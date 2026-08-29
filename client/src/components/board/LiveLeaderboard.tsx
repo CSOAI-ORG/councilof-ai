@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   countLine,
   hasFigure,
@@ -57,10 +57,38 @@ export default function LiveLeaderboard({
 }) {
   const { data, error, loading } = useGspcBoard();
   const [expanded, setExpanded] = useState(false);
+  const [indexLine, setIndexLine] = useState<string | null>(null);
 
   const rows = orderedRows(data);
   const shown = expanded ? rows : rows.slice(0, DEFAULT_ROWS);
   const count = countLine(data);
+  const emptyNames = rows.filter((a) => a.status === "UNMEASURED").map((a) => a.axis);
+  const stampState = (data?.measured_on as { living_stamp?: { verification_state?: string } } | undefined)
+    ?.living_stamp?.verification_state;
+
+  useEffect(() => {
+    let dead = false;
+    fetch("/signed/card_index.json", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((j: { n_cards?: number; n_cells?: number }) => {
+        if (dead) return;
+        const cards = typeof j.n_cards === "number" ? j.n_cards : null;
+        const cells = typeof j.n_cells === "number" ? j.n_cells : null;
+        if (cards == null || cells == null) {
+          setIndexLine(null);
+          return;
+        }
+        setIndexLine(
+          `${cards} in the index · ${cells} verify against #card-attestation-1`,
+        );
+      })
+      .catch(() => {
+        if (!dead) setIndexLine(null);
+      });
+    return () => {
+      dead = true;
+    };
+  }, []);
 
   return (
     <section className={`w-full ${className}`}>
@@ -130,6 +158,21 @@ export default function LiveLeaderboard({
                 </tbody>
               </table>
             </div>
+
+            {emptyNames.length > 0 && (
+              <p className="mt-3 text-[11px] leading-relaxed text-muted-foreground">
+                Empty on purpose: {emptyNames.join(", ")}.
+              </p>
+            )}
+            {indexLine && (
+              <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+                {indexLine}
+              </p>
+            )}
+            <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
+              Living stamp: {stampState ?? "UNCHECKABLE"}. The 18 Aug stamp stays
+              superseded UNVERIFIABLE — not deleted.
+            </p>
 
             {/* ── the two controls ─────────────────────────────────────── */}
             <div className="mt-5 flex flex-wrap items-center gap-3">

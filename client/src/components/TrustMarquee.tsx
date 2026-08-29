@@ -156,7 +156,7 @@ export default function TrustMarquee({
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className={"text-sm font-bold uppercase tracking-wide " + (dark ? "text-emerald-300" : "text-emerald-700")}>
-            Aligned to the world's frameworks · built on open source · verifiable
+            Built on open source · verifiable
           </h2>
           <p className={"text-[11px] " + (dark ? "text-emerald-200/60" : "text-gray-400")}>
             Every badge links to its official source. We map & implement these — we do not claim endorsement.

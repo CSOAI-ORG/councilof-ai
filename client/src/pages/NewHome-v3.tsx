@@ -17,15 +17,14 @@
 import ToolStack from "../components/home/ToolStack";
 import LiveLeaderboard from "../components/board/LiveLeaderboard";
 import HeroSlides from "../components/HeroSlides";
+import { useGspcBoard } from "../components/board/useGspcBoard";
 import {
   ChevronRight,
   FileCheck,
-  Monitor,
   BarChart3,
   Shield,
   Gamepad2,
   Cpu,
-  Link2,
 } from "lucide-react";
 
 // ── End-user outcomes — real surfaces, owned images ───────────────────────
@@ -34,7 +33,7 @@ const OUTCOMES: {
   desc: string;
   href: string;
   image?: string;
-  icon: typeof Monitor;
+  icon: typeof BarChart3;
   status?: string;
 }[] = [
   {
@@ -52,14 +51,6 @@ const OUTCOMES: {
     icon: BarChart3,
   },
   {
-    title: "XRPL attestation",
-    desc: "Devnet-proven ledger attestation. Cards anchored to XRP Ledger for tamper-evident history.",
-    href: "/xrpl-attest",
-    image: "/images/secure_evidence_vault.jpg",
-    icon: Link2,
-    status: "devnet",
-  },
-  {
     title: "OpenTelemetry harness",
     desc: "OTEL-instrumented measurement runs. Every call traced, every verdict reproducible.",
     href: "/benchmarks",
@@ -73,17 +64,26 @@ const OUTCOMES: {
     image: "/images/public_watchdog_intake.jpg",
     icon: Shield,
   },
-  {
-    title: "Training arenas",
-    desc: "Six arenas serving frozen items, marked by the same published key. You vs the AI, scored.",
-    href: "/arena",
-    image: "/images/literacy_training_arena.jpg",
-    icon: Monitor,
-  },
 ];
 
 // ── Hero: Council OS door ───────────────────
 function HeroCouncilOS() {
+  const { data, error, loading } = useGspcBoard();
+  const t = data?.totals;
+  const cta =
+    typeof t?.axes === "number" &&
+    typeof t?.measured_axes === "number" &&
+    typeof t?.unmeasured_axes === "number"
+      ? `${t.axes} slots · ${t.measured_axes} measured · ${t.unmeasured_axes} empty on purpose`
+      : error
+        ? "board unreachable"
+        : loading
+          ? "reading GET /api/gspc"
+          : null;
+  const stamp = (data?.measured_on as { living_stamp?: { verification_state?: string } } | undefined)
+    ?.living_stamp;
+  const stampState = stamp?.verification_state;
+
   return (
     <section className="surface-ink py-16 sm:py-20 lg:py-24">
       <div className="section-shell">
@@ -100,25 +100,52 @@ function HeroCouncilOS() {
               Council OS
             </h1>
 
+            <p className="mt-5 max-w-lg font-mono text-sm font-semibold tracking-wide text-emerald-200 lg:mx-0 mx-auto">
+              {cta ?? "GET /api/gspc"}
+            </p>
+
             {/* One sentence */}
-            <p className="mt-5 max-w-lg text-lg leading-relaxed text-emerald-100/90 lg:mx-0 mx-auto">
+            <p className="mt-4 max-w-lg text-lg leading-relaxed text-emerald-100/90 lg:mx-0 mx-auto">
               The workspace that opens the board, verifier, assessment, and evidence
               pack in one window — loginless and free.
             </p>
+            <p className="mt-3 max-w-lg text-sm text-emerald-100/75 lg:mx-0 mx-auto">
+              Verify free. Pack is assembly only. Payment does not fill a cell.
+            </p>
+            <p className="mt-2 max-w-lg text-sm text-emerald-100/75 lg:mx-0 mx-auto">
+              Arena:{" "}
+              <a href="/gspc-arena" className="underline underline-offset-2 hover:text-white">
+                one quotable room
+              </a>{" "}
+              on this fold.
+            </p>
+            <p className="mt-2 max-w-lg text-xs text-emerald-100/60 lg:mx-0 mx-auto">
+              Living stamp on GET /api/gspc:{" "}
+              {stampState ?? (error ? "UNCHECKABLE" : "…")}. The 18 Aug stamp stays
+              superseded UNVERIFIABLE — not deleted.
+            </p>
 
-            {/* Two CTAs only: primary filled + ghost */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
+            {/* Three buttons: board / verify, OS second row */}
+            <div className="mt-8 flex flex-col gap-3 sm:items-start">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
+                <a
+                  href="/gspc-scoreboard"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 hover:shadow-emerald-400/30"
+                >
+                  Board <ChevronRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="/gspc-verify"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                >
+                  Verify
+                </a>
+              </div>
               <a
                 href="/os"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 hover:shadow-emerald-400/30"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-7 py-3 text-sm font-semibold text-emerald-100/90 transition-colors hover:bg-white/10"
               >
-                Open Council OS <ChevronRight className="h-4 w-4" />
-              </a>
-              <a
-                href="/gspc-verify"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Verify a card — free
+                Council OS
               </a>
             </div>
           </div>
@@ -180,6 +207,10 @@ function OutcomesBand() {
         <p className="t-lede measure measure-center mt-4 text-center text-muted-foreground">
           Real surfaces, real images, real links. Empty cells stay empty. Every figure from a live API.
         </p>
+        <p className="measure measure-center mt-3 text-center text-xs text-muted-foreground">
+          XRPL is a scope line, not a product tile: mainnet facts on 6 accounts;
+          attestation devnet-proven; mainnet planned. Not 16 axes.
+        </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {OUTCOMES.map((o) => (
             <a
@@ -228,7 +259,6 @@ function USPStrip() {
   const SIGNALS = [
     { icon: "✶", label: "Ed25519 signed", sub: "Every card cryptographically signed" },
     { icon: "⚖", label: "Live axis counts", sub: "GET /api/gspc — never typed" },
-    { icon: "◫", label: "Framework alignment", sub: "EU AI Act · NIST · ISO 42001 · DORA" },
     { icon: "🔓", label: "Verification free forever", sub: "No account, no fee" },
   ];
 
@@ -236,7 +266,7 @@ function USPStrip() {
     <section className="section-y-sm surface-ink border-y" style={{ borderColor: "var(--ink-border)" }}>
       <div className="section-shell">
         <p className="t-kicker ink-kicker text-center font-mono">Measurement, not certification</p>
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {SIGNALS.map((s) => (
             <div key={s.label} className="ink-card flex flex-col items-center rounded-xl px-3 py-5 text-center">
               <span className="text-xl leading-none text-emerald-300/90" aria-hidden>{s.icon}</span>
@@ -244,14 +274,6 @@ function USPStrip() {
               <span className="ink-muted mt-1.5 text-[11px] leading-snug">{s.sub}</span>
             </div>
           ))}
-        </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <span className="text-xs text-emerald-100/60">Aligned to:</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">EU AI Act</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">NIST AI RMF</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">ISO 42001</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">DORA</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">C2PA</span>
         </div>
         <p className="ink-muted mt-5 text-center text-[11px]">
           We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
@@ -273,6 +295,9 @@ function VerifyDoor() {
           <p className="mt-2 text-sm text-muted-foreground">
             Paste a signed measurement record. Your browser recomputes the hash and checks
             the Ed25519 signature. Nothing is sent to us. No account, no fee, permanently.
+          </p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Verify free. Pack is assembly only. Payment does not fill a cell.
           </p>
           <a
             href="/gspc-verify"

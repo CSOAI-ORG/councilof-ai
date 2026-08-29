@@ -134,9 +134,9 @@ const TOOLS: Tool[] = [
   {
     id: "tool-embed",
     family: "For your own site",
-    name: "Embed and white-label kit",
+    name: "Embed the verify URL",
     what:
-      "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
+      "Put the verify URL on your own site. /embed.js is live. The reader’s browser re-checks the signature — green only when the bytes are true.",
     pain:
       "Otherwise the people reading your site still have to take your word for the result.",
     note: "Built only from what is actually on the board. Free forever.",
@@ -289,7 +289,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
-            Open in Council OS
+            Open
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>
