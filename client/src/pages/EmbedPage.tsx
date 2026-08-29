@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
+import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
 
 /**
  * /embed — the white-label "Powered by Council of AI" onboarding page.
@@ -72,7 +73,9 @@ export default function EmbedPage() {
             badge and a self-verifying card. The signed verdict travels with its own bytes: your
             visitors recompute the hash and check the Ed25519 signature in their own browser, against
             the published key, without trusting you <em>or</em> us.{" "}
-            <strong className="text-emerald-50">Verification is free forever.</strong>
+            <strong className="text-emerald-50">Verification is free forever.</strong> That is the
+            n-site spray: your origin, our 3kb glass, their visitors checking the same bytes. We do
+            not fork your stack into CSOAI-ORG.
           </p>
         </div>
       </section>
@@ -238,7 +241,14 @@ export default function EmbedPage() {
           <Link href="/methodology" className="text-emerald-300 hover:underline">
             Read the methodology →
           </Link>
+          <Link href="/licensing-agreement" className="text-emerald-300 hover:underline">
+            Licence (invoice, not a token) →
+          </Link>
+          <Link href="/distribution-integrity" className="text-emerald-300 hover:underline">
+            Represented is not distributed →
+          </Link>
         </div>
+        <JoinedSpecsFooter variant="dark" />
       </div>
     </div>
   );

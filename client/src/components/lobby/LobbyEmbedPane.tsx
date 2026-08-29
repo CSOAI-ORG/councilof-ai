@@ -3,6 +3,7 @@ import { FOCUS, MEASURE, PRIMARY, SP, TYPE } from "./glass";
 import { CopyBlock, PaneHead, WireNotice } from "./paneKit";
 import { quotableWire, stateWord, useBoardWire, useSignalCards } from "./boardWire";
 import { badgeSnippet, cardSnippet, CARD_EMBED_HEIGHT, CARD_EMBED_WIDTH } from "@/lib/embedSnippet";
+import JoinedSpecsFooter from "@/components/JoinedSpecsFooter";
 
 /**
  * LobbyEmbedPane — the white-label embed kit, NATIVE in Council OS.
@@ -258,6 +259,7 @@ export default function LobbyEmbedPane({
             Verify a card yourself
           </button>
         </div>
+        <JoinedSpecsFooter />
       </div>
     </div>
   );
