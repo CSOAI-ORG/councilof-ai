@@ -31,6 +31,14 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
     expect(src).not.toMatch(/OpenTelemetry|otel/i);
   });
 
+  it("links four public OSS tools, not lifestyle MCPs", () => {
+    expect(src).toContain("github.com/CSOAI-ORG/inspect-receipts");
+    expect(src).toContain("github.com/CSOAI-ORG/claimguard");
+    expect(src).toContain("github.com/CSOAI-ORG/corpus-watch");
+    expect(src).toContain("github.com/CSOAI-ORG/signed-receipts");
+    expect(src).not.toMatch(/fishkeeper|qidi-printer|habit/i);
+  });
+
   it("uses shipped posters; videos are optional", () => {
     expect(src).toContain("/images/coliseum_hero_arena.jpg");
     expect(src).toContain("/images/secure_evidence_vault.jpg");

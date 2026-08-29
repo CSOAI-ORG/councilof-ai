@@ -77,6 +77,8 @@ const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const Blog = lazy(() => import("./pages/Blog"));
+const AnswersIndex = lazy(() => import("./pages/Answers"));
+const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
 const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
@@ -393,6 +395,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
+  "/answers": "Answers — measurement explainers | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
@@ -722,6 +725,8 @@ function App() {
                   <Route path="/chat" component={AgUiBridge} />
                   <Route path="/rankings" component={RankingsBridge} />
                   <Route path="/methodology" component={Methodology} />
+                  <Route path="/answers/:slug" component={AnswerPage} />
+                  <Route path="/answers" component={AnswersIndex} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />

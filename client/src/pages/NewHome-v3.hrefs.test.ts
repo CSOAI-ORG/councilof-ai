@@ -23,6 +23,7 @@ describe("homepage doors — HomeWorlds, not leftover tiles", () => {
     expect(home).not.toContain("USPStrip");
     expect(home).not.toMatch(/href="\/os"/);
     expect(home).not.toMatch(/OpenTelemetry|otel/i);
+    expect(home).toContain("<HomeWorlds />");
   });
 });
 

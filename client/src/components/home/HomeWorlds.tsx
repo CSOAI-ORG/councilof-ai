@@ -158,12 +158,64 @@ function OsNamedLinks({ id }: { id?: string }) {
   );
 }
 
+const OSS_CARDS = [
+  {
+    name: "inspect-receipts",
+    href: "https://github.com/CSOAI-ORG/inspect-receipts",
+    what: "Ed25519 receipts for Inspect AI eval runs.",
+  },
+  {
+    name: "claimguard",
+    href: "https://github.com/CSOAI-ORG/claimguard",
+    what: "Claim vs signed-artifact integrity checker.",
+  },
+  {
+    name: "corpus-watch",
+    href: "https://github.com/CSOAI-ORG/corpus-watch",
+    what: "Regulatory drift hash-watcher (EU AI Act CELLAR / UK statute).",
+  },
+  {
+    name: "signed-receipts",
+    href: "https://github.com/CSOAI-ORG/signed-receipts",
+    what: "Signed receipts. Inspect with inspect-signed-receipt.",
+  },
+] as const;
+
+function OssCards() {
+  return (
+    <section className="surface-raised py-12" aria-labelledby="oss-tools-title">
+      <div className="section-shell max-w-3xl">
+        <h2 id="oss-tools-title" className="text-2xl font-bold tracking-tight text-foreground">
+          Open tools
+        </h2>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Public GitHub. Measurement, not certification. Not lifestyle MCPs.
+        </p>
+        <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+          {OSS_CARDS.map((c) => (
+            <li key={c.name}>
+              <a
+                href={c.href}
+                className="block rounded-lg border border-border bg-card px-3 py-3 hover:border-emerald-500"
+              >
+                <span className="font-mono text-sm font-semibold text-foreground">{c.name}</span>
+                <span className="mt-1 block text-[13px] text-muted-foreground">{c.what}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 export default function HomeWorlds() {
   return (
     <>
       <WorldMeasure />
       <WorldVerify />
       <OsNamedLinks id="cta-os" />
+      <OssCards />
     </>
   );
 }
