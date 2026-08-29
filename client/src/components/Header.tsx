@@ -62,6 +62,7 @@ const PRIMARY_LINKS: { name: string; href: string }[] = [
   { name: "Verify", href: "/gspc-verify" },
   { name: "Get measured", href: "/assess" },
   { name: "Board", href: "/gspc-scoreboard" },
+  { name: "Council OS", href: "/os" },
   { name: "Tools", href: "/tools" },
 ];
 
@@ -294,6 +295,7 @@ export function Header() {
           {/* Desktop Navigation — Logo · Verify · Get measured · Board · Tools. Rest is footer /library. */}
           <div className="hidden md:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
+              <div className="flex items-center gap-1 xl:hidden">
               {PRIMARY_LINKS.map((item) => (
                 <a
                   key={item.href}
@@ -307,7 +309,9 @@ export function Header() {
                   {item.name}
                 </a>
               ))}
-              {null && navigation.map((item) => (
+              </div>
+              <div className="hidden xl:flex items-center gap-1 2xl:gap-3">
+              {navigation.map((item) => (
                 <div
                   key={item.name}
                   className="relative"
@@ -395,12 +399,19 @@ export function Header() {
                   )}
                 </div>
               ))}
+              </div>
             </div>
           </div>
 
           {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
             {/* Search */}
+            <a
+              href="/os"
+              className="hidden xl:inline-flex rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Council OS
+            </a>
             <button
               onClick={() => setSearchOpen(true)}
               className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors"
@@ -532,7 +543,7 @@ export function Header() {
               >
                 Library
               </a>
-              {false && navigation.map((item) => (
+              {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
                   <a
                     href={item.href}
