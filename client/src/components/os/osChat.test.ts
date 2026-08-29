@@ -4,10 +4,13 @@ import {
   formatAxis,
   formatBoardTotals,
   formatCardList,
+  liveCountLine,
   looksLikeCardJson,
   namedAxis,
+  OS_PROMPT,
   OS_TOOLS,
   wantsBoardTotals,
+  wantsGetMeasured,
   wantsListCards,
 } from "./osChat";
 
@@ -23,12 +26,29 @@ describe("osChat — four tools", () => {
     expect(wantsBoardTotals("read the board")).toBe(true);
     expect(wantsBoardTotals("ask the board")).toBe(true);
     expect(wantsBoardTotals("open the board")).toBe(true);
+    expect(wantsBoardTotals("Show the board")).toBe(true);
     expect(wantsListCards("list cards")).toBe(true);
     expect(looksLikeCardJson('{"id":"abc","signature":"x","body":{}}')).toBe(true);
     expect(looksLikeCardJson("hello")).toBe(false);
     expect(namedAxis("jail")).toBe("jail");
     expect(namedAxis("governance")).toBe("governance");
     expect(namedAxis("hello")).toBeNull();
+  });
+
+  it("routes a shop/ChatGPT stranger to get-measured, not a four-tools dump", () => {
+    expect(wantsGetMeasured("I run a shop with ChatGPT")).toBe(true);
+    expect(wantsGetMeasured("I use AI at work")).toBe(true);
+    expect(wantsGetMeasured("Show the board")).toBe(false);
+    expect(OS_PROMPT).toBe("Paste a signed card, or say what you use AI for.");
+    expect(FOUR_TOOLS_HELP).toMatch(/do not certify/i);
+    expect(FOUR_TOOLS_HELP).not.toMatch(/name an axis/);
+  });
+
+  it("builds the live count line from totals, never a typed 22", () => {
+    expect(liveCountLine({ axes: 3, measured_axes: 2, unmeasured_axes: 1 })).toBe(
+      "3 slots · 2 measured · 1 empty",
+    );
+    expect(liveCountLine({ public_count: "GET /api/gspc" })).toBe("Board loading…");
   });
 
   it("formats UNMEASURED as a first-class cell, never a typed 22", () => {

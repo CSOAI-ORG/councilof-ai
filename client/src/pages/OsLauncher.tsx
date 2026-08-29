@@ -32,7 +32,7 @@ export type { DoorId };
 export default function OsLauncher() {
   const search = useSearch();
   const [location, setLocation] = useLocation();
-  const [door, setDoor] = useState<DoorId>(() => doorFromSearch(search));
+  const [door, setDoor] = useState<DoorId | null>(() => doorFromSearch(search));
 
   useEffect(() => {
     document.title = "Council OS | councilof.ai";

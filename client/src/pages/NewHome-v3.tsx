@@ -6,13 +6,12 @@
  */
 import { useState } from "react";
 import { ChevronRight } from "lucide-react";
-import ToolStack from "../components/home/ToolStack";
 import OsShell from "../components/os/OsShell";
 import { type DoorId } from "../components/os/doors";
 import LobbyVerifyPane from "../components/lobby/LobbyVerifyPane";
 
 export default function NewHomeV3() {
-  const [door, setDoor] = useState<DoorId>("board");
+  const [door, setDoor] = useState<DoorId | null>(null);
   return (
     <main className="surface-base">
       <OsShell variant="hero" door={door} onDoor={setDoor} />
@@ -37,8 +36,6 @@ export default function NewHomeV3() {
           </p>
         </div>
       </section>
-
-      <ToolStack />
 
       <section className="surface-raised py-8">
         <div className="section-shell flex flex-wrap items-center justify-center gap-4 text-sm">
