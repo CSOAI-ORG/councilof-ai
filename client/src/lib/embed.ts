@@ -7,8 +7,12 @@
  * inside the pane. The parent lobby listens for `coai:embed-nav` so the pane
  * rail can follow the reader without remounting the iframe.
  *
- * `?embed=1` is a hint the parent always sends. `window.self !== window.top`
- * is the fallback when a framed page drops the query string.
+ * Protocol is one message: `{ type: "coai:embed-nav", path, search, title }`.
+ * There is no `ready` or `theme` event. Unused listeners must not be invented.
+ * `?embed=1` is also the partner spray hint on `/embed` (their origin, our glass).
+ * It is not how OS frames `/` `/os` `/dashboard` — those are unframeable.
+ *
+ * `window.self !== window.top` is the fallback when a framed page drops the query.
  */
 import { useEffect } from "react";
 import { isSiteDoor, LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";

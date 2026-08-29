@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import { LOBBY_TABS, matchRoute, matchTab, type LobbyTab } from "./tabs";
 import { AXES, quotable } from "@/lib/gspcAxes";
+import { looksLikeCardJson, matchRefusal, wantsBoardTotals } from "./lobbyRefuse";
+import { fetchPinnedCardKey, verifyCard } from "@/lib/cardVerify";
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
@@ -274,6 +276,77 @@ export function useLobbyChat(): LobbyChat {
             state: "deterministic",
             signature: `axis closed · ${axis.axis} · unmeasured`,
           });
+        }
+        return;
+      }
+
+      const refusal = matchRefusal(question);
+      if (refusal) {
+        push({
+          role: "council",
+          text: refusal.text,
+          state: "ungrounded",
+          signature: `refusal · ${refusal.id}`,
+        });
+        return;
+      }
+
+      if (wantsBoardTotals(question)) {
+        setBusy(true);
+        try {
+          const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const j: any = await r.json();
+          const t = j?.totals ?? {};
+          const grammar = t.public_count || t.count_grammar || "live GET /api/gspc";
+          push({
+            role: "council",
+            text:
+              `Live board from GET /api/gspc — ${grammar}.\n` +
+              `SEPARATED leads: ${t.separated_leads ?? "—"}. TIE: ${t.ties ?? "—"}. ` +
+              `Empty cells stay empty. This is measurement, not a ranking.\n\n` +
+              `Opened the native board pane. No fixture.`,
+            state: "grounded",
+            signature: "board_totals · GET /api/gspc",
+          });
+          onNavigate(LOBBY_TABS.find((x) => x.id === "board") ?? SPACE_TAB);
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: offlineHelp(String(e?.message ?? e)),
+            state: "deterministic",
+            signature: "board_totals · failed",
+          });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
+
+      if (looksLikeCardJson(question)) {
+        setBusy(true);
+        try {
+          const card = JSON.parse(question);
+          const key = await fetchPinnedCardKey();
+          const v = await verifyCard(card, key);
+          push({
+            role: "council",
+            text:
+              `verify_card (browser, nothing uploaded): **${v.state}**.\n` +
+              `${v.reason ?? ""}\n\n` +
+              `Three states only: VALID · INVALID · UNCHECKABLE. Same path as /gspc-verify.`,
+            state: v.state === "VALID" ? "grounded" : "ungrounded",
+            signature: `verify_card · ${v.state}`,
+          });
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: `UNCHECKABLE — could not parse or check that paste (${String(e?.message ?? e)}). Nothing was sent to a server.`,
+            state: "ungrounded",
+            signature: "verify_card · uncheckable",
+          });
+        } finally {
+          setBusy(false);
         }
         return;
       }
