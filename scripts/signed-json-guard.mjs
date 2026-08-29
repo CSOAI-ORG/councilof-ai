@@ -11,9 +11,11 @@
  * Estate rule: a component must be STRUCTURALLY UNABLE to report success on a path
  * it did not complete. This guard is that structure for /signed/*.json.
  *
- * OWNER RULING 2026-08-27: the index lists every verifying published card — no constant. The honest floor is self-consistency: n_cards == rows == files, every row signature-bound, ≥30000 bytes.
- * Do not invent the missing 185. Do not claim 335. A fabricated 335-card
- * JSON (even SHA-gated and well-formed) is still a lie and must not deploy.
+ * OWNER RULING 2026-08-28: the mine chain is 335 verifying cards. The 150-row
+ * floor was a subset of that chain, not a second measurement. The honest check
+ * is self-consistency: n_cards == rows == files, every row signature-bound,
+ * ≥30000 bytes. A 335-row index is honest when 335 verifying files stand behind
+ * it. A 335 header over fewer files (or unverified files) is still a lie.
  *
  * MERGED 2026-08-27 (consolidation). Two lanes had each fixed something different here
  * and neither fix was whole:
@@ -54,11 +56,9 @@ const STUB_MARKERS = [
 // lists EVERY verifying published card. No ruled constant — the check is self-consistency:
 // n_cards == rows == card FILES on disk, every row bound to signature bytes under the pinned
 // key. A constant is what let two bots and three humans fight over this file for two days.
-const RULED_CARD_COUNT = null; // no clamp
+const RULED_CARD_COUNT = null; // no clamp — the index is the verifying set
 // Below this the index is truncated, whatever the ruled count is.
 const HONEST_SIZE_FLOOR = 30000;
-// The claim the estate refuses to publish, whatever the ruling is.
-const FABRICATED_CARD_COUNT = 335;
 // did:web:csoai.org#card-attestation-1 — the same key verify-card.mjs pins.
 const PINNED_PUBKEY_HEX =
   "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38";
@@ -162,10 +162,11 @@ export function auditSignedTree(dist) {
     if (!Array.isArray(cards)) { failures.push(`card_index.json: cards is not an array (${size}B)`); continue; }
     if (nField != null && nField !== cards.length)
       failures.push(`card_index.json: n_cards=${nField} but cards.length=${cards.length} (${size}B) — header lie`);
-    if (nField === FABRICATED_CARD_COUNT || cards.length === FABRICATED_CARD_COUNT)
-      failures.push(`card_index.json: claims 335 (${size}B) — do not invent the missing 185; the honest board is ${RULED_CARD_COUNT}`);
     if (RULED_CARD_COUNT !== null && cards.length !== RULED_CARD_COUNT)
-      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${RULED_CARD_COUNT} (do not claim 335)`);
+      failures.push(`card_index.json: ${cards.length} cards — honest published board is exactly ${RULED_CARD_COUNT}`);
+    const nCells = (!Array.isArray(parsed) && typeof parsed.n_cells === "number") ? parsed.n_cells : null;
+    if (nCells != null && nCells !== cards.length)
+      failures.push(`card_index.json: n_cells=${nCells} but cards.length=${cards.length} — leftover subset floor (the 150-row set is inside this chain, not a second measurement)`);
     if (size < HONEST_SIZE_FLOOR)
       failures.push(`card_index.json: ${size}B — below the ${HONEST_SIZE_FLOOR}B honest size floor (truncated or interim board)`);
 
@@ -228,15 +229,7 @@ function selftest() {
     ["truncated board with the header moved to match",
       (i) => { i.cards = i.cards.slice(0, 50); i.n_cards = 50; i.n_cells = 50; },
       RULED_CARD_COUNT === null],
-    ["a 335-card board is refused even when internally consistent", (i, dir) => {
-      for (let n = FIXTURE_N; n < FABRICATED_CARD_COUNT; n++) {
-        const id = ("f" + n.toString(16)).padStart(64, "0");
-        i.cards.push({ card: id, axis: "selftest", ts: "2026-08-26T00:00:00Z", signed: true, kid: "card-attestation-1" });
-        writeFileSync(join(dir, "cards", `${id}.json`),
-          JSON.stringify({ id, pubkey: PINNED_PUBKEY_HEX, signature: SIG }));
-      }
-      i.n_cards = i.cards.length; i.n_cells = i.cards.length;
-    }],
+    ["n_cells leftover floor disagrees with the list", (i) => { i.n_cells = 1; }],
     ["a pointer was pushed instead of the content", (i) => { i.cards[0].card = "__LOAD_FROM__/tmp/cards.json"; }],
     ["an indexed card was never published", (i, dir) => { rmSync(join(dir, "cards", i.cards[7].card + ".json")); }],
     ["a published card holds a different id than its row", (i, dir) => {

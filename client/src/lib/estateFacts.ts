@@ -5,8 +5,8 @@
  * Same doctrine as boardCount.ts, applied to the other half of the estate's
  * public numbers. ADR-001: "No surface should type a count." The board already
  * had a derivation path; the card chain did not, so pages typed it — and typed
- * it wrong. /signed/HOW-TO-VERIFY.md still says "these 150 cannot be migrated"
- * two paragraphs under its own "Cards published: 313".
+ * it wrong. The 150-row floor was a subset of the 335-card chain, not a
+ * verifying-only elite. Counts here are derived, never typed.
  *
  * ── THE GRAMMAR RULE FOR THIS FILE ──────────────────────────────────────────
  * Four numbers live here and they mean four different things:
@@ -74,16 +74,17 @@ function withheldSentenceOf(withheld: number, attested: number, manifestSigned: 
 }
 
 function verifiedSentenceOf(published: number, valid: number, keys: number): string {
-  // HONESTY FIX (2026-08-28): 313 cards are catalogued in card_index.json, but only 150
-  // actually verify against did:web:csoai.org#card-attestation-1. The old text claimed
-  // "all 313 verify" which was false — catalogued ≠ pin-verified. The distinction must
-  // always be stated; a catalogue entry is not a verification.
-  //
-  // The live reality: card_index n_cards=313; 150 verify against the pinned key.
-  // This function must never produce "all N verify" when catalogued ≠ verified.
-  const pinnedVerified = 150; // cards that actually verify against did:web:csoai.org#card-attestation-1
+  // Derived, never typed. The 150-row floor was a subset of the 335-card chain.
+  // When catalogued !== verified, say both numbers. When they match, say they match.
+  if (valid === published) {
+    return (
+      `${published} signed measurement cards are catalogued in the index, and all ${valid} verify ` +
+      `against did:web:csoai.org#card-attestation-1. A stranger can run that check offline with ` +
+      `public/signed/verify-card.mjs, no account and no permission.`
+    );
+  }
   return (
-    `${published} signed measurement cards are catalogued in the index; ${pinnedVerified} verify ` +
+    `${published} signed measurement cards are catalogued in the index; ${valid} verify ` +
     `against did:web:csoai.org#card-attestation-1. Catalogued ≠ pin-verified — the index is a ` +
     `manifest, not a verification. A stranger can run the verification offline with ` +
     `public/signed/verify-card.mjs, no account and no permission.`

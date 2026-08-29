@@ -1,0 +1,20 @@
+{
+  "schema": "csoai.x402/0.1",
+  "one_line": "agents pay to assemble the pack; the board stays free",
+  "resource": "https://pack.councilof.ai/v1/pack/assemble",
+  "method": "POST",
+  "scheme": "exact",
+  "network": "base",
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "paid_for": "assembly",
+  "not": ["score", "certificate", "filled-cells", "pay-to-pass"],
+  "board": "https://councilof.ai/api/gspc",
+  "verify": "https://councilof.ai/verify",
+  "host": "https://pack.councilof.ai",
+  "well_known": "https://pack.councilof.ai/.well-known/x402",
+  "agent_paths": [
+    "Grok /pack",
+    "python3 agent_client.py $SCOPE",
+    "@x402/fetch"
+  ]
+}

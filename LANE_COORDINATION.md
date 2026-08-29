@@ -363,3 +363,18 @@ Fix (queued for the owning lane): retire/repoint board_living.json consumers
 (claimguard fixture, catalog entry, docs) to gspc-board.signed.json; re-derive
 board_living from the 22-axis snapshot ONLY with a fresh sign; until then quote
 /api/state (already the only quotable authority).
+
+## 2026-08-28 · grok — 335 is the chain; 150 is a subset floor, not a second set
+
+Bytes, not a clamp:
+
+- MANIFEST n=335, unique (axis,model)=335. Live index was 313 with leftover `n_cells:150`.
+- The 150-row board is a **subset of the 335-card chain**, not 150 extra/duplicate hashes.
+- 22 verifying bodies were withheld (three models). They already lived in commit e557620b
+  and all 22 verify under #card-attestation-1. Restored onto disk.
+- Now: n_cards == n_cells == rows == files == 335. Python + verify-card.mjs: 335/335 VALID.
+- signed-json-guard no longer treats a consistent 335 as fabricated. It now flags
+  `n_cells != rows` (the leftover 150 floor).
+- chain.json still carries historical `body_published:false` on those 22; we did not
+  re-sign the envelope. derive-chain-facts now measures files, so withheld=0.
+- Do not restore a 150 floor. Do not claim 150 "verify" when 335 do.
