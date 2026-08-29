@@ -1,25 +1,36 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { wantsGetMeasured } from "@/components/os/osChat";
 
 const home = readFileSync(resolve(__dirname, "HomeVerify.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
 const header = readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8");
 const tools = readFileSync(resolve(__dirname, "ToolsPage.tsx"), "utf8");
 
-describe("homepage a human can finish", () => {
-  it("first paint is two buttons, not a lab wall", () => {
+describe("homepage is chat + GSPC list", () => {
+  it("is OpenRouter layout without tokens or AG-UI", () => {
     expect(home).toMatch(/Check an AI claim\. Or measure your system\./);
-    expect(home).toMatch(/Empty means not measured/);
     expect(home).toContain('href="/gspc-verify"');
     expect(home).toContain('href="/assess"');
-    expect(home).toContain('href="/tools"');
-    expect(home).toContain("<RecordVerifyForm");
-    expect(home).toContain("/methodology");
+    expect(home).toContain('id="os-chat"');
+    expect(home).toContain("GSPC board");
+    expect(home).toContain("https://councilof.ai/mcp");
+    expect(home).toContain("/tools");
+    expect(home).toContain("Run / re-attest");
+    expect(home).toContain("Ledger");
+    expect(home).toContain("Not a ranking for sale");
     expect(home).not.toContain("OsShell");
     expect(home).not.toContain("/govbench");
     expect(home).not.toMatch(/GET \/api\/gspc/);
-    expect(home).not.toMatch(/Open Council OS|coliseum|GPAI Evidence|cobol/i);
+    expect(home).not.toMatch(/Open Council OS|coliseum|GPAI Evidence|cobol|ToolStack/i);
+    expect(home).not.toMatch(/p-value|separation_p/);
+    expect(home).toContain("Not a ranking for sale");
+    expect(home).not.toMatch(/certified organization|buy a rank/i);
+  });
+
+  it("routes Claude-at-work to get measured", () => {
+    expect(wantsGetMeasured("I use Claude at work")).toBe(true);
   });
 
   it("App keeps AG-UI off /", () => {
