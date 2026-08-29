@@ -55,6 +55,28 @@ tell it which fields are floats. The fields that are floats in our cards are `ac
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
 unnecessary; these cards cannot be migrated without invalidating their ids. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement.
 
+### Two number spellings — do not mix them
+
+`Number.prototype.toString` (ES6 / RFC 8785) is a **print algorithm for one IEEE-754
+binary64**. After JSON parse there is no memory that a field was a Python float.
+
+| IEEE-754 value | Rule A — published cards (CPython `json.dumps`) | Rule B — JCS / board / catalog (ES6 `ToString`) |
+|---|---|---|
+| 0 | `0.0` | `0` |
+| 1 | `1.0` | `1` |
+| 1e-6 | `1e-06` | `0.000001` |
+| 1e-7 | `1e-07` | `1e-7` |
+| 1e20 | `1e+20` | `100000000000000000000` |
+| 1e21 | `1e+21` | `1e+21` |
+
+- **Rule A** is these cards. Keep `0.0` on the float fields named above. Do not
+  "canonicalize" a published card with JCS or `JSON.stringify`.
+- **Rule B** is the living board stamp (`sig_input` on `/api/gspc`), new catalog
+  rows, and any artefact that declares `preimage_rule: "jcs-rfc8785"`. Emit ES6
+  `ToString`; no `.0`; Python `repr` is the wrong algorithm (`1e-06` ≠ `0.000001`).
+- A Python-only dump of a board payload can still match Rule B **if** those
+  fields are JSON ints, not floats.
+
 ## 4. Check one card
 
 ```bash
