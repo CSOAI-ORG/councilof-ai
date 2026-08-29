@@ -110,6 +110,15 @@ const RULES = [
     why: 'Measurement credential, never certification. Do not offer "get certified".',
   },
   {
+    id: "rank_for_sale",
+    // Three paid arms only: Run/re-attest, Ledger (feed/packs), Data (corpus).
+    // Verify is free. A public rank / score / grade is never the SKU.
+    // Retraction ("never a purchased public rank", "can never buy a score") stays.
+    pattern: /rank for sale|bought rank|buy a (?:rank|ranking|score|grade)|purchased public rank|sell(?:ing)? (?:the |a )?(?:score|rank|grade)|score for sale|paid (?:public )?rank/i,
+    nearAllow: /never (?:a )?(?:bought|purchased|buy)|never (?:the |a )?(?:score|rank|grade)|never sell|grade is never sold|can never buy a score|nobody ranked pays|not for sale/i,
+    why: "Paid arms are Run/re-attest, Ledger, and Data. A rank or score is never sold. Verify is free.",
+  },
+  {
     id: "inspect_scorer",
     // GSPC grade is the estate harness + Ed25519 card. Inspect AI / LLM-as-judge
     // is not the scorer. Do not trip "Quality inspection", PyPI inspect-signed-receipt,
