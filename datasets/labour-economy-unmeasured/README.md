@@ -18,6 +18,6 @@ Three contextual indices — AI-economy · human-labour · humanoid-labour — d
 - Method: https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/SOVOS/INDEX-METHOD-0.1.md (branch until merge)
 - Live API (after master merge): `GET https://councilof.ai/api/indices`
 - Do **not** invent TVL, ARR, wage %, displacement %, or TAM as MEASURED.
-- Overnight: fixture verified; Hub upload waits on Path A `HF_TOKEN` or Path B Trusted Publisher OIDC (`docs/HF_UPLOAD_RUNBOOK.md`). CI probe 2026-08-29T00:46Z.
+- Overnight: fixture verified; Hub upload waits on Path A `HF_TOKEN` or Path B Trusted Publisher OIDC (`docs/HF_UPLOAD_RUNBOOK.md`). CI probe 2026-08-29T01:38Z.
 
 Fixture schema: `csoai.labour-economy-index/0.1` — every `measured_score` is `null`, `fused_into_gspc` is `false`.
