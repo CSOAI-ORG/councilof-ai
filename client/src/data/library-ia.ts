@@ -58,7 +58,14 @@ export const PRIMARY_PATHS = new Set<string>([
   "/coliseum",
   // GSPC Quests — frozen six-axis leftover (v1 governance 24-item, not living n=237).
   // Playable in-browser grader. NOT the living 22-axis board.
-  "/gspc-quests.html",
+    "/gspc-quests.html",
+  // Compliance Training World — static industry quests (Art 50(2) + five packs).
+  // Training attestation only — never a conformity mark.
+  "/compliance-training-world/catalog.html",
+  // ClaimGuard honesty gate (static HTML via _redirects rewrite).
+  "/claimguard",
+  // Regulator findings — signed EU AI Act obligation grades from the board.
+  "/regulator-findings",
   // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
   // rail cannot also be an archive page: the OS presents it as live, and the embed hides
   // the "Reference / archive" strip, so the reader was shown a current surface while the
