@@ -2,6 +2,8 @@
 
 **Do not send.** Owner (director of CSOAI Ltd) signs the DOCX and mails it. TUI 4 does not send as Council.
 
+Public one-pager (must be true before mail): `/transparency-cop`
+
 Official:
 - How to sign: https://digital-strategy.ec.europa.eu/en/library/how-sign-code-practice-transparency-ai-generated-content
 - FAQ: https://digital-strategy.ec.europa.eu/en/faqs/signing-code-practice-transparency-ai-generated-content

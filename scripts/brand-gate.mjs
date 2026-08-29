@@ -93,6 +93,12 @@ const RULES = [
     why: "Internal strategy / codename was never for the public surface.",
   },
   {
+    id: "gpai_code_signature",
+    pattern: /signed the GPAI Code|GPAI Code of Practice signator|we (?:have )?signed (?:the )?GPAI Code/i,
+    nearAllow: /do not sign|not a signator|we do not sign|not sign the GPAI/i,
+    why: "We are not a GPAI Code signatory. Transparency CoP (detection/marking tool) only, if signed. C2PA remains planned until CR-012 is live.",
+  },
+  {
     id: "infra_leak",
     // Any localhost:<port>, not just 4400: prerender binds an OS-assigned port unless --port
     // is passed, so a missed canonical rewrite can now bake ANY port into the shipped HTML.
