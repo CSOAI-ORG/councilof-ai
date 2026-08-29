@@ -321,6 +321,7 @@ const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
+const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
@@ -355,7 +356,9 @@ function ScrollToTop() {
 
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
-  "/products": "The product family — one signed rail | Council of AI",
+  "/products": "Council OS — four SKUs, one workspace | Council of AI",
+  "/badge": "White-label badge — Council of AI",
+  "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
   "/council-model-card": "Council model card | Council of AI",
   "/council-system-card": "Council system card | Council of AI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
@@ -706,6 +709,9 @@ function App() {
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/embed" component={EmbedPage} />
                   <Route path="/white-label" component={EmbedPage} />
+                  <Route path="/badge" component={BadgeKit} />
+                  <Route path="/badges">{() => <Redirect to="/badge" />}</Route>
+                  <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />

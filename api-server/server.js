@@ -15,6 +15,7 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import crypto from "node:crypto";
+import net from "node:net";
 import a2a from "./a2a.js"; // Layer 0 + A2A gateway (/api/gate, /api/a2a/*)
 import assess from "./assess.js"; // EU AI Act signed assessment (/api/assess)
 import payments from "./payments.js";
@@ -58,8 +59,37 @@ const webhooks = new Map();    // id -> { id, url, events, active, secret }
 const now = () => Date.now();
 setInterval(() => { for (const [s, exp] of oauthState) if (exp < now()) oauthState.delete(s); }, 60_000).unref?.();
 
-// ---------------------------------------------------------------- health
-app.get("/api/health", (_req, res) => res.json({ ok: true, service: "csoai-api", ts: new Date().toISOString() }));
+function pingTcp(urlLike) {
+  return new Promise((resolve) => {
+    try {
+      const u = new URL(urlLike);
+      const port = Number(u.port) || (u.protocol.startsWith("postgres") ? 5432 : u.protocol.startsWith("redis") ? 6379 : 0);
+      if (!u.hostname || !port) return resolve({ ok: false, error: "bad url" });
+      const s = net.connect({ host: u.hostname, port, timeout: 800 }, () => {
+        s.end();
+        resolve({ ok: true });
+      });
+      s.on("error", (e) => resolve({ ok: false, error: e.message }));
+      s.on("timeout", () => {
+        s.destroy();
+        resolve({ ok: false, error: "timeout" });
+      });
+    } catch (e) {
+      resolve({ ok: false, error: String(e && e.message ? e.message : e) });
+    }
+  });
+}
+
+// ---------------------------------------------------------------- health (liveness)
+// Tokens/webhooks are in-memory Maps. Postgres/Redis are composed beside us
+// but this process does not open them yet — their own healthchecks cover them.
+// A down store is reported; it does not take the API out of rotation.
+app.get("/api/health", async (_req, res) => {
+  const out = { ok: true, service: "csoai-api", storage: "memory", ts: new Date().toISOString() };
+  if (process.env.DATABASE_URL) out.postgres = await pingTcp(process.env.DATABASE_URL);
+  if (process.env.REDIS_URL) out.redis = await pingTcp(process.env.REDIS_URL);
+  res.status(200).json(out);
+});
 
 // ---------------------------------------------------------------- GitHub OAuth
 app.get("/api/oauth/github/start", (req, res) => {

@@ -257,20 +257,20 @@ export default function MembershipAgreement() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <FileText className="h-5 w-5 text-primary" />
-                  5. Licensing & Certification
+                  5. Measurement credentials
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div>
                   <h4 className="font-semibold mb-3">5.1 License Grant</h4>
                   <p className="text-muted-foreground mb-3">
-                    Upon successful compliance assessment, CSOAI grants Member a non-exclusive, non-transferable license to:
+                    Membership does not certify anything. A member may:
                   </p>
                   <ul className="space-y-2">
                     {[
-                      "Display CSOAI certification marks",
-                      "Reference CSOAI compliance status",
-                      "Access CSOAI member resources"
+                      "Link to signed measurement cards they hold",
+                      "Cite Council of AI as an independent measurement body",
+                      "Access member resources and the public verify rail"
                     ].map((item, index) => (
                       <li key={index} className="flex items-start gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
@@ -293,8 +293,8 @@ export default function MembershipAgreement() {
                     5.3 License Revocation
                   </h4>
                   <p className="text-sm text-muted-foreground">
-                    CSOAI may revoke license for: material non-compliance, safety incidents with inadequate response,
-                    non-payment (after 60-day cure period), or misuse of CSOAI certification marks.
+                    CSOAI may revoke membership for: material misrepresentation of a measurement as a
+                    certification, safety incidents with inadequate response, or non-payment after a 60-day cure.
                   </p>
                 </div>
               </CardContent>

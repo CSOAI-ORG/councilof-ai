@@ -52,6 +52,7 @@ export default function PlansPage() {
         <div className="relative mt-6 flex flex-wrap justify-center gap-3">
           <a href="/os?lobby=assess&task=get-measured" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured →</a>
           <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Verify a card →</a>
+          <a href="/products" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Four SKUs →</a>
         </div>
       </section>
 
@@ -123,6 +124,12 @@ export default function PlansPage() {
         <p className="mt-6 text-center text-xs text-emerald-300/75">
           Not a certification body (cards are verified measurement credentials, not certificates), not an
           observability platform. You own your data. The rail is free; verification is free forever.
+        </p>
+        <p className="mt-4 text-center text-sm text-emerald-100/70">
+          Need a feed or a corpus? That is Council Ledger and Council Data — on enquiry, never a grade.{" "}
+          <a href="/licensing-agreement" className="text-emerald-300 hover:underline">Standing terms</a>
+          {" · "}
+          <a href="/products" className="text-emerald-300 hover:underline">four SKUs</a>.
         </p>
       </section>
     </div>

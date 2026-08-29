@@ -22,6 +22,8 @@ export default function EunomiaCatalog() {
     { name: "GET /api/registers", href: "/api/registers", desc: "The signed financial-axis register (live DB)" },
   ];
   const hf = [
+    { name: "living-catalog", href: "https://huggingface.co/spaces/csoai/living-catalog", desc: "Directory of record — every dataset, Space, API, RAG pointer" },
+    { name: "living-catalog (data)", href: "https://huggingface.co/datasets/csoai/living-catalog", desc: "The jsonl the Space reads. Hub is the database." },
     { name: "gspc-board", href: "https://huggingface.co/datasets/csoai/gspc-board", desc: "Dataset · board rows" },
     { name: "gspc-bench-results", href: "https://huggingface.co/datasets/csoai/gspc-bench-results", desc: "Dataset · bench results" },
     { name: "gspc-governance-leaderboard", href: "https://huggingface.co/spaces/csoai/gspc-governance-leaderboard", desc: "Space · leaderboard" },
