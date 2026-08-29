@@ -65,9 +65,9 @@ const OUTCOMES: {
     icon: Shield,
   },
   {
-    title: "Training arenas",
-    desc: "Six arenas serving frozen items, marked by the same published key. You vs the AI, scored.",
-    href: "/arena",
+    title: "Compliance Training World",
+    desc: "Industry quests graded in-browser — Art 50(2), bank, insurance, equity, bond, cross-border. Training attests completion, never certification.",
+    href: "/compliance-training-world/catalog.html",
     image: "/images/literacy_training_arena.jpg",
     icon: Monitor,
   },
