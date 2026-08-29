@@ -1,1 +1,1 @@
-PLACEHOLDER_WILL_REPLACE
+__FILE__/workspace/FIX_GS.json
