@@ -27,14 +27,14 @@ const SLIDES: Slide[] = [
     kicker: "THE INSTRUMENTS",
     headline: ["Measured,", "not modelled."],
     sub: "417 statutory provisions · 237 scored GovBench items · every verdict a predicate an auditor can recompute.",
-    cta: { label: "See the instruments", href: "/govbench", primary: true },
+    cta: { label: "See the board", href: "/gspc-scoreboard", primary: true },
     scene: "cells",
   },
   {
     kicker: "THE COUNCIL OS",
     headline: ["Every seat signed.", "Every vote an artefact."],
     sub: "A council architecture where every seat is signed and every vote is an artefact — shown, not claimed.",
-    cta: { label: "See the council board", href: "/arena", primary: true },
+    cta: { label: "Open Council OS", href: "/os", primary: true },
     scene: "council",
   },
   {

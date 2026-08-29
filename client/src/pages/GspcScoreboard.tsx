@@ -316,6 +316,11 @@ export default function GspcScoreboard() {
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(DATASET_LD) }} />
       <div className="mx-auto max-w-5xl px-6 py-14">
+        <img
+          src="/images/detail/board_arena_detail.jpg"
+          alt="Measured systems facing each other across the GSPC board"
+          className="mb-8 h-48 w-full rounded-2xl object-cover sm:h-64"
+        />
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
           Live from GET /api/gspc — recompute anything, free
         </p>
