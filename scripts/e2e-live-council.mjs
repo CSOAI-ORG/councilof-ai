@@ -189,19 +189,10 @@ try {
   } else {
     pass("homepage is prerendered", `${home.length} bytes`);
   }
-  const lobbyAsset = (home.match(/assets\/CouncilLobby[^"'\s]+/) || [])[0];
-  if (!lobbyAsset) {
-    fail("homepage references CouncilLobby chunk");
+  if (!/data-testid="os-shell"|os-chat|Article 50 is in force/i.test(home)) {
+    fail("homepage is Council OS (os-shell)");
   } else {
-    pass("homepage references CouncilLobby", lobbyAsset);
-    const { text: lobbyJs } = await fetchText("/" + lobbyAsset);
-    if (/lazy\(\(\)=>\w+\(\(\)=>import\("\.\/LobbyOverlay/.test(lobbyJs) || lobbyJs.includes("import(\"./LobbyOverlay")) {
-      fail("CouncilLobby must not lazy-import LobbyOverlay", "second chunk can 404 mid-deploy and white-screen the site");
-    } else if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
-      pass("CouncilLobby ships overlay in-module");
-    } else {
-      fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
-    }
+    pass("homepage is Council OS", "os-shell");
   }
 } catch (e) {
   fail("lobby chunk check", String(e).slice(0, 120));
