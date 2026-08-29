@@ -15,31 +15,31 @@ import { useBoardCount } from "@/lib/boardCount";
 export const SKUS = [
   {
     id: "verify",
-    name: "Council Verify",
+    name: "Verify",
     href: "/gspc-verify",
     tag: "Free forever",
     what: "Paste a signed card. Your browser recomputes the hash and checks the Ed25519 signature. Nothing is sent to us. No account.",
   },
   {
-    id: "os",
-    name: "Council OS",
-    href: "/os?lobby=home",
-    tag: "The workspace",
-    what: "One window: board, verifier, assess, evidence. This is the product a stranger opens. Paid only when a feed, a corpus, or a re-attest loop is required.",
+    id: "run",
+    name: "Run / re-attest",
+    href: "/assess",
+    tag: "Enquiry",
+    what: "We measure the named system again when the law or the model moves. Get measured is the lead. Paid is the re-attest loop.",
   },
   {
     id: "ledger",
-    name: "Council Ledger",
-    href: "/licensing-agreement",
-    tag: "Paid · on enquiry",
-    what: "Signed evidence feed and evidence packs for insurers, procurement, and deployers. A measurement of a named system — never a purchased public rank.",
+    name: "Ledger",
+    href: "/contact?arm=ledger",
+    tag: "Enquiry",
+    what: "Signed evidence feed and packs for insurers and procurement. Never a purchased public rank.",
   },
   {
     id: "data",
-    name: "Council Data",
-    href: "/licensing-agreement",
-    tag: "Paid · on enquiry",
-    what: "Licensed signed corpus: traces, preference pairs, safety incidents. A vendor may buy data. A vendor can never buy a score.",
+    name: "Data",
+    href: "/contact?arm=data",
+    tag: "Enquiry",
+    what: "Licensed corpus: traces, preference pairs, safety incidents. A vendor may buy data. A vendor can never buy a score.",
   },
 ] as const;
 
@@ -126,10 +126,10 @@ export default function Products() {
     <div className="min-h-screen bg-[#03110b]">
     <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
       <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
-        Council of AI — four SKUs, one workspace
+        Council of AI — verify free, three arms on enquiry
       </p>
       <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
-        Council OS is the product. Everything else is a pane or a licence.
+        Verify is free. Three things invoice.
       </h1>
       <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
         We measure AI systems against frozen, published tests, sign the result, and
@@ -266,22 +266,16 @@ export default function Products() {
 
       <div className="mt-12 flex flex-wrap gap-3">
         <Link
-          href="/os"
+          href="/gspc-verify"
           className="rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-emerald-950 transition hover:bg-emerald-400"
         >
-          Open Council OS
-        </Link>
-        <Link
-          href="/licensing-agreement"
-          className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold text-slate-100 transition hover:border-emerald-400/50"
-        >
-          Licence a feed or corpus
-        </Link>
-        <Link
-          href="/gspc-verify"
-          className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold text-slate-100 transition hover:border-emerald-400/50"
-        >
           Verify a card — free
+        </Link>
+        <Link
+          href="/contact?arm=ledger"
+          className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold text-slate-100 transition hover:border-emerald-400/50"
+        >
+          Enquire for Ledger or Data
         </Link>
       </div>
     </main>

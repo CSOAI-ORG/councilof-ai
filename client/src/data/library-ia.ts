@@ -164,7 +164,7 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/about-credential": { path: "/academy", label: "Council Academy" },
   "/credential-training": { path: "/academy", label: "Council Academy" },
   "/certification": { path: "/academy", label: "Council Academy" },
-  "/certificate-verification": { path: "/gspc-verify", label: "Verify a card" },
+  "/certificate-verification": { path: "/academy", label: "Council Academy (training record, not GSPC)" },
   "/leaderboard": { path: "/gspc-arena", label: "the arena" },
   "/eu-ai-act-explained": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },

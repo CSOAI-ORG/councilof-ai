@@ -119,10 +119,10 @@ export default function GSPCVerify() {
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
           <section>
-            <h2 className="text-2xl font-bold text-emerald-50">Living attestation — from GET /api/gspc</h2>
+            <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
             <p className="mt-1 text-[13px] text-emerald-100/60">
-              Ed25519 signature, SHA-256 hash, and XRPL status fetched at render time. No hardcoded
-              scores. Empty fields show exactly why they are empty.
+              This is the published board stamp. It is not a stamp on a card you just pasted.
+              Empty fields show exactly why they are empty.
             </p>
             <div className="mt-4">
               <BoardAttestation

@@ -26,7 +26,12 @@ describe("homepage is chat + GSPC list", () => {
     expect(src).toContain('id="os-chat"');
     expect(src).toContain("GSPC leaderboard");
     expect(src).toContain("https://councilof.ai/mcp");
+    expect(src).toContain("Claude");
+    expect(src).toContain("Cursor");
+    expect(src).toContain("Kimi");
+    expect(src).toContain("Grok");
     expect(src).toContain("/tools");
+    expect(src).toContain("Empty means not measured");
     expect(src).toContain("Run / re-attest");
     expect(src).toContain("Ledger");
     expect(src).toContain("Not a ranking for sale");
@@ -57,6 +62,7 @@ describe("header is five words", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Tools"');
     expect(header).not.toContain("Chat is Council OS");
+    expect(header).not.toContain("Start free");
   });
 });
 

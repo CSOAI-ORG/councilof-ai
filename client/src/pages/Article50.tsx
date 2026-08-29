@@ -77,7 +77,7 @@ const FAQ = [
 export default function Article50() {
   useEffect(() => { document.title = "EU AI Act Article 50 — transparency obligations, in force from 2 Aug 2026 | CSOAI"; }, []);
   const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
-  const aug = days("2026-08-02"), dec = days("2026-12-02"), aug27 = days("2027-08-02");
+  const aug = days("2026-08-02"), dec = days("2026-12-02"), annex = days("2027-12-02");
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
@@ -89,7 +89,7 @@ export default function Article50() {
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4"><div className="text-3xl font-black text-amber-200">{aug}</div><div className="text-sm text-amber-100/80">days → obligation + enforcement live (2 Aug 2026)</div></div>
           <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4"><div className="text-3xl font-black text-amber-200">{dec}</div><div className="text-sm text-amber-100/80">days → marking grace period ends (2 Dec 2026)</div></div>
-          <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4"><div className="text-3xl font-black text-emerald-200">{aug27}</div><div className="text-sm text-emerald-100/80">days → legacy GPAI full compliance (2 Aug 2027)</div></div>
+          <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4"><div className="text-3xl font-black text-emerald-200">{annex}</div><div className="text-sm text-emerald-100/80">days → Annex III high-risk (2 Dec 2027)</div></div>
         </div>
 
         {/* 3D portal — the measurement lens over the region where Article 50 binds */}

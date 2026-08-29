@@ -472,9 +472,9 @@ export function Header() {
                     Sign In
                   </Button>
                 </Link>
-                <Link href="/start">
+                <Link href="/assess">
                   <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">
-                    Start free
+                    Get measured
                   </Button>
                 </Link>
               </>
@@ -596,9 +596,9 @@ export function Header() {
                         Sign In
                       </Button>
                     </a>
-                    <a href="/start" className="block">
+                    <a href="/assess" className="block">
                       <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
-                        Start free
+                        Get measured
                       </Button>
                     </a>
                   </>
