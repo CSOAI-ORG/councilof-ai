@@ -24,10 +24,57 @@ import argparse, base64, hashlib, json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
 from jcs import canonicalize as jcs  # noqa: E402
 
+DOCTRINE = (
+    "MEASUREMENT, not certification. 'measured with Inspect AI' is the "
+    "claim; 'Inspect-certified' would be a violation. config_digest + "
+    "rows_digest make the run reproducible and stranger-checkable."
+)
+
+
 def content_id(body_obj):
     """Card id = sha256(JCS-canonical(body)) — matches verify-card.mjs canonicalJcs(card.body).
     NOT plain json.dumps: JCS emits integral floats as integers and leaves non-ASCII literal."""
     return hashlib.sha256(jcs(body_obj).encode()).hexdigest()
+
+
+def config_digest(cfg):
+    """sha256 of the run config under sorted-key JSON. Binds instrument parameters, not scores."""
+    return hashlib.sha256(
+        json.dumps(cfg, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    ).hexdigest()
+
+
+def emit_card(*, cfg, rows_digest, instrument, instrument_version, axis, n, accuracy, sk):
+    """Sign a MEASUREMENT card with a caller-supplied Ed25519 key (throwaway keys in tests).
+
+    Never an estate signature unless the caller passes the estate key. The card is a
+    measurement credential, not a certificate.
+    """
+    from cryptography.hazmat.primitives import serialization
+
+    body = {
+        "axis": axis,
+        "n": n,
+        "accuracy": accuracy,
+        "instrument": {"name": instrument, "version": instrument_version},
+        "config_digest": config_digest(cfg),
+        "rows_digest": rows_digest,
+    }
+    pub = sk.public_key().public_bytes(
+        serialization.Encoding.Raw, serialization.PublicFormat.Raw
+    )
+    card = {
+        "alg": "Ed25519",
+        "preimage_rule": "jcs-rfc8785",
+        "kind": "measurement",
+        "body": body,
+        "doctrine": DOCTRINE,
+        "id": content_id(body),
+        "pubkey": pub.hex(),
+        "signature": sk.sign(jcs(body).encode()).hex(),
+    }
+    return card
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -42,44 +89,26 @@ def main():
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
 
-    cfg = json.load(open(a.config))
-    cfg_digest = hashlib.sha256(json.dumps(cfg, sort_keys=True, separators=(",", ":"),
-                                           ensure_ascii=False).encode()).hexdigest()
-
-    card = {
-        "alg": "Ed25519",
-        "preimage_rule": "jcs-rfc8785",
-        "kind": "measurement",
-        "body": {
-            "axis": a.axis,
-            "n": a.n,
-            "accuracy": a.accuracy,
-            "instrument": {"name": a.instrument, "version": a.instrument_version},
-            "config_digest": cfg_digest,
-            "rows_digest": a.rows_digest,
-        },
-        "doctrine": ("MEASUREMENT, not certification. 'measured with Inspect AI' is the "
-                     "claim; 'Inspect-certified' would be a violation. config_digest + "
-                     "rows_digest make the run reproducible and stranger-checkable."),
-    }
     from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
-    from cryptography.hazmat.primitives import serialization
+
+    cfg = json.load(open(a.config))
     sk = Ed25519PrivateKey.from_private_bytes(open(a.key, "rb").read())
-    pub = sk.public_key().public_bytes(serialization.Encoding.Raw,
-                                       serialization.PublicFormat.Raw)
-    cid = content_id(card["body"])
-    card["id"] = cid
-    card["pubkey"] = pub.hex()
-    # Sign over the JCS-canonical BODY bytes — exactly what verify-card.mjs checks:
-    # preimage = canonicalJcs(card.body); crypto.subtle.verify(Ed25519, key, sig, preimage).
-    # A signature over the digest-hex would NOT verify (the distributed verifier signs the
-    # body preimage). card.signature is the RAW Ed25519 bytes as hex (verifier unhexes it).
-    preimage = jcs(card["body"]).encode()
-    card["signature"] = sk.sign(preimage).hex()
+    card = emit_card(
+        cfg=cfg,
+        rows_digest=a.rows_digest,
+        instrument=a.instrument,
+        instrument_version=a.instrument_version,
+        axis=a.axis,
+        n=a.n,
+        accuracy=a.accuracy,
+        sk=sk,
+    )
     json.dump(card, open(a.out, "w"), indent=1, ensure_ascii=False)
-    print(f"MEASUREMENT card {a.out} id={cid[:16]} instrument={a.instrument}@{a.instrument_version} "
-          f"axis={a.axis} n={a.n} acc={a.accuracy}")
-    print(f"config_digest={cfg_digest[:16]}")
+    print(
+        f"MEASUREMENT card {a.out} id={card['id'][:16]} instrument={a.instrument}@{a.instrument_version} "
+        f"axis={a.axis} n={a.n} acc={a.accuracy}"
+    )
+    print(f"config_digest={card['body']['config_digest'][:16]}")
 
 if __name__ == "__main__":
     main()
