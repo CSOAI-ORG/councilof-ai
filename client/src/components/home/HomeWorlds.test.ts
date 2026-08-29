@@ -22,12 +22,13 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
     expect(src).toContain("UNCHECKABLE");
   });
 
-  it("does not sell XRPL, leftover /arena, or MCP fleet as hero outcomes", () => {
+  it("does not sell XRPL, leftover /arena, MCP fleet, or OTEL as hero outcomes", () => {
     expect(src).not.toContain("/xrpl-attest");
     expect(src).not.toContain("/mcp-fleet");
     expect(src).not.toContain('href="/arena"');
     expect(src).not.toContain("/gspc-arena");
     expect(src).not.toMatch(/href="\/os"/);
+    expect(src).not.toMatch(/OpenTelemetry|otel/i);
   });
 
   it("uses shipped posters; videos are optional", () => {

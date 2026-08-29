@@ -164,9 +164,9 @@ export default function GSPCVerify() {
               <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — read it out of that
               document yourself and compare it to the <code>pubkey</code> on any card.{" "}
               {ANCHORING_CLAIM}{" "}
-              <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
-              not yet shipped</strong> — the label will name it in the commit it ships, as with
-              ML-DSA-65. The post-quantum ML-DSA-65 (FIPS-204) signer is likewise{" "}
+              <strong className="text-emerald-50">tsa.status: err</strong> — no OpenTimestamps
+              proof is published on a <code>content_id</code>. The post-quantum ML-DSA-65
+              (FIPS-204) signer is likewise{" "}
               <strong className="text-emerald-50">built, not shipped</strong>; the label will name
               it in the same commit it ships — never ahead of it.
             </li>

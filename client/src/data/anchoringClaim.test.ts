@@ -9,3 +9,9 @@ describe("anchoring claim — ledger is a pointer, not a grade", () => {
     expect(XRPL_STATUS_LABEL).toBe("devnet pointer — not a grade");
   });
 });
+
+describe("OTS is err, not a shipped product", () => {
+  it("does not call OpenTimestamps live", () => {
+    expect(ANCHORING_CLAIM).not.toMatch(/OpenTimestamps anchoring is on the roadmap/i);
+  });
+});

@@ -77,10 +77,44 @@ export default function XrplAttest() {
               <p className="mt-2">{rec.honesty}</p>
             </div>
 
+            <div className="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+              <table className="w-full text-sm">
+                <caption className="sr-only">The two published XRPL hashes</caption>
+                <thead>
+                  <tr className="border-b bg-slate-50 text-left text-slate-700">
+                    <th className="p-3">Kind</th>
+                    <th className="p-3">Network</th>
+                    <th className="p-3">Transaction</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="p-3 font-semibold">Payment memo</td>
+                    <td className="p-3 font-mono text-xs">{rec.network}</td>
+                    <td className="p-3">
+                      <a className="break-all font-mono text-xs text-emerald-700 underline" href={rec.explorer[0]}>
+                        {rec.memo_attach_tx}
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="p-3 font-semibold">XLS-70 CredentialCreate</td>
+                    <td className="p-3 font-mono text-xs">{rec.network}</td>
+                    <td className="p-3">
+                      <a className="break-all font-mono text-xs text-emerald-700 underline" href={rec.explorer[1]}>
+                        {rec.credential_attach_tx}
+                      </a>
+                      <p className="mt-1 text-xs text-slate-500">Not a GSPC grade. No mainnet mint.</p>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-emerald-600/20 bg-white p-5 shadow-sm">
                 <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
-                  Attach 1 — transaction memo
+                  Attach 1 — Payment memo
                 </p>
                 <p className="mt-2 text-sm text-gray-600">
                   A 1-drop payment toward the subject account carrying the SHA-256 of a{" "}

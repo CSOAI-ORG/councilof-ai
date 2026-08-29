@@ -105,7 +105,9 @@ export default function Article50Pack() {
         <p className="text-zinc-500 text-sm mb-8">
           The measurement and its signature were produced on an independent compute node. This page
           re-checks the signature <em>in your browser</em> against the published public key — nothing
-          here depends on trusting CSOAI's server.
+          here depends on trusting CSOAI&apos;s server. This is the <strong>one C2PA durability
+          pack</strong> we publish — a measured finding, not an Art 50 certificate, and not a
+          watermark SKU. Extra watermark MCP forks are not products on this site.
         </p>
 
         {err && (
