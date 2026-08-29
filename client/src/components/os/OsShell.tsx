@@ -25,7 +25,6 @@ export default function OsShell({
   const [q, setQ] = useState("");
   const [strip, setStrip] = useState("Reading GET /api/gspc…");
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const showTabs = variant === "hero";
 
   useEffect(() => {
     let live = true;
@@ -71,27 +70,25 @@ export default function OsShell({
           We measure marking. We do not certify. Empty cells stay empty.
         </p>
 
-        {showTabs && (
-          <nav aria-label="Council OS sections" className="mt-4 flex flex-wrap gap-1">
-            {DOORS.map((d) => {
-              const active = door === d.id;
-              return (
-                <button
-                  key={d.id}
-                  type="button"
-                  onClick={() => onDoor(d.id)}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
-                    active
-                      ? "bg-emerald-100 text-emerald-900"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  {d.label}
-                </button>
-              );
-            })}
-          </nav>
-        )}
+        <nav aria-label="Council OS sections" className="mt-4 flex flex-wrap gap-1" data-testid="os-tabs">
+          {DOORS.map((d) => {
+            const active = door === d.id;
+            return (
+              <button
+                key={d.id}
+                type="button"
+                onClick={() => onDoor(d.id)}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
+                  active
+                    ? "bg-emerald-100 text-emerald-900"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`}
+              >
+                {d.label}
+              </button>
+            );
+          })}
+        </nav>
 
         <p className="mt-3 font-mono text-[12px] font-semibold text-emerald-800" data-testid="os-live-strip">
           {strip}

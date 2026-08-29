@@ -11,6 +11,8 @@ const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
+import OsLauncher from "./pages/OsLauncher";
+import OsHeader from "./components/os/OsHeader";
 import { Footer } from "./components/Footer";
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
@@ -265,8 +267,6 @@ const Webhooks = lazy(() => import("./pages/Webhooks"));
 const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCenter"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
-const OsLauncher = lazy(() => import("./pages/OsLauncher"));
-const OsHeader = lazy(() => import("./components/os/OsHeader"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const SovereignTour = lazy(() => import("./pages/SovereignTour"));
 const SovereignAcademy = lazy(() => import("./pages/SovereignAcademy"));
@@ -557,13 +557,9 @@ function App() {
                   <ScrollToTop />
                   <RouteTitle />
                   <RouteAnnouncer />
-                  <Suspense fallback={null}>
-                    <OsHeader />
-                  </Suspense>
+                  <OsHeader />
                   <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
-                    <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center"><SectionLoader /></div>}>
-                      <OsLauncher />
-                    </Suspense>
+                    <OsLauncher />
                   </main>
                 </div>
                 <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />
