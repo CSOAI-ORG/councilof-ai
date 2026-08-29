@@ -1,1 +1,1 @@
-@file:/tmp/tabs-for-mcp.ts
+PLACEHOLDER_LOAD_FROM_FILE
