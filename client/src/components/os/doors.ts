@@ -42,13 +42,18 @@ const TASK_TO_DOOR: Record<string, DoorId> = {
   "get-measured": "assess",
 };
 
-export function doorFromSearch(search: string): DoorId {
+export function doorFromSearch(search: string): DoorId | null {
   const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
   const lobby = params.get("lobby");
-  if (lobby && LOBBY_TO_DOOR[lobby]) return LOBBY_TO_DOOR[lobby];
+  if (!lobby || lobby === "home") {
+    const task = params.get("task");
+    if (task && TASK_TO_DOOR[task]) return TASK_TO_DOOR[task];
+    return null;
+  }
+  if (LOBBY_TO_DOOR[lobby]) return LOBBY_TO_DOOR[lobby];
   const task = params.get("task");
   if (task && TASK_TO_DOOR[task]) return TASK_TO_DOOR[task];
-  return "board";
+  return null;
 }
 
 /** /os?lobby=software is a hop off the host onto DSH — never an iframe of /dashboard. */

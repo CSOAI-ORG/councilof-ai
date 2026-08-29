@@ -15,11 +15,16 @@ describe("OsShell is the product on / and /os", () => {
     expect(OS_TOOLS).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
     expect(shell).toContain("OS_PROMPT");
     expect(shell).toContain("OS_EMPTY");
-    expect(OS_PROMPT).toBe("Paste a card, name an axis, or ask the board.");
+    expect(OS_PROMPT).toBe("Paste a signed card, or say what you use AI for.");
     expect(OS_EMPTY).toBe("Free verify. Paste never leaves this browser.");
     expect(shell).toContain('id="os-chat"');
     expect(shell).toContain('data-testid="os-tabs"');
+    expect(shell).toContain('data-testid="os-chips"');
+    expect(shell).toContain("I was sent a card");
+    expect(shell).toContain("I use AI at work");
+    expect(shell).toContain("Show the board");
     expect(shell).not.toContain("showTabs");
+    expect(shell).not.toMatch(/GET \/api\/gspc/);
     expect(header).toContain('getElementById("os-chat")');
     expect(header).toContain("Chat is Council OS");
   });
@@ -28,10 +33,11 @@ describe("OsShell is the product on / and /os", () => {
     expect(app).toMatch(/path === '\/' \|\| path === '\/os'/);
     expect(launcher).toContain("<OsShell");
     expect(launcher).toContain('variant="page"');
-    expect(shell).toMatch(/Article 50 is in force/);
-    expect(shell).toMatch(/We measure marking/);
-    expect(shell).toMatch(/We do not certify/);
+    expect(shell).toMatch(/Check an AI claim/);
+    expect(shell).toMatch(/We do not certify you/);
+    expect(shell).toMatch(/Marking rules are in force/);
     expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
+    expect(shell).toContain("{door ?");
   });
 
   it("glass only after VALID; paid sign stays gated", () => {

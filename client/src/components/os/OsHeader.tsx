@@ -63,8 +63,9 @@ export default function OsHeader() {
   const { user, logout } = useAuth();
 
   const params = new URLSearchParams(search);
-  const lobby = params.get("lobby") || "home";
-  const currentDoor = LOBBY_TO_DOOR[lobby] || "board";
+  const lobby = params.get("lobby");
+  const currentDoor =
+    lobby && lobby !== "home" ? LOBBY_TO_DOOR[lobby] ?? null : null;
   const panel = isEmbedded();
   const atHome = location === "/" || location === "";
 

@@ -4,12 +4,14 @@ import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVeri
 import type { DoorId } from "./doors";
 import {
   FOUR_TOOLS_HELP,
+  GET_MEASURED_REPLY,
   formatAxis,
   formatBoardTotals,
   formatCardList,
   looksLikeCardJson,
   namedAxis,
   wantsBoardTotals,
+  wantsGetMeasured,
   wantsListCards,
 } from "./osChat";
 
@@ -112,6 +114,16 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
         } finally {
           setBusy(false);
         }
+        return;
+      }
+
+      if (wantsGetMeasured(question)) {
+        onDoor("assess");
+        push({
+          role: "council",
+          text: GET_MEASURED_REPLY,
+          tool: "nav",
+        });
         return;
       }
 

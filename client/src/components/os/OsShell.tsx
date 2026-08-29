@@ -5,12 +5,18 @@ import OsDoorBody from "./OsDoors";
 import OsGlassCard from "./OsGlassCard";
 import OsSignGate from "./OsSignGate";
 import { DOORS, DOOR_TO_LOBBY, type DoorId } from "./doors";
-import { OS_EMPTY, OS_PROMPT } from "./osChat";
+import { liveCountLine, OS_EMPTY, OS_PROMPT } from "./osChat";
 import { useOsChat } from "./useOsChat";
+
+const CHIPS: { id: string; label: string; door: DoorId; think: string }[] = [
+  { id: "card", label: "I was sent a card", door: "verify", think: "Is this real?" },
+  { id: "work", label: "I use AI at work", door: "assess", think: "What applies to me?" },
+  { id: "board", label: "Show the board", door: "board", think: "What’s actually measured?" },
+];
 
 /**
  * Council OS product shell — chat as front door, five tabs, four tools.
- * Same component on /os and as the homepage hero. No second UI. No iframe of /.
+ * First paint is for a stranger: three chips, one box, no 22-cell wall.
  */
 export default function OsShell({
   variant,
@@ -18,12 +24,12 @@ export default function OsShell({
   onDoor,
 }: {
   variant: "page" | "hero";
-  door: DoorId;
+  door: DoorId | null;
   onDoor: (id: DoorId) => void;
 }) {
   const chat = useOsChat(onDoor);
   const [q, setQ] = useState("");
-  const [strip, setStrip] = useState("Reading GET /api/gspc…");
+  const [strip, setStrip] = useState("Reading the board…");
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -32,11 +38,10 @@ export default function OsShell({
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
       .then((j) => {
         if (!live) return;
-        const t = j?.totals ?? {};
-        setStrip(t.public_count || t.count_grammar || "live GET /api/gspc");
+        setStrip(liveCountLine(j?.totals ?? {}));
       })
       .catch(() => {
-        if (live) setStrip("board unreachable — GET /api/gspc");
+        if (live) setStrip("Board is unreachable right now. Empty stays empty.");
       });
     return () => {
       live = false;
@@ -48,6 +53,13 @@ export default function OsShell({
     if (!text || chat.busy) return;
     setQ("");
     void chat.send(text);
+  }
+
+  function pickChip(c: (typeof CHIPS)[number]) {
+    onDoor(c.door);
+    if (c.door === "verify") {
+      inputRef.current?.focus();
+    }
   }
 
   return (
@@ -62,12 +74,11 @@ export default function OsShell({
       aria-labelledby="os-h1"
     >
       <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-4 py-5 sm:px-6">
-        <h1 id="os-h1" className="text-2xl font-black tracking-tight text-slate-900">
-          Council OS
+        <h1 id="os-h1" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+          Check an AI claim. Or measure your system.
         </h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Article 50 is in force (EUR-Lex, 2 August 2026; some marking duties 2 December 2026).
-          We measure marking. We do not certify. Empty cells stay empty.
+        <p className="mt-2 text-sm text-slate-600 sm:text-base">
+          Empty cells stay empty. Not a certificate. Free, no account.
         </p>
 
         <nav aria-label="Council OS sections" className="mt-4 flex flex-wrap gap-1" data-testid="os-tabs">
@@ -90,10 +101,24 @@ export default function OsShell({
           })}
         </nav>
 
-        <p className="mt-3 font-mono text-[12px] font-semibold text-emerald-800" data-testid="os-live-strip">
-          {strip}
-        </p>
-        <p className="text-[11px] text-slate-500">live from GET /api/gspc · task read-the-board</p>
+        <div className="mt-4 flex flex-wrap gap-2" data-testid="os-chips">
+          {CHIPS.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              title={c.think}
+              data-testid={`os-chip-${c.id}`}
+              onClick={() => pickChip(c)}
+              className={`rounded-full border px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
+                door === c.door
+                  ? "border-emerald-700 bg-emerald-50 text-emerald-900"
+                  : "border-slate-300 bg-white text-slate-800 hover:border-emerald-600 hover:bg-emerald-50"
+              }`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
 
         <div className="mt-4">
           <label htmlFor="os-chat" className="sr-only">
@@ -104,7 +129,7 @@ export default function OsShell({
               id="os-chat"
               ref={inputRef}
               value={q}
-              rows={1}
+              rows={2}
               onChange={(e) => setQ(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -130,6 +155,13 @@ export default function OsShell({
             </p>
           )}
         </div>
+
+        <p className="mt-3 text-[13px] font-semibold text-emerald-800" data-testid="os-live-strip">
+          {strip}
+        </p>
+        <p className="mt-1 text-[12px] text-slate-600" data-testid="os-art50">
+          Marking rules are in force. We measure them. We do not certify you.
+        </p>
 
         {chat.turns.length > 0 && (
           <div
@@ -163,9 +195,11 @@ export default function OsShell({
           <OsSignGate />
         </div>
 
-        <div className="mt-5 min-h-0 flex-1 overflow-y-auto pb-8">
-          <OsDoorBody door={door} />
-        </div>
+        {door ? (
+          <div className="mt-5 min-h-0 flex-1 overflow-y-auto pb-8" data-testid="os-door-body">
+            <OsDoorBody door={door} />
+          </div>
+        ) : null}
       </div>
     </section>
   );

@@ -14,8 +14,8 @@ describe("OsLauncher doors", () => {
     expect(doorFromSearch("lobby=verify")).toBe("verify");
     expect(doorFromSearch("lobby=cards")).toBe("cards");
     expect(doorFromSearch("lobby=harness")).toBe("harness");
-    expect(doorFromSearch("lobby=home")).toBe("board");
-    expect(doorFromSearch("")).toBe("board");
+    expect(doorFromSearch("lobby=home")).toBeNull();
+    expect(doorFromSearch("")).toBeNull();
   });
 
   it("maps space/assess deep-links onto header doors", () => {

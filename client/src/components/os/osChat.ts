@@ -6,7 +6,7 @@
 export const OS_TOOLS = ["board_totals", "get_axis", "verify_card", "list_cards"] as const;
 export type OsTool = (typeof OS_TOOLS)[number];
 
-export const OS_PROMPT = "Paste a card, name an axis, or ask the board.";
+export const OS_PROMPT = "Paste a signed card, or say what you use AI for.";
 export const OS_EMPTY = "Free verify. Paste never leaves this browser.";
 
 const CANON_AXES = [
@@ -56,9 +56,40 @@ const AXIS_ALIASES: Record<string, string> = {
 };
 
 export function wantsBoardTotals(question: string): boolean {
-  return /\b(walk me through the live (gspc )?board|read[- ]the[- ]board|board totals|ask the board|how many axis|which axis carry a measured|(show|open) (me )?the (live )?board)\b/i.test(
+  return /\b(walk me through the live (gspc )?board|read[- ]the[- ]board|board totals|ask the board|how many axis|which axis carry a measured|(show|open) (me )?the (live )?board|show the board)\b/i.test(
     question,
   );
+}
+
+/** Shop / workplace / vendor-PDF strangers — Get measured, not a four-tools dump. */
+export function wantsGetMeasured(question: string): boolean {
+  const t = question.trim();
+  if (!t || looksLikeCardJson(t) || wantsBoardTotals(t) || wantsListCards(t)) return false;
+  return (
+    /\bi use ai at work\b/i.test(t) ||
+    /\bget measured\b/i.test(t) ||
+    /\bi (run|own|have|operate) a (shop|store|business|clinic|firm)\b/i.test(t) ||
+    /\b(chatgpt|copilot|gemini|claude)\b/i.test(t) ||
+    /\b(vendor pdf|what applies to me|deadline)\b/i.test(t) ||
+    /\bwe use (an )?ai\b/i.test(t)
+  );
+}
+
+/** Live count line for first paint. Never a typed 15/22. Never “GET /api/gspc”. */
+export function liveCountLine(totals: any): string {
+  const slots = totals?.axes ?? totals?.slots;
+  const measured = totals?.measured_axes ?? totals?.measured;
+  const empty = totals?.unmeasured_axes ?? totals?.unmeasured;
+  if (
+    typeof slots === "number" &&
+    typeof measured === "number" &&
+    typeof empty === "number"
+  ) {
+    return `${slots} slots · ${measured} measured · ${empty} empty`;
+  }
+  const g = totals?.public_count || totals?.count_grammar;
+  if (typeof g === "string" && g.trim() && !/GET\s+\//i.test(g)) return g.trim();
+  return "Board loading…";
 }
 
 export function wantsListCards(question: string): boolean {
@@ -100,9 +131,8 @@ export function formatBoardTotals(j: any): string {
       ? `${unmeasured} UNMEASURED`
       : "UNMEASURED slots stay empty";
   return (
-    `Live board from GET /api/gspc — ${grammar}. ${empty}.\n` +
-    `SEPARATED leads: ${t.separated_leads ?? "—"}. TIE: ${t.ties ?? "—"}. ` +
-    `Empty cells stay empty. This is measurement, not a ranking. Four tools only: ${OS_TOOLS.join(" · ")}.`
+    `Live: ${grammar}. ${empty}. Empty cells stay empty. ` +
+    `This is measurement, not a ranking and not a certificate.`
   );
 }
 
@@ -145,6 +175,11 @@ export function formatCardList(j: any): string {
 }
 
 export const FOUR_TOOLS_HELP =
-  `Four tools only: board_totals, get_axis, verify_card, list_cards. ` +
-  `Paste a card (stays in this browser), name an axis, ask the board, or list cards. ` +
-  `We measure; we do not certify.`;
+  `Paste a signed card to check it here — nothing is sent. ` +
+  `Or say what you use AI for (a shop, a workplace, a vendor PDF) and we will open Get measured. ` +
+  `Or ask to see the board. Empty means we have not measured it. We do not guess. We do not certify.`;
+
+export const GET_MEASURED_REPLY =
+  `Get measured is free. You keep the card. ` +
+  `Empty means we have not measured that system — we do not guess. ` +
+  `This is not a certificate.`;
