@@ -1,20 +1,11 @@
 /**
  * NewHome-v3 — councilof.ai Homepage (OWNER STACK 2026-08-28)
  *
- * Structure: Council OS hero (arena image) + HeroSlides + products + outcomes
- * + living board as printer + slim USP.
- *
- * Owner hypothesis: strangers land on OS door, not the board table. Products and
- * outcomes are visible, the board is a fluid printer, not the hero.
- *
- * LIVE LOCK: GET /api/gspc is 22 axis · 15 MEASURED · 7 UNMEASURED.
- * Never "22 measured". Empty stays empty. Never certify. Never invent scores.
- *
- * NOTE: Council OS is a DOOR (arena image + CTAs), not a live embed.
- * Embedding the full LobbyOverlay would conflict with the standalone /os route.
- * The arena image serves as the visual preview; click opens the real OS.
+ * First paint is the instrument: H1 Council of AI, live totals from GET /api/gspc,
+ * filled vs hollow cells from the payload, Verify first. OS is tertiary. Empty stays empty.
  */
 import ToolStack from "../components/home/ToolStack";
+import HeroBoard from "../components/home/HeroBoard";
 import LiveLeaderboard from "../components/board/LiveLeaderboard";
 import HeroSlides from "../components/HeroSlides";
 import {
@@ -81,64 +72,6 @@ const OUTCOMES: {
     icon: Monitor,
   },
 ];
-
-// ── Hero: Council OS door ───────────────────
-function HeroCouncilOS() {
-  return (
-    <section className="surface-ink py-16 sm:py-20 lg:py-24">
-      <div className="section-shell">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* Left: headline + CTAs */}
-          <div className="text-center lg:text-left">
-            {/* Badge */}
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Independent Measurement Body
-            </span>
-
-            <h1 className="mt-6 text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-5xl">
-              Council OS
-            </h1>
-
-            {/* One sentence */}
-            <p className="mt-5 max-w-lg text-lg leading-relaxed text-emerald-100/90 lg:mx-0 mx-auto">
-              The workspace that opens the board, verifier, assessment, and evidence
-              pack in one window — loginless and free.
-            </p>
-
-            {/* Two CTAs only: primary filled + ghost */}
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start">
-              <a
-                href="/os"
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-500/25 transition-all hover:bg-emerald-400 hover:shadow-emerald-400/30"
-              >
-                Open Council OS <ChevronRight className="h-4 w-4" />
-              </a>
-              <a
-                href="/gspc-verify"
-                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-transparent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Verify a card — free
-              </a>
-            </div>
-          </div>
-
-          {/* Right: arena image — the Council OS measurement space */}
-          <div className="relative mx-auto w-full max-w-xl lg:mx-0">
-            <div className="overflow-hidden rounded-2xl shadow-2xl shadow-emerald-900/30">
-              <img
-                src="/images/coliseum_hero_arena.jpg"
-                alt="White arena with humans in green and white facing humanoid robots - the Council OS measurement space"
-                className="w-full object-cover"
-                loading="eager"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // ── Primary CTA band (repeated after products and above footer) ───────────────────
 function PrimaryCtaBand({ id }: { id?: string }) {
@@ -245,16 +178,8 @@ function USPStrip() {
             </div>
           ))}
         </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <span className="text-xs text-emerald-100/60">Aligned to:</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">EU AI Act</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">NIST AI RMF</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">ISO 42001</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">DORA</span>
-          <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">C2PA</span>
-        </div>
         <p className="ink-muted mt-5 text-center text-[11px]">
-          We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+          Measurement, never certification. Framework wordmarks live in the footer, once.
         </p>
       </div>
     </section>
@@ -290,8 +215,7 @@ function VerifyDoor() {
 export default function NewHomeV3() {
   return (
     <main className="surface-base">
-      {/* 1. Hero = Council OS door with arena image */}
-      <HeroCouncilOS />
+      <HeroBoard />
 
       {/* 2. HeroSlides carousel — instruments, council, refutations */}
       <HeroSlides />

@@ -26,7 +26,7 @@ transport your client speaks; the contracts are identical.
 
 ## Install
 
-Published on npm as `csoai-gspc-mcp`. No checkout required:
+Published as `csoai-gspc-mcp` on npm. No checkout required:
 
 ```sh
 npx -y csoai-gspc-mcp
@@ -37,6 +37,8 @@ npx -y csoai-gspc-mcp
 ```sh
 claude mcp add gspc -- npx -y csoai-gspc-mcp
 ```
+
+From a checkout of the repo the server is `mcp/gspc-server/index.mjs` (no extra install).
 
 ### Claude Desktop
 
