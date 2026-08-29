@@ -35,8 +35,8 @@ Twenty-six refreshes = re-verify public artifacts and re-issue **counsel-cleared
 | 313 | RWA corrections ledger | Append any bad-card rows from refresh | honesty | ✅ N/A pre-refresh `docs/STAGE3_OPS_LEDGER_STATUS.md` |
 | 314 | Refutation ledger | Append index-claim rows if needed | honesty | ✅ N/A pre-refresh `docs/STAGE3_OPS_LEDGER_STATUS.md` |
 | 315 | HF `csoai/rwa-attest` sync | REPORTED corpus mirror — no fake scores | HF | 🔄 live repo ✅ · further sync ☐ write token / OIDC |
-| 316 | HF labour UNMEASURED pack | Upload `datasets/labour-economy-unmeasured` | HF | 🔄 #139 · pack+verify ✅ · Hub missing · Path A/B `docs/HF_UPLOAD_RUNBOOK.md` |
-| 317 | HF testnet RWA pack | Upload `datasets/rwa-testnet-unmeasured` | HF | 🔄 #186 · pack+verify ✅ · Hub missing · Path A/B runbook |
+| 316 | HF labour UNMEASURED pack | Upload `datasets/labour-economy-unmeasured` | HF | ✅ #139/#253 live [`csoai/labour-economy-unmeasured`](https://huggingface.co/datasets/csoai/labour-economy-unmeasured) |
+| 317 | HF testnet RWA pack | Upload `datasets/rwa-testnet-unmeasured` | HF | ✅ #186 live [`csoai/rwa-testnet-unmeasured`](https://huggingface.co/datasets/csoai/rwa-testnet-unmeasured) |
 | 318 | Contact registry schema | Bump `contact-registry.schema.json` if rows change | schema | ✅ N/A `docs/STAGE3_OPS_LEDGER_STATUS.md` |
 | 319 | Option A powered-by | Partner-facing attestation language refresh | DESIGN | ☐ sales+counsel |
 | 320 | Stage 3 sign-off | Owner attestation that 295–319 complete + mainnet OK | meta | ⛔ owner |

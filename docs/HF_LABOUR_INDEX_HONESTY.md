@@ -8,6 +8,6 @@
 - permission to invent MEASURED labour/economy product scores on Council OS / DSH, or
 - an INDEX-METHOD bank freeze.
 
-Until INDEX-METHOD freezes a bank and counsel clears product language, the public product surface stays **UNMEASURED**. Prefer uploading / linking `datasets/labour-economy-unmeasured/` as the honesty-first Hub stub (#139 🔄).
+Until INDEX-METHOD freezes a bank and counsel clears product language, the public product surface stays **UNMEASURED**. Hub stub live: [`csoai/labour-economy-unmeasured`](https://huggingface.co/datasets/csoai/labour-economy-unmeasured) (#139/#253 ✅).
 
 Corrections path: append to `/api/corrections` if Hub copy overclaims; never silent-edit signed artefacts.

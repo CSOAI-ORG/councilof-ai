@@ -39,7 +39,7 @@ MCP OAuth (`hf_whoami`) may show **admin** on `csoai` and scopes including `cont
 - `hf_fs` MCP is **read-only** (ls/cat/stat/search — no upload).
 - Shell `hf` still needs path A or path B.
 
-Until upload succeeds, keep packs staged and leave #139/#186/#253 as 🔄. See `datasets/UPLOAD_DEFERRED.md`.
+**Status (2026-08-29):** #139 / #186 / #253 Hub packs are **live**. Use this runbook to re-verify or re-upload. Tick register only after `hf_fs stat` confirms repos exist (already done for the initial ship).
 
 ## Pre-upload verify (no token required)
 
@@ -47,7 +47,7 @@ Until upload succeeds, keep packs staged and leave #139/#186/#253 as 🔄. See `
 npm run verify:staged-hf   # assert measured_score null in staged JSON
 ```
 
-Hub repos are **missing** until create+upload (or empty create + OIDC upload) succeeds.
+Hub repos for #139/#186/#253 are **live** (2026-08-29). Commands below re-create/re-upload if needed.
 
 ## #139 / #253 — `csoai/labour-economy-unmeasured`
 
