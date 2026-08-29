@@ -1,9 +1,374 @@
 #!/usr/bin/env node
-import { gunzipSync } from "node:zlib";
-import { writeFileSync } from "node:fs";
-import { fileURLToPath, pathToFileURL } from "node:url";
-import path from "node:path";
-const here = path.dirname(fileURLToPath(import.meta.url));
-const out = path.join(here, "_restored_body.mjs");
-writeFileSync(out, gunzipSync(Buffer.from("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", "base64")));
-await import(pathToFileURL(out).href);
+/**
+ * csoai-gspc-mcp — stdio MCP server for the live GSPC board and the signed cards.
+ *
+ * Zero dependencies. Node >= 20 (WebCrypto Ed25519 and global fetch).
+ * Transport: MCP stdio — newline-delimited JSON-RPC 2.0 on stdin/stdout.
+ * Logs go to stderr only; stdout carries nothing but protocol messages.
+ *
+ * DOCTRINE (carried into every tool, not just this comment):
+ *   - We measure, never certify. No tool here issues a certification.
+ *   - Three-state verdicts: VALID / INVALID (with the reason) / UNCHECKABLE.
+ *     "I could not check" is a different claim from "this is forged".
+ *   - Unmeasured is first-class. A declared slot with no run behind it is an
+ *     honest answer, never an error, never a zero, never rounded up.
+ *   - Live means live. A fetch failure returns a distinct UNREACHABLE state;
+ *     no cached number is ever presented as a live one.
+ *   - Two surfaces that count the same thing are reported as two labelled
+ *     numbers. This server never reconciles them.
+ *
+ * ONE SOURCE OF TRUTH:
+ *   - Tool definitions come from gspc-tools.json — the same file the HTTP
+ *     endpoint at councilof.ai/mcp imports (functions/mcp/gspc-tools.json).
+ *     In a repo checkout that file is read directly; the npm package ships a
+ *     byte-identical copy made at pack time (npm run prepack).
+ *   - verify_card runs the code in public/signed/verify-card.mjs — the same
+ *     module the published CLI verifier is. Same rule: repo file first, packed
+ *     copy as fallback.
+ */
+
+import { createInterface } from "node:readline";
+import { readFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const VERSION = "0.1.1";
+const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
+const FETCH_TIMEOUT_MS = 15000;
+
+/** Card URLs may be fetched only from the estate's own published origins. */
+const FETCHABLE_ORIGINS = ["https://councilof.ai/", "https://csoai.org/", "https://www.csoai.org/"];
+
+/* ------------------------------------------------- one-source module loading */
+
+function firstExisting(paths) {
+  for (const p of paths) {
+    const abs = fileURLToPath(new URL(p, import.meta.url));
+    if (existsSync(abs)) return abs;
+  }
+  return null;
+}
+
+const TOOLS_PATH = firstExisting([
+  "../../functions/mcp/gspc-tools.json", // repo checkout: the canonical file
+  "./gspc-tools.json", // npm package: the byte-identical pack-time copy
+]);
+if (!TOOLS_PATH) {
+  process.stderr.write("csoai-gspc-mcp: gspc-tools.json not found — broken install\n");
+  process.exit(1);
+}
+const TOOLS = JSON.parse(readFileSync(TOOLS_PATH, "utf8")).tools;
+
+const VERIFIER_PATH = firstExisting([
+  "../../public/signed/verify-card.mjs", // repo checkout: the canonical file
+  "./verify-card.mjs", // npm package: the byte-identical pack-time copy
+]);
+if (!VERIFIER_PATH) {
+  process.stderr.write("csoai-gspc-mcp: verify-card.mjs not found — broken install\n");
+  process.exit(1);
+}
+const { verifyCard } = await import(`file://${VERIFIER_PATH}`);
+
+/* ------------------------------------------------------------------ fetching */
+
+async function fetchJson(path) {
+  const url = `${ORIGIN}${path}`;
+  const r = await fetch(url, {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
+  if (!r.ok) throw new Error(`GET ${url} returned HTTP ${r.status}`);
+  return r.json();
+}
+
+/**
+ * The distinct unreachable state. Never a cached number, never a zero that
+ * could be mistaken for a measurement.
+ */
+function unreachable(path, e) {
+  return {
+    state: "UNREACHABLE",
+    reachable: false,
+    source: `${ORIGIN}${path}`,
+    error: e instanceof Error ? e.message : String(e),
+    attempted_at: new Date().toISOString(),
+    note:
+      "The live source could not be fetched. No cached or remembered number is " +
+      "substituted — an unreachable board is a different claim from any count.",
+  };
+}
+
+/* --------------------------------------------------------------------- tools */
+
+async function boardTotals() {
+  let d;
+  try {
+    d = await fetchJson("/api/gspc");
+  } catch (e) {
+    return unreachable("/api/gspc", e);
+  }
+  const t = d.totals ?? {};
+  return {
+    state: "LIVE",
+    reachable: true,
+    kind: "live-board-totals",
+    source: `${ORIGIN}/api/gspc`,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    counts: [
+      {
+        name: "axis_slots",
+        value: t.axes ?? null,
+        kind: "declared slot count — a slot is a position on the board, not evidence anything was measured",
+      },
+      {
+        name: "measured",
+        value: t.measured_axes ?? null,
+        kind: "measurement count — slots with a real run behind them",
+      },
+      {
+        name: "unmeasured",
+        value: t.unmeasured_axes ?? null,
+        kind: "declared slots with no run behind them — published so the gap is visible; first-class, not an error",
+      },
+    ],
+    count_grammar: t.count_grammar ?? null,
+    public_count: t.public_count ?? null,
+    by_family: t.by_family ?? null,
+    not_a_certification: true,
+  };
+}
+
+async function getAxis(args) {
+  const wanted = String(args.axis ?? "").trim().toLowerCase();
+  if (!wanted) return { state: "BAD_INPUT", error: "pass an axis name, e.g. governance" };
+  let d;
+  try {
+    d = await fetchJson("/api/gspc");
+  } catch (e) {
+    return unreachable("/api/gspc", e);
+  }
+  const rows = d.axes ?? [];
+  const row = rows.find((r) => String(r.axis ?? "").toLowerCase() === wanted);
+  if (!row) {
+    return {
+      state: "NOT_ON_BOARD",
+      axis: wanted,
+      note: "This name is not a row on the live board. That is a fact about the board, not a verdict about the subject.",
+      board_carries: rows.map((r) => r.axis),
+      as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    };
+  }
+  const measured = String(row.status ?? "").toUpperCase() === "MEASURED";
+  return {
+    state: "LIVE",
+    axis: row.axis,
+    family: row.family ?? null,
+    status: row.status ?? null,
+    measured,
+    measured_note: measured
+      ? "a real run stands behind this row"
+      : "a declared slot with no run behind it — published so the gap is visible; first-class, not an error and not a zero",
+    n: row.n ?? null,
+    accuracy: row.accuracy ?? null,
+    interval: row.interval ?? null,
+    leader: row.leader ?? null,
+    dataset: row.dataset ?? null,
+    note: row.note ?? null,
+    as_of: { board_measured_on: d.measured_on ?? null, fetched_at: new Date().toISOString() },
+    source: `${ORIGIN}/api/gspc`,
+    not_a_certification: true,
+  };
+}
+
+/** Coerce whatever the caller passed into a card object, or say why we could not. */
+async function coerceCard(raw) {
+  if (raw && typeof raw === "object") return { card: raw };
+  if (typeof raw !== "string")
+    return { error: "pass the card as an object, a JSON string, or a councilof.ai / csoai.org URL" };
+  const s = raw.trim();
+  if (/^https?:\/\//i.test(s)) {
+    if (!FETCHABLE_ORIGINS.some((o) => s.startsWith(o)))
+      return {
+        error:
+          "only councilof.ai and csoai.org URLs are fetched by this tool; fetch other URLs yourself and pass the JSON",
+      };
+    try {
+      const r = await fetch(s, { headers: { accept: "application/json" }, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+      if (!r.ok) return { error: `card fetch returned HTTP ${r.status}` };
+      return { card: await r.json() };
+    } catch (e) {
+      return { error: `card fetch failed: ${e.message}` };
+    }
+  }
+  try {
+    return { card: JSON.parse(s) };
+  } catch {
+    return { error: "the string is neither valid JSON nor a councilof.ai / csoai.org URL" };
+  }
+}
+
+async function verifyCardTool(args) {
+  const { card, error } = await coerceCard(args.card ?? args.record ?? args.json ?? args.url ?? args.input);
+  if (error) return { state: "UNCHECKABLE", reason: error, not_a_certification: true };
+  const v = await verifyCard(card);
+  return {
+    state: v.state, // VALID | INVALID | UNCHECKABLE — three verdicts, never two
+    id: v.id ?? card?.id ?? null,
+    axis: v.axis ?? null,
+    reason: v.reason ?? null,
+    rule: `${ORIGIN}/signed/HOW-TO-VERIFY.md`,
+    pinned_key: "did:web:csoai.org#card-attestation-1",
+    not_a_certification: true,
+    note:
+      v.state === "VALID"
+        ? "The body reproduces its own id and the signature verifies under the published card-attestation key. This is a verified measurement card — not a certification of anything."
+        : v.state === "INVALID"
+          ? "This card fails the published rule for the stated reason. INVALID is a positive finding, distinct from UNCHECKABLE."
+          : "The check could not be completed. 'Could not check' is a different claim from 'forged'.",
+  };
+}
+
+async function listCards(args) {
+  const out = {
+    doctrine:
+      "Two labelled numbers from two surfaces, reported separately and never reconciled by this tool. If they disagree, the disagreement is the finding.",
+    index: null,
+    card_store_count_endpoint: null,
+    rows: null,
+    not_a_certification: true,
+  };
+  try {
+    const idx = await fetchJson("/signed/card_index.json");
+    const rows = Array.isArray(idx.cards) ? idx.cards : [];
+    out.index = {
+      source: `${ORIGIN}/signed/card_index.json`,
+      n_cards_declared: idx.n_cards ?? null,
+      rows_carried: rows.length,
+      head: idx.head ?? null,
+      packaged_at: idx.packaged_at ?? null,
+      pubkey: idx.pubkey ?? null,
+    };
+    const wanted = args.axis ? String(args.axis).toLowerCase() : null;
+    const limit = Number.isInteger(args.limit) ? args.limit : 10;
+    out.rows = rows
+      .filter((r) => !wanted || String(r.axis ?? "").toLowerCase() === wanted)
+      .slice()
+      .sort((a, b) => String(b.ts ?? "").localeCompare(String(a.ts ?? "")))
+      .slice(0, limit)
+      .map((r) => ({ card: r.card, axis: r.axis, ts: r.ts, signed: r.signed }));
+  } catch (e) {
+    out.index = unreachable("/signed/card_index.json", e);
+  }
+  try {
+    const api = await fetchJson("/api/cards");
+    out.card_store_count_endpoint = {
+      source: `${ORIGIN}/api/cards`,
+      count: api?.cards?.count ?? null,
+      signed: api?.cards?.signed ?? null,
+    };
+  } catch (e) {
+    out.card_store_count_endpoint = unreachable("/api/cards", e);
+  }
+  return out;
+}
+
+const HANDLERS = {
+  board_totals: boardTotals,
+  get_axis: getAxis,
+  verify_card: verifyCardTool,
+  list_cards: listCards,
+};
+
+/* ----------------------------------------------------------------- transport */
+
+const SUPPORTED_PROTOCOLS = ["2024-11-05", "2025-03-26", "2025-06-18"];
+
+function send(msg) {
+  process.stdout.write(JSON.stringify(msg) + "\n");
+}
+
+function reply(id, result) {
+  send({ jsonrpc: "2.0", id, result });
+}
+
+function replyError(id, code, message) {
+  send({ jsonrpc: "2.0", id, error: { code, message } });
+}
+
+function summaryLine(name, payload) {
+  if (payload.state === "UNREACHABLE" || payload.index?.state === "UNREACHABLE")
+    return `UNREACHABLE — the live source could not be fetched; no cached number is substituted.`;
+  switch (name) {
+    case "board_totals":
+      return `LIVE board totals — ${payload.public_count ?? "see counts"} (slots and measurements are different kinds; never summed).`;
+    case "get_axis":
+      return payload.state === "NOT_ON_BOARD"
+        ? `NOT ON BOARD — "${payload.axis}" is not a row the live board carries.`
+        : `${payload.status ?? "?"} — axis "${payload.axis}" (${payload.measured ? "a real run stands behind this row" : "declared slot, no run behind it"}).`;
+    case "verify_card":
+      return `${payload.state}${payload.reason ? " — " + payload.reason : ""}${payload.state === "VALID" ? ` — ${String(payload.id).slice(0, 16)}… verifies under the published key.` : ""}`;
+    case "list_cards": {
+      const a = payload.index?.n_cards_declared ?? "?";
+      const b = payload.card_store_count_endpoint?.count ?? "?";
+      return `index declares ${a} card rows; the store's count endpoint reports ${b}. Two labelled numbers, not reconciled here.`;
+    }
+    default:
+      return name;
+  }
+}
+
+async function handle(msg) {
+  const { id, method, params } = msg;
+  const isRequest = id !== undefined && id !== null;
+
+  if (method === "initialize") {
+    const asked = params?.protocolVersion;
+    return reply(id, {
+      protocolVersion: SUPPORTED_PROTOCOLS.includes(asked) ? asked : "2024-11-05",
+      capabilities: { tools: {} },
+      serverInfo: { name: "csoai-gspc-mcp", version: VERSION },
+    });
+  }
+  if (method === "notifications/initialized" || method === "initialized") return; // notification, no reply
+  if (method === "ping") return reply(id, {});
+  if (method === "tools/list") return reply(id, { tools: TOOLS });
+
+  if (method === "tools/call") {
+    const name = params?.name;
+    const fn = HANDLERS[name];
+    if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
+    try {
+      const payload = await fn(params?.arguments ?? {});
+      return reply(id, {
+        content: [{ type: "text", text: `${summaryLine(name, payload)}\n\n${JSON.stringify(payload, null, 2)}` }],
+        structuredContent: payload,
+        isError: false,
+      });
+    } catch (e) {
+      return reply(id, {
+        content: [{ type: "text", text: `tool error: ${e instanceof Error ? e.message : String(e)}` }],
+        isError: true,
+      });
+    }
+  }
+
+  if (isRequest) return replyError(id, -32601, `method not found: ${method}`);
+  // Unknown notification: ignore silently, per JSON-RPC.
+}
+
+const rl = createInterface({ input: process.stdin, crlfDelay: Infinity });
+rl.on("line", (line) => {
+  const s = line.trim();
+  if (!s) return;
+  let msg;
+  try {
+    msg = JSON.parse(s);
+  } catch {
+    return replyError(null, -32700, "parse error");
+  }
+  handle(msg).catch((e) => {
+    process.stderr.write(`csoai-gspc-mcp: ${e?.stack ?? e}\n`);
+    if (msg?.id !== undefined && msg?.id !== null) replyError(msg.id, -32603, "internal error");
+  });
+});
+rl.on("close", () => process.exit(0));
+process.stderr.write(`csoai-gspc-mcp ${VERSION} — stdio MCP server, live source ${ORIGIN}\n`);
