@@ -3,38 +3,49 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { wantsGetMeasured } from "@/components/os/osChat";
 
-const home = readFileSync(resolve(__dirname, "HomeVerify.tsx"), "utf8");
-const app = readFileSync(resolve(__dirname, "../App.tsx"), "utf8");
-const header = readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8");
-const tools = readFileSync(resolve(__dirname, "ToolsPage.tsx"), "utf8");
+const here = resolve(__dirname);
+const src = [
+  readFileSync(resolve(here, "HomeVerify.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeBoard.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/PluginBlock.tsx"), "utf8"),
+]
+  .join("\n")
+  .replace(/\/\*[\s\S]*?\*\//g, "")
+  .replace(/^\s*\/\/.*$/gm, "");
+const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
+const header = readFileSync(resolve(here, "../components/Header.tsx"), "utf8");
+const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
+const footer = readFileSync(resolve(here, "../components/Footer.tsx"), "utf8");
 
 describe("homepage is chat + GSPC list", () => {
   it("is OpenRouter layout without tokens or AG-UI", () => {
-    expect(home).toMatch(/Check an AI claim\. Or measure your system\./);
-    expect(home).toContain('href="/gspc-verify"');
-    expect(home).toContain('href="/assess"');
-    expect(home).toContain('id="os-chat"');
-    expect(home).toContain("GSPC board");
-    expect(home).toContain("https://councilof.ai/mcp");
-    expect(home).toContain("/tools");
-    expect(home).toContain("Run / re-attest");
-    expect(home).toContain("Ledger");
-    expect(home).toContain("Not a ranking for sale");
-    expect(home).not.toContain("OsShell");
-    expect(home).not.toContain("/govbench");
-    expect(home).not.toMatch(/GET \/api\/gspc/);
-    expect(home).not.toMatch(/Open Council OS|coliseum|GPAI Evidence|cobol|ToolStack/i);
-    expect(home).not.toMatch(/p-value|separation_p/);
-    expect(home).toContain("Not a ranking for sale");
-    expect(home).not.toMatch(/certified organization|buy a rank/i);
+    expect(src).toMatch(/Check an AI claim\. Or measure your system\./);
+    expect(src).toContain('href="/gspc-verify"');
+    expect(src).toContain('href="/assess"');
+    expect(src).toContain('id="os-chat"');
+    expect(src).toContain("GSPC leaderboard");
+    expect(src).toContain("https://councilof.ai/mcp");
+    expect(src).toContain("/tools");
+    expect(src).toContain("Run / re-attest");
+    expect(src).toContain("Ledger");
+    expect(src).toContain("Not a ranking for sale");
+    expect(src).not.toContain("OsShell");
+    expect(src).not.toContain("/govbench");
+    expect(src).not.toMatch(/GET \/api\/gspc/);
+    expect(src).not.toMatch(/Open Council OS|coliseum|GPAI Evidence|cobol|ToolStack/i);
+    expect(src).not.toMatch(/p-value|separation_p/);
+    expect(src).not.toMatch(/certified organization|buy a rank/i);
+    expect(src).not.toMatch(/AG-UI|AG UI/);
   });
 
   it("routes Claude-at-work to get measured", () => {
     expect(wantsGetMeasured("I use Claude at work")).toBe(true);
+    expect(src).toContain("wantsGetMeasured");
   });
 
   it("App keeps AG-UI off /", () => {
-    expect(app).toContain('component={HomeVerify}');
+    expect(app).toContain("component={HomeVerify}");
     expect(app).not.toMatch(/path === '\/' \|\| path === '\/os'/);
   });
 });
@@ -58,5 +69,15 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toMatch(/Ask: board totals/);
     expect(tools).not.toMatch(/lifestyle/i);
+  });
+});
+
+describe("footer 20%", () => {
+  it("keeps the three arms and drops Academy / MCP Fleet from Product", () => {
+    expect(footer).toContain("Run / re-attest");
+    expect(footer).toContain("Ledger");
+    expect(footer).toContain("Data");
+    expect(footer).not.toMatch(/name: 'Academy'/);
+    expect(footer).not.toMatch(/name: 'MCP Fleet'/);
   });
 });

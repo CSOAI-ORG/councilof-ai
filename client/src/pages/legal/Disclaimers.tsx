@@ -60,30 +60,30 @@ export default function Disclaimers() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-red-900">
                   <AlertTriangle className="h-5 w-5 text-red-600" />
-                  1. Certification Validity & Limitations
+                  1. We issue no certification
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-red-900 font-semibold text-lg">
-                  CSOAI CERTIFICATION DOES NOT GUARANTEE REGULATORY COMPLIANCE
+                  A MEASUREMENT CARD DOES NOT GUARANTEE REGULATORY COMPLIANCE. WE DO NOT CERTIFY.
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    Obtaining CSOAI certification (at any level) demonstrates that an individual or organization
-                    has completed our training and passed our assessment process. However:
+                    A Council Academy training record shows a person completed a course. It is not a
+                    certification of an AI system. We measure; we do not certify. However:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
-                      <strong>Certification is not a substitute for compliance.</strong> Organizations remain
+                      <strong>A training record is not a substitute for compliance.</strong> Organizations remain
                       fully responsible for ensuring their AI systems comply with all applicable laws and regulations,
                       including but not limited to the EU AI Act, NIST AI RMF, ISO 42001, and local laws.
                     </li>
                     <li>
-                      <strong>Certification is a point-in-time assessment.</strong> It reflects the state of
-                      knowledge and systems at the time of certification, not ongoing compliance.
+                      <strong>A measurement is a point-in-time assessment.</strong> It reflects the state of
+                      the system at the time of the run, not ongoing compliance.
                     </li>
                     <li>
-                      <strong>Regulatory requirements change.</strong> Laws and regulations evolve. Certification
+                      <strong>Regulatory requirements change.</strong> Laws and regulations evolve. A signed card
                       does not guarantee compliance with future regulatory changes.
                     </li>
                     <li>
@@ -91,7 +91,7 @@ export default function Disclaimers() {
                       specific compliance requirements depend on your industry, jurisdiction, and AI use cases.
                     </li>
                     <li>
-                      <strong>Organizations must conduct their own assessments.</strong> CSOAI certification
+                      <strong>Organizations must conduct their own assessments.</strong> A measurement card
                       does not replace the need for independent legal review, risk assessment, or regulatory audits.
                     </li>
                   </ul>
@@ -297,7 +297,7 @@ export default function Disclaimers() {
                   </li>
                   <li>
                     Organizations are solely responsible for the safety, compliance, and operation of
-                    their AI systems, regardless of CSOAI certification status.
+                    their AI systems, regardless of any measurement card or training record they hold.
                   </li>
                   <li>
                     CSOAI's total liability for any claim shall not exceed the fees paid by you to

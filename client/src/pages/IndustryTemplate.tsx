@@ -196,7 +196,7 @@ function IndustryPage({ industry }: { industry: Industry }) {
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
             <p className="text-sm leading-relaxed text-slate-700">
               Run the free rail against your model on this bench. CSOAI is a measurement body — the
-              card records what your model did, not an approval. We do not sell a grade.
+              card records what your model did, not an approval. A grade is never sold.
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <Link

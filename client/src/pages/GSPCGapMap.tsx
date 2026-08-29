@@ -29,7 +29,7 @@ const GAP_REASONS = [
   { code: "wrong_granularity", label: "Wrong granularity", description: "Field benchmarks exist but at category, not provision, granularity.", count: 312 },
   { code: "speaker_only", label: "Speaker only", description: "Benchmark asks 'would the model answer compliantly?' — not 'would it act compliantly?'", count: 89 },
   { code: "bare_model_only", label: "Bare model only", description: "Benchmark scores a base model, not a deployed agent.", count: 42 },
-  { code: "judgement_based", label: "Judgement-based", description: "Benchmark uses LLM-as-judge; not deterministic; rejected by Law 1.", count: 11 },
+  { code: "judgement_based", label: "Judgement-based", description: "Benchmark uses a model judge; not deterministic; rejected by Law 1.", count: 11 },
 ];
 
 const FIELD_EVIDENCED = [
@@ -291,7 +291,7 @@ export default function GSPCGapMap() {
               <ul className="text-sm space-y-2 text-muted-foreground">
                 <li className="flex gap-2"><span className="text-primary">→</span> 1,301 unmeasured cells = addressable market</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> 99.2% blind = competitive vacuum</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> Deterministic, not LLM-as-judge = defensible</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Deterministic predicates, never a model judge = defensible</li>
                 <li className="flex gap-2"><span className="text-primary">→</span> Published refutations = trust signal</li>
               </ul>
             </div>

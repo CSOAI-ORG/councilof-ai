@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| eighty-twenty | grok (tui-2) | home composer+board, footer Product, legal certify/rank copy, brand-gate nearAllow | RUNNING |
 | nine-products-e2e | claude (main) | product tiles, /products, /tools, product flows | RUNNING |
 | os-inner-experiences | claude (agent) | lobby/play.ts, LobbyPlay, GameBar, city/sim/arena pages, quests | RUNNING |
 | gspc-mcp | claude (agent) | functions/mcp/, new mcp server package, /llms.txt, mcp-registry | RUNNING |

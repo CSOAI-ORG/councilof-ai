@@ -52,7 +52,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     points: [
       { tag: "pain", text: "Unsigned cells and point-in-time claims with nothing behind them" },
       { tag: "pain", text: "Private test sets nobody outside can run" },
-      { tag: "pain", text: "LLM-as-judge scoring, where correlated errors look like agreement" },
+      { tag: "pain", text: "Model-on-model scoring, where correlated errors look like agreement" },
       { tag: "benefit", text: "Signed results over an open corpus, with the scoring code published" },
       { tag: "usp", text: "Deterministic predicates only — no model ever judges another model" },
     ],
@@ -64,7 +64,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     body:
       "The instrument maps onto a frozen corpus of 417 statutory provisions rather than onto our own idea of what good looks like. Frozen means held at a version, so a card issued today still means the same thing when someone reads it next year — and when the underlying text does move, that is a drift event we publish, not a footnote we bury.",
     points: [
-      { tag: "pain", text: "Safety scores defined by whoever is selling the score" },
+      { tag: "pain", text: "Safety scores defined by whoever is selling a house metric" },
       { tag: "benefit", text: "Each measurement cites the provision and the version behind it" },
       { tag: "benefit", text: "The corpus is public, so the mapping is arguable clause by clause" },
       { tag: "usp", text: "Statutory anchoring, not a house definition of \"responsible AI\"" },

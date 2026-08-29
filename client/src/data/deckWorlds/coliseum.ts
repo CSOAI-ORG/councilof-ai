@@ -93,7 +93,7 @@ export const COLISEUM_SLIDES: Slide[] = [
     body:
       "This is our first design law and it is not negotiable. Every verdict comes from a deterministic predicate — a fixed rule that either fires or does not. Run the same rows through the same grader tomorrow and you get the same number. There is no judge model, no rubric prompt, and therefore no place for one system's blind spots to quietly become the scoreboard.",
     points: [
-      { tag: "pain", text: "LLM-as-judge scoring inherits the judge's own failure modes" },
+      { tag: "pain", text: "Model-on-model scoring inherits the judge's own failure modes" },
       { tag: "pain", text: "Rankings you cannot reproduce are rankings you cannot challenge" },
       { tag: "benefit", text: "Same rows, same grader, same answer — every time" },
       { tag: "usp", text: "Responses no rule can parse are reported UNMEASURED, never scored as wrong" },

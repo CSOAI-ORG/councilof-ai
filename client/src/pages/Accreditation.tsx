@@ -387,7 +387,7 @@ export default function Accreditation() {
             Ready to train your team with CSOAI?
           </h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join certified AI Safety Analysts building careers in the fastest-growing
+            Join AI Safety Analysts who completed a training record — we do not certify — in the fastest-growing
             field in tech.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

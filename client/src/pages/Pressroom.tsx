@@ -44,7 +44,7 @@ export default function Pressroom() {
           ))}
         </div>
         <h2 className="mt-12 text-xl font-bold text-gray-900">Boilerplate</h2>
-        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">Council of AI (CSOAI Ltd, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run systems against frozen, published tests drawn from statute, sign the result, and publish the parts we could not measure. We do not certify, remediate, or sell a grade. Verify stays free at councilof.ai/gspc-verify. Live board counts are at GET councilof.ai/api/gspc.</p>
+        <p className="mt-2 max-w-3xl text-sm text-gray-700 leading-relaxed">Council of AI (CSOAI Ltd, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run systems against frozen, published tests drawn from statute, sign the result, and publish the parts we could not measure. We do not certify or remediate. A grade is never sold. Verify stays free at councilof.ai/gspc-verify. Live board counts are at GET councilof.ai/api/gspc.</p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a href="/try" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">See the Council live -&gt;</a>
           <a href="/lineage" className="rounded-xl border border-emerald-300 px-5 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50">The story -&gt;</a>
