@@ -79,7 +79,7 @@ export default function LiveLeaderboard({
           return;
         }
         setIndexLine(
-          `${cards} in the index · ${cells} verify against #card-attestation-1`,
+          `${cards} in index · #card-attestation-1 · 150 is the old floor (subset)`,
         );
       })
       .catch(() => {
