@@ -182,6 +182,7 @@ const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
 const Doctrine = lazy(() => import("./pages/Doctrine"));
+const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
@@ -398,6 +399,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/methodology": "Methodology | CSOAI",
   "/answers": "Answers — measurement explainers | Council of AI",
   "/doctrine": "Doctrine — measurement, not certification | Council of AI",
+  "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
@@ -690,6 +692,7 @@ function App() {
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
                   <Route path="/doctrine" component={Doctrine} />
+                  <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
