@@ -53,8 +53,9 @@ for (const repo of TARGETS) {
 
 console.log("\n=== next ===");
 if (!tok) {
-  console.log("Set HF_TOKEN (or Actions secret) then: npm run hf:upload-staged");
-  console.log("Or workflow_dispatch: .github/workflows/hf-upload-staged.yml");
+  console.log("Path A: set HF_TOKEN (Cloud/Actions) then: npm run hf:upload-staged");
+  console.log("Path B: empty Hub repos + Trusted Publishers → workflow_dispatch hf-upload-staged auth=oidc");
+  console.log("See docs/HF_UPLOAD_RUNBOOK.md · datasets/UPLOAD_DEFERRED.md");
 } else {
   console.log("Auth present — run: npm run hf:upload-staged");
   console.log("Then tick NEXT_300 only after Hub shows exists");
