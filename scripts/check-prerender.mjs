@@ -56,5 +56,8 @@ if (onDisk < ok.length * 0.95) {
   console.error(`✗ prerender: report claims ${ok.length} ok but only ${onDisk} index.html on disk — report contradicts the filesystem.`);
   process.exit(1);
 }
-if (thin.length) { console.error(`✗ prerender: ${thin.length} thin route(s).`); process.exit(1); }
+if (thin.length) {
+  console.error(`✗ prerender: ${thin.length} thin route(s): ${thin.map((r) => r.route).join(", ")}`);
+  process.exit(1);
+}
 console.log("✓ prerender: report and filesystem agree; 0 thin, 0 errored.");

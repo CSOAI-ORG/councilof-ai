@@ -316,14 +316,25 @@ try {
   }
 } catch {}
 
+// Pages Function 308s are not in _redirects. Discover still finds the path in the
+// route-manifest; prerendering it writes a 300-char THIN snapshot and fails deploy.
+// #888 only removed the MUST entry — the route still arrived via discovery.
+const FUNCTION_308 = new Set(["/pricing-legacy"]);
+const normRoute = (r) => r.split("?")[0].replace(/\/$/, "") || "/";
+
 const discovered = discover();
 const skippedStatic = discovered.filter(publicOwns);
-const skippedRedirect = discovered.filter((r) => !publicOwns(r) && REDIRECTED_ELSEWHERE.has(r.split("?")[0].replace(/\/$/, "") || "/"));
-const routes = discovered.filter((r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r));
+const skippedRedirect = discovered.filter((r) => !publicOwns(r) && REDIRECTED_ELSEWHERE.has(normRoute(r)));
+const skippedFn308 = discovered.filter((r) => !publicOwns(r) && FUNCTION_308.has(normRoute(r)));
+const routes = discovered.filter(
+  (r) => !skippedStatic.includes(r) && !skippedRedirect.includes(r) && !skippedFn308.includes(r),
+);
 if (skippedStatic.length)
   console.log(`prerender: ${skippedStatic.length} route(s) skipped — public/ already owns the file: ${skippedStatic.join(", ")}`);
 if (skippedRedirect.length)
   console.log(`prerender: ${skippedRedirect.length} route(s) skipped — _redirects sends them elsewhere: ${skippedRedirect.join(", ")}`);
+if (skippedFn308.length)
+  console.log(`prerender: ${skippedFn308.length} route(s) skipped — Pages Function 308: ${skippedFn308.join(", ")}`);
 console.log(`${routes.length} routes to prerender from ${DIST}/\n`);
 
 // ---------------------------------------------------------------- static server
