@@ -61,8 +61,13 @@ for (const f of files) {
 
 // ── the chain manifest, recounted rather than read off its own header ────────
 const links = Array.isArray(chain.links) ? chain.links : [];
-const withheld = links.filter((l) => l.body_published === false).map((l) => l.id);
-const published = links.filter((l) => l.body_published !== false).length;
+const fileIds = new Set(files.map((f) => f.replace(/\.json$/, "")));
+// Withheld = chain positions with NO body on disk. The signed `body_published`
+// flag on chain.json is historical: it still says false for 22 ids whose files
+// now verify on disk, and we cannot rewrite that flag without re-signing the
+// envelope. Files, not the stale boolean, are the measurement.
+const withheld = links.filter((l) => !fileIds.has(l.id)).map((l) => l.id);
+const published = links.filter((l) => fileIds.has(l.id)).length;
 const withheldAttested = withheld.filter((id) => signedParents.has(id));
 
 // A signature over the manifest is what makes the ORDER itself attested. Since
@@ -152,8 +157,10 @@ const out = {
       " Both numbers must travel together; quoting only the count of withheld positions would " +
       "present a disclosure as a proof.",
     why_withheld:
-      "The signed body carries an internal identifier we do not publish. The body is what the " +
-      "signature is over, so it cannot be redacted without invalidating its id.",
+      withheld.length === 0
+        ? "None. Every chain position has a verifying body on disk. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement."
+        : "The signed body carries an internal identifier we do not publish. The body is what the " +
+          "signature is over, so it cannot be redacted without invalidating its id.",
   },
 
   index: {
@@ -165,7 +172,9 @@ const out = {
     // frozen at the verifiable floor" even after the owner ruling made the index list
     // every verifying published card — a typed claim drifting from the data beside it.
     relationship_note:
-      indexRows.length === files.length
+      indexRows.length === files.length && withheld.length === 0
+        ? "card_index.json lists every published card body on disk (rows == files == chain positions). The 150-row floor is a subset of this chain, not a second measurement."
+        : indexRows.length === files.length
         ? "card_index.json lists every published card body on disk (rows == files), and every " +
           "row resolves to a published body. The chain manifest is the larger set: it also " +
           "carries the positions whose body is withheld."
