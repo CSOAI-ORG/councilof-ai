@@ -128,7 +128,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Enterprise
   { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
   { id: 'enterprise-dashboard', title: 'Enterprise Dashboard', description: 'CISO compliance hub for enterprises', category: 'pages', href: '/enterprise-dashboard', icon: BarChart3, keywords: ['ciso', 'compliance', 'hub'] },
-  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
+  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=assess&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
   { id: 'enterprise-onboarding', title: 'Enterprise Onboarding', description: 'Get started with enterprise features', category: 'pages', href: '/enterprise-onboarding', icon: Zap, keywords: ['setup', 'onboard', 'start'] },
 
   // Government & Regulator
@@ -156,7 +156,7 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // Settings & Account
   { id: 'settings', title: 'Settings', description: 'Account and application settings', category: 'pages', href: '/settings', icon: Settings, keywords: ['preferences', 'account', 'config'] },
-  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/?lobby=measured&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
+  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=assess&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
   { id: 'notifications', title: 'Notification Settings', description: 'Configure notification preferences', category: 'pages', href: '/settings/notifications', icon: Settings, keywords: ['alerts', 'email', 'notifications'] },
 
   // Feature Pages
@@ -232,7 +232,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'art-44', title: 'Article 44: Insurance & Liability', description: 'Risk coverage and responsibility', category: 'charter', href: '/charter#part-v', icon: Shield, keywords: ['insurance', 'liability', 'risk'] },
 
   // Part VI: Long-Term Governance (Articles 45-52)
-  { id: 'art-45', title: 'Article 45: Existential Risk Prevention', description: 'AGI and catastrophic risk protocols', category: 'charter', href: '/charter#part-vi', icon: AlertTriangle, keywords: ['existential', 'risk', 'catastrophic'] },
+  { id: 'art-45', title: 'Article 45: Existential Risk Prevention', description: 'AGI and catastrophic risk protocols', category: 'charter', href: '/charter#part-vi', icon: AlertTriangle, keywords: ['existential', 'physical', 'catastrophic'] },
   { id: 'art-46', title: 'Article 46: AGI/ASI Protocols', description: 'Advanced AI governance frameworks', category: 'charter', href: '/charter#part-vi', icon: Brain, keywords: ['agi', 'asi', 'superintelligence'] },
   { id: 'art-47', title: 'Article 47: International Treaties', description: 'Global coordination mechanisms', category: 'charter', href: '/charter#part-vi', icon: Globe2, keywords: ['treaties', 'international', 'coordination'] },
   { id: 'art-48', title: 'Article 48: Charter Amendment Process', description: 'Constitutional change procedures', category: 'charter', href: '/charter#part-vi', icon: FileText, keywords: ['amendment', 'change', 'update'] },
@@ -286,7 +286,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },
   { id: 'faq-5', title: 'What is the Council\'s designed multi-provider oversight?', description: 'A multi-provider oversight system for continuous safety oversight', category: 'faq', href: '/byzantine', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
   { id: 'faq-6', title: 'How do I register my AI system?', description: 'Use the AI Systems Registry to register and classify your AI', category: 'faq', href: '/ai-systems', icon: HelpCircle, keywords: ['register', 'ai system', 'how'] },
-  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/?lobby=measured&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
+  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/os?lobby=assess&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
   { id: 'faq-8', title: 'How do I become a Watchdog analyst?', description: 'Complete Watchdog training and apply for analyst positions', category: 'faq', href: '/watchdog-signup', icon: HelpCircle, keywords: ['watchdog', 'analyst', 'become'] },
   { id: 'faq-9', title: 'When does the Charter take effect?', description: 'The Partnership Charter launches January 15, 2026 at 09:00 GMT', category: 'faq', href: '/charter', icon: HelpCircle, keywords: ['charter', 'effective', 'date'] },
   { id: 'faq-10', title: 'How do I join as a Founding Member?', description: 'Apply to be one of the first 100 founding members', category: 'faq', href: '/founding-members', icon: HelpCircle, keywords: ['founding', 'member', 'join'] },
@@ -296,7 +296,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'new-faq', title: 'FAQ - Frequently Asked Questions', description: 'Comprehensive answers to all questions about CSOAI and AI governance', category: 'faq', href: '/faq', icon: HelpCircle, keywords: ['faq', 'questions', 'answers', 'help'] },
   { id: 'new-glossary', title: 'AI Governance Glossary', description: '60+ terms and definitions for AI governance, compliance, and risk', category: 'faq', href: '/glossary', icon: BookOpen, keywords: ['glossary', 'terms', 'definitions', 'dictionary'] },
   { id: 'new-assessment', title: 'AI Governance Readiness Assessment', description: 'Free 5-minute assessment to evaluate your AI governance maturity', category: 'faq', href: '/assess', icon: FileCheck, keywords: ['assessment', 'readiness', 'maturity', 'quiz', 'evaluation'] },
-  { id: 'new-industries', title: 'Industry Solutions', description: 'AI governance solutions tailored for finance, healthcare, government, and more', category: 'frameworks', href: '/industry-solutions', icon: Building2, keywords: ['industry', 'solutions', 'finance', 'healthcare', 'government', 'sector'] },
+  { id: 'new-industries', title: 'Industry Solutions', description: 'AI governance solutions tailored for finance, healthcare, government, and more', category: 'faq', href: '/industry-solutions', icon: Building2, keywords: ['industry', 'solutions', 'finance', 'healthcare', 'government', 'sector'] },
   { id: 'new-partners', title: 'Partners & Advisory Services', description: 'Strategic partnerships, advisory services, and partner program', category: 'faq', href: '/partners', icon: Users, keywords: ['partners', 'advisory', 'consulting', 'services', 'ecosystem'] },
   { id: 'new-casestudies', title: 'Case Studies', description: 'Real-world AI governance implementation success stories', category: 'faq', href: '/case-studies', icon: BookOpen, keywords: ['case', 'studies', 'success', 'stories', 'implementations', 'results', 'ROI'] },
   { id: 'new-trustcenter', title: 'Trust Center', description: 'Security certifications, compliance, data protection, and infrastructure details', category: 'faq', href: '/trust-center', icon: Shield, keywords: ['trust', 'security', 'compliance', 'certifications', 'ISO', 'SOC', 'GDPR', 'encryption', 'privacy'] },
