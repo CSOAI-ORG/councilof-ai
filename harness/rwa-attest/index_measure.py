@@ -2,11 +2,10 @@
 """index_measure.py — deterministic v0.1 measurement of the two index axes whose
 PUBLIC DATA BANKS exist (Eurostat AI adoption + World Bank labour series).
 
-Honesty: these are REFERENCE-SERIES indexes (published values with citation +
-live-fetch timestamp + deterministic formula). NOT estimates, NOT ratings.
-Bank gaps are stated, not hidden: compute-price and AI-investment components
-(ai-economy) and the humanoid-labour axis have NO authoritative public machine
-series yet -> remain UNMEASURED (bank-pending).
+Honesty: these are REFERENCE-SERIES snapshots (published values with citation +
+live-fetch timestamp). NOT a board MEASURED index. C-2026-0826-05 withdrew
+MEASURED-INDEX-v0.1. Do not restore that sticker. New cards only after the
+missing series + formula exist and TUI 1 signs (2-of-3), never this laptop key.
 
 Formula v0.1 (published): index value = latest reference value of the headline
 component; index components table with previous-year value + YoY delta; a
@@ -92,7 +91,8 @@ def main():
     ai_body = {
         "schema": "csoai.ai-economy-index/0.1",
         "axis": "ai-economy-index",
-        "status": "MEASURED-INDEX-v0.1",
+        "status": "UNMEASURED",
+        "status_correction": "C-2026-0826-05 — MEASURED-INDEX-v0.1 was an over-claim. Board GET /api/gspc is authority. UNMEASURED until missing series + formula are published and a new card is signed.",
         "fetched_at": fetched_at,
         "scope_honesty": ("v0.1 = EU enterprise AI-adoption reference components only. "
                           "Compute-price, AI-investment and sector-output components are "
@@ -123,7 +123,8 @@ def main():
     hl_body = {
         "schema": "csoai.human-labour-index/0.1",
         "axis": "human-labour-index",
-        "status": "MEASURED-INDEX-v0.1",
+        "status": "UNMEASURED",
+        "status_correction": "C-2026-0826-05 — MEASURED-INDEX-v0.1 was an over-claim. Board GET /api/gspc is authority. UNMEASURED until missing series + formula are published and a new card is signed.",
         "fetched_at": fetched_at,
         "scope_honesty": "Reference-series snapshot (participation + unemployment, EU). "
                          "Displacement/wage components are BANK-GAPS. Not a forecast.",
