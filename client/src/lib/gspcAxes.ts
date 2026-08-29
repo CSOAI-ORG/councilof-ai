@@ -284,8 +284,26 @@ export interface AxesState {
   publicCount?: string;
   /** slot15 / human-vs-ai etc. Shown as in-lane, not mixed into board counts. */
   inLane: InLaneAxis[];
+  /** From totals.separated_leads / ties / untested_separations. Absent if the wire omitted them. */
+  separationTally?: { separated: number; ties: number; untested: number };
   error?: string;
   loading: boolean;
+}
+
+export function tallyFromTotals(totals: unknown): { separated: number; ties: number; untested: number } | undefined {
+  if (!totals || typeof totals !== "object") return undefined;
+  const t = totals as Record<string, unknown>;
+  const separated = num(t.separated_leads);
+  const ties = num(t.ties);
+  if (separated === undefined || ties === undefined) return undefined;
+  return { separated, ties, untested: num(t.untested_separations) ?? 0 };
+}
+
+/** First line a harness reads. Built only from published totals, never from a local recount. */
+export function separationHeadline(t: { separated: number; ties: number; untested: number }): string {
+  const parts = [`${t.separated} SEPARATED`, `${t.ties} TIE`];
+  if (t.untested > 0) parts.push(`${t.untested} UNTESTED`);
+  return parts.join(" · ");
 }
 
 /** A real finite number, or undefined. Null, "", NaN and absent all mean absent. */
@@ -377,6 +395,7 @@ export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "
       doi: j?.doi,
       publicCount: publicCount || undefined,
       inLane,
+      separationTally: tallyFromTotals(j?.totals),
     };
   } catch (e: any) {
     return {

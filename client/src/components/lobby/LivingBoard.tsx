@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   countOf, fetchAxes, formatPublishedInterval, inLaneFacts, publicCaption,
-  publishedInterval, publishedSeparation, quotable,
+  publishedInterval, publishedSeparation, quotable, separationHeadline,
   type AxesState, type InLaneAxis,
 } from "@/lib/gspcAxes";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
@@ -13,7 +13,7 @@ import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
  * the caption is totals.public_count. Empty / unearned cells stay empty.
  */
 
-const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading"> = {
+const EMPTY: Pick<AxesState, "axes" | "source" | "measuredOn" | "publicCount" | "inLane" | "loading" | "separationTally"> = {
   axes: [],
   source: "snapshot",
   measuredOn: "",
@@ -39,6 +39,7 @@ export default function LivingBoard({
 
   const c = countOf(state.axes);
   const caption = publicCaption(state.publicCount, c.measured, c.total);
+  const sepLine = state.separationTally ? separationHeadline(state.separationTally) : null;
 
   return (
     <section aria-labelledby="coai-living-board-h" className="mb-8">
@@ -48,6 +49,16 @@ export default function LivingBoard({
           <h3 id="coai-living-board-h" className="mt-1 text-[20px] font-semibold tracking-tight text-slate-900">
             Every published axis
           </h3>
+          {sepLine && (
+            <p className="mt-2 font-mono text-[13px] font-semibold tracking-wide text-slate-900">
+              {sepLine}
+            </p>
+          )}
+          {sepLine && (
+            <p className={`mt-1 ${TYPE.muted}`}>
+              A point-estimate lead is not a measured advantage. Empty cells stay empty.
+            </p>
+          )}
           <p className={`mt-2 ${MEASURE} ${TYPE.body}`}>
             {state.loading
               ? "Reading GET /api/gspc…"

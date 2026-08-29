@@ -524,7 +524,7 @@ export function paneLoadFor(path: string): PaneLoad {
   return { action: "iframe", path };
 }
 
-export const DEFAULT_TAB: LobbyTabId = "home";
+export const DEFAULT_TAB: LobbyTabId = "board";
 
 export function tabById(id: LobbyTabId): LobbyTab {
   return LOBBY_TABS.find((t) => t.id === id) ?? LOBBY_TABS[0];

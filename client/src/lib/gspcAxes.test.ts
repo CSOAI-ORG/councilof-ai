@@ -1,7 +1,7 @@
 import { describe, expect, it, vi, afterEach } from "vitest";
 import {
   fetchAxes, formatPublishedInterval, hasMacroF1, inLaneFacts, publicCaption,
-  publishedInterval, publishedSeparation, quotable,
+  publishedInterval, publishedSeparation, quotable, separationHeadline, tallyFromTotals,
 } from "./gspcAxes";
 import { BOARD_COUNT_OBSERVED } from "./boardCount";
 
@@ -66,7 +66,12 @@ describe("fetchAxes", () => {
       ok: true,
       headers: { get: () => "application/json" },
       json: async () => ({
-        totals: { public_count: "22 axis · 15 measured" },
+        totals: {
+          public_count: "22 axis · 15 measured",
+          separated_leads: 4,
+          ties: 10,
+          untested_separations: 0,
+        },
         measured_on: { date: "2026-08-26" },
         axes: [
           {
@@ -146,6 +151,10 @@ describe("fetchAxes", () => {
     expect(slot.separation).toBe("UNTESTED");
     expect(slot.fleetLine).toBe("fleet mean 0.1543");
     expect(slot.specialistLine).toBe("council-safe 0.1429 (n=35)");
+
+    expect(r.separationTally).toEqual({ separated: 4, ties: 10, untested: 0 });
+    expect(separationHeadline(r.separationTally!)).toBe("4 SEPARATED · 10 TIE");
+    expect(tallyFromTotals({ public_count: "x" })).toBeUndefined();
   });
 
   it("retries once when the first response is HTML instead of JSON", async () => {

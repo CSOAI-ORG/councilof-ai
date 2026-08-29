@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  DASHBOARD_TABS, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, tabById,
+  DASHBOARD_TABS, DEFAULT_TAB, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, tabById,
 } from "./tabs";
 import { PRIMARY_PATHS } from "../../data/library-ia";
 
@@ -240,6 +240,11 @@ describe("the two panes added by the OS-tools sweep", () => {
 });
 
 describe("TUI 2 — OS instrument chrome", () => {
+  it("defaults the workspace to the native board, not the sitemap", () => {
+    expect(DEFAULT_TAB).toBe("board");
+    expect(tabById(DEFAULT_TAB).kind).toBe("native");
+  });
+
   it("desktop/rail is board, verify, cards, evidence, embed, plus Play", () => {
     expect(OS_RAIL_TABS.filter((t) => t.id !== "home").map((t) => t.id)).toEqual([
       "board", "verify", "cards", "evidence", "embed", "play",
