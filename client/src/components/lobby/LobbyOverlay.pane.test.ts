@@ -13,10 +13,10 @@ describe("LobbyOverlay pane loader", () => {
     expect(overlaySrc).toMatch(/setFrameSrc\(withEmbed\(load\.path\)\)/);
   });
 
-  it("applies decideEmbedNav — unframeable leaves OS, native drops the iframe", () => {
-    expect(overlaySrc).toMatch(/decideEmbedNav\(e\.data\.path/);
-    expect(overlaySrc).toMatch(/d\.action === "leave"/);
-    expect(overlaySrc).toMatch(/d\.action === "drop-iframe"/);
+  it("delegates embed-nav to handleEmbedNav and never iframes Software", () => {
+    expect(overlaySrc).toMatch(/handleEmbedNav\(e,/);
+    expect(overlaySrc).toMatch(/softwareLeavesOs\(t\)/);
+    expect(overlaySrc).toMatch(/window\.location\.assign\(SOFTWARE_HREF\)/);
     expect(overlaySrc).toMatch(/setFrameSrc\(""\)/);
     expect(overlaySrc).not.toMatch(/setOverride\(\{ path: e\.data\.path/);
   });

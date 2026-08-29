@@ -1,4 +1,4 @@
-import { isUnframeable } from "@/lib/unframeable";
+import { isUnframeable, pathBare } from "@/lib/unframeable";
 
 /**
  * The Council Lobby's centre-pane destinations.
@@ -533,6 +533,13 @@ export const DEFAULT_TAB: LobbyTabId = "board";
 
 export function tabById(id: LobbyTabId): LobbyTab {
   return LOBBY_TABS.find((t) => t.id === id) ?? LOBBY_TABS[0];
+}
+
+/** Software is DSH — a full page, never a framed `/dashboard`. */
+export const SOFTWARE_HREF = "/dashboard";
+
+export function softwareLeavesOs(t: Pick<LobbyTab, "id" | "path">): boolean {
+  return t.id === "software" || (t.path ? pathBare(t.path) === SOFTWARE_HREF : false);
 }
 
 function isNavCommand(text: string): boolean {

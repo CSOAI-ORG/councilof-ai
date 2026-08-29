@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DEFAULT_TAB, LOBBY_TABS, isOsRailTab, isSiteDoor, paneLoadFor, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
+import { DEFAULT_TAB, LOBBY_TABS, isOsRailTab, isSiteDoor, paneLoadFor, softwareLeavesOs, SOFTWARE_HREF, tabById, type LobbyTab, type LobbyTabId } from "./tabs";
 import { isUnframeable, withoutEmbed } from "@/lib/unframeable";
 import LobbyHeader, { ColiseumGlyph } from "./LobbyHeader";
 import LobbyPaneRail, { PANEL_ID, tabDomId } from "./LobbyPaneRail";
@@ -22,7 +22,8 @@ import {
   panelStyle, scrimStyle,
 } from "./glass";
 import { LOBBY_TASKS, type LobbyIntent } from "@/lib/lobbyLink";
-import { decideEmbedNav, isEmbedNav, withEmbed } from "@/lib/embed";
+import { withEmbed } from "@/lib/embed";
+import { handleEmbedNav } from "./handleEmbedNav";
 import { setOsOpen } from "@/lib/osChrome";
 import { isLibraried } from "@/data/library-ia";
 import {
@@ -100,25 +101,6 @@ function readSize(): "comfortable" | "full" {
     if (v === "comfortable" || v === "full") return v;
   } catch { /* ignore */ }
   return "full";
-}
-
-/**
- * A readable name for a framed route the rail does not own.
- *
- * It used to be `e.data.title || path` verbatim. A page that has not set its own
- * <title> carries the site's, so opening the Workbench pane signed out (which
- * redirects to /login) put "Council of AI — we measure, we sign, we re-attest"
- * in the pane header as though that were the name of the surface. A title is used
- * only when it looks like a PAGE name: the first segment, short enough to be one,
- * and not the estate's own brand — "Council of AI" names the whole site, so as a
- * pane name it tells the reader strictly less than the path does.
- */
-const SITE_NAMES = /^(council of ai|csoai|councilof\.ai)$/i;
-
-function paneNameFor(title: unknown, path: string): string {
-  const raw = typeof title === "string" ? title.split(/\s[|\u2014]\s/)[0].trim() : "";
-  if (!raw || raw.length > 40 || SITE_NAMES.test(raw)) return path;
-  return raw;
 }
 
 /** Tabbable guard that bounces focus back into the dialog. See useFocusTrap. */
@@ -278,6 +260,10 @@ export default function LobbyOverlay({
       setFrameSrc("");
       return;
     }
+    if (softwareLeavesOs(t)) {
+      window.location.assign(SOFTWARE_HREF);
+      return;
+    }
     if (t.path && (isUnframeable(t.path) || isSiteDoor(t.path))) {
       window.location.assign(t.path);
       return;
@@ -296,28 +282,13 @@ export default function LobbyOverlay({
   // scroll). Lobby-chrome navigation still remounts via loadPane().
   useEffect(() => {
     const onMsg = (e: MessageEvent) => {
-      if (e.origin !== window.location.origin) return;
-      if (!isEmbedNav(e.data)) return;
-      const d = decideEmbedNav(e.data.path, e.data.search);
-      if (d.action === "leave") {
-        window.location.assign(d.href);
-        return;
-      }
-      if (d.action === "drop-iframe") {
-        setFrameSrc("");
-        setFramePath("");
-        setTabId(d.tabId);
-        setOverride(null);
-        return;
-      }
-      if (d.action === "follow-route") {
-        setFramePath(d.path);
-        setTabId(d.tabId);
-        setOverride(null);
-        return;
-      }
-      setFramePath(d.path);
-      setOverride({ path: d.path, label: paneNameFor(e.data.title, d.path) });
+      handleEmbedNav(e, {
+        assignTop: (href) => window.location.assign(href),
+        setFrameSrc,
+        setFramePath,
+        setTabId,
+        setOverride,
+      });
     };
     window.addEventListener("message", onMsg);
     return () => window.removeEventListener("message", onMsg);

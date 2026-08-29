@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  DASHBOARD_TABS, DEFAULT_TAB, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, tabById,
+  DASHBOARD_TABS, DEFAULT_TAB, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, softwareLeavesOs, SOFTWARE_HREF, tabById,
 } from "./tabs";
 import { PRIMARY_PATHS } from "../../data/library-ia";
 
@@ -261,8 +261,10 @@ describe("TUI 2 — OS instrument chrome", () => {
   it("software is a full navigation to /dashboard, never a framed pane", () => {
     const software = tabById("software");
     expect(isOsRailTab("software")).toBe(false);
-    expect(software.path).toBe("/dashboard");
+    expect(software.path).toBe(SOFTWARE_HREF);
     expect(software.kind).not.toBe("native");
+    expect(softwareLeavesOs(software)).toBe(true);
+    expect(softwareLeavesOs(tabById("board"))).toBe(false);
     expect(paneLoadFor(software.path)).toEqual({ action: "navigate", path: "/dashboard" });
   });
 
