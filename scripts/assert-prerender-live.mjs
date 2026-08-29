@@ -87,10 +87,10 @@ for (const host of hosts) {
     pass(`${host}/ ${home.bytes} bytes`);
   }
 
-  if (!/assets\/CouncilLobby/i.test(home.body)) {
-    fail(`${host}/ does not reference a CouncilLobby chunk (AG UI will not boot from HTML)`);
+  if (!/data-testid="os-shell"|os-chat|Article 50 is in force/i.test(home.body)) {
+    fail(`${host}/ is not Council OS (missing os-shell)`);
   } else {
-    pass(`${host}/ references CouncilLobby`);
+    pass(`${host}/ is Council OS (os-shell)`);
   }
 
   if (os.error) fail(`${host}/os/ fetch failed: ${os.error}`);
@@ -101,7 +101,7 @@ for (const host of hosts) {
   if (sovos.error) fail(`${host}/sov-os/ fetch failed: ${sovos.error}`);
   else if (sovos.status !== 200 || /404 — Not found/i.test(sovos.body)) fail(`${host}/sov-os/ HTTP ${sovos.status || "404"}`);
   else if (sovos.bytes < 8000) fail(`${host}/sov-os/ thin (${sovos.bytes} B — prerender missing?)`);
-  else if (!/CouncilLobby|lobby=home/i.test(sovos.body)) fail(`${host}/sov-os/ is not Council OS (missing lobby)`);
+  else if (!/os-shell|Council OS|os-chat/i.test(sovos.body)) fail(`${host}/sov-os/ is not Council OS`);
   else pass(`${host}/sov-os/ HTTP 200 Council OS (${sovos.bytes} B)`);
 
   if (verify.error) fail(`${host}/gspc-verify/ fetch failed: ${verify.error} (often a 308 slash loop)`);
