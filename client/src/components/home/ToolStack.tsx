@@ -303,10 +303,10 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
 export default function ToolStack() {
   const figures = useLiveFigures();
   return (
-    <section id="what-we-offer" aria-labelledby="what-we-offer-title" className="surface-sunken section-y">
+    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y">
       <div className="section-shell">
         <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Three tools</p>
-        <h2 id="what-we-offer-title" className="t-section mt-4 text-center text-foreground">
+        <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
           Verify. Get measured. Pack.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
