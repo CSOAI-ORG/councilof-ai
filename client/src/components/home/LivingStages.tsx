@@ -309,8 +309,8 @@ function Independence() {
 function Boundary() {
   return (
     <SplitBand
-      video="/videos/council-of-ai.mp4"
-      poster="/videos/council-of-ai.jpg"
+      video="/videos/trust-lobby.mp4"
+      poster="/videos/trust-lobby.jpg"
       alt="What the Council of AI is, and the line it does not cross"
       mediaSide="right"
       tint="surface-sunken"
@@ -409,8 +409,8 @@ function VerifyYourself() {
 
           {/* The pipeline explained in motion rather than a cropped panel. */}
           <VideoEmbed
-            src="/videos/csoai-architecture.mp4"
-            poster="/videos/csoai-architecture.jpg"
+            src="/videos/architecture-of-measurement.mp4"
+            poster="/videos/architecture-of-measurement.jpg"
             title="How a card is made: grading against frozen provisions, then canonical signing"
             caption="How the card is made before you ever check it — deterministic grading, then canonical Ed25519 signing."
             className="mt-10"

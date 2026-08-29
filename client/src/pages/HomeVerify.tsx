@@ -10,6 +10,8 @@ import HomeComposer from "@/components/home/HomeComposer";
 import PluginBlock from "@/components/home/PluginBlock";
 import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
+import HomeFilms from "@/components/home/HomeFilms";
+import HomeDemoLoop from "@/components/home/HomeDemoLoop";
 import { setMetaDescription } from "@/lib/utils";
 
 export default function HomeVerify() {
@@ -60,6 +62,7 @@ export default function HomeVerify() {
             </div>
 
             <HomeComposer onAskAxis={setAxis} />
+            <HomeDemoLoop />
             <PluginBlock />
 
             <p className="mt-3 text-[12px] text-slate-500">
@@ -82,6 +85,7 @@ export default function HomeVerify() {
         </div>
       </main>
 
+      <HomeFilms />
       <ToolStack />
       <LivingStages />
     </div>

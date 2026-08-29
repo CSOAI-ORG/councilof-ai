@@ -3,6 +3,7 @@
 
 | lane | owner | files/territory | state |
 |---|---|---|---|
+| home-films | grok (tui-2) | homepage films from NotebookLM Downloads + demo loop | RUNNING |
 | epic-home | grok (tui-2) | restore mega-menu + OS + HeroSlides + 9-product ToolStack + LivingStages on home | RUNNING |
 | weekend-must | grok (tui-2) | MUST 1–25 lean surface: OS FAB, products four lines, assess insurer, mcp four tools | RUNNING |
 | eighty-twenty | grok (tui-2) | home composer+board, footer Product, legal certify/rank copy, brand-gate nearAllow | RUNNING |
