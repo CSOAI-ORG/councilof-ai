@@ -16,15 +16,15 @@ Observed Hub (2026-08-28), admin: Nicholastempleman. Product surface on councilo
 | `csoai/measured-vs-reported` | Register honesty |
 | others (`gspc-*`, `signed-fleet-*`, `living-catalog`) | axis/corpus/fleet/catalog |
 
-## Staged dedicated packs (upload 🔄 — needs `HF_TOKEN`)
+## Staged dedicated packs (upload 🔄 — `HF_TOKEN` **or** Trusted Publisher OIDC)
 
-Pre-upload: `npm run verify:staged-hf` · runbook: `docs/HF_UPLOAD_RUNBOOK.md`
+Pre-upload: `npm run verify:staged-hf` · runbook: `docs/HF_UPLOAD_RUNBOOK.md` (path A token · path B empty repo + OIDC)
 
 | Staged pack | Target repo | NEXT_300 |
 |-------------|-------------|----------|
 | `datasets/labour-economy-unmeasured/` | `csoai/labour-economy-unmeasured` | #139, #253 |
 | `datasets/rwa-testnet-unmeasured/` | `csoai/rwa-testnet-unmeasured` | #186 |
 
-Hub `stat` (2026-08-28): both target repos **missing**. Per-slot UNMEASURED README cards above are **not** a substitute for the unified staged manifests — upload when write token works (`npm run hf:upload-staged`).
+Hub `stat` (2026-08-28): both target repos **missing**. Per-slot UNMEASURED README cards above are **not** a substitute for the unified staged manifests — upload when path A or B works (`npm run hf:upload-staged` / CI `hf-upload-staged.yml`).
 
 See also `datasets/UPLOAD_DEFERRED.md` (overnight batch status).
