@@ -305,6 +305,7 @@ const REDIRECTED_ELSEWHERE = new Set([
   // Pages Function 308s are not in public/_redirects, so heuristic discovery still
   // queues them. Snapshotting /pricing-legacy yields 300ch THIN and fails deploy.yml.
   "/pricing-legacy",
+  "/.well-known/x402",
 ]);
 try {
   const rf = join(PUBLIC_DIR, "_redirects");
@@ -323,7 +324,7 @@ try {
 // Pages Function 308s are not in _redirects. Discover still finds the path in the
 // route-manifest; prerendering it writes a 300-char THIN snapshot and fails deploy.
 // #888 only removed the MUST entry — the route still arrived via discovery.
-const FUNCTION_308 = new Set(["/pricing-legacy"]);
+const FUNCTION_308 = new Set(["/pricing-legacy", "/.well-known/x402"]);
 const normRoute = (r) => r.split("?")[0].replace(/\/$/, "") || "/";
 
 const discovered = discover();
