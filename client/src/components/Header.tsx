@@ -3,13 +3,14 @@
  * Clean, modern navigation with CSOAI branding
  */
 
-import { useLocation } from 'wouter';
+import { Link, useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
-import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, Search, Award, Building2, Landmark, Globe2, BookMarked, ShieldCheck, BarChart2, Boxes, LayoutGrid } from 'lucide-react';
+import { Menu, X, User, LogOut, Settings, BookOpen, BarChart3, ChevronDown, Search, Award, Landmark, Globe2, BookMarked, ShieldCheck, BarChart2, Boxes, LayoutGrid } from 'lucide-react';
 import { NotificationCenter } from '@/pages/NotificationCenter';
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSiteChromeHidden } from '@/lib/osChrome';
+import { lobbyHref, openLobby } from '@/lib/lobbyLink';
 
 import {
   DropdownMenu,
@@ -188,7 +189,7 @@ const navigation: NavGroup[] = [
   },
 ];
 
-/** Archive mega-menu. Not rendered on the marketing chrome. */
+/** Six-group master mega-menu — rendered on marketing chrome. HOME_NAV stays the short rail. */
 export const ARCHIVE_NAV = navigation;
 
 export function Header() {
@@ -287,18 +288,103 @@ export function Header() {
               cannot fit without mid-word wrapping, so the mobile menu takes over. */}
           <div className="hidden xl:flex items-center" ref={dropdownRef}>
             <div className="flex items-center gap-1 2xl:gap-3">
-              {HOME_NAV.map((item) => (
-                <a
+              <a
+                href="/"
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                  location === '/'
+                    ? 'text-emerald-700 bg-emerald-50'
+                    : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                }`}
+              >
+                Home
+              </a>
+              {navigation.map((item) => (
+                <div
                   key={item.name}
-                  href={item.href}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
-                    isActive(item.href)
-                      ? 'text-emerald-700 bg-emerald-50'
-                      : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
-                  }`}
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(item.name)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  {item.name}
-                </a>
+                  <button
+                    data-nav-trigger={item.name}
+                    aria-haspopup="true"
+                    aria-expanded={activeDropdown === item.name}
+                    aria-controls={`nav-panel-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                    className={`px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
+                      isActive(item.href) || activeDropdown === item.name
+                        ? 'text-emerald-700 bg-emerald-50'
+                        : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                    }`}
+                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                    onFocus={() => handleMouseEnter(item.name)}
+                  >
+                    {item.name}
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                        activeDropdown === item.name ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {activeDropdown === item.name && (
+                    <div
+                      id={`nav-panel-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                      className="absolute left-0 top-full pt-2 z-50"
+                      onMouseEnter={() => handleMouseEnter(item.name)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="w-72 max-h-[min(72vh,40rem)] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl">
+                        <div className="border-b border-border bg-primary/[0.07] px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <item.icon className="h-5 w-5 text-emerald-600" />
+                            <div>
+                              <div className="font-semibold text-foreground">{item.name}</div>
+                              <div className="text-xs text-muted-foreground">{item.description}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="py-2">
+                          {item.submenu.map((subItem) => (
+                            <div key={subItem.href + subItem.name}>
+                              {subItem.section && (
+                                <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                  {subItem.section}
+                                </div>
+                              )}
+                              <a
+                                href={subItem.href}
+                                target={subItem.external ? '_blank' : undefined}
+                                rel={subItem.external ? 'noreferrer' : undefined}
+                                className="block px-4 py-2.5 hover:bg-muted focus:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 transition-colors group"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                <div className="font-medium text-foreground group-hover:text-emerald-700 text-sm">
+                                  {subItem.name}
+                                  {subItem.external && (
+                                    <span className="ml-1.5 align-middle text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+                                      JSON
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-0.5">
+                                  {subItem.description}
+                                </div>
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="px-4 py-2 bg-muted border-t border-border">
+                          <a
+                            href={item.href}
+                            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            View all {item.name.toLowerCase()} &rarr;
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -314,11 +400,12 @@ export function Header() {
               <Search className="h-5 w-5" />
             </button>
             <a
-              href="/os"
+              href={lobbyHref({ pane: 'home' })}
+              onClick={(e) => { e.preventDefault(); openLobby({ pane: 'home' }); }}
               className="rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800"
-              title="Council OS — no account"
+              title="Chat is Council OS — the AG UI"
             >
-              OS (no account)
+              Chat
             </a>
 
             {/* "Verify a card" removed from the header 2026-08-21 (owner call): the
@@ -376,7 +463,20 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
-            ) : null}
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground font-medium">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link href="/start">
+                  <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium shadow-sm">
+                    Start free
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -402,23 +502,60 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="xl:hidden py-4 border-t border-border max-h-[calc(100vh-4rem)] overflow-y-auto">
             <div className="space-y-1">
-              {HOME_NAV.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`block px-4 py-3 rounded-lg font-medium ${
-                    isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {item.name}
-                </a>
+              <a
+                href="/"
+                className={`block px-4 py-3 rounded-lg font-medium ${
+                  location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </a>
+              <a
+                href={lobbyHref({ pane: 'home' })}
+                className="block px-4 py-3 rounded-lg font-medium text-emerald-800 bg-emerald-50"
+                onClick={(e) => { e.preventDefault(); setMobileMenuOpen(false); openLobby({ pane: 'home' }); }}
+                title="Chat is Council OS — the AG UI"
+              >
+                Chat
+              </a>
+              {navigation.map((item) => (
+                <div key={item.name} className="space-y-1">
+                  <a
+                    href={item.href}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium ${
+                      isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <item.icon className="h-5 w-5 text-emerald-600" />
+                    {item.name}
+                  </a>
+                  <div className="ml-12 space-y-1">
+                    {item.submenu.map((subItem) => (
+                      <div key={subItem.href + subItem.name}>
+                        {subItem.section && (
+                          <div className="px-4 pt-3 pb-0.5 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            {subItem.section}
+                          </div>
+                        )}
+                        <a
+                          href={subItem.href}
+                          target={subItem.external ? '_blank' : undefined}
+                          rel={subItem.external ? 'noreferrer' : undefined}
+                          className="block px-4 py-2 text-sm text-muted-foreground hover:text-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {subItem.name}
+                          {subItem.external && <span className="ml-1 text-[10px] uppercase tracking-wide text-muted-foreground">JSON</span>}
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ))}
 
               <div className="pt-4 mt-4 border-t border-border space-y-2 px-4">
-                <a href="/os" className="block" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full bg-emerald-700 hover:bg-emerald-800">OS (no account)</Button>
-                </a>
                 <a href="/library" className="block" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full">Browse the full Library</Button>
                 </a>
@@ -439,7 +576,20 @@ export function Header() {
                       Sign Out
                     </Button>
                   </>
-                ) : null}
+                ) : (
+                  <>
+                    <a href="/login" className="block">
+                      <Button variant="outline" className="w-full" onClick={() => setMobileMenuOpen(false)}>
+                        Sign In
+                      </Button>
+                    </a>
+                    <a href="/start" className="block">
+                      <Button className="w-full bg-emerald-600 hover:bg-emerald-700" onClick={() => setMobileMenuOpen(false)}>
+                        Start free
+                      </Button>
+                    </a>
+                  </>
+                )}
               </div>
             </div>
           </div>
