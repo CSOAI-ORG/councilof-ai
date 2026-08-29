@@ -119,6 +119,22 @@ const RULES = [
     why: "GSPC grade is the estate harness + signed card, not Inspect / model-judge. Do not wrap a bank in Inspect model_graded_fact.",
   },
   {
+    id: "false_art50_nov",
+    // EUR-Lex: Art 50 applied 2 Aug 2026; some marking 2 Dec 2026; Annex III 2 Dec 2027.
+    // "2 Nov 2026" / "November 2026 cliff" is a dead Digital-Omnibus rumour.
+    pattern: /2\s+Nov(?:ember)?\s+2026|November 2026 cliff/i,
+    nearAllow: /not 2 Nov|wrong date|EUR-Lex|2 August 2026|2 Aug 2026/i,
+    why: "EUR-Lex only: Art 50 applied 2 Aug 2026; marking grace 2 Dec 2026; Annex III 2 Dec 2027. There is no 2 Nov 2026 cliff.",
+  },
+  {
+    id: "hub_queue_stickers",
+    // 2410 is the Hub queue length (all UNMEASURED). Do not ship 2410 scores/stickers.
+    // Negative lookahead skips arXiv 2410.07959. nearAllow keeps the honest queue sentence.
+    pattern: /\b2,?410\b(?!\.\d).{0,48}(?:sticker|badge|scores?|leaderboard|VALID cards?)|(?:sticker|badge|scores?|leaderboard).{0,48}\b2,?410\b(?!\.\d)/i,
+    nearAllow: /unmeasured|named sites|hub-queue|empty stays empty|status_all|no score/i,
+    why: "hub-queue is 2410 named UNMEASURED ids, not 2410 scores or stickers. Empty stays empty.",
+  },
+  {
     id: "infra_leak",
     // Any localhost:<port>, not just 4400: prerender binds an OS-assigned port unless --port
     // is passed, so a missed canonical rewrite can now bake ANY port into the shipped HTML.
