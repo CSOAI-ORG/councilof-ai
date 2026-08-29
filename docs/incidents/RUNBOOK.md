@@ -35,7 +35,7 @@ reconstructed after the fact.
 | **Comms / Customer** | User-facing mitigations after Counsel clears | Announce “we are CRA compliant” |
 
 Until a named rota exists, **Incident Lead = Nicholas Templeman**
-(`contact@csoai.org`). Other seats: unassigned — say so, do not invent names.
+(`nicholas@csoai.org`). Other seats: unassigned — say so, do not invent names.
 
 CSOAI Ltd is a **UK** company. The Art. 14 CSIRT is the CSIRT of the Member
 State of **main establishment in the Union**, or the path Counsel names for a
