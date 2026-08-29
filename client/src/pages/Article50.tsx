@@ -62,6 +62,7 @@ const TIMELINE = [
   { d: "2 Aug 2025", t: "GPAI provider obligations began." },
   { d: "2 Aug 2026", t: "Article 50 transparency obligations apply — and market-surveillance enforcement is live from day one. No grace period for anything launched after this date." },
   { d: "2 Dec 2026", t: "End of the marking grace period for synthetic-content systems that were already on the market before 2 Aug 2026." },
+  { d: "2 Dec 2027", t: "Annex III high-risk obligations (EUR-Lex). We measure. We do not certify." },
   { d: "2 Aug 2027", t: "Legacy GPAI models (on the market before 2 Aug 2025) must be fully compliant." },
 ];
 

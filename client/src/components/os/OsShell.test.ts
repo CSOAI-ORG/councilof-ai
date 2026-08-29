@@ -2,40 +2,27 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { DOORS } from "./doors";
-import { OS_EMPTY, OS_PROMPT, OS_TOOLS } from "./osChat";
+import { OS_TOOLS } from "./osChat";
 
 const shell = readFileSync(resolve(__dirname, "OsShell.tsx"), "utf8");
-const header = readFileSync(resolve(__dirname, "OsHeader.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
 const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), "utf8");
 
-describe("OsShell is the product on /os, not the homepage", () => {
-  it("uses the five header doors and four tools", () => {
+describe("OsShell is not the homepage or /os directory", () => {
+  it("keeps four tools in the unused shell", () => {
     expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
     expect(OS_TOOLS).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
-    expect(shell).toContain("OS_PROMPT");
-    expect(shell).toContain("OS_EMPTY");
-    expect(OS_PROMPT).toBe("Paste a signed card, or say what you use AI for.");
-    expect(OS_EMPTY).toBe("Free verify. Paste never leaves this browser.");
-    expect(shell).toContain('id="os-chat"');
-    expect(shell).toContain('data-testid="os-tabs"');
-    expect(shell).toContain('data-testid="os-chips"');
-    expect(shell).toContain("I was sent a card");
-    expect(shell).toContain("I use AI at work");
-    expect(shell).toContain("Show the board");
-    expect(shell).not.toContain("showTabs");
-    expect(shell).not.toMatch(/GET \/api\/gspc/);
-    expect(header).toContain('getElementById("os-chat")');
-    expect(header).toContain("Chat is Council OS");
+    expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
   });
 
-  it("homepage is verify, not AG-UI", () => {
-    expect(app).not.toMatch(/path === '\/' \|\| path === '\/os'/);
-    expect(app).toMatch(/path === '\/os'/);
+  it("homepage is verify; /os is a directory of real pages", () => {
     expect(app).toContain("HomeVerify");
-    expect(launcher).toContain("<OsShell");
-    expect(launcher).toContain('variant="page"');
-    expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
+    expect(app).toContain("ToolsPage");
+    expect(app).toContain('<Redirect to="/os" />');
+    expect(launcher).toContain('data-testid="os-directory"');
+    expect(launcher).toContain("/gspc-verify");
+    expect(launcher).toContain("/assess");
+    expect(launcher).not.toContain("OsShell");
   });
 
   it("glass only after VALID; paid sign stays gated", () => {

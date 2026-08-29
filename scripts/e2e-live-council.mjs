@@ -215,18 +215,13 @@ try {
 
 try {
   const { text: osHtml } = await fetchText("/os");
-  const osAsset = (osHtml.match(/assets\/OsLauncher[^"'\s]+/) || [])[0];
-  if (!osAsset) fail(" /os references OsLauncher chunk");
-  else {
-    const { text: osJs } = await fetchText("/" + osAsset);
-    if (osJs.includes("How the free rail works") && osJs.includes("Measure an enterprise system")) {
-      pass("Assess door honours task= copy", osAsset);
-    } else {
-      fail("Assess door task= copy missing", osAsset);
-    }
+  if (!/data-testid="os-directory"|\/gspc-verify|\/assess/i.test(osHtml)) {
+    fail("/os is a directory of real pages");
+  } else {
+    pass("/os is a directory", "os-directory");
   }
 } catch (e) {
-  fail("OsLauncher assessCopy", String(e).slice(0, 120));
+  fail("/os directory", String(e).slice(0, 120));
 }
 
 if (failed) {
