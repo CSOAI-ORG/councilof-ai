@@ -52,12 +52,14 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("/report");
     expect(launcher).not.toMatch(/<OsShell|import OsShell/);
     expect(launcher).toContain('data-testid="os-directory"');
+    expect(launcher).toContain("parseTerminal");
+    expect(launcher).toContain("TERMINAL_HINT");
   });
 
   it("OsHeader door buttons are addressable so an end user can hop panes", () => {
     const header = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
     expect(header).toContain('data-testid={`os-door-${door.id}`}');
-    expect(header).toContain("doorFromSearch(search) ?? \"board\"");
+    expect(header).toContain("osDoorHref");
   });
 
   it("LobbyHome mounts the Hub record next to the living board — no Space iframe", () => {
