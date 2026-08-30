@@ -87,13 +87,13 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "no-mainnet-grade",
     claim: "There is no XRPL mainnet attestation that writes MEASURED.",
     verdict: "keep",
-    live: "True gap. Do not close it by inventing an issuer account.",
+    live: "True gap. DEVNET only. Do not close it by inventing an issuer account.",
   },
   {
     id: "trex-absent-issuer",
     claim: "There is no live T-REX / ERC-3643 token CSOAI issues.",
     verdict: "keep",
-    live: "Later role is partner attester of a digest we already signed. Never issuer.",
+    live: "Planned later role is partner attester of a digest we already signed. Never issuer.",
   },
   {
     id: "no-sov-token",
