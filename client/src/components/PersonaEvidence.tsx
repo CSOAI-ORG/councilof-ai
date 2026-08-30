@@ -148,7 +148,7 @@ export default function PersonaEvidence({
 }) {
   const { data, error, loading } = useGspcBoard();
   const board = Array.isArray(data?.axes) ? (data!.axes as GspcAxis[]) : [];
-  const rows: Row[] = axes.map((a) => ({
+  const rows: Row[] = (axes ?? []).map((a) => ({
     ...a,
     axis: board.find((b) => b.axis === a.slug) ?? null,
   }));
