@@ -39,7 +39,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     active_controls: {
       signing_chain: "Ed25519 (estate-chain-1, published did:web:csoai.org) + SHA-256 hash-chain — every card GATED→SIGNED→TIME-ANCHORED",
       watchdog: "external dead-man's switch (10-min) — chain death/env-wipe/key-loss self-heals; boot-time fail-fast assertions",
-      corrections_ledger: "GET /api/corrections — the estate publishes when it was wrong; 13 real self-caught corrections, signed, appended-never-edited",
+      corrections_ledger: "GET /api/corrections — append-only addenda; cite the live length. Never silently edited.",
       drift_detection: "daily reg-watch re-hashes provisions; measurement records go stale when the underlying text changes — re-attest on amendment",
     },
     // CLASS 4: NAMED ACCOUNTABILITY OWNERS
@@ -54,7 +54,7 @@ export const onRequestGet: PagesFunction<Env> = async () => {
       "the signed measurement receipt (h3k card, Ed25519, 60s verify)",
       "this evidence pack (the four classes, signed)",
       "the version-pinned provision text the receipt cites",
-      "the control crosswalk (13 axes × 8 frameworks) with methodology",
+      "the control crosswalk as a view over GET /api/gspc (living board). Not a 13-axis product.",
       "the corrections ledger excerpt (the honesty gate, signed)",
     ],
     // HONEST LIMITS (never overclaim)
