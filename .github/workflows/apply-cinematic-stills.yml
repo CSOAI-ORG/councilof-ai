@@ -1,0 +1,35 @@
+name: apply-cinematic-stills
+on:
+  push:
+    branches: [cursor/home-sections-enhance-cd38]
+    paths:
+      - .github/workflows/apply-cinematic-stills.yml
+      - scripts/_apply_cinematic_stills.py
+  workflow_dispatch:
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/home-sections-enhance-cd38
+      - name: Fetch stills and clean up
+        run: |
+          set -euo pipefail
+          python3 scripts/_apply_cinematic_stills.py
+          git config user.name "Nicholas Templeman"
+          git config user.email "nicholas@csoai.org"
+          git add public/images/cinematic/coliseum-plunge.jpg \
+                  public/images/cinematic/harness-plugin.jpg \
+                  public/images/cinematic/council-os-lobby.jpg
+          git commit -m "feat(home): add three cinematic-world stills"
+          rm -f scripts/_apply_cinematic_stills.py \
+                .github/workflows/apply-cinematic-stills.yml
+          rm -rf scripts/_cinematic_b64
+          git add -A scripts/_apply_cinematic_stills.py \
+                  .github/workflows/apply-cinematic-stills.yml \
+                  scripts/_cinematic_b64
+          git commit -m "chore: remove one-shot cinematic-stills apply"
+          git push origin cursor/home-sections-enhance-cd38
