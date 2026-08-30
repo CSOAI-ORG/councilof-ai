@@ -88,7 +88,7 @@ describe("Council OS tabs", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  // ── one destination, one owner ─────────────────────────────────────────
+  // ── one destination, one owner ───────────────────────────────────────────
   it("never serves the same path from two destinations", () => {
     const paths = [
       ...LOBBY_TABS.filter((t) => t.path).map((t) => t.path),
