@@ -14,6 +14,21 @@ export default function Contact() {
 
   useEffect(() => {
     document.title = 'Contact Us - CSOAI';
+    const arm = new URLSearchParams(window.location.search).get("arm");
+    const subjects: Record<string, string> = {
+      ledger: "Ledger enquiry",
+      data: "Data enquiry",
+      run: "Run / re-attest enquiry",
+    };
+    if (arm && subjects[arm]) {
+      setFormData((prev) => ({
+        ...prev,
+        subject: subjects[arm],
+        message:
+          prev.message ||
+          `Enquiry for the ${arm} arm. Verify stays free. A grade is never sold.`,
+      }));
+    }
   }, []);
 
   const fadeInUp = {
