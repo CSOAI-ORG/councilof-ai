@@ -253,3 +253,116 @@ export default function LobbyOverlay({
     setFramePath(load.path);
     setFrameSrc(withEmbed(load.path));
   }, [page]);
+
+  // A later intent (an in-page CTA fired while the lobby is already open) moves
+  // the pane. `nonce` makes a repeat of the same request land again.
+  useEffect(() => {
+    if (!intent) return;
+    setMinimised(false);
+    const next = tabById(intent.pane);
+    setTabId(intent.pane);
+    if (intent.route) {
+      setOverride({ path: intent.route, label: intent.task ? LOBBY_TASKS[intent.task].label : intent.route });
+      loadPane(intent.route);
+      return;
+    }
+    setOverride(null);
+    if (next.kind !== "local" && next.kind !== "native" && next.path) loadPane(next.path);
+  }, [intent?.nonce, intent?.pane, intent?.route, loadPane, intent?.task]);
+
+  const go = useCallback((t: LobbyTab) => {
+    recordActivity({ kind: "pane", label: t.label, tabId: t.id });
+    setOverride(null);
+    setTabId(t.id);
+    if (t.kind === "local" || t.kind === "native") {
+      // Drop the iframe so a leftover src cannot sit under the native pane.
+      setFramePath("");
+      setFrameSrc("");
+      onHostTab?.(t);
+      return;
+    }
+    if (softwareLeavesOs(t)) {
+      window.location.assign(SOFTWARE_HREF);
+      onHostTab?.(t);
+      return;
+    }
+    if (t.path && isUnframeable(t.path)) {
+      window.location.assign(t.path);
+      return;
+    }
+    if (!page && t.path && isSiteDoor(t.path)) {
+      window.location.assign(t.path);
+      return;
+    }
+    if (t.path) loadPane(t.path);
+    onHostTab?.(t);
+  }, [loadPane, onHostTab, page]);
+
+  const openRoute = useCallback((path: string, label: string) => {
+    recordActivity({ kind: "route", label, path });
+    setOverride({ path, label });
+    loadPane(path);
+  }, [loadPane]);
+
+  // In-pane clicks stay in the iframe and post `coai:embed-nav`. Follow the
+  // path in the rail without remounting the frame (that would flash and lose
+  // scroll). Lobby-chrome navigation still remounts via loadPane().
+  useEffect(() => {
+    const onMsg = (e: MessageEvent) => {
+      applyEmbedNav(e, {
+        assignTop: (href) => window.location.assign(href),
+        setFrameSrc,
+        setFramePath,
+        setTabId,
+        setOverride,
+      });
+    };
+    window.addEventListener("message", onMsg);
+    return () => window.removeEventListener("message", onMsg);
+  }, []);
+
+  // The framed page is same-origin, so Esc pressed INSIDE it can still close the
+  // lobby. Without this, focus in the frame would swallow the shortcut.
+  const onFrameLoad = useCallback(() => {
+    setFrameLoaded(true);
+    try {
+      const doc = frameRef.current?.contentDocument;
+      doc?.addEventListener("keydown", (e: any) => { if (e.key === "Escape") onClose(); });
+    } catch { /* cross-origin or blocked — the outer Esc still works */ }
+  }, [onClose]);
+
+  /**
+   * The framed page is one the site classifies as Library/archive. Opened directly
+   * it carries a "Reference / archive" strip; framed with ?embed=1 that strip is
+   * hidden with the rest of the site chrome, so the OS was quietly presenting an
+   * archive page as a current surface. Same classifier the Library uses, so the two
+   * can never disagree.
+   */
+  const paneIsArchive = !!framePath && isLibraried(framePath.split("?")[0]);
+  /** An auth-gated destination whose frame has bounced to the sign-in form. */
+  const bouncedToLogin = tab.auth === "required" && /^\/login(\/|$|\?)/.test(framePath);
+  const localPane = !override && tab.kind === "local";
+  const nativePane = !override && tab.kind === "native";
+  const panePath = framePath || override?.path || tab.path;
+  const paneLabel = override ? override.label : tab.label;
+  const chatActive = chat.turnCount > 0;
+
+  /**
+   * The pane's breadcrumb trail (OpenRouter-style inner-page chrome), derived
+   * from the live pane state — the owning tab and the path the frame actually
+   * reported. When a human name for the current surface exists (the tab label,
+   * an override's label, a framed page's own title) the trailing crumb prints
+   * it in place of the raw slug; the trail itself never invents a link — see
+   * breadcrumbs.ts.
+   */
+  const crumbs = useMemo(() => {
+    const list = paneCrumbs(tab, panePath, !!override);
+    const last = list[list.length - 1];
+    if (last && paneLabel && paneLabel !== panePath) last.label = paneLabel;
+    return list;
+  }, [tab, panePath, override, paneLabel]);
+
+  useEffect(() => {
+    if (!chatActive) return;
+    requestAnimationFrame(() => threadEndRef.current?.scrollIntoView({ block: "end" }));
+  }, [chat.turnCount, chatActive]);
