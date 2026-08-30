@@ -11,6 +11,7 @@ import PluginBlock from "@/components/home/PluginBlock";
 import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
 import HomeFilms from "@/components/home/HomeFilms";
+import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import HomeDemoLoop from "@/components/home/HomeDemoLoop";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import { setMetaDescription } from "@/lib/utils";
@@ -96,6 +97,7 @@ export default function HomeVerify() {
         </div>
       </main>
 
+      <HomeCinematicWorlds />
       <HomeFilms />
       <ToolStack />
       <LivingStages />
