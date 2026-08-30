@@ -2,9 +2,12 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
+import { OS_RAIL_TABS } from "@/components/lobby/tabs";
 import { BOARD_PANE, DOORS, doorFromSearch, osLeaveForSearch } from "./OsLauncher";
 
 const launcher = readFileSync(resolve(__dirname, "OsLauncher.tsx"), "utf8");
+const overlay = readFileSync(resolve(__dirname, "../components/lobby/LobbyOverlay.tsx"), "utf8");
+const header = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
 
 describe("OsLauncher doors", () => {
   it("keeps the header rail to Board · Verify · Space · Assess · Harness", () => {
@@ -41,11 +44,11 @@ describe("OsLauncher doors", () => {
     expect(osLeaveForSearch("lobby=board")).toBeNull();
   });
 
-  it("mounts the product frame — header, door body, chat — not OsShell", () => {
+  it("mounts the product workspace — header, inner overlay, doors — not OsShell", () => {
     expect(launcher).toContain("<OsHeader");
     expect(launcher).toContain("<OsDoorBody");
-    expect(launcher).toContain('id="os-chat"');
-    expect(launcher).toContain("openLobby");
+    expect(launcher).toContain("<LobbyOverlay");
+    expect(launcher).toContain('mode="page"');
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
     expect(launcher).toContain("/report");
@@ -54,9 +57,21 @@ describe("OsLauncher doors", () => {
   });
 
   it("OsHeader door buttons are addressable so an end user can hop panes", () => {
-    const header = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
     expect(header).toContain('data-testid={`os-door-${door.id}`}');
     expect(header).toContain("doorFromSearch(search) ?? \"board\"");
+    expect(header).toContain("OS_ASK_EVENT");
+  });
+
+  it("page workspace exposes every inner rail tab and the AI side rail", () => {
+    expect(overlay).toContain('mode?: "overlay" | "page"');
+    expect(overlay).toContain("workspacePaneLoadFor");
+    expect(overlay).toContain('inputId={page ? "os-chat"');
+    expect(overlay).toContain('data-testid={page ? "os-workspace"');
+    expect(OS_RAIL_TABS.map((t) => t.id)).toEqual(expect.arrayContaining([
+      "home", "board", "matrix", "results", "models", "tools", "verify", "cards",
+      "state", "evidence", "embed", "products", "harness", "space", "measured",
+      "watchdog", "claimguard", "ras", "library", "workbench", "play",
+    ]));
+    expect(OS_RAIL_TABS.map((t) => t.id)).not.toContain("software");
   });
 });
-
