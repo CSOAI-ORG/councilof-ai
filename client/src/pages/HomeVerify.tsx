@@ -12,6 +12,7 @@ import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
 import HomeFilms from "@/components/home/HomeFilms";
 import HomeDemoLoop from "@/components/home/HomeDemoLoop";
+import HomeUnderstand from "@/components/home/HomeUnderstand";
 import { setMetaDescription } from "@/lib/utils";
 
 export default function HomeVerify() {
@@ -29,14 +30,24 @@ export default function HomeVerify() {
       <HeroSlides />
 
       <main className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <section aria-labelledby="os-h1">
+        <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
+          <section aria-labelledby="os-h1" className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-7">
             <h1 id="os-h1" className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
               Check an AI claim. Or measure your system.
             </h1>
             <p className="mt-3 text-slate-600">
               Empty means not measured. Not a certificate. Free, no account.
             </p>
+            <HomeUnderstand
+              className="mt-5"
+              title="What you can do in this box"
+              items={[
+                "Paste a signed card. Your browser checks the hash and the signature. Nothing is sent.",
+                "Say what you use AI for. We route you to get measured — free, no account.",
+                "Click a row on the board. Empty cells stay empty.",
+                { kind: "usp", text: "Verification is free forever. A rank is never sold." },
+              ]}
+            />
 
             <div className="mt-6 flex flex-wrap gap-3">
               <Link

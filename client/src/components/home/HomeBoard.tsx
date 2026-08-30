@@ -3,6 +3,7 @@
  * Live board only. Empty rows stay empty. No TIE p-values on this pane.
  */
 import { countLine, orderedRows, useGspcBoard, type GspcAxis } from "@/components/board/useGspcBoard";
+import HomeUnderstand from "./HomeUnderstand";
 
 export default function HomeBoard({ highlight }: { highlight?: string | null }) {
   const { data, error, loading } = useGspcBoard();
@@ -11,7 +12,10 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
   const want = (highlight || "").toLowerCase();
 
   return (
-    <section aria-labelledby="home-board-h">
+    <section
+      aria-labelledby="home-board-h"
+      className="rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-7"
+    >
       <h2 id="home-board-h" className="text-xl font-bold text-slate-900">
         GSPC leaderboard
       </h2>
@@ -23,6 +27,15 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
             : count || "Empty stays empty."}
       </p>
       <p className="mt-1 text-sm text-slate-600">Empty rows stay empty. Not a ranking for sale.</p>
+      <HomeUnderstand
+        className="mt-4"
+        title="How to read this table"
+        items={[
+          "A filled row is a measurement. A dash is honest emptiness.",
+          "The count line is living GET /api/gspc — we do not type it into the page.",
+          { kind: "usp", text: "Position is layout, not a purchased rank." },
+        ]}
+      />
 
       {data && !error && (
         <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
