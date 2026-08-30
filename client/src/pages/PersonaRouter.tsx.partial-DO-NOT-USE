@@ -1,0 +1,64 @@
+import { useEffect } from "react";
+import SovereignSpot from "../components/SovereignSpot";
+import { PersonaHeroArt, Slideshow, TrustStrip } from "../components/BrandGraphics";
+import PersonaEvidence from "../components/PersonaEvidence";
+import AxisProof from "../components/AxisProof";
+
+// PersonaRouter — /for/:persona demographic landing pages. Each declared audience lands on a
+// page that speaks to them and routes them into the right EXISTING pages.
+//
+// ── THE CLAIM RULE THAT GOVERNS THIS FILE (read before editing a single string) ───────────
+// Every sentence here is one of two kinds, and they are held to different standards.
+//
+//   (a) A statement about the LAW. Keep it only if it is accurate to the instrument, and
+//       name the article. "Credit scoring is high-risk" is fine; "insurance is high-risk"
+//       was not — the AI Act names LIFE AND HEALTH insurance specifically (Annex III(5)(c)).
+//
+//   (b) A statement about what CSOAI DOES. Keep it only if a PUBLISHED artifact backs it.
+//       The artifacts are: the signed measurement cards under /signed/ (index at
+//       /signed/card_index.json, method at /signed/HOW-TO-VERIFY.md), the living board at
+//       GET /api/gspc, the published crosswalk at /crosswalk/east-west-v1.json, and the
+//       dated corpus feed at /corpus-watch/status.json.
+//
+// WHAT WAS CUT, AND WHY IT MATTERS. These pages used to say CSOAI "maps one control set
+// across DORA, the EU AI Act, and NIST". The only published crosswalk maps the EU AI Act
+// against the UK DRCF principles, Illinois SB 315 and TC260 — four regimes. It contains NO
+// DORA rows and NO NIST rows. DORA is real here, but only as a hashed baseline instrument in
+// the corpus feed, which is a much smaller thing and is now described as the smaller thing.
+// A capability sentence with no artifact behind it is the exact defect this estate measures
+// other people for. Do not reintroduce one; rewrite to what is true, or cut it.
+//
+// NO COUNT IS TYPED ON THIS PAGE. Figures come from PersonaEvidence, which reads them live
+// off /api/gspc. Axis SLUGS below are pointers into that board, not counts.
+
+// PersonaRouter — /for/:persona audience pages.
+//
+// TWO DEFECTS THIS FILE NOW CARRIES THE FIX FOR.
+//
+// 1. These pages were unreachable. Seven Pages Functions under functions/for/ answered
+//    every one of them with a 308 to the bare homepage, so all seven URLs were
+//    byte-identical and none of this differentiated content was ever served. The
+//    functions are deleted; the router below is what a reader gets.
+//
+// 2. Once reachable, they still named no axis, no n and no card — the measurement was
+//    absent from the measurement company's own audience pages. Each persona now declares
+//    the board axis that actually bear on its reader (`axis`, a list of LABELS, which is
+//    canon and safe to write down) and <AxisProof> reads their live rows from
+//    GET /api/gspc. Not one number below is typed: an axis that is an UNMEASURED slot
+//    renders as unmeasured, because a finance reader being shown only the measured axis
+//    would be shown a flattering subset rather than the board.
+
+type Link = { href: string; label: string; note: string };
+type Persona = {
+  key: "sec-filer" | "finance" | "healthcare" | "regulator" | "startup" | "enterprise";
+  eyebrow: string; h1: string; intro: string;
+  links: Link[];
+  /** Board axis ids, exactly as GET /api/gspc names them. Labels only — never figures. */
+  axes: string[];
+  /** Why these axis are the ones this reader should check. */
+  axesWhy: string;
+  slides: { title: string; body: string; tag?: string }[];
+  /** Board axis this audience can actually go and check, with why each is here. */
+  evidence: { lead: string; axes: { slug: string; why: string }[] };
+  faqs: { q: string; a: string }[];
+};
