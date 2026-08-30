@@ -40,10 +40,15 @@ export default function ToolsPage() {
       </pre>
       <button
         type="button"
+        data-testid="copy-mcp-snippet"
         className="mt-3 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
         onClick={async () => {
-          await navigator.clipboard.writeText(MCP_SNIPPET);
-          setCopied(true);
+          try {
+            await navigator.clipboard.writeText(MCP_SNIPPET);
+            setCopied(true);
+          } catch {
+            setCopied(false);
+          }
         }}
       >
         {copied ? "Copied" : "Copy the snippet"}
