@@ -33,11 +33,11 @@ describe("ToolStack hrefs are real pages, not /?lobby=", () => {
     expect(hrefFor({ kind: "pane", pane: "board" })).toBe("/os?lobby=board");
     expect(hrefFor({ kind: "pane", pane: "verify" })).toBe("/gspc-verify");
     expect(hrefFor({ kind: "pane", pane: "measured" })).toBe("/assess");
-    expect(hrefFor({ kind: "pane", pane: "evidence" })).toBe("/evidence-rail");
+    expect(hrefFor({ kind: "pane", pane: "evidence" })).toBe("/gpai-evidence");
     expect(hrefFor({ kind: "pane", pane: "embed" })).toBe("/embed");
     expect(hrefFor({ kind: "pane", pane: "watchdog" })).toBe("/report");
     expect(hrefFor({ kind: "task", task: "insurer-rail" })).toBe("/insurers");
     expect(hrefFor({ kind: "task", task: "specialist-registers" })).toBe("/registers");
-    expect(hrefFor({ kind: "route", path: "/os?lobby=home" })).toBe("/os?lobby=home");
+    expect(hrefFor({ kind: "kind": "route", path: "/os?lobby=home" })).toBe("/os?lobby=home");
   });
 });

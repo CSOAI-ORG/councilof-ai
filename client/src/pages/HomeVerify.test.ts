@@ -77,6 +77,9 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
+    expect(header).toContain("href: '/report'");
+    expect(header).toContain("href: '/for/enterprise'");
+    expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
     expect(header).not.toContain("Start free");
   });
@@ -96,6 +99,7 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("Kimi");
     expect(tools).toContain("Grok");
     expect(tools).toContain("https://councilof.ai/mcp");
+    expect(tools).toContain("mcpServers");
     expect(tools).toMatch(/Ask: board totals/);
     expect(tools).not.toMatch(/lifestyle/i);
   });

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Link } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import {
   BOARD_PANE,
   DOOR_TO_LOBBY,
@@ -8,6 +8,10 @@ import {
   osLeaveForSearch,
   LOBBY_TO_DOOR,
 } from "@/components/os/doors";
+import OsHeader from "@/components/os/OsHeader";
+import OsDoorBody from "@/components/os/OsDoors";
+import { openLobby } from "@/lib/lobbyLink";
+import { useBoardCount } from "@/lib/boardCount";
 
 export {
   BOARD_PANE,
@@ -25,34 +29,97 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Assess", href: "/assess", what: "Get measured. Free. The card is yours." },
   { name: "Evidence", href: "/methodology", what: "How we grade. No model in the verdict." },
   { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
+  { name: "Report", href: "/report", what: "Public incident intake. Signed acknowledgement." },
+  { name: "Plugin", href: "/tools", what: "Paste-ready MCP for Claude, Cursor, Kimi, Grok." },
 ];
 
-/** /os is a directory of real pages. Not AG-UI. No iframe of /. */
+/** /os is the Council OS product frame. Doors are native. Not the unused shell. Not AG-UI. */
 export default function OsLauncher() {
+  const search = useSearch();
+  const [, setLocation] = useLocation();
+  const leave = osLeaveForSearch(search);
+  const door = doorFromSearch(search) ?? "board";
+  const board = useBoardCount();
+  const [ask, setAsk] = useState("");
+
   useEffect(() => {
-    document.title = "Tools | councilof.ai";
+    document.title = "Council OS | councilof.ai";
   }, []);
 
+  useEffect(() => {
+    if (leave) setLocation(leave);
+  }, [leave, setLocation]);
+
   return (
-    <main className="mx-auto max-w-3xl px-4 py-16" data-testid="os-directory">
-      <h1 className="text-3xl font-black tracking-tight text-slate-900">Tools</h1>
-      <p className="mt-3 text-slate-600">
-        Real pages. Not an agent theatre. Plugin users: see{" "}
-        <Link href="/tools" className="font-medium text-emerald-800 hover:underline">
-          /tools
-        </Link>
-        .
-      </p>
-      <ul className="mt-8 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-        {PAGES.map((p) => (
-          <li key={p.href}>
-            <a href={p.href} className="block px-5 py-4 hover:bg-slate-50">
-              <div className="font-semibold text-slate-900">{p.name}</div>
-              <div className="text-sm text-slate-600">{p.what}</div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <div data-testid="os-directory">
+      <OsHeader />
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">
+          Council OS
+        </p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          One workspace. Living counts. Empty stays empty.
+        </h1>
+        <p className="mt-3 max-w-2xl text-slate-600">
+          Board, verify, get measured, arena, and the harness — in this window.
+          Counts come from GET /api/gspc.{" "}
+          <span className="font-semibold text-emerald-900">{board.public_count}</span>
+          . We measure. We do not certify.
+        </p>
+
+        <section aria-label="Council OS door" className="mt-8">
+          <OsDoorBody door={door} />
+        </section>
+
+        <form
+          className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const prompt = ask.trim();
+            if (!prompt) {
+              document.getElementById("os-chat")?.focus();
+              return;
+            }
+            openLobby({ prompt });
+          }}
+        >
+          <label htmlFor="os-chat" className="text-sm font-semibold text-slate-900">
+            Ask the workspace
+          </label>
+          <p className="mt-1 text-xs text-slate-600">
+            Typed, never sent until you press Ask. Answers from published measurement, or a refusal.
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <input
+              id="os-chat"
+              value={ask}
+              onChange={(e) => setAsk(e.target.value)}
+              placeholder="Ask about the board, a card, or what get-measured actually runs"
+              className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-600"
+            />
+            <button
+              type="submit"
+              className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Ask
+            </button>
+          </div>
+        </form>
+
+        <h2 className="mt-12 text-sm font-bold uppercase tracking-wide text-slate-500">
+          Also open as a full page
+        </h2>
+        <ul className="mt-3 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+          {PAGES.map((p) => (
+            <li key={p.href}>
+              <Link href={p.href} className="block px-5 py-4 hover:bg-slate-50">
+                <div className="font-semibold text-slate-900">{p.name}</div>
+                <div className="text-sm text-slate-600">{p.what}</div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </main>
+    </div>
   );
 }

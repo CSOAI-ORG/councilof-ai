@@ -1,14 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { setMetaDescription } from "@/lib/utils";
 
+const MCP_URL = "https://councilof.ai/mcp";
+const MCP_SNIPPET = `{
+  "mcpServers": {
+    "gspc": {
+      "url": "${MCP_URL}"
+    }
+  }
+}`;
+
 const HOSTS = [
-  { name: "Claude", how: "Add gspc → https://councilof.ai/mcp" },
-  { name: "Cursor", how: "Add gspc in ~/.cursor/mcp.json with the URL below." },
-  { name: "Kimi", how: "Add the same MCP URL in the tool’s MCP settings." },
-  { name: "Grok", how: "Add the same MCP URL, or grok plugin install CSOAI-ORG/council-of-ai-grok" },
+  { name: "Claude", how: "Add gspc → paste the JSON below, or the URL." },
+  { name: "Cursor", how: "Paste the JSON into ~/.cursor/mcp.json" },
+  { name: "Kimi", how: "MCP settings → same JSON / URL." },
+  { name: "Grok", how: "Same URL, or grok plugin install CSOAI-ORG/council-of-ai-grok" },
 ] as const;
 
 export default function ToolsPage() {
+  const [copied, setCopied] = useState(false);
   useEffect(() => {
     document.title = "Add gspc in your tool | councilof.ai";
     setMetaDescription(
@@ -24,9 +34,20 @@ export default function ToolsPage() {
       <p className="mt-3 text-slate-600">
         Ask: board totals. Paste a card to verify. Four tools. No 23rd axis.
       </p>
-      <p className="mt-4 font-mono text-sm text-emerald-900">
-        https://councilof.ai/mcp
-      </p>
+      <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
+      <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
+        <code>{MCP_SNIPPET}</code>
+      </pre>
+      <button
+        type="button"
+        className="mt-3 rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+        onClick={async () => {
+          await navigator.clipboard.writeText(MCP_SNIPPET);
+          setCopied(true);
+        }}
+      >
+        {copied ? "Copied" : "Copy the snippet"}
+      </button>
       <ol className="mt-8 space-y-4">
         {HOSTS.map((h) => (
           <li key={h.name} className="rounded-xl border border-slate-200 bg-white p-4">
