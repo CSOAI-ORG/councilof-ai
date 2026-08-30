@@ -1,0 +1,171 @@
+addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [activeDropdown]);
+
+  // SPA hops keep this header mounted. Close the mega-menu so a leftover
+  // panel cannot sit on top of the next page's buttons.
+  useEffect(() => {
+    setActiveDropdown(null);
+    setMobileMenuOpen(false);
+    setSearchOpen(false);
+  }, [location]);
+
+  if (hideChrome) return null;
+
+  return (
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-card/95 shadow-sm backdrop-blur-md">
+      <nav id="navigation" className="container mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <a
+            href="/"
+            className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+          >
+            {/* Institutional mark — flat green shield, white field, measurement temple.
+                Flat by design: a gradient shield reads as a software product, a flat one
+                reads as a standards body. Same geometry as /csoai-icon.svg so the header,
+                the favicon and the schema.org logo cannot drift apart. */}
+            <div className="relative w-10 h-10">
+              <svg viewBox="0 0 100 100" className="w-full h-full" role="img" aria-label="Council of AI">
+                <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
+                <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
+                <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
+                <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
+                <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
+                <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
+                <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
+              </svg>
+            </div>
+            <span className="text-xl 2xl:text-2xl font-bold text-emerald-700 tracking-tight whitespace-nowrap">Council of AI</span>
+          </a>
+
+          {/* Desktop Navigation — Logo · Verify · Get measured · Board · Tools. Rest is footer /library. */}
+          <div className="hidden md:flex items-center" ref={dropdownRef}>
+            <div className="flex items-center gap-1 2xl:gap-3">
+              <div className="flex items-center gap-1 xl:hidden">
+              {PRIMARY_LINKS.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                    isActive(item.href)
+                      ? 'text-emerald-700 bg-emerald-50'
+                      : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ))}
+              </div>
+              <div className="hidden xl:flex items-center gap-1 2xl:gap-3">
+              {navigation.map((item) => (
+                <div
+                  key={item.name}
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(item.name)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <button
+                    data-nav-trigger={item.name}
+                    aria-haspopup="true"
+                    aria-expanded={activeDropdown === item.name}
+                    aria-controls={`nav-panel-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                    className={`px-2 2xl:px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1 whitespace-nowrap ${
+                      isActive(item.href) || activeDropdown === item.name
+                        ? 'text-emerald-700 bg-emerald-50'
+                        : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
+                    }`}
+                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                    onFocus={() => handleMouseEnter(item.name)}
+                  >
+                    {item.name}
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform duration-200 ${
+                        activeDropdown === item.name ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {activeDropdown === item.name && (
+                    <div
+                      id={`nav-panel-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                      className="absolute left-0 top-full pt-2 z-50"
+                      onMouseEnter={() => handleMouseEnter(item.name)}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <div className="w-72 max-h-[min(72vh,40rem)] overflow-y-auto rounded-xl border border-border bg-popover shadow-xl">
+                        <div className="border-b border-border bg-primary/[0.07] px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <item.icon className="h-5 w-5 text-emerald-600" />
+                            <div>
+                              <div className="font-semibold text-foreground">{item.name}</div>
+                              <div className="text-xs text-muted-foreground">{item.description}</div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="py-2">
+                          {item.submenu.map((subItem) => (
+                            <div key={subItem.href + subItem.name}>
+                              {subItem.section && (
+                                <div className="px-4 pt-3 pb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                  {subItem.section}
+                                </div>
+                              )}
+                              <a
+                                href={subItem.href}
+                                target={subItem.external ? '_blank' : undefined}
+                                rel={subItem.external ? 'noreferrer' : undefined}
+                                className="block px-4 py-2.5 hover:bg-muted focus:bg-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 transition-colors group"
+                                onClick={() => setActiveDropdown(null)}
+                              >
+                                <div className="font-medium text-foreground group-hover:text-emerald-700 text-sm">
+                                  {subItem.name}
+                                  {subItem.external && (
+                                    <span className="ml-1.5 align-middle text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
+                                      JSON
+                                    </span>
+                                  )}
+                                </div>
+                                <div className="text-xs text-muted-foreground mt-0.5">
+                                  {subItem.description}
+                                </div>
+                              </a>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="px-4 py-2 bg-muted border-t border-border">
+                          <a
+                            href={item.href}
+                            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
+                            onClick={() => setActiveDropdown(null)}
+                          >
+                            View all {item.name.toLowerCase()} &rarr;
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Side Actions — flex-nowrap + shrink-0 prevents vertical-letter collapse on 1280-1400px viewports */}
+          <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
+            {/* Search */}
+            <a
+              href="/os"
+              className="hidden xl:inline-flex rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Council OS
+            </a>
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5" />
+    
