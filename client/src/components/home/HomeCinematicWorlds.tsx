@@ -173,7 +173,7 @@ function WorldBand({ world, count }: { world: World; count: string }) {
       aria-labelledby={`world-${world.id}-h`}
       className={dark ? "bg-[#04120c] text-emerald-50" : "bg-white text-slate-900"}
     >
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <div>
             <p
@@ -257,7 +257,7 @@ export default function HomeCinematicWorlds() {
   const board = useBoardCount();
   return (
     <section id="worlds" aria-labelledby="worlds-h" className="border-t border-slate-200">
-      <div className="bg-slate-50 px-4 py-10 sm:px-6">
+      <div className="bg-slate-50 px-4 py-16 sm:px-6 sm:py-20">
         <div className="mx-auto max-w-6xl">
           <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">Three worlds</p>
           <h2 id="worlds-h" className="mt-2 text-3xl font-black tracking-tight text-slate-900">
