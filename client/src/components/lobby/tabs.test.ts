@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
-  DASHBOARD_TABS, DEFAULT_TAB, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, routesIn, softwareLeavesOs, SOFTWARE_HREF, tabById,
+  DASHBOARD_TABS, DEFAULT_TAB, isDashboardTab, isDocumentFrame, isOsRailTab, isSiteDoor, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, OS_RAIL_TABS, paneLoadFor, workspacePaneLoadFor, routesIn, softwareLeavesOs, SOFTWARE_HREF, tabById,
 } from "./tabs";
 import { PRIMARY_PATHS } from "../../data/library-ia";
 
@@ -24,12 +24,15 @@ describe("Council OS tabs", () => {
     expect(isSiteDoor("/library")).toBe(false);
   });
 
-  it("keeps the OS rail to instruments plus Home and Play", () => {
-    expect(OS_RAIL_TABS.map((t) => t.id)).toEqual([
-      "home", "board", "verify", "cards", "evidence", "embed", "play",
-    ]);
+  it("lists every inner pane on the OS rail except Software", () => {
+    expect(OS_RAIL_TABS.map((t) => t.id)).toEqual(
+      LOBBY_TABS.filter((t) => t.id !== "software").map((t) => t.id),
+    );
     expect(isOsRailTab("software")).toBe(false);
-    expect(isOsRailTab("products")).toBe(false);
+    expect(isOsRailTab("products")).toBe(true);
+    expect(isOsRailTab("matrix")).toBe(true);
+    expect(isOsRailTab("space")).toBe(true);
+    expect(isOsRailTab("measured")).toBe(true);
     expect(tabById("software").path).toBe("/dashboard");
     expect(isSiteDoor("/dashboard")).toBe(true);
     expect(isDocumentFrame("/methodology")).toBe(true);
@@ -85,7 +88,7 @@ describe("Council OS tabs", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  // ── one destination, one owner ───────────────────────────────────────────
+  // ── one destination, one owner ─────────────────────────────────────────
   it("never serves the same path from two destinations", () => {
     const paths = [
       ...LOBBY_TABS.filter((t) => t.path).map((t) => t.path),
@@ -93,7 +96,7 @@ describe("Council OS tabs", () => {
     ];
     const seen = new Map<string, number>();
     for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
-    // measured + ras both name /assess (Get-measured vs Readiness). Not on the OS rail.
+    // measured + ras both name /assess (Get-measured vs Readiness). Both stay on the rail.
     expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([["/assess", 2]]);
   });
 
@@ -245,10 +248,13 @@ describe("TUI 2 — OS instrument chrome", () => {
     expect(tabById(DEFAULT_TAB).kind).toBe("native");
   });
 
-  it("desktop/rail is board, verify, cards, evidence, embed, plus Play", () => {
-    expect(OS_RAIL_TABS.filter((t) => t.id !== "home").map((t) => t.id)).toEqual([
-      "board", "verify", "cards", "evidence", "embed", "play",
-    ]);
+  it("desktop/rail carries every inner pane except Software", () => {
+    expect(OS_RAIL_TABS.filter((t) => t.id !== "home").map((t) => t.id)).toEqual(
+      LOBBY_TABS.filter((t) => t.id !== "home" && t.id !== "software").map((t) => t.id),
+    );
+    expect(OS_RAIL_TABS.map((t) => t.id)).toContain("matrix");
+    expect(OS_RAIL_TABS.map((t) => t.id)).toContain("models");
+    expect(OS_RAIL_TABS.map((t) => t.id)).toContain("harness");
   });
 
   it("board, verify, cards, evidence, embed are native — Play is local", () => {
@@ -284,5 +290,16 @@ describe("TUI 2 — OS instrument chrome", () => {
     expect(paneLoadFor("/cra-readiness")).toEqual({ action: "iframe", path: "/cra-readiness" });
     expect(paneLoadFor("/products")).toEqual({ action: "navigate", path: "/products" });
     expect(paneLoadFor("/gspc-scoreboard")).toEqual({ action: "navigate", path: "/gspc-scoreboard" });
+  });
+
+  it("page workspace iframes inner destinations and still leaves chrome aliases", () => {
+    expect(workspacePaneLoadFor("/models")).toEqual({ action: "iframe", path: "/models" });
+    expect(workspacePaneLoadFor("/tools")).toEqual({ action: "iframe", path: "/tools" });
+    expect(workspacePaneLoadFor("/gspc-arena")).toEqual({ action: "iframe", path: "/gspc-arena" });
+    expect(workspacePaneLoadFor("/assess")).toEqual({ action: "iframe", path: "/assess" });
+    expect(workspacePaneLoadFor("/products")).toEqual({ action: "iframe", path: "/products" });
+    expect(workspacePaneLoadFor("/dashboard")).toEqual({ action: "navigate", path: "/dashboard" });
+    expect(workspacePaneLoadFor("/os")).toEqual({ action: "navigate", path: "/os" });
+    expect(workspacePaneLoadFor("/")).toEqual({ action: "navigate", path: "/" });
   });
 });

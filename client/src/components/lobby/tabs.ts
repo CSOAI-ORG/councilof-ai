@@ -269,7 +269,7 @@ export const LOBBY_TABS: LobbyTab[] = [
 
 /** Live pages framed from Home / chat without a dedicated rail tab. */
 export const LOBBY_ROUTES: LobbyRoute[] = [
-  // ── the shipped products the rail does not have a pane for ──────────────
+  //  ── the shipped products the rail does not have a pane for ──────────────
   // Each is a live route the OS frames with ?embed=1, so in-pane navigation
   // stays inside the workspace. GPAI Evidence and Embed are absent HERE on
   // purpose: the native Evidence pack / Embed kit panes own them, and each pane
@@ -302,7 +302,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     group: "product",
     cues: /\b(legacy on[- ]?ramp|mainframe|cobol)\b/i,
   },
-  // ── the audience doors ─────────────────────────────────────────────────
+  //  ── the audience doors ─────────────────────────────────────────
   // These were a hard-coded array inside LobbyHome, where "Enterprises" pointed
   // at /assess — a tile promising an audience page and delivering the assessment
   // form the Get-measured tab already owns. They are real routes now, each at its
@@ -487,16 +487,13 @@ export function isSiteDoor(path: string): boolean {
   return (SITE_DOORS as readonly string[]).includes(bare);
 }
 
-/** Left rail of Council OS: instruments + Home + Play. Not the sitemap. */
-export const OS_RAIL_IDS: LobbyTabId[] = [
-  "home",
-  "board",
-  "verify",
-  "cards",
-  "evidence",
-  "embed",
-  "play",
-];
+/**
+ * Left rail of Council OS: every inner pane. Software (DSH) is the one tab
+ * that leaves /os — it is a real /dashboard navigation, never a framed pane.
+ */
+export const OS_RAIL_IDS: LobbyTabId[] = LOBBY_TABS
+  .filter((t) => t.id !== "software")
+  .map((t) => t.id);
 
 export function isOsRailTab(id: LobbyTabId): boolean {
   return OS_RAIL_IDS.includes(id);
@@ -524,6 +521,18 @@ export type PaneLoad =
 
 export function paneLoadFor(path: string): PaneLoad {
   if (isUnframeable(path) || isSiteDoor(path) || !isDocumentFrame(path)) {
+    return { action: "navigate", path };
+  }
+  return { action: "iframe", path };
+}
+
+/**
+ * /os page workspace: keep a destination inside the centre pane.
+ * Only unframeable chrome (/, /os, /dashboard, OS aliases) still leaves.
+ */
+export function workspacePaneLoadFor(path: string): PaneLoad {
+  const bare = pathBare(path);
+  if (isUnframeable(path) || bare === "/" || bare === "/os" || bare === "/dashboard") {
     return { action: "navigate", path };
   }
   return { action: "iframe", path };
