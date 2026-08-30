@@ -76,7 +76,9 @@ describe("Council OS tabs", () => {
     expect(matchRoute("show the system card")?.path).toBe("/system-card");
     expect(matchRoute("open the mcp fleet")?.path).toBe("/mcp-fleet");
     expect(matchRoute("show the regulation feed")?.path).toBe("/feed");
-    expect(matchTab("open the crosswalk")?.id).toBe("matrix");
+    // crosswalk owns its own route cue — not the matrix tab
+    expect(matchRoute("open the crosswalk")?.path).toBe("/crosswalk");
+    expect(matchTab("open the crosswalk")).toBeNull();
     expect(matchRoute("what is the weather")).toBeNull();
   });
 
@@ -93,8 +95,8 @@ describe("Council OS tabs", () => {
     ];
     const seen = new Map<string, number>();
     for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
-    // measured + ras both name /assess (Get-measured vs Readiness). Not on the OS rail.
-    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([["/assess", 2]]);
+    // ras owns /readiness-assessment; measured owns /assess — no shared path.
+    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([]);
   });
 
   it("keeps /honesty on the rail tab only — the audited duplicate is gone", () => {
