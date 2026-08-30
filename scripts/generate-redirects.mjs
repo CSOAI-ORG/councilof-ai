@@ -149,12 +149,11 @@ const EXISTING = [
   "/enterprises            /os?lobby=assess&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
-  // /for is an index with no page of its own — send it to the default audience. The
-  // trailing-slash form needs its own rule: it used to be swallowed by a Pages Function
-  // at functions/for/index.ts (deleted with the rest of the /for/* suppression), and
-  // without a rule here it falls through the catch-all to the SPA shell instead.
-  "/for                    /for/enterprise/             308",
-  "/for/                   /for/enterprise/             308",
+  // /for is an index with no page of its own. functions/for.ts already 308s /for
+  // onto the Council OS assess door — keep the generated file identical so /for/
+  // (no function) does not land on /for/enterprise/ while /for lands on OS.
+  "/for                    /os?lobby=assess&task=enterprise-start  308",
+  "/for/                   /os?lobby=assess&task=enterprise-start  308",
 
   // --- Stage 39/40 top-down align (J-D1 · J-D2 · J-D5 · datasets) ---
   "/regulation             /library/regulation/         308",
@@ -280,7 +279,7 @@ const lines = [
   "# then every splat rule (100-rule dynamic budget), catch-all last. One splat placed",
   "# early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —",
   `# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: ${DYNAMIC_RULES.filter(IS_DYNAMIC).length + 1}/100.`,
-  "# Enforced by scripts/redirects-guard.mjs.",
+  "# Enforced by scripts.redirects-guard.mjs.",
   "",
   ...STATIC_RULES,
   "",
