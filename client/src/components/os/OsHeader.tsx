@@ -31,7 +31,7 @@ import { Button } from "@/components/ui/button";
 import { FOCUS } from "@/components/lobby/glass";
 import { DOORS, DOOR_TO_LOBBY, doorFromSearch, type DoorId } from "@/components/os/doors";
 import { isEmbedded } from "@/lib/embed";
-import { osDoorHref } from "@/lib/lobbyLink";
+import { OS_ASK_EVENT, osDoorHref } from "@/lib/lobbyLink";
 
 function ColiseumGlyph({ className }: { className?: string }) {
   return (
@@ -124,9 +124,12 @@ export default function OsHeader() {
           <>
           <button
             type="button"
-            onClick={() => document.getElementById("os-chat")?.focus()}
+            onClick={() => {
+              window.dispatchEvent(new Event(OS_ASK_EVENT));
+              document.getElementById("os-chat")?.focus();
+            }}
             className={`rounded-lg bg-emerald-700 px-3 py-1.5 text-sm font-semibold text-white hover:bg-emerald-800 ${FOCUS}`}
-            title="Chat is Council OS — the AG UI"
+            title="Chat is Council OS — the AI rail"
           >
             Chat
           </button>

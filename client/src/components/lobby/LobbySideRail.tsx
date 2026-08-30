@@ -76,6 +76,7 @@ export default function LobbySideRail({
 
   return (
     <aside
+      data-testid="os-side-rail"
       aria-label="Reports, tasks and chats"
       className={`${SURFACE} ${SP.rail} flex h-full w-full flex-col`}
       style={panelStyle}

@@ -5,7 +5,7 @@ import LivingBoard from "./LivingBoard";
 /**
  * LobbyHome — the Council OS desktop.
  *
- * Living board first. Then the five instruments + Play. Not the sitemap.
+ * Living board first. Then every inner pane except Software. Not a second sitemap.
  * Sign-in is a real navigation to /dashboard (DSH), never an iframe inside /os.
  */
 

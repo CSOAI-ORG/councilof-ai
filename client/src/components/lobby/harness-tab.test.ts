@@ -20,8 +20,10 @@ describe("harness tab", () => {
   it("appears in the dashboard sidebar (it has a real path)", () => {
     expect(DASHBOARD_TABS.some((t) => t.id === "harness")).toBe(true);
   });
-  it("has no duplicate path across tabs", () => {
+  it("has no duplicate path across tabs except the two /assess doors", () => {
     const paths = LOBBY_TABS.map((t) => t.path).filter(Boolean);
-    expect(new Set(paths).size).toBe(paths.length);
+    const counts = new Map<string, number>();
+    for (const p of paths) counts.set(p, (counts.get(p) ?? 0) + 1);
+    expect([...counts.entries()].filter(([, n]) => n > 1)).toEqual([["/assess", 2]]);
   });
 });

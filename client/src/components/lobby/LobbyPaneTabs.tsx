@@ -111,6 +111,7 @@ export default function LobbyPaneTabs({
           <button
             key={t.id}
             id={tabDomId(t.id)}
+            data-testid={`os-rail-tab-${t.id}`}
             type="button"
             role="tab"
             aria-selected={on}
