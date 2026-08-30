@@ -82,7 +82,7 @@ type RegFeed = {
   deadlines?: { date: string; instrument: string; what: string; basis?: string; status?: string }[];
 };
 
-/* ─── shared shapes ───────────────────────────────────────── */
+/* ─── shared shapes ───────────────────────────────────────────── */
 
 type Point = { tag: "pain" | "benefit" | "usp"; text: string };
 
@@ -258,7 +258,7 @@ function Body({ children }: { children: ReactNode }) {
   return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
 }
 
-/* ─── 1 · independence ────────────────────────────────────────── */
+/* ─── 1 · independence ─────────────────────────────────────────── */
 
 function Independence() {
   return (
@@ -304,7 +304,7 @@ function Independence() {
   );
 }
 
-/* ─── 2 · the boundary ──────────────────────────────────────── */
+/* ─── 2 · the boundary ──────────────────────────────────────────── */
 
 function Boundary() {
   return (
@@ -348,7 +348,7 @@ function Boundary() {
   );
 }
 
-/* ─── 3 · verify it yourself ──────────────────────────────────── */
+/* ─── 3 · verify it yourself ────────────────────────────────────── */
 
 const VERIFY_STEPS = [
   {
