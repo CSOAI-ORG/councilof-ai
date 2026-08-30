@@ -496,16 +496,16 @@ function OwnErrors() {
 
 /* ─── 5 · living law ────────────────────────────────────────── */
 
-function LivingLaw() {
+export function LivingLaw() {
   const feed = useJson<RegFeed>("/api/regulation");
   const today = new Date().toISOString().slice(0, 10);
   const next = (feed?.deadlines ?? []).filter((e) => e.date >= today).slice(0, 3);
 
   return (
     <HeavyBand
-      image="/images/band/clock.png"
-      objectPosition="28% 50%"
-      alt="A plain white clock face with a single green hand"
+      image="/images/liveness_drift_engine.jpg"
+      objectPosition="70% 50%"
+      alt="Two clay figures at a console beside an hourglass, EUR-Lex and legislation.gov.uk feeding a re-attestation seal"
       panelSide="right"
     >
       <Kicker>Living law</Kicker>
@@ -549,7 +549,7 @@ function LivingLaw() {
 
 /* ─── 6 · the live board, with humans beside it ───────────────────────── */
 
-function LiveBoard() {
+export function LiveBoard() {
   const gspc = useJson<Gspc>("/api/gspc");
   const reported = useJson<Reported>("/api/reported");
 
@@ -566,9 +566,9 @@ function LiveBoard() {
 
   return (
     <HeavyBand
-      image="/images/band/hardened.png"
-      objectPosition="72% 50%"
-      alt="A field of pale solids linked by a lattice of green light"
+      image="/images/secure_evidence_vault.jpg"
+      objectPosition="35% 50%"
+      alt="Three clay figures pointing at a glowing signed credential in front of an open vault"
       panelSide="left"
     >
       <Kicker>The board{stamp ? ` · stamped ${stamp}` : ""}</Kicker>
@@ -659,8 +659,6 @@ export default function LivingStages() {
       <Boundary />
       <VerifyYourself />
       <OwnErrors />
-      <LivingLaw />
-      <LiveBoard />
     </div>
   );
 }
