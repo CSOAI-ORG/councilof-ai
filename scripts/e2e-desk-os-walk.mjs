@@ -173,7 +173,7 @@ try {
 }
 
 console.log(`\n${notes.length} passed, ${errors.length} failed, base=${BASE}`);
-<if errors.length) {
+if (errors.length) {
   for (const e of errors) console.log("  · " + e);
   process.exit(1);
 }
