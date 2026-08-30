@@ -121,7 +121,12 @@ for (const dir of STRANGER_DIRS) {
 }
 
 for (const slug of VENDORS) n += pretty(`vs/${slug}`, compare);
-for (const p of PERSONAS) n += pretty(`for/${p}`, home);
+// Never overwrite a prerendered /for/:persona page with HOME. That was why
+// live /for/startup hydrated correctly but the static HTML was the homepage.
+for (const p of PERSONAS) {
+  const src = fromDir(`for/${p}`, home);
+  n += pretty(`for/${p}`, src, false);
+}
 for (const s of INDUSTRIES) n += pretty(`industries/${s}`, industriesHub);
 n += pretty("library/axes", library);
 n += pretty("library/measurement", library);
