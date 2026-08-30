@@ -15,6 +15,8 @@ describe("cinematic three-world merge contract", () => {
     expect(home).toContain("<HomeCinematicWorlds");
     expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeCinematicWorlds"));
     expect(v3).not.toContain("HomeCinematicWorlds");
+    expect(worlds).toContain("lg:grid-cols-3");
+    expect(worlds).toContain("Arena. Harness. Front door.");
     expect(worlds).toContain("/images/cinematic/coliseum-plunge.jpg");
     expect(worlds).toContain("/images/cinematic/harness-plugin.jpg");
     expect(worlds).toContain("/images/cinematic/council-os-lobby.jpg");
