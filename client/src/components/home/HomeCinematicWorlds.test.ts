@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { CINEMATIC_VIDEO } from "./HomeCinematicWorlds";
 
 const worlds = readFileSync(resolve(__dirname, "HomeCinematicWorlds.tsx"), "utf8");
+const living = readFileSync(resolve(__dirname, "LivingStages.tsx"), "utf8");
 const home = readFileSync(resolve(__dirname, "../../pages/HomeVerify.tsx"), "utf8");
 const v3 = readFileSync(resolve(__dirname, "../../pages/NewHome-v3.tsx"), "utf8");
 
@@ -15,7 +16,12 @@ describe("cinematic three-world merge contract", () => {
     expect(home).toContain("<HomeCinematicWorlds");
     expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeCinematicWorlds"));
     expect(v3).not.toContain("HomeCinematicWorlds");
-    expect(worlds).toContain("lg:grid-cols-3");
+    expect(worlds).toContain("<LivingLaw");
+    expect(worlds).toContain("<LiveBoard");
+    expect(worlds.indexOf("<WorldCard world={arena}")).toBeLessThan(worlds.indexOf("<LivingLaw"));
+    expect(worlds.indexOf("<LivingLaw")).toBeLessThan(worlds.indexOf("<WorldCard world={harness}"));
+    expect(worlds.indexOf("<WorldCard world={harness}")).toBeLessThan(worlds.indexOf("<LiveBoard"));
+    expect(worlds.indexOf("<LiveBoard")).toBeLessThan(worlds.indexOf("<WorldCard world={door}"));
     expect(worlds).toContain("Arena. Harness. Front door.");
     expect(worlds).toContain("/images/cinematic/coliseum-plunge.jpg");
     expect(worlds).toContain("/images/cinematic/harness-plugin.jpg");
@@ -33,5 +39,14 @@ describe("cinematic three-world merge contract", () => {
     expect(shipped).toContain("Jail is measured");
     expect(shipped).toContain("TIE");
     expect(worlds).toContain("public_count");
+  });
+
+  it("uses unused clay plates for living law and the board band", () => {
+    expect(living).toContain("/images/liveness_drift_engine.jpg");
+    expect(living).toContain("/images/secure_evidence_vault.jpg");
+    expect(living).not.toContain("/images/band/clock.png");
+    const tail = living.slice(living.indexOf("export default function LivingStages"));
+    expect(tail).not.toContain("<LivingLaw");
+    expect(tail).not.toContain("<LiveBoard");
   });
 });

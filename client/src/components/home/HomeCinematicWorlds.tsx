@@ -1,5 +1,5 @@
 /**
- * HomeCinematicWorlds — three films in one row: Arena · Harness · Front door.
+ * HomeCinematicWorlds — Arena, then living law, Harness, then the board, Front door.
  *
  * MERGE CONTRACT. Living GET /api/gspc is totals.public_count. Jail is MEASURED,
  * TIE stays TIE. No 22/22, Six-axis, Dunder Mifflin, bought ranks, or pip install csoai.
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { VideoEmbed } from "@/components/scrollworld";
 import { useBoardCount } from "@/lib/boardCount";
+import { LivingLaw, LiveBoard } from "./LivingStages";
 
 export const CINEMATIC_VIDEO = {
   coliseum: "/videos/csoai-coliseum-plunge.mp4",
@@ -131,15 +132,18 @@ function WorldCard({ world, count }: { world: World; count: string }) {
     <article
       id={`world-${world.id}`}
       aria-labelledby={`world-${world.id}-h`}
-      className="flex flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_18px_40px_-28px_rgba(4,18,12,.45)]"
+      className="border-t border-slate-200 bg-white py-16 sm:py-24"
     >
-      <WorldMedia world={world} />
-      <div className="flex flex-1 flex-col px-5 py-6 sm:px-6">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-14">
+      <div className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_18px_40px_-28px_rgba(4,18,12,.45)]">
+        <WorldMedia world={world} />
+      </div>
+      <div className="flex flex-col">
         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-700">{world.kicker}</p>
-        <h3 id={`world-${world.id}-h`} className="mt-2 text-2xl font-black tracking-tight text-slate-900">
+        <h3 id={`world-${world.id}-h`} className="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
           {world.headline}
         </h3>
-        <p className="mt-3 text-[15px] leading-relaxed text-slate-600">{world.lede}</p>
+        <p className="mt-3 text-[16px] leading-relaxed text-slate-600">{world.lede}</p>
         {world.id === "os" && (
           <p className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-950">
             {count}
@@ -173,29 +177,33 @@ function WorldCard({ world, count }: { world: World; count: string }) {
           </Link>
         </div>
       </div>
+      </div>
     </article>
   );
 }
 
 export default function HomeCinematicWorlds() {
   const board = useBoardCount();
+  const [arena, harness, door] = WORLDS;
   return (
-    <section id="worlds" aria-labelledby="worlds-h" className="border-t border-slate-200 bg-slate-50 py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-700">Three worlds</p>
-        <h2 id="worlds-h" className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-          Arena. Harness. Front door.
-        </h2>
-        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-          Three landscape films, one row. Until the file is on the path, you see the still.
-          Counts stay living. Empty stays empty.
-        </p>
-        <div className="mt-14 grid gap-8 lg:grid-cols-3 lg:gap-7">
-          {WORLDS.map((w) => (
-            <WorldCard key={w.id} world={w} count={board.public_count} />
-          ))}
+    <div id="worlds">
+      <section aria-labelledby="worlds-h" className="border-t border-slate-200 bg-slate-50 py-16 sm:py-20">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-emerald-700">Three worlds</p>
+          <h2 id="worlds-h" className="mt-3 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+            Arena. Harness. Front door.
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+            One film at a time. Living law sits between the arena and the harness.
+            The board sits between the harness and the front door. Counts stay living.
+          </p>
         </div>
-      </div>
-    </section>
+      </section>
+      <WorldCard world={arena} count={board.public_count} />
+      <LivingLaw />
+      <WorldCard world={harness} count={board.public_count} />
+      <LiveBoard />
+      <WorldCard world={door} count={board.public_count} />
+    </div>
   );
 }
