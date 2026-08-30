@@ -119,8 +119,11 @@ export function loadGspcBoard(): Promise<GspcPayload> {
   if (!inflight) {
     inflight = fetchGspcPayload(GSPC_ENDPOINT)
       .catch((e) => {
+        // Local vite proxies /api to a missing :3001 (HTTP 500). Prerender
+        // serves the SPA shell as HTML. Neither is the living board — read
+        // the public origin instead of painting an empty desk.
         const msg = String((e as Error)?.message ?? e);
-        if (/HTML|not JSON|Unexpected token/i.test(msg)) {
+        if (/HTML|not JSON|Unexpected token|HTTP [45]\d\d|Failed to fetch|NetworkError/i.test(msg)) {
           return fetchGspcPayload(LIVE_GSPC);
         }
         throw e;
