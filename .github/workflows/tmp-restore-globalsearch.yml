@@ -1,0 +1,41 @@
+name: tmp-restore-globalsearch
+on:
+  push:
+    branches: [cursor/os-e2e-polish-cd38]
+    paths:
+      - .github/workflows/tmp-restore-globalsearch.yml
+jobs:
+  restore:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cursor/os-e2e-polish-cd38
+          fetch-depth: 0
+      - name: Restore GlobalSearch from last complete blob plus three hrefs
+        run: |
+          git show aa35c132c1bab6d8da4e516d4e4dc079dd82e2e9:client/src/components/GlobalSearch.tsx > client/src/components/GlobalSearch.tsx
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('client/src/components/GlobalSearch.tsx')
+          t = p.read_text()
+          r1 = "  { id: 'watchdog', title: 'Report Incident', description: 'Submit an AI safety incident report', category: 'pages', href: '/watchdog', icon: AlertTriangle, keywords: ['report', 'incident', 'safety'] },"
+          n1 = "  { id: 'watchdog', title: 'Report Incident', description: 'Submit an AI safety incident report', category: 'pages', href: '/report', icon: AlertTriangle, keywords: ['report', 'incident', 'safety'] },"
+          r2 = "  { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },"
+          n2 = "  { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/for/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },"
+          r3 = "  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },"
+          n3 = "  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/report', icon: AlertTriangle, color: 'bg-red-500' },"
+          assert t.count(r1)==1 and t.count(r2)==1 and t.count(r3)==1
+          p.write_text(t.replace(r1,n1).replace(r2,n2).replace(r3,n3))
+          PY
+      - name: Commit restored GlobalSearch
+        run: |
+          git config user.name "Nicholas Templeman"
+          git config user.email "nicholas@csoai.org"
+          git add client/src/components/GlobalSearch.tsx
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(personas): restore GlobalSearch.tsx exact disk bytes (report + /for/enterprise)"
+          git push origin HEAD:cursor/os-e2e-polish-cd38
