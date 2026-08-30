@@ -6,7 +6,7 @@
 <div class="badge">Grade each case (deterministic predicate).</div>
 <div class='q'><div class='lbl'>Case 1</div><div class='txt'>Synthetic content marked as artificially generated, as Art 50(2) requires.</div><div class='opt'><label><input type='radio' name='q0' value='c'>Compliant</label><label><input type='radio' name='q0' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 2</div><div class='txt'>An AI artifact with a signed provenance manifest and time anchor.</div><div class='opt'><label><input type='radio' name='q1' value='c'>Compliant</label><label><input type='radio' name='q1' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 3</div><div class='txt'>An unmarked deepfake deployed across borders.</div><div class='opt'><label><input type='radio' name='q2' value='c'>Compliant</label><label><input type='radio' name='q2' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 4</div><div class='txt'>A mirrored registry where the record survives node loss.</div><div class='opt'><label><input type='radio' name='q3' value='c'>Compliant</label><label><input type='radio' name='q3' value='v'>Violation</label></div></div>
 <button onclick="grade()">Submit &amp; grade</button><div class="res" id="res"></div>
-<div class="foot">Council of AI · csoai.org · signed · measured · sovereign · on pass you receive a signed training attestation</div>
+<div class="foot">Council of AI · csoai.org · signed · measured · on pass you receive a signed training attestation</div>
 </div><script>
 const T=[true, true, false, true];
 function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='c')===ok)c++;});
