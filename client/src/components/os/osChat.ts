@@ -56,8 +56,11 @@ const AXIS_ALIASES: Record<string, string> = {
 };
 
 export function wantsBoardTotals(question: string): boolean {
-  return /\b(walk me through the live (gspc )?board|read[- ]the[- ]board|board totals|ask the board|how many axis|which axis carry a measured|(show|open) (me )?the (live )?board|show the board)\b/i.test(
-    question,
+  return (
+    /^BOARD\b/i.test(question.trim()) ||
+    /\b(walk me through the live (gspc )?board|read[- ]the[- ]board|board totals|ask the board|how many axis|which axis carry a measured|(show|open) (me )?the (live )?board|show the board)\b/i.test(
+      question,
+    )
   );
 }
 

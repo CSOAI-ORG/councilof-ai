@@ -6,11 +6,20 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import {
   GET_MEASURED_REPLY,
+  liveCountLine,
   looksLikeCardJson,
   namedAxis,
   wantsGetMeasured,
 } from "@/components/os/osChat";
 import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVerify";
+import {
+  axisFromFn,
+  censusNote,
+  correctionsNote,
+  parseTerminal,
+  TERMINAL_HINT,
+} from "@/lib/terminalFn";
+import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
 
 export default function HomeComposer({
   onAskAxis,
@@ -29,11 +38,73 @@ export default function HomeComposer({
     setVerdict(null);
     if (!raw || busy) return;
 
-    if (looksLikeCardJson(raw)) {
+    const parsed = parseTerminal(raw);
+
+    if (parsed.fn === "BOARD") {
       setBusy(true);
       try {
-        const parsed = JSON.parse(raw);
-        const card = Array.isArray(parsed) ? parsed[0] : parsed;
+        const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const j = await r.json();
+        setNote(`BOARD — ${liveCountLine(j?.totals ?? {})}. Empty stays empty.`);
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setNote(`BOARD failed (${msg}). Cite GET /api/gspc.`);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
+    if (parsed.fn === "CORRECT") {
+      setBusy(true);
+      try {
+        const r = await fetch("/api/corrections", { headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        const j = await r.json();
+        const n = Array.isArray(j?.corrections) ? j.corrections.length : j?.count;
+        setNote(correctionsNote(n));
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setNote(`CORRECT failed (${msg}). Cite GET /api/corrections.`);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
+    if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
+      const id = parsed.paste === "hub-id" ? parsed.arg : parsed.arg.trim();
+      if (!id) {
+        setNote("CENSUS / WATCH needs an owner/name id. DISCOVERED, never MEASURED.");
+        return;
+      }
+      const store = typeof localStorage === "undefined" ? null : localStorage;
+      saveWatchlist(store, upsertWatch(loadWatchlist(store), [id]));
+      setNote(
+        parsed.fn === "WATCH"
+          ? `WATCH ${id} — local digest compare. ${censusNote(id)}`
+          : censusNote(id),
+      );
+      return;
+    }
+
+    if (parsed.fn === "HELP") {
+      setNote(`${TERMINAL_HINT}. ${GET_MEASURED_REPLY}`);
+      return;
+    }
+
+    const verifyBody = parsed.fn === "VERIFY" ? parsed.arg || raw : looksLikeCardJson(raw) ? raw : "";
+    if (verifyBody && (parsed.fn === "VERIFY" || looksLikeCardJson(raw))) {
+      if (!looksLikeCardJson(verifyBody)) {
+        setNote("VERIFY needs a signed card JSON. Nothing was sent.");
+        setLoc("/gspc-verify");
+        return;
+      }
+      setBusy(true);
+      try {
+        const body = JSON.parse(verifyBody);
+        const card = Array.isArray(body) ? body[0] : body;
         const key = await fetchPinnedCardKey();
         setVerdict(await verifyCard(card, key));
       } catch (e: unknown) {
@@ -51,10 +122,10 @@ export default function HomeComposer({
       return;
     }
 
-    const axis = namedAxis(raw);
+    const axis = axisFromFn(parsed) ?? namedAxis(raw);
     if (axis && onAskAxis) {
       onAskAxis(axis);
-      setNote(`Board jumped to “${axis}”. Empty cells stay empty.`);
+      setNote(`AXIS ${axis} — board jumped. Empty cells stay empty.`);
       return;
     }
 
@@ -113,6 +184,9 @@ export default function HomeComposer({
         </p>
       )}
       {note && <p className="mt-3 text-sm text-slate-600">{note}</p>}
+      <p className="mt-2 font-mono text-[11px] text-slate-500" data-testid="terminal-hint">
+        {TERMINAL_HINT}
+      </p>
     </form>
   );
 }
