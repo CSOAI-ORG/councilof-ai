@@ -367,7 +367,7 @@ export default function LobbyOverlay({
     requestAnimationFrame(() => threadEndRef.current?.scrollIntoView({ block: "end" }));
   }, [chat.turnCount, chatActive]);
 
-  // ── docked (minimised) ─────────────────────────────────────────────────────────────────────────
+  // ── docked (minimised) ─────────────────────────────────────────────────────────
   if (!page && minimised) {
     return (
       <div
@@ -407,7 +407,7 @@ export default function LobbyOverlay({
     );
   }
 
-  // ── the workspace ────────────────────────────────────────────────────────────────
+  // ── the workspace ────────────────────────────────────────────────────
   return (
     <>
       {!page && <FocusSentinel onFocus={() => focusEdge("last")} />}
@@ -626,7 +626,7 @@ export default function LobbyOverlay({
             )}
           </main>
 
-          {/* ── the reports rail ─────────────────────────────────────
+          {/* ── the reports rail ──────────────────────────────────────────
               IT USED TO BE `hidden lg:block`, AND SO DID ITS RESTORE TAB. Below
               1024px Reports / Tasks / Chats did not exist — but the header's rail
               control stayed enabled and kept flipping its own label, so pressing
