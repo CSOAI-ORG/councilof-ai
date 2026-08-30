@@ -406,3 +406,356 @@ export default function LobbyHeader({
     </header>
   );
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * THE LIVE STATE BAR
+ *
+ * Three readouts, each one a control that opens the surface behind it, each one
+ * carrying its own provenance in `title`: the kind, the source file and the
+ * `as_of` the endpoint read out of that file.
+ *
+ * The board readout quotes `board.public_count` verbatim. That string carries the
+ * slot count and the measured count together, and the endpoint publishes it for
+ * that reason: the slot number alone is not a measurement, and quoting it alone
+ * is the specific overclaim this estate has already had to retract once.
+ *
+ * The fleet readout prints the reachable count and the catalogued count SIDE BY
+ * SIDE and never adds them. They are different kinds — one was contacted and
+ * answered, the other has no endpoint and has never been contacted — and adding
+ * across kinds is how a fleet of one reachable server got published as 378.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+function LiveStateBar({
+  live,
+  onOpenHit,
+}: {
+  live: ReturnType<typeof useLiveState>;
+  onOpenHit: (hit: { tab?: LobbyTab; route?: string; label: string }) => void;
+}) {
+  if (live.phase === "loading") {
+    return (
+      <span className={`flex items-center gap-2 ${HEAD.fine}`} aria-live="polite">
+        <span className={HEAD.key}>Live state</span>
+        <span>reading {STATE_ENDPOINT}…</span>
+      </span>
+    );
+  }
+
+  if (live.phase === "failed") {
+    // NOT "unmeasured". We failed to read the endpoint; that is a fact about
+    // this browser's request, not a published finding about the estate.
+    return (
+      <span
+        className={`flex items-center gap-2 rounded-lg border border-amber-600/30 bg-amber-50 px-2.5 py-1 text-amber-900 dark:border-amber-400/30 dark:bg-amber-400/10 dark:text-amber-200`}
+        title={`GET ${STATE_ENDPOINT} did not answer: ${live.error}. No count is shown, because none was read.`}
+        role="status"
+      >
+        <span className={HEAD.key}>Live state</span>
+        <span className="font-mono text-[11.5px] leading-none">unreachable — no count read</span>
+      </span>
+    );
+  }
+
+  const { board, fleet, cards, chain } = live.state;
+  const grammar = quote(board.countGrammar);
+
+  return (
+    // One scrolling line on a phone, where three wrapped rows would eat a third
+    // of the screen before the reader saw a pane; wrapped from sm up, where there
+    // is room for them all at once.
+    <span className="flex w-full min-w-0 items-center gap-1.5 overflow-x-auto pb-0.5 sm:w-auto sm:flex-wrap sm:overflow-x-visible sm:pb-0">
+      <Readout
+        label="Board"
+        value={quote(board.publicCount)}
+        ok={quotable(board.publicCount)}
+        title={
+          (grammar !== UNMEASURED ? `${grammar}\n\n` : "") +
+          provenance(board.publicCount) +
+          "\n\nOpens the living board."
+        }
+        onClick={() => onOpenHit({ tab: tabOf("board"), label: "Live board" })}
+      />
+      <Readout
+        label="Fleet"
+        value={
+          quotable(fleet.reachable) || quotable(fleet.catalogued)
+            ? `${quote(fleet.reachable)} reachable · ${quote(fleet.catalogued)} catalogued`
+            : UNMEASURED
+        }
+        ok={quotable(fleet.reachable)}
+        title={
+          "Reachable: servers that answered MCP initialize from the probe host. " +
+          "Catalogued: ids with no published endpoint, never contacted.\n" +
+          "These are different kinds and are never added together.\n\n" +
+          `reachable — ${provenance(fleet.reachable)}\n` +
+          `catalogued — ${provenance(fleet.catalogued)}\n\nOpens the published fleet manifest.`
+        }
+        onClick={() => onOpenHit({ route: "/mcp-fleet", label: "MCP fleet" })}
+      />
+      {/* This chip said "150 published · 150 signed". /api/state gives that fact
+          kind "catalogued" and sources it from card_index.json; it is the curated
+          INDEX, not the published set. The chain — which /api/state also publishes,
+          and which the Verify pane reads straight off /signed/chain.json — carries
+          313 bodies published and 313 verified valid. So the OS read 150 "published"
+          one click from a pane reading 313. Neither number was wrong; the WORD was.
+          Each figure now carries the word its own fact gives it, and the chain gets
+          its own chip rather than being hidden behind the index. */}
+      <Readout
+        label="Card index"
+        value={
+          quotable(cards.count)
+            ? `${quote(cards.count)} ${cards.count?.kind ?? "listed"} · ${quote(cards.signed)} signed`
+            : UNMEASURED
+        }
+        ok={quotable(cards.count)}
+        title={
+          "The curated card index, counted from its array rather than read off its header. " +
+          "It is NOT the whole published set — see the Chain chip beside it, and never add the two.\n\n" +
+          `index — ${provenance(cards.count)}\n` +
+          `signed — ${provenance(cards.signed)}\n\nOpens the verifier.`
+        }
+        onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
+      />
+      <Readout
+        label="Chain"
+        value={
+          quotable(chain.verified) || quotable(chain.positions)
+            ? `${quote(chain.verified)} verified · ${quote(chain.positions)} positions`
+            : UNMEASURED
+        }
+        ok={quotable(chain.verified)}
+        title={
+          "Verified: card bodies whose bytes reproduce their id and whose signature checks out. " +
+          "Positions: every link in the chain, including the ones whose body is withheld — " +
+          "listed so an absence is never invisible. Different kinds; never added together.\n\n" +
+          `verified — ${provenance(chain.verified)}\n` +
+          `published — ${provenance(chain.bodiesPublished)}\n` +
+          `positions — ${provenance(chain.positions)}\n\nOpens the verifier.`
+        }
+        onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
+      />
+      <a
+        href={STATE_ENDPOINT}
+        target="_blank"
+        rel="noreferrer"
+        title={`Every figure in this bar is read from ${STATE_ENDPOINT} by field name, with the kind and the as_of it was published under. Open it and check.`}
+        className={
+          `shrink-0 rounded px-1.5 py-1 font-mono text-[11px] leading-none whitespace-nowrap text-emerald-800 underline decoration-dotted underline-offset-2 ` +
+          `transition hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200 ` +
+          `motion-reduce:transition-none ${FOCUS} dark:focus-visible:ring-offset-slate-950`
+        }
+      >
+        {STATE_ENDPOINT}
+      </a>
+    </span>
+  );
+}
+
+function Readout({
+  label,
+  value,
+  ok,
+  title,
+  onClick,
+}: {
+  label: string;
+  value: string;
+  ok: boolean;
+  title: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={
+        `inline-flex shrink-0 items-center gap-2 rounded-lg border px-2.5 py-1 whitespace-nowrap transition motion-reduce:transition-none ` +
+        `${FOCUS} dark:focus-visible:ring-offset-slate-950 ` +
+        (ok
+          ? "border-slate-900/10 bg-white/60 hover:bg-white dark:border-white/12 dark:bg-white/5 dark:hover:bg-white/10"
+          : "border-slate-900/12 bg-slate-100 hover:bg-slate-200/70 dark:border-white/12 dark:bg-white/5 dark:hover:bg-white/10")
+      }
+    >
+      <span className={HEAD.key}>{label}</span>
+      <span className={ok ? HEAD.val : `${HEAD.val} italic`}>{value}</span>
+    </button>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+ * SEARCH
+ *
+ * A WAI-ARIA combobox over the OS's real index (osSearch.ts). Destinations and
+ * pages answer from the first keystroke; the board axis and the published signed
+ * cards load on first activation, and while they are on the wire the listbox SAYS
+ * so — a short list is never passed off as the whole one, and a set that fails is
+ * named with its error rather than silently omitted.
+ * ───────────────────────────────────────────────────────────────────────────── */
+
+function OsSearchField({
+  inputRef,
+  onOpenHit,
+  disabled,
+}: {
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  onOpenHit: (hit: OsHit) => void;
+  disabled?: boolean;
+}) {
+  const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
+  const [at, setAt] = useState(0);
+  const { results, pending, failures, activate } = useOsSearch(query);
+  const listId = useId();
+  const optionId = (i: number) => `${listId}-opt-${i}`;
+
+  const typed = query.trim().length > 0;
+  const open = focused && typed;
+
+  useEffect(() => { setAt(0); }, [query]);
+
+  const groups = useMemo(() => {
+    const out: Array<{ group: string; items: Array<{ hit: OsHit; index: number }> }> = [];
+    results.forEach((hit, index) => {
+      const last = out[out.length - 1];
+      if (last && last.group === hit.group) last.items.push({ hit, index });
+      else out.push({ group: hit.group, items: [{ hit, index }] });
+    });
+    return out;
+  }, [results]);
+
+  const choose = useCallback(
+    (hit: OsHit | undefined) => {
+      if (!hit) return;
+      onOpenHit(hit);
+      setQuery("");
+      setFocused(false);
+      inputRef.current?.blur();
+    },
+    [onOpenHit, inputRef],
+  );
+
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      // Swallow it while the list is up: Esc should close the list the reader is
+      // looking at, not the whole OS behind it. The overlay's window-level
+      // handler never sees this one.
+      if (open || typed) {
+        e.preventDefault();
+        e.stopPropagation();
+        setQuery("");
+        setFocused(false);
+        inputRef.current?.blur();
+      }
+      return;
+    }
+    if (!open || results.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setAt((i) => (i + 1) % results.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setAt((i) => (i - 1 + results.length) % results.length);
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      setAt(0);
+    } else if (e.key === "End") {
+      e.preventDefault();
+      setAt(results.length - 1);
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      choose(results[at]);
+    }
+  };
+
+  return (
+    <div className="relative min-w-0 flex-1">
+      <span
+        className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400"
+        aria-hidden="true"
+      >
+        <IconSearch />
+      </span>
+      <input
+        ref={inputRef}
+        type="text"
+        role="combobox"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-autocomplete="list"
+        aria-activedescendant={open && results.length ? optionId(at) : undefined}
+        aria-label="Search Council OS — destinations, board axis and signed cards"
+        placeholder="Search destinations, board axis, signed cards"
+        value={query}
+        disabled={disabled}
+        onFocus={() => { setFocused(true); activate(); }}
+        // A click on an option must not be cancelled by the blur that precedes
+        // it, so the list swallows mousedown and closing is deferred a tick.
+        onBlur={() => { setTimeout(() => setFocused(false), 0); }}
+        onChange={(e) => { setQuery(e.target.value); activate(); }}
+        onKeyDown={onKeyDown}
+        className={`${HEAD_FIELD} py-1.5 pl-8 pr-14 text-[12.5px] leading-5 disabled:opacity-50`}
+      />
+      <kbd
+        className={`pointer-events-none absolute right-2 top-1/2 hidden -translate-y-1/2 md:block ${KBD}`}
+        aria-hidden="true"
+      >
+        ⌘K
+      </kbd>
+
+      {open && (
+        <div
+          className={`absolute left-0 right-0 top-[calc(100%+0.4rem)] z-30 max-h-[24rem] overflow-y-auto p-1.5 ${HEAD_MENU}`}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <div id={listId} role="listbox" aria-label="Council OS search results">
+            {groups.map((g) => (
+              <div key={g.group} role="group" aria-label={g.group}>
+                <p className={`px-2 pb-1 pt-2 ${HEAD.key}`}>{g.group}</p>
+                {g.items.map(({ hit, index }) => (
+                  <div
+                    key={hit.id}
+                    id={optionId(index)}
+                    role="option"
+                    aria-selected={index === at}
+                    onMouseEnter={() => setAt(index)}
+                    onClick={() => choose(hit)}
+                    className={
+                      "cursor-pointer rounded-lg px-2 py-1.5 " +
+                      (index === at
+                        ? "bg-emerald-100 dark:bg-emerald-400/15"
+                        : "hover:bg-slate-900/5 dark:hover:bg-white/10")
+                    }
+                  >
+                    <span className="block text-[12.5px] font-semibold leading-tight text-slate-900 dark:text-slate-100">
+                      {hit.label}
+                    </span>
+                    <span className={`block truncate ${HEAD.fine}`}>{hit.detail}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+
+            {results.length === 0 && (
+              <p className={`px-2 py-2.5 ${HEAD.fine}`}>
+                Nothing in the OS index matches “{query.trim()}”. The index covers this workspace's
+                destinations and pages, every live board axis and the published signed cards — nothing else.
+              </p>
+            )}
+
+            {pending.length > 0 && (
+              <p className={`border-t px-2 py-1.5 ${HEAD_EDGE} ${HEAD.fine}`} aria-live="polite">
+                Still loading: {pending.join(", ")}. These results are not the whole index yet.
+              </p>
+            )}
+            {failures.map((f) => (
+              <p key={f} className={`border-t px-2 py-1.5 ${HEAD_EDGE} ${HEAD.fine}`} role="status">
+                Not searchable this session: {f}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
