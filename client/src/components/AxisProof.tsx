@@ -4,7 +4,7 @@ import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 /**
  * AxisProof — the block that turns a commercial page into a checkable one.
  *
- * ── THE DEFECT THIS CLOSES ───────────────────────────────────────────────
+ * ── THE DEFECT THIS CLOSES ───────────────────────────────────────────────────
  * The audience pages (/for/:persona) and the sector pages (/industries/:slug)
  * were the pages a buyer is actually sent to, and they named no axis, no n and
  * no card. The measurement was absent from the measurement company's own
@@ -12,7 +12,7 @@ import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
  * nothing to check. Sector pages that DID carry a figure carried it as a typed
  * literal in a data file, which is the other half of the same defect.
  *
- * ── WHAT IT DOES ─────────────────────────────────────────────────
+ * ── WHAT IT DOES ─────────────────────────────────────────────────────────────
  * A page names the axis that bear on its reader — a LABEL, which is canon and
  * safe to write down — and this component reads their live rows from
  * GET /api/gspc. Every number on screen (n, leader accuracy, interval,
@@ -20,7 +20,7 @@ import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
  * payload does not carry a field the cell says so in words via axisCells rather
  * than computing on `undefined` (which is how `NaN%` reached /insurers).
  *
- * ── WHAT IT WILL NOT DO ────────────────────────────────────────────
+ * ── WHAT IT WILL NOT DO ──────────────────────────────────────────────────────
  * It does not invent a row. An axis named by a page that the board does not
  * carry is rendered as "not on the board" rather than silently dropped, because
  * a silently dropped row is how a page comes to describe a measurement that
