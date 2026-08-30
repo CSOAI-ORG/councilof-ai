@@ -82,7 +82,7 @@ const TOOLS: Tool[] = [
   },
   {
     id: "tool-board",
-    family: "GSPC \u00b7 the living board",
+    family: "GSPC · the living board",
     name: "The living board",
     what:
       "Every slot we publish about how AI systems behave, with the measurement behind it — and a visibly empty cell wherever there is no measurement.",
@@ -108,11 +108,11 @@ const TOOLS: Tool[] = [
     ticks: [
       "Your browser recomputes the hash and checks Ed25519.",
       "Nothing is sent to us. Nothing needs our permission.",
-      "Three states only: VALID \u00b7 INVALID \u00b7 UNCHECKABLE.",
+      "Three states only: VALID · INVALID · UNCHECKABLE.",
     ],
     note: "No account and no fee, permanently.",
     image: "/images/method/receipt.png",
-    alt: "A pale slab split by green light, stamped \u201cEd25519 Verified\u201d",
+    alt: "A pale slab split by green light, stamped “Ed25519 Verified”",
     door: { kind: "pane", pane: "verify" },
   },
   {
@@ -134,12 +134,12 @@ const TOOLS: Tool[] = [
     // Verified in the pane before this line was written.
     note: "Free, and no account. The card is yours; publishing it is your decision.",
     image: "/images/detail/evidence_vault_detail.jpg",
-    alt: "Clay figures pointing at a card reading \u201c3KB credential\u201d in front of an open vault",
+    alt: "Clay figures pointing at a card reading “3KB credential” in front of an open vault",
     door: { kind: "pane", pane: "measured" },
   },
   {
     id: "tool-gpai",
-    family: "EU AI Act \u00b7 GPAI",
+    family: "EU AI Act · GPAI",
     name: "GPAI evidence pack",
     what:
       "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
@@ -224,7 +224,7 @@ const TOOLS: Tool[] = [
     note: "Anyone can file one. No account, and no charge.",
     image: "/images/loop/outcry.png",
     objectPosition: "left center",
-    alt: "A raw jagged signal trace behind a glass panel labelled \u201cunstructured outcry\u201d",
+    alt: "A raw jagged signal trace behind a glass panel labelled “unstructured outcry”",
     door: { kind: "pane", pane: "watchdog" },
   },
 ];
@@ -261,7 +261,7 @@ function useLiveFigures() {
     // Read the bond row out of the register data rather than typing its numbers.
     const bond = EUNOMIA_AXES.find((a) => a.axis === "bond-router");
     if (!bond || bond.status !== "MEASURED") return null;
-    return `bond desk \u00b7 COBOL copybook \u2192 attestation \u00b7 MEASURED on ${bond.n} graded items`;
+    return `bond desk · COBOL copybook → attestation · MEASURED on ${bond.n} graded items`;
   }, []);
 
   return {
@@ -325,7 +325,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
             Open this tool
-            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">\u2192</span>
+            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>
       </a>
