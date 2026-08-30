@@ -44,18 +44,18 @@ describe("OsLauncher doors", () => {
   it("mounts the product frame — header, door body, chat — not OsShell", () => {
     expect(launcher).toContain("<OsHeader");
     expect(launcher).toContain("<OsDoorBody");
-    expect(launcher).toContain('id="os-chat"');
+    expect(launcher).toContain("id=\"os-chat\"");
     expect(launcher).toContain("openLobby");
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
     expect(launcher).toContain("/report");
     expect(launcher).not.toMatch(/<OsShell|import OsShell/);
-    expect(launcher).toContain('data-testid="os-directory"');
+    expect(launcher).toContain("data-testid=\"os-directory\"");
   });
 
   it("OsHeader door buttons are addressable so an end user can hop panes", () => {
     const header = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
-    expect(header).toContain('data-testid={`os-door-${door.id`}');
-    expect(header).toContain('doorFromSearch(search) ?? "board"');
+    expect(header).toContain("data-testid={`os-door-${door.id}`}");
+    expect(header).toContain("doorFromSearch(search) ?? \"board\"");
   });
 });
