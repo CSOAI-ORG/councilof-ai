@@ -104,6 +104,13 @@ const MODULES = [
     what: "A record that a course was completed. It attests learning, never conformity, and is not an accreditation.",
   },
   {
+    name: "Compliance Training World",
+    href: "/compliance-training-world/catalog.html",
+    tag: "Training",
+    what: "Industry quests — Art 50(2), bank, insurance, equity, bond, cross-border — graded in-browser. A pass is a training attestation, never a conformity mark.",
+    external: true,
+  },
+  {
     name: "Get measured",
     href: "/os?lobby=assess",
     tag: "Free card",
@@ -214,12 +221,9 @@ export default function Products() {
           These are panes of Council OS or packs under Council Ledger. They are not a fifth SKU.
         </p>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {MODULES.map((p) => (
-            <li key={p.href}>
-              <Link
-                href={p.href}
-                className="block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-5 transition hover:border-emerald-400/40 hover:bg-white/[0.05]"
-              >
+          {MODULES.map((p) => {
+            const body = (
+              <>
                 <div className="flex items-baseline justify-between gap-3">
                   <span className="text-lg font-bold text-slate-100">{p.name}</span>
                   <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
@@ -227,9 +231,24 @@ export default function Products() {
                   </span>
                 </div>
                 <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.what}</p>
-              </Link>
-            </li>
-          ))}
+              </>
+            );
+            const cls =
+              "block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-5 transition hover:border-emerald-400/40 hover:bg-white/[0.05]";
+            return (
+              <li key={p.href}>
+                {"external" in p && p.external ? (
+                  <a href={p.href} className={cls}>
+                    {body}
+                  </a>
+                ) : (
+                  <Link href={p.href} className={cls}>
+                    {body}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </section>
 
