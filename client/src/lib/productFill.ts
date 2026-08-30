@@ -90,7 +90,7 @@ export const FILL_ROWS: FillRow[] = [
     layer: "pack",
     title: "Data SKU",
     fills: "Licensed traces, preference pairs, incident rows.",
-    never: "A score. A vendor can buy data and cannot buy a grade.",
+    never: "A vendor can never buy a score.",
     href: "/contact?arm=data",
     status: "enquiry",
   },
