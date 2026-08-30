@@ -20,6 +20,16 @@ describe("homepage films and understand lists", () => {
     expect(films).not.toMatch(/certified organization|buy a rank|all 22 measured/i);
   });
 
+  it("does not reuse a homepage film beside the three verify steps", () => {
+    const living = readFileSync(resolve(__dirname, "LivingStages.tsx"), "utf8");
+    const verify = living.slice(living.indexOf("function VerifyYourself"), living.indexOf("function OwnErrors"));
+    expect(verify).toContain("/videos/proving-ground.mp4");
+    expect(verify).not.toContain("architecture-of-measurement.mp4");
+    expect(verify).not.toContain("architecture-of-trust.mp4");
+    expect(verify).not.toContain("trust-lobby.mp4");
+    expect(verify).not.toContain("csoai-demo.mp4");
+  });
+
   it("desk demo and product tiles teach with ticks, not invented counts", () => {
     expect(understand).toContain("only here");
     expect(demo).toContain("Twenty seconds on the instrument");
