@@ -59,3 +59,4 @@ describe("OsLauncher doors", () => {
     expect(header).toContain("doorFromSearch(search) ?? \"board\"");
   });
 });
+
