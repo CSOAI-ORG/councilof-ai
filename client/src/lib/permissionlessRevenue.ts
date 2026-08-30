@@ -51,7 +51,7 @@ export const OPENINGS: Opening[] = [
     when: "now",
     title: "Invoice the four SKUs",
     eats: "Run / re-attest, Ledger packs, Data licences. Verify stays free and pulls the queue.",
-    never: "A purchased public rank. A fifth SKU.",
+    never: "A rank is never sold. A fifth SKU.",
     feed: "Open SDKs + /products + /licensing-agreement",
     href: "/licensing-agreement",
   },

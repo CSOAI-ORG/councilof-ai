@@ -75,7 +75,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "dr-0007",
     claim: "A retracted consensus claim is a credibility asset, not a product to revive.",
     verdict: "keep",
-    live: "Do not put 33-agent Byzantine consensus back on a public door.",
+    live: "Do not put the withdrawn 33-agent council back on a public door.",
   },
   {
     id: "xrpl-devnet",
@@ -151,7 +151,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   },
   {
     id: "bft-product",
-    claim: "33-agent Byzantine consensus is a live public product.",
+    claim: "A designed 33-agent council is a live public product.",
     verdict: "false",
     live: "Retracted. Do not rebuild it as a door or a grade.",
   },
