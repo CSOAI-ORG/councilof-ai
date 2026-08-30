@@ -40,7 +40,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("How to read this table");
     expect(src).toContain("What this film is saying");
     expect(src).not.toContain("OsShell");
-    expect(src).not.toMatch(/certified organization|buy a rank/i);
+    expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
   });
 
   it("shows all nine product plates", () => {

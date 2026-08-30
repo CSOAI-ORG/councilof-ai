@@ -25,7 +25,7 @@ export default function HomeDemoLoop() {
           items={[
             "The board, the verifier and get-measured — the three doors a stranger actually uses.",
             "A filled cell is a measurement. A dash is honest emptiness.",
-            { kind: "usp", text: "Nothing in the loop is a certificate, a rank for sale, or a badge you can buy." },
+            { kind: "usp", text: "Nothing in the loop is a certificate or a badge you can buy. A rank is never sold." },
           ]}
         />
       </div>
