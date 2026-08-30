@@ -21,6 +21,7 @@ export default function LobbyComposer({
   seedNonce,
   onFirstReply,
   onClose,
+  inputId,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -34,6 +35,8 @@ export default function LobbyComposer({
   /** Folds the composer dock away. The overlay passed this for months while the
    *  composer silently dropped it — once opened, the dock could never be closed. */
   onClose?: () => void;
+  /** Stable id so OsHeader Chat can focus this field on /os. */
+  inputId?: string;
 }) {
   const [q, setQ] = useState("");
   const [audience, setAudience] = useState<string>(() => {
@@ -123,6 +126,7 @@ export default function LobbyComposer({
       <div className="flex items-end gap-2">
         <div className="relative min-w-0 flex-1">
           <textarea
+            id={inputId}
             ref={inputRef}
             value={q}
             rows={1}

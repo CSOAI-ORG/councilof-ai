@@ -37,6 +37,9 @@ export const TASK_PARAM = "task";
 /** Fired by openLobby() for in-page CTAs that should not touch the URL at all. */
 export const LOBBY_EVENT = "coai:lobby-open";
 
+/** OsHeader Chat / a page-mode workspace: open the AI rail and focus the composer. */
+export const OS_ASK_EVENT = "coai:os-ask";
+
 export type LobbyTaskId =
   | "read-the-board"
   | "explain-axis"
