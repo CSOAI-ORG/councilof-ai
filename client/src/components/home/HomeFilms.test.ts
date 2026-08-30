@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 
 const films = readFileSync(resolve(__dirname, "HomeFilms.tsx"), "utf8");
 const understand = readFileSync(resolve(__dirname, "HomeUnderstand.tsx"), "utf8");
-const demo = readFileSync(resolve(__dirname, "HomeDemoLoop.tsx"), "utf8");
 const stack = readFileSync(resolve(__dirname, "ToolStack.tsx"), "utf8");
 
 describe("homepage films and understand lists", () => {
@@ -23,7 +22,8 @@ describe("homepage films and understand lists", () => {
   it("does not reuse a homepage film beside the three verify steps", () => {
     const living = readFileSync(resolve(__dirname, "LivingStages.tsx"), "utf8");
     const verify = living.slice(living.indexOf("function VerifyYourself"), living.indexOf("function OwnErrors"));
-    expect(verify).toContain("/videos/proving-ground.mp4");
+    expect(verify).not.toContain("/videos/proving-ground.mp4");
+    expect(verify).toContain("FooterVerifyStrip");
     expect(verify).toContain("lg:grid-cols-3");
     expect(verify).not.toContain("lg:grid-cols-[1.15fr_1fr]");
     expect(verify).not.toContain("architecture-of-measurement.mp4");
@@ -34,7 +34,6 @@ describe("homepage films and understand lists", () => {
 
   it("desk demo and product tiles teach with ticks, not invented counts", () => {
     expect(understand).toContain("only here");
-    expect(demo).toContain("Twenty seconds on the instrument");
     expect(stack).toContain("ticks:");
     expect(stack).toContain("Why these nine, and not a catalogue");
     expect(stack).toContain("Three states only: VALID · INVALID · UNCHECKABLE.");

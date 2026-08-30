@@ -13,6 +13,7 @@ describe("cinematic three-world merge contract", () => {
     expect(CINEMATIC_VIDEO.harness).toBe("/videos/csoai-harness-plugin.mp4");
     expect(CINEMATIC_VIDEO.os).toBe("/videos/csoai-council-os.mp4");
     expect(home).toContain("<HomeCinematicWorlds");
+    expect(home.indexOf("<LivingStages")).toBeLessThan(home.indexOf("<HomeCinematicWorlds"));
     expect(v3).not.toContain("HomeCinematicWorlds");
     expect(worlds).toContain("/images/cinematic/coliseum-plunge.jpg");
     expect(worlds).toContain("/images/cinematic/harness-plugin.jpg");

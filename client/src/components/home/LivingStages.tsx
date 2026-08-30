@@ -2,8 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import { RotatingHighlight } from "../type/RotatingHighlight";
 import { SECTION_TITLES } from "../type/sectionTitles";
-import LiveLeaderboard from "../board/LiveLeaderboard";
 import { VideoEmbed } from "@/components/scrollworld";
+import FooterVerifyStrip from "../FooterVerifyStrip";
 import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
 
 /**
@@ -154,7 +154,7 @@ function HeavyBand({
       ? "bg-gradient-to-l from-white/75 via-white/25 to-transparent"
       : "bg-gradient-to-r from-white/75 via-white/25 to-transparent";
   return (
-    <section className="surface-raised relative flex min-h-[68svh] items-center overflow-hidden">
+    <section className="surface-raised relative flex min-h-[78svh] items-center overflow-hidden">
       <img
         src={image}
         alt={alt}
@@ -219,7 +219,7 @@ function SplitBand({
 }) {
   return (
     <section className={`relative ${tint}`}>
-      <div className="section-shell section-y grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="section-shell section-y grid grid-cols-1 items-center gap-14 py-8 lg:grid-cols-2 lg:gap-20">
         <div className={mediaSide === "right" ? "lg:order-1" : "lg:order-2"}>{children}</div>
         {video ? (
           <VideoEmbed
@@ -407,14 +407,7 @@ function VerifyYourself() {
             ))}
           </ol>
 
-          {/* Landscape under the three cards — unused on the rest of home. */}
-          <VideoEmbed
-            src="/videos/proving-ground.mp4"
-            poster="/videos/proving-ground.jpg"
-            title="The Proving Ground — how we test containment"
-            caption="The arena, not the signing bench. Containment is tested here; the card you check in the three steps is the signed result. Not a certificate."
-            className="max-w-none"
-          />
+          <FooterVerifyStrip />
         </div>
 
         <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
@@ -549,18 +542,6 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <Points
-        points={[
-          { tag: "pain", text: "A one-off stamp starts going stale the day the statute moves" },
-          { tag: "benefit", text: "Old cards stay. History is append-only — nothing is overwritten" },
-          { tag: "benefit", text: "A disputed date is recorded as a dispute, not silently resolved" },
-          { tag: "usp", text: "When a provision changes we re-measure and issue a delta card" },
-        ]}
-      />
-      <p className="mt-4 text-xs leading-relaxed text-gray-500">
-        Where a date is genuinely disputed, the feed records the dispute rather than resolving it
-        silently — and where we got a date wrong ourselves, the correction is published, not patched.
-      </p>
       <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/assess", label: "Get re-measured" }} />
     </HeavyBand>
   );
@@ -680,8 +661,6 @@ export default function LivingStages() {
       <OwnErrors />
       <LivingLaw />
       <LiveBoard />
-      {/* the board as a grid, read live from /api/gspc — the section above says what it means */}
-      <LiveLeaderboard className="surface-raised section-y" />
     </div>
   );
 }

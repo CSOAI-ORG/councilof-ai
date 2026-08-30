@@ -26,9 +26,19 @@ interface VerifyBadge {
 
 const BADGES: VerifyBadge[] = [
   {
+    label: 'councilof.ai',
+    href: 'https://councilof.ai',
+    title: 'The public instrument — living board at GET /api/gspc',
+  },
+  {
     label: 'GitHub · CSOAI-ORG',
     href: 'https://github.com/CSOAI-ORG',
     title: 'CSOAI open-source organisation on GitHub',
+  },
+  {
+    label: 'GitHub · councilof-ai',
+    href: 'https://github.com/CSOAI-ORG/councilof-ai',
+    title: 'This site’s source repository',
   },
   {
     label: 'Hugging Face · csoai',
@@ -91,7 +101,7 @@ export function FooterVerifyStrip() {
               target="_blank"
               rel="noopener noreferrer"
               title={badge.title}
-              className="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:border-emerald-600 hover:text-emerald-700 transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-950 shadow-sm hover:border-emerald-600 hover:text-emerald-800 transition-colors"
             >
               <span>{badge.label}</span>
               <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />

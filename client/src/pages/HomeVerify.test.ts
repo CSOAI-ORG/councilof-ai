@@ -7,10 +7,8 @@ const here = resolve(__dirname);
 const src = [
   readFileSync(resolve(here, "HomeVerify.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/home/HomeBoard.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/home/PluginBlock.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/board/LiveLeaderboard.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/home/HomeDemoLoop.tsx"), "utf8"),
 ]
   .join("\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -26,19 +24,19 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
-    expect(src).toContain("GSPC leaderboard");
-    expect(src).toContain("https://councilof.ai/mcp");
+    expect(src).toContain("The live board");
     expect(src).toContain("HeroSlides");
     expect(src).toContain("HomeFilms");
-    expect(src).toContain("HomeDemoLoop");
+    expect(src).toContain("HomeCinematicWorlds");
     expect(src).toContain("ToolStack");
     expect(src).toContain("LivingStages");
     expect(src).toContain("Open Council OS");
     expect(src).toContain("Empty means not measured");
-    expect(src).toContain("Not a ranking for sale");
     expect(src).toContain("What you can do in this box");
-    expect(src).toContain("How to read this table");
     expect(src).toContain("What this film is saying");
+    expect(src).toContain("defaultExpanded");
+    expect(src).not.toContain("HomeDemoLoop");
+    expect(src).not.toContain("PluginBlock");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
   });
