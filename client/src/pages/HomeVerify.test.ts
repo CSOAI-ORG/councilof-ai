@@ -17,6 +17,7 @@ const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
 const header = readFileSync(resolve(here, "../components/Header.tsx"), "utf8");
 const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
 const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
+const boardHook = readFileSync(resolve(here, "../components/board/useGspcBoard.ts"), "utf8");
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
@@ -39,6 +40,11 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).not.toContain("PluginBlock");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
+  });
+
+  it("falls back to the live board when local /api/gspc is 500 or HTML", () => {
+    expect(boardHook).toContain("https://councilof.ai/api/gspc");
+    expect(boardHook).toContain("HTTP [45]\\d\\d");
   });
 
   it("shows all nine product plates", () => {
@@ -76,7 +82,12 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
     expect(header).toContain("href: '/report'");
+    expect(header).toContain("href: '/for/startup'");
     expect(header).toContain("href: '/for/enterprise'");
+    expect(header).toContain("href: '/for/finance'");
+    expect(header).toContain("href: '/for/healthcare'");
+    expect(header).toContain("href: '/for/regulator'");
+    expect(header).toContain("href: '/for/sec-filer'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
     expect(header).not.toContain("Start free");
