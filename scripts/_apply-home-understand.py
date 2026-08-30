@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""One-shot: insert understand ticks into ToolStack and LivingStages."""
+"""One-shot: insert understand ticks into ToolStack and LivingStages. retrigger."""
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -25,7 +25,7 @@ def before(path, marker, extra):
 
 stack = ROOT / 'client/src/components/home/ToolStack.tsx'
 after(stack, 'import type { LobbyTabId } from "@/components/lobby/tabs";\n', 'import HomeUnderstand from "./HomeUnderstand";\n')
-after(stack, '  note?: string;\n', '  ticks: string[];\n')
+after(stack, '  ticks: string[];\n', '')  # type already present after first apply
 
 PAINS = [
 ('Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.', ['Board, verify, get measured and the evidence pack in one window.', 'No second tab and no second login.', 'Every pane is a real page you can open today.']),
