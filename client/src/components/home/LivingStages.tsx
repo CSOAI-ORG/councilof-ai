@@ -391,29 +391,39 @@ function VerifyYourself() {
           alt="The trust root did:web:csoai.org anchoring signed measurement cards through a hash-chained evidence ledger to local, offline verification on the reader's own machine"
         />
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-start">
-          <ol className="grid gap-4">
+        <div className="mt-12 space-y-8">
+          <ol className="grid gap-4 lg:grid-cols-3 lg:gap-5">
             {VERIFY_STEPS.map((s) => (
               <li
                 key={s.n}
-                className="flex items-start gap-5 rounded-2xl border border-gray-200 bg-gray-50/70 p-6"
+                className="flex h-full flex-col gap-3 rounded-2xl border border-gray-200 bg-gray-50/70 p-5 sm:p-6"
               >
-                <span className="w-9 shrink-0 font-mono text-2xl font-black tabular-nums text-emerald-500">{s.n}</span>
+                <span className="font-mono text-2xl font-black tabular-nums text-emerald-500">{s.n}</span>
                 <div>
-                  <h3 className="text-lg font-extrabold text-gray-900">{s.h}</h3>
-                  <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">{s.d}</p>
+                  <h3 className="text-lg font-extrabold leading-snug text-gray-900">{s.h}</h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-gray-600 sm:text-[15px]">{s.d}</p>
                 </div>
               </li>
             ))}
           </ol>
 
-          {/* The pipeline explained in motion rather than a cropped panel. */}
+          {/* Landscape under the three cards — unused on the rest of home. */}
           <VideoEmbed
-            src="/videos/architecture-of-measurement.mp4"
-            poster="/videos/architecture-of-measurement.jpg"
-            title="How a card is made: grading against frozen provisions, then canonical signing"
-            caption="How the card is made before you ever check it — deterministic grading, then canonical Ed25519 signing."
-            className="mt-10"
+            src="/videos/proving-ground.mp4"
+            poster="/videos/proving-ground.jpg"
+            title="The Proving Ground — how we test containment"
+            caption="The arena, not the signing bench. Containment is tested here; the card you check in the three steps is the signed result. Not a certificate."
+            className="max-w-none"
+          />
+        </div>
+
+        <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
+          <Points
+            points={[
+              { tag: "benefit", text: "The whole check runs offline — no account and no permission" },
+              { tag: "benefit", text: "Pin our key first. A card checked against the key it ships with only proves it is self-consistent" },
+              { tag: "usp", text: "You recompute the same Ed25519 signature over the same hash chain we published" },
+            ]}
           />
         </div>
 
@@ -455,6 +465,13 @@ function OwnErrors() {
           </>
         )}
       </Body>
+      <Points
+        points={[
+          { tag: "pain", text: "Most measurement bodies quietly reword a claim that did not hold" },
+          { tag: "benefit", text: "The ledger is append-only — entries are never edited or deleted" },
+          { tag: "usp", text: "We retracted our own consensus claim (DR-0007) rather than dress it up" },
+        ]}
+      />
       <p className="measure mt-5 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5 text-[15px] leading-[1.65] text-gray-700">
         <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
@@ -532,6 +549,14 @@ function LivingLaw() {
           </ul>
         </>
       )}
+      <Points
+        points={[
+          { tag: "pain", text: "A one-off stamp starts going stale the day the statute moves" },
+          { tag: "benefit", text: "Old cards stay. History is append-only — nothing is overwritten" },
+          { tag: "benefit", text: "A disputed date is recorded as a dispute, not silently resolved" },
+          { tag: "usp", text: "When a provision changes we re-measure and issue a delta card" },
+        ]}
+      />
       <p className="mt-4 text-xs leading-relaxed text-gray-500">
         Where a date is genuinely disputed, the feed records the dispute rather than resolving it
         silently — and where we got a date wrong ourselves, the correction is published, not patched.

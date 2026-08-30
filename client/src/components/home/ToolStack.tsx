@@ -4,6 +4,7 @@ import { type LobbyTaskId } from "@/lib/lobbyLink";
 import { useBoardCount } from "@/lib/boardCount";
 import { EUNOMIA_AXES } from "@/data/eunomia";
 import type { LobbyTabId } from "@/components/lobby/tabs";
+import HomeUnderstand from "./HomeUnderstand";
 
 /**
  * ToolStack — nine sections, one per thing this place actually does.
@@ -46,6 +47,8 @@ interface Tool {
   pain: string;
   /** A standing condition or limit on the tool. Shown on the tile, never hidden. */
   note?: string;
+  /** Short ticks a stranger can scan. Benefits, never invented counts. */
+  ticks: string[];
   image: string;
   alt: string;
   /**
@@ -68,6 +71,11 @@ const TOOLS: Tool[] = [
       "One window that opens every surface here — the board, the verifier, the assessment, the evidence pack — without a second tab or a second login.",
     pain:
       "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
+    ticks: [
+      "Board, verify, get measured and the evidence pack in one window.",
+      "No second tab and no second login.",
+      "Every pane is a real page you can open today.",
+    ],
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
     door: { kind: "route", path: "/os?lobby=home" },
@@ -80,6 +88,11 @@ const TOOLS: Tool[] = [
       "Every slot we publish about how AI systems behave, with the measurement behind it — and a visibly empty cell wherever there is no measurement.",
     pain:
       "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
+    ticks: [
+      "A filled cell is a measurement. A dash is honest emptiness.",
+      "Counts come from living GET /api/gspc — never typed into the page.",
+      "A TIE stays a TIE. It is never dressed up as a win.",
+    ],
     image: "/images/detail/board_arena_detail.jpg",
     alt: "Clay people and pale humanoids facing each other across an arena under beams of light",
     door: { kind: "pane", pane: "board" },
@@ -92,6 +105,11 @@ const TOOLS: Tool[] = [
       "Paste a signed measurement record and your own browser recomputes its hash and checks the signature. Nothing is sent to us, and nothing needs our permission.",
     pain:
       "Otherwise checking somebody's AI claim means trusting the company that made the claim.",
+    ticks: [
+      "Your browser recomputes the hash and checks Ed25519.",
+      "Nothing is sent to us. Nothing needs our permission.",
+      "Three states only: VALID · INVALID · UNCHECKABLE.",
+    ],
     note: "No account and no fee, permanently.",
     image: "/images/method/receipt.png",
     alt: "A pale slab split by green light, stamped “Ed25519 Verified”",
@@ -105,6 +123,11 @@ const TOOLS: Tool[] = [
       "We run your system against the frozen, published tests that apply to it and hand you a small signed record you keep — the scores, the sample size behind each one, and the slots we could not fill.",
     pain:
       "Otherwise you hand a buyer a policy document where they asked for evidence.",
+    ticks: [
+      "Frozen, published tests — the target does not move after you sit.",
+      "You keep the signed card. Publishing it is your decision.",
+      "Slots we could not fill stay empty and are named.",
+    ],
     // NOT "sign-in required": /assess is wrapped in RequireAuth, but RequireAuth
     // carries an explicit isPublicMeasure() carve-out for exactly this route
     // (components/RequireAuth.tsx) — "Get measured is free and needs no account".
@@ -122,6 +145,11 @@ const TOOLS: Tool[] = [
       "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
     pain:
       "GPAI duties have been in force since 2 August 2025, and most providers have only their own paperwork to show for them.",
+    ticks: [
+      "Live rows that exist, the banks they resolve to, and the gaps.",
+      "Gaps are named rather than skipped.",
+      "Independent evidence — not a conformity mark, and not legal advice.",
+    ],
     note: "Independent evidence. Not a conformity mark, and not legal advice.",
     image: "/images/method/ast.png",
     alt: "A block of carved statute breaking apart into a branching tree of true/false conditions",
@@ -135,6 +163,11 @@ const TOOLS: Tool[] = [
       "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
     pain:
       "Otherwise the people reading your site still have to take your word for the result.",
+    ticks: [
+      "A badge that goes green only when the bytes are true.",
+      "Each reader's browser re-checks the signature.",
+      "Built only from what is actually on the board.",
+    ],
     note: "Built only from what is actually on the board. Free forever.",
     image: "/images/method/foundry.png",
     alt: "A pale moulded form lifting out of a split block of clay on a beam of green light",
@@ -148,6 +181,11 @@ const TOOLS: Tool[] = [
       "The measured rows, the honestly empty ones, and third-party reported figures — kept in three separate columns and never blended into a single number an underwriter could mistake for a rating.",
     pain:
       "Otherwise AI exposure is priced off a questionnaire the applicant filled in about itself, and nothing updates between binding and renewal.",
+    ticks: [
+      "Measured, empty and reported figures stay in three separate columns.",
+      "Nothing is blended into a single number an underwriter could mistake for a rating.",
+      "We measure. We do not price risk.",
+    ],
     note: "We measure. We do not price risk, and we take no share of anything written on the back of a card.",
     image: "/images/detail/liveness_drift_detail.jpg",
     alt: "An hourglass weighing a stale seal against a re-attested current one, fed by EUR-Lex and legislation.gov.uk ribbons",
@@ -161,6 +199,11 @@ const TOOLS: Tool[] = [
       "A separate board for money and mainframes: whether a COBOL copybook off a bond desk can be turned into an attestable record, whether an underwriting rule reads as covered or excluded — one row per instrument, each with its own item count.",
     pain:
       "Otherwise the systems that actually run a bond desk or a claims book sit outside every AI measurement anybody publishes.",
+    ticks: [
+      "One row per instrument, each with its own item count.",
+      "COBOL copybook and underwriting-rule rows sit beside the public board.",
+      "A specialist register is still measurement — never a certificate.",
+    ],
     image: "/images/loop/four-states.png",
     alt: "Specimens sealed in glass tubes, turning from grey clay to a lit green core",
     door: { kind: "task", task: "specialist-registers" },
@@ -173,6 +216,11 @@ const TOOLS: Tool[] = [
       "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
     pain:
       "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
+    ticks: [
+      "A public form for AI behaviour that looks wrong.",
+      "You get a signed acknowledgement of exactly what you filed.",
+      "Whatever we act on is measured and signed like everything else here.",
+    ],
     note: "Anyone can file one. No account, and no charge.",
     image: "/images/loop/outcry.png",
     objectPosition: "left center",
@@ -258,6 +306,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           </h3>
           <p className="t-body text-foreground/80">{tool.what}</p>
           <p className="t-body text-muted-foreground">{tool.pain}</p>
+          <HomeUnderstand items={tool.ticks} />
 
           {figure && (
             <p className="mt-auto rounded-xl border border-emerald-500/30 bg-emerald-500/[0.08] px-3 py-2 text-[13px] font-semibold leading-snug text-emerald-900 dark:text-emerald-200">
@@ -297,6 +346,17 @@ export default function ToolStack() {
           Independent measurement body. We run AI systems against frozen published tests, sign the
           result, and leave empty cells empty. Nine doors, each a real page.
         </p>
+        <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/60 px-5 py-4">
+          <HomeUnderstand
+            title="Why these nine, and not a catalogue"
+            items={[
+              "Each tile opens a page that exists today. A tool with no destination is not on this band.",
+              "Empty cells stay empty. We do not invent a figure to fill a gap.",
+              { kind: "usp", text: "We measure. We do not sell a rank, a certificate, or a placement." },
+            ]}
+          />
+        </div>
+
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TOOLS.map((t) => (

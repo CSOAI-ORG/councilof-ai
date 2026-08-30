@@ -9,6 +9,8 @@ const src = [
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeBoard.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/PluginBlock.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeDemoLoop.tsx"), "utf8"),
 ]
   .join("\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -34,6 +36,9 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("Open Council OS");
     expect(src).toContain("Empty means not measured");
     expect(src).toContain("Not a ranking for sale");
+    expect(src).toContain("What you can do in this box");
+    expect(src).toContain("How to read this table");
+    expect(src).toContain("What this film is saying");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank/i);
   });
@@ -50,6 +55,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(stack).toContain("Specialist registers");
     expect(stack).toContain("Report an incident");
     expect(stack).toContain("/images/");
+    expect(stack).toContain("ticks:");
+    expect(stack).toContain("Why these nine, and not a catalogue");
   });
 
   it("routes Claude-at-work to get measured", () => {
