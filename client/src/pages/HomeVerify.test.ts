@@ -82,6 +82,7 @@ describe("header restores master menu and Council OS", () => {
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
     expect(header).not.toContain("Start free");
+    expect(header).toContain("SPA hops keep this header mounted");
   });
 
   it("renders the mega-menu groups", () => {
