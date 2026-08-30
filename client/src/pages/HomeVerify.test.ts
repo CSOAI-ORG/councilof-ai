@@ -104,6 +104,22 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
     expect(tools).toMatch(/Ask: board totals/);
+    expect(tools).toContain("board_totals · get_axis · verify_card · list_cards");
+    expect(tools).toContain("HundredGate");
+    expect(tools).toContain("WatchlistPane");
     expect(tools).not.toMatch(/lifestyle/i);
+  });
+});
+
+describe("home lock — later merges must not restore the desk video", () => {
+  it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
+    const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
+    expect(home).toContain("LiveLeaderboard");
+    expect(home).toContain("HfLivingRecord");
+    expect(home).toContain("The living board");
+    expect(home).toMatch(/Check a claim\. Measure a system\./);
+    expect(home).not.toContain("HomeDemoLoop");
+    expect(home).not.toContain("csoai-demo.mp4");
+    expect(home).not.toContain("HomeBoard");
   });
 });
