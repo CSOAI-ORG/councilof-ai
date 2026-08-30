@@ -269,7 +269,7 @@ export const LOBBY_TABS: LobbyTab[] = [
 
 /** Live pages framed from Home / chat without a dedicated rail tab. */
 export const LOBBY_ROUTES: LobbyRoute[] = [
-  //  ── the shipped products the rail does not have a pane for ──────────────
+  // ── the shipped products the rail does not have a pane for ──────────────
   // Each is a live route the OS frames with ?embed=1, so in-pane navigation
   // stays inside the workspace. GPAI Evidence and Embed are absent HERE on
   // purpose: the native Evidence pack / Embed kit panes own them, and each pane
@@ -302,7 +302,7 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     group: "product",
     cues: /\b(legacy on[- ]?ramp|mainframe|cobol)\b/i,
   },
-  //  ── the audience doors ─────────────────────────────────────────
+  // ── the audience doors ─────────────────────────────────────────────────
   // These were a hard-coded array inside LobbyHome, where "Enterprises" pointed
   // at /assess — a tile promising an audience page and delivering the assessment
   // form the Get-measured tab already owns. They are real routes now, each at its
