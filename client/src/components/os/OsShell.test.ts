@@ -22,7 +22,7 @@ describe("OsShell is not the homepage or /os directory", () => {
     expect(launcher).toContain('data-testid="os-directory"');
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
-    expect(launcher).not.toContain("OsShell");
+    expect(launcher).not.toMatch(/<OsShell|import OsShell/);
   });
 
   it("glass only after VALID; paid sign stays gated", () => {

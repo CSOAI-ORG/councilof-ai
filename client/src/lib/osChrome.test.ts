@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { isOsOpen, OS_OPEN_ATTR, setOsOpen } from "./osChrome";
+import { isOsOpen, isOsProductPath, OS_OPEN_ATTR, setOsOpen } from "./osChrome";
 
 function stubDom() {
   const attrs = new Map<string, string>();
@@ -24,6 +24,15 @@ describe("osChrome", () => {
     setOsOpen(true);
     expect(isOsOpen()).toBe(true);
     expect(el.getAttribute(OS_OPEN_ATTR)).toBe("1");
+  });
+
+  it("treats /os as the product frame, not a marketing page", () => {
+    expect(isOsProductPath("/os")).toBe(true);
+    expect(isOsProductPath("/os/")).toBe(true);
+    expect(isOsProductPath("/os?lobby=assess")).toBe(true);
+    expect(isOsProductPath("/")).toBe(false);
+    expect(isOsProductPath("/for/startup")).toBe(false);
+    expect(isOsProductPath("/gspc-verify")).toBe(false);
   });
 
   it("clears the mark when the OS closes or minimises", () => {

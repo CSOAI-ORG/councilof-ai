@@ -234,7 +234,7 @@ export function hrefFor(door: Door): string {
   if (door.kind === "pane") {
     if (door.pane === "verify") return "/gspc-verify";
     if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
-    if (door.pane === "evidence") return "/evidence-rail";
+    if (door.pane === "evidence") return "/gpai-evidence";
     if (door.pane === "embed") return "/embed";
     if (door.pane === "watchdog") return "/report";
     if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
@@ -324,7 +324,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
-            Open in Council OS
+            Open this tool
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>

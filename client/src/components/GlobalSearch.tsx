@@ -120,13 +120,13 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // Watchdog & Jobs
   { id: 'public-watchdog', title: 'Public Watchdog', description: 'Crowdsourced AI incident monitoring', category: 'pages', href: '/public-watchdog', icon: Eye, keywords: ['incidents', 'monitoring', 'crowdsourced'] },
-  { id: 'watchdog', title: 'Report Incident', description: 'Submit an AI safety incident report', category: 'pages', href: '/watchdog', icon: AlertTriangle, keywords: ['report', 'incident', 'safety'] },
+  { id: 'watchdog', title: 'Report Incident', description: 'Submit an AI safety incident report', category: 'pages', href: '/report', icon: AlertTriangle, keywords: ['report', 'incident', 'safety'] },
   { id: 'jobs', title: 'Analyst Jobs', description: 'Browse AI safety analyst job opportunities', category: 'pages', href: '/jobs', icon: Briefcase, keywords: ['careers', 'work', 'opportunities'] },
   { id: 'my-applications', title: 'My Applications', description: 'Track your job applications', category: 'pages', href: '/my-applications', icon: FileText, keywords: ['applications', 'status', 'tracking'] },
   { id: 'leaderboard', title: 'Watchdog Leaderboard', description: 'Top performing AI safety analysts', category: 'pages', href: '/leaderboard', icon: Award, keywords: ['ranking', 'top', 'performers'] },
 
   // Enterprise
-  { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
+  { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/for/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
   { id: 'enterprise-dashboard', title: 'Enterprise Dashboard', description: 'CISO compliance hub for enterprises', category: 'pages', href: '/enterprise-dashboard', icon: BarChart3, keywords: ['ciso', 'compliance', 'hub'] },
   { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=assess&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
   { id: 'enterprise-onboarding', title: 'Enterprise Onboarding', description: 'Get started with enterprise features', category: 'pages', href: '/enterprise-onboarding', icon: Zap, keywords: ['setup', 'onboard', 'start'] },
@@ -311,7 +311,7 @@ const QUICK_ACTIONS: QuickAction[] = [
   { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety training', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
   { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
   { id: 'action-take-exam', title: 'Get measured', description: 'Start at /assess — a signed card, not a certificate', href: '/assess', icon: FileCheck, color: 'bg-purple-500' },
-  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/watchdog', icon: AlertTriangle, color: 'bg-red-500' },
+  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/report', icon: AlertTriangle, color: 'bg-red-500' },
   { id: 'action-apply-job', title: 'Browse Analyst Jobs', description: 'Find Watchdog analyst opportunities', href: '/jobs', icon: Briefcase, color: 'bg-amber-500' },
   { id: 'action-view-charter', title: 'View Partnership Charter', description: 'Read the 52 Articles', href: '/charter', icon: FileText, color: 'bg-slate-700' },
 ];

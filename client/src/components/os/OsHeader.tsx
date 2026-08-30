@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { FOCUS } from "@/components/lobby/glass";
-import { DOORS, DOOR_TO_LOBBY, LOBBY_TO_DOOR, type DoorId } from "@/components/os/doors";
+import { DOORS, DOOR_TO_LOBBY, doorFromSearch, type DoorId } from "@/components/os/doors";
 import { isEmbedded } from "@/lib/embed";
 import { osDoorHref } from "@/lib/lobbyLink";
 
@@ -62,10 +62,7 @@ export default function OsHeader() {
   const search = useSearch();
   const { user, logout } = useAuth();
 
-  const params = new URLSearchParams(search);
-  const lobby = params.get("lobby");
-  const currentDoor =
-    lobby && lobby !== "home" ? LOBBY_TO_DOOR[lobby] ?? null : null;
+  const currentDoor = doorFromSearch(search) ?? "board";
   const panel = isEmbedded();
   const atHome = location === "/" || location === "";
 
@@ -105,6 +102,8 @@ export default function OsHeader() {
               return (
                 <button
                   key={door.id}
+                  type="button"
+                  data-testid={`os-door-${door.id}`}
                   onClick={() => navigateToDoor(door.id)}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
                     active
@@ -230,6 +229,8 @@ export default function OsHeader() {
           return (
             <button
               key={door.id}
+              type="button"
+              data-testid={`os-door-mobile-${door.id}`}
               onClick={() => navigateToDoor(door.id)}
               className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
                 active

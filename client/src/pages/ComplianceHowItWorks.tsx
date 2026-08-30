@@ -171,7 +171,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "What's the cost of compliance?",
-      answer: "Costs vary based on your system complexity and current compliance level. Basic assessment is free. Professional compliance reviews start at $500. Enterprise contracts are customized."
+      answer: "Get measured is free and needs no account. A grade is never sold. Paid arms — Run/re-attest, Ledger, and Data — are quoted privately. There are no public prices."
     },
     {
       question: "How long does compliance implementation take?",

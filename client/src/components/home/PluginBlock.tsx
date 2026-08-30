@@ -5,10 +5,11 @@
 import HomeUnderstand from "./HomeUnderstand";
 
 const URL = "https://councilof.ai/mcp";
+const MCP_SNIPPET = `{ "mcpServers": { "gspc": { "url": "${URL}" } } }`;
 
 const HOSTS = [
   { name: "Claude", how: `Add gspc → ${URL}` },
-  { name: "Cursor", how: `~/.cursor/mcp.json → ${URL}` },
+  { name: "Cursor", how: `~/.cursor/mcp.json → paste the JSON` },
   { name: "Kimi", how: `MCP settings → ${URL}` },
   { name: "Grok", how: `plugin install CSOAI-ORG/council-of-ai-grok → ${URL}` },
 ] as const;
@@ -36,8 +37,11 @@ export default function PluginBlock() {
           { kind: "usp", text: "The plugin reads the same public board a stranger sees. No private score." },
         ]}
       />
+      <pre className="mt-3 overflow-x-auto rounded-lg bg-slate-950 px-3 py-2 font-mono text-[11px] text-emerald-100">
+        <code>{MCP_SNIPPET}</code>
+      </pre>
       <p className="mt-3">
-        <code className="font-mono text-[12px]">https://councilof.ai/mcp</code>
+        <code className="font-mono text-[12px]">{URL}</code>
         {" · "}
         <a href="/tools" className="font-medium text-emerald-800 hover:underline">
           /tools

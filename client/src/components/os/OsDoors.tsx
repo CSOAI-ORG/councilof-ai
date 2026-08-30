@@ -185,17 +185,19 @@ function SpaceDoor() {
           The governed arena — rounds graded deterministically, never by a model jury.
         </p>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <p className="text-sm text-slate-600">
-          Head-to-head comparisons on frozen provisions. Winner is a signed measurement, not a model beauty contest.
-        </p>
-        <Link
-          href="/gspc-arena"
-          className={`mt-4 inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 ${FOCUS}`}
-        >
-          Open the Arena →
-        </Link>
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <iframe
+          title="Council Space arena"
+          src="/gspc-arena?embed=1"
+          className="h-[70vh] w-full border-0"
+        />
       </div>
+      <Link
+        href="/gspc-arena"
+        className={`inline-flex items-center text-sm font-semibold text-emerald-800 hover:underline ${FOCUS}`}
+      >
+        Open the Arena as a full page →
+      </Link>
     </div>
   );
 }
@@ -235,15 +237,20 @@ function AssessDoor() {
         <h2 className="text-xl font-bold text-slate-900">{copy.title}</h2>
         <p className="mt-1 text-sm text-slate-600">{copy.lead}</p>
       </div>
-      <div className="rounded-xl border border-slate-200 bg-white p-6">
-        <p className="text-sm text-slate-600">{copy.body}</p>
-        <Link
-          href="/assess"
-          className={`mt-4 inline-flex items-center rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 ${FOCUS}`}
-        >
-          {copy.cta}
-        </Link>
+      <p className="text-sm text-slate-600">{copy.body}</p>
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+        <iframe
+          title="Get measured"
+          src="/assess?embed=1"
+          className="h-[70vh] w-full border-0"
+        />
       </div>
+      <Link
+        href="/assess"
+        className={`inline-flex items-center text-sm font-semibold text-emerald-800 hover:underline ${FOCUS}`}
+      >
+        {copy.cta}
+      </Link>
     </div>
   );
 }

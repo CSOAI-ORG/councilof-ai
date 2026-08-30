@@ -302,12 +302,12 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 pb-4">
-        <AxisProof axis={p.axes} why={p.axesWhy} tone="light" />
+        <AxisProof axes={p.axes} why={p.axesWhy} tone="light" />
       </section>
 
       <section className="max-w-6xl mx-auto px-6 py-12"><Slideshow slides={p.slides} /></section>
 
-      <PersonaEvidence lead={p.evidence.lead} axis={p.evidence.axes} />
+      <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
         <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&_.text-emerald-50\\/60]:!text-emerald-600/70 [&_div]:!border-emerald-200" />
