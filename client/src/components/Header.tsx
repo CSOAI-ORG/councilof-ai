@@ -258,6 +258,8 @@ export function Header() {
     return () => document.removeEventListener('keydown', onKey);
   }, [activeDropdown]);
 
+  // SPA hops keep this header mounted. Close the mega-menu so a leftover
+  // panel cannot sit on top of the next page's buttons.
   useEffect(() => {
     setActiveDropdown(null);
     setMobileMenuOpen(false);
