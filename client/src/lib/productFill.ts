@@ -34,8 +34,8 @@ export const FILL_PIPELINE = [
   "Pack — GPAI / RAS / insurer four-class assembly of cells, omissions and a corrections excerpt.",
   "Coverage index — N measured of M declared slots. Counts rows. Never predicts. Never a fused grade.",
   "Corrections ledger — GET /api/corrections. Append-only facts about our history, not a score.",
-  "Optional digest anchor — XRPL memo / XLS-70 after custody and mainnet proof. Pointer, not a grade.",
-  "Optional attester feed — ERC-3643 / T-REX partner role, never issuer, never a bond we mint.",
+  "Optional digest anchor — planned after custody. XRPL memo / XLS-70 on DEVNET today. Not mainnet. Pointer, not a grade.",
+  "Optional attester feed — planned ERC-3643 / T-REX partner role, never issuer. Nothing is live. Never a bond we mint.",
   "Optional harness spans — OpenTelemetry of our workers. Debug and cost. Not a partner trace. Not a grade.",
 ] as const;
 
