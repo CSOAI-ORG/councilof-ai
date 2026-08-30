@@ -109,11 +109,26 @@ export const PLAY_CARDS: PlayCard[] = [
     route: "/academy",
     reality: "Opens Council Academy in the centre pane. Course completion attests training, not conformity.",
   },
+  {
+    id: "compliance-training",
+    title: "Compliance Training World",
+    blurb:
+      "Industry quests — Art 50(2), bank, insurance, equity, bond, cross-border — graded in-browser. " +
+      "Training attests completion, never certification.",
+    image: "/images/literacy_training_arena.jpg",
+    alt: "Compliance training quests across regulated industries",
+    status: "route",
+    route: "/compliance-training-world/catalog.html",
+    chip: "playable now",
+    reality:
+      "Opens the live quest catalog in the centre pane. You pick a quest, answer cases, and the page " +
+      "grades you with a deterministic predicate. A pass is a training attestation — not a conformity mark.",
+  },
 ];
 
 /** The standing notice above the gallery. Rendered every time, never dismissible. */
 export const PLAY_NOTICE =
   "Play gallery previews on councilof.ai. Where a card opens a route, the card says what kind of " +
-  "destination it is — one is a quest page you actually play, the rest are pages you read. Cards " +
+  "destination it is — quest pages you actually play, and pages you read. Cards " +
   "marked “Not yet playable — in build” have no live destination yet, and are shown so the roadmap " +
   "is visible rather than implied.";
