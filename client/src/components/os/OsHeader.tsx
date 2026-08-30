@@ -102,6 +102,8 @@ export default function OsHeader() {
               return (
                 <button
                   key={door.id}
+                  type="button"
+                  data-testid={`os-door-${door.id}`}
                   onClick={() => navigateToDoor(door.id)}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
                     active
@@ -227,6 +229,8 @@ export default function OsHeader() {
           return (
             <button
               key={door.id}
+              type="button"
+              data-testid={`os-door-mobile-${door.id}`}
               onClick={() => navigateToDoor(door.id)}
               className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-medium transition ${FOCUS} ${
                 active
