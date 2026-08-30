@@ -27,6 +27,7 @@ describe("osChat — four tools", () => {
     expect(wantsBoardTotals("ask the board")).toBe(true);
     expect(wantsBoardTotals("open the board")).toBe(true);
     expect(wantsBoardTotals("Show the board")).toBe(true);
+    expect(wantsBoardTotals("BOARD")).toBe(true);
     expect(wantsListCards("list cards")).toBe(true);
     expect(looksLikeCardJson('{"id":"abc","signature":"x","body":{}}')).toBe(true);
     expect(looksLikeCardJson("hello")).toBe(false);

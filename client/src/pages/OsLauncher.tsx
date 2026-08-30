@@ -12,6 +12,14 @@ import OsHeader from "@/components/os/OsHeader";
 import OsDoorBody from "@/components/os/OsDoors";
 import { openLobby } from "@/lib/lobbyLink";
 import { useBoardCount } from "@/lib/boardCount";
+import {
+  censusNote,
+  correctionsNote,
+  parseTerminal,
+  TERMINAL_HINT,
+} from "@/lib/terminalFn";
+import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
+import { liveCountLine } from "@/components/os/osChat";
 
 export {
   BOARD_PANE,
@@ -41,6 +49,7 @@ export default function OsLauncher() {
   const door = doorFromSearch(search) ?? "board";
   const board = useBoardCount();
   const [ask, setAsk] = useState("");
+  const [fnNote, setFnNote] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Council OS | councilof.ai";
@@ -80,6 +89,43 @@ export default function OsLauncher() {
               document.getElementById("os-chat")?.focus();
               return;
             }
+            const parsed = parseTerminal(prompt);
+            if (parsed.fn === "BOARD") {
+              void fetch("/api/gspc", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => setFnNote(`BOARD — ${liveCountLine(j?.totals ?? {})}. Empty stays empty.`))
+                .catch((err: Error) => setFnNote(`BOARD failed (${err.message}). Cite GET /api/gspc.`));
+              setLocation("/os?lobby=board");
+              return;
+            }
+            if (parsed.fn === "VERIFY") {
+              setLocation("/gspc-verify");
+              return;
+            }
+            if (parsed.fn === "AXIS") {
+              setLocation("/os?lobby=board");
+              setFnNote(`AXIS ${parsed.arg || "—"}. Empty stays empty.`);
+              return;
+            }
+            if (parsed.fn === "CORRECT") {
+              void fetch("/api/corrections", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => {
+                  const n = Array.isArray(j?.corrections) ? j.corrections.length : j?.count;
+                  setFnNote(correctionsNote(n));
+                })
+                .catch((err: Error) => setFnNote(`CORRECT failed (${err.message}).`));
+              return;
+            }
+            if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
+              const id = parsed.arg.trim();
+              if (id) {
+                const store = typeof localStorage === "undefined" ? null : localStorage;
+                saveWatchlist(store, upsertWatch(loadWatchlist(store), [id]));
+              }
+              setFnNote(id ? censusNote(id) : "CENSUS needs an owner/name id.");
+              return;
+            }
             openLobby({ prompt });
           }}
         >
@@ -87,14 +133,14 @@ export default function OsLauncher() {
             Ask the workspace
           </label>
           <p className="mt-1 text-xs text-slate-600">
-            Typed, never sent until you press Ask. Answers from published measurement, or a refusal.
+            Typed, never sent until you press Ask. Functions first; otherwise the lobby.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <input
               id="os-chat"
               value={ask}
               onChange={(e) => setAsk(e.target.value)}
-              placeholder="Ask about the board, a card, or what get-measured actually runs"
+              placeholder="BOARD · AXIS jail · CENSUS Qwen/Qwen3.8-27B · CORRECT"
               className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-600"
             />
             <button
@@ -104,6 +150,8 @@ export default function OsLauncher() {
               Ask
             </button>
           </div>
+          <p className="mt-2 font-mono text-[11px] text-emerald-800">{TERMINAL_HINT}</p>
+          {fnNote && <p className="mt-2 text-sm text-slate-700">{fnNote}</p>}
         </form>
 
         <h2 className="mt-12 text-sm font-bold uppercase tracking-wide text-slate-500">

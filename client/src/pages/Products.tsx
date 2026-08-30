@@ -1,4 +1,12 @@
 import { Link } from "wouter";
+import EmptySlots from "@/components/EmptySlots";
+import GovernanceTerminal from "@/components/GovernanceTerminal";
+import HealthInventory from "@/components/HealthInventory";
+import HealthTerms from "@/components/HealthTerms";
+import PermissionlessRevenue from "@/components/PermissionlessRevenue";
+import PlaybookAudit from "@/components/PlaybookAudit";
+import ProductFill from "@/components/ProductFill";
+import SovExternalAudit from "@/components/SovExternalAudit";
 import { useBoardCount } from "@/lib/boardCount";
 
 /**
@@ -157,6 +165,15 @@ export default function Products() {
           ))}
         </ul>
       </section>
+
+      <ProductFill tone="dark" />
+      <HealthInventory tone="dark" />
+      <HealthTerms tone="dark" />
+      <GovernanceTerminal tone="dark" />
+      <PermissionlessRevenue tone="dark" />
+      <SovExternalAudit tone="dark" />
+      <PlaybookAudit tone="dark" />
+      <EmptySlots tone="dark" />
 
       <section aria-labelledby="engine-h" className="mt-12">
         <h2 id="engine-h" className="text-xl font-bold text-emerald-300">The engine</h2>
