@@ -53,24 +53,24 @@ const FILMS: {
 
 export default function HomeFilms() {
   return (
-    <section id="watch" aria-labelledby="watch-h" className="border-t border-slate-200 bg-gradient-to-b from-slate-50 to-white py-16">
+    <section id="watch" aria-labelledby="watch-h" className="border-t border-slate-200 bg-gradient-to-b from-slate-50 to-white py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">Watch</p>
         <h2 id="watch-h" className="mt-2 text-3xl font-black tracking-tight text-slate-900">
           See the instrument, then use it
         </h2>
         <p className="mt-3 max-w-2xl text-slate-600">
-          Three short films. Tap to play — the file loads only then. Under each one, what it
-          actually means, in ticks. Verify a card when you are done.
+          Three short films, one at a time. Tap to play — the file loads only then.
+          Under each one, what it actually means. Verify a card when you are done.
         </p>
-        <ul className="mt-10 grid gap-7 md:grid-cols-3">
+        <ul className="mt-14 space-y-16">
           {FILMS.map((f) => (
             <li
               key={f.src}
-              className="flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_18px_40px_-28px_rgba(4,18,12,.45)]"
+              className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-[0_18px_40px_-28px_rgba(4,18,12,.45)]"
             >
               <VideoEmbed src={f.src} poster={f.poster} title={f.title} caption={f.caption} className="max-w-none" />
-              <div className="flex flex-1 flex-col gap-4 px-5 pb-6 pt-1">
+              <div className="px-6 pb-8 pt-2 sm:px-8">
                 <HomeUnderstand title="What this film is saying" items={f.takeaways} />
               </div>
             </li>
