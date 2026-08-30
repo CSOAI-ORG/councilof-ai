@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync, existsSync, rmSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { describe, expect, it, afterEach } from "vitest";
@@ -32,6 +32,21 @@ describe("place-end-user-aliases", () => {
     expect(existsSync(join(dist, "vs/vanta.html"))).toBe(true);
     expect(PERSONAS).toContain("regulator");
     expect(VENDORS).toContain("vanta");
+  });
+
+  it("does not overwrite a prerendered /for page with HOME", () => {
+    const root = mkdtempSync(join(tmpdir(), "aliases-persona-"));
+    dirs.push(root);
+    const dist = join(root, "dist/client");
+    mkdirSync(join(dist, "gspc-scoreboard"), { recursive: true });
+    mkdirSync(join(dist, "for/startup"), { recursive: true });
+    writeFileSync(join(dist, "index.html"), "<html>HOME</html>");
+    writeFileSync(join(dist, "gspc-scoreboard/index.html"), "<html>BOARD</html>");
+    writeFileSync(join(dist, "for/startup/index.html"), "<html>STARTUP</html>");
+
+    run(dist);
+
+    expect(readFileSync(join(dist, "for/startup/index.html"), "utf8")).toBe("<html>STARTUP</html>");
   });
 
   it("places dashboard, login, about, and library sector pretty-URLs", () => {
