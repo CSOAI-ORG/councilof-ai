@@ -59,6 +59,13 @@ export default function HomeVerify() {
               >
                 Open Council OS
               </Link>
+              <a
+                href="/compliance-training-world/catalog.html"
+                data-testid="home-btn-train"
+                className="inline-flex rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-900 hover:bg-slate-50"
+              >
+                Compliance training
+              </a>
             </div>
 
             <HomeComposer onAskAxis={setAxis} />
