@@ -417,6 +417,16 @@ function VerifyYourself() {
           />
         </div>
 
+        <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
+          <Points
+            points={[
+              { tag: "benefit", text: "The whole check runs offline — no account and no permission" },
+              { tag: "benefit", text: "Pin our key first. A card checked against the key it ships with only proves it is self-consistent" },
+              { tag: "usp", text: "You recompute the same Ed25519 signature over the same hash chain we published" },
+            ]}
+          />
+        </div>
+
         <Cta href="/gspc-verify" label="Verify a card now" secondary={{ href: "/api-docs", label: "Read the API docs" }} />
       </div>
     </section>
@@ -455,6 +465,13 @@ function OwnErrors() {
           </>
         )}
       </Body>
+      <Points
+        points={[
+          { tag: "pain", text: "Most measurement bodies quietly reword a claim that did not hold" },
+          { tag: "benefit", text: "The ledger is append-only — entries are never edited or deleted" },
+          { tag: "usp", text: "We retracted our own consensus claim (DR-0007) rather than dress it up" },
+        ]}
+      />
       <p className="measure mt-5 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5 text-[15px] leading-[1.65] text-gray-700">
         <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
@@ -532,6 +549,14 @@ function LivingLaw() {
           </ul>
         </>
       )}
+      <Points
+        points={[
+          { tag: "pain", text: "A one-off stamp starts going stale the day the statute moves" },
+          { tag: "benefit", text: "Old cards stay. History is append-only — nothing is overwritten" },
+          { tag: "benefit", text: "A disputed date is recorded as a dispute, not silently resolved" },
+          { tag: "usp", text: "When a provision changes we re-measure and issue a delta card" },
+        ]}
+      />
       <p className="mt-4 text-xs leading-relaxed text-gray-500">
         Where a date is genuinely disputed, the feed records the dispute rather than resolving it
         silently — and where we got a date wrong ourselves, the correction is published, not patched.
