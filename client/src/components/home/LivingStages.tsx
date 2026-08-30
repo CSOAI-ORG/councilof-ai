@@ -40,7 +40,7 @@ import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
  * and no heading is ever left holding a placeholder dash.
  */
 
-/* ─── live data ─────────────────────────────────────────────────────────── */
+/* ─── live data ─────────────────────────────────────────────── */
 
 function useJson<T>(url: string): T | null {
   const [data, setData] = useState<T | null>(null);
@@ -82,7 +82,7 @@ type RegFeed = {
   deadlines?: { date: string; instrument: string; what: string; basis?: string; status?: string }[];
 };
 
-/* ─── shared shapes ─────────────────────────────────────────────────────── */
+/* ─── shared shapes ───────────────────────────────────────────── */
 
 type Point = { tag: "pain" | "benefit" | "usp"; text: string };
 
@@ -258,7 +258,7 @@ function Body({ children }: { children: ReactNode }) {
   return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
 }
 
-/* ─── 1 · independence ──────────────────────────────────────────────────── */
+/* ─── 1 · independence ─────────────────────────────────────────── */
 
 function Independence() {
   return (
@@ -304,7 +304,7 @@ function Independence() {
   );
 }
 
-/* ─── 2 · the boundary ──────────────────────────────────────────────────── */
+/* ─── 2 · the boundary ──────────────────────────────────────────── */
 
 function Boundary() {
   return (
@@ -348,7 +348,7 @@ function Boundary() {
   );
 }
 
-/* ─── 3 · verify it yourself ────────────────────────────────────────────── */
+/* ─── 3 · verify it yourself ────────────────────────────────────── */
 
 const VERIFY_STEPS = [
   {
@@ -433,7 +433,7 @@ function VerifyYourself() {
   );
 }
 
-/* ─── 4 · we publish our own errors ─────────────────────────────────────── */
+/* ─── 4 · we publish our own errors ─────────────────────────────── */
 
 function OwnErrors() {
   const corr = useJson<Corrections>("/api/corrections");
@@ -495,13 +495,13 @@ function OwnErrors() {
       <Cta
         href="/refutation-ledger"
         label="Read the ledger"
-        secondary={{ href: "/watchdog", label: "Report something to us" }}
+        secondary={{ href: "/report", label: "Report something to us" }}
       />
     </SplitBand>
   );
 }
 
-/* ─── 5 · living law ────────────────────────────────────────────────────── */
+/* ─── 5 · living law ────────────────────────────────────────── */
 
 function LivingLaw() {
   const feed = useJson<RegFeed>("/api/regulation");
@@ -566,7 +566,7 @@ function LivingLaw() {
   );
 }
 
-/* ─── 6 · the live board, with humans beside it ─────────────────────────── */
+/* ─── 6 · the live board, with humans beside it ───────────────────────── */
 
 function LiveBoard() {
   const gspc = useJson<Gspc>("/api/gspc");
@@ -669,7 +669,7 @@ function LiveBoard() {
   );
 }
 
-/* ─── export ────────────────────────────────────────────────────────────── */
+/* ─── export ────────────────────────────────────────────── */
 
 export default function LivingStages() {
   return (
