@@ -30,7 +30,7 @@ h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B98
 <div class="score" id="score"></div>
 <div class="result" id="res"></div>
 
-<div class="foot">Council of AI · csoai.org · signed · measured · sovereign · deterministic predicate, not opinion</div>
+<div class="foot">Council of AI · csoai.org · signed · measured · deterministic predicate, not opinion</div>
 </div>
 <script>
 const ITEMS=[
@@ -41,15 +41,15 @@ const ITEMS=[
  {txt:"A press release: 'Our model helps police find suspects' — no identity-safe model card.", syn:true}
 ];
 let qs=document.getElementById('qs');
-ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class="q"><div class="lbl">Sample ${i+1}</div><div class="txt">${it.txt}</div><div class="opt">
-<label><input type="radio" name="q${i}" value="syn">Marked synthetic</label>
-<label><input type="radio" name="q${i}" value="hum">Genuine human</label></div></div>`;});
+ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class=\"q\"><div class=\"lbl\">Sample ${i+1}</div><div class=\"txt\">${it.txt}</div><div class=\"opt\">
+<label><input type=\"radio\" name=\"q${i}\" value=\"syn\">Marked synthetic</label>
+<label><input type=\"radio\" name=\"q${i}\" value=\"hum\">Genuine human</label></div></div>`;});
 function grade(){
- let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==="syn")===it.syn)c++;});
+ let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value===\"syn\")===it.syn)c++;});
  let p=Math.round(c/ITEMS.length*100);let pass=p>=80;
  document.getElementById('score').textContent=`Score: ${c}/${ITEMS.length} (${p}%) — ${pass?'PASS':'NEEDS TRAINING'}`;
  let r=document.getElementById('res');r.style.display='block';r.className='result '+(pass?'pass':'fail');
- r.innerHTML=pass?`<b>Attestation ready.</b> Deterministic score ${p}% → a signed training attestation is issued to your ledger (subject=deployer, rule=Art 50(2), scenario=art50-2-retrofit-marking).<br><span class="cid">content_id 0c64059c79f618e8c472c7fc7a816e7b214ba167a20d76f5f0f4803eb8ba0489</span>`
+ r.innerHTML=pass?`<b>Attestation ready.</b> Deterministic score ${p}% → a signed training attestation is issued to your ledger (subject=deployer, rule=Art 50(2), scenario=art50-2-retrofit-marking).<br><span class=\"cid\">content_id 0c64059c79f618e8c472c7fc7a816e7b214ba167a20d76f5f0f4803eb8ba0489</span>`
  :`<b>Not yet.</b> Score ${p}% &lt; 80%. The AI coach will walk the misses. Re-run to pass.`;
 }
 </script></body></html>

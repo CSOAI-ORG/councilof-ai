@@ -6,10 +6,10 @@
 <div class="badge">Grade each case (deterministic predicate).</div>
 <div class='q'><div class='lbl'>Case 1</div><div class='txt'>An AI score on AI-linked debt with no signed measurement methodology.</div><div class='opt'><label><input type='radio' name='q0' value='c'>Compliant</label><label><input type='radio' name='q0' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 2</div><div class='txt'>A compute-asset (GPU) collateral valuation model with an unwritten rating method.</div><div class='opt'><label><input type='radio' name='q1' value='c'>Compliant</label><label><input type='radio' name='q1' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 3</div><div class='txt'>A credit model that discloses its measurement axis separation.</div><div class='opt'><label><input type='radio' name='q2' value='c'>Compliant</label><label><input type='radio' name='q2' value='v'>Violation</label></div></div><div class='q'><div class='lbl'>Case 4</div><div class='txt'>A rating-style conclusion published without the underlying evidence row.</div><div class='opt'><label><input type='radio' name='q3' value='c'>Compliant</label><label><input type='radio' name='q3' value='v'>Violation</label></div></div>
 <button onclick="grade()">Submit &amp; grade</button><div class="res" id="res"></div>
-<div class="foot">Council of AI · csoai.org · signed · measured · sovereign · on pass you receive a signed training attestation</div>
+<div class="foot">Council of AI · csoai.org · signed · measured · on pass you receive a signed training attestation</div>
 </div><script>
 const T=[true, true, true, false];
-function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==='c')===ok)c++;});
+function grade(){let c=0;T.forEach((ok,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value==='c')===ok)c++;});
 let p=Math.round(c/T.length*100),pass=p>=80;let r=document.getElementById('res');r.style.display='block';
 r.style.borderColor=pass?'#10B981':'#e5534b';
 r.innerHTML=pass?`<b>Attestation ready.</b> Score ${p}% → a signed training attestation (subject=deployer, industry=bond) is issued to your ledger.`
