@@ -29,7 +29,7 @@ const SLIDES: Slide[] = [
   {
     kicker: "THE INSTRUMENTS",
     headline: ["Measured,", "not modelled."],
-    sub: "417 statutory provisions · 237 scored GovBench items · every verdict a predicate an auditor can recompute.",
+    sub: "Living GET /api/gspc. Every verdict is a predicate an auditor can recompute. Empty cells stay empty.",
     cta: { label: "See the board", href: "/gspc-scoreboard" },
     scene: "cells",
   },

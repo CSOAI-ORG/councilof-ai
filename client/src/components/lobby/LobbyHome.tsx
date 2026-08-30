@@ -1,3 +1,4 @@
+import HfLivingRecord from "@/components/HfLivingRecord";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 import { LOBBY_TABS, OS_RAIL_TABS, type LobbyTab } from "./tabs";
 import LivingBoard from "./LivingBoard";
@@ -103,7 +104,9 @@ export default function LobbyHome({
         <LivingBoard onOpenBoard={openBoard} />
       </div>
 
-      <h3 className={`${TYPE.section} mt-2 mb-3`}>Instruments</h3>
+      <HfLivingRecord compact />
+
+      <h3 className={`${TYPE.section} mt-8 mb-3`}>Instruments</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {DESKTOP.map((t) => (
           <li key={t.id}>

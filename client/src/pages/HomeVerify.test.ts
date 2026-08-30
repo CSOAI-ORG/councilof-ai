@@ -9,6 +9,8 @@ const src = [
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/board/LiveLeaderboard.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/HfLivingRecord.tsx"), "utf8"),
+  readFileSync(resolve(here, "../lib/hfLivingRecord.ts"), "utf8"),
 ]
   .join("\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
@@ -37,6 +39,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("defaultExpanded");
     expect(src).not.toContain("HomeDemoLoop");
     expect(src).not.toContain("PluginBlock");
+    expect(src).toContain("HfLivingRecord");
+    expect(src).toContain("huggingface.co/datasets/csoai/gspc-board");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
   });

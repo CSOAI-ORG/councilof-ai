@@ -23,8 +23,13 @@
   "measured": {
     "total_tools": 4,
     "server_count": 1,
-    "tools": ["measure", "verify", "jail-probe", "enter-arena"],
-    "note": "MEASURED live from worker tools/list. Official registry latest 1.0.3. Board counts from GET /api/gspc. Worker runtime may lag until CF_API_TOKEN restored."
+    "tools": ["board_totals", "get_axis", "verify_card", "list_cards"],
+    "note": "POST /mcp tools/list. These four are the product door. measure / verify / jail-probe / enter-arena are not this product."
+  },
+  "planted": {
+    "tools": ["board_totals", "get_axis", "verify_card", "list_cards"],
+    "url": "https://councilof.ai/mcp",
+    "note": "The product door. Four read tools. No 23rd axis. No jail run from MCP."
   },
   "provider": {
     "name": "CSOAI Ltd",

@@ -5,6 +5,7 @@ import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 import { BOARD_PANE, DOORS, doorFromSearch, osLeaveForSearch } from "./OsLauncher";
 
 const launcher = readFileSync(resolve(__dirname, "OsLauncher.tsx"), "utf8");
+const lobbyHome = readFileSync(resolve(__dirname, "../components/lobby/LobbyHome.tsx"), "utf8");
 
 describe("OsLauncher doors", () => {
   it("keeps the header rail to Board · Verify · Space · Assess · Harness", () => {
@@ -58,5 +59,10 @@ describe("OsLauncher doors", () => {
     expect(header).toContain('data-testid={`os-door-${door.id}`}');
     expect(header).toContain("doorFromSearch(search) ?? \"board\"");
   });
-});
 
+  it("LobbyHome mounts the Hub record next to the living board — no Space iframe", () => {
+    expect(lobbyHome).toContain("HfLivingRecord");
+    expect(lobbyHome).toContain("LivingBoard");
+    expect(lobbyHome).not.toMatch(/<iframe/i);
+  });
+});
