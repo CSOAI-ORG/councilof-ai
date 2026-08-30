@@ -1,4 +1,9 @@
 import { useEffect, useState } from "react";
+import HundredGate from "@/components/HundredGate";
+import NSitesFlags from "@/components/NSitesFlags";
+import SignedAgentTravel from "@/components/SignedAgentTravel";
+import TwoSpeed from "@/components/TwoSpeed";
+import WatchlistPane from "@/components/WatchlistPane";
 import { setMetaDescription } from "@/lib/utils";
 
 const MCP_URL = "https://councilof.ai/mcp";
@@ -27,7 +32,7 @@ export default function ToolsPage() {
   }, []);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-16" data-testid="tools-mcp">
+    <main className="mx-auto max-w-4xl px-4 py-16" data-testid="tools-mcp">
       <h1 className="text-3xl font-black tracking-tight text-slate-900">
         Use this in Claude / Cursor / Kimi / Grok
       </h1>
@@ -70,6 +75,11 @@ export default function ToolsPage() {
         </a>
         , free.
       </p>
+      <HundredGate />
+      <SignedAgentTravel />
+      <TwoSpeed />
+      <NSitesFlags />
+      <WatchlistPane />
     </main>
   );
 }
