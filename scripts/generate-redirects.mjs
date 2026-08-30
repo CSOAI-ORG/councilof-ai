@@ -279,7 +279,7 @@ const lines = [
   "# then every splat rule (100-rule dynamic budget), catch-all last. One splat placed",
   "# early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —",
   `# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: ${DYNAMIC_RULES.filter(IS_DYNAMIC).length + 1}/100.`,
-  "# Enforced by scripts.redirects-guard.mjs.",
+  "# Enforced by scripts/redirects-guard.mjs.",
   "",
   ...STATIC_RULES,
   "",
