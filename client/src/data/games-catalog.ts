@@ -81,6 +81,17 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     frozen: true,
   },
   {
+    id: "compliance-training",
+    name: "Compliance Training World",
+    path: "/compliance-training-world/catalog.html",
+    kind: "leftover",
+    description:
+      "Industry compliance quests (Art 50(2), bank, insurance, equity, bond, cross-border) with in-browser deterministic grader. Training attestation only — never certification, never the living 22-axis board.",
+    usesLiveBoard: false,
+    badge: "frozen",
+    frozen: true,
+  },
+  {
     id: "coliseum-deck",
     name: "The Coliseum",
     path: "/coliseum",
