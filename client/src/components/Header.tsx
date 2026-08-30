@@ -112,7 +112,12 @@ const navigation: NavGroup[] = [
       { name: 'Distribution integrity', href: '/distribution-integrity', description: 'Represented is not distributed: the committed-versus-distributed spread, coverage-first and UNMEASURED' },
       { name: 'Verify embed / white-label', href: '/embed', description: 'A self-verifying badge for your own site — WebCrypto checks the signature in the reader’s browser' },
       { name: 'Legacy modernization on-ramp', href: '/cobolbridge', description: 'COBOL lineage under DORA / Basel / SOX carried into signed, continuous evidence' },
-      { section: 'Who it is for', name: 'Enterprise', href: '/for/enterprise', description: 'Measure a portfolio of systems against the duties that actually bind them' },
+      { section: 'Who it is for', name: 'Startups', href: '/for/startup', description: 'A signed measurement your buyer can re-check — not a certificate' },
+      { name: 'Enterprise', href: '/for/enterprise', description: 'Measure a portfolio of systems against the duties that actually bind them' },
+      { name: 'Finance', href: '/for/finance', description: 'Model risk, DORA, and the EU AI Act — what we actually hold' },
+      { name: 'Healthcare', href: '/for/healthcare', description: 'Clinical AI, measured, and the measurement signed' },
+      { name: 'Regulators', href: '/for/regulator', description: 'An assurance baseline you can verify and publish' },
+      { name: 'SEC filers', href: '/for/sec-filer', description: 'AI governance your 10-K can stand behind' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'An observed behavioural sample with a stated n and interval — something a risk model can price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement with a published method. We issue no conformity mark' },
       { name: 'Industries', href: '/industries', description: 'Sector by sector: the provisions that apply, and when they bite' },
@@ -336,7 +341,7 @@ export function Header() {
                         ? 'text-emerald-700 bg-emerald-50'
                         : 'text-muted-foreground hover:text-emerald-700 hover:bg-muted'
                     }`}
-                    onClick={() => setActiveDropdown(activeDropdown === item.name ? null : item.name)}
+                    onClick={() => setActiveDropdown(item.name)}
                     onFocus={() => handleMouseEnter(item.name)}
                   >
                     {item.name}
