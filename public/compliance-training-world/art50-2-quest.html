@@ -22,7 +22,7 @@ h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B98
 </style></head><body><div class="wrap">
 <div class="badge">Council of AI · Compliance Training World · City Quest</div>
 <h1>Art 50(2) — Synthetic Content Marking Quest</h1>
-<div class="rule"><b>Rule (EU AI Act Art 50(2)):</b> Deployers of generative AI must mark synthetic content (deepfakes, AI text/images) as artificially generated. Retrofit deadline for in-service systems: <b>2 Aug 2026</b>. Fail = enforcement exposure. Mark what is synthetic; leave what is genuinely human. <span class="cid">Quest: art50-2-retrofit-marking · bench: ProvBench</span></div>
+<div class="rule"><b>Rule (EU AI Act Art 50(2)):</b> Deployers of generative AI must mark synthetic content (deepfakes, AI text/images) as artificially generated. Retrofit deadline for in-service systems: <b>2 Dec 2026</b>. Fail = enforcement exposure. Mark what is synthetic; leave what is genuinely human. <span class="cid">Quest: art50-2-retrofit-marking · bench: ProvBench</span></div>
 <div class="badge" style="margin-top:6px">Grade the samples (deterministic predicate).</div>
 
 <div id="qs"></div>
@@ -41,15 +41,15 @@ const ITEMS=[
  {txt:"A press release: 'Our model helps police find suspects' — no identity-safe model card.", syn:true}
 ];
 let qs=document.getElementById('qs');
-ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class=\"q\"><div class=\"lbl\">Sample ${i+1}</div><div class=\"txt\">${it.txt}</div><div class=\"opt\">
-<label><input type=\"radio\" name=\"q${i}\" value=\"syn\">Marked synthetic</label>
-<label><input type=\"radio\" name=\"q${i}\" value=\"hum\">Genuine human</label></div></div>`;});
+ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class="q"><div class="lbl">Sample ${i+1}</div><div class="txt">${it.txt}</div><div class="opt">
+<label><input type="radio" name="q${i}" value="syn">Marked synthetic</label>
+<label><input type="radio" name="q${i}" value="hum">Genuine human</label></div></div>`;});
 function grade(){
- let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value===\"syn\")===it.syn)c++;});
+ let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name="q${i}"]:checked`);if(v&&(v.value==="syn")===it.syn)c++;});
  let p=Math.round(c/ITEMS.length*100);let pass=p>=80;
  document.getElementById('score').textContent=`Score: ${c}/${ITEMS.length} (${p}%) — ${pass?'PASS':'NEEDS TRAINING'}`;
  let r=document.getElementById('res');r.style.display='block';r.className='result '+(pass?'pass':'fail');
- r.innerHTML=pass?`<b>Attestation ready.</b> Deterministic score ${p}% → a signed training attestation is issued to your ledger (subject=deployer, rule=Art 50(2), scenario=art50-2-retrofit-marking).<br><span class=\"cid\">content_id 0c64059c79f618e8c472c7fc7a816e7b214ba167a20d76f5f0f4803eb8ba0489</span>`
+ r.innerHTML=pass?`<b>Attestation ready.</b> Deterministic score ${p}% → a signed training attestation is issued to your ledger (subject=deployer, rule=Art 50(2), scenario=art50-2-retrofit-marking).<br><span class="cid">content_id 0c64059c79f618e8c472c7fc7a816e7b214ba167a20d76f5f0f4803eb8ba0489</span>`
  :`<b>Not yet.</b> Score ${p}% &lt; 80%. The AI coach will walk the misses. Re-run to pass.`;
 }
 </script></body></html>
