@@ -17,6 +17,7 @@ describe("cinematic three-world merge contract", () => {
     expect(worlds).toContain("/images/cinematic/coliseum-plunge.jpg");
     expect(worlds).toContain("/images/cinematic/harness-plugin.jpg");
     expect(worlds).toContain("/images/cinematic/council-os-lobby.jpg");
+    expect(worlds).toContain('type.startsWith("video/")');
   });
 
   it("refuses the storyboard and press claims that are not true of the living board", () => {

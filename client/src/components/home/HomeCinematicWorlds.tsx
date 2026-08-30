@@ -21,7 +21,8 @@
  *   - security.txt is RFC 9116 on the live host (councilof.ai), not a homepage claim.
  *   - Canonical methodology DOI 10.5281/zenodo.21991104. CSOAI Ltd UK 16939677.
  *
- * Videos drop at the three reserved paths below. Until HEAD is 200, the still shows.
+ * Videos drop at the three reserved paths below. Until HEAD is a real
+ * video/* response, the still shows (Vite SPA fallback is HTML 200).
  */
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
@@ -109,13 +110,19 @@ const WORLDS: World[] = [
   },
 ];
 
+function isVideoHead(r: Response): boolean {
+  if (!r.ok) return false;
+  const type = (r.headers.get("content-type") || "").toLowerCase();
+  return type.startsWith("video/");
+}
+
 function useVideoArrived(src: string): boolean {
   const [ok, setOk] = useState(false);
   useEffect(() => {
     let alive = true;
     fetch(src, { method: "HEAD" })
       .then((r) => {
-        if (alive) setOk(r.ok);
+        if (alive) setOk(isVideoHead(r));
       })
       .catch(() => {
         if (alive) setOk(false);
