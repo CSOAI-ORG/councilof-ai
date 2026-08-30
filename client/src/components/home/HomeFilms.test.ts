@@ -24,6 +24,8 @@ describe("homepage films and understand lists", () => {
     const living = readFileSync(resolve(__dirname, "LivingStages.tsx"), "utf8");
     const verify = living.slice(living.indexOf("function VerifyYourself"), living.indexOf("function OwnErrors"));
     expect(verify).toContain("/videos/proving-ground.mp4");
+    expect(verify).toContain("lg:grid-cols-3");
+    expect(verify).not.toContain("lg:grid-cols-[1.15fr_1fr]");
     expect(verify).not.toContain("architecture-of-measurement.mp4");
     expect(verify).not.toContain("architecture-of-trust.mp4");
     expect(verify).not.toContain("trust-lobby.mp4");
