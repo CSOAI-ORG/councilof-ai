@@ -371,10 +371,10 @@ const VERIFY_STEPS = [
 function VerifyYourself() {
   return (
     <section className="relative bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
         <div className="max-w-3xl">
           <Kicker>Do not trust us — check</Kicker>
-          <Heading>Verify a card yourself. Three steps.</Heading>
+          <Heading>Three steps. Then you know.</Heading>
           <Body>
             Every measurement we publish is a small signed record — under a kilobyte, carrying the
             axis, the model, the accuracy, the issuer, the date and the hash of the card before it.

@@ -12,6 +12,8 @@ describe("homepage films and understand lists", () => {
     expect(films).toContain("architecture-of-trust.mp4");
     expect(films).toContain("trust-lobby.mp4");
     expect(films).toContain("What this film is saying");
+    expect(films).toContain("lg:grid-cols-3");
+    expect(films).toContain("Three films. Then the scale.");
     expect(films).toContain("HomeUnderstand");
     expect(films).toContain("Frozen, published tests");
     expect(films).toContain("Empty cells stay empty");

@@ -336,11 +336,11 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
 export default function ToolStack() {
   const figures = useLiveFigures();
   return (
-    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y">
+    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y-lg">
       <div className="section-shell">
         <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine products</p>
         <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
-          What you can actually do here
+          Nine doors. Each one opens today.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
           Independent measurement body. We run AI systems against frozen published tests, sign the

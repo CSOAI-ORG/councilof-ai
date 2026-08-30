@@ -29,17 +29,17 @@ export default function HomeVerify() {
     <div data-testid="home-verify">
       <HeroSlides />
 
-      <main className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
+      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
         <section aria-labelledby="os-h1">
-          <h1 id="os-h1" className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-            Check an AI claim. Or measure your system.
+          <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
+            Check a claim. Measure a system.
           </h1>
-          <p className="mt-3 max-w-2xl text-slate-600">
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
             Empty means not measured. Not a certificate. Free, no account.
           </p>
           <HomeUnderstand
-            className="mt-5 max-w-2xl"
-            title="What you can do in this box"
+            className="mt-6 max-w-2xl"
+            title="What this desk does"
             items={[
               "Click a row. The figure, n and status open underneath — living GET /api/gspc.",
               "Paste a signed card. Your browser checks the hash and the signature. Nothing is sent.",
@@ -48,7 +48,7 @@ export default function HomeVerify() {
             ]}
           />
 
-          <div className="mt-6 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/gspc-verify"
               data-testid="home-btn-verify"
@@ -72,9 +72,9 @@ export default function HomeVerify() {
           </div>
         </section>
 
-        <div className="mt-12">
+        <div className="mt-20 sm:mt-24">
           <LiveLeaderboard
-            heading="The live board"
+            heading="The living board"
             defaultExpanded
             showHumanPanel={false}
             highlight={axis}
@@ -82,11 +82,11 @@ export default function HomeVerify() {
           />
         </div>
 
-        <section aria-labelledby="ask-h" className="mt-10 rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:p-7">
-          <h2 id="ask-h" className="text-xl font-bold text-slate-900">
-            Ask, or paste a card
+        <section aria-labelledby="ask-h" className="mt-20 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:mt-24 sm:p-8">
+          <h2 id="ask-h" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
+            Ask. Or paste a card.
           </h2>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-3 text-base text-slate-600">
             Name an axis to jump the board. Paste a signed card to verify it here. Nothing leaves this device.
           </p>
           <HomeComposer onAskAxis={setAxis} />

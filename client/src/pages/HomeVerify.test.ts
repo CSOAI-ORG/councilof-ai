@@ -20,11 +20,11 @@ const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "u
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
-    expect(src).toMatch(/Check an AI claim\. Or measure your system\./);
+    expect(src).toMatch(/Check a claim\. Measure a system\./);
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
-    expect(src).toContain("The live board");
+    expect(src).toContain("The living board");
     expect(src).toContain("HeroSlides");
     expect(src).toContain("HomeFilms");
     expect(src).toContain("HomeCinematicWorlds");
@@ -32,7 +32,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("LivingStages");
     expect(src).toContain("Open Council OS");
     expect(src).toContain("Empty means not measured");
-    expect(src).toContain("What you can do in this box");
+    expect(src).toContain("What this desk does");
     expect(src).toContain("What this film is saying");
     expect(src).toContain("defaultExpanded");
     expect(src).not.toContain("HomeDemoLoop");
