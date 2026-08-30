@@ -407,12 +407,12 @@ function VerifyYourself() {
             ))}
           </ol>
 
-          {/* The pipeline explained in motion rather than a cropped panel. */}
+          {/* Unused on the rest of home — the three films already cover card-making. */}
           <VideoEmbed
-            src="/videos/architecture-of-measurement.mp4"
-            poster="/videos/architecture-of-measurement.jpg"
-            title="How a card is made: grading against frozen provisions, then canonical signing"
-            caption="How the card is made before you ever check it — deterministic grading, then canonical Ed25519 signing."
+            src="/videos/proving-ground.mp4"
+            poster="/videos/proving-ground.jpg"
+            title="The Proving Ground — how we test containment"
+            caption="The arena, not the signing bench. Containment is tested here; the card you check on the left is the signed result. Not a certificate."
             className="mt-10"
           />
         </div>
