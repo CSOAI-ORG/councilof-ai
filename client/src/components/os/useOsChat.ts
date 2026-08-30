@@ -14,6 +14,8 @@ import {
   wantsGetMeasured,
   wantsListCards,
 } from "./osChat";
+import { censusNote, correctionsNote, parseTerminal } from "@/lib/terminalFn";
+import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
 
 export type OsTurn = {
   role: "user" | "council";
@@ -49,10 +51,63 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
         return;
       }
 
-      if (looksLikeCardJson(question)) {
+      const parsed = parseTerminal(question);
+      if (parsed.fn === "CORRECT") {
         setBusy(true);
         try {
-          const card = JSON.parse(question);
+          const r = await fetch("/api/corrections", { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const j = await r.json();
+          const n = Array.isArray(j?.corrections) ? j.corrections.length : j?.count;
+          push({ role: "council", text: correctionsNote(n), tool: "correct" });
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: `CORRECT failed (${String(e?.message ?? e)}). Cite GET /api/corrections.`,
+            tool: "correct",
+          });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
+      if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
+        const id = parsed.arg.trim();
+        if (id && typeof localStorage !== "undefined") {
+          saveWatchlist(localStorage, upsertWatch(loadWatchlist(localStorage), [id]));
+        }
+        push({
+          role: "council",
+          text: id ? censusNote(id) : "CENSUS needs an owner/name id. DISCOVERED, never MEASURED.",
+          tool: "census",
+        });
+        return;
+      }
+      if (parsed.fn === "BOARD" || wantsBoardTotals(question)) {
+        setBusy(true);
+        try {
+          const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const j = await r.json();
+          if (!j || !Array.isArray(j.axes)) throw new Error("not a GSPC payload");
+          push({ role: "council", text: formatBoardTotals(j), tool: "board_totals" });
+          onDoor("board");
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: `board_totals failed (${String(e?.message ?? e)}). Cite GET /api/gspc when it returns.`,
+            tool: "board_totals",
+          });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
+
+      if (looksLikeCardJson(question) || (parsed.fn === "VERIFY" && parsed.paste === "card")) {
+        setBusy(true);
+        try {
+          const card = JSON.parse(parsed.fn === "VERIFY" && parsed.arg ? parsed.arg : question);
           const key = await fetchPinnedCardKey();
           const v = await verifyCard(card, key);
           push({
@@ -70,27 +125,6 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
             role: "council",
             text: `UNCHECKABLE — could not parse or check that paste (${String(e?.message ?? e)}). Nothing was sent to a server.`,
             tool: "verify_card",
-          });
-        } finally {
-          setBusy(false);
-        }
-        return;
-      }
-
-      if (wantsBoardTotals(question)) {
-        setBusy(true);
-        try {
-          const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          const j = await r.json();
-          if (!j || !Array.isArray(j.axes)) throw new Error("not a GSPC payload");
-          push({ role: "council", text: formatBoardTotals(j), tool: "board_totals" });
-          onDoor("board");
-        } catch (e: any) {
-          push({
-            role: "council",
-            text: `board_totals failed (${String(e?.message ?? e)}). Cite GET /api/gspc when it returns.`,
-            tool: "board_totals",
           });
         } finally {
           setBusy(false);
