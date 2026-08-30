@@ -4,6 +4,7 @@ import { type LobbyTaskId } from "@/lib/lobbyLink";
 import { useBoardCount } from "@/lib/boardCount";
 import { EUNOMIA_AXES } from "@/data/eunomia";
 import type { LobbyTabId } from "@/components/lobby/tabs";
+import HomeUnderstand from "./HomeUnderstand";
 
 /**
  * ToolStack — nine sections, one per thing this place actually does.
@@ -46,6 +47,8 @@ interface Tool {
   pain: string;
   /** A standing condition or limit on the tool. Shown on the tile, never hidden. */
   note?: string;
+  /** Short ticks a stranger can scan. Benefits, never invented counts. */
+  ticks: string[];
   image: string;
   alt: string;
   /**
