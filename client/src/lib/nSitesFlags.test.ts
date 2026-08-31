@@ -30,6 +30,11 @@ describe("N-sites permissionless flags", () => {
     expect(flagsByStatus("do-not").some((f) => f.id === "plugin-harvest")).toBe(true);
     expect(flagsByStatus("do-not").some((f) => f.id === "art50-stamp")).toBe(true);
     expect(flagsByStatus("do-not").some((f) => f.id === "scored-millions")).toBe(true);
+    expect(flagsByStatus("do-not").some((f) => f.id === "zerogpu-fleet")).toBe(true);
+    expect(flagsByStatus("planted").some((f) => f.id === "hf-inference-rail")).toBe(true);
+    expect(NSITES_FLAGS.find((f) => f.id === "hf-inference-rail")?.snippet).toMatch(
+      /router\.huggingface\.co\/v1/,
+    );
     expect(NSITES_BOOTSTRAP.some((s) => /Hundred unique weight lineages/.test(s))).toBe(true);
   });
 
