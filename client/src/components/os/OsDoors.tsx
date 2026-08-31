@@ -59,8 +59,21 @@ type McpProbe =
   | { status: "live"; tools: { name: string; blurb: string }[]; ms: number }
   | { status: "down"; error: string };
 
+type ComputeLane =
+  | { status: "checking" }
+  | {
+      status: "ready";
+      agui: string;
+      listed: string;
+      graded: string;
+      asOf: string;
+      inventory: string;
+    }
+  | { status: "down"; error: string };
+
 function HarnessDoor() {
   const [probe, setProbe] = useState<McpProbe>({ status: "checking" });
+  const [lane, setLane] = useState<ComputeLane>({ status: "checking" });
 
   useEffect(() => {
     let cancelled = false;
@@ -96,6 +109,40 @@ function HarnessDoor() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/compute", { headers: { accept: "application/json" } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const j = await res.json();
+        if (cancelled) return;
+        const listed =
+          typeof j?.census?.n_unique_ids === "number"
+            ? Number(j.census.n_unique_ids).toLocaleString("en-GB")
+            : "see digest";
+        const graded = typeof j?.census?.n_measured === "number" ? String(j.census.n_measured) : "0";
+        setLane({
+          status: "ready",
+          agui: String(j?.agui?.status || "unconfigured"),
+          listed,
+          graded,
+          asOf: typeof j?.census?.as_of === "string" ? j.census.as_of : "as_of in the digest",
+          inventory: String(j?.runpod?.inventory_kind || "unmeasured"),
+        });
+      } catch (e) {
+        if (cancelled) return;
+        setLane({
+          status: "down",
+          error: e instanceof Error ? e.message : "unreachable",
+        });
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const tools = probe.status === "live" ? probe.tools : HARNESS_TOOLS_FALLBACK;
 
   return (
@@ -103,7 +150,7 @@ function HarnessDoor() {
       <div>
         <h2 className="text-xl font-bold text-slate-900">Measurement harness</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Connect your MCP client or agent to the live measurement rail.
+          Census lists. RunPod / grokbot grades. This door is a view — not a second scoreboard.
         </p>
       </div>
       <div
@@ -142,6 +189,44 @@ function HarnessDoor() {
           https://councilof.ai/mcp
         </a>
       </div>
+      <div
+        className={`rounded-xl border px-4 py-3 text-sm ${
+          lane.status === "ready" && lane.agui === "live"
+            ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+            : "border-amber-200 bg-amber-50 text-amber-950"
+        }`}
+        role="status"
+        aria-live="polite"
+      >
+        {lane.status === "checking" && <p>Reading GET /api/compute…</p>}
+        {lane.status === "down" && (
+          <p>
+            Compute probe failed ({lane.error}). Cite{" "}
+            <a className="font-medium underline" href="/api/compute">
+              GET /api/compute
+            </a>
+            . Nothing fabricated.
+          </p>
+        )}
+        {lane.status === "ready" && (
+          <div className="space-y-1">
+            <p>
+              AG-UI wire · {lane.agui}
+              {lane.agui === "unconfigured"
+                ? " — set AGUI_WIRE_URL on Pages to the RunPod :8785 tunnel."
+                : "."}{" "}
+              RunPod inventory · {lane.inventory}.
+            </p>
+            <p>
+              Census · {lane.listed} listings observed · {lane.graded} graded · {lane.asOf}. DISCOVERED,
+              not MEASURED.
+            </p>
+          </div>
+        )}
+        <a href="/api/compute" className={`mt-2 inline-block font-medium underline-offset-2 hover:underline ${FOCUS}`}>
+          GET /api/compute
+        </a>
+      </div>
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <h3 className="font-semibold text-slate-900">MCP endpoint</h3>
         <code className="mt-2 block rounded-lg bg-slate-100 px-3 py-2 font-mono text-sm text-slate-800">
@@ -159,11 +244,22 @@ function HarnessDoor() {
             </li>
           ))}
         </ul>
+        <p className="mt-3 text-xs text-slate-500">
+          Four tools only. COMPUTE is a Council OS terminal function, not a fifth MCP tool.
+        </p>
+      </div>
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 className="font-semibold text-slate-900">Grokbot terminal</h3>
+        <p className="mt-1 text-sm text-slate-600">
+          VERIFY · BOARD · AXIS · CENSUS · CORRECT · WATCH · COMPUTE. A Hub id is DISCOVERED, never
+          MEASURED.
+        </p>
       </div>
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <h3 className="font-semibold text-slate-900">AG-UI panel (optional chrome)</h3>
         <p className="mt-1 text-sm text-slate-600">
-          MCP is the portable OS. Never an iframe of /os or /products.
+          MCP is the portable OS. Never an iframe of /os or /products. The RunPod wire is{" "}
+          <code className="font-mono">AGUI_WIRE_URL</code> → <code className="font-mono">/api/agui/*</code>.
         </p>
         <div className="mt-3 space-y-1.5 font-mono text-xs">
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("board")}</div>
