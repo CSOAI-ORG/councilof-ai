@@ -26,6 +26,13 @@ describe("/gspc-verify two modes — estate + unsigned public-root", () => {
     expect(catalogue).toContain("Do not fake Ed25519");
   });
 
+  it("paste-hash hits live /api/proof inclusion; unsigned leaves stay UNCHECKABLE", () => {
+    expect(catalogue).toContain("/api/proof?sha=");
+    expect(catalogue).toContain("kind=inclusion");
+    expect(catalogue).toContain("UNCHECKABLE");
+    expect(catalogue).toContain("Not a second scoreboard");
+  });
+
   it("does not claim PQC-signed cards; 3KB atom vs ML-DSA-65 size", () => {
     expect(page).toContain("3KB atom is binding");
     expect(page).toContain("~3.3KB");
