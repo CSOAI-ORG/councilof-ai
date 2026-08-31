@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/card-v0.json",
+  "title": "CSOAI public card v0",
+  "description": "Permissionless public-state card. Coverage, not a client. Measurement, not certification. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over that UTF-8. 3KB hard cap on the canonical payload object. UNMEASURED[] is required for missing fields — never invent.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "surface",
+    "subject",
+    "as_of",
+    "source_urls",
+    "payload",
+    "sha256",
+    "unmeasured"
+  ],
+  "properties": {
+    "schema": { "const": "https://councilof.ai/schema/card-v0.json" },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "xrpl.asset.state",
+        "xrpl.basket.root",
+        "public.notice",
+        "benji.onchain.supply"
+      ]
+    },
+    "subject": { "type": "string", "minLength": 1 },
+    "as_of": { "type": "string", "format": "date-time" },
+    "source_urls": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "format": "uri" }
+    },
+    "payload": { "type": "object" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "sig_ed25519": {
+      "type": ["string", "null"],
+      "description": "Hex Ed25519 over canonical payload. null = UNMEASURED (laptop cannot use did:web:csoai.org#board-attestation-1)."
+    },
+    "did": {
+      "type": "string",
+      "description": "Intended verify DID. Layer-0 seals of the Merkle root are a different key."
+    },
+    "unmeasured": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Regulatory tree tags, not licences."
+    }
+  }
+}
