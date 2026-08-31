@@ -49,6 +49,8 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("openLobby");
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
+    expect(launcher).not.toContain("Free. The card is yours.");
+    expect(launcher).toContain("Coming — Paddle");
     expect(launcher).toContain("/report");
     expect(launcher).toContain("HfLivingRecord");
     expect(launcher).toContain("/xrpl-attest");
