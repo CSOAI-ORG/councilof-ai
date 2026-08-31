@@ -1,0 +1,82 @@
+{
+  "schema": "csoai.coverage-leftover/0.1",
+  "kind": "leftover-honesty",
+  "measured": false,
+  "signed": false,
+  "eat": "census + digest + queue + lock. Remainder UNMEASURED.",
+  "remainder": "UNMEASURED",
+  "never": [
+    "we graded every Hugging Face model",
+    "mill 3032028 listings",
+    "MEASURED stamp",
+    "stamp MEASURED onto GET /api/gspc",
+    "mill start",
+    "resume A100",
+    "invented 3M digest file",
+    "edit public/signed/card_index.json",
+    "merge #953",
+    "wrangler"
+  ],
+  "fetched": "2026-08-31T17:02:00+01:00",
+  "census": {
+    "kind": "csoai.hub-census/0.1",
+    "stranger_get": "https://councilof.ai/signed/hub-census-baseline.json",
+    "n": 3032028,
+    "n_measured": 0,
+    "listing_state_all": "DISCOVERED",
+    "status_all": "UNMEASURED",
+    "complete_reason": "hub-exhausted",
+    "pages_done": 3033,
+    "weights_downloaded": 0,
+    "gpu_inference": 0,
+    "note": "Dated Hub listing walk. Metadata only. A listing is DISCOVERED, not a GSPC grade. Do not stamp MEASURED."
+  },
+  "digest": {
+    "measured": false,
+    "kind": "census digest, not a signed GSPC cell",
+    "sha256_jsonl": "0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9",
+    "bytes_jsonl": 1594550255,
+    "pointer": "https://councilof.ai/signed/hub-census-baseline.json -> sha256_jsonl",
+    "invented_3m_digest_file": false,
+    "note": "Coverage leftover. Point at the existing census digest. Do not invent a 3M digest file."
+  },
+  "queue": {
+    "dataset": "https://huggingface.co/datasets/csoai/hub-queue",
+    "n": 2410,
+    "status_all": "UNMEASURED",
+    "n_measured": 0,
+    "note": "Named Hub model ids. status=UNMEASURED. card_id empty. Queue is not a grade. mill.sh stays dead. Do not resume A100."
+  },
+  "lock": {
+    "stranger_get": "https://councilof.ai/fleet/FLEET-B.lock.json",
+    "leftover_honesty": "https://councilof.ai/fleet-b-lock.json",
+    "n_locked": 40,
+    "n_target": 40,
+    "status_all": "UNMEASURED",
+    "census_n": 3032028,
+    "census_n_measured": 0,
+    "enters_board_means": false,
+    "note": "Lock BEFORE mill. mill.sh stays dead. Census UNMEASURED. Do not stamp MEASURED onto GET /api/gspc."
+  },
+  "live_board": {
+    "get": "https://councilof.ai/api/gspc",
+    "totals": "22 axis \u00b7 15 measured \u00b7 7 unmeasured",
+    "unique_n": 30,
+    "unique_n_state": "UNSIGNED until n>=30 + 4way + keystone"
+  },
+  "empty_slots_unmeasured": [
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-economy-index",
+    "human-labour-index",
+    "humanoid-labour-index"
+  ],
+  "gpu": {
+    "keep": "3090 only",
+    "mill_sh": "KILLED",
+    "a100": "DO NOT start"
+  },
+  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n>=30 + 4way + keystone. Unique n stays 30 UNSIGNED. Empty cells stay empty. Never certify."
+}
