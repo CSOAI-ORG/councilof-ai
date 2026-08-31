@@ -1,0 +1,67 @@
+name: public-root
+
+# One writer. Commits public/root.json + cards + proofs + publisher-health.
+# Does NOT prerender the site. Does NOT add a fourth overlapping full-site deploy.
+# Existing Pages deploy on master picks up the JSON. GHA on master only.
+# If BOARD_SIGN_KEY_PKCS8_B64 is missing, fail closed (exit 3). Never publish unsigned NEW leaves.
+# Never print the key. Never wrangler. Never stamp MEASURED.
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  repository_dispatch:
+    types: [xrpl-tick, notice-tick, census-tick, heal]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run adapters + halts without writing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: public-root
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: deps
+        run: pip install cryptography
+      - name: publish public root
+        id: run
+        env:
+          PYTHONUNBUFFERED: "1"
+          BOARD_SIGN_KEY_PKCS8_B64: ${{ secrets.BOARD_SIGN_KEY_PKCS8_B64 }}
+        run: |
+          set -euo pipefail
+          # GHA on master only: this workflow is not registered on pull_request.
+          # checkout ref is master even if a dispatch arrives with another ref.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            python scripts/publish_public_root.py --dry-run
+          else
+            python scripts/publish_public_root.py
+          fi
+      - name: commit published tree
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-public-root"
+          git config user.email "board@csoai.org"
+          git add public/root.json public/cards public/proofs public/publisher-health.json
+          if git diff --cached --quiet; then
+            echo "no tree change"
+            exit 0
+          fi
+          git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git push origin HEAD:master
