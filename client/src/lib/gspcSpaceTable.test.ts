@@ -51,9 +51,22 @@ describe("gspc-board Space is a public findings desk", () => {
     expect(css).toContain(".jump");
   });
 
+  it("quotes the planted queue and signed snapshot without running ahead of the evidence", () => {
+    expect(blob).toContain("Council of AI measures AI health");
+    expect(blob).toContain("valid signed board snapshot");
+    expect(js).toContain("subjects DISCOVERED in the planted queue");
+    expect(js).toContain("Full Hub-scale paginated Speed 0 census is ready to run, not yet completed");
+    expect(js).toContain("Rows behind the board");
+    expect(js).toContain("Card v2");
+    expect(js).toContain("do not yet bind a subject or weight-manifest digest");
+    expect(js).not.toContain(">2,000,000");
+    expect(js).not.toMatch(/MEASURED is a signed cell on a unique lineage/);
+    expect(blob).not.toMatch(/Covering millions|we scored two million|covered millions/i);
+  });
+
   it("keeps inner-work language off the public Space", () => {
     expect(blob).toMatch(/A rank is never sold/);
-    expect(blob).not.toMatch(/A\+\+\+|100\/100|hundred-gate|Speed 0|Speed 1|watchlist|do-not|never say we scored|Claim we scored two million|board printer|XRPL stays DEVNET/i);
+    expect(blob).not.toMatch(/A\+\+\+|100\/100|hundred-gate|Speed 1|watchlist|do-not|never say we scored|Claim we scored two million|board printer|XRPL stays DEVNET/i);
     expect(blob).not.toMatch(/rank for sale|buy a grade|£79|£499|Byzantine|22\/22|dorado|cibola|sovos/i);
     expect(blob).not.toMatch(/hub-queue is MEASURED/);
   });
