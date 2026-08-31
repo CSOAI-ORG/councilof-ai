@@ -132,7 +132,7 @@ The public-root catalogue is a **different object**.
 3. Leaves in this catalogue are **unsigned**: `sig_ed25519` is null (`NO_LAPTOP_SIGN`).
 4. Inclusion is membership of a leaf SHA-256 in `card_sha256[]`. That is not a signature check.
 5. Do not claim a three-host checksum until Hugging Face and GitHub copies of this root exist.
-6. GET `/api/xrpl` is **404** until it would serve the same 16 as this root. Do not stamp MEASURED from the catalogue.
+6. GET `/api/xrpl` is a **reader** of this root (`writes_board` false). Live locked 16 when HTTP 200 n=16, same merkle. Do not stamp MEASURED from the catalogue.
 7. Layer-0 may seal the root document with a different key. That seal is not a laptop/keystone card signature.
 
 Do not invent keys. Do not treat public-root inclusion as estate-card VALID.

@@ -12,7 +12,7 @@
  * - site_attestation (Ed25519, did:web:csoai.org#board-attestation-1) verifies.
  * - living_stamp is UNVERIFIABLE (explicitly stated in the payload).
  * - XRPL public-root: GET /root.json (unsigned leaves, NO_LAPTOP_SIGN).
- *   /api/xrpl is 404 until it would serve the same 16 as that root.
+ *   /api/xrpl is a reader of that root (writes_board false). Live locked 16.
  * - Never certify. Verify stays free and loginless.
  */
 
@@ -193,11 +193,11 @@ export default function BoardAttestation({
               <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
             </div>
             <p className={`mt-1 text-[12px] font-semibold ${dark ? "text-amber-300" : "text-amber-700"}`}>
-              /api/xrpl is 404
+              /api/xrpl is a reader
             </p>
             <p className={`mt-1 text-[10px] ${textMuted}`}>
               Living catalogue is GET /root.json — unsigned leaves, NO_LAPTOP_SIGN.
-              Not a GSPC grade. Not live until /api/xrpl would serve the same 16.
+              Live locked 16, same merkle. Not a GSPC grade. Not MEASURED. Not DEVNET.
             </p>
           </button>
         </div>
