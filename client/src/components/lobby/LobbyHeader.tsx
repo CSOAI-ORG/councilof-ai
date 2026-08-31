@@ -372,7 +372,7 @@ export default function LobbyHeader({
         </nav>
       )}
 
-      {/* ── row 4 · the shortcuts, on demand ────────────────────
+      {/* ── row 4 · the shortcuts, on demand ────────────────────────────
           These were printed permanently across the foot of the bar: six shortcuts, always
           on screen, read once and then furniture forever. A reference belongs where someone
           goes looking for it, not in the space a live readout could use. The shortcuts all
