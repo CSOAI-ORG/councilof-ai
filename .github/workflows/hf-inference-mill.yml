@@ -1,0 +1,98 @@
+name: hf-inference-mill
+
+# FLEET-B mill via Hugging Face Inference Providers (router.huggingface.co/v1).
+# Weights stay on the Hub. Never a GSPC board rewrite. n<30 unquotable.
+# Needs secrets.HF_INFERENCE_TOKEN (or HF_TOKEN) with Inference Providers scope.
+# Fail closed on 403: do not invent scores.
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max FLEET-B slugs this hour"
+        type: string
+        default: "8"
+  workflow_run:
+    workflows: ["public-root"]
+    types: [completed]
+
+concurrency:
+  group: hf-inference-mill
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  mill:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+      FLEET_LOCK: public/fleet/FLEET-B.lock.json
+      FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
+      MILL_OUT: mill-out
+      MILL_LIMIT: ${{ github.event.inputs.limit || '8' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: probe Inference Providers
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request, sys
+          tok = (os.environ.get("HF_INFERENCE_TOKEN") or os.environ.get("HF_TOKEN") or "").strip()
+          if not tok:
+              print("HALT: HF_INFERENCE_TOKEN/HF_TOKEN secret empty")
+              sys.exit(3)
+          payload = json.dumps({
+              "model": "Qwen/Qwen3-8B:featherless-ai",
+              "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
+              "max_tokens": 4,
+              "temperature": 0,
+          }).encode()
+          req = urllib.request.Request(
+              "https://router.huggingface.co/v1/chat/completions",
+              data=payload,
+              method="POST",
+              headers={
+                  "Authorization": f"Bearer {tok}",
+                  "Content-Type": "application/json",
+                  "User-Agent": "csoai-hf-inference-mill",
+              },
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=60) as r:
+                  d = json.loads(r.read())
+              txt = ((d.get("choices") or [{}])[0].get("message") or {}).get("content")
+              print("INFERENCE_OK", repr(txt)[:80])
+          except Exception as e:
+              body = e.read()[:240].decode("utf-8", "replace") if hasattr(e, "read") else str(e)
+              code = getattr(e, "code", None)
+              print("INFERENCE_FAIL", code, body)
+              if code == 403:
+                  print("HALT: token lacks Inference Providers. Create a fine-grained token with that permission and gh secret set HF_INFERENCE_TOKEN.")
+                  sys.exit(3)
+              sys.exit(3)
+          PY
+      - name: mill FLEET-B via router
+        run: |
+          set -euo pipefail
+          mkdir -p mill-out
+          python3 scripts/mill_hf_inference.py
+      - name: upload mill JSON (not a board rewrite)
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf-inference-mill
+          path: mill-out
+          if-no-files-found: error
