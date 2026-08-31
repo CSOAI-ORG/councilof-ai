@@ -14,6 +14,7 @@ import {
   wantsGetMeasured,
   wantsListCards,
 } from "./osChat";
+import { formatComputeReply } from "@/lib/computeBridge";
 import { censusNote, correctionsNote, parseTerminal } from "@/lib/terminalFn";
 import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
 
@@ -65,6 +66,25 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
             role: "council",
             text: `CORRECT failed (${String(e?.message ?? e)}). Cite GET /api/corrections.`,
             tool: "correct",
+          });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
+      if (parsed.fn === "COMPUTE") {
+        setBusy(true);
+        try {
+          const r = await fetch("/api/compute", { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const j = await r.json();
+          push({ role: "council", text: formatComputeReply(j), tool: "compute" });
+          onDoor("harness");
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: `COMPUTE failed (${String(e?.message ?? e)}). Cite GET /api/compute. Nothing graded.`,
+            tool: "compute",
           });
         } finally {
           setBusy(false);
