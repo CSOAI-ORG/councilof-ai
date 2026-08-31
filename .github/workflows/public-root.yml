@@ -53,7 +53,7 @@ jobs:
             python scripts/publish_public_root.py
           fi
       - name: commit published tree
-        if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
@@ -64,4 +64,18 @@ jobs:
             exit 0
           fi
           git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git push origin HEAD:master
+      # Halt is still fail-closed (publish step failed). Persist health only — never the unsigned tree.
+      - name: commit halt health
+        if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-public-root"
+          git config user.email "board@csoai.org"
+          git add public/publisher-health.json
+          if git diff --cached --quiet; then
+            echo "no halt health"
+            exit 0
+          fi
+          git commit -m "public-root: halt health (tree not published, $(date -u +%Y-%m-%dT%H:%MZ))"
           git push origin HEAD:master
