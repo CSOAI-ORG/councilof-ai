@@ -45,7 +45,7 @@ describe("N-sites permissionless flags", () => {
     expect(NSITES_MILL_METHOD.base_url).toBe("https://router.huggingface.co/v1");
     expect(NSITES_MILL_METHOD.id).toBe("hf-inference-rail");
     expect(NSITES_MILL_METHOD.mill_secret).toBe("HF_INFERENCE_TOKEN");
-    expect(NSITES_MILL_METHOD.workflows).toContain("hf-inference-mill");
+    expect(NSITES_MILL_METHOD.workflows).not.toContain("hf-inference-mill");
     expect(NSITES_MILL_METHOD.workflows).toContain("hf-fin-shells");
     expect(NSITES_MILL_METHOD.never.join(" ")).toMatch(/ZeroGPU|Ollama/i);
     const plantedCompute = flagsByStatus("planted")
@@ -53,8 +53,12 @@ describe("N-sites permissionless flags", () => {
       .map((f) => f.id);
     expect(plantedCompute).toEqual(["hf-inference-rail", "gspc-hf-node"]);
     expect(NSITES_FLAGS.find((f) => f.id === "gspc-hf-node")?.snippet).toMatch(
-      /csoai-gspc-node\.hf\.space\/v1\/measure/,
+      /404 by design/,
     );
+    expect(NSITES_FLAGS.find((f) => f.id === "gspc-hf-node")?.snippet).not.toMatch(
+      /POST https:\/\/csoai-gspc-node\.hf\.space\/v1\/measure/,
+    );
+    expect(NSITES_MILL_METHOD.snippet).not.toMatch(/hf-inference-mill/);
     expect(flagsByStatus("do-not").some((f) => f.id === "zerogpu-fleet")).toBe(true);
     expect(JSON.stringify(NSITES_FLAGS)).not.toMatch(/ollama pull|localhost:11434/i);
     expect(flagsUi).toContain("n-sites-mill-method");
