@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 
 /**
- * Unsigned public-root catalogue (NO_LAPTOP_SIGN).
- * Loads GET /root.json. Inclusion is membership in card_sha256[].
- * Paste-hash also hits live GET /api/proof?sha= (kind=inclusion).
- * Does not verify Ed25519 on leaves — sig_ed25519 is null. UNCHECKABLE.
+ * Public-root catalogue (GET /root.json) + GET /api/xrpl reader.
+ * Live /api/xrpl: 14/16 GH-secret sigs; EURQ/USDQ unsigned (NO_LAPTOP_SIGN).
+ * Inclusion is membership in card_sha256[]. Paste-hash also hits live GET /api/proof?sha=.
+ * DEVNET historical. Do not restamp. Do not mix represented TVL. Do not add /api/swift.
  */
 
 type RootDoc = {
@@ -107,14 +107,15 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
   return (
     <div className={box} data-testid="public-root-catalogue">
       <p className={`text-xs font-bold uppercase tracking-wide ${mono}`}>
-        Unsigned catalogue · NO_LAPTOP_SIGN
+        Public-root catalogue · 14/16 GH-secret sigs
       </p>
       <p className={`mt-2 text-sm ${muted}`}>
-        Load GET <a className="underline" href="/root.json">/root.json</a>. Leaves are not
-        laptop-signed: <code>sig_ed25519</code> is null. Inclusion is membership in{" "}
-        <code>card_sha256[]</code> plus live GET <code>/api/proof?sha=</code> (kind=inclusion).
-        This is not a signed-card verify. Do not fake Ed25519. Unsigned leaves stay UNCHECKABLE.
-        Not a second scoreboard. Intended DID fragment:{" "}
+        Load GET <a className="underline" href="/root.json">/root.json</a>. GET{" "}
+        <code>/api/xrpl</code>: <strong>14/16 GH-secret sigs</strong>; <code>EURQ</code>/<code>USDQ</code>{" "}
+        unsigned (<code>sig_ed25519</code> null, NO_LAPTOP_SIGN). Do not say all leaves unsigned.
+        Inclusion is membership in <code>card_sha256[]</code> plus live GET <code>/api/proof?sha=</code>{" "}
+        (kind=inclusion). This is not a signed-card verify of the two unsigned leaves. Do not fake
+        Ed25519. DEVNET historical. Not a second scoreboard. Intended DID fragment:{" "}
         <code>did:web:csoai.org#board-attestation-1</code>.{" "}
         <code>/api/xrpl</code> is a reader of this root
         {xrpl?.status === 200 && xrpl.kind === "reader"
@@ -148,8 +149,8 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
             <dd className="break-all">{root.did_intended || "did:web:csoai.org#board-attestation-1"}</dd>
           </div>
           <div>
-            <dt className="uppercase tracking-wide opacity-70">unsigned-leaf</dt>
-            <dd>NO_LAPTOP_SIGN · Ed25519 UNCHECKABLE</dd>
+            <dt className="uppercase tracking-wide opacity-70">/api/xrpl sigs</dt>
+            <dd>14/16 GH-secret; EURQ/USDQ unsigned</dd>
           </div>
         </dl>
       )}
@@ -168,8 +169,8 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       {checked && (
         <p className={`mt-2 text-sm font-semibold ${included ? "text-emerald-300" : "text-amber-300"}`}>
           {included
-            ? "INCLUDED in card_sha256[] — unsigned catalogue membership. Not a signature check. Ed25519 UNCHECKABLE."
-            : "NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check. Unsigned leaves stay UNCHECKABLE."}
+            ? "INCLUDED in card_sha256[] — catalogue membership. Not a signature check. EURQ/USDQ stay unsigned (NO_LAPTOP_SIGN)."
+            : "NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check. EURQ/USDQ stay unsigned."}
         </p>
       )}
       {checked && proofErr && (
@@ -178,9 +179,9 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       {checked && proofHttp != null && (
         <p className={`mt-2 text-sm font-semibold ${proofHttp === 200 && proof?.kind === "inclusion" ? "text-emerald-300" : "text-amber-300"}`}>
           {proofHttp === 200 && proof?.kind === "inclusion"
-            ? `LIVE INCLUSION HTTP 200 — GET /api/proof?sha= kind=inclusion index=${proof.index ?? "—"}. merkle_root=${(proof.merkle_root || "").slice(0, 16) || "—"}… Unsigned leaf: Ed25519 UNCHECKABLE. Not a score. Not a second scoreboard.`
+            ? `LIVE INCLUSION HTTP 200 — GET /api/proof?sha= kind=inclusion index=${proof.index ?? "—"}. merkle_root=${(proof.merkle_root || "").slice(0, 16) || "—"}… 14/16 GH-secret sigs on /api/xrpl; EURQ/USDQ unsigned. Not a score. Not a second scoreboard.`
             : proofHttp === 404
-              ? `NOT A LEAF of the last published root (GET /api/proof HTTP 404). Unsigned leaves stay UNCHECKABLE. Not a score.`
+              ? `NOT A LEAF of the last published root (GET /api/proof HTTP 404). EURQ/USDQ stay unsigned. Not a score.`
               : `GET /api/proof HTTP ${proofHttp}. Inclusion UNCHECKABLE this load.`}
         </p>
       )}

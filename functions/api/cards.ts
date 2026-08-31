@@ -5,6 +5,10 @@
  * public can verify the measurements the estate has actually signed (not a
  * stale static snapshot). Uses the same fetch-static-asset pattern as the rest
  * of the API (e.g. /city/board.json), reading the bundled /signed/*.json.
+ *
+ * The signed measurement pack is 14 behavioural axes. Living board counts come
+ * from GET /api/gspc (quote totals.public_count). Do not treat 14 as the living
+ * slot count. Do not type a fake 22 MEASURED. Empty financial cells stay empty.
  */
 
 interface CardIndexEntry {
@@ -21,17 +25,34 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const origin = new URL(request.url).origin;
   const u = (p: string) => new URL(p, origin).toString();
 
-  const [boardRes, indexRes, measRes, crossBorderRes] = await Promise.all([
+  const [boardRes, indexRes, measRes, crossBorderRes, gspcRes] = await Promise.all([
     fetch(u("/signed/board_living.json")),
     fetch(u("/signed/card_index.json")),
     fetch(u("/signed/gspc-measurement.json")),
     fetch(u("/signals/cross-border-card.signed.json")),
+    fetch(u("/api/gspc")),
   ]);
 
   const board = boardRes.ok ? await boardRes.json().catch(() => null) : null;
   const index = indexRes.ok ? await indexRes.json().catch(() => null) : null;
   const meas = measRes.ok ? await measRes.json().catch(() => null) : null;
   const crossBorder = crossBorderRes.ok ? await crossBorderRes.json().catch(() => null) : null;
+  const gspc = gspcRes.ok ? await gspcRes.json().catch(() => null) : null;
+  const livingTotals = gspc?.totals
+    ? {
+        see: "/api/gspc",
+        public_count: gspc.totals.public_count ?? null,
+        axes: gspc.totals.axes ?? null,
+        measured_axes: gspc.totals.measured_axes ?? null,
+        unmeasured_axes: gspc.totals.unmeasured_axes ?? null,
+        note:
+          "14 behavioural + see GET /api/gspc for the living board. Do not treat 14 as the living slot count. Empty financial cells stay empty. Do not stamp MEASURED here.",
+      }
+    : {
+        see: "/api/gspc",
+        note:
+          "14 behavioural + see GET /api/gspc for the living board. Living totals unreachable this load.",
+      };
 
   if (!board || !index) {
     return Response.json(
@@ -40,6 +61,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
         status: "UNPUBLISHED",
         host,
         cards: { count: 0, signed: 0, list: [] as CardIndexEntry[] },
+        living_board: livingTotals,
         note:
           "Signed measurement card bundle (/signed/*.json) is not published on this deploy yet. " +
           "Live board axes: /api/gspc · axis registry: /api/axis-register.",
@@ -100,15 +122,25 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     served_from: host,
     measured_on: board.updated,
     measurement: meas
-      ? { schema: meas.schema, gspc_registry_axes: meas.gspc_registry_axes, axes: (meas.axes || []).length, publish_readiness: meas.publish_readiness }
-      : null,
+      ? {
+          schema: meas.schema,
+          gspc_registry_axes: meas.gspc_registry_axes,
+          axes: (meas.axes || []).length,
+          pack: "14 behavioural (signed gspc-measurement.json snapshot — not the living board)",
+          living_board: livingTotals,
+          publish_readiness: meas.publish_readiness,
+        }
+      : { living_board: livingTotals },
     board: {
       schema: board.schema,
       signed: board.signed,
       signer: board.signer,
       axes: Object.keys(board.axes || {}),
+      axes_note:
+        "This signed living-board snapshot lists 14 behavioural axes. Living board: GET /api/gspc. Do not treat 14 as the living slot count.",
       signature,
     },
+    living_board: livingTotals,
     cross_border: crossBorderEntry,
     cards: {
       count: count + (crossBorderEntry ? 1 : 0),
@@ -120,7 +152,8 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "count = signed measurement cards in the living registry plus cross-border East-West card when published. " +
       "kid identifies the signing key; signed=true means the card carries a signature — it does NOT mean anyone " +
       "has checked it. Read board.signature.verification_state: the living board's stamp is UNVERIFIABLE (it does " +
-      "not reproduce under any published rule and its signer is not in did.json). This index carries 313 cards; " +
+      "not reproduce under any published rule and its signer is not in did.json). This index's measurement pack is " +
+      "14 behavioural + see GET /api/gspc for the living board. This index carries 313 cards; " +
       "150 of those verify against did:web:csoai.org#card-attestation-1 (per board_living.json) — see /signed/HOW-TO-VERIFY.md.",
   });
 };
