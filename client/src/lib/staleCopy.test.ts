@@ -82,3 +82,34 @@ describe("leftover: chrome is not a certificate mill", () => {
     expect(osHeader).not.toMatch(/href="\/certificates"/);
   });
 });
+
+const leftoverCensus = readFileSync(
+  resolve(__dirname, "../../../public/interop/census-digest-leftover.json"),
+  "utf8",
+);
+const llms = readFileSync(resolve(__dirname, "../../../public/llms.txt"), "utf8");
+const spaceReadme = readFileSync(resolve(__dirname, "../../../spaces/gspc-board/README.md"), "utf8");
+
+describe("leftover: CENSUS_3M is census+digest+queue+lock, remainder UNMEASURED", () => {
+  it("does not treat 3032028 Hub listings as MEASURED", () => {
+    const j = JSON.parse(leftoverCensus);
+    expect(j.measured).toBe(false);
+    expect(j.signed).toBe(false);
+    expect(j.remainder).toBe("UNMEASURED");
+    expect(j.eat).toMatch(/census \+ digest \+ queue \+ lock/);
+    expect(j.census.status_all).toBe("UNMEASURED");
+    expect(j.census.n_measured).toBe(0);
+    expect(j.census.listing_state_all).toBe("DISCOVERED");
+    expect(j.digest.measured).toBe(false);
+    expect(j.digest.invented_3m_digest_file).toBe(false);
+    expect(j.queue.status_all).toBe("UNMEASURED");
+    expect(j.lock.status_all).toBe("UNMEASURED");
+    expect(j.lock.n_locked).toBe(40);
+    expect(llms).toMatch(/census \+ digest \+ queue \+ lock/);
+    expect(llms).toMatch(/Remainder UNMEASURED/);
+    expect(spaceReadme).toMatch(/census, not a grade/);
+    expect(spaceReadme).toMatch(/Remainder UNMEASURED/);
+    expect(spaceReadme).not.toMatch(/Fifteen axes carry a signed measurement/);
+    expect(spaceReadme).toMatch(/Not a mill/);
+  });
+});
