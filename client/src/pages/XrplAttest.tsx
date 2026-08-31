@@ -6,7 +6,7 @@ import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
  * /xrpl-attest — public-root catalogue, not a DEVNET pointer.
  *
  * Living feed is GET /root.json (unsigned leaves, NO_LAPTOP_SIGN).
- * GET /api/xrpl is 404 until it would serve the same 16 as that root.
+ * GET /api/xrpl is a reader of that root (writes_board false). Not a mill.
  * Historical DEVNET txs are not the live catalogue.
  */
 
@@ -25,9 +25,9 @@ export default function XrplAttest() {
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "XRPL public-root catalogue — unsigned leaves; /api/xrpl is 404 | Council of AI";
+    document.title = "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI";
     setMetaDescription(
-      "GET /root.json is the living XRPL catalogue. Leaves are unsigned (NO_LAPTOP_SIGN). /api/xrpl is 404 until it would serve the same 16 as that root. Not a GSPC grade.",
+      "GET /root.json is the living XRPL catalogue. Leaves are unsigned (NO_LAPTOP_SIGN). /api/xrpl is a reader of that root (writes_board false). Not a GSPC grade.",
     );
     fetch("/root.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("GET /root.json HTTP " + r.status))))
@@ -58,11 +58,15 @@ export default function XrplAttest() {
         <div className="mt-8 rounded-xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-900">
           <p className="font-bold uppercase tracking-wide text-xs">Honesty box — read first</p>
           <p className="mt-2">
-            GET <code>/api/xrpl</code> is <strong>not live</strong>
-            {xrplStatus != null ? <> (HTTP {xrplStatus})</> : null}. It stays 404 until it would
-            serve the same 16 as <code>/root.json</code>. Do not stamp MEASURED from this
-            catalogue. Historical XRPL DEVNET Payment-memo / CredentialCreate hashes are not
-            this feed.
+            GET <code>/api/xrpl</code> is a <strong>reader</strong> of <code>/root.json</code>
+            {xrplStatus != null ? <> (HTTP {xrplStatus} this load)</> : null}.{" "}
+            <code>writes_board</code> is false. Do not stamp MEASURED from this catalogue.
+            Historical XRPL DEVNET Payment-memo / CredentialCreate hashes are not this feed.
+            Hugging Face mirror:{" "}
+            <a className="underline" href="https://huggingface.co/datasets/csoai/gspc-boards">
+              csoai/gspc-boards
+            </a>{" "}
+            <code>public-root/root.json</code>.
           </p>
           {root?.note && <p className="mt-2">{root.note}</p>}
         </div>

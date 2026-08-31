@@ -24,6 +24,12 @@ export const HF_PLANTED: HfPlanted[] = [
     status: "planted",
   },
   {
+    id: "gspc-boards",
+    href: "https://huggingface.co/datasets/csoai/gspc-boards",
+    role: "Public-root Merkle mirror (public-root/root.json). Cite GET /api/gspc for GSPC. Not a second board.",
+    status: "planted",
+  },
+  {
     id: "hub-queue",
     href: "https://huggingface.co/datasets/csoai/hub-queue",
     role: "Named Hub ids. DISCOVERED. All UNMEASURED.",

@@ -4,15 +4,17 @@ import { describe, expect, it } from "vitest";
 
 const page = readFileSync(resolve(__dirname, "XrplAttest.tsx"), "utf8");
 
-describe("XRPL public-root catalogue — unsigned, /api/xrpl is 404", () => {
-  it("points at /root.json and refuses a live /api/xrpl feed", () => {
+describe("XRPL public-root catalogue — unsigned, /api/xrpl is a reader", () => {
+  it("points at /root.json and names /api/xrpl as a reader that does not write the board", () => {
     expect(page).toContain("/root.json");
     expect(page).toContain("/api/xrpl");
-    expect(page).toMatch(/not live/i);
+    expect(page).toMatch(/reader/i);
+    expect(page).toContain("writes_board");
     expect(page).toContain("NO_LAPTOP_SIGN");
     expect(page).toMatch(/unsigned/i);
     expect(page).toContain("did:web:csoai.org#board-attestation-1");
     expect(page).not.toMatch(/XRPL DEVNET pointer/);
+    expect(page).not.toMatch(/stays 404/);
   });
 
   it("does not treat historical DEVNET hashes as the living feed", () => {

@@ -13,8 +13,16 @@ type RootDoc = {
   merkle_root?: string;
   card_sha256?: string[];
   xrpl_fi_assetCount?: number;
+  xrpl_asset_count_attempted?: number;
   did_intended?: string;
   note?: string;
+};
+
+type XrplReader = {
+  kind?: string;
+  writes_board?: boolean;
+  n?: number;
+  status?: number;
 };
 
 function normHex(s: string): string {
@@ -23,6 +31,7 @@ function normHex(s: string): string {
 
 export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "dark" | "light" }) {
   const [root, setRoot] = useState<RootDoc | null>(null);
+  const [xrpl, setXrpl] = useState<XrplReader | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [needle, setNeedle] = useState("");
 
@@ -32,6 +41,12 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`GET /root.json HTTP ${r.status}`))))
       .then(setRoot)
       .catch((e) => setErr(String(e?.message || e)));
+    fetch("/api/xrpl", { signal: ac.signal, headers: { accept: "application/json" } })
+      .then(async (r) => {
+        const body = r.ok ? await r.json().catch(() => ({})) : {};
+        setXrpl({ status: r.status, kind: body.kind, writes_board: body.writes_board, n: body.n });
+      })
+      .catch(() => setXrpl({ status: 0 }));
     return () => ac.abort();
   }, []);
 
@@ -60,7 +75,17 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
         laptop-signed: <code>sig_ed25519</code> is null. Inclusion is membership in{" "}
         <code>card_sha256[]</code>. This is not a signed-card verify. Do not fake Ed25519.
         Intended DID fragment: <code>did:web:csoai.org#board-attestation-1</code>.{" "}
-        <code>/api/xrpl</code> is 404 until it would serve the same 16 as this root.
+        <code>/api/xrpl</code> is a reader of this root
+        {xrpl?.status === 200 && xrpl.kind === "reader"
+          ? ` (live, n=${xrpl.n ?? "—"}, writes_board=${String(xrpl.writes_board)})`
+          : xrpl?.status != null
+            ? ` (HTTP ${xrpl.status} this load)`
+            : ""}
+        . Not a GSPC mill. Hugging Face mirror:{" "}
+        <a className="underline" href="https://huggingface.co/datasets/csoai/gspc-boards">
+          csoai/gspc-boards
+        </a>{" "}
+        <code>public-root/root.json</code>.
       </p>
       {err && <p className="mt-3 text-sm text-red-400">Root fetch failed: {err}</p>}
       {root && (

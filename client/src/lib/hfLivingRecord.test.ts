@@ -2,9 +2,10 @@ import { describe, expect, it } from "vitest";
 import { HF_LIVING_RULING, HF_PLANTED, HF_VIEWERS } from "./hfLivingRecord";
 
 describe("HF living record", () => {
-  it("plants the four Hub datasets and never stamps hub-queue MEASURED", () => {
+  it("plants the Hub datasets and never stamps hub-queue MEASURED", () => {
     expect(HF_PLANTED.map((r) => r.id)).toEqual([
       "gspc-board",
+      "gspc-boards",
       "hub-queue",
       "living-catalog",
       "gspc-gov",

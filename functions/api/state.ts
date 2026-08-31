@@ -67,6 +67,7 @@ import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
+import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 
 import type { AxisScore } from "./_gspc_types";
@@ -106,6 +107,7 @@ const SRC_CLAIMS = "public/claims-register.json";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
 const SRC_CENSUS = "public/signed/hub-census-baseline.json";
+const SRC_PUBLIC_ROOT = "public/root.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
@@ -644,6 +646,48 @@ export const onRequestGet: PagesFunction = async () => {
       rail_honesty: (rwaRegistry as any).honesty ?? null,
     },
 
+    // ── PUBLIC-ROOT (permissionless Merkle; NOT GSPC) ────────────────────────
+    public_root: {
+      authority: SRC_PUBLIC_ROOT,
+      live_endpoint: "/root.json",
+      xrpl_reader: "/api/xrpl",
+      card_count: fact(
+        (publicRoot as any).card_count ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → card_count",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Leaves on the permissionless public-root. Separate from signed_cards.count and from GSPC.",
+      ),
+      xrpl_asset_count_attempted: fact(
+        (publicRoot as any).xrpl_asset_count_attempted ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → xrpl_asset_count_attempted",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "xrpl.fi instruments attempted this fold. Not a GSPC mill. Not 377 instruments.",
+      ),
+      merkle_root: fact(
+        (publicRoot as any).merkle_root ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → merkle_root",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Merkle over card_sha256[]. Stranger inclusion is membership in that list.",
+      ),
+      schema: fact(
+        (publicRoot as any).schema ?? null,
+        "declared",
+        SRC_PUBLIC_ROOT + " → schema",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Frozen card-v0 schema URL.",
+      ),
+      caveat:
+        "Card sig_ed25519 is null (NO_LAPTOP_SIGN). This is not GSPC. Hugging Face " +
+        "csoai/gspc-boards public-root/root.json is a mirror of these bytes, not a second board.",
+    },
+
     // ── BOUNDED AUTHORITY ────────────────────────────────────────────────────
     not_covered: {
       rule:
@@ -693,6 +737,16 @@ export const onRequestGet: PagesFunction = async () => {
           subject: "the csoai.org static site",
           why_not: "A separate deploy with separate content and its own figures.",
           where: "That site's own artifacts.",
+        },
+        {
+          subject: "Hugging Face Hub live listing counts",
+          why_not:
+            "HF is a mirror of committed bytes in this repo (public-root/root.json on " +
+            "csoai/gspc-boards). This endpoint does not probe the Hub. A Hub file matching " +
+            "is a three-host checksum, not a second board and not a GSPC grade.",
+          where:
+            "GET /root.json here, then GET " +
+            "https://huggingface.co/datasets/csoai/gspc-boards/resolve/main/public-root/root.json",
         },
         {
           subject: "traffic, users, customers, revenue",

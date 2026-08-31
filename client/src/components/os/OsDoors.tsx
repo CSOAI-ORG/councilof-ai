@@ -3,12 +3,18 @@ import { Link, useLocation, useSearch } from "wouter";
 import { FOCUS } from "@/components/lobby/glass";
 import { osDoorHref, osPanelHref } from "@/lib/lobbyLink";
 import { BOARD_PANE, type DoorId } from "./doors";
+import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
 
 const VerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const CardsPane = lazy(() => import("@/components/lobby/LobbyCardsPane"));
 
 function BoardDoor() {
-  return <BOARD_PANE />;
+  return (
+    <div className="space-y-8">
+      <BOARD_PANE />
+      <PublicRootCatalogue variant="light" />
+    </div>
+  );
 }
 
 function VerifyDoor() {

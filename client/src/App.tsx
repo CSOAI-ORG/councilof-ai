@@ -395,7 +395,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "XRPL public-root catalogue — unsigned leaves; /api/xrpl is 404 | Council of AI",
+  "/xrpl-attest": "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI",
   "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",

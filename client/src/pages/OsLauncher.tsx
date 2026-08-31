@@ -21,6 +21,7 @@ import {
 import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
 import { formatComputeReply } from "@/lib/computeBridge";
 import { liveCountLine } from "@/components/os/osChat";
+import HfLivingRecord from "@/components/HfLivingRecord";
 
 export {
   BOARD_PANE,
@@ -40,6 +41,8 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
   { name: "Report", href: "/report", what: "Public incident intake. Signed acknowledgement." },
   { name: "Plugin", href: "/tools", what: "Paste-ready MCP for Claude, Cursor, Kimi, Grok." },
+  { name: "Public root", href: "/xrpl-attest", what: "Unsigned catalogue + /api/xrpl reader. Not a GSPC mill." },
+  { name: "Hugging Face record", href: "https://huggingface.co/datasets/csoai/gspc-boards", what: "Hub mirror of the signed record and public-root. Cite GET /api/gspc for the board." },
 ];
 
 /** /os is the Council OS product frame. Doors are native. Not the unused shell. Not AG-UI. */
@@ -72,14 +75,17 @@ export default function OsLauncher() {
         </h1>
         <p className="mt-3 max-w-2xl text-slate-600">
           Board, verify, get measured, arena, and the harness — in this window.
-          Counts come from GET /api/gspc.{" "}
+          GSPC counts come from GET /api/gspc.{" "}
           <span className="font-semibold text-emerald-900">{board.public_count}</span>
-          . We measure. We do not certify.
+          . Hugging Face is the parallel record — a Hub repo is not a grade.
+          We measure. We do not certify.
         </p>
 
         <section aria-label="Council OS door" className="mt-8">
           <OsDoorBody door={door} />
         </section>
+
+        <HfLivingRecord compact />
 
         <form
           className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4"
@@ -167,14 +173,28 @@ export default function OsLauncher() {
           Also open as a full page
         </h2>
         <ul className="mt-3 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
-          {PAGES.map((p) => (
-            <li key={p.href}>
-              <Link href={p.href} className="block px-5 py-4 hover:bg-slate-50">
+          {PAGES.map((p) => {
+            const external = p.href.startsWith("http");
+            const inner = (
+              <>
                 <div className="font-semibold text-slate-900">{p.name}</div>
                 <div className="text-sm text-slate-600">{p.what}</div>
-              </Link>
-            </li>
-          ))}
+              </>
+            );
+            return (
+              <li key={p.href}>
+                {external ? (
+                  <a href={p.href} target="_blank" rel="noreferrer" className="block px-5 py-4 hover:bg-slate-50">
+                    {inner}
+                  </a>
+                ) : (
+                  <Link href={p.href} className="block px-5 py-4 hover:bg-slate-50">
+                    {inner}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </main>
     </div>

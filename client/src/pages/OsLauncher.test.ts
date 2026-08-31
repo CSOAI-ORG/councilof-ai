@@ -50,6 +50,9 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
     expect(launcher).toContain("/report");
+    expect(launcher).toContain("HfLivingRecord");
+    expect(launcher).toContain("/xrpl-attest");
+    expect(launcher).toContain("huggingface.co/datasets/csoai/gspc-boards");
     expect(launcher).not.toMatch(/<OsShell|import OsShell/);
     expect(launcher).toContain('data-testid="os-directory"');
     expect(launcher).toContain("parseTerminal");
@@ -59,6 +62,7 @@ describe("OsLauncher doors", () => {
     const doors = readFileSync(resolve(__dirname, "../components/os/OsDoors.tsx"), "utf8");
     expect(doors).toContain("/api/compute");
     expect(doors).toContain("AGUI_WIRE_URL");
+    expect(doors).toContain("PublicRootCatalogue");
     expect(doors).not.toMatch(/MEASURED from the lobby/);
   });
 
