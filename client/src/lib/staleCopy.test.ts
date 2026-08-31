@@ -40,3 +40,17 @@ describe("leftover: /xrpl-attest is a public-root reader, not a live DEVNET poin
     expect(playbook).toMatch(/\/xrpl-attest is a \/root\.json reader/);
   });
 });
+
+const header = readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8");
+
+describe("leftover: header mega-nav honesty", () => {
+  it("does not sell /assess as a free signed assessment or /xrpl-attest as a Devnet pointer", () => {
+    expect(header).not.toMatch(/Free signed assessment/);
+    expect(header).not.toMatch(/No account, no fee/);
+    expect(header).not.toMatch(/Devnet pointer/);
+    expect(header).toMatch(/Honesty stays free/);
+    expect(header).toMatch(/Coming — Paddle waitlist/);
+    expect(header).toMatch(/XRPL_STATUS_LABEL/);
+    expect(header).toMatch(/writes_board false/);
+  });
+});
