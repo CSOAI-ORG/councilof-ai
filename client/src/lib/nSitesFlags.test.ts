@@ -51,7 +51,10 @@ describe("N-sites permissionless flags", () => {
     const plantedCompute = flagsByStatus("planted")
       .filter((f) => f.kind === "compute")
       .map((f) => f.id);
-    expect(plantedCompute).toEqual(["hf-inference-rail"]);
+    expect(plantedCompute).toEqual(["hf-inference-rail", "gspc-hf-node"]);
+    expect(NSITES_FLAGS.find((f) => f.id === "gspc-hf-node")?.snippet).toMatch(
+      /csoai-gspc-node\.hf\.space\/v1\/measure/,
+    );
     expect(flagsByStatus("do-not").some((f) => f.id === "zerogpu-fleet")).toBe(true);
     expect(JSON.stringify(NSITES_FLAGS)).not.toMatch(/ollama pull|localhost:11434/i);
     expect(flagsUi).toContain("n-sites-mill-method");
