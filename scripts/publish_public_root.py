@@ -513,9 +513,11 @@ def main() -> int:
         ),
         "merkle_root": root_merkle,
         "note": (
-            "NEW leaves are Ed25519-signed with #board-attestation-1 when the "
-            "GitHub secret is present. The 07:38Z set is the last unsigned snapshot. "
-            "Layer-0 seals, if any, are a different key. Not MEASURED. Not a certificate."
+            "This root.json envelope is not itself Ed25519-signed (no sig_ed25519 on "
+            "the envelope; did_intended names the leaf signer). NEW leaves are "
+            "Ed25519-signed with #board-attestation-1 when the GitHub secret is present. "
+            "The 07:38Z set is the last unsigned snapshot. Layer-0 seals, if any, are a "
+            "different key. Not MEASURED. Not a certificate. Free; not paywalled."
         ),
         "schema": CARD_SCHEMA,
         "sources": ["https://xrpl.fi/api/metrics"],
