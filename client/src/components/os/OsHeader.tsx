@@ -201,9 +201,9 @@ export default function OsHeader() {
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <a href="/certificates" className="flex items-center">
+                  <a href="/academy" className="flex items-center">
                     <Award className="mr-2 h-4 w-4" />
-                    Certificates
+                    Training records
                   </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
