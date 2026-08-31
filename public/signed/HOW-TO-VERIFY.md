@@ -136,3 +136,20 @@ The public-root catalogue is a **different object**.
 7. Layer-0 may seal the root document with a different key. That seal is not a laptop/keystone card signature.
 
 Do not invent keys. Do not treat public-root inclusion as estate-card VALID.
+
+## PQC / hybrid — not inside the 3KB card
+
+Cards today are **Ed25519 only**. The 3KB atom is binding. An ML-DSA-65 (FIPS-204) signature
+is ~3.3KB and **cannot live inside** the card. There is no PQC field on card-v0 (frozen:
+`sig_ed25519` may be a hex string or null). `#board-pqc-1` is **ABSENT** from
+`did:web:csoai.org` — no ML-DSA public key is published. Do not generate one here.
+
+- A null `sig_ed25519` is unsigned (`NO_LAPTOP_SIGN`) — **UNCHECKABLE**, never VALID.
+- Do not claim a card is PQC-signed. The verify UI has no PQC helper wired; fail-closed.
+- Hybrid, when it ships, is a **second receipt** on the ROOT / DID / inclusion bundle
+  (or a Falcon/ML-DSA envelope *beside* the 3KB, not inside it). Ed25519 is not replaced.
+- OpenTimestamps: `tsa.status: err`. No `.ots` proof is published on a `content_id`.
+  The card trust path is Ed25519 + SHA-256 hash-chain only.
+- **PQCBench** on the GSPC board is the continuity arena (`csoai/gspc-asi`) — a
+  model-comparison task about cryptographic *assumptions*, not a post-quantum
+  signature on these cards. Do not conflate.
