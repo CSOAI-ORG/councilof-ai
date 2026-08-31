@@ -270,7 +270,7 @@ export const onRequestGet: PagesFunction = async () => {
         on_disagreement:
           "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
           "re-derived and re-signed. Do not pick the one you prefer.",
-      ),
+      },
       signature: {
         signer: boardCustody.signer ?? null,
         alg: boardCustody.alg ?? null,
