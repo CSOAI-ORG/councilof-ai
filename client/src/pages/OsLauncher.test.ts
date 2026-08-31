@@ -54,6 +54,12 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain('data-testid="os-directory"');
     expect(launcher).toContain("parseTerminal");
     expect(launcher).toContain("TERMINAL_HINT");
+    expect(launcher).toContain("COMPUTE");
+    expect(launcher).toContain("/api/compute");
+    const doors = readFileSync(resolve(__dirname, "../components/os/OsDoors.tsx"), "utf8");
+    expect(doors).toContain("/api/compute");
+    expect(doors).toContain("AGUI_WIRE_URL");
+    expect(doors).not.toMatch(/MEASURED from the lobby/);
   });
 
   it("OsHeader door buttons are addressable so an end user can hop panes", () => {
