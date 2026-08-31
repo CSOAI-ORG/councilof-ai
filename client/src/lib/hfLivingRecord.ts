@@ -47,7 +47,7 @@ export const HF_VIEWERS: { id: string; href: string; role: string }[] = [
   {
     id: "space-gspc-board",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
-    role: "Public findings desk. Ontology, tape, published record, coverage and limitations. Same GET /api/gspc.",
+    role: "Public findings desk. Ontology, tape, published record. Queue is DISCOVERED, not a completed Hub census. Compact cards verify; Card v2 lineage binding is next. Same GET /api/gspc.",
   },
   {
     id: "space-living-catalog",
