@@ -128,11 +128,9 @@ const TOOLS: Tool[] = [
       "You keep the signed card. Publishing it is your decision.",
       "Slots we could not fill stay empty and are named.",
     ],
-    // NOT "sign-in required": /assess is wrapped in RequireAuth, but RequireAuth
-    // carries an explicit isPublicMeasure() carve-out for exactly this route
-    // (components/RequireAuth.tsx) — "Get measured is free and needs no account".
-    // Verified in the pane before this line was written.
-    note: "Free, and no account. The card is yours; publishing it is your decision.",
+    // /assess matches /measure: paid waitlist, Coming — Paddle, booking not live.
+    // Verify stays free. Do not claim a free signed run on this tile.
+    note: "Paid measurement. Coming — Paddle. Booking is not live. Verify stays free.",
     image: "/images/detail/evidence_vault_detail.jpg",
     alt: "Clay figures pointing at a card reading “3KB credential” in front of an open vault",
     door: { kind: "pane", pane: "measured" },
