@@ -1,1 +1,57 @@
-PLACEHOLDER2
+{
+  "schema": "csoai.index-components-unsigned/0.1",
+  "axis": "humanoid-labour-index",
+  "kind": "declared-index-empty",
+  "status": "UNSIGNED",
+  "signed": false,
+  "keystone": null,
+  "headline_index": null,
+  "n": 0,
+  "board_write": "NOT WRITTEN. GET https://councilof.ai/api/gspc humanoid-labour-index stays UNMEASURED n=0. No labour-hour bank. Registry ≠ MEASURED.",
+  "certification": "NONE — never a certification, never a rating, never an endorsement",
+  "published_at": "2026-08-31T16:10:00Z",
+  "published_at_europe_london": "2026-08-31T17:10:00+01:00",
+  "official_public_machine_series": "NONE",
+  "fleet_number": null,
+  "do_not": [
+    "invent a fleet",
+    "bank vendor self-report",
+    "treat IFR industrial robots as humanoid",
+    "treat Isaac Sim as the index",
+    "stamp MEASURED",
+    "compute a composite",
+    "restore MEASURED-INDEX-v0.1"
+  ],
+  "poc_path": {
+    "where": "KEEP 3090 /workspace/sovos-repo/humanoid/humanoid_poc.py",
+    "what": "A PoC script. Not a labour-index bank. Not stranger-recomputable official series. Not n."
+  },
+  "nearest_public_series_not_humanoid": {
+    "source": "IFR World Robotics 2025 — Industrial Robots press release 2025-09-25",
+    "url": "https://ifr.org/ifr-press-releases/news/global-robot-demand-in-factories-doubles-over-10-years",
+    "honesty": "Industrial robots (articulated arms, cobots). Not a humanoid fleet, not hours, not incidents. Not banked."
+  },
+  "registry_prerequisite": "A stranger-recomputable humanoid labour bank requires a public registry (statistical unit, identity, operator, status, metered hours, task class, safety incidents, evidence class, licence, governance). A NAMED-deployment registry now exists as UNSIGNED leftover. It is not hours, not incidents, not a score, and does not fill this slot.",
+  "registry_pointer": {
+    "path": "/interop/humanoid-registry-unsigned.json",
+    "schema": "csoai.humanoid-registry-unsigned/0.1",
+    "signed": false,
+    "measured": false,
+    "n": 30,
+    "n_is": "named public deployments with fetched evidence URLs",
+    "n_is_not": "labour-hours, installed fleet, safety incidents, or a MEASURED index",
+    "writes_board": false,
+    "note": "Pointer only. Do not read n=30 as the board slot. Board GET /api/gspc humanoid-labour-index stays UNMEASURED n=0."
+  },
+  "isaac_sim": {
+    "when": "AFTER",
+    "state": "NOT STARTED",
+    "note": "Isaac Sim is AFTER the named-deployment registry, not before. No harness started."
+  },
+  "honesty": {
+    "not_an_index": "No composite. No fleet.",
+    "not_measured": "Board slot humanoid-labour-index stays UNMEASURED.",
+    "not_certification": "Council of AI measures; it never certifies.",
+    "correction": "C-2026-0826-05 stands. Do not restore MEASURED-INDEX-v0.1."
+  }
+}
