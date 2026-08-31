@@ -117,7 +117,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
     id: "forbid-xrpl-mainnet",
     claim: "Stand up an XRPL issuer this week and issue GSPC-MEASURED credentials.",
     verdict: "forbidden",
-    live: "XRPL is DEVNET. Attester, never issuer. No on-chain MEASURED. No invented payTo.",
+    live: "No XRPL issuer this week. /xrpl-attest is a /root.json reader, not a mill. Attester, never issuer. No on-chain MEASURED. No invented payTo.",
   },
   {
     id: "forbid-auto-email",

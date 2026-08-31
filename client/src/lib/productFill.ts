@@ -34,7 +34,7 @@ export const FILL_PIPELINE = [
   "Pack — GPAI / RAS / insurer four-class assembly of cells, omissions and a corrections excerpt.",
   "Coverage index — N measured of M declared slots. Counts rows. Never predicts. Never a fused grade.",
   "Corrections ledger — GET /api/corrections. Append-only facts about our history, not a score.",
-  "Optional digest anchor — planned after custody. XRPL memo / XLS-70 on DEVNET today. Not mainnet. Pointer, not a grade.",
+  "Optional digest anchor — living feed is GET /root.json; /api/xrpl is a reader (writes_board false, n=16). Historical DEVNET hashes are not this feed. Not a grade.",
   "Optional attester feed — planned ERC-3643 / T-REX partner role, never issuer. Nothing is live. Never a bond we mint.",
   "Optional harness spans — OpenTelemetry of our workers. Debug and cost. Not a partner trace. Not a grade.",
 ] as const;
@@ -115,11 +115,11 @@ export const FILL_ROWS: FillRow[] = [
   {
     id: "xrpl",
     layer: "anchor",
-    title: "XRPL digest pointer",
-    fills: "DEVNET Payment memo + XLS-70 CredentialCreate pointing at a published card index.",
+    title: "XRPL public-root reader",
+    fills: "GET /root.json unsigned catalogue. /api/xrpl reader of that root (writes_board false). Historical DEVNET hashes are not this feed.",
     never: "A GSPC grade. A bond. A rating. A market. MEASURED.",
     href: "/xrpl-attest",
-    status: "devnet",
+    status: "live",
   },
   {
     id: "trex",
