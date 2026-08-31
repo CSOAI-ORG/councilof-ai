@@ -72,3 +72,13 @@ describe("leftover: eunomia indices stay UNMEASURED on the living board", () => 
     expect(eunomiaData).toMatch(/UNMEASURED on the living board \(C-2026-0826-05\)/);
   });
 });
+
+const osHeader = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
+
+describe("leftover: chrome is not a certificate mill", () => {
+  it("does not offer My Certificates in Header or OsHeader", () => {
+    expect(header).not.toMatch(/My Certificates/);
+    expect(osHeader).toMatch(/Training records/);
+    expect(osHeader).not.toMatch(/href="\/certificates"/);
+  });
+});
