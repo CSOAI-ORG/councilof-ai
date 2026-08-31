@@ -48,7 +48,7 @@ describe("leftover: header mega-nav honesty", () => {
     expect(header).not.toMatch(/Free signed assessment/);
     expect(header).not.toMatch(/No account, no fee/);
     expect(header).not.toMatch(/Devnet pointer/);
-    expect(header).toMatch(/Honesty stays free/);
+    expect(header).toMatch(/Verify stays free/);
     expect(header).toMatch(/Coming — Paddle waitlist/);
     expect(header).toMatch(/XRPL_STATUS_LABEL/);
     expect(header).toMatch(/writes_board false/);
