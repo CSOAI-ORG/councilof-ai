@@ -38,7 +38,7 @@ export default function ToolsPage() {
       </h1>
       <p className="mt-3 text-slate-600">
         Ask: board totals. Paste a card to verify. Four tools:
-        board_totals · get_axis · verify_card · list_cards. No 23rd axis.
+        board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.
       </p>
       <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
       <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">

@@ -24,6 +24,7 @@ concurrency:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   publish:
@@ -43,6 +44,7 @@ jobs:
         env:
           PYTHONUNBUFFERED: "1"
           BOARD_SIGN_KEY_PKCS8_B64: ${{ secrets.BOARD_SIGN_KEY_PKCS8_B64 }}
+          BOARD_SIGN_URL: https://councilof.ai/api/board-sign
         run: |
           set -euo pipefail
           # GHA on master only: this workflow is not registered on pull_request.

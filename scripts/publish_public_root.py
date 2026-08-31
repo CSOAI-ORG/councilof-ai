@@ -19,6 +19,7 @@ import json
 import os
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -147,6 +148,61 @@ def key_present() -> bool:
     return bool(v.strip())
 
 
+def oidc_available() -> bool:
+    return bool(os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") and os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN"))
+
+
+def signer_available() -> bool:
+    """GHA PKCS8 or Pages OIDC relay. Never a laptop key."""
+    return key_present() or oidc_available()
+
+
+def sign_via_oidc(payload: dict) -> str | None:
+    """Ask Pages /api/board-sign using the job's GitHub OIDC token. Key stays on Pages."""
+    req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
+    req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
+    sign_url = os.environ.get("BOARD_SIGN_URL") or "https://councilof.ai/api/board-sign"
+    if not req_url or not req_tok:
+        return None
+    sep = "&" if "?" in req_url else "?"
+    aud = "https://councilof.ai/api/board-sign"
+    token_req = urllib.request.Request(
+        req_url + sep + "audience=" + urllib.parse.quote(aud, safe=""),
+        headers={"Authorization": f"Bearer {req_tok}", "Accept": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(token_req, timeout=20) as resp:
+            oidc = json.loads(resp.read().decode("utf-8")).get("value")
+    except Exception as e:
+        print(f"oidc token request failed: {type(e).__name__}", file=sys.stderr)
+        return None
+    if not isinstance(oidc, str) or not oidc:
+        return None
+    body = json.dumps({"payload": payload}, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    sign_req = urllib.request.Request(
+        sign_url,
+        data=body,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {oidc}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": UA,
+        },
+    )
+    try:
+        with urllib.request.urlopen(sign_req, timeout=30) as resp:
+            out = json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        print(f"board-sign HTTP {e.code}", file=sys.stderr)
+        return None
+    except Exception as e:
+        print(f"board-sign failed: {type(e).__name__}", file=sys.stderr)
+        return None
+    sig = out.get("sig_ed25519") if isinstance(out, dict) else None
+    return sig if isinstance(sig, str) and len(sig) >= 64 else None
+
+
 def load_key():
     raw = os.environ.get("BOARD_SIGN_KEY_PKCS8_B64", "").strip()
     if not raw:
@@ -161,8 +217,12 @@ def load_key():
 
 
 def sign_payload(payload: dict, key) -> str:
-    sig = key.sign(canonical_bytes(payload))
-    return sig.hex()
+    if key is not None:
+        return key.sign(canonical_bytes(payload)).hex()
+    remote = sign_via_oidc(payload)
+    if remote:
+        return remote
+    raise RuntimeError("no PKCS8 and OIDC board-sign unavailable")
 
 
 def make_card(leaf: dict, sig: str | None) -> dict:
@@ -302,7 +362,11 @@ def main() -> int:
     args = ap.parse_args()
 
     # Never print the secret. Presence only.
-    print(f"BOARD_SIGN_KEY_PKCS8_B64: {'present' if key_present() else 'absent'}", flush=True)
+    print(
+        f"BOARD_SIGN_KEY_PKCS8_B64: {'present' if key_present() else 'absent'}; "
+        f"oidc: {'yes' if oidc_available() else 'no'}",
+        flush=True,
+    )
 
     committed = load_committed()
     validate_committed(committed)
@@ -323,9 +387,10 @@ def main() -> int:
     leaves.extend(benji_out["leaves"])
     leaves.extend(notices_out["leaves"])
 
-    have_key = key_present()
-    key = load_key() if have_key else None
-    if have_key and key is None:
+    have_pkcs8 = key_present()
+    have_key = signer_available()
+    key = load_key() if have_pkcs8 else None
+    if have_pkcs8 and key is None:
         print("HALT-ON-MISSING-KEY: secret present but key did not load", file=sys.stderr)
         write_halt_health(committed, reason="missing-key", have_key=True, dry_run=args.dry_run)
         return EXIT_MISSING_KEY
@@ -403,7 +468,7 @@ def main() -> int:
             },
         }
         if not have_key:
-            print("HALT-ON-MISSING-KEY: BOARD_SIGN_KEY_PKCS8_B64 absent; fail closed.", file=sys.stderr)
+            print("HALT-ON-MISSING-KEY: no PKCS8 and no GHA OIDC board-sign; fail closed.", file=sys.stderr)
             write_halt_health(
                 committed,
                 reason="missing-key",

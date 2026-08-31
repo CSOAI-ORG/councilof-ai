@@ -42,10 +42,10 @@ export default function CobolBridge() {
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Evidence rail · legacy system → signed evidence — not a market</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL copybook to signed evidence — not a bond</h1>
           <p className="mt-5 max-w-3xl text-lg text-emerald-50/90">
-            Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">cobolbridge.ai</a> modernizes the code and records the mapping; Council of AI turns published lineage into an independent, Ed25519-signed measurement pack. Empty financial cells on the board stay empty. This is not a tokenized market and not a rating.
+            Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. The sidecar is <strong>SPEC only</strong> — <code>cobolbridge.ai</code> is parked (HTTP 522). Read <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">SPEC.md</a>. Council of AI turns published lineage into an independent, Ed25519-signed measurement pack. Empty financial cells on the board stay empty. This is not a tokenized market and not a rating.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open cobolbridge.ai →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open SPEC.md (domain parked) →</a>
             <a href="/contact" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Talk to us — enterprise →</a>
           </div>
         </div>
@@ -89,7 +89,7 @@ export default function CobolBridge() {
             ))}
           </div>
           <div className="mt-6">
-            <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">Explore cobolbridge.ai →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">Explore cobolbridge.ai →</a>
           </div>
         </div>
       </section>
@@ -144,7 +144,7 @@ export default function CobolBridge() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/contact" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Contact — enterprise →</a>
-            <a href="https://cobolbridge.ai" target="_blank" rel="noopener" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Open cobolbridge.ai →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Open cobolbridge.ai →</a>
           </div>
         </div>
       </section>

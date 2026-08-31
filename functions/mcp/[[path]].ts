@@ -93,7 +93,7 @@ function contractOnly(kind: "measure" | "jail-probe", args: Record<string, unkno
 }
 
 /* ------------------------------------------------------------------------------
- * The four shared GSPC tools — board_totals, get_axis, verify_card, list_cards.
+ * Shared MCP tools — GSPC four plus public-root get_root / get_card / verify_inclusion.
  * Definitions come from ./gspc-tools.json (the ONE source, shared with the stdio
  * server in mcp/gspc-server); the handlers below mirror mcp/gspc-server/index.mjs
  * shape-for-shape so a client can switch transports without re-learning anything.
@@ -245,6 +245,64 @@ async function listCardsTool(origin: string, args: Record<string, unknown>) {
   return out;
 }
 
+async function getRootTool(origin: string) {
+  try {
+    const d = (await fetchOriginJson(origin, "/root.json")) as Record<string, unknown>;
+    return {
+      state: "VALID",
+      source: `${origin}/root.json`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      card_count: d.card_count ?? null,
+      merkle_root: d.merkle_root ?? null,
+      note: d.note ?? null,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  } catch (e) {
+    return { ...unreachablePayload(origin, "/root.json", e), state: "UNREACHABLE", not_gspc: true };
+  }
+}
+
+async function getCardTool(origin: string, args: Record<string, unknown>) {
+  const sha = String(args.sha256 || "").trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(sha)) {
+    return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
+  }
+  try {
+    const d = (await fetchOriginJson(origin, `/cards/${sha.slice(0, 16)}.json`)) as Record<string, unknown>;
+    const card = (d.card || d) as Record<string, unknown>;
+    const match = String(card.sha256 || "") === sha;
+    return {
+      state: match ? "VALID" : "INVALID",
+      sha256: sha,
+      source: `${origin}/cards/${sha.slice(0, 16)}.json`,
+      surface: card.surface ?? null,
+      unmeasured: card.unmeasured ?? [],
+      sig_ed25519: card.sig_ed25519 ?? null,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  } catch (e) {
+    return { ...unreachablePayload(origin, `/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
+  }
+}
+
+async function verifyInclusionTool(origin: string, args: Record<string, unknown>) {
+  const sha = String(args.sha256 || "").trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(sha)) {
+    return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
+  }
+  try {
+    const d = (await fetchOriginJson(origin, `/api/proof?sha=${sha}`)) as Record<string, unknown>;
+    if (d.kind === "inclusion") return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+    if (d.error === "not_found") return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
+    return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
+  } catch (e) {
+    return { ...unreachablePayload(origin, `/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
+  }
+}
+
 /**
  * verify_card — the shared three-state verdict (VALID / INVALID+reason /
  * UNCHECKABLE), same contract as the stdio server. Runs on cardVerify, the same
@@ -297,6 +355,12 @@ function sharedToolSummary(name: string, payload: Record<string, unknown>): stri
       const store = payload.card_store_count_endpoint as Record<string, unknown> | null;
       return `index declares ${idx?.n_cards_declared ?? "?"} card rows; the store's count endpoint reports ${store?.count ?? "?"}. Two labelled numbers, not reconciled here.`;
     }
+    case "get_root":
+      return `${payload.state ?? "?"} — public-root merkle ${(String(payload.merkle_root || "")).slice(0, 16) || "none"}. Not GSPC.`;
+    case "get_card":
+      return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+    case "verify_inclusion":
+      return `${payload.state ?? "?"} — inclusion against live merkle.`;
     default:
       return name;
   }
@@ -319,6 +383,12 @@ async function handleSharedTool(
         ? await getAxisTool(origin, args)
         : name === "list_cards"
           ? await listCardsTool(origin, args)
+          : name === "get_root"
+            ? await getRootTool(origin)
+            : name === "get_card"
+              ? await getCardTool(origin, args)
+              : name === "verify_inclusion"
+                ? await verifyInclusionTool(origin, args)
           : await verifyCardThreeState(args, origin);
   return rpc(id, {
     content: [
