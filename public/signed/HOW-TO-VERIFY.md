@@ -121,3 +121,18 @@ available. A signature is an integrity claim, not a truth claim.
 an index can only list what its publisher chose to list. The 150-row floor that
 used to ship beside this chain is a subset of these 335 cards, not a second
 measurement.
+
+## Public-root unsigned catalogue (`/root.json`)
+
+Estate steps 1–6 above are for **Ed25519-signed** cards against `#card-attestation-1`.
+The public-root catalogue is a **different object**.
+
+1. Fetch `https://councilof.ai/root.json`.
+2. Note `as_of`, `merkle_root`, `card_count`, and `did_intended` (`did:web:csoai.org#board-attestation-1`).
+3. Leaves in this catalogue are **unsigned**: `sig_ed25519` is null (`NO_LAPTOP_SIGN`).
+4. Inclusion is membership of a leaf SHA-256 in `card_sha256[]`. That is not a signature check.
+5. Do not claim a three-host checksum until Hugging Face and GitHub copies of this root exist.
+6. GET `/api/xrpl` is **404** until it would serve the same 16 as this root. Do not stamp MEASURED from the catalogue.
+7. Layer-0 may seal the root document with a different key. That seal is not a laptop/keystone card signature.
+
+Do not invent keys. Do not treat public-root inclusion as estate-card VALID.
