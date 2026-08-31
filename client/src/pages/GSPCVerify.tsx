@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
 import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { VerifyButton } from "@/components/gspc/VerifyButton";
@@ -18,6 +19,7 @@ import BoardAttestation from "@/components/board/BoardAttestation";
 
 export default function GSPCVerify() {
   const [boardData, setBoardData] = useState<any>(null);
+  const [mode, setMode] = useState<"estate" | "public-root">("estate");
 
   useEffect(() => {
     document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
@@ -49,16 +51,59 @@ export default function GSPCVerify() {
             Paste a signed card.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            VALID · INVALID · UNCHECKABLE. Nothing is sent. This is not a certificate, and it is
-            not a training record.
+            Two modes. Estate cards recompute Ed25519 against did:web:csoai.org#card-attestation-1.
+            Public-root cards load GET /root.json — an unsigned catalogue (NO_LAPTOP_SIGN;
+            leaf sig_ed25519 is null). Inclusion is membership in that hash list. This is not
+            a certificate, and it is not a training record.
           </p>
+          <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "estate"}
+              onClick={() => setMode("estate")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "estate"
+                  ? "bg-emerald-500 text-[#03110b]"
+                  : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
+              }`}
+            >
+              Estate card
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "public-root"}
+              onClick={() => setMode("public-root")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "public-root"
+                  ? "bg-amber-400 text-[#03110b]"
+                  : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
+              }`}
+            >
+              Public-root catalogue
+            </button>
+          </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
-        {/* VERIFY ONE RECORD — single input, permalink-able */}
+        {mode === "public-root" && (
+          <section>
+            <h2 className="text-2xl font-bold text-amber-200">Public-root card + inclusion</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              This mode does not work as a laptop-signed card check. Leaves are an
+              unsigned catalogue. Load GET /root.json. Do not fake Ed25519.
+            </p>
+            <div className="mt-4">
+              <PublicRootCatalogue variant="dark" />
+            </div>
+          </section>
+        )}
+
+        {mode === "estate" && (
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">Verify a single record</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
             against the published keys. Share a permalink and the recipient&apos;s browser re-runs
@@ -68,8 +113,10 @@ export default function GSPCVerify() {
             <RecordVerifyForm variant="dark" />
           </div>
         </section>
+        )}
 
-        {/* VERIFY */}
+        {mode === "estate" && (
+        <>
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">Verify a chain</h2>
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
@@ -115,6 +162,8 @@ export default function GSPCVerify() {
             </p>
           </div>
         </section>
+        </>
+        )}
 
         {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
         {boardData && (
