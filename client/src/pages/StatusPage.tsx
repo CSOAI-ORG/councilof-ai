@@ -126,6 +126,20 @@ export default function StatusPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-4xl px-6 pt-6" data-testid="pqc-honesty">
+        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Card crypto — Ed25519 today · PQC not inside 3KB</h2>
+        <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 space-y-2">
+          <p className="text-sm text-emerald-100/80">
+            Estate cards are Ed25519 over a SHA-256 hash chain against <code>did:web:csoai.org#card-attestation-1</code>.
+            The 3KB atom is binding. An ML-DSA-65 signature is ~3.3KB and cannot live inside the card.
+            <code>#board-pqc-1</code> is ABSENT — no ML-DSA public key is published. Hybrid is planned as a second receipt on the root / DID, never inside the atom. Do not claim PQC-signed cards. Fail-closed: no PQC helper is wired; a missing PQC seal is UNCHECKABLE, never VALID.
+          </p>
+          <p className="text-xs text-amber-200/80">
+            tsa.status: err — no OpenTimestamps proof is published. PQCBench is the GSPC continuity arena (csoai/gspc-asi), not a post-quantum signature.
+          </p>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-4xl px-6 pt-6">
         <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Layer 0 protocols - {connected ? "aligned & live" : "expected"}</h2>
         <div className="grid gap-2 sm:grid-cols-2">

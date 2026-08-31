@@ -14,4 +14,14 @@ describe("/status reads /root.json and keeps /api/xrpl 404", () => {
     expect(page).toContain("NO_LAPTOP_SIGN");
     expect(page).toMatch(/stays 404/);
   });
+
+  it("states 3KB vs ML-DSA-65 and #board-pqc-1 ABSENT", () => {
+    expect(page).toContain("pqc-honesty");
+    expect(page).toContain("3KB atom is binding");
+    expect(page).toContain("~3.3KB");
+    expect(page).toContain("#board-pqc-1");
+    expect(page).toContain("ABSENT");
+    expect(page).toContain("tsa.status: err");
+    expect(page).toContain("csoai/gspc-asi");
+  });
 });

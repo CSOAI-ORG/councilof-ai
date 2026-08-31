@@ -211,6 +211,15 @@ export default function GSPCVerify() {
               it in the same commit it ships — never ahead of it.
             </li>
             <li>
+              The <strong className="text-emerald-50">3KB atom is binding</strong>. An ML-DSA-65
+              signature is ~3.3KB and cannot live inside a card. Hybrid, when it ships, is a
+              second receipt on the root / DID / inclusion bundle — never a PQC-signed card.
+              <code>#board-pqc-1</code> is <strong className="text-emerald-50">ABSENT</strong>.
+              No PQC verify helper is wired. Fail-closed: a missing PQC seal is UNCHECKABLE,
+              never VALID. PQCBench is the GSPC continuity arena (<code>csoai/gspc-asi</code>),
+              not a post-quantum signature on these cards.
+            </li>
+            <li>
               It does not contact a server. Verification is local; you bring the records and
               the WebCrypto implementation in your browser.
             </li>
