@@ -314,7 +314,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "discovery",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
     plant: "Hub-native public findings desk — ontology, tape, published record, coverage, limitations.",
-    note: "GET /api/gspc remains the feed. Same depth as the living table, written for readers.",
+    note: "GET /api/gspc remains the feed. Planted queue is DISCOVERED. Speed 0 pagination and Card v2 lineage binding are next, not done.",
     snippet: "https://huggingface.co/spaces/csoai/gspc-board",
   },
   {
