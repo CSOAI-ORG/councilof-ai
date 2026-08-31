@@ -14,6 +14,8 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # #card-attestation-1 is missing.
 #
 # 2026-08-31: deploy2 ca44ae1 allowlists root.json + schema/card-v0.json so csoai.org/root.json twins councilof.ai.
+# 2026-08-31 leftover: GHA copies living cards+proofs from councilof.ai onto _site
+# (root+schema+cards+proofs only; never SPA). Not wrangler from agents.
 # Push on this file starts a deploy. workflow_dispatch needs actions:write;
 # this token does not have it. Merging a change to this workflow is the
 # agent-reachable path to refresh did:web:csoai.org.
@@ -61,6 +63,24 @@ jobs:
           assert 'MCPMeasurementServer' not in types, types
           print('did.json kids OK:', kids)
           print('did.json services OK:', types)
+          PY
+      - name: Twin living cards+proofs from councilof.ai (not SPA)
+        working-directory: src
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          root = json.loads(pathlib.Path('_site/root.json').read_text())
+          print('twin as_of', root.get('as_of'), 'merkle', root.get('merkle_root'), 'n', root.get('card_count'))
+          for dname in ('cards', 'proofs'):
+              pathlib.Path('_site', dname).mkdir(parents=True, exist_ok=True)
+          for sha in root['card_sha256']:
+              s16 = sha[:16]
+              for kind in ('cards', 'proofs'):
+                  url = f'https://councilof.ai/{kind}/{s16}.json'
+                  dest = pathlib.Path('_site') / kind / f'{s16}.json'
+                  subprocess.check_call(['curl', '-sS', '-f', '--max-time', '25', '-A', 'csoai-site-deploy', '-o', str(dest), url])
+                  print(kind, s16, dest.stat().st_size)
+          print('twinned cards+proofs only; no SPA')
           PY
       - name: Deploy to csoai-site production
         working-directory: src
@@ -111,3 +131,15 @@ jobs:
                   sys.exit(1)
           PY
           curl -s -o /dev/null -w "redirect: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
+          python3 - <<'PY'
+          import json, subprocess, sys
+          root = json.loads(subprocess.check_output(['curl','-sS','--max-time','20','https://csoai.org/root.json'], text=True))
+          merkle = root['merkle_root']
+          sha16 = root['card_sha256'][0][:16]
+          card = subprocess.check_output(['curl','-sS','-o','/tmp/csoai-card.json','-w','%{http_code}','--max-time','20', f'https://csoai.org/cards/{sha16}.json'], text=True)
+          proof = subprocess.check_output(['curl','-sS','-o','/tmp/csoai-proof.json','-w','%{http_code}','--max-time','20', f'https://csoai.org/proofs/{sha16}.json'], text=True)
+          print('live merkle', merkle, 'card', card, 'proof', proof, 'sha16', sha16)
+          if card != '200' or proof != '200':
+              print('WAIT GHA: cards/proofs not live yet')
+              sys.exit(1)
+          PY
