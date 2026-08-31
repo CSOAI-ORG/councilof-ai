@@ -1,0 +1,306 @@
+{
+  "schema": "csoai.swift-17-unsigned/0.1",
+  "kind": "leftover-honesty",
+  "measured": false,
+  "signed": false,
+  "writes_board": false,
+  "status_all": "UNMEASURED",
+  "settlement_still_off_chain": true,
+  "swift_partnered": false,
+  "seventeen_banks_on_our_feed": false,
+  "cohort_are_clients": false,
+  "no_api_swift": true,
+  "stranger_get_api_swift": {
+    "path": "/api/swift",
+    "http_status": 404,
+    "by_design": true,
+    "note": "Stranger GET /api/swift is 404 by design. Not a GPI firehose. Not ISO20022 bytes. No Worker route. 404 stays honest."
+  },
+  "press": {
+    "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "press_date": "2026-07-09",
+    "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+    "official_html_body": "UNCHECKABLE",
+    "gpi_firehose": false,
+    "iso20022_bytes": false,
+    "source": "scripts/adapters/swift_notices.py SWIFT_PRESS"
+  },
+  "cite_xrpl": {
+    "get": "https://councilof.ai/api/xrpl",
+    "n": 16,
+    "writes_board": false,
+    "note": "Cite only. Do not restamp XRPL. Do not mix represented TVL."
+  },
+  "never": [
+    "partnered with SWIFT",
+    "17-banks-on-our-feed",
+    "clients",
+    "MEASURED stamp",
+    "GET /api/swift as a live feed",
+    "invent GET /api/swift",
+    "Worker route /api/swift",
+    "GPI firehose",
+    "ISO20022 bytes",
+    "GET /api/gspc write",
+    "wrangler",
+    "mill",
+    "sign root.json",
+    "edit public/signed/card_index.json",
+    "edit board_living.json",
+    "merge #953"
+  ],
+  "fetched": "2026-08-31T18:45:00+01:00",
+  "as_of": "2026-08-31T17:45:00Z",
+  "n": 17,
+  "n_measured": 0,
+  "n_live_transfer_notices": 3,
+  "source": "scripts/adapters/swift_notices.py COHORT_17 + SWIFT_PRESS",
+  "note": "TARGETS not clients. Never partnered with SWIFT. Never 17-banks-on-our-feed. Settlement still off-chain. Hash of official public press URL only. Press HTML body UNCHECKABLE. Three banks may carry notice_status live_transfer_confirmed as notices; they stay UNMEASURED and not clients. Other 14 stay cohort-UNMEASURED.",
+  "notices": [
+    {
+      "subject": "SWIFT shared-ledger 17-bank cohort (9 Jul 2026 press)",
+      "as_of": "2026-08-31T07:38:20Z",
+      "notice_status": "pilot_cohort_17",
+      "status": "UNMEASURED",
+      "who": [
+        "ANZ",
+        "BNP Paribas",
+        "BNY",
+        "Citi",
+        "DBS",
+        "FAB",
+        "FirstRand",
+        "HSBC",
+        "Itaú",
+        "Lloyds",
+        "Mashreq",
+        "MUFG",
+        "OCBC",
+        "Standard Chartered",
+        "UBS",
+        "UOB",
+        "Wells Fargo"
+      ],
+      "settlement_still_off_chain": true,
+      "not_clients": true,
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "press_html_body": "UNCHECKABLE"
+    },
+    {
+      "subject": "HSBC–Standard Chartered tokenised transfer (public notice ~19 Aug 2026)",
+      "as_of": "2026-08-31T07:38:20Z",
+      "notice_status": "live_transfer_confirmed",
+      "status": "UNMEASURED",
+      "who": [
+        "HSBC",
+        "Standard Chartered"
+      ],
+      "settlement_still_off_chain": true,
+      "not_clients": true,
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "press_html_body": "UNCHECKABLE",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "currency",
+        "press_html_body"
+      ]
+    },
+    {
+      "subject": "UOB–HSBC HKD tokenised transfer (public notice ~28 Aug 2026)",
+      "as_of": "2026-08-31T07:38:20Z",
+      "notice_status": "live_transfer_confirmed",
+      "status": "UNMEASURED",
+      "who": [
+        "UOB",
+        "HSBC"
+      ],
+      "settlement_still_off_chain": true,
+      "not_clients": true,
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "press_html_body": "UNCHECKABLE",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "currency",
+        "press_html_body"
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "name": "ANZ",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "BNP Paribas",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "BNY",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "Citi",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "DBS",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "FAB",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "FirstRand",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "HSBC",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "live_transfer_confirmed",
+      "notice": "HSBC–Standard Chartered tokenised transfer (public notice ~19 Aug 2026); also UOB–HSBC HKD (~28 Aug 2026)"
+    },
+    {
+      "name": "Itaú",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "Lloyds",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "Mashreq",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "MUFG",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "OCBC",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "Standard Chartered",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "live_transfer_confirmed",
+      "notice": "HSBC–Standard Chartered tokenised transfer (public notice ~19 Aug 2026)"
+    },
+    {
+      "name": "UBS",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    },
+    {
+      "name": "UOB",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "live_transfer_confirmed",
+      "notice": "UOB–HSBC HKD tokenised transfer (public notice ~28 Aug 2026)"
+    },
+    {
+      "name": "Wells Fargo",
+      "kind": "TARGET",
+      "client": false,
+      "settlement_still_off_chain": true,
+      "status": "UNMEASURED",
+      "signed": false,
+      "writes_board": false,
+      "notice_status": "cohort-UNMEASURED"
+    }
+  ],
+  "cite": "Static leftover. Stranger GET /interop/swift-17-unsigned.json. GET /api/swift stays 404. Do not stamp MEASURED. Do not mill."
+}

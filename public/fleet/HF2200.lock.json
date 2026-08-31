@@ -1,0 +1,54 @@
+{
+  "kind": "csoai.fleet-lock/0.1",
+  "fleet": "HF2200",
+  "as_of": "2026-08-31T17:45:00Z",
+  "n_target": 2200,
+  "n_locked": 0,
+  "status_all": "UNMEASURED",
+  "mill": false,
+  "writes_board": false,
+  "do_not_mill_today": true,
+  "enters_board_means": false,
+  "models": [],
+  "models_omitted_reason": "Listing 2200 model names would mill. n_target + halt + cite FLEET-B is the lock. Never graded 2200 models.",
+  "after_fleet_b": {
+    "fleet": "FLEET-B",
+    "stranger_get": "https://councilof.ai/fleet/FLEET-B.lock.json",
+    "n_locked": 40,
+    "n_target": 40,
+    "status_all": "UNMEASURED",
+    "as_of": "2026-08-31T10:33:37Z",
+    "note": "HF2200 is a lock subset of hub-queue AFTER this 40. Do not mix FLEET-B into HF2200. Do not mill."
+  },
+  "source_queue": "https://huggingface.co/datasets/csoai/hub-queue",
+  "queue_subset": "hub-queue AFTER FLEET-B 40",
+  "census_n": 3032028,
+  "census_n_measured": 0,
+  "fleet_a": {
+    "n_measured": 19,
+    "note": "FLEET-A 19 already measured — do not restamp."
+  },
+  "live_board": "GET https://councilof.ai/api/gspc",
+  "public_count": "22 axis · 15 measured",
+  "cite_xrpl": {
+    "get": "https://councilof.ai/api/xrpl",
+    "n": 16,
+    "writes_board": false,
+    "note": "Cite only. Do not restamp XRPL. Do not mix represented TVL."
+  },
+  "note": "Lock subset of hub-queue AFTER FLEET-B (n_locked=40 UNMEASURED). n_target 2200. mill:false. writes_board:false. do_not_mill_today:true. Census 3032028 n_measured 0 stays. Never say we graded 2200 models.",
+  "halt": [
+    "mill",
+    "mill.sh",
+    "MEASURED stamp",
+    "grade 2200 models",
+    "list 2200 model names",
+    "silent restamp FLEET-A",
+    "wrangler",
+    "Hub upload",
+    "edit public/signed/card_index.json",
+    "edit board_living.json",
+    "sign root.json",
+    "merge #953"
+  ]
+}
