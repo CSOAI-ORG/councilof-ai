@@ -143,6 +143,10 @@ export interface LiveState {
     positions: StateFact | null;
     bodiesPublished: StateFact | null;
   };
+  census: {
+    listingsObserved: StateFact | null;
+    nMeasured: StateFact | null;
+  };
 }
 
 export type LiveStateResult =
@@ -156,6 +160,7 @@ export function readLiveState(payload: unknown): LiveState {
   const fleet = obj(root.mcp_fleet) ?? {};
   const cards = obj(root.signed_cards) ?? {};
   const chain = obj(root.card_chain) ?? {};
+  const census = obj(root.hub_census) ?? {};
   return {
     board: {
       publicCount: readFact(board.public_count),
@@ -175,6 +180,10 @@ export function readLiveState(payload: unknown): LiveState {
       verified: readFact(chain.bodies_verified_valid),
       positions: readFact(chain.chain_positions),
       bodiesPublished: readFact(chain.bodies_published),
+    },
+    census: {
+      listingsObserved: readFact(census.listings_observed),
+      nMeasured: readFact(census.n_measured),
     },
   };
 }

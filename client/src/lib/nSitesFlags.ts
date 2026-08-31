@@ -198,7 +198,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
   },
   {
     id: "board-api",
-    title: "Living board API",
+    title: "CSOAI-GSPC API",
     status: "planted",
     kind: "receipt",
     href: "https://councilof.ai/api/gspc",
@@ -243,7 +243,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "discovery",
     href: "https://huggingface.co/datasets/csoai/gspc-board",
-    plant: "Canonical Hub mirror of the living board.",
+    plant: "Canonical Hub mirror of CSOAI-GSPC.",
     note: "A Hub listing is not a GSPC grade.",
     snippet: "https://huggingface.co/datasets/csoai/gspc-board",
   },
@@ -313,8 +313,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "discovery",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
-    plant: "Hub-native board view.",
-    note: "GET /api/gspc remains the feed.",
+    plant: "Hub-native CSOAI-GSPC — axes, leaderboards, published record, coverage, limitations.",
+    note: "GET /api/gspc remains the feed. Planted queue is DISCOVERED. Speed 0 pagination and Card v2 lineage binding are next, not done.",
     snippet: "https://huggingface.co/spaces/csoai/gspc-board",
   },
   {

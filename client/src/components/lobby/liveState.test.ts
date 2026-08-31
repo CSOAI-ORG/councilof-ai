@@ -81,6 +81,18 @@ describe("liveState — reading /api/state", () => {
     expect(p).toContain("as_of: 2026-08-12 (measured_on.date)");
   });
 
+  it("reads hub census as catalogued listings, never as a grade", () => {
+    const s = readLiveState({
+      hub_census: {
+        listings_observed: fact(3032028, "catalogued"),
+        n_measured: fact(0, "catalogued"),
+      },
+    });
+    expect(quote(s.census.listingsObserved)).toBe("3,032,028");
+    expect(quote(s.census.nMeasured)).toBe("0");
+    expect(s.census.listingsObserved?.kind).toBe("catalogued");
+  });
+
   it("says an artifact has no timestamp instead of substituting one", () => {
     const s = readLiveState({
       signed_cards: { count: { value: 150, kind: "catalogued", source: "x", as_of: null, as_of_field: null } },

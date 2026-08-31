@@ -180,7 +180,8 @@ export function formatCardList(j: any): string {
 export const FOUR_TOOLS_HELP =
   `Paste a signed card to check it here — nothing is sent. ` +
   `Or say what you use AI for (a shop, a workplace, a vendor PDF) and we will open Get measured. ` +
-  `Or ask to see the board. Empty means we have not measured it. We do not guess. We do not certify.`;
+  `Or ask to see the board. Type COMPUTE for the census and RunPod wire. ` +
+  `A Hub listing is DISCOVERED, never MEASURED. Empty means we have not measured it. We do not guess. We do not certify.`;
 
 export const GET_MEASURED_REPLY =
   `Get measured is free. You keep the card. ` +

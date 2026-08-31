@@ -1,5 +1,5 @@
 /**
- * Hugging Face is the signing record. The living board is GET /api/gspc.
+ * Hugging Face is the signing record. CSOAI-GSPC is GET /api/gspc.
  *
  * These four datasets are planted. They are mirrors, queues and banks —
  * never a second scoreboard, never an iframe of a Space, never MEASURED
@@ -14,13 +14,13 @@ export type HfPlanted = {
 };
 
 export const HF_LIVING_RULING =
-  "The living board is GET /api/gspc. Hugging Face holds the signed record. A Hub repo is not a grade.";
+  "CSOAI-GSPC is GET /api/gspc. Hugging Face holds the signed record. A Hub repo is not a grade.";
 
 export const HF_PLANTED: HfPlanted[] = [
   {
     id: "gspc-board",
     href: "https://huggingface.co/datasets/csoai/gspc-board",
-    role: "Living board mirror. Cite GET /api/gspc.",
+    role: "CSOAI-GSPC Hub mirror. Cite GET /api/gspc.",
     status: "planted",
   },
   {
@@ -47,7 +47,7 @@ export const HF_VIEWERS: { id: string; href: string; role: string }[] = [
   {
     id: "space-gspc-board",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
-    role: "Board viewer. Same living counts. Not a second instrument.",
+    role: "CSOAI-GSPC public board. Search a model. Open an axis. Hub listings are DISCOVERED; a finished walk is not a grade. Compact cards verify. Same GET /api/gspc.",
   },
   {
     id: "space-living-catalog",
