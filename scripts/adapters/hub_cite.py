@@ -31,14 +31,18 @@ def _get(url: str, timeout: int = 20) -> tuple[int, Any]:
         return 0, None
 
 
-def collect(repo_root: Path) -> dict[str, Any]:
-    census_path = repo_root / "public" / "signed" / "hub-census-baseline.json"
+def _cite_census(repo_root: Path) -> dict[str, Any]:
+    """Prefer daily delta SUMMARY; else the committed baseline. Never a 3.032M walk."""
+    delta = repo_root / "public" / "signed" / "hub-census-delta.json"
+    baseline = repo_root / "public" / "signed" / "hub-census-baseline.json"
+    census_path = delta if delta.is_file() else baseline
     hub: dict[str, Any] = {
         "kind": "cite",
         "surface_not_on_card_v0": "hub.census.digest",
         "status": "UNMEASURED",
         "listing_state": "DISCOVERED",
-        "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED.",
+        "n_measured": 0,
+        "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED. listings.jsonl is never committed.",
     }
     if census_path.is_file():
         doc = json.loads(census_path.read_text(encoding="utf-8"))
@@ -47,14 +51,23 @@ def collect(repo_root: Path) -> dict[str, Any]:
                 "as_of": doc.get("as_of"),
                 "n": doc.get("n"),
                 "n_unique_ids": doc.get("n_unique_ids"),
-                "n_measured": doc.get("n_measured"),
+                "n_measured": int(doc.get("n_measured") or 0),
                 "sha256_jsonl": doc.get("sha256_jsonl"),
                 "complete": doc.get("complete"),
-                "source": "public/signed/hub-census-baseline.json",
+                "mode": doc.get("mode"),
+                "source": str(census_path.relative_to(repo_root)).replace("\\", "/"),
             }
         )
+        if hub["n_measured"] != 0:
+            raise RuntimeError("hub_cite refused a MEASURED census digest")
     else:
         hub["unmeasured"] = ["hub-census-baseline.json"]
+        hub["source"] = "public/signed/hub-census-baseline.json"
+    return hub
+
+
+def collect(repo_root: Path) -> dict[str, Any]:
+    hub = _cite_census(repo_root)
 
     code, gspc = _get(GSPC_URL)
     board: dict[str, Any] = {
