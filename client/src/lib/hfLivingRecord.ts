@@ -47,7 +47,7 @@ export const HF_VIEWERS: { id: string; href: string; role: string }[] = [
   {
     id: "space-gspc-board",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
-    role: "Board viewer. Same living counts. Not a second instrument.",
+    role: "Living table. Board + n-sites census of millions. Same GET /api/gspc. Not a second instrument.",
   },
   {
     id: "space-living-catalog",
