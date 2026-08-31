@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Council of AI — GSPC living table</title>
+  <meta name="description" content="Living table: GET /api/gspc, n-sites census of millions, two-speed, hundred-gate. Measurement, not certification. A rank is never sold.">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header>
+    <p class="kicker">Hugging Face · living table</p>
+    <h1>GSPC living table</h1>
+    <p class="lede">
+      The millions run as Speed 0 census on every n-site. MEASURED is a signed cell
+      on a unique lineage. A Hub listing is DISCOVERED. A rank is never sold.
+    </p>
+    <p class="lede" id="caption">Reading GET https://councilof.ai/api/gspc…</p>
+    <div class="counts" id="counts" aria-live="polite"></div>
+    <nav class="jump" aria-label="Table sections">
+      <a href="#board">Board</a>
+      <a href="#census">N-sites census</a>
+      <a href="#two-speed">Two-speed</a>
+      <a href="#hundred">Hundred-gate</a>
+      <a href="#health">Health</a>
+      <a href="#empty">Empty slots</a>
+      <a href="#flags">Planted flags</a>
+      <a href="#watch">Watchlist</a>
+      <a href="https://councilof.ai/gspc-verify">Verify</a>
+      <a href="https://councilof.ai/mcp">MCP</a>
+      <a href="https://huggingface.co/spaces/csoai/gspc-flywheel">Flywheel</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="board">
+      <p class="kicker">Living board · GET /api/gspc</p>
+      <h2>Every published axis</h2>
+      <p class="fine">Jail is a measured floor, not a 16th pane. Empty cells stay empty. Order is presentation, not rank.</p>
+      <div class="axes" id="axes">Loading axes…</div>
+    </section>
+
+    <section id="census">
+      <p class="kicker">Millions · all n-sites · Speed 0</p>
+      <h2>Cover millions by census. Unlock permissionless flags at 100 unique lineages done 100/100 A+++.</h2>
+      <p class="lede">
+        Hugging Face lists more than two million model repos. Speed 0 walks every
+        n-site without downloading weights. Speed 1 runs unique licence-eligible
+        lineages. Never say we scored two million models. Never stamp hub-queue MEASURED.
+      </p>
+      <div class="counts" id="census-counts"></div>
+      <div class="grid2" id="census-sites"></div>
+      <div class="panel" style="margin-top:0.75rem">
+        <p class="kicker">Planted queue · still UNMEASURED</p>
+        <pre id="queue" class="fine">loading hub-queue SUMMARY…</pre>
+        <p class="fine" id="catalog">loading living-catalog…</p>
+      </div>
+    </section>
+
+    <section id="two-speed">
+      <p class="kicker">Two-speed · bind, do not vendor</p>
+      <h2>Statically census everything. Dynamically run only unique lineages.</h2>
+      <div class="grid2" id="speeds"></div>
+    </section>
+
+    <section id="hundred">
+      <p class="kicker">100/100 A+++ · then permissionless</p>
+      <h2>Quality envelope before the remaining flags go permissionless</h2>
+      <div class="panel" id="hundred-box"></div>
+    </section>
+
+    <section id="health">
+      <p class="kicker">Health · inventory, not a score</p>
+      <h2>Health is every correct fact we can access. It is never one number.</h2>
+      <div class="panel" id="health-box"></div>
+    </section>
+
+    <section id="empty">
+      <p class="kicker">Seven empty slots · honest next</p>
+      <h2>The seven empty slots stay UNMEASURED until a signed cell exists.</h2>
+      <div class="grid2" id="empty-box"></div>
+    </section>
+
+    <section id="flags">
+      <p class="kicker">N-sites · one receipt, many drops</p>
+      <h2>Win through immutable coverage and independent reproduction — not mass uploads.</h2>
+      <div id="flags-box"></div>
+    </section>
+
+    <section id="watch">
+      <p class="kicker">Watchlist · DISCOVERED only</p>
+      <h2>Paste owner/name ids. Listing is DISCOVERED, never MEASURED.</h2>
+      <div class="panel">
+        <textarea id="watch-draft" rows="3" placeholder="owner/name — one per line"></textarea>
+        <button type="button" id="watch-add">Watch these ids</button>
+        <button type="button" class="ghost" id="watch-refresh">Refresh digests</button>
+        <p class="fine" id="watch-note"></p>
+        <table id="watch-table"><thead><tr><th>id</th><th>state</th><th>digest</th></tr></thead><tbody></tbody></table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Council of AI · CSOAI Ltd UK 16939677 · measurement, never certification.
+    board_totals · get_axis · verify_card · list_cards.
+    A rank is never sold. Verification is free forever.
+    Source: councilof-ai <code>spaces/gspc-board/</code> — do not regress this Space to a printer.
+  </footer>
+  <script src="./table.js"></script>
+</body>
+</html>
