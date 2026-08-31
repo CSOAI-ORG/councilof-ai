@@ -22,7 +22,7 @@ export const EMPTY_SLOTS: SlotFill[] = [
     id: "reserve-attestation",
     axis: "reserve-attestation",
     honest_next:
-      "A live partner issuer plus a bolted instrument. XRPL stays DEVNET. We attest; we do not issue.",
+      "A live partner issuer plus a bolted instrument. /xrpl-attest is a public-root reader, not a mill. We attest; we do not issue.",
     never: "Mainnet CredentialCreate this week. On-chain MEASURED. Invented issuer account.",
   },
   {
