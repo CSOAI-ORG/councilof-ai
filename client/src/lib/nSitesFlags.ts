@@ -93,7 +93,31 @@ export const HF_INFERENCE_SNIPPET = `base_url=https://router.huggingface.co/v1
 # model = <hub-slug>:<provider>  e.g. Qwen/Qwen3-8B:featherless-ai
 Authorization: Bearer $HF_INFERENCE_TOKEN
 # GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)
-# workflows: public-root · census-delta · public-root-watcher · hf-inference-mill`;
+# workflows: public-root · census-delta · public-root-watcher · hf-inference-mill · hf-fin-shells`;
+
+/** Canonical mill for every N-site drop. Census is Hub API. Inference is this rail. */
+export const NSITES_MILL_METHOD = {
+  id: "hf-inference-rail",
+  title: "Hugging Face Inference Providers",
+  base_url: "https://router.huggingface.co/v1",
+  model: "<hub-slug>:<provider>",
+  authorization: "Bearer $HF_INFERENCE_TOKEN",
+  hub_write_secret: "HF_TOKEN",
+  mill_secret: "HF_INFERENCE_TOKEN",
+  workflows: [
+    "public-root",
+    "census-delta",
+    "public-root-watcher",
+    "hf-inference-mill",
+    "hf-fin-shells",
+  ],
+  never: [
+    "local Ollama weight pulls",
+    "ZeroGPU as the fleet batch engine",
+    "laptop mill of Hub weights",
+  ],
+  snippet: HF_INFERENCE_SNIPPET,
+} as const;
 
 export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.
 
