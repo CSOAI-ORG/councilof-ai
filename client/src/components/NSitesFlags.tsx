@@ -1,8 +1,10 @@
 import { useState } from "react";
 import {
+  HF_INFERENCE_SNIPPET,
   NSITES_BOOTSTRAP,
   NSITES_ENVELOPE,
   NSITES_FLAGS,
+  NSITES_MILL_METHOD,
   NSITES_PUBLIC_CLAIM,
   NSITES_RULING,
   PLUGIN_HARVEST,
@@ -100,6 +102,26 @@ export default function NSitesFlags() {
           </a>
           .
         </p>
+      </div>
+
+      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5" data-testid="n-sites-mill-method">
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-emerald-900">
+          Mill method · every N-site
+        </p>
+        <p className="mt-2 text-sm text-emerald-950">
+          {NSITES_MILL_METHOD.title}. Base{" "}
+          <a
+            href="https://router.huggingface.co/v1/models"
+            className="font-medium text-emerald-800 hover:underline"
+          >
+            https://router.huggingface.co/v1
+          </a>
+          . Model {NSITES_MILL_METHOD.model}. Weights stay on the Hub. ZeroGPU is
+          a demo quota, not the fleet. A listing is not MEASURED.
+        </p>
+        <pre className="mt-3 overflow-x-auto rounded-lg border border-emerald-200 bg-slate-950 p-3 text-[12px] text-emerald-100">
+          <code>{HF_INFERENCE_SNIPPET}</code>
+        </pre>
       </div>
 
       <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-5" data-testid="n-sites-envelope">
