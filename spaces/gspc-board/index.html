@@ -1,1 +1,181 @@
-PLACEHOLDER_LOAD_FROM_FILE
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GSPC — published findings</title>
+  <meta name="description" content="Public GSPC findings. Interactive ontology, living board, and the published record for every axis. Measurement, not certification.">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="mast">
+    <div class="mast-row">
+      <p class="kicker">Council of AI · living board</p>
+      <p class="mast-meta" id="stamp">Reading the living board…</p>
+    </div>
+    <h1>GSPC findings</h1>
+    <p class="lede">
+      The published measurement board. Select a node or a row to open the record —
+      figure, interval, separation, signed cards, bank, and the honesty notes that
+      travel with it. Empty slots stay empty. A rank is never sold.
+    </p>
+    <div class="tape" id="tape" aria-live="polite"></div>
+    <nav class="jump">
+      <a href="#ontology">Ontology</a>
+      <a href="#tape-table">Board</a>
+      <a href="#desk">Record</a>
+      <a href="#read">How to read</a>
+      <a href="#empty">Empty slots</a>
+      <a href="#health">What you can check</a>
+      <a href="#census">Coverage</a>
+      <a href="#doors">Same record, many doors</a>
+      <a href="#honesty">Limitations</a>
+      <a href="#lookup">Look up a model</a>
+      <a href="https://councilof.ai/gspc-verify">Verify</a>
+    </nav>
+  </header>
+
+  <section id="ontology" class="desk-block" aria-labelledby="onto-h">
+    <div class="desk-head">
+      <p class="kicker">Ontology</p>
+      <h2 id="onto-h">Governance · Safety · Provenance · Continuity</h2>
+    </div>
+    <p class="fine">Interactive map of every published slot. Green is MEASURED. Grey is empty. Click a pillar to filter the tape; click an axis to open the record.</p>
+    <div class="legend" id="legend"></div>
+    <div id="graph" class="graph" role="img" aria-label="GSPC ontology. Click a node to open that axis."></div>
+  </section>
+
+  <section id="tape-table" class="desk-block" aria-labelledby="tape-h">
+    <div class="desk-head row">
+      <div>
+        <p class="kicker">Board tape</p>
+        <h2 id="tape-h">Every published axis</h2>
+      </div>
+      <label class="find">
+        <span class="sr">Filter</span>
+        <input id="q" type="search" placeholder="Filter axis / family / status">
+      </label>
+    </div>
+    <p class="fine" id="filter-note"></p>
+    <div class="scroll">
+      <table class="sheet" id="board-table">
+        <thead>
+          <tr>
+            <th>Axis</th>
+            <th>Family</th>
+            <th>Status</th>
+            <th>Figure</th>
+            <th>n</th>
+            <th>Interval</th>
+            <th>Separation</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody id="board-body">
+          <tr><td colspan="8">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="desk" class="desk-block desk-focus" hidden aria-labelledby="desk-h">
+    <div class="desk-head">
+      <p class="kicker" id="desk-kicker">Selected record</p>
+      <h2 id="desk-h">—</h2>
+      <p class="fine" id="desk-sub"></p>
+    </div>
+    <div class="quote" id="quote"></div>
+    <div class="sheets three">
+      <div>
+        <h3>Finding</h3>
+        <table class="sheet" id="find-table"></table>
+      </div>
+      <div>
+        <h3>Signed records</h3>
+        <table class="sheet" id="rec-table"></table>
+      </div>
+      <div>
+        <h3>Honesty on this axis</h3>
+        <table class="sheet" id="honest-table"></table>
+      </div>
+    </div>
+    <p class="note" id="desk-note"></p>
+    <div id="fleet" class="fleet" hidden></div>
+    <p class="links" id="desk-links"></p>
+  </section>
+
+  <section id="read" class="desk-block" aria-labelledby="read-h">
+    <div class="desk-head">
+      <p class="kicker">How to read</p>
+      <h2 id="read-h">A listing is not a grade. A TIE is not a win.</h2>
+    </div>
+    <div class="grid2" id="read-box"></div>
+  </section>
+
+  <section id="empty" class="desk-block" aria-labelledby="empty-h">
+    <div class="desk-head">
+      <p class="kicker">Published empty</p>
+      <h2 id="empty-h">Seven slots exist so the gap is visible</h2>
+    </div>
+    <div class="grid2" id="empty-box"></div>
+  </section>
+
+  <section id="health" class="desk-block" aria-labelledby="health-h">
+    <div class="desk-head">
+      <p class="kicker">What you can check</p>
+      <h2 id="health-h">Health is every correct fact you can reach. It is never one number.</h2>
+    </div>
+    <table class="sheet" id="health-table"></table>
+  </section>
+
+  <section id="census" class="desk-block" aria-labelledby="census-h">
+    <div class="desk-head">
+      <p class="kicker">Coverage</p>
+      <h2 id="census-h">What has been listed, and what has been measured</h2>
+    </div>
+    <div class="tape" id="census-counts"></div>
+    <div class="grid2" id="census-sites"></div>
+    <pre class="fine block" id="queue">Reading the public queue…</pre>
+    <p class="fine" id="catalog"></p>
+  </section>
+
+  <section id="doors" class="desk-block" aria-labelledby="doors-h">
+    <div class="desk-head">
+      <p class="kicker">Same record, many doors</p>
+      <h2 id="doors-h">The finding does not change when the host does</h2>
+    </div>
+    <div class="grid2" id="doors-box"></div>
+  </section>
+
+  <section id="honesty" class="desk-block" aria-labelledby="honest-h">
+    <div class="desk-head">
+      <p class="kicker">Limitations · corrections</p>
+      <h2 id="honest-h">The board publishes what it cannot claim</h2>
+    </div>
+    <ol class="limits" id="limits"></ol>
+    <table class="sheet" id="corr-table"></table>
+    <p class="fine" id="lane-note"></p>
+  </section>
+
+  <section id="lookup" class="desk-block" aria-labelledby="look-h">
+    <div class="desk-head">
+      <p class="kicker">Look up a model</p>
+      <h2 id="look-h">A Hub id is a listing until a signed cell exists</h2>
+    </div>
+    <div class="panel-in">
+      <textarea id="watch-draft" rows="3" placeholder="owner/name — one per line"></textarea>
+      <button type="button" id="watch-add">Add to this desk</button>
+      <button type="button" class="ghost" id="watch-refresh">Read digests</button>
+      <p class="fine" id="watch-note"></p>
+      <table class="sheet" id="watch-table"><thead><tr><th>id</th><th>state</th><th>digest</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <footer>
+    Council of AI · CSOAI Ltd UK 16939677 · measurement, never certification.
+    Verify is free. <a href="https://councilof.ai/gspc-verify">councilof.ai/gspc-verify</a>
+    · DOI 10.5281/zenodo.21991104
+  </footer>
+  <script src="./table.js"></script>
+</body>
+</html>

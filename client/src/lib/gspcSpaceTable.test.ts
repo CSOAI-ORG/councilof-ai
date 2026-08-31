@@ -5,45 +5,56 @@ import { describe, expect, it } from "vitest";
 const root = resolve(__dirname, "../../..");
 const html = readFileSync(resolve(root, "spaces/gspc-board/index.html"), "utf8");
 const js = readFileSync(resolve(root, "spaces/gspc-board/table.js"), "utf8");
+const css = readFileSync(resolve(root, "spaces/gspc-board/style.css"), "utf8");
 const readme = readFileSync(resolve(root, "spaces/gspc-board/README.md"), "utf8");
-const blob = [html, js, readme].join("\n");
+const blob = [html, js, css, readme].join("\n");
 
-describe("gspc-board Space is the living table, not a 1.8KB printer", () => {
-  it("hosts the whole living table with yesterday's n-sites desks", () => {
-    expect(html).toContain("GSPC living table");
-    expect(html).toContain('id="board"');
-    expect(html).toContain('id="census"');
-    expect(html).toContain('id="two-speed"');
-    expect(html).toContain('id="hundred"');
-    expect(html).toContain('id="health"');
-    expect(html).toContain('id="empty"');
-    expect(html).toContain('id="flags"');
-    expect(html).toContain('id="watch"');
+describe("gspc-board Space is a public findings desk", () => {
+  it("opens an interactive ontology and a Bloomberg-style record on select", () => {
+    expect(html).toContain("GSPC findings");
+    expect(html).toContain('id="ontology"');
+    expect(html).toContain('id="graph"');
+    expect(html).toContain('id="board-table"');
+    expect(html).toContain('id="desk"');
+    expect(html).toContain('id="find-table"');
+    expect(html).toContain('id="rec-table"');
+    expect(html).toContain('id="honest-table"');
+    expect(html).toContain('id="fleet"');
     expect(js).toContain("https://councilof.ai/api/gspc");
-    expect(js).toContain("hub-queue");
-    expect(js).toContain("living-catalog");
-    expect(js).toContain("Speed 0");
-    expect(js).toContain("Speed 1");
-    expect(js).toContain("100 unique lineages");
-    expect(js).toContain("huggingface");
-    expect(js).toContain("openrouter");
-    expect(js).toContain("ollama");
-    expect(js).toContain("kaggle");
-    expect(js).toContain("github");
-    expect(js).toContain("reserve-attestation");
-    expect(js).toContain("XRPL stays DEVNET");
-    expect(readme).toContain("GSPC living table");
-    expect(readme).not.toMatch(/board printer/i);
+    expect(js).toContain("signed/card_index.json");
+    expect(js).toContain("openAxis");
+    expect(js).toContain("PILLARS");
+    expect(js).toContain("This slot is published empty");
+    expect(js).toContain("Measured floor");
+    expect(js).toContain("per_model");
+    expect(js).toContain("data-pillar");
+    expect(readme).toContain("Public findings desk");
   });
 
-  it("keeps millions as n-sites census and never invents a scored Hub", () => {
-    expect(blob).toMatch(/Speed 0 census/);
-    expect(blob).toMatch(/DISCOVERED/);
+  it("keeps the living-table depth as public findings, not a thinner stub", () => {
+    expect(html).toContain('id="read"');
+    expect(html).toContain('id="empty"');
+    expect(html).toContain('id="health"');
+    expect(html).toContain('id="census"');
+    expect(html).toContain('id="doors"');
+    expect(html).toContain('id="honesty"');
+    expect(html).toContain('id="lookup"');
+    expect(js).toContain("A listing is not a grade");
+    expect(js).toContain("api/corrections");
+    expect(js).toContain("hub-queue");
+    expect(js).toContain("living-catalog");
+    expect(js).toContain("measured_in_lane");
+    expect(js).toContain("unparsed_rate");
+    expect(js).toContain("cvar05_harm");
+    expect(js).toContain("blobs=true");
+    expect(css).toContain(".sheets.three");
+    expect(css).toContain(".jump");
+  });
+
+  it("keeps inner-work language off the public Space", () => {
     expect(blob).toMatch(/A rank is never sold/);
-    expect(blob).toMatch(/Do not say we scored two million|Claim we scored two million/);
+    expect(blob).not.toMatch(/A\+\+\+|100\/100|hundred-gate|Speed 0|Speed 1|watchlist|do-not|never say we scored|Claim we scored two million|board printer|XRPL stays DEVNET/i);
     expect(blob).not.toMatch(/rank for sale|buy a grade|£79|£499|Byzantine|22\/22|dorado|cibola|sovos/i);
     expect(blob).not.toMatch(/hub-queue is MEASURED/);
-    expect(js).toContain("Never. Millions are DISCOVERED by census");
-    expect(js).toContain("status_all");
   });
 });
