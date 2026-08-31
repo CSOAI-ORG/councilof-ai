@@ -11,8 +11,8 @@
   "do_not_restore": "MEASURED-INDEX-v0.1 (C-2026-0826-05). The v0.1 leftover remains an over-claim correction, not a board stamp.",
   "v0_1_leftover": "/interop/ai-economy-index.v0.1.json",
   "certification": "NONE \u2014 never a certification, never a rating, never an endorsement",
-  "published_at": "2026-08-31T15:30:00Z",
-  "published_at_europe_london": "2026-08-31T16:30:00+01:00",
+  "published_at": "2026-08-31T15:40:00Z",
+  "published_at_europe_london": "2026-08-31T16:40:00+01:00",
   "source_have": "index-bank-fill-2026-08-27 (HAVE 2026-08-27; not a board stamp)",
   "live_reconfirm": {
     "fetched_at": "2026-08-31T15:30:00Z",
@@ -96,6 +96,109 @@
     "not_an_index": "No composite is computed. No formula is published.",
     "not_measured": "Board slot ai-economy-index stays UNMEASURED.",
     "not_certification": "Council of AI measures; it never certifies.",
-    "c_2026_0826_05": "Do not restore MEASURED-INDEX-v0.1."
-  }
+    "c_2026_0826_05": "Do not restore MEASURED-INDEX-v0.1.",
+    "no_headline_composite": "No composite is computed. STILL GAP inputs stay empty. Do not stamp MEASURED.",
+    "labelled_not_gdp": "x402 and ERC-8004 are LABELLED COMPONENTS under this leftover. They do not write the board."
+  },
+  "writes_board": false,
+  "partial": true,
+  "cited_series": [
+    {
+      "id": "anthropic-economic-index",
+      "publisher": "Anthropic",
+      "status": "PINNED",
+      "not_a_composite": true,
+      "not_official_nso": true,
+      "not_a_csoai_score": true,
+      "index_url": "https://www.anthropic.com/economic-index",
+      "index_last_updated": "2026-06-26",
+      "release_id": "release_2026_06_26",
+      "report_title": "Anthropic Economic Index report: Cadences",
+      "report_url": "https://www.anthropic.com/research/economic-index-june-2026-report",
+      "citation_key": "anthropic2026aeiv6",
+      "dataset_id": "Anthropic/EconomicIndex",
+      "dataset_url": "https://huggingface.co/datasets/Anthropic/EconomicIndex",
+      "dataset_files": [
+        "release_2026_06_26/data/aei_claude_ai_2026-06-26.csv",
+        "release_2026_06_26/data/aei_1p_api_2026-06-26.csv"
+      ],
+      "source_ids": [
+        "claude_ai",
+        "1p_api"
+      ],
+      "data_documentation_url": "https://huggingface.co/datasets/Anthropic/EconomicIndex/blob/main/release_2026_06_26/data_documentation.md",
+      "fetched_from": [
+        "https://www.anthropic.com/economic-index",
+        "https://www.anthropic.com/research/economic-index-june-2026-report",
+        "https://huggingface.co/datasets/Anthropic/EconomicIndex"
+      ],
+      "fetched_at": "2026-08-31T15:40:00Z",
+      "honesty": "IDs fetched live 31 Aug 2026 from Anthropic Economic Index pages + the Hugging Face tree those pages cite. Claude usage telemetry and survey. Not SNA. Not a CSOAI headline. No score computed here. Do not invent later release IDs."
+    },
+    {
+      "id": "eurostat-isoc_eb_ai",
+      "publisher": "Eurostat",
+      "status": "HAVE",
+      "dataset_id": "ISOC_EB_AI",
+      "dataset": "isoc_eb_ai",
+      "indicator": "E_AI_TANY",
+      "unit": "PC_ENT",
+      "geo": "EU27_2020",
+      "size_emp": [
+        "GE10",
+        "GE250"
+      ],
+      "nace_r2": "C10-S951_X_K",
+      "freq": "A",
+      "agency": "ESTAT",
+      "sdmx_version": "1.0",
+      "as_of": "2026-06-15T11:00:00+0200",
+      "live_sdmx_reconfirmed": "2026-08-31",
+      "live_sdmx_reconfirmed_at": "2026-08-31T15:40:00Z",
+      "api": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/isoc_eb_ai?format=JSON&lang=EN&geo=EU27_2020&indic_is=E_AI_TANY&unit=PC_ENT",
+      "browser": "https://ec.europa.eu/eurostat/databrowser/view/isoc_eb_ai/default/table?lang=en",
+      "pinned_cells": {
+        "GE10": {
+          "2023": 8.06,
+          "2024": 13.48,
+          "2025": 19.95
+        },
+        "GE250": {
+          "2023": 30.48,
+          "2024": 41.17,
+          "2025": 55.03
+        }
+      },
+      "honesty": "Official NSO series. Live SDMX reconfirmed 31 Aug 2026 (updated 2026-06-15T11:00:00+0200). Same cells as the adoption HAVE. Not an index."
+    }
+  ],
+  "labelled_components": [
+    {
+      "id": "x402",
+      "kind": "labelled_component",
+      "status": "LABELLED",
+      "what": "payment proofs / RAS rail, not GDP",
+      "writes_board": false,
+      "not_dollar_economy": true,
+      "not_live_service_volume": true,
+      "volume_usd": null,
+      "schema": "csoai.x402/0.1",
+      "well_known": "https://councilof.ai/.well-known/x402.json",
+      "honesty": "Transaction count is not dollar economy. Pack-assembly rail; the board stays free. No invented $ volume. writes_board false."
+    },
+    {
+      "id": "ERC-8004",
+      "kind": "labelled_component",
+      "status": "LABELLED",
+      "what": "registrations, not live services",
+      "writes_board": false,
+      "not_dollar_economy": true,
+      "volume_usd": null,
+      "honesty": "Registrations are not live services. Cite as a component, never the composite. Do not invent a callable fraction or $ volume. writes_board false."
+    }
+  ],
+  "still_gap": [
+    "compute-price",
+    "AI-sector-output"
+  ]
 }
