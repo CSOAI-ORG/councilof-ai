@@ -10,7 +10,7 @@ Shared working agreement for ALL agents on this repo. Read this first.
 - Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 15 measured · 7 UNMEASURED**.
   Cards **335/335**. Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
 - csoai.org = Cloudflare Pages `csoai-site` (DID apex). `os`/`app`.csoai.org CNAME there.
-- GitHub sudo codes to `nicholas@csoai.org` land in **Namecheap Private Email**, not Gmail.
+- Mailbox is **nicholas@csoai.org** on Namecheap Private Email (https://privateemail.com). GitHub sudo codes go there. **Do not use Gmail.**
 - Full eat: `_alignment/ALIGNMENT_2026-08-31.md` (Mac). Cursor feed already has 22/15/335 grammar.
 
 ## Deployed truth (build — still true)
