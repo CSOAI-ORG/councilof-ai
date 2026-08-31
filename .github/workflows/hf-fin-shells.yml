@@ -6,6 +6,8 @@ name: hf-fin-shells
 # Never laptop/MetaMask key. Never writes GET /api/gspc. Never invents a %.
 
 on:
+  schedule:
+    - cron: "27 */2 * * *"
   workflow_dispatch: {}
 
 concurrency:
