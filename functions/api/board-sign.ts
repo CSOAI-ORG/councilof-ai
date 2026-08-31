@@ -52,7 +52,8 @@ async function verifyOidc(token: string): Promise<void> {
   if (!audList.some((a) => typeof a === "string" && allowed.has(a))) throw new Error("aud");
   if (payload.repository !== REPO) throw new Error("repo");
   const wf = String(payload.job_workflow_ref || payload.workflow || payload.workflow_ref || "");
-  if (!wf.includes("public-root")) throw new Error("workflow");
+  const allowedWf = ["public-root", "hf-fin-shells", "hf-inference-mill"];
+  if (!allowedWf.some((w) => wf.includes(w))) throw new Error("workflow");
   if (typeof payload.exp === "number" && payload.exp * 1000 < Date.now() - 30_000) throw new Error("exp");
   const jwks = (await (await fetch(`${ISS}/.well-known/jwks`)).json()) as { keys: JsonWebKey[] };
   const jwk = jwks.keys.find((k) => (k as JsonWebKey & { kid?: string }).kid === header.kid);
