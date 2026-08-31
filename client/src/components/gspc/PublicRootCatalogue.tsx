@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 /**
  * Unsigned public-root catalogue (NO_LAPTOP_SIGN).
  * Loads GET /root.json. Inclusion is membership in card_sha256[].
- * Does not verify Ed25519 on leaves — sig_ed25519 is null.
+ * Paste-hash also hits live GET /api/proof?sha= (kind=inclusion).
+ * Does not verify Ed25519 on leaves — sig_ed25519 is null. UNCHECKABLE.
  */
 
 type RootDoc = {
@@ -25,6 +26,19 @@ type XrplReader = {
   status?: number;
 };
 
+type ProofDoc = {
+  schema?: string;
+  kind?: string;
+  error?: string;
+  sha256?: string;
+  index?: number;
+  merkle_root?: string;
+  as_of?: string;
+  proof?: string[];
+  reason?: string;
+  unmeasured?: string[];
+};
+
 function normHex(s: string): string {
   return s.trim().toLowerCase().replace(/^0x/, "");
 }
@@ -34,6 +48,9 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
   const [xrpl, setXrpl] = useState<XrplReader | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [needle, setNeedle] = useState("");
+  const [proofHttp, setProofHttp] = useState<number | null>(null);
+  const [proof, setProof] = useState<ProofDoc | null>(null);
+  const [proofErr, setProofErr] = useState<string | null>(null);
 
   useEffect(() => {
     const ac = new AbortController();
@@ -58,6 +75,28 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
   const included = q.length === 64 && hashes.includes(q);
   const checked = q.length === 64;
 
+  useEffect(() => {
+    if (q.length !== 64) {
+      setProof(null);
+      setProofHttp(null);
+      setProofErr(null);
+      return;
+    }
+    const ac = new AbortController();
+    setProofErr(null);
+    fetch(`/api/proof?sha=${encodeURIComponent(q)}`, {
+      signal: ac.signal,
+      headers: { accept: "application/json" },
+    })
+      .then(async (r) => {
+        const body = (await r.json().catch(() => ({}))) as ProofDoc;
+        setProofHttp(r.status);
+        setProof(body);
+      })
+      .catch((e) => setProofErr(String(e?.message || e)));
+    return () => ac.abort();
+  }, [q]);
+
   const box =
     variant === "dark"
       ? "rounded-2xl border border-amber-400/30 bg-amber-500/5 p-6"
@@ -73,8 +112,10 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       <p className={`mt-2 text-sm ${muted}`}>
         Load GET <a className="underline" href="/root.json">/root.json</a>. Leaves are not
         laptop-signed: <code>sig_ed25519</code> is null. Inclusion is membership in{" "}
-        <code>card_sha256[]</code>. This is not a signed-card verify. Do not fake Ed25519.
-        Intended DID fragment: <code>did:web:csoai.org#board-attestation-1</code>.{" "}
+        <code>card_sha256[]</code> plus live GET <code>/api/proof?sha=</code> (kind=inclusion).
+        This is not a signed-card verify. Do not fake Ed25519. Unsigned leaves stay UNCHECKABLE.
+        Not a second scoreboard. Intended DID fragment:{" "}
+        <code>did:web:csoai.org#board-attestation-1</code>.{" "}
         <code>/api/xrpl</code> is a reader of this root
         {xrpl?.status === 200 && xrpl.kind === "reader"
           ? ` (live, n=${xrpl.n ?? "—"}, writes_board=${String(xrpl.writes_board)})`
@@ -108,7 +149,7 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
           </div>
           <div>
             <dt className="uppercase tracking-wide opacity-70">unsigned-leaf</dt>
-            <dd>NO_LAPTOP_SIGN</dd>
+            <dd>NO_LAPTOP_SIGN · Ed25519 UNCHECKABLE</dd>
           </div>
         </dl>
       )}
@@ -127,8 +168,20 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       {checked && (
         <p className={`mt-2 text-sm font-semibold ${included ? "text-emerald-300" : "text-amber-300"}`}>
           {included
-            ? "INCLUDED — hash is in this unsigned catalogue. Not a signature check."
-            : "NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check."}
+            ? "INCLUDED in card_sha256[] — unsigned catalogue membership. Not a signature check. Ed25519 UNCHECKABLE."
+            : "NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check. Unsigned leaves stay UNCHECKABLE."}
+        </p>
+      )}
+      {checked && proofErr && (
+        <p className="mt-2 text-sm text-red-400">GET /api/proof failed: {proofErr}. Inclusion UNCHECKABLE this load.</p>
+      )}
+      {checked && proofHttp != null && (
+        <p className={`mt-2 text-sm font-semibold ${proofHttp === 200 && proof?.kind === "inclusion" ? "text-emerald-300" : "text-amber-300"}`}>
+          {proofHttp === 200 && proof?.kind === "inclusion"
+            ? `LIVE INCLUSION HTTP 200 — GET /api/proof?sha= kind=inclusion index=${proof.index ?? "—"}. merkle_root=${(proof.merkle_root || "").slice(0, 16) || "—"}… Unsigned leaf: Ed25519 UNCHECKABLE. Not a score. Not a second scoreboard.`
+            : proofHttp === 404
+              ? `NOT A LEAF of the last published root (GET /api/proof HTTP 404). Unsigned leaves stay UNCHECKABLE. Not a score.`
+              : `GET /api/proof HTTP ${proofHttp}. Inclusion UNCHECKABLE this load.`}
         </p>
       )}
       {q && q.length !== 64 && (
