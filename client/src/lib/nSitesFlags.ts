@@ -88,12 +88,7 @@ export const PLUGIN_SNIPPET = "grok plugin install CSOAI-ORG/councilof-ai#plugin
 
 export const NPM_SNIPPET = "npx -y csoai-gspc-mcp";
 
-export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.
-
-Verify: https://councilof.ai/gspc-verify
-${HF_BADGE_SNIPPET}
-
-Unknown stays unknown. A rank is never sold.`;
+export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.\n\nVerify: https://councilof.ai/gspc-verify\n${HF_BADGE_SNIPPET}\n\nUnknown stays unknown. A rank is never sold.`;
 
 export const NSITES_FLAGS: NSiteFlag[] = [
   {
@@ -313,8 +308,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "discovery",
     href: "https://huggingface.co/spaces/csoai/gspc-board",
-    plant: "Hub-native board view.",
-    note: "GET /api/gspc remains the feed.",
+    plant: "Hub-native living table — board, n-sites census, two-speed, hundred-gate.",
+    note: "GET /api/gspc remains the feed. Millions are DISCOVERED on every n-site.",
     snippet: "https://huggingface.co/spaces/csoai/gspc-board",
   },
   {
