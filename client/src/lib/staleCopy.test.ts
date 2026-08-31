@@ -10,6 +10,7 @@ const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8"
 const sov = readFileSync(resolve(__dirname, "./sovExternalAudit.ts"), "utf8");
 const playbook = readFileSync(resolve(__dirname, "./playbookAudit.ts"), "utf8");
 const header = readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8");
+const xrplNav = readFileSync(resolve(__dirname, "../data/xrplNavDescription.ts"), "utf8");
 
 describe("stale copy honesty", () => {
   it("RAS pack cites the living board, not a 13-axis product", () => {
@@ -39,8 +40,8 @@ describe("leftover: /xrpl-attest is a public-root reader, not a live DEVNET poin
     expect(productsFill).toMatch(/living feed is GET \/root\.json/);
     expect(sov).toMatch(/\/xrpl-attest is a \/root\.json reader/);
     expect(playbook).toMatch(/\/xrpl-attest is a \/root\.json reader/);
-    expect(header).not.toMatch(/Devnet pointer/);
-    expect(header).toMatch(/\/xrpl-attest reads live GET \/root\.json/);
-    expect(header).toMatch(/historical DEVNET payment-memo hashes are not this feed/);
+    expect(xrplNav).toMatch(/\/xrpl-attest reads live GET \/root\.json/);
+    expect(xrplNav).toMatch(/historical DEVNET payment-memo hashes are not this feed/);
+    expect(header).not.toMatch(/PLACEHOLDER/);
   });
 });
