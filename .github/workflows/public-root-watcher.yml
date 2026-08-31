@@ -23,6 +23,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: three-host merkle
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
         run: |
           python3 - <<'PY'
           import hashlib, json, urllib.request, sys
