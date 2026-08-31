@@ -45,6 +45,10 @@ jobs:
           PYTHONUNBUFFERED: "1"
           BOARD_SIGN_KEY_PKCS8_B64: ${{ secrets.BOARD_SIGN_KEY_PKCS8_B64 }}
           BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
           set -euo pipefail
           # GHA on master only: this workflow is not registered on pull_request.
