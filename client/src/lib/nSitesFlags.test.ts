@@ -32,6 +32,8 @@ describe("N-sites permissionless flags", () => {
     expect(flagsByStatus("do-not").some((f) => f.id === "scored-millions")).toBe(true);
     expect(flagsByStatus("do-not").some((f) => f.id === "zerogpu-fleet")).toBe(true);
     expect(flagsByStatus("planted").some((f) => f.id === "hf-inference-rail")).toBe(true);
+    expect(flagsByStatus("planted").some((f) => f.id === "metamask-not-signer")).toBe(true);
+    expect(JSON.stringify(NSITES_FLAGS)).not.toMatch(/\b13\/14\b/);
     expect(NSITES_FLAGS.find((f) => f.id === "hf-inference-rail")?.snippet).toMatch(
       /router\.huggingface\.co\/v1/,
     );
