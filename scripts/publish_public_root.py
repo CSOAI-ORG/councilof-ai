@@ -231,7 +231,7 @@ def validate_committed(committed: dict) -> None:
             raise SystemExit(f"sha mismatch in {path}")
         got = payload_sha256(card["payload"])
         if got != sha:
-            raise SystemExit(f"payload sha256≠id in {path}: {got}")
+            raise SystemExit(f"payload sha256\u2260id in {path}: {got}")
         if len(canonical_bytes(card["payload"])) > PAYLOAD_CAP:
             raise SystemExit(f"payload cap in {path}")
     got_m = merkle_root(shas)
@@ -243,6 +243,52 @@ def validate_committed(committed: dict) -> None:
 def write_pretty(path: Path, obj: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def write_halt_health(
+    committed: dict,
+    *,
+    reason: str,
+    have_key: bool,
+    split: bool = False,
+    unsigned_new: int = 0,
+    extra: dict | None = None,
+    dry_run: bool = False,
+) -> None:
+    """Honest sidecar before first signed hour. Does not rewrite the tree."""
+    health = {
+        "kind": "csoai.publisher-health/v0",
+        "as_of": now_iso(),
+        "last_success": "unsigned-snapshot",
+        "last_success_as_of": LAST_UNSIGNED_AS_OF,
+        "writer": "scripts/publish_public_root.py",
+        "dry_run": dry_run,
+        "key": "present" if have_key else "absent",
+        "halt": {
+            "split": split,
+            "unsigned_new_leaves": unsigned_new,
+            "missing_key": reason == "missing-key",
+            "reason": reason,
+        },
+        "merkle_root": committed.get("merkle_root"),
+        "card_count": committed.get("card_count"),
+        "xrpl_asset_state_count": 16,
+        "adapters": extra.get("adapters") if extra and "adapters" in extra else None,
+        "note": (
+            "Halt health. Tree not rewritten. Last success is the 07:38Z unsigned snapshot. "
+            "Fail-closed. Not MEASURED. Not a certificate."
+        ),
+    }
+    if extra:
+        for k, v in extra.items():
+            if k != "adapters":
+                health[k] = v
+    if health["adapters"] is None:
+        health.pop("adapters", None)
+    print(f"halt health: reason={reason} dry_run={dry_run} write={not dry_run}", flush=True)
+    if dry_run:
+        return
+    write_pretty(ROOT / "public" / "publisher-health.json", health)
 
 
 def main() -> int:
@@ -262,6 +308,7 @@ def main() -> int:
     validate_committed(committed)
     split = halt_on_split(committed)
     if split is not None:
+        write_halt_health(committed, reason="split", have_key=key_present(), split=True, dry_run=args.dry_run)
         return split
     if args.validate_committed:
         return EXIT_OK
@@ -280,6 +327,7 @@ def main() -> int:
     key = load_key() if have_key else None
     if have_key and key is None:
         print("HALT-ON-MISSING-KEY: secret present but key did not load", file=sys.stderr)
+        write_halt_health(committed, reason="missing-key", have_key=True, dry_run=args.dry_run)
         return EXIT_MISSING_KEY
 
     cards: list[dict] = []
@@ -304,6 +352,13 @@ def main() -> int:
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
     if len(asset_cards) != 16:
         print(f"HALT: locked 16 produced {len(asset_cards)} xrpl.asset.state leaves", file=sys.stderr)
+        write_halt_health(
+            committed,
+            reason="locked-16",
+            have_key=have_key,
+            extra={"xrpl_asset_state_count": len(asset_cards)},
+            dry_run=args.dry_run,
+        )
         return EXIT_BAD
     basket_hex = merkle_root([c["sha256"] for c in asset_cards])
 
@@ -334,10 +389,39 @@ def main() -> int:
             f"{LAST_UNSIGNED_AS_OF} unsigned set.",
             file=sys.stderr,
         )
+        extra = {
+            "cites": hub_out.get("sidecar") or {},
+            "swift": notices_out.get("sidecar") or {},
+            "benji": benji_out.get("sidecar") or {},
+            "watchlist": (xrpl_out.get("sidecar") or {}).get("watchlist"),
+            "represented_tvl": (xrpl_out.get("sidecar") or {}).get("represented_tvl"),
+            "adapters": {
+                "xrpl": {"status": "halt-before-write", "n": len(asset_cards), "note": "adapters ran; tree not rewritten"},
+                "swift_notices": {"status": "halt-before-write", "note": "TARGETS not clients"},
+                "benji": {"status": "halt-before-write", "note": "GraphQL dark. Not issuer 7"},
+                "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
+            },
+        }
         if not have_key:
             print("HALT-ON-MISSING-KEY: BOARD_SIGN_KEY_PKCS8_B64 absent; fail closed.", file=sys.stderr)
+            write_halt_health(
+                committed,
+                reason="missing-key",
+                have_key=False,
+                unsigned_new=len(new_unsigned),
+                extra=extra,
+                dry_run=args.dry_run,
+            )
             return EXIT_MISSING_KEY
         print("key was present but leaves stayed unsigned", file=sys.stderr)
+        write_halt_health(
+            committed,
+            reason="unsigned-leaf",
+            have_key=True,
+            unsigned_new=len(new_unsigned),
+            extra=extra,
+            dry_run=args.dry_run,
+        )
         return EXIT_UNSIGNED
 
     shas = [c["sha256"] for c in cards]

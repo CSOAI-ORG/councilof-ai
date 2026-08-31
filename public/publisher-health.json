@@ -1,0 +1,38 @@
+{
+  "kind": "csoai.publisher-health/v0",
+  "as_of": "2026-08-31T07:38:20Z",
+  "last_success": "unsigned-snapshot",
+  "last_success_as_of": "2026-08-31T07:38:20Z",
+  "writer": "scripts/publish_public_root.py",
+  "dry_run": false,
+  "key": "absent",
+  "halt": {
+    "split": false,
+    "unsigned_new_leaves": 0,
+    "missing_key": true,
+    "reason": "missing-key"
+  },
+  "merkle_root": "17bfa5e032c83c65513f0a8d23ce713197270d0a1d230159362d86c8ce758269",
+  "card_count": 22,
+  "xrpl_asset_state_count": 16,
+  "adapters": {
+    "xrpl": {
+      "status": "unsigned-snapshot",
+      "n": 16,
+      "note": "Locked 16 from last success 07:38Z. Not a mill. Not 377."
+    },
+    "swift_notices": {
+      "status": "halt-before-write",
+      "note": "missing-key; tree not rewritten this hour. TARGETS not clients."
+    },
+    "benji": {
+      "status": "halt-before-write",
+      "note": "missing-key; GraphQL dark. Not issuer 7."
+    },
+    "hub_cite": {
+      "status": "cite-only",
+      "note": "Health sidecar when the writer runs. Not a card-v0 leaf. Not MEASURED."
+    }
+  },
+  "note": "Static health before first signed hour. Cron fail-closes exit 3 until the GHA secret exists. Last success is the 07:38Z unsigned snapshot. Not MEASURED. Not a certificate."
+}

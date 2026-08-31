@@ -28,21 +28,33 @@ const PROTO_LABEL: Record<string, string> = {
   "/api/social": "Social - governed posting",
 };
 
-function Stat({ label, value, ok }: { label: string; value: string; ok?: boolean }) {
+function Stat({ label, value, ok, wide }: { label: string; value: string; ok?: boolean; wide?: boolean }) {
   return (
-    <div className="rounded-xl border border-emerald-500/15 bg-black/25 px-3 py-2">
+    <div className={(wide ? "sm:col-span-2 " : "") + "rounded-xl border border-emerald-500/15 bg-black/25 px-3 py-2"}>
       <div className="text-[10px] uppercase tracking-wide text-emerald-300/50">{label}</div>
-      <div className={"font-mono text-sm font-bold " + (ok === false ? "text-amber-300" : "text-emerald-300")}>{value}</div>
+      <div className={"font-mono text-sm font-bold break-all " + (ok === false ? "text-amber-300" : "text-emerald-300")}>{value}</div>
     </div>
   );
 }
+
+type XrplState = { status: number; n?: number | null; merkle?: string | null };
+type HealthDoc = {
+  last_success?: string;
+  last_success_as_of?: string;
+  key?: string;
+  halt?: { split?: boolean; missing_key?: boolean; reason?: string; unsigned_new_leaves?: number };
+  adapters?: Record<string, { status?: string; n?: number; note?: string }>;
+  merkle_root?: string;
+  as_of?: string;
+};
 
 export default function StatusPage() {
   const [live, setLive] = useState<SovHealth | null>(null);
   const [tools, setTools] = useState<number | null>(null);
   const [checked, setChecked] = useState(false);
   const [root, setRoot] = useState<any>(null);
-  const [xrplStatus, setXrplStatus] = useState<number | null>(null);
+  const [xrpl, setXrpl] = useState<XrplState | null>(null);
+  const [pubHealth, setPubHealth] = useState<HealthDoc | null>(null);
 
   useEffect(() => {
     document.title = "System Status - the Council OS, live | CSOAI";
@@ -53,14 +65,45 @@ export default function StatusPage() {
       .catch(() => null)
       .then(setRoot);
     fetch("/api/xrpl")
-      .then((r) => setXrplStatus(r.status))
-      .catch(() => setXrplStatus(0));
+      .then(async (r) => {
+        let body: any = null;
+        try { body = await r.json(); } catch { body = null; }
+        setXrpl({ status: r.status, n: body?.n ?? null, merkle: body?.merkle_root ?? null });
+      })
+      .catch(() => setXrpl({ status: 0, n: null, merkle: null }));
+    fetch("/publisher-health.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then(setPubHealth);
   }, []);
 
   const connected = !!(live && live.ok);
   const toolsOk = tools != null;
   const protos = (live && Array.isArray(live.tools)) ? live.tools : [];
   const brain = (live && live.brain) || {};
+
+  const merkleHex = root?.merkle_root ? String(root.merkle_root) : "—";
+  const unsignedLeaf =
+    pubHealth?.last_success === "unsigned-snapshot" ||
+    (root?.note && String(root.note).includes("NO_LAPTOP_SIGN"))
+      ? "NO_LAPTOP_SIGN"
+      : pubHealth?.key === "present"
+        ? "new-leaves-signed"
+        : "NO_LAPTOP_SIGN";
+  const haltSplit = pubHealth?.halt?.split
+    ? `HALT-ON-SPLIT @ ${pubHealth.as_of || pubHealth.last_success_as_of || "unknown"}`
+    : pubHealth?.halt?.reason
+      ? String(pubHealth.halt.reason)
+      : pubHealth
+        ? "none this file"
+        : "health missing";
+  const xrplLabel = !xrpl
+    ? "probing…"
+    : xrpl.status === 200
+      ? `200 n=${xrpl.n ?? "?"}`
+      : String(xrpl.status);
+  const xrplOk = xrpl?.status === 200 && xrpl.n === 16;
+  const adapters = pubHealth?.adapters || null;
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -69,11 +112,61 @@ export default function StatusPage() {
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - system status</p>
           <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">We publish our <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">own status.</span></h1>
-          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. Below: what we probe live from your browser, what we don't, and every incident on record.</p>
+          <p className="mt-4 mx-auto max-w-xl text-lg text-emerald-100/80">An AI-governance company should be the most transparent system you run. Below: the public-root instrument first, then what we probe live from your browser. A dead gateway is not the only instrument.</p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-6 pt-8">
+      <section className="mx-auto max-w-4xl px-6 pt-8" data-testid="public-root-status">
+        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Public-root catalogue — last root, merkle, unsigned-leaf</h2>
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/5 p-5 space-y-3">
+          <p className="text-sm text-emerald-100/80">
+            Living catalogue is GET <a className="text-emerald-300 underline" href="/root.json">/root.json</a>
+            {" "}(alias <code>/api/root</code> when Pages has the function). Inclusion is membership in that hash list.
+            This is not a laptop-signed card check. Layer-0 seals the root document, not the leaves.
+            Adapter health is GET <a className="text-emerald-300 underline" href="/publisher-health.json">/publisher-health.json</a>.
+            Do not stamp MEASURED from this catalogue.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 text-sm">
+            <Stat label="Last root (as_of)" value={root?.as_of ? String(root.as_of) : "not loaded"} />
+            <Stat label="card_count" value={root?.card_count != null ? String(root.card_count) : "—"} />
+            <Stat label="merkle_root" value={merkleHex} wide />
+            <Stat label="unsigned-leaf" value={unsignedLeaf} />
+            <Stat label="/api/xrpl state" value={xrplLabel} ok={xrplOk} />
+            <Stat label="halt_on_split last" value={haltSplit} ok={pubHealth?.halt?.split !== true} />
+          </div>
+          {xrpl?.merkle && root?.merkle_root && (
+            <p className="text-xs font-mono text-emerald-200/80">
+              /api/xrpl merkle {xrpl.merkle === root.merkle_root ? "matches" : "DOES NOT MATCH"} /root.json
+            </p>
+          )}
+          <div className="pt-1">
+            <p className="text-[10px] uppercase tracking-wide text-emerald-300/50 mb-2">adapter health</p>
+            {adapters ? (
+              <div className="grid gap-2 sm:grid-cols-2 text-sm">
+                {Object.entries(adapters).map(([name, a]) => (
+                  <Stat
+                    key={name}
+                    label={name}
+                    value={`${a?.status || "—"}`}
+                    ok={a?.status === "unsigned-snapshot" || a?.status === "cite-only"}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p className="text-xs text-amber-200/80">publisher-health.json not loaded — no adapter sidecar this hour.</p>
+            )}
+            {pubHealth?.last_success && (
+              <p className="mt-2 text-xs text-amber-200/80">
+                last_success={pubHealth.last_success}
+                {pubHealth.last_success_as_of ? ` @ ${pubHealth.last_success_as_of}` : ""}
+                {pubHealth.halt?.missing_key ? " · halt=missing-key" : ""}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl px-6 pt-6">
         <div className={"rounded-2xl border p-5 " + (connected ? "border-emerald-400/50 bg-gradient-to-br from-emerald-500/15 to-transparent" : checked ? "border-amber-400/40 bg-amber-500/5" : "border-emerald-500/20 bg-[#05140d]")}>
           <div className="flex flex-wrap items-center gap-3">
             <span className="relative flex h-3 w-3">
@@ -84,6 +177,7 @@ export default function StatusPage() {
             {live && live.version && <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">v{live.version}</span>}
             <span className="ml-auto font-mono text-[11px] text-emerald-300/60">CSOAI Council OS</span>
           </div>
+          <p className="mt-2 text-xs text-emerald-300/60">Gateway probe is optional. Public-root fields above do not depend on it.</p>
           <div className="mt-3 grid gap-2 sm:grid-cols-4 text-sm">
             <Stat label="Substrate" value="Layer 0" />
             {/* The fallback is a count of registry ROWS (servers), so it cannot be labelled
@@ -101,28 +195,6 @@ export default function StatusPage() {
             <Stat label="Ed25519" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
             <Stat label="Care floor" value={live && live.governance && live.governance.care_floor != null ? String(live.governance.care_floor) : "0.95"} />
           </div>
-        </div>
-      </section>
-
-
-      <section className="mx-auto max-w-4xl px-6 pt-6" data-testid="public-root-status">
-        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Public-root catalogue — unsigned leaves</h2>
-        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/5 p-5 space-y-3">
-          <p className="text-sm text-emerald-100/80">
-            Living catalogue is GET <a className="text-emerald-300 underline" href="/root.json">/root.json</a>.
-            Leaves are unsigned (NO_LAPTOP_SIGN; sig_ed25519 null). Inclusion is membership in that hash list.
-            This is not a laptop-signed card check. Layer-0 seals the root document, not the leaves.
-          </p>
-          <div className="grid gap-2 sm:grid-cols-4 text-sm">
-            <Stat label="Last root (as_of)" value={root?.as_of ? String(root.as_of) : "not loaded"} />
-            <Stat label="merkle_root" value={root?.merkle_root ? String(root.merkle_root).slice(0, 16) + "…" : "—"} />
-            <Stat label="card_count" value={root?.card_count != null ? String(root.card_count) : "—"} />
-            <Stat label="/api/xrpl" value={xrplStatus == null ? "probing…" : String(xrplStatus)} ok={xrplStatus === 404} />
-          </div>
-          <p className="text-xs text-amber-200/80">
-            /api/xrpl stays 404 until it would serve the same 16 as /root.json. Unsigned-leaf flag: NO_LAPTOP_SIGN.
-            Do not stamp MEASURED from this catalogue.
-          </p>
         </div>
       </section>
 
@@ -156,7 +228,7 @@ export default function StatusPage() {
       </section>
 
       <section className="mx-auto max-w-4xl px-6 py-10 space-y-3">
-        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Components — what we probe live, and what we don't</h2>
+        <h2 className="mb-1 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Components — what we probe live, and what we don&apos;t</h2>
         {COMPONENTS.map((c) => {
           const probed = c.probe != null;
           const ok = c.probe === "gateway" ? connected : c.probe === "tools" ? toolsOk : false;
@@ -175,7 +247,7 @@ export default function StatusPage() {
             </div>
           );
         })}
-        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Council engine that powers the CSOAI OS." : "The Council engine is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don't paint them green by default.</p>
+        <p className="pt-4 text-center text-xs text-emerald-300/50">{connected ? "Connected live to the Council engine that powers the CSOAI OS." : "The Council engine is reached live from your browser."} Rows marked &ldquo;not probed from this page&rdquo; have no public health endpoint we can honestly check from here — we don&apos;t paint them green by default. A dead gateway is not the public-root instrument.</p>
       </section>
 
       <section className="mx-auto max-w-4xl px-6 pb-14 space-y-4">
