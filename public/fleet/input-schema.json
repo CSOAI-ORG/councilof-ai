@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GSPC FIN coverage input",
+  "type": "object",
+  "required": [
+    "axis",
+    "status",
+    "unmeasured"
+  ],
+  "properties": {
+    "axis": {
+      "type": "string"
+    },
+    "status": {
+      "const": "UNMEASURED"
+    },
+    "unmeasured": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "n": {
+      "type": "integer",
+      "maximum": 0
+    }
+  }
+}
