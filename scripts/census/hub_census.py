@@ -7,11 +7,11 @@ runs GPU inference, never stamps MEASURED.
 
 Identity chain (do not collapse):
   source listing
-    -> immutable source revision (sha)
-    -> artefact-manifest digest (later, blobs=true)
-    -> lineage
-    -> runtime variant
-    -> GSPC measurement
+  -> immutable source revision (sha)
+  -> artefact-manifest digest (later, blobs=true)
+  -> lineage
+  -> runtime variant
+  -> GSPC measurement
 
 An identical artefact on Hugging Face, Kaggle and GitHub is one
 measurement feeding exact aliases. Ollama quants, adapters and API
