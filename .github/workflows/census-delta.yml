@@ -35,6 +35,9 @@ jobs:
       - name: collect delta SUMMARY
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
           PYTHONUNBUFFERED: "1"
         run: |
           set -euo pipefail
