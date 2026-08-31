@@ -19,9 +19,13 @@ jobs:
   sign-and-pr:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Mill method for every N-site is router.huggingface.co/v1 (hf-inference-mill).
+    # This job writes Hub shells; it does not mill. Bind the mill token so the rail is present.
     env:
       HF_TOKEN: ${{ secrets.HF_TOKEN }}
       HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
       BOARD_SIGN_URL: https://councilof.ai/api/board-sign
       FIN_OUT: fin-signed
     steps:
