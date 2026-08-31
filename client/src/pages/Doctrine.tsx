@@ -42,7 +42,7 @@ const POINTS: { title: string; body: string }[] = [
   {
     title: "Mainnet copy needs stamp and law.",
     body:
-      "No GSPC credential as a grade. No token, bond, or cut of a market. XRPL hashes on this site are Devnet pointers.",
+      "No GSPC credential as a grade. No token, bond, or cut of a market. Historical XRPL hashes are Devnet pointers; the living /xrpl-attest feed is GET /root.json (not a grade).",
   },
   {
     title: "We eat our own cooking.",

@@ -80,14 +80,14 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   {
     id: "xrpl-devnet",
     claim: "XRPL attestation exists as a DEVNET pointer: memo + XLS-70 URI at a card index.",
-    verdict: "keep",
-    live: "/xrpl-attest. DEVNET. txnNotFound on mainnet. Pointer, not a grade.",
+    verdict: "stale",
+    live: "/xrpl-attest is a /root.json reader. GET /api/xrpl 200 n=16, writes_board false. Historical DEVNET hashes are not this feed. Not a grade.",
   },
   {
     id: "no-mainnet-grade",
     claim: "There is no XRPL mainnet attestation that writes MEASURED.",
     verdict: "keep",
-    live: "True gap. DEVNET only. Do not close it by inventing an issuer account.",
+    live: "True gap. No mainnet attestation writes MEASURED. Historical DEVNET hashes only. Do not close it by inventing an issuer account.",
   },
   {
     id: "trex-absent-issuer",
@@ -207,7 +207,7 @@ export const KEEP_ARMS = [
   {
     id: "arm-anchor",
     title: "Arm 3 — optional digest anchors",
-    maps: "XRPL DEVNET pointer now. T-REX attester later, with a live partner issuer. Never a Council-minted token.",
+    maps: "XRPL public-root reader now (/root.json + /api/xrpl n=16). T-REX attester later, with a live partner issuer. Never a Council-minted token.",
   },
 ] as const;
 
