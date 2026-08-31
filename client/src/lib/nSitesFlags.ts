@@ -492,6 +492,16 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     note: "Otherwise the estate manufactures thousands of signed statements that still do not tell a stranger what was measured.",
   },
   {
+    id: "metamask-not-signer",
+    title: "MetaMask is not the signer",
+    status: "planted",
+    kind: "receipt",
+    href: "https://councilof.ai/gspc-greenfield-playbook.md",
+    plant: "Wallet copy. x402 payTo is not BOARD_SIGN_KEY. Treasury is not the signer.",
+    note: "MetaMask is not connected as the mill signer. BOARD_SIGN_KEY stays on Pages / GHA OIDC.",
+    snippet: "MetaMask is not connected. Treasury is not the signer. Payment does not mint MEASURED.",
+  },
+  {
     id: "hf-inference-rail",
     title: "HF Inference Providers mill",
     status: "planted",
