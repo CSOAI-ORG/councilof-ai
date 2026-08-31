@@ -98,7 +98,7 @@ const fact = (
   note?: string,
 ): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
 
-// ── sources, named once ────────────────────────────────────────────────────
+// ── sources, named once ──────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
@@ -117,3 +117,54 @@ const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? nul
 const boardTotals = (boardSigned as any).totals ?? {};
 const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
 const boardCustody = (boardSigned as any).custody_attestation ?? {};
+
+// ── live derivation, so snapshot drift is visible rather than silent ─────────
+// /api/gspc computes its totals from these arrays at request time. The signed
+// file above is a snapshot of that computation. If the two ever disagree, the
+// number a lane quotes depends on which surface it happened to read — exactly the
+// failure this endpoint exists to end. So both are computed and compared here,
+// and the disagreement (if any) is published rather than resolved silently.
+const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
+const liveAxisSlots = LIVE_AXES.length;
+const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
+const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
+const boardAgrees =
+  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+
+// ── cards: counted from the index, not read off a header ─────────────────────
+const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
+const cardsCounted = cards.length;
+const cardsSigned = cards.filter((c) => c.signed === true).length;
+const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
+
+// ── claims register: rows tallied by status ──────────────────────────────
+const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
+const declaredStatuses: string[] = (claimsRegister as any).statuses ?? [];
+const claimsByStatus: Record<string, number> = {};
+for (const s of declaredStatuses) claimsByStatus[s] = 0;
+const undeclaredStatuses: string[] = [];
+for (const row of claimRows) {
+  const s = row.status ?? "(missing)";
+  if (!(s in claimsByStatus)) {
+    claimsByStatus[s] = 0;
+    if (!declaredStatuses.includes(s)) undeclaredStatuses.push(s);
+  }
+  claimsByStatus[s] += 1;
+}
+
+// ── MCP fleet: the probe's own counts, never summed across kinds ─────────────
+const mcpCounts = (mcpRegistry as any).counts ?? {};
+const mcpFinished: string | null = mcpCounts.finished ?? null;
+
+// ── RWA instruments: recounted from the array, then compared to the header ───
+const instruments: Array<{ address_status?: string; status?: string }> =
+  (rwaRegistry as any).instruments ?? [];
+const rwaNamed = instruments.length;
+const rwaAttested = instruments.filter((i) => i.address_status === "mainnet-verified").length;
+const rwaNotLocated = instruments.filter((i) => i.address_status === "not-located").length;
+const rwaUnmeasuredRisk = instruments.filter((i) => i.status === "UNMEASURED").length;
+const rwaHeader = (rwaRegistry as any).counts ?? {};
+const rwaHeaderAgrees =
+  rwaHeader.named === rwaNamed &&
+  rwaHeader.mainnet_verified_and_attested === rwaAttested &&
+  rwaHeader.not_located === rwaNotLocated;
