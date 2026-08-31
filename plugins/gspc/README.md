@@ -27,4 +27,6 @@ claude mcp add gspc -- npx -y csoai-gspc-mcp
 # { "mcpServers": { "gspc": { "url": "https://councilof.ai/mcp" } } }
 ```
 
+Council OS terminal `COMPUTE` reports the two-machine wire (census digest + AG-UI). It is not a fifth MCP tool.
+
 Lifestyle MCPs are not this product.
