@@ -22,3 +22,5 @@ Frozen gold only. Labels copied from already-published HF `items.jsonl`. No synt
 | cross-reality (xr) | 32 | 48 |
 
 `protocol.jsonl` (det) and `checks.jsonl` (xr) have allowed label *sets* but no expected gold. Inventing those would be padding.
+
+Per-item source ledger: `added/ITEM_SOURCES.md` (row → expected, source file path, SHA256).
