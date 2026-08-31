@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-08-31T17:52:44Z",
+  "as_of": "2026-08-31T18:31:18Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -310,7 +310,11 @@
     "swift_partnered": false,
     "seventeen_banks_on_our_feed": false,
     "cohort_are_clients": false,
-    "note": "One hashed press URL covering a 17-name TARGETS cohort, plus two transfer notices. Not clients. Settlement still off-chain."
+    "gpi_firehose": false,
+    "n_cards": 17,
+    "settlement_still_off_chain": true,
+    "press_url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+    "note": "17 UNMEASURED coverage cards, one TARGET each, hashing the 9 Jul 2026 official press URL. Not clients. Settlement still off-chain."
   },
   "benji": {
     "graphql": "DARK",
@@ -319,7 +323,7 @@
     "not_issuer_7": true,
     "franklin_graphql": false
   },
-  "card_count": 29,
+  "card_count": 43,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }
