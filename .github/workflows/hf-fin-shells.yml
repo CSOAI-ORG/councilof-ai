@@ -1,0 +1,87 @@
+name: hf-fin-shells
+
+# Sign FIN7 UNMEASURED coverage cards via OIDC → /api/board-sign.
+# Upload to csoai/gspc-* Hub shells (create_pr). Never laptop/MetaMask key.
+# Never writes GET /api/gspc. Never invents a %.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: hf-fin-shells
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  sign-and-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
+      BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+      FIN_OUT: fin-signed
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: sign coverage cards (OIDC, key stays on Pages)
+        run: python3 scripts/sign_fin_coverage.py
+      - name: pip huggingface_hub
+        run: pip install huggingface_hub
+      - name: PR signed cards + schema + skeletons onto FIN shells
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          signed = Path("fin-signed")
+          schema = Path("public/fleet/input-schema.json")
+          skel_dir = Path("public/interop/fin7-skeletons")
+          map_ = {
+            "reserve-attestation": "csoai/gspc-reserve-attestation",
+            "regulatory-framework": "csoai/gspc-regulatory-framework",
+            "distribution-integrity": "csoai/gspc-distribution-integrity",
+            "custody-disclosure": "csoai/gspc-custody-disclosure",
+            "ai-economy-index": "csoai/gspc-ai-economy-index",
+            "human-labour-index": "csoai/gspc-human-labour-index",
+            "humanoid-labour-index": "csoai/gspc-humanoid-labour-index",
+          }
+          skel_name = {
+            "reserve-attestation": "reserve-attestation.skeleton.json",
+            "regulatory-framework": "regulatory-framework.skeleton.json",
+            "distribution-integrity": "distribution-integrity.skeleton.json",
+            "custody-disclosure": "custody-disclosure.skeleton.json",
+            "ai-economy-index": "ai-economy-index.partial.json",
+            "human-labour-index": "human-labour-index.partial.json",
+            "humanoid-labour-index": "humanoid-labour-index.empty.json",
+          }
+          for axis, repo in map_.items():
+              folder = Path(f"/tmp/pack-{axis}")
+              folder.mkdir(parents=True, exist_ok=True)
+              (folder / "coverage-card.json").write_bytes((signed / f"coverage-{axis}.json").read_bytes())
+              if schema.is_file():
+                  (folder / "input-schema.json").write_bytes(schema.read_bytes())
+              sn = skel_dir / skel_name[axis]
+              if sn.is_file():
+                  (folder / "skeleton.json").write_bytes(sn.read_bytes())
+              info = api.upload_folder(
+                  folder_path=str(folder),
+                  repo_id=repo,
+                  repo_type="dataset",
+                  create_pr=True,
+                  commit_message="UNMEASURED signed coverage card + input-schema + skeleton. Cite GET /api/gspc. Not a grade.",
+              )
+              print(axis, getattr(info, "pr_url", info))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fin-signed-cards
+          path: fin-signed
