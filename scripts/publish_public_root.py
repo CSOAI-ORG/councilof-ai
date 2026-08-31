@@ -30,7 +30,7 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, hub_cite, swift_notices, xrpl  # noqa: E402
+from adapters import benji, fin7_coverage, hub_cite, swift_notices, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 DID = "did:web:csoai.org#board-attestation-1"
@@ -381,12 +381,14 @@ def main() -> int:
     xrpl_out = xrpl.collect()
     notices_out = swift_notices.collect()
     benji_out = benji.collect()
+    fin7_out = fin7_coverage.collect()
     hub_out = hub_cite.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
     leaves.extend(benji_out["leaves"])
     leaves.extend(notices_out["leaves"])
+    leaves.extend(fin7_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
