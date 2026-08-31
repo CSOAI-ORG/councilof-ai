@@ -19,6 +19,7 @@ import {
   TERMINAL_HINT,
 } from "@/lib/terminalFn";
 import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
+import { formatComputeReply } from "@/lib/computeBridge";
 import { liveCountLine } from "@/components/os/osChat";
 
 export {
@@ -117,6 +118,14 @@ export default function OsLauncher() {
                 .catch((err: Error) => setFnNote(`CORRECT failed (${err.message}).`));
               return;
             }
+            if (parsed.fn === "COMPUTE") {
+              void fetch("/api/compute", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => setFnNote(formatComputeReply(j)))
+                .catch((err: Error) => setFnNote(`COMPUTE failed (${err.message}). Cite GET /api/compute.`));
+              setLocation("/os?lobby=harness");
+              return;
+            }
             if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
               const id = parsed.arg.trim();
               if (id) {
@@ -140,7 +149,7 @@ export default function OsLauncher() {
               id="os-chat"
               value={ask}
               onChange={(e) => setAsk(e.target.value)}
-              placeholder="BOARD · AXIS jail · CENSUS Qwen/Qwen3.8-27B · CORRECT"
+              placeholder="BOARD · AXIS jail · CENSUS Qwen/Qwen3.8-27B · COMPUTE · CORRECT"
               className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-600"
             />
             <button
