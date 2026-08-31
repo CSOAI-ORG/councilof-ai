@@ -159,7 +159,7 @@ export function Footer() {
         {/* Framework logos — self-hosted badge art; links to the real framework home */}
         <div className="border-t border-border pt-6 mb-6">
           <p className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
-            Framework alignment
+            Frameworks we measure against
           </p>
           <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
             {[
@@ -173,19 +173,19 @@ export function Footer() {
                 src: '/images/badges/frameworks/nist-ai-rmf.svg',
                 alt: 'NIST AI RMF',
                 href: 'https://www.nist.gov/itl/ai-risk-management-framework',
-                title: 'NIST AI Risk Management Framework — alignment, not certification',
+                title: 'NIST AI Risk Management Framework — we measure against; we are not certified',
               },
               {
                 src: '/images/badges/frameworks/iso-42001.svg',
                 alt: 'ISO/IEC 42001',
                 href: 'https://www.iso.org/standard/81230.html',
-                title: 'ISO/IEC 42001 AI management systems — we align; we are not certified',
+                title: 'ISO/IEC 42001 AI management systems — we are not certified',
               },
               {
                 src: '/images/badges/frameworks/dora.svg',
                 alt: 'DORA',
                 href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
-                title: 'Digital Operational Resilience Act — financial-axis alignment',
+                title: 'Digital Operational Resilience Act — we measure against; we are not certified',
               },
               {
                 src: '/images/badges/frameworks/c2pa.svg',
