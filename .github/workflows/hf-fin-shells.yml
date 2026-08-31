@@ -118,18 +118,20 @@ jobs:
                   "UNMEASURED signed coverage + input-schema + skeleton + pinned eval.yaml. Cite GET /api/gspc. Not a grade. No composite.",
               )
 
-          generic = """# Hub listing is not a GSPC grade. Cite GET https://councilof.ai/api/gspc
-# 22 axis · 15 measured · 7 UNMEASURED. Do not invent a percentage.
-# This dataset is a bank/home. A Hub listing is DISCOVERED, not MEASURED.
-name: gspc-hub-shell
-cite: https://councilof.ai/api/gspc
-public_count: "22 axis · 15 measured"
-hub_listing_is_not_a_grade: true
-do_not_invent_percentage: true
-never_llm_judge: true
-never_stamp_measured_from_listing: true
-schema: csoai.gspc-axes/0.5
-"""
+          generic = "\n".join([
+              "# Hub listing is not a GSPC grade. Cite GET https://councilof.ai/api/gspc",
+              "# 22 axis · 15 measured · 7 UNMEASURED. Do not invent a percentage.",
+              "# This dataset is a bank/home. A Hub listing is DISCOVERED, not MEASURED.",
+              "name: gspc-hub-shell",
+              "cite: https://councilof.ai/api/gspc",
+              'public_count: "22 axis · 15 measured"',
+              "hub_listing_is_not_a_grade: true",
+              "do_not_invent_percentage: true",
+              "never_llm_judge: true",
+              "never_stamp_measured_from_listing: true",
+              "schema: csoai.gspc-axes/0.5",
+              "",
+          ])
           others = {
               "csoai/gspc-jail-goldbank": "jail gold bank — board jail is MEASURED; this listing is the bank, not a mill",
               "csoai/gspc-provenance-controls": "provenance-controls home — facts pane on GET /api/gspc; listing is not a mill",
