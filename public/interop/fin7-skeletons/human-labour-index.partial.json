@@ -1,0 +1,41 @@
+{
+  "as_of_mined": "2026-08-31",
+  "axis": "human-labour-index",
+  "companies_house": "16939677",
+  "correction": "C-2026-0826-05 do not restore MEASURED-INDEX-v0.1",
+  "did": "did:web:csoai.org",
+  "issuer": "CSOAI Ltd",
+  "license": "CC-BY-4.0",
+  "rows": [
+    {
+      "as_of": "2026-08-25",
+      "component": "eu_participation",
+      "role": "reference_input",
+      "unit": "percent",
+      "value": 57.58,
+      "vintage": 2024
+    },
+    {
+      "as_of": "2026-08-25",
+      "component": "eu_unemployment",
+      "role": "reference_input",
+      "unit": "percent",
+      "value": 5.92,
+      "vintage": 2024
+    },
+    {
+      "component": "displacement",
+      "role": "gap"
+    },
+    {
+      "component": "wages",
+      "role": "gap"
+    },
+    {
+      "component": "hours_by_ai_exposure",
+      "role": "gap"
+    }
+  ],
+  "rule": "UNMEASURED-first. A skeleton is not a score. Board GET /api/gspc is authority.",
+  "status": "UNMEASURED"
+}
