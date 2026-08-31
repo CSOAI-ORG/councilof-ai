@@ -222,7 +222,7 @@ export function Header() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild><a href="/dashboard" className="flex items-center"><BarChart3 className="h-4 w-4 mr-2" />Dashboard</a></DropdownMenuItem>
                     <DropdownMenuItem asChild><a href="/my-courses" className="flex items-center"><BookOpen className="h-4 w-4 mr-2" />My Courses</a></DropdownMenuItem>
-                    <DropdownMenuItem asChild><a href="/certificates" className="flex items-center"><Award className="h-4 w-4 mr-2" />My Certificates</a></DropdownMenuItem>
+                    <DropdownMenuItem asChild><a href="/academy" className="flex items-center"><Award className="h-4 w-4 mr-2" />Training records</a></DropdownMenuItem>
                     <DropdownMenuItem asChild><a href="/settings" className="flex items-center"><Settings className="h-4 w-4 mr-2" />Settings</a></DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={logout} className="text-red-600"><LogOut className="h-4 w-4 mr-2" />Sign Out</DropdownMenuItem>
