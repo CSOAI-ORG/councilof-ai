@@ -41,7 +41,9 @@ describe("leftover: /xrpl-attest is a public-root reader, not a live DEVNET poin
   });
 });
 
-const header = readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8");
+const header =
+  readFileSync(resolve(__dirname, "../components/Header.tsx"), "utf8") +
+  readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
 
 describe("leftover: header mega-nav honesty", () => {
   it("does not sell /assess as a free signed assessment or /xrpl-attest as a Devnet pointer", () => {
