@@ -1,0 +1,118 @@
+{
+  "schema": "csoai.coverage-leftover/0.1",
+  "kind": "leftover-honesty",
+  "measured": false,
+  "signed": false,
+  "never": ["MEASURED stamp", "certification", "issuer 7", "17 SWIFT clients"],
+  "fetched": "2026-08-31T08:30:00+01:00",
+  "live_board": {
+    "get": "https://councilof.ai/api/gspc",
+    "totals": "22 axis · 15 measured · 7 unmeasured",
+    "unique_n": 30,
+    "unique_n_state": "UNSIGNED until n≥30 + 4way + keystone",
+    "provenance_controls": {
+      "status": "MEASURED",
+      "n": 6,
+      "n_unit": "issuer accounts, not bank items",
+      "coverage": "6 of 16 instruments named in the registry"
+    }
+  },
+  "have_xrpl_issuers": [
+    {
+      "instrument": "RLUSD",
+      "r_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "toml": "HAVE listing at ripple.com/.well-known/xrp-ledger.toml",
+      "two_way": "listing HAVE; Domain encoding odd; not a certificate"
+    },
+    {
+      "instrument": "OUSG",
+      "issuer": "Ondo",
+      "r_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "toml": "HAVE",
+      "two_way": "HAVE"
+    },
+    {
+      "instrument": "AAULF",
+      "issuer": "Archax×abrdn",
+      "r_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "toml": "HTTP 403",
+      "two_way": false
+    },
+    {
+      "instrument": "TBILL",
+      "issuer": "OpenEden",
+      "r_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "toml": "HTTP 404 ABSENT",
+      "two_way": false
+    },
+    {
+      "instrument": "USDB",
+      "issuer": "Braza",
+      "r_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "toml": "HAVE",
+      "two_way": "HAVE"
+    },
+    {
+      "instrument": "BBRL",
+      "issuer": "Braza",
+      "r_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+      "toml": "HAVE",
+      "two_way": "HAVE"
+    }
+  ],
+  "not_issuer_7": {
+    "instrument": "sgBENJI",
+    "issuer": "Franklin Templeton",
+    "stellar_toml": "HAVE",
+    "xrpl_toml": "ABSENT",
+    "status": "UNCHECKABLE on XRPL. Not MEASURED. Not mill issuer 7."
+  },
+  "xrpl_fi": {
+    "tracked_instruments": 16,
+    "have_r_addresses_in_mill": 6,
+    "note": "distributed ≠ represented. Do not invent 377 instruments."
+  },
+  "swift_17_targets": {
+    "kind": "TARGETS",
+    "not": ["clients", "MEASURED", "membership"],
+    "press": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "press_date": "2026-07-09",
+    "official_html_body": "UNCHECKABLE",
+    "settlement": "off-chain / existing systems; no public Besu RPC",
+    "banks_named_on_press_index": [
+      "ANZ",
+      "BNP Paribas",
+      "BNY",
+      "Citi",
+      "DBS",
+      "First Abu Dhabi Bank (FAB)",
+      "FirstRand Bank Limited",
+      "HSBC",
+      "Itaú Unibanco",
+      "Lloyds Bank",
+      "Mashreq",
+      "MUFG Bank",
+      "OCBC",
+      "Standard Chartered",
+      "UBS",
+      "UOB",
+      "Wells Fargo"
+    ]
+  },
+  "empty_slots_unmeasured": [
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-economy-index",
+    "human-labour-index",
+    "humanoid-labour-index"
+  ],
+  "cards_note_leftover": {
+    "api_cards_count": 336,
+    "card_index_pack": 335,
+    "api_note_still_says": 313,
+    "do_not_rollback_to": [150, 313]
+  },
+  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n≥30 + 4way + keystone."
+}
