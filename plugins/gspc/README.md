@@ -1,7 +1,7 @@
 # gspc — Council OS inside the tool you already use
 
-Four tools: `board_totals` · `get_axis` · `verify_card` · `list_cards`.
-Measurement, never certification. No 23rd axis. No sign.
+Seven tools: four GSPC (`board_totals` · `get_axis` · `verify_card` · `list_cards`) plus three public-root three-state (`get_root` · `get_card` · `verify_inclusion`).
+Measurement, never certification. No 23rd axis. No sign. A 404 leaf is INVALID, not UNCHECKABLE.
 
 Strangers with a PDF and no Claude: use https://councilof.ai — verify, free, no plugin.
 

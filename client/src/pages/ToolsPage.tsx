@@ -27,7 +27,7 @@ export default function ToolsPage() {
   useEffect(() => {
     document.title = "Add gspc in your tool | councilof.ai";
     setMetaDescription(
-      "Council OS for people already in Claude, Cursor, Kimi, or Grok. Four tools at https://councilof.ai/mcp. Measurement, never certification.",
+      "Council OS for people already in Claude, Cursor, Kimi, or Grok. Seven tools at https://councilof.ai/mcp (four GSPC + three public-root three-state). Measurement, never certification.",
     );
   }, []);
 
@@ -37,7 +37,7 @@ export default function ToolsPage() {
         Use this in Claude / Cursor / Kimi / Grok
       </h1>
       <p className="mt-3 text-slate-600">
-        Ask: board totals. Paste a card to verify. Four tools:
+        Ask: board totals. Paste a card to verify. Seven tools:
         board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.
       </p>
       <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
