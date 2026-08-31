@@ -98,7 +98,7 @@ const fact = (
   note?: string,
 ): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
 
-// ── sources, named once ──────────────────────────────────────────
+// ── sources, named once ────────────────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
@@ -109,3 +109,11 @@ const SRC_CENSUS = "public/signed/hub-census-baseline.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
 
 const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
+
+// ── board: as_of comes from the payload's own measurement stamp ──────────────
+// This artifact carries no ISO timestamp. Its honest date-of-record is the
+// measurement stamp it was signed over, so that string is quoted verbatim rather
+// than parsed into something that looks more precise than it is.
+const boardTotals = (boardSigned as any).totals ?? {};
+const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
+const boardCustody = (boardSigned as any).custody_attestation ?? {};
