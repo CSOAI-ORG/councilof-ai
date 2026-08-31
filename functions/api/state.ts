@@ -98,7 +98,7 @@ const fact = (
   note?: string,
 ): Fact => ({ value, kind, source, as_of, as_of_field, ...(note ? { note } : {}) });
 
-// ── sources, named once ──────────────────────────────────────────
+// ── sources, named once ──────────────────────────────────────────────────────
 const SRC_BOARD = "public/signed/gspc-board.signed.json";
 const SRC_CARDS = "public/signed/card_index.json";
 const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)";
@@ -137,7 +137,7 @@ const cardsCounted = cards.length;
 const cardsSigned = cards.filter((c) => c.signed === true).length;
 const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
 
-// ── claims register: rows tallied by status ──────────────────────────────
+// ── claims register: rows tallied by status ──────────────────────────────────
 const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
 const declaredStatuses: string[] = (claimsRegister as any).statuses ?? [];
 const claimsByStatus: Record<string, number> = {};
@@ -270,7 +270,7 @@ export const onRequestGet: PagesFunction = async () => {
         on_disagreement:
           "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
           "re-derived and re-signed. Do not pick the one you prefer.",
-      },
+      ),
       signature: {
         signer: boardCustody.signer ?? null,
         alg: boardCustody.alg ?? null,
@@ -460,7 +460,7 @@ export const onRequestGet: PagesFunction = async () => {
         n_cards_header: cardsHeaderCount,
         agrees: cardsHeaderCount === cardsCounted,
         note: "If agrees is false the artifact is internally inconsistent and neither number is quotable.",
-      ),
+      },
       packaged_at: fact(
         (cardIndex as any).packaged_at ?? null,
         "declared",
