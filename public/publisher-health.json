@@ -1,40 +1,37 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-08-31T10:37:05Z",
-  "last_success": "unsigned-snapshot",
-  "last_success_as_of": "2026-08-31T07:38:20Z",
+  "as_of": "2026-08-31T10:39:17Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
   "halt": {
     "split": false,
-    "unsigned_new_leaves": 20,
-    "missing_key": false,
-    "reason": "unsigned-leaf"
+    "unsigned_new_leaves": 0,
+    "missing_key": false
   },
-  "merkle_root": "17bfa5e032c83c65513f0a8d23ce713197270d0a1d230159362d86c8ce758269",
-  "card_count": 22,
-  "xrpl_asset_state_count": 16,
-  "adapters": {
-    "xrpl": {
-      "status": "halt-before-write",
-      "n": 16,
-      "note": "adapters ran; tree not rewritten"
+  "xrpl_basket_merkle": "584f3810274bc8382dc0de890c0ee0a31347dca8d1c7158f55ac1fdc8aff6100",
+  "represented_tvl": {
+    "usd": 1349133623.8931634,
+    "source": "https://xrpl.fi/api/metrics",
+    "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
+  },
+  "watchlist": [
+    {
+      "symbol": "AAULF",
+      "issuer": "Archax",
+      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "toml": 403,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
     },
-    "swift_notices": {
-      "status": "halt-before-write",
-      "note": "TARGETS not clients"
-    },
-    "benji": {
-      "status": "halt-before-write",
-      "note": "GraphQL dark. Not issuer 7"
-    },
-    "hub_cite": {
-      "status": "cite-only",
-      "note": "Health sidecar only. Not a card-v0 leaf."
+    {
+      "symbol": "TBILL",
+      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "toml": 404,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
     }
-  },
-  "note": "Halt health. Tree not rewritten. Last success is the 07:38Z unsigned snapshot. Fail-closed. Not MEASURED. Not a certificate.",
+  ],
   "cites": {
     "hub.census.digest": {
       "kind": "cite",
@@ -322,26 +319,7 @@
     "not_issuer_7": true,
     "franklin_graphql": false
   },
-  "watchlist": [
-    {
-      "symbol": "AAULF",
-      "issuer": "Archax",
-      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
-      "toml": 403,
-      "in_locked_16": false,
-      "note": "watchlist extra; not a silent expand of the 16"
-    },
-    {
-      "symbol": "TBILL",
-      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
-      "toml": 404,
-      "in_locked_16": false,
-      "note": "watchlist extra; not a silent expand of the 16"
-    }
-  ],
-  "represented_tvl": {
-    "usd": 1349133252.7331674,
-    "source": "https://xrpl.fi/api/metrics",
-    "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
-  }
+  "card_count": 22,
+  "xrpl_asset_state_count": 16,
+  "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }
