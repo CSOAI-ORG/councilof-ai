@@ -102,6 +102,30 @@ const CAPABILITIES: Capability[] = [
       "There is no issuance on a laptop and no self-service issuance. A run is scheduled on the node; the artifacts and the verifier are what travel.",
   },
   {
+    name: "Hub listing census",
+    status: "limited",
+    what:
+      "A dated metadata walk of the Hugging Face Hub. Every row is DISCOVERED. The digest is quoted from GET /api/state → hub_census and GET /api/compute. No weights are downloaded.",
+    limit:
+      "A finished walk is not a finished grade. The count is listings observed, not models scored. Do not stamp MEASURED on the queue.",
+  },
+  {
+    name: "RunPod AG-UI wire",
+    status: "not-yet",
+    what:
+      "The measurement node speaks AG-UI on port 8785. Council OS reaches it only through GET /api/agui/* when AGUI_WIRE_URL is set on Cloudflare Pages.",
+    limit:
+      "This site currently answers agui_wire_unconfigured. A pod being up is not a measurement. The 2026-08-22 inventory IPs are stale and are not quoted here.",
+  },
+  {
+    name: "Grokbot terminal functions",
+    status: "available",
+    what:
+      "VERIFY · BOARD · AXIS · CENSUS · CORRECT · WATCH · COMPUTE on the Council OS paste box. CENSUS records a listing. COMPUTE reports the two-machine wire.",
+    limit:
+      "These functions do not write MEASURED. A Hub id stays DISCOVERED until a signed cell exists.",
+  },
+  {
     name: "Automatic sweep of newly released models",
     status: "not-yet",
     what:
