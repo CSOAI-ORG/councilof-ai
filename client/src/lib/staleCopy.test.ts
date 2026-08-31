@@ -56,3 +56,19 @@ describe("leftover: header mega-nav honesty", () => {
     expect(header).toMatch(/writes_board false/);
   });
 });
+
+const eunomiaNav = readFileSync(resolve(__dirname, "../components/HeaderNav.tsx"), "utf8");
+const eunomiaPage = readFileSync(resolve(__dirname, "../pages/EunomiaIndices.tsx"), "utf8");
+const eunomiaData = readFileSync(resolve(__dirname, "../data/eunomia.ts"), "utf8");
+
+describe("leftover: eunomia indices stay UNMEASURED on the living board", () => {
+  it("does not stamp the three empty index axes MEASURED", () => {
+    expect(eunomiaNav).not.toMatch(/now measured \(frozen gold sets/);
+    expect(eunomiaNav).toMatch(/UNMEASURED on GET \/api\/gspc/);
+    expect(eunomiaPage).not.toMatch(/EUNOMIA indices — measured/);
+    expect(eunomiaPage).not.toMatch(/now MEASURED/);
+    expect(eunomiaPage).toMatch(/UNMEASURED on GET \/api\/gspc/);
+    expect(eunomiaData).not.toMatch(/Aspirational index axes — now MEASURED/);
+    expect(eunomiaData).toMatch(/UNMEASURED on the living board \(C-2026-0826-05\)/);
+  });
+});
