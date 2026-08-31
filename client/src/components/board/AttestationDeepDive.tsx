@@ -86,7 +86,6 @@ function Ed25519Panel({ data, onClose }: { data: any; onClose: () => void }) {
         <Shield className="h-5 w-5" />
         <h3 className="text-lg font-bold">Ed25519 Signature Verification</h3>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Signature</p>
@@ -101,12 +100,10 @@ function Ed25519Panel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         </div>
       </div>
-
       <div>
         <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Verification Trace</p>
         <TraceLog entries={traces} />
       </div>
-
       <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
         <p className="text-sm text-emerald-800">
           <strong>Verification method:</strong> {att?.signer || "—"}
@@ -115,7 +112,6 @@ function Ed25519Panel({ data, onClose }: { data: any; onClose: () => void }) {
           Fetch <a href="/.well-known/did.json" className="underline">.well-known/did.json</a> → extract public key → verify sig over canonical(payload − site_attestation)
         </p>
       </div>
-
       <div className="flex gap-3 text-sm">
         <a href="/.well-known/did.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
           DID document <ExternalLink className="h-3 w-3" />
@@ -147,7 +143,6 @@ function SHA256Panel({ data, onClose }: { data: any; onClose: () => void }) {
         <Hash className="h-5 w-5" />
         <h3 className="text-lg font-bold">SHA-256 Content Integrity</h3>
       </div>
-
       <div className="rounded-lg border border-slate-200 p-4">
         <p className="text-sm text-slate-700 mb-3">
           {att?.sig_input || "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON"}
@@ -163,12 +158,10 @@ function SHA256Panel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         </div>
       </div>
-
       <div>
         <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Hash Computation Trace</p>
         <TraceLog entries={traces} />
       </div>
-
       <div className="rounded-lg bg-slate-900 p-4">
         <p className="text-xs text-slate-400 mb-2">Canonical JSON rules (ECMAScript Number::toString)</p>
         <pre className="text-[11px] text-emerald-400 overflow-x-auto">
@@ -186,22 +179,26 @@ function SHA256Panel({ data, onClose }: { data: any; onClose: () => void }) {
 }
 
 function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
-  const [finRun, setFinRun] = useState<any>(null);
+  const [root, setRoot] = useState<any>(null);
+  const [xrplStatus, setXrplStatus] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch("/interop/financial-measure-run-v2.json")
+    fetch("/root.json")
       .then((r) => (r.ok ? r.json() : null))
       .catch(() => null)
-      .then(setFinRun);
+      .then(setRoot);
+    fetch("/api/xrpl")
+      .then((r) => setXrplStatus(r.status))
+      .catch(() => setXrplStatus(0));
   }, []);
 
   const traces = [
-    { time: "T+0ms", event: "Check /api/xrpl endpoint", status: "warn" as const },
-    { time: "T+50ms", event: "HTTP 404 — endpoint not live", status: "warn" as const },
-    { time: "T+55ms", event: "Fallback: read /interop/financial-measure-run-v2.json", status: "ok" as const },
-    { time: "T+60ms", event: "Parse issuer facts (MAINNET reads)", status: finRun ? "ok" as const : "info" as const },
-    { time: "T+65ms", event: "Attestation carrier: DEVNET (not mainnet)", status: "info" as const },
-    { time: "T+70ms", event: "Mainnet attestation: PLANNED, not wired", status: "warn" as const },
+    { time: "T+0ms", event: "GET /api/xrpl", status: "warn" as const },
+    { time: "T+40ms", event: `/api/xrpl HTTP ${xrplStatus ?? "…"} — not live until it serves the same 16 as /root.json`, status: "warn" as const },
+    { time: "T+50ms", event: "GET /root.json (public-root catalogue)", status: root ? "ok" as const : "info" as const },
+    { time: "T+55ms", event: root ? `as_of ${root.as_of} · merkle ${String(root.merkle_root || "").slice(0, 16)}… · card_count ${root.card_count}` : "root not loaded", status: root ? "ok" as const : "warn" as const },
+    { time: "T+60ms", event: "Leaf sig_ed25519 is null — unsigned catalogue / NO_LAPTOP_SIGN", status: "info" as const },
+    { time: "T+65ms", event: "Not a GSPC grade. Do not stamp MEASURED from this catalogue.", status: "info" as const },
   ];
 
   return (
@@ -210,73 +207,44 @@ function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
         <Database className="h-5 w-5" />
         <h3 className="text-lg font-bold">XRPL Ledger Status</h3>
       </div>
-
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
         <div className="flex items-center gap-2 text-amber-800 font-semibold mb-2">
           <AlertCircle className="h-4 w-4" />
-          PLANNED — not live
+          Unsigned public-root catalogue — /api/xrpl is 404
         </div>
         <ul className="text-sm text-amber-700 space-y-1">
-          <li>• /api/xrpl returns 404 — no live ledger height</li>
-          <li>• Issuer facts are read from MAINNET</li>
-          <li>• Attestations are carried on DEVNET</li>
-          <li>• Mainnet attestation is on the roadmap, not wired</li>
+          <li>• GET /root.json is the living XRPL catalogue (card-v0 leaves)</li>
+          <li>• Leaves are unsigned (NO_LAPTOP_SIGN; sig_ed25519 null)</li>
+          <li>• /api/xrpl stays 404 until it would serve the same 16 as that root</li>
+          <li>• Not a GSPC grade. Do not stamp MEASURED.</li>
         </ul>
+        {root && (
+          <p className="mt-2 font-mono text-[11px] text-amber-800">
+            as_of {root.as_of} · merkle {root.merkle_root} · n={root.card_count} · xrpl.fi {root.xrpl_fi_assetCount}
+          </p>
+        )}
       </div>
-
       <div>
         <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Fetch Trace</p>
         <TraceLog entries={traces} />
       </div>
-
-      {finRun && finRun.measured && (
+      {root && Array.isArray(root.card_sha256) && (
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            Issuer Control Facts (MAINNET) — {finRun.measured.length} instruments
+            Public-root leaves — {root.card_sha256.length} unsigned hashes in /root.json
           </p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left text-slate-600">
-                  <th className="py-2 pr-3">Instrument</th>
-                  <th className="py-2 px-3">Allowlist</th>
-                  <th className="py-2 px-3">Freeze</th>
-                  <th className="py-2 px-3">Domain</th>
-                </tr>
-              </thead>
-              <tbody>
-                {finRun.measured.map((m: any) => (
-                  <tr key={m.instrument} className="border-b border-slate-100">
-                    <td className="py-2 pr-3 font-medium">{m.instrument}</td>
-                    <td className="py-2 px-3">
-                      {m.control_facts?.facts?.allowlisting_enforced ? (
-                        <span className="text-emerald-600">✓</span>
-                      ) : (
-                        <span className="text-slate-400">—</span>
-                      )}
-                    </td>
-                    <td className="py-2 px-3">
-                      {m.control_facts?.facts?.issuer_can_freeze ? (
-                        <span className="text-amber-600">yes</span>
-                      ) : (
-                        <span className="text-emerald-600">no</span>
-                      )}
-                    </td>
-                    <td className="py-2 px-3 text-xs text-slate-600">{m.control_facts?.domain || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="text-sm text-slate-600">
+            Inclusion is membership in this hash list. Leaf signatures are null.
+            Schema: <a href="/schema/card-v0.json" className="underline">/schema/card-v0.json</a>.
+          </p>
         </div>
       )}
-
       <div className="flex gap-3 text-sm">
         <a href="/xrpl-attest" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          XRPL attestation page →
+          XRPL public-root page →
         </a>
-        <a href="/interop/financial-measure-run-v2.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          Raw JSON <ExternalLink className="h-3 w-3" />
+        <a href="/root.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
+          /root.json <ExternalLink className="h-3 w-3" />
         </a>
       </div>
     </div>
@@ -286,28 +254,23 @@ function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
 function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
   const totals = data?.totals;
   const axes = data?.axes || [];
-
   const measured = axes.filter((a: any) => a.status === "MEASURED");
   const unmeasured = axes.filter((a: any) => a.status !== "MEASURED");
-
   const chartData = [
     { name: "GSPC", measured: totals?.by_family?.gspc?.measured || 0, total: totals?.by_family?.gspc?.axes || 0 },
     { name: "Financial", measured: totals?.by_family?.financial?.measured || 0, total: totals?.by_family?.financial?.axes || 0 },
   ];
-
   const separationData = [
     { name: "SEPARATED", value: totals?.separated_leads || 0, fill: "#10b981" },
     { name: "TIE", value: totals?.ties || 0, fill: "#f59e0b" },
     { name: "UNTESTED", value: totals?.untested_separations || 0, fill: "#94a3b8" },
   ];
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-emerald-700">
         <TrendingUp className="h-5 w-5" />
         <h3 className="text-lg font-bold">Board Progress — {totals?.public_count || "22·15"}</h3>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">By Family</p>
@@ -324,7 +287,6 @@ function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
             </ResponsiveContainer>
           </div>
         </div>
-
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Separation (McNemar p&lt;0.05)</p>
           <div className="h-48">
@@ -344,12 +306,9 @@ function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         </div>
       </div>
-
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">
-            Measured ({measured.length})
-          </p>
+          <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">Measured ({measured.length})</p>
           <div className="max-h-32 overflow-y-auto rounded-lg border border-emerald-200 bg-emerald-50 p-2">
             {measured.map((a: any) => (
               <div key={a.axis} className="flex items-center justify-between py-1 text-sm">
@@ -359,11 +318,8 @@ function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
             ))}
           </div>
         </div>
-
         <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">
-            Empty — visible ({unmeasured.length})
-          </p>
+          <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">Empty — visible ({unmeasured.length})</p>
           <div className="max-h-32 overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 p-2">
             {unmeasured.length > 0 ? unmeasured.map((a: any) => (
               <div key={a.axis} className="flex items-center justify-between py-1 text-sm">
@@ -376,7 +332,6 @@ function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         </div>
       </div>
-
       <p className="text-xs text-slate-600">
         {totals?.count_grammar || "22 axis are on the board; 15 carry a measurement and 7 are declared slots with no run behind them."}
       </p>
@@ -387,17 +342,14 @@ function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
 function SeparationPanel({ data, onClose }: { data: any; onClose: () => void }) {
   const axes = (data?.axes || []).filter((a: any) => a.separation);
   const totals = data?.totals;
-
   const separatedAxes = axes.filter((a: any) => a.separation === "SEPARATED");
   const tieAxes = axes.filter((a: any) => a.separation === "TIE");
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-emerald-700">
         <Activity className="h-5 w-5" />
         <h3 className="text-lg font-bold">McNemar Separation Analysis</h3>
       </div>
-
       <div className="rounded-lg border border-slate-200 p-4">
         <p className="text-sm text-slate-700">
           Separation tests whether a leader's lead is statistically real (McNemar p&lt;0.05 on discordant items).
@@ -418,7 +370,6 @@ function SeparationPanel({ data, onClose }: { data: any; onClose: () => void }) 
           </div>
         </div>
       </div>
-
       {separatedAxes.length > 0 && (
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">Separated Leaders</p>
@@ -450,7 +401,6 @@ function SeparationPanel({ data, onClose }: { data: any; onClose: () => void }) 
           </div>
         </div>
       )}
-
       {tieAxes.length > 0 && (
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">Statistical Ties</p>
@@ -482,21 +432,18 @@ function SeparationPanel({ data, onClose }: { data: any; onClose: () => void }) 
 
 function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
   const inLane = data?.measured_in_lane || [];
-
   const chartData = inLane.map((a: any) => ({
     name: a.axis,
     accuracy: a.accuracy ? a.accuracy * 100 : 0,
     fleetMean: a.fleet_mean ? a.fleet_mean * 100 : 0,
     n: a.n || 0,
   }));
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-violet-700">
         <Clock className="h-5 w-5" />
         <h3 className="text-lg font-bold">Unsigned Financial Slots — Not Board Rows</h3>
       </div>
-
       <div className="rounded-lg border border-violet-200 bg-violet-50 p-4">
         <p className="text-sm text-violet-800 mb-2">
           {inLane.length} unsigned financial slots measured on a smaller fleet with no separation test.
@@ -507,7 +454,6 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
           Status: <strong>UNTESTED</strong> — path to signed requires n≥30 + 4-way separation + keystone attestation
         </p>
       </div>
-
       {chartData.length > 0 && (
         <div>
           <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Accuracy vs Fleet Mean</p>
@@ -526,16 +472,13 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         </div>
       )}
-
       <div>
         <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Per-Axis Detail</p>
         {inLane.map((a: any) => (
           <div key={a.axis} className="rounded-lg border border-slate-200 p-3 mb-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-slate-800">{a.axis}</span>
-              <span className="rounded-full border border-violet-300 bg-violet-50 px-2 py-0.5 text-[10px] font-bold text-violet-700">
-                IN-LANE
-              </span>
+              <span className="rounded-full border border-violet-300 bg-violet-50 px-2 py-0.5 text-[10px] font-bold text-violet-700">IN-LANE</span>
             </div>
             <p className="text-xs text-slate-600 mt-1">{a.bench || a.task}</p>
             <div className="mt-2 flex flex-wrap gap-3 text-xs font-mono">
@@ -546,7 +489,6 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
           </div>
         ))}
       </div>
-
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
         <p className="text-xs font-semibold text-amber-800">Path to Signed (honest)</p>
         <ul className="text-xs text-amber-700 mt-1 space-y-0.5">
@@ -555,9 +497,7 @@ function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
           <li>• Keystone attestation (Ed25519 over canonical JSON)</li>
           <li>• Board gate reconciliation (owner-gated)</li>
         </ul>
-        <p className="text-[10px] text-amber-600 mt-2">
-          No fake close: unsigned is not marked signed, no completion date invented
-        </p>
+        <p className="text-[10px] text-amber-600 mt-2">No fake close: unsigned is not marked signed, no completion date invented</p>
       </div>
     </div>
   );
@@ -567,7 +507,6 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
   const [tab, setTab] = useState<"current" | "history">("current");
   const [history, setHistory] = useState<any[] | null>(null);
   const [historyLoading, setHistoryLoading] = useState(false);
-
   useEffect(() => {
     if (tab === "history" && history === null && !historyLoading) {
       setHistoryLoading(true);
@@ -580,31 +519,20 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
         });
     }
   }, [tab, axis?.axis, history, historyLoading]);
-
   const tabCls = (active: boolean) =>
     `px-4 py-2 text-sm font-semibold rounded-t-lg transition-colors ${
-      active
-        ? "bg-white text-emerald-700 border-t border-x border-slate-200"
-        : "text-slate-500 hover:text-slate-700"
+      active ? "bg-white text-emerald-700 border-t border-x border-slate-200" : "text-slate-500 hover:text-slate-700"
     }`;
-
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-emerald-700">
         <Activity className="h-5 w-5" />
         <h3 className="text-lg font-bold">{axis?.axis || "Axis"}</h3>
       </div>
-
-      {/* Tabs */}
       <div className="flex gap-1 border-b border-slate-200">
-        <button onClick={() => setTab("current")} className={tabCls(tab === "current")}>
-          Current
-        </button>
-        <button onClick={() => setTab("history")} className={tabCls(tab === "history")}>
-          History
-        </button>
+        <button onClick={() => setTab("current")} className={tabCls(tab === "current")}>Current</button>
+        <button onClick={() => setTab("history")} className={tabCls(tab === "history")}>History</button>
       </div>
-
       {tab === "current" && (
         <>
           <div className="grid gap-4 md:grid-cols-2">
@@ -619,7 +547,6 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
               <p className="text-xs text-slate-600">{axis?.n_unit || "items"}</p>
             </div>
           </div>
-
           {axis?.accuracy !== undefined && (
             <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
               <div className="flex items-center justify-between">
@@ -630,25 +557,18 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
                 {axis.interval && (
                   <div className="text-right">
                     <p className="text-xs text-emerald-600">Wilson 95%</p>
-                    <p className="font-mono text-emerald-800">
-                      {(axis.interval[0] * 100).toFixed(1)}–{(axis.interval[1] * 100).toFixed(1)}%
-                    </p>
+                    <p className="font-mono text-emerald-800">{(axis.interval[0] * 100).toFixed(1)}–{(axis.interval[1] * 100).toFixed(1)}%</p>
                   </div>
                 )}
               </div>
               <p className="text-xs text-emerald-700 mt-2">Leader: {axis.leader}</p>
             </div>
           )}
-
           {axis?.separation && (
             <div className={`rounded-lg border p-3 ${axis.separation === "SEPARATED" ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
               <div className="flex items-center justify-between">
-                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${axis.separation === "SEPARATED" ? "bg-emerald-200 text-emerald-800" : "bg-amber-200 text-amber-800"}`}>
-                  {axis.separation}
-                </span>
-                {axis.separation_p !== undefined && (
-                  <span className="font-mono text-sm">p={axis.separation_p.toFixed(4)}</span>
-                )}
+                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${axis.separation === "SEPARATED" ? "bg-emerald-200 text-emerald-800" : "bg-amber-200 text-amber-800"}`}>{axis.separation}</span>
+                {axis.separation_p !== undefined && (<span className="font-mono text-sm">p={axis.separation_p.toFixed(4)}</span>)}
               </div>
               <p className="text-xs mt-2 text-slate-700">
                 {axis.separation === "SEPARATED"
@@ -657,7 +577,6 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
               </p>
             </div>
           )}
-
           {axis?.dataset_url && (
             <a href={axis.dataset_url} target="_blank" rel="noreferrer" className={`inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline ${FOCUS}`}>
               Frozen gold bank (Hugging Face) <ExternalLink className="h-3 w-3" />
@@ -665,27 +584,15 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
           )}
         </>
       )}
-
       {tab === "history" && (
         <div className="space-y-4">
-          {historyLoading && (
-            <p className="text-sm text-slate-500">Loading history…</p>
-          )}
-
+          {historyLoading && (<p className="text-sm text-slate-500">Loading history…</p>)}
           {!historyLoading && history && history.length > 0 && (
             <>
-              <p className="text-xs text-slate-600">
-                Historical records for this axis. Each row is a past measurement run.
-              </p>
-              
-              {/* History chart */}
+              <p className="text-xs text-slate-600">Historical records for this axis. Each row is a past measurement run.</p>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={history.map((h: any) => ({
-                    date: h.measured_at?.slice(0, 10) || h.date || "—",
-                    accuracy: h.accuracy ? h.accuracy * 100 : null,
-                    n: h.n || 0,
-                  }))}>
+                  <LineChart data={history.map((h: any) => ({ date: h.measured_at?.slice(0, 10) || h.date || "—", accuracy: h.accuracy ? h.accuracy * 100 : null, n: h.n || 0 }))}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                     <XAxis dataKey="date" tick={{ fontSize: 10 }} />
                     <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
@@ -695,8 +602,6 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-
-              {/* History table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
@@ -717,9 +622,7 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
                         <td className="py-2 px-3 font-mono">{h.n || "—"}</td>
                         <td className="py-2 px-3">
                           {h.separation && (
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${h.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
-                              {h.separation}
-                            </span>
+                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${h.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>{h.separation}</span>
                           )}
                         </td>
                       </tr>
@@ -729,17 +632,13 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
               </div>
             </>
           )}
-
           {!historyLoading && (!history || history.length === 0) && (
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
               <p className="text-sm text-slate-600 font-semibold">No history available</p>
               <p className="text-xs text-slate-500 mt-1">
-                History endpoint returned empty. This axis may be newly measured, or
-                historical records are not yet published at <code className="text-[10px]">/api/gspc/history/{axis?.axis}</code>.
+                History endpoint returned empty. This axis may be newly measured, or historical records are not yet published at <code className="text-[10px]">/api/gspc/history/{axis?.axis}</code>.
               </p>
-              <p className="text-xs text-slate-400 mt-2">
-                Empty stays visible — we do not invent historical data.
-              </p>
+              <p className="text-xs text-slate-400 mt-2">Empty stays visible — we do not invent historical data.</p>
             </div>
           )}
         </div>
@@ -751,18 +650,10 @@ function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () 
 export default function AttestationDeepDive({ kind, data, onClose }: DeepDiveProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div
-        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className={`absolute right-4 top-4 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 ${FOCUS}`}
-          aria-label="Close"
-        >
+      <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} className={`absolute right-4 top-4 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 ${FOCUS}`} aria-label="Close">
           <X className="h-5 w-5" />
         </button>
-
         {kind === "ed25519" && <Ed25519Panel data={data} onClose={onClose} />}
         {kind === "sha256" && <SHA256Panel data={data} onClose={onClose} />}
         {kind === "xrpl" && <XRPLPanel data={data} onClose={onClose} />}
