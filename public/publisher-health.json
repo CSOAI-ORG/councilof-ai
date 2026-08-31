@@ -1,16 +1,16 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-08-31T10:08:23Z",
+  "as_of": "2026-08-31T10:37:05Z",
   "last_success": "unsigned-snapshot",
   "last_success_as_of": "2026-08-31T07:38:20Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
-  "key": "absent",
+  "key": "present",
   "halt": {
     "split": false,
     "unsigned_new_leaves": 20,
-    "missing_key": true,
-    "reason": "missing-key"
+    "missing_key": false,
+    "reason": "unsigned-leaf"
   },
   "merkle_root": "17bfa5e032c83c65513f0a8d23ce713197270d0a1d230159362d86c8ce758269",
   "card_count": 22,
@@ -340,7 +340,7 @@
     }
   ],
   "represented_tvl": {
-    "usd": 1349133252.7331684,
+    "usd": 1349133252.7331674,
     "source": "https://xrpl.fi/api/metrics",
     "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
   }
