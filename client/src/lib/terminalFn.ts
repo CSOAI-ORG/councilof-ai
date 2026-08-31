@@ -7,7 +7,16 @@
 
 import { looksLikeCardJson, namedAxis } from "@/components/os/osChat";
 
-export const TERMINAL_FNS = ["VERIFY", "BOARD", "AXIS", "CENSUS", "CORRECT", "WATCH", "HELP"] as const;
+export const TERMINAL_FNS = [
+  "VERIFY",
+  "BOARD",
+  "AXIS",
+  "CENSUS",
+  "CORRECT",
+  "WATCH",
+  "COMPUTE",
+  "HELP",
+] as const;
 export type TerminalFn = (typeof TERMINAL_FNS)[number];
 export type TerminalPaste = "card" | "hub-id" | "text";
 
@@ -18,7 +27,7 @@ export type TerminalParse = {
 };
 
 export const TERMINAL_HINT =
-  "Functions: VERIFY · BOARD · AXIS {name} · CENSUS {id} · CORRECT · WATCH {id}";
+  "Functions: VERIFY · BOARD · AXIS {name} · CENSUS {id} · CORRECT · WATCH {id} · COMPUTE";
 
 export const TERMINAL_FN_RULING =
   "Type a function, get a dated vital sign. A Hub listing is DISCOVERED, never MEASURED.";
@@ -37,7 +46,7 @@ export function parseTerminal(raw: string): TerminalParse {
   if (!t) return { fn: null, arg: "", paste: "text" };
   if (looksLikeCardJson(t)) return { fn: "VERIFY", arg: t, paste: "card" };
 
-  const headed = t.match(/^(VERIFY|BOARD|AXIS|CENSUS|CORRECT|WATCH|HELP)\b\s*([\s\S]*)$/i);
+  const headed = t.match(/^(VERIFY|BOARD|AXIS|CENSUS|CORRECT|WATCH|COMPUTE|HELP)\b\s*([\s\S]*)$/i);
   if (headed) {
     const fn = headed[1].toUpperCase() as TerminalFn;
     const arg = headed[2].trim();
