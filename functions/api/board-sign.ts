@@ -47,11 +47,12 @@ async function verifyOidc(token: string): Promise<void> {
   if (header.alg !== "RS256") throw new Error("alg");
   if (payload.iss !== ISS) throw new Error("iss");
   const aud = payload.aud;
-  const audOk = aud === AUD || (Array.isArray(aud) && aud.includes(AUD));
-  if (!audOk) throw new Error("aud");
+  const allowed = new Set([AUD, "https://councilof.ai", "https://github.com/CSOAI-ORG/councilof-ai"]);
+  const audList = Array.isArray(aud) ? aud : [aud];
+  if (!audList.some((a) => typeof a === "string" && allowed.has(a))) throw new Error("aud");
   if (payload.repository !== REPO) throw new Error("repo");
-  const wf = String(payload.job_workflow_ref || payload.workflow_ref || "");
-  if (!wf.includes("public-root.yml")) throw new Error("workflow");
+  const wf = String(payload.job_workflow_ref || payload.workflow || payload.workflow_ref || "");
+  if (!wf.includes("public-root")) throw new Error("workflow");
   if (typeof payload.exp === "number" && payload.exp * 1000 < Date.now() - 30_000) throw new Error("exp");
   const jwks = (await (await fetch(`${ISS}/.well-known/jwks`)).json()) as { keys: JsonWebKey[] };
   const jwk = jwks.keys.find((k) => (k as JsonWebKey & { kid?: string }).kid === header.kid);

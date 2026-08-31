@@ -194,7 +194,8 @@ def sign_via_oidc(payload: dict) -> str | None:
         with urllib.request.urlopen(sign_req, timeout=30) as resp:
             out = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        print(f"board-sign HTTP {e.code}", file=sys.stderr)
+        err = e.read()[:240].decode("utf-8", "replace") if e.fp else ""
+        print(f"board-sign HTTP {e.code} {err}", file=sys.stderr)
         return None
     except Exception as e:
         print(f"board-sign failed: {type(e).__name__}", file=sys.stderr)
@@ -402,10 +403,14 @@ def main() -> int:
         is_new = digest not in LAST_UNSIGNED_SET
         sig = None
         if is_new:
-            if key is None:
+            if not have_key:
                 new_unsigned.append(digest)
             else:
-                sig = sign_payload(leaf["payload"], key)
+                try:
+                    sig = sign_payload(leaf["payload"], key)
+                except Exception as e:
+                    print(f"sign failed: {type(e).__name__}", file=sys.stderr)
+                    new_unsigned.append(digest)
         card = make_card(leaf, sig)
         if card["sha256"] != digest:
             raise SystemExit("sha256=id invariant broken")
