@@ -23,8 +23,8 @@ describe("External SOV / XRPL / T-REX form", () => {
     expect(LIVE_PIN.index_schema).toBe("csoai.sov-signal-index/1");
     expect(LIVE_PIN.index_not_certification).toBe(true);
     expect(KEEP_ARMS).toHaveLength(3);
-    expect(KEEP_ARMS[2].maps).toMatch(/attester|DEVNET/i);
-    expect(claimsByVerdict("keep").some((c) => c.id === "xrpl-devnet")).toBe(true);
+    expect(KEEP_ARMS[2].maps).toMatch(/reader|attester/i);
+    expect(claimsByVerdict("stale").some((c) => c.id === "xrpl-devnet")).toBe(true);
     expect(claimsByVerdict("keep").some((c) => c.id === "no-sov-token")).toBe(true);
     expect(claimsByVerdict("keep").some((c) => c.id === "four-skus")).toBe(true);
   });
