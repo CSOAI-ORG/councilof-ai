@@ -34,6 +34,8 @@ Snapshot 31 Aug 2026 from that API:
 - **335 signed cards** (`n_cards == n_cells`) · living stamp **SIGNED** (`did:web:csoai.org#board-attestation-1`)
 - Methodology: [doi:10.5281/zenodo.21991104](https://doi.org/10.5281/zenodo.21991104)
 
+- **Overlay notes:** ARC-AGI is an UNMEASURED overlay until a frozen gold bank exists; not a 23rd axis. Public GET stays 22·15·7. See [`public/gspc-overlays.json`](public/gspc-overlays.json) and [`public/schema/gspc-axes-notes.json`](public/schema/gspc-axes-notes.json).
+
 If this file and the API disagree, the API is right.
 
 ## Verify
