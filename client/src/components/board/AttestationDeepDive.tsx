@@ -180,7 +180,13 @@ function SHA256Panel({ data, onClose }: { data: any; onClose: () => void }) {
 
 function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
   const [root, setRoot] = useState<any>(null);
-  const [xrplStatus, setXrplStatus] = useState<number | null>(null);
+  const [xrpl, setXrpl] = useState<{
+    status: number;
+    n?: number | null;
+    merkle?: string | null;
+    kind?: string | null;
+    writes_board?: boolean | null;
+  } | null>(null);
 
   useEffect(() => {
     fetch("/root.json")
@@ -188,39 +194,64 @@ function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
       .catch(() => null)
       .then(setRoot);
     fetch("/api/xrpl")
-      .then((r) => setXrplStatus(r.status))
-      .catch(() => setXrplStatus(0));
+      .then(async (r) => {
+        let body: any = null;
+        try {
+          body = await r.json();
+        } catch {
+          body = null;
+        }
+        setXrpl({
+          status: r.status,
+          n: body?.n ?? null,
+          merkle: body?.merkle_root ?? null,
+          kind: body?.kind ?? null,
+          writes_board: body?.writes_board ?? null,
+        });
+      })
+      .catch(() => setXrpl({ status: 0, n: null, merkle: null }));
   }, []);
 
+  const live16 = xrpl?.status === 200 && xrpl.n === 16;
+  const merkleMatch = !!(xrpl?.merkle && root?.merkle_root && xrpl.merkle === root.merkle_root);
+
   const traces = [
-    { time: "T+0ms", event: "GET /api/xrpl", status: "warn" as const },
-    { time: "T+40ms", event: `/api/xrpl HTTP ${xrplStatus ?? "…"} — not live until it serves the same 16 as /root.json`, status: "warn" as const },
-    { time: "T+50ms", event: "GET /root.json (public-root catalogue)", status: root ? "ok" as const : "info" as const },
-    { time: "T+55ms", event: root ? `as_of ${root.as_of} · merkle ${String(root.merkle_root || "").slice(0, 16)}… · card_count ${root.card_count}` : "root not loaded", status: root ? "ok" as const : "warn" as const },
+    { time: "T+0ms", event: "GET /root.json (public-root catalogue)", status: root ? "ok" as const : "info" as const },
+    { time: "T+40ms", event: root ? `as_of ${root.as_of} · merkle ${String(root.merkle_root || "").slice(0, 16)}… · card_count ${root.card_count}` : "root not loaded", status: root ? "ok" as const : "warn" as const },
+    { time: "T+50ms", event: `GET /api/xrpl HTTP ${xrpl?.status ?? "…"} n=${xrpl?.n ?? "—"} · ${xrpl?.kind || "reader"} writes_board=${String(xrpl?.writes_board ?? false)}`, status: live16 ? "ok" as const : xrpl ? "warn" as const : "info" as const },
+    { time: "T+55ms", event: merkleMatch ? "same merkle as /root.json" : xrpl?.merkle ? "merkle does not match /root.json" : "waiting for merkle", status: merkleMatch ? "ok" as const : "warn" as const },
     { time: "T+60ms", event: "Leaf sig_ed25519 is null — unsigned catalogue / NO_LAPTOP_SIGN", status: "info" as const },
-    { time: "T+65ms", event: "Not a GSPC grade. Do not stamp MEASURED from this catalogue.", status: "info" as const },
+    { time: "T+65ms", event: "Not a GSPC grade. Not DEVNET. Do not stamp MEASURED from this catalogue.", status: "info" as const },
   ];
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 text-amber-700">
         <Database className="h-5 w-5" />
-        <h3 className="text-lg font-bold">XRPL Ledger Status</h3>
+        <h3 className="text-lg font-bold">XRPL public-root reader</h3>
       </div>
       <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
         <div className="flex items-center gap-2 text-amber-800 font-semibold mb-2">
           <AlertCircle className="h-4 w-4" />
-          Unsigned public-root catalogue — /api/xrpl is 404
+          Unsigned public-root catalogue — /api/xrpl is a reader
         </div>
         <ul className="text-sm text-amber-700 space-y-1">
           <li>• GET /root.json is the living XRPL catalogue (card-v0 leaves)</li>
+          <li>• GET /api/xrpl is a reader of that root (writes_board false). Live locked 16 when HTTP 200 n=16, same merkle.</li>
           <li>• Leaves are unsigned (NO_LAPTOP_SIGN; sig_ed25519 null)</li>
-          <li>• /api/xrpl stays 404 until it would serve the same 16 as that root</li>
-          <li>• Not a GSPC grade. Do not stamp MEASURED.</li>
+          <li>• Not a GSPC grade. Not DEVNET. Do not stamp MEASURED.</li>
         </ul>
         {root && (
           <p className="mt-2 font-mono text-[11px] text-amber-800">
-            as_of {root.as_of} · merkle {root.merkle_root} · n={root.card_count} · xrpl.fi {root.xrpl_fi_assetCount}
+            as_of {root.as_of} · merkle {root.merkle_root} · card_count={root.card_count} · xrpl.fi {root.xrpl_fi_assetCount}
+          </p>
+        )}
+        {xrpl && (
+          <p className="mt-1 font-mono text-[11px] text-amber-800">
+            /api/xrpl HTTP {xrpl.status}
+            {xrpl.n != null ? ` n=${xrpl.n}` : ""}
+            {xrpl.merkle ? ` · merkle ${xrpl.merkle}` : ""}
+            {merkleMatch ? " · matches /root.json" : ""}
           </p>
         )}
       </div>
@@ -245,6 +276,9 @@ function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
         </a>
         <a href="/root.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
           /root.json <ExternalLink className="h-3 w-3" />
+        </a>
+        <a href="/api/xrpl" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
+          /api/xrpl <ExternalLink className="h-3 w-3" />
         </a>
       </div>
     </div>
