@@ -95,6 +95,13 @@ Authorization: Bearer $HF_INFERENCE_TOKEN
 # GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)
 # workflows: public-root · census-delta · public-root-watcher · hf-inference-mill · hf-fin-shells`;
 
+/** GSPC as a Hugging Face inference-style node — same call shape as a model. */
+export const GSPC_NODE_SNIPPET = `POST https://csoai-gspc-node.hf.space/v1/measure
+Authorization: Bearer $HF_INFERENCE_TOKEN
+{"model":"Qwen/Qwen3-8B:featherless-ai","axis":"governance","n":10}
+# Subject: router.huggingface.co/v1. Node does not write GET /api/gspc.
+# n<30 UNQUOTABLE. Listing is not MEASURED. ZeroGPU is not the fleet.`;
+
 /** Canonical mill for every N-site drop. Census is Hub API. Inference is this rail. */
 export const NSITES_MILL_METHOD = {
   id: "hf-inference-rail",
@@ -534,6 +541,16 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     plant: "Every N-site mill: router.huggingface.co/v1, not local weight pulls. GHA secrets.HF_TOKEN + secrets.HF_INFERENCE_TOKEN.",
     note: "31/40 FLEET-B slugs have a live provider. Token needs Inference Providers scope. Listing is not MEASURED. ZeroGPU is still not the fleet SLA.",
     snippet: HF_INFERENCE_SNIPPET,
+  },
+  {
+    id: "gspc-hf-node",
+    title: "GSPC Hugging Face inference node",
+    status: "planted",
+    kind: "compute",
+    href: "https://csoai-gspc-node.hf.space/v1/models",
+    plant: "Call the benchmark the way you call a Hub model. Caller brings Bearer. Subject stays slug:provider.",
+    note: "Instrument Space, not a generative model. Does not write GET /api/gspc. n<30 unquotable. Fail-closed on 403.",
+    snippet: GSPC_NODE_SNIPPET,
   },
   {
     id: "zerogpu-fleet",
