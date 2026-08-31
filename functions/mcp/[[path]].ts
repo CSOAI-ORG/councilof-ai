@@ -29,7 +29,7 @@
 
 import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
 // The ONE tool-definition source, shared byte-for-byte with the stdio server
-// (mcp/gspc-server — npm: csoai-gspc-mcp). Neither surface defines these four
+// (mcp/gspc-server — npm: csoai-gspc-mcp). Neither surface defines these seven
 // tools anywhere else, so the two cannot drift.
 import GSPC_TOOLS from "./gspc-tools.json";
 
@@ -93,7 +93,7 @@ function contractOnly(kind: "measure" | "jail-probe", args: Record<string, unkno
 }
 
 /* ------------------------------------------------------------------------------
- * Shared MCP tools — GSPC four plus public-root get_root / get_card / verify_inclusion.
+ * Shared MCP tools — GSPC four plus public-root get_root / get_card / verify_inclusion (seven).
  * Definitions come from ./gspc-tools.json (the ONE source, shared with the stdio
  * server in mcp/gspc-server); the handlers below mirror mcp/gspc-server/index.mjs
  * shape-for-shape so a client can switch transports without re-learning anything.
@@ -103,6 +103,10 @@ async function fetchOriginJson(origin: string, path: string): Promise<unknown> {
   const r = await fetch(`${origin}${path}`, { headers: { accept: "application/json" } });
   if (!r.ok) throw new Error(`GET ${origin}${path} returned HTTP ${r.status}`);
   return r.json();
+}
+
+function isHttp404(e: unknown): boolean {
+  return e instanceof Error && /HTTP 404\b/.test(e.message);
 }
 
 /** The distinct unreachable state — never a cached number presented as live. */
@@ -284,6 +288,16 @@ async function getCardTool(origin: string, args: Record<string, unknown>) {
       not_gspc: true,
     };
   } catch (e) {
+    if (isHttp404(e)) {
+      return {
+        state: "INVALID",
+        sha256: sha,
+        reason: "not a leaf of the live root",
+        source: `${origin}/cards/${sha.slice(0, 16)}.json`,
+        not_a_certification: true,
+        not_gspc: true,
+      };
+    }
     return { ...unreachablePayload(origin, `/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
   }
 }
@@ -299,6 +313,9 @@ async function verifyInclusionTool(origin: string, args: Record<string, unknown>
     if (d.error === "not_found") return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
     return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
   } catch (e) {
+    if (isHttp404(e)) {
+      return { state: "INVALID", sha256: sha, reason: "not a leaf", not_a_certification: true };
+    }
     return { ...unreachablePayload(origin, `/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
   }
 }
@@ -511,7 +528,7 @@ async function handleVerify(id: unknown, args: Record<string, unknown>, origin: 
   });
 }
 
-/** Public MCP lists four GSPC tools only. Upstream extras stay callable, not advertised. */
+/** Public MCP lists the shared gspc-tools.json set (four GSPC + three public-root). Upstream extras stay callable, not advertised. */
 function patchToolsList(body: unknown): unknown {
   const result = (body as { result?: { tools?: { name?: string }[] } })?.result;
   if (!result || !Array.isArray(result.tools)) return body;
@@ -583,7 +600,7 @@ export const onRequest: PagesFunction = async (ctx) => {
           doctrine:
             "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
           stdio_alternative:
-            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — same four board/card tools, one shared definitions file.",
+            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — same seven tools (four GSPC + three public-root three-state), one shared definitions file.",
           board: `${origin}/api/gspc`,
           signed_cards: `${origin}/signed/card_index.json`,
           how_to_verify: `${origin}/signed/HOW-TO-VERIFY.md`,
