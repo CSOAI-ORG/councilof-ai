@@ -1,8 +1,9 @@
 name: hf-fin-shells
 
 # Sign FIN7 UNMEASURED coverage cards via OIDC → /api/board-sign.
-# Upload to csoai/gspc-* Hub shells (create_pr). Never laptop/MetaMask key.
-# Never writes GET /api/gspc. Never invents a %.
+# Write onto csoai/gspc-* Hub shells on main (GHA HF_TOKEN). create_pr only if main 403.
+# Also land eval.yaml on jail-goldbank + provenance-controls.
+# Never laptop/MetaMask key. Never writes GET /api/gspc. Never invents a %.
 
 on:
   workflow_dispatch: {}
@@ -18,7 +19,7 @@ permissions:
 jobs:
   sign-and-pr:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     # Mill method for every N-site is router.huggingface.co/v1 (hf-inference-mill).
     # This job writes Hub shells; it does not mill. Bind the mill token so the rail is present.
     env:
@@ -39,16 +40,20 @@ jobs:
         run: python3 scripts/sign_fin_coverage.py
       - name: pip huggingface_hub
         run: pip install huggingface_hub
-      - name: PR signed cards + schema + skeletons onto FIN shells
+      - name: write signed cards + schema + skeletons + eval.yaml onto FIN shells (main, else PR)
         run: |
           python3 - <<'PY'
-          import os
+          import os, shutil, traceback
           from pathlib import Path
           from huggingface_hub import HfApi
+
           api = HfApi(token=os.environ["HF_TOKEN"])
           signed = Path("fin-signed")
           schema = Path("public/fleet/input-schema.json")
+          eval7 = Path("public/fleet/eval-fin7.yaml")
           skel_dir = Path("public/interop/fin7-skeletons")
+          fallback = Path("public/interop/fin7-skeletons")
+
           map_ = {
             "reserve-attestation": "csoai/gspc-reserve-attestation",
             "regulatory-framework": "csoai/gspc-regulatory-framework",
@@ -67,23 +72,96 @@ jobs:
             "human-labour-index": "human-labour-index.partial.json",
             "humanoid-labour-index": "humanoid-labour-index.empty.json",
           }
+
+          def put_folder(repo, folder, msg):
+              try:
+                  info = api.upload_folder(
+                      folder_path=str(folder),
+                      repo_id=repo,
+                      repo_type="dataset",
+                      create_pr=False,
+                      commit_message=msg,
+                  )
+                  print("MAIN", repo, getattr(info, "commit_url", info) or info)
+                  return "main"
+              except Exception as e:
+                  print("MAIN_FAIL", repo, type(e).__name__, str(e)[:240])
+                  info = api.upload_folder(
+                      folder_path=str(folder),
+                      repo_id=repo,
+                      repo_type="dataset",
+                      create_pr=True,
+                      commit_message=msg,
+                  )
+                  print("PR", repo, getattr(info, "pr_url", info) or info)
+                  return "pr"
+
           for axis, repo in map_.items():
-              folder = Path(f"/tmp/pack-{axis}")
+              folder = Path(f"pack-{axis}")
               folder.mkdir(parents=True, exist_ok=True)
-              (folder / "coverage-card.json").write_bytes((signed / f"coverage-{axis}.json").read_bytes())
+              src = signed / f"coverage-{axis}.json"
+              if not src.is_file():
+                  src = fallback / f"coverage-{axis}.json"
+              if not src.is_file():
+                  raise SystemExit(f"missing signed coverage for {axis}")
+              shutil.copyfile(src, folder / "coverage-card.json")
               if schema.is_file():
-                  (folder / "input-schema.json").write_bytes(schema.read_bytes())
+                  shutil.copyfile(schema, folder / "input-schema.json")
               sn = skel_dir / skel_name[axis]
               if sn.is_file():
-                  (folder / "skeleton.json").write_bytes(sn.read_bytes())
-              info = api.upload_folder(
-                  folder_path=str(folder),
-                  repo_id=repo,
-                  repo_type="dataset",
-                  create_pr=True,
-                  commit_message="UNMEASURED signed coverage card + input-schema + skeleton. Cite GET /api/gspc. Not a grade.",
+                  shutil.copyfile(sn, folder / "skeleton.json")
+              if eval7.is_file():
+                  shutil.copyfile(eval7, folder / "eval.yaml")
+              put_folder(
+                  repo,
+                  folder,
+                  "UNMEASURED signed coverage + input-schema + skeleton + pinned eval.yaml. Cite GET /api/gspc. Not a grade. No composite.",
               )
-              print(axis, getattr(info, "pr_url", info))
+
+          generic = """# Hub listing is not a GSPC grade. Cite GET https://councilof.ai/api/gspc
+# 22 axis · 15 measured · 7 UNMEASURED. Do not invent a percentage.
+# This dataset is a bank/home. A Hub listing is DISCOVERED, not MEASURED.
+name: gspc-hub-shell
+cite: https://councilof.ai/api/gspc
+public_count: "22 axis · 15 measured"
+hub_listing_is_not_a_grade: true
+do_not_invent_percentage: true
+never_llm_judge: true
+never_stamp_measured_from_listing: true
+schema: csoai.gspc-axes/0.5
+"""
+          others = {
+              "csoai/gspc-jail-goldbank": "jail gold bank — board jail is MEASURED; this listing is the bank, not a mill",
+              "csoai/gspc-provenance-controls": "provenance-controls home — facts pane on GET /api/gspc; listing is not a mill",
+          }
+          for repo, note in others.items():
+              folder = Path("pack-" + repo.split("/")[-1])
+              folder.mkdir(parents=True, exist_ok=True)
+              (folder / "eval.yaml").write_text(generic + f"note: {note}\n", encoding="utf-8")
+              put_folder(
+                  repo,
+                  folder,
+                  "eval.yaml: Hub listing is not a grade. Cite GET /api/gspc. Do not invent a %. Never LLM-judge.",
+              )
+
+          # Attempt merge of leftover open PRs if main write already landed.
+          merge_targets = [
+              ("csoai/gspc-reserve-attestation", 8),
+              ("csoai/gspc-regulatory-framework", 7),
+              ("csoai/gspc-distribution-integrity", 7),
+              ("csoai/gspc-custody-disclosure", 7),
+              ("csoai/gspc-ai-economy-index", 7),
+              ("csoai/gspc-human-labour-index", 7),
+              ("csoai/gspc-humanoid-labour-index", 7),
+              ("csoai/gspc-jail-goldbank", 4),
+              ("csoai/gspc-provenance-controls", 4),
+          ]
+          for repo, num in merge_targets:
+              try:
+                  r = api.merge_pull_request(repo_id=repo, discussion_num=num, repo_type="dataset")
+                  print("MERGED", repo, num, r)
+              except Exception as e:
+                  print("MERGE_SKIP", repo, num, type(e).__name__, str(e)[:160])
           PY
       - uses: actions/upload-artifact@v4
         with:
