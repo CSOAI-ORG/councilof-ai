@@ -5,6 +5,10 @@ import { describe, expect, it } from "vitest";
 const pack = readFileSync(resolve(__dirname, "../../../functions/api/evidence-pack.ts"), "utf8");
 const mcp = readFileSync(resolve(__dirname, "../../../public/.well-known/mcp.json"), "utf8");
 const tools = readFileSync(resolve(__dirname, "../pages/ToolsPage.tsx"), "utf8");
+const claim = readFileSync(resolve(__dirname, "../data/anchoringClaim.ts"), "utf8");
+const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8");
+const sov = readFileSync(resolve(__dirname, "./sovExternalAudit.ts"), "utf8");
+const playbook = readFileSync(resolve(__dirname, "./playbookAudit.ts"), "utf8");
 
 describe("stale copy honesty", () => {
   it("RAS pack cites the living board, not a 13-axis product", () => {
@@ -23,5 +27,16 @@ describe("stale copy honesty", () => {
     expect(j.measured.note).toMatch(/not this product/);
     expect(tools).toContain("WatchlistPane");
     expect(tools).toContain("board_totals · get_axis · verify_card · list_cards");
+  });
+});
+
+describe("leftover: /xrpl-attest is a public-root reader, not a live DEVNET pointer", () => {
+  it("does not present /xrpl-attest as a separate DEVNET pointer", () => {
+    expect(claim).not.toMatch(/\/xrpl-attest page is a separate DEVNET pointer/);
+    expect(claim).toMatch(/reader of GET \/root\.json/);
+    expect(productsFill).not.toMatch(/XRPL memo \/ XLS-70 on DEVNET today/);
+    expect(productsFill).toMatch(/living feed is GET \/root\.json/);
+    expect(sov).toMatch(/\/xrpl-attest is a \/root\.json reader/);
+    expect(playbook).toMatch(/\/xrpl-attest is a \/root\.json reader/);
   });
 });

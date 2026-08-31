@@ -133,7 +133,7 @@ export const OPENINGS: Opening[] = [
     title: "Be the attester others mint against",
     eats: "T-REX / XRPL partners may point a token at a digest we already signed. We take an attester fee for the pointer, never the coupon.",
     never: "Council as issuer, miner, or SOV token house.",
-    feed: "/xrpl-attest DEVNET now. Partner issuer later. No invented r-address.",
+    feed: "/xrpl-attest is a /root.json reader now. Partner issuer later. No invented r-address.",
     href: "/xrpl-attest",
   },
   {
