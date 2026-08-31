@@ -25,4 +25,14 @@ describe("/gspc-verify two modes — estate + unsigned public-root", () => {
     expect(catalogue).toMatch(/unsigned/i);
     expect(catalogue).toContain("Do not fake Ed25519");
   });
+
+  it("does not claim PQC-signed cards; 3KB atom vs ML-DSA-65 size", () => {
+    expect(page).toContain("3KB atom is binding");
+    expect(page).toContain("~3.3KB");
+    expect(page).toContain("#board-pqc-1");
+    expect(page).toContain("ABSENT");
+    expect(page).toContain("UNCHECKABLE");
+    expect(page).toContain("csoai/gspc-asi");
+    expect(page).toContain("never a PQC-signed card");
+  });
 });
