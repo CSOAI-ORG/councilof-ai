@@ -1,12 +1,14 @@
 /*
  * CSOAI Live Assessment Tool
- * Calls the signed /api/assess endpoint (api-server, Ed25519) and shows the verifiable verdict.
- * API base: VITE_ASSESS_API (defaults to https://api.csoai.org). Works the moment api-server is deployed.
+ *
+ * /assess must match /measure: paid measurement, booking not live, Coming — Paddle,
+ * public verifies free, never a bought rank. This page must not claim a free
+ * signed run. Do not put Paddle checkout chrome here (and never on /honesty).
  */
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, AlertTriangle, Loader2, BadgeCheck, XCircle } from "lucide-react";
+import { ShieldCheck, BadgeCheck, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -80,14 +82,18 @@ export default function AssessTool() {
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-4">
-          Free. No account. The card is yours. Empty means we have not measured that system —
-          we do not guess. Not a certificate.
+          Paid measurement. Booking is not live. Coming — Paddle. The public verifies free.
+          Never a bought rank. Empty means we have not measured that system — we do not guess.
+          Not a certificate.
         </p>
-        <p className="mb-8">
-          <a href="/contact?arm=ledger" className="text-sm font-semibold text-emerald-800 underline-offset-2 hover:underline">
+        <p className="mb-8 text-sm text-muted-foreground">
+          Waitlist and scope live on <a href="/measure" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/measure</a>.
+          Verify a published card at <a href="/gspc-verify" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/gspc-verify</a> — free, no account.
+          {" "}
+          <a href="/contact?arm=ledger" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">
             Need this for an insurer?
           </a>
-          <span className="text-sm text-muted-foreground"> — enquiry for a signed pack. Never a bought rank.</span>
+          <span> — enquiry for a signed pack. Never a bought rank.</span>
         </p>
 
         <Card className="mb-6">
@@ -107,10 +113,14 @@ export default function AssessTool() {
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.logging}
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
-            <Button onClick={run} disabled={loading || (!form.system && !form.purpose && !form.endpoint)} className="w-full">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Measuring…</> : "Run signed measurement"}
+            <Button onClick={run} disabled={true} className="w-full" aria-disabled="true">
+              Coming — Paddle · booking not live
             </Button>
-            {error && <p className="text-sm text-red-600 flex items-center gap-2"><AlertTriangle className="h-4 w-4" />{error}</p>}
+            <p className="text-xs text-muted-foreground">
+              Signed measurement is a paid engagement. Checkout is not on this page. Do not treat a disabled
+              button as a free run. {loading ? "Not running." : null}
+              {error && <span className="text-red-600"> {error}</span>}
+            </p>
           </CardContent>
         </Card>
 
