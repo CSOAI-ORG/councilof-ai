@@ -11,6 +11,7 @@ import {
   namedAxis,
   wantsGetMeasured,
 } from "@/components/os/osChat";
+import { formatComputeReply } from "@/lib/computeBridge";
 import { fetchPinnedCardKey, verifyCard, type CardVerdict } from "@/lib/cardVerify";
 import {
   axisFromFn,
@@ -67,6 +68,22 @@ export default function HomeComposer({
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         setNote(`CORRECT failed (${msg}). Cite GET /api/corrections.`);
+      } finally {
+        setBusy(false);
+      }
+      return;
+    }
+
+    if (parsed.fn === "COMPUTE") {
+      setBusy(true);
+      try {
+        const r = await fetch("/api/compute", { headers: { accept: "application/json" } });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        setNote(formatComputeReply(await r.json()));
+        setLoc("/os?lobby=harness");
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        setNote(`COMPUTE failed (${msg}). Cite GET /api/compute.`);
       } finally {
         setBusy(false);
       }
