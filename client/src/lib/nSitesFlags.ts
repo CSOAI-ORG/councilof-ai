@@ -71,19 +71,35 @@ export const PLUGIN_HARVEST = {
 export const HF_BADGE_SNIPPET =
   "[![CSOAI-GSPC — measurement, not certification](https://councilof.ai/api/badge?style=hf&size=md)](https://councilof.ai/gspc-verify)";
 
-export const EMBED_SNIPPET = `<script src=\"https://councilof.ai/embed.js\"\n        data-org=\"Council of AI\" data-brand=\"#059669\"\n        data-verify=\"https://councilof.ai/gspc-verify\"\n        data-size=\"md\"></script>`;
+export const EMBED_SNIPPET = `<script src="https://councilof.ai/embed.js"
+        data-org="Council of AI" data-brand="#059669"
+        data-verify="https://councilof.ai/gspc-verify"
+        data-size="md"></script>`;
 
-export const MCP_SNIPPET = `{\n  \"mcpServers\": {\n    \"gspc\": {\n      \"url\": \"https://councilof.ai/mcp\"\n    }\n  }\n}`;
+export const MCP_SNIPPET = `{
+  "mcpServers": {
+    "gspc": {
+      "url": "https://councilof.ai/mcp"
+    }
+  }
+}`;
 
 export const PLUGIN_SNIPPET = "grok plugin install CSOAI-ORG/councilof-ai#plugins/gspc";
 
 export const NPM_SNIPPET = "npx -y csoai-gspc-mcp";
 
 /** Every N-site mill uses Inference Providers. Weights stay on the Hub. */
-export const HF_INFERENCE_SNIPPET = `base_url=https://router.huggingface.co/v1\n# model = <hub-slug>:<provider>  e.g. Qwen/Qwen3-8B:featherless-ai\nAuthorization: Bearer $HF_INFERENCE_TOKEN\n# GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)\n# workflows: public-root · census-delta · public-root-watcher · hf-fin-shells`;
+export const HF_INFERENCE_SNIPPET = `base_url=https://router.huggingface.co/v1
+# model = <hub-slug>:<provider>  e.g. Qwen/Qwen3-8B:featherless-ai
+Authorization: Bearer $HF_INFERENCE_TOKEN
+# GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)
+# workflows: public-root · census-delta · public-root-watcher · hf-fin-shells`;
 
 /** GSPC Space printer — not a mill product. POST /v1/measure is 404 by design. */
-export const GSPC_NODE_SNIPPET = `GET https://csoai-gspc-node.hf.space/health\nwrites_board: false\n# POST /v1/measure is 404 by design. Do not mill.\n# Never writes GET /api/gspc. A listing is not MEASURED.`;
+export const GSPC_NODE_SNIPPET = `GET https://csoai-gspc-node.hf.space/health
+writes_board: false
+# POST /v1/measure is 404 by design. Do not mill.
+# Never writes GET /api/gspc. A listing is not MEASURED.`;
 
 /** Canonical mill for every N-site drop. Census is Hub API. Inference is this rail. */
 export const NSITES_MILL_METHOD = {
@@ -108,7 +124,12 @@ export const NSITES_MILL_METHOD = {
   snippet: HF_INFERENCE_SNIPPET,
 } as const;
 
-export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.\n\nVerify: https://councilof.ai/gspc-verify\n${HF_BADGE_SNIPPET}\n\nUnknown stays unknown. A rank is never sold.`;
+export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.
+
+Verify: https://councilof.ai/gspc-verify
+${HF_BADGE_SNIPPET}
+
+Unknown stays unknown. A rank is never sold.`;
 
 export const NSITES_FLAGS: NSiteFlag[] = [
   {
