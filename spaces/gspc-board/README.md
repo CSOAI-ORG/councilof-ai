@@ -15,7 +15,7 @@ short_description: "CSOAI-GSPC public board. Search a model. Open an axis."
 
 Public board of Council of AI. Same figures as [councilof.ai](https://councilof.ai). Measurement, not certification. A rank is never sold.
 
-Search a model. Open an axis. Read the published record. Fifteen axes carry a signed measurement. 2,410 models are listed and not yet graded. A listing is not a grade. Empty slots stay empty. Jail is a measured floor, not a scored arena door. Rows behind the board are the sum of per-axis `n`, not a model count.
+Search a model. Open an axis. Read the published record. Fifteen axes carry a signed measurement. 3,032,028 Hub listings were observed on 31 Aug 2026; none graded. 2,410 names remain on the planted public list. A listing is not a grade. Empty slots stay empty. Jail is a measured floor, not a scored arena door. Rows behind the board are the sum of per-axis `n`, not a model count.
 
 GET https://councilof.ai/api/gspc
 
