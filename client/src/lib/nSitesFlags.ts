@@ -88,6 +88,13 @@ export const PLUGIN_SNIPPET = "grok plugin install CSOAI-ORG/councilof-ai#plugin
 
 export const NPM_SNIPPET = "npx -y csoai-gspc-mcp";
 
+/** Every N-site mill uses Inference Providers. Weights stay on the Hub. */
+export const HF_INFERENCE_SNIPPET = `base_url=https://router.huggingface.co/v1
+# model = <hub-slug>:<provider>  e.g. Qwen/Qwen3-8B:featherless-ai
+Authorization: Bearer $HF_INFERENCE_TOKEN
+# GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)
+# workflows: public-root · census-delta · public-root-watcher · hf-inference-mill`;
+
 export const PUBLISHER_DISCUSSION_SNIPPET = `CSOAI published a GSPC measurement for this exact revision — a per-axis passport, not approval.
 
 Verify: https://councilof.ai/gspc-verify
@@ -486,12 +493,22 @@ export const NSITES_FLAGS: NSiteFlag[] = [
   },
   {
     id: "hf-inference-rail",
-    title: "HF Inference Providers as the GSPC scale rail",
+    title: "HF Inference Providers mill",
+    status: "planted",
+    kind: "compute",
+    href: "https://router.huggingface.co/v1/models",
+    plant: "Every N-site mill: router.huggingface.co/v1, not local weight pulls. GHA secrets.HF_TOKEN + secrets.HF_INFERENCE_TOKEN.",
+    note: "31/40 FLEET-B slugs have a live provider. Token needs Inference Providers scope. Listing is not MEASURED. ZeroGPU is still not the fleet SLA.",
+    snippet: HF_INFERENCE_SNIPPET,
+  },
+  {
+    id: "zerogpu-fleet",
+    title: "ZeroGPU as the fleet batch engine",
     status: "do-not",
     kind: "compute",
-    href: "https://huggingface.co/docs/hub/jobs-overview",
-    plant: "Never. Jobs / paid workers / second-provider reruns are the execution lanes.",
-    note: "ZeroGPU is for interactive demos, not the fleet batch engine.",
+    href: "https://huggingface.co/docs/hub/spaces-gpus",
+    plant: "Never. Interactive demos only. Batch mill is Inference Providers + Jobs/paid workers.",
+    note: "Spaces ZeroGPU is not an SLA for 990k responses.",
   },
   {
     id: "queue-as-measured",
