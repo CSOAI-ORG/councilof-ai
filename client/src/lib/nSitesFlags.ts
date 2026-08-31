@@ -93,14 +93,13 @@ export const HF_INFERENCE_SNIPPET = `base_url=https://router.huggingface.co/v1
 # model = <hub-slug>:<provider>  e.g. Qwen/Qwen3-8B:featherless-ai
 Authorization: Bearer $HF_INFERENCE_TOKEN
 # GHA secrets: HF_TOKEN (Hub write) · HF_INFERENCE_TOKEN (Providers mill)
-# workflows: public-root · census-delta · public-root-watcher · hf-inference-mill · hf-fin-shells`;
+# workflows: public-root · census-delta · public-root-watcher · hf-fin-shells`;
 
-/** GSPC as a Hugging Face inference-style node — same call shape as a model. */
-export const GSPC_NODE_SNIPPET = `POST https://csoai-gspc-node.hf.space/v1/measure
-Authorization: Bearer $HF_INFERENCE_TOKEN
-{"model":"Qwen/Qwen3-8B:featherless-ai","axis":"governance","n":10}
-# Subject: router.huggingface.co/v1. Node does not write GET /api/gspc.
-# n<30 UNQUOTABLE. Listing is not MEASURED. ZeroGPU is not the fleet.`;
+/** GSPC Space printer — not a mill product. POST /v1/measure is 404 by design. */
+export const GSPC_NODE_SNIPPET = `GET https://csoai-gspc-node.hf.space/health
+writes_board: false
+# POST /v1/measure is 404 by design. Do not mill.
+# Never writes GET /api/gspc. A listing is not MEASURED.`;
 
 /** Canonical mill for every N-site drop. Census is Hub API. Inference is this rail. */
 export const NSITES_MILL_METHOD = {
@@ -115,7 +114,6 @@ export const NSITES_MILL_METHOD = {
     "public-root",
     "census-delta",
     "public-root-watcher",
-    "hf-inference-mill",
     "hf-fin-shells",
   ],
   never: [
@@ -548,8 +546,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "compute",
     href: "https://csoai-gspc-node.hf.space/v1/models",
-    plant: "Call the benchmark the way you call a Hub model. Caller brings Bearer. Subject stays slug:provider.",
-    note: "Instrument Space, not a generative model. Does not write GET /api/gspc. n<30 unquotable. Fail-closed on 403.",
+    plant: "Instrument Space printer. writes_board false. POST /v1/measure is 404 by design. Do not mill.",
+    note: "Not a mill product. Does not write GET /api/gspc. Fail-closed: 404.",
     snippet: GSPC_NODE_SNIPPET,
   },
   {

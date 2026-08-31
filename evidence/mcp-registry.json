@@ -105,47 +105,16 @@
       "name": "csoai-gspc-mcp",
       "endpoint": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
       "transport": "streamable-http",
-      "role": "current",
+      "role": "dead-worker",
       "alias_of": "csoai-gspc-mcp",
-      "status": "reachable",
-      "last_probed": "2026-08-27T05:04:56.229Z",
-      "http_status": 200,
-      "protocol_version": "2024-11-05",
-      "server_version": "1.0.0",
-      "tools_count": 4,
-      "tools": [
-        {
-          "name": "measure",
-          "description": "Run a subject through GSPC measurement axes and return a signed measurement credential (NOT a certificate). Unmeasured axes stay UNMEASURED.",
-          "required_args": [
-            "model"
-          ]
-        },
-        {
-          "name": "verify",
-          "description": "Verify a signed card: recompute content_id, check Ed25519 signature + time-anchor. Free, anonymous, no trust.",
-          "required_args": [
-            "card"
-          ]
-        },
-        {
-          "name": "jail-probe",
-          "description": "Submit a jail-break attempt against a model. Returns the verdict contract; sandbox execution + signed card issuance happens on the measurement fleet (A100/3090). Consent-gated; never certifies.",
-          "required_args": [
-            "model",
-            "prompt"
-          ]
-        },
-        {
-          "name": "enter-arena",
-          "description": "Self-enrolment for external agents. Present an A2A agent card URL + machine-readable consent:true; we run the honest live predicates now (card validity, signing state, endpoint liveness) and return an UNSIGNED intake receipt with contentId, queued for signed fleet measurement. No placement for sale, Firewall 2, UNMEASURED shown honestly.",
-          "required_args": [
-            "agent_card_url",
-            "consent"
-          ]
-        }
-      ],
-      "error": null,
+      "status": "unreachable",
+      "last_probed": null,
+      "http_status": 404,
+      "protocol_version": null,
+      "server_version": null,
+      "tools_count": null,
+      "tools": [],
+      "error": "HTTP 404; not a door. Live door is https://councilof.ai/mcp. Do not invent a new worker. Dated 2026-08-27 probe named this reachable — leftover 2026-08-31: not live.",
       "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
       "catalogue_source": null,
       "catalogue_claim": null
