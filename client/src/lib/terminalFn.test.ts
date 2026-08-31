@@ -18,7 +18,7 @@ const os = readFileSync(resolve(__dirname, "../pages/OsLauncher.tsx"), "utf8");
 describe("terminal functions", () => {
   it("parses Bloomberg keys and a bare Hub id as census", () => {
     expect(TERMINAL_FN_RULING).toMatch(/DISCOVERED, never MEASURED/);
-    expect(TERMINAL_FNS).toEqual(["VERIFY", "BOARD", "AXIS", "CENSUS", "CORRECT", "WATCH", "HELP"]);
+    expect(TERMINAL_FNS).toEqual(["VERIFY", "BOARD", "AXIS", "CENSUS", "CORRECT", "WATCH", "COMPUTE", "HELP"]);
     expect(parseTerminal("BOARD").fn).toBe("BOARD");
     expect(parseTerminal("AXIS jail").fn).toBe("AXIS");
     expect(axisFromFn(parseTerminal("AXIS jail"))).toBe("jail");
@@ -36,6 +36,8 @@ describe("terminal functions", () => {
     expect(correctionsNote(30)).toMatch(/30 addenda/);
     expect(correctionsNote(30)).toMatch(/not a wellness score/);
     expect(TERMINAL_HINT).toMatch(/VERIFY/);
+    expect(TERMINAL_HINT).toMatch(/COMPUTE/);
+    expect(parseTerminal("COMPUTE").fn).toBe("COMPUTE");
   });
 
   it("treats card JSON as VERIFY and does not invent a sold rank", () => {
