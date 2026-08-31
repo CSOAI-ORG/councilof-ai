@@ -372,7 +372,7 @@ export default function LobbyHeader({
         </nav>
       )}
 
-      {/* ── row 4 · the shortcuts, on demand ────────────────────────────
+      {/* ── row 4 · the shortcuts, on demand ────────────────────
           These were printed permanently across the foot of the bar: six shortcuts, always
           on screen, read once and then furniture forever. A reference belongs where someone
           goes looking for it, not in the space a live readout could use. The shortcuts all
@@ -447,7 +447,7 @@ function LiveStateBar({
     );
   }
 
-  const { board, fleet, cards, chain } = live.state;
+  const { board, fleet, cards, chain, census } = live.state;
   const grammar = quote(board.countGrammar);
 
   return (
@@ -524,6 +524,24 @@ function LiveStateBar({
           `positions — ${provenance(chain.positions)}\n\nOpens the verifier.`
         }
         onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
+      />
+      <Readout
+        label="Census"
+        value={
+          quotable(census.listingsObserved)
+            ? `${quote(census.listingsObserved)} listed · ${
+                quotable(census.nMeasured) ? quote(census.nMeasured) : "0"
+              } graded`
+            : UNMEASURED
+        }
+        ok={quotable(census.listingsObserved)}
+        title={
+          "Hub listings observed on a metadata walk. DISCOVERED, not MEASURED. " +
+          "Never add this to the board count.\n\n" +
+          `listed — ${provenance(census.listingsObserved)}\n` +
+          `graded — ${provenance(census.nMeasured)}\n\nOpens GET /api/state.`
+        }
+        onClick={() => onOpenHit({ route: "/api/state", label: "Live state" })}
       />
       <a
         href={STATE_ENDPOINT}
