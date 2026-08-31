@@ -41,11 +41,20 @@ export default function StatusPage() {
   const [live, setLive] = useState<SovHealth | null>(null);
   const [tools, setTools] = useState<number | null>(null);
   const [checked, setChecked] = useState(false);
+  const [root, setRoot] = useState<any>(null);
+  const [xrplStatus, setXrplStatus] = useState<number | null>(null);
 
   useEffect(() => {
     document.title = "System Status - the Council OS, live | CSOAI";
     fetchHealth().then((h) => { setLive(h); setChecked(true); });
     fetchToolCount().then(setTools);
+    fetch("/root.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then(setRoot);
+    fetch("/api/xrpl")
+      .then((r) => setXrplStatus(r.status))
+      .catch(() => setXrplStatus(0));
   }, []);
 
   const connected = !!(live && live.ok);
@@ -92,6 +101,28 @@ export default function StatusPage() {
             <Stat label="Ed25519" value={(live && live.governance && live.governance.sigil) || "ed25519"} />
             <Stat label="Care floor" value={live && live.governance && live.governance.care_floor != null ? String(live.governance.care_floor) : "0.95"} />
           </div>
+        </div>
+      </section>
+
+
+      <section className="mx-auto max-w-4xl px-6 pt-6" data-testid="public-root-status">
+        <h2 className="mb-3 font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/60">Public-root catalogue — unsigned leaves</h2>
+        <div className="rounded-2xl border border-amber-400/30 bg-amber-500/5 p-5 space-y-3">
+          <p className="text-sm text-emerald-100/80">
+            Living catalogue is GET <a className="text-emerald-300 underline" href="/root.json">/root.json</a>.
+            Leaves are unsigned (NO_LAPTOP_SIGN; sig_ed25519 null). Inclusion is membership in that hash list.
+            This is not a laptop-signed card check. Layer-0 seals the root document, not the leaves.
+          </p>
+          <div className="grid gap-2 sm:grid-cols-4 text-sm">
+            <Stat label="Last root (as_of)" value={root?.as_of ? String(root.as_of) : "not loaded"} />
+            <Stat label="merkle_root" value={root?.merkle_root ? String(root.merkle_root).slice(0, 16) + "…" : "—"} />
+            <Stat label="card_count" value={root?.card_count != null ? String(root.card_count) : "—"} />
+            <Stat label="/api/xrpl" value={xrplStatus == null ? "probing…" : String(xrplStatus)} ok={xrplStatus === 404} />
+          </div>
+          <p className="text-xs text-amber-200/80">
+            /api/xrpl stays 404 until it would serve the same 16 as /root.json. Unsigned-leaf flag: NO_LAPTOP_SIGN.
+            Do not stamp MEASURED from this catalogue.
+          </p>
         </div>
       </section>
 
