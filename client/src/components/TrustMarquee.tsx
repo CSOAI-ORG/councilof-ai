@@ -75,9 +75,9 @@ function LiveStats({ dark }: { dark?: boolean }) {
   );
 }
 
-// A horizontally-scrolling "trust wall" of frameworks we align to, open source we
-// are built on, and standards we implement. Each chip links to its official source
-// (that's what makes it real social authority — every claim is verifiable).
+// A horizontally-scrolling "trust wall" of frameworks we measure against, open source we
+// are built on, and standards we implement. Each chip links to its official source.
+// We do not claim certification or endorsement.
 // variant="strip": slim single-line marquee for the OS bottom bar.
 // variant="full":  headed section for pages, with a legend.
 
@@ -156,10 +156,10 @@ export default function TrustMarquee({
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-2 flex flex-wrap items-baseline justify-between gap-2">
           <h2 className={"text-sm font-bold uppercase tracking-wide " + (dark ? "text-emerald-300" : "text-emerald-700")}>
-            Aligned to the world's frameworks · built on open source · verifiable
+            Frameworks we measure against · built on open source · verifiable
           </h2>
           <p className={"text-[11px] " + (dark ? "text-emerald-200/60" : "text-gray-400")}>
-            Every badge links to its official source. We map & implement these — we do not claim endorsement.
+            Every badge links to its official source. We measure against these — we do not claim endorsement or certification.
           </p>
         </div>
       </div>

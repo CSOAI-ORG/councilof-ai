@@ -12,7 +12,7 @@
       "auth_required": false,
       "registry": {
         "name": "io.github.CSOAI-ORG/gspc",
-        "version": "1.0.3",
+        "version": "1.1.0",
         "url": "https://registry.modelcontextprotocol.io"
       }
     }
@@ -21,15 +21,31 @@
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 4,
+    "total_tools": 7,
     "server_count": 1,
-    "tools": ["board_totals", "get_axis", "verify_card", "list_cards"],
-    "note": "POST /mcp tools/list. These four are the product door. measure / verify / jail-probe / enter-arena are not this product."
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
+    "note": "POST /mcp tools/list. Seven read tools: four GSPC board/card plus three public-root three-state (get_root / get_card / verify_inclusion). measure / verify / jail-probe / enter-arena are not this product. Registry latest 1.1.0; historic 1.0.x listed four."
   },
   "planted": {
-    "tools": ["board_totals", "get_axis", "verify_card", "list_cards"],
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
     "url": "https://councilof.ai/mcp",
-    "note": "The product door. Four read tools. No 23rd axis. No jail run from MCP."
+    "note": "The product door. Seven read tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP."
   },
   "provider": {
     "name": "CSOAI Ltd",

@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc 1.0.3.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc latest 1.1.0. Seven read tools on POST /mcp (four GSPC + three public-root three-state).",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -15,7 +15,7 @@
       "primary": "https://councilof.ai/mcp",
       "fallback": "https://csoai.org/mcp",
       "current": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
-      "note": "Primary and fallback are canonical URLs once routed; current is the live worker endpoint. Registry latest 1.0.3; worker runtime may lag until CF_API_TOKEN restored."
+      "note": "Primary and fallback are canonical URLs once routed; current is the live worker endpoint. Registry latest 1.1.0; HTTP tools/list is seven. Worker runtime may lag until CF_API_TOKEN restored."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -24,8 +24,16 @@
     }
   },
   "capabilities": {
-    "tools": ["board_totals", "get_axis", "verify_card", "list_cards"],
-    "total_tools": 4,
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
+    "total_tools": 7,
     "streaming": false,
     "auth_required": false
   },
