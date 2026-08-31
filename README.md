@@ -1,198 +1,97 @@
-# CSOAI - Council of Safety of AI
+# Council of AI
 
-**The World's First AI Safety Infrastructure Platform**
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/councilof_ai/)
 
-CSOAI is a comprehensive AI safety governance platform providing multi-framework compliance, Byzantine fault-tolerant decision-making, and workforce development for the AI safety industry.
+> Independent AI-governance measurement. We measure, we sign, we re-attest — everyone can check.
 
-## Overview
+Council of AI (CSOAI LTD, UK Companies House 16939677) is an independent measurement body for AI behaviour. We run AI systems on published, frozen instruments; issue the results as signed, offline-verifiable measurement credentials (Ed25519); and re-measure on a cadence so the evidence stays current. **Measurement, not certification** — we do not certify, sell ratings, or remediate, and we take no money from anything we rank. Verification is free and loginless.
 
-CSOAI serves three core functions:
+**Live:** [councilof.ai](https://councilof.ai) on **Cloudflare Pages** (`councilof-ai`). Not Vercel.
 
-1. **Enterprise Compliance** - Multi-framework AI compliance automation (EU AI Act, NIST AI RMF, ISO 42001, TC260)
-2. **33-Agent Council** - Byzantine fault-tolerant voting system for AI safety decisions
-3. **Training & Certification** - Professional development for AI safety analysts
+---
 
-## Features
+## Quick start
 
-### Multi-Framework Compliance
-- **EU AI Act** - 113 articles, full compliance mapping
-- **NIST AI RMF** - 72 requirements across GOVERN, MAP, MEASURE, MANAGE
-- **ISO 42001** - AI Management System standard
-- **TC260** - Chinese AI Safety Governance Framework
+```bash
+# Install via pip
+pip install councilof_ai
 
-### 33-Agent Council (Byzantine Fault Tolerant)
-- 33 independent AI agents across 3 providers
-- 11 Guardian agents (safety, security, privacy)
-- 11 Arbiter agents (fairness, transparency, accountability)
-- 11 Scribe agents (documentation, compliance, reporting)
-- 22/33 consensus threshold
-- Tolerates up to 10 faulty/malicious agents
+# Or install via Smithery
+npx -y @smithery/cli@latest install councilof-ai --client claude
+```
 
-### Training & Certification
-- 8-module courses for each framework (24 total modules)
-- Professional certification exams
-- Analyst workbench for case management
-- Job marketplace for AI safety professionals
+## What we measure
 
-### Watchdog System
-- Public incident reporting
-- AI model safety leaderboard
-- Community-driven accountability
+Live axis list and scores: **`GET https://councilof.ai/api/gspc`** (schema `csoai.gspc-axes/0.5`).
 
-## Tech Stack
+Snapshot 31 Aug 2026 from that API:
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 19, TypeScript, TailwindCSS, Wouter |
-| Backend | Node.js, Express, tRPC |
-| Database | PostgreSQL/MySQL, Drizzle ORM |
-| AI | OpenAI, Anthropic, Google Gemini |
-| Payments | Stripe |
-| Storage | AWS S3 |
+- **22 slots** on the board · **15 measured** · **7 UNMEASURED** (declared empty, not a fail)
+- **14 / 14 behavioural GSPC axes measured** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail
+- **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
+- **UNMEASURED is first-class** — gaps are reported with their n and limits
+- **335 signed cards** (`n_cards == n_cells`) · living stamp **SIGNED** (`did:web:csoai.org#board-attestation-1`)
+- Methodology: [doi:10.5281/zenodo.21991104](https://doi.org/10.5281/zenodo.21991104)
 
-## Project Structure
+- **Overlay notes:** ARC-AGI is an UNMEASURED overlay until a frozen gold bank exists; not a 23rd axis. Public GET stays 22·15·7. See [`public/gspc-overlays.json`](public/gspc-overlays.json) and [`public/schema/gspc-axes-notes.json`](public/schema/gspc-axes-notes.json).
 
-\`\`\`
-CSOAI/
-├── client/                  # React frontend
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Page components
-│   │   ├── contexts/        # React contexts
-│   │   ├── hooks/           # Custom hooks
-│   │   ├── lib/             # Utilities and tRPC client
-│   │   └── styles/          # CSS styles
-│   ├── index.html
-│   └── vite.config.ts
-├── server/                  # Node.js backend
-│   ├── routers/             # tRPC routers
-│   ├── services/            # Business logic
-│   │   ├── council.ts       # 33-Agent Council
-│   │   ├── auth.ts          # Authentication
-│   │   └── ...
-│   ├── db/                  # Database schema and config
-│   ├── content/             # Training module content
-│   └── index.ts             # Server entry point
-├── shared/                  # Shared types and schemas
-├── docs/                    # Documentation
-│   ├── architecture/        # Technical architecture
-│   ├── compliance/          # Compliance frameworks
-│   ├── courses/             # Training content
-│   └── business/            # Business docs
-├── tests/                   # Test files
-└── assets/                  # Static assets
-\`\`\`
+If this file and the API disagree, the API is right.
 
-## Getting Started
+## Verify
 
-### Prerequisites
+- **https://councilof.ai/gspc-verify/** — free, no login
+- **https://csoai.org/verify**
+- DID: https://csoai.org/.well-known/did.json
 
-- Node.js 20+
-- pnpm
-- PostgreSQL or MySQL database
-- API keys for OpenAI, Anthropic, and Google AI
+## Hosting and deploy
 
-### Installation
+| Host | Cloudflare Pages project | Deploy |
+|---|---|---|
+| councilof.ai / www | `councilof-ai` | GitHub Actions `deploy.yml` → `wrangler pages deploy` |
+| csoai.org | `csoai-site` | Wrangler (`csoai-site-deploy.yml`) |
 
-1. Clone the repository
-\`\`\`bash
-git clone https://github.com/csoai/platform.git
-cd CSOAI
-\`\`\`
+Vercel is not the live host. The leftover Vercel Git links (`csoai-v2-app`, `councilof-ai-src`) were disconnected and those Vercel projects deleted on 31 Aug 2026.
 
-2. Install dependencies
-\`\`\`bash
-pnpm install
-\`\`\`
+Build (this repo):
 
-3. Configure environment
-\`\`\`bash
-cp .env.example .env
-# Edit .env with your configuration
-\`\`\`
+```bash
+npm run build:client
+bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
+# GHA deploy.yml ships dist/client to Cloudflare Pages
+```
 
-4. Set up database
-\`\`\`bash
-pnpm db:push
-\`\`\`
+Do **not** run `npx vite build` from the repo root (it picks up a dead `src/`). Do **not** `vercel deploy` this site.
 
-5. Start development server
-\`\`\`bash
-pnpm dev
-\`\`\`
+## Documentation
 
-The frontend will be available at http://localhost:5173
-The API will be available at http://localhost:3001
+- [Measurement body overview](https://councilof.ai/about/)
+- [Methodology](https://councilof.ai/methodology/)
+- [GSPC scoreboard](https://councilof.ai/gspc-scoreboard)
+- [Published measurements](https://councilof.ai/benchmarks)
+- [EU AI Act Article 50](https://councilof.ai/article-50)
 
-### Available Scripts
+## What we never do
 
-- \`pnpm dev\` - Start development servers
-- \`pnpm build\` - Build for production
-- \`pnpm start\` - Run production server
-- \`pnpm test\` - Run tests
-- \`pnpm db:push\` - Push schema changes to database
-- \`pnpm db:studio\` - Open Drizzle Studio
+- Certify AI systems or issue compliance badges
+- Sell ratings, ranking position, or early sight of grades
+- Remediate or recommend fixes in exchange for fees
+- Take money in either direction from anything we rank
 
-## API Documentation
+## Surfaces
 
-### Authentication
-- \`POST /api/trpc/auth.login\` - User login
-- \`POST /api/trpc/auth.register\` - User registration
-- \`GET /api/trpc/auth.me\` - Get current user
-
-### Compliance
-- \`GET /api/trpc/compliance.getFrameworks\` - List frameworks
-- \`POST /api/trpc/compliance.startAssessment\` - Start assessment
-- \`GET /api/trpc/compliance.getAssessment\` - Get assessment
-
-### 33-Agent Council
-- \`GET /api/trpc/council.getAgents\` - List all agents
-- \`GET /api/trpc/council.getSessions\` - List voting sessions
-- \`POST /api/trpc/council.triggerVoting\` - Trigger council vote
-
-### Watchdog
-- \`GET /api/trpc/watchdog.getReports\` - List reports
-- \`POST /api/trpc/watchdog.submitReport\` - Submit report
-- \`GET /api/trpc/watchdog.getLeaderboard\` - Safety leaderboard
-
-### Training
-- \`GET /api/trpc/training.getCourses\` - List courses
-- \`POST /api/trpc/training.enrollInCourse\` - Enroll in course
-
-## Compliance Frameworks
-
-### EU AI Act (2024)
-The EU AI Act is the world's first comprehensive legal framework on AI. CSOAI maps all 113 articles and provides:
-- Risk classification (Unacceptable, High, Limited, Minimal)
-- Conformity assessment workflows
-- Technical documentation generation
-- Human oversight verification
-
-### NIST AI RMF 1.0
-The NIST AI Risk Management Framework provides:
-- GOVERN: Policies and procedures
-- MAP: Risk identification
-- MEASURE: Risk assessment
-- MANAGE: Risk treatment
-
-### ISO/IEC 42001
-AI Management System standard covering:
-- Leadership and planning
-- Risk assessment
-- Operational controls
-- Performance evaluation
-
-### TC260 (China)
-Chinese AI Safety Governance Framework:
-- Inherent Risk assessment
-- Application Risk evaluation
-- Derivative Risk monitoring
+| Surface | Purpose |
+|---------|---------|
+| [councilof.ai](https://councilof.ai) | Measurement body — signed credentials, verify, scoreboard |
+| [csoai.org](https://csoai.org) | Public site / DID apex |
+| [meok.ai](https://meok.ai) | MEOK OS — yours, on your keys |
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 
-## Contact
+---
 
-- Website: https://councilof.ai
-- Email: contact@councilof.ai
+<p align="center">
+  <sub>Council of AI · CSOAI LTD · UK Companies House 16939677 · We measure. We sign. We re-attest.</sub>
+</p>
