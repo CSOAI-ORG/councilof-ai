@@ -62,7 +62,7 @@ export interface WireLane {
 export interface WireBoard {
   axes: WireAxis[];
   inLane: WireLane[];
-  /** The API's own derived sentence, e.g. "22 axes · 22 measured". Never typed. */
+  /** The API's own derived sentence, e.g. "22 axes · 15 measured". Never typed. */
   publicCount: string;
   measuredOn: string;
   issuer: string;
