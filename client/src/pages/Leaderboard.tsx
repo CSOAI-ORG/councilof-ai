@@ -437,6 +437,16 @@ function MatrixGrid(props: {
           </tr>
         </thead>
         <tbody>
+          {rows.length === 0 && (
+            <tr>
+              <td
+                colSpan={1 + (compositeOn ? 1 : 0) + shownAxes.length}
+                className="px-4 py-10 text-center text-[12px] text-emerald-200/55"
+              >
+                No model matches that filter. Clear the search to see every measured row.
+              </td>
+            </tr>
+          )}
           {rows.map((m, i) => {
             const comp = compositeByModel.get(m.id);
             const selected = compare.has(m.id);
@@ -449,6 +459,7 @@ function MatrixGrid(props: {
                       checked={selected}
                       onChange={() => onToggleCompare(m.id)}
                       title="Add to head-to-head compare"
+                      aria-label={`Add ${m.id} to head-to-head compare`}
                       className="shrink-0"
                     />
                     <button
@@ -742,7 +753,7 @@ function VerifyModal({ cell, pinnedKey, onClose }: { cell: MatrixCell; pinnedKey
             <div className="font-mono text-[12px] text-emerald-100">{cell.model}</div>
             <div className="text-[12px] text-emerald-300/70">{axisMeta(cell.axis).label} · <span className="font-mono">{pct(cell.accuracy)}</span></div>
           </div>
-          <button onClick={onClose} className="text-emerald-300/60 hover:text-emerald-200">✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} className="text-emerald-300/60 hover:text-emerald-200">✕</button>
         </div>
         <div className="mt-3 rounded bg-black/30 p-2 font-mono text-[11px] text-emerald-200/70">
           card {shortSha(cell.card)}
@@ -855,7 +866,7 @@ function ModelProfileDrawer(props: {
               </div>
             )}
           </div>
-          <button onClick={onClose} className="text-emerald-300/60 hover:text-emerald-200">✕</button>
+          <button type="button" aria-label="Close" onClick={onClose} className="text-emerald-300/60 hover:text-emerald-200">✕</button>
         </div>
 
         <p className="mt-3 text-[12px] text-emerald-100/70">
@@ -939,6 +950,8 @@ function Overlay({ children, onClose }: { children: React.ReactNode; onClose: ()
   return (
     <div
       ref={ref}
+      role="dialog"
+      aria-modal="true"
       className="fixed inset-0 z-50 flex bg-black/60 p-4 backdrop-blur-sm"
       onMouseDown={(e) => { if (e.target === ref.current) onClose(); }}
     >
