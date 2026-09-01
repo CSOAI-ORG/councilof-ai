@@ -23,6 +23,7 @@ describe("AG-UI live GSPC stream leftover (1 Sep 2026)", () => {
     expect(card).toContain('fetch("/root.json"');
     expect(card).toContain("UNCHECKABLE");
     expect(card).not.toMatch(/22 axis · 22 measured/);
+    expect(card).not.toMatch(/22 axis · 15 measured/);
   });
 
   it("Harness AG-UI panel mounts live stream card + draft-only W3C CG cite", () => {

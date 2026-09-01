@@ -164,7 +164,7 @@ export const A_PLUS_PLUS_PLUS: GateCriterion[] = [
   {
     id: "axes",
     title: "Honest axis set",
-    must: "All 22 measured instruments carry a signed cell. Jail is the MEASURED floor, not an arena door.",
+    must: "15 measured instruments carry a signed cell; 7 empty stay empty. Jail is the MEASURED floor, not an arena door.",
   },
 ];
 

@@ -32,7 +32,7 @@ const axis = (over: Partial<WireAxis>): WireAxis => ({
 const board = (axes: WireAxis[]): WireBoard => ({
   axes,
   inLane: [{ axis: "slot15", bench: "", task: "", n: 6, status: "MEASURED" }],
-  publicCount: "22 axes · 22 measured",
+  publicCount: "22 axes · 15 measured",
   measuredOn: "2026-08-12",
   issuer: "CSOAI Ltd",
   doi: "10.5281/zenodo.21991104",
@@ -150,7 +150,7 @@ describe("evidence index — no count is ever typed", () => {
     const out = composeEvidenceIndex({
       board: board([a]), included: [a], system: "", provider: "", now: "T",
     });
-    expect((out.board as Record<string, unknown>).public_count).toBe("22 axes · 22 measured");
+    expect((out.board as Record<string, unknown>).public_count).toBe("22 axes · 15 measured");
   });
 
   it("never claims the index itself is signed or certified", () => {
@@ -188,12 +188,12 @@ describe("boardWire — the failure path reports, it does not paper over", () =>
       axes: [{ axis: "governance", n: 237, accuracy: 0.7, status: "MEASURED", separation: "SEPARATED",
         dataset: "csoai/gspc-gov", dataset_url: "https://huggingface.co/datasets/csoai/gspc-gov",
         interval: ["bad"] }],
-      totals: { public_count: "22 axes · 22 measured" },
+      totals: { public_count: "22 axes · 15 measured" },
     }), { status: 200, headers: { "content-type": "application/json" } }));
     const b = await fetchBoard();
     expect(b.axes[0].dataset_url).toBe("https://huggingface.co/datasets/csoai/gspc-gov");
     expect(b.axes[0].interval).toBeUndefined();
-    expect(b.publicCount).toBe("22 axes · 22 measured");
+    expect(b.publicCount).toBe("22 axes · 15 measured");
   });
 
   it("treats an unknown status as UNMEASURED, never as measured", async () => {

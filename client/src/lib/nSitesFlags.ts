@@ -239,7 +239,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://councilof.ai/api/gspc",
     plant: "Every machine that needs the dated public count.",
-    note: "Quote totals.public_count. 22 axis · 22 measured.",
+    note: "Quote totals.public_count. 22 axis · 15 measured · 7 empty. Empty cells stay empty.",
     snippet: "https://councilof.ai/api/gspc",
   },
   {

@@ -4,7 +4,7 @@
  * An outside brief (2026-08-30) mapped three commercial arms onto Council.
  * Keep the map. Do not keep its stale board counts, public seat prices,
  * fused investable index, Council-minted bonds, or “300+ MCP servers are
- * this product.” Living board: GET /api/gspc — 22 axis · 22 measured.
+ * this product.” Living board: GET /api/gspc — 22 axis · 15 measured · 7 empty. Empty cells stay empty.
  */
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
@@ -27,9 +27,9 @@ export const SOV_AUDIT_SOURCE = {
 
 export const LIVE_PIN = {
   board_schema: "csoai.gspc-axes/0.5",
-  public_count: "22 axis · 22 measured",
+  public_count: "22 axis · 15 measured",
   axes: 22,
-  measured_axes: 22,
+  measured_axes: 15,
   items: 893,
   corrections: 30,
   index_schema: "csoai.sov-signal-index/1",
@@ -123,13 +123,13 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "stale-board-counts",
     claim: "13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
     verdict: "stale",
-    live: "GET /api/gspc: 22 axis · 22 measured · 893 items. Quote the living board.",
+    live: "GET /api/gspc: 22 axis · 15 measured · 7 empty · 893 items. Empty cells stay empty. Quote the living board.",
   },
   {
     id: "six-axis",
     claim: "Six-axis benchmarks are the published GSPC product.",
     verdict: "stale",
-    live: "22 measured instruments. Jail is the MEASURED floor, not a sixth-axis brand.",
+    live: "22 instruments · 15 measured · 7 empty. Jail is the MEASURED floor, not a sixth-axis brand.",
   },
   {
     id: "no-hf-org",
