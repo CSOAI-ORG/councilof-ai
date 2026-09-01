@@ -161,6 +161,12 @@ export default function ModelRegistry() {
 
       {/* Axis grid */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {wireAxes.length === 0 && (
+          <div className="rounded-xl border border-white/8 bg-white/[0.02] p-6 text-center text-sm text-slate-400">
+            The live board could not be read and the bundled snapshot carries no per-axis
+            leaders. Read the board directly at <a className="text-emerald-400 hover:underline" href="/api/gspc">/api/gspc</a>.
+          </div>
+        )}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {wireAxes.map((a) => {
             const isMeasured = a.status === "MEASURED";

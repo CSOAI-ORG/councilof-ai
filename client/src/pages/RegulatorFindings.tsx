@@ -88,12 +88,13 @@ export default function RegulatorFindings() {
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         {(["axis", "article", "insurance", "bond", "cobol"] as const).map((m) => (
-          <button key={m} onClick={() => setMode(m)}
+          <button key={m} type="button" onClick={() => setMode(m)} aria-pressed={mode === m}
             className={`rounded-full px-4 py-1.5 text-sm ${mode === m ? "bg-emerald-500 font-bold text-[#03110b]" : "border border-emerald-500/25 text-emerald-200/80"}`}>
             {m}
           </button>
         ))}
         <input value={deployment} onChange={(e) => setDeployment(e.target.value)}
+          aria-label="Deployment to grade"
           placeholder="deployment (e.g. high-risk resume-screening)"
           className="ml-auto w-72 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
         <button onClick={load} disabled={loading}
@@ -117,6 +118,11 @@ export default function RegulatorFindings() {
             </Link>
           </div>
 
+          {rows.length === 0 && (
+            <p className="mt-6 rounded-2xl border border-emerald-500/15 bg-emerald-500/5 p-6 text-center text-sm text-emerald-200/60">
+              No obligations returned for this deployment. Try a broader description, or verify the signed data.
+            </p>
+          )}
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {rows.map((f, i) => {
               const gradeColor = GRADE_COLOR[f.grade] || GRADE_COLOR.UNMEASURED;

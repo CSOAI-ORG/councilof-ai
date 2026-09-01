@@ -170,6 +170,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               size="sm"
+              aria-label="Refresh dashboard"
               onClick={() => refetch()}
               disabled={isLoading}
             >
