@@ -1,15 +1,28 @@
 # card-v0 evidence grammar — 2026-09-01
 
 **Status:** leftover honesty land. Grammar + additive schema only.  
-**Locks:** Board stays **22 · 15 · 7**. Never MEASURED from this doc. Never certify. No wrangler. No Cloud Agents. No `BOARD_SIGN_KEY` in Workers. No new products. No SaaS seats. One root. No second board.
+**Locks:** Board stays **22 · 15 · 7**. Never MEASURED from this doc. Never certify. No wrangler. No Cloud Agents. No `BOARD_SIGN_KEY` on laptop / 3090 / MetaMask / Workers. No second root writer. No paywall `/root.json`. No 23/22. No endorsement claims. No new products. No SaaS seats. One root. No second board.
 
-This document unifies product evidence behind one **card-v0** atom and one publish path. It does **not** ship OTel exporters, TRACE upstream wiring, x402 rails, or mill instrumentation.
+This document unifies product evidence behind one **card-v0** atom and one publish path. It does **not** ship OTel exporters, TRACE upstream wiring, live x402 `/proof`, or mill instrumentation.
+
+---
+
+## Owner AX (runtime / plugin / harness)
+
+| Lock | Value |
+|---|---|
+| Microsoft Agent Framework + Channels | Supported **runtime/client** via MCP |
+| Harness | **Authority** stays ours — clients do not mint MEASURED |
+| Master plugin | **One** grammar: card-v0 — tools board · axis · verify · list · check_drift · request_attestation (x402) |
+| Surfaces add | `owasp.control` (plus existing `cobol.legacy` · `xdc.document.state`) |
+
+See: `docs/OWNER_AX_MS_AGENT_FRAMEWORK_2026-09-01.md`, `docs/owasp-agentic-crosswalk.md`.
 
 ---
 
 ## Thesis
 
-OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-8004 / COBOL Bridge (`cobol.legacy`, ours) / XDC document-state (six arms + Layer-0 + AG-UI presentation) all emit the **same outer card-v0 envelope**. Root indexes cards. External chains witness the **root hash only**.
+OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-8004 / COBOL Bridge (`cobol.legacy`, ours) / XDC document-state / OWASP control coverage (six arms + Layer-0 + AG-UI presentation) all emit the **same outer card-v0 envelope**. Root indexes cards. External chains witness the **root hash only**. AG-UI is presentation only — not a 7th evidence atom.
 
 ---
 
@@ -29,7 +42,6 @@ OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-80
 
 **Already live (keep):** optional `did`, `tags` on the envelope. Do not strip them to invent a second shape.
 
-
 ## Outer envelope vs nested measure
 
 **card-v0 = outer surface envelope** (same for every product arm):
@@ -39,11 +51,10 @@ OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-80
 Live also carries optional `did` / `tags` — keep; do not invent a thinner fork.
 
 - **Six arms + AG-UI:** AG-UI presents cards/root; it is not a second evidence atom.
-- **`gspc.behavioural`:** GSPC measure fields nest **inside `payload`** (axis, model, accuracy/status, bank cites, …). Never lift them to the outer envelope. Historical shape-A `gspc.measurement-card` under `public/signed/cards/` stays frozen and separate.
-- Other surfaces keep their facts in `payload` the same way.
+- **`gspc.behavioural`:** GSPC measure fields nest **inside `payload`**. Never lift them to the outer envelope. Historical shape-A stays frozen.
 - **Cobalt:** leave alone this leftover (no Cobalt schema/product edits).
 - **COBOL Bridge:** OURS (`CSOAI-ORG/cobol-bridge-mcp`) — Layer-0; `cobol.legacy`; same root as GSPC. Not a CSGA competitor.
-
+- **OWASP:** `owasp.control` is evidence-only cite leaf — never a cert/endorsement badge. See `docs/owasp-agentic-crosswalk.md`.
 
 Machine schema (path is singular): [`public/schema/card-v0.json`](../public/schema/card-v0.json).
 
@@ -58,9 +69,7 @@ json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encod
 - Sorted keys. `ensure_ascii=false`.  
 - **3072-byte hard cap** on the canonical **payload** (not the full card envelope).  
 - Writer: `scripts/publish_public_root.py` (`PAYLOAD_CAP = 3072`).  
-- Do **not** mix with historical GSPC shape-A measurement cards (`public/signed/cards/*`, `ensure_ascii=True`, body+id envelope). Those stay frozen; card-v0 is the public-root unify atom.
-
-Live probe (2026-09-01): ~78 leaves under `public/cards/`; payload sizes well under 3KB; `sha256` recomputes from payload with `ensure_ascii=False`.
+- Do **not** mix with historical GSPC shape-A measurement cards (`public/signed/cards/*`, `ensure_ascii=True`, body+id envelope).
 
 ---
 
@@ -79,6 +88,7 @@ Live probe (2026-09-01): ~78 leaves under `public/cards/`; payload sizes well un
 - `erc8004.callable`
 - `cobol.legacy`
 - `xdc.document.state`
+- `owasp.control`
 
 ### Live (shipped — align, do not fork)
 
@@ -89,51 +99,45 @@ Live probe (2026-09-01): ~78 leaves under `public/cards/`; payload sizes well un
 | `public.notice` | SWIFT + BENJI press / staff letters today |
 | `benji.onchain.supply` | BENJI supply leaf today |
 
-**Naming honesty (do not mass-rename):**
+**Naming honesty (do not mass-rename):** grammar `benji.supply` ↔ live `benji.onchain.supply`; grammar `swift.notice` ↔ live `public.notice`. Cite-only sidecars stay off card-v0.
 
-- Grammar `benji.supply` ↔ live `benji.onchain.supply` — keep live string until a deliberate adapter migrate.  
-- Grammar `swift.notice` ↔ live notices use `public.notice` — keep live string; new SWIFT leaves may use `swift.notice` once the writer allow-list expands.  
-- Cite-only `hub.census.digest` / `gspc.board.cite` stay **off** card-v0 (publisher-health sidecar only).
-
-Schema enum is **additive**: live names retained; grammar names reserved so future emitters share one schema without a second atom.
+Schema enum is **additive**: live names retained; grammar names reserved.
 
 ---
 
-## One publish path
+## One publish path + root/chain
 
 ```text
 adapters → make_card → merkle(leaf sha256s) → public/root.json (+ proofs) → twin apex
 ```
 
-- One writer. One merkle root. Chain / Rekor / OTS / Bitcoin witness **root hash**, not a parallel board.  
-- `root.json` envelope may be unsigned until keystone; leaf signatures are separate.  
-- Halt-on-split / missing-key / unsigned-NEW remain. Laptop never signs with estate key.
+```text
+unsigned card-v0 leaf → GHA signs → ONE writer advances root → chain witnesses ROOT HASH ONLY
+```
+
+- One writer. One merkle root.  
+- Halts: `halt-on-split` · `halt-on-missing-key` · `halt-on-unsigned-leaf`.  
+- See `docs/ROOT_CHAIN_UNSIGNED_GHA_2026-09-01.md`.
 
 Board authority remains living GET [`/api/gspc`](https://councilof.ai/api/gspc) — **22 · 15 · 7**. Empty stays empty.
 
 ---
 
-
 ## COBOL Bridge — Layer-0 note (correction)
 
-**COBOL Bridge is OURS.** Repo: [`CSOAI-ORG/cobol-bridge-mcp`](https://github.com/CSOAI-ORG/cobol-bridge-mcp). It is the Layer-0 mainframe arm and shares the **same public root as GSPC**. It is **not** a CSGA competitor. Kill any leftover competitor framing.
+**COBOL Bridge is OURS.** Repo: [`CSOAI-ORG/cobol-bridge-mcp`](https://github.com/CSOAI-ORG/cobol-bridge-mcp). Layer-0 mainframe arm; **same public root as GSPC**. Not a CSGA competitor.
 
-- Grammar surface: `cobol.legacy` (copybook / CICS / JCL / VSAM evidence leaf).  
-- Outer card-v0 envelope unchanged; payload nests artifacts + PII flags + GDPR/PCI/SOX/Art.12 crosswalk + `source_hash`.  
-- Read-only sidecar contract in upstream `SPEC.md` — never writes bank core / ledger / CICS / VSAM / JCL submit.  
-- `cobolbridge.ai` HTTP 522 sits — this leftover does not attach the domain.  
-- Commercial (owner, out of band from parse tools): Free **10/day**; Pro **£79/mo** + signed root inclusion. Paid inclusion does not stamp MEASURED on the board.  
-- Cobalt Bridge remains untouched (different product).
+- Grammar surface: `cobol.legacy`.  
+- Commercial (owner, out of band): Free **10/day**; Pro **£79/mo** + signed root inclusion. Inclusion ≠ MEASURED.  
+- Cobalt Bridge remains untouched.
 
-Also reserved additively: `xdc.document.state` (XDC document-state leaf; same outer envelope; no live writer from this leftover).
+Also reserved: `xdc.document.state`, `owasp.control`.
 
 ## Out of scope (this leftover)
 
-- TRACE-spec clone / upstream issue  
-- x402 `/proof` wiring  
-- OTel mill instrumentation  
-- MEASURED stamps, certification, seats, second board  
-- Wrangler / Workers `BOARD_SIGN_KEY` / Cloud Agents  
-- Cobalt schema or product changes  
+- TRACE-spec clone / upstream issue · live x402 `/proof` claim · OTel mill instrument  
+- MEASURED stamps, certification, seats, second board, 23/22  
+- Wrangler / Workers or laptop `BOARD_SIGN_KEY` / Cloud Agents / paywall `/root.json`  
+- Cobalt schema or product changes · OWASP/Microsoft endorsement claims  
 
 *End. CEO leftover honesty. Europe/London. 1 Sep 2026.*
