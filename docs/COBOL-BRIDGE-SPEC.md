@@ -4,4 +4,4 @@ Canonical SPEC (read-only sidecar, never writes core, no Starter pricing on meas
 
 https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md
 
-`cobolbridge.ai` HTTP 522 on 31 Aug 2026. This pointer does not attach the domain. Not a GSPC cell. Living board remains `GET https://councilof.ai/api/gspc`.
+`cobolbridge.ai` is **in build**. Apex HTTP 522 (Cloudflare origin timeout; custom domain not on Pages `cobolbridge-site`). Pages origin `cobolbridge-site.pages.dev` is 200 — marketing landing, not a mill. This pointer does not attach the domain. Not a GSPC cell. Living board remains `GET https://councilof.ai/api/gspc`.

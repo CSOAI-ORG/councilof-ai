@@ -249,9 +249,9 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "cobolbridge.ai",
     "name": "cobolbridge.ai",
     "type": "site",
-    "description": "Legacy Modernization Safety",
+    "description": "In build — apex HTTP 522. SPEC only. Not a live mill.",
     "category": "L0-H: Legacy Bridge",
-    "url": "",
+    "url": "/cobolbridge",
     "geo": [
       "London, UK",
       "Charlotte, US"
@@ -260,7 +260,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
       "COBOL to AI",
       "legacy system safety"
     ],
-    "mcp_enabled": true
+    "mcp_enabled": false
   },
   {
     "id": "a2a-governance-bridge-mcp",

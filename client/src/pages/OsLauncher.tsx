@@ -171,7 +171,7 @@ export default function OsLauncher() {
                 .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
                 .then((j) =>
                   setFnNote(
-                    `SWIFT — n=${j?.n} (${j?.n_live} LIVE, ${j?.n_committed} COMMITTED, ${j?.n_discovered} DISCOVERED). Sourced census, not MEASURED. Not clients. cobolbridge.ai 522 is infra.`,
+                    `SWIFT — n=${j?.n} (${j?.n_live} LIVE, ${j?.n_committed} COMMITTED, ${j?.n_discovered} DISCOVERED). Sourced census, not MEASURED. Not clients. cobolbridge.ai is in build (apex 522).`,
                   ),
                 )
                 .catch((err: Error) => setFnNote(`SWIFT (${err.message}). Cite GET /api/swift after GHA.`));

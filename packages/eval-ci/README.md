@@ -27,5 +27,6 @@ to fill it. The recorded bank pin is the auditable fact either way.
 sh packages/eval-ci/run.sh gspc-axis   # gate, then emit QUEUED delta card
 ```
 
-`.github/workflows/eval-ci.yml` runs the selftest, enforces the gate, and uploads the queued
-card. Signing stays on GHA `#card-attestation-1`.
+`.github/workflows/eval-ci.yml` runs the selftest and the fail-on-silent-edit gate on **every
+pull request** (path filters do not hide a bank edit). Signing stays on GHA `#card-attestation-1`.
+Master is not branch-protected; making `eval-ci` a required check is an owner GitHub setting.
