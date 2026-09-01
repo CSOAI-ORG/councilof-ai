@@ -373,7 +373,7 @@ function CompositeNote({ count }: { count: number }) {
     <div className="mt-3 rounded-lg border border-amber-400/30 bg-amber-400/[0.06] px-4 py-3 text-[12.5px] text-amber-100/90">
       <strong>Composite is opt-in, and here is the whole formula:</strong> the unweighted mean of each model&rsquo;s
       measured cells across the {count} selected axes. It averages <em>only</em> the axes a model was measured on, and it
-      reports that count (<span className="font-mono">measured / of</span>) beside every score — a mean over 3 axes and a
+      reports that count (<span className="font-mono">measured / of</span>) beside every score — a mean over the selected measures and a
       mean over 12 are not the same claim. No hidden weighting, no filled blanks. The per-axis columns stay visible
       beside it. This is a convenience, never a crown.
     </div>
@@ -454,7 +454,7 @@ function MatrixGrid(props: {
                     <button
                       onClick={() => onOpenProfile(m.id)}
                       className="truncate text-left font-mono text-[12px] text-emerald-100 hover:text-emerald-300 hover:underline"
-                      title={`${m.id}\nMeasured on ${m.cards} axes. Open governance profile.`}
+                      title={`${m.id}\nMeasured on ${m.cards} of the measures. Open governance profile.`}
                     >
                       {m.id}
                     </button>
