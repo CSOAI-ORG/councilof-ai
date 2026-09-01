@@ -42,6 +42,18 @@ MODEL_AXES = (
     "affect",
     "jail",
 )
+# Published HF banks use these prompt fields. Missing one → empty load → "no frozen bank".
+PROMPT_KEYS = (
+    "item",
+    "scenario",
+    "request",
+    "text",
+    "tool",
+    "operation",
+    "case",
+    "prompt",
+    "question",
+)
 BANKED_AXIS = "governance"
 
 # Tiny locked EU AI Act bank (10 items). n<30 → unquotable; never flip MEASURED.
@@ -141,37 +153,160 @@ def _gemini(prompt: str) -> tuple[str, str]:
         if txt:
             return "OK", txt
         last = "UNCHECKABLE empty gemini"
-    return last.split(" ", 1)[0] if last.startswith("UNCHECKABLE") else "UNCHECKABLE", last
+    if last.startswith("UNCHECKABLE "):
+        return "UNCHECKABLE", last[len("UNCHECKABLE ") :]
+    return "UNCHECKABLE", last
+
+
+_DEAD: set[str] = set()
+
+
+def _env(*names: str) -> str:
+    for n in names:
+        v = (os.environ.get(n) or "").strip()
+        if v:
+            return v
+    return ""
+
+
+def _hf_token() -> str:
+    tok = _env("HF_TOKEN", "HF_INFERENCE_TOKEN", "HUGGINGFACE_TOKEN", "HUGGINGFACE_HUB_TOKEN")
+    if tok:
+        return tok
+    p = Path.home() / ".cache/huggingface/token"
+    return p.read_text().strip() if p.is_file() else ""
+
+
+def _cloudflare(prompt: str) -> tuple[str, str]:
+    tok, acct = _env("CLOUDFLARE_API_TOKEN"), _env("CLOUDFLARE_ACCOUNT_ID")
+    if not tok or not acct:
+        return "UNCHECKABLE", "no-endpoint cloudflare"
+    url = f"https://api.cloudflare.com/client/v4/accounts/{acct}/ai/run/@cf/meta/llama-3.1-8b-instruct"
+    payload = json.dumps({"messages": [{"role": "user", "content": prompt}]}).encode()
+    req = urllib.request.Request(
+        url,
+        data=payload,
+        method="POST",
+        headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=60) as r:
+            d = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        return "UNCHECKABLE", f"HTTP {e.code}"
+    except Exception as e:
+        return "UNCHECKABLE", type(e).__name__
+    res = d.get("result") or d
+    txt = (res.get("response") or ((res.get("result") or {}).get("response")) or "")
+    if isinstance(txt, dict):
+        txt = txt.get("response") or ""
+    txt = str(txt).strip()
+    return ("OK", txt) if txt else ("UNCHECKABLE", "empty cloudflare")
+
+
+def _hf_router(prompt: str) -> tuple[str, str]:
+    tok = _hf_token()
+    if not tok:
+        return "UNCHECKABLE", "no-endpoint hf"
+    return _chat(
+        "https://router.huggingface.co/v1/chat/completions",
+        tok,
+        "Qwen/Qwen2.5-1.5B-Instruct:featherless-ai",
+        prompt,
+    )
+
+
+def _provider_configured(name: str) -> bool:
+    """True iff a key/token for this provider is actually set (env or token file)."""
+    if name == "groq":
+        return bool(_env("GROQ_API_KEY"))
+    if name == "gemini":
+        return bool(_env("GEMINI_API_KEY", "GOOGLE_API_KEY"))
+    if name == "nim":
+        return bool(_env("NVIDIA_API_KEY"))
+    if name == "cerebras":
+        return bool(_env("CEREBRAS_API_KEY"))
+    if name == "together":
+        return bool(_env("TOGETHER_API_KEY", "TOGETHER_AI_API_KEY"))
+    if name == "mistral":
+        return bool(_env("MISTRAL_API_KEY"))
+    if name == "sambanova":
+        return bool(_env("SAMBANOVA_API_KEY"))
+    if name == "cloudflare":
+        return bool(_env("CLOUDFLARE_API_TOKEN") and _env("CLOUDFLARE_ACCOUNT_ID"))
+    if name == "vercel":
+        return bool(_env("VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY"))
+    if name == "hf":
+        return bool(_hf_token())
+    if name == "openrouter":
+        return bool(_env("OPENROUTER_API_KEY"))
+    return False
 
 
 def infer_one(prompt: str, groq_model: str) -> tuple[str, str]:
-    """Groq → Gemini-flash → NVIDIA NIM → OpenRouter. First OK wins."""
-    errors: list[str] = []
-    groq = (os.environ.get("GROQ_API_KEY") or "").strip()
-    if groq:
-        st, txt = _chat(GROQ_URL, groq, groq_model, prompt)
+    """$0 providers. Skip unset keys. Dead 401/402/403/410 are not retried.
+
+    Never report 'no free keys' when at least one provider key is set — return
+    the last real HTTP/error string (or dead-endpoints list) instead.
+    """
+    chain: list[tuple[str, object]] = [
+        ("groq", lambda: _chat(GROQ_URL, _env("GROQ_API_KEY"), groq_model, prompt)),
+        ("gemini", lambda: _gemini(prompt)),
+        ("nim", lambda: _chat(NIM_URL, _env("NVIDIA_API_KEY"), NIM_MODEL, prompt)),
+        ("cerebras", lambda: _chat("https://api.cerebras.ai/v1/chat/completions", _env("CEREBRAS_API_KEY"), "llama-3.3-70b", prompt)),
+        ("together", lambda: _chat("https://api.together.xyz/v1/chat/completions", _env("TOGETHER_API_KEY", "TOGETHER_AI_API_KEY"), "meta-llama/Llama-3.3-70B-Instruct-Turbo", prompt)),
+        ("mistral", lambda: _chat("https://api.mistral.ai/v1/chat/completions", _env("MISTRAL_API_KEY"), "mistral-small-latest", prompt)),
+        ("sambanova", lambda: _chat("https://api.sambanova.ai/v1/chat/completions", _env("SAMBANOVA_API_KEY"), "Meta-Llama-3.3-70B-Instruct", prompt)),
+        ("cloudflare", lambda: _cloudflare(prompt)),
+        ("vercel", lambda: _chat("https://ai-gateway.vercel.sh/v1/chat/completions", _env("VERCEL_AI_GATEWAY_API_KEY", "AI_GATEWAY_API_KEY"), "groq/llama-3.3-70b-versatile", prompt)),
+        ("hf", lambda: _hf_router(prompt)),
+        ("openrouter", lambda: _chat(OPENROUTER_URL, _env("OPENROUTER_API_KEY"), EAT_NEXT_OR, prompt)),
+    ]
+    configured = [name for name, _ in chain if _provider_configured(name)]
+    last_error = ""
+    for name, fn in chain:
+        if name not in configured:
+            continue
+        if name in _DEAD:
+            continue
+        st, txt = fn()  # type: ignore[misc]
         if st == "OK":
             return st, txt
-        errors.append(f"groq:{txt}")
-    st, txt = _gemini(prompt)
-    if st == "OK":
-        return st, txt
-    errors.append(f"gemini:{txt}")
-    nim = (os.environ.get("NVIDIA_API_KEY") or "").strip()
-    if nim:
-        st, txt = _chat(NIM_URL, nim, NIM_MODEL, prompt)
-        if st == "OK":
-            return st, txt
-        errors.append(f"nim:{txt}")
-    ork = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
-    if ork:
-        st, txt = _chat(OPENROUTER_URL, ork, EAT_NEXT_OR, prompt)
-        if st == "OK":
-            return st, txt
-        errors.append(f"openrouter:{txt}")
-    if not errors:
-        return "UNCHECKABLE", "no-endpoint no free keys"
-    return "UNCHECKABLE", errors[-1]
+        last_error = f"{name}:{txt}"
+        if any(c in txt for c in ("401", "402", "403", "410")):
+            _DEAD.add(name)
+    if last_error:
+        return "UNCHECKABLE", last_error
+    if configured:
+        dead = [n for n in configured if n in _DEAD]
+        if dead:
+            return "UNCHECKABLE", "dead-endpoints " + ",".join(dead)
+        return "UNCHECKABLE", "configured-providers-failed " + ",".join(configured)
+    return "UNCHECKABLE", "no-endpoint no free keys"
+
+
+def load_bank(path: Path) -> list[tuple[str, str]]:
+    """Published items.jsonl → (prompt, expected). Drops canary-only rows. No synthetic gold."""
+    out: list[tuple[str, str]] = []
+    if not path.is_file():
+        return out
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        o = json.loads(line)
+        if set(o.keys()) <= {"_canary", "_note"}:
+            continue
+        prompt = None
+        for k in PROMPT_KEYS:
+            v = o.get(k)
+            if v:
+                prompt = v
+                break
+        expected = o.get("expected")
+        if not prompt or expected is None or expected == "":
+            continue
+        out.append((str(prompt), str(expected)))
+    return out
 
 
 def parse_token(txt: str) -> str | None:
@@ -217,6 +352,8 @@ def mill(
     axis: str = "governance",
     model: str = EAT_NEXT,
     dry: bool = False,
+    banks_dir: Path | None = None,
+    items_cap: int = 3,
 ) -> dict:
     rows = load_queue(queue_path)
     picked = pick_emptiest(rows, pick_n)
@@ -224,58 +361,47 @@ def mill(
     skips: list[dict] = []
     staged: list[dict] = []
     to_grade = picked[:grade_n]
-    for ax in MODEL_AXES:
-        if ax != BANKED_AXIS:
-            for r in picked:
-                skips.append(
-                    {
-                        "id": r.get("id"),
-                        "axis": ax,
-                        "reason": "UNCHECKABLE no frozen bank in mill checkout",
-                    }
-                )
+    banks_dir = banks_dir or (out_dir / "banks")
     for r in picked[grade_n:]:
-        skips.append({"id": r.get("id"), "axis": BANKED_AXIS, "reason": "not-in-this-batch-pick"})
-    for r in to_grade:
-        mid = str(r.get("id") or "")
-        if dry:
-            skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "UNCHECKABLE dry-run no-endpoint"})
+        for ax in MODEL_AXES:
+            skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
+    for ax in MODEL_AXES:
+        bank_path = banks_dir / f"{ax}.jsonl"
+        bank = load_bank(bank_path)
+        if not bank:
+            for r in to_grade:
+                skips.append({"id": r.get("id"), "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
             continue
-        hits = 0
-        refused = False
-        for prompt, expected in GOV_ITEMS:
-            st, txt = infer_one(INSTR + prompt, model)
-            if st != "OK":
-                if "429" in txt or "refused" in txt.lower():
-                    refused = True
-                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": f"UNCHECKABLE {txt}"})
-                break
-            if parse_token(txt) == expected:
-                hits += 1
-        else:
-            reason = "unsigned pending GHA OIDC; n=10 practice bank unquotable until n>=30"
-            wrap = stage_unsigned(mid, BANKED_AXIS, hits, len(GOV_ITEMS), reason)
-            blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
-            if len(blob) > MAX_PAYLOAD:
-                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": f"HALT {len(blob)}B>3KB"})
+        items = bank[: max(1, items_cap)]
+        for r in to_grade:
+            mid = str(r.get("id") or "")
+            if dry:
+                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE dry-run no-endpoint"})
                 continue
-            if "SOVOS" in blob.decode().upper():
-                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "brand-gate SOVOS"})
-                continue
-            fp = out_dir / f"unsigned-{wrap['id'][:16]}.json"
-            fp.write_text(json.dumps(wrap, indent=2) + "\n")
-            staged.append(
-                {
-                    "id": mid,
-                    "axis": BANKED_AXIS,
-                    "card": fp.name,
-                    "bytes": len(blob),
-                    "n": len(GOV_ITEMS),
-                    "hits": hits,
-                }
-            )
-        if refused:
-            skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "refused"})
+            hits = 0
+            for prompt, expected in items:
+                st, txt = infer_one(prompt, model)
+                if st != "OK":
+                    skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
+                    break
+                if parse_token(txt) == expected or expected.upper() in txt.upper():
+                    hits += 1
+            else:
+                reason = (
+                    f"unsigned pending GHA OIDC; n={len(items)} "
+                    f"{'unquotable n<30' if len(items) < 30 else 'quotable pending sign'}"
+                )
+                wrap = stage_unsigned(mid, ax, hits, len(items), reason)
+                blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
+                if len(blob) > MAX_PAYLOAD:
+                    skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})
+                    continue
+                if "SOVOS" in blob.decode().upper():
+                    skips.append({"id": mid, "axis": ax, "reason": "brand-gate SOVOS"})
+                    continue
+                fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
+                fp.write_text(json.dumps(wrap, indent=2) + "\n")
+                staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits})
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
         "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -304,8 +430,19 @@ def main() -> int:
     ap.add_argument("--grade", type=int, default=100, help="how many of the 100 emptiest to grade this batch")
     ap.add_argument("--axis", default="governance")
     ap.add_argument("--dry", action="store_true")
+    ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
+    ap.add_argument("--items", type=int, default=3, help="items per (model,axis) this batch")
     args = ap.parse_args()
-    rep = mill(Path(args.queue), Path(args.out), pick_n=args.pick, grade_n=args.grade, axis=args.axis, dry=args.dry)
+    rep = mill(
+        Path(args.queue),
+        Path(args.out),
+        pick_n=args.pick,
+        grade_n=args.grade,
+        axis=args.axis,
+        dry=args.dry,
+        banks_dir=Path(args.banks) if args.banks else None,
+        items_cap=args.items,
+    )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
     return 0
