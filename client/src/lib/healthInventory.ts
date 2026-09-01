@@ -7,7 +7,7 @@
  * how healthy the RECORD is. It is not how healthy the model is, not a
  * fused SOV grade, and not an investable index.
  *
- * Live 2026-09-01: GET /api/gspc → 22 axis · 22 measured · 0 empty ·
+ * Owner lock 2026-09-01: GET /api/gspc → 22 axis · 15 measured · 7 empty ·
  * 893 items. csoai.sov-signal-index/1 → 15 signed rows,
  * not_a_certification: true, never predicts. GET /api/corrections → 30.
  */
@@ -38,14 +38,14 @@ export const HEALTH_NEVER = [
 
 export const LIVE_HEALTH_PIN = {
   declared: 22,
-  measured: 22,
-  empty: 0,
+  measured: 15,
+  empty: 7,
   items: 893,
   index_rows: 15,
   index_schema: "csoai.sov-signal-index/1",
   not_a_certification: true,
   corrections: 30,
-  board: "22 axis · 22 measured",
+  board: "22 axis · 15 measured",
 } as const;
 
 export const HEALTH_FACTS: HealthFact[] = [
