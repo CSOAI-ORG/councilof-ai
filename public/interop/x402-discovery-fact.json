@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.x402-discovery-fact/0.1",
+  "kind": "FACT",
+  "as_of": "2026-09-01T09:55:00Z",
+  "method": "keyless HTTPS GET",
+  "reads": [
+    {
+      "url": "https://www.x402.org/x402/discovery",
+      "http": 404,
+      "note": "301 to x402.org/x402/discovery then 404. Not a listing."
+    },
+    {
+      "url": "https://councilof.ai/.well-known/x402.json",
+      "http": 200,
+      "schema": "csoai.x402/0.1",
+      "mode": "mock",
+      "resource": "https://pack.councilof.ai/v1/pack/assemble",
+      "note": "Our price card. mode=mock. Not a Bazaar catalog row. Not a certificate. Not pay-to-pass."
+    }
+  ],
+  "invented_listing": false,
+  "not": ["certificate", "SaaS checkout", "filled GSPC cell"],
+  "verify": "https://councilof.ai/gspc-verify"
+}
