@@ -30,7 +30,7 @@ OBJECTIVE_NAMES = [
     "G2", "Capterra", "AlternativeTo",
     "F6S", "Gust", "EU-Startups", "Failory", "Indie Hackers",
     "niche AI dirs", "UK tech media",
-    "NVIDIA Inception", "Google for Startups", "AWS Activate", "OCI",
+    "NVIDIA Inception", "Microsoft Founders Hub", "Google for Startups", "AWS Activate", "OCI",
     "Cloudflare", "Innovate UK", "EIC",
 ]
 
@@ -66,6 +66,20 @@ def test_gated_tier_s_click_paths() -> None:
     print(f"click-paths OK: {sum(1 for r in d['surfaces'] if r.get('tier')=='S' and r.get('openness')=='GATED')} TIER S GATED URLs in playbook")
 
 
+def test_free_money_click_paths() -> None:
+    d = json.loads(LOG.read_text(encoding="utf-8"))
+    play = PLAYBOOK.read_text(encoding="utf-8")
+    missing = []
+    for r in d["surfaces"]:
+        if r.get("tier") != "FREE-MONEY":
+            continue
+        url = (r.get("evidence") or "").strip()
+        if not url or url not in play:
+            missing.append(f"{r['name']} {url}")
+    assert not missing, f"FREE MONEY click-paths missing from playbook: {missing}"
+    print(f"free-money paths OK: {sum(1 for r in d['surfaces'] if r.get('tier')=='FREE-MONEY')} URLs in playbook")
+
+
 def test_honesty_floors() -> None:
     blob = LOG.read_text(encoding="utf-8") + PLAYBOOK.read_text(encoding="utf-8")
     blob += X402.read_text(encoding="utf-8") if X402.exists() else ""
@@ -89,6 +103,7 @@ def main() -> int:
     test_coverage()
     test_honesty_floors()
     test_gated_tier_s_click_paths()
+    test_free_money_click_paths()
     return 0
 
 
