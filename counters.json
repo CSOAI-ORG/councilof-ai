@@ -112,6 +112,42 @@
    "last_verified": "2026-08-04",
    "owner": "SOV Harness Custodian",
    "drift_rejected": [233, 293, 341, 378]
+  },
+  "revenue_issuances": {
+   "value": null,
+   "status": "UNMEASURED",
+   "phrasing": "signed measurement cards issued via the paid rail",
+   "evidence": "KV x402 replay store (keyed on issued sha256, paid vs free) — not yet provisioned",
+   "last_verified": null,
+   "owner": "Revenue",
+   "note": "SKU-1. No live settle path (x402 is fail-closed, mode:mock). value is null, never 0 — 0 would assert a measured count. Instrumented by functions/api/revenue.ts; source of truth is settled receipts on-chain, not intent."
+  },
+  "revenue_proofs": {
+   "value": null,
+   "status": "UNMEASURED",
+   "phrasing": "compliance evidence bundles sold (by regulation)",
+   "evidence": "bundle-delivery counter (per-regulation tag: article-50 / dora / cra) — not yet provisioned",
+   "last_verified": null,
+   "owner": "Revenue",
+   "note": "SKU-2. Split new vs quarterly-recompute. Null until a bundle is actually delivered and settled; never inferred from a quote."
+  },
+  "revenue_licences": {
+   "value": null,
+   "status": "UNMEASURED",
+   "phrasing": "active enterprise rail licences (volume band + metered overage)",
+   "evidence": "licence registry (KV/D1, keyed on licensee) — not yet provisioned",
+   "last_verified": null,
+   "owner": "Revenue",
+   "note": "SKU-3. Meter on issuances/bundles, never seats. Null until a rail is licensed."
+  },
+  "revenue_settled_usdc": {
+   "value": null,
+   "status": "UNMEASURED",
+   "phrasing": "USDC settled to the estate pay_to on Base (single-use receipts)",
+   "evidence": "sum of settled txhash in the KV replay store = actual cash — not yet provisioned",
+   "last_verified": null,
+   "owner": "Revenue",
+   "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Null until X402_PAY_TO + a facilitator are provisioned and a receipt settles. Fail-closed by design."
   }
  }
 }

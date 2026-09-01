@@ -4,15 +4,16 @@
  * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.
  * 402 without payment is OK. May trail the last published root (≤24h).
  */
-import { verifyX402Payment, type X402Env } from "./_x402";
+import { verifyX402Payment, x402Accepts, type X402Env } from "./_x402";
 
-const json = (body: unknown, status = 200) =>
+const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
       "access-control-allow-origin": "*",
+      ...extraHeaders,
     },
   });
 
@@ -35,6 +36,15 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         {
           schema: "csoai.public-root-proof/0.1",
           error: "payment_required",
+          // Canonical x402 challenge: an off-the-shelf x402 client pays straight off `accepts`.
+          // Price atom is the issuance re-serve tier ($0.02, ESTIMATE, owner-overridable); payTo
+          // is null until the owner provisions X402_PAY_TO (no address is invented here).
+          accepts: x402Accepts(env as X402Env, u("/api/proof?bundle=1"), {
+            skuId: "issuance",
+            tier: "reserve",
+            description: "Bundle of inclusion proofs for the last published root (re-serve). Not a grade.",
+          }),
+          x402Version: 1,
           payment_required: {
             kind: "x402",
             amount: 0.02,
@@ -110,15 +120,20 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         merkle_root: root.merkle_root,
       });
     }
-    return json({
-      schema: "csoai.public-root-proof/0.1",
-      kind: "bundle",
-      as_of: root.as_of || null,
-      merkle_root: root.merkle_root || null,
-      n: items.length,
-      proofs: items,
-      note: "Paid bundle of inclusion proofs for the last published root. Not a grade.",
-    });
+    return json(
+      {
+        schema: "csoai.public-root-proof/0.1",
+        kind: "bundle",
+        as_of: root.as_of || null,
+        merkle_root: root.merkle_root || null,
+        n: items.length,
+        proofs: items,
+        note: "Paid bundle of inclusion proofs for the last published root. Not a grade.",
+      },
+      200,
+      // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
+      payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
+    );
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {

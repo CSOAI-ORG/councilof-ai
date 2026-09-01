@@ -20,6 +20,8 @@
 //   — see https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp. Until then verification
 //   returns { ok:false } by design; that is the honest state, not a regression.
 
+import { SKUS, USDC_BASE, usdToAtomic, resolvePriceUsd } from "./_skus";
+
 export type X402Env = {
   // The x402 facilitator that verifies (and settles) a receipt. Absent → metered endpoints
   // stay 402: an unverified receipt is never accepted.
@@ -28,9 +30,74 @@ export type X402Env = {
   X402_NETWORK?: string; // e.g. "base"
   X402_PAY_TO?: string; // the address the receipt must pay
   X402_AMOUNT?: string; // atomic units required (string, as x402 encodes it)
+  // Per-SKU price overrides (strings, as Cloudflare passes them) are read via _skus.ts.
+  [k: string]: string | undefined;
 };
 
-export type X402Result = { ok: boolean; reason: string };
+export type X402Result = {
+  ok: boolean;
+  reason: string;
+  // Present only when a facilitator confirmed settlement — the value to echo back in the
+  // X-PAYMENT-RESPONSE header per the x402 spec. Never fabricated; absent when fail-closed.
+  paymentResponse?: string;
+};
+
+/** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
+export type X402Accept = {
+  scheme: "exact";
+  network: string;
+  maxAmountRequired: string; // atomic units, decimal string
+  asset: string;
+  payTo: string | null; // null until the owner provisions the receiving address (X402_PAY_TO)
+  resource: string;
+  description: string;
+  mimeType: string;
+  maxTimeoutSeconds: number;
+  extra: { name: string; decimals: number };
+};
+
+/**
+ * x402Accepts — build the standard `accepts` challenge array for a metered resource, so any
+ * off-the-shelf x402 client (@x402/fetch, the manifest's advertised agent paths) can pay with
+ * no bespoke glue. The amount is the SKU price (an ESTIMATE, owner-overridable via env) converted
+ * to atomic units; asset/network default to USDC-on-Base but are env-overridable.
+ *
+ * OWNER-PROVISIONED, NOT INVENTED: `payTo` comes ONLY from env.X402_PAY_TO. No address is
+ * hardcoded — the estate receiving address is an owner decision (EXEC-A §2 step 5). Until it is
+ * set, `payTo` is null: the challenge is well-formed and advertises the price, but a client has
+ * no address to pay, which is the honest state of a rail whose money destination is unprovisioned.
+ * Likewise the facilitator URL (env.X402_FACILITATOR_URL, consumed in verifyX402Payment) is never
+ * hardcoded — see the TODO(x402 live) at the top of this file.
+ */
+export function x402Accepts(
+  env: X402Env,
+  resourceUrl: string,
+  opts: { skuId: string; tier: string; description?: string },
+): X402Accept[] {
+  const sku = SKUS[opts.skuId];
+  // Prefer an explicit atomic override (X402_AMOUNT) if the owner set one; else derive the
+  // atomic amount from the SKU's (env-overridable) USD price. Never free: a missing price throws.
+  const atomic =
+    env.X402_AMOUNT && env.X402_AMOUNT !== ""
+      ? env.X402_AMOUNT
+      : usdToAtomic(resolvePriceUsd(opts.skuId, opts.tier, env));
+  return [
+    {
+      scheme: "exact",
+      network: env.X402_NETWORK || USDC_BASE.network,
+      maxAmountRequired: atomic,
+      asset: env.X402_ASSET || USDC_BASE.asset,
+      payTo: env.X402_PAY_TO || null,
+      resource: resourceUrl,
+      description:
+        opts.description ||
+        `${sku ? sku.name : opts.skuId} — ${sku ? sku.artifact : "metered artifact"} (ESTIMATE price; owner-overridable).`,
+      mimeType: "application/json",
+      maxTimeoutSeconds: 300,
+      extra: { name: USDC_BASE.symbol, decimals: USDC_BASE.decimals },
+    },
+  ];
+}
 
 /**
  * verifyX402Payment — returns { ok:true } ONLY for a facilitator-verified receipt. Never grants
@@ -87,8 +154,21 @@ export async function verifyX402Payment(
       body: JSON.stringify({ x402Version: 1, paymentPayload: payload, paymentRequirements }),
     });
     if (!vr.ok) return { ok: false, reason: `facilitator /verify HTTP ${vr.status}` };
-    const out = (await vr.json()) as { isValid?: boolean; invalidReason?: string };
-    if (out && out.isValid === true) return { ok: true, reason: "facilitator verified receipt" };
+    const out = (await vr.json()) as {
+      isValid?: boolean;
+      invalidReason?: string;
+      payment?: unknown;
+      txHash?: string;
+    };
+    if (out && out.isValid === true) {
+      // A verified receipt carries a settlement echo to return in X-PAYMENT-RESPONSE (x402 spec).
+      // Only ever set from what the facilitator actually returned — never fabricated.
+      const paymentResponse =
+        out.txHash || out.payment
+          ? btoa(JSON.stringify({ txHash: out.txHash ?? null, payment: out.payment ?? null }))
+          : undefined;
+      return { ok: true, reason: "facilitator verified receipt", paymentResponse };
+    }
     return { ok: false, reason: `facilitator rejected receipt: ${out?.invalidReason || "not valid"}` };
   } catch (e) {
     return { ok: false, reason: `facilitator /verify error: ${(e as Error).message}` };
