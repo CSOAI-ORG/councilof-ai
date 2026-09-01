@@ -1,0 +1,60 @@
+{
+ "as_of": "2026-09-01T05:39:07Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.a2a-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "one_controlled_probe": true,
+   "no_real_task": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
+  },
+  "method": "crawl /.well-known/agent-card.json (legacy agent.json fallback); A2A v1.0 AgentCard conformance; capability-honesty = ONE controlled tasks/get(bogus-id) graded declared-vs-actual transport",
+  "sample": {
+   "n_seeds": 18,
+   "conformant_cards": 5,
+   "no_card": 13,
+   "unique_probed": 4,
+   "honesty_verdicts": [
+    "marketplace-operated-grid-planner:TRANSPORT_MISMATCH",
+    "A-Identity Trust Oracle:TRANSPORT_HONEST",
+    "Brain On BNB AI — hireable agents:TRANSPORT_HONEST",
+    "hosted-erc8183-seller-fixture:TRANSPORT_MISMATCH"
+   ]
+  },
+  "citation_reported": {
+   "claim": "worst model failed 92.6% of real office tasks; best still 70%",
+   "source": "CMU 'TheAgentCompany', arXiv:2412.14161 (May 2025)",
+   "url": "https://arxiv.org/abs/2412.14161",
+   "framing": "reported; general agent-task benchmark, NOT A2A-specific"
+  },
+  "story": "most on-chain-live agents serve NO conformant AgentCard; some conformant cards show declared-vs-actual transport mismatch",
+  "verified_via": "keyless HTTPS crawl + one deterministic JSON-RPC probe",
+  "as_of": "2026-09-01T05:39:07Z",
+  "unmeasured": [
+   "skill_execution_correctness",
+   "auth_gated_agents",
+   "streaming_actual",
+   "push_actual",
+   "broad_registry_crawl"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "feeffd9af28a9dcfc4d3b1124b6a83b510cbf9b6fd5f7e8fb9e60730b9ef967e",
+ "sig_ed25519": "c7ac9f7856f8c1e0fb34e433e9ae45339d7cfa47235954103654fabef3d91bade0c0f08e1365332ec2dfdba6091667b9d82ffa512b99cbf542c682f54268b600",
+ "surface": "a2a.agent",
+ "subject": "A2A agent-card census — 18 seeds, 5 conformant cards, capability-honesty axis",
+ "source_urls": [
+  "https://a2a-protocol.org",
+  "https://arxiv.org/abs/2412.14161",
+  "https://huggingface.co/datasets/csoai/a2a-census"
+ ],
+ "unmeasured": [
+  "skill_execution_correctness",
+  "auth_gated_agents",
+  "streaming_actual",
+  "push_actual",
+  "broad_registry_crawl"
+ ]
+}
