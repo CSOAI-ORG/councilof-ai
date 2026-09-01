@@ -27,7 +27,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     url: "/about",
   },
   {
-    q: 'What is the GSPC board, and what does "22 axis · 22 measured" mean?',
+    q: 'What is the GSPC board, and what does the live count mean?',
     a: "GSPC (Governance · Safety · Provenance · Continuity) is the living board of measurement slots. The count — read from GET /api/gspc, not typed here — states how many slots carry a measured result versus how many are honestly empty or described.",
     url: "/gspc-scoreboard",
   },
