@@ -1,6 +1,6 @@
 /**
  * AttestationDeepDive — click-through deep pages for attestation rows.
- * LOCKS: Living root-as-index GET /root.json; N→N+1 drift = UNCHECKABLE; board 22·15·7; never certify.
+ * LOCKS: Living root-as-index GET /root.json; N→N+1 drift = UNCHECKABLE; board counts live from GET /api/gspc; never certify.
  */
 import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
@@ -24,9 +24,9 @@ const FOCUS = "focus:outline-none focus:ring-2 focus:ring-emerald-500/40";
 
 function ProgressPanel({ data }: { data?: any }) {
   const totals = data?.totals;
-  const measured = totals?.measured_axes ?? 15;
-  const axes = totals?.axes ?? 22;
-  const empty = totals?.unmeasured_axes ?? 7;
+  const axes = totals?.axes ?? 0;
+  const measured = totals?.measured_axes ?? 0;
+  const empty = totals?.unmeasured_axes ?? Math.max(axes - measured, 0);
 
   return (
     <div className="space-y-4 p-4">
@@ -42,8 +42,10 @@ function ProgressPanel({ data }: { data?: any }) {
         for the current snapshot only.
       </p>
       <p className="text-sm text-slate-700">
-        Progress · {axes} axis · {measured} measured · {empty} empty (visible). Board stays{" "}
-        <strong>22 · 15 · 7</strong>. Never fill empty. Never certify.
+        Progress ·{" "}
+        <strong>{totals?.public_count || `${axes} axis · ${measured} measured`}</strong>
+        {empty ? ` · ${empty} empty (visible)` : ""}. Counts come from GET /api/gspc.
+        Never fill empty. Never certify.
       </p>
     </div>
   );
@@ -109,7 +111,7 @@ export default function AttestationDeepDive({ kind, data, onClose }: Props) {
               <a className="underline" href="/root.json">
                 /root.json
               </a>
-              . Board 22 · 15 · 7. Never certify.
+              . Counts come from GET /api/gspc. Never certify.
             </p>
           </div>
         ) : null}

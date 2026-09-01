@@ -7,6 +7,7 @@ import { BOARD_COUNT_OBSERVED, boardCountFromPayload } from "@/lib/boardCount";
 import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
+import GspcTerminal from "@/components/board/GspcTerminal";
 import AttestationDeepDive from "@/components/board/AttestationDeepDive";
 import XrplReaderRail from "@/components/gspc/XrplReaderRail";
 import { downloadBoardCsv } from "@/lib/boardCsv";
@@ -355,8 +356,17 @@ export default function GspcScoreboard() {
           )}
         </p>
 
-        {err && <p className="mt-8 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
-        {!data && !err && <p className="mt-8 text-gray-600">Loading the live board…</p>}
+        {/* Interactive terminal — the one board, drill into signed per-model rankings */}
+        <div className="mt-8">
+          <GspcTerminal />
+        </div>
+
+        <p className="mt-10 text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">
+          The full board — with intervals and harm tails
+        </p>
+
+        {err && <p className="mt-4 text-red-600">Board fetch failed: {err} — the API at /api/gspc is the source of truth.</p>}
+        {!data && !err && <p className="mt-4 text-gray-600">Loading the live board…</p>}
 
         {isFinancialAxis && (
           <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
@@ -631,9 +641,9 @@ export default function GspcScoreboard() {
 
         {data && Array.isArray(data.measured_in_lane) && data.measured_in_lane.length > 0 && (
           <div className="mt-10 rounded-2xl border border-dashed border-emerald-600/25 bg-emerald-50/40 p-6">
-            <h2 className="text-lg font-bold text-gray-900">Unsigned financial slots — not board rows</h2>
+            <h2 className="text-lg font-bold text-gray-900">In-lane measurements — not board rows</h2>
             <p className="mt-1 text-sm text-gray-600">
-              {data.measured_in_lane.length} unsigned financial slots. Published as <code>measured_in_lane</code> on GET /api/gspc.
+              {data.measured_in_lane.length} {data.measured_in_lane.length === 1 ? "slot" : "slots"} measured in-lane. Published as <code>measured_in_lane</code> on GET /api/gspc.
               NOT stamped onto the board count. public_count stays “{board.public_count}” — quoted
               live, never typed. Click any card for traces + graphs.
             </p>
