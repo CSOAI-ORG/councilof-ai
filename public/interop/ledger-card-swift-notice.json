@@ -1,0 +1,44 @@
+{
+ "as_of": "2026-09-01T05:07:20Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.ledger-notice/0.1",
+  "flags": {
+   "press_census": true,
+   "banks_are_targets_not_clients": true,
+   "not_a_grade": true,
+   "settlement_still_off_chain": true,
+   "api_swift_http": 404,
+   "api_swift_honest_404": true,
+   "gpi_not_graded": true
+  },
+  "press_date": "2026-07-09",
+  "press_fetch": "UNREACHABLE at as_of (curl HTTP:000 and fetch timeout from this vantage); body remains UNCHECKABLE",
+  "press_url_sha256_2026_08_31": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+  "tape": "csoai/swift-17 swift17.jsonl - 17 rows, every row status=DISCOVERED n=0 not_a_client=true",
+  "verified_via": "keyless HTTP GET only; live check of GET https://councilof.ai/api/swift returned 404 at as_of; press body not refetchable, prior url_sha256 quoted from the 2026-08-31 tape",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "official_html_body",
+   "bank_participation_status",
+   "gpi_performance",
+   "pilot_outcome"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "e72e784599382b0936ebc13bdfa2dace4b7855dfb05fede92092d81e9abece63",
+ "sig_ed25519": "df31a9c40fa5d64e9b406df17ee42a357d153041e156f247109f43ef8140dc46e716a71bf35d4cbfa17362d0e33137acc7a4ad83b6f9e57dc76973e43c198b0c",
+ "surface": "swift.notice",
+ "subject": "Swift (S.W.I.F.T. SC) - shared-ledger press notice 2026-07-09, 17 banks (press census)",
+ "source_urls": [
+  "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+  "https://huggingface.co/datasets/csoai/swift-17/resolve/main/swift17.jsonl",
+  "https://councilof.ai/api/swift"
+ ],
+ "unmeasured": [
+  "official_html_body",
+  "bank_participation_status",
+  "gpi_performance",
+  "pilot_outcome"
+ ]
+}

@@ -1,0 +1,44 @@
+{
+ "as_of": "2026-09-01T05:07:20Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "issuer_published_address_match": true
+  },
+  "chain": "ethereum",
+  "contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+  "decimals": 18,
+  "total_supply_raw": "48095039789740699318737949",
+  "total_supply_benji": "48095039.7897",
+  "holders": 3,
+  "basis": "issuer states 1 share of FOBXX = 1 BENJI; Ethereum address published on issuer benji-contracts page (HTTP 200)",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key) + issuer contract-address page HTTP 200; a lookalike 'Franklin OnChain U.S. Government Money Fund' token 0x9ae41Ea995b217dA17181181ba398065D66c01f2 is NOT on the issuer page and is excluded",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "fund_aum_all_chains",
+   "supply_on_other_8_published_chains",
+   "nav_per_share",
+   "reserve_attestation"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "7d97e7f1c3872126cd4f72be26894061b3dd8b2992014ae7a5242c13ae44ab23",
+ "sig_ed25519": "35a4bf5181dfa9251ec7248304bcaeaa94e7479693517644acf8ba27ea3b2f86255854624ee28dae5bd3701f6bbef636456b548198b2275e93d5f6425fb7b905",
+ "surface": "benji.onchain.supply",
+ "subject": "Franklin Templeton - BENJI (FOBXX on-chain shares), Ethereum",
+ "source_urls": [
+  "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+  "https://digitalassets.franklintempleton.com/benji/",
+  "https://eth.blockscout.com/token/0x3DDc84940Ab509C11B20B76B466933f40b750dc9"
+ ],
+ "unmeasured": [
+  "fund_aum_all_chains",
+  "supply_on_other_8_published_chains",
+  "nav_per_share",
+  "reserve_attestation"
+ ]
+}
