@@ -12,7 +12,7 @@ const FAKE_WIRE = {
     axes: 22,
     measured_axes: 15,
     unmeasured_axes: 7,
-    public_count: "22 axis · 22 measured",
+    public_count: "22 axis · 15 measured",
     count_grammar: "22 axis are on the board; 15 of them carry a measurement and 7 are declared slots.",
   },
   axes: [
@@ -27,7 +27,7 @@ describe("aguiGspcStream — live GSPC inside AG-UI streams", () => {
   it("snapshots wire totals and keeps empty visible without inventing scores", () => {
     const snap = snapshotFromGspcPayload(FAKE_WIRE);
     expect(snap.source).toBe("wire");
-    expect(snap.public_count).toBe("22 axis · 22 measured");
+    expect(snap.public_count).toBe("22 axis · 15 measured");
     expect(snap.totals).toEqual({ axes: 22, measured_axes: 15, unmeasured_axes: 7 });
     expect(snap.measured.map((a) => a.axis)).toEqual(["governance", "provenance-controls"]);
     expect(snap.empty.map((a) => a.axis)).toEqual(["reserve-attestation", "humanoid-labour-index"]);
@@ -44,7 +44,7 @@ describe("aguiGspcStream — live GSPC inside AG-UI streams", () => {
 
     const text = toAguiGspcTextMessage(snap);
     expect(text.type).toBe("TEXT_MESSAGE_CONTENT");
-    expect(text.delta).toContain("22 axis · 22 measured");
+    expect(text.delta).toContain("22 axis · 15 measured");
     expect(text.delta).toContain("reserve-attestation");
     expect(text.delta).toMatch(/Not a certificate/);
     expect(text.delta).not.toMatch(/certif(?:ied|ication) by Council/i);
