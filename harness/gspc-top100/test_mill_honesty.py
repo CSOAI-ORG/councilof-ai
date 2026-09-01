@@ -11,13 +11,14 @@ sys.path.insert(0, str(HERE))
 from mill_hub_queue import (  # noqa: E402
     MODEL_AXES,
     _DEAD,
+    infer_hub,
     infer_one,
     load_bank,
     mill,
     pick_emptiest,
     stage_unsigned,
 )
-from verify_card import canonical_body_bytes, verify_signed_card  # noqa: E402
+from verify_card import canonical_body_bytes, verify_signed_card, verify_signed_card_with_did_doc  # noqa: E402
 
 
 def test_pick_emptiest_skips_measured() -> None:
@@ -32,12 +33,27 @@ def test_pick_emptiest_skips_measured() -> None:
     assert ids == ["b/empty", "c/empty"]
 
 
+def test_pick_emptiest_prefers_generative() -> None:
+    rows = [
+        {"rank": 1, "id": "sentence-transformers/all-MiniLM-L6-v2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "sentence-similarity"},
+        {"rank": 2, "id": "Qwen/Qwen3-8B", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+        {"rank": 3, "id": "google-bert/bert-base-uncased", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "fill-mask"},
+    ]
+    picked = pick_emptiest(rows, 10, generative_only=True)
+    assert [r["id"] for r in picked] == ["Qwen/Qwen3-8B"]
+
+
 def test_unsigned_card_is_uncheckable_not_measured() -> None:
     wrap = stage_unsigned("unit/model", "governance", hits=8, n=10, reason="n<30 unquotable")
     assert wrap["signature"] is None
     assert wrap["body"]["status"] == "UNMEASURED"
     assert wrap["body"]["accuracy"] != 0 or wrap["body"]["n"] == 0
     assert "SOVOS" not in json.dumps(wrap).upper()
+    zero = stage_unsigned("unit/model", "governance", hits=0, n=30, reason="n>=30 pending sign")
+    dumped = json.dumps(zero["body"], sort_keys=True, separators=(",", ":"))
+    assert ":0.0" not in dumped
+    assert zero["body"]["accuracy"] == 0
+    assert type(zero["body"]["accuracy"]) is int
     raw = canonical_body_bytes(wrap["body"])
     import hashlib
 
@@ -178,6 +194,53 @@ def test_infer_one_uses_set_keys_not_no_free_keys() -> None:
     assert "dead-endpoints" in txt2 or "403" in txt2 or "groq" in txt2
 
 
+def test_infer_hub_calls_the_hub_slug_not_a_proxy() -> None:
+    """A card for Qwen/Qwen3-8B must come from that slug, not Groq llama-3.3."""
+    import io
+    import json
+    import os
+    from email.message import Message
+    from unittest.mock import patch
+
+    _DEAD.clear()
+    os.environ["HF_TOKEN"] = "hf_test_not_real"
+    seen: list[str] = []
+
+    def fake_urlopen(req, timeout=60):  # noqa: ARG001
+        body = json.loads(req.data.decode())
+        seen.append(body.get("model"))
+        class R:
+            def read(self):
+                return json.dumps({"choices": [{"message": {"content": "PROHIBITED"}}]}).encode()
+            def __enter__(self):
+                return self
+            def __exit__(self, *a):
+                return False
+        return R()
+
+    try:
+        with patch("mill_hub_queue.urllib.request.urlopen", fake_urlopen):
+            st, txt = infer_hub("Qwen/Qwen3-8B", "classify this")
+    finally:
+        os.environ.pop("HF_TOKEN", None)
+        _DEAD.clear()
+    assert st == "OK"
+    assert txt == "PROHIBITED"
+    assert seen
+    assert all(s.startswith("Qwen/Qwen3-8B") for s in seen)
+    assert not any("llama-3.3" in (s or "") for s in seen)
+
+
+def test_unknown_did_is_uncheckable_not_measured() -> None:
+    wrap = stage_unsigned("unit/model", "governance", hits=8, n=30, reason="n>=30 pending sign")
+    wrap["did"] = "did:web:csoai.org#no-such-key"
+    wrap["signature"] = "ab" * 32
+    v, reason = verify_signed_card_with_did_doc(json.dumps(wrap).encode(), {"verificationMethod": []})
+    assert v == "UNCHECKABLE"
+    assert wrap["body"]["status"] == "UNMEASURED"
+    assert v != "VALID"
+
+
 def test_live_hub_queue_not_2410_measured() -> None:
     """If a hub-queue parquet is in cwd/scratch, assert n_measured != 2410 unless 2410 cards."""
     candidates = [
@@ -200,10 +263,13 @@ def test_live_hub_queue_not_2410_measured() -> None:
 
 if __name__ == "__main__":
     test_pick_emptiest_skips_measured()
+    test_pick_emptiest_prefers_generative()
     test_unsigned_card_is_uncheckable_not_measured()
     test_mill_dry_skip_log_no_measured_flip()
     test_load_bank_reads_case_operation_and_skips_canary()
     test_mill_dry_with_all_14_banks_has_no_frozen_bank_skip()
     test_infer_one_uses_set_keys_not_no_free_keys()
+    test_infer_hub_calls_the_hub_slug_not_a_proxy()
+    test_unknown_did_is_uncheckable_not_measured()
     test_live_hub_queue_not_2410_measured()
     print("PASS mill honesty")
