@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://councilof.ai/schema/card-v0.json",
   "title": "CSOAI public card v0",
-  "description": "Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive 2026-09-01b: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root as GSPC — not a competitor) + xdc.document.state. Outer envelope unchanged.",
+  "description": "Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root — not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf — never cert/endorsement). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf → GHA signs → one writer advances root; chain witnesses root hash only.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -35,7 +35,8 @@
         "dorado.gate",
         "erc8004.callable",
         "cobol.legacy",
-        "xdc.document.state"
+        "xdc.document.state",
+        "owasp.control"
       ]
     },
     "subject": {
@@ -56,7 +57,7 @@
     },
     "payload": {
       "type": "object",
-      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts."
+      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only — never a badge."
     },
     "sha256": {
       "type": "string",
@@ -67,7 +68,7 @@
         "string",
         "null"
       ],
-      "description": "Hex Ed25519 over canonical payload. null = UNMEASURED (laptop cannot use did:web:csoai.org#board-attestation-1)."
+      "description": "Hex Ed25519 over canonical payload. null = unsigned / gap. Laptop cannot use did:web:csoai.org#board-attestation-1."
     },
     "did": {
       "type": "string",
