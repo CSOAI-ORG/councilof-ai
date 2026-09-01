@@ -8,7 +8,10 @@ results only. Counts are always three-state and never invented.
 
 Probes:
   hf-model     GET huggingface.co/api/models/{id}      200=LIVE 404=DEAD 401/403=HELD
+  hf-space     GET huggingface.co/api/spaces/{id}      200=LIVE 404=DEAD 401/403=HELD
+  npm-registry GET registry.npmjs.org/{name}           200=LIVE 404=DEAD
   mcp-server   GET remote url (reachability)           2xx/4xx=LIVE conn-fail=DEAD none=PLACEHOLDER
+  a2a-agent    GET /.well-known/agent-card.json        200 json=LIVE 404=DEAD none=PLACEHOLDER
   erc8004      eth_call tokenURI(token_id) on chain RPC non-empty=LIVE 0x=PLACEHOLDER err=DEAD
   xrpl-account account_info                            exists=LIVE not_found=DEAD
 
@@ -28,10 +31,40 @@ import common as c
 CHAIN_RPC = {
     1: "https://ethereum-rpc.publicnode.com",
     10: "https://optimism-rpc.publicnode.com",
+    25: "https://cronos-rpc.publicnode.com",
     56: "https://bsc-rpc.publicnode.com",
+    100: "https://gnosis-rpc.publicnode.com",
+    130: "https://unichain-rpc.publicnode.com",
     137: "https://polygon-bor-rpc.publicnode.com",
+    169: "https://manta-pacific-rpc.publicnode.com",
+    204: "https://opbnb-rpc.publicnode.com",
+    250: "https://fantom-rpc.publicnode.com",
+    288: "https://boba-rpc.publicnode.com",
+    324: "https://zksync-era-rpc.publicnode.com",
+    480: "https://worldchain-rpc.publicnode.com",
+    1088: "https://metis-rpc.publicnode.com",
+    1101: "https://polygon-zkevm-rpc.publicnode.com",
+    1284: "https://moonbeam-rpc.publicnode.com",
+    1329: "https://sei-rpc.publicnode.com",
+    1868: "https://soneium-rpc.publicnode.com",
+    2222: "https://kava-rpc.publicnode.com",
+    5000: "https://mantle-rpc.publicnode.com",
+    8217: "https://kaia-rpc.publicnode.com",
     8453: "https://base-rpc.publicnode.com",
+    1135: "https://lisk-rpc.publicnode.com",
+    34443: "https://mode-rpc.publicnode.com",
     42161: "https://arbitrum-one-rpc.publicnode.com",
+    42220: "https://celo-rpc.publicnode.com",
+    43114: "https://avalanche-c-chain-rpc.publicnode.com",
+    57073: "https://ink-rpc.publicnode.com",
+    59144: "https://linea-rpc.publicnode.com",
+    81457: "https://blast-rpc.publicnode.com",
+    167000: "https://taiko-rpc.publicnode.com",
+    534352: "https://scroll-rpc.publicnode.com",
+    7777777: "https://zora-rpc.publicnode.com",
+    80094: "https://berachain-rpc.publicnode.com",
+    11155111: "https://ethereum-sepolia-rpc.publicnode.com",
+    84532: "https://base-sepolia-rpc.publicnode.com",
 }
 TOKENURI_SELECTOR = "0xc87b56dd"  # tokenURI(uint256)
 XRPL_RPC = "https://s1.ripple.com:51234"
@@ -48,6 +81,48 @@ def probe_hf(entry: dict) -> tuple[str, str]:
     if st == 404:
         return "DEAD", f"{mid} (404)"
     return "UNCHECKABLE", f"{mid} (status={st})"
+
+
+def probe_hf_space(entry: dict) -> tuple[str, str]:
+    sid = entry["id"]
+    st, _ = c.http_get(f"https://huggingface.co/api/spaces/{sid}", timeout=12)
+    if st == 200:
+        return "LIVE", f"{sid} (200)"
+    if st in (401, 403):
+        return "HELD", f"{sid} (gated {st})"
+    if st == 404:
+        return "DEAD", f"{sid} (404)"
+    return "UNCHECKABLE", f"{sid} (status={st})"
+
+
+def probe_npm(entry: dict) -> tuple[str, str]:
+    name = entry["id"]
+    # scoped packages: @org/pkg → %40org%2Fpkg
+    enc = name.replace("/", "%2F").replace("@", "%40")
+    st, _ = c.http_get(f"https://registry.npmjs.org/{enc}", timeout=12)
+    if st == 200:
+        return "LIVE", f"{name} (200)"
+    if st == 404:
+        return "DEAD", f"{name} (404)"
+    return "UNCHECKABLE", f"{name} (status={st})"
+
+
+def probe_a2a(entry: dict) -> tuple[str, str]:
+    meta = entry.get("meta") or {}
+    base = (meta.get("card_url") or entry.get("id") or "").rstrip("/")
+    name = str(entry["id"])
+    if not base.startswith("http"):
+        return "PLACEHOLDER", f"{name} (no agent-card URL)"
+    for path in ("/.well-known/agent-card.json", "/.well-known/agent.json", "/agent-card.json"):
+        st, body = c.http_get(base + path, timeout=12)
+        if st == 200 and body:
+            return "LIVE", f"{name} ({path} 200)"
+        if st in (401, 403):
+            return "HELD", f"{name} (gated {st})"
+    st, _ = c.http_get(base, timeout=12)
+    if st >= 0:
+        return "PLACEHOLDER", f"{name} (host {st}, no agent-card)"
+    return "DEAD", f"{name} (unreachable)"
 
 
 def probe_mcp(entry: dict) -> tuple[str, str]:
@@ -68,9 +143,15 @@ def probe_erc8004(entry: dict) -> tuple[str, str]:
     contract = meta.get("contract_address")
     token_id = meta.get("token_id")
     name = str(entry["id"])
-    rpc = CHAIN_RPC.get(chain)
-    if not rpc or not contract or token_id is None:
+    try:
+        cid = int(chain)
+    except (TypeError, ValueError):
         return "UNCHECKABLE", f"{name} (chain {chain} not resolvable / missing fields)"
+    rpc = CHAIN_RPC.get(cid)
+    if not rpc:
+        return "UNCHECKABLE", f"{name} (chain {chain} not resolvable / missing fields)"
+    if not contract or token_id is None:
+        return "UNCHECKABLE", f"{name} (missing contract/token_id)"
     try:
         data = TOKENURI_SELECTOR + f"{int(token_id):064x}"
     except Exception:
@@ -107,35 +188,50 @@ def probe_xrpl(entry: dict) -> tuple[str, str]:
 
 PROBERS = {
     "hf-model": probe_hf,
+    "hf-space": probe_hf_space,
+    "npm-registry": probe_npm,
     "mcp-server": probe_mcp,
+    "a2a-agent": probe_a2a,
     "erc8004": probe_erc8004,
     "xrpl-account": probe_xrpl,
 }
 
 SURFACE = {
     "hf-model": "autoeat.hf.newmodels",
+    "hf-space": "autoeat.hf.spaces",
+    "npm-registry": "autoeat.npm.registry",
     "mcp-server": "autoeat.mcp.registry",
+    "a2a-agent": "autoeat.a2a.agents",
     "erc8004": "autoeat.erc8004.newagents",
     "xrpl-account": "autoeat.xrpl.accounts",
 }
 
 SOURCE_URLS = {
     "hf-model": ["https://huggingface.co/api/models"],
+    "hf-space": ["https://huggingface.co/api/spaces"],
+    "npm-registry": ["https://registry.npmjs.org/-/v1/search"],
     "mcp-server": ["https://registry.modelcontextprotocol.io/v0/servers"],
+    "a2a-agent": ["https://api.8004scan.io/api/v1/agents"],
     "erc8004": ["https://api.8004scan.io/api/v1/agents", "https://base-rpc.publicnode.com"],
     "xrpl-account": ["https://s1.ripple.com:51234"],
 }
 
 METHOD = {
     "hf-model": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+    "hf-space": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
+    "npm-registry": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
     "mcp-server": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
+    "a2a-agent": "keyless HTTPS GET /.well-known/agent-card.json; three-state LIVE/PLACEHOLDER/DEAD",
     "erc8004": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
     "xrpl-account": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
 }
 
 UNMEASURED = {
     "hf-model": ["gspc_score", "weights_integrity", "lineage", "runtime_variant"],
+    "hf-space": ["runtime_behavior", "hardware_claim", "lineage"],
+    "npm-registry": ["install_integrity", "malware", "maintainer_identity"],
     "mcp-server": ["tool_behavior", "capability_claims", "auth_scope", "service_quality"],
+    "a2a-agent": ["skill_execution_correctness", "auth_gated_agents", "streaming_actual"],
     "erc8004": ["reputation_validity", "validation_registry_mainnet", "service_quality"],
     "xrpl-account": ["issuer_identity", "reserve_attestation", "off_ledger_backing"],
 }

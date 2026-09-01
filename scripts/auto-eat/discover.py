@@ -5,10 +5,13 @@ Polls the public sources wired this session and appends genuinely-NEW ids to
 the frozen append-only queue with status=DISCOVERED, as_of, source, kind.
 
 Sources (all keyless, read-only):
-  hf-model     https://huggingface.co/api/models?sort=createdAt   (new models)
-  mcp-server   https://registry.modelcontextprotocol.io/v0/servers (MCP registry)
-  erc8004      https://api.8004scan.io/api/v1/agents               (ERC-8004 regs)
-  xrpl-account https://s1.ripple.com:51234 account/tx of latest validated ledger
+  hf-model      https://huggingface.co/api/models?sort=createdAt   (new models)
+  hf-space      https://huggingface.co/api/spaces?sort=createdAt   (new Spaces)
+  npm-registry  https://registry.npmjs.org/-/v1/search?text=mcp
+  mcp-server    https://registry.modelcontextprotocol.io/v0/servers (MCP registry)
+  a2a-agent     8004scan agent records that carry an http(s) uri
+  erc8004       https://api.8004scan.io/api/v1/agents               (ERC-8004 regs)
+  xrpl-account  https://s1.ripple.com:51234 account/tx of latest validated ledger
 
 Dedupe: against the frozen queue AND against ids already named in the human
 ledger cards. State counts, never invent. DISCOVERED is a first-class state;
@@ -25,6 +28,8 @@ import sys
 import common as c
 
 HF_MODELS = "https://huggingface.co/api/models?sort=createdAt&direction=-1&limit={n}"
+HF_SPACES = "https://huggingface.co/api/spaces?sort=createdAt&direction=-1&limit={n}"
+NPM_SEARCH = "https://registry.npmjs.org/-/v1/search?text=keywords:mcp&size={n}"
 MCP_REGISTRY = "https://registry.modelcontextprotocol.io/v0/servers?limit={n}"
 ERC8004 = "https://api.8004scan.io/api/v1/agents?limit={n}&min_feedbacks=1"
 XRPL_RPC = "https://s1.ripple.com:51234"
@@ -52,6 +57,59 @@ def discover_hf(n: int) -> list[dict]:
             "source": "huggingface.co/api/models",
             "as_of": c.utcnow(),
             "meta": {"pipeline_tag": m.get("pipeline_tag"), "sha": m.get("sha")},
+        })
+    return out
+
+
+def discover_hf_space(n: int) -> list[dict]:
+    st, body = c.http_get(HF_SPACES.format(n=n))
+    if st != 200 or not body:
+        print(f"  hf-space UNREACHABLE (status={st})", file=sys.stderr)
+        return []
+    try:
+        items = json.loads(body)
+    except Exception:
+        print("  hf-space UNCHECKABLE (bad json)", file=sys.stderr)
+        return []
+    out = []
+    for m in items:
+        sid = m.get("id")
+        if not sid:
+            continue
+        out.append({
+            "kind": "hf-space",
+            "id": sid,
+            "status": "DISCOVERED",
+            "source": "huggingface.co/api/spaces",
+            "as_of": c.utcnow(),
+            "meta": {"likes": m.get("likes"), "sdk": m.get("sdk")},
+        })
+    return out
+
+
+def discover_npm(n: int) -> list[dict]:
+    st, body = c.http_get(NPM_SEARCH.format(n=n))
+    if st != 200 or not body:
+        print(f"  npm-registry UNREACHABLE (status={st})", file=sys.stderr)
+        return []
+    try:
+        data = json.loads(body)
+    except Exception:
+        print("  npm-registry UNCHECKABLE (bad json)", file=sys.stderr)
+        return []
+    out = []
+    for row in data.get("objects", []):
+        pkg = (row.get("package") or {})
+        name = pkg.get("name")
+        if not name:
+            continue
+        out.append({
+            "kind": "npm-registry",
+            "id": name,
+            "status": "DISCOVERED",
+            "source": "registry.npmjs.org/-/v1/search",
+            "as_of": c.utcnow(),
+            "meta": {"version": pkg.get("version")},
         })
     return out
 
@@ -115,6 +173,36 @@ def discover_erc8004(n: int) -> list[dict]:
     return out
 
 
+def discover_a2a(n: int) -> list[dict]:
+    """A2A agents that 8004scan already indexed with an http(s) uri."""
+    st, body = c.http_get(ERC8004.format(n=n), timeout=30)
+    if st != 200 or not body:
+        print(f"  a2a-agent UNREACHABLE (status={st})", file=sys.stderr)
+        return []
+    try:
+        data = json.loads(body)
+    except Exception:
+        print("  a2a-agent UNCHECKABLE (bad json)", file=sys.stderr)
+        return []
+    out = []
+    for a in data.get("items", []):
+        uri = a.get("agent_uri") or a.get("url") or a.get("endpoint") or ""
+        if not isinstance(uri, str) or not uri.startswith("http"):
+            continue
+        aid = a.get("agent_id") or uri
+        out.append({
+            "kind": "a2a-agent",
+            "id": str(aid),
+            "status": "DISCOVERED",
+            "source": "api.8004scan.io/api/v1/agents (http uri)",
+            "as_of": c.utcnow(),
+            "meta": {"card_url": uri.rstrip("/"), "chain_id": a.get("chain_id")},
+        })
+        if len(out) >= n:
+            break
+    return out
+
+
 def discover_xrpl(n: int) -> list[dict]:
     # Latest validated ledger -> distinct accounts touched by its transactions.
     st, res = c.http_post_json(XRPL_RPC, {
@@ -165,7 +253,10 @@ def main() -> int:
     found: list[dict] = []
     for name, fn in (
         ("hf-model", discover_hf),
+        ("hf-space", discover_hf_space),
+        ("npm-registry", discover_npm),
         ("mcp-server", discover_mcp),
+        ("a2a-agent", discover_a2a),
         ("erc8004", discover_erc8004),
         ("xrpl-account", discover_xrpl),
     ):
