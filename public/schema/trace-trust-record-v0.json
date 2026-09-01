@@ -10,6 +10,11 @@
     "kind": { "const": "csoai.trace-trust-record/0.1" },
     "writes_board": { "const": false },
     "gspc_card_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "otel_trace_id": {
+      "type": ["string", "null"],
+      "description": "Optional OTel trace id. Empty/null = UNCHECKABLE. TRACE does not invent a span."
+    },
+    "otel_trace_hash": { "type": ["string", "null"] },
     "claims": {
       "type": "object",
       "required": ["rats", "eat", "slsa", "scitt", "spiffe", "ear", "silicon"]
