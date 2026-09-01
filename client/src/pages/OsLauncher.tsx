@@ -138,14 +138,18 @@ export default function OsLauncher() {
               return;
             }
             if (parsed.fn === "XRPL") {
-              void fetch("/interop/xrpl-16.json", { headers: { accept: "application/json" } })
+              void fetch("/api/xrpl", { headers: { accept: "application/json" } })
                 .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
-                .then((j) =>
+                .then((j) => {
+                  const syms = Array.isArray(j?.assets) ? j.assets.map((a: { symbol?: string }) => a.symbol).join(" ") : "";
+                  const unsigned = Array.isArray(j?.assets)
+                    ? j.assets.filter((a: { sig_ed25519?: string | null }) => !a.sig_ed25519).map((a: { symbol?: string }) => a.symbol)
+                    : [];
                   setFnNote(
-                    `XRPL — named ${j?.counts?.named} · located ${j?.counts?.located} · not-located ${j?.counts?.not_located} · control-facts MEASURED ${j?.counts?.control_facts_measured}. Named ≠ located ≠ measured. writes_board=false.`,
-                  ),
-                )
-                .catch((err: Error) => setFnNote(`XRPL tape (${err.message}). Cite /interop/xrpl-16.json after GHA.`));
+                    `XRPL reader n=${j?.n} kind=${j?.kind} writes_board=${j?.writes_board}. ${syms}. Unsigned leaves: ${unsigned.join(",") || "none"}. Not the attest-page 16. Cite GET /api/xrpl.`,
+                  );
+                })
+                .catch((err: Error) => setFnNote(`XRPL (${err.message}). Cite GET /api/xrpl.`));
               return;
             }
             if (parsed.fn === "SWIFT") {
