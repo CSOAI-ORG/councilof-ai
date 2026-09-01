@@ -60,6 +60,10 @@ export const PRIMARY_PATHS = new Set<string>([
   "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
+  // GenAI.mil federal-AI move — static evidence surface (public/genai-mil.html).
+  // Both the clean URL and the .html path are registered (Cloudflare Pages serves
+  // both), mirroring /gspc-quests.html, so the page never ships flagged "archived".
+  "/genai-mil", "/genai-mil.html",
   // Commercial comparison + audience surfaces. These were live routes that no
   // PRIMARY_PATHS entry covered, so every one of them shipped under the
   // "Reference / archive" banner while being the pages a buyer is sent to.
