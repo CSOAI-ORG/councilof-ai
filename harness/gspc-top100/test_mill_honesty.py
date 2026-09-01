@@ -17,6 +17,7 @@ from mill_hub_queue import (  # noqa: E402
     infer_hub,
     infer_one,
     load_bank,
+    load_only_ids,
     mill,
     pick_emptiest,
     stage_unsigned,
@@ -262,11 +263,102 @@ def test_apply_valid_flips_equals_valid_count() -> None:
     assert "unsigned pending" not in json.dumps(row)
 
 
+def test_live_provider_slugs_file_has_twelve() -> None:
+    ids = load_only_ids(HERE / "live_provider_slugs.txt")
+    assert ids is not None
+    assert len(ids) == 12
+    assert "deepseek-ai/DeepSeek-R1" in ids
+    assert "openai-community/gpt2" not in ids
+
+
+def test_pick_emptiest_only_ids_skips_rank_dead() -> None:
+    """Rank-1 gpt2/opt must not be graded when --only is the 12 provider-live slugs."""
+    rows = [
+        {"rank": 1, "id": "openai-community/gpt2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+        {"rank": 2, "id": "facebook/opt-125m", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+        {"rank": 3, "id": "deepseek-ai/DeepSeek-R1", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+        {"rank": 4, "id": "meta-llama/Llama-3.1-8B-Instruct", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+    ]
+    live = {"deepseek-ai/DeepSeek-R1", "meta-llama/Llama-3.1-8B-Instruct"}
+    picked = pick_emptiest(rows, 10, generative_only=True, axis="safety", only_ids=live)
+    assert [r["id"] for r in picked] == ["deepseek-ai/DeepSeek-R1", "meta-llama/Llama-3.1-8B-Instruct"]
+    ranked = pick_emptiest(rows, 2, generative_only=True, axis="safety")
+    assert [r["id"] for r in ranked] == ["openai-community/gpt2", "facebook/opt-125m"]
+
+
+def test_mill_dry_only_ids_does_not_grade_rank_dead(tmp_path: Path | None = None) -> None:
+    out = (tmp_path or (HERE / "_mill_test_only"))
+    if out.exists() and tmp_path is None:
+        import shutil
+
+        shutil.rmtree(out, ignore_errors=True)
+    q = HERE / "_mill_test_only_queue.jsonl"
+    q.write_text(
+        json.dumps({"rank": 1, "id": "openai-community/gpt2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"})
+        + "\n"
+        + json.dumps({"rank": 2, "id": "deepseek-ai/DeepSeek-R1", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"})
+        + "\n"
+    )
+    allow = HERE / "_mill_test_only_ids.txt"
+    allow.write_text("deepseek-ai/DeepSeek-R1\n")
+    ids = load_only_ids(allow)
+    assert ids == {"deepseek-ai/DeepSeek-R1"}
+    rep = mill(q, out, pick_n=10, grade_n=10, axis="safety", dry=True, only_ids=ids)
+    skip_ids = {s["id"] for s in rep["skips"]}
+    assert "deepseek-ai/DeepSeek-R1" in skip_ids
+    assert "openai-community/gpt2" not in skip_ids
+    assert rep["only_ids_n"] == 1
+    assert rep["measured_flips"] == 0
+    q.unlink(missing_ok=True)
+    allow.unlink(missing_ok=True)
+
+
 def test_axis_prompt_asks_for_one_token() -> None:
     p = axis_prompt("governance", "a square is live-scanned", ["PROHIBITED", "HIGH_RISK"])
     assert "EXACTLY ONE token" in p
     assert "PROHIBITED" in p
     assert "a square is live-scanned" in p
+
+
+def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) -> None:
+    """Re-running mill-sign must not OIDC-sign a body that already has a matching signature."""
+    sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+    import sign_mill_cards as sm  # noqa: E402
+
+    root = tmp_path or (HERE / "_mill_test_sign")
+    if tmp_path is None:
+        import shutil
+
+        shutil.rmtree(root, ignore_errors=True)
+    src = root / "unsigned"
+    dst = root / "signed"
+    src.mkdir(parents=True, exist_ok=True)
+    dst.mkdir(parents=True, exist_ok=True)
+    wrap = stage_unsigned("deepseek-ai/DeepSeek-R1", "safety", hits=12, n=30, reason="signed-pending-verify")
+    wrap["body"]["unmeasured"] = ["signed-pending-verify"]
+    (src / "unsigned-safety-deadbeef12.json").write_text(json.dumps(wrap, indent=2) + "\n")
+    already = {
+        "alg": "Ed25519",
+        "body": wrap["body"],
+        "id": wrap["id"],
+        "signature": "ab" * 32,
+        "did": "did:web:csoai.org#board-attestation-1",
+    }
+    (dst / "signed-safety-deadbeef12.json").write_text(json.dumps(already, indent=2) + "\n")
+    called = []
+
+    def boom(body):
+        called.append(body)
+        raise AssertionError("OIDC must not run for already-signed matching id")
+
+    sm.SRC = src
+    sm.DST = dst
+    sm.sign_via_oidc = boom
+    rc = sm.main()
+    assert rc == 0
+    assert called == []
+    out = json.loads((dst / "signed-safety-deadbeef12.json").read_text())
+    assert out["signature"] == "ab" * 32
 
 
 def test_unknown_did_is_uncheckable_not_measured() -> None:
@@ -309,7 +401,11 @@ if __name__ == "__main__":
     test_infer_one_uses_set_keys_not_no_free_keys()
     test_infer_hub_calls_the_hub_slug_not_a_proxy()
     test_apply_valid_flips_equals_valid_count()
+    test_live_provider_slugs_file_has_twelve()
+    test_pick_emptiest_only_ids_skips_rank_dead()
+    test_mill_dry_only_ids_does_not_grade_rank_dead()
     test_axis_prompt_asks_for_one_token()
+    test_sign_mill_skips_already_signed_same_id()
     test_unknown_did_is_uncheckable_not_measured()
     test_live_hub_queue_not_2410_measured()
     print("PASS mill honesty")

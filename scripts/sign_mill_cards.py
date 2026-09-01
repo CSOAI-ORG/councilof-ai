@@ -53,6 +53,16 @@ def main() -> int:
             failures += 1
             continue
         digest = hashlib.sha256(raw).hexdigest()
+        dest = DST / fp.name.replace("unsigned-", "signed-", 1)
+        if dest.is_file():
+            try:
+                prev = json.loads(dest.read_text(encoding="utf-8"))
+            except Exception:
+                prev = {}
+            if prev.get("id") == digest and prev.get("signature"):
+                print("SKIP already-signed", dest.name, digest[:16])
+                signed += 1
+                continue
         try:
             sig = sign_via_oidc(body)
         except Exception as e:
@@ -70,7 +80,6 @@ def main() -> int:
             "quotable": n >= 30,
             "not_a_certificate": True,
         }
-        dest = DST / fp.name.replace("unsigned-", "signed-", 1)
         dest.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
         print("SIGNED", dest.name, digest[:16], "n", n)
         signed += 1

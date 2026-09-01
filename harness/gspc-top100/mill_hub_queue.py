@@ -98,7 +98,23 @@ def load_queue(path: Path) -> list[dict]:
     return rows
 
 
-def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False, axis: str | None = None) -> list[dict]:
+def load_only_ids(path: Path | None) -> set[str] | None:
+    """Provider-live slug allowlist. Rank-only pick otherwise eats gpt2/opt/GGUF 400s."""
+    if path is None:
+        return None
+    p = Path(path)
+    if not p.is_file():
+        return set()
+    return {ln.strip() for ln in p.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")}
+
+
+def pick_emptiest(
+    rows: list[dict],
+    n: int,
+    generative_only: bool = False,
+    axis: str | None = None,
+    only_ids: set[str] | None = None,
+) -> list[dict]:
     def is_empty(r: dict) -> bool:
         if axis:
             cell = (r.get("measured_axes") or {}).get(axis) or {}
@@ -108,6 +124,8 @@ def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False, axis:
         return str(r.get("status") or "").upper() != "MEASURED" or not r.get("card_id")
 
     empty = [r for r in rows if is_empty(r)]
+    if only_ids:
+        empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
         gen = [r for r in empty if r.get("pipeline_tag") in GEN_TAGS]
         if gen:
@@ -473,10 +491,11 @@ def mill(
     banks_dir: Path | None = None,
     items_cap: int = 30,
     generative_only: bool = True,
+    only_ids: set[str] | None = None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
@@ -548,6 +567,7 @@ def mill(
         "not_a_certificate": True,
         "eat_next_model": model,
         "axis": axis,
+        "only_ids_n": len(only_ids) if only_ids is not None else 0,
         "note": "MEASURED only after GHA OIDC + VALID. Hub-queue id is the model that answered. n<30 unquotable.",
     }
     (out_dir / "mill-report.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -565,7 +585,9 @@ def main() -> int:
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
+    ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
     args = ap.parse_args()
+    only = load_only_ids(Path(args.only)) if args.only else None
     rep = mill(
         Path(args.queue),
         Path(args.out),
@@ -575,6 +597,7 @@ def main() -> int:
         dry=args.dry,
         banks_dir=Path(args.banks) if args.banks else None,
         items_cap=args.items,
+        only_ids=only,
     )
     print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
