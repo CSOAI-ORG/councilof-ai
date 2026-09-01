@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T07:53:04Z",
+ "as_of": "2026-09-01T08:10:45Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 12,
+   "live": 11,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9167,
    "live_examples": [
-    "arjunyonjan/pragya-h3 (200)",
-    "eric-tron/test_app_2 (200)",
-    "lavanya2007/Late_attendance (200)",
-    "saif2040ai/marc21-training (200)",
-    "ahmedrihana/Amharic_Gurage_Translator (200)",
-    "Slakade/suryaocr (200)"
+    "farhan78/SynopsisScreeningAndFeedbackAssistant (200)",
+    "negar-ai/agents-course (200)",
+    "tecuts/match (200)",
+    "tareq-ali777/pdf-slides-rotator (200)",
+    "Te-nok/EBM-Assistant-v2-dev (200)",
+    "SalmaShirdel/persian-mdeberta-v3-ner-demo (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:53:04Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "76b9b54292fde120c6817e5867733dadd8dd90de73f3759da1d8a9ff2eb014f6",
- "sig_ed25519": "69e81ca3e1523131d9f228b18534603a505223c77726647d241be5aeef9f0f7a235e5bc3721377fdc1186abe4520a79db080b12a926cf035b03aa7121a5e8f0a",
+ "sha256": "135d4ac75e6882f518bd5bfad9b9eee894f3b097f341b13700c8a64580810201",
+ "sig_ed25519": "78f0d29b0a2fabb13015aea15dc01f0aa4320eea686e83d7988c703f03158130e360bb804d0935f5bcff62817ccc72edadc55d5af3f7298873a817d4872af208",
  "surface": "autoeat.hf.spaces",
- "subject": "auto-eat hf-space: 10 LIVE of 10 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-space: 11 LIVE of 12 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/spaces"
  ],

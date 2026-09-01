@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T07:53:04Z",
+ "as_of": "2026-09-01T08:10:45Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,24 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 5,
+   "live": 5,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "ai (200)",
-    "@modelcontextprotocol/sdk (200)",
-    "@modelcontextprotocol/server (200)",
-    "@ai-sdk/mcp (200)",
-    "claude-cup (200)",
-    "@modelcontextprotocol/client (200)"
+    "mcporter (200)",
+    "agentic-flow (200)",
+    "ato-mcp (200)",
+    "@lovable.dev/mcp-js (200)",
+    "pi-mcp-adapter (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:53:04Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "install_integrity",
    "malware",
@@ -39,10 +38,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "4f0ccc61e85af3b23a458750a37623ea9bb4007f5c79e52477769c8e1c24dd1a",
- "sig_ed25519": "d79c481ebce95601d27e40799509a28e84f70c78e8ca3402e70da3c64a3c052727524e80d61a4bd5c47af04967603f8c4d66cab058d2b33df874e61c14fc440e",
+ "sha256": "9c0fef37b908f1d503fc0ba2518cc5c4c55ad634b828e9caec3c405487100d83",
+ "sig_ed25519": "242243a42cd304528a62ed52448a61ec232dfb655b7dba7ba11126e6d59a0666e13651229047291a5394d56722a4a0de5689dedb13f48b5923e571a554946409",
  "surface": "autoeat.npm.registry",
- "subject": "auto-eat npm-registry: 10 LIVE of 10 probed (read-only, ungraded)",
+ "subject": "auto-eat npm-registry: 5 LIVE of 5 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.npmjs.org/-/v1/search"
  ],
