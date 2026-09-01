@@ -1,7 +1,7 @@
 /**
  * Shared MCP tool handlers for Pages /mcp.
  * Definitions stay in ./gspc-tools.json (byte-for-byte with npm csoai-gspc-mcp).
- * Do not edit mcp/gspc-server — four-tool npm package stays honest.
+ * npm csoai-gspc-mcp@0.1.0 is four tools; HTTP and source 0.1.1 are seven.
  */
 import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";

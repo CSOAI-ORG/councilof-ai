@@ -3,7 +3,8 @@
  *
  * tools/call name=measure | jail-probe — mill-tool DROPPED. Do not claim a signed
  * measurement card from this door. Use read-only board_totals / get_axis.
- * npm csoai-gspc-mcp four tools stay honest: board_totals get_axis verify_card list_cards.
+ * HTTP /mcp is seven tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion).
+ * npm csoai-gspc-mcp@0.1.0 is four tools; 0.1.1 source matches HTTP.
  * POST /v1/measure is 404; this handler does not implement it.
  * Dead worker csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; Pages /mcp is the door.
  */
@@ -119,7 +120,7 @@ export const onRequest: PagesFunction = async (ctx) => {
             message:
               "mill-tool `" +
               call.params.name +
-              "` dropped. Use read-only board_totals / get_axis. npm csoai-gspc-mcp four tools: board_totals get_axis verify_card list_cards. POST /v1/measure is 404; this door does not mill.",
+              "` dropped. Use read-only board_totals / get_axis / get_root. POST /v1/measure is 404; this door does not mill.",
           },
         },
         { headers: { ...CORS } },
@@ -136,7 +137,7 @@ export const onRequest: PagesFunction = async (ctx) => {
         capabilities: { tools: {} },
         serverInfo: { name: "csoai-gspc-mcp", version: "0.1.0" },
         instructions:
-          "Read-only GSPC MCP. Four tools: board_totals get_axis verify_card list_cards plus public-root get_root get_card verify_inclusion. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. npm stdio csoai-gspc-mcp@0.1.0.",
+          "Read-only GSPC MCP. Seven tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. npm stdio csoai-gspc-mcp@0.1.0 is four tools; source 0.1.1 matches HTTP.",
       });
     }
 

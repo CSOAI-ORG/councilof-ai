@@ -1,0 +1,76 @@
+{
+  "schema": "csoai.lid-pack/0.1",
+  "as_of": "2026-09-01T03:27:00Z",
+  "quote": "22 slots / 15 measured / 7 UNMEASURED. Ready is not measured. Complete is not 22/22.",
+  "gspc": {
+    "source": "https://councilof.ai/api/gspc",
+    "schema": "csoai.gspc-axes/0.5",
+    "axes": 22,
+    "measured_axes": 15,
+    "unmeasured_axes": 7,
+    "public_count": "22 axis · 15 measured",
+    "behavioural_measured": "14/14",
+    "financial_measured": "1/8 provenance-controls n=6",
+    "living_stamp": "SIGNED",
+    "doi": "10.5281/zenodo.21991104",
+    "empty": [
+      "reserve-attestation",
+      "regulatory-framework",
+      "distribution-integrity",
+      "custody-disclosure",
+      "ai-economy-index",
+      "human-labour-index",
+      "humanoid-labour-index"
+    ]
+  },
+  "public_root": {
+    "councilof.ai": "https://councilof.ai/root.json",
+    "csoai.org": "https://csoai.org/root.json",
+    "http": 200,
+    "as_of": "2026-09-01T01:48:00Z",
+    "card_count": 43,
+    "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
+    "sig_ed25519": null,
+    "envelope": "UNSIGNED until keystone compact preimage",
+    "note": "The file itself says it is not Ed25519-signed until keystone."
+  },
+  "proof": {
+    "url": "https://councilof.ai/api/proof",
+    "free_inclusion": "/api/proof?sha=<64-hex>",
+    "live_merkle_match": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c"
+  },
+  "hub_census": {
+    "discovered": 3032028,
+    "n_measured": 0
+  },
+  "erc8004": {
+    "identities_31aug": 531269,
+    "cannot_measure_today": true
+  },
+  "cobolbridge.ai": { "http": 522, "do_not_demo": true, "status": "/cobolbridge-status.json" },
+  "api_swift": { "http": 404, "honest": true },
+  "card_v0_surfaces_frozen": 4,
+  "schema_bump_needed": ["genius.reserve", "erc8004.callable", "cobol.legacy"],
+  "mcp": {
+    "remote": "https://councilof.ai/mcp",
+    "http_tools": 7,
+    "npm_0.1.0_tools": 4
+  },
+  "board_sign_key": {
+    "gha_secret_BOARD_SIGN_KEY_PKCS8_B64": false,
+    "pages_secret": true,
+    "oidc_relay": "POST https://councilof.ai/api/board-sign",
+    "laptop": false,
+    "runpod": false
+  },
+  "not_a_certification": true,
+  "do_not": [
+    "claim 22/22",
+    "fill the 7 empty",
+    "laptop sign",
+    "second root writer",
+    "paywall /root.json",
+    "demo cobolbridge.ai 522",
+    "CSOAI/ uppercase Hub namespace"
+  ]
+}
