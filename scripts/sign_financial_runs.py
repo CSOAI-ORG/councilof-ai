@@ -42,7 +42,11 @@ def sign_via_oidc(payload: dict) -> str:
         SIGN_URL,
         data=body,
         method="POST",
-        headers={"Authorization": f"Bearer {oidc}", "Content-Type": "application/json"},
+        headers={
+            "Authorization": f"Bearer {oidc}",
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 csoai-financial-measure/0.2",
+        },
     )
     try:
         with urllib.request.urlopen(sign_req, timeout=30) as resp:
