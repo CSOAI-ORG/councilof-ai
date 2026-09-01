@@ -122,6 +122,18 @@ an index can only list what its publisher chose to list. The 150-row floor that
 used to ship beside this chain is a subset of these 335 cards, not a second
 measurement.
 
+**It does not establish revocation state.** Offline verification establishes
+signature validity and key binding *as of the verification parameters held* —
+the pinned key you fetched, on the day you fetched it. Whether that key remains
+valid is a fact about the present, and a computation over past records cannot
+testify about the present. If we ever revoke or rotate the card-attestation key,
+that fact will be published in the DID document and noted at `/api/corrections`;
+a verifier holding yesterday's parameters will keep saying VALID until its
+parameters are refreshed, and nothing in the verdict tells you otherwise. State
+your parameter-fetch date beside any verdict you republish. *(Limit stated
+2026-09-01, prompted by review on the IETF agentproto list — it was true before
+it was stated.)*
+
 ## Public-root unsigned catalogue (`/root.json`)
 
 Estate steps 1–6 above are for **Ed25519-signed** cards against `#card-attestation-1`.

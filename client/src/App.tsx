@@ -1056,6 +1056,7 @@ function App() {
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />
                   <Route path="/tools" component={ToolsPage} />
+                  <Route path="/plugin" component={ToolsPage} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>

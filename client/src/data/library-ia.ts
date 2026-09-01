@@ -35,7 +35,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/board", "/board/models",
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
-  "/models", "/tools", "/report",
+  "/models", "/tools", "/plugin", "/report",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
