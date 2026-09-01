@@ -61,6 +61,11 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("TERMINAL_HINT");
     expect(launcher).toContain("COMPUTE");
     expect(launcher).toContain("/api/compute");
+    expect(launcher).toContain("XRPL");
+    expect(launcher).toContain("SWIFT");
+    expect(launcher).toContain("JAIL");
+    expect(launcher).toContain("TRACE");
+    expect(launcher).toContain("/gspc/jail");
     const doors = readFileSync(resolve(__dirname, "../components/os/OsDoors.tsx"), "utf8");
     expect(doors).toContain("/api/compute");
     expect(doors).toContain("AGUI_WIRE_URL");

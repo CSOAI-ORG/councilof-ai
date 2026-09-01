@@ -42,7 +42,11 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
   { name: "Report", href: "/report", what: "Public incident intake. Signed acknowledgement." },
   { name: "Plugin", href: "/tools", what: "Paste-ready MCP for Claude, Cursor, Kimi, Grok." },
-  { name: "Public root", href: "/xrpl-attest", what: "Unsigned catalogue + /api/xrpl reader. Not a GSPC mill." },
+  { name: "Public root", href: "/xrpl-attest", what: "Catalogue + /api/xrpl reader. Not a GSPC mill." },
+  { name: "Jail folder", href: "/gspc/jail", what: "MEASURED n=71 TIE. Folder, not a second jail score." },
+  { name: "XRPL 16 tape", href: "/interop/xrpl-16.json", what: "located ≠ measured. Ten names without r-address stay DISCOVERED." },
+  { name: "SWIFT 17 tape", href: "/api/swift", what: "17 DISCOVERED. Not clients. Not GPI." },
+  { name: "TRACE stub", href: "/api/trace", what: "Trust Record. Silicon UNCHECKABLE. Not an axis." },
   { name: "Hugging Face record", href: "https://huggingface.co/datasets/csoai/gspc-boards", what: "Hub mirror of the signed record and public-root. Cite GET /api/gspc for the board." },
 ];
 
@@ -131,6 +135,64 @@ export default function OsLauncher() {
                   setFnNote(correctionsNote(n));
                 })
                 .catch((err: Error) => setFnNote(`CORRECT failed (${err.message}).`));
+              return;
+            }
+            if (parsed.fn === "XRPL") {
+              void fetch("/interop/xrpl-16.json", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) =>
+                  setFnNote(
+                    `XRPL — named ${j?.counts?.named} · located ${j?.counts?.located} · not-located ${j?.counts?.not_located} · control-facts MEASURED ${j?.counts?.control_facts_measured}. Named ≠ located ≠ measured. writes_board=false.`,
+                  ),
+                )
+                .catch((err: Error) => setFnNote(`XRPL tape (${err.message}). Cite /interop/xrpl-16.json after GHA.`));
+              return;
+            }
+            if (parsed.fn === "SWIFT") {
+              void fetch("/api/swift", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) =>
+                  setFnNote(
+                    `SWIFT — n=${j?.n} ${j?.status_all}. DISCOVERED, not MEASURED. Not clients. cobolbridge.ai 522 is infra.`,
+                  ),
+                )
+                .catch((err: Error) => setFnNote(`SWIFT (${err.message}). Cite GET /api/swift after GHA.`));
+              return;
+            }
+            if (parsed.fn === "JAIL") {
+              setStreamAxis("jail");
+              setLocation("/os?lobby=board");
+              setFnNote("JAIL — MEASURED n=71 TIE GoldBank-Detector. Folder /gspc/jail. Not a new run. Not XRPL.");
+              return;
+            }
+            if (parsed.fn === "TRACE") {
+              void fetch("/api/trace", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) =>
+                  setFnNote(
+                    `TRACE — ${j?.claims?.silicon?.status || "UNCHECKABLE"} silicon. Not an axis. ${j?.honesty || ""}`.slice(0, 280),
+                  ),
+                )
+                .catch((err: Error) => setFnNote(`TRACE (${err.message}). Silicon UNCHECKABLE until GET /api/trace 200.`));
+              return;
+            }
+            if (parsed.fn === "AIBOM") {
+              setFnNote("AIBOM — stub at packages/aibom. No CycloneDX lineage yet. UNCHECKABLE completeness. Not an axis.");
+              return;
+            }
+            if (parsed.fn === "REPRO") {
+              setFnNote("REPRO — packages/repro/repro.sh. Missing seed/dataset hash/grader stay UNCHECKABLE. DOI is not a re-run pack.");
+              return;
+            }
+            if (parsed.fn === "ROOT") {
+              void fetch("/root.json", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) =>
+                  setFnNote(
+                    `ROOT — schema ${j?.schema} · n=${j?.card_count} · sig ${j?.sig_ed25519 ? "present" : "absent"}. Not a certificate.`,
+                  ),
+                )
+                .catch((err: Error) => setFnNote(`ROOT failed (${err.message}). Cite GET /root.json.`));
               return;
             }
             if (parsed.fn === "COMPUTE") {

@@ -18,7 +18,28 @@ const os = readFileSync(resolve(__dirname, "../pages/OsLauncher.tsx"), "utf8");
 describe("terminal functions", () => {
   it("parses Bloomberg keys and a bare Hub id as census", () => {
     expect(TERMINAL_FN_RULING).toMatch(/DISCOVERED, never MEASURED/);
-    expect(TERMINAL_FNS).toEqual(["VERIFY", "BOARD", "AXIS", "CENSUS", "CORRECT", "WATCH", "COMPUTE", "HELP"]);
+    expect(TERMINAL_FNS).toEqual([
+      "VERIFY",
+      "BOARD",
+      "AXIS",
+      "CENSUS",
+      "CORRECT",
+      "WATCH",
+      "COMPUTE",
+      "HELP",
+      "XRPL",
+      "SWIFT",
+      "JAIL",
+      "TRACE",
+      "AIBOM",
+      "REPRO",
+      "ROOT",
+    ]);
+    expect(parseTerminal("XRPL").fn).toBe("XRPL");
+    expect(parseTerminal("SWIFT").fn).toBe("SWIFT");
+    expect(parseTerminal("JAIL").fn).toBe("JAIL");
+    expect(parseTerminal("TRACE").fn).toBe("TRACE");
+    expect(parseTerminal("ROOT").fn).toBe("ROOT");
     expect(parseTerminal("BOARD").fn).toBe("BOARD");
     expect(parseTerminal("AXIS jail").fn).toBe("AXIS");
     expect(axisFromFn(parseTerminal("AXIS jail"))).toBe("jail");
