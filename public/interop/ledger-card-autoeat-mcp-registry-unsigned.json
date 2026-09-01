@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.mcp.registry",
- "subject": "auto-eat mcp-server: 11 LIVE of 14 probed (read-only, ungraded)",
- "as_of": "2026-09-01T06:09:13Z",
+ "subject": "auto-eat mcp-server: 376 LIVE of 513 probed (read-only, ungraded)",
+ "as_of": "2026-09-01T08:40:01Z",
  "source_urls": [
   "https://registry.modelcontextprotocol.io/v0/servers"
  ],
@@ -18,25 +18,25 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 14,
-   "live": 11,
-   "placeholder": 2,
+   "n_probed": 513,
+   "live": 376,
+   "placeholder": 105,
    "held": 0,
-   "dead": 1,
+   "dead": 32,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.7857,
+   "live_fraction_of_probed": 0.7329,
    "live_examples": [
-    "ac.inference.sh/mcp (401)",
-    "ad.inside/inside-ads (405)",
-    "ae.propick/propick (405)",
-    "ag.hood/name-service (200)",
-    "agency.goji/goji (405)",
-    "agency.lona/trading (401)"
+    "ai.afmr/discovery (405)",
+    "ai.adside/adside (401)",
+    "ai.adplane/google-ads (401)",
+    "ai.adweave/meta-ads-mcp (401)",
+    "ai.agentdm/agentdm (200)",
+    "ai.adramp/google-ads (401)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T06:09:13Z",
+  "as_of": "2026-09-01T08:40:01Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
