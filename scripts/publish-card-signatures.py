@@ -342,6 +342,32 @@ available. A signature is an integrity claim, not a truth claim.
 **It also does not prove the set is complete.** The index declares a chain head that is not
 among these {len(verified)} cards: they are a prefix of a longer chain. Each card verifies
 individually; completeness does not.
+
+## 7. Post-quantum (PQC) — an OPTIONAL field, absent = UNCHECKABLE
+
+The trust path for every card above is **Ed25519 + SHA-256 hash-chain** and stays that way.
+PQC is **added beside it, never in place of it** — Ed25519 is not removed.
+
+`card-v0` carries an OPTIONAL `sig_pqc` field:
+
+- **Absent or `null` => UNCHECKABLE.** Not a claim of any kind. A card without `sig_pqc` is
+  neither PQC-signed nor failing PQC; the check simply does not apply. Every published card
+  today is in this state. Continuity being MEASURED on the board does not make this field exist.
+- **Present** would be an **ML-DSA-65 (FIPS-204)** signature over the SAME canonical preimage
+  (§2), verified with an ML-DSA public key published in `did:web:csoai.org` beside the Ed25519
+  key. **No such PQC key is published yet**, so a verifier MUST treat any present `sig_pqc` as
+  UNCHECKABLE until that key exists — never as a pass. Fail-closed, three-state, as everywhere.
+
+**Planned path (not yet shipped): hybrid Ed25519 + ML-DSA-65.** Both signatures over the same
+preimage, both required to verify, so a break in either scheme alone does not forge a card. An
+ML-DSA-65 signature is ~3.3KB and does not fit inside the 3KB atom, so it rides in an envelope
+*beside* the card (or in `sig_pqc` referencing that envelope), never bloating the signed body.
+This is roadmap, labelled PLANNED; do not claim a card is PQC-signed until the key and the
+envelope both exist and verify.
+
+**PQCBench** on the GSPC board (`csoai/gspc-asi`) is a model-comparison task about cryptographic
+*assumptions* — it is **not** a post-quantum *signer* and confers no PQC signature on any card.
+The two must never be conflated.
 """,
 )
 
