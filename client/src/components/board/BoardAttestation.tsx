@@ -1,1 +1,1 @@
-LOADING_FROM_DISK
+${file:/workspace/FINAL_ba.content}
