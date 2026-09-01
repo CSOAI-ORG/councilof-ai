@@ -1,0 +1,54 @@
+{
+ "as_of": "2026-09-01T07:53:04Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
+  "sample": {
+   "n_probed": 10,
+   "live": 10,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "arjunyonjan/pragya-h3 (200)",
+    "eric-tron/test_app_2 (200)",
+    "lavanya2007/Late_attendance (200)",
+    "saif2040ai/marc21-training (200)",
+    "ahmedrihana/Amharic_Gurage_Translator (200)",
+    "Slakade/suryaocr (200)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T07:53:04Z",
+  "unmeasured": [
+   "runtime_behavior",
+   "hardware_claim",
+   "lineage"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "76b9b54292fde120c6817e5867733dadd8dd90de73f3759da1d8a9ff2eb014f6",
+ "sig_ed25519": "69e81ca3e1523131d9f228b18534603a505223c77726647d241be5aeef9f0f7a235e5bc3721377fdc1186abe4520a79db080b12a926cf035b03aa7121a5e8f0a",
+ "surface": "autoeat.hf.spaces",
+ "subject": "auto-eat hf-space: 10 LIVE of 10 probed (read-only, ungraded)",
+ "source_urls": [
+  "https://huggingface.co/api/spaces"
+ ],
+ "unmeasured": [
+  "runtime_behavior",
+  "hardware_claim",
+  "lineage"
+ ]
+}
