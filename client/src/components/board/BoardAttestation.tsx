@@ -320,7 +320,7 @@ export default function BoardAttestation({
         <div className={`border-t ${borderCls} pt-5`}>
           <div className="flex items-center mb-3">
             <h3 className={labelCls}>
-              Unsigned Financial Slots · not board rows
+              In-lane measurements · not board rows
             </h3>
             <button
               onClick={() => setDeepDive({ kind: "in-lane" })}
@@ -330,10 +330,10 @@ export default function BoardAttestation({
             </button>
           </div>
           <p className={`text-[11px] ${textMuted} mb-3`}>
-            {inLane.length} unsigned financial slots measured on a smaller fleet with no separation test.
-            Published as <code className="text-[10px]">measured_in_lane</code> on GET /api/gspc.
-            NOT stamped onto the board 15. public_count stays 22 axis · 15 measured.
-            Fetched from /interop/ as unsigned leftover only.
+            {inLane.length} {inLane.length === 1 ? "slot" : "slots"} measured in-lane on a smaller fleet with no separation test.
+            Published as <code className="text-[10px]">measured_in_lane</code> on GET /api/gspc —
+            never stamped onto the board. Board public_count stays{" "}
+            {totals?.public_count || `${axes} axis · ${measured} measured`}.
           </p>
           
           <div className="grid gap-2 sm:grid-cols-2">
