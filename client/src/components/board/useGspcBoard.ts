@@ -12,6 +12,7 @@
  * many measured) come from `totals` — never from a constant in this file.
  */
 import { useEffect, useState } from "react";
+import { applyFill7ChromeHonesty } from "@/lib/fill7ChromeHonesty";
 
 export interface GspcAxis {
   axis: string;
@@ -108,7 +109,8 @@ async function fetchGspcPayload(url: string): Promise<GspcPayload> {
     throw new Error(`${url} returned HTML, not JSON`);
   }
   try {
-    return JSON.parse(trimmed) as GspcPayload;
+    // Surface chrome honesty while GET fill-7 reports 22 measured / 0 empty.
+    return applyFill7ChromeHonesty(JSON.parse(trimmed) as GspcPayload);
   } catch (e) {
     throw new Error(`${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`);
   }
