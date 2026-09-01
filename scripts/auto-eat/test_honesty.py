@@ -137,6 +137,47 @@ def test_discover_hf_space_and_npm_from_fixture() -> None:
     assert npms[0]["id"] == "@fixture/mcp-demo"
 
 
+def test_hf_pagination_two_pages() -> None:
+    """Shipped discover_hf walks skip= pages until n."""
+    orig_get, orig_page = c.http_get, discover.PAGE
+    seen = []
+
+    def fake_get(url, timeout=15, headers=None):
+        seen.append(url)
+        if "skip=0" in url:
+            return 200, json.dumps([{"id": "a/m1"}, {"id": "a/m2"}]).encode()
+        if "skip=2" in url:
+            return 200, json.dumps([{"id": "a/m3"}]).encode()
+        return 200, b"[]"
+
+    c.http_get = fake_get
+    discover.PAGE = 2
+    try:
+        rows = discover.discover_hf(3)
+    finally:
+        c.http_get = orig_get
+        discover.PAGE = orig_page
+    assert [r["id"] for r in rows] == ["a/m1", "a/m2", "a/m3"]
+    assert any("skip=0" in u for u in seen) and any("skip=2" in u for u in seen)
+
+
+def test_run_probes_parallel_unsigned() -> None:
+    orig = probe.probe_hf
+
+    def fake(entry):
+        return "LIVE", f"{entry['id']} (200)"
+
+    probe.PROBERS["hf-model"] = fake
+    try:
+        by = probe.run_probes([
+            {"kind": "hf-model", "id": "p/one"},
+            {"kind": "hf-model", "id": "p/two"},
+        ])
+    finally:
+        probe.PROBERS["hf-model"] = orig
+    assert by["hf-model"]["LIVE"] == 2 and by["hf-model"]["n"] == 2
+
+
 def test_pidfile_lock_in_eat_loop() -> None:
     text = (HERE / "eat-loop.sh").read_text(encoding="utf-8")
     assert "EAT_PIDFILE" in text
@@ -152,10 +193,12 @@ def main() -> int:
     test_write_atom_structurally_unsigned()
     test_erc8004_expanded_chain_not_uncheckable_for_missing_rpc()
     test_discover_hf_space_and_npm_from_fixture()
+    test_hf_pagination_two_pages()
+    test_run_probes_parallel_unsigned()
     test_pidfile_lock_in_eat_loop()
     print(
         "selftest OK: staged atom unsigned; ERC-8004 43114 not missing-RPC; "
-        "hf-space+npm DISCOVERED from fixture; pidfile lock"
+        "hf-space+npm DISCOVERED; hf pagination; parallel probes; pidfile lock"
     )
     return 0
 

@@ -20,21 +20,24 @@
 #
 # Env:
 #   EAT_REPO       path to a councilof-ai clone (default: git toplevel of this script)
-#   EAT_INTERVAL   seconds between passes in loop mode (default 3600)
+#   EAT_INTERVAL   seconds between passes in loop mode (default 15)
 #   EAT_BRANCH     feed branch (default auto-eat-feed)
 #   EAT_DEPLOY_KEY ssh key for push (default /workspace/keys/arena_deploy_ed25519)
-#   EAT_PER_SOURCE ids polled per source per pass (default 25)
-#   EAT_MAX_PROBE  ids probed per pass (default 40)
+#   EAT_PER_SOURCE ids polled per source per pass (default 2000)
+#   EAT_MAX_PROBE  ids probed per pass (default 5000)
+#   EAT_PROBE_WORKERS  concurrent probes (default 64)
 #   EAT_NO_PUSH=1  stage + commit locally, never push (for dry runs)
+# Public APIs — not a literal 1e6x of 40 probes/hour. This is the keyless ceiling.
 set -u
 
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="${EAT_REPO:-$(git -C "$HERE" rev-parse --show-toplevel 2>/dev/null)}"
 BRANCH="${EAT_BRANCH:-auto-eat-feed}"
 DEPLOY_KEY="${EAT_DEPLOY_KEY:-/workspace/keys/arena_deploy_ed25519}"
-PER_SOURCE="${EAT_PER_SOURCE:-25}"
-MAX_PROBE="${EAT_MAX_PROBE:-40}"
-INTERVAL="${EAT_INTERVAL:-3600}"
+PER_SOURCE="${EAT_PER_SOURCE:-2000}"
+MAX_PROBE="${EAT_MAX_PROBE:-5000}"
+INTERVAL="${EAT_INTERVAL:-15}"
+export EAT_PROBE_WORKERS="${EAT_PROBE_WORKERS:-64}"
 LOG="${EAT_LOG:-$REPO/scripts/auto-eat/eat.log}"
 PIDFILE="${EAT_PIDFILE:-/workspace/auto-eat/eat-loop.pid}"
 AE="$REPO/scripts/auto-eat"
