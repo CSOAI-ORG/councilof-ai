@@ -1,0 +1,79 @@
+{
+ "as_of": "2026-09-01T04:12:34Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "axis": "regulatory-framework",
+  "kind": "csoai.financial-measure-run/0.2",
+  "n": 6,
+  "risk_verdict": "UNMEASURED",
+  "status": "MEASURED",
+  "as_of": "2026-09-01T04:12:34Z",
+  "rows": [
+   {
+    "id": "RLUSD",
+    "instrument": "RLUSD (Ripple USD)",
+    "regime": "NYDFS",
+    "declared": true,
+    "confirm_url": "https://ripple.com/solutions/stablecoin/transparency/",
+    "http": 200,
+    "not_compliant_claim": true
+   },
+   {
+    "id": "OUSG",
+    "instrument": "Ondo OUSG (Short-Term US Treasuries)",
+    "regime": "Reg D 506(c)",
+    "declared": true,
+    "confirm_url": "https://ondo.finance/ousg",
+    "http": 200,
+    "not_compliant_claim": true
+   },
+   {
+    "id": "AAULF",
+    "instrument": "Archax x abrdn USD Liquidity Fund",
+    "regime": "Luxembourg MMFR",
+    "declared": true,
+    "confirm_url": "https://archax.com/invest/abrdn-usd",
+    "http": 200,
+    "not_compliant_claim": true
+   },
+   {
+    "id": "TBILL",
+    "instrument": "OpenEden TBILL (TBL)",
+    "regime": "BVI SIBA",
+    "declared": true,
+    "confirm_url": "https://docs.openeden.com/tbill/introduction",
+    "http": 200,
+    "not_compliant_claim": true
+   },
+   {
+    "id": "USDB",
+    "instrument": "Braza Bank USDB",
+    "regime": "BACEN",
+    "declared": true,
+    "confirm_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+    "http": 200,
+    "not_compliant_claim": true
+   },
+   {
+    "id": "BBRL",
+    "instrument": "Braza Bank BBRL",
+    "regime": "BACEN",
+    "declared": true,
+    "confirm_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+    "http": 200,
+    "not_compliant_claim": true
+   }
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "b656b465aead6ee783dec4f6f9adf9e06d4f72c02f308be6bc2ea8e2c1bc783c",
+ "sig_ed25519": "d51c4f1b064868c821f0da776f640ee2102e7f5928ebbc2c3c857d21edd3e5088a0df8356fa29ea61bfe46ba1cc020dbd13ed1580b44cb39dc8e75adbcc94508",
+ "surface": "public.notice",
+ "subject": "financial-measure:regulatory-framework",
+ "source_urls": [
+  "https://councilof.ai/interop/financial-measure-run-regulatory-framework.json"
+ ],
+ "unmeasured": [
+  "risk_verdict"
+ ]
+}

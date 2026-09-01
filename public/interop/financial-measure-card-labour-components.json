@@ -1,0 +1,39 @@
+{
+ "as_of": "2026-09-01T04:12:34Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "axis": "labour-components",
+  "kind": "csoai.financial-measure-run/0.2",
+  "n": 2,
+  "risk_verdict": "UNMEASURED",
+  "status": "MEASURED",
+  "as_of": "2026-09-01T04:12:34Z",
+  "rows": [
+   {
+    "series": "EU participation rate",
+    "year": 2024,
+    "value": 57.58,
+    "unit": "%",
+    "surface": "/interop/human-labour-index.v0.1.json"
+   },
+   {
+    "series": "EU unemployment rate",
+    "year": 2024,
+    "value": 5.92,
+    "unit": "%",
+    "surface": "/interop/human-labour-index.v0.1.json"
+   }
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "e60ba721f9a0ea8d291bd6b7d292c86532fd80273a3a8084b2c21b0a7db6b33e",
+ "sig_ed25519": "fdebc740a1192b41374fab375e199769d4dd725e09054cca9fc064857b63ab1064c8f5c1f3a5cdf9711595c24a6449a190e454716b8c7247407532798254f204",
+ "surface": "public.notice",
+ "subject": "financial-measure:labour-components",
+ "source_urls": [
+  "https://councilof.ai/interop/financial-measure-run-labour-components.json"
+ ],
+ "unmeasured": [
+  "risk_verdict"
+ ]
+}
