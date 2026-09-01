@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:19:19Z",
+ "as_of": "2026-09-01T08:40:01Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 386,
-   "live": 244,
+   "n_probed": 1287,
+   "live": 498,
    "placeholder": 0,
-   "held": 1,
+   "held": 0,
    "dead": 0,
-   "uncheckable": 141,
-   "live_fraction_of_probed": 0.6321,
+   "uncheckable": 789,
+   "live_fraction_of_probed": 0.3869,
    "live_examples": [
-    "Vinnarasan/Agentic (200)",
-    "aixk/FastHyperNet20-200M (200)",
-    "JokerJokerJoker/cat01 (200)",
-    "robert131OO4/cascade-vex (200)",
-    "gogonnanaaa/public-v2 (200)",
-    "compiledcode83/queue_-child (200)"
+    "vsuhas9/LFM2-VL-450M-r32-a16 (200)",
+    "ShinyUser/mt92-r1238-uid24-balanced (200)",
+    "ASD1232132/MyAwesomeModel-TestRepo (200)",
+    "ShinyUser/mt92-r1238-uid191-quality (200)",
+    "yunjae-won/T14bsolution_14b_S1.7b_klreg1.0_stage0_checkpoint50 (200)",
+    "vishwa1711/my-agentic-rag-ai (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:19:19Z",
+  "as_of": "2026-09-01T08:40:01Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -40,10 +40,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "a9f55634c0d9fa329d24401940b7c362bfeea3ac845cfd8d736f08b6708e2109",
- "sig_ed25519": "f04bd0e7edf0fa23c06f874cd7d88807953eef8fdc83fd77eb4231652fb6b0023c11f352faf3394a45e5d7fcceb33083c50f23a8e63d66a699849f9a4d99b101",
+ "sha256": "c8fc2099a427ccb1028640f3a9a58ef4bbe0362264c83308dce10a2f722759b6",
+ "sig_ed25519": "e7cfafb2dd3608a0552f7e08bb2a193008f01f7005b8d595d93f292137612c653c712640aa5b77ce199e625d9bdde6fd7e1cc4abe06fa885df8112ed080a260f",
  "surface": "autoeat.hf.newmodels",
- "subject": "auto-eat hf-model: 244 LIVE of 386 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-model: 498 LIVE of 1287 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/models"
  ],

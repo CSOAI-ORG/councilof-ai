@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T06:09:13Z",
+ "as_of": "2026-09-01T08:40:01Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 14,
-   "live": 11,
-   "placeholder": 2,
+   "n_probed": 513,
+   "live": 376,
+   "placeholder": 105,
    "held": 0,
-   "dead": 1,
+   "dead": 32,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.7857,
+   "live_fraction_of_probed": 0.7329,
    "live_examples": [
-    "ac.inference.sh/mcp (401)",
-    "ad.inside/inside-ads (405)",
-    "ae.propick/propick (405)",
-    "ag.hood/name-service (200)",
-    "agency.goji/goji (405)",
-    "agency.lona/trading (401)"
+    "ai.afmr/discovery (405)",
+    "ai.adside/adside (401)",
+    "ai.adplane/google-ads (401)",
+    "ai.adweave/meta-ads-mcp (401)",
+    "ai.agentdm/agentdm (200)",
+    "ai.adramp/google-ads (401)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T06:09:13Z",
+  "as_of": "2026-09-01T08:40:01Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -40,10 +40,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "7541c559ec7f0e6f6f854d65b5a2d09a25075471ee9866f74211e2050d615dba",
- "sig_ed25519": "37e174c5f662392d33570e5fe82e825688a977a7547abb96f97da8c3206d3455914c60f0be0acc574972d15696f688ea4c0316ead177c97011e754c567524805",
+ "sha256": "249e4750796796e80debe2c70391ad807c6764c91400b0174918dc806fb2c5e2",
+ "sig_ed25519": "bd0ab3cc42dba2bd4165bb493a34bb3899ab74c477e7069307c1cb464a84599e74cff2142b63df3135c33d46ab07cbfe9d0ab2d557ba26df6d1d50efc7a8160e",
  "surface": "autoeat.mcp.registry",
- "subject": "auto-eat mcp-server: 11 LIVE of 14 probed (read-only, ungraded)",
+ "subject": "auto-eat mcp-server: 376 LIVE of 513 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.modelcontextprotocol.io/v0/servers"
  ],
