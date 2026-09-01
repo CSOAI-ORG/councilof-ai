@@ -1,7 +1,7 @@
 # RUNPOD POD INVENTORY — 2026-08-22 (JEEVES audit)
 
-## Sink pod (213.173.105.83:25804 — UP, DSH mesh node)
-Volume: mfs#euro.runpod.net:9421 → /workspace (2.3P total, 452T free)
+## Sink pod (host:port held privately — UP, DSH mesh node)
+Volume: RunPod mfs mount (host:port held privately) → /workspace (2.3P total, 452T free)
 
 ### Models (Ollama blobs, 20G total)
 | Model | Size | State |
@@ -33,13 +33,13 @@ ollama. 20G blobs are orphaned-but-intact if manifests are stale.
   bootstrap — the estate's agent mesh node)
 - SOVOS/living, offload-dsh/rtest (7M, f1)
 
-## 3090 pod (194.26.196.156:12853 — DOWN/paused as of 2026-08-22)
+## 3090 pod (host:port held privately — DOWN/paused as of 2026-08-22)
 - SSH times out (paused). Was the heavy-compute pod (RTX 3090) per
   runpod-overnight.sh. Volume state unknown until resumed.
 - When resumed: check /workspace for models + overnight-* bundles.
 
 ## Notes
-- RunPod GraphQL API key (rpa_2U0...) validates but `myself { pods }` returns
+- RunPod GraphQL API key (held privately; redacted) validates but `myself { pods }` returns
   null — account view does not expose pod list via this key; inventory done
   via direct SSH to reachable pods.
 - These models + cards are training/measurement assets — do NOT delete;

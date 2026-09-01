@@ -52,21 +52,23 @@ export const PLAY_CARDS: PlayCard[] = [
   },
   {
     id: "gspc-quests",
-    title: "GSPC Quests — answer what the models answered",
+    title: "GSPC Quests — play the board the models are measured on",
     blurb:
-      "Six axis-scoped quests from the banked GSPC items. Your answers are read by the same " +
-      "deterministic regex and scored by the same macro-F1 rule used to measure every model.",
+      "Twelve behavioural axes, each a quest over its frozen GSPC bank. Your answers are read by the same " +
+      "deterministic rule and scored by the same macro-F1 aggregation used to measure every model, and your " +
+      "score sits beside the measured model leader read live from /api/gspc.",
     // Reuses the duel art deliberately: this is the graded-items half of that idea,
-    // playable today — the live match half stays honestly in-build below.
+    // playable today — the live networked match half stays honestly in-build below.
     image: "/images/coliseum_logic_duel.jpg",
     alt: "A human and an AI facing each other across a chessboard in the arena",
     status: "route",
     route: "/gspc-quests.html",
     chip: "playable now",
     reality:
-      "Opens the real quest page in the centre pane. You actually play: pick a quest, answer its " +
-      "items, and the page grades you with the model's own grader, beside the model's published " +
-      "figure. Your score stays in this browser — nothing is recorded or sent anywhere.",
+      "Opens the real quest page in the centre pane. You actually play: pick an axis, answer its items, and the " +
+      "page grades you with the model's own grader beside the model's live figure. It also carries a Humans-vs-the-Board " +
+      "view, a daily quest with a local streak, and an on-device co-op round. Your score stays in this browser — " +
+      "nothing is recorded, signed, or sent anywhere; the model's card is signed, yours is local play.",
   },
   {
     id: "logic-duel",

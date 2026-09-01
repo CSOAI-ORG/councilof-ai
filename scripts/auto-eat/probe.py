@@ -141,6 +141,49 @@ UNMEASURED = {
 }
 
 
+def stage_live_atom(kind: str, agg: dict) -> tuple[bool, str]:
+    """Stage one unsigned card-v0 for a kind that had LIVE probes.
+
+    LIVE = reachable/resolvable only. auto_measured is always False. sig is
+    always null (write_atom). This function cannot mark MEASURED.
+    """
+    live = agg["LIVE"]
+    n = agg["n"]
+    payload = {
+        "kind": "csoai.auto-eat-probe/0.1",
+        "flags": {
+            "read_only": True,
+            "no_tx": True,
+            "nothing_minted": True,
+            "no_payment_made": True,
+            "auto_measured": False,
+            "cited_not_endorsed": True,
+        },
+        "method": METHOD[kind],
+        "sample": {
+            "n_probed": n,
+            "live": live,
+            "placeholder": agg.get("PLACEHOLDER", 0),
+            "held": agg.get("HELD", 0),
+            "dead": agg.get("DEAD", 0),
+            "uncheckable": agg.get("UNCHECKABLE", 0) + agg.get("UNREACHABLE", 0),
+            "live_fraction_of_probed": round(live / n, 4) if n else 0,
+            "live_examples": agg["live_examples"],
+        },
+        "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+        "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+        "as_of": c.utcnow(),
+        "unmeasured": UNMEASURED[kind],
+    }
+    return c.write_atom(
+        surface=SURFACE[kind],
+        subject=f"auto-eat {kind}: {live} LIVE of {n} probed (read-only, ungraded)",
+        source_urls=SOURCE_URLS[kind],
+        payload=payload,
+        unmeasured=UNMEASURED[kind],
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--max", type=int, default=40)
@@ -192,39 +235,7 @@ def main() -> int:
         if live <= 0:
             print(f"  {kind}: probed={n} live=0 -> no card (nothing measurable this pass)")
             continue
-        payload = {
-            "kind": "csoai.auto-eat-probe/0.1",
-            "flags": {
-                "read_only": True,
-                "no_tx": True,
-                "nothing_minted": True,
-                "no_payment_made": True,
-                "auto_measured": False,
-                "cited_not_endorsed": True,
-            },
-            "method": METHOD[kind],
-            "sample": {
-                "n_probed": n,
-                "live": live,
-                "placeholder": agg.get("PLACEHOLDER", 0),
-                "held": agg.get("HELD", 0),
-                "dead": agg.get("DEAD", 0),
-                "uncheckable": agg.get("UNCHECKABLE", 0) + agg.get("UNREACHABLE", 0),
-                "live_fraction_of_probed": round(live / n, 4) if n else 0,
-                "live_examples": agg["live_examples"],
-            },
-            "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-            "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-            "as_of": c.utcnow(),
-            "unmeasured": UNMEASURED[kind],
-        }
-        ok, msg = c.write_atom(
-            surface=SURFACE[kind],
-            subject=f"auto-eat {kind}: {live} LIVE of {n} probed (read-only, ungraded)",
-            source_urls=SOURCE_URLS[kind],
-            payload=payload,
-            unmeasured=UNMEASURED[kind],
-        )
+        ok, msg = stage_live_atom(kind, agg)
         print(f"  {kind}: probed={n} live={live} atom={msg}")
         if ok:
             staged += 1

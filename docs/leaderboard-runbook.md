@@ -4,9 +4,9 @@
 signature is created on-pod with the estate key; results commit to the monorepo via PR.
 No critical artifact lives only on the Mac.
 
-**Pod:** A100 `l7g747oivyq6ab` — `ssh -p 23166 root@38.128.232.57`
+**Pod:** A100 (compute node) — SSH host/port held privately (see TRADE-SECRETS.md, not committed)
 **Monorepo:** `CSOAI-ORG/councilof-ai` — `harness/arena/` + `functions/api/arena/scoreboard.ts`
-**RAG volume:** sink pod `213.173.105.83:25804` → `/workspace/RAG/mac-migrate/arena-results/`
+**RAG volume:** sink pod (host:port held privately) → `/workspace/RAG/mac-migrate/arena-results/`
 
 ---
 

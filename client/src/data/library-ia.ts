@@ -36,6 +36,11 @@ export const PRIMARY_PATHS = new Set<string>([
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/report",
+  // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
+  // A promoted self-serve destination (footer + /tools + /mcp cross-link); unregistered
+  // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
+  // the same page under a shorter alias.
+  "/connect-gspc", "/connect-ai",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
@@ -60,8 +65,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // Council OS Games catalog — every game path must be here (enforced by test).
   // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
   "/coliseum",
-  // GSPC Quests — frozen six-axis leftover (v1 governance 24-item, not living n=237).
-  // Playable in-browser grader. NOT the living 22-axis board.
+  // GSPC Quests — twelve playable behavioural axes over frozen banks (v1 governance
+  // 24-item, not living n=237). In-browser grader, Humans-vs-the-Board, daily quest,
+  // on-device co-op. Local play, not a measurement. NOT the living 22-axis board.
   "/gspc-quests.html",
   // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
   // rail cannot also be an archive page: the OS presents it as live, and the embed hides

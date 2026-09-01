@@ -295,6 +295,7 @@ const Signals = lazy(() => import("./pages/Signals"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const RegistryAll = lazy(() => import("./pages/RegistryAll"));
 const SocialConnect = lazy(() => import("./pages/SocialConnect"));
+const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 const SovereignHub = lazy(() => import("./pages/SovereignHub"));
 const Pressroom = lazy(() => import("./pages/Pressroom"));
 const Compare = lazy(() => import("./pages/Compare"));
@@ -384,6 +385,8 @@ const ROUTE_TITLES: Record<string, string> = {
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/gspc-verify": "GSPC Verify | CSOAI",
+  "/connect-gspc": "Connect GSPC to your AI — every platform | CSOAI",
+  "/connect-ai": "Connect GSPC to your AI — every platform | CSOAI",
   "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
@@ -839,6 +842,8 @@ function App() {
                   <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
                   <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
                   <Route path="/connect" component={SocialConnect} />
+                  <Route path="/connect-gspc" component={ConnectGSPC} />
+                  <Route path="/connect-ai" component={ConnectGSPC} />
                   <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
                   <Route path="/me" component={SovereignHub} />
                   <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />

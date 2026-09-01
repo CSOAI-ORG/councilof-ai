@@ -36,6 +36,7 @@ PER_SOURCE="${EAT_PER_SOURCE:-25}"
 MAX_PROBE="${EAT_MAX_PROBE:-40}"
 INTERVAL="${EAT_INTERVAL:-3600}"
 LOG="${EAT_LOG:-$REPO/scripts/auto-eat/eat.log}"
+PIDFILE="${EAT_PIDFILE:-/workspace/auto-eat/eat-loop.pid}"
 AE="$REPO/scripts/auto-eat"
 
 log() { echo "$(date -u +%FT%TZ) $*" >> "$LOG"; echo "$(date -u +%FT%TZ) $*"; }
@@ -106,7 +107,19 @@ case "${1:-once}" in
     one_pass; exit $?
     ;;
   loop)
-    log "KEEPER-START interval=${INTERVAL}s"
+    # Single instance via pidfile. Never pgrep -f (self-match trap).
+    mkdir -p "$(dirname "$PIDFILE")"
+    if [ -f "$PIDFILE" ]; then
+      old="$(cat "$PIDFILE" 2>/dev/null || true)"
+      if [ -n "$old" ] && kill -0 "$old" 2>/dev/null; then
+        log "FAIL keeper already running pid=$old pidfile=$PIDFILE"
+        exit 1
+      fi
+      log "stale pidfile pid=${old:-empty} gone — taking lock"
+    fi
+    echo $$ > "$PIDFILE"
+    trap 'rm -f "$PIDFILE"' EXIT
+    log "KEEPER-START interval=${INTERVAL}s pid=$$ pidfile=$PIDFILE"
     while true; do
       one_pass || true   # a failed pass logs FAIL and the keeper keeps living
       log "PASS-END sleep $INTERVAL"
