@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T09:41:42Z",
+ "as_of": "2026-09-01T11:41:31Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,20 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 26,
-   "live": 25,
+   "n_probed": 1,
+   "live": 1,
    "placeholder": 0,
-   "held": 1,
+   "held": 0,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.9615,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "prathmesh-jarvis/jarvis-backend (200)",
-    "syazwanhosen/mcp (200)",
-    "huntingislove/oidc-idp-probe (200)",
-    "ExpressedIt/Cag-ai-animator-2026 (200)",
-    "sangeetachintha/StudyAssistant (200)",
-    "extreme1122/deepfake-voicecoining-scam-detector (200)"
+    "travaydoma/ChinaVTB (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T09:41:42Z",
+  "as_of": "2026-09-01T11:41:31Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -39,10 +34,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "a0294af2938ace407da4cc80a7e483ee07df367e8b6db28a9f95ddbf2a415d36",
- "sig_ed25519": "be9eac0b4e5134fd9a2ca1d91bff63d32a6c2330ec9a583cf765343eaf98e9a626a0d5a006dd062575aa3d2c9e0c188516c960113407fc0121d8ef4b951e4003",
+ "sha256": "ee2fecb6d38795f428599cc194a0ba18a8b27dd8040daefc9bab663ef7f4e58d",
+ "sig_ed25519": "2fbb2a30b80f76c79e9274eb3999751454bc32514c1597900c3d0d5ffe74174a619398c01be3d9f3d245726de7416ab347f6fc1a1b755ab548afd311d7ecbe01",
  "surface": "autoeat.hf.spaces",
- "subject": "auto-eat hf-space: 25 LIVE of 26 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-space: 1 LIVE of 1 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/spaces"
  ],

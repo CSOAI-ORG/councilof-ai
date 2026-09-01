@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:51:18Z",
+ "as_of": "2026-09-01T08:58:43Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 700,
-   "live": 25,
+   "n_probed": 500,
+   "live": 13,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 675,
-   "live_fraction_of_probed": 0.0357,
+   "uncheckable": 487,
+   "live_fraction_of_probed": 0.026,
    "live_examples": [
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266933 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:8955 (tokenURI resolvable)",
-    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1259 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266234 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:265982 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266229 (tokenURI resolvable)"
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61164 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61163 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61155 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61160 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61158 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61156 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:51:18Z",
+  "as_of": "2026-09-01T08:58:43Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "48f625854db8fa5c89953839259d17bc5e4700e651f3b8f1d2c595ed7ee08beb",
- "sig_ed25519": "385bf51dad9bcdd54d70235e29e36484ec2de064ea6c2784b79099f1df1ab6e3491f9393bf1696300872db98ffea2c7c7c0b310ae8de540540677b52775e5f01",
+ "sha256": "feebe7a7971c3c5af02314689e980793c82356850be7b06589060f00b50c3cee",
+ "sig_ed25519": "d35413816ea5c02e84070039f1fda86c0241196f84417cb8914c98053b62e1c55f5b383417d262bfc68980f8c569a43967e996fe70bf18d40ea8762399ea860d",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 25 LIVE of 700 probed (read-only, ungraded)",
+ "subject": "auto-eat erc8004: 13 LIVE of 500 probed (read-only, ungraded)",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"
