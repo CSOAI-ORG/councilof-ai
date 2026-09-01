@@ -1,12 +1,12 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "erc8004.callable",
- "subject": "ERC-8004 Identity #56249 (AgentEcon) - Base, registry 0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
- "as_of": "2026-09-01T05:07:20Z",
+ "subject": "ERC-8004 live-filter census — 45 real agents probed on Base/ETH/etc., 25 LIVE",
+ "as_of": "2026-09-01T05:35:13Z",
  "source_urls": [
-  "https://econ.memoryapi.org",
+  "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com",
-  "https://api.8004scan.io/api/v1/agents?limit=10&is_testnet=false&sort_by=total_feedbacks&sort_order=desc"
+  "https://huggingface.co/datasets/csoai/erc8004-reader"
  ],
  "payload": {
   "kind": "csoai.ledger-probe/0.1",
@@ -15,52 +15,51 @@
    "no_tx": true,
    "nothing_minted": true,
    "no_payment_made": true,
+   "handshake_only": true,
    "validation_mainnet": "PENDING",
    "cited_not_endorsed": true
   },
-  "registry": {
-   "chain_id": 8453,
-   "contract": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
-   "token_id": 56249,
-   "token_uri_kind": "data:application/json;base64 (eip-8004 registration-v1)",
-   "token_uri_sha256": "18932369e68159557e69922d6c0862a1c4bda00712ea6689c734b3a985357c79"
-  },
-  "probe": {
-   "state": "CALLABLE",
-   "endpoint": "https://econ.memoryapi.org",
-   "http": 200,
-   "answered": "live JSON service descriptor (AgentEcon v1.0.0, x402 endpoints listed); GET /x402/econ/inflation also answered HTTP 200; plain GETs only, no payment"
+  "method": "keyless 8004scan real-agent filter (min_feedbacks>=1) + keyless eth_call tokenURI(uint256) per-chain publicnode RPC + keyless HTTPS three-state GET",
+  "registry_totals": {
+   "registered_all_indexer": 785448,
+   "with_feedback_ge1": 138967,
+   "is_verified_filter_returns_all_UNTRUSTED": 785448
   },
   "sample": {
-   "n_probed": 3,
-   "callable": [
-    "56249 AgentEcon (200)"
-   ],
-   "not_callable": [
-    "56260 AgentFEC - declared endpoint fec.memoryapi.org answers HTTP 404 at / and /.well-known/agent-card.json"
-   ],
-   "registration_reachable_service_unprobed": [
-    "25975 Botoshi - registration JSON live at agentmoney.net"
-   ],
-   "census": "8004scan reported 473,941 mainnet registrations at 2026-09-01 (third-party indexer, quoted not verified)"
+   "selector": "min_feedbacks>=1 + x402 pool, ranked, resolvable chains only",
+   "n_probed": 45,
+   "live": 25,
+   "placeholder": 14,
+   "dead": 6,
+   "live_fraction_of_probed": 0.5556,
+   "live_examples": [
+    "70394 tephra-renderer (200)",
+    "63912 NEURAL_MESH (200)",
+    "74072 IFF x402 Evidence Monitor (200)",
+    "302257 Brain on BNB — Venus Health Factor Monitor (200)",
+    "303779 marketplace-operated-grid-planner (200)"
+   ]
   },
-  "verified_via": "keyless eth_call tokenURI(uint256) via base-rpc.publicnode.com (no key) + keyless HTTPS GET probes; three-state grammar callable/not-callable/unreachable",
-  "as_of": "2026-09-01T05:07:20Z",
+  "story": "measured the REAL agents (feedback-bearing/x402), not the ~785k registration headline",
+  "verified_via": "keyless eth_call + keyless HTTPS GET; three-state LIVE/PLACEHOLDER/DEAD",
+  "as_of": "2026-09-01T05:35:13Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
    "service_quality",
-   "census_total_verification"
+   "census_total_verification",
+   "non_resolvable_chains"
   ]
  },
- "sha256": "0e73c6d638eafa160d687f976e29236d11336504113ccd8381f580454213ffdb",
+ "sha256": "df15daea976eec52618a9108b6c585a0e70d4a74d8f3ca18f6758268ce59d9e5",
  "unmeasured": [
   "reputation_validity",
   "validation_registry_mainnet",
   "service_quality",
-  "census_total_verification"
+  "census_total_verification",
+  "non_resolvable_chains"
  ],
  "did": "did:web:csoai.org#card-attestation-1",
  "sig_ed25519": null,
- "note": "NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing (hf-fin-shells-measure pattern) under did:web:csoai.org#card-attestation-1"
+ "note": "NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing under did:web:csoai.org#board-attestation-1"
 }

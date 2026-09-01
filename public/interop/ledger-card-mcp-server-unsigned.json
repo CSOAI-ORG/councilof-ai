@@ -1,0 +1,83 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "mcp.server",
+ "subject": "MCP ecosystem census — Smithery 11191 reported, 41 probed (ours first), 21 LIVE",
+ "as_of": "2026-09-01T05:37:09Z",
+ "source_urls": [
+  "https://registry.modelcontextprotocol.io/v0/servers",
+  "https://registry.smithery.ai/servers",
+  "https://councilof.ai/mcp",
+  "https://huggingface.co/datasets/csoai/mcp-census"
+ ],
+ "payload": {
+  "kind": "csoai.mcp-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "handshake_only": true,
+   "no_tools_call": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless registry census + MCP initialize+tools/list ONLY (never tools/call)",
+  "registries": {
+   "modelcontextprotocol_io": {
+    "keyless": true,
+    "fetched": 2000,
+    "with_remote_url": 455
+   },
+   "smithery_ai": {
+    "keyless": true,
+    "total_reported": 11191,
+    "fetched": 300
+   },
+   "glama_ai": {
+    "keyless": false,
+    "note": "needs API key; DISCOVERED not probed"
+   },
+   "pulsemcp": {
+    "keyless": "sunsetting"
+   }
+  },
+  "own_first": {
+   "surface": "councilof.ai/mcp",
+   "server": "csoai-gspc-mcp",
+   "tools": 7,
+   "schema_valid": true,
+   "also": "npm csoai-gspc-mcp@0.1.0 (stdio, 4 tools); Grok plugin"
+  },
+  "sample": {
+   "n_probed_incl_own": 41,
+   "reachable_live": 21,
+   "dead": 20,
+   "tools_readable": 20,
+   "live_fraction": 0.5122,
+   "stranger_live_examples": [
+    "inference.sh (25t)",
+    "ac.tandem/docs-mcp (13t)",
+    "inside-ads (3t)",
+    "hood (5t)",
+    "goji (9t)"
+   ]
+  },
+  "verified_via": "MCP JSON-RPC handshake; three-state LIVE/PLACEHOLDER/DEAD + schema_valid",
+  "as_of": "2026-09-01T05:37:09Z",
+  "unmeasured": [
+   "tool_correctness",
+   "auth_gated_servers",
+   "smithery_deep_probe",
+   "glama_full_registry",
+   "server_uptime"
+  ]
+ },
+ "sha256": "65ec4c23b74aafbd5d59978dac88184c5b2198ae74f93d17bf9ed628f5fc7dc1",
+ "unmeasured": [
+  "tool_correctness",
+  "auth_gated_servers",
+  "smithery_deep_probe",
+  "glama_full_registry",
+  "server_uptime"
+ ],
+ "did": "did:web:csoai.org#card-attestation-1",
+ "sig_ed25519": null,
+ "note": "NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing under did:web:csoai.org#board-attestation-1"
+}

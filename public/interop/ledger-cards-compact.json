@@ -30,42 +30,40 @@
    "no_tx": true,
    "nothing_minted": true,
    "no_payment_made": true,
+   "handshake_only": true,
    "validation_mainnet": "PENDING",
    "cited_not_endorsed": true
   },
-  "registry": {
-   "chain_id": 8453,
-   "contract": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
-   "token_id": 56249,
-   "token_uri_kind": "data:application/json;base64 (eip-8004 registration-v1)",
-   "token_uri_sha256": "18932369e68159557e69922d6c0862a1c4bda00712ea6689c734b3a985357c79"
-  },
-  "probe": {
-   "state": "CALLABLE",
-   "endpoint": "https://econ.memoryapi.org",
-   "http": 200,
-   "answered": "live JSON service descriptor (AgentEcon v1.0.0, x402 endpoints listed); GET /x402/econ/inflation also answered HTTP 200; plain GETs only, no payment"
+  "method": "keyless 8004scan real-agent filter (min_feedbacks>=1) + keyless eth_call tokenURI(uint256) per-chain publicnode RPC + keyless HTTPS three-state GET",
+  "registry_totals": {
+   "registered_all_indexer": 785448,
+   "with_feedback_ge1": 138967,
+   "is_verified_filter_returns_all_UNTRUSTED": 785448
   },
   "sample": {
-   "n_probed": 3,
-   "callable": [
-    "56249 AgentEcon (200)"
-   ],
-   "not_callable": [
-    "56260 AgentFEC - declared endpoint fec.memoryapi.org answers HTTP 404 at / and /.well-known/agent-card.json"
-   ],
-   "registration_reachable_service_unprobed": [
-    "25975 Botoshi - registration JSON live at agentmoney.net"
-   ],
-   "census": "8004scan reported 473,941 mainnet registrations at 2026-09-01 (third-party indexer, quoted not verified)"
+   "selector": "min_feedbacks>=1 + x402 pool, ranked, resolvable chains only",
+   "n_probed": 45,
+   "live": 25,
+   "placeholder": 14,
+   "dead": 6,
+   "live_fraction_of_probed": 0.5556,
+   "live_examples": [
+    "70394 tephra-renderer (200)",
+    "63912 NEURAL_MESH (200)",
+    "74072 IFF x402 Evidence Monitor (200)",
+    "302257 Brain on BNB — Venus Health Factor Monitor (200)",
+    "303779 marketplace-operated-grid-planner (200)"
+   ]
   },
-  "verified_via": "keyless eth_call tokenURI(uint256) via base-rpc.publicnode.com (no key) + keyless HTTPS GET probes; three-state grammar callable/not-callable/unreachable",
-  "as_of": "2026-09-01T05:07:20Z",
+  "story": "measured the REAL agents (feedback-bearing/x402), not the ~785k registration headline",
+  "verified_via": "keyless eth_call + keyless HTTPS GET; three-state LIVE/PLACEHOLDER/DEAD",
+  "as_of": "2026-09-01T05:35:13Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
    "service_quality",
-   "census_total_verification"
+   "census_total_verification",
+   "non_resolvable_chains"
   ]
  },
  "rwa.reserve": {
@@ -125,6 +123,105 @@
    "bank_participation_status",
    "gpi_performance",
    "pilot_outcome"
+  ]
+ },
+ "mcp.server": {
+  "kind": "csoai.mcp-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "handshake_only": true,
+   "no_tools_call": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless registry census + MCP initialize+tools/list ONLY (never tools/call)",
+  "registries": {
+   "modelcontextprotocol_io": {
+    "keyless": true,
+    "fetched": 2000,
+    "with_remote_url": 455
+   },
+   "smithery_ai": {
+    "keyless": true,
+    "total_reported": 11191,
+    "fetched": 300
+   },
+   "glama_ai": {
+    "keyless": false,
+    "note": "needs API key; DISCOVERED not probed"
+   },
+   "pulsemcp": {
+    "keyless": "sunsetting"
+   }
+  },
+  "own_first": {
+   "surface": "councilof.ai/mcp",
+   "server": "csoai-gspc-mcp",
+   "tools": 7,
+   "schema_valid": true,
+   "also": "npm csoai-gspc-mcp@0.1.0 (stdio, 4 tools); Grok plugin"
+  },
+  "sample": {
+   "n_probed_incl_own": 41,
+   "reachable_live": 21,
+   "dead": 20,
+   "tools_readable": 20,
+   "live_fraction": 0.5122,
+   "stranger_live_examples": [
+    "inference.sh (25t)",
+    "ac.tandem/docs-mcp (13t)",
+    "inside-ads (3t)",
+    "hood (5t)",
+    "goji (9t)"
+   ]
+  },
+  "verified_via": "MCP JSON-RPC handshake; three-state LIVE/PLACEHOLDER/DEAD + schema_valid",
+  "as_of": "2026-09-01T05:37:09Z",
+  "unmeasured": [
+   "tool_correctness",
+   "auth_gated_servers",
+   "smithery_deep_probe",
+   "glama_full_registry",
+   "server_uptime"
+  ]
+ },
+ "a2a.agent": {
+  "kind": "csoai.a2a-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "one_controlled_probe": true,
+   "no_real_task": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
+  },
+  "method": "crawl /.well-known/agent-card.json (legacy agent.json fallback); A2A v1.0 AgentCard conformance; capability-honesty = ONE controlled tasks/get(bogus-id) graded declared-vs-actual transport",
+  "sample": {
+   "n_seeds": 18,
+   "conformant_cards": 5,
+   "no_card": 13,
+   "unique_probed": 4,
+   "honesty_verdicts": [
+    "marketplace-operated-grid-planner:TRANSPORT_MISMATCH",
+    "A-Identity Trust Oracle:TRANSPORT_HONEST",
+    "Brain On BNB AI — hireable agents:TRANSPORT_HONEST",
+    "hosted-erc8183-seller-fixture:TRANSPORT_MISMATCH"
+   ]
+  },
+  "citation_reported": {
+   "claim": "worst model failed 92.6% of real office tasks; best still 70%",
+   "source": "CMU 'TheAgentCompany', arXiv:2412.14161 (May 2025)",
+   "url": "https://arxiv.org/abs/2412.14161",
+   "framing": "reported; general agent-task benchmark, NOT A2A-specific"
+  },
+  "story": "most on-chain-live agents serve NO conformant AgentCard; some conformant cards show declared-vs-actual transport mismatch",
+  "verified_via": "keyless HTTPS crawl + one deterministic JSON-RPC probe",
+  "as_of": "2026-09-01T05:39:07Z",
+  "unmeasured": [
+   "skill_execution_correctness",
+   "auth_gated_agents",
+   "streaming_actual",
+   "push_actual",
+   "broad_registry_crawl"
   ]
  }
 }

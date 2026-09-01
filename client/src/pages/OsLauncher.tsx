@@ -46,7 +46,7 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Public root", href: "/xrpl-attest", what: "Catalogue + /api/xrpl reader. Not a GSPC mill." },
   { name: "Jail folder", href: "/gspc/jail", what: "MEASURED n=71 TIE. Folder, not a second jail score." },
   { name: "XRPL 16 tape", href: "/interop/xrpl-16.json", what: "located ≠ measured. Ten names without r-address stay DISCOVERED." },
-  { name: "SWIFT 17 tape", href: "/api/swift", what: "17 DISCOVERED. Not clients. Not GPI." },
+  { name: "SWIFT census tape", href: "/api/swift", what: "26 named: 3 LIVE, 9 COMMITTED, 14 DISCOVERED. Not clients. Not GPI." },
   { name: "TRACE stub", href: "/api/trace", what: "Trust Record. Silicon UNCHECKABLE. Not an axis." },
   { name: "Hugging Face record", href: "https://huggingface.co/datasets/csoai/gspc-boards", what: "Hub mirror of the signed record and public-root. Cite GET /api/gspc for the board." },
 ];
@@ -171,7 +171,7 @@ export default function OsLauncher() {
                 .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
                 .then((j) =>
                   setFnNote(
-                    `SWIFT — n=${j?.n} ${j?.status_all}. DISCOVERED, not MEASURED. Not clients. cobolbridge.ai 522 is infra.`,
+                    `SWIFT — n=${j?.n} (${j?.n_live} LIVE, ${j?.n_committed} COMMITTED, ${j?.n_discovered} DISCOVERED). Sourced census, not MEASURED. Not clients. cobolbridge.ai 522 is infra.`,
                   ),
                 )
                 .catch((err: Error) => setFnNote(`SWIFT (${err.message}). Cite GET /api/swift after GHA.`));

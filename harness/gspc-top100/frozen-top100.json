@@ -1,0 +1,838 @@
+{
+ "schema": "csoai.gspc-top100/0.1",
+ "kind": "frozen-model-census",
+ "status": "DISCOVERED",
+ "writes_board": false,
+ "as_of": "2026-09-01",
+ "sample_size": 100,
+ "selection_filter": {
+  "source": "Hugging Face Hub (huggingface_hub.HfApi.list_models)",
+  "pipeline_tag": "text-generation",
+  "sort": "downloads (descending)",
+  "open_license_set": [
+   "apache-2.0",
+   "mit",
+   "bsd",
+   "bsd-3-clause",
+   "bsd-2-clause",
+   "cc-by-4.0",
+   "cc-by-sa-4.0",
+   "cc0-1.0",
+   "cc-by-3.0",
+   "mpl-2.0",
+   "gpl-3.0",
+   "lgpl-3.0"
+  ],
+  "rule": "First 100 models, in descending-downloads order, whose HF `license:` tag is in the open_license_set. Non-commercial (cc-by-nc*) and bespoke community licences (llama*, gemma) are EXCLUDED. 138 models were scanned to collect 100 open-licence hits.",
+  "excluded_note": "cc-by-nc-4.0 excluded (non-commercial is not open). Llama/Gemma community licences excluded (not OSI-open)."
+ },
+ "license_histogram": {
+  "apache-2.0": 75,
+  "mit": 25
+ },
+ "vllm_servable_candidates": 66,
+ "quantised_or_derivative_flagged": 34,
+ "honesty": "DISCOVERED census only. No model has been run. No axis measured. Downloads are a Hub snapshot at as_of, not a quality signal. Serving-eligibility flags are heuristic (repo-id markers); a real load pass is required before any measurement. Nothing here is MEASURED until a card signs green through GHA and verifies VALID.",
+ "models": [
+  {
+   "rank": 1,
+   "model_id": "Qwen/Qwen3-0.6B",
+   "downloads_snapshot": 22182252,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 2,
+   "model_id": "openai-community/gpt2",
+   "downloads_snapshot": 14317307,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 3,
+   "model_id": "Qwen/Qwen3-8B",
+   "downloads_snapshot": 13643917,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 4,
+   "model_id": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+   "downloads_snapshot": 12664530,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 5,
+   "model_id": "nvidia/Qwen3.6-35B-A3B-NVFP4",
+   "downloads_snapshot": 10805863,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 6,
+   "model_id": "Qwen/Qwen2.5-7B-Instruct",
+   "downloads_snapshot": 10577733,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 7,
+   "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+   "downloads_snapshot": 7642984,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 8,
+   "model_id": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+   "downloads_snapshot": 6742957,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 9,
+   "model_id": "openai/gpt-oss-20b",
+   "downloads_snapshot": 6450692,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 10,
+   "model_id": "Qwen/Qwen2.5-0.5B-Instruct",
+   "downloads_snapshot": 6013414,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 11,
+   "model_id": "Qwen/Qwen3-4B",
+   "downloads_snapshot": 5837970,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 12,
+   "model_id": "openai/gpt-oss-120b",
+   "downloads_snapshot": 5316895,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 13,
+   "model_id": "Qwen/Qwen3-32B",
+   "downloads_snapshot": 4808415,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 14,
+   "model_id": "dphn/dolphin-2.9.1-yi-1.5-34b",
+   "downloads_snapshot": 4774727,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 15,
+   "model_id": "deepseek-ai/DeepSeek-V4-Flash-0731",
+   "downloads_snapshot": 4561861,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 16,
+   "model_id": "ornith-ai/Ornith-1.0-9B-GGUF",
+   "downloads_snapshot": 4410015,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 17,
+   "model_id": "Qwen/Qwen2.5-7B-Instruct-AWQ",
+   "downloads_snapshot": 3914155,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 18,
+   "model_id": "Qwen/Qwen3-1.7B",
+   "downloads_snapshot": 3764190,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 19,
+   "model_id": "EleutherAI/pythia-160m",
+   "downloads_snapshot": 3502122,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 20,
+   "model_id": "Qwen/Qwen3-4B-Instruct-2507",
+   "downloads_snapshot": 3406272,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 21,
+   "model_id": "ornith-ai/Ornith-1.0-35B-GGUF",
+   "downloads_snapshot": 3162990,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 22,
+   "model_id": "ornith-ai/Ornith-1.0-35B",
+   "downloads_snapshot": 3045441,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 23,
+   "model_id": "Qwen/Qwen2.5-14B-Instruct",
+   "downloads_snapshot": 2733990,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 24,
+   "model_id": "HuggingFaceTB/SmolLM2-135M",
+   "downloads_snapshot": 2453206,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 25,
+   "model_id": "ornith-ai/Ornith-1.5-9B-GGUF",
+   "downloads_snapshot": 2425069,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 26,
+   "model_id": "Qwen/Qwen3-30B-A3B",
+   "downloads_snapshot": 2375419,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 27,
+   "model_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+   "downloads_snapshot": 2343447,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 28,
+   "model_id": "Qwen/Qwen3-14B-AWQ",
+   "downloads_snapshot": 2243726,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 29,
+   "model_id": "ornith-ai/Ornith-1.5-35B-A3B-GGUF",
+   "downloads_snapshot": 2237578,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 30,
+   "model_id": "Qwen/Qwen2.5-14B-Instruct-AWQ",
+   "downloads_snapshot": 2109624,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 31,
+   "model_id": "antirez/deepseek-v4-gguf",
+   "downloads_snapshot": 2082306,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 32,
+   "model_id": "distilbert/distilgpt2",
+   "downloads_snapshot": 2070005,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 33,
+   "model_id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+   "downloads_snapshot": 2055081,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 34,
+   "model_id": "Qwen/Qwen2.5-32B-Instruct",
+   "downloads_snapshot": 2035194,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 35,
+   "model_id": "Qwen/Qwen2.5-Coder-14B-Instruct",
+   "downloads_snapshot": 2031535,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 36,
+   "model_id": "deepseek-ai/DeepSeek-R1",
+   "downloads_snapshot": 2028559,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 37,
+   "model_id": "prism-ml/Ternary-Bonsai-27B-mlx-2bit",
+   "downloads_snapshot": 1996752,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 38,
+   "model_id": "prism-ml/Bonsai-27B-mlx-1bit",
+   "downloads_snapshot": 1974001,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 39,
+   "model_id": "zai-org/GLM-4.7-Flash",
+   "downloads_snapshot": 1939208,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 40,
+   "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+   "downloads_snapshot": 1918507,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 41,
+   "model_id": "Qwen/Qwen2.5-Coder-14B-Instruct-AWQ",
+   "downloads_snapshot": 1851570,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 42,
+   "model_id": "ornith-ai/Ornith-1.0-9B",
+   "downloads_snapshot": 1805743,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 43,
+   "model_id": "Qwen/Qwen3-14B",
+   "downloads_snapshot": 1805300,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 44,
+   "model_id": "Qwen/Qwen3-8B-AWQ",
+   "downloads_snapshot": 1780825,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 45,
+   "model_id": "Qwen/Qwen3-Coder-Next-FP8",
+   "downloads_snapshot": 1762681,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 46,
+   "model_id": "Qwen/Qwen2.5-0.5B",
+   "downloads_snapshot": 1712857,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 47,
+   "model_id": "deepseek-ai/DeepSeek-V4-Flash",
+   "downloads_snapshot": 1704533,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 48,
+   "model_id": "Qwen/Qwen2.5-Coder-32B-Instruct",
+   "downloads_snapshot": 1678300,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 49,
+   "model_id": "Qwen/Qwen3-4B-Base",
+   "downloads_snapshot": 1677300,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 50,
+   "model_id": "Qwen/Qwen3-1.7B-Base",
+   "downloads_snapshot": 1660220,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 51,
+   "model_id": "zai-org/GLM-5.2",
+   "downloads_snapshot": 1552546,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 52,
+   "model_id": "nvidia/Gemma-4-26B-A4B-NVFP4",
+   "downloads_snapshot": 1521602,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 53,
+   "model_id": "QuantTrio/Qwen3-VL-30B-A3B-Instruct-AWQ",
+   "downloads_snapshot": 1502519,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 54,
+   "model_id": "zai-org/GLM-5.2-FP8",
+   "downloads_snapshot": 1500335,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 55,
+   "model_id": "farbodtavakkoli/OTel-LLM-E4B-IT",
+   "downloads_snapshot": 1479479,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 56,
+   "model_id": "microsoft/phi-2",
+   "downloads_snapshot": 1469211,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 57,
+   "model_id": "deepseek-ai/DeepSeek-V3.2",
+   "downloads_snapshot": 1425897,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 58,
+   "model_id": "HuggingFaceTB/SmolLM2-135M-Instruct",
+   "downloads_snapshot": 1400792,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 59,
+   "model_id": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+   "downloads_snapshot": 1382839,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 60,
+   "model_id": "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ",
+   "downloads_snapshot": 1368308,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 61,
+   "model_id": "farbodtavakkoli/OTel-LLM-27B-IT",
+   "downloads_snapshot": 1349505,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 62,
+   "model_id": "mistralai/Mistral-7B-Instruct-v0.2",
+   "downloads_snapshot": 1185946,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 63,
+   "model_id": "ibm-granite/granite-4.1-8b",
+   "downloads_snapshot": 1177594,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 64,
+   "model_id": "nvidia/GLM-5.2-NVFP4",
+   "downloads_snapshot": 1165743,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 65,
+   "model_id": "ibm-research/PowerMoE-3b",
+   "downloads_snapshot": 1148418,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 66,
+   "model_id": "Qwen/Qwen3-4B-Instruct-2507-FP8",
+   "downloads_snapshot": 1146915,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 67,
+   "model_id": "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF",
+   "downloads_snapshot": 1145310,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 68,
+   "model_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8",
+   "downloads_snapshot": 1109362,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 69,
+   "model_id": "deepseek-ai/DeepSeek-V3-0324",
+   "downloads_snapshot": 1068678,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 70,
+   "model_id": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
+   "downloads_snapshot": 1026280,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 71,
+   "model_id": "Qwen/Qwen2.5-1.5B",
+   "downloads_snapshot": 1020825,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 72,
+   "model_id": "openai-community/gpt2-large",
+   "downloads_snapshot": 1019873,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 73,
+   "model_id": "sakamakismile/Qwen3.6-27B-Text-NVFP4-MTP",
+   "downloads_snapshot": 1017598,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 74,
+   "model_id": "Bahushruth/Qwen3.6-35B-A3B-abliterated-v4",
+   "downloads_snapshot": 1014377,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 75,
+   "model_id": "Qwen/Qwen3-0.6B-Base",
+   "downloads_snapshot": 995084,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 76,
+   "model_id": "Qwen/Qwen2-1.5B-Instruct",
+   "downloads_snapshot": 968749,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 77,
+   "model_id": "cyankiwi/Qwen3-Coder-30B-A3B-Instruct-AWQ-4bit",
+   "downloads_snapshot": 948371,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 78,
+   "model_id": "allenai/OLMo-2-0425-1B",
+   "downloads_snapshot": 937281,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 79,
+   "model_id": "Qwen/Qwen2-0.5B",
+   "downloads_snapshot": 860516,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 80,
+   "model_id": "Qwen/Qwen2.5-Math-1.5B",
+   "downloads_snapshot": 858525,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 81,
+   "model_id": "zai-org/GLM-5-FP8",
+   "downloads_snapshot": 855004,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 82,
+   "model_id": "nvidia/Qwen3.5-122B-A10B-NVFP4",
+   "downloads_snapshot": 840336,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 83,
+   "model_id": "EleutherAI/pythia-70m-deduped",
+   "downloads_snapshot": 839052,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 84,
+   "model_id": "nm-testing/SmolLM-1.7B-Instruct-quantized.w4a16",
+   "downloads_snapshot": 825383,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 85,
+   "model_id": "protoLabsAI/Ornith-1.0-35B-FP8",
+   "downloads_snapshot": 813896,
+   "license": "mit",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 86,
+   "model_id": "deepseek-ai/DeepSeek-V4-Pro",
+   "downloads_snapshot": 809261,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 87,
+   "model_id": "openbmb/MiniCPM5-1B",
+   "downloads_snapshot": 790508,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 88,
+   "model_id": "EleutherAI/gpt-neox-20b",
+   "downloads_snapshot": 785845,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 89,
+   "model_id": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+   "downloads_snapshot": 774811,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 90,
+   "model_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "downloads_snapshot": 774016,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 91,
+   "model_id": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+   "downloads_snapshot": 759644,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 92,
+   "model_id": "cyankiwi/Qwen3-30B-A3B-Instruct-2507-AWQ-4bit",
+   "downloads_snapshot": 733578,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 93,
+   "model_id": "EleutherAI/pythia-160m-deduped",
+   "downloads_snapshot": 725872,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 94,
+   "model_id": "nvidia/Qwen3.6-27B-NVFP4",
+   "downloads_snapshot": 703992,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 95,
+   "model_id": "Qwen/Qwen3-32B-AWQ",
+   "downloads_snapshot": 670300,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 96,
+   "model_id": "HuggingFaceTB/SmolLM3-3B-Base",
+   "downloads_snapshot": 657687,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 97,
+   "model_id": "Qwen/Qwen3-30B-A3B-Instruct-2507-FP8",
+   "downloads_snapshot": 648046,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  },
+  {
+   "rank": 98,
+   "model_id": "microsoft/phi-4",
+   "downloads_snapshot": 633005,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 99,
+   "model_id": "microsoft/Phi-3-mini-4k-instruct",
+   "downloads_snapshot": 619238,
+   "license": "mit",
+   "vllm_servable_candidate": true,
+   "note": ""
+  },
+  {
+   "rank": 100,
+   "model_id": "cyankiwi/MiniCPM-SALA-AWQ-8bit",
+   "downloads_snapshot": 614817,
+   "license": "apache-2.0",
+   "vllm_servable_candidate": false,
+   "note": "GGUF/quantised derivative repo — needs a serving adapter, not a plain vLLM HF load"
+  }
+ ]
+}

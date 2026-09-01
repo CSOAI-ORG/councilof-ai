@@ -1,0 +1,82 @@
+{
+  "schema": "csoai.swift-census/0.1",
+  "kind": "census-tape",
+  "writes_board": false,
+  "supersedes": "csoai.swift-17/0.1",
+  "status_all": "THREE_STATE",
+  "n": 26,
+  "n_named_sourced": 26,
+  "n_live": 3,
+  "n_committed": 9,
+  "n_discovered": 14,
+  "n_measured": 0,
+  "as_of": "2026-09-01",
+  "universe_note": "Swift cites 40+ financial institutions in the MVP construction phase, up from 30 named at Sibos Frankfurt Sept 2025. Only 26 could be sourced to a real, reachable, dated press URL and named here. The remaining ~14+ are NOT enumerated — no name is invented to reach 50.",
+  "honest_count_statement": "This is a sourced census of 26 named banks (3 LIVE, 9 COMMITTED, 14 DISCOVERED), not a '50'. Every row cites a real press URL with a date. No bank is a Council client. Not a Swift relationship. Not MEASURED — no ISO 20022 / copybook / MT artifact fetched. cobolbridge.ai HTTP 522 is infra, not this tape.",
+  "settlement_still_off_chain": true,
+  "swift_partnered": false,
+  "cohort_are_clients": false,
+  "swift_com_fetch": "UNREACHABLE from this vantage at as_of (WebFetch and curl both timed out on www.swift.com). Swift's own press URLs are hashed and cited; their HTML bodies remain UNCHECKABLE. Named committed cohort sourced to reachable secondary press.",
+  "sources": {
+    "swift_pilot_9jul": {
+      "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "date": "2026-07-09",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "note": "Swift press release, 17-bank pilot cohort. HTML body UNREACHABLE from this vantage; URL hashed."
+    },
+    "gfmag_pilot_10jul": {
+      "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+      "date": "2026-07-10",
+      "url_sha256": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+      "note": "Reachable secondary source confirming the same 17 pilot banks."
+    },
+    "sc_live_19aug": {
+      "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+      "date": "2026-08-19",
+      "url_sha256": "1870ceb4dbd25dd87e8c80505dc06a061cf2197a8a1e7e9d4be10e264a7f9d70",
+      "quote": "Swift's blockchain-based ledger acted as a secure orchestration layer, enabling the obligations to be matched and netted between the two banks prior to final settlement through existing systems.",
+      "note": "Standard Chartered primary press release: first live tokenised deposit transaction with HSBC, 19 Aug 2026. Settlement still through existing systems."
+    },
+    "fintechnews_uob_28aug": {
+      "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+      "date": "2026-08-28",
+      "url_sha256": "3b78e18273973ed311b6e8ed0475175147a12c36589ab3c25637b3044b847974",
+      "quote": "The transactions make UOB the first Singapore-headquartered bank to conduct live transactions on the blockchain-based ledger.",
+      "note": "UOB + HSBC live Hong Kong dollar tokenised deposit transaction; UOB first Singapore-HQ bank live. Reported 28 Aug 2026."
+    },
+    "ethers_mvp_2apr": {
+      "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+      "date": "2026-04-02",
+      "url_sha256": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056",
+      "note": "Reachable secondary source naming 15 construction-phase founding banks; cites 40+ institutions (up from 30 at Sibos Sept 2025). Only the named ones are enumerated as COMMITTED rows."
+    }
+  },
+  "rows": [
+    {"id": "hsbc", "name": "HSBC", "status": "LIVE", "event_date": "2026-08-19", "source": ["sc_live_19aug", "fintechnews_uob_28aug"], "note": "First live tokenised deposit transaction with Standard Chartered (19 Aug); HK dollar transaction with UOB (28 Aug). Settlement still off-chain.", "artifact_url": null},
+    {"id": "standard-chartered", "name": "Standard Chartered", "status": "LIVE", "event_date": "2026-08-19", "source": ["sc_live_19aug"], "note": "First live tokenised deposit transaction on Swift's ledger with HSBC, 19 Aug 2026. Settlement still off-chain.", "artifact_url": null},
+    {"id": "uob", "name": "UOB", "status": "LIVE", "event_date": "2026-08-28", "source": ["fintechnews_uob_28aug"], "note": "First Singapore-headquartered bank live; HK dollar tokenised deposit transaction with HSBC. Settlement still off-chain.", "artifact_url": null},
+    {"id": "anz", "name": "ANZ", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "bnp-paribas", "name": "BNP Paribas", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "bny", "name": "BNY", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "citi", "name": "Citi", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "dbs", "name": "DBS", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "fab", "name": "First Abu Dhabi Bank", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "firstrand", "name": "FirstRand Bank Limited", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "itau-unibanco", "name": "Itaú Unibanco", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "lloyds", "name": "Lloyds Bank", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "mashreq", "name": "Mashreq", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "mufg", "name": "MUFG Bank", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul", "ethers_mvp_2apr"], "note": "9 Jul 2026 pilot cohort; also named in construction phase. No live transaction sourced.", "artifact_url": null},
+    {"id": "ocbc", "name": "OCBC", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul", "ethers_mvp_2apr"], "note": "9 Jul 2026 pilot cohort; also named in construction phase. No live transaction sourced.", "artifact_url": null},
+    {"id": "ubs", "name": "UBS", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul"], "note": "9 Jul 2026 pilot cohort. No live transaction sourced.", "artifact_url": null},
+    {"id": "wells-fargo", "name": "Wells Fargo", "status": "DISCOVERED", "source": ["swift_pilot_9jul", "gfmag_pilot_10jul", "ethers_mvp_2apr"], "note": "9 Jul 2026 pilot cohort; also named in construction phase. No live transaction sourced.", "artifact_url": null},
+    {"id": "jpmorgan", "name": "JPMorgan", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in Swift shared-ledger construction phase (40+ cohort). Not in the 17-bank pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "deutsche-bank", "name": "Deutsche Bank", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "natwest", "name": "NatWest", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "rbc", "name": "Royal Bank of Canada", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "saudi-awwal", "name": "Saudi Awwal Bank", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "shinhan", "name": "Shinhan Bank", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "socgen-forge", "name": "Societe Generale-FORGE", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "td", "name": "TD Bank Group", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null},
+    {"id": "westpac", "name": "Westpac", "status": "COMMITTED", "source": ["ethers_mvp_2apr"], "note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced.", "artifact_url": null}
+  ]
+}

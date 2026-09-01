@@ -1,0 +1,956 @@
+{
+ "schema": "csoai.swift-census-atoms/0.1",
+ "kind": "unsigned-atom-bundle",
+ "writes_board": false,
+ "n_atoms": 26,
+ "as_of": "2026-09-01",
+ "honesty": "One unsigned card-v0 atom per named bank in the swift-census tape. Every atom cites a real press URL. No bank is a client. Not MEASURED. Queued for GHA OIDC signing; sig_ed25519 is null until a card verifies.",
+ "atoms": [
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.hsbc",
+   "subject": "Swift shared-ledger census: HSBC — status LIVE (2026-08-19)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+    "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "HSBC",
+    "bank_id": "hsbc",
+    "status": "LIVE",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": "2026-08-19",
+    "source_url_sha256": {
+     "sc_live_19aug": "1870ceb4dbd25dd87e8c80505dc06a061cf2197a8a1e7e9d4be10e264a7f9d70",
+     "fintechnews_uob_28aug": "3b78e18273973ed311b6e8ed0475175147a12c36589ab3c25637b3044b847974"
+    },
+    "note": "LIVE press-sourced tokenised-deposit transaction. Settlement still off-chain. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "2f426aa429f1822596b3e2d4fcd89c0b3f0604ffa64bf94d851205c66b45ac28",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.standard-chartered",
+   "subject": "Swift shared-ledger census: Standard Chartered — status LIVE (2026-08-19)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Standard Chartered",
+    "bank_id": "standard-chartered",
+    "status": "LIVE",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": "2026-08-19",
+    "source_url_sha256": {
+     "sc_live_19aug": "1870ceb4dbd25dd87e8c80505dc06a061cf2197a8a1e7e9d4be10e264a7f9d70"
+    },
+    "note": "LIVE press-sourced tokenised-deposit transaction. Settlement still off-chain. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "8506ee6fd005ce2de4e98aea155c0d7a66a3641b7bbe153609df89412594d696",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.uob",
+   "subject": "Swift shared-ledger census: UOB — status LIVE (2026-08-28)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "UOB",
+    "bank_id": "uob",
+    "status": "LIVE",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": "2026-08-28",
+    "source_url_sha256": {
+     "fintechnews_uob_28aug": "3b78e18273973ed311b6e8ed0475175147a12c36589ab3c25637b3044b847974"
+    },
+    "note": "LIVE press-sourced tokenised-deposit transaction. Settlement still off-chain. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "bda4303f59faf992b0dcd330ceafc655f09503d4cae4bad3b7b3aca77b5886fe",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.anz",
+   "subject": "Swift shared-ledger census: ANZ — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "ANZ",
+    "bank_id": "anz",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "e99bc5393225c5d7516e625a62bf7d78a29c5c91c9f03c5cd2d9e741c31fe9cb",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.bnp-paribas",
+   "subject": "Swift shared-ledger census: BNP Paribas — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "BNP Paribas",
+    "bank_id": "bnp-paribas",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "2ba31a9411afa52940623616a7b963a2ea4139d310eb06afaec3b911a867e2b2",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.bny",
+   "subject": "Swift shared-ledger census: BNY — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "BNY",
+    "bank_id": "bny",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "c139dcfac814b8f37c30ec8b8017f42e32b77d80aa914d0419d4afb68bb332cc",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.citi",
+   "subject": "Swift shared-ledger census: Citi — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Citi",
+    "bank_id": "citi",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "84d632fd74e361e44d0505f58ffad4038b198826a4d9d2bbcc352bb7eecb52ed",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.dbs",
+   "subject": "Swift shared-ledger census: DBS — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "DBS",
+    "bank_id": "dbs",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "bc92b814604bd3053823564a952f8d61d1e131d6f10c0ec07b04b7fa92d80a40",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.fab",
+   "subject": "Swift shared-ledger census: First Abu Dhabi Bank — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "First Abu Dhabi Bank",
+    "bank_id": "fab",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "8dc075a70cb837fd6aafd21960fb22ebf481d560a1b5346d07d2a8c945a585ad",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.firstrand",
+   "subject": "Swift shared-ledger census: FirstRand Bank Limited — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "FirstRand Bank Limited",
+    "bank_id": "firstrand",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "66940129575a665c4814f43f21c46353d5457c3afcb8c8daa14f117b584e9e5e",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.itau-unibanco",
+   "subject": "Swift shared-ledger census: Itaú Unibanco — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Itaú Unibanco",
+    "bank_id": "itau-unibanco",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "f52e7c2bf1d41b718672cf87d9236bd5394c49194396ba23bd0cb20ff9959bf2",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.lloyds",
+   "subject": "Swift shared-ledger census: Lloyds Bank — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Lloyds Bank",
+    "bank_id": "lloyds",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "f12d90e4cd389b889bb20ad02460f8b1e497077fc945e066bd35d35d03699d7f",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.mashreq",
+   "subject": "Swift shared-ledger census: Mashreq — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Mashreq",
+    "bank_id": "mashreq",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "741e9e909f17c44573fce544f6c61e012cbdd28c4663c8154caa15f368577ec9",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.mufg",
+   "subject": "Swift shared-ledger census: MUFG Bank — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/",
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "MUFG Bank",
+    "bank_id": "mufg",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "d2fd21c953476c2bf728b2874e2eb75098a43b06897e121955a58dcf5698828d",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.ocbc",
+   "subject": "Swift shared-ledger census: OCBC — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/",
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "OCBC",
+    "bank_id": "ocbc",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "34a400df675dd0c9f2ff0e6a91e8f40204c1a03a33774aa5a4629fddcfdd62b4",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.ubs",
+   "subject": "Swift shared-ledger census: UBS — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "UBS",
+    "bank_id": "ubs",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "bb771ac2c38bb6ca3b99b3aa356f0c4abad579f7dd0c6c944cd7f892de9e3501",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.wells-fargo",
+   "subject": "Swift shared-ledger census: Wells Fargo — status DISCOVERED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/",
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Wells Fargo",
+    "bank_id": "wells-fargo",
+    "status": "DISCOVERED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "swift_pilot_9jul": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+     "gfmag_pilot_10jul": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "DISCOVERED: named in the 9 Jul 2026 pilot cohort. No ISO 20022 / copybook / MT artifact fetched. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "6407b5ffb042ee26112de431e1d7b8c15e365f24c3cad07f007252ab291fabb5",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.jpmorgan",
+   "subject": "Swift shared-ledger census: JPMorgan — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "JPMorgan",
+    "bank_id": "jpmorgan",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "3e466e5e47282e8c77594117882324f121f6576116be7efe5c1649b89daa9e58",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.deutsche-bank",
+   "subject": "Swift shared-ledger census: Deutsche Bank — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Deutsche Bank",
+    "bank_id": "deutsche-bank",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "b4b90fe4286ba138fe4ad99369b6509b1b9de50ebfb06ee471ff29fa3e83fd73",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.natwest",
+   "subject": "Swift shared-ledger census: NatWest — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "NatWest",
+    "bank_id": "natwest",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "9e9e8242c2e9a88cf0171608e4a27d248b5be202ce1fdd8ce70c10f9eb4e227f",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.rbc",
+   "subject": "Swift shared-ledger census: Royal Bank of Canada — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Royal Bank of Canada",
+    "bank_id": "rbc",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "f9ad75bd2db48a1003b213a01d164e4e45613bd84a89ddf51ec1fd93c817d7ae",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.saudi-awwal",
+   "subject": "Swift shared-ledger census: Saudi Awwal Bank — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Saudi Awwal Bank",
+    "bank_id": "saudi-awwal",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "9faa41ce853865d9f3cb4dac9b2a5f09fa70deca7fd539e004bc8251d69e1bd7",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.shinhan",
+   "subject": "Swift shared-ledger census: Shinhan Bank — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Shinhan Bank",
+    "bank_id": "shinhan",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "9d1b503566fd5647f7495164140e64891b791a4052af6ad46ff109ac5ed9da4d",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.socgen-forge",
+   "subject": "Swift shared-ledger census: Societe Generale-FORGE — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Societe Generale-FORGE",
+    "bank_id": "socgen-forge",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "4e3287063b315d85e5cb3b2f72fc5ca9d5081737cc47ebfdfac32c7efd606db5",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.td",
+   "subject": "Swift shared-ledger census: TD Bank Group — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "TD Bank Group",
+    "bank_id": "td",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "de04ff25cef7a35d7055f1f7fe6e895658aea93076c542f72388c0df1f7d46ca",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  },
+  {
+   "schema": "https://councilof.ai/schema/card-v0.json",
+   "surface": "swift.notice.westpac",
+   "subject": "Swift shared-ledger census: Westpac — status COMMITTED (2026-09-01)",
+   "as_of": "2026-09-01T00:00:00Z",
+   "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+   ],
+   "payload": {
+    "kind": "csoai.swift-notice/0.1",
+    "bank": "Westpac",
+    "bank_id": "westpac",
+    "status": "COMMITTED",
+    "n": 0,
+    "not_a_grade": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "event_date": null,
+    "source_url_sha256": {
+     "ethers_mvp_2apr": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056"
+    },
+    "note": "COMMITTED: named in Swift shared-ledger construction phase (40+ cohort). Not in pilot. Not a grade, not a client.",
+    "as_of": "2026-09-01T00:00:00Z"
+   },
+   "sha256": "3d54c245362a4eb7b3004b82cae16bad5ec77905696175a67df422edfbcfd933",
+   "unmeasured": [
+    "iso20022_message",
+    "settlement_rail_bytes",
+    "official_html_body",
+    "pilot_or_live_outcome"
+   ],
+   "did": "did:web:csoai.org#card-attestation-1",
+   "sig_ed25519": null,
+   "note": "NO_LAPTOP_SIGN — unsigned atom queued for GHA OIDC signing (hf-fin-shells-measure pattern)."
+  }
+ ]
+}

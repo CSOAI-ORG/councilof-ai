@@ -77,7 +77,7 @@ export default function EstateDoors() {
       .then((r) =>
         setSwift(
           r.status === 404
-            ? { label: "404 honest", detail: "no /api/swift is served — 17 names are a DISCOVERED census, not clients, not a grade", tone: "gap" }
+            ? { label: "404 honest", detail: "no /api/swift is served — a three-state DISCOVERED-first census, not clients, not a grade", tone: "gap" }
             : r.ok && !isJson(r)
               ? HTML_ANSWERED
               : { label: `HTTP ${r.status}`, detail: "probed on this load", tone: r.ok ? "ok" : "warn" },

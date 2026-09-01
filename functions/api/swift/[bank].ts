@@ -1,12 +1,13 @@
 /**
- * GET /api/swift/:bank — one DISCOVERED row, or UNCHECKABLE if the id is unknown.
+ * GET /api/swift/:bank — one three-state census row, or UNCHECKABLE if the id is unknown.
+ * LIVE / COMMITTED / DISCOVERED. Never MEASURED, never a client.
  */
 // Three ups, not four: wrangler compiles the repo-root functions/ dir, so this
 // file sits at functions/api/swift/ and the tape at <root>/public/interop/.
 // The extra ../ resolved outside the repo and failed every GHA deploy since
 // #1009 ("Could not resolve" in run 33472240842) — the whole estate stopped
 // shipping on it.
-import tape from "../../../public/interop/swift-17.json";
+import tape from "../../../public/interop/swift-census.json";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -18,15 +19,31 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
+type Row = {
+  id: string;
+  name: string;
+  status: string;
+  event_date?: string;
+  source: string[];
+  note: string;
+  artifact_url: string | null;
+};
+
+const HONEST: Record<string, string> = {
+  LIVE: "LIVE press-sourced tokenised-deposit transaction. Settlement still off-chain. Not a grade. Not a client.",
+  COMMITTED: "COMMITTED: named in Swift's shared-ledger construction phase. Not in the pilot. Not MEASURED. Not a client.",
+  DISCOVERED: "DISCOVERED. Named in the pilot cohort. No public ISO 20022 / copybook / MT artifact located. Not MEASURED. Not a client.",
+};
+
 export const onRequestGet: PagesFunction = async (context) => {
   const raw = context.params.bank;
   const id = String(Array.isArray(raw) ? raw[0] : raw || "").toLowerCase();
-  const rows = (tape as { rows: Array<{ id: string; name: string; status: string; artifact_url: string | null }> }).rows;
-  const row = rows.find((r) => r.id === id);
+  const t = tape as { schema: string; sources: Record<string, unknown>; rows: Row[] };
+  const row = t.rows.find((r) => r.id === id);
   if (!row) {
     return json(
       {
-        schema: "csoai.swift-17/0.1",
+        schema: t.schema,
         kind: "reader",
         writes_board: false,
         status: "UNCHECKABLE",
@@ -37,13 +54,11 @@ export const onRequestGet: PagesFunction = async (context) => {
     );
   }
   return json({
-    schema: "csoai.swift-17/0.1",
+    schema: t.schema,
     kind: "reader",
     writes_board: false,
     ...row,
-    artifact: row.artifact_url ? "FETCH" : "none",
-    honesty: row.artifact_url
-      ? "Public artifact URL present. Grade only after FETCH."
-      : "DISCOVERED. No public ISO 20022 / copybook / MT file located. Not MEASURED.",
+    sources: row.source.map((s) => (t.sources as Record<string, unknown>)[s]).filter(Boolean),
+    honesty: HONEST[row.status] ?? "Three-state census row. Not MEASURED. Not a client.",
   });
 };

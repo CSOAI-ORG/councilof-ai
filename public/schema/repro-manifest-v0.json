@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/repro-manifest-v0.json",
+  "title": "CSOAI reproducibility manifest v0",
+  "description": "One-command stranger re-run pack. Folds trace_hash + harness_version + seed + dataset_hash + grader_version. Any field not honestly known is the literal string UNCHECKABLE and is never invented. A card MAY reference repro_manifest_sha256; that reference never upgrades an UNCHECKABLE field. Not a GSPC axis, not a certificate, does not write the board.",
+  "type": "object",
+  "required": ["schema", "kind", "writes_board", "fields", "repro_manifest_sha256", "honesty"],
+  "properties": {
+    "schema": { "const": "https://councilof.ai/schema/repro-manifest-v0.json" },
+    "kind": { "const": "csoai.repro-manifest/0.1" },
+    "writes_board": { "const": false },
+    "reproduces_card_sha256": { "type": "string" },
+    "fields": {
+      "type": "object",
+      "required": ["trace_hash", "harness_version", "seed", "dataset_hash", "grader_version"],
+      "additionalProperties": { "type": "string" },
+      "description": "Each value is a real value or the literal 'UNCHECKABLE'."
+    },
+    "n_uncheckable": { "type": "integer", "minimum": 0 },
+    "rerun": { "type": "string" },
+    "repro_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "honesty": { "type": "string" }
+  }
+}
