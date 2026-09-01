@@ -31,7 +31,7 @@ export const EARN_WEDGE =
   "Every host that can verify is a cash register for assembly the moment settlement exists. Until then, the same assembly invoices on enquiry.";
 
 export const OPEN_SDKS = [
-  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Four read tools in Claude, Cursor, Kimi, Grok." },
+  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Seven read tools in Claude, Cursor, Kimi, Grok." },
   { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Latest 0.1.0. Same four tools." },
   { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc v1.0.3." },
   { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },

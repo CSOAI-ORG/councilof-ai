@@ -158,8 +158,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "receipt",
     href: "https://councilof.ai/mcp",
-    plant: "Claude, Cursor, Kimi, Grok — one JSON, four tools.",
-    note: "board_totals · get_axis · verify_card · list_cards. No 23rd axis.",
+    plant: "Claude, Cursor, Kimi, Grok — one JSON, seven tools.",
+    note: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.",
     snippet: MCP_SNIPPET,
   },
   {
@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "Same four tools as HTTP /mcp.",
+    note: "npm 0.1.0 is four tools. HTTP /mcp is seven. Prefer the remote URL.",
     snippet: NPM_SNIPPET,
   },
   {
