@@ -63,7 +63,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
     id: "cursor-plugin",
     claim: "Cursor / Grok already have a GSPC plugin door.",
     verdict: "keep",
-    live: "Four read tools. Consent first. No inline 0–1 safety score. No FRIA stamp.",
+    live: "Seven read tools on HTTP /mcp. Consent first. No inline 0–1 safety score. No FRIA stamp.",
   },
   {
     id: "scitt-bind",

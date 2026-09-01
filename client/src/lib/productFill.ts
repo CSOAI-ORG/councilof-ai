@@ -143,7 +143,7 @@ export const FILL_ROWS: FillRow[] = [
     id: "plugin",
     layer: "cell",
     title: "GSPC plugin / MCP",
-    fills: "Reads the public board: board_totals, get_axis, verify_card, list_cards.",
+    fills: "Reads the public board: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion.",
     never: "A 23rd axis. Chat harvest. A feed of new scores into the coverage index.",
     href: "/tools",
     status: "live",

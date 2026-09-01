@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/public-root-v0.json",
+  "title": "CSOAI public-root envelope v0",
+  "description": "Merkle envelope over public-state cards. This is not a card-v0 leaf and not a GSPC measurement. Ed25519 over the compact preimage {kind, schema, as_of, merkle_root, card_count, did_intended} only. card_sha256[] is bound by merkle_root. GHA on master is the only signer. Not a certificate. Empty GSPC financial slots stay UNMEASURED.",
+  "type": "object",
+  "required": [
+    "kind",
+    "schema",
+    "as_of",
+    "merkle_root",
+    "card_count",
+    "did_intended"
+  ],
+  "properties": {
+    "kind": { "const": "csoai.public-root/v0" },
+    "schema": { "const": "https://councilof.ai/schema/public-root-v0.json" },
+    "as_of": { "type": "string" },
+    "merkle_root": { "type": "string", "minLength": 64, "maxLength": 64 },
+    "card_count": { "type": "integer", "minimum": 0 },
+    "did_intended": { "type": "string" },
+    "card_sha256": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 64, "maxLength": 64 }
+    },
+    "sig_ed25519": { "type": "string" },
+    "sig_preimage": { "type": "string" },
+    "note": { "type": "string" },
+    "language": { "type": "string" },
+    "sources": { "type": "array", "items": { "type": "string" } }
+  }
+}

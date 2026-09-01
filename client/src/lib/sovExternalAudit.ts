@@ -42,7 +42,7 @@ export const LIVE_PIN = {
   board_dataset: "csoai/gspc-board",
   boards_alias_note:
     "csoai/gspc-boards exists as a separate benchmark-register tree. It is not the living board mirror.",
-  mcp_planted: "board_totals · get_axis · verify_card · list_cards",
+  mcp_planted: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
   x402: "csoai.x402/0.1 — pay for pack assembly. The board stays free. Public card does not carry a payTo.",
 } as const;
 
@@ -141,7 +141,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "mcp-three-hundred",
     claim: "The planted GSPC product is a suite of hundreds of MCP servers.",
     verdict: "false",
-    live: "Official registry io.github.CSOAI-ORG/gspc v1.0.3. Four read tools. Extra catalogues are not this product.",
+    live: "Official registry io.github.CSOAI-ORG/gspc. HTTP /mcp is seven read tools. Extra catalogues are not this product.",
   },
   {
     id: "iso-42001",

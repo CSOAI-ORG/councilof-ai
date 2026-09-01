@@ -19,14 +19,26 @@ describe("stale copy honesty", () => {
     expect(pack).not.toMatch(/13 axes × 8 frameworks/);
   });
 
-  it("mcp.json names the planted four-read door as the measured product", () => {
+  it("mcp.json names the planted seven-read door as the measured product", () => {
     const j = JSON.parse(mcp);
-    expect(j.planted.tools).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
-    expect(j.measured.tools).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
-    expect(j.planted.note).toMatch(/Four read tools/);
+    const seven = [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+    ];
+    expect(j.planted.tools).toEqual(seven);
+    expect(j.measured.tools).toEqual(seven);
+    expect(j.measured.total_tools).toBe(7);
+    expect(j.planted.note).toMatch(/Seven read tools/);
     expect(j.measured.note).toMatch(/not this product/);
     expect(tools).toContain("WatchlistPane");
-    expect(tools).toContain("board_totals · get_axis · verify_card · list_cards");
+    expect(tools).toContain(
+      "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
+    );
   });
 });
 

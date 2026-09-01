@@ -110,6 +110,9 @@ const EXISTING = [
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
   "/gspc                   /gspc-scoreboard             308",
+  // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
+  "/plugin                 /tools                       301",
+  "/plugin/                /tools                       301",
   "/scoreboard             /gspc-scoreboard             308",
   "/scorecard              /gspc-scoreboard             308",
   "/scorecard/             /gspc-scoreboard             308",

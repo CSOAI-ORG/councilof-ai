@@ -33,6 +33,7 @@ if str(HERE) not in sys.path:
 from adapters import benji, fin7_coverage, hub_cite, swift_notices, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
+ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
 DID = "did:web:csoai.org#board-attestation-1"
 SURFACES = {
     "xrpl.asset.state",
@@ -529,13 +530,13 @@ def main() -> int:
         ),
         "merkle_root": root_merkle,
         "note": (
-            "This root.json envelope is not Ed25519-signed (no sig_ed25519 on the envelope; "
-            "unsigned until keystone). did_intended names the intended leaf attestation identity only. "
-            "Individual leaves MAY carry GH-secret attestations when present — leaf coverage harvest, "
-            "not grades, and not a sealed signed root. Layer-0 seals, if any, are a different key. "
+            "Envelope schema is public-root-v0, not card-v0. Leaves stay card-v0. "
+            "Unsigned until GHA signs this envelope (sig_ed25519). "
+            "did_intended names the intended leaf attestation identity only. "
+            "Leaves MAY carry attestations — coverage harvest, not grades. "
             "Not MEASURED. Not a certificate. Free; not paywalled."
         ),
-        "schema": CARD_SCHEMA,
+        "schema": ENVELOPE_SCHEMA,
         "sources": ["https://xrpl.fi/api/metrics"],
         "xrpl_asset_count_attempted": 16,
         "xrpl_basket_merkle": basket_hex,
@@ -561,8 +562,9 @@ def main() -> int:
             "PKCS8 stays on Pages (OIDC). Not a certificate."
         )
         root_body["note"] = (
-            "This root.json envelope is Ed25519-signed over the compact preimage "
-            "under did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
+            "Envelope schema is public-root-v0, not card-v0. This root.json envelope "
+            "is Ed25519-signed over the compact preimage under "
+            "did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
             "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."
         )
 

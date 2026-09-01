@@ -51,7 +51,7 @@ export const NSITES_BOOTSTRAP = [
 ] as const;
 
 export const PLUGIN_HARVEST = {
-  plugin_reads: "Public board, four MCP tools, signed cards. Consent first.",
+  plugin_reads: "Public board, seven MCP tools, signed cards. Consent first.",
   plugin_never: [
     "user chat bodies",
     "covert telemetry",
@@ -189,7 +189,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc",
     plant: "Hosts that install from GitHub source. Consent first. No --trust until accepted.",
-    note: "Same four tools. Does not harvest chats or mint regulation scores.",
+    note: "Same seven tools as HTTP /mcp. Does not harvest chats or mint regulation scores.",
     snippet: PLUGIN_SNIPPET,
   },
   {
@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "npm 0.1.0 is four tools. HTTP /mcp is seven. Prefer the remote URL.",
+    note: "npm 0.1.0 is four tools (stdio). HTTP /mcp is seven. Teach the live list.",
     snippet: NPM_SNIPPET,
   },
   {

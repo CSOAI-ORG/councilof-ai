@@ -45,7 +45,7 @@ export default function TransparencyCop() {
           <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-gray-600">
             <li>Ed25519 measurement cards (did:web:csoai.org#card-attestation-1)</li>
             <li>Browser verify at /gspc-verify</li>
-            <li>HTTP MCP https://councilof.ai/mcp — four tools only</li>
+            <li>HTTP MCP https://councilof.ai/mcp — seven tools (stdio npm 0.1.0 is four)</li>
             <li>
               C2PA / CAI conformance: <strong>not live</strong> (claims register CR-012 planned)
             </li>
