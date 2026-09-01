@@ -1,3 +1,5 @@
+import { isUnframeable, pathBare } from "@/lib/unframeable";
+
 /**
  * The Council Lobby's centre-pane destinations.
  *
@@ -36,6 +38,7 @@
 export type LobbyTabId =
   | "home"
   | "board"
+  | "matrix"
   | "results"
   | "models"
   | "tools"
@@ -109,6 +112,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "/gspc-scoreboard",
     kind: "native",
     cues: /\b(board|scoreboard|score|axes|axis|gspc|leaderboard)\b/i,
+  },
+  {
+    id: "matrix",
+    label: "Regulation matrix",
+    blurb: "Industry × regulation grid — living data from GET /api/gspc. Printer of the board, not a simulation.",
+    path: "",
+    kind: "native",
+    cues: /\b(matrix|industry|sector|regulation|crosswalk|east.?west|compliance grid)\b/i,
   },
   {
     id: "results",
@@ -220,7 +231,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "ras",
     label: "Readiness assessment",
     blurb: "The guided readiness route — structured questions, human-readable output.",
-    path: "/readiness-assessment",
+    path: "/assess",
     cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
@@ -241,7 +252,7 @@ export const LOBBY_TABS: LobbyTab[] = [
   {
     id: "software",
     label: "Software",
-    blurb: "Signed-in dashboard (DSH) — the same destinations as this rail.",
+    blurb: "Signed-in dashboard (DSH) — opens as its own page, not an iframe inside /os.",
     path: "/dashboard",
     cues: /\b(dashboard|software|dsh|signed[- ]in)\b/i,
   },
@@ -462,10 +473,73 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   },
 ];
 
-export const DEFAULT_TAB: LobbyTabId = "home";
+/**
+ * Marketing / DSH destinations `go()` and `loadPane` open as a full page.
+ * The unframeable set (client/src/lib/unframeable.ts) is the breakout list —
+ * OS chrome aliases, demo shells, `/dashboard`. SITE_DOORS is the extra
+ * marketing doors (`/products` `/honesty` `/pricing`) that also leave OS
+ * when chosen as a destination. Products may still frame from a route ping.
+ */
+export const SITE_DOORS = ["/", "/os", "/dashboard", "/products", "/honesty", "/pricing"] as const;
+
+export function isSiteDoor(path: string): boolean {
+  const bare = (path.split("?")[0].split("#")[0].replace(/\/$/, "") || "/");
+  return (SITE_DOORS as readonly string[]).includes(bare);
+}
+
+/** Left rail of Council OS: instruments + Home + Play. Not the sitemap. */
+export const OS_RAIL_IDS: LobbyTabId[] = [
+  "home",
+  "board",
+  "verify",
+  "cards",
+  "evidence",
+  "embed",
+  "play",
+];
+
+export function isOsRailTab(id: LobbyTabId): boolean {
+  return OS_RAIL_IDS.includes(id);
+}
+
+export const OS_RAIL_TABS: LobbyTab[] = LOBBY_TABS.filter((t) => isOsRailTab(t.id));
+
+/** Document pages that may still iframe. Everything else opens as a normal page. */
+export const DOCUMENT_FRAMES = ["/library", "/methodology", "/cra-readiness"] as const;
+
+export function isDocumentFrame(path: string): boolean {
+  const bare = (path.split("?")[0].split("#")[0].replace(/\/$/, "") || "/");
+  return (DOCUMENT_FRAMES as readonly string[]).includes(bare);
+}
+
+/**
+ * Overlay centre-pane loader. Native tabs never call this. Everything else
+ * either leaves the workspace or (documents only) iframes. Unframeable paths
+ * (`/`, `/os`, `/dashboard`, OS chrome aliases) are always navigate — never
+ * an iframe src. Software is `/dashboard` → full page.
+ */
+export type PaneLoad =
+  | { action: "navigate"; path: string }
+  | { action: "iframe"; path: string };
+
+export function paneLoadFor(path: string): PaneLoad {
+  if (isUnframeable(path) || isSiteDoor(path) || !isDocumentFrame(path)) {
+    return { action: "navigate", path };
+  }
+  return { action: "iframe", path };
+}
+
+export const DEFAULT_TAB: LobbyTabId = "board";
 
 export function tabById(id: LobbyTabId): LobbyTab {
   return LOBBY_TABS.find((t) => t.id === id) ?? LOBBY_TABS[0];
+}
+
+/** Software is DSH — a full page, never a framed `/dashboard`. */
+export const SOFTWARE_HREF = "/dashboard";
+
+export function softwareLeavesOs(t: Pick<LobbyTab, "id" | "path">): boolean {
+  return t.id === "software" || (t.path ? pathBare(t.path) === SOFTWARE_HREF : false);
 }
 
 function isNavCommand(text: string): boolean {

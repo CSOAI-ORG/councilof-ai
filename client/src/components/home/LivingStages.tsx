@@ -2,8 +2,8 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link } from "wouter";
 import { RotatingHighlight } from "../type/RotatingHighlight";
 import { SECTION_TITLES } from "../type/sectionTitles";
-import LiveLeaderboard from "../board/LiveLeaderboard";
 import { VideoEmbed } from "@/components/scrollworld";
+import FooterVerifyStrip from "../FooterVerifyStrip";
 import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
 
 /**
@@ -40,7 +40,7 @@ import { ANCHORING_CLAIM } from "../../data/anchoringClaim";
  * and no heading is ever left holding a placeholder dash.
  */
 
-/* ─── live data ─────────────────────────────────────────────────────────── */
+/* ─── live data ─────────────────────────────────────────────── */
 
 function useJson<T>(url: string): T | null {
   const [data, setData] = useState<T | null>(null);
@@ -82,7 +82,7 @@ type RegFeed = {
   deadlines?: { date: string; instrument: string; what: string; basis?: string; status?: string }[];
 };
 
-/* ─── shared shapes ─────────────────────────────────────────────────────── */
+/* ─── shared shapes ───────────────────────────────────────────── */
 
 type Point = { tag: "pain" | "benefit" | "usp"; text: string };
 
@@ -154,7 +154,7 @@ function HeavyBand({
       ? "bg-gradient-to-l from-white/75 via-white/25 to-transparent"
       : "bg-gradient-to-r from-white/75 via-white/25 to-transparent";
   return (
-    <section className="surface-raised relative flex min-h-[68svh] items-center overflow-hidden">
+    <section className="surface-raised relative flex min-h-[78svh] items-center overflow-hidden">
       <img
         src={image}
         alt={alt}
@@ -219,7 +219,7 @@ function SplitBand({
 }) {
   return (
     <section className={`relative ${tint}`}>
-      <div className="section-shell section-y grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div className="section-shell section-y grid grid-cols-1 items-center gap-14 py-8 lg:grid-cols-2 lg:gap-20">
         <div className={mediaSide === "right" ? "lg:order-1" : "lg:order-2"}>{children}</div>
         {video ? (
           <VideoEmbed
@@ -258,7 +258,7 @@ function Body({ children }: { children: ReactNode }) {
   return <p className="t-lede measure mt-5 font-medium text-gray-700">{children}</p>;
 }
 
-/* ─── 1 · independence ──────────────────────────────────────────────────── */
+/* ─── 1 · independence ─────────────────────────────────────────── */
 
 function Independence() {
   return (
@@ -296,7 +296,7 @@ function Independence() {
       <Cta
         // /pricing is an ARCHIVED path (library-ia REPLACEMENTS maps it forward), so this CTA
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
-        href="/?lobby=measured&task=pricing-overview"
+        href="/os?lobby=assess&task=pricing-overview"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />
@@ -304,13 +304,13 @@ function Independence() {
   );
 }
 
-/* ─── 2 · the boundary ──────────────────────────────────────────────────── */
+/* ─── 2 · the boundary ──────────────────────────────────────────── */
 
 function Boundary() {
   return (
     <SplitBand
-      video="/videos/council-of-ai.mp4"
-      poster="/videos/council-of-ai.jpg"
+      video="/videos/trust-lobby.mp4"
+      poster="/videos/trust-lobby.jpg"
       alt="What the Council of AI is, and the line it does not cross"
       mediaSide="right"
       tint="surface-sunken"
@@ -348,7 +348,7 @@ function Boundary() {
   );
 }
 
-/* ─── 3 · verify it yourself ────────────────────────────────────────────── */
+/* ─── 3 · verify it yourself ────────────────────────────────────── */
 
 const VERIFY_STEPS = [
   {
@@ -371,10 +371,10 @@ const VERIFY_STEPS = [
 function VerifyYourself() {
   return (
     <section className="relative bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+      <div className="mx-auto max-w-6xl px-6 py-24 sm:py-32">
         <div className="max-w-3xl">
           <Kicker>Do not trust us — check</Kicker>
-          <Heading>Verify a card yourself. Three steps.</Heading>
+          <Heading>Three steps. Then you know.</Heading>
           <Body>
             Every measurement we publish is a small signed record — under a kilobyte, carrying the
             axis, the model, the accuracy, the issuer, the date and the hash of the card before it.
@@ -391,29 +391,32 @@ function VerifyYourself() {
           alt="The trust root did:web:csoai.org anchoring signed measurement cards through a hash-chained evidence ledger to local, offline verification on the reader's own machine"
         />
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-start">
-          <ol className="grid gap-4">
+        <div className="mt-12 space-y-8">
+          <ol className="grid gap-4 lg:grid-cols-3 lg:gap-5">
             {VERIFY_STEPS.map((s) => (
               <li
                 key={s.n}
-                className="flex items-start gap-5 rounded-2xl border border-gray-200 bg-gray-50/70 p-6"
+                className="flex h-full flex-col gap-3 rounded-2xl border border-gray-200 bg-gray-50/70 p-5 sm:p-6"
               >
-                <span className="w-9 shrink-0 font-mono text-2xl font-black tabular-nums text-emerald-500">{s.n}</span>
+                <span className="font-mono text-2xl font-black tabular-nums text-emerald-500">{s.n}</span>
                 <div>
-                  <h3 className="text-lg font-extrabold text-gray-900">{s.h}</h3>
-                  <p className="mt-1.5 text-[15px] leading-relaxed text-gray-600">{s.d}</p>
+                  <h3 className="text-lg font-extrabold leading-snug text-gray-900">{s.h}</h3>
+                  <p className="mt-1.5 text-[14px] leading-relaxed text-gray-600 sm:text-[15px]">{s.d}</p>
                 </div>
               </li>
             ))}
           </ol>
 
-          {/* The pipeline explained in motion rather than a cropped panel. */}
-          <VideoEmbed
-            src="/videos/csoai-architecture.mp4"
-            poster="/videos/csoai-architecture.jpg"
-            title="How a card is made: grading against frozen provisions, then canonical signing"
-            caption="How the card is made before you ever check it — deterministic grading, then canonical Ed25519 signing."
-            className="mt-10"
+          <FooterVerifyStrip />
+        </div>
+
+        <div className="mt-10 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/50 px-5 py-4">
+          <Points
+            points={[
+              { tag: "benefit", text: "The whole check runs offline — no account and no permission" },
+              { tag: "benefit", text: "Pin our key first. A card checked against the key it ships with only proves it is self-consistent" },
+              { tag: "usp", text: "You recompute the same Ed25519 signature over the same hash chain we published" },
+            ]}
           />
         </div>
 
@@ -423,7 +426,7 @@ function VerifyYourself() {
   );
 }
 
-/* ─── 4 · we publish our own errors ─────────────────────────────────────── */
+/* ─── 4 · we publish our own errors ─────────────────────────────── */
 
 function OwnErrors() {
   const corr = useJson<Corrections>("/api/corrections");
@@ -455,6 +458,13 @@ function OwnErrors() {
           </>
         )}
       </Body>
+      <Points
+        points={[
+          { tag: "pain", text: "Most measurement bodies quietly reword a claim that did not hold" },
+          { tag: "benefit", text: "The ledger is append-only — entries are never edited or deleted" },
+          { tag: "usp", text: "We retracted our own consensus claim (DR-0007) rather than dress it up" },
+        ]}
+      />
       <p className="measure mt-5 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5 text-[15px] leading-[1.65] text-gray-700">
         <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
@@ -469,7 +479,8 @@ function OwnErrors() {
             <li key={c.id} className="rounded-xl border border-gray-200 bg-white p-3">
               <span className="font-mono text-[11px] font-bold text-emerald-700">{c.id}</span>
               <span className="ml-2 text-[11px] text-gray-400">{c.date}</span>
-              <p className="mt-1 text-[13px] leading-relaxed text-gray-600">{c.what_was_wrong}</p>
+              {/* Excerpts removed: what_was_wrong may quote retired counts (e.g. "14-slot", 
+                  "13 measured of 14"). Show id/date only; full content at /refutation-ledger. */}
             </li>
           ))}
         </ul>
@@ -477,13 +488,13 @@ function OwnErrors() {
       <Cta
         href="/refutation-ledger"
         label="Read the ledger"
-        secondary={{ href: "/watchdog", label: "Report something to us" }}
+        secondary={{ href: "/report", label: "Report something to us" }}
       />
     </SplitBand>
   );
 }
 
-/* ─── 5 · living law ────────────────────────────────────────────────────── */
+/* ─── 5 · living law ────────────────────────────────────────── */
 
 function LivingLaw() {
   const feed = useJson<RegFeed>("/api/regulation");
@@ -531,16 +542,12 @@ function LivingLaw() {
           </ul>
         </>
       )}
-      <p className="mt-4 text-xs leading-relaxed text-gray-500">
-        Where a date is genuinely disputed, the feed records the dispute rather than resolving it
-        silently — and where we got a date wrong ourselves, the correction is published, not patched.
-      </p>
       <Cta href="/eu-ai-act" label="What is coming, and when" secondary={{ href: "/assess", label: "Get re-measured" }} />
     </HeavyBand>
   );
 }
 
-/* ─── 6 · the live board, with humans beside it ─────────────────────────── */
+/* ─── 6 · the live board, with humans beside it ───────────────────────── */
 
 function LiveBoard() {
   const gspc = useJson<Gspc>("/api/gspc");
@@ -643,7 +650,7 @@ function LiveBoard() {
   );
 }
 
-/* ─── export ────────────────────────────────────────────────────────────── */
+/* ─── export ────────────────────────────────────────────── */
 
 export default function LivingStages() {
   return (
@@ -654,8 +661,6 @@ export default function LivingStages() {
       <OwnErrors />
       <LivingLaw />
       <LiveBoard />
-      {/* the board as a grid, read live from /api/gspc — the section above says what it means */}
-      <LiveLeaderboard className="surface-raised section-y" />
     </div>
   );
 }

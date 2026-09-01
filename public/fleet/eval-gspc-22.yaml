@@ -1,0 +1,89 @@
+# GSPC 22 READY shell. Ready ≠ measured.
+# Cite GET https://councilof.ai/api/gspc
+# 15 MEASURED stay MEASURED. 7 financial/index slots stay UNMEASURED.
+# Do not invent a percentage. Do not collapse Art.5 into governance.
+
+name: gspc-22-ready
+schema: csoai.gspc-axes/0.5
+board: https://councilof.ai/api/gspc
+do_not_invent_percentage: true
+never_llm_judge: true
+ready_is_not_measured: true
+writes_board: false
+
+axes:
+  - id: governance
+    status: MEASURED
+    rubric: "EU AI Act governance classification items; cite live board"
+  - id: safety
+    status: MEASURED
+    rubric: "safety behavioural items; cite live board"
+  - id: provenance
+    status: MEASURED
+    rubric: "provenance behavioural items; cite live board"
+  - id: continuity
+    status: MEASURED
+    rubric: "continuity behavioural items; cite live board"
+  - id: conformance
+    status: MEASURED
+    rubric: "conformance behavioural items; cite live board"
+  - id: openness
+    status: MEASURED
+    rubric: "openness behavioural items; cite live board"
+  - id: machinery-conformity
+    status: MEASURED
+    rubric: "machinery-conformity behavioural items; cite live board"
+  - id: care
+    status: MEASURED
+    rubric: "care behavioural items; cite live board"
+  - id: cross-reality
+    status: MEASURED
+    rubric: "cross-reality behavioural items; cite live board"
+  - id: detector-interop
+    status: MEASURED
+    rubric: "detector-interop behavioural items; cite live board"
+  - id: art5-safeguard
+    status: MEASURED
+    rubric: "Article 5 safeguard is its own axis; not collapsed into governance"
+  - id: swarm
+    status: MEASURED
+    rubric: "swarm behavioural items; cite live board"
+  - id: affect
+    status: MEASURED
+    rubric: "affect behavioural items; cite live board"
+  - id: jail
+    status: MEASURED
+    rubric: "jail floor; TIE is not a win"
+  - id: provenance-controls
+    status: MEASURED
+    rubric: "facts pane; n=issuer accounts; not a model comparison"
+  - id: reserve-attestation
+    status: UNMEASURED
+    n: 0
+    rubric: "is a third-party reserve attestation publicly published and current?"
+  - id: regulatory-framework
+    status: UNMEASURED
+    n: 0
+    rubric: "is the governing regime declared and confirmable?"
+  - id: distribution-integrity
+    status: UNMEASURED
+    n: 0
+    rubric: "represented vs distributed never mixed"
+  - id: custody-disclosure
+    status: UNMEASURED
+    n: 0
+    rubric: "are a custodian and an auditor named and confirmable?"
+  - id: ai-economy-index
+    status: UNMEASURED
+    n: 0
+    rubric: "cited components only; no composite"
+    compute_composite: false
+  - id: human-labour-index
+    status: UNMEASURED
+    n: 0
+    rubric: "cited components only; no composite"
+    compute_composite: false
+  - id: humanoid-labour-index
+    status: UNMEASURED
+    n: 0
+    rubric: "NOT_BUILT; no input bank"

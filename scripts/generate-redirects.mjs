@@ -36,7 +36,9 @@ const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
                      // /signed is the evidence tree IETF implementers are pointed at.
                      // Without this the SPA catch-all answers /signed/ with the app
                      // shell (soft 404) instead of the directory index.
-                     "/signed"];
+                     "/signed",
+                     // 48h thesis stack JSON (index + watches) — serve as assets.
+                     "/stack"];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -60,8 +62,10 @@ const EXISTING = [
   "/consensus            /council   308",
   "/jewels               /          308",
   "/crown-jewels         /          308",
-  "/plans                /pricing   308",
-  "/enterprise-plans     /pricing   308",
+  // Pricing lives in Council OS Assess (functions/pricing.ts). Do not chain
+  // through /pricing — that is itself a 308 door hop.
+  "/plans                /os?lobby=assess&task=pricing-overview   308",
+  "/enterprise-plans     /os?lobby=assess&task=pricing-overview   308",
   "/council-space  /gspc-arena             308",
   "/city           /gspc-arena?view=towns  308",
   // Living-measurement / product short doors. Destinations already exist.
@@ -73,8 +77,8 @@ const EXISTING = [
   "/insurance/     /insurers/              308",
   "/article50      /article-50/            308",
   "/article50/     /article-50/            308",
-  "/overlay        /?lobby=home            308",
-  "/overlay/       /?lobby=home            308",
+  "/overlay        /os?lobby=home          308",
+  "/overlay/       /os?lobby=home          308",
   "/rwa            /distribution-integrity/ 308",
   "/rwa/           /distribution-integrity/ 308",
   "/financial-axis /financial-axes/        308",
@@ -90,28 +94,41 @@ const EXISTING = [
   "/acr-agi        /rating-the-raters/     308",
   "/acr-agi/       /rating-the-raters/     308",
   "/method         /methodology            308",
+  // AEO short doors from LIVE-GAP-AUDIT. Destinations already ship as blog
+  // (or /colorado-ai-act). Do not invent an SS 584 seed page — pin the
+  // existing explainer. After /answers merges, the blog still 200s.
+  "/scitt          /blog/scitt-ai-supply-chain-transparency/  308",
+  "/scitt/         /blog/scitt-ai-supply-chain-transparency/  308",
+  "/colorado       /colorado-ai-act/         308",
+  "/colorado/      /colorado-ai-act/         308",
+  "/ss584          /blog/third-party-ai-audit-standards-ss584-isae3000/  308",
+  "/ss584/         /blog/third-party-ai-audit-standards-ss584-isae3000/  308",
+  "/nist-ai-600    /blog/nist-ai-600-1-profile-mapping/  308",
+  "/nist-ai-600/   /blog/nist-ai-600-1-profile-mapping/  308",
+  "/containment    /blog/what-is-monitored-containment/  308",
+  "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
   "/gspc                   /gspc-scoreboard             308",
   "/scoreboard             /gspc-scoreboard             308",
   "/scorecard              /gspc-scoreboard             308",
   "/scorecard/             /gspc-scoreboard             308",
-  "/lobby                  /?lobby=home                 308",
-  "/console                /?lobby=home                 308",
+  "/lobby                  /os?lobby=home               308",
+  "/console                /os?lobby=home               308",
   "/council-os             /os                          308",
   "/council-os/            /os                          308",
-  "/sov-os                 /?lobby=home                 308",
-  "/sov-os/                /?lobby=home                 308",
-  "/ag-ui                  /?lobby=home                 308",
-  "/ag-ui/                 /?lobby=home                 308",
-  "/agui                   /?lobby=home                 308",
-  "/agui/                  /?lobby=home                 308",
-  "/chat                   /?lobby=home                 308",
-  "/chat/                  /?lobby=home                 308",
-  "/rankings               /?lobby=board                308",
-  "/rankings/              /?lobby=board                308",
-  "/benchmarkers           /?lobby=results              308",
-  "/benchmarkers/          /?lobby=results              308",
+  "/sov-os                 /os?lobby=home               308",
+  "/sov-os/                /os?lobby=home               308",
+  "/ag-ui                  /os?lobby=home               308",
+  "/ag-ui/                 /os?lobby=home               308",
+  "/agui                   /os?lobby=home               308",
+  "/agui/                  /os?lobby=home               308",
+  "/chat                   /os?lobby=home               308",
+  "/chat/                  /os?lobby=home               308",
+  "/rankings               /os?lobby=board              308",
+  "/rankings/              /os?lobby=board              308",
+  "/benchmarkers           /os?lobby=verify             308",
+  "/benchmarkers/          /os?lobby=verify             308",
   "/mcp-registry           /mcps/                       308",
   "/mcp-registry/          /mcps/                       308",
   "/library/measurement    /library/axes                308",
@@ -123,9 +140,13 @@ const EXISTING = [
   //     file), AND both names are PATH_BANNED internal codenames in scripts/brand-gate.mjs.
   //     They were shipping banned codenames in a public edge config.
   "/verify/                /gspc-verify/                308",
-  "/enterprise             /?lobby=measured&task=enterprise-start  308",
-  "/enterprise/            /?lobby=measured&task=enterprise-start  308",
-  "/enterprises            /?lobby=measured&task=enterprise-start  308",
+  "/badges                 /badge                       308",
+  "/badges/                /badge                       308",
+  "/verify-certificate     /gspc-verify/                308",
+  "/verify-certificate/    /gspc-verify/                308",
+  "/enterprise             /os?lobby=assess&task=enterprise-start  308",
+  "/enterprise/            /os?lobby=assess&task=enterprise-start  308",
+  "/enterprises            /os?lobby=assess&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   // /for is an index with no page of its own — send it to the default audience. The
@@ -171,18 +192,41 @@ const EXISTING = [
 
   // JA-D2: keep edge alias without shipping the slug in the client bundle
   // (App.tsx route removed; string stays only in this edge map).
+
+  // SEO cleanup 2026-08-27: /fabric/* was a leftover product tree never wired in
+  // this repo. Google indexed /fabric/agent-incident-reporter-mcp; send it to the
+  // live MCP registry door. csoai.org has the same leftover but is a different
+  // Pages project (csoai-site), so that redirect belongs in its own deploy.
+  "/fabric/agent-incident-reporter-mcp  /mcps/  308",
+
+  // 2026-08-28: /readiness-assessment was a 404 (no edge redirect, SPA catch-all
+  // inert). The live page is /assess. /ras was 200→ras.html (STOREFRONT) but the
+  // user requests a 308→/assess to kill the self-loop and unify the door.
+  "/readiness-assessment   /assess  308",
+  "/readiness-assessment/  /assess  308",
+  "/ras                    /assess  308",
+  "/ras/                   /assess  308",
+
+  // 2026-08-28: /claimguard.html 200 rewrite loops with Pages' .html→slashless
+  // strip (claimguard → claimguard.html → claimguard). Send humans to the live
+  // honesty rail. /coming was a 404 orphan; same destination. /stack directory
+  // index is JSON — hop bare /stack there so agents and browsers both resolve.
+  "/claimguard             /honesty/                308",
+  "/claimguard/            /honesty/                308",
+  "/claimguard.html        /honesty/                308",
+  "/coming                 /honesty/                308",
+  "/coming/                /honesty/                308",
+  "/stack                  /stack/index.json        308",
+  "/stack/                 /stack/index.json        308",
 ];
 
 const STOREFRONT = [
   "/catalog.json  /catalog.json     200",
-  "/claimguard    /claimguard.html  200",
-  "/claimguard/   /claimguard       308",
-  "/ras           /ras.html         200",
-  "/ras/          /ras              308",
 ];
 
 const PERSONA_SLASH = [
-  "pricing", "honesty", "library", "regulators", "start", "insurers",
+  // pricing is a Functions door hop → /os Assess — do not emit /pricing → /pricing/
+  "honesty", "library", "regulators", "start", "insurers",
   "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
   "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
   "models", "tools", "api-docs",

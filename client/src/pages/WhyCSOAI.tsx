@@ -49,10 +49,10 @@ export default function WhyCsoai() {
       </section>
 
       <section className="mx-auto max-w-5xl px-6 py-8">
-        <div className="text-sm font-bold uppercase tracking-wide text-emerald-300/70">CSOAI vs a certificate shop</div>
+        <div className="text-sm font-bold uppercase tracking-wide text-emerald-300/70">Council of AI vs a certificate shop</div>
         <div className="mt-3 overflow-hidden rounded-2xl border border-emerald-500/20">
           <table className="w-full text-left text-sm">
-            <thead className="bg-emerald-500/10 text-emerald-200"><tr><th className="px-4 py-3 font-bold">Capability</th><th className="px-4 py-3 font-bold text-emerald-300">CSOAI</th><th className="px-4 py-3 font-bold text-emerald-100/60">Certificate / GRC shop</th></tr></thead>
+            <thead className="bg-emerald-500/10 text-emerald-200"><tr><th className="px-4 py-3 font-bold">Capability</th><th className="px-4 py-3 font-bold text-emerald-300">Council of AI</th><th className="px-4 py-3 font-bold text-emerald-100/60">Certificate / GRC shop</th></tr></thead>
             <tbody>
               {MATRIX.map((m, i) => (
                 <tr key={i} className={i % 2 ? "bg-white/[0.02]" : ""}>

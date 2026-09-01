@@ -1,0 +1,100 @@
+name: census-delta
+
+# B11 daily overlapping Hub listing sweep.
+# Commit SUMMARY only. n_measured stays 0. Never listings.jsonl (1.59GB).
+# Never stamp MEASURED. Never invent a 3.032M walk — baseline remains
+# public/signed/hub-census-baseline.json. After SUMMARY lands, dispatch
+# census-tick so public-root cites the digest in publisher-health only
+# (not a new card-v0 surface).
+
+on:
+  schedule:
+    - cron: "30 4 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types: [census-delta]
+
+concurrency:
+  group: census-delta
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  delta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: collect delta SUMMARY
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hub-census-delta
+          python3 scripts/census/hub_census.py collect \
+            --out-dir /tmp/hub-census-delta \
+            --mode delta \
+            --overlap-hours 6 \
+            --fresh
+          python3 - <<'PY'
+          import json, pathlib, sys
+          p = pathlib.Path("/tmp/hub-census-delta/SUMMARY.json")
+          s = json.loads(p.read_text(encoding="utf-8"))
+          if int(s.get("n_measured") or 0) != 0:
+              print("HALT: n_measured is not 0", s.get("n_measured"), file=sys.stderr)
+              sys.exit(3)
+          if str(s.get("status_all") or "").upper() == "MEASURED":
+              print("HALT: stamped MEASURED", file=sys.stderr)
+              sys.exit(3)
+          if str(s.get("listing_state_all") or "").upper() == "MEASURED":
+              print("HALT: listing_state MEASURED", file=sys.stderr)
+              sys.exit(3)
+          print(
+              "n=", s.get("n"),
+              "n_measured=", s.get("n_measured"),
+              "status_all=", s.get("status_all"),
+              "complete_reason=", s.get("complete_reason"),
+          )
+          PY
+          mkdir -p public/signed scripts/census
+          cp /tmp/hub-census-delta/SUMMARY.json public/signed/hub-census-delta.json
+          cp /tmp/hub-census-delta/SUMMARY.json scripts/census/delta.SUMMARY.json
+          # never stage listings.jsonl
+          rm -f /tmp/hub-census-delta/listings.jsonl
+      - name: commit SUMMARY only
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-census-delta"
+          git config user.email "board@csoai.org"
+          git add public/signed/hub-census-delta.json scripts/census/delta.SUMMARY.json
+          git diff --cached --name-only | grep -E 'listings\.jsonl$' && {
+            echo "HALT: listings.jsonl staged" >&2
+            exit 3
+          } || true
+          if git diff --cached --quiet; then
+            echo "no SUMMARY change"
+            exit 0
+          fi
+          git commit -m "census-delta: SUMMARY only, n_measured=0 ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git push origin HEAD:master
+      - name: dispatch census-tick
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sS -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            "https://api.github.com/repos/${{ github.repository }}/dispatches" \
+            -d '{"event_type":"census-tick"}'

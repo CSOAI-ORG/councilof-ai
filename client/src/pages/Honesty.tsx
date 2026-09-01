@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { setMetaDescription } from "@/lib/utils";
 import { useBoardCount } from "@/lib/boardCount";
 import { useEstateFacts } from "@/lib/estateFacts";
+import { ANCHORING_CLAIM } from "@/data/anchoringClaim";
 
 /**
  * /honesty — the honesty gate: what this estate publishes against itself.
@@ -220,9 +221,8 @@ export default function Honesty() {
         <p className="mt-4 leading-relaxed text-slate-700">
           Two more limits in the same family. There is no RFC-3161 timestamp authority and no
           blockchain anchoring behind any card — our records say{" "}
-          <code>timestamp_authority: none</code> and the claims register carries anchoring as
-          planned, not live. And our XRP Ledger attestation work is devnet-proven with mainnet
-          planned; nothing is attested on any Ethereum chain, because that backend is not built.
+          <code>timestamp_authority: none</code>. {ANCHORING_CLAIM} Nothing is attested on any
+          Ethereum chain, because that backend is not built.
         </p>
 
         {/* ── 3. what we have not measured ───────────────────────────── */}

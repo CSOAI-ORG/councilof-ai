@@ -35,7 +35,8 @@ export default function MCPRegistry() {
     const q = query.trim().toLowerCase();
     return ALL_SERVERS.filter((s) => {
       if (activeCategory !== "All" && s.category !== activeCategory) return false;
-      if (activeFramework !== "All" && !s.frameworks.includes(activeFramework)) return false;
+      const fw = s.frameworks ?? [];
+      if (activeFramework !== "All" && !fw.includes(activeFramework)) return false;
       if (q && !(`${s.name} ${s.description} ${s.slug}`.toLowerCase().includes(q))) return false;
       return true;
     });
@@ -202,7 +203,7 @@ export default function MCPRegistry() {
               <p className="text-sm text-gray-600 leading-relaxed flex-1">{s.description}</p>
               <div className="flex flex-wrap gap-1.5 mt-3">
                 <Badge variant="outline" className="text-[10px] text-gray-600">{s.category}</Badge>
-                {s.frameworks.map((fw) => (
+                {(s.frameworks ?? []).map((fw) => (
                   <Badge key={fw} className="text-[10px] bg-blue-50 text-blue-700 border-blue-200">{fw}</Badge>
                 ))}
               </div>
@@ -255,12 +256,12 @@ export default function MCPRegistry() {
                 Book a free 15-min EU AI Act diagnostic <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
-            <Link href="/?lobby=measured&task=pricing-overview">
+            <Link href="/os?lobby=assess&task=pricing-overview">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 How the free rail works
               </Button>
             </Link>
-            <Link href="/?lobby=measured&task=enterprise-start">
+            <Link href="/os?lobby=assess&task=enterprise-start">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Enterprise lobby
               </Button>

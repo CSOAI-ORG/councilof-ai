@@ -1,0 +1,127 @@
+{
+  "schema": "csoai.thin-banks-gold-80-leftover/0.1",
+  "status": "UNSIGNED",
+  "signed": false,
+  "certified": false,
+  "kind": "leftover-pointer",
+  "published_at": "2026-08-31T15:40:27Z",
+  "published_at_europe_london": "2026-08-31T16:40:27+01:00",
+  "live_board": {
+    "get": "https://councilof.ai/api/gspc",
+    "public_count": "22 axis · 15 measured",
+    "measured_axes": 15,
+    "unmeasured_axes": 7,
+    "seven_empty_stay_empty": [
+      "reserve-attestation",
+      "regulatory-framework",
+      "distribution-integrity",
+      "custody-disclosure",
+      "ai-economy-index",
+      "human-labour-index",
+      "humanoid-labour-index"
+    ],
+    "this_leftover_does_not_write_api_gspc": true
+  },
+  "unique_n": {
+    "n": 30,
+    "state": "UNSIGNED SAT"
+  },
+  "do_not": [
+    "invent labels",
+    "model-as-judge",
+    "pad with synthetic items",
+    "fill empty GSPC board cells",
+    "write /api/gspc",
+    "edit public/signed/card_index.json",
+    "write board_living.json",
+    "restart mill.sh",
+    "certify",
+    "wrangler"
+  ],
+  "note": "Leftover gold files only. Frozen expected labels copied from already-published HF items.jsonl. Does not restamp the living board. 7 empty stay empty. Not a certificate.",
+  "axes": {
+    "safety": {
+      "board_id": "agi",
+      "hf": "csoai/gspc-agi",
+      "current_n_file": 37,
+      "current_gold_n": 36,
+      "current_canary": 1,
+      "added": 30,
+      "grown_gold_n": 66,
+      "grown_file_n": 67,
+      "gap_to_80": 14,
+      "source_of_added": "huggingface.co/datasets/csoai/agisafe-bench/items.jsonl",
+      "source_sha256": "0fad07a04d2c8da7c8bb5da4ec42d3a4d9945666485dca0379d3b450acfde514",
+      "overlap_with_current": 0,
+      "labels_invented": false
+    },
+    "provenance": {
+      "board_id": "prv",
+      "hf": "csoai/gspc-prv",
+      "current_n_file": 33,
+      "current_gold_n": 32,
+      "current_canary": 1,
+      "added": 0,
+      "grown_gold_n": 32,
+      "gap_to_80": 48,
+      "why_stopped": "No unused frozen gold items. KEEP gspc_prv_v2 is a 16-row subset. poai-bench is a n=20 survival experiment (cells, not behavioural expected labels)."
+    },
+    "continuity": {
+      "board_id": "asi",
+      "hf": "csoai/gspc-asi",
+      "current_n_file": 34,
+      "current_gold_n": 33,
+      "current_canary": 1,
+      "added": 0,
+      "grown_gold_n": 33,
+      "gap_to_80": 47,
+      "why_stopped": "No unused frozen gold items. KEEP gspc_asi_v2 matches current n=33. asisec-bench/pqcbench.json is criteria scores, not item gold."
+    },
+    "openness": {
+      "board_id": "oss",
+      "hf": "csoai/gspc-oss",
+      "current_n_file": 33,
+      "current_gold_n": 32,
+      "current_canary": 1,
+      "added": 30,
+      "grown_gold_n": 62,
+      "grown_file_n": 63,
+      "gap_to_80": 18,
+      "source_of_added": "huggingface.co/datasets/csoai/omai-bench/items.jsonl",
+      "source_sha256": "1cc9c15a37ec038b6415b7248d6cbfaa9627fd74cdb15feee7f3e8628186bbc6",
+      "overlap_with_current": 0,
+      "labels_invented": false
+    },
+    "detector-interop": {
+      "board_id": "det",
+      "hf": "csoai/gspc-det",
+      "current_n_file": 34,
+      "current_gold_n": 33,
+      "current_canary": 1,
+      "added": 0,
+      "grown_gold_n": 33,
+      "gap_to_80": 47,
+      "why_stopped": "protocol.jsonl exists (n=30) with allowed label sets but NO expected gold. Cannot invent DETECTED/NOT_DETECTED. KEEP 2026-08-05 gspc-det.items.jsonl is the same 34-line bank."
+    },
+    "cross-reality": {
+      "board_id": "xr",
+      "hf": "csoai/gspc-xr",
+      "current_n_file": 33,
+      "current_gold_n": 32,
+      "current_canary": 1,
+      "added": 0,
+      "grown_gold_n": 32,
+      "gap_to_80": 48,
+      "why_stopped": "checks.jsonl exists (n=30) with allowed label sets but NO expected gold. Cannot invent MATCH/DIVERGE. KEEP xr v0 is a 16-row subset; 2026-08-05 bank is the same 33-line bank (request vs item field only)."
+    }
+  },
+  "bank_files": {
+    "pointer": "public/interop/thin-banks-gold-80-20260831.json",
+    "verbatim_agisafe": "public/datasets/thin-banks-gold-80-20260831/added/csoai-agisafe-bench-items.jsonl",
+    "verbatim_omai": "public/datasets/thin-banks-gold-80-20260831/added/csoai-omai-bench-items.jsonl",
+    "item_sources": "public/datasets/thin-banks-gold-80-20260831/added/ITEM_SOURCES.md",
+    "inventory": "public/datasets/thin-banks-gold-80-20260831/inventory.json",
+    "readme": "public/datasets/thin-banks-gold-80-20260831/README.md",
+    "note": "Annotated wrappers safety-from-agisafe-bench.jsonl and openness-from-omai-bench.jsonl are reconstructable from the verbatim copies; expected is never rewritten. Not stored on this leftover to avoid duplicate gold bytes."
+  }
+}

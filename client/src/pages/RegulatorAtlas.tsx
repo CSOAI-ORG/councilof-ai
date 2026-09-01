@@ -97,7 +97,7 @@ function RegCard({ r }: { r: Regime }) {
           </span>
         )}
         <a href="/hive" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Browse the Hive →</a>
-        <a href="/?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
+        <a href="/os?lobby=home" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Govern a case →</a>
       </div>
       {ans && <div className="mt-3 whitespace-pre-wrap rounded-lg bg-black/30 p-3 text-[13px] text-emerald-50/90">{ans}</div>}
     </div>

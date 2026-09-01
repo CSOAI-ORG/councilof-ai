@@ -1,0 +1,101 @@
+name: eat-overnight
+
+# Overnight auto batch: Grok + GitHub + Hugging Face + KEEP 3090 alignment.
+# Never writes GET /api/gspc. Never fills the 7 UNMEASURED slots.
+# Never starts EXITED A100s. BOARD_SIGN_KEY stays on Pages/OIDC.
+
+on:
+  schedule:
+    - cron: "47 */2 * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: eat-overnight
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HUGGINGFACE_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: pip huggingface_hub
+        run: pip install huggingface_hub
+      - name: node + board + restore signed FIN cards if flattened
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error, sys
+          from pathlib import Path
+          UA = {"User-Agent": "csoai-eat-overnight/0"}
+          def get(url):
+              req = urllib.request.Request(url, headers=UA)
+              try:
+                  with urllib.request.urlopen(req, timeout=25) as r:
+                      return r.status, r.read()
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read()
+          st, b = get("https://csoai-gspc-node.hf.space/health")
+          health = json.loads(b) if st == 200 else {"http": st}
+          print("NODE", st, health)
+          if health.get("writes_board") is not False:
+              print("HALT: node writes_board not false")
+              sys.exit(3)
+          st, b = get("https://councilof.ai/api/gspc")
+          g = json.loads(b)
+          pc = (g.get("totals") or {}).get("public_count")
+          print("BOARD", pc)
+          if "22 axis" not in str(pc) or "15 measured" not in str(pc):
+              print("HALT: board drifted")
+              sys.exit(3)
+          FIN = ["reserve-attestation","regulatory-framework","distribution-integrity","custody-disclosure","ai-economy-index","human-labour-index","humanoid-labour-index"]
+          restore = []
+          for slug in FIN:
+              st, b = get(f"https://huggingface.co/datasets/csoai/gspc-{slug}/resolve/main/coverage-card.json")
+              try:
+                  card = json.loads(b)
+              except Exception:
+                  restore.append(slug); continue
+              sig = card.get("sig_ed25519") or ""
+              if card.get("unsigned") is True or card.get("signed") is False or len(sig) < 128 or not str(card.get("did") or "").endswith("#board-attestation-1"):
+                  restore.append(slug)
+          print("RESTORE", restore)
+          print("KEEP_3090 fpowppss5ngtkw mill-client-only EXITED-A100s-stay-down")
+          if not restore:
+              print("EAT_OK no restore")
+              sys.exit(0)
+          tok = (os.environ.get("HF_TOKEN") or "").strip()
+          if not tok:
+              print("RESTORE_SKIP no HF_TOKEN")
+              sys.exit(0)
+          from huggingface_hub import HfApi
+          api = HfApi(token=tok)
+          skel = Path("public/interop/fin7-skeletons")
+          for slug in restore:
+              src = skel / f"coverage-{slug}.json"
+              if not src.is_file():
+                  print("missing", src); continue
+              repo = f"csoai/gspc-{slug}"
+              try:
+                  api.upload_file(path_or_fileobj=str(src), path_in_repo="coverage-card.json", repo_id=repo, repo_type="dataset", create_pr=False, commit_message="EAT overnight: restore Ed25519 UNMEASURED coverage-card.json. Empty stays empty.")
+                  print("MAIN", slug)
+              except Exception as e:
+                  print("MAIN_FAIL", slug, type(e).__name__, str(e)[:160])
+                  try:
+                      url = api.upload_file(path_or_fileobj=str(src), path_in_repo="coverage-card.json", repo_id=repo, repo_type="dataset", create_pr=True, commit_message="EAT overnight: restore signed UNMEASURED coverage-card.json.")
+                      print("PR", slug, url)
+                  except Exception as e2:
+                      print("PR_FAIL", slug, type(e2).__name__, str(e2)[:160])
+          print("EAT_DONE")
+          PY

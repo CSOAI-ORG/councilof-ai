@@ -19,15 +19,16 @@
     },
     {
       "id": "csoai-gspc-mcp-worker",
-      "endpoint": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "endpoint": "https://councilof.ai/mcp",
       "transport": "streamable-http",
-      "role": "current",
+      "role": "alias",
       "alias_of": "csoai-gspc-mcp",
-      "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current"
+      "declared_by": "/.well-known/mcp/server-card.json -> endpoints.mcp.current",
+      "note": "Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Live door is https://councilof.ai/mcp. Do not invent a new worker."
     },
     {
       "id": "csoai-gspc-mcp-stdio",
-      "endpoint": "stdio: node mcp/gspc-server/index.mjs (package csoai-gspc-mcp — NOT published to npm; a probe here proves the server in this checkout, nothing else)",
+      "endpoint": "stdio: node mcp/gspc-server/index.mjs (package csoai-gspc-mcp@0.1.0 is published on npm; stdio probe here still proves this checkout)",
       "transport": "stdio",
       "command": ["node", "mcp/gspc-server/index.mjs"],
       "role": "stdio",

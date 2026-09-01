@@ -135,7 +135,7 @@ export default function LobbyComposer({
             }}
             aria-label="Ask the Council, or name a pane to open"
             aria-describedby="coai-lobby-chat-note"
-            placeholder='Ask the Council — or say "show the board"'
+            placeholder='Ask the Council — paste a card to verify here (nothing uploaded). Or say "show the board"'
             className="max-h-28 min-h-[2.75rem] w-full resize-none rounded-xl border border-slate-900/15 bg-white px-4 py-2.5 text-[15px] leading-snug text-slate-900 placeholder-slate-500 shadow-inner transition outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 motion-reduce:transition-none"
           />
         </div>

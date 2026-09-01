@@ -2,5 +2,5 @@ import { Redirect } from "wouter";
 
 /** Retracted 33-agent guarantee. SPA hydrate must not remount the old page. */
 export default function AgentCouncil() {
-  return <Redirect to="/?lobby=home" />;
+  return <Redirect to="/honesty/" />;
 }

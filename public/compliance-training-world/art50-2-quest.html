@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Art 50(2) Compliance Quest — Compliance Training World</title><style>
+body{margin:0;background:radial-gradient(900px 500px at 75% -10%,rgba(16,185,129,.15),transparent),#07080d;color:#eef1f5;font-family:-apple-system,'Avenir Next',Avenir,Helvetica,Arial,sans-serif}
+.wrap{max-width:860px;margin:0 auto;padding:54px 24px}
+.badge{color:#10B981;font-size:12px;letter-spacing:2px;text-transform:uppercase}
+h1{font-size:32px;margin:10px 0 6px;background:linear-gradient(90deg,#fff,#10B981);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rule{background:#0e1118;border:1px solid rgba(16,185,129,.28);border-radius:16px;padding:22px 26px;margin:20px 0}
+.rule p{color:#c7ccd6;line-height:1.6}
+.q{margin:22px 0;background:#0e1118;border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px}
+.q .lbl{font-size:14px;color:#9aa2b1;letter-spacing:.5px}
+.q .txt{font-size:18px;margin:10px 0 14px;font-weight:600}
+.opt{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+.opt label{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:9px 18px;cursor:pointer;font-size:14px}
+.opt input{margin-right:6px}
+.btn{margin-top:22px;background:#10B981;color:#04140c;border:none;padding:14px 30px;font-size:16px;font-weight:700;border-radius:12px;cursor:pointer}
+.btn:hover{background:#12c991}
+.score{margin-top:18px;font-size:17px}
+.result{display:none;margin-top:24px;padding:22px;background:linear-gradient(135deg,rgba(16,185,129,.18),transparent);border:1px solid rgba(16,185,129,.4);border-radius:16px}
+.result.pass{border-color:#10B981}.result.fail{border-color:#e5534b}
+.cid{font-family:monospace;font-size:13px;color:#9aa2b1;word-break:break-all}
+.foot{color:#565d6b;font-size:12px;margin-top:40px}
+</style></head><body><div class="wrap">
+<div class="badge">Council of AI · Compliance Training World · City Quest</div>
+<h1>Art 50(2) — Synthetic Content Marking Quest</h1>
+<div class="rule"><b>Rule (EU AI Act Art 50(2)):</b> Deployers of generative AI must mark synthetic content (deepfakes, AI text/images) as artificially generated. Retrofit deadline for in-service systems: <b>2 Aug 2026</b>. Fail = enforcement exposure. Mark what is synthetic; leave what is genuinely human. <span class="cid">Quest: art50-2-retrofit-marking · bench: ProvBench</span></div>
+<div class="badge" style="margin-top:6px">Grade the samples (deterministic predicate).</div>
+
+<div id="qs"></div>
+<button class="btn" onclick="grade()">Submit &amp; grade</button>
+<div class="score" id="score"></div>
+<div class="result" id="res"></div>
+
+<div class="foot">Council of AI · csoai.org · signed · measured · deterministic predicate, not opinion</div>
+</div>
+<script>
+const ITEMS=[
+ {txt:"A photorealistic 'CEO is leaving' image, 5 high-res AI artifacts, no watermark.", syn:true},
+ {txt:"A hand-drawn whiteboard photo from an internal workshop, EXIF intact.", syn:false},
+ {txt:"A 1080p video of an official speech, lipsync-smooth but audio 0.3s off.", syn:true},
+ {txt:"An editorial photo with an embedded C2PA provenance manifest proving human capture.", syn:false},
+ {txt:"A press release: 'Our model helps police find suspects' — no identity-safe model card.", syn:true}
+];
+let qs=document.getElementById('qs');
+ITEMS.forEach((it,i)=>{qs.innerHTML+=`<div class=\"q\"><div class=\"lbl\">Sample ${i+1}</div><div class=\"txt\">${it.txt}</div><div class=\"opt\">
+<label><input type=\"radio\" name=\"q${i}\" value=\"syn\">Marked synthetic</label>
+<label><input type=\"radio\" name=\"q${i}\" value=\"hum\">Genuine human</label></div></div>`;});
+function grade(){
+ let c=0; ITEMS.forEach((it,i)=>{let v=document.querySelector(`input[name=\"q${i}\"]:checked`);if(v&&(v.value===\"syn\")===it.syn)c++;});
+ let p=Math.round(c/ITEMS.length*100);let pass=p>=80;
+ document.getElementById('score').textContent=`Score: ${c}/${ITEMS.length} (${p}%) — ${pass?'PASS':'NEEDS TRAINING'}`;
+ let r=document.getElementById('res');r.style.display='block';r.className='result '+(pass?'pass':'fail');
+ r.innerHTML=pass?`<b>Attestation ready.</b> Deterministic score ${p}% → a signed training attestation is issued to your ledger (subject=deployer, rule=Art 50(2), scenario=art50-2-retrofit-marking).<br><span class=\"cid\">content_id 0c64059c79f618e8c472c7fc7a816e7b214ba167a20d76f5f0f4803eb8ba0489</span>`
+ :`<b>Not yet.</b> Score ${p}% &lt; 80%. The AI coach will walk the misses. Re-run to pass.`;
+}
+</script></body></html>

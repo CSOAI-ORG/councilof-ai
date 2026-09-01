@@ -329,3 +329,52 @@ rewrote the historical entries (corrections-register discipline). Fleet/owner fl
   Access (20k GPU hrs, no deadline); sign-ups = stage-only for agents, Nick submits
   (fleet paste honesty boundary). Sink port 55664, A100-measurement 13440 (14-model
   ollama fleet) — updated in this notice for all lanes.
+
+## 2026-08-28 · K3 AUTO-BATCH audit findings (append)
+
+1. crawler-view-gate FAIL root-caused (3 branches incl. k3/runway): the probe route
+   /this-route-should-not-exist-crawler-gate-probe returns 404 WITH a 284-char body —
+   the gate flags the soft-404. Fix = deploy lane: make the probe route a HARD 404
+   (empty/standard body per the gate contract) in public/_redirects or the 404 handler.
+   NOT a content failure — doc-only PRs hit it identically.
+2. JS/action JCS dispatch SHIPPED (canon:jcs-rfc8785, pinned semantics) — python +
+   JS both dispatch now; verify-card.mjs = last (queued).
+3. XRPL location attempt #4: no keyless issuer source (CoinPaprika list, xrpl.org
+   static) — final honest status: 10 issuers remain declared not-located; method set.
+4. Inspect AI adoption note: primary harness choice confirmed (MIT, UK AISI);
+   preimage = config-digest + instrument version for measurement runs (doctrine:
+   "measured with Inspect AI", never "Inspect-certified"). Doc queued.
+
+## 2026-08-28 · K3 record — card index ruling 2026-08-27 adopted (append)
+
+OWNER RULING (2026-08-27, supersedes the 150 freeze): index = 313 cards; 150 verify
+against did:web:csoai.org#card-attestation-1; INDEX 313 != 313 VERIFIED. No agent clamps
+the index to any constant. K3's earlier 150-references (count grammar, runway, catalog)
+are superseded — corrected in the runway doc, append-only. No relitigation.
+
+## 2026-08-28 · K3 AUDIT — board_living.json stale + invalid sig (finding + fix)
+
+Finding (bytes): public/signed/board_living.json on master = 14-axis, public_count
+"14 measured of 14 quotable", signer 8f9a00a2… — signature INVALID under the style-A
+canonical (content edited post-sign again, or re-signed under a different canonical).
+The LIVE board is gspc-board-22axis-2026 (22·15·7, /api/state cross-check TRUE, sig
+0c7e8510…). board_living.json is therefore SUPERSEDED.
+Fix (queued for the owning lane): retire/repoint board_living.json consumers
+(claimguard fixture, catalog entry, docs) to gspc-board.signed.json; re-derive
+board_living from the 22-axis snapshot ONLY with a fresh sign; until then quote
+/api/state (already the only quotable authority).
+
+## 2026-08-28 · grok — 335 is the chain; 150 is a subset floor, not a second set
+
+Bytes, not a clamp:
+
+- MANIFEST n=335, unique (axis,model)=335. Live index was 313 with leftover `n_cells:150`.
+- The 150-row board is a **subset of the 335-card chain**, not 150 extra/duplicate hashes.
+- 22 verifying bodies were withheld (three models). They already lived in commit e557620b
+  and all 22 verify under #card-attestation-1. Restored onto disk.
+- Now: n_cards == n_cells == rows == files == 335. Python + verify-card.mjs: 335/335 VALID.
+- signed-json-guard no longer treats a consistent 335 as fabricated. It now flags
+  `n_cells != rows` (the leftover 150 floor).
+- chain.json still carries historical `body_published:false` on those 22; we did not
+  re-sign the envelope. derive-chain-facts now measures files, so withheld=0.
+- Do not restore a 150 floor. Do not claim 150 "verify" when 335 do.

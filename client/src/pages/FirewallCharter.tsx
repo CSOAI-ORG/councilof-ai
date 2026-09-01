@@ -90,6 +90,10 @@ export default function FirewallCharter() {
             <a href="/gspc-verify" className="font-semibold text-emerald-700 underline">
               verify a card
             </a>
+            {" · "}
+            <a href="/doctrine" className="font-semibold text-emerald-700 underline">
+              doctrine
+            </a>
             . Charter v1.0 · published 2026-08-19 · corrections to this charter are themselves
             appended, never silently edited.
           </p>

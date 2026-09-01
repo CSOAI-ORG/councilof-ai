@@ -78,12 +78,19 @@ export const onRequestGet: PagesFunction = async (context) => {
   const bankResolved = banked.filter((a) => SLUG.test(a.dataset as string));
   const bankUnresolvable = banked.filter((a) => !SLUG.test(a.dataset as string));
 
+  // Living stamp is mutated at the edge (below) when BOARD_SIGN_KEY is present.
+  // The historical UNVERIFIABLE stamp is kept on `superseded`, never deleted.
+  const measuredOn = {
+    ...MEASURED_ON,
+    living_stamp: { ...MEASURED_ON.living_stamp },
+  };
+
   const body = {
     schema: "csoai.gspc-axes/0.5",
     issuer: "CSOAI Ltd (GB, Companies House 16939677)",
     doi: "10.5281/zenodo.21991104",
     doi_note: "GSPC Methodology and the Frozen Corpus Anchor (the canonical methodology record — one citable spine, HB.0). Supersedes the stale 21755656 (an unrelated EAT-benchmark dataset).",
-    measured_on: MEASURED_ON,
+    measured_on: measuredOn,
     note:
       "Measurement, not certification. Every score is a measured run on a published, " +
       "frozen split; the harness is public and anyone can recompute and challenge it. " +
@@ -218,7 +225,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       "22 axes are on the board and 15 carry a measurement. The 7 declared slots (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, and the three candidate indices) have NO run behind them — they are published so the gap is visible, and must never be quoted as measured. See totals.count_grammar.",
       "The one measured financial axis, provenance-controls, measures on-chain CONTROL FACTS only — which flags an issuer account carries — for ONE axis family over SIX instruments. What those facts imply about an instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. It is not a rating, not investment advice, not a ranking, and not an endorsement of any named instrument.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
-      "Two candidate indices (ai-economy-index, human-labour-index) have partial input banks whose linked v0.1 artifacts still carry a status label of MEASURED-INDEX-v0.1. That label was an over-claim and is superseded: both axis are UNMEASURED here, and this board is the authority. Reference components existing is not an index being measured.",
+      "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. ai-economy-index and human-labour-index stay UNMEASURED until missing series + formula are published and NEW signed cards exist. Reference components (Eurostat 13.48%, WB 57.58%/5.92%) are not an index. Do not restore the v0.1 sticker. Board GET /api/gspc is authority.",
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
       "jail's fleet accuracy 0.5455 is the mean of per-model accuracies across 7 models x 71 gold cells (usable n 68–71); the leader accuracy 0.5915 is the best zero-false-positive detector's (tp+tn)/71. Best precision 1.0, best recall 0.237 — the best detector still misses 3 of 4 escapes.",
       "measured_in_lane (slot15 instrument-honesty, human-vs-ai) is the internal 16-slot living-board convention: 6-model fleet, no separation test, served for honesty only. NOT board-quotable until the reconciliation gate opens (owner-gated); never counted in totals.",
@@ -248,11 +255,61 @@ export const onRequestGet: PagesFunction = async (context) => {
         return "{" + Object.keys(r).sort().map((k) => JSON.stringify(k) + ":" + canonical(r[k])).join(",") + "}";
       };
       const hex = (b: ArrayBuffer) => [...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("");
-      const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
       const der = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
       const key = await crypto.subtle.importKey("pkcs8", der, { name: "Ed25519" }, true, ["sign"]);
-      const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
       const jwk = (await crypto.subtle.exportKey("jwk", key)) as JsonWebKey;
+
+      // New living stamp: one key (DID-pinned #board-attestation-1), one signature,
+      // sufficient preimage. UNMEASURED n is null. The 2026-08-18 stamp is kept
+      // under `superseded` — it stays UNVERIFIABLE; this does not paint it VALID.
+      const livingPreimage = {
+        schema: "csoai.gspc-living/0.2",
+        gold_run: "2026-08-18T03:22:16Z",
+        source: "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+        axes: AXES.map((a) => ({
+          axis: a.axis,
+          family: a.family,
+          kind: a.kind,
+          status: a.status,
+          n: a.status === "MEASURED" ? a.n : null,
+          accuracy: a.status === "MEASURED" && typeof a.accuracy === "number" ? a.accuracy : null,
+          separation: a.separation ?? null,
+        })),
+      };
+      const livingBytes = canonical(livingPreimage);
+      const livingSig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(livingBytes)));
+      measuredOn.living_stamp = {
+        schema: "csoai.gspc-living/0.2",
+        gold_run: livingPreimage.gold_run,
+        source: livingPreimage.source,
+        signed: true,
+        signer: "did:web:csoai.org#board-attestation-1",
+        signer_anchored: true,
+        alg: "Ed25519",
+        signature: livingSig,
+        public_key_x: jwk.x,
+        preimage: livingPreimage,
+        sig_input:
+          "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` " +
+          "object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by " +
+          "code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted " +
+          "LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString " +
+          "(integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, " +
+          "sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, " +
+          "superseded, tracked_as, verify) are NOT in the preimage.",
+        sig_input_ensure_ascii: false,
+        sig_input_is_digest: false,
+        verification_state: "SIGNED",
+        verifiable: true,
+        verify:
+          "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify " +
+          "`signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
+        superseded: MEASURED_ON.living_stamp,
+        tracked_as: "/api/corrections C-2026-0826-08",
+      } as typeof measuredOn.living_stamp;
+
+      const signedBytes = canonical(body); // body WITHOUT site_attestation — reconstructable by anyone
+      const sig = hex(await crypto.subtle.sign("Ed25519", key, new TextEncoder().encode(signedBytes)));
       (body as Record<string, unknown>).site_attestation = {
         attests: "integrity of this board snapshot as published by the site (NOT a re-measurement)",
         signer: "did:web:csoai.org#board-attestation-1",

@@ -1,4 +1,8 @@
 // Private module — AxisScore type + MEASURED_ON.
+// Schema notes (not an axis): overlay ARC-AGI UNMEASURED until a frozen gold bank
+// exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc stays 22·15·7.
+// Do not bump the board to 23. Do not add an axis here, in gspc.ts, /api/gspc, or
+// board_living.json. See public/gspc-overlays.json.
 // Restored from blob b4b3ab1788ec044156da0d4962189fe5f4dd975f (pre-PR#425).
 export interface AxisScore {
   axis: string;

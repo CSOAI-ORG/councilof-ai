@@ -23,10 +23,10 @@ const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/sov-os", "/?lobby=home"],
-  ["/ag-ui", "/?lobby=home"],
-  ["/agui", "/?lobby=home"],
-  ["/chat", "/?lobby=home"],
+  ["/sov-os", "/os?lobby=home"],
+  ["/ag-ui", "/os?lobby=home"],
+  ["/agui", "/os?lobby=home"],
+  ["/chat", "/os?lobby=home"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
@@ -65,6 +65,18 @@ const PAGES = [
   "/privacy-policy",
   "/vulnerability-disclosure",
   "/disclaimers",
+];
+
+// Functions-first leftover hops (not necessarily in public/_redirects).
+const LIVE_HOPS = [
+  ["/pricing", "/os?lobby=assess&task=pricing-overview"],
+  ["/plans", "/os?lobby=assess&task=pricing-overview"],
+  ["/enterprise-plans", "/os?lobby=assess&task=pricing-overview"],
+  ["/enterprise", "/os?lobby=assess&task=enterprise-start"],
+  ["/get-measured", "/os?lobby=assess&task=get-measured"],
+  ["/overlay", "/os?lobby=home"],
+  ["/certification", "/honesty/"],
+  ["/claimguard", "/honesty/"],
 ];
 
 let failed = 0;
@@ -130,13 +142,28 @@ for (const [from, to] of ALIASES) {
   }
 }
 
+for (const [from, to] of LIVE_HOPS) {
+  try {
+    const res = await fetchHead(from);
+    const loc = res.headers.get("location") || "";
+    const destOk = loc.includes(to) || loc.endsWith(to);
+    if ((res.status === 301 || res.status === 302 || res.status === 308) && destOk) {
+      pass(`live hop ${from} ${res.status} → ${loc}`);
+    } else {
+      fail(`live hop ${from} expected 308 ${to}`, `${res.status} ${loc}`);
+    }
+  } catch (e) {
+    fail(`live hop ${from}`, String(e).slice(0, 120));
+  }
+}
+
 for (const path of MUST_RESOLVE) {
   try {
     const { res, text } = await fetchText(path);
     const title = (text.match(/<title>([^<]+)/i) || [])[1] || "";
     if (res.status >= 400 || /404 — Not found/i.test(title)) {
       fail(`${path} must resolve for a stranger`, `HTTP ${res.status} ${title}`);
-    } else if (path.includes("gspc") && /13 axes\s*[×x]\s*19/i.test(text)) {
+    } else if (path.includes("gspc") && /13 axes\s*[x×]\s*19/i.test(text)) {
       fail(`${path} leftover static table`, "hardcoded 13×19");
     } else {
       pass(`${path} resolves`, `HTTP ${res.status} ${text.length} B`);
@@ -162,22 +189,39 @@ try {
   } else {
     pass("homepage is prerendered", `${home.length} bytes`);
   }
-  const lobbyAsset = (home.match(/assets\/CouncilLobby[^"'\s]+/) || [])[0];
-  if (!lobbyAsset) {
-    fail("homepage references CouncilLobby chunk");
+  if (!/data-testid="home-verify"|Check an AI claim in your browser/i.test(home)) {
+    fail("homepage is verify (home-verify)");
   } else {
-    pass("homepage references CouncilLobby", lobbyAsset);
-    const { text: lobbyJs } = await fetchText("/" + lobbyAsset);
-    if (/lazy\(\(\)=>\w+\(\(\)=>import\("\.\/LobbyOverlay/.test(lobbyJs) || lobbyJs.includes("import(\"./LobbyOverlay")) {
-      fail("CouncilLobby must not lazy-import LobbyOverlay", "second chunk can 404 mid-deploy and white-screen the site");
-    } else if (lobbyJs.includes("LobbyOverlay") || lobbyJs.includes("Council Lobby")) {
-      pass("CouncilLobby ships overlay in-module");
-    } else {
-      fail("CouncilLobby missing overlay", "chunk loaded but overlay strings absent");
-    }
+    pass("homepage is verify", "home-verify");
   }
 } catch (e) {
   fail("lobby chunk check", String(e).slice(0, 120));
+}
+
+try {
+  const { res, text } = await fetchText("/sitemap.xml");
+  if (!res.ok) fail("sitemap.xml", `HTTP ${res.status}`);
+  else {
+    const hasOs = text.includes("<loc>https://councilof.ai/os</loc>") || text.includes("<loc>https://councilof.ai/os/</loc>");
+    const hasHonesty = text.includes("councilof.ai/honesty");
+    const hasCloud = /<loc>https:\/\/councilof\.ai\/cloud\/?<\/loc>/.test(text);
+    (hasOs ? pass : fail)("sitemap lists /os");
+    (hasHonesty ? pass : fail)("sitemap lists /honesty");
+    (hasCloud ? fail : pass)("sitemap does not list leftover /cloud 404", hasCloud ? "flagship 404" : "absent");
+  }
+} catch (e) {
+  fail("sitemap.xml", String(e).slice(0, 120));
+}
+
+try {
+  const { text: osHtml } = await fetchText("/os");
+  if (!/data-testid="os-directory"|\/gspc-verify|\/assess/i.test(osHtml)) {
+    fail("/os is a directory of real pages");
+  } else {
+    pass("/os is a directory", "os-directory");
+  }
+} catch (e) {
+  fail("/os directory", String(e).slice(0, 120));
 }
 
 if (failed) {

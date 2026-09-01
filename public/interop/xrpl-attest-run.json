@@ -1,7 +1,7 @@
 {
  "schema": "csoai.xrpl-attest-run/0.1",
  "network": "XRPL DEVNET",
- "honesty": "TESTNET proof-of-capability only. Synthetic subject. Not an investment, not a rating, not a conformity mark. Attesting is permissionless; authorization inside any permissioned domain still requires the relying party to trust this issuer key.",
+ "honesty": "DEVNET pointer only — not mainnet, not a GSPC grade, not a rating, not a conformity mark, not KYC. Both hashes were re-read 2026-08-29 via s.devnet.rippletest.net JSON-RPC `tx`; both are txnNotFound on xrplcluster.com (mainnet) and s.altnet.rippletest.net (testnet). XLS-70 Credentials have been enabled on mainnet since Sep 2025; CSOAI is not issuing grades on that rail. DepositPreauth is access control, not our KYC. Synthetic subject. Authorization inside any permissioned domain still requires the relying party to trust this issuer key.",
  "evidence": {
   "source": "https://councilof.ai/signed/card_index.json",
   "card": "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c",
@@ -15,6 +15,33 @@
  "subject_account": "rBkftm76iPPjT3zBnfS7yLiMzK4tBZkgCs",
  "memo_attach_tx": "BC767FEF6497832908B2D208101E361C58A6C0B617C5D94419F9274826A77464",
  "credential_attach_tx": "958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B",
+ "tx_labels": {
+  "checked": "2026-08-29",
+  "rpc_devnet": "https://s.devnet.rippletest.net:51234/",
+  "memo_attach_tx": {
+   "hash": "BC767FEF6497832908B2D208101E361C58A6C0B617C5D94419F9274826A77464",
+   "network": "xrpl-devnet",
+   "TransactionType": "Payment",
+   "ledger_index": 4763652,
+   "engine_result": "tesSUCCESS",
+   "memo_type": "csoai/attest",
+   "mainnet": "txnNotFound",
+   "testnet": "txnNotFound",
+   "note": "1-drop Payment carrying a memo. Pointer at a card digest. Not a grade."
+  },
+  "credential_attach_tx": {
+   "hash": "958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B",
+   "network": "xrpl-devnet",
+   "TransactionType": "CredentialCreate",
+   "ledger_index": 4763655,
+   "engine_result": "tesSUCCESS",
+   "CredentialType_ascii": "CSOAI.GSPC.CARD/0.1",
+   "URI": "https://councilof.ai/signed/card_index.json",
+   "mainnet": "txnNotFound",
+   "testnet": "txnNotFound",
+   "note": "XLS-70 CredentialCreate on DEVNET. URI is a pointer at the public card index. Unaccepted, so it authorizes nothing. Not a GSPC grade. Do not mint on mainnet. Do not treat as CSOAI KYC or DepositPreauth."
+  }
+ },
  "explorer": [
   "https://devnet.xrpl.org/transactions/BC767FEF6497832908B2D208101E361C58A6C0B617C5D94419F9274826A77464",
   "https://devnet.xrpl.org/transactions/958BA25801A068AEA1507FC1649A862C33D59A1D715924794D98D2C66254DC4B"

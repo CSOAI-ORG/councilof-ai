@@ -2,17 +2,17 @@
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SwarmBench — multi-agent / swarm accountability measurement | CSOAI</title>
-<meta name="description" content="SwarmBench measures where accountability sits in multi-agent / swarm governance. Bank published on Hugging Face (csoai/gspc-swarm). MEASURED at n=40 — not yet quotable, so no score and no interval are shown. Measurement, not certification.">
+<meta name="description" content="SwarmBench measures where accountability sits in multi-agent / swarm governance. Bank published on Hugging Face (csoai/gspc-swarm). Counts live on GET /api/gspc (swarm axis). Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/swarmbench">
 <meta property="og:title" content="SwarmBench — multi-agent / swarm accountability measurement">
-<meta property="og:description" content="The multi-agent / swarm accountability lane. MEASURED at n=40, bank published on Hugging Face — but not yet quotable, so no score and no interval are shown.">
+<meta property="og:description" content="The multi-agent / swarm accountability lane. Bank published on Hugging Face. Counts live on GET /api/gspc (swarm axis).">
 <meta property="og:url" content="https://councilof.ai/swarmbench">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SwarmBench — multi-agent / swarm accountability measurement">
-<meta name="twitter:description" content="The multi-agent / swarm accountability lane. MEASURED at n=40, bank on Hugging Face — not yet quotable, so no score and no interval are shown.">
+<meta name="twitter:description" content="The multi-agent / swarm accountability lane. Bank on Hugging Face. Counts live on GET /api/gspc (swarm axis).">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "SwarmBench", "description": "Measures where accountability sits in multi-agent / swarm governance. Labelled with CORRECTLY_PLACED / MISPLACED. The bank is published on Hugging Face and a run has been made at n=40, but the board does not yet discriminate between models, so the lane is held not-quotable: no score and no interval are shown. Measurement, not certification.", "url": "https://councilof.ai/swarmbench", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "dateModified": "2026-08-12", "citation": "https://doi.org/10.5281/zenodo.21755656", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic regex label extraction and macro-F1 over CORRECTLY_PLACED / MISPLACED; answers that cannot be parsed are reported UNPARSEABLE and excluded, never scored as wrong; a run that does not separate models above the discrimination floor is held not-quotable, never published as a bare number", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-swarm"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "SwarmBench", "description": "Measures where accountability sits in multi-agent / swarm governance. Labelled with CORRECTLY_PLACED / MISPLACED. The bank is published on Hugging Face. Counts live on GET /api/gspc (swarm axis). Measurement, not certification.", "url": "https://councilof.ai/swarmbench", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "dateModified": "2026-08-28", "citation": "https://doi.org/10.5281/zenodo.21755656", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "deterministic regex label extraction and macro-F1 over CORRECTLY_PLACED / MISPLACED; answers that cannot be parsed are reported UNPARSEABLE and excluded, never scored as wrong; a run that does not separate models above the discrimination floor is held not-quotable, never published as a bare number", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-swarm"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -52,16 +52,16 @@ footer a{color:var(--acc)}
 </style></head><body>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 Measures</a><a href="/govbench">GovBench</a><a href="/swarmbench">SwarmBench</a><a href="/council-space">Council Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">measured · n=40 · not yet quotable</p>
+<p class="pill warn">measured · counts live on GET /api/gspc</p>
 <h1>SwarmBench</h1>
 <p class="sub">multi-agent / swarm accountability · anchor: multi-agent governance literature · bank: csoai/gspc-swarm</p>
 <p class="lede">SwarmBench measures one thing about multi-agent and swarm systems: <b>where accountability
 sits</b> — whether responsibility for an outcome is placed on the party that actually caused it, or on
 the wrong one. Each item is graded deterministically into <b>CORRECTLY_PLACED</b> or <b>MISPLACED</b>.
 No model judges another model.</p>
-<p class="lede" style="margin-top:-.6rem">The bank is built and published on Hugging Face, and a run has
-been made at <b>n&nbsp;=&nbsp;40</b>. So this lane is <b>MEASURED</b>. It is <b>not yet quotable</b> — and
-the sections below say exactly why, and show no score and no interval until it is.</p>
+<p class="lede" style="margin-top:-.6rem">The bank is built and published on Hugging Face. Counts live on
+<code>GET /api/gspc</code> (swarm axis). The sections below explain what that state means and why no score
+or interval is shown until the discrimination gate clears.</p>
 
 <h2>Statutory / standards anchor</h2>
 <p class="lede" style="margin-bottom:.6rem"><b style="color:var(--ink)">Anchor:</b>
@@ -75,22 +75,22 @@ accountability rests on the responsible party, and <b>MISPLACED</b> when it does
 <h2>What has been measured</h2>
 <div class="scroll"><table>
 <tr><th>state</th><th>bank</th><th>labels</th><th class="n">n</th><th>quotable</th><th class="n">score</th></tr>
-<tr><td><span style="color:var(--acc)">MEASURED</span></td><td style="color:var(--acc)">csoai/gspc-swarm</td><td style="color:var(--mut)">CORRECTLY_PLACED · MISPLACED</td><td class="n">40</td><td style="color:var(--warn)">no — held</td><td class="n" style="color:var(--mut)">—</td></tr>
+<tr><td><span style="color:var(--acc)">MEASURED</span></td><td style="color:var(--acc)">csoai/gspc-swarm</td><td style="color:var(--mut)">CORRECTLY_PLACED · MISPLACED</td><td class="n"><a href="/api/gspc" style="color:var(--acc)">live</a></td><td style="color:var(--warn)">no — held</td><td class="n" style="color:var(--mut)">—</td></tr>
 </table></div>
 <div class="note"><b>Measured, and deliberately not quoted.</b> There is no macro-F1 here, no accuracy,
 and no confidence interval — not because nothing was scored, but because what was scored does not yet
-separate one model from another. The bank has reached n&nbsp;=&nbsp;40, which clears usable_n&nbsp;=&nbsp;30.
-But the models on the board sit within <b>0.15</b> macro-F1 of each other, below the discrimination floor
-this estate requires before it will print a leaderboard number. A spread that small means the board is not
-yet distinguishing skill from noise, so quoting any single figure would imply a separation the run does not
-support. The honest state is: measured, held, awaiting a clean discriminating board.</div>
+separate one model from another. The bank clears usable_n&nbsp;=&nbsp;30, but the models on the board sit
+within <b>0.15</b> macro-F1 of each other, below the discrimination floor this estate requires before it
+will print a leaderboard number. A spread that small means the board is not yet distinguishing skill from
+noise, so quoting any single figure would imply a separation the run does not support. The honest state is:
+measured, held, awaiting a clean discriminating board. For current counts, see <code>GET /api/gspc</code>.</div>
 
 <h2>Why measured but not quotable</h2>
 <p class="lede" style="margin-bottom:.4rem">Two gates stand between a run and a published number, and this
 lane clears the first but not the second:</p>
 <div class="scroll"><table>
 <tr><th>gate</th><th>rule</th><th>this lane</th></tr>
-<tr><td>usable_n</td><td style="color:var(--mut)">n&nbsp;&ge;&nbsp;30 usable items</td><td style="color:var(--acc)">cleared (n=40)</td></tr>
+<tr><td>usable_n</td><td style="color:var(--mut)">n&nbsp;&ge;&nbsp;30 usable items</td><td style="color:var(--acc)">cleared — see <a href="/api/gspc" style="color:var(--acc)">/api/gspc</a></td></tr>
 <tr><td>discrimination</td><td style="color:var(--mut)">board spread &ge; 0.15 macro-F1</td><td style="color:var(--warn)">not cleared — models within 0.15</td></tr>
 </table></div>
 <div class="note">Clearing n is necessary but not sufficient. A board where every model lands inside a

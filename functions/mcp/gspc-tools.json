@@ -60,6 +60,45 @@
         },
         "additionalProperties": false
       }
+    },
+    {
+      "name": "get_root",
+      "description": "GET the permissionless public-root at https://councilof.ai/root.json. Returns merkle_root, card_count, as_of, and UNMEASURED notes. Separate from GSPC. Three states: VALID (fetched), UNREACHABLE (could not fetch), UNCHECKABLE (body unreadable). Never a certificate.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_card",
+      "description": "GET one public-root card-v0 leaf by sha256 (64 hex) from https://councilof.ai/cards/{sha16}.json. UNMEASURED cells stay visible. Three states: VALID (fetched), INVALID (not a leaf of the live root), UNCHECKABLE (fetch failed). Not a GSPC measurement-card.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sha256": {
+            "type": "string",
+            "description": "64-char hex payload SHA-256 of the card-v0 leaf."
+          }
+        },
+        "required": ["sha256"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "verify_inclusion",
+      "description": "Check a sha256 against the live public-root merkle via GET /api/proof?sha=. Three states only: VALID (included), INVALID (not a leaf), UNCHECKABLE (proof endpoint unreachable). Does not claim Ed25519 unless sig_ed25519 is present and checked separately. Never a grade.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sha256": {
+            "type": "string",
+            "description": "64-char hex digest to test for inclusion."
+          }
+        },
+        "required": ["sha256"],
+        "additionalProperties": false
+      }
     }
   ]
 }

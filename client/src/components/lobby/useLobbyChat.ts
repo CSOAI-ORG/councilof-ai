@@ -1,5 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-import { matchRoute, matchTab, type LobbyTab } from "./tabs";
+import { LOBBY_TABS, matchRoute, matchTab, type LobbyTab } from "./tabs";
+import { AXES, quotable } from "@/lib/gspcAxes";
+import { looksLikeCardJson, matchRefusal, wantsBoardTotals } from "./lobbyRefuse";
+import { fetchPinnedCardKey, verifyCard } from "@/lib/cardVerify";
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
@@ -22,6 +25,9 @@ import { matchRoute, matchTab, type LobbyTab } from "./tabs";
  * is EXPLICITLY labelled deterministic. We never dress a local string up as a
  * live answer, and this lane never writes a compliance verdict.
  */
+
+/** The space pane from LOBBY_TABS — the existing contract for opening Council Space. */
+const SPACE_TAB = LOBBY_TABS.find((t) => t.id === "space")!;
 
 export type Turn = {
   role: "user" | "council";
@@ -60,6 +66,77 @@ function offlineHelp(reason: string): string {
     `left of this lobby. The pages themselves fetch their own live data and will tell you if ` +
     `they cannot reach it either.`
   );
+}
+
+/**
+ * Axis/Space open command detection.
+ *
+ * Returns an object describing what the user asked for:
+ * - axis: the matching axis from the board (if found)
+ * - isPractice: true if this is explicitly a practice/training request
+ * - isSpace: true if the user asked for Council Space/arena generally
+ */
+function matchAxisOrSpace(text: string): {
+  axis: typeof AXES[number] | null;
+  isPractice: boolean;
+  isSpace: boolean;
+} {
+  const t = text.toLowerCase();
+  const isNavCommand = /\b(show|open|go|take me|switch|jump|load|view|bring up|let me|enter)\b/i.test(text);
+  if (!isNavCommand) return { axis: null, isPractice: false, isSpace: false };
+
+  const isPractice = /\b(practice|training|train|practice mode|unsigned|test run)\b/i.test(t);
+  const isSpace = /\b(arena|space|council space|coliseum)\b/i.test(t);
+
+  const axisNames = AXES.map((a) => a.axis.toLowerCase());
+  const axisAliases: Record<string, string> = {
+    gov: "governance",
+    governing: "governance",
+    "risk tier": "governance",
+    safe: "safety",
+    refusal: "safety",
+    prov: "provenance",
+    marking: "provenance",
+    c2pa: "provenance",
+    cont: "continuity",
+    pqc: "continuity",
+    mcp: "conformance",
+    tool: "conformance",
+    oss: "openness",
+    licence: "openness",
+    license: "openness",
+    mach: "machinery-conformity",
+    machinery: "machinery-conformity",
+    xr: "cross-reality",
+    immersive: "cross-reality",
+    det: "detector-interop",
+    watermark: "detector-interop",
+    art5: "art5-safeguard",
+    "article 5": "art5-safeguard",
+    prohibited: "art5-safeguard",
+    emotion: "affect",
+    affective: "affect",
+    multi: "swarm",
+    coordination: "swarm",
+  };
+
+  let foundAxis: typeof AXES[number] | null = null;
+  for (const [alias, canonical] of Object.entries(axisAliases)) {
+    if (t.includes(alias)) {
+      foundAxis = AXES.find((a) => a.axis === canonical) ?? null;
+      if (foundAxis) break;
+    }
+  }
+  if (!foundAxis) {
+    for (const axisName of axisNames) {
+      if (t.includes(axisName)) {
+        foundAxis = AXES.find((a) => a.axis.toLowerCase() === axisName) ?? null;
+        if (foundAxis) break;
+      }
+    }
+  }
+
+  return { axis: foundAxis, isPractice, isSpace };
 }
 
 export interface LobbyChat {
@@ -152,6 +229,125 @@ export function useLobbyChat(): LobbyChat {
           state: "deterministic",
           signature: `local command · ${extra.path}`,
         });
+        return;
+      }
+
+      // Lane 1.5 — axis-specific navigation. Uses the existing space pane contract.
+      // General "open arena" / "open space" already handled by matchTab above.
+      // This lane handles individual axis names: MEASURED opens space, UNMEASURED refuses.
+      const axisMatch = matchAxisOrSpace(question);
+      if (axisMatch.isPractice) {
+        onNavigate(SPACE_TAB);
+        push({
+          role: "council",
+          text:
+            `Opening Council Space in PRACTICE mode.\n\n` +
+            `**Unsigned training. Never quoted. Not a measurement. Not legal advice. Not a conformity mark.**\n\n` +
+            `Practice runs are for learning and testing only. They do not produce signed cards, ` +
+            `are not recorded on the board, and must never be cited as evidence. ` +
+            `When law actually changes, the living-law path is re-measure + delta card — the old card stays. ` +
+            `The simulation is not that path.`,
+          state: "deterministic",
+          signature: "practice mode · unsigned",
+        });
+        return;
+      }
+      if (axisMatch.axis) {
+        const axis = axisMatch.axis;
+        const isMeasured = quotable(axis);
+        if (isMeasured) {
+          onNavigate(SPACE_TAB);
+          push({
+            role: "council",
+            text:
+              `Opened Council Space for the "${axis.axis}" axis.\n\n` +
+              `This axis is **MEASURED** — accuracy ${(axis.accuracy! * 100).toFixed(1)}%, n=${axis.n}. ` +
+              `The arena shows the measured rounds. Council Space fetches its own live data from GET /api/gspc.`,
+            state: "deterministic",
+            signature: `axis open · ${axis.axis} · measured`,
+          });
+        } else {
+          push({
+            role: "council",
+            text:
+              `The "${axis.axis}" axis is **UNMEASURED** — it is a declared slot on the board with no run behind it.\n\n` +
+              `Council Space cannot open a floor for an axis that has no measurement. ` +
+              `Empty cells stay empty. Check GET /api/gspc for the current board state.`,
+            state: "deterministic",
+            signature: `axis closed · ${axis.axis} · unmeasured`,
+          });
+        }
+        return;
+      }
+
+      const refusal = matchRefusal(question);
+      if (refusal) {
+        push({
+          role: "council",
+          text: refusal.text,
+          state: "ungrounded",
+          signature: `refusal · ${refusal.id}`,
+        });
+        return;
+      }
+
+      if (wantsBoardTotals(question)) {
+        setBusy(true);
+        try {
+          const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
+          if (!r.ok) throw new Error("HTTP " + r.status);
+          const j: any = await r.json();
+          const t = j?.totals ?? {};
+          const grammar = t.public_count || t.count_grammar || "live GET /api/gspc";
+          push({
+            role: "council",
+            text:
+              `Live board from GET /api/gspc — ${grammar}.\n` +
+              `SEPARATED leads: ${t.separated_leads ?? "—"}. TIE: ${t.ties ?? "—"}. ` +
+              `Empty cells stay empty. This is measurement, not a ranking.\n\n` +
+              `Opened the native board pane. No fixture.`,
+            state: "grounded",
+            signature: "board_totals · GET /api/gspc",
+          });
+          onNavigate(LOBBY_TABS.find((x) => x.id === "board") ?? SPACE_TAB);
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: offlineHelp(String(e?.message ?? e)),
+            state: "deterministic",
+            signature: "board_totals · failed",
+          });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
+
+      if (looksLikeCardJson(question)) {
+        setBusy(true);
+        try {
+          const card = JSON.parse(question);
+          const key = await fetchPinnedCardKey();
+          const v = await verifyCard(card, key);
+          push({
+            role: "council",
+            text:
+              `verify_card (browser, nothing uploaded): **${v.state}**.\n` +
+              `${v.reason ?? ""}\n\n` +
+              `Three states only: VALID · INVALID · UNCHECKABLE. Same path as /gspc-verify.`,
+            state: v.state === "VALID" ? "grounded" : "ungrounded",
+            signature: `verify_card · ${v.state}`,
+          });
+        } catch (e: any) {
+          push({
+            role: "council",
+            text: `UNCHECKABLE — could not parse or check that paste (${String(e?.message ?? e)}). Nothing was sent to a server.`,
+            state: "ungrounded",
+            signature: "verify_card · uncheckable",
+          });
+        } finally {
+          setBusy(false);
+        }
         return;
       }
 

@@ -74,7 +74,7 @@ export default function Workbench() {
                 </button>
               ))}
             </div>
-            <a href="/?lobby=tools" className="mt-3 block rounded-lg border border-emerald-500/20 px-3 py-2 text-center text-[12px] font-semibold text-emerald-200/80 hover:bg-white/5">Published tools →</a>
+            <a href="/os?lobby=home" className="mt-3 block rounded-lg border border-emerald-500/20 px-3 py-2 text-center text-[12px] font-semibold text-emerald-200/80 hover:bg-white/5">Published tools →</a>
           </div>
 
           {/* Coordinating agent + artifacts */}

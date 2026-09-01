@@ -1,24 +1,16 @@
+import HfLivingRecord from "@/components/HfLivingRecord";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
-import { LOBBY_TABS, routesIn, type LobbyTab } from "./tabs";
-import { isLibraried } from "@/data/library-ia";
+import { LOBBY_TABS, OS_RAIL_TABS, type LobbyTab } from "./tabs";
 import LivingBoard from "./LivingBoard";
 
 /**
  * LobbyHome — the Council OS desktop.
  *
- * Living board first (every published axis from GET /api/gspc, in-lane kept
- * separate). Rail tabs, then the shipped products, then the audience doors, then
- * the extra live routes those tabs do not own.
- *
- * EVERY TILE READS ITS LABEL, BLURB AND PATH FROM tabs.ts. The audience row used
- * to be a hard-coded array in this file, and it had drifted: the "Enterprises"
- * tile pointed at /assess — the assessment form the Get-measured tab already
- * owns — so the desktop offered two doors, one of them mislabelled. The array is
- * gone; audiences are LOBBY_ROUTES like everything else, which makes a duplicate
- * destination visible in one list instead of hidden in two.
+ * Living board first. Then the five instruments + Play. Not the sitemap.
+ * Sign-in is a real navigation to /dashboard (DSH), never an iframe inside /os.
  */
 
-const DESKTOP = LOBBY_TABS.filter((t) => t.id !== "home");
+const DESKTOP = OS_RAIL_TABS.filter((t) => t.id !== "home");
 
 function Tile({
   label,
@@ -86,10 +78,10 @@ function Tile({
 
 export default function LobbyHome({
   onSelect,
-  onOpenRoute,
 }: {
   onSelect: (t: LobbyTab) => void;
-  onOpenRoute: (path: string, label: string) => void;
+  /** Kept so the overlay can pass openRoute; Home tiles never iframe. */
+  onOpenRoute?: (path: string, label: string) => void;
 }) {
   const openBoard = () => {
     const board = LOBBY_TABS.find((t) => t.id === "board");
@@ -104,16 +96,17 @@ export default function LobbyHome({
       </h2>
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>
         This chat is the AG UI — Council OS. One workspace. The living board
-        is below — every axis the API publishes, nothing invented. Benchmarkers,
-        models, tools, library, and the workbench are the same glass. Ask
-        underneath.
+        is below — every axis the API publishes, nothing invented. Board, verify,
+        cards, evidence, embed. Ask on the right. Documents open as pages.
       </p>
 
       <div className="mt-8">
         <LivingBoard onOpenBoard={openBoard} />
       </div>
 
-      <h3 className={`${TYPE.section} mt-2 mb-3`}>Live surfaces</h3>
+      <HfLivingRecord compact />
+
+      <h3 className={`${TYPE.section} mt-8 mb-3`}>Instruments</h3>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {DESKTOP.map((t) => (
           <li key={t.id}>
@@ -130,84 +123,12 @@ export default function LobbyHome({
         ))}
       </ul>
 
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Products</h3>
-      <p className={`-mt-1 mb-3 ${MEASURE} ${TYPE.muted}`}>
-        The shipped products the rail has no pane for. Evidence pack and Embed kit are panes above —
-        they take input and hand you an artefact, so they are not listed twice here.
+      <p className={`mt-8 ${MEASURE} ${TYPE.muted}`}>
+        <a href="/dashboard" className="font-semibold text-emerald-800 underline underline-offset-2 hover:text-emerald-950">
+          Sign in
+        </a>
+        {" "}opens the signed-in dashboard as its own page — not inside this workspace.
       </p>
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {routesIn("product").map((x) => (
-          <li key={x.path}>
-            <Tile
-              label={x.label}
-              blurb={x.blurb}
-              path={x.path}
-              archive={isLibraried(x.path)}
-              onClick={() => onOpenRoute(x.path, x.label)}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Who you are</h3>
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {routesIn("audience").map((x) => (
-          <li key={x.path}>
-            <Tile
-              label={x.label}
-              blurb={x.blurb}
-              path={x.path}
-              archive={isLibraried(x.path)}
-              onClick={() => onOpenRoute(x.path, x.label)}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Layer 0 and the record</h3>
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {routesIn("record").map((x) => (
-          <li key={x.path}>
-            <Tile
-              label={x.label}
-              blurb={x.blurb}
-              path={x.path}
-              archive={isLibraried(x.path)}
-              onClick={() => onOpenRoute(x.path, x.label)}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Analyst desk</h3>
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {routesIn("analyst").map((x) => (
-          <li key={x.path}>
-            <Tile
-              label={x.label}
-              blurb={x.blurb}
-              path={x.path}
-              archive={isLibraried(x.path)}
-              onClick={() => onOpenRoute(x.path, x.label)}
-            />
-          </li>
-        ))}
-      </ul>
-
-      <h3 className={`${TYPE.section} mt-8 mb-3`}>Receipts</h3>
-      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {routesIn("receipts").map((x) => (
-          <li key={x.path}>
-            <Tile
-              label={x.label}
-              blurb={x.blurb}
-              path={x.path}
-              archive={isLibraried(x.path)}
-              onClick={() => onOpenRoute(x.path, x.label)}
-            />
-          </li>
-        ))}
-      </ul>
     </section>
   );
 }

@@ -59,7 +59,10 @@ const P_LOW = 0.4; // legal / policy pages
 
 const PRIORITY = new Map([
   ["/", 1.0],
-  ["/pricing", P_TOP],
+  // /pricing and /certification are Functions door hops (OS Assess / honesty).
+  // Rank the live destinations, not the hop URLs.
+  ["/os", P_TOP],
+  ["/honesty", P_TOP],
   ["/gspc-arena", P_TOP],
   ["/layer0", P_TOP],
   ["/refutation-ledger", P_TOP],
@@ -361,6 +364,8 @@ console.log(
 
 // Flagship sanity check — these MUST be present.
 const REQUIRED = [
+  "/os",
+  "/honesty",
   "/gspc-arena",
   "/gspc-verify",
   "/gspc-anchors",

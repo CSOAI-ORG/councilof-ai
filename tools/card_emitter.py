@@ -34,7 +34,7 @@ import sys
 KIND = "gspc.measurement-card"
 ISSUER = "CSOAI Ltd (UK 16939677)"
 VERIFY_URL = "https://councilof.ai/verify"
-PUBLIC_FRAMING = "13 measured of 14 quotable"
+PUBLIC_FRAMING = "counts live on GET /api/gspc"
 GENESIS = "GSPC-CARD-FACTORY-GENESIS"
 ALG = "Ed25519"
 

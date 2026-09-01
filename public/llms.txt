@@ -23,6 +23,23 @@ Jail is a measured containment floor on the behavioural half of the board — no
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
 Do not quote scores, n, leaders, or stamp tables from this file.
 
+## Overlay notes (not a 23rd axis)
+
+notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc stays 22·15·7. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
+
+## Census leftover (not a grade)
+
+CENSUS_3M: census + digest + queue + lock. Remainder UNMEASURED.
+Hub listings are DISCOVERED, not MEASURED. Do not mill 3,032,028 listings. Unique n stays 30 UNSIGNED. mill.sh stays dead.
+
+- Census (n_measured=0, status_all=UNMEASURED): https://councilof.ai/signed/hub-census-baseline.json
+- Digest (sha256_jsonl, measured:false): 0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9 — coverage leftover, not a signed GSPC cell. Do not invent a 3M digest file.
+- Queue (all UNMEASURED): https://huggingface.co/datasets/csoai/hub-queue
+- Lock (n_locked=40 UNMEASURED): https://councilof.ai/fleet/FLEET-B.lock.json leftover-honesty https://councilof.ai/fleet-b-lock.json
+- Leftover honesty: https://councilof.ai/census-digest-leftover.json
+
+Empty cells stay empty. Measurement, never certification.
+
 ## East-West (cross-border)
 
 - Flagship: https://councilof.ai/east-west
@@ -40,7 +57,8 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship): https://councilof.ai/mcp
-- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — package name csoai-gspc-mcp, NOT yet published to npm; same four board/card tools as /mcp, one shared definitions file
+- Public root (https://councilof.ai/root.json): Merkle envelope. The envelope itself is not Ed25519-signed (did_intended only; no sig_ed25519; unsigned until keystone). Leaves MAY carry GH-secret attestations — coverage harvest, not grades, not a sealed signed root. Not MEASURED. Not a certificate. Free; not paywalled.
+- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.0` is published (https://www.npmjs.com/package/csoai-gspc-mcp ; registry https://registry.npmjs.org/csoai-gspc-mcp); four tools: board_totals, get_axis, verify_card, list_cards; same four board/card tools as /mcp, one shared definitions file
 - MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai

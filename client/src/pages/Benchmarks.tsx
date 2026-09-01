@@ -176,6 +176,11 @@ export default function Benchmarks() {
     <div className="min-h-screen bg-white dark:bg-gray-950">
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
         <div className="container max-w-6xl">
+          <img
+            src="/images/detail/board_arena_detail.jpg"
+            alt="The measurement estate — six surfaces, one signed foundation"
+            className="mb-8 h-44 w-full rounded-2xl object-cover sm:h-56"
+          />
           <Badge className="mb-4 bg-emerald-600 hover:bg-emerald-600">Open estate · Apache-2.0</Badge>
           <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-6 text-gray-900 dark:text-white">
             Six surfaces. One foundation.

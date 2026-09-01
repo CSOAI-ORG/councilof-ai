@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { LOBBY_TABS } from "@/components/lobby/tabs";
-import { openLobby, type LobbyTaskId } from "@/lib/lobbyLink";
+import { type LobbyTaskId } from "@/lib/lobbyLink";
 import { useBoardCount } from "@/lib/boardCount";
 import { EUNOMIA_AXES } from "@/data/eunomia";
 import type { LobbyTabId } from "@/components/lobby/tabs";
+import HomeUnderstand from "./HomeUnderstand";
 
 /**
  * ToolStack — nine sections, one per thing this place actually does.
@@ -14,13 +15,9 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
  * they could DO here. This band answers the other question: nine tools, each with the
  * pain it removes stated in the reader's words, and a door that opens the tool.
  *
- * EVERY DOOR OPENS INSIDE COUNCIL OS. Each tile's href is a real, copyable,
- * crawlable URL (`/?lobby=<pane>` or `/?task=<task>`) — the deep-link contract in
- * lib/lobbyLink.ts — and the click handler calls openLobby() so an in-page click
- * opens the pane in place instead of navigating away. Two tiles reach a live PAGE
- * rather than a rail pane; they go through the LOBBY_TASKS registry (which carries a
- * `route`), because the URL contract deliberately has no ?route= param and a route
- * must be reviewable in one place.
+ * EACH TILE IS A REAL PAGE HREF. Board and OS go to /os?lobby=board or
+ * /os?lobby=home. Verify is /gspc-verify. Assess, evidence, embed, report,
+ * insurers, registers are pages. No /?lobby= dump and no openLobby intercept.
  *
  * NINE, NOT NINE-ISH. Every tile below has a destination a stranger can reach today.
  * A tool with no destination is not on this band at all, and a tool whose destination
@@ -37,7 +34,8 @@ import type { LobbyTabId } from "@/components/lobby/tabs";
 
 type Door =
   | { kind: "pane"; pane: LobbyTabId }
-  | { kind: "task"; task: LobbyTaskId };
+  | { kind: "task"; task: LobbyTaskId }
+  | { kind: "route"; path: string };
 
 interface Tool {
   id: string;
@@ -49,6 +47,8 @@ interface Tool {
   pain: string;
   /** A standing condition or limit on the tool. Shown on the tile, never hidden. */
   note?: string;
+  /** Short ticks a stranger can scan. Benefits, never invented counts. */
+  ticks: string[];
   image: string;
   alt: string;
   /**
@@ -71,9 +71,14 @@ const TOOLS: Tool[] = [
       "One window that opens every surface here — the board, the verifier, the assessment, the evidence pack — without a second tab or a second login.",
     pain:
       "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
+    ticks: [
+      "Board, verify, get measured and the evidence pack in one window.",
+      "No second tab and no second login.",
+      "Every pane is a real page you can open today.",
+    ],
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
-    door: { kind: "pane", pane: "home" },
+    door: { kind: "route", path: "/os?lobby=home" },
   },
   {
     id: "tool-board",
@@ -83,6 +88,11 @@ const TOOLS: Tool[] = [
       "Every slot we publish about how AI systems behave, with the measurement behind it — and a visibly empty cell wherever there is no measurement.",
     pain:
       "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
+    ticks: [
+      "A filled cell is a measurement. A dash is honest emptiness.",
+      "Counts come from living GET /api/gspc — never typed into the page.",
+      "A TIE stays a TIE. It is never dressed up as a win.",
+    ],
     image: "/images/detail/board_arena_detail.jpg",
     alt: "Clay people and pale humanoids facing each other across an arena under beams of light",
     door: { kind: "pane", pane: "board" },
@@ -95,6 +105,11 @@ const TOOLS: Tool[] = [
       "Paste a signed measurement record and your own browser recomputes its hash and checks the signature. Nothing is sent to us, and nothing needs our permission.",
     pain:
       "Otherwise checking somebody's AI claim means trusting the company that made the claim.",
+    ticks: [
+      "Your browser recomputes the hash and checks Ed25519.",
+      "Nothing is sent to us. Nothing needs our permission.",
+      "Three states only: VALID · INVALID · UNCHECKABLE.",
+    ],
     note: "No account and no fee, permanently.",
     image: "/images/method/receipt.png",
     alt: "A pale slab split by green light, stamped “Ed25519 Verified”",
@@ -108,11 +123,14 @@ const TOOLS: Tool[] = [
       "We run your system against the frozen, published tests that apply to it and hand you a small signed record you keep — the scores, the sample size behind each one, and the slots we could not fill.",
     pain:
       "Otherwise you hand a buyer a policy document where they asked for evidence.",
-    // NOT "sign-in required": /assess is wrapped in RequireAuth, but RequireAuth
-    // carries an explicit isPublicMeasure() carve-out for exactly this route
-    // (components/RequireAuth.tsx) — "Get measured is free and needs no account".
-    // Verified in the pane before this line was written.
-    note: "Free, and no account. The card is yours; publishing it is your decision.",
+    ticks: [
+      "Frozen, published tests — the target does not move after you sit.",
+      "You keep the signed card. Publishing it is your decision.",
+      "Slots we could not fill stay empty and are named.",
+    ],
+    // /assess matches /measure: paid waitlist, Coming — Paddle, booking not live.
+    // Verify stays free. Do not claim a free signed run on this tile.
+    note: "Paid measurement. Coming — Paddle. Booking is not live. Verify stays free.",
     image: "/images/detail/evidence_vault_detail.jpg",
     alt: "Clay figures pointing at a card reading “3KB credential” in front of an open vault",
     door: { kind: "pane", pane: "measured" },
@@ -124,7 +142,12 @@ const TOOLS: Tool[] = [
     what:
       "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
     pain:
-      "GPAI duties have been in force since 2 August 2026, and most providers have only their own paperwork to show for them.",
+      "GPAI duties have been in force since 2 August 2025, and most providers have only their own paperwork to show for them.",
+    ticks: [
+      "Live rows that exist, the banks they resolve to, and the gaps.",
+      "Gaps are named rather than skipped.",
+      "Independent evidence — not a conformity mark, and not legal advice.",
+    ],
     note: "Independent evidence. Not a conformity mark, and not legal advice.",
     image: "/images/method/ast.png",
     alt: "A block of carved statute breaking apart into a branching tree of true/false conditions",
@@ -138,6 +161,11 @@ const TOOLS: Tool[] = [
       "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
     pain:
       "Otherwise the people reading your site still have to take your word for the result.",
+    ticks: [
+      "A badge that goes green only when the bytes are true.",
+      "Each reader's browser re-checks the signature.",
+      "Built only from what is actually on the board.",
+    ],
     note: "Built only from what is actually on the board. Free forever.",
     image: "/images/method/foundry.png",
     alt: "A pale moulded form lifting out of a split block of clay on a beam of green light",
@@ -151,6 +179,11 @@ const TOOLS: Tool[] = [
       "The measured rows, the honestly empty ones, and third-party reported figures — kept in three separate columns and never blended into a single number an underwriter could mistake for a rating.",
     pain:
       "Otherwise AI exposure is priced off a questionnaire the applicant filled in about itself, and nothing updates between binding and renewal.",
+    ticks: [
+      "Measured, empty and reported figures stay in three separate columns.",
+      "Nothing is blended into a single number an underwriter could mistake for a rating.",
+      "We measure. We do not price risk.",
+    ],
     note: "We measure. We do not price risk, and we take no share of anything written on the back of a card.",
     image: "/images/detail/liveness_drift_detail.jpg",
     alt: "An hourglass weighing a stale seal against a re-attested current one, fed by EUR-Lex and legislation.gov.uk ribbons",
@@ -164,6 +197,11 @@ const TOOLS: Tool[] = [
       "A separate board for money and mainframes: whether a COBOL copybook off a bond desk can be turned into an attestable record, whether an underwriting rule reads as covered or excluded — one row per instrument, each with its own item count.",
     pain:
       "Otherwise the systems that actually run a bond desk or a claims book sit outside every AI measurement anybody publishes.",
+    ticks: [
+      "One row per instrument, each with its own item count.",
+      "COBOL copybook and underwriting-rule rows sit beside the public board.",
+      "A specialist register is still measurement — never a certificate.",
+    ],
     image: "/images/loop/four-states.png",
     alt: "Specimens sealed in glass tubes, turning from grey clay to a lit green core",
     door: { kind: "task", task: "specialist-registers" },
@@ -176,6 +214,11 @@ const TOOLS: Tool[] = [
       "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
     pain:
       "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
+    ticks: [
+      "A public form for AI behaviour that looks wrong.",
+      "You get a signed acknowledgement of exactly what you filed.",
+      "Whatever we act on is measured and signed like everything else here.",
+    ],
     note: "Anyone can file one. No account, and no charge.",
     image: "/images/loop/outcry.png",
     objectPosition: "left center",
@@ -184,8 +227,29 @@ const TOOLS: Tool[] = [
   },
 ];
 
-function hrefFor(door: Door): string {
-  return door.kind === "pane" ? `/?lobby=${door.pane}` : `/?task=${door.task}`;
+export function hrefFor(door: Door): string {
+  if (door.kind === "route") return door.path;
+  if (door.kind === "pane") {
+    if (door.pane === "verify") return "/gspc-verify";
+    if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
+    if (door.pane === "evidence") return "/gpai-evidence";
+    if (door.pane === "embed") return "/embed";
+    if (door.pane === "watchdog") return "/report";
+    if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
+      return `/os?lobby=${door.pane}`;
+    }
+    return "/os?lobby=board";
+  }
+  if (door.task === "insurer-rail") return "/insurers";
+  if (door.task === "specialist-registers") return "/registers";
+  if (
+    door.task === "pricing-overview" ||
+    door.task === "enterprise-start" ||
+    door.task === "get-measured"
+  ) {
+    return "/assess";
+  }
+  return "/os?lobby=board";
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */
@@ -221,14 +285,6 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
     <article id={tool.id} aria-labelledby={`${tool.id}-name`} className="h-full">
       <a
         href={href}
-        onClick={(e) => {
-          // Plain left-click opens the pane in place. Modified clicks (new tab,
-          // new window, download) are left entirely alone — the href is real.
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-          e.preventDefault();
-          if (tool.door.kind === "pane") openLobby({ pane: tool.door.pane });
-          else openLobby({ task: tool.door.task });
-        }}
         className="card-quiet group flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
       >
         <img
@@ -248,6 +304,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           </h3>
           <p className="t-body text-foreground/80">{tool.what}</p>
           <p className="t-body text-muted-foreground">{tool.pain}</p>
+          <HomeUnderstand items={tool.ticks} />
 
           {figure && (
             <p className="mt-auto rounded-xl border border-emerald-500/30 bg-emerald-500/[0.08] px-3 py-2 text-[13px] font-semibold leading-snug text-emerald-900 dark:text-emerald-200">
@@ -265,7 +322,7 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
-            Open in Council OS
+            Open this tool
             <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </span>
         </div>
@@ -277,31 +334,33 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
 export default function ToolStack() {
   const figures = useLiveFigures();
   return (
-    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y">
+    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y-lg">
       <div className="section-shell">
-        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine problems, nine tools</p>
+        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine products</p>
         <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
-          What we actually do, in nine tools
+          Nine doors. Each one opens today.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
-          We are an independent measurement body for AI behaviour: we run AI systems against frozen,
-          published tests, sign the result, and publish what we could not measure alongside what we
-          could. These nine are the tools that come out of that; everything further down this page is
-          the evidence behind them. Each tile names a problem, names the tool that removes it, and
-          opens that tool inside Council OS — the workspace, not a brochure for it.
+          Independent measurement body. We run AI systems against frozen published tests, sign the
+          result, and leave empty cells empty. Nine doors, each a real page.
         </p>
+        <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/60 px-5 py-4">
+          <HomeUnderstand
+            title="Why these nine, and not a catalogue"
+            items={[
+              "Each tile opens a page that exists today. A tool with no destination is not on this band.",
+              "Empty cells stay empty. We do not invent a figure to fill a gap.",
+              { kind: "usp", text: "We measure. We do not sell a rank, a certificate, or a placement." },
+            ]}
+          />
+        </div>
+
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TOOLS.map((t) => (
             <Tile key={t.id} tool={t} figure={figures[t.id]} />
           ))}
         </div>
-
-        <p className="t-body measure measure-center mt-10 text-center text-muted-foreground">
-          What is missing from this band is missing on purpose. A surface with no destination a
-          stranger can reach today does not get a tile, and where a tool is real but conditional the
-          condition is printed on its own face.
-        </p>
       </div>
     </section>
   );

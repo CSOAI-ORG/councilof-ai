@@ -22,7 +22,7 @@ const PATHS: Path[] = [
   ] },
   { n: 3, title: "Apply", blurb: "Turn knowledge into governance — map, assess, generate.", ring: "border-blue-300", chip: "bg-blue-100 text-blue-800", modules: [
     { name: "Framework Crosswalks", href: "/crosswalks" },
-    { name: "Readiness Assessment (free)", href: "/readiness-assessment" },
+    { name: "Readiness Assessment (free)", href: "/assess" },
     { name: "Policy Generator", href: "/policy-generator" },
   ] },
   { n: 4, title: "Attest", blurb: "Finish a course and get a signed training record. It attests training, not conformity — we certify nothing.", ring: "border-violet-300", chip: "bg-violet-100 text-violet-800", modules: [
@@ -46,7 +46,7 @@ export default function SovereignAcademy() {
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">No manuals. Your Council assistant walks you through governance as a journey — from the Layer 0 floor to the frameworks and law that apply to you, into the tools, then into a signed training record. We attest training — never conformity. Every step flows into the real OS.</p>
           <div className="mt-7 flex flex-wrap gap-3">
             <a href="/tour" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Take the guided tour {"\u2192"}</a>
-            <a href="/readiness-assessment" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"\u2192"}</a>
+            <a href="/assess" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Free readiness check {"\u2192"}</a>
           </div>
         </div>
       </section>

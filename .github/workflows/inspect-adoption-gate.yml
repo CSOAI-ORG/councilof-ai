@@ -1,0 +1,42 @@
+name: inspect adoption gate
+
+# 10-fixture cross-verify of the Inspect MEASUREMENT emitter vs verify_any_card.py.
+# Throwaway keys. Binds the published jail gold-run (n=71, TIE). Does not re-run
+# the fleet and does not invent a number. inspect_ai missing is UNCHECKABLE (skip),
+# never a fake pass.
+
+on:
+  pull_request:
+    paths:
+      - "harness/arena/**"
+      - "tools/verify_any_card.py"
+      - "tools/_jcs.py"
+      - ".github/workflows/inspect-adoption-gate.yml"
+  push:
+    branches: [master]
+    paths:
+      - "harness/arena/**"
+      - "tools/verify_any_card.py"
+      - "tools/_jcs.py"
+  workflow_dispatch: {}
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install verify deps
+        run: pip install cryptography
+      - name: Inspect 10-fixture adoption gate
+        run: python3 harness/arena/test_inspect_adoption_gate.py
+      - name: v1 shape-A still verifies (one published card)
+        run: |
+          CARD=$(ls public/signed/cards/*.json | head -1)
+          python3 tools/verify_any_card.py --quiet "$CARD"

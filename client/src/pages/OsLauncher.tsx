@@ -1,237 +1,230 @@
-import { useEffect } from "react";
-import { Link } from "wouter";
-import GameBar from "@/components/os/GameBar";
-import AxisPanel from "@/components/os/AxisPanel";
-import CityPanel from "@/components/os/CityPanel";
-import { lobbyHref, openLobby } from "@/lib/lobbyLink";
-import { FOCUS } from "@/components/lobby/glass";
+import { useEffect, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
+import {
+  BOARD_PANE,
+  DOOR_TO_LOBBY,
+  DOORS,
+  doorFromSearch,
+  osLeaveForSearch,
+  LOBBY_TO_DOOR,
+} from "@/components/os/doors";
+import OsHeader from "@/components/os/OsHeader";
+import OsDoorBody from "@/components/os/OsDoors";
+import { openLobby } from "@/lib/lobbyLink";
+import { useBoardCount } from "@/lib/boardCount";
+import {
+  censusNote,
+  correctionsNote,
+  parseTerminal,
+  TERMINAL_HINT,
+} from "@/lib/terminalFn";
+import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
+import { formatComputeReply } from "@/lib/computeBridge";
+import { liveCountLine } from "@/components/os/osChat";
+import HfLivingRecord from "@/components/HfLivingRecord";
+import GspcStreamCard from "@/components/os/GspcStreamCard";
 
-/**
- * OsLauncher — crawlable /os page. The operable OS is the Council OS overlay
- * (Enter Council OS). This page keeps the town / arena / axes for readers and
- * crawlers; it no longer hosts a second chat. `/console` and `/council-os`
- * alias to the overlay.
- *
- * Brand: white background, emerald (#10b981) accent. Real data only — no
- * invented metrics, no killed/branded routes.
- */
-
-type NavGroup = {
-  label: string;
-  items: { name: string; href: string; note?: string; badge?: string; task?: Parameters<typeof openLobby>[0]["task"]; pane?: Parameters<typeof openLobby>[0]["pane"] }[];
+export {
+  BOARD_PANE,
+  DOOR_TO_LOBBY,
+  DOORS,
+  doorFromSearch,
+  osLeaveForSearch,
+  LOBBY_TO_DOOR,
 };
+export type { DoorId } from "@/components/os/doors";
 
-const NAV: NavGroup[] = [
-  {
-    label: "Play",
-    items: [
-      { name: "Council Town", href: "#council-town", note: "the agent-town game", badge: "live" },
-      { name: "The Arena", href: "/gspc-arena", note: "model vs model", pane: "space" },
-      { name: "Live demo & tour", href: "/demo", note: "watch it run" },
-    ],
-  },
-  {
-    label: "City",
-    items: [
-      { name: "Council City", href: "#city", note: "living printer of the public board" },
-      { name: "Living board", href: "#city", note: "counts from GET /api/gspc" },
-      { name: "Paper District", href: "https://councilof.ai/paper-district", note: "research library" },
-      { name: "Council Space", href: "/gspc-arena", note: "the governed arena", pane: "space" },
-    ],
-  },
-  {
-    label: "Measure",
-    items: [
-      { name: "GSPC axis", href: "#axis", note: "living board · counts from /api/gspc" },
-      { name: "Live board", href: "/gspc-scoreboard", note: "signed scores", pane: "board" },
-      { name: "Results", href: "/benchmarks", note: "every artefact-bound figure", pane: "results" },
-      { name: "Models", href: "/models", note: "ranked by signed scores", pane: "models" },
-      { name: "Verify a card", href: "/gspc-verify", note: "offline check", pane: "verify" },
-      { name: "Methodology", href: "/methodology", note: "how we grade", task: "browse-methodology" },
-    ],
-  },
-  {
-    label: "Tools",
-    items: [
-      { name: "Published tools", href: "/tools", pane: "tools" },
-      { name: "Claim integrity", href: "/honesty", note: "claim-vs-artifact check", badge: "live", pane: "claimguard" },
-      { name: "Workbench", href: "/workbench", pane: "workbench" },
-      { name: "Library", href: "/library", pane: "library" },
-      { name: "Watchdog map", href: "/watchdog-map", pane: "watchdog" },
-      { name: "Get assessed", href: "/assess", note: "human-rail assessment", pane: "ras" },
-    ],
-  },
-  {
-    label: "Estate",
-    items: [
-      { name: "About", href: "/about" },
-      { name: "How the free rail works", href: "/?lobby=measured&task=pricing-overview" },
-    ],
-  },
+const PAGES: { name: string; href: string; what: string }[] = [
+  { name: "Board", href: "/gspc-scoreboard", what: "What’s actually measured. Empty stays empty." },
+  { name: "Verify", href: "/gspc-verify", what: "Paste a card. Nothing is sent." },
+  { name: "Assess", href: "/assess", what: "Paid measurement. Coming — Paddle. Booking is not live." },
+  { name: "Evidence", href: "/methodology", what: "How we grade. No model in the verdict." },
+  { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
+  { name: "Report", href: "/report", what: "Public incident intake. Signed acknowledgement." },
+  { name: "Plugin", href: "/tools", what: "Paste-ready MCP for Claude, Cursor, Kimi, Grok." },
+  { name: "Public root", href: "/xrpl-attest", what: "Unsigned catalogue + /api/xrpl reader. Not a GSPC mill." },
+  { name: "Hugging Face record", href: "https://huggingface.co/datasets/csoai/gspc-boards", what: "Hub mirror of the signed record and public-root. Cite GET /api/gspc for the board." },
 ];
 
-function NavLink({ item }: { item: NavGroup["items"][number] }) {
-  const isAnchor = item.href.startsWith("#");
-  const isExternal = item.href.startsWith("http");
-  const inner = (
-    <span className="flex items-center gap-2">
-      <span className="flex-1 truncate">{item.name}</span>
-      {item.badge && (
-        <span className="rounded-full border border-amber-300 bg-amber-50 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-amber-700">
-          {item.badge}
-        </span>
-      )}
-    </span>
-  );
-  const cls =
-    "group block min-h-[44px] rounded-lg px-3 py-2 text-sm font-medium text-slate-700 transition " +
-    "hover:bg-emerald-50 hover:text-emerald-800 lg:min-h-0 " + FOCUS;
-  if (isAnchor || isExternal) {
-    return (
-      <a href={item.href} className={cls} {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}>
-        {inner}
-        {item.note && <span className="block text-[11px] font-normal text-slate-500 group-hover:text-emerald-800">{item.note}</span>}
-      </a>
-    );
-  }
-  if (item.pane || item.task) {
-    const href = lobbyHref({ pane: item.pane, task: item.task, path: "/os" });
-    return (
-      <a
-        href={href}
-        className={cls}
-        onClick={(e) => {
-          e.preventDefault();
-          openLobby({ pane: item.pane, task: item.task });
-        }}
-      >
-        {inner}
-        {item.note && <span className="block text-[11px] font-normal text-slate-500 group-hover:text-emerald-800">{item.note}</span>}
-      </a>
-    );
-  }
-  return (
-    <Link href={item.href} className={cls}>
-      {inner}
-      {item.note && <span className="block text-[11px] font-normal text-slate-500 group-hover:text-emerald-800">{item.note}</span>}
-    </Link>
-  );
-}
-
+/** /os is the Council OS product frame. Doors are native. Not the unused shell. Not AG-UI. */
 export default function OsLauncher() {
+  const search = useSearch();
+  const [, setLocation] = useLocation();
+  const leave = osLeaveForSearch(search);
+  const door = doorFromSearch(search) ?? "board";
+  const board = useBoardCount();
+  const [ask, setAsk] = useState("");
+  const [fnNote, setFnNote] = useState<string | null>(null);
+  /** Live AG-UI stream card: axis id for GET /api/gspc, or "" for board totals only. */
+  const [streamAxis, setStreamAxis] = useState<string | null>(null);
+
   useEffect(() => {
-    document.title = "Council OS — the Council hub | councilof.ai";
+    document.title = "Council OS | councilof.ai";
   }, []);
 
+  useEffect(() => {
+    if (leave) setLocation(leave);
+  }, [leave, setLocation]);
+
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <div className="mx-auto flex max-w-7xl gap-8 px-5 py-8 lg:px-8">
-        <aside className="sticky top-8 hidden h-fit w-56 shrink-0 lg:block" aria-label="Council OS sections">
-          <div className="mb-4 flex items-center gap-2">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500 text-sm font-bold text-white">C</span>
-            <div>
-              <div className="text-sm font-bold leading-none text-slate-900">Council OS</div>
-              <div className="font-mono text-[10px] uppercase tracking-[1.5px] text-slate-600">councilof.ai</div>
-            </div>
+    <div data-testid="os-directory">
+      <OsHeader />
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-700">
+          Council OS
+        </p>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900">
+          One workspace. Living counts. Empty stays empty.
+        </h1>
+        <p className="mt-3 max-w-2xl text-slate-600">
+          Board, verify, get measured, arena, and the harness — in this window.
+          GSPC counts come from GET /api/gspc.{" "}
+          <span className="font-semibold text-emerald-900">{board.public_count}</span>
+          . Hugging Face is the parallel record — a Hub repo is not a grade.
+          We measure. We do not certify.
+        </p>
+
+        <section aria-label="Council OS door" className="mt-8">
+          <OsDoorBody door={door} />
+        </section>
+
+        <HfLivingRecord compact />
+
+        <form
+          className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            const prompt = ask.trim();
+            if (!prompt) {
+              document.getElementById("os-chat")?.focus();
+              return;
+            }
+            const parsed = parseTerminal(prompt);
+            if (parsed.fn === "BOARD") {
+              setStreamAxis("");
+              void fetch("/api/gspc", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => setFnNote(`BOARD — ${liveCountLine(j?.totals ?? {})}. Empty stays empty.`))
+                .catch((err: Error) => {
+                  setStreamAxis(null);
+                  setFnNote(`BOARD failed (${err.message}). Cite GET /api/gspc. UNCHECKABLE.`);
+                });
+              setLocation("/os?lobby=board");
+              return;
+            }
+            if (parsed.fn === "VERIFY") {
+              setLocation("/gspc-verify");
+              return;
+            }
+            if (parsed.fn === "AXIS") {
+              const axis = (parsed.arg || "").trim();
+              setStreamAxis(axis || "");
+              setLocation("/os?lobby=board");
+              setFnNote(`AXIS ${axis || "—"}. Live row from GET /api/gspc. Empty stays empty.`);
+              return;
+            }
+            if (parsed.fn === "CORRECT") {
+              void fetch("/api/corrections", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => {
+                  const n = Array.isArray(j?.corrections) ? j.corrections.length : j?.count;
+                  setFnNote(correctionsNote(n));
+                })
+                .catch((err: Error) => setFnNote(`CORRECT failed (${err.message}).`));
+              return;
+            }
+            if (parsed.fn === "COMPUTE") {
+              void fetch("/api/compute", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => setFnNote(formatComputeReply(j)))
+                .catch((err: Error) => setFnNote(`COMPUTE failed (${err.message}). Cite GET /api/compute.`));
+              setLocation("/os?lobby=harness");
+              return;
+            }
+            if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
+              const id = parsed.arg.trim();
+              if (id) {
+                const store = typeof localStorage === "undefined" ? null : localStorage;
+                saveWatchlist(store, upsertWatch(loadWatchlist(store), [id]));
+              }
+              setFnNote(id ? censusNote(id) : "CENSUS needs an owner/name id.");
+              return;
+            }
+            openLobby({ prompt });
+          }}
+        >
+          <label htmlFor="os-chat" className="text-sm font-semibold text-slate-900">
+            Ask the workspace
+          </label>
+          <p className="mt-1 text-xs text-slate-600">
+            Typed, never sent until you press Ask. Functions first; otherwise the lobby.
+          </p>
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <input
+              id="os-chat"
+              value={ask}
+              onChange={(e) => setAsk(e.target.value)}
+              placeholder="BOARD · AXIS jail · CENSUS Qwen/Qwen3.8-27B · COMPUTE · CORRECT"
+              className="min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-emerald-600"
+            />
+            <button
+              type="submit"
+              className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800"
+            >
+              Ask
+            </button>
           </div>
-          <nav className="space-y-5">
-            {NAV.map((g) => (
-              <div key={g.label}>
-                <div className="mb-1 px-3 font-mono text-[10px] font-bold uppercase tracking-[2px] text-slate-500">{g.label}</div>
-                <div className="space-y-0.5">
-                  {g.items.map((it) => (
-                    <NavLink key={it.name} item={it} />
-                  ))}
-                </div>
-              </div>
-            ))}
-          </nav>
-        </aside>
-        <main className="min-w-0 flex-1 space-y-10">
-          {/* 2026-08-26: the sidebar above is `hidden lg:block`, so below 1024px
-              every one of these ~20 destinations was unreachable from /os. The
-              same NAV is rendered here as a disclosure for small screens. */}
-          <details className="rounded-2xl border border-slate-200 bg-white lg:hidden">
-            <summary className={`flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 rounded-2xl px-4 py-3 text-sm font-bold text-slate-900 ${FOCUS}`}>
-              <span>Browse Council OS</span>
-              <span aria-hidden="true" className="font-mono text-[11px] uppercase tracking-[2px] text-slate-500">menu</span>
-            </summary>
-            <nav aria-label="Council OS sections (mobile)" className="space-y-5 border-t border-slate-100 px-2 pb-4 pt-4">
-              {NAV.map((g) => (
-                <div key={g.label}>
-                  <div className="mb-1 px-3 font-mono text-[10px] font-bold uppercase tracking-[2px] text-slate-500">{g.label}</div>
-                  <div className="space-y-0.5">
-                    {g.items.map((it) => (
-                      <NavLink key={it.name} item={it} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </nav>
-          </details>
-          <section>
-            <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-700">Council OS</p>
-            <h1 className="mt-2 text-3xl font-black tracking-tight sm:text-4xl">Measure. Sign. Check.</h1>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">
-              The living GSPC board, verify, Council Space, and the ask bar — one workspace.
-              Counts come from GET /api/gspc. Empty cells stay empty.
-            </p>
-            <div className="mt-6 space-y-4">
-              <a href={lobbyHref({ pane: "home" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }} className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Enter Council OS</a>
-              <GameBar />
+          <p className="mt-2 font-mono text-[11px] text-emerald-800">{TERMINAL_HINT}</p>
+          {fnNote && <p className="mt-2 text-sm text-slate-700">{fnNote}</p>}
+          {streamAxis !== null && (
+            <div className="mt-3" data-testid="os-agui-stream-gspc">
+              <GspcStreamCard axis={streamAxis || undefined} />
             </div>
-          </section>
-          <section id="council-town" className="scroll-mt-8">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/60 to-white">
-              <div className="grid gap-6 p-6 md:grid-cols-[1.3fr_1fr] md:p-8">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-700">Center stage · the game</span>
-                    <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">Client live</span>
-                  </div>
-                  <h2 className="mt-2 text-2xl font-bold text-slate-900">Council Town</h2>
-                  <p className="mt-2 max-w-md text-[14px] leading-relaxed text-slate-600">Our estate-branded open-world town where AI agent clans deliberate — the living exhibit in the Council OS Games arcade.</p>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    <a href="https://council-town.pages.dev" target="_blank" rel="noreferrer" className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Open Council Town ↗</a>
-                    <a href={lobbyHref({ pane: "home" })} onClick={(e) => { e.preventDefault(); openLobby({ pane: "home" }); }} className={`inline-flex min-h-[44px] items-center rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 ${FOCUS}`}>Open Council OS</a>
-                  </div>
-                </div>
-                <div className="flex flex-col justify-center rounded-xl border border-emerald-200 bg-white/80 p-6 text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-100 text-xl font-bold text-emerald-800">C</div>
-                  <div className="mt-3 text-sm font-semibold text-slate-900">Client deployed · world owner-gated</div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section>
-            <div className="rounded-2xl border border-slate-200 bg-white p-6 md:p-8">
-              <h2 className="text-2xl font-bold text-slate-900">The Arena</h2>
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <Link href="/gspc-arena" className={`inline-flex min-h-[44px] items-center rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-emerald-800 ${FOCUS}`}>Open the full Arena →</Link>
-                <Link href="/methodology" className={`inline-flex min-h-[44px] items-center text-sm font-semibold text-emerald-700 hover:text-emerald-800 ${FOCUS}`}>How it is graded — no LLM-as-judge</Link>
-              </div>
-            </div>
-          </section>
-          <section id="city" className="scroll-mt-8">
-            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-b from-emerald-50/40 to-white">
-              <div className="p-6 md:p-8">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-700">Council City</span>
-                  <span className="rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-emerald-700">Live from /api/gspc</span>
-                </div>
-                <h2 className="text-2xl font-bold text-slate-900">Council City</h2>
-                <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-600">
-                  The living printer of the public board. Axis and model counts come from GET /api/gspc.
-                  Empty cells stay empty. Measurement credential, never certification.
-                </p>
-                <div className="mt-6"><CityPanel /></div>
-              </div>
-            </div>
-          </section>
-          <section id="axis" className="scroll-mt-8"><AxisPanel /></section>
-          <footer className="border-t border-slate-100 pt-6 text-[12px] text-slate-500">One measured surface — the game, the arena, the axis and the Council together.</footer>
-        </main>
-      </div>
+          )}
+          <p className="mt-3 text-[11px] text-slate-600" data-testid="w3c-agent-conformance-draft">
+            Draft opening only:{" "}
+            <a
+              className="font-medium text-emerald-800 underline-offset-2 hover:underline"
+              href="https://www.w3.org/community/agent-conformance/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              W3C Agent Conformance and Benchmarking Community Group
+            </a>
+            {" "}
+            — Nick joins. Measurement credential, never certification. No endorsement or “we conform”
+            claim.
+          </p>
+        </form>
+
+        <h2 className="mt-12 text-sm font-bold uppercase tracking-wide text-slate-500">
+          Also open as a full page
+        </h2>
+        <ul className="mt-3 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+          {PAGES.map((p) => {
+            const external = p.href.startsWith("http");
+            const inner = (
+              <>
+                <div className="font-semibold text-slate-900">{p.name}</div>
+                <div className="text-sm text-slate-600">{p.what}</div>
+              </>
+            );
+            return (
+              <li key={p.href}>
+                {external ? (
+                  <a href={p.href} target="_blank" rel="noreferrer" className="block px-5 py-4 hover:bg-slate-50">
+                    {inner}
+                  </a>
+                ) : (
+                  <Link href={p.href} className="block px-5 py-4 hover:bg-slate-50">
+                    {inner}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </main>
     </div>
   );
 }

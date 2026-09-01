@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 const TRAINING_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to train and certify as a CSOAI AI Safety Analyst",
-  description: "A typical 8-week study timeline to become a certified AI Safety Analyst, from free Watchdog training through to the certification exam.",
+  name: "How to train as a CSOAI AI Safety Analyst",
+  description: "A typical 8-week study timeline to earn a signed training record, from free Watchdog training through to the final assessment.",
   step: [
     { "@type": "HowToStep", position: 1, name: "Week 1 — Watchdog Training", text: "Complete free Watchdog modules (4 hours). Understand AI safety basics and incident identification." },
     { "@type": "HowToStep", position: 2, name: "Week 2-3 — Fundamentals Module 1", text: "Study EU AI Act and NIST AI RMF basics. Complete quizzes and case studies." },
     { "@type": "HowToStep", position: 3, name: "Week 4-5 — Fundamentals Module 2", text: "Learn TC260, compliance principles, and review case studies." },
-    { "@type": "HowToStep", position: 4, name: "Week 6-7 — Practice & Review", text: "Take unlimited practice exams, review weak areas, and prepare for the real exam." },
-    { "@type": "HowToStep", position: 5, name: "Week 8 — Take Certification Exam", text: "Schedule and take your 90-minute proctored exam. Get results instantly." },
+    { "@type": "HowToStep", position: 4, name: "Week 6-7 — Practice & Review", text: "Take unlimited practice exams, review weak areas, and prepare for the final assessment." },
+    { "@type": "HowToStep", position: 5, name: "Week 8 — Complete Training", text: "Complete your final assessment and receive a signed training record — attests learning, never conformity." },
   ],
 };
 
@@ -27,7 +27,7 @@ const TRAINING_BREADCRUMB_SCHEMA = {
 };
 
 export default function TrainingHowItWorks() {
-  useEffect(() => { document.title = "CSOAI Training Guide — Certify in 8 Weeks"; }, []);
+  useEffect(() => { document.title = "CSOAI Training Guide — earn your record in 8 weeks"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const trainingLevels = [
@@ -110,7 +110,7 @@ export default function TrainingHowItWorks() {
     },
     {
       title: "Practice Exams",
-      description: "Take unlimited practice exams to prepare for the real certification exam",
+      description: "Take unlimited practice assessments to prepare for the final training assessment",
       icon: CheckCircle
     },
     {
@@ -247,7 +247,7 @@ export default function TrainingHowItWorks() {
 
         {/* Exam Structure */}
         <div className="mb-20 bg-emerald-50 p-12 rounded-lg border-2 border-emerald-200">
-          <h2 className="text-3xl font-bold mb-8 text-center">Certification Exam Structure</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center">Final Assessment Structure</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {examStructure.map((item, idx) => (
               <div key={idx} className="flex items-start gap-4">
@@ -307,7 +307,7 @@ export default function TrainingHowItWorks() {
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">Week 8</div>
                 <div>
-                  <h4 className="font-bold text-emerald-900 mb-1">Take Certification Exam</h4>
+                  <h4 className="font-bold text-emerald-900 mb-1">Complete training</h4>
                   <p className="text-gray-700">Schedule and take your 90-minute proctored exam. Get results instantly.</p>
                 </div>
               </div>

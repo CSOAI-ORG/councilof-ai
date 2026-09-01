@@ -17,7 +17,7 @@ const FAQ = [
   { q: "What are the CRA deadlines?", a: "The CRA entered into force on 10 December 2024. Conformity-assessment-body rules apply from 11 June 2026, reporting obligations for actively-exploited vulnerabilities and severe incidents from 11 September 2026, and the main obligations from 11 December 2027." },
   { q: "What must be reported under the CRA and when?", a: "Manufacturers must report actively-exploited vulnerabilities and severe incidents: an early warning within 24 hours, a full notification within 72 hours (via the CRA Single Reporting Platform to their CSIRT and ENISA), and a final report within 14 days of a fix (or one month for severe incidents)." },
   { q: "How do the CRA and NIS2 relate?", a: "They complement each other: the CRA secures digital products (hardware/software) placed on the market, while NIS2 secures the networks and systems of essential and important entities. CSOAI crosswalks both to one control set." },
-  { q: "How does CSOAI help with CRA compliance?", a: "CSOAI supports SBOM generation (CycloneDX), signed provenance (Sigstore/SLSA), coordinated vulnerability handling and Layer-0 (Ed25519) signed evidence of secure-by-design and reporting — reproducible for conformity assessment." },
+  { q: "How does CSOAI treat CRA?", a: "CSOAI measures and signs evidence (SBOM workflow, incident runbook, Ed25519 receipts). It does not certify CRA conformity or issue a CE mark. A rank is never sold. Confirm scope with counsel." },
 ];
 
 export default function Cra() {

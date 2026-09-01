@@ -1,7 +1,7 @@
 {
   "name": "csoai-gspc-mcp",
   "version": "0.1.1",
-  "description": "Stdio MCP server for the live GSPC board and the signed measurement cards at councilof.ai. Four honest tools: board_totals, get_axis, verify_card (pinned-key, three-state), list_cards. We measure, never certify; unmeasured is first-class; verdicts are VALID / INVALID / UNCHECKABLE, never two-state. Zero dependencies.",
+  "description": "Stdio MCP server for the live GSPC board, signed measurement cards, and public-root merkle at councilof.ai. Seven honest tools: board_totals, get_axis, verify_card (pinned-key, three-state), list_cards, get_root, get_card, verify_inclusion. We measure, never certify; unmeasured is first-class; verdicts are VALID / INVALID / UNCHECKABLE, never two-state. A 404 leaf is INVALID. Zero dependencies.",
   "type": "module",
   "bin": {
     "csoai-gspc-mcp": "index.mjs"
@@ -27,7 +27,6 @@
     "provenance",
     "ai-governance"
   ],
-  "mcpName": "io.github.CSOAI-ORG/gspc",
   "license": "Apache-2.0",
   "homepage": "https://councilof.ai",
   "repository": {

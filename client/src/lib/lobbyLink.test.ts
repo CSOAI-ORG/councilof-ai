@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { LOBBY_TASKS, lobbyTaskHref, resolveIntent } from "./lobbyLink";
+import { LOBBY_TASKS, lobbyHref, lobbyTaskHref, osDoorHref, osKeepsDoorQuery, osPanelHref, resolveIntent } from "./lobbyLink";
 
 describe("lobbyLink — demographic task registry", () => {
   const demographicTasks = [
@@ -23,6 +23,34 @@ describe("lobbyLink — demographic task registry", () => {
     const href = lobbyTaskHref("sector-brief", { ctx: "finance", path: "/for/finance" });
     expect(href).toContain("task=sector-brief");
     expect(href).toContain("ctx=finance");
+  });
+
+  it("defaults crawlable hrefs onto /os, not the marketing dump", () => {
+    expect(lobbyHref({ pane: "board" })).toMatch(/^\/os\?/);
+    expect(lobbyHref({ pane: "board" })).not.toMatch(/^\/\?lobby=/);
+  });
+
+  it("keeps /os door query so CouncilLobby does not strip Assess task=", () => {
+    expect(osKeepsDoorQuery("/os", "lobby=assess&task=pricing-overview")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "lobby=assess&task=enterprise-start")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "lobby=verify")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "lobby=cards")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "embed=1&lobby=board")).toBe(true);
+    expect(osKeepsDoorQuery("/os", "lobby=home&ask=hello")).toBe(false);
+    expect(osKeepsDoorQuery("/", "lobby=board")).toBe(true);
+    expect(osKeepsDoorQuery("/", "lobby=assess&task=pricing-overview")).toBe(true);
+  });
+
+  it("mints a harness panel URL without using withEmbed on /os", () => {
+    expect(osPanelHref("board")).toBe("/os?embed=1&lobby=board");
+    expect(osPanelHref("verify")).toBe("/os?embed=1&lobby=verify");
+    expect(osPanelHref("cards")).toBe("/os?embed=1&lobby=cards");
+  });
+
+  it("preserves embed=1 on a door hop and does not invent it", () => {
+    expect(osDoorHref("verify", "embed=1&lobby=board")).toBe("/os?lobby=verify&embed=1");
+    expect(osDoorHref("cards", "lobby=board")).toBe("/os?lobby=cards");
+    expect(osDoorHref("verify", "lobby=board", "/")).toBe("/?lobby=verify");
   });
 
   it("resolves regulator brief with context", () => {

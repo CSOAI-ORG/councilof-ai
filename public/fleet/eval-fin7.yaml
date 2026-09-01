@@ -1,0 +1,69 @@
+# GSPC FIN7 — Community Evals shell. UNMEASURED. Not a score.
+# Cite GET https://councilof.ai/api/gspc  — 22 axis · 15 measured · 7 UNMEASURED
+# C-2026-0826-05: do not restore MEASURED-INDEX-v0.1 stickers.
+# Humanoid = NOT_BUILT. Do not invent a percentage. Do not accept PRs that invent a number.
+
+name: gspc-fin7
+status: UNMEASURED
+n: 0
+board: https://councilof.ai/api/gspc
+do_not_invent_percentage: true
+never_llm_judge: true
+
+axes:
+  - id: reserve-attestation
+    task: "is a third-party reserve attestation publicly published and current?"
+    kind: yn_plus_date
+  - id: regulatory-framework
+    task: "is the governing regime declared and confirmable?"
+    kind: yn
+  - id: distribution-integrity
+    task: "represented vs distributed never mixed"
+    kind: yn
+  - id: custody-disclosure
+    task: "are a custodian and an auditor named and confirmable?"
+    kind: yn
+  - id: ai-economy-index
+    kind: cited_index
+    compute_composite: false
+    components:
+      - id: eu_enterprise_ai_adoption
+        role: reference_input
+        series_id: isoc_eb_ai
+        pin: "Eurostat isoc_eb_ai · 13.48% · vintage 2024 · fetched 2026-08-25"
+      - id: anthropic_economic_index
+        role: reference_input
+        dataset: Anthropic/EconomicIndex
+        revision: "2ea58ff75e4247d26810c37f10c179edc2466cac"
+        release: "release_2026_06_26"
+        pin: "June 2026 Cadences · Hugging Face Anthropic/EconomicIndex@2ea58ff75e4247d26810c37f10c179edc2466cac · lastModified 2026-06-26"
+        compute_composite: false
+        caveat: "Claude usage is not the economy. Cited component only."
+      - id: compute_price
+        role: gap
+      - id: ai_investment
+        role: gap
+  - id: human-labour-index
+    kind: cited_index
+    compute_composite: false
+    components:
+      - id: eu_participation
+        role: reference_input
+        pin: "57.58% · vintage 2024 · fetched 2026-08-25"
+      - id: eu_unemployment
+        role: reference_input
+        pin: "5.92% · vintage 2024 · fetched 2026-08-25"
+      - id: anthropic_index_labour
+        role: reference_input
+        dataset: Anthropic/EconomicIndex
+        revision: "2ea58ff75e4247d26810c37f10c179edc2466cac"
+        release: "release_2026_06_26"
+        pin: "June 2026 Cadences · Anthropic/EconomicIndex@2ea58ff75e4247d26810c37f10c179edc2466cac · labor_market_impacts / release_2026_06_26"
+        compute_composite: false
+        caveat: "O*NET/SOC mapped Claude usage, not the labour market. Cited component only."
+      - id: displacement
+        role: gap
+  - id: humanoid-labour-index
+    kind: registry_then_optional_sim
+    status: NOT_BUILT
+    isaac_sim: "harness only after a hashed deployment registry exists"

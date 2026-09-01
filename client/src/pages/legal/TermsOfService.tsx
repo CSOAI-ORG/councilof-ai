@@ -16,7 +16,7 @@ const prohibitedConduct = [
   "Violate any laws or regulations",
   "Infringe intellectual property rights",
   "Misrepresent your identity or affiliation",
-  "Misrepresent CSOAI certification status",
+  "Misrepresent a measurement as a certification",
   "Attempt to gain unauthorized access",
   "Interfere with platform operation",
   "Upload malicious code",
@@ -404,7 +404,7 @@ export default function TermsOfService() {
                       <li>• Uninterrupted or error-free service</li>
                       <li>• That defects will be corrected</li>
                       <li>• Services free of viruses</li>
-                      <li>• Specific outcomes from certification</li>
+                      <li>• Specific outcomes from a measurement run</li>
                     </ul>
                   </div>
 
@@ -412,7 +412,7 @@ export default function TermsOfService() {
                     <h4 className="font-semibold mb-2 text-orange-600">Important Notices</h4>
                     <ul className="text-sm text-muted-foreground space-y-1">
                       <li>• Resources are informational, not legal advice</li>
-                      <li>• CSOAI certification supports but does not guarantee regulatory compliance</li>
+                      <li>• A measurement card does not guarantee regulatory compliance. We do not certify.</li>
                       <li>• Consult qualified professionals for specific situations</li>
                     </ul>
                   </div>

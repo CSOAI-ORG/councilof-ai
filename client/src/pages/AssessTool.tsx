@@ -1,15 +1,17 @@
 /*
  * CSOAI Live Assessment Tool
- * Calls the signed /api/assess endpoint (api-server, Ed25519) and shows the verifiable verdict.
- * API base: VITE_ASSESS_API (defaults to https://api.csoai.org). Works the moment api-server is deployed.
+ *
+ * /assess must match /measure: paid measurement, booking not live, Coming — Paddle,
+ * public verifies free, never a bought rank. This page must not claim a free
+ * signed run. Do not put Paddle checkout chrome here (and never on /honesty).
  */
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, AlertTriangle, Loader2, BadgeCheck, XCircle } from "lucide-react";
+import { ShieldCheck, BadgeCheck, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import DashboardLayout from "@/components/DashboardLayout";
+
 
 // Same-origin by default: /api/assess is a Pages Function on this deployment. The old
 // default, https://api.csoai.org, was a hostname with NO DNS record — every click on the
@@ -73,17 +75,25 @@ export default function AssessTool() {
   }
 
   return (
-    <DashboardLayout>
+    <>
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="flex items-center gap-3 mb-2">
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
-        <p className="text-muted-foreground mb-8">
-          Describe the system — text, and optionally an endpoint URL we record but do not probe.
-          We classify against frozen EU AI Act keywords and return a signed report you can
-          recompute. This is a measurement, not a GSPC bench run, not a conformity assessment,
-          and not a certification. No signup.
+        <p className="text-muted-foreground mb-4">
+          Paid measurement. Booking is not live. Coming — Paddle. The public verifies free.
+          Never a bought rank. Empty means we have not measured that system — we do not guess.
+          Not a certificate.
+        </p>
+        <p className="mb-8 text-sm text-muted-foreground">
+          Waitlist and scope live on <a href="/measure" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/measure</a>.
+          Verify a published card at <a href="/gspc-verify" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">/gspc-verify</a> — free, no account.
+          {" "}
+          <a href="/contact?arm=ledger" className="font-semibold text-emerald-800 underline-offset-2 hover:underline">
+            Need this for an insurer?
+          </a>
+          <span> — enquiry for a signed pack. Never a bought rank.</span>
         </p>
 
         <Card className="mb-6">
@@ -103,10 +113,14 @@ export default function AssessTool() {
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.logging}
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
-            <Button onClick={run} disabled={loading || (!form.system && !form.purpose && !form.endpoint)} className="w-full">
-              {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Measuring…</> : "Run signed measurement"}
+            <Button onClick={run} disabled={true} className="w-full" aria-disabled="true">
+              Coming — Paddle · booking not live
             </Button>
-            {error && <p className="text-sm text-red-600 flex items-center gap-2"><AlertTriangle className="h-4 w-4" />{error}</p>}
+            <p className="text-xs text-muted-foreground">
+              Signed measurement is a paid engagement. Checkout is not on this page. Do not treat a disabled
+              button as a free run. {loading ? "Not running." : null}
+              {error && <span className="text-red-600"> {error}</span>}
+            </p>
           </CardContent>
         </Card>
 
@@ -123,9 +137,9 @@ export default function AssessTool() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="flex items-start gap-2 font-semibold">
-                  {report.tier === "LIMITED_OR_MINIMAL"
+                  {report.alg === "Ed25519" && report.tier === "LIMITED_OR_MINIMAL"
                     ? <><BadgeCheck className="h-5 w-5 text-emerald-600 shrink-0" />{report.verdict}</>
-                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}</>}
+                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}{report.alg !== "Ed25519" ? " — UNCHECKABLE until the living stamp ceremony" : ""}</>}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.rationale}</p>
                 {report.gaps.length > 0 && (
@@ -170,6 +184,6 @@ export default function AssessTool() {
           </motion.div>
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 }

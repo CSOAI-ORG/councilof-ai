@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.living-root-as-index-honesty/0.1",
+  "status": "UNSIGNED",
+  "signed": false,
+  "published_at": "2026-09-01T02:40:00Z",
+  "published_at_europe_london": "2026-09-01T03:40:00+01:00",
+  "live_roots": {
+    "councilof.ai": "https://councilof.ai/root.json",
+    "csoai.org": "https://csoai.org/root.json",
+    "card_count": 43,
+    "merkle_root_prefix": "4a9a5036",
+    "envelope": "unsigned until keystone — no fake sig_ed25519 on the envelope",
+    "leaf_attestations": "coverage harvest, not grades"
+  },
+  "board": {
+    "public_count": "22 axis · 15 measured",
+    "unmeasured_axes": 7,
+    "do_not_fill_empty": true
+  },
+  "n_to_n_plus_1_drift": {
+    "status": "UNCHECKABLE",
+    "note": "No published board time series for N→N+1 drift. Empty stays empty — do not invent drift numbers or a Merkle seal. Cite GET /root.json and GET /api/gspc for the living snapshot only."
+  },
+  "cite_only_panes": {
+    "ERC-8004": "pane input only; writes_board false",
+    "humanoid": "pane input only; writes_board false",
+    "x402": "pane input only; writes_board false"
+  },
+  "chrome_followup": {
+    "BoardAttestation": "link GET /root.json as living root-as-index (prepared locally)",
+    "AttestationDeepDive.ProgressPanel": "render N→N+1 UNCHECKABLE when no time series (prepared locally)"
+  },
+  "do_not": [
+    "fill the 7 empty",
+    "invent MEASURED",
+    "fake Merkle seal",
+    "new products",
+    "wrangler"
+  ],
+  "sit": "NAMED",
+  "ceo_merges": true
+}

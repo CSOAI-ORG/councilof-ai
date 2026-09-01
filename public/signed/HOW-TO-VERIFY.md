@@ -3,7 +3,7 @@
 You do not need our code, our permission, or our word for any of this. Everything below runs
 against the published bytes.
 
-**Cards published:** 313 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
+**Cards published:** 335 · **Algorithm:** Ed25519 · **Distinct signing keys:** 1
 
 ## 1. Pin the key first — this step is not optional
 
@@ -33,7 +33,7 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
-the same value as **`0`**. 116 of our 313 cards contain such a value, so a
+the same value as **`0`**. Integral-float cards in this set do the same, so a
 naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
 on roughly a third of the set.
 
@@ -53,7 +53,7 @@ const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
 at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
 tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
 any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these 150 cannot be migrated without invalidating their ids.
+unnecessary; these cards cannot be migrated without invalidating their ids. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement.
 
 ## 4. Check one card
 
@@ -117,6 +117,39 @@ card-attestation key and have not been altered since. **It does not prove the me
 correct** — that rests on the published method, the gold labels and the rows, all separately
 available. A signature is an integrity claim, not a truth claim.
 
-**It also does not prove the set is complete.** The index declares a chain head that is not
-among these 313 cards: they are a prefix of a longer chain. Each card verifies
-individually; completeness does not.
+**It also does not prove the set is complete.** Each card verifies individually;
+an index can only list what its publisher chose to list. The 150-row floor that
+used to ship beside this chain is a subset of these 335 cards, not a second
+measurement.
+
+## Public-root unsigned catalogue (`/root.json`)
+
+Estate steps 1–6 above are for **Ed25519-signed** cards against `#card-attestation-1`.
+The public-root catalogue is a **different object**.
+
+1. Fetch `https://councilof.ai/root.json`.
+2. Note `as_of`, `merkle_root`, `card_count`, and `did_intended` (`did:web:csoai.org#board-attestation-1`).
+3. Leaves in this catalogue are **unsigned**: `sig_ed25519` is null (`NO_LAPTOP_SIGN`).
+4. Inclusion is membership of a leaf SHA-256 in `card_sha256[]`. That is not a signature check.
+5. Do not claim a three-host checksum until Hugging Face and GitHub copies of this root exist.
+6. GET `/api/xrpl` is a **reader** of this root (`writes_board` false). Live locked 16 when HTTP 200 n=16, same merkle. Do not stamp MEASURED from the catalogue.
+7. Layer-0 may seal the root document with a different key. That seal is not a laptop/keystone card signature.
+
+Do not invent keys. Do not treat public-root inclusion as estate-card VALID.
+
+## PQC / hybrid — not inside the 3KB card
+
+Cards today are **Ed25519 only**. The 3KB atom is binding. An ML-DSA-65 (FIPS-204) signature
+is ~3.3KB and **cannot live inside** the card. There is no PQC field on card-v0 (frozen:
+`sig_ed25519` may be a hex string or null). `#board-pqc-1` is **ABSENT** from
+`did:web:csoai.org` — no ML-DSA public key is published. Do not generate one here.
+
+- A null `sig_ed25519` is unsigned (`NO_LAPTOP_SIGN`) — **UNCHECKABLE**, never VALID.
+- Do not claim a card is PQC-signed. The verify UI has no PQC helper wired; fail-closed.
+- Hybrid, when it ships, is a **second receipt** on the ROOT / DID / inclusion bundle
+  (or a Falcon/ML-DSA envelope *beside* the 3KB, not inside it). Ed25519 is not replaced.
+- OpenTimestamps: `tsa.status: err`. No `.ots` proof is published on a `content_id`.
+  The card trust path is Ed25519 + SHA-256 hash-chain only.
+- **PQCBench** on the GSPC board is the continuity arena (`csoai/gspc-asi`) — a
+  model-comparison task about cryptographic *assumptions*, not a post-quantum
+  signature on these cards. Do not conflate.

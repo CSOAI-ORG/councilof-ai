@@ -7,6 +7,7 @@
  * via isEmbedded(). Minimising the OS returns the public site.
  */
 import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { isEmbedded } from "./embed";
 
 export const OS_OPEN_ATTR = "data-coai-os-open";
@@ -24,8 +25,15 @@ export function isOsOpen(): boolean {
   return document.documentElement.getAttribute(OS_OPEN_ATTR) === "1";
 }
 
-/** Hide marketing chrome: framed pane, or OS covering the page. */
+/** /os is the product frame. Marketing Header/Footer must not stack on OsHeader. */
+export function isOsProductPath(pathname: string): boolean {
+  const p = (pathname || "/").split(/[?#]/)[0].replace(/\/$/, "") || "/";
+  return p === "/os";
+}
+
+/** Hide marketing chrome: framed pane, OS overlay, or the /os product page. */
 export function useSiteChromeHidden(): boolean {
+  const [location] = useLocation();
   const [osOpen, setOpen] = useState(false);
   useEffect(() => {
     const sync = () => setOpen(isOsOpen());
@@ -33,5 +41,5 @@ export function useSiteChromeHidden(): boolean {
     window.addEventListener(OS_CHROME_EVENT, sync);
     return () => window.removeEventListener(OS_CHROME_EVENT, sync);
   }, []);
-  return isEmbedded() || osOpen;
+  return isEmbedded() || osOpen || isOsProductPath(location);
 }

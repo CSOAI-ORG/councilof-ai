@@ -768,6 +768,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia Data"
  },
  {
+  "path": "/eunomia-indices",
+  "comp": "EunomiaIndices",
+  "title": "Eunomia Indices"
+ },
+ {
   "path": "/evidence",
   "comp": "EvidenceHub",
   "title": "Evidence Hub"
@@ -779,8 +784,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/faq",
-  "comp": "FAQ",
-  "title": "FAQ"
+  "comp": "FaqPage",
+  "title": "Faq Page"
  },
  {
   "path": "/features/33-agent-council",
@@ -909,8 +914,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/frequently-asked-questions",
-  "comp": "FAQ",
-  "title": "FAQ"
+  "comp": "FaqPage",
+  "title": "Faq Page"
  },
  {
   "path": "/global-ai-regulation",
@@ -1995,7 +2000,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/sovereign-town",
   "comp": "Redirect",
-  "title": "Sovereign Town"
+  "title": "Council Space"
  },
  {
   "path": "/sovereign-twin",

@@ -14,6 +14,9 @@ Shapes handled (see CARD-SHAPES-AND-REPRODUCIBILITY.md for the full inventory):
   A  gspc-card        {alg, body, id, preimage, pubkey, signature}
                       preimage = canonical JSON of body; hex key + hex sig
                       id must equal sha256(preimage)
+                      If preimage_rule or canon is "jcs-rfc8785", the preimage is RFC 8785
+                      JCS (sibling _jcs.py, else harness/arena/jcs.py). Missing JCS is
+                      UNCHECKABLE — never a silent fallback to v1 json.dumps.
 
   B  axis-signal      {...fields..., content_id, signature:{alg,pubkey,sig,...}}
                       content_id = sha256(canonical JSON of body-minus-integrity-fields)
@@ -39,6 +42,7 @@ import argparse
 import base64
 import binascii
 import hashlib
+import importlib.util
 import json
 import os
 import sys
@@ -106,6 +110,34 @@ def canonical_match(obj, want_hex):
         if hashlib.sha256(b).hexdigest() == want_hex:
             return b, label
     return None, None
+
+
+def _load_jcs():
+    """RFC 8785 canonicalize, or None.
+
+    Stranger kit: sibling tools/_jcs.py. This repo: harness/arena/jcs.py.
+    Missing is UNCHECKABLE — never treat a jcs-rfc8785 card as v1.
+    """
+    here = os.path.dirname(os.path.abspath(__file__))
+    candidates = (
+        os.path.join(here, "_jcs.py"),
+        os.path.join(os.path.dirname(here), "harness", "arena", "jcs.py"),
+    )
+    for path in candidates:
+        if not os.path.isfile(path):
+            continue
+        spec = importlib.util.spec_from_file_location("_csoai_jcs", path)
+        if spec is None or spec.loader is None:
+            continue
+        mod = importlib.util.module_from_spec(spec)
+        try:
+            spec.loader.exec_module(mod)
+        except Exception:
+            continue
+        fn = getattr(mod, "canonicalize", None)
+        if callable(fn):
+            return fn
+    return None
 
 
 def dsse_pae(payload_type: str, payload: bytes) -> bytes:
@@ -177,6 +209,31 @@ class Result:
 
 def verify_A(d, r):
     body, sig, pub = d["body"], d["signature"], d["pubkey"]
+    rule = d.get("preimage_rule") or d.get("canon")
+    if rule == "jcs-rfc8785":
+        jcs_fn = _load_jcs()
+        if jcs_fn is None:
+            r.add(
+                "JCS canonicaliser available",
+                False,
+                "UNCHECKABLE: jcs-rfc8785 card but no sibling _jcs.py "
+                "(and no harness/arena/jcs.py). Not a v1 fallback.",
+            )
+            return r
+        raw = jcs_fn(body)
+        pre = raw if isinstance(raw, bytes) else raw.encode("utf-8")
+        hid = hashlib.sha256(pre).hexdigest()
+        r.add(
+            "id == sha256(JCS body)",
+            hid == d["id"],
+            f"{d['id'][:16]}..." if hid == d["id"] else "JCS digest does not match id",
+        )
+        if hid != d["id"]:
+            return r
+        k = _key_bytes(pub)
+        r.key = binascii.hexlify(k).decode()
+        r.add("Ed25519 sig over JCS body", ed25519_verify(k, _sig_bytes(sig), pre))
+        return r
     pre, variant = canonical_match(body, d["id"])
     r.add("id == sha256(canonical body)", pre is not None,
           f"{d['id'][:16]}... via {variant}" if pre else "matches NEITHER canonicalisation")

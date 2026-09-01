@@ -38,6 +38,6 @@ scheduled full deploy every 3 hours until Git auto-deploy is disabled.
 
 ## Related
 
-- Living board API: `/api/gspc` (14 axes, site_attestation)
+- Living board API: `/api/gspc` (cite `totals.public_count`, site_attestation)
 - ClaimGuard: https://github.com/CSOAI-ORG/claimguard
 - Estate plan: https://github.com/CSOAI-ORG/.github/blob/cursor/gspc-axis-canon-inventory-ff6e/docs/MASTER_PLAN.md

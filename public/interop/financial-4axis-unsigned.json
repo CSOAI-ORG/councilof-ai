@@ -1,0 +1,188 @@
+{
+  "schema": "csoai.financial-measure-run/0.3-unsigned",
+  "run_id": "financial-4axis-unsigned-2026-08-27",
+  "status": "UNSIGNED",
+  "signed": false,
+  "board_write": "NOT WRITTEN. Live board stays 22 axis · 15 measured · 7 empty. These 4 unsigned financial slots remain UNMEASURED on GET /api/gspc.",
+  "risk_verdict": "UNMEASURED (needs counsel)",
+  "mainnet_attestation": "PLANNED",
+  "certification": "NONE — never a certification, never a risk rating, never an endorsement",
+  "rubric_source": "https://councilof.ai/interop/financial-axes.json",
+  "prior_measured_axis": {
+    "axis": "provenance-controls",
+    "status": "MEASURED",
+    "issuers": 6,
+    "schema": "csoai.financial-measure-run/0.2",
+    "content_id": "29369542cb537f38331fecb22b53067b7702f83d93d2ce8e94147a77a97a7d4b",
+    "surface": "/interop/financial-measure-run-v2.json",
+    "note": "Already MEASURED on the same 6 issuers — do not re-grade"
+  },
+  "network": "XRPL MAINNET",
+  "chain_rpc": "https://s1.ripple.com:51234/",
+  "ledger_index": 106580095,
+  "fetched_at": "2026-08-27T14:59:39Z",
+  "as_of": "2026-08-27",
+  "axes": [
+    {
+      "id": "reserve-attestation",
+      "name": "Reserve attestation present",
+      "status": "UNSIGNED",
+      "rubric": "Stranger-retrievable CPA report as_of on or after 2026-07-13. Self-reported balances / NAV / process audits are not reserve attestations.",
+      "grading_rules": {
+        "YES": "Third-party reserve attestation (Deloitte/PwC/etc.) publicly published with as_of >= 2026-07-13",
+        "NO": "No current attestation, or attestation as_of < 2026-07-13",
+        "UNCHECKABLE": "Missing input — never invent YES"
+      },
+      "counts": { "n": 6, "yes": 0, "no": 6, "uncheckable": 0 }
+    },
+    {
+      "id": "regulatory-framework",
+      "name": "Declared regulatory framework",
+      "status": "UNSIGNED",
+      "rubric": "Declared regime confirmable by re-fetch. Declaring ≠ complying. Locale is UX default, not legal.",
+      "grading_rules": {
+        "YES": "Governing regime declared and confirmable (MiCA/UCITS/Reg D/BVI/etc.)",
+        "NO": "No declared regime or not confirmable",
+        "UNCHECKABLE": "Missing input — never invent YES"
+      },
+      "counts": { "n": 6, "yes": 5, "no": 1, "uncheckable": 0 }
+    },
+    {
+      "id": "distribution-integrity",
+      "name": "Represented vs distributed",
+      "status": "UNSIGNED",
+      "rubric": "RWA.xyz public classification + holder count. RWA API v4 is UNCHECKABLE (401). Flag represented>>distributed (JMWH pattern).",
+      "grading_rules": {
+        "YES": "Distribution classification present and not represented>>distributed (JMWH pattern)",
+        "NO": "Missing classification or JMWH pattern flagged",
+        "UNCHECKABLE": "RWA API 401 or missing input"
+      },
+      "counts": { "n": 6, "yes": 6, "no": 0, "uncheckable": 0 }
+    },
+    {
+      "id": "custody-disclosure",
+      "name": "Named custodian/auditor",
+      "status": "UNSIGNED",
+      "rubric": "Custodian AND auditor both named. Disclosure presence only, never quality.",
+      "grading_rules": {
+        "YES": "Both custodian and auditor named",
+        "NO": "Custodian or auditor missing",
+        "UNCHECKABLE": "Missing input — never invent YES"
+      },
+      "counts": { "n": 6, "yes": 3, "no": 3, "uncheckable": 0 }
+    }
+  ],
+  "issuers": [
+    {
+      "id": "rlusd",
+      "name": "RLUSD (Ripple USD)",
+      "mainnet_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+      "domain": "ripple.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "notes": {
+        "reserve-attestation": "Deloitte PDF as_of 2026-02-27 — published but NOT current (< 2026-07-13), so NO"
+      },
+      "evidence": [
+        "https://cdn.sanity.io/files/ior4a5y3/production/775b1aee336cea2bc165585d47e7c0a6361e979b.pdf",
+        "https://docs.ripple.com/products/stablecoin/overview/rlusd",
+        "https://ripple.com/products/stablecoin/transparency/",
+        "https://app.rwa.xyz/assets/RLUSD"
+      ]
+    },
+    {
+      "id": "ousg",
+      "name": "Ondo OUSG",
+      "mainnet_issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "domain": "ondo.finance",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://ondo.finance/ousg",
+        "https://app.rwa.xyz/assets/OUSG"
+      ]
+    },
+    {
+      "id": "archax-aaulf",
+      "name": "Archax x abrdn AAULF",
+      "mainnet_issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "domain": "archax.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://app.rwa.xyz/assets/AAULF"
+      ]
+    },
+    {
+      "id": "openeden-tbill",
+      "name": "OpenEden TBILL (TBL)",
+      "mainnet_issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "domain": "openeden.com",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "YES"
+      },
+      "evidence": [
+        "https://docs.openeden.com/tbill/trust-and-transparency.md",
+        "https://docs.openeden.com/tbill/introduction.md",
+        "https://docs.openeden.com/tbill/faq.md",
+        "https://app.rwa.xyz/assets/TBILL"
+      ]
+    },
+    {
+      "id": "braza-usdb",
+      "name": "Braza Bank USDB",
+      "mainnet_issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "domain": "tokens.brazacripto.com.br",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "NO",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://app.rwa.xyz/assets/USDB",
+        "https://tokens.brazacripto.com.br/",
+        "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/"
+      ]
+    },
+    {
+      "id": "braza-bbrl",
+      "name": "Braza Bank BBRL",
+      "mainnet_issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+      "domain": "tokens.brazacripto.com.br",
+      "grades": {
+        "reserve-attestation": "NO",
+        "regulatory-framework": "YES",
+        "distribution-integrity": "YES",
+        "custody-disclosure": "NO"
+      },
+      "evidence": [
+        "https://app.rwa.xyz/assets/BBRL",
+        "https://tokens.brazacripto.com.br/"
+      ]
+    }
+  ],
+  "honesty": {
+    "not_a_rating": "This artifact contains deterministic fact checks only. It is NOT a risk rating, credit rating, investment advice, or endorsement of any kind.",
+    "not_advice": "Nothing in this artifact constitutes financial, legal, tax, or investment advice. Consult licensed professionals.",
+    "not_endorsement": "Inclusion in this run does not imply endorsement, approval, or certification of any issuer or instrument.",
+    "not_certification": "Council of AI measures; it never certifies. No conformity marks. This run is UNSIGNED.",
+    "signed_requirements": "SIGNED status requires n≥30 + 4-way review + keystone signature. This run does not meet those requirements.",
+    "stranger_recompute": "Strangers can recompute by re-fetching sources and applying grading_rules. Grading is deterministic."
+  }
+}

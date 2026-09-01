@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
 import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
 import { VerifyButton } from "@/components/gspc/VerifyButton";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { setMetaDescription } from "@/lib/utils";
 import { CHAIN_STATUS } from "@/data/chain";
+import BoardAttestation from "@/components/board/BoardAttestation";
 
 /**
  * /gspc-verify — recompute the chain yourself.
@@ -16,9 +18,25 @@ import { CHAIN_STATUS } from "@/data/chain";
  */
 
 export default function GSPCVerify() {
+  const [boardData, setBoardData] = useState<any>(null);
+  const [mode, setMode] = useState<"estate" | "public-root">("estate");
+
   useEffect(() => {
     document.title = "Verify the chain — recompute it yourself, client-side | CSOAI";
     setMetaDescription("Verify a Council of AI measurement card client-side: recompute the Ed25519 signature chain in your browser against the published public key. No account, no server trust.");
+  }, []);
+
+  useEffect(() => {
+    const ac = new AbortController();
+    fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((d) => {
+        if (d && typeof d === "object" && Array.isArray(d.axes)) {
+          setBoardData(d);
+        }
+      })
+      .catch(() => { /* verification page still works without the board data */ });
+    return () => ac.abort();
   }, []);
 
   return (
@@ -27,31 +45,65 @@ export default function GSPCVerify() {
       <section className="border-b border-emerald-500/15">
         <div className="mx-auto max-w-4xl px-6 pt-14 pb-10">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
-            Chain verification · client-side · no server involved
+            Verify · nothing sent · no account
           </p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">
-            Don&apos;t take our word for it.{" "}
-            <span className="bg-gradient-to-r from-emerald-300 to-amber-300 bg-clip-text text-transparent">
-              Recompute the chain.
-            </span>
+            Paste a signed card.
           </h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
-            If a record was edited after signing, the recomputed hash will not match the stored
-            one — and that row is reported as <strong className="text-red-300">BROKEN</strong>,
-            visibly, with the row identified. The button below proves it, including what happens
-            when a record is deliberately tampered with.
+            Two modes. Estate cards recompute Ed25519 against did:web:csoai.org#card-attestation-1.
+            Public-root cards load GET /root.json — an unsigned catalogue (NO_LAPTOP_SIGN;
+            leaf sig_ed25519 is null). Inclusion is membership in that hash list. This is not
+            a certificate, and it is not a training record.
           </p>
-          <p className="mt-3 text-[13px] text-emerald-200/70">
-            Privacy: verification runs entirely in your browser. Nothing you check is sent to us,
-            logged, or stored — and it never will be. No login, no fee, forever.
-          </p>
+          <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "estate"}
+              onClick={() => setMode("estate")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "estate"
+                  ? "bg-emerald-500 text-[#03110b]"
+                  : "border border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10"
+              }`}
+            >
+              Estate card
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === "public-root"}
+              onClick={() => setMode("public-root")}
+              className={`min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold ${
+                mode === "public-root"
+                  ? "bg-amber-400 text-[#03110b]"
+                  : "border border-amber-400/30 text-amber-200 hover:bg-amber-500/10"
+              }`}
+            >
+              Public-root catalogue
+            </button>
+          </div>
         </div>
       </section>
 
       <div className="mx-auto max-w-4xl px-6 py-12 space-y-16">
-        {/* VERIFY ONE RECORD — single input, permalink-able */}
+        {mode === "public-root" && (
+          <section>
+            <h2 className="text-2xl font-bold text-amber-200">Public-root card + inclusion</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              This mode does not work as a laptop-signed card check. Leaves are an
+              unsigned catalogue. Load GET /root.json. Do not fake Ed25519.
+            </p>
+            <div className="mt-4">
+              <PublicRootCatalogue variant="dark" />
+            </div>
+          </section>
+        )}
+
+        {mode === "estate" && (
         <section>
-          <h2 className="text-2xl font-bold text-emerald-50">Verify a single record</h2>
+          <h2 className="text-2xl font-bold text-emerald-50">Verify a single estate record</h2>
           <p className="mt-1 text-[13px] text-emerald-100/60">
             Paste any one estate record — hash and signature are recomputed here, in your browser,
             against the published keys. Share a permalink and the recipient&apos;s browser re-runs
@@ -61,8 +113,10 @@ export default function GSPCVerify() {
             <RecordVerifyForm variant="dark" />
           </div>
         </section>
+        )}
 
-        {/* VERIFY */}
+        {mode === "estate" && (
+        <>
         <section>
           <h2 className="text-2xl font-bold text-emerald-50">Verify a chain</h2>
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
@@ -108,6 +162,28 @@ export default function GSPCVerify() {
             </p>
           </div>
         </section>
+        </>
+        )}
+
+        {/* LIVING ATTESTATION TABLES — from GET /api/gspc */}
+        {boardData && (
+          <section>
+            <h2 className="text-2xl font-bold text-emerald-50">Board stamp — living board, not your card</h2>
+            <p className="mt-1 text-[13px] text-emerald-100/60">
+              This is the published board stamp. It is not a stamp on a card you just pasted.
+              Empty fields show exactly why they are empty.
+            </p>
+            <div className="mt-4">
+              <BoardAttestation
+                data={boardData}
+                variant="dark"
+                showProgress={true}
+                showInLane={true}
+                compact={false}
+              />
+            </div>
+          </section>
+        )}
 
         {/* WHAT THIS DOES NOT DO */}
         <section className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
@@ -128,11 +204,20 @@ export default function GSPCVerify() {
               <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — read it out of that
               document yourself and compare it to the <code>pubkey</code> on any card.{" "}
               {ANCHORING_CLAIM}{" "}
-              <strong className="text-emerald-50">OpenTimestamps (Bitcoin) anchoring is roadmap,
-              not yet shipped</strong> — the label will name it in the commit it ships, as with
-              ML-DSA-65. The post-quantum ML-DSA-65 (FIPS-204) signer is likewise{" "}
+              <strong className="text-emerald-50">tsa.status: err</strong> — no OpenTimestamps
+              proof is published on a <code>content_id</code>. The post-quantum ML-DSA-65
+              (FIPS-204) signer is likewise{" "}
               <strong className="text-emerald-50">built, not shipped</strong>; the label will name
               it in the same commit it ships — never ahead of it.
+            </li>
+            <li>
+              The <strong className="text-emerald-50">3KB atom is binding</strong>. An ML-DSA-65
+              signature is ~3.3KB and cannot live inside a card. Hybrid, when it ships, is a
+              second receipt on the root / DID / inclusion bundle — never a PQC-signed card.
+              <code>#board-pqc-1</code> is <strong className="text-emerald-50">ABSENT</strong>.
+              No PQC verify helper is wired. Fail-closed: a missing PQC seal is UNCHECKABLE,
+              never VALID. PQCBench is the GSPC continuity arena (<code>csoai/gspc-asi</code>),
+              not a post-quantum signature on these cards.
             </li>
             <li>
               It does not contact a server. Verification is local; you bring the records and

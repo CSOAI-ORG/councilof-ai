@@ -26,10 +26,10 @@ export const EUNOMIA_AXES: EunomiaAxis[] = [
 { axis: "eunomia-token", bench: "eunomia-energy-currency", instrument: "energy currency (ATP)", seat: "Berlin", n: 10, labels: ["COMPLIANT","NON_COMPLIANT"], strong: { acc: 0.778, ci: [0.453,0.937] }, baseline: { acc: 0.5, ci: [0.237,0.763] }, status: "MEASURED" },
 { axis: "climate-transition", bench: "eunomia-climate-transition", instrument: "EU Taxonomy / ISSB / PCAF", seat: "Amsterdam", n: 10, labels: ["COMPLIANT","NON_COMPLIANT"], strong: { acc: 1.0, ci: [0.722,1.0] }, baseline: { acc: 0.6, ci: [0.313,0.832] }, status: "MEASURED" },
 { axis: "privacy-risk", bench: "eunomia-privacy-risk", instrument: "GDPR art 9 / 33", seat: "Dublin", n: 10, labels: ["COMPLIANT","NON_COMPLIANT"], strong: { acc: 1.0, ci: [0.722,1.0] }, baseline: { acc: 0.6, ci: [0.313,0.832] }, status: "MEASURED" },
-// Aspirational index axes — NOT yet measured. Declared UNMEASURED first (honest JL.5):
-// an index only earns a score once its frozen item set is built + graded + signed.
-// No invented number here; these show "— no number until measured".
-{ axis: "ai-economy-index", bench: "eunomia-ai-agentcommerce-index", instrument: "AI-economy (agent-payments) index — real vs gamified", seat: "San Francisco", n: 0, labels: ["REAL","GAMIFIED"], strong: null, baseline: null, status: "UNMEASURED" },
-{ axis: "human-labour", bench: "eunomia-human-labour-index", instrument: "human-labour displacement index", seat: "Toronto", n: 0, labels: ["COMPLIANT","NON_COMPLIANT"], strong: null, baseline: null, status: "UNMEASURED" },
-{ axis: "humanoid-labour", bench: "eunomia-humanoid-labour-index", instrument: "humanoid-labour index", seat: "London", n: 0, labels: ["COMPLIANT","NON_COMPLIANT"], strong: null, baseline: null, status: "UNMEASURED" },
+// Aspirational index axes — UNMEASURED on the living board (C-2026-0826-05).
+// A n=10 harness gold set exists as reference input only. Not board-quotable.
+// Do not restore MEASURED-INDEX-v0.1. GET /api/gspc is authority (22 axis · 15 measured · 7 UNMEASURED).
+{ axis: "ai-economy-index", bench: "eunomia-ai-agentcommerce-index", instrument: "AI-economy (agent-payments) index — real vs gamified", seat: "San Francisco", n: 10, labels: ["REAL","GAMIFIED"], strong: { acc: 0.6, ci: [0.313,0.832] }, baseline: { acc: 0.9, ci: [0.596,0.982] }, status: "UNMEASURED" },
+{ axis: "human-labour", bench: "eunomia-human-labour-index", instrument: "human-labour displacement index", seat: "Toronto", n: 10, labels: ["COMPLIANT","NON_COMPLIANT"], strong: { acc: 1.0, ci: [0.723,1.0] }, baseline: { acc: 0.5, ci: [0.237,0.763] }, status: "UNMEASURED" },
+{ axis: "humanoid-labour", bench: "eunomia-humanoid-labour-index", instrument: "humanoid-labour index", seat: "London", n: 10, labels: ["COMPLIANT","NON_COMPLIANT"], strong: { acc: 1.0, ci: [0.723,1.0] }, baseline: { acc: 0.5, ci: [0.237,0.763] }, status: "UNMEASURED" },
 ];

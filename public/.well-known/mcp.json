@@ -8,11 +8,12 @@
       "display_name": "GSPC Measurement Tools",
       "url": "https://councilof.ai/mcp",
       "fallback_url": "https://csoai.org/mcp",
-      "upstream": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp",
+      "stdio": "npx -y csoai-gspc-mcp@0.1.0",
+      "dead_worker": "https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker.",
       "auth_required": false,
       "registry": {
         "name": "io.github.CSOAI-ORG/gspc",
-        "version": "1.0.3",
+        "version": "1.1.0",
         "url": "https://registry.modelcontextprotocol.io"
       }
     }
@@ -21,10 +22,31 @@
   "gspc_board": "https://councilof.ai/api/gspc",
   "server_card": "https://councilof.ai/.well-known/mcp/server-card.json",
   "measured": {
-    "total_tools": 4,
+    "total_tools": 7,
     "server_count": 1,
-    "tools": ["measure", "verify", "jail-probe", "enter-arena"],
-    "note": "MEASURED live from worker tools/list. Official registry latest 1.0.3. Board counts from GET /api/gspc. Worker runtime may lag until CF_API_TOKEN restored."
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
+    "note": "POST /mcp tools/list. Seven read tools: four GSPC board/card plus three public-root three-state (get_root / get_card / verify_inclusion). mill-tool `measure` is dropped. measure / verify / jail-probe / enter-arena are not this product. Registry latest 1.1.0; historic 1.0.x listed four. npm stdio csoai-gspc-mcp@0.1.0 is the four-tool package."
+  },
+  "planted": {
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
+    "url": "https://councilof.ai/mcp",
+    "note": "The product door. Seven read tools. Public-root trio is VALID / INVALID / UNCHECKABLE, never a GSPC grade. No 23rd axis. No jail run from MCP. mill-tool `measure` dropped."
   },
   "provider": {
     "name": "CSOAI Ltd",

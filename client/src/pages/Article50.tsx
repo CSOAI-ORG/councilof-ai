@@ -62,6 +62,7 @@ const TIMELINE = [
   { d: "2 Aug 2025", t: "GPAI provider obligations began." },
   { d: "2 Aug 2026", t: "Article 50 transparency obligations apply — and market-surveillance enforcement is live from day one. No grace period for anything launched after this date." },
   { d: "2 Dec 2026", t: "End of the marking grace period for synthetic-content systems that were already on the market before 2 Aug 2026." },
+  { d: "2 Dec 2027", t: "Annex III high-risk obligations (EUR-Lex). We measure. We do not certify." },
   { d: "2 Aug 2027", t: "Legacy GPAI models (on the market before 2 Aug 2025) must be fully compliant." },
 ];
 
@@ -70,13 +71,13 @@ const FAQ = [
   { q: "When does Article 50 take effect?", a: "Article 50 transparency obligations — and the enforcement powers behind them — apply from 2 August 2026. Systems already on the market have a marking grace period until 2 December 2026 for synthetic content, and GPAI models placed on the market before 2 August 2025 have until 2 August 2027. Anything launched after 2 August 2026 must comply immediately." },
   { q: "What are the penalties for breaching Article 50?", a: "Non-compliance with transparency obligations can attract fines of up to €15 million or 3% of total worldwide annual turnover, whichever is higher, alongside national market-surveillance enforcement. (Higher tiers exist for other articles — up to €35M or 7% for prohibited practices.)" },
   { q: "What is the editorial-responsibility exception?", a: "AI-generated text published to inform the public does not have to be labelled as AI-generated if a natural or legal person holds editorial responsibility for it and it has undergone human review. It rewards genuine editorial control; it is not a way to launder unreviewed generated text through a nominal editor." },
-  { q: "How does CSOAI help with Article 50 compliance?", a: "CSOAI maps Article 50 to concrete, verifiable controls: a surface registry classifying every interactive surface, first-interaction disclosure patterns, C2PA / content-provenance watermarking for machine-readable marking, and Layer-0 (Ed25519) signed evidence that the marking and disclosure were in place — reproducible for auditors. And it applies the same controls to itself: every surface of this site is classified publicly at /ai-transparency." },
+  { q: "How does CSOAI treat Article 50?", a: "CSOAI maps Article 50 to measurable controls (surface registry, first-interaction disclosure, provenance marks) and publishes how it treats its own surfaces at /ai-transparency. That is measurement and evidence, not a transparency certificate." },
 ];
 
 export default function Article50() {
   useEffect(() => { document.title = "EU AI Act Article 50 — transparency obligations, in force from 2 Aug 2026 | CSOAI"; }, []);
   const ld = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) };
-  const aug = days("2026-08-02"), dec = days("2026-12-02"), aug27 = days("2027-08-02");
+  const aug = days("2026-08-02"), dec = days("2026-12-02"), annex = days("2027-12-02");
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
@@ -88,7 +89,7 @@ export default function Article50() {
         <div className="mt-5 grid gap-3 sm:grid-cols-3">
           <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4"><div className="text-3xl font-black text-amber-200">{aug}</div><div className="text-sm text-amber-100/80">days → obligation + enforcement live (2 Aug 2026)</div></div>
           <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4"><div className="text-3xl font-black text-amber-200">{dec}</div><div className="text-sm text-amber-100/80">days → marking grace period ends (2 Dec 2026)</div></div>
-          <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4"><div className="text-3xl font-black text-emerald-200">{aug27}</div><div className="text-sm text-emerald-100/80">days → legacy GPAI full compliance (2 Aug 2027)</div></div>
+          <div className="rounded-xl border border-emerald-400/40 bg-emerald-500/10 p-4"><div className="text-3xl font-black text-emerald-200">{annex}</div><div className="text-sm text-emerald-100/80">days → Annex III high-risk (2 Dec 2027)</div></div>
         </div>
 
         {/* 3D portal — the measurement lens over the region where Article 50 binds */}

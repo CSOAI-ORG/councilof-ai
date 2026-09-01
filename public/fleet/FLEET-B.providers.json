@@ -1,0 +1,616 @@
+{
+  "kind": "csoai.fleet-b-provider-map/0.1",
+  "as_of": "2026-08-31T12:04:57Z",
+  "source": "GET huggingface.co/api/models/{slug}?expand[]=inferenceProviderMapping",
+  "n_locked": 40,
+  "n_with_live_provider": 31,
+  "writes_board": false,
+  "rows": [
+    {
+      "slug": "Qwen/Qwen3-0.6B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-0.6B:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "openai-community/gpt2",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-8B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-8B:nscale",
+        "Qwen/Qwen3-8B:featherless-ai"
+      ],
+      "n_providers": 2,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-7B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-7B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-1.5B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-1.5B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-3B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-3B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "meta-llama/Llama-3.2-1B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "farbodtavakkoli/OTel-2.0-LLM-31B-IT:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-0.5B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "openai/gpt-oss-20b",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "featherless-ai",
+        "groq",
+        "novita",
+        "nscale",
+        "ovhcloud",
+        "together"
+      ],
+      "router_ids": [
+        "openai/gpt-oss-20b:groq",
+        "openai/gpt-oss-20b:novita",
+        "openai/gpt-oss-20b:nscale",
+        "openai/gpt-oss-20b:together",
+        "openai/gpt-oss-20b:featherless-ai",
+        "openai/gpt-oss-20b:ovhcloud",
+        "openai/gpt-oss-20b:deepinfra"
+      ],
+      "n_providers": 7,
+      "error": null
+    },
+    {
+      "slug": "meta-llama/Llama-3.1-8B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "novita",
+        "nscale"
+      ],
+      "router_ids": [
+        "meta-llama/Llama-3.1-8B-Instruct:novita",
+        "meta-llama/Llama-3.1-8B-Instruct:nscale",
+        "meta-llama/Llama-3.1-8B-Instruct:deepinfra"
+      ],
+      "n_providers": 3,
+      "error": null
+    },
+    {
+      "slug": "openai/gpt-oss-120b",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "baseten",
+        "cerebras",
+        "deepinfra",
+        "featherless-ai",
+        "fireworks-ai",
+        "groq",
+        "novita",
+        "nscale",
+        "ovhcloud",
+        "scaleway",
+        "together"
+      ],
+      "router_ids": [
+        "openai/gpt-oss-120b:groq",
+        "openai/gpt-oss-120b:novita",
+        "openai/gpt-oss-120b:cerebras",
+        "openai/gpt-oss-120b:nscale",
+        "openai/gpt-oss-120b:together",
+        "openai/gpt-oss-120b:fireworks-ai",
+        "openai/gpt-oss-120b:featherless-ai",
+        "openai/gpt-oss-120b:scaleway",
+        "openai/gpt-oss-120b:baseten",
+        "openai/gpt-oss-120b:ovhcloud",
+        "openai/gpt-oss-120b:deepinfra"
+      ],
+      "n_providers": 11,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-4B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-4B:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "dphn/dolphin-2.9.1-yi-1.5-34b",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-32B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-32B:nscale",
+        "Qwen/Qwen3-32B:featherless-ai",
+        "Qwen/Qwen3-32B:deepinfra"
+      ],
+      "n_providers": 3,
+      "error": null
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "baseten",
+        "deepinfra",
+        "fireworks-ai",
+        "novita",
+        "together"
+      ],
+      "router_ids": [
+        "deepseek-ai/DeepSeek-V4-Flash-0731:novita",
+        "deepseek-ai/DeepSeek-V4-Flash-0731:together",
+        "deepseek-ai/DeepSeek-V4-Flash-0731:fireworks-ai",
+        "deepseek-ai/DeepSeek-V4-Flash-0731:baseten",
+        "deepseek-ai/DeepSeek-V4-Flash-0731:deepinfra"
+      ],
+      "n_providers": 5,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-1.7B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-1.7B:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "google/gemma-3-1b-it",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "google/gemma-3-1b-it:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-4B-Instruct-2507",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-4B-Instruct-2507:nscale",
+        "Qwen/Qwen3-4B-Instruct-2507:featherless-ai"
+      ],
+      "n_providers": 2,
+      "error": null
+    },
+    {
+      "slug": "RadixArk/Kimi-K3-DSpark",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "ornith-ai/Ornith-1.0-35B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-R1",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "novita"
+      ],
+      "router_ids": [
+        "deepseek-ai/DeepSeek-R1:novita"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-14B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-14B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "HuggingFaceTB/SmolLM2-135M",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-30B-A3B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-30B-A3B:deepinfra"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-Coder-7B-Instruct:nscale",
+        "Qwen/Qwen2.5-Coder-7B-Instruct:featherless-ai"
+      ],
+      "n_providers": 2,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-Coder-14B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-32B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-32B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "TinyLlama/TinyLlama-1.1B-Chat-v1.0:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen-72B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "zai-org/GLM-4.7-Flash",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "featherless-ai",
+        "novita",
+        "zai-org"
+      ],
+      "router_ids": [
+        "zai-org/GLM-4.7-Flash:novita",
+        "zai-org/GLM-4.7-Flash:featherless-ai",
+        "zai-org/GLM-4.7-Flash:zai-org",
+        "zai-org/GLM-4.7-Flash:deepinfra"
+      ],
+      "n_providers": 4,
+      "error": null
+    },
+    {
+      "slug": "ornith-ai/Ornith-1.0-9B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "ornith-ai/Ornith-1.0-9B:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-14B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen3-14B:nscale",
+        "Qwen/Qwen3-14B:featherless-ai",
+        "Qwen/Qwen3-14B:deepinfra"
+      ],
+      "n_providers": 3,
+      "error": null
+    },
+    {
+      "slug": "zai-org/GLM-5.2",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "baseten",
+        "deepinfra",
+        "featherless-ai",
+        "fireworks-ai",
+        "novita",
+        "scaleway",
+        "together",
+        "zai-org"
+      ],
+      "router_ids": [
+        "zai-org/GLM-5.2:novita",
+        "zai-org/GLM-5.2:together",
+        "zai-org/GLM-5.2:fireworks-ai",
+        "zai-org/GLM-5.2:featherless-ai",
+        "zai-org/GLM-5.2:zai-org",
+        "zai-org/GLM-5.2:scaleway",
+        "zai-org/GLM-5.2:baseten",
+        "zai-org/GLM-5.2:deepinfra"
+      ],
+      "n_providers": 8,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen3-Coder-Next-FP8",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [],
+      "router_ids": [],
+      "n_providers": 0,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-0.5B",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-0.5B:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "deepseek-ai/DeepSeek-V4-Flash",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "deepinfra",
+        "novita"
+      ],
+      "router_ids": [
+        "deepseek-ai/DeepSeek-V4-Flash:novita",
+        "deepseek-ai/DeepSeek-V4-Flash:deepinfra"
+      ],
+      "n_providers": 2,
+      "error": null
+    },
+    {
+      "slug": "meta-llama/Meta-Llama-3-8B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai"
+      ],
+      "router_ids": [
+        "meta-llama/Meta-Llama-3-8B-Instruct:featherless-ai"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "zai-org/GLM-5.2-FP8",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "zai-org"
+      ],
+      "router_ids": [
+        "zai-org/GLM-5.2-FP8:zai-org"
+      ],
+      "n_providers": 1,
+      "error": null
+    },
+    {
+      "slug": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "inference": null,
+      "pipeline_tag": null,
+      "gated": null,
+      "providers_live": [
+        "featherless-ai",
+        "nscale"
+      ],
+      "router_ids": [
+        "Qwen/Qwen2.5-Coder-32B-Instruct:nscale",
+        "Qwen/Qwen2.5-Coder-32B-Instruct:featherless-ai"
+      ],
+      "n_providers": 2,
+      "error": null
+    }
+  ]
+}

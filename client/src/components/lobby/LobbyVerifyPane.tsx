@@ -165,7 +165,8 @@ export default function LobbyVerifyPane() {
         the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
         fixed at build time so no key is looked up at check time. A live fetch of that document is
         shown as a labelled cross-check only. Nothing you paste leaves this device, and no account
-        is asked for — here or ever.
+        is asked for — here or ever. Three states only: VALID · INVALID · UNCHECKABLE. This is
+        GSPC card-v1 — not a VRO, not an Emilia receipt, not an XRPL credential.
       </p>
 
       {/* ── a real published card, so the tool can actually be exercised ── */}

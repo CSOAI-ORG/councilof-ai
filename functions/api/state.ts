@@ -67,6 +67,8 @@ import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
+import publicRoot from "../../public/root.json";
+import hubCensus from "../../public/signed/hub-census-baseline.json";
 
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
@@ -104,7 +106,11 @@ const SRC_CHAIN = "public/signed/chain-facts.json (derived by scripts/derive-cha
 const SRC_CLAIMS = "public/claims-register.json";
 const SRC_RWA = "public/interop/rwa-registry.json";
 const SRC_MCP = "evidence/mcp-registry.json";
+const SRC_CENSUS = "public/signed/hub-census-baseline.json";
+const SRC_PUBLIC_ROOT = "public/root.json";
 const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)";
+
+const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? null;
 
 // ── board: as_of comes from the payload's own measurement stamp ──────────────
 // This artifact carries no ISO timestamp. Its honest date-of-record is the
@@ -352,6 +358,85 @@ export const onRequestGet: PagesFunction = async () => {
         "listing is not a fleet.",
     },
 
+    // ── HUB CENSUS ───────────────────────────────────────────────────────────
+    // A dated listing walk. DISCOVERED, not MEASURED. Quote these fields; do
+    // not say we scored the Hub. Live RunPod / AG-UI probes are NOT here.
+    hub_census: {
+      authority: SRC_CENSUS,
+      live_endpoint: "/api/compute",
+      listings_observed: fact(
+        (hubCensus as { n_unique_ids?: number }).n_unique_ids ?? null,
+        "catalogued",
+        SRC_CENSUS + " → n_unique_ids",
+        censusAsOf,
+        "as_of",
+        "Unique Hub repo ids seen on a metadata walk. DISCOVERED listings. Not models graded. " +
+          "Not MEASURED. Never quote this as a coverage score.",
+      ),
+      n_measured: fact(
+        (hubCensus as { n_measured?: number }).n_measured ?? 0,
+        "catalogued",
+        SRC_CENSUS + " → n_measured",
+        censusAsOf,
+        "as_of",
+        "GSPC cells written by this walk. Zero. Do not stamp MEASURED on the queue.",
+      ),
+      listing_state_all: fact(
+        (hubCensus as { listing_state_all?: string }).listing_state_all ?? "DISCOVERED",
+        "catalogued",
+        SRC_CENSUS + " → listing_state_all",
+        censusAsOf,
+        "as_of",
+        "Every row in this walk is a listing. A listing is not a grade.",
+      ),
+      status_all: fact(
+        (hubCensus as { status_all?: string }).status_all ?? "UNMEASURED",
+        "unmeasured",
+        SRC_CENSUS + " → status_all",
+        censusAsOf,
+        "as_of",
+        "The walk did not grade. UNMEASURED is the finding.",
+      ),
+      complete: fact(
+        (hubCensus as { complete?: boolean }).complete ?? false,
+        "catalogued",
+        SRC_CENSUS + " → complete",
+        censusAsOf,
+        "as_of",
+        "The Hub list_models cursor exhausted. That is a finished walk, not a finished grade.",
+      ),
+      complete_reason: fact(
+        (hubCensus as { complete_reason?: string }).complete_reason ?? null,
+        "catalogued",
+        SRC_CENSUS + " → complete_reason",
+        censusAsOf,
+        "as_of",
+      ),
+      pages_done: fact(
+        (hubCensus as { pages_done?: number }).pages_done ?? null,
+        "catalogued",
+        SRC_CENSUS + " → pages_done",
+        censusAsOf,
+        "as_of",
+      ),
+      sha256_jsonl: fact(
+        (hubCensus as { sha256_jsonl?: string }).sha256_jsonl ?? null,
+        "catalogued",
+        SRC_CENSUS + " → sha256_jsonl",
+        censusAsOf,
+        "as_of",
+        "Digest of the listings file. A census digest is not a signed GSPC cell.",
+      ),
+      weights_downloaded: fact(
+        (hubCensus as { weights_downloaded?: number }).weights_downloaded ?? 0,
+        "catalogued",
+        SRC_CENSUS + " → weights_downloaded",
+        censusAsOf,
+        "as_of",
+        "Must stay 0. A census machine does not download weights.",
+      ),
+    },
+
     // ── PUBLISHED SIGNED CARDS ───────────────────────────────────────────────
     signed_cards: {
       authority: SRC_CARDS,
@@ -561,6 +646,48 @@ export const onRequestGet: PagesFunction = async () => {
       rail_honesty: (rwaRegistry as any).honesty ?? null,
     },
 
+    // ── PUBLIC-ROOT (permissionless Merkle; NOT GSPC) ────────────────────────
+    public_root: {
+      authority: SRC_PUBLIC_ROOT,
+      live_endpoint: "/root.json",
+      xrpl_reader: "/api/xrpl",
+      card_count: fact(
+        (publicRoot as any).card_count ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → card_count",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Leaves on the permissionless public-root. Separate from signed_cards.count and from GSPC.",
+      ),
+      xrpl_asset_count_attempted: fact(
+        (publicRoot as any).xrpl_asset_count_attempted ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → xrpl_asset_count_attempted",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "xrpl.fi instruments attempted this fold. Not a GSPC mill. Not 377 instruments.",
+      ),
+      merkle_root: fact(
+        (publicRoot as any).merkle_root ?? null,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → merkle_root",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Merkle over card_sha256[]. Stranger inclusion is membership in that list.",
+      ),
+      schema: fact(
+        (publicRoot as any).schema ?? null,
+        "declared",
+        SRC_PUBLIC_ROOT + " → schema",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        "Frozen card-v0 schema URL.",
+      ),
+      caveat:
+        "Card sig_ed25519 is null (NO_LAPTOP_SIGN). This is not GSPC. Hugging Face " +
+        "csoai/gspc-boards public-root/root.json is a mirror of these bytes, not a second board.",
+    },
+
     // ── BOUNDED AUTHORITY ────────────────────────────────────────────────────
     not_covered: {
       rule:
@@ -612,11 +739,36 @@ export const onRequestGet: PagesFunction = async () => {
           where: "That site's own artifacts.",
         },
         {
+          subject: "Hugging Face Hub live listing counts",
+          why_not:
+            "HF is a mirror of committed bytes in this repo (public-root/root.json on " +
+            "csoai/gspc-boards). This endpoint does not probe the Hub. A Hub file matching " +
+            "is a three-host checksum, not a second board and not a GSPC grade.",
+          where:
+            "GET /root.json here, then GET " +
+            "https://huggingface.co/datasets/csoai/gspc-boards/resolve/main/public-root/root.json",
+        },
+        {
           subject: "traffic, users, customers, revenue",
           why_not:
             "Not measured and not published. There is no counter behind these anywhere in this repo, " +
             "so any figure would be invented.",
           where: "Nowhere. UNPUBLISHED is the honest answer, and it is the whole answer.",
+        },
+        {
+          subject: "live RunPod pod inventory and grokbot estate GPUs",
+          why_not:
+            "This repo has no RunPod API identity. The 2026-08-22 inventory IPs are stale. A pod " +
+            "being up is not a measurement, and a remembered address is not a fleet.",
+          where:
+            "GET /api/compute probes the AG-UI wire only. Quote that probe, never a remembered IP.",
+        },
+        {
+          subject: "AG-UI / grokbot live session state",
+          why_not:
+            "Live probes are forbidden in /api/state. The wire is configured by AGUI_WIRE_URL on " +
+            "Cloudflare Pages. Copying a serve-time ping here would stamp freshness nobody measured.",
+          where: "GET /api/compute and GET /api/agui/health.",
         },
       ],
     },

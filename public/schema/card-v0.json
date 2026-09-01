@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/card-v0.json",
+  "title": "CSOAI public card v0",
+  "description": "Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root — not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf — never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf → GHA signs → one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "surface",
+    "subject",
+    "as_of",
+    "source_urls",
+    "payload",
+    "sha256",
+    "unmeasured"
+  ],
+  "properties": {
+    "schema": {
+      "const": "https://councilof.ai/schema/card-v0.json"
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "xrpl.asset.state",
+        "xrpl.basket.root",
+        "public.notice",
+        "benji.onchain.supply",
+        "gspc.behavioural",
+        "trace.runtime",
+        "otel.span",
+        "swift.notice",
+        "benji.supply",
+        "rwa.reserve",
+        "dorado.gate",
+        "erc8004.callable",
+        "cobol.legacy",
+        "xdc.document.state",
+        "owasp.control",
+        "genius.reserve"
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_urls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "payload": {
+      "type": "object",
+      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only — never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites — never endorsement / never board MEASURED."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sig_ed25519": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Hex Ed25519 over canonical payload. null = unsigned / gap. Laptop cannot use did:web:csoai.org#board-attestation-1."
+    },
+    "did": {
+      "type": "string",
+      "description": "Intended verify DID. Layer-0 seals of the Merkle root are a different key."
+    },
+    "unmeasured": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Regulatory tree tags, not licences."
+    }
+  }
+}

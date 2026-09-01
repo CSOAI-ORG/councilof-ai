@@ -20,11 +20,15 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
-    background: var(--bg); color: var(--fg);
-    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 16px;
+    background: transparent; color: var(--fg);
+    font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 8px;
   }
-  .wrap { max-width: 560px; margin: 0 auto; border: 1px solid var(--line); border-radius: 14px; padding: 18px 18px 16px; }
+  .wrap {
+    max-width: 400px; margin: 0 auto; border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px 14px 10px; background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(10px);
+  }
   .top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .brand { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
   h1 { font-size: 16px; margin: 6px 0 2px; font-weight: 800; }

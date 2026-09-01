@@ -18,15 +18,20 @@ are reported as two labelled numbers and never reconciled.
 | `get_axis` | One axis row from the live board: `n`, `accuracy`, `interval`, MEASURED/UNMEASURED status, dates. Args: `{ "axis": "jail" }`. |
 | `verify_card` | Verify a signed `gspc.measurement-card` under the published rule — recompute the id from the canonical body, check the Ed25519 signature under the **pinned** key `did:web:csoai.org#card-attestation-1`. A card signed with its own freshly-made key is INVALID, not valid. Args: `{ "card": <object | JSON string | councilof.ai URL> }`. |
 | `list_cards` | What the published index (`/signed/card_index.json`) declares next to what the card store endpoint (`/api/cards`) reports — two labelled numbers, never reconciled. Optional `axis`, `limit`. |
+| `get_root` | GET `https://councilof.ai/root.json`. Three states: VALID / UNREACHABLE / UNCHECKABLE. Separate from GSPC. Never a certificate. |
+| `get_card` | GET one card-v0 leaf by sha256. VALID / INVALID (not a leaf) / UNCHECKABLE (fetch failed). A 404 leaf is INVALID, not UNCHECKABLE. |
+| `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
 
-The same four tools, from the same definitions file
+The same seven tools, from the same definitions file
 (`functions/mcp/gspc-tools.json`), are served over HTTP at
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.
 
 ## Install
 
-Published: `csoai-gspc-mcp` on npm. Four tools only. Fail-closed. Points at `https://councilof.ai/mcp` for the HTTP twin.
+Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) **0.1.0** (registry live); package.json tracks **0.1.1** for the next publish. No checkout required:
+
+Live check 2026-09-01: `npm view csoai-gspc-mcp version` → **0.1.0**. Source README must never again say unpublished.
 
 ```sh
 npx -y csoai-gspc-mcp
@@ -38,6 +43,8 @@ npx -y csoai-gspc-mcp
 claude mcp add gspc -- npx -y csoai-gspc-mcp
 ```
 
+From a checkout of the repo the server is `mcp/gspc-server/index.mjs` (no extra install).
+
 ### Claude Desktop
 
 Add to `claude_desktop_config.json` (macOS:
@@ -48,8 +55,8 @@ Add to `claude_desktop_config.json` (macOS:
 {
   "mcpServers": {
     "gspc": {
-      "command": "node",
-      "args": ["/ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs"]
+      "command": "npx",
+      "args": ["-y", "csoai-gspc-mcp"]
     }
   }
 }
@@ -63,16 +70,24 @@ Add to `.cursor/mcp.json` in your project (or `~/.cursor/mcp.json` globally):
 {
   "mcpServers": {
     "gspc": {
-      "command": "node",
-      "args": ["/ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs"]
+      "command": "npx",
+      "args": ["-y", "csoai-gspc-mcp"]
     }
   }
 }
 ```
 
+### Grok Build
+
+```toml
+[mcp_servers.gspc-npm]
+command = "npx"
+args = ["-y", "csoai-gspc-mcp"]
+```
+
 ### Any other stdio MCP client (Grok Bot, DSH harness, your own agent)
 
-Spawn `node /ABS/PATH/TO/councilof-ai/mcp/gspc-server/index.mjs` and speak
+Spawn `npx -y csoai-gspc-mcp` and speak
 newline-delimited JSON-RPC 2.0 on its stdin/stdout (stderr is logs only):
 
 1. send `{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"you","version":"0"}}}`

@@ -1,0 +1,59 @@
+name: public-root-watcher
+
+# D1.11 — three-host fetch after a successful public-root run.
+# Reader only. Never a second writer. Logs OK or DRIFT.
+
+on:
+  workflow_run:
+    workflows: ["public-root"]
+    types: [completed]
+  workflow_dispatch: {}
+
+concurrency:
+  group: public-root-watcher
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  watch:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: three-host merkle
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+          HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+          HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, urllib.request, sys
+          UA = {"User-Agent": "csoai-public-root-watcher/0"}
+          def get(url):
+              req = urllib.request.Request(url, headers=UA)
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, r.read()
+              except Exception as e:
+                  return getattr(e, "code", 0), str(e).encode()
+          hosts = {
+              "councilof.ai": "https://councilof.ai/root.json",
+              "csoai.org": "https://csoai.org/root.json",
+              "hf": "https://huggingface.co/datasets/csoai/gspc-boards/resolve/main/public-root/root.json",
+          }
+          got = {}
+          for k, u in hosts.items():
+              st, b = get(u)
+              h = hashlib.sha256(b).hexdigest() if st == 200 else None
+              got[k] = {"http": st, "sha256": h, "n": len(b)}
+              print(k, st, h)
+          shas = {v["sha256"] for v in got.values() if v["sha256"]}
+          if len(shas) == 1 and all(v["http"] == 200 for v in got.values()):
+              print("OK three-host match", next(iter(shas)))
+              sys.exit(0)
+          print("DRIFT", json.dumps(got))
+          sys.exit(1)
+          PY

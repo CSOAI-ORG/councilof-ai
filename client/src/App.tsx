@@ -11,6 +11,9 @@ const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
+import OsLauncher from "./pages/OsLauncher";
+import HomeVerify from "./pages/HomeVerify";
+import ToolsPage from "./pages/ToolsPage";
 import { Footer } from "./components/Footer";
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
@@ -77,6 +80,8 @@ const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const Blog = lazy(() => import("./pages/Blog"));
+const AnswersIndex = lazy(() => import("./pages/Answers"));
+const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
 const MarketingHome = lazy(() => import("./pages/MarketingHome"));
 const Standards = lazy(() => import("./pages/Standards"));
@@ -87,6 +92,7 @@ const EunomiaData = lazy(() => import("./pages/EunomiaData"));
 const Eunomia = lazy(() => import("./pages/Eunomia"));
 const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
 const EunomiaCrosswalk = lazy(() => import("./pages/EunomiaCrosswalk"));
+const EunomiaIndices = lazy(() => import("./pages/EunomiaIndices"));
 const Careers = lazy(() => import("./pages/Careers"));
 const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
@@ -178,6 +184,8 @@ const Library = lazy(() => import("./pages/Library"));
 const Honesty = lazy(() => import("./pages/Honesty"));
 const Dispute = lazy(() => import("./pages/Dispute"));
 const FirewallCharter = lazy(() => import("./pages/FirewallCharter"));
+const Doctrine = lazy(() => import("./pages/Doctrine"));
+const TransparencyCop = lazy(() => import("./pages/TransparencyCop"));
 const GspcScoreboard = lazy(() => import("./pages/GspcScoreboard"));
 const MeasurementBoard = lazy(() => import("./pages/MeasurementBoard"));
 const MeasuredModels = lazy(() => import("./pages/MeasuredModels"));
@@ -228,6 +236,7 @@ const WhyCSOAI = lazy(() => import("./pages/WhyCSOAI"));
 const MembershipAgreement = lazy(() => import("./pages/legal/MembershipAgreement"));
 const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCouncilAgreement"));
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
+const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
 const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
@@ -236,7 +245,7 @@ const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
 const ServiceLevelAgreement = lazy(() => import("./pages/legal/ServiceLevelAgreement"));
 const Council = lazy(() => import("./pages/Council"));
 const GlobalRegulationTracker = lazy(() => import("./pages/GlobalRegulationTracker"));
-const FAQ = lazy(() => import("./pages/FAQ"));
+const FaqPage = lazy(() => import("./pages/FaqPage"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
@@ -260,7 +269,6 @@ const Webhooks = lazy(() => import("./pages/Webhooks"));
 const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCenter"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
-const OsLauncher = lazy(() => import("./pages/OsLauncher"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const SovereignTour = lazy(() => import("./pages/SovereignTour"));
 const SovereignAcademy = lazy(() => import("./pages/SovereignAcademy"));
@@ -319,6 +327,7 @@ const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
 const EmbedPage = lazy(() => import("./pages/EmbedPage"));
+const BadgeKit = lazy(() => import("./pages/BadgeKit"));
 const RealWorldMap = lazy(() => import("./pages/RealWorldMap"));
 const PlansPage = lazy(() => import("./pages/PlansPage"));
 const OnboardOS = lazy(() => import("./pages/OnboardOS"));
@@ -353,7 +362,10 @@ function ScrollToTop() {
 
 const ROUTE_TITLES: Record<string, string> = {
   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
-  "/products": "The product family — one signed rail | Council of AI",
+  "/products": "Council OS — four SKUs, one workspace | Council of AI",
+  "/badge": "White-label badge — Council of AI",
+  "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
+  "/licence-manifest": "Licence manifest — request evidence, not a rank | Council of AI",
   "/council-model-card": "Council model card | Council of AI",
   "/council-system-card": "Council system card | Council of AI",
   "/watchdog-signup": "Become an AI Safety Watchdog Analyst | CSOAI",
@@ -364,7 +376,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/academy": "Council Academy — AI governance training | CSOAI",
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
-  "/": "Council of AI — we measure, we sign, we re-attest",
+  "/": "Council OS | Council of AI",
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
@@ -383,11 +395,14 @@ const ROUTE_TITLES: Record<string, string> = {
   "/badges": "Governance badges — wear your measured status | CSOAI",
   "/verify-certificate": "Verify a completion record | CSOAI",
   "/gspc-anchors": "GSPC Anchors | CSOAI",
-  "/xrpl-attest": "Ledger attestation — devnet-proven; mainnet planned | Council of AI",
+  "/xrpl-attest": "XRPL public-root catalogue — unsigned leaves; /api/xrpl reader | Council of AI",
   "/claims-register": "Claims register — every public claim, its evidence, its status | CSOAI",
   "/distribution-integrity": "Distribution integrity — represented is not distributed | Council of AI",
   "/layer0": "Layer 0 | CSOAI",
   "/methodology": "Methodology | CSOAI",
+  "/answers": "Answers — measurement explainers | Council of AI",
+  "/doctrine": "Doctrine — measurement, not certification | Council of AI",
+  "/transparency-cop": "Transparency Code — detection/verify tool, C2PA planned | Council of AI",
   "/ai-act-benchmark": "AI Act Benchmark — measured, not claimed | CSOAI",
   "/provbench": "ProvBench — Does provenance survive the real world? | CSOAI",
   "/refutation-ledger": "Refutation Ledger | CSOAI",
@@ -415,7 +430,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
   "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
-  "/cobolbridge": "CobolBridge — enterprise on-ramp to signed compliance evidence | CSOAI",
+  "/cobolbridge": "CobolBridge — legacy system to signed evidence | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -427,7 +442,10 @@ const ROUTE_TITLES: Record<string, string> = {
   "/globe": "Global Regulation Globe | CSOAI",
   "/tour": "Platform Tour | CSOAI",
   "/demo": "Demo | CSOAI",
-  "/assess": "AI Act Assessment | CSOAI",
+  "/assess": "Get measured — paid measurement; booking not live | Council of AI",
+  "/login": "Sign in | Council of AI",
+  "/dashboard": "Council software | Council of AI",
+  "/os": "Council OS | Council of AI",
   "/enterprise": "Enterprise | CSOAI",
   "/government": "Government | CSOAI",
   "/regulators": "Regulators | CSOAI",
@@ -516,20 +534,6 @@ function App() {
   // on an in-app navigation. Production is the authority; the SPA now agrees by
   // not claiming the path at all, and wouter falls through to the /os route.
   // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
-  if (path === '/sov-os') {
-    return (
-      <ErrorBoundary>
-        <ThemeProvider defaultTheme="dark">
-          <TooltipProvider>
-            <Suspense fallback={<div className="grid h-[100dvh] place-items-center bg-[#04070d]"><SectionLoader /></div>}>
-              <SovOS />
-            </Suspense>
-            <Toaster position="top-right" />
-          </TooltipProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    );
-  }
   if (location === '/demo' || location === '/os-demo') {
     return (
       <ErrorBoundary>
@@ -541,6 +545,9 @@ function App() {
         </ThemeProvider>
       </ErrorBoundary>
     );
+  }
+  if (path === "/ag-ui" || path === "/chat" || path === "/console" || path === "/sov-os") {
+    return <Redirect to="/os" />;
   }
   return (
     <ErrorBoundary>
@@ -558,7 +565,7 @@ function App() {
                 <ArchivedBanner />
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
-                  <Route path="/" component={NewHomeV3} />
+                  <Route path="/" component={HomeVerify} />
                   <Route path="/home-v2" component={NewHomeV2} />
                   <Route path="/home-v3" component={NewHomeV3} />
                   <Route path="/motion-lab" component={MotionLab} />
@@ -655,6 +662,8 @@ function App() {
                   <Route path="/east-west" component={EastWest} />
                   <Route path="/challenge" component={Challenge} />
                   <Route path="/firewall-charter" component={FirewallCharter} />
+                  <Route path="/doctrine" component={Doctrine} />
+                  <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
@@ -683,6 +692,9 @@ function App() {
                   <Route path="/gspc-verify" component={GSPCVerify} />
                   <Route path="/embed" component={EmbedPage} />
                   <Route path="/white-label" component={EmbedPage} />
+                  <Route path="/badge" component={BadgeKit} />
+                  <Route path="/badges">{() => <Redirect to="/badge" />}</Route>
+                  <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
@@ -690,6 +702,8 @@ function App() {
                   <Route path="/chat" component={AgUiBridge} />
                   <Route path="/rankings" component={RankingsBridge} />
                   <Route path="/methodology" component={Methodology} />
+                  <Route path="/answers/:slug" component={AnswerPage} />
+                  <Route path="/answers" component={AnswersIndex} />
                   <Route path="/ai-act-benchmark" component={AiActBenchmark} />
                   <Route path="/provbench" component={ProvBench} />
                   <Route path="/layer0" component={Layer0} />
@@ -720,6 +734,7 @@ function App() {
                   <Route path="/eunomia" component={Eunomia} />
                   <Route path="/eunomia-catalog" component={EunomiaCatalog} />
                   <Route path="/eunomia-crosswalk" component={EunomiaCrosswalk} />
+                  <Route path="/eunomia-indices" component={EunomiaIndices} />
                   <Route path="/careers" component={Careers} />
                   <Route path="/charter" component={Charter} />
                   <Route path="/maternal-covenant" component={MaternalCovenant} />
@@ -958,6 +973,7 @@ function App() {
                   <Route path="/legal/founding-council" component={FoundingCouncilAgreement} />
                   <Route path="/licensing-agreement" component={LicensingAgreement} />
                   <Route path="/legal/licensing" component={LicensingAgreement} />
+                  <Route path="/licence-manifest" component={LicenceManifest} />
                   <Route path="/privacy-policy" component={PrivacyPolicy} />
                   <Route path="/privacy" component={PrivacyPolicy} />
                   <Route path="/legal/privacy" component={PrivacyPolicy} />
@@ -977,11 +993,12 @@ function App() {
                   <Route path="/legal/sla" component={ServiceLevelAgreement} />
                   <Route path="/global-regulations" component={GlobalRegulationTracker} />
                   <Route path="/regulation-tracker" component={GlobalRegulationTracker} />
-                  <Route path="/faq" component={FAQ} />
-                  <Route path="/frequently-asked-questions" component={FAQ} />
+                  <Route path="/faq" component={FaqPage} />
+                  <Route path="/faqs"><Redirect to="/faq" /></Route>
+                  <Route path="/frequently-asked-questions" component={FaqPage} />
                   <Route path="/glossary" component={Glossary} />
                   <Route path="/ai-glossary" component={Glossary} />
-                  <Route path="/readiness-assessment" component={ReadinessAssessment} />
+                  <Route path="/readiness-assessment">{() => <Redirect to="/assess" />}</Route>
                   <Route path="/assessment" component={ReadinessAssessment} />
                   <Route path="/industry-solutions" component={IndustrySolutions} />
                   <Route path="/industries" component={IndustrySolutions} />
@@ -1038,7 +1055,7 @@ function App() {
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />
-                  <Route path="/tools" component={ToolCommons} />
+                  <Route path="/tools" component={ToolsPage} />
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>

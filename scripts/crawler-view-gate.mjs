@@ -50,12 +50,9 @@ const HOST = (() => {
 // A real crawler UA. The point is to be seen as one, not to evade anything.
 const UA = "Mozilla/5.0 (compatible; GPTBot/1.0; +https://openai.com/gptbot)";
 
-// Routes the site itself advertises via llms.txt / sitemap / nav.
-// The REAL routes, taken from scripts/prerender.mjs — not the legacy .html paths the
-// 2026-08-04 audit tested. Both behave identically today (62 chars, one document), but
-// testing the paths the app actually declares is the difference between measuring the
-// product and measuring a stale URL list.
-const ROUTES = ["/", "/pricing", "/certification", "/crosswalks", "/compare",
+// Living documents a crawler should read. Leftover /pricing and /certification
+// are 308 hops (Assess / honesty), not pages — do not demand they self-canonical.
+const ROUTES = ["/", "/honesty", "/insurers", "/crosswalks", "/compare",
                 "/article-50", "/about", "/eu-ai-act"];
 
 const ABSENT_URL = "/this-route-should-not-exist-crawler-gate-probe";

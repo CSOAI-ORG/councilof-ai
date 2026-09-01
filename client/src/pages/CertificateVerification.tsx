@@ -123,12 +123,25 @@ export default function CertificateVerification() {
               <Shield className="h-12 w-12 text-green-600" />
             </div>
           </div>
+          <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm text-amber-900">
+            This is a Council Academy training record. It is not a GSPC measurement card and not a
+            conformity mark.
+          </p>
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Completion Record Verification</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Verify the authenticity of CSOAI Council Academy completion records. Enter a record
             ID or scan a QR code to confirm training completion. A completion record attests
             training completion, not conformity.
           </p>
+        </div>
+
+        <div className="mb-6 rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm text-slate-800">
+          <strong>This is a training record.</strong> Council Academy completion — not a GSPC
+          measurement card. To check a signed measurement, use{" "}
+          <a href="/gspc-verify" className="font-medium text-emerald-800 hover:underline">
+            /gspc-verify
+          </a>
+          .
         </div>
 
         {/* Honest capability notice */}

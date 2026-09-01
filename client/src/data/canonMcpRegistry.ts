@@ -876,7 +876,7 @@ export const CANON_REGISTRY: CanonEntry[] = [
     "id": "csoai-watermark-attest-mcp",
     "name": "CSOAI Watermark Attest",
     "type": "server",
-    "description": "EU AI Act Article 50 watermarking compliance MCP \u2014 C2PA, content provenance, deepfake disclosure, AI-content labelling. Hits the November 2026 cliff.",
+    "description": "EU AI Act Article 50 watermarking / provenance MCP \u2014 C2PA planned (CR-012), not shipped. Art 50 applied 2 Aug 2026 (EUR-Lex); marking grace 2 Dec 2026. Not a 23rd axis.",
     "category": "Compliance & Regulatory",
     "url": "https://github.com/CSOAI-ORG/csoai-watermark-attest-mcp",
     "tags": [],

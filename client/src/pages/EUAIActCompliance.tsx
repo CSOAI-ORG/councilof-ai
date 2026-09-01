@@ -107,7 +107,7 @@ export default function EUAIActCompliance() {
       answer: "CSOAI provides: compliance assessment tools, Council review, measurement credential training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
     },
     {
-      question: "Can we get certified for EU AI Act compliance?",
+      question: "Can we obtain an EU AI Act conformity certificate from Council of AI?",
       answer: "Not by us, and — as of now — not by anyone. EU AI Act conformity certificates are issued by notified bodies, and as of April 2026 zero had been designated; no JTC 21 harmonised standard yet grants presumption of conformity either. Anyone offering you an EU AI Act certificate today cannot deliver what it implies. What we provide is attestation-support: signed, provision-anchored evidence of how your system actually behaves, which is what you will need when a conformity route opens — and what a market-surveillance authority can act on now."
     },
     {

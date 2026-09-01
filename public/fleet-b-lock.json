@@ -1,0 +1,62 @@
+{
+  "schema": "csoai.coverage-leftover/0.1",
+  "kind": "leftover-honesty",
+  "measured": false,
+  "signed": false,
+  "never": [
+    "MEASURED stamp",
+    "stamp MEASURED onto GET /api/gspc",
+    "mill start",
+    "invented scores",
+    "fill 7 empty financial slots",
+    "MEASURED-INDEX-v0.1 restore",
+    "clobber public/interop/fin7-skeletons/",
+    "edit public/signed/card_index.json"
+  ],
+  "fetched": "2026-08-31T15:55:00+01:00",
+  "harmony_order_item": 4,
+  "g1": {
+    "status": "PARTIAL",
+    "fleet_a": "live",
+    "fleet_b_lock": "PRESENT"
+  },
+  "fleet_b_lock": {
+    "path": "public/fleet/FLEET-B.lock.json",
+    "stranger_get": "https://councilof.ai/fleet/FLEET-B.lock.json",
+    "public_file": "PRESENT",
+    "kind": "csoai.fleet-lock/0.1",
+    "n_locked": 40,
+    "n_target": 40,
+    "status_all": "UNMEASURED",
+    "census_n": 3032028,
+    "census_n_measured": 0,
+    "enters_board_means": false,
+    "as_of": "2026-08-31T10:33:37Z",
+    "not": ["mill running", "MEASURED", "signed lock", "board stamp"],
+    "note": "Lock BEFORE mill. mill.sh stays dead. Census UNMEASURED. Do not stamp MEASURED onto GET /api/gspc."
+  },
+  "live_board": {
+    "get": "https://councilof.ai/api/gspc",
+    "totals": "22 axis · 15 measured · 7 unmeasured",
+    "unique_n": 30,
+    "unique_n_state": "UNSIGNED until n≥30 + 4way + keystone"
+  },
+  "empty_slots_unmeasured": [
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-economy-index",
+    "human-labour-index",
+    "humanoid-labour-index"
+  ],
+  "fin7_skeletons": {
+    "path": "public/interop/fin7-skeletons/",
+    "note": "Parallel stream. UNMEASURED skeletons. Ready ≠ measured. This leftover does not write that directory."
+  },
+  "gpu": {
+    "keep": "3090 only",
+    "a100": "DO NOT start"
+  },
+  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n≥30 + 4way + keystone. Unique n stays 30 UNSIGNED."
+}

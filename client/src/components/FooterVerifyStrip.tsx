@@ -1,27 +1,18 @@
 /**
- * FooterVerifyStrip — "Verify us everywhere" badge chips.
+ * FooterVerifyStrip — "Verify us everywhere" with real platform logos.
  *
- * Every entry below was probed live on 2026-08-20 and returned a REAL page
- * (HTTP 200, content-checked — not a soft-404). Text chips only: no external
- * badge images, nothing loads from a third party.
- *
- * Probed and EXCLUDED as dead/unverifiable on 2026-08-20 — do not re-add
- * without a fresh probe:
- *   - smithery.ai/server/proofof-ai and /cobol-bridge (HTTP 200 but soft-404
- *     "Not Found" body, all slug variants)
- *   - glama.ai listing (direct server URL 404; search page is not a listing)
- *   - mcpmarket.com (429 rate-limited, unverifiable)
- *   - openrouter.ai/csoai (soft-404; no public app/profile page exists)
- *   - kaggle.com/organizations/csoai (real 404; the live Kaggle presence is
- *     the nicktempleman profile linked below)
+ * Logos are self-hosted under /images/badges/verify/ (no third-party badge
+ * CDN at render time). Every href was previously probed as a live listing —
+ * see history in this file for exclusions (smithery/glama soft-404s, etc.).
  */
-
-import { ExternalLink } from 'lucide-react';
 
 interface VerifyBadge {
   label: string;
   href: string;
   title: string;
+  logo: string;
+  /** Optional logo box sizing tweak for wide marks (HF). */
+  wide?: boolean;
 }
 
 const BADGES: VerifyBadge[] = [
@@ -29,77 +20,96 @@ const BADGES: VerifyBadge[] = [
     label: 'GitHub · CSOAI-ORG',
     href: 'https://github.com/CSOAI-ORG',
     title: 'CSOAI open-source organisation on GitHub',
+    logo: '/images/badges/verify/github.svg',
   },
   {
     label: 'Hugging Face · csoai',
     href: 'https://huggingface.co/csoai',
     title: 'CSOAI organisation on Hugging Face',
+    logo: '/images/badges/verify/huggingface.svg',
+    wide: true,
   },
   {
     label: 'PyPI · inspect-signed-receipt',
     href: 'https://pypi.org/project/inspect-signed-receipt/',
     title: 'inspect-signed-receipt package on PyPI',
+    logo: '/images/badges/verify/pypi.svg',
   },
   {
     label: 'PyPI · csoai',
     href: 'https://pypi.org/project/csoai/',
     title: 'csoai package on PyPI',
+    logo: '/images/badges/verify/pypi.svg',
   },
   {
     label: 'PyPI · proofof-ai-mcp',
     href: 'https://pypi.org/project/proofof-ai-mcp/',
     title: 'proofof-ai-mcp package on PyPI',
+    logo: '/images/badges/verify/pypi.svg',
   },
   {
     label: 'Kaggle',
     href: 'https://www.kaggle.com/nicktempleman',
     title: 'CSOAI datasets and notebooks on Kaggle',
+    logo: '/images/badges/verify/kaggle.svg',
   },
   {
     label: 'Zenodo DOI 10.5281/zenodo.21991104',
     href: 'https://doi.org/10.5281/zenodo.21991104',
     title: 'Canonical concept DOI on Zenodo',
+    logo: '/images/badges/verify/zenodo.svg',
   },
   {
     label: 'Wikidata · Q141128616',
     href: 'https://www.wikidata.org/wiki/Q141128616',
     title: 'CSOAI entity on Wikidata',
+    logo: '/images/badges/verify/wikidata.svg',
   },
   {
     label: 'Companies House · 16939677',
     href: 'https://find-and-update.company-information.service.gov.uk/company/16939677',
     title: 'CSOAI LTD on the UK Companies House register',
+    logo: '/images/badges/verify/companies-house.svg',
   },
   {
     label: 'did:web trust root',
     href: 'https://csoai.org/.well-known/did.json',
     title: 'did:web:csoai.org DID document — the signing trust root',
+    logo: '/images/badges/verify/did-web.svg',
   },
 ];
 
 export function FooterVerifyStrip() {
   return (
-    <div className="border-t border-gray-200 mt-8 pt-8">
-      <h3 className="text-gray-500 text-xs text-center uppercase tracking-wider mb-4">
+    <div className="border-t border-border pt-6 mb-6">
+      <h3 className="text-muted-foreground text-xs text-center uppercase tracking-wider mb-4">
         Verify us everywhere
       </h3>
-      <ul className="flex flex-wrap items-center justify-center gap-2 list-none p-0 m-0">
+      <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
         {BADGES.map((badge) => (
-          <li key={badge.href}>
+          <li key={badge.href + badge.label}>
             <a
               href={badge.href}
               target="_blank"
               rel="noopener noreferrer"
               title={badge.title}
-              className="inline-flex items-center gap-1.5 rounded-full border border-gray-300 px-3 py-1 text-xs text-gray-700 hover:border-emerald-600 hover:text-emerald-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground shadow-sm transition hover:border-emerald-600/50 hover:bg-emerald-50/60"
             >
+              <img
+                src={badge.logo}
+                alt=""
+                width={badge.wide ? 22 : 18}
+                height={18}
+                className="h-[18px] w-auto shrink-0 object-contain"
+                loading="lazy"
+                decoding="async"
+              />
               <span>{badge.label}</span>
-              <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
             </a>
           </li>
         ))}
       </ul>
-      <p className="text-gray-500 text-xs text-center mt-3">
+      <p className="text-muted-foreground text-xs text-center mt-3">
         Every listing above is a live, independently hosted record — follow any of them to check us.
       </p>
     </div>

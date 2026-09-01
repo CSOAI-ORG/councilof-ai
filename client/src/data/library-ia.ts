@@ -38,20 +38,27 @@ export const PRIMARY_PATHS = new Set<string>([
   "/models", "/tools", "/report",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
-  "/eunomia-catalog", "/eunomia-crosswalk",
+  "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
   // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
-  "/distribution-integrity", "/embed", "/white-label", "/cobolbridge",
+  "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
+  "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
   // Commercial comparison + audience surfaces. These were live routes that no
   // PRIMARY_PATHS entry covered, so every one of them shipped under the
   // "Reference / archive" banner while being the pages a buyer is sent to.
   "/compare", "/competitors", "/vs", "/for",
-  // Council OS
-  "/os", "/workbench", "/start",
+  // Council OS — the product frame and its hops
+  "/os", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
+  // Council OS Games catalog — every game path must be here (enforced by test).
+  // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
+  "/coliseum",
+  // GSPC Quests — frozen six-axis leftover (v1 governance 24-item, not living n=237).
+  // Playable in-browser grader. NOT the living 22-axis board.
+  "/gspc-quests.html",
   // The Council OS RAIL TABS and Home desktop tiles. A permanent destination in the OS
   // rail cannot also be an archive page: the OS presents it as live, and the embed hides
   // the "Reference / archive" strip, so the reader was shown a current surface while the
@@ -75,7 +82,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // registered here so it can never ship flagged "archived".
   "/report",
   // Evidence
-  "/honesty", "/refutation-ledger", "/firewall-charter", "/api-docs", "/status", "/rating-the-raters",
+  "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
   "/system-card", "/xrpl-attest", "/claims-register",
   // Academy (folded into Company in the nav; the pages are still current)
   "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
@@ -157,17 +164,17 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/about-credential": { path: "/academy", label: "Council Academy" },
   "/credential-training": { path: "/academy", label: "Council Academy" },
   "/certification": { path: "/academy", label: "Council Academy" },
-  "/certificate-verification": { path: "/gspc-verify", label: "Verify a card" },
+  "/certificate-verification": { path: "/academy", label: "Council Academy (training record, not GSPC)" },
   "/leaderboard": { path: "/gspc-arena", label: "the arena" },
   "/eu-ai-act-explained": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/roi-calculator": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
-  "/pricing": { path: "/?lobby=measured&task=pricing-overview", label: "How the free rail works" },
+  "/pricing": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
   "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/training-hub": { path: "/academy", label: "Council Academy" },

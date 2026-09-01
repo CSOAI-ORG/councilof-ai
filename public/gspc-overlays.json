@@ -1,0 +1,129 @@
+{
+  "kind": "csoai.gspc-overlay/0.1",
+  "board_schema": "csoai.gspc-axes/0.5",
+  "board_slots": 22,
+  "as_of": "2026-09-01",
+  "note": "Overlays are not panes. Do not bump to csoai.gspc-axes/0.6 until a frozen gold bank exists. Never ship 23 measured of 22. GET /api/gspc remains the board.",
+  "overlays": [
+    {
+      "id": "abstract-reasoning",
+      "status": "UNMEASURED",
+      "instrument": "ARC-AGI-3 public tasks after a gold-action key is frozen",
+      "not_a_pane": true,
+      "do_not_paste_arc_prize_percentages": true,
+      "not_an_agi_declaration": true,
+      "natural_homes_if_later_a_pane": [
+        "cross-reality",
+        "swarm"
+      ],
+      "schema_bump_required_to_become_a_slot": "csoai.gspc-axes/0.6",
+      "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET stays 22·15·7."
+    }
+  ],
+  "labelled_facts": [
+    {
+      "id": "erc-8004-callable-fraction",
+      "status": "UNMEASURED",
+      "kind": "labelled_fact",
+      "not_an_index": true,
+      "not_a_gspc_pane": true,
+      "homes": [
+        "ai-economy-index"
+      ],
+      "note": "531269 ERC-8004 registrations across 24 chains; ~3–15% callable (weekly gap trackable). Honest ai-economy base — cite as a component, never the composite. Do not invent the percentage. Slot ai-economy-index stays UNMEASURED.",
+      "unmeasured": [
+        "signed_and_callable_fraction",
+        "composite_index"
+      ],
+      "cited": {
+        "regs": 531269,
+        "chains": 24,
+        "callable_band_pct": "3-15",
+        "gap": "weekly trackable",
+        "status": "CITED",
+        "writes_board": false
+      }
+    },
+    {
+      "id": "x402-adoption",
+      "status": "UNMEASURED",
+      "kind": "labelled_fact",
+      "not_an_index": true,
+      "not_a_gspc_pane": true,
+      "homes": [
+        "ai-economy-index",
+        "custody-disclosure"
+      ],
+      "note": "LF standard; Visa/MC/Stripe/AWS/Circle; ~75M tx ~$24M mostly sub-dollar. Track adoption; do not claim. writes_board false.",
+      "cited": {
+        "tx_approx": "~75M",
+        "usd_approx": "~$24M",
+        "mostly": "sub-dollar",
+        "status": "CITED",
+        "writes_board": false
+      }
+    },
+    {
+      "id": "humanoid-shipments-counterpoint",
+      "status": "UNMEASURED",
+      "kind": "labelled_fact",
+      "not_an_index": true,
+      "not_a_gspc_pane": true,
+      "homes": [
+        "humanoid-labour-index"
+      ],
+      "note": "Counterpoint ~22k H1 2026 (~+300%); China 86–97%; forecast 50k+. Reference only. UNMEASURED. No registry.",
+      "cited": {
+        "h1_2026_units": "~22k",
+        "yoy": "~+300%",
+        "china_share_pct": "86-97",
+        "forecast": "50k+",
+        "status": "CITED",
+        "writes_board": false
+      }
+    },
+    {
+      "id": "reserve-attestation-public-series",
+      "status": "UNMEASURED",
+      "kind": "labelled_fact",
+      "not_an_index": true,
+      "not_a_gspc_pane": true,
+      "homes": [
+        "reserve-attestation"
+      ],
+      "note": "Tether KPMG buffer $6.8B Dec → $4.1B Jun; Circle monthly. Neither hourly. Cell stays UNMEASURED.",
+      "cited": {
+        "tether_buffer_dec_bn": 6.8,
+        "tether_buffer_jun_bn": 4.1,
+        "circle": "monthly",
+        "neither_hourly": true,
+        "status": "CITED",
+        "writes_board": false
+      }
+    },
+    {
+      "id": "eu-ai-act-art12-annex-iii-deferral",
+      "status": "UNMEASURED",
+      "kind": "labelled_fact",
+      "not_an_index": true,
+      "not_a_gspc_pane": true,
+      "homes": [
+        "regulatory-framework"
+      ],
+      "note": "Art.12 Annex III logging deferred 2 Dec 2027; demand unchanged; hourly root = event log they need. Not a legal opinion. Slot UNMEASURED.",
+      "cited": {
+        "deferral": "2027-12-02",
+        "demand": "unchanged",
+        "hourly_root": "event-log demand",
+        "status": "CITED",
+        "writes_board": false
+      }
+    }
+  ],
+  "metamask": {
+    "connected": false,
+    "is_signer": false,
+    "note": "Treasury is not the signer. BOARD_SIGN_KEY is not in MetaMask."
+  },
+  "notes": "overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc stays 22·15·7. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. Do not bump schema to csoai.gspc-axes/0.6 until a frozen gold bank exists."
+}

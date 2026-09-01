@@ -1,0 +1,181 @@
+{
+  "schema": "csoai.index-components-unsigned/0.1",
+  "axis": "human-labour-index",
+  "kind": "declared-index-components",
+  "status": "UNSIGNED",
+  "signed": false,
+  "keystone": null,
+  "headline_index": null,
+  "formula": "unpublished \u2014 displacement and hours-by-AI-exposure remain STILL GAP",
+  "board_write": "NOT WRITTEN. GET https://councilof.ai/api/gspc human-labour-index stays UNMEASURED n=0.",
+  "do_not_restore": "MEASURED-INDEX-v0.1 (C-2026-0826-05).",
+  "v0_1_leftover": "/interop/human-labour-index.v0.1.json",
+  "certification": "NONE \u2014 never a certification, never a rating, never an endorsement",
+  "published_at": "2026-08-31T15:40:00Z",
+  "published_at_europe_london": "2026-08-31T16:40:00+01:00",
+  "source_have": "index-bank-fill-2026-08-27 (HAVE 2026-08-27; not a board stamp)",
+  "live_reconfirm": {
+    "fetched_at": "2026-08-31T15:30:00Z",
+    "world_bank_SL_TLF_CACT_ZS_EUU": {
+      "2023": 57.7151000918271,
+      "2024": 57.5769911220536,
+      "2025": 57.2757723145448
+    },
+    "eurostat_tps00173_updated": "2026-04-23T23:00:00+0200",
+    "match_have": true
+  },
+  "required_inputs": [
+    "employment pair (participation + unemployment)",
+    "wages",
+    "displacement",
+    "hours-by-AI-exposure"
+  ],
+  "components": [
+    {
+      "id": "labour-force-participation",
+      "bank_status": "HAVE",
+      "stranger_recomputable": true,
+      "series": "World Bank SL.TLF.CACT.ZS",
+      "geo": "EUU",
+      "unit": "percent of population ages 15+ (modeled ILO estimate)",
+      "api": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&date=2023:2025",
+      "api_lastupdated": "2026-07-13",
+      "values": {
+        "2023": 57.7151000918271,
+        "2024": 57.5769911220536,
+        "2025": 57.2757723145448
+      },
+      "honesty": "Ages 15+ modeled ILO, not the Eurostat 20\u201364 activity rate. Do not swap series mid-bank. Not an index."
+    },
+    {
+      "id": "unemployment",
+      "bank_status": "HAVE",
+      "stranger_recomputable": true,
+      "series": "World Bank SL.UEM.TOTL.ZS",
+      "geo": "EUU",
+      "unit": "percent of labour force (modeled ILO estimate)",
+      "api": "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&date=2023:2025",
+      "api_lastupdated": "2026-07-13",
+      "values": {
+        "2023": 6.02643653344515,
+        "2024": 5.92300803762815,
+        "2025": 5.92604538207809
+      },
+      "honesty": "Banked HAVE remains the World Bank series. Eurostat une_rt_a 5.9% 2024 is news rounding, not swapped in."
+    },
+    {
+      "id": "wages",
+      "bank_status": "FETCHED",
+      "stranger_recomputable": true,
+      "honesty": "Whole-economy official wage / labour-cost series (Eurostat SDMX). Not wages-by-AI-exposure. Closes the named wages gap as a whole-economy series only.",
+      "observations": [
+        {
+          "series": "Eurostat tps00173 / lc_lci_lev",
+          "geo": "EU27_2020",
+          "nace": "B-S_X_O",
+          "unit": "EUR per hour",
+          "dataset_updated": "2026-04-23T23:00:00+0200",
+          "api": "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/tps00173?format=JSON&lang=EN&geo=EU27_2020",
+          "news": "https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20260331-2",
+          "values": {
+            "total_labour_cost_D1_D4_MD5": {
+              "2024": 33.5,
+              "2025": 34.9
+            },
+            "wages_and_salaries_D11": {
+              "2024": 25.2,
+              "2025": 26.2
+            },
+            "non_wage_D12_D4_MD5": {
+              "2024": 8.3,
+              "2025": 8.6
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "displacement",
+      "bank_status": "STILL_GAP",
+      "stranger_recomputable": false,
+      "honesty": "No official recurring series named jobs displaced by AI at ILO, OECD, Eurostat, BLS, or IMF. Exposure scores are not displacement."
+    },
+    {
+      "id": "hours-by-AI-exposure",
+      "bank_status": "STILL_GAP",
+      "stranger_recomputable": false,
+      "honesty": "No official published series of hours worked by AI-exposure class. ISCO/NACE hours exist; they are not hours\u00d7exposure."
+    }
+  ],
+  "honesty": {
+    "not_an_index": "No composite is computed. No formula is published.",
+    "not_measured": "Board slot human-labour-index stays UNMEASURED.",
+    "not_certification": "Council of AI measures; it never certifies.",
+    "claude_is_not_the_labour_market": true,
+    "c_2026_0826_05": "Do not restore MEASURED-INDEX-v0.1.",
+    "no_headline_composite": "No composite is computed. STILL GAP inputs stay empty. Do not stamp MEASURED.",
+    "anthropic_is_not_the_labour_market": true
+  },
+  "writes_board": false,
+  "partial": true,
+  "cited_series": [
+    {
+      "id": "anthropic-economic-index",
+      "publisher": "Anthropic",
+      "status": "PINNED",
+      "not_a_composite": true,
+      "not_official_nso": true,
+      "not_a_csoai_score": true,
+      "index_url": "https://www.anthropic.com/economic-index",
+      "index_last_updated": "2026-06-26",
+      "release_id": "release_2026_06_26",
+      "report_title": "Anthropic Economic Index report: Cadences",
+      "report_url": "https://www.anthropic.com/research/economic-index-june-2026-report",
+      "citation_key": "anthropic2026aeiv6",
+      "dataset_id": "Anthropic/EconomicIndex",
+      "dataset_url": "https://huggingface.co/datasets/Anthropic/EconomicIndex",
+      "dataset_files": [
+        "release_2026_06_26/data/aei_claude_ai_2026-06-26.csv",
+        "release_2026_06_26/data/aei_1p_api_2026-06-26.csv"
+      ],
+      "source_ids": [
+        "claude_ai",
+        "1p_api"
+      ],
+      "data_documentation_url": "https://huggingface.co/datasets/Anthropic/EconomicIndex/blob/main/release_2026_06_26/data_documentation.md",
+      "fetched_from": [
+        "https://www.anthropic.com/economic-index",
+        "https://www.anthropic.com/research/economic-index-june-2026-report",
+        "https://huggingface.co/datasets/Anthropic/EconomicIndex"
+      ],
+      "fetched_at": "2026-08-31T15:40:00Z",
+      "honesty": "IDs fetched live 31 Aug 2026 from Anthropic Economic Index pages + the Hugging Face tree those pages cite. Claude usage telemetry and survey. Not SNA. Not a CSOAI headline. No score computed here. Do not invent later release IDs."
+    },
+    {
+      "id": "world-bank-SL.TLF.CACT.ZS",
+      "publisher": "World Bank",
+      "status": "HAVE",
+      "indicator_id": "SL.TLF.CACT.ZS",
+      "geo": "EUU",
+      "sourceid": "2",
+      "as_of": "2026-07-13",
+      "api": "https://api.worldbank.org/v2/country/EUU/indicator/SL.TLF.CACT.ZS?format=json&date=2023:2025",
+      "honesty": "Ages 15+ modeled ILO estimate. Pin the series ID. Not an index."
+    },
+    {
+      "id": "world-bank-SL.UEM.TOTL.ZS",
+      "publisher": "World Bank",
+      "status": "HAVE",
+      "indicator_id": "SL.UEM.TOTL.ZS",
+      "geo": "EUU",
+      "sourceid": "2",
+      "as_of": "2026-07-13",
+      "api": "https://api.worldbank.org/v2/country/EUU/indicator/SL.UEM.TOTL.ZS?format=json&date=2023:2025",
+      "honesty": "Percent of labour force, modeled ILO estimate. Pin the series ID. Not an index."
+    }
+  ],
+  "still_gap": [
+    "displacement",
+    "hours-by-AI-exposure"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.correction-note/0.1",
+  "id": "C-2026-0826-08",
+  "kind": "living-stamp",
+  "date_found": "2026-08-26",
+  "restated": "2026-08-28",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "subject": "measured_on.living_stamp",
+  "verification_state": "UNVERIFIABLE",
+  "verifiable": false,
+  "signed_bytes_exist": true,
+  "treat_as_valid_attestation": false,
+  "not_a_grade": true,
+  "not_a_token": true,
+  "what_was_wrong": "The living board stamp was presented as a checkable attestation. It is not. It shipped signed:true and a sig_input sentence, the same shape as the two attestations on this site that do verify. No published bytes reproduce it.",
+  "how_caught": "Outside audit of the live site, 2026-08-26. Re-run the same day: both published signatures, all five published keys, nine candidate payloads, raw/digest/hex forms, both ensure_ascii settings, every drop-set of up to three fields.",
+  "reproduction_attempts": 58184,
+  "reproduction_verified": 0,
+  "faults": [
+    "Two signatures for one stamp: 53aa09fa… in /signed/board_living.json and bd199fd3… on /api/gspc measured_on.living_stamp (same signer, same updated). At most one can be over the bytes the other is over.",
+    "Signer 8f9a00a2… is in none of the verification methods in https://csoai.org/.well-known/did.json, so a reproducing preimage would still only prove self-consistency.",
+    "board_living.json states its axes were re-snapshotted from the live board six days after the signature date, so the signed bytes are not the published bytes."
+  ],
+  "what_this_does_not_claim": "The stamp is not asserted INVALID. It is asserted UNCHECKABLE, which for a relying party is the same outcome. Bytes are not withdrawn. A quietly deleted stamp would be worse than a public UNVERIFIABLE row.",
+  "close_requires": [
+    "Publish one preimage rule: which fields are signature fields; raw bytes vs digest vs hex; ensure_ascii; number encoding.",
+    "Publish ONE signature over those exact bytes.",
+    "Anchor the signer in did.json, or re-sign with a published key.",
+    "Owner holds the key. This note does not mint one."
+  ],
+  "do_not": [
+    "Fill the 7 UNMEASURED slots to make the stamp look live.",
+    "Treat site_attestation on /api/gspc as substantiating this stamp. It covers integrity of the payload as served.",
+    "Launch a ticker. XRP/ETH/RWA are subjects to measure, not products to float."
+  ],
+  "unmeasured_slots_unchanged": [
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-economy-index",
+    "human-labour-index",
+    "humanoid-labour-index"
+  ],
+  "attestations_that_do_verify": [
+    "150 measurement cards under did:web:csoai.org#card-attestation-1",
+    "site_attestation on /api/gspc under did:web:csoai.org#board-attestation-1"
+  ],
+  "surfaces": {
+    "ledger": "https://councilof.ai/api/corrections",
+    "board": "https://councilof.ai/api/gspc",
+    "stamp_file": "https://councilof.ai/signed/board_living.json",
+    "this_file": "/corrections/living-stamp-unverifiable.json"
+  },
+  "ledger_signature_state": "STALE",
+  "ledger_signature_note": "GET /api/corrections currently serves signature_state STALE: the array was appended after the 2026-08-22 re-issue. A stale signature is a published defect, never a silent edit. Re-issue is owner-gated.",
+  "signature": null,
+  "unsigned_reason": "This note records that a stamp cannot be checked. Signing the note with another key would not make the stamp verifiable. Owner may later sign this file under #card-attestation-1; until then it is unsigned on purpose."
+}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   countLine,
   hasFigure,
@@ -49,19 +49,46 @@ export default function LiveLeaderboard({
   className = "",
   showHumanPanel = true,
   heading = "The live board",
+  defaultExpanded = false,
+  highlight = null,
+  onSelect,
 }: {
   className?: string;
   /** Set false to render the grid alone. */
   showHumanPanel?: boolean;
   heading?: string;
+  /** Home desk starts with every slot visible. */
+  defaultExpanded?: boolean;
+  /** Axis the composer named — we select it and scroll it into view. */
+  highlight?: string | null;
+  onSelect?: (axis: string) => void;
 }) {
   const { data, error, loading } = useGspcBoard();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const [picked, setPicked] = useState<string | null>(null);
 
   const rows = orderedRows(data);
   const shown = expanded ? rows : rows.slice(0, DEFAULT_ROWS);
   const count = countLine(data);
-  const hidden = Math.max(0, rows.length - shown.length);
+  const want = (highlight || picked || "").toLowerCase();
+  const selected = rows.find((r) => r.axis.toLowerCase() === want) ?? null;
+
+  useEffect(() => {
+    if (highlight) {
+      setPicked(highlight);
+      setExpanded(true);
+    }
+  }, [highlight]);
+
+  useEffect(() => {
+    if (!want) return;
+    document.getElementById("board-result")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [want]);
+
+  function choose(axis: string) {
+    setPicked(axis);
+    onSelect?.(axis);
+  }
 
   return (
     <section className={`w-full ${className}`}>
@@ -126,11 +153,18 @@ export default function LiveLeaderboard({
                 </thead>
                 <tbody>
                   {shown.map((a) => (
-                    <Row key={a.axis} a={a} />
+                    <Row
+                      key={a.axis}
+                      a={a}
+                      active={want !== "" && a.axis.toLowerCase() === want}
+                      onChoose={() => choose(a.axis)}
+                    />
                   ))}
                 </tbody>
               </table>
             </div>
+
+            {selected && <AxisResult a={selected} />}
 
             {/* ── the two controls ─────────────────────────────────────── */}
             <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -141,12 +175,9 @@ export default function LiveLeaderboard({
                   aria-expanded={expanded}
                   className="rounded-full border border-primary/30 bg-card px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary/10"
                 >
-                  {expanded ? `Show top ${DEFAULT_ROWS}` : `Show all ${rows.length} slots`}
-                  {!expanded && hidden > 0 && (
-                    <span className="ml-1.5 font-normal text-primary/70">
-                      (+{hidden} more)
-                    </span>
-                  )}
+                  {expanded
+                    ? `Show top ${DEFAULT_ROWS}`
+                    : `Show all ${rows.length} slots`}
                 </button>
               )}
 
@@ -181,7 +212,76 @@ export default function LiveLeaderboard({
   );
 }
 
-function Row({ a }: { a: GspcAxis }) {
+function AxisResult({ a }: { a: GspcAxis }) {
+  const measured = hasFigure(a);
+  const kind = typeof a.kind === "string" ? a.kind : undefined;
+  const chip = chipFor(a.status, a.separation, kind);
+  const width = measured ? Math.max(2, Math.min(100, (a.accuracy as number) * 100)) : 0;
+  const lo = Array.isArray(a.interval) ? a.interval[0] : null;
+  const hi = Array.isArray(a.interval) ? a.interval[1] : null;
+  return (
+    <aside
+      id="board-result"
+      className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5 sm:p-6"
+      aria-live="polite"
+    >
+      <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-800">
+        Selected axis
+      </p>
+      <h3 className="mt-1 text-xl font-black tracking-tight text-slate-900">{a.axis}</h3>
+      {a.bench && <p className="mt-1 text-sm text-slate-600">{a.bench}</p>}
+      {a.task && <p className="mt-3 text-sm leading-relaxed text-slate-700">{a.task}</p>}
+      <div className="mt-4">
+        <div className="flex items-baseline justify-between gap-3 text-sm">
+          <span className="font-semibold text-slate-800">Measured figure</span>
+          <span className="font-mono font-bold text-slate-900">
+            {measured ? `${a.accuracy_is ? "≥" : ""}${pct(a.accuracy as number)}` : "no figure — empty stays empty"}
+          </span>
+        </div>
+        <div className="mt-2 h-3 overflow-hidden rounded-full bg-white ring-1 ring-emerald-200">
+          <div
+            className={measured ? "h-full rounded-full bg-emerald-600" : "h-full"}
+            style={{ width: `${width}%` }}
+          />
+        </div>
+        {lo != null && hi != null && (
+          <p className="mt-1 font-mono text-[11px] text-slate-500">
+            95% CI {pct(lo)} – {pct(hi)}
+          </p>
+        )}
+      </div>
+      <dl className="mt-4 grid gap-2 text-sm sm:grid-cols-2">
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">n</dt>
+          <dd className="font-mono text-slate-900">
+            {typeof a.n === "number" ? a.n : "—"}
+            {a.n_unit ? ` ${a.n_unit}` : ""}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Status</dt>
+          <dd className="mt-1"><StatusChip kind={chip} /></dd>
+        </div>
+        {a.leader && (
+          <div className="sm:col-span-2">
+            <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Leader</dt>
+            <dd className="text-slate-800">{a.leader}</dd>
+          </div>
+        )}
+      </dl>
+      <p className="mt-4 text-xs text-slate-600">
+        Ordering is layout, not a purchased rank. A TIE is never a win. Ask below about this row, or open the axis.
+      </p>
+      <p className="mt-2 text-sm">
+        <a href={`/gspc/${encodeURIComponent(a.axis)}`} className="font-semibold text-emerald-800 hover:underline">
+          Open {a.axis} →
+        </a>
+      </p>
+    </aside>
+  );
+}
+
+function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: () => void }) {
   const measured = hasFigure(a);
   // `kind` distinguishes an axis with no run (UNMEASURED) from one that IS
   // measured but by deterministic facts, which have no leader and so no
@@ -192,7 +292,13 @@ function Row({ a }: { a: GspcAxis }) {
   const facts = kind === "deterministic-facts";
 
   return (
-    <tr className="border-b border-border align-middle last:border-0 hover:bg-primary/[0.05]">
+    <tr
+      id={`axis-${a.axis}`}
+      className={`cursor-pointer border-b border-border align-middle last:border-0 ${
+        active ? "bg-emerald-50" : "hover:bg-primary/[0.05]"
+      }`}
+      onClick={onChoose}
+    >
       <td className="p-4">
         <div className="font-bold tracking-tight text-foreground">{a.axis}</div>
         {a.bench && <div className="mt-0.5 text-xs text-muted-foreground">{a.bench}</div>}

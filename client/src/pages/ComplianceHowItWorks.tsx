@@ -166,12 +166,12 @@ export default function ComplianceHowItWorks() {
       answer: "CSOAI monitors global AI regulations and publishes updates monthly. You'll receive notifications when frameworks change, and we update our assessment tools accordingly."
     },
     {
-      question: "Can we get certified for compliance?",
+      question: "Can we obtain a conformity certificate from Council of AI?",
       answer: "Not in the regulatory sense, and we will not pretend otherwise. A conformity certificate requires an accreditation chain — a national accreditation organisation (such as UKAS), then a certification body under ISO/IEC 42006 — and CSOAI holds no such accreditation. What you receive is an attestation record: signed, deterministic, provision-anchored evidence of measured behaviour. It demonstrates what your system actually did. It does not, and cannot, declare conformity."
     },
     {
       question: "What's the cost of compliance?",
-      answer: "Costs vary based on your system complexity and current compliance level. Basic assessment is free. Professional compliance reviews start at $500. Enterprise contracts are customized."
+      answer: "Get measured is free and needs no account. A grade is never sold. Paid arms — Run/re-attest, Ledger, and Data — are quoted privately. There are no public prices."
     },
     {
       question: "How long does compliance implementation take?",

@@ -738,8 +738,8 @@ export default function About() {
           <Card className="p-12 bg-gradient-to-br from-slate-900 to-emerald-900 text-white text-center">
             <h2 className="text-4xl font-bold mb-6">Start with the free rail</h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Training is free and the whole verification rail is free forever. We do not sell a
-              grade, we do not certify anyone, and we cannot determine anyone's compliance — that
+              Training is free and the whole verification rail is free forever. A grade is never
+              sold, we do not certify anyone, and we cannot determine anyone's compliance — that
               stays with the competent authorities. What we can do is measure, sign, and publish
               what we could not measure.
             </p>
@@ -749,7 +749,7 @@ export default function About() {
                   Start Free Training
                 </Button>
               </Link>
-              <Link href="/?lobby=measured&task=enterprise-start">
+              <Link href="/os?lobby=assess&task=enterprise-start">
                 <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                   Enterprise lobby
                 </Button>

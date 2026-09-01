@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSOAI-GSPC — Council of AI</title>
+  <meta name="description" content="CSOAI-GSPC public board. Search a model. Open an axis. Read the published record. Measurement, not certification.">
+  <link rel="icon" href="https://councilof.ai/csoai-icon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="https://councilof.ai" rel="noopener">
+      <svg viewBox="0 0 100 100" class="mark" role="img" aria-label="Council of AI">
+        <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
+        <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
+        <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
+        <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
+        <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
+        <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
+      </svg>
+      <span>
+        <b>Council of AI</b>
+        <i>CSOAI-GSPC</i>
+      </span>
+    </a>
+    <nav class="top-nav jump" aria-label="CSOAI-GSPC">
+      <a href="#ontology">Axes</a>
+      <a href="#boards">Leaderboards</a>
+      <a href="#models">Models</a>
+      <a href="#tape-table">Board</a>
+      <a href="https://councilof.ai/gspc-verify">Verify</a>
+    </nav>
+    <label class="search">
+      <span class="sr">Search models or axes</span>
+      <input id="q" type="search" placeholder="Search a model or axis" autocomplete="off">
+    </label>
+  </header>
+
+  <section class="hero">
+    <p class="kicker">Public · measurement, never certification</p>
+    <h1>CSOAI-GSPC</h1>
+    <p class="lede" id="ruling">
+      CSOAI-GSPC measures AI health. Fifteen axes carry a signed measurement.
+      3,032,028 Hub listings were observed; none graded. 2,410 names remain on the planted public list.
+      A listing is not a grade. A rank is never sold.
+    </p>
+    <div class="tape" id="tape" aria-live="polite"></div>
+  </section>
+
+  <section id="ontology" class="block" aria-labelledby="onto-h">
+    <div class="head">
+      <div>
+        <p class="kicker">Axes</p>
+        <h2 id="onto-h">Every published axis</h2>
+      </div>
+      <div class="pillars" id="pillars"></div>
+    </div>
+    <p class="fine" id="legend">Green is measured. Slate is empty. Click a family, then an axis.</p>
+    <div id="graph" class="atlas" role="list"></div>
+  </section>
+
+  <section id="boards" class="block" aria-labelledby="lb-h">
+    <div class="head">
+      <div>
+        <p class="kicker">Axis leaderboard</p>
+        <h2 id="lb-h">Top published names — up to nine</h2>
+      </div>
+      <label class="pick">
+        <span class="sr">Axis</span>
+        <select id="lb-axis"></select>
+      </label>
+    </div>
+    <p class="fine" id="lb-note"></p>
+    <ol class="podium" id="podium"></ol>
+    <div class="scroll">
+      <table class="sheet" id="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Model</th>
+            <th>Figure</th>
+            <th>n</th>
+            <th>Interval</th>
+            <th>Lead</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="models" class="block" aria-labelledby="mod-h">
+    <div class="head">
+      <p class="kicker">Model directory</p>
+      <h2 id="mod-h">Names the signed board has already published</h2>
+    </div>
+    <p class="fine" id="mod-note"></p>
+    <div class="scroll">
+      <table class="sheet" id="mod-table">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Axes</th>
+            <th>Best published figure</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="tape-table" class="block" aria-labelledby="tape-h">
+    <div class="head">
+      <p class="kicker">Full board</p>
+      <h2 id="tape-h">Figure, interval, separation, leader</h2>
+    </div>
+    <p class="fine" id="filter-note"></p>
+    <div class="scroll">
+      <table class="sheet" id="board-table">
+        <thead>
+          <tr>
+            <th>Axis</th>
+            <th>Family</th>
+            <th>Status</th>
+            <th>Figure</th>
+            <th>n</th>
+            <th>Interval</th>
+            <th>Separation</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody id="board-body">
+          <tr><td colspan="8">Loading the live board…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="desk" class="block focus" hidden aria-labelledby="desk-h">
+    <div class="head">
+      <p class="kicker" id="desk-kicker">Selected record</p>
+      <h2 id="desk-h">—</h2>
+      <p class="fine" id="desk-sub"></p>
+    </div>
+    <div class="quote" id="quote"></div>
+    <h3>Top published names</h3>
+    <div class="scroll">
+      <table class="sheet" id="desk-lb"></table>
+    </div>
+    <div class="sheets three">
+      <div>
+        <h3>Finding</h3>
+        <table class="sheet" id="find-table"></table>
+      </div>
+      <div>
+        <h3>Signed records</h3>
+        <table class="sheet" id="rec-table"></table>
+      </div>
+      <div>
+        <h3>What this axis does not claim</h3>
+        <table class="sheet" id="honest-table"></table>
+      </div>
+    </div>
+    <p class="note" id="desk-note"></p>
+    <div id="fleet" class="fleet" hidden></div>
+    <p class="links" id="desk-links"></p>
+  </section>
+
+  <section id="read" class="block" aria-labelledby="read-h">
+    <div class="head">
+      <p class="kicker">How to read</p>
+      <h2 id="read-h">A listing is not a grade. A TIE is not a win.</h2>
+    </div>
+    <div class="grid2" id="read-box"></div>
+  </section>
+
+  <section id="empty" class="block" aria-labelledby="empty-h">
+    <div class="head">
+      <p class="kicker">Published empty</p>
+      <h2 id="empty-h">Seven slots exist so the gap is visible</h2>
+    </div>
+    <div class="grid2" id="empty-box"></div>
+  </section>
+
+  <section id="health" class="block" aria-labelledby="health-h">
+    <div class="head">
+      <p class="kicker">What you can check</p>
+      <h2 id="health-h">Health is every correct fact you can reach. It is never one number.</h2>
+    </div>
+    <table class="sheet" id="health-table"></table>
+  </section>
+
+  <section id="census" class="block" aria-labelledby="census-h">
+    <div class="head">
+      <p class="kicker">Coverage</p>
+      <h2 id="census-h">What has been listed. What has been measured.</h2>
+    </div>
+    <p class="lede" id="census-ruling">Reading the public list…</p>
+    <div class="tape" id="census-counts"></div>
+    <div class="grid2" id="census-sites"></div>
+    <pre class="fine block" id="queue">Reading the public list…</pre>
+    <p class="fine" id="catalog"></p>
+  </section>
+
+  <section id="doors" class="block" aria-labelledby="doors-h">
+    <div class="head">
+      <p class="kicker">Same record, many doors</p>
+      <h2 id="doors-h">The finding does not change when the host does</h2>
+    </div>
+    <div class="grid2" id="doors-box"></div>
+  </section>
+
+  <section id="honesty" class="block" aria-labelledby="honest-h">
+    <div class="head">
+      <p class="kicker">Limitations</p>
+      <h2 id="honest-h">The board publishes what it cannot claim</h2>
+    </div>
+    <ol class="limits" id="limits"></ol>
+    <table class="sheet" id="corr-table"></table>
+    <p class="fine" id="lane-note"></p>
+  </section>
+
+  <section id="lookup" class="block" aria-labelledby="look-h">
+    <div class="head">
+      <p class="kicker">Look up a listing</p>
+      <h2 id="look-h">A Hub name is a listing until this board grades it</h2>
+    </div>
+    <div class="panel-in">
+      <textarea id="watch-draft" rows="3" placeholder="owner/name — one per line"></textarea>
+      <button type="button" id="watch-add">Add</button>
+      <button type="button" class="ghost" id="watch-refresh">Read files list</button>
+      <p class="fine" id="watch-note"></p>
+      <table class="sheet" id="watch-table"><thead><tr><th>id</th><th>state</th><th>files</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <footer>
+    <a class="brand foot" href="https://councilof.ai" rel="noopener">
+      <svg viewBox="0 0 100 100" class="mark sm" aria-hidden="true">
+        <path d="M50 4 L91 19 V49 C91 74 50 96 50 96 C50 96 9 74 9 49 V19 Z" fill="#04624a"/>
+        <path d="M50 12 L84 24 V49 C84 69 50 88 50 88 C50 88 16 69 16 49 V24 Z" fill="#ffffff"/>
+        <rect x="26" y="66" width="48" height="6" fill="#04624a"/>
+        <rect x="30" y="61" width="40" height="4" fill="#04624a"/>
+        <rect x="33" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="44" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="55" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="66" y="38" width="6" height="22" fill="#04624a"/>
+        <rect x="28" y="33" width="44" height="5" fill="#04624a"/>
+        <path d="M50 20 L75 32 H25 Z" fill="#04624a"/>
+      </svg>
+      Council of AI
+    </a>
+    <p>CSOAI Ltd UK 16939677 · measurement, never certification. Verify is free.
+      <a href="https://councilof.ai/gspc-verify">councilof.ai/gspc-verify</a>
+      · DOI 10.5281/zenodo.21991104</p>
+  </footer>
+  <script src="./table.js"></script>
+</body>
+</html>

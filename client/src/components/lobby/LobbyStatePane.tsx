@@ -48,6 +48,7 @@ const KIND_MEANS: Record<string, string> = {
 const TITLES: Record<string, string> = {
   board: "The GSPC board",
   mcp_fleet: "MCP fleet",
+  hub_census: "Hub census (DISCOVERED, not graded)",
   signed_cards: "Signed cards",
   claims_register: "Claims register",
   rwa_instruments: "RWA instruments",

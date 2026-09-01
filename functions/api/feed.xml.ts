@@ -14,10 +14,10 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
-    title: "GSPC board: 14 measured of 14 quotable — jail separation MEASURED (TIE)",
+    title: "GSPC board: 22 axis · 15 measured — living lock",
     link: "https://councilof.ai/api/gspc",
-    date: "Tue, 25 Aug 2026 17:10:00 GMT",
-    desc: "Live public_count is now 14 measured of 14 quotable. Jail status MEASURED; separation TIE (n=71); untested_separations=0. Cite live totals.public_count — do not invent 22 axes. Historical RSS items below keep their sitting-day wording.",
+    date: "Thu, 28 Aug 2026 04:55:00 GMT",
+    desc: "Live board is 22 axis · 15 measured · 7 empty. Cite totals.public_count from GET /api/gspc. Historical RSS items below keep their sitting-day wording; counts typed there are superseded by the live board.",
   },
   {
     title: "The carder is live: deterministic fact-cards, and it caught us first",

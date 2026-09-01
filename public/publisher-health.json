@@ -1,0 +1,329 @@
+{
+  "kind": "csoai.publisher-health/v0",
+  "as_of": "2026-09-01T01:48:00Z",
+  "writer": "scripts/publish_public_root.py",
+  "dry_run": false,
+  "key": "present",
+  "halt": {
+    "split": false,
+    "unsigned_new_leaves": 0,
+    "missing_key": false
+  },
+  "xrpl_basket_merkle": "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9",
+  "represented_tvl": {
+    "usd": 1075447304.2899997,
+    "source": "https://xrpl.fi/api/metrics",
+    "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
+  },
+  "watchlist": [
+    {
+      "symbol": "AAULF",
+      "issuer": "Archax",
+      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "toml": 403,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
+    },
+    {
+      "symbol": "TBILL",
+      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "toml": 404,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
+    }
+  ],
+  "cites": {
+    "hub.census.digest": {
+      "kind": "cite",
+      "surface_not_on_card_v0": "hub.census.digest",
+      "status": "UNMEASURED",
+      "listing_state": "DISCOVERED",
+      "n_measured": 0,
+      "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. Not MEASURED. listings.jsonl is never committed.",
+      "as_of": "2026-08-31T10:08:00Z",
+      "n": 2169,
+      "n_unique_ids": 2169,
+      "sha256_jsonl": "d2d32c4a3a11148b6cd7d5461e9971a822382f1847dbc3718d8323ccccd1b1bb",
+      "complete": true,
+      "mode": "delta",
+      "source": "public/signed/hub-census-delta.json"
+    },
+    "gspc.board.cite": {
+      "kind": "cite",
+      "surface_not_on_card_v0": "gspc.board.cite",
+      "source": "https://councilof.ai/api/gspc",
+      "http": 200,
+      "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. This writer does not write /api/gspc.",
+      "totals_axes": 22,
+      "totals_measured_axes": 15,
+      "totals_unmeasured_axes": 7,
+      "public_count": "22 axis · 15 measured",
+      "measured_on": {
+        "model": "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet.",
+        "endpoint": "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
+        "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
+        "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+        "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
+        "living_stamp": {
+          "schema": "csoai.gspc-living/0.2",
+          "gold_run": "2026-08-18T03:22:16Z",
+          "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+          "signed": true,
+          "signer": "did:web:csoai.org#board-attestation-1",
+          "signer_anchored": true,
+          "alg": "Ed25519",
+          "signature": "3d292c1461bb6945054ac6e660201f45eecbe0b12a0201dd92525ef8599e4a3d288f6b9c8f63f0c65ab970fa7ed583eea4d98c4ef7146c6a5556ba7327b26b04",
+          "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+          "preimage": {
+            "schema": "csoai.gspc-living/0.2",
+            "gold_run": "2026-08-18T03:22:16Z",
+            "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+            "axes": [
+              {
+                "axis": "governance",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 237,
+                "accuracy": 0.7,
+                "separation": "SEPARATED"
+              },
+              {
+                "axis": "safety",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 36,
+                "accuracy": 0.944,
+                "separation": "TIE"
+              },
+              {
+                "axis": "provenance",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 32,
+                "accuracy": 0.781,
+                "separation": "TIE"
+              },
+              {
+                "axis": "continuity",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 33,
+                "accuracy": 0.606,
+                "separation": "TIE"
+              },
+              {
+                "axis": "conformance",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 35,
+                "accuracy": 0.743,
+                "separation": "TIE"
+              },
+              {
+                "axis": "openness",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 32,
+                "accuracy": 0.875,
+                "separation": "TIE"
+              },
+              {
+                "axis": "machinery-conformity",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 33,
+                "accuracy": 0.545,
+                "separation": "TIE"
+              },
+              {
+                "axis": "care",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 199,
+                "accuracy": 0.535,
+                "separation": "SEPARATED"
+              },
+              {
+                "axis": "cross-reality",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 32,
+                "accuracy": 0.812,
+                "separation": "TIE"
+              },
+              {
+                "axis": "detector-interop",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 33,
+                "accuracy": 0.879,
+                "separation": "TIE"
+              },
+              {
+                "axis": "art5-safeguard",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 36,
+                "accuracy": 0.972,
+                "separation": "TIE"
+              },
+              {
+                "axis": "swarm",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 37,
+                "accuracy": 0.384,
+                "separation": "SEPARATED"
+              },
+              {
+                "axis": "affect",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 41,
+                "accuracy": 0.878,
+                "separation": "SEPARATED"
+              },
+              {
+                "axis": "jail",
+                "family": "gspc",
+                "kind": "model-comparison",
+                "status": "MEASURED",
+                "n": 71,
+                "accuracy": 0.5915,
+                "separation": "TIE"
+              },
+              {
+                "axis": "provenance-controls",
+                "family": "financial",
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 6,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "reserve-attestation",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "regulatory-framework",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "distribution-integrity",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "custody-disclosure",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "ai-economy-index",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "human-labour-index",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              },
+              {
+                "axis": "humanoid-labour-index",
+                "family": "financial",
+                "kind": "declared-slot",
+                "status": "UNMEASURED",
+                "n": null,
+                "accuracy": null,
+                "separation": null
+              }
+            ]
+          },
+          "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
+          "sig_input_ensure_ascii": false,
+          "sig_input_is_digest": false,
+          "verification_state": "SIGNED",
+          "verifiable": true,
+          "verify": "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
+          "superseded": {
+            "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+            "updated": "2026-08-18T03:22:16Z",
+            "signed": true,
+            "verification_state": "UNVERIFIABLE",
+            "verifiable": false,
+            "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+            "signer_anchored": false,
+            "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+            "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+            "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
+            "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
+            "reproduction_attempts": 58184,
+            "reproduction_verified": 0,
+            "tracked_as": "/api/corrections C-2026-0826-08"
+          },
+          "tracked_as": "/api/corrections C-2026-0826-08"
+        }
+      }
+    }
+  },
+  "swift": {
+    "swift_partnered": false,
+    "seventeen_banks_on_our_feed": false,
+    "cohort_are_clients": false,
+    "gpi_firehose": false,
+    "n_cards": 17,
+    "settlement_still_off_chain": true,
+    "press_url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+    "note": "17 UNMEASURED coverage cards, one TARGET each, hashing the 9 Jul 2026 official press URL. Not clients. Settlement still off-chain."
+  },
+  "benji": {
+    "graphql": "DARK",
+    "xrpl_toml": "ABSENT",
+    "stellar_toml_http": 200,
+    "not_issuer_7": true,
+    "franklin_graphql": false
+  },
+  "card_count": 43,
+  "xrpl_asset_state_count": 16,
+  "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
+}
