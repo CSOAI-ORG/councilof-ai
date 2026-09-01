@@ -57,7 +57,9 @@ one_pass() {
   else
     git checkout --quiet -B "$BRANCH" origin/master 2>>"$LOG"
   fi
-  git merge --no-edit --quiet origin/master 2>>"$LOG"; rc=$?
+  # Feed branch owns public/interop/auto-eat. -X ours keeps those on conflict
+  # after a fold onto master; other master files still merge in.
+  git merge --no-edit -X ours origin/master 2>>"$LOG"; rc=$?
   if [ "$rc" -ne 0 ]; then
     git merge --abort 2>/dev/null
     log "FAIL merge origin/master rc=$rc — aborted, refuse to drift"; return 1
