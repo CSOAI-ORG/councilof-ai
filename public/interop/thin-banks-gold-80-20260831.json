@@ -8,10 +8,12 @@
   "published_at_europe_london": "2026-08-31T16:40:27+01:00",
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
-    "public_count": "22 axis · 15 measured",
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "seven_empty_stay_empty": [
+    "public_count": "22 axis · 22 measured",
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "this_leftover_does_not_write_api_gspc": true,
+    "note": "After #1077 LIVE GET is 22·22·0. Cite totals.public_count.",
+    "seven_empty_historical": [
       "reserve-attestation",
       "regulatory-framework",
       "distribution-integrity",
@@ -20,7 +22,7 @@
       "human-labour-index",
       "humanoid-labour-index"
     ],
-    "this_leftover_does_not_write_api_gspc": true
+    "seven_empty_note": "Historical pre-#1077 empty list. LIVE unmeasured_axes=0 after #1077."
   },
   "unique_n": {
     "n": 30,
@@ -36,9 +38,12 @@
     "write board_living.json",
     "restart mill.sh",
     "certify",
-    "wrangler"
+    "wrangler",
+    "invent scores",
+    "zero-fill",
+    "restore MEASURED-INDEX-v0.1"
   ],
-  "note": "Leftover gold files only. Frozen expected labels copied from already-published HF items.jsonl. Does not restamp the living board. 7 empty stay empty. Not a certificate.",
+  "note": "Leftover gold files only. Frozen expected labels copied from already-published HF items.jsonl. Does not restamp the living board. LIVE board is 22·22·0 after #1077; this gold leftover does not restamp. Not a certificate.",
   "axes": {
     "safety": {
       "board_id": "agi",
