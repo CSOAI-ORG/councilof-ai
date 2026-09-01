@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T11:41:31Z",
+ "as_of": "2026-09-01T13:08:24Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,23 +13,21 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 4,
-   "live": 4,
+   "n_probed": 2,
+   "live": 2,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "raZVfCwti8Yn4GPe1URscmqYgog67aLZQZ (exists)",
-    "r9AYsTf9rGTKGWp81RSPQG146yNtZ8fbWE (exists)",
-    "rBY95cBdsEKmKyo9CpZ53YWTMx2vdQzXZS (exists)",
-    "rNbR4Gw9d9JRLdkb4rAhkWDcJyKRk39FoA (exists)"
+    "r9Ms1uHdCdjsb6dRj2S1nuFFgvpmE9cXUy (exists)",
+    "rDLKK2DDMMtWWpfq96e9cvVaXfy3gWi21 (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:08:24Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -37,10 +35,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "bd3545bb5eedd08d1006764e79bdc0fee386e1b477af6e510835ab9c9bcd632e",
- "sig_ed25519": "917cbe171411c35ff93bdfb0a4e6491a0383d8f9a8243c75810f2723c31bad5774b2dbfdf7ac9b369400c8d4676079cbf7f1c6d0e8daf9ddcebdab7eb0dc0a01",
+ "sha256": "9f9b6ef8c585b8dfe28558a607f1860d3ccf133a7e0793726ed4468ecf417e91",
+ "sig_ed25519": "658d2f6bec42dec276096ce743f58e211b8e13cba3e688fc0076ad2af113225a07734e577841cc4bc5133e069e28dc1384cc0976bf31a2671d3031ead8da9109",
  "surface": "autoeat.xrpl.accounts",
- "subject": "auto-eat xrpl-account: 4 LIVE of 4 probed (read-only, ungraded)",
+ "subject": "auto-eat xrpl-account: 2 LIVE of 2 probed (read-only, ungraded)",
  "source_urls": [
   "https://s1.ripple.com:51234"
  ],

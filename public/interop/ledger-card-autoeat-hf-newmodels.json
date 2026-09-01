@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T11:41:31Z",
+ "as_of": "2026-09-01T13:08:24Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,20 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
+   "n_probed": 6,
+   "live": 6,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "SergeyKurchev/cosmos3-domain30-mix-lora (200)"
+    "mrthor102/gun04 (200)",
+    "mrthor102/gun05 (200)",
+    "clear-blue-sky/cto10 (200)",
+    "mrthor102/gun02 (200)",
+    "Adeyemo260/Qwen3.8-Max (200)",
+    "mrthor102/gun01 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:08:24Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -35,10 +40,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "95fb15542d412bbfdc382397b6bd397c7315dbd1969ee349ebb696a2ed41eeac",
- "sig_ed25519": "8b1ecfe2d9c72e6446d446cdf4ab07d5e8bebb237a681707a6383d0fca7a09469f7a38d163cee4e81824166a01ea79a7c68814777a9bcf46a09b75f1d0d2900b",
+ "sha256": "4b3b9c542e27c21c34d804d53b69d5bef4cd8b6b7991db04cd605c20a4662fa1",
+ "sig_ed25519": "5d4e12c19152005de30272b9c4f1d8d9ca2a5ff51f19501a4eb60403e4677e3312b01af6232dc30817d9ad7b840713da09401b31be9fa08686801c9e8464490d",
  "surface": "autoeat.hf.newmodels",
- "subject": "auto-eat hf-model: 1 LIVE of 1 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-model: 6 LIVE of 6 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/models"
  ],

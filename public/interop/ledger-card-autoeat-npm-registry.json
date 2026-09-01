@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T11:41:31Z",
+ "as_of": "2026-09-01T13:04:55Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 6,
-   "live": 6,
+   "n_probed": 7,
+   "live": 7,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "figma-local-context (200)",
-    "warp-agent-mcp (200)",
-    "mnemodb (200)",
-    "@milcho0604/velog-mcp (200)",
-    "@scramble-cloud/lurus-code-cli (200)",
-    "@microsoft/m365agentstoolkit-mcp (200)"
+    "grok-taskflow (200)",
+    "grok-search-rs-pc (200)",
+    "zubeid-youtube-mcp-server (200)",
+    "@hivelore/cli (200)",
+    "@facilio/cli (200)",
+    "@slatesvideo/cli (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:04:55Z",
   "unmeasured": [
    "install_integrity",
    "malware",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "ca9fa2893df9f57cc171cac45192b40b053abbacd1471fd6371f104c286ca2ad",
- "sig_ed25519": "24521117ce08e6a09b9195e782937f3234d4fe79a6f22e01b6345397115ef22838bae17164d0116785baf6dd2cc0ef0693e08e80e043ac68b1e64577c732eb0e",
+ "sha256": "0f91240fb5021fabc79a89353bf4ddc2b59407a89441b752a6156c06cebae1e0",
+ "sig_ed25519": "e251cabc54baa20bf69c5b26a70598d96e76384939a404d151d0736102a2030275d7ba1f170c9345be2f956ccff63bbb1604c9dc2bd11d9c2a11d837e005c100",
  "surface": "autoeat.npm.registry",
- "subject": "auto-eat npm-registry: 6 LIVE of 6 probed (read-only, ungraded)",
+ "subject": "auto-eat npm-registry: 7 LIVE of 7 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.npmjs.org/-/v1/search"
  ],
