@@ -9,7 +9,7 @@ Councilof-ai is already the master monorepo shape (`harness/`, `evidence/`, `mcp
 | `eval-ci` | GitHub Action skeleton | Does not mill 3,032,028 Hub listings. Runs only when a frozen bank path changes. |
 | `repro` | one-command re-run | Prints the pack a stranger needs. Does not invent a seed that was not recorded. |
 | `erc8004` | Validation Registry writer stub | `writes_board=false`. No trust score. Census ≠ grade. |
-| `cobol-bridge` | pointer | Live door is `cobolbridge.ai` **522**. Repo `CSOAI-ORG/cobol-bridge-mcp` is the donor. |
+| `cobol-bridge` | pointer | **In build.** Apex `cobolbridge.ai` **522**. Pages origin `cobolbridge-site.pages.dev` is 200, custom domain not attached. Donor `CSOAI-ORG/cobol-bridge-mcp`. |
 | `watermark` | pointer | Donor `CSOAI-ORG/csoai-watermark-attest-mcp`. HMAC-as-C2PA is forbidden. |
 
 Do not fold `csoai-dashboard` or `csoai-static-deploy2` by `git add -A`. CONSOLIDATION.md remains the surface law: one master website.

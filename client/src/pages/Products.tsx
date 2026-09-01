@@ -102,8 +102,8 @@ const MODULES = [
   {
     name: "Legacy on-ramp",
     href: "/cobolbridge",
-    tag: "Ledger module",
-    what: "Modernization lineage carried into signed evidence. Pathway status: UNMEASURED, and it says so.",
+    tag: "In build",
+    what: "COBOL lineage into signed evidence — in build. Apex 522. Pathway UNMEASURED until a signed card exists.",
   },
   {
     name: "Council Academy",

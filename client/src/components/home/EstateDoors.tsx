@@ -125,8 +125,8 @@ export default function EstateDoors() {
     { name: "/mcp", href: "/tools", state: mcp },
     {
       name: "cobolbridge.ai",
-      href: "https://cobolbridge.ai",
-      state: { label: "522 — not probed here", detail: "last checked 2026-09-01 from the estate, not from your browser; do not demo it", tone: "warn" },
+      href: "/cobolbridge",
+      state: { label: "in build · apex 522", detail: "not probed from your browser; Pages origin is live, custom domain is not attached; do not demo the 522", tone: "warn" },
     },
     {
       name: "OpenTelemetry",

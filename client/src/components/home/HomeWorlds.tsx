@@ -79,7 +79,7 @@ function WorldMeasure() {
         Living board
       </p>
       <h2 className="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-        22 axis. 15 measured. 7 empty.
+        Every axis. Counts live from the board.
       </h2>
       <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-200 sm:text-lg">
         Counts come from GET /api/gspc. Ties are ties. Jail is the floor. In-lane

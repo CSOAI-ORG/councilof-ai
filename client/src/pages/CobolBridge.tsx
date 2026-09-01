@@ -10,7 +10,7 @@ import { useEffect } from "react";
 // migration becomes continuous measurement snapshots.
 //
 // Rules honoured: no public prices; "we do not certify"; UNMEASURED marked;
-// domain cobolbridge.ai stays 522 unattached; never certify;
+// domain cobolbridge.ai is IN BUILD (apex 522); never certify; never MEASURED without a signed card;
 // external scale figures cited as widely reported (Communications of the ACM),
 // never presented as our measurement.
 
@@ -40,13 +40,13 @@ export default function CobolBridge() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-20">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(720px 380px at 82% -12%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Evidence rail · legacy system → signed evidence — not a market</p>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Evidence rail · in build · not a live mill</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL copybook to signed evidence — not a bond</h1>
           <p className="mt-5 max-w-3xl text-lg text-emerald-50/90">
-            Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. The sidecar is <strong>SPEC only</strong> — <code>cobolbridge.ai</code> is parked (HTTP 522). Read <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">SPEC.md</a>. Council of AI turns published lineage into an independent, Ed25519-signed measurement pack. Empty financial cells on the board stay empty. This is not a tokenized market and not a rating. We do not certify.
+            Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. This on-ramp is <strong>in build</strong> — <code>cobolbridge.ai</code> apex is HTTP 522 (Cloudflare origin timeout). Read <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">SPEC.md</a>. Council of AI turns published lineage into an independent, Ed25519-signed measurement pack when a signed card exists. This is not a tokenized market and not a rating. We do not certify.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open SPEC.md (domain parked) →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open SPEC.md (in build) →</a>
             <a href="/contact" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Talk to us — enterprise →</a>
           </div>
         </div>
@@ -76,9 +76,9 @@ export default function CobolBridge() {
       <section className="bg-gray-50 border-y border-gray-200">
         <div className="max-w-6xl mx-auto px-6 py-14">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-700/80">2 · the bridge</p>
-          <h2 className="mt-2 text-2xl font-bold text-gray-900">cobolbridge.ai modernizes the code — and emits audit-ready lineage as it goes</h2>
+          <h2 className="mt-2 text-2xl font-bold text-gray-900">In build — lineage out of the migration, when the mill exists</h2>
           <p className="mt-3 max-w-3xl text-gray-600">
-            Instead of a rewrite that loses the paper trail, the migration is instrumented: every mapping and transformation is captured as data, so the lineage a supervisor asks for falls out of the work rather than being reconstructed after the fact. Domain <code>cobolbridge.ai</code> stays HTTP 522 unattached.
+            Instead of a rewrite that loses the paper trail, the intended mill instruments every mapping and transformation as data, so the lineage a supervisor asks for falls out of the work rather than being reconstructed after the fact. That mill is <strong>in build</strong>. Domain <code>cobolbridge.ai</code> apex is HTTP 522. Do not demo it.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {BRIDGE.map((c) => (
@@ -90,7 +90,7 @@ export default function CobolBridge() {
             ))}
           </div>
           <div className="mt-6">
-            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">Explore SPEC.md (domain parked) →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="text-sm font-semibold text-emerald-700 hover:text-emerald-800">Explore SPEC.md (in build) →</a>
           </div>
         </div>
       </section>
@@ -112,7 +112,7 @@ export default function CobolBridge() {
         </div>
 
         <div className="mt-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-          <span className="font-bold">Status: UNMEASURED.</span> This on-ramp is a described pathway. The cobolbridge.ai → signed-measurement pipeline is not yet a live, measured integration; it is presented as UNMEASURED until it is built and run, in keeping with our three-state honesty. Domain cobolbridge.ai stays 522 unattached. We do not certify.
+          <span className="font-bold">Status: IN BUILD · UNMEASURED.</span> This on-ramp is a described pathway. Nothing here is MEASURED — there is no signed card. Domain cobolbridge.ai apex is HTTP 522. We do not certify.
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3 text-sm">
@@ -130,7 +130,7 @@ export default function CobolBridge() {
           <h2 className="mt-2 text-2xl font-bold text-gray-900">What this is — and what it is not</h2>
           <ul className="mt-4 max-w-3xl space-y-3 text-gray-700">
             <li className="flex gap-3"><span className="mt-1 text-emerald-600">◆</span><span>We measure and attest. <span className="font-semibold">We do not certify.</span> A signed Council of AI measurement is independent evidence, never a conformity mark or a pass/fail badge.</span></li>
-            <li className="flex gap-3"><span className="mt-1 text-emerald-600">◆</span><span>cobolbridge.ai is a modernization tool (domain parked, HTTP 522). The Council of AI measurement is <span className="font-semibold">independent of it</span> — the attestation is about the evidence, not an endorsement of the migration.</span></li>
+            <li className="flex gap-3"><span className="mt-1 text-emerald-600">◆</span><span>cobolbridge.ai is <span className="font-semibold">in build</span> (apex HTTP 522). The Council of AI measurement is <span className="font-semibold">independent of it</span> — a signed card is about the evidence, not an endorsement of a migration, and none exists yet.</span></li>
             <li className="flex gap-3"><span className="mt-1 text-emerald-600">◆</span><span>The determination of compliance stays with the competent authorities — supervisors and regulators. Our pack is an input they can verify, not their decision.</span></li>
           </ul>
         </div>
@@ -145,7 +145,7 @@ export default function CobolBridge() {
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/contact" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Contact — enterprise →</a>
-            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Open SPEC.md (domain parked) →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Open SPEC.md (in build) →</a>
           </div>
         </div>
       </section>

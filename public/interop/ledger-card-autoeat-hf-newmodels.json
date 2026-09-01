@@ -1,0 +1,56 @@
+{
+ "as_of": "2026-09-01T06:25:18Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+  "sample": {
+   "n_probed": 12,
+   "live": 12,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "AMAImedia/Qwimi-3.6-27B-Coder-MTP-NOESIS-BF16 (200)",
+    "mamunmk007/squad-answerability (200)",
+    "mahdi2020/distilbert-base-uncased-News-Category-Classifier (200)",
+    "noname1992/loras (200)",
+    "IntoLayer/Affine-5g94ihdxwu-v8a (200)",
+    "latency-sensitive-bench/mikasa-robo (200)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:25:18Z",
+  "unmeasured": [
+   "gspc_score",
+   "weights_integrity",
+   "lineage",
+   "runtime_variant"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "2c97b64c1421e4e9803f977a7b9966d7d394d6caa80f7f6d70573ca7333f356a",
+ "sig_ed25519": "c87ea3efd511bfd06d3dcf4e2d0a3b28aa00efad806a11250d7e19f0be1e14381abb8855e9cb26b14f31ef2bc8dac258bf7a3c367db5d619fd205f8e2ea1520c",
+ "surface": "autoeat.hf.newmodels",
+ "subject": "auto-eat hf-model: 12 LIVE of 12 probed (read-only, ungraded)",
+ "source_urls": [
+  "https://huggingface.co/api/models"
+ ],
+ "unmeasured": [
+  "gspc_score",
+  "weights_integrity",
+  "lineage",
+  "runtime_variant"
+ ]
+}
