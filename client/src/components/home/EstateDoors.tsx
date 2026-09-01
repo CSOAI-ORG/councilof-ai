@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { applyFill7ChromeHonesty } from "@/lib/fill7ChromeHonesty";
 
 /**
  * EstateDoors — the honest doors strip (B1.2, CSOAI_FRONTEND_REACH_AGENTS).
@@ -49,7 +50,7 @@ export default function EstateDoors() {
       .then(async (r) => {
         if (!r.ok) return setBoard({ label: `HTTP ${r.status}`, detail: "board not readable this load", tone: "warn" });
         if (!isJson(r)) return setBoard(HTML_ANSWERED);
-        const d = await r.json().catch(() => ({}));
+        const d = applyFill7ChromeHonesty(await r.json().catch(() => ({})));
         const count = typeof d?.totals?.public_count === "string" ? d.totals.public_count : null;
         setBoard(
           count
