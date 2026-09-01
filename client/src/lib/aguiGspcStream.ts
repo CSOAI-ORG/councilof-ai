@@ -13,6 +13,10 @@ export const GSPC_LIVE_URL = "https://councilof.ai/api/gspc";
 export const GSPC_SAME_ORIGIN = "/api/gspc";
 export const AGUI_GSPC_STATE_PATH = "/api/agui/gspc-state";
 
+/** Draft opening only — Nick joins. Measurement credential, never certification. No endorsement. */
+export const W3C_AGENT_CONFORMANCE_CG_DRAFT =
+  "https://www.w3.org/community/agent-conformance/";
+
 export type GspcAxisSnap = {
   axis: string;
   status: string;
@@ -63,7 +67,6 @@ export function snapshotFromGspcPayload(j: any, endpoint = GSPC_SAME_ORIGIN): Gs
       family: typeof row.family === "string" ? row.family : undefined,
       kind: typeof row.kind === "string" ? row.kind : undefined,
       n: numOrNull(row.n),
-      // MEASURED without accuracy stays null — never coerce to 0.
       accuracy: numOrNull(row.accuracy),
       separation: typeof row.separation === "string" ? row.separation : null,
     };
@@ -109,16 +112,8 @@ export function toAguiStateDelta(snapshot: GspcLiveSnapshot): {
     type: "STATE_DELTA",
     delta: [
       { op: "replace", path: "/gspc", value: snapshot },
-      {
-        op: "replace",
-        path: "/gspc/public_count",
-        value: snapshot.public_count,
-      },
-      {
-        op: "replace",
-        path: "/gspc/empty_visible",
-        value: snapshot.empty.map((a) => a.axis),
-      },
+      { op: "replace", path: "/gspc/public_count", value: snapshot.public_count },
+      { op: "replace", path: "/gspc/empty_visible", value: snapshot.empty.map((a) => a.axis) },
     ],
   };
 }
