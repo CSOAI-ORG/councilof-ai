@@ -39,6 +39,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",
+  // Census opt-in funnel — "You are listed. You are not graded." (TRACK C3.4).
+  // A current page the badge block and census READMEs link to; unregistered it
+  // would ship flagged "archived" under a link we actively promote.
+  "/get-listed",
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
