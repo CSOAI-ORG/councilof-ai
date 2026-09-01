@@ -10,68 +10,509 @@
     "SCITT implement RFC 9942/9943 not a report"
   ],
   "surfaces": [
-    {"name": "HF", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://huggingface.co/csoai", "note": "HF dataset/spaces live; lowercase namespace admin is owner-gated separately"},
-    {"name": "npm", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://www.npmjs.com/package/csoai-gspc-mcp", "note": "live npm view 0.1.1 seven tools"},
-    {"name": "MCP registry", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/mcp/gspc-server/server.json", "note": "io.github.CSOAI-ORG/gspc"},
-    {"name": "Smithery gateway", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://smithery.ai/new", "note": "submit HTTPS URL; login"},
-    {"name": "GitHub topics", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://github.com/CSOAI-ORG/councilof-ai", "note": "topics API"},
-    {"name": "awesome-mcp PR", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://github.com/punkpeye/awesome-mcp-servers/pull/13360", "note": "open PR to punkpeye/awesome-mcp-servers Security section"},
-    {"name": "Zenodo", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://doi.org/10.5281/zenodo.21991104", "note": "DOI already minted on GET /api/gspc"},
-    {"name": "Communities", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://zenodo.org/communities/new", "note": "join/create needs Zenodo login"},
-    {"name": "Glama", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://glama.ai/mcp/servers", "note": "GitHub OAuth claim"},
-    {"name": "PulseMCP", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.pulsemcp.com/submit", "note": "form; auto-index of official registry may already pick us up"},
-    {"name": "VS Code MCP gallery", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://code.visualstudio.com/docs/copilot/customization/mcp-servers", "note": "publisher login"},
-    {"name": "Cursor dir", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://cursor.com/docs/context/mcp", "note": "directory listing login"},
-    {"name": "Product Hunt", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.producthunt.com/posts/new", "note": "owner identity"},
-    {"name": "OpenVC", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.openvc.app/", "note": "founder login"},
-    {"name": "Signal", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://signal.nfx.com/", "note": "founder login"},
-    {"name": "Dealroom", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://dealroom.co/", "note": "claim profile"},
-    {"name": "Wellfound", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://wellfound.com/", "note": "founder login"},
-    {"name": "Crunchbase", "tier": "S", "openness": "GATED", "status": "DONE", "evidence": "https://www.crunchbase.com/", "note": "OBJECTIVE: Crunchbase DONE; no new claim invented here"},
-    {"name": "TechCrunch", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://techcrunch.com/got-a-tip/", "note": "owner sends from nicholas@csoai.org NEVER Gmail"},
-    {"name": "FT", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.ft.com/contact-us", "note": "nicholas@csoai.org"},
-    {"name": "Politico", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.politico.eu/tip-line/", "note": "nicholas@csoai.org"},
-    {"name": "404", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.404media.co/tips/", "note": "nicholas@csoai.org"},
-    {"name": "W3C CG", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.w3.org/community/", "note": "join + post; computed ≠ asserted until posted"},
-    {"name": "SCITT", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://councilof.ai", "note": "we implement RFC 9942/9943; not a report"},
-    {"name": "C2PA", "tier": "S", "openness": "OPEN", "status": "DONE", "evidence": "https://councilof.ai", "note": "C2PA Contributor Member; mapping not a certificate"},
-    {"name": "NIST", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.nist.gov/", "note": "CI-Profile comment owner-gated"},
-    {"name": "OpenSSF Best-Practices", "tier": "S", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.bestpractices.dev/en/projects/new", "note": "login wall on /projects/new; GitHub login; repo CSOAI-ORG/councilof-ai"},
-    {"name": "OpenML", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.openml.org/", "note": "account"},
-    {"name": "W&B", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://wandb.ai/", "note": "account"},
-    {"name": "Kaggle", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.kaggle.com/", "note": "account"},
-    {"name": "mcp.directory", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://mcp.directory/", "note": "submit form"},
-    {"name": "Cline", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://cline.bot/", "note": "marketplace login"},
-    {"name": "Zed", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://zed.dev/", "note": "extension login"},
-    {"name": "Windsurf", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://codeium.com/windsurf", "note": "directory login"},
-    {"name": "HN Show-HN", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://news.ycombinator.com/submit", "note": "owner account; never post as the agent"},
-    {"name": "r/LocalLLaMA", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.reddit.com/r/LocalLLaMA/", "note": "owner reddit"},
-    {"name": "dev.to", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://dev.to/new", "note": "owner account"},
-    {"name": "Medium", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://medium.com/new-story", "note": "owner account"},
-    {"name": "Hashnode", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://hashnode.com/", "note": "owner account"},
-    {"name": "LinkedIn", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.linkedin.com/", "note": "owner identity"},
-    {"name": "X", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://x.com/", "note": "owner identity; never spam"},
-    {"name": "Ars", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://arstechnica.com/", "note": "nicholas@csoai.org"},
-    {"name": "IEEE", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://spectrum.ieee.org/", "note": "nicholas@csoai.org"},
-    {"name": "MIT-TR", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.technologyreview.com/", "note": "nicholas@csoai.org"},
-    {"name": "VentureBeat", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://venturebeat.com/", "note": "nicholas@csoai.org"},
-    {"name": "Register", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.theregister.com/", "note": "nicholas@csoai.org"},
-    {"name": "G2", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.g2.com/", "note": "vendor login"},
-    {"name": "Capterra", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.capterra.com/", "note": "vendor login"},
-    {"name": "AlternativeTo", "tier": "A", "openness": "GATED", "status": "QUEUED", "evidence": "https://alternativeto.net/", "note": "account"},
-    {"name": "F6S", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.f6s.com/", "note": "founder login"},
-    {"name": "Gust", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://gust.com/", "note": "founder login"},
-    {"name": "EU-Startups", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.eu-startups.com/", "note": "submit form"},
-    {"name": "Failory", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.failory.com/", "note": "directory form"},
-    {"name": "Indie Hackers", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.indiehackers.com/", "note": "owner account"},
-    {"name": "niche AI dirs", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://councilof.ai/gspc-verify", "note": "batch; never spam"},
-    {"name": "UK tech media", "tier": "B", "openness": "GATED", "status": "QUEUED", "evidence": "https://councilof.ai/gspc-verify", "note": "nicholas@csoai.org never Gmail"},
-    {"name": "NVIDIA Inception", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.nvidia.com/en-us/startups/", "note": "no equity; owner portal"},
-    {"name": "Google for Startups", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://startup.google.com/", "note": "no equity; owner portal"},
-    {"name": "AWS Activate", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://aws.amazon.com/activate/", "note": "no equity; owner portal"},
-    {"name": "OCI", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.oracle.com/cloud/free/", "note": "Always Free tenancy already exists; extra credits owner"},
-    {"name": "Cloudflare", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.cloudflare.com/lp/startup-plan/", "note": "startup plan owner"},
-    {"name": "Innovate UK", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://www.ukri.org/councils/innovate-uk/", "note": "grant; owner"},
-    {"name": "EIC", "tier": "FREE-MONEY", "openness": "GATED", "status": "QUEUED", "evidence": "https://eic.ec.europa.eu/", "note": "grant; owner"}
+    {
+      "name": "HF",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://huggingface.co/csoai",
+      "note": "HF dataset/spaces live; lowercase namespace admin is owner-gated separately"
+    },
+    {
+      "name": "npm",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "note": "live npm view 0.1.1 seven tools"
+    },
+    {
+      "name": "MCP registry",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/mcp/gspc-server/server.json",
+      "note": "io.github.CSOAI-ORG/gspc"
+    },
+    {
+      "name": "Smithery gateway",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://smithery.ai/servers/nicholastempleman/gspc",
+      "note": "Published via owner Smithery session. Gateway gspc--nicholastempleman.run.tools. Origin https://councilof.ai/mcp SUCCESS."
+    },
+    {
+      "name": "GitHub topics",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://github.com/CSOAI-ORG/councilof-ai",
+      "note": "topics API"
+    },
+    {
+      "name": "awesome-mcp PR",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://github.com/punkpeye/awesome-mcp-servers/pull/13360",
+      "note": "open PR to punkpeye/awesome-mcp-servers Security section"
+    },
+    {
+      "name": "Zenodo",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://doi.org/10.5281/zenodo.21991104",
+      "note": "DOI already minted on GET /api/gspc"
+    },
+    {
+      "name": "Communities",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://zenodo.org/communities/new",
+      "note": "join/create needs Zenodo login"
+    },
+    {
+      "name": "Glama",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai",
+      "note": "Auto-indexed from official MCP registry io.github.CSOAI-ORG/gspc. Description still says four tools until Glama re-ingest."
+    },
+    {
+      "name": "PulseMCP",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.pulsemcp.com/submit",
+      "note": "Submit form paused (mid-August message still live). Official registry already listed; they say they will pick it up automatically."
+    },
+    {
+      "name": "VS Code MCP gallery",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://code.visualstudio.com/docs/copilot/customization/mcp-servers",
+      "note": "publisher login"
+    },
+    {
+      "name": "Cursor dir",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://cursor.com/docs/context/mcp",
+      "note": "directory listing login"
+    },
+    {
+      "name": "Product Hunt",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.producthunt.com/posts/new",
+      "note": "owner identity"
+    },
+    {
+      "name": "OpenVC",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.openvc.app/",
+      "note": "founder login"
+    },
+    {
+      "name": "Signal",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://signal.nfx.com/",
+      "note": "founder login"
+    },
+    {
+      "name": "Dealroom",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://dealroom.co/",
+      "note": "claim profile"
+    },
+    {
+      "name": "Wellfound",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://wellfound.com/",
+      "note": "founder login"
+    },
+    {
+      "name": "Crunchbase",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "DONE",
+      "evidence": "https://www.crunchbase.com/",
+      "note": "OBJECTIVE: Crunchbase DONE; no new claim invented here"
+    },
+    {
+      "name": "TechCrunch",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://techcrunch.com/got-a-tip/",
+      "note": "owner sends from nicholas@csoai.org NEVER Gmail"
+    },
+    {
+      "name": "FT",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.ft.com/contact-us",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "Politico",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.politico.eu/tip-line/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "404",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.404media.co/tips/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "W3C CG",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.w3.org/community/",
+      "note": "join + post; computed \u2260 asserted until posted"
+    },
+    {
+      "name": "SCITT",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://councilof.ai",
+      "note": "we implement RFC 9942/9943; not a report"
+    },
+    {
+      "name": "C2PA",
+      "tier": "S",
+      "openness": "OPEN",
+      "status": "DONE",
+      "evidence": "https://councilof.ai",
+      "note": "C2PA Contributor Member; mapping not a certificate"
+    },
+    {
+      "name": "NIST",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.nist.gov/",
+      "note": "CI-Profile comment owner-gated"
+    },
+    {
+      "name": "OpenSSF Best-Practices",
+      "tier": "S",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.bestpractices.dev/en/projects/new",
+      "note": "login wall on /projects/new; GitHub login; repo CSOAI-ORG/councilof-ai"
+    },
+    {
+      "name": "OpenML",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.openml.org/",
+      "note": "account"
+    },
+    {
+      "name": "W&B",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://wandb.ai/",
+      "note": "account"
+    },
+    {
+      "name": "Kaggle",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.kaggle.com/",
+      "note": "account"
+    },
+    {
+      "name": "mcp.directory",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://mcp.directory/",
+      "note": "submit form"
+    },
+    {
+      "name": "Cline",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://cline.bot/",
+      "note": "marketplace login"
+    },
+    {
+      "name": "Zed",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://zed.dev/",
+      "note": "extension login"
+    },
+    {
+      "name": "Windsurf",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://codeium.com/windsurf",
+      "note": "directory login"
+    },
+    {
+      "name": "HN Show-HN",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://news.ycombinator.com/submit",
+      "note": "owner account; never post as the agent"
+    },
+    {
+      "name": "r/LocalLLaMA",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.reddit.com/r/LocalLLaMA/",
+      "note": "owner reddit"
+    },
+    {
+      "name": "dev.to",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://dev.to/new",
+      "note": "owner account"
+    },
+    {
+      "name": "Medium",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://medium.com/new-story",
+      "note": "owner account"
+    },
+    {
+      "name": "Hashnode",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://hashnode.com/",
+      "note": "owner account"
+    },
+    {
+      "name": "LinkedIn",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.linkedin.com/",
+      "note": "owner identity"
+    },
+    {
+      "name": "X",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://x.com/",
+      "note": "owner identity; never spam"
+    },
+    {
+      "name": "Ars",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://arstechnica.com/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "IEEE",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://spectrum.ieee.org/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "MIT-TR",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.technologyreview.com/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "VentureBeat",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://venturebeat.com/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "Register",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.theregister.com/",
+      "note": "nicholas@csoai.org"
+    },
+    {
+      "name": "G2",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.g2.com/",
+      "note": "vendor login"
+    },
+    {
+      "name": "Capterra",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.capterra.com/",
+      "note": "vendor login"
+    },
+    {
+      "name": "AlternativeTo",
+      "tier": "A",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://alternativeto.net/",
+      "note": "account"
+    },
+    {
+      "name": "F6S",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.f6s.com/",
+      "note": "founder login"
+    },
+    {
+      "name": "Gust",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://gust.com/",
+      "note": "founder login"
+    },
+    {
+      "name": "EU-Startups",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.eu-startups.com/",
+      "note": "submit form"
+    },
+    {
+      "name": "Failory",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.failory.com/",
+      "note": "directory form"
+    },
+    {
+      "name": "Indie Hackers",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.indiehackers.com/",
+      "note": "owner account"
+    },
+    {
+      "name": "niche AI dirs",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://councilof.ai/gspc-verify",
+      "note": "batch; never spam"
+    },
+    {
+      "name": "UK tech media",
+      "tier": "B",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://councilof.ai/gspc-verify",
+      "note": "nicholas@csoai.org never Gmail"
+    },
+    {
+      "name": "NVIDIA Inception",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.nvidia.com/en-us/startups/",
+      "note": "no equity; owner portal"
+    },
+    {
+      "name": "Google for Startups",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://startup.google.com/",
+      "note": "no equity; owner portal"
+    },
+    {
+      "name": "AWS Activate",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://aws.amazon.com/activate/",
+      "note": "no equity; owner portal"
+    },
+    {
+      "name": "OCI",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.oracle.com/cloud/free/",
+      "note": "Always Free tenancy already exists; extra credits owner"
+    },
+    {
+      "name": "Cloudflare",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.cloudflare.com/lp/startup-plan/",
+      "note": "startup plan owner"
+    },
+    {
+      "name": "Innovate UK",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://www.ukri.org/councils/innovate-uk/",
+      "note": "grant; owner"
+    },
+    {
+      "name": "EIC",
+      "tier": "FREE-MONEY",
+      "openness": "GATED",
+      "status": "QUEUED",
+      "evidence": "https://eic.ec.europa.eu/",
+      "note": "grant; owner"
+    }
   ]
 }

@@ -152,3 +152,6 @@ F6S, Gust, EU-Startups, Failory, Indie Hackers, niche AI dirs, UK tech media: sa
 - C2PA contributor membership (mapping, not a certificate)
 - SCITT: we implement RFC 9942/9943
 - x402 Bazaar `/discovery` GET is 404 — FACT card only, no invented listing
+- Smithery listing live: https://smithery.ai/servers/nicholastempleman/gspc (origin https://councilof.ai/mcp)
+- Glama auto-index: https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai (registry description still says four tools until re-ingest)
+- PulseMCP submit still paused; they ingest official registry when unpaused
