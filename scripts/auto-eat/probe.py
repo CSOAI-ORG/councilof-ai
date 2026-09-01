@@ -23,8 +23,9 @@ Usage: python3 probe.py [--max N]   (default 40 total this pass)
 from __future__ import annotations
 
 import argparse
+import os
 import sys
-import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import common as c
 
@@ -68,7 +69,7 @@ CHAIN_RPC = {
 }
 TOKENURI_SELECTOR = "0xc87b56dd"  # tokenURI(uint256)
 XRPL_RPC = "https://s1.ripple.com:51234"
-RATE_SLEEP = 0.4  # seconds between network probes
+WORKERS = max(1, int(os.environ.get("EAT_PROBE_WORKERS", "64")))
 
 
 def probe_hf(entry: dict) -> tuple[str, str]:
@@ -280,9 +281,40 @@ def stage_live_atom(kind: str, agg: dict) -> tuple[bool, str]:
     )
 
 
+def _probe_one(r: dict) -> tuple[str, str, str]:
+    kind = r.get("kind")
+    prober = PROBERS.get(kind)
+    if not prober:
+        return str(kind), "UNCHECKABLE", f"{r.get('id')} (no prober)"
+    try:
+        state, note = prober(r)
+    except Exception as e:
+        state, note = "UNCHECKABLE", f"{r.get('id')} (exception {str(e)[:40]})"
+    return kind, state, note
+
+
+def run_probes(todo: list) -> dict:
+    """Probe todo concurrently. Returns by_kind aggregates. Does not sign."""
+    by_kind: dict[str, dict] = {}
+    workers = min(WORKERS, max(1, len(todo)))
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(_probe_one, r): r for r in todo}
+        for fut in as_completed(futs):
+            kind, state, note = fut.result()
+            agg = by_kind.setdefault(
+                kind,
+                {"n": 0, "LIVE": 0, "PLACEHOLDER": 0, "HELD": 0, "DEAD": 0, "UNCHECKABLE": 0, "UNREACHABLE": 0, "live_examples": []},
+            )
+            agg["n"] += 1
+            agg[state] = agg.get(state, 0) + 1
+            if state == "LIVE" and len(agg["live_examples"]) < 6:
+                agg["live_examples"].append(note[:90])
+    return by_kind
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--max", type=int, default=40)
+    ap.add_argument("--max", type=int, default=5000)
     args = ap.parse_args()
 
     rows = c.load_queue()
@@ -303,24 +335,9 @@ def main() -> int:
             if len(todo) >= args.max:
                 break
 
-    # group results by kind
-    by_kind: dict[str, dict] = {}
+    by_kind = run_probes(todo)
     for r in todo:
-        kind = r.get("kind")
-        prober = PROBERS.get(kind)
-        if not prober:
-            continue
-        try:
-            state, note = prober(r)
-        except Exception as e:
-            state, note = "UNCHECKABLE", f"{r.get('id')} (exception {str(e)[:40]})"
-        agg = by_kind.setdefault(kind, {"n": 0, "LIVE": 0, "PLACEHOLDER": 0, "HELD": 0, "DEAD": 0, "UNCHECKABLE": 0, "UNREACHABLE": 0, "live_examples": []})
-        agg["n"] += 1
-        agg[state] = agg.get(state, 0) + 1
-        if state == "LIVE" and len(agg["live_examples"]) < 6:
-            agg["live_examples"].append(note[:90])
-        probed.add(f"{kind}:{r.get('id')}")
-        time.sleep(RATE_SLEEP)
+        probed.add(f"{r.get('kind')}:{r.get('id')}")
 
     staged = 0
     per_kind_summary = {}
