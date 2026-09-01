@@ -1,0 +1,130 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Council of AI — GSPC Measurement API",
+    "description": "Read the live GSPC governance board and the signed measurement-card index published by the Council of AI (CSOAI), an independent AI-governance MEASUREMENT body. We measure; we never certify. UNMEASURED is a first-class, published state. Every number is recomputable from its rows. This is the universal OpenAPI fallback for non-MCP platforms (ChatGPT Custom GPT Actions, Gemini/xAI/Perplexity function-calling); MCP-native clients should use the streamable-HTTP server at https://councilof.ai/mcp instead. Byte-exact Ed25519 card verification is a client-side / MCP operation (verify_card) so that nothing a user checks is ever uploaded — see the privacy note on getCards.",
+    "version": "1.1.0",
+    "contact": {
+      "name": "CSOAI Ltd",
+      "url": "https://councilof.ai"
+    },
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://councilof.ai",
+      "description": "Production (Cloudflare Pages). Fallback host: https://csoai.org"
+    }
+  ],
+  "externalDocs": {
+    "description": "Verify any signed card in the browser (nothing is uploaded)",
+    "url": "https://councilof.ai/gspc-verify"
+  },
+  "paths": {
+    "/api/gspc": {
+      "get": {
+        "operationId": "getBoard",
+        "summary": "Get the live GSPC board (totals + all axes)",
+        "description": "Returns the whole living GSPC board: totals (slot count and measured count, reported as two distinct labelled numbers that are never summed) plus one row per axis with its n, accuracy, confidence interval, family, and MEASURED / UNMEASURED status. Use this as the trust primitive: read the governance board before deciding whether to trust a model. Pass the optional 'axis' query parameter to return a single axis row. Quote totals.public_count verbatim; never invent a number and never claim MEASURED for an UNMEASURED slot.",
+        "parameters": [
+          {
+            "name": "axis",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive axis name (e.g. governance, safety, provenance, continuity). Omit to get the full board. An unknown name returns the list of names the board actually carries.",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The live board.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Board" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cards": {
+      "get": {
+        "operationId": "getCards",
+        "summary": "Get the signed measurement-card index",
+        "description": "Returns the published index of Ed25519-signed measurement cards plus the living-board totals. Use this to discover which measurements have been signed and to fetch a card's URL. PRIVACY: byte-exact verification of a card is deliberately NOT a server operation — it runs client-side (open https://councilof.ai/gspc-verify) or via the MCP verify_card tool, so nothing a user checks is ever sent to a server, logged, or stored. A card that carries its own key proves only self-consistency; a valid verdict requires the signer to be the pinned key at did:web:csoai.org#card-attestation-1. Verdicts are three-state: VALID, INVALID (with reason), or UNCHECKABLE — never two-state.",
+        "responses": {
+          "200": {
+            "description": "The signed-card index and living-board totals.",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/CardIndex" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Board": {
+        "type": "object",
+        "properties": {
+          "schema": { "type": "string" },
+          "issuer": { "type": "string" },
+          "totals": {
+            "type": "object",
+            "properties": {
+              "axes": { "type": "integer", "description": "Slot count: declared positions on the board." },
+              "measured_axes": { "type": "integer", "description": "Measurement count: slots with a real run behind them." },
+              "unmeasured_axes": { "type": "integer", "description": "Declared slots with no run behind them (first-class, published)." },
+              "public_count": { "type": "string", "description": "The exact human-readable count to quote verbatim, e.g. '22 axis · 22 measured'." },
+              "count_grammar": { "type": "string", "description": "How to read the two numbers honestly. The larger counts slots, the smaller counts measurements; quote both or quote the smaller." }
+            }
+          },
+          "axes": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Axis" }
+          }
+        }
+      },
+      "Axis": {
+        "type": "object",
+        "properties": {
+          "axis": { "type": "string", "description": "Axis name, e.g. governance." },
+          "family": { "type": "string" },
+          "bench": { "type": "string", "description": "The benchmark used, e.g. GovBench." },
+          "task": { "type": "string" },
+          "n": { "type": "integer", "description": "Item count behind the measurement. Nothing is quoted below n>=30." },
+          "accuracy": { "type": "number" },
+          "interval": {
+            "type": "array",
+            "items": { "type": "number" },
+            "description": "Confidence interval [low, high]."
+          },
+          "status": { "type": "string", "enum": ["MEASURED", "UNMEASURED"], "description": "MEASURED = a real run behind the slot; UNMEASURED = a declared slot published so the gap is visible. Never present UNMEASURED as an error or a zero." }
+        }
+      },
+      "CardIndex": {
+        "type": "object",
+        "properties": {
+          "living_totals": {
+            "type": "object",
+            "description": "Pointer to the living board totals (see GET /api/gspc).",
+            "properties": {
+              "see": { "type": "string" },
+              "public_count": { "type": "string" }
+            }
+          },
+          "index": {
+            "type": "object",
+            "description": "The signed-card index: n_cards declared and the rows it actually carries."
+          }
+        }
+      }
+    }
+  }
+}
