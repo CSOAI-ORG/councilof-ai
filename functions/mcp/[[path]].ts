@@ -19,6 +19,7 @@ import {
   handleVerify,
   rpc,
 } from "./_handlers";
+import { toolSpan, withTraceHeader } from "./_otel";
 
 async function proxy(ctx: Parameters<PagesFunction>[0], bodyText: string | null): Promise<Response> {
   const url = new URL(ctx.request.url);
@@ -105,9 +106,16 @@ export const onRequest: PagesFunction = async (ctx) => {
     }
   }
 
+  // Optional GenAI span for tool calls (H22). No-op unless CSOAI_OTEL is set; when on, the
+  // trace id rides back on x-otel-trace-id and the OTLP span is logged to the Workers tail.
+  const otelTid =
+    call?.method === "tools/call" && call.params?.name
+      ? toolSpan((ctx.env ?? {}) as Record<string, unknown>, String(call.params.name))
+      : null;
+
   try {
     if (call?.method === "tools/call" && call.params?.name === "verify") {
-      return await handleVerify(call.id, call.params.arguments ?? {}, origin);
+      return withTraceHeader(await handleVerify(call.id, call.params.arguments ?? {}, origin), otelTid);
     }
 
     if (call?.method === "tools/call" && (call.params?.name === "measure" || call.params?.name === "jail-probe")) {
@@ -128,7 +136,10 @@ export const onRequest: PagesFunction = async (ctx) => {
     }
 
     if (call?.method === "tools/call" && call.params?.name && SHARED_TOOL_NAMES.has(call.params.name)) {
-      return await handleSharedTool(call.id, call.params.name, call.params.arguments ?? {}, origin);
+      return withTraceHeader(
+        await handleSharedTool(call.id, call.params.name, call.params.arguments ?? {}, origin),
+        otelTid,
+      );
     }
 
     if (call?.method === "initialize") {
