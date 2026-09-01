@@ -149,8 +149,20 @@ def main() -> int:
     rows = c.load_queue()
     probed = c.load_probed()
 
-    todo = [r for r in rows if r.get("status") == "DISCOVERED" and f"{r.get('kind')}:{r.get('id')}" not in probed]
-    todo = todo[: args.max]
+    pending = [r for r in rows if r.get("status") == "DISCOVERED" and f"{r.get('kind')}:{r.get('id')}" not in probed]
+    # round-robin across kinds so every source is exercised each pass (a flat
+    # slice would let one prolific source starve the others).
+    buckets: dict[str, list] = {}
+    for r in pending:
+        buckets.setdefault(r.get("kind"), []).append(r)
+    todo = []
+    while len(todo) < args.max and any(buckets.values()):
+        for kind in list(buckets.keys()):
+            if not buckets[kind]:
+                continue
+            todo.append(buckets[kind].pop(0))
+            if len(todo) >= args.max:
+                break
 
     # group results by kind
     by_kind: dict[str, dict] = {}
