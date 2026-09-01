@@ -1,0 +1,67 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "autoeat.xrpl.twoway",
+ "subject": "auto-eat xrpl two-way: 4 PASS of 16 (FAIL 9, UNCHECKABLE 3) — never 16/16",
+ "as_of": "2026-09-01T13:01:56Z",
+ "source_urls": [
+  "https://councilof.ai/api/xrpl",
+  "https://councilof.ai/interop/xrpl-two-way-check.json"
+ ],
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true,
+   "not_16_of_16": true
+  },
+  "method": "on-ledger Domain <-> issuer .well-known/xrp-ledger.toml [[ACCOUNTS]]; extra www/guess URLs probed, no invented PASS",
+  "sample": {
+   "n": 16,
+   "PASS": 4,
+   "FAIL": 9,
+   "UNCHECKABLE": 3,
+   "honest_two_way_count": "4/16",
+   "pass_symbols": [
+    "RLUSD",
+    "OUSG",
+    "USDB",
+    "BBRL"
+   ],
+   "fail_symbols": [
+    "EURCV",
+    "USD.gh",
+    "EUR.gh",
+    "EURQ",
+    "USDQ",
+    "EURØP",
+    "XAU.gh",
+    "GBP.gh",
+    "PSC"
+   ],
+   "uncheckable_symbols": [
+    "USD.bs",
+    "EUR.bs",
+    "USDC"
+   ]
+  },
+  "story": "Re-ran 2026-09-01T13:01:56Z against live GET /api/xrpl n=16. Still 4/16. GateHub toml URL is HTML. Bitstamp/Circle toml 404. Nine issuers have no Domain. SWIFT banks are a different census, not this roster.",
+  "verified_via": "xrpl_two_way_check.py vs publicnode/s1/s2 + issuer toml",
+  "as_of": "2026-09-01T13:01:56Z",
+  "unmeasured": [
+   "gspc_score",
+   "16/16 two-way",
+   "SWIFT clients"
+  ]
+ },
+ "sig_ed25519": null,
+ "state": "queued",
+ "unmeasured": [
+  "gspc_score",
+  "16/16 two-way",
+  "SWIFT clients"
+ ]
+}
