@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -42,6 +43,8 @@ NPM_SEARCH = "https://registry.npmjs.org/-/v1/search?text=keywords:mcp&size={n}&
 MCP_REGISTRY = "https://registry.modelcontextprotocol.io/v0/servers?limit={n}"
 ERC8004 = "https://api.8004scan.io/api/v1/agents?limit={n}&offset={skip}&min_feedbacks=1"
 XRPL_RPC = "https://s1.ripple.com:51234"
+# Public model/space ids can look like secrets; never queue them (push protection).
+SECRETISH = re.compile(r"(hf_[A-Za-z0-9]{20,}|github_pat_|gho_|sk-|xox[baprs]-)", re.I)
 
 
 def discover_hf(n: int) -> list[dict]:
