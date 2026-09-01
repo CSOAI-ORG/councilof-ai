@@ -1,16 +1,26 @@
 {
  "loop": "asi-auto-eat",
- "as_of": "2026-09-01T06:05:02Z",
- "queue_discovered_total": 0,
- "discovered_by_kind": {},
- "probed_total": 0,
- "staged_live_of_probed": {
-  "live": 0,
-  "probed": 0,
-  "fraction": null
+ "as_of": "2026-09-01T06:25:19Z",
+ "queue_discovered_total": 156,
+ "discovered_by_kind": {
+  "hf-model": 65,
+  "mcp-server": 14,
+  "erc8004": 25,
+  "xrpl-account": 52
  },
- "atoms_staged": 0,
- "surfaces_staged": [],
+ "probed_total": 156,
+ "staged_live_of_probed": {
+  "live": 48,
+  "probed": 64,
+  "fraction": 0.75
+ },
+ "atoms_staged": 4,
+ "surfaces_staged": [
+  "autoeat.erc8004.newagents",
+  "autoeat.hf.newmodels",
+  "autoeat.mcp.registry",
+  "autoeat.xrpl.accounts"
+ ],
  "last_signed_batch": null,
  "invariant": "atoms carry sig_ed25519=null; nothing is MEASURED until a card signs green via GHA OIDC and verifies"
 }

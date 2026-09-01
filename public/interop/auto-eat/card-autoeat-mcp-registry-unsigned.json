@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "autoeat.mcp.registry",
+ "subject": "auto-eat mcp-server: 11 LIVE of 14 probed (read-only, ungraded)",
+ "as_of": "2026-09-01T06:09:13Z",
+ "source_urls": [
+  "https://registry.modelcontextprotocol.io/v0/servers"
+ ],
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 11,
+   "placeholder": 2,
+   "held": 0,
+   "dead": 1,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 0.7857,
+   "live_examples": [
+    "ac.inference.sh/mcp (401)",
+    "ad.inside/inside-ads (405)",
+    "ae.propick/propick (405)",
+    "ag.hood/name-service (200)",
+    "agency.goji/goji (405)",
+    "agency.lona/trading (401)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:09:13Z",
+  "unmeasured": [
+   "tool_behavior",
+   "capability_claims",
+   "auth_scope",
+   "service_quality"
+  ]
+ },
+ "sig_ed25519": null,
+ "state": "queued",
+ "unmeasured": [
+  "tool_behavior",
+  "capability_claims",
+  "auth_scope",
+  "service_quality"
+ ]
+}

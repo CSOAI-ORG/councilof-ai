@@ -245,5 +245,150 @@
   "serving": "ollama GGUF Q4 build on RTX 3090; not raw HF safetensors",
   "axis_bank": "csoai/gspc-oss items.jsonl (32 real items; 1 canary excluded)",
   "as_of": "2026-09-01T06:30:00Z"
+ },
+ "autoeat.hf.newmodels": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+  "sample": {
+   "n_probed": 12,
+   "live": 12,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "AMAImedia/Qwimi-3.6-27B-Coder-MTP-NOESIS-BF16 (200)",
+    "mamunmk007/squad-answerability (200)",
+    "mahdi2020/distilbert-base-uncased-News-Category-Classifier (200)",
+    "noname1992/loras (200)",
+    "IntoLayer/Affine-5g94ihdxwu-v8a (200)",
+    "latency-sensitive-bench/mikasa-robo (200)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:25:18Z",
+  "unmeasured": [
+   "gspc_score",
+   "weights_integrity",
+   "lineage",
+   "runtime_variant"
+  ]
+ },
+ "autoeat.mcp.registry": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 11,
+   "placeholder": 2,
+   "held": 0,
+   "dead": 1,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 0.7857,
+   "live_examples": [
+    "ac.inference.sh/mcp (401)",
+    "ad.inside/inside-ads (405)",
+    "ae.propick/propick (405)",
+    "ag.hood/name-service (200)",
+    "agency.goji/goji (405)",
+    "agency.lona/trading (401)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:09:13Z",
+  "unmeasured": [
+   "tool_behavior",
+   "capability_claims",
+   "auth_scope",
+   "service_quality"
+  ]
+ },
+ "autoeat.erc8004.newagents": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 1,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 13,
+   "live_fraction_of_probed": 0.0714,
+   "live_examples": [
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:74072 (tokenURI resolvable)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:21:43Z",
+  "unmeasured": [
+   "reputation_validity",
+   "validation_registry_mainnet",
+   "service_quality"
+  ]
+ },
+ "autoeat.xrpl.accounts": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
+  "sample": {
+   "n_probed": 24,
+   "live": 24,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "rPqBXzNTjK4B8stZnsmH7tvvc8eFsph1G9 (exists)",
+    "r9uoGPwfeQi5TLeKoTLhpPvU7fFf7qAfW9 (exists)",
+    "rUqqN1KKvLSknssUXrLX48vtnNdpvaqsZ7 (exists)",
+    "rdGzD9oHEUJkiWxiuVA4UnB9f4kF7giQn (exists)",
+    "rBERMc8i2DoMkMDHGF38acFMfudsBffdwA (exists)",
+    "rsnbU4EG66bXZrHcpuE9XZQQe5V6BGiFyz (exists)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:25:18Z",
+  "unmeasured": [
+   "issuer_identity",
+   "reserve_attestation",
+   "off_ledger_backing"
+  ]
  }
 }
