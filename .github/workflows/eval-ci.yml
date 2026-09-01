@@ -1,28 +1,53 @@
-# Continuous eval skeleton. Frozen-bank path changes only.
-# Does not mill Hub listings. Does not stamp MEASURED from a listing.
-# A real delta card is UNCHECKABLE until the harness job is wired.
+# Continuous eval as CI (J32).
+# The bank-hash pin + fail-on-silent-edit gate is REAL. The delta re-run is a stub in CI
+# (no GPU model here) that emits the delta SHAPE with an UNCHECKABLE number — the bank pin
+# it records is the auditable fact. Delta cards are QUEUED for GHA #card-attestation-1;
+# this workflow NEVER laptop-signs and never mills Hub listings.
 name: eval-ci
 on:
-  push:
+  pull_request:
     paths:
-      - "harness/**"
-      - "fixtures/**"
+      - "public/datasets/**"          # a watched frozen bank
+      - "harness/owem/card_pipeline.py"  # the grader
+      - "packages/eval-ci/**"
+      - ".github/workflows/eval-ci.yml"
+  push:
+    branches: [master]
+    paths:
+      - "public/datasets/**"
+      - "harness/owem/card_pipeline.py"
       - "packages/eval-ci/**"
       - ".github/workflows/eval-ci.yml"
   workflow_dispatch:
     inputs:
-      dry_run:
-        description: "do not write cards"
-        default: "true"
+      axis:
+        description: "axis to re-run"
+        default: "gspc-axis"
 jobs:
-  frozen-bank-delta:
+  bank-gate-and-delta:
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      # REAL GATE — prove the gate itself works, then enforce it. Fails the PR on a silent
+      # bank edit (a bank whose bytes changed but whose pin in bank.lock.json did not).
+      - name: eval-CI gate selftest
+        run: python3 packages/eval-ci/check_bank.py --selftest
+      - name: eval-CI bank gate (fail-on-silent-edit)
+        run: python3 packages/eval-ci/check_bank.py
+      # STUB re-run — emits the QUEUED delta card shape (number UNCHECKABLE without a model run).
+      - name: emit QUEUED eval-delta card
+        run: python3 packages/eval-ci/emit_delta.py --axis "${{ github.event.inputs.axis || 'gspc-axis' }}" --write
       - name: honesty
         run: |
-          echo "eval-ci skeleton. No LLM-as-judge. No Hub mill."
-          echo "Signed delta card: UNCHECKABLE until packages/eval-ci/run.sh exists and a frozen bank job is wired."
-          test -f packages/eval-ci/README.md
+          echo "Bank pin verified. Delta card emitted QUEUED (sig_ed25519=null)."
+          echo "Signing is GHA #card-attestation-1 only. No LLM-as-judge run in CI; the number is UNCHECKABLE."
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-delta-card
+          path: public/interop/cards/eval-ci/*.json
+          if-no-files-found: warn
