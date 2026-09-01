@@ -1,0 +1,54 @@
+{
+ "as_of": "2026-09-01T06:25:18Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
+  "sample": {
+   "n_probed": 24,
+   "live": 24,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "rPqBXzNTjK4B8stZnsmH7tvvc8eFsph1G9 (exists)",
+    "r9uoGPwfeQi5TLeKoTLhpPvU7fFf7qAfW9 (exists)",
+    "rUqqN1KKvLSknssUXrLX48vtnNdpvaqsZ7 (exists)",
+    "rdGzD9oHEUJkiWxiuVA4UnB9f4kF7giQn (exists)",
+    "rBERMc8i2DoMkMDHGF38acFMfudsBffdwA (exists)",
+    "rsnbU4EG66bXZrHcpuE9XZQQe5V6BGiFyz (exists)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:25:18Z",
+  "unmeasured": [
+   "issuer_identity",
+   "reserve_attestation",
+   "off_ledger_backing"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "539dad13720bb559e703c3be995068d712b3087c7447a921640c24103c334317",
+ "sig_ed25519": "35c02ec7af74758a75921570e90a83934f2a5bae131a4d72c581fe76822482dc458422be3150b253a54b808582dfd202cc8a76bce9fdc740b27a1fb6e2782503",
+ "surface": "autoeat.xrpl.accounts",
+ "subject": "auto-eat xrpl-account: 24 LIVE of 24 probed (read-only, ungraded)",
+ "source_urls": [
+  "https://s1.ripple.com:51234"
+ ],
+ "unmeasured": [
+  "issuer_identity",
+  "reserve_attestation",
+  "off_ledger_backing"
+ ]
+}

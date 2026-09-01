@@ -1,0 +1,50 @@
+{
+ "as_of": "2026-09-01T06:21:43Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 1,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 13,
+   "live_fraction_of_probed": 0.0714,
+   "live_examples": [
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:74072 (tokenURI resolvable)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:21:43Z",
+  "unmeasured": [
+   "reputation_validity",
+   "validation_registry_mainnet",
+   "service_quality"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "5e1c1c1dc39fdb037676652785b559fc58e5ec4c714e290d52fee3ecc56a41cc",
+ "sig_ed25519": "bfdddff738455f2974da875471ba16e8edb1f22d050a6f89e2a0f507e28a4de4918ab886a7fe621087aa00263681d8031b9feb68b47045b1d8bb2441ed0d0408",
+ "surface": "autoeat.erc8004.newagents",
+ "subject": "auto-eat erc8004: 1 LIVE of 14 probed (read-only, ungraded)",
+ "source_urls": [
+  "https://api.8004scan.io/api/v1/agents",
+  "https://base-rpc.publicnode.com"
+ ],
+ "unmeasured": [
+  "reputation_validity",
+  "validation_registry_mainnet",
+  "service_quality"
+ ]
+}
