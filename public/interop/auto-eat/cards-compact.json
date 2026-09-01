@@ -11,25 +11,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 12,
+   "live": 11,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9167,
    "live_examples": [
-    "3cda2225/record-armtest05_act_policy (200)",
-    "yunjae-won/T14bsolution_14b_S1.7b_klreg0.05_stage0_checkpoint20 (200)",
-    "Yrd23/stegsecure (200)",
-    "power612/albedo-qwen3.6-35b-436677b9 (200)",
-    "liodon-ai/Nanbeige4.2-3B-DSpark-FP8 (200)",
-    "reyansh38771/sn97____albetop____uid238____hk5HW4X (200)"
+    "XUUUUSID/gpt2-124m-variants-pre (200)",
+    "XUUUUSID/olmo2-1b-sft-variant-E16 (200)",
+    "XUUUUSID/olmo2-1b-sft-variant-D16 (200)",
+    "zXQWD12SAD/MyAwesomeModel-TestRepo (200)",
+    "XUUUUSID/olmo2-1b-sft-variant-R1 (200)",
+    "cyankiwi/GLM-5.3-AWQ-INT4 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:54:48Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -119,25 +119,25 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 11,
+   "live": 11,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rPRzzNueJWLfG6rEDxfnycmemozgGdL9Bw (exists)",
-    "rs2dgzYeqYqsk8bvkQR5YPyqsXYcA24MP2 (exists)",
-    "rsiTX1Z59Nm7nbCRy86w1L5FKvz23dRVVo (exists)",
-    "rss7Vw3oNN6qheasqV4ErJRYE8hEwwFcq6 (exists)",
-    "rptowXFUbBs1fxpscyGxqv2n3xYg7NJfBh (exists)",
-    "rfpG8NYHuMKdCWx8T275rvZBV1wFypudHV (exists)"
+    "r3cGEVyyNuA8Sq5ATsKVVNezF9bxdSdyNz (exists)",
+    "rHALT8JEoSoWK4DmHnYWv9wgfnJmpS25Mv (exists)",
+    "rJxKvTYUUCXdzdu9oBXuuMiDei4MWqnqXJ (exists)",
+    "rKv64MDJ5ciUYQ8rzPUZDNiJRzSnyyv6nY (exists)",
+    "rEstSpPL3kh1fwrYU2B6jV6DdoudeHJKdj (exists)",
+    "rGeYZgL1bcxwScfqxdsEGGrgELKzTFJ1jR (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:54:49Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -156,25 +156,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 12,
+   "live": 11,
    "placeholder": 0,
-   "held": 0,
+   "held": 1,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 1.0,
+   "live_fraction_of_probed": 0.9167,
    "live_examples": [
-    "Rashed1237/multi-disease-ai (200)",
-    "kingookasha/okashas (200)",
-    "kayraharika/paddleocr-vl-base-test (200)",
-    "kayraharika/paddleocr-vl-1.5-test (200)",
-    "kayraharika/paddleocr-vl-0.9b-test (200)",
-    "lavanya2007/face-detection (200)"
+    "farhan78/SynopsisScreeningAndFeedbackAssistant (200)",
+    "negar-ai/agents-course (200)",
+    "tecuts/match (200)",
+    "tareq-ali777/pdf-slides-rotator (200)",
+    "Te-nok/EBM-Assistant-v2-dev (200)",
+    "SalmaShirdel/persian-mdeberta-v3-ner-demo (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:54:49Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -193,25 +193,24 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 10,
-   "live": 10,
+   "n_probed": 5,
+   "live": 5,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "@modelcontextprotocol/node (200)",
-    "agent-install (200)",
-    "mcp-remote (200)",
-    "@assistant-ui/react (200)",
-    "fallow (200)",
-    "mcp-handler (200)"
+    "mcporter (200)",
+    "agentic-flow (200)",
+    "ato-mcp (200)",
+    "@lovable.dev/mcp-js (200)",
+    "pi-mcp-adapter (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T07:54:49Z",
+  "as_of": "2026-09-01T08:10:45Z",
   "unmeasured": [
    "install_integrity",
    "malware",
