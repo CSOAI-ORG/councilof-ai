@@ -25,16 +25,18 @@ npx -y @smithery/cli@latest install councilof-ai --client claude
 
 Live axis list and scores: **`GET https://councilof.ai/api/gspc`** (schema `csoai.gspc-axes/0.5`).
 
-Snapshot 31 Aug 2026 from that API:
+Live GET from that API (quote the API, not this file):
 
-- **22 slots** on the board · **15 measured** · **7 UNMEASURED** (declared empty, not a fail)
-- **14 / 14 behavioural GSPC axes measured** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail
+- **22 slots · 22 measured** = **14 model-comparison + 8 fact runs**. Not 22/22 grades. Not certified.
+- **14 model-comparison** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail
+- **8 deterministic-facts** — provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index (disclosure n=8; not a fleet grade)
+- **councilof.ai/root.json SIGNED** public-root-v0 merkle `d438fb12…`. **csoai.org/root.json STALE unsigned** merkle `4a9a5036…`.
 - **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
 - **UNMEASURED is first-class** — gaps are reported with their n and limits
 - **335 signed cards** (`n_cards == n_cells`) · living stamp **SIGNED** (`did:web:csoai.org#board-attestation-1`)
 - Methodology: [doi:10.5281/zenodo.21991104](https://doi.org/10.5281/zenodo.21991104)
 
-- **Overlay notes:** ARC-AGI is an UNMEASURED overlay until a frozen gold bank exists; not a 23rd axis. Public GET stays 22·15·7. See [`public/gspc-overlays.json`](public/gspc-overlays.json) and [`public/schema/gspc-axes-notes.json`](public/schema/gspc-axes-notes.json).
+- **Overlay notes:** ARC-AGI is an UNMEASURED overlay until a frozen gold bank exists; not a 23rd axis. If this file and GET /api/gspc disagree, the API is right. See [`public/gspc-overlays.json`](public/gspc-overlays.json) and [`public/schema/gspc-axes-notes.json`](public/schema/gspc-axes-notes.json).
 
 If this file and the API disagree, the API is right.
 
