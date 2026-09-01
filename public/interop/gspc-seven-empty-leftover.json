@@ -2,8 +2,8 @@
   "schema": "csoai.gspc-seven-empty-leftover/0.1",
   "status": "UNSIGNED",
   "signed": false,
-  "published_at": "2026-09-01T02:15:00Z",
-  "published_at_europe_london": "2026-09-01T03:15:00+01:00",
+  "published_at": "2026-09-01T02:30:41Z",
+  "published_at_europe_london": "2026-09-01T03:30:41+01:00",
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
@@ -40,31 +40,32 @@
   "slots": {
     "reserve-attestation": {
       "board": "UNMEASURED n=0",
-      "have": "UNSIGNED 4-axis n=30 YES 1 / NO 29 / UNCHECKABLE 0 (Circle USDC current Deloitte as_of 2026-07-31) · CITED: Tether KPMG full audit 13 Aug (reserves > liabilities by $6.8B); Circle monthly. Still UNMEASURED — no MEASURED stamp.",
+      "have": "UNSIGNED 4-axis n=30 YES 1 / NO 29 / UNCHECKABLE 0 · CITED: Tether KPMG buffer $6.8B (Dec) → $4.1B (Jun); Circle monthly. Neither series is hourly. Still UNMEASURED — no MEASURED stamp.",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
       "still_gap": "SIGNED needs 4way + keystone. Not a board stamp.",
       "public_series": {
         "status": "CITED",
         "tether": {
-          "what": "Tether first full KPMG audit 13 Aug (reserves > liabilities by $6.8B)",
-          "honesty": "Public audit cite. Reserve-attestation remains the hourly recomputable cell. Not MEASURED. Not a board stamp."
+          "what": "Tether KPMG reserve buffer $6.8B (Dec) → $4.1B (Jun)",
+          "honesty": "Public audit cite only. Buffer is not hourly. Reserve-attestation stays the hourly-recomputable UNMEASURED cell. Not a board stamp."
         },
         "circle": {
           "what": "Circle monthly reserve attestations",
-          "honesty": "Monthly public series. Cell stays hourly-recomputable and UNMEASURED on the board."
-        }
+          "honesty": "Monthly public series — not hourly. Cell stays UNMEASURED on the board."
+        },
+        "neither_hourly": true
       }
     },
     "regulatory-framework": {
       "board": "UNMEASURED n=0",
-      "have": "UNSIGNED 4-axis n=30 YES 27 / NO 3 / UNCHECKABLE 0 · CITED: Art.12 Annex III logging deferred 2 Aug 2027 (hourly root = recomputable event-log demand). Still UNMEASURED.",
+      "have": "UNSIGNED 4-axis n=30 YES 27 / NO 3 / UNCHECKABLE 0 · CITED: Art.12 Annex III logging deferred 2 Dec 2027; demand unchanged; hourly root = event log they need. Still UNMEASURED.",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
       "still_gap": "SIGNED needs 4way + keystone. Not a legal opinion. Not a board stamp.",
       "public_series": {
         "status": "CITED",
         "eu_ai_act_art12": {
-          "what": "EU AI Act Art.12 logging obligations for Annex III systems deferred to 2 Aug 2027",
-          "honesty": "Hourly root as recomputable event-log demand context. Not a legal opinion. Not a board stamp. Slot stays UNMEASURED."
+          "what": "EU AI Act Art.12 logging obligations for Annex III systems deferred to 2 Dec 2027",
+          "honesty": "Demand unchanged. Hourly root = the recomputable event log they will need. Not a legal opinion. Not a board stamp. Slot stays UNMEASURED."
         }
       }
     },
@@ -82,12 +83,18 @@
     },
     "ai-economy-index": {
       "board": "UNMEASURED n=0",
-      "have": "Eurostat adoption stranger-recomputable (HAVE + 2025). AI-investment FETCHED published-report (not NSO). compute-price STILL GAP. AI-sector-output STILL GAP.",
+      "have": "Eurostat adoption stranger-recomputable (HAVE + 2025). AI-investment FETCHED published-report (not NSO). compute-price STILL GAP. AI-sector-output STILL GAP. · CITED: ERC-8004 531269/24 chains/3–15% callable (weekly gap); x402 ~75M tx ~$24M — track, do not claim.",
       "landed": "/interop/ai-economy-index-components-unsigned.json",
       "still_gap": "No composite. Do not restore MEASURED-INDEX-v0.1.",
       "public_series": {
-        "x402": "LF standard; Visa/MC/Stripe/AWS/Circle + ~40; ~75M tx mostly sub-dollar — payments rail solved; trust rail = signed root. writes_board false.",
-        "ERC-8004": "~531,269 regs / 24 chains; ~3–15% live endpoint — registered vs signed-and-callable. No invented score. writes_board false."
+        "ERC-8004": {
+          "what": "531269 regs / 24 chains / 3–15% callable",
+          "honesty": "Weekly gap trackable. Honest ai-economy base (registered vs signed-and-callable). Cite only — no invented composite. writes_board false. Slot UNMEASURED."
+        },
+        "x402": {
+          "what": "LF standard; Visa/MC/Stripe/AWS/Circle; ~75M tx ~$24M mostly sub-dollar",
+          "honesty": "Track adoption; do not claim. Payments rail context only. writes_board false. Slot UNMEASURED."
+        }
       }
     },
     "human-labour-index": {
@@ -98,10 +105,16 @@
     },
     "humanoid-labour-index": {
       "board": "UNMEASURED n=0",
-      "have": "No official public machine series.",
+      "have": "No official public machine series. · CITED (reference only, UNMEASURED): Counterpoint 22k H1 2026 +~300%; China 86–97%; forecast 50k+.",
       "landed": "/interop/humanoid-labour-index-empty.json",
       "still_gap": "Registry first. PoC path named; not a fleet. No number.",
-      "public_series": "~22k units H1 2026 (~+300%); China ~97%; Counterpoint >50k year forecast — public series context; still no registry → still UNMEASURED."
+      "public_series": {
+        "status": "CITED",
+        "counterpoint": {
+          "what": "Counterpoint ~22k units H1 2026 (~+300%); China share 86–97%; forecast 50k+",
+          "honesty": "Reference only. UNMEASURED. No registry → no board stamp. Do not invent a labour-index score."
+        }
+      }
     }
   },
   "siblings_already_live": {
