@@ -48,22 +48,29 @@ def test_coverage() -> None:
     print(f"coverage OK: {len(OBJECTIVE_NAMES)} OBJECTIVE names, {len(rows)} rows")
 
 
-def test_gated_tier_s_click_paths() -> None:
-    """Every GATED TIER S evidence URL is a click-path in the shipped playbook."""
+def test_gated_click_paths() -> None:
+    """Every GATED TIER S and TIER A evidence URL is an Open: click-path in the playbook.
+
+    TIER B may stay a shorter batch, but S+A cannot be a name dump: the log
+    evidence URL must appear as `Open: <url>` so the owner can paste.
+    """
     d = json.loads(LOG.read_text(encoding="utf-8"))
     play = PLAYBOOK.read_text(encoding="utf-8")
     missing = []
+    counted = 0
     for r in d["surfaces"]:
-        if r.get("tier") != "S" or r.get("openness") != "GATED":
+        if r.get("openness") != "GATED" or r.get("tier") not in ("S", "A"):
             continue
+        counted += 1
         url = (r.get("evidence") or "").strip()
         if not url:
             missing.append(r["name"] + " (empty evidence)")
             continue
-        if url not in play:
+        needle = f"Open: {url}"
+        if needle not in play:
             missing.append(f"{r['name']} {url}")
-    assert not missing, f"GATED TIER S click-paths missing from playbook: {missing}"
-    print(f"click-paths OK: {sum(1 for r in d['surfaces'] if r.get('tier')=='S' and r.get('openness')=='GATED')} TIER S GATED URLs in playbook")
+    assert not missing, f"GATED TIER S/A Open: click-paths missing from playbook: {missing}"
+    print(f"click-paths OK: {counted} TIER S+A GATED Open: URLs in playbook")
 
 
 def test_free_money_click_paths() -> None:
@@ -102,7 +109,7 @@ def test_honesty_floors() -> None:
 def main() -> int:
     test_coverage()
     test_honesty_floors()
-    test_gated_tier_s_click_paths()
+    test_gated_click_paths()
     test_free_money_click_paths()
     return 0
 
