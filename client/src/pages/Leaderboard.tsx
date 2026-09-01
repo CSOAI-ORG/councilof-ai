@@ -611,7 +611,7 @@ function SelfAudit({ matrix, counts, board }: { matrix: FleetMatrix; counts: Ret
         <li>
           <strong>Some axes have small n.</strong>{" "}
           {thin.length
-            ? `${thin.length} axes rest on fewer than 10 models: ${thin.slice(0, 4).map((a) => `${axisMeta(a.id).label} (${a.models})`).join(", ")}${thin.length > 4 ? "…" : ""}.`
+            ? `${thin.length} of the measures rest on fewer than 10 models each: ${thin.slice(0, 4).map((a) => `${axisMeta(a.id).label} (${a.models})`).join(", ")}${thin.length > 4 ? "…" : ""}.`
             : "Every axis carries at least 10 models."}
         </li>
         <li>
