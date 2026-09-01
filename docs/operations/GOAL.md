@@ -13,7 +13,7 @@ Immediate, in order:
 1. **#876** — 335 verifying chain. Structural GHA (floor, reject, lane-guard, conflict-guard, crawler-view) **green** after `7ab8b075`. Vercel 402 is dead (ignore). Wait Cursor Approval Agent, then merge. Live must read `n_cards == n_cells == 335`.
 2. **Inspect 10-fixture gate** — separate PR. Throwaway keys. No new jail number.
 3. **Living-door aliases** + `/api/arena/scoreboard` HEAD (Grok lane).
-4. **Cursor** — OS doors / AG-UI E2E; quote live `GET /api/gspc` **22 axis · 15 measured · 7 UNMEASURED**. Do not restore 14-of-14 or 150.
+4. **Cursor** — OS doors / AG-UI E2E; quote live `GET /api/gspc` **22 axis · 22 measured · 0 UNMEASURED**. Do not restore 14-of-14, 15·7, or 150.
 5. **Claude / other TUIs** — products, MCP, lobby, **single dist builder**. Close stale 150-floor PRs. Do not counter-push #876.
 6. **EAT attest** — `signed-json-guard` is the only index gate. Floor/reject bots no longer restore 150.
 
@@ -28,7 +28,7 @@ Immediate, in order:
 | Owner | **Nick** | merge-to-master if required, insurance, NLnet, secrets, I-D | — |
 
 Live grammar (cite the field, never type a constant):
-`GET /api/gspc` → **22 axis · 15 measured · 7 UNMEASURED**.
+`GET /api/gspc` → **22 axis · 22 measured · 0 UNMEASURED**.
 Card chain after #876 → **335/335 VALID** under `#card-attestation-1`. The 150-row board is a **subset**, not a second set.
 
 ## Constraints
