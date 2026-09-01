@@ -3,7 +3,7 @@
 // buyers (insurers, bond desks, vendors) behind an x402 payment gate. R8: this is
 // DATA-only — never scores, never ranked. Regulators + public get the signed stream
 // free (see /first-fine-watch).
-import { verifyX402Payment, type X402Env } from "./_x402";
+import { verifyX402Payment, x402Accepts, type X402Env } from "./_x402";
 
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
@@ -49,6 +49,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         lane: "commercial-data",
         schema: "csoai.eunomia-data/0.1",
         gate,
+        // Canonical x402 challenge: the $0.02 data atom (issuance re-serve tier — an ESTIMATE,
+        // owner-overridable via env). payTo is null until the owner sets X402_PAY_TO.
+        accepts: x402Accepts(context.env as X402Env, `${origin}/api/eunomia-data`, {
+          skuId: "issuance",
+          tier: "reserve",
+          description: "Commercial enforcement-corpus + deadline data (DATA only — never scores, never ranked).",
+        }),
+        x402Version: 1,
         payment_required: {
           amount_usd: 0.02,
           instruction: "Complete x402 settlement via settle_mcp, then retry with x-payment header.",
@@ -73,7 +81,13 @@ export const onRequestGet: PagesFunction = async (context) => {
       data: { fines, deadlines },
     }, null, 2),
     {
-      headers: { "content-type": "application/json", "access-control-allow-origin": "*", "cache-control": "public, max-age=300" },
+      headers: {
+        "content-type": "application/json",
+        "access-control-allow-origin": "*",
+        "cache-control": "public, max-age=300",
+        // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
+        ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
+      },
     },
   );
 };
