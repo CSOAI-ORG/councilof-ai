@@ -1,0 +1,64 @@
+--- a/functions/api/gspc.ts
++++ b/functions/api/gspc.ts
+@@ -286,9 +286,8 @@ export const onRequestGet: PagesFunction = async (context) => {
+       // ── the count, derived, never typed ──────────────────────────────────────
+       // A SLOT ON THE BOARD IS NOT A MEASUREMENT. The 22-axis canon is a count of
+       // slots; measured_axes is the count of slots with a real run behind them.
+-      // Seven financial slots remain declared UNMEASURED (n=0). The grammar
+-      // still DERIVES both from the axis array rather than typing either: if a
+-      // future slot is added with no run, the gap re-appears honestly on its own.
++      // Owner lock is 22·15·7 — NEVER stamp the 7 empty MEASURED to close the gap.
++      // Both counts DERIVE from the axis array rather than typing either.
+       // Every number below is computed from the axis array.
+       const measured = m.length;                       // status MEASURED — a run exists
+       const unmeasured = selected.length - measured;   // slot published, no run
+@@ -321,19 +320,21 @@ export const onRequestGet: PagesFunction = async (context) => {
+           financial: {
+             ...bySelectedFamily("financial"),
+             note: "The 8 financial/domain axis (ADR-001). One is measured — provenance-controls, from a " +
+-              "deterministic mainnet read of 6 issuer accounts. The other seven are declared slots " +
+-              "with no run (unsigned 4-axis n30 lives at /interop/ only — never stamp MEASURED here). " +
++              "deterministic mainnet read of 6 issuer accounts. The other seven are declared slots with " +
++              "no board-grade SIGNED run. Unsigned leftovers under /interop/ must not write the board. " +
+               "None of the eight is a model comparison, so none has a leader, an accuracy or a " +
+-              "separation determination, and none contributes to any mean below."
++              "separation determination, and none contributes to any mean below. C-2026-0826-05: do not " +
++              "restore MEASURED-INDEX-v0.1; do not rename ai-economy-index / human-labour-index to " +
++              "*-components as MEASURED board axes.",
+           },
+         },
+         sweep_note:
+           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
+           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
+-          "state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board " +
+-          "has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes " +
+-          "carry no accuracy and no leader — measured is not the same as scored — but each has a " +
+-          "signed or unsigned run only where evidence supports it. Owner lock: 22 axis · 15 measured · 7 empty. Never stamp the 7 empty MEASURED.",
++          "state. The ruling applied the word 'measured' to the full slot count; the evidence supports " +
++          "22 axis and 15 measurements, and the evidence wins. Owner lock 22·15·7 — the 7 empty " +
++          "declared slots stay UNMEASURED. Unsigned /interop/ leftovers must not write the board. No " +
++          "axis was marked MEASURED to close that gap.",
+         license: "CC-BY-4.0",
+         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
+         items,
+@@ -361,7 +362,7 @@ export const onRequestGet: PagesFunction = async (context) => {
+           `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
+           `does not rank its own models against the vendors it measures. This changes leader attribution ` +
+           `and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: ` +
+-          `every axis still carries a measurement, so the measured count is unchanged. The excluded models' ` +
++          `measured_axes is derived from status===MEASURED and is unchanged by leader attribution. The excluded models' ` +
+           `signed cards are untouched — measurement happened; it is simply not published as a public ranking ` +
+           `of our own model.`,
+         // ── uncarded-leader drop (2026-09-01) ────────────────────────────────
+@@ -430,10 +431,10 @@ export const onRequestGet: PagesFunction = async (context) => {
+     ],
+     limitations: [
+       `${separatedNames.length} of the ${measuredCount} measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.`,
+-      `${selected.length} axis are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. Only provenance-controls is MEASURED in the financial family. The other seven financial slots are declared UNMEASURED (n=0).`,
+-      "provenance-controls measures FACTS on six issuer accounts. The four issuer-disclosure axes and three index/component slots stay UNMEASURED on this board; unsigned n30 lives at /interop/ only. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
++      "22 axes are on the board and 15 carry a measurement. The 7 declared slots (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index) have NO board-grade SIGNED run behind them — they are published so the gap is visible, and must never be quoted as measured. Unsigned leftovers under /interop/ must not write the board. See totals.count_grammar.",
++      "The one measured financial axis, provenance-controls, measures on-chain CONTROL FACTS only — which flags an issuer account carries — for ONE axis family over SIX instruments. What those facts imply about an instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. It is not a rating, not investment advice, not a ranking, and not an endorsement of any named instrument.",
+       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
+-      "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. ai-adoption-components, labour-components, and humanoid-labour-index stay UNMEASURED on this board. Do not restore the v0.1 sticker. Do not stamp MEASURED to fill.",
++      "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. ai-economy-index and human-labour-index stay UNMEASURED until missing series + formula are published and NEW signed cards exist. Reference components are not an index. Do not restore the v0.1 sticker. Do not rename those slots to *-components as MEASURED board axes. Board GET /api/gspc is authority.",
+       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
