@@ -31,6 +31,8 @@ transport your client speaks; the contracts are identical.
 
 Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) **0.1.0** (registry live); package.json tracks **0.1.1** for the next publish. No checkout required:
 
+Live check 2026-09-01: `npm view csoai-gspc-mcp version` → **0.1.0**. Source README must never again say unpublished.
+
 ```sh
 npx -y csoai-gspc-mcp
 ```
