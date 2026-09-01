@@ -16,6 +16,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import common as c  # noqa: E402
+import discover  # noqa: E402
 import probe  # noqa: E402
 
 
@@ -83,6 +84,125 @@ def test_write_atom_structurally_unsigned() -> None:
         assert atom["state"] == "queued"
 
 
+def test_erc8004_expanded_chain_not_uncheckable_for_missing_rpc() -> None:
+    """Avalanche 43114 was absent from the old 6-chain map; must resolve now."""
+    assert 43114 in probe.CHAIN_RPC
+    orig = c.http_post_json
+
+    def fake_rpc(url, obj, timeout=15):
+        assert "avalanche" in url
+        return 200, {"jsonrpc": "2.0", "id": 1, "result": "0x" + "11" * 40}
+
+    c.http_post_json = fake_rpc
+    try:
+        state, note = probe.probe_erc8004({
+            "id": "avax-fixture-agent",
+            "kind": "erc8004",
+            "status": "DISCOVERED",
+            "meta": {
+                "chain_id": 43114,
+                "contract_address": "0x" + "ab" * 20,
+                "token_id": 1,
+            },
+        })
+    finally:
+        c.http_post_json = orig
+    assert state != "UNCHECKABLE" or "not resolvable" not in note, (state, note)
+    assert "not resolvable" not in note, note
+    assert state == "LIVE", (state, note)
+
+
+def test_discover_hf_space_and_npm_from_fixture() -> None:
+    """Shipped discover_hf_space / discover_npm emit DISCOVERED rows from a fixture body."""
+    orig = c.http_get
+
+    def fake_get(url, timeout=15, headers=None):
+        if "huggingface.co/api/spaces" in url:
+            return 200, json.dumps([{"id": "org/demo-space", "likes": 1, "sdk": "gradio"}]).encode()
+        if "registry.npmjs.org/-/v1/search" in url:
+            return 200, json.dumps({
+                "objects": [{"package": {"name": "@fixture/mcp-demo", "version": "0.0.1"}}],
+            }).encode()
+        return -1, None
+
+    c.http_get = fake_get
+    try:
+        spaces = discover.discover_hf_space(5)
+        npms = discover.discover_npm(5)
+    finally:
+        c.http_get = orig
+    assert spaces and spaces[0]["kind"] == "hf-space" and spaces[0]["status"] == "DISCOVERED"
+    assert spaces[0]["id"] == "org/demo-space"
+    assert npms and npms[0]["kind"] == "npm-registry" and npms[0]["status"] == "DISCOVERED"
+    assert npms[0]["id"] == "@fixture/mcp-demo"
+
+
+def test_mcp_cursor_pages() -> None:
+    orig = c.http_get
+    seen = []
+
+    def fake_get(url, timeout=15, headers=None):
+        seen.append(url)
+        if "cursor=" not in url:
+            return 200, json.dumps({
+                "servers": [{"server": {"name": "one", "remotes": [{"url": "https://a.example/mcp"}]}}],
+                "metadata": {"nextCursor": "c2"},
+            }).encode()
+        return 200, json.dumps({
+            "servers": [{"server": {"name": "two", "remotes": []}}],
+            "metadata": {},
+        }).encode()
+
+    c.http_get = fake_get
+    try:
+        rows = discover.discover_mcp(5)
+    finally:
+        c.http_get = orig
+    assert [r["id"] for r in rows] == ["one", "two"]
+    assert any("cursor=c2" in u for u in seen)
+
+
+def test_hf_pagination_two_pages() -> None:
+    """Shipped discover_hf walks skip= pages until n."""
+    orig_get, orig_page = c.http_get, discover.HF_PAGE
+    seen = []
+
+    def fake_get(url, timeout=15, headers=None):
+        seen.append(url)
+        if "skip=0" in url:
+            return 200, json.dumps([{"id": "a/m1"}, {"id": "a/m2"}]).encode()
+        if "skip=2" in url:
+            return 200, json.dumps([{"id": "a/m3"}]).encode()
+        return 200, b"[]"
+
+    c.http_get = fake_get
+    discover.HF_PAGE = 2
+    try:
+        rows = discover.discover_hf(3)
+    finally:
+        c.http_get = orig_get
+        discover.HF_PAGE = orig_page
+    assert [r["id"] for r in rows] == ["a/m1", "a/m2", "a/m3"]
+    assert any("skip=0" in u for u in seen) and any("skip=2" in u for u in seen)
+
+
+def test_run_probes_parallel_unsigned() -> None:
+    orig = probe.probe_hf
+
+    def fake(entry):
+        return "LIVE", f"{entry['id']} (200)"
+
+    probe.PROBERS["hf-model"] = fake
+    try:
+        by = probe.run_probes([
+            {"kind": "hf-model", "id": "p/one"},
+            {"kind": "hf-model", "id": "p/two"},
+        ])
+    finally:
+        probe.PROBERS["hf-model"] = orig
+    assert by["hf-model"]["LIVE"] == 2 and by["hf-model"]["n"] == 2
+
+
 def test_pidfile_lock_in_eat_loop() -> None:
     text = (HERE / "eat-loop.sh").read_text(encoding="utf-8")
     assert "EAT_PIDFILE" in text
@@ -96,8 +216,16 @@ def test_pidfile_lock_in_eat_loop() -> None:
 def main() -> int:
     test_probe_hf_discovered_fixture_then_stage_unsigned()
     test_write_atom_structurally_unsigned()
+    test_erc8004_expanded_chain_not_uncheckable_for_missing_rpc()
+    test_discover_hf_space_and_npm_from_fixture()
+    test_hf_pagination_two_pages()
+    test_mcp_cursor_pages()
+    test_run_probes_parallel_unsigned()
     test_pidfile_lock_in_eat_loop()
-    print("selftest OK: staged atom sig_ed25519=null, state=queued, auto_measured=False; pidfile lock, no pgrep -f")
+    print(
+        "selftest OK: staged atom unsigned; ERC-8004 43114 not missing-RPC; "
+        "hf-space+npm DISCOVERED; hf pagination; parallel probes; pidfile lock"
+    )
     return 0
 
 

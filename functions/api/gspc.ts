@@ -112,9 +112,10 @@ export const onRequestGet: PagesFunction = async (context) => {
       // ── the count, derived, never typed ──────────────────────────────────────
       // A SLOT ON THE BOARD IS NOT A MEASUREMENT. The 22-axis canon is a count of
       // slots; measured_axes is the count of slots with a real run behind them.
-      // Those two numbers are different (22 and 15) and the grammar must say both,
-      // because quoting only the larger one would claim 7 measurements that do not
-      // exist. Every number below is computed from the axis array.
+      // Every axis now carries a run, so measured_axes == axes == 22. The grammar
+      // still DERIVES both from the axis array rather than typing either: if a
+      // future slot is added with no run, the gap re-appears honestly on its own.
+      // Every number below is computed from the axis array.
       const measured = m.length;                       // status MEASURED — a run exists
       const unmeasured = selected.length - measured;   // slot published, no run
       const bySelectedFamily = (fam: "gspc" | "financial") => {
@@ -130,10 +131,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
         count_grammar:
-          `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
-          `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
-          `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
-          `so the gap is visible; it is not evidence of anything having been measured.`,
+          unmeasured === 0
+            ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
+              `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
+              `future slot is added with no run behind it, this line separates the two again on its own.`
+            : `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
+              `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
+              `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
+              `so the gap is visible; it is not evidence of anything having been measured.`,
         by_family: {
           gspc: {
             ...bySelectedFamily("gspc"),
@@ -141,22 +146,23 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           financial: {
             ...bySelectedFamily("financial"),
-            note: "The 8 financial/domain axis (ADR-001). Deterministic-facts runs on the six-issuer " +
-              "set where status is MEASURED. Index slots stay UNMEASURED (C-2026-0826-05). None of the " +
-              "eight is a model comparison, so none has a leader, an accuracy or a separation " +
-              "determination, and none contributes to any mean below.",
+            note: "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — " +
+              "issuer-account flags read off the public ledger (financial n=16 on the live XRPL " +
+              "reader; provenance-controls n=6) and public statistical series, graded by rule with no " +
+              "model, no fleet and no judgement. None of the eight is a model comparison, so none has " +
+              "a leader, an accuracy or a separation determination, and none contributes to any mean " +
+              "below — measured is not the same as scored. The two former index slots are measured as " +
+              "component facts (ai-adoption-components, labour-components), never restored to the " +
+              "retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05).",
           },
         },
         sweep_note:
           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
-          "were absent from this payload until now, so this endpoint reported 14 — the un-swept state. " +
-          // REDACTION: the ruling's phrasing applied the word 'measured' directly to the
-          // full slot count. That exact string is the forbidden form this board's own gate
-          // now catches, so it is DESCRIBED here rather than reproduced — printing it on a
-          // public surface would publish the very sentence the correction exists to retire.
-          "The ruling applied the word 'measured' to the full slot count; the evidence supports " +
-          "22 axis and 15 measurements, and the evidence wins. No axis was marked MEASURED to " +
-          "close that gap.",
+          "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
+          "state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board " +
+          "has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes " +
+          "carry no accuracy and no leader — measured is not the same as scored — but each has a " +
+          "signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
@@ -222,7 +228,7 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
     limitations: [
       `${separatedNames.length} of the ${measuredCount} measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.`,
-      `${selected.length} axes are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. Financial facts axes are not model comparisons.`,
+      `${selected.length} axis are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. The financial-fact axis are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
       "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. Those slots are now component-fact objects (ai-adoption-components, labour-components), not indexes. Do not restore the v0.1 sticker.",

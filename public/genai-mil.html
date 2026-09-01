@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GenAI.mil: the federal-AI verification gap — Council of AI</title>
+<meta name="description" content="Three vendors now run on GenAI.mil for millions of federal seats. Here are the signed public facts, the deployments we mark UNCHECKABLE, and the behavioural measurement gap — measurement, not certification.">
+<link rel="canonical" href="https://councilof.ai/genai-mil">
+<style>
+:root{--bg:#fff;--fg:#111;--dim:#5a5a5a;--line:#e3e3e3;--accent:#12467b;--code:#f5f6f8;--warn:#8a5a00;--ok:#1f6b3a}
+@media (prefers-color-scheme:dark){:root{--bg:#12141a;--fg:#e8e8ea;--dim:#a0a4ad;--line:#2a2e37;--accent:#8ab4f8;--code:#1b1e26;--warn:#e0b050;--ok:#69d18e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+main{max-width:820px;margin:0 auto;padding:2.2rem 1.2rem 4rem}
+h1{font-size:1.9rem;line-height:1.2;margin:.2rem 0 .4rem}
+h2{font-size:1.25rem;margin:2.2rem 0 .6rem;padding-top:1rem;border-top:1px solid var(--line)}
+h3{font-size:1.02rem;margin:1.3rem 0 .3rem}
+p{margin:.6rem 0}
+a{color:var(--accent)}
+.lede{font-size:1.12rem;color:var(--fg)}
+.dim{color:var(--dim)}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:.1em .35em;border-radius:4px}
+.tag{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.02em;padding:.12em .5em;border-radius:999px;border:1px solid var(--line);margin:.1em .25em .1em 0;vertical-align:middle}
+.tag.uncheck{color:var(--warn);border-color:var(--warn)}
+.tag.unmeas{color:var(--dim)}
+.tag.signed{color:var(--ok);border-color:var(--ok)}
+table{border-collapse:collapse;width:100%;margin:.8rem 0;font-size:.93rem}
+th,td{border:1px solid var(--line);padding:.5rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--code)}
+.card{border:1px solid var(--line);border-radius:8px;padding:.8rem 1rem;margin:.7rem 0}
+.card h3{margin-top:.2rem}
+ul{margin:.5rem 0;padding-left:1.3rem}
+li{margin:.25rem 0}
+.foot{margin-top:2.5rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.85rem;color:var(--dim)}
+blockquote{margin:.8rem 0;padding:.5rem 1rem;border-left:3px solid var(--accent);color:var(--fg);background:var(--code);border-radius:0 6px 6px 0}
+</style>
+</head>
+<body>
+<main>
+<p class="dim mono">Council of AI · evidence surface · /genai-mil</p>
+<h1>Three vendors now answer to millions of federal seats. Who measured their behaviour?</h1>
+<p class="lede">On 31 August 2026 the U.S. War Department put three frontier AI vendors on one platform, <span class="mono">GenAI.mil</span>, at Impact Level 5, for a user base designed to reach more than three million people. The security wrapper is authorised. The deployments are sealed. The models' <em>behaviour</em> on the governance-and-safety axes is unsigned. That last gap is the thing this page is about.</p>
+
+<p><strong>The rule this whole page keeps:</strong> we <strong>measure</strong>; we do <strong>not</strong> certify. Nothing here is a conformity mark, an endorsement, or a legal determination. A signed card records what a reproducible test found. Where we did not test, we say <span class="tag unmeas">UNMEASURED</span>. Where a system is sealed from the public and cannot be tested, we say <span class="tag uncheck">UNCHECKABLE</span> — and that is an honest, first-class answer, not a failure.</p>
+
+<h2>What was announced (the public facts, signed)</h2>
+<p>These are recorded as public-notice cards: we sign the press, not the models. Each hashes an official or reported source and states plainly what it does <em>not</em> measure.</p>
+<table>
+<thead><tr><th>Fact</th><th>Value</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Vendors on GenAI.mil</td><td>OpenAI ChatGPT (ChatGPT Mil), xAI Grok (Grok for Government / Starshield AI), Google Gemini</td><td class="dim">War Dept release; DefenseScoop; Military Times; TechCrunch</td></tr>
+<tr><td>Accreditation</td><td>Impact Level 5 (IL5) — highest for non-public, sensitive unclassified data</td><td class="dim">War Dept release</td></tr>
+<tr><td>Design capacity</td><td>More than 3 million military members, civilian employees and contractors</td><td class="dim">War Dept release</td></tr>
+<tr><td>Users on the platform</td><td>~1.5 million (as of 12 Jun 2026, Pentagon CTO)</td><td class="dim">Military Times / DefenseScoop</td></tr>
+</tbody>
+</table>
+<p class="dim">Note on counts: the sourced current-user figure is ~1.5M (June 2026). A ~1.7M figure circulated in operator notes is unverified; we record only the sourced number.</p>
+
+<h2>The three states, honestly</h2>
+
+<div class="card">
+<h3><span class="tag uncheck">UNCHECKABLE</span> The military deployments</h3>
+<p>ChatGPT Mil and Grok for Government run inside an IL5 boundary that is not public. We did not probe them, and we will not: a classified or government instance is <strong>UNCHECKABLE by definition</strong>. Any claim that we measured "the model the military uses" would be false. We measured the public model, never the sealed instance.</p>
+</div>
+
+<div class="card">
+<h3><span class="tag signed">AUTHORISED</span> The FedRAMP wrapper — and what it does not cover</h3>
+<p>The security wrapper around these products is authorised on the FedRAMP marketplace: OpenAI ChatGPT Enterprise and API (marketplace listing <span class="mono">FR2533155773</span>, ongoing as of 9 Jan 2026); Google Gemini at FedRAMP High (Mar 2025); Anthropic Claude at FedRAMP High via AWS and Google Cloud (Apr–Jun 2025). FedRAMP authorises <em>cloud security controls</em>. It does <strong>not</strong> sign the model's behaviour on the behavioural axes. That gap is us.</p>
+</div>
+
+<div class="card">
+<h3><span class="tag unmeas">UNMEASURED</span> The public models' behaviour — queued, not done</h3>
+<p>The honest state today: Council of AI has <strong>no signed behavioural card yet</strong> for the public GPT, Grok, Gemini, or Claude models. Grading the public models on the 14 behavioural GSPC axes with the deterministic grader is queued as an owner step (it needs the frontier-inference key). Until that runs, this row stays <span class="tag unmeas">UNMEASURED</span>. We will not print a score we did not measure.</p>
+</div>
+
+<h2>Vendor claims vs our card</h2>
+<p>Each vendor published a system or model card documenting its own safety testing and known limitations — public disclosures, on the record. We record the disclosure and, beside it, our own state. Public disclosures compared, not certified; factual, not defamatory.</p>
+<table>
+<thead><tr><th>Vendor</th><th>Public disclosure</th><th>Our card</th></tr></thead>
+<tbody>
+<tr><td>OpenAI (GPT / ChatGPT)</td><td>GPT-5 System Card</td><td><span class="tag unmeas">UNMEASURED</span></td></tr>
+<tr><td>Anthropic (Claude)</td><td>Claude Opus system card</td><td><span class="tag unmeas">UNMEASURED</span></td></tr>
+<tr><td>Google (Gemini)</td><td>Gemini model cards</td><td><span class="tag unmeas">UNMEASURED</span></td></tr>
+<tr><td>xAI (Grok)</td><td>Grok model card</td><td><span class="tag unmeas">UNMEASURED</span></td></tr>
+</tbody>
+</table>
+<p class="dim">A vendor's self-reported testing is a claim. An independent, reproducible, signed behavioural card is a measurement. The point of the comparison is the shape of the gap between the two — not to dispute what any vendor published.</p>
+
+<h2>Where the frameworks meet the axes</h2>
+<p>On 18 March 2026 CAISI (the NIST Center for AI Standards and Innovation) signed an MOU with GSA to bring AI-evaluation science into federal procurement through the USAi platform. NIST's AI Risk Management Framework is the federal risk spine. Our crosswalk points each RMF function at the GSPC behavioural axis that produces signed, reproducible evidence for it — <a href="/interop/nist-airmf-gspc-crosswalk.json">NIST AI RMF → GSPC axes crosswalk</a>. It is a mapping, not a legal determination.</p>
+<p><strong>Open door:</strong> the GSA contract-clause comment window (GSAR 552.239-7001) closed on 3 August 2026 — that door is shut. But NIST's <em>Trustworthy AI in Critical Infrastructure Profile</em> Community of Interest is open now, by mailing list and community channel. That is where an independent measurement layer belongs, and where we are preparing a contribution.</p>
+
+<h2>The compute thesis</h2>
+<blockquote>A cluster does not produce a signed card.</blockquote>
+<p>The same week these deployments went live, Anthropic was reported to have signed a roughly 35-billion-dollar cloud-compute deal with Nvidia-backed Lambda — one of several very large capacity commitments across the frontier labs. Compute buys capability. It does not, on its own, produce a reproducible, independently signed record of how a model behaves on the axes that a government cares about. That record has to be measured. Measuring it — for everyone, in the open — is the whole job.</p>
+
+<h2>Verify it yourself</h2>
+<ul>
+<li>Live board and axis totals: <a href="https://councilof.ai/api/gspc">/api/gspc</a> (<span class="mono">totals.public_count</span> is the sentence to quote).</li>
+<li>Signed public root (Merkle over every published card): <a href="/root.json">/root.json</a>.</li>
+<li>Signed card index and per-card verifier: <a href="/signed/">/signed/</a>.</li>
+<li>The GenAI.mil facts above are published as public-notice cards folded into the signed root; the frontier-model behavioural cards will appear on the <a href="/leaderboard">leaderboard</a> once the owner-step grading runs.</li>
+</ul>
+
+<p class="foot">Council of AI measures AI behaviour and publishes signed, reproducible records. We do not certify, accredit, or endorse, and verification is free. The GenAI.mil deployments are non-public and were not probed; the public models named here are not yet measured. This page states facts and states plainly what remains UNCHECKABLE or UNMEASURED. Last updated 1 September 2026.</p>
+</main>
+</body>
+</html>

@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T06:21:43Z",
+ "as_of": "2026-09-01T08:40:01Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,20 +13,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 14,
-   "live": 1,
+   "n_probed": 600,
+   "live": 36,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 13,
-   "live_fraction_of_probed": 0.0714,
+   "uncheckable": 564,
+   "live_fraction_of_probed": 0.06,
    "live_examples": [
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:74072 (tokenURI resolvable)"
+    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:292058 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:66178 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:66980 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9014 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9012 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9010 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T06:21:43Z",
+  "as_of": "2026-09-01T08:40:01Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
@@ -34,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "5e1c1c1dc39fdb037676652785b559fc58e5ec4c714e290d52fee3ecc56a41cc",
- "sig_ed25519": "bfdddff738455f2974da875471ba16e8edb1f22d050a6f89e2a0f507e28a4de4918ab886a7fe621087aa00263681d8031b9feb68b47045b1d8bb2441ed0d0408",
+ "sha256": "a93e7773769fb01ab55e015be744a6a24bc58bcc9b6a6d82cc9d57ab876c5a9a",
+ "sig_ed25519": "cee061129282cf505c2c8e4a2bc5bc13258256601f410e96507e09bc1f4d19560e9c81dc92a34967670bad2178a91e0d88918b9401afd13b89ef4b2d63602401",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 1 LIVE of 14 probed (read-only, ungraded)",
+ "subject": "auto-eat erc8004: 36 LIVE of 600 probed (read-only, ungraded)",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"

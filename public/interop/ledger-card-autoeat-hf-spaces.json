@@ -1,0 +1,54 @@
+{
+ "as_of": "2026-09-01T08:40:01Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
+  "sample": {
+   "n_probed": 1287,
+   "live": 498,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 789,
+   "live_fraction_of_probed": 0.3869,
+   "live_examples": [
+    "Rudesh0796/Groq-ChatBot-using-LLM (200)",
+    "KurdKod/huggingchat-artifact-pad30 (200)",
+    "001hlyu/hf.space (200)",
+    "yusram/road-eye-guard-yusra-app (200)",
+    "Rishu16Gamer/Cubestax (200)",
+    "zhisong-liu/TailWeather (200)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T08:40:01Z",
+  "unmeasured": [
+   "runtime_behavior",
+   "hardware_claim",
+   "lineage"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "f5d506d23f034af9b781b2fc0b59a32cc6525e303841d0a428fc76af6146dd60",
+ "sig_ed25519": "29c00700f4f8edfe49890991ae0b652c9d20f908c312e4bc42ee6cd2d8bbfb60d8cc5478a2668880524e2b219df5b528a2e1c9557b96fc74f70d6e321ed6f00e",
+ "surface": "autoeat.hf.spaces",
+ "subject": "auto-eat hf-space: 498 LIVE of 1287 probed (read-only, ungraded)",
+ "source_urls": [
+  "https://huggingface.co/api/spaces"
+ ],
+ "unmeasured": [
+  "runtime_behavior",
+  "hardware_claim",
+  "lineage"
+ ]
+}

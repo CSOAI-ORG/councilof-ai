@@ -93,11 +93,13 @@ export interface AxisScore {
 
 // Pages nudge 2026-08-25T18:47Z — ensure measured_on.note TIE ships past sticky storm
 export const MEASURED_ON = {
-  model: "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier " +
-    "cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never " +
-    "conflated with the board fleet.",
+  model: "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + " +
+    "6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on " +
+    "the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model " +
+    "comparison: they are measured as deterministic facts (issuer-account reads + public series), " +
+    "with no fleet, no leader and no accuracy.",
   endpoint: "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
-  date: "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
+  date: "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
   grading: "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
   note: "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals " +
     "(public_count, measured_axes, quotable_axes) and are derived, never typed. " +

@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-01T07:44:50Z",
+  "as_of": "2026-09-01T08:50:07Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -10,9 +10,9 @@
     "unsigned_new_leaves": 0,
     "missing_key": false
   },
-  "xrpl_basket_merkle": "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9",
+  "xrpl_basket_merkle": "e98a523d2d992cd06d3524b98ed81865edd0bd2b1cc1333021021471824eddf0",
   "represented_tvl": {
-    "usd": 1075447304.2899997,
+    "usd": 1189668922.292956,
     "source": "https://xrpl.fi/api/metrics",
     "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
   },
@@ -60,9 +60,9 @@
       "totals_unmeasured_axes": 0,
       "public_count": "22 axis · 22 measured",
       "measured_on": {
-        "model": "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet.",
+        "model": "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model comparison: they are measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
         "endpoint": "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
-        "date": "2026-08-12 (13 canonical axes) · 2026-08-18 (jail)",
+        "date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
         "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
         "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
         "living_stamp": {
@@ -324,7 +324,7 @@
     "not_issuer_7": true,
     "franklin_graphql": false
   },
-  "card_count": 43,
+  "card_count": 50,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }
