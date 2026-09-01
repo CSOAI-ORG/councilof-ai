@@ -18,7 +18,7 @@ from mill_hub_queue import (  # noqa: E402
     pick_emptiest,
     stage_unsigned,
 )
-from verify_card import canonical_body_bytes, verify_signed_card  # noqa: E402
+from verify_card import canonical_body_bytes, verify_signed_card, verify_signed_card_with_did_doc  # noqa: E402
 
 
 def test_pick_emptiest_skips_measured() -> None:
@@ -226,6 +226,16 @@ def test_infer_hub_calls_the_hub_slug_not_a_proxy() -> None:
     assert not any("llama-3.3" in (s or "") for s in seen)
 
 
+def test_unknown_did_is_uncheckable_not_measured() -> None:
+    wrap = stage_unsigned("unit/model", "governance", hits=8, n=30, reason="n>=30 pending sign")
+    wrap["did"] = "did:web:csoai.org#no-such-key"
+    wrap["signature"] = "ab" * 32
+    v, reason = verify_signed_card_with_did_doc(json.dumps(wrap).encode(), {"verificationMethod": []})
+    assert v == "UNCHECKABLE"
+    assert wrap["body"]["status"] == "UNMEASURED"
+    assert v != "VALID"
+
+
 def test_live_hub_queue_not_2410_measured() -> None:
     """If a hub-queue parquet is in cwd/scratch, assert n_measured != 2410 unless 2410 cards."""
     candidates = [
@@ -255,5 +265,6 @@ if __name__ == "__main__":
     test_mill_dry_with_all_14_banks_has_no_frozen_bank_skip()
     test_infer_one_uses_set_keys_not_no_free_keys()
     test_infer_hub_calls_the_hub_slug_not_a_proxy()
+    test_unknown_did_is_uncheckable_not_measured()
     test_live_hub_queue_not_2410_measured()
     print("PASS mill honesty")

@@ -33,7 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: master
+          # mill cards batch to the dispatch branch (auto-eat-feed / mill PR), never 90s-push master
+          ref: ${{ inputs.target == 'mill' && github.ref_name || 'master' }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -57,7 +58,7 @@ jobs:
           if [ "$T" = "ledger" ]; then
             git add public/interop/ledger-card-*.json
           elif [ "$T" = "mill" ]; then
-            git add public/interop/mill-cards-signed
+            git add public/interop/mill-cards-signed public/interop/mill-cards-unsigned
           else
             git add public/interop/financial-measure-card-*.json
           fi
@@ -66,4 +67,8 @@ jobs:
             exit 0
           fi
           git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
-          git push origin HEAD:master
+          if [ "$T" = "mill" ]; then
+            git push origin "HEAD:${{ github.ref_name }}"
+          else
+            git push origin HEAD:master
+          fi
