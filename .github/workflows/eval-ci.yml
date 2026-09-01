@@ -14,6 +14,7 @@ on:
       - "public/datasets/**"
       - "harness/owem/card_pipeline.py"
       - "packages/eval-ci/**"
+      - "scripts/auto-eat/**"
       - ".github/workflows/eval-ci.yml"
   workflow_dispatch:
     inputs:
@@ -36,6 +37,8 @@ jobs:
         run: python3 packages/eval-ci/check_bank.py --selftest
       - name: eval-CI bank gate (fail-on-silent-edit)
         run: python3 packages/eval-ci/check_bank.py
+      - name: auto-eat honesty (unsigned atoms, pidfile lock)
+        run: python3 scripts/auto-eat/test_honesty.py
       # STUB re-run — emits the QUEUED delta card shape (number UNCHECKABLE without a model run).
       - name: emit QUEUED eval-delta card
         run: python3 packages/eval-ci/emit_delta.py --axis "${{ github.event.inputs.axis || 'gspc-axis' }}" --write

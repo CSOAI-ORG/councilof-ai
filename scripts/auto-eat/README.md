@@ -81,8 +81,9 @@ Leave either undone and a human stays in the loop.
 # one proof cycle
 EAT_PER_SOURCE=25 EAT_MAX_PROBE=40 bash scripts/auto-eat/eat-loop.sh once
 
-# install the keeper (no crontab on the pod — nohup loop + pidfile)
-nohup env EAT_INTERVAL=3600 bash scripts/auto-eat/eat-loop.sh loop \
-  >> scripts/auto-eat/eat.log 2>&1 &
-echo $! > /workspace/auto-eat/eat-loop.pid
+# install the keeper (no crontab on the pod — nohup loop + pidfile inside eat-loop.sh)
+# One instance: eat-loop.sh loop writes /workspace/auto-eat/eat-loop.pid and
+# refuses a live pid. Never pgrep -f (self-match trap).
+nohup env EAT_INTERVAL=3600 EAT_PIDFILE=/workspace/auto-eat/eat-loop.pid \
+  bash scripts/auto-eat/eat-loop.sh loop >> scripts/auto-eat/eat.log 2>&1 &
 ```
