@@ -1,0 +1,55 @@
+{
+ "as_of": "2026-09-01",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true,
+   "cohort_are_clients": false
+  },
+  "method": "GET https://councilof.ai/api/swift — three-state census of named press cohort",
+  "sample": {
+   "n": 26,
+   "n_measured": 0,
+   "n_live": 3,
+   "n_committed": 9,
+   "n_discovered": 14,
+   "live_ids": [
+    "hsbc",
+    "standard-chartered",
+    "uob"
+   ],
+   "committed_n": 9,
+   "discovered_n": 14
+  },
+  "story": "SWIFT named banks are TARGETS / press list, not clients. 3 LIVE (HSBC, Standard Chartered, UOB) from sourced press. 0 MEASURED. Official swift.com HTML UNCHECKABLE (timeout). No ISO 20022 / MT artifact fetched.",
+  "verified_via": "live GET /api/swift three-state",
+  "as_of": "2026-09-01",
+  "unmeasured": [
+   "gspc_score",
+   "ISO20022 artifact",
+   "SWIFT membership",
+   "clients"
+  ]
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "0c868b451753daf5a184aeaefdb26539089da1becaca2551a661d981c939961a",
+ "sig_ed25519": "8fe4e706d5defa53ceaee9426d90d0185554e9e34505bb6283da85a2d943c59a461ccb6cf500e50864d626f6826c0b016583f7a074fc0144b43d9b7f79a4ba05",
+ "surface": "autoeat.swift.census",
+ "subject": "auto-eat SWIFT census: 26 named / 3 LIVE / 0 MEASURED — not clients",
+ "source_urls": [
+  "https://councilof.ai/api/swift",
+  "https://councilof.ai/interop/swift-17.json"
+ ],
+ "unmeasured": [
+  "gspc_score",
+  "ISO20022 artifact",
+  "SWIFT membership",
+  "clients"
+ ]
+}
