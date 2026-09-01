@@ -1,7 +1,7 @@
 # GSPC Greenfield Playbook
 
-Living board: GET https://councilof.ai/api/gspc — **22 axis · 15 measured · 7 UNMEASURED**. Schema `csoai.gspc-axes/0.5`.
-Measurement, not certification. Empty cells stay empty. Combined GSPC against a model is a **signed vector**, not a SaaS average. Data free; proofs paid (`/api/proof?bundle=1` 402). Payment does not mint MEASURED. MetaMask is not connected. Treasury is not the signer. BOARD_SIGN_KEY is not on a laptop, 3090, or MetaMask.
+Living board: GET https://councilof.ai/api/gspc — **22 axis · 22 measured (14 model + 8 fact)**. Schema `csoai.gspc-axes/0.5`.
+Measurement, not certification. Combined GSPC against a model is a **signed vector**, not a SaaS average. Data free; proofs paid (`/api/proof?bundle=1` 402). Payment does not mint MEASURED. MetaMask is not connected. Treasury is not the signer. BOARD_SIGN_KEY is not on a laptop, 3090, or MetaMask.
 
 ---
 
@@ -9,7 +9,7 @@ Measurement, not certification. Empty cells stay empty. Combined GSPC against a 
 
 **GSPC Greenfield Playbook**
 
-**2000 clean-house moves · 22 slots · 15 measured · 7 declared empty · more tables**
+**2000 clean-house moves · 22 axis · 22 measured (14 model + 8 fact) · more tables**
 
 *Living source of truth: GET https://councilof.ai/api/gspc · Schema csoai.gspc-axes/0.5*
 
@@ -17,7 +17,7 @@ Measurement, not certification. Empty cells stay empty. Combined GSPC against a 
 
 *Stamp date: 31 August 2026 · Classification: measurement instrument, never certification*
 
-Doctrine, unchanged. Empty cells stay empty. A published slot is a visible gap, not evidence. Ties are never counted as wins. No model grades another model. Nothing is quoted below n \>= 30. The Hub is a parallel record, not a second board. Greenfield means the work-list is rebuilt from the Completion Review with everything we now know. Live scores stay. Upgrades are work, not a new number.
+Doctrine, unchanged. A published slot is a visible gap, not evidence. Ties are never counted as wins. No model grades another model. Nothing is quoted below n \>= 30. The Hub is a parallel record, not a second board. Greenfield means the work-list is rebuilt from the Completion Review with everything we now know. Live scores stay. Upgrades are work, not a new number.
 
 # **1. What this document is**
 

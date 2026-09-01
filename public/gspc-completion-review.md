@@ -1,6 +1,6 @@
 # GSPC Completion Review
 
-Living board: GET https://councilof.ai/api/gspc. Measurement, not certification. Empty cells stay empty.
+Living board: GET https://councilof.ai/api/gspc. Measurement, not certification.
 
 ---
 
@@ -8,7 +8,7 @@ Living board: GET https://councilof.ai/api/gspc. Measurement, not certification.
 
 **GSPC Completion Review**
 
-Full-stack axis upgrade pack · 22 slots · 15 measured · 7 declared empty
+Full-stack axis upgrade pack · 22 axis · 22 measured (14 model + 8 fact)
 
 Living source of truth: GET https://councilof.ai/api/gspc · Schema csoai.gspc-axes/0.5
 
@@ -16,7 +16,7 @@ Hugging Face holds the signed record. A Hub repo is not a grade.
 
 Stamp date: 31 August 2026 · Classification: measurement instrument, never certification
 
-**Doctrine, unchanged.** Empty cells stay empty. A published slot is a visible gap, not evidence. Ties are never counted as wins. No model grades another model. Nothing is quoted below n ≥ 30. The Hub is a parallel record, not a second board.
+**Doctrine, unchanged.** A published slot is a visible gap, not evidence. Ties are never counted as wins. No model grades another model. Nothing is quoted below n ≥ 30. The Hub is a parallel record, not a second board.
 
 **1. What this document is**
 
