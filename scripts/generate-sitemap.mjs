@@ -297,11 +297,21 @@ for (const [mp, cf, pr] of MACHINE_PATHS) {
   if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
 }
 
-// Every blog article that is actually reachable. /blog/:slug is a :param route (skipped
-// above), and the previous hand-maintained list of 22 slugs left 26 real articles out of
-// the sitemap entirely. Read the dataset instead; skip any slug that _redirects sends
-// elsewhere, because a sitemap URL that 308s away is exactly the defect being fixed.
+// Every blog article that is actually BUILT. /blog/:slug is a :param route (skipped above),
+// so the family has to be enumerated. Two sources have to agree for a URL to be listed:
+//
+//   1. blog-content.ts — the slug has article content to render, AND
+//   2. scripts/prerender.mjs MUST list — the slug is actually snapshotted to a static page.
+//
+// Reading ONLY blog-content.ts (as this did before) put every slug with content in the
+// sitemap, but content is not a page: 19 of the 48 content slugs are NOT in the prerender
+// queue, so the static host serves an honest 404 for them and the sitemap advertised 19 dead
+// URLs (byzantine-consensus, sovereign-governance-layer, proof-of-ai, …). A sitemap must list
+// what the edge SERVES, so the built set is the authority. This is DERIVED from prerender.mjs,
+// never a hand-list: a slug added to the snapshot queue lands in the sitemap on the next build,
+// and one removed leaves it — the two cannot drift the way a copied list does.
 const BLOG_TS = join(ROOT, "client/src/data/blog-content.ts");
+const PRERENDER_MJS = join(ROOT, "scripts/prerender.mjs");
 let blogSlugs = [];
 try {
   const bsrc = readFileSync(BLOG_TS, "utf8");
@@ -309,9 +319,26 @@ try {
 } catch {
   console.warn("[sitemap] blog-content.ts unreadable — no /blog/:slug entries emitted");
 }
+// The set of /blog/<slug> paths the prerender actually snapshots. If this comes back empty the
+// source shape changed and every blog URL would silently vanish — fail loud instead.
+let builtBlog = new Set();
+try {
+  const psrc = readFileSync(PRERENDER_MJS, "utf8");
+  builtBlog = new Set([...psrc.matchAll(/["'`]\/blog\/([a-z0-9-]+)["'`]/g)].map((m) => m[1]));
+  if (blogSlugs.length && builtBlog.size === 0) {
+    console.error("[sitemap] ERROR: derived 0 built /blog/ slugs from prerender.mjs — the source shape changed.");
+    process.exit(1);
+  }
+} catch {
+  console.error("[sitemap] ERROR: scripts/prerender.mjs unreadable — cannot tell which blog pages are built.");
+  process.exit(1);
+}
 let blogSkipped = 0;
+let blogUnbuilt = 0;
 for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
+  // Not snapshotted → the static host 404s it → it must not be in the sitemap.
+  if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
   if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
   if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
 }
@@ -357,9 +384,10 @@ writeFileSync(OUT, xml);
 console.log(
   `[sitemap] ${finalPaths.length} URLs -> public/sitemap.xml ` +
     `(skipped ${skippedParams} :param routes, ${skippedJunk} junk/legacy, ` +
-    `${droppedRedirect} redirect-to-elsewhere, ${blogSkipped} redirected blog slugs; ` +
+    `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
+    `${blogSkipped} redirected blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
-    `${blogSlugs.length - blogSkipped} blog articles; lastmod=${today})`
+    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
 );
 
 // Flagship sanity check — these MUST be present.

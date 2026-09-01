@@ -10,7 +10,7 @@
     "dev:server": "NODE_ENV=development tsx watch server/index.ts",
     "dev:client": "vite --config client/vite.config.ts",
     "build": "npm run build:client && npm run build:server",
-    "build:client": "node scripts/resolve-app-tsx.mjs && node scripts/build-card-matrix.mjs && node scripts/build-findings-index.mjs && node scripts/pages-size-guard.mjs public && node scripts/refutation-count-lint.mjs && node scripts/counter-lint.mjs && node scripts/mcp-probe.mjs --check && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/redirects-guard.mjs public/_redirects && node scripts/generate-signed-index.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
+    "build:client": "node scripts/resolve-app-tsx.mjs && node scripts/build-card-matrix.mjs && node scripts/generate-cards-bundle.mjs && node scripts/build-findings-index.mjs && node scripts/pages-size-guard.mjs public && node scripts/refutation-count-lint.mjs && node scripts/counter-lint.mjs && node scripts/mcp-probe.mjs --check && node scripts/generate-sitemap.mjs && node scripts/generate-redirects.mjs && node scripts/redirects-guard.mjs public/_redirects && node scripts/generate-signed-index.mjs && node scripts/generate-route-manifest.mjs && vite build --config client/vite.config.ts && node scripts/strip-datasectors-preload.mjs && node -e \"require('fs').cpSync('functions','dist/client/functions',{recursive:true})\"",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "lint:counters": "node scripts/counter-lint.mjs",
     "mcp:probe": "node scripts/mcp-probe.mjs",

@@ -4,6 +4,8 @@
  * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.
  * 402 without payment is OK. May trail the last published root (≤24h).
  */
+import { verifyX402Payment, type X402Env } from "./_x402";
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -14,27 +16,37 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
+export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const u = (p: string) => new URL(p, origin).toString();
   const sha = (url.searchParams.get("sha") || "").trim().toLowerCase();
   const bundle = url.searchParams.get("bundle") === "1";
-  const paid = request.headers.get("x-payment") != null;
+  // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
+  // (bundle) branch; the free ?sha= inclusion never needs it.
+  const payment = bundle
+    ? await verifyX402Payment(request, env as X402Env, u("/api/proof?bundle=1"))
+    : { ok: false, reason: "not a bundle request" };
+  const paid = payment.ok;
 
   if (bundle) {
     if (!paid) {
       return json(
         {
           schema: "csoai.public-root-proof/0.1",
+          error: "payment_required",
           payment_required: {
             kind: "x402",
             amount: 0.02,
             per: "proof-bundle",
             instruction:
-              "One inclusion is free (?sha=). The full bundle is x402. Settle via the estate x402 receipt MCP, then retry with the x-payment header.",
+              "One inclusion is free (?sha=). The full bundle is x402. Settle via the estate x402 receipt MCP, then retry with the x-payment header carrying the settled receipt.",
             settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
           },
+          // Fail-closed: a receipt is only accepted when a configured x402 facilitator
+          // verifies it. Header presence alone is NOT payment and never grants the bundle.
+          verification: "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
+          not_paid_reason: payment.reason,
           free: { one_inclusion: "/api/proof?sha=<64-hex>" },
         },
         402,
@@ -63,24 +75,40 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const hashes = Array.isArray(root.card_sha256) ? root.card_sha256 : [];
 
   if (bundle && paid) {
+    // O(1) subrequests. This used to fetch /proofs/<h>.json AND fall back to /cards/<h>.json
+    // ONCE PER hash — up to 1 (root) + 2 x card_sha256.length subrequests. With 50 hashes that
+    // is ~101 fetches, far past Cloudflare Pages Functions' 50-subrequest cap, so the invocation
+    // threw and the endpoint 500'd. Every inclusion proof already lives inside its card wrapper,
+    // which the build-time aggregate carries, so ONE fetch of /cards-bundle.json resolves them
+    // all regardless of card count.
+    const bundleRes = await fetch(u("/cards-bundle.json"));
+    if (!bundleRes.ok) {
+      return json(
+        {
+          schema: "csoai.public-root-proof/0.1",
+          error: "not_found",
+          path: "/api/proof",
+          unmeasured: ["cards-bundle.json"],
+          reason: `static /cards-bundle.json HTTP ${bundleRes.status}`,
+        },
+        404,
+      );
+    }
+    const cbundle = (await bundleRes.json()) as {
+      cards?: Record<string, { proof?: unknown[] } | undefined>;
+    };
+    const bundleCards = cbundle && cbundle.cards ? cbundle.cards : {};
     const items = [];
     for (let i = 0; i < hashes.length; i++) {
       const h = hashes[i];
-      const r = await fetch(u(`/proofs/${h.slice(0, 16)}.json`));
-      if (r.ok) {
-        items.push(await r.json());
-        continue;
-      }
-      const c = await fetch(u(`/cards/${h.slice(0, 16)}.json`));
-      if (c.ok) {
-        const w = await c.json();
-        items.push({
-          sha256: h,
-          index: i,
-          proof: w.proof || [],
-          merkle_root: root.merkle_root,
-        });
-      }
+      const w = bundleCards[h];
+      if (!w) continue;
+      items.push({
+        sha256: h,
+        index: i,
+        proof: Array.isArray(w.proof) ? w.proof : [],
+        merkle_root: root.merkle_root,
+      });
     }
     return json({
       schema: "csoai.public-root-proof/0.1",

@@ -16,17 +16,98 @@ const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
+// ── neutral-body rule: our own models never lead the PUBLIC board ─────────────
+// CSOAI measures; it must not self-preference. Eight of the fourteen model-comparison
+// axes had our own tuned "council-*-v3-light (council specialist)" fine-tunes as the
+// point-leader. A measurement body cannot publish its own model as the winner over the
+// vendors it measures, so those models are pulled off the PUBLIC leaderboard here.
+//
+// This is a SERVING-LAYER exclusion, not a deletion: the axis modules and the signed
+// measurement cards are untouched (the measurement happened and stays on the record —
+// see /api/cards and /signed/). We simply do not name our own model as the public leader.
+const isOwnCouncilModel = (name?: string | null): boolean =>
+  typeof name === "string" && (/^council\b/i.test(name.trim()) || /\(council specialist\)/i.test(name));
+
+// Remove our own model from an axis's PUBLIC leader slot. Only touches model-comparison
+// axes our own model led; every external-led axis (and every fact axis) passes through
+// unchanged. The leader-specific numbers (the leader's accuracy, its Wilson interval, its
+// macro_f1 / unparsed_rate, and the council-vs-base separation determination) described OUR
+// model, so with it excluded they cannot stand as a public ranking. The external runner-up's
+// per-axis numbers are NOT carried in this payload (they lived on the measurement pod), so
+// they are dropped rather than reattributed — never fabricated. The axis stays MEASURED:
+// external models answered the same frozen bank (fleet_mean is over the whole fleet), so the
+// measurement is real; it simply carries no public leader until an external-only re-rank is
+// published. Fleet-level aggregates (fleet_mean, mean_harm, cvar05_harm) are NOT a
+// self-preference claim and are kept.
+type PublicAxis = AxisScore & {
+  excluded_leader?: string;
+  public_leader_state?: string;
+  excluded_note?: string;
+  measurement_note?: string;
+};
+const excludeOwnLeader = (a: AxisScore): PublicAxis => {
+  if (a.kind !== "model-comparison" || !isOwnCouncilModel(a.leader)) return a;
+  const {
+    accuracy: _acc,
+    accuracy_is: _accIs,
+    interval: _int,
+    macro_f1: _mf1,
+    unparsed_rate: _upr,
+    separation_p: _sp,
+    separation_basis: _sb,
+    leader: _ld,
+    note: _note,
+    ...rest
+  } = a;
+  return {
+    ...rest,
+    leader: undefined,
+    // No separation determination stands on the public board once the tested leader is
+    // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
+    // tallies below, which is the honest count of what the public board can still assert.
+    separation: "UNTESTED",
+    excluded_leader: a.leader,
+    public_leader_state: "EXCLUDED_OWN_MODEL",
+    // The primary note is neutral — the original note narrated our own model leading, which
+    // is exactly the self-preference being removed, so it must not be the public sentence.
+    note:
+      "No public leader: our own council specialist held the point lead and a neutral measurement " +
+      "body does not rank its own models against the vendors it measures. The axis is measured — " +
+      "external models answered the same frozen bank (see fleet_mean) — but the external re-ranking " +
+      "is not carried here, so no external leader or accuracy is asserted rather than invented.",
+    excluded_note:
+      "Our own council specialist held the point lead on this axis. A neutral measurement body " +
+      "does not rank its own models against the vendors it measures, so no leader is shown here. " +
+      "The measurement is real and the signed card still exists; the external re-ranking requires a " +
+      "per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
+    // The original measurement note is preserved verbatim for the record — it DESCRIBES the run
+    // (which included our own models), it is NOT the public ranking. Kept so the provenance,
+    // fleet findings and bank details on these axes are not lost by the exclusion.
+    measurement_note: a.note,
+  };
+};
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
 
-  const selected = axis ? AXES.filter((a) => a.axis === axis) : AXES;
-  if (axis && selected.length === 0) {
+  const selectedRaw = axis ? AXES.filter((a) => a.axis === axis) : AXES;
+  if (axis && selectedRaw.length === 0) {
     return new Response(
       JSON.stringify({ error: "unknown axis", known: AXES.map((a) => a.axis) }, null, 2),
       { status: 404, headers: { "content-type": "application/json; charset=utf-8" } },
     );
   }
+  // The PUBLIC view: our own models removed from every leader slot. Everything downstream
+  // (totals, separation stats, means, the axes array, the living stamp) derives from this,
+  // so a council model can never re-enter a public count.
+  const selected = selectedRaw.map(excludeOwnLeader);
+  const ownLedExcludedAxes = selectedRaw
+    .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader))
+    .map((a) => a.axis);
+  const externallyLedAxes = selected
+    .filter((a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string")
+    .map((a) => a.axis);
 
   const items = selected.reduce((s, a) => s + a.n, 0);
   const measuredSlots = selected.filter((a) => a.status === "MEASURED");
@@ -178,6 +259,21 @@ export const onRequestGet: PagesFunction = async (context) => {
           "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
           "only to the model-comparison axes. The financial axes have no fleet and no leader: they are " +
           "not counted as untested, because no separation test is applicable to them.",
+        // ── neutral-body exclusion (2026-09-01) ──────────────────────────────
+        // Our own tuned council specialists are removed from the PUBLIC leader slots. These
+        // counts make the effect explicit and are DERIVED from the axis array, never typed.
+        externally_led_axes: externallyLedAxes.length,
+        own_leaders_excluded: ownLedExcludedAxes.length,
+        own_leaders_excluded_axes: ownLedExcludedAxes,
+        own_model_exclusion_note:
+          `Own council-specialist models were removed from the public per-axis leaders on ` +
+          `${ownLedExcludedAxes.length} of the ${cmp.length} model-comparison axes (${ownLedExcludedAxes.join(", ") || "none"}); ` +
+          `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
+          `does not rank its own models against the vendors it measures. This changes leader attribution ` +
+          `and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: ` +
+          `every axis still carries a measurement, so the measured count is unchanged. The excluded models' ` +
+          `signed cards are untouched — measurement happened; it is simply not published as a public ranking ` +
+          `of our own model.`,
         mean_macro_f1: avg((a) => a.macro_f1),
         mean_accuracy: avg((a) => a.accuracy),
         mean_fleet_mean: avg((a) => a.fleet_mean),
@@ -272,7 +368,9 @@ export const onRequestGet: PagesFunction = async (context) => {
         schema: "csoai.gspc-living/0.2",
         gold_run: "2026-08-18T03:22:16Z",
         source: "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
-        axes: AXES.map((a) => ({
+        // Own council leaders excluded here too, so no public surface of this payload — the
+        // stamp included — names our own model's leader accuracy on an axis it topped.
+        axes: AXES.map(excludeOwnLeader).map((a) => ({
           axis: a.axis,
           family: a.family,
           kind: a.kind,
