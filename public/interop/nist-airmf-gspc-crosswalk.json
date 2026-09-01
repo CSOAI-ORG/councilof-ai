@@ -1,0 +1,80 @@
+{
+  "kind": "csoai.crosswalk/0.1",
+  "schema": "csoai.gspc-crosswalk/0.1",
+  "title": "NIST AI RMF 1.0 functions -> GSPC behavioural axes",
+  "as_of": "2026-09-01T00:00:00Z",
+  "status": "MAPPING",
+  "not_a_legal_determination": true,
+  "not_a_certification": true,
+  "not_a_conformity_assessment": true,
+  "disclaimer": "A crosswalk is a mapping between two frameworks. It is not a legal determination, a conformity assessment, or a certification of any model. It says which GSPC axis carries measurable evidence for which NIST AI RMF outcome. Measurement, not certification.",
+  "context": {
+    "why": "CAISI (NIST) signed an MOU with GSA on 18 Mar 2026 to bring AI-evaluation science into federal procurement via the USAi platform. NIST AI RMF is the federal risk-management spine. This crosswalk points each RMF function at the GSPC behavioural axis that produces signed, reproducible evidence for it.",
+    "caisi_gsa_mou": "https://www.nist.gov/news-events/news/2026/03/caisi-signs-mou-gsa-boost-ai-evaluation-science-federal-procurement-through",
+    "gsa_release": "https://www.gsa.gov/about-gsa/newsroom/news-releases/gsa-and-nist-partner-to-boost-ai-evaluation-science-in-federal-procurement-03182026",
+    "open_docket_target": {
+      "name": "NIST AI RMF Profile: Trustworthy AI in Critical Infrastructure - Community of Interest",
+      "status": "OPEN",
+      "how": "mailing list + community Slack; concept note dated 7 Apr 2026; no fixed comment deadline as of Sep 2026",
+      "url": "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure"
+    },
+    "closed_docket": {
+      "name": "GSA GSAR clause 552.239-7001 (Basic Safeguarding of Data within LLM AI Systems)",
+      "status": "CLOSED",
+      "comments_closed": "2026-08-03",
+      "note": "Comment window closed. Do not file there.",
+      "url": "https://www.federalregister.gov/documents/2026/06/17/2026-12205/general-services-acquisition-regulation-acquisition-of-information-and-communication-technology"
+    }
+  },
+  "gspc_axes": {
+    "public_behavioural_axes": 14,
+    "public_quotable_note": "The public quotable board is 14 behavioural GSPC axes; live totals come from https://councilof.ai/api/gspc totals.public_count. The internal universe registers additional expansion axes that are NOT board-quotable until their gate.",
+    "measured_axes_listed": [
+      "governance", "safety", "provenance", "continuity", "conformance",
+      "openness", "machinery-conformity", "care", "cross-reality",
+      "detector-interop", "art5-safeguard", "swarm", "affect", "jail"
+    ]
+  },
+  "crosswalk": [
+    {
+      "nist_function": "GOVERN",
+      "outcome": "Policies, accountability, and oversight structures for AI risk are in place and enforced.",
+      "gspc_axes": ["governance", "art5-safeguard", "openness"],
+      "evidence": "Signed governance-axis cards + openness (documentation/transparency) cards. GOVERN maps to whether the deployer can show governed, documented, accountable behaviour.",
+      "coverage": "PARTIAL - GSPC measures model behaviour, not the deployer's org policies."
+    },
+    {
+      "nist_function": "MAP",
+      "outcome": "Context, intended use, and risks are identified and documented.",
+      "gspc_axes": ["provenance", "conformance", "detector-interop"],
+      "evidence": "Provenance + conformance (protocol/interop) + detector-interop cards establish what a model is, how it is invoked, and whether its outputs are detectable/attributable.",
+      "coverage": "PARTIAL"
+    },
+    {
+      "nist_function": "MEASURE",
+      "outcome": "AI risks and trustworthiness characteristics are analysed, assessed, and tracked.",
+      "gspc_axes": ["safety", "care", "jail", "affect", "swarm", "cross-reality", "machinery-conformity"],
+      "evidence": "The behavioural core. Deterministic-grader, Ed25519-signed measurement cards per axis per model. This is the function GSPC is built to serve: reproducible behavioural measurement, not self-attestation.",
+      "coverage": "DIRECT - strongest overlap."
+    },
+    {
+      "nist_function": "MANAGE",
+      "outcome": "Risks are prioritised, responded to, and monitored over time; incidents are handled.",
+      "gspc_axes": ["continuity", "safety", "detector-interop"],
+      "evidence": "Continuity + safety cards over time (the living board) plus detector-interop for incident attribution. MANAGE maps to ongoing, dated measurement rather than a one-time grade.",
+      "coverage": "PARTIAL - GSPC supplies the measurement stream; response/remediation is the deployer's."
+    }
+  ],
+  "honesty": {
+    "measure_not_certify": true,
+    "unmeasured_is_first_class": true,
+    "gap": "FedRAMP authorises the security wrapper; NIST AI RMF frames the risk; neither signs the MODEL's behaviour on these axes. The signed behavioural card is the missing evidence layer.",
+    "deployments_uncheckable": "The GenAI.mil IL5 deployments are non-public and were not probed. They are UNCHECKABLE. This crosswalk maps frameworks to the PUBLIC models only."
+  },
+  "source_urls": [
+    "https://www.nist.gov/itl/ai-risk-management-framework",
+    "https://www.nist.gov/news-events/news/2026/03/caisi-signs-mou-gsa-boost-ai-evaluation-science-federal-procurement-through",
+    "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure",
+    "https://councilof.ai/api/gspc"
+  ]
+}

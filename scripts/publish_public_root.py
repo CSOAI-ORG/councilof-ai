@@ -30,7 +30,7 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, fin7_coverage, hub_cite, swift_notices, xrpl  # noqa: E402
+from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, swift_notices, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
@@ -399,6 +399,7 @@ def main() -> int:
     notices_out = swift_notices.collect()
     benji_out = benji.collect()
     fin7_out = fin7_coverage.collect()
+    genai_mil_out = genai_mil_notices.collect()
     hub_out = hub_cite.collect(ROOT)
 
     leaves: list[dict] = []
@@ -406,6 +407,10 @@ def main() -> int:
     leaves.extend(benji_out["leaves"])
     leaves.extend(notices_out["leaves"])
     leaves.extend(fin7_out["leaves"])
+    # GenAI.mil public-notice leaves (war.gov 31 Aug, FedRAMP gap, vendor
+    # claim-vs-card x4, NIST crosswalk). Facts, not measurements. New leaves stay
+    # UNSIGNED until the GHA OIDC job signs them; deployments UNCHECKABLE.
+    leaves.extend(genai_mil_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()

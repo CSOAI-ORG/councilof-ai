@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
-from adapters import swift_notices, xrpl  # noqa: E402
+from adapters import genai_mil_notices, swift_notices, xrpl  # noqa: E402
 
 UA = {"User-Agent": "csoai-test-public-root/0"}
 
@@ -96,6 +96,35 @@ def test_envelope_preimage_under_3kb() -> None:
     assert len(raw) < 512
 
 
+def test_genai_mil_7_unmeasured_notices() -> None:
+    out = genai_mil_notices.collect()
+    leaves = out["leaves"]
+    assert len(leaves) == 7
+    sidecar = out["sidecar"]
+    assert sidecar.get("deployments_uncheckable") is True
+    assert sidecar.get("model_behaviour_unsigned") is True
+    assert sidecar.get("public_models_measured") is False
+    subjects = []
+    for leaf in leaves:
+        payload = leaf["payload"]
+        assert leaf["surface"] == "public.notice"
+        # Facts, never a grade: every leaf is UNMEASURED or a MAPPING.
+        assert payload.get("status") in ("UNMEASURED", "MAPPING")
+        # Every leaf is honest about what it did NOT measure.
+        assert leaf.get("unmeasured")
+        assert leaf["source_urls"]
+        subjects.append(leaf["subject"])
+        text = json.dumps(leaf).lower()
+        # No certification language anywhere in these facts.
+        assert "certified" not in text or "not certified" in text or "not a cert" in text
+    joined = " ".join(subjects).lower()
+    assert "genai.mil" in joined
+    assert "fedramp" in joined
+    assert "crosswalk" in joined
+    # Public frontier models are UNMEASURED here (owner-step grading).
+    assert any("unmeasured" in s.lower() for s in subjects)
+
+
 def test_live_root_envelope() -> None:
     st, root = _get("https://councilof.ai/root.json")
     assert st == 200
@@ -114,6 +143,7 @@ def test_live_root_envelope() -> None:
 if __name__ == "__main__":
     test_xrpl_locked_16_and_live_reader()
     test_swift_17_unmeasured_notices()
+    test_genai_mil_7_unmeasured_notices()
     test_envelope_preimage_under_3kb()
     test_live_root_envelope()
-    print("PASS public-root XRPL16 reader + SWIFT17 UNMEASURED notices + envelope preimage")
+    print("PASS public-root XRPL16 + SWIFT17 + GenAI.mil7 UNMEASURED notices + envelope preimage")
