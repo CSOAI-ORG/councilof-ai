@@ -8,7 +8,7 @@ Living board: GET https://councilof.ai/api/gspc. Measurement, not certification.
 
 **GSPC Completion Review**
 
-Full-stack axis upgrade pack · 22 axis · 22 measured (14 model + 8 fact)
+Full-stack axis upgrade pack · 22 axis · 15 measured · 7 empty/UNMEASURED. Empty cells stay empty
 
 Living source of truth: GET https://councilof.ai/api/gspc · Schema csoai.gspc-axes/0.5
 

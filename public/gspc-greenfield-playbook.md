@@ -1,6 +1,6 @@
 # GSPC Greenfield Playbook
 
-Living board: GET https://councilof.ai/api/gspc — **22 axis · 22 measured (14 model + 8 fact)**. Schema `csoai.gspc-axes/0.5`.
+Living board: GET https://councilof.ai/api/gspc — **22 axis · 15 measured · 7 empty/UNMEASURED**. Empty cells stay empty. Schema `csoai.gspc-axes/0.5`.
 Measurement, not certification. Combined GSPC against a model is a **signed vector**, not a SaaS average. Data free; proofs paid (`/api/proof?bundle=1` 402). Payment does not mint MEASURED. MetaMask is not connected. Treasury is not the signer. BOARD_SIGN_KEY is not on a laptop, 3090, or MetaMask.
 
 ---
@@ -9,7 +9,7 @@ Measurement, not certification. Combined GSPC against a model is a **signed vect
 
 **GSPC Greenfield Playbook**
 
-**2000 clean-house moves · 22 axis · 22 measured (14 model + 8 fact) · more tables**
+**2000 clean-house moves · 22 axis · 15 measured · 7 empty/UNMEASURED · more tables**
 
 *Living source of truth: GET https://councilof.ai/api/gspc · Schema csoai.gspc-axes/0.5*
 
