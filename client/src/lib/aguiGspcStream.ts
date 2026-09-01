@@ -1,3 +1,4 @@
+import { applyFill7ChromeHonesty } from "./fill7ChromeHonesty";
 /**
  * AG-UI live GSPC inside streams.
  *
@@ -53,6 +54,8 @@ function strOr(v: unknown, fallback: string): string {
 
 /** Project a living /api/gspc body into a stream-safe snapshot. Never invents scores. */
 export function snapshotFromGspcPayload(j: any, endpoint = GSPC_SAME_ORIGIN): GspcLiveSnapshot {
+  j = applyFill7ChromeHonesty(j);
+
   const axes = Array.isArray(j?.axes) ? j.axes : [];
   const totals = j?.totals && typeof j.totals === "object" ? j.totals : {};
   const measured: GspcAxisSnap[] = [];
