@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bodyDir = join(__dirname, "_gate_body");
-const n = 4;
+const n = 12;
 const code = Array.from({ length: n }, (_, i) => {
   const b64 = readFileSync(join(bodyDir, `part${i}.b64`), "utf8").trim();
   return Buffer.from(b64, "base64").toString("utf8");
