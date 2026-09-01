@@ -25,6 +25,16 @@ const TONE: Record<DoorState["tone"], string> = {
 
 const PROBING: DoorState = { label: "PROBING", detail: "checked on this load", tone: "probing" };
 
+// A host that SPA-fallbacks every path answers HTML with a 200 for a missing
+// API door. Parsing that as a door state would claim a door that is not there,
+// so every probe requires a JSON content-type before it believes the answer.
+const isJson = (r: Response) => (r.headers.get("content-type") || "").toLowerCase().includes("json");
+const HTML_ANSWERED: DoorState = {
+  label: "UNCHECKABLE",
+  detail: "the path answered HTML, not the API — no door state is claimed from a fallback page",
+  tone: "warn",
+};
+
 export default function EstateDoors() {
   const [root, setRoot] = useState<DoorState>(PROBING);
   const [swift, setSwift] = useState<DoorState>(PROBING);
@@ -37,6 +47,7 @@ export default function EstateDoors() {
     fetch("/root.json", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {
         if (!r.ok) return setRoot({ label: `HTTP ${r.status}`, detail: "envelope not readable this load", tone: "warn" });
+        if (!isJson(r)) return setRoot(HTML_ANSWERED);
         const d = await r.json().catch(() => ({}));
         const signed = typeof d?.sig_ed25519 === "string" && d.sig_ed25519.length > 0;
         setRoot(
@@ -52,7 +63,9 @@ export default function EstateDoors() {
         setSwift(
           r.status === 404
             ? { label: "404 honest", detail: "no /api/swift is served — 17 names are a DISCOVERED census, not clients, not a grade", tone: "gap" }
-            : { label: `HTTP ${r.status}`, detail: "probed on this load", tone: r.ok ? "ok" : "warn" },
+            : r.ok && !isJson(r)
+              ? HTML_ANSWERED
+              : { label: `HTTP ${r.status}`, detail: "probed on this load", tone: r.ok ? "ok" : "warn" },
         ),
       )
       .catch(() => !ac.signal.aborted && setSwift({ label: "UNREACHABLE", detail: "probe failed this load", tone: "warn" }));
@@ -60,8 +73,10 @@ export default function EstateDoors() {
     fetch("/api/xrpl", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {
         if (!r.ok) return setXrpl({ label: `HTTP ${r.status}`, detail: "reader not readable this load", tone: "warn" });
+        if (!isJson(r)) return setXrpl(HTML_ANSWERED);
         const d = await r.json().catch(() => ({}));
-        setXrpl({ label: `reader · n=${d.n ?? "—"}`, detail: `writes_board=${String(d.writes_board)} — reads the ledger, writes nothing onto the board`, tone: "ok" });
+        if (typeof d.n !== "number") return setXrpl(HTML_ANSWERED);
+        setXrpl({ label: `reader · n=${d.n}`, detail: `writes_board=${String(d.writes_board)} — reads the ledger, writes nothing onto the board`, tone: "ok" });
       })
       .catch(() => !ac.signal.aborted && setXrpl({ label: "UNREACHABLE", detail: "GET /api/xrpl did not answer", tone: "warn" }));
 
@@ -73,6 +88,7 @@ export default function EstateDoors() {
     })
       .then(async (r) => {
         if (!r.ok) return setMcp({ label: `HTTP ${r.status}`, detail: "tool list not readable this load", tone: "warn" });
+        if (!isJson(r)) return setMcp(HTML_ANSWERED);
         const d = await r.json().catch(() => ({}));
         const tools: unknown[] = Array.isArray(d?.result?.tools) ? d.result.tools : [];
         setMcp(

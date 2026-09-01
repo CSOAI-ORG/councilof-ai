@@ -48,6 +48,8 @@ export default function XrplReaderRail({
     fetch("/api/xrpl", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {
         if (!r.ok) throw new Error(`GET /api/xrpl HTTP ${r.status}`);
+        if (!(r.headers.get("content-type") || "").toLowerCase().includes("json"))
+          throw new Error("GET /api/xrpl answered HTML, not the API");
         const doc = (await r.json()) as XrplReaderDoc;
         if (!Array.isArray(doc.assets)) throw new Error("GET /api/xrpl: no assets[]");
         setWire({ state: "live", doc });
