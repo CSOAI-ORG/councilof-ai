@@ -1,157 +1,694 @@
 {
- "schema": "csoai.financial-measure-run/0.2",
+ "schema": "csoai.financial-measure-run/0.3",
  "axis": "custody-disclosure",
- "network": "issuer disclosure pages retrieved this hour",
- "supersedes": null,
- "clone_of": "/interop/financial-measure-run-v2.json",
+ "as_of": "2026-09-01T04:44:08Z",
+ "roster": "GET https://councilof.ai/api/xrpl (kind=reader, writes_board=false, n=16)",
+ "order": "start set RLUSD, OUSG, USDB, BBRL (bidirectional domain), then reader order",
+ "n": 16,
+ "status": "MEASURED",
+ "risk_verdict": "UNMEASURED",
+ "three_state": "PASS / FAIL / UNCHECKABLE per fact. UNREACHABLE page => UNCHECKABLE, never FAIL.",
+ "rubric": "Custodian named? Auditor named? PASS/FAIL/UNCHECKABLE each. Disclosure only, never quality.",
+ "supersedes": "f6e5967e4e5994782ef90dfe12776a73d65ce112e2268bb308b4daac548be88a",
+ "parked": {
+  "rwa-attest-other": [
+   "Archax x abrdn USD Liquidity Fund",
+   "OpenEden TBILL (TBL)"
+  ],
+  "note": "Off the live XRPL reader-16. Parked, not measured here. BUSINESS-ERRATA 01Sep2026 §3."
+ },
  "measured": [
   {
-   "instrument": "RLUSD (Ripple USD)",
+   "id": "RLUSD",
+   "issuer": "Ripple",
    "mainnet_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": true,
-     "auditor_named_confirmable": false
+   "verified_via": "Bidirectional domain match",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "https://ripple.com/",
+   "source_pages": [
+    {
+     "url": "https://ripple.com/solutions/stablecoin/transparency/",
+     "http": 200,
+     "sha256": "3c8b8cafbdcc5afc86f568bc8a2b711dddde2d5a426963e6d32fb264753e31c3"
     },
-    "source_url": "https://ripple.com/products/stablecoin/",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.5,
-    "wilson95": [
-     0.095,
-     0.905
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
+    {
+     "url": "https://ripple.com/reports/rlusd-whitepaper.pdf",
+     "http": 200,
+     "sha256": "0e61e22db446884edc73c85077ac80ca88f669d3e05c008c80556ac7d2bf77c0"
+    },
+    {
+     "url": "https://ripple.com/",
+     "http": 200,
+     "sha256": "49d210e467418950abc17cf46087e342c49556937d00f347e3943c5eec419fc8"
+    }
+   ],
+   "primary_url": "https://ripple.com/solutions/stablecoin/transparency/",
+   "reserve": {
+    "third_party_attestation_language": "PASS",
+    "attestor_or_language": "Reserve Report",
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
    },
-   "risk_verdict_status": "UNMEASURED"
+   "regulatory": {
+    "regime_declared_and_confirmable": "PASS",
+    "regime": "NYDFS",
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 920663998.7515154,
+    "holders": 72158,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "PASS",
+    "custodian": "Standard Custody",
+    "auditor_named_confirmable": "PASS",
+    "auditor": "EY"
+   },
+   "page_state": "OK"
   },
   {
-   "instrument": "Ondo OUSG (Short-Term US Treasuries)",
+   "id": "OUSG",
+   "issuer": "Ondo Finance",
    "mainnet_issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": true,
-     "auditor_named_confirmable": false
+   "verified_via": "Bidirectional domain match",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "ondo.finance",
+   "source_pages": [
+    {
+     "url": "https://app.ondo.finance/legal-documentation/us",
+     "http": 200,
+     "sha256": "9bfbe373efd5ce6ee3c5e36f93f66ebc5c4b92074b88d5aa1766bad995be1ac9"
     },
-    "source_url": "https://ondo.finance/ousg",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.5,
-    "wilson95": [
-     0.095,
-     0.905
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
+    {
+     "url": "https://ondo.finance/ousg",
+     "http": 200,
+     "sha256": "11a52e1b2ad1804424fe6c44206b2eaeca4aee4f51ffc2dff31f14a4c0a927dd"
+    },
+    {
+     "url": "https://ondo.finance",
+     "http": 200,
+     "sha256": "dc4241078cfea814b4c5c8d75e22f0f7f0612f60a840925257ce0d0bc4252ae5"
+    }
+   ],
+   "primary_url": "https://app.ondo.finance/legal-documentation/us",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
    },
-   "risk_verdict_status": "UNMEASURED"
+   "regulatory": {
+    "regime_declared_and_confirmable": "FAIL",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 1657065.565236341,
+    "holders": 6,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
   },
   {
-   "instrument": "Archax x abrdn USD Liquidity Fund",
-   "mainnet_issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": false,
-     "auditor_named_confirmable": false
-    },
-    "source_url": "https://www.archax.com/",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.0,
-    "wilson95": [
-     0.0,
-     0.658
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
-   },
-   "risk_verdict_status": "UNMEASURED"
-  },
-  {
-   "instrument": "OpenEden TBILL (TBL)",
-   "mainnet_issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": false,
-     "auditor_named_confirmable": false
-    },
-    "source_url": "https://openeden.com/tbill",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.0,
-    "wilson95": [
-     0.0,
-     0.658
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
-   },
-   "risk_verdict_status": "UNMEASURED"
-  },
-  {
-   "instrument": "Braza Bank USDB",
+   "id": "USDB",
+   "issuer": "Braza Bank",
    "mainnet_issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": false,
-     "auditor_named_confirmable": false
+   "verified_via": "Bidirectional domain match",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "tokens.brazacripto.com.br",
+   "source_pages": [
+    {
+     "url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+     "http": 200,
+     "sha256": "eac9c13342b7101ee4599b746796963c15717f72534683590d3f91bd37ac07fd"
     },
-    "source_url": "https://www.brazabank.com.br/",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.0,
-    "wilson95": [
-     0.0,
-     0.658
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
+    {
+     "url": "https://tokens.brazacripto.com.br",
+     "http": 200,
+     "sha256": "54c115722a1fe082b02ead8415c319a87888297cb821c26f80eeb28b7a6bbae0"
+    }
+   ],
+   "primary_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
    },
-   "risk_verdict_status": "UNMEASURED"
+   "regulatory": {
+    "regime_declared_and_confirmable": "PASS",
+    "regime": "BACEN",
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 23472472.91000002,
+    "holders": 30,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
   },
   {
-   "instrument": "Braza Bank BBRL",
+   "id": "BBRL",
+   "issuer": "Braza Bank",
    "mainnet_issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
-   "control_facts": {
-    "status": "MEASURED",
-    "as_of": "2026-09-01T04:08:19Z",
-    "rubric": "Custodian named and confirmable? Auditor named and confirmable? Y/N + Y/N. Disclosure only. Not quality.",
-    "facts": {
-     "custodian_named_confirmable": false,
-     "auditor_named_confirmable": false
+   "verified_via": "Bidirectional domain match",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "tokens.brazacripto.com.br",
+   "source_pages": [
+    {
+     "url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+     "http": 200,
+     "sha256": "eac9c13342b7101ee4599b746796963c15717f72534683590d3f91bd37ac07fd"
     },
-    "source_url": "https://www.brazabank.com.br/",
-    "http": 200,
-    "n_facts": 2,
-    "coverage_rate": 0.0,
-    "wilson95": [
-     0.0,
-     0.658
-    ],
-    "honest_note": "Named-string presence on a retrieved page. Generic 'custodians' without a name is N. Not a quality score."
+    {
+     "url": "https://tokens.brazacripto.com.br",
+     "http": 200,
+     "sha256": "54c115722a1fe082b02ead8415c319a87888297cb821c26f80eeb28b7a6bbae0"
+    }
+   ],
+   "primary_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
    },
-   "risk_verdict_status": "UNMEASURED"
+   "regulatory": {
+    "regime_declared_and_confirmable": "PASS",
+    "regime": "BACEN",
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 91602965.98639075,
+    "holders": 130,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
+  },
+  {
+   "id": "EURCV",
+   "issuer": "Société Générale-FORGE",
+   "mainnet_issuer": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "null (flagged, stays flagged)",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 10000000,
+    "holders": 1,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "USD.bs",
+   "issuer": "Bitstamp",
+   "mainnet_issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+   "verified_via": "XRPLMeta registry",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "bitstamp.net",
+   "source_pages": [
+    {
+     "url": "https://bitstamp.net",
+     "http": 200,
+     "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d"
+    }
+   ],
+   "primary_url": "https://bitstamp.net",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "FAIL",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 8069548.462941189,
+    "holders": 7325,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
+  },
+  {
+   "id": "EUR.bs",
+   "issuer": "Bitstamp",
+   "mainnet_issuer": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+   "verified_via": "XRPLMeta registry",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "bitstamp.net",
+   "source_pages": [
+    {
+     "url": "https://bitstamp.net",
+     "http": 200,
+     "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d"
+    }
+   ],
+   "primary_url": "https://bitstamp.net",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "FAIL",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 4960395.484593186,
+    "holders": 430,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
+  },
+  {
+   "id": "USD.gh",
+   "issuer": "GateHub",
+   "mainnet_issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+   "verified_via": "XRPLMeta registry",
+   "reader_sig_ed25519": "present",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 4937209.045177016,
+    "holders": 20396,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "USDC",
+   "issuer": "Circle",
+   "mainnet_issuer": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "present",
+   "chain_domain": "https://circle.com",
+   "source_pages": [
+    {
+     "url": "https://www.circle.com/transparency",
+     "http": 200,
+     "sha256": "b093c317a92ff9331c90ddfc12e47a1a6050e26e8bbabda8d1ba7b0937b37931"
+    },
+    {
+     "url": "https://circle.com",
+     "http": 200,
+     "sha256": "823186a98057b333c88d90c39eb6b6fdf5ad01ca8a1ae7fd4bab6c4f6e85adf4"
+    }
+   ],
+   "primary_url": "https://www.circle.com/transparency",
+   "reserve": {
+    "third_party_attestation_language": "FAIL",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "FAIL",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 4433544.71890076,
+    "holders": 10318,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "FAIL",
+    "custodian": null,
+    "auditor_named_confirmable": "FAIL",
+    "auditor": null
+   },
+   "page_state": "OK"
+  },
+  {
+   "id": "EUR.gh",
+   "issuer": "GateHub",
+   "mainnet_issuer": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+   "verified_via": "XRPLMeta registry",
+   "reader_sig_ed25519": "present",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 1683763.846539358,
+    "holders": 15081,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "EURQ",
+   "issuer": "Quantoz",
+   "mainnet_issuer": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "null (flagged, stays flagged)",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 1000000,
+    "holders": 2,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "USDQ",
+   "issuer": "Quantoz",
+   "mainnet_issuer": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "null (flagged, stays flagged)",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 1000000,
+    "holders": 1,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "EURØP",
+   "issuer": "Schuman Financial",
+   "mainnet_issuer": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "present",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 340323.8873202474,
+    "holders": 273,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "XAU.gh",
+   "issuer": "GateHub",
+   "mainnet_issuer": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "null (flagged, stays flagged)",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 4132.852267201553,
+    "holders": 582,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "GBP.gh",
+   "issuer": "GateHub",
+   "mainnet_issuer": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "present",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 199432.4102117872,
+    "holders": 280,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
+  },
+  {
+   "id": "PSC",
+   "issuer": "Republic of Palau",
+   "mainnet_issuer": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+   "verified_via": "XRPScan well-known directory",
+   "reader_sig_ed25519": "null (flagged, stays flagged)",
+   "chain_domain": null,
+   "source_pages": [],
+   "primary_url": null,
+   "reserve": {
+    "third_party_attestation_language": "UNCHECKABLE",
+    "attestor_or_language": null,
+    "date": null,
+    "date_note": "packet date not parsed this run; null stays null"
+   },
+   "regulatory": {
+    "regime_declared_and_confirmable": "UNCHECKABLE",
+    "regime": null,
+    "not_compliant_claim": true
+   },
+   "distribution": {
+    "classified_distributed_on_reader": "PASS",
+    "reader_kind": "distributed",
+    "chain_supply": 14588,
+    "holders": 91,
+    "represented_supply": null,
+    "represented_gt_distributed": "UNCHECKABLE",
+    "represented_note": "no RWA.xyz key this run; represented supply not invented"
+   },
+   "custody": {
+    "custodian_named_confirmable": "UNCHECKABLE",
+    "custodian": null,
+    "auditor_named_confirmable": "UNCHECKABLE",
+    "auditor": null
+   },
+   "page_state": "UNREACHABLE"
   }
  ],
- "honesty": "Financial axis MEASURED for deterministic disclosure/chain facts on the same six issuers as provenance-controls v0.2. Risk verdicts remain UNMEASURED. Not ratings/advice/endorsements. Stranger re-runs this script + compares. Do not stamp from a Hub skeleton.",
- "content_id": "f6e5967e4e5994782ef90dfe12776a73d65ce112e2268bb308b4daac548be88a",
- "signature": {
-  "alg": "Ed25519",
-  "content_id": "f6e5967e4e5994782ef90dfe12776a73d65ce112e2268bb308b4daac548be88a",
-  "sig": "OBypGPpa2vmes8cPmt09NhMcMtM9YEeR4fLC2cfpklX+oGn4+gBgsCAt0dw5/83uuyTQffZziPBEtFyvZmYTCA==",
-  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
-  "mill": "same city_ed25519 mill as /interop/financial-measure-run-v2.json content_id 29369542cb537f38",
-  "note": "Ed25519 over sha256(canonical body sans envelope). Not #card-attestation-1 (that key stays off this laptop). Not a rating."
- }
+ "signing": "Run body is UNSIGNED at rest. Cards are signed ONLY by GHA hf-fin-shells-measure via /api/board-sign. Never a laptop key. Board status changes only through that path.",
+ "honesty": "Facts MEASURED. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. Self-declare is not attestation. No model, no accuracy, no leader. EURQ/USDQ (and any other) reader sig_ed25519=null stays flagged.",
+ "content_id": "d1b2b1329f43726d4798792580f5f25e76e00db4f4dbab6675db1e4b276b8f9a"
 }

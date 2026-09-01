@@ -55,47 +55,51 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "reserve-attestation", family: "financial", kind: "deterministic-facts",
-    bench: "ReserveFacts", task: "is a third-party reserve attestation publicly published and current? (deterministic Y/N + date)",
-    n: 6, n_unit: "issuer accounts (not bank items)",
-    n_note: "Same six issuers as provenance-controls v0.2. Instrument count, not bank items.",
+    bench: "ReserveFacts", task: "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
+    n: 16, n_unit: "issuer accounts (not bank items)",
+    n_note: "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-reserve-attestation.json",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED for disclosure facts only. Rubric: named third-party attestor on a retrieved " +
-      "page, plus current=Y/N. Self-declare of 'we publish attestations' without a named firm is N. " +
-      "This run retrieved product pages; no named attestor firm + dated PDF on the six, so current=N " +
-      "for all six — that is the measurement, not a missing run. Risk verdict UNMEASURED. Not a rating.",
+    note: "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, " +
+      "then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE " +
+      "(no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). " +
+      "Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off " +
+      "this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating.",
   },
   {
     axis: "regulatory-framework", family: "financial", kind: "deterministic-facts",
-    bench: "RegimeFacts", task: "is the governing regime declared and confirmable (MiCA / UCITS / Reg D / BVI)? (deterministic Y/N)",
-    n: 6, n_unit: "issuer accounts (not bank items)",
+    bench: "RegimeFacts", task: "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
+    n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-regulatory-framework.json",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED for declaration presence on a retrieved URL. Not compliance. Same six issuers as " +
-      "provenance-controls v0.2. Risk verdict UNMEASURED. Not a rating.",
+    note: "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. " +
+      "3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
+      "compliance. Risk verdict UNMEASURED. Not a rating.",
   },
   {
     axis: "distribution-integrity", family: "financial", kind: "deterministic-facts",
-    bench: "DistributionFacts", task: "represented-vs-distributed classification and holder count",
-    n: 6, n_unit: "issuer accounts (not bank items)",
+    bench: "DistributionFacts", task: "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
+    n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-distribution-integrity.json",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED from GET /api/xrpl (writes_board=false) plus the six-issuer set. Represented " +
-      "supply is UNMEASURED inside the card this hour (no RWA.xyz key). Represented TVL is not mixed " +
-      "into the 16. Risk verdict UNMEASURED. Not a rating.",
+    note: "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on " +
+      "distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no " +
+      "same-unit pair). EURQ/USDQ reader sig_ed25519=null stays flagged. Risk verdict UNMEASURED. " +
+      "Not a rating.",
   },
   {
     axis: "custody-disclosure", family: "financial", kind: "deterministic-facts",
-    bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (deterministic Y/N)",
-    n: 6, n_unit: "issuer accounts (not bank items)",
+    bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
+    n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-custody-disclosure.json",
     colour: "#fbbf24", hue: 43,
-    note: "MEASURED for named-string presence on retrieved pages. Disclosure only — never custodian " +
-      "or auditor quality. Same six issuers. Risk verdict UNMEASURED. Not a rating.",
+    note: "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: " +
+      "custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor " +
+      "quality. Risk verdict UNMEASURED. Not a rating.",
   },
   {
     axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
