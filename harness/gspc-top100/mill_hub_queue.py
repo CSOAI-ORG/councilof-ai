@@ -98,8 +98,16 @@ def load_queue(path: Path) -> list[dict]:
     return rows
 
 
-def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False) -> list[dict]:
-    empty = [r for r in rows if str(r.get("status") or "").upper() != "MEASURED" or not r.get("card_id")]
+def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False, axis: str | None = None) -> list[dict]:
+    def is_empty(r: dict) -> bool:
+        if axis:
+            cell = (r.get("measured_axes") or {}).get(axis) or {}
+            if str(cell.get("status") or "").upper() == "MEASURED" and cell.get("card_id"):
+                return False
+            return True
+        return str(r.get("status") or "").upper() != "MEASURED" or not r.get("card_id")
+
+    empty = [r for r in rows if is_empty(r)]
     if generative_only:
         gen = [r for r in empty if r.get("pipeline_tag") in GEN_TAGS]
         if gen:
@@ -108,12 +116,73 @@ def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False) -> li
     return empty[:n]
 
 
-def _chat(url: str, key: str, model: str, prompt: str) -> tuple[str, str]:
+def axis_prompt(axis: str, item: str, labels: list[str]) -> str:
+    labs = " | ".join(sorted({str(x) for x in labels if x}))
+    if not labs:
+        labs = "PROHIBITED | HIGH_RISK | LIMITED_RISK | MINIMAL_RISK"
+    return (
+        f"You are scoring one frozen {axis} item.\n"
+        f"Reply with EXACTLY ONE token from: {labs}\n\n"
+        f"Item: {item}\n"
+    )
+
+
+def flip_queue_axis(rows: list[dict], model_id: str, axis: str, card_id: str) -> bool:
+    """Record MEASURED for one (id, axis) only. Does not invent a card."""
+    if not model_id or not axis or not card_id:
+        return False
+    for r in rows:
+        if str(r.get("id") or "") != model_id:
+            continue
+        ma = r.setdefault("measured_axes", {})
+        if not isinstance(ma, dict):
+            ma = {}
+            r["measured_axes"] = ma
+        ma[axis] = {"status": "MEASURED", "card_id": card_id}
+        return True
+    return False
+
+
+def mill_index_row(wrap: dict, card_url: str) -> dict:
+    """HF gspc-hub-cards index row. status=MEASURED only for interned VALID wraps."""
+    body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
+    return {
+        "model": body.get("model"),
+        "axis": body.get("axis"),
+        "accuracy": body.get("accuracy"),
+        "status": "MEASURED",
+        "card_sha256": wrap.get("id"),
+        "card_url": card_url,
+        "verify": "https://councilof.ai/gspc-verify",
+        "signed": True,
+        "alg": wrap.get("alg") or "Ed25519",
+        "did": wrap.get("did"),
+        "n": body.get("n"),
+        "name_published": True,
+    }
+
+
+def apply_valid_flips(rows: list[dict], verified: list[dict]) -> int:
+    """Flip hub-queue (id, axis) MEASURED iff wrap was VALID. Returns flip count."""
+    n = 0
+    for wrap in verified:
+        if wrap.get("_verdict") != "VALID":
+            continue
+        body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
+        mid = str(body.get("model") or "")
+        ax = str(body.get("axis") or "")
+        cid = str(wrap.get("id") or "")
+        if flip_queue_axis(rows, mid, ax, cid):
+            n += 1
+    return n
+
+
+def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32) -> tuple[str, str]:
     payload = json.dumps(
         {
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": 8,
+            "max_tokens": max_tokens,
             "temperature": 0,
         }
     ).encode()
@@ -146,7 +215,7 @@ def _gemini(prompt: str) -> tuple[str, str]:
         payload = json.dumps(
             {
                 "contents": [{"parts": [{"text": prompt}]}],
-                "generationConfig": {"maxOutputTokens": 8, "temperature": 0},
+                "generationConfig": {"maxOutputTokens": 32, "temperature": 0},
             }
         ).encode()
         req = urllib.request.Request(url, data=payload, method="POST", headers={"Content-Type": "application/json"})
@@ -375,7 +444,7 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str) -> 
         "n": n,
         "accuracy": js_safe_number(acc),
         "status": "UNMEASURED",
-        "unmeasured": [reason] if reason else ["unsigned pending GHA OIDC"],
+        "unmeasured": [reason] if reason else ["signed-pending-verify"],
         "public_framing": "Measurement, not certification. Empty is not zero.",
         "verify": "https://councilof.ai/gspc-verify",
         "brand": "Council of AI",
@@ -406,15 +475,15 @@ def mill(
     generative_only: bool = True,
 ) -> dict:
     rows = load_queue(queue_path)
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only)
+    ax = axis if axis in MODEL_AXES else "governance"
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
     to_grade = picked[:grade_n]
     banks_dir = banks_dir or (out_dir / "banks")
     for r in picked[grade_n:]:
-        for ax in MODEL_AXES:
-            skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
+        skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
     live: dict[str, bool] = {}
     if not dry:
         for r in to_grade:
@@ -422,51 +491,50 @@ def mill(
             st, txt = infer_hub(mid, "Reply with one token: PING")
             if st != "OK":
                 live[mid] = False
-                for ax in MODEL_AXES:
-                    skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE probe {txt}"})
+                skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE probe {txt}"})
             else:
                 live[mid] = True
-    for ax in MODEL_AXES:
-        bank_path = banks_dir / f"{ax}.jsonl"
-        bank = load_bank(bank_path)
-        if not bank:
-            for r in to_grade:
-                mid = str(r.get("id") or "")
-                if live.get(mid, True):
-                    skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
-            continue
-        items = bank[: max(1, items_cap)]
+    bank_path = banks_dir / f"{ax}.jsonl"
+    bank = load_bank(bank_path)
+    if not bank:
         for r in to_grade:
             mid = str(r.get("id") or "")
-            if dry:
-                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE dry-run no-endpoint"})
+            if live.get(mid, True):
+                skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
+        items: list[tuple[str, str]] = []
+    else:
+        items = bank[: max(1, items_cap)]
+    labels = [exp for _, exp in items]
+    for r in to_grade:
+        mid = str(r.get("id") or "")
+        if dry:
+            skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE dry-run no-endpoint"})
+            continue
+        if not live.get(mid, False):
+            continue
+        if not items:
+            continue
+        hits = 0
+        for prompt, expected in items:
+            st, txt = infer_hub(mid, axis_prompt(ax, prompt, labels))
+            if st != "OK":
+                skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
+                break
+            if parse_token(txt) == expected or expected.upper() in txt.upper():
+                hits += 1
+        else:
+            reason = "n<30 unquotable" if len(items) < 30 else "signed-pending-verify"
+            wrap = stage_unsigned(mid, ax, hits, len(items), reason)
+            blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
+            if len(blob) > MAX_PAYLOAD:
+                skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})
                 continue
-            if not live.get(mid, False):
+            if "SOVOS" in blob.decode().upper():
+                skips.append({"id": mid, "axis": ax, "reason": "brand-gate SOVOS"})
                 continue
-            hits = 0
-            for prompt, expected in items:
-                st, txt = infer_hub(mid, prompt)
-                if st != "OK":
-                    skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
-                    break
-                if parse_token(txt) == expected or expected.upper() in txt.upper():
-                    hits += 1
-            else:
-                reason = (
-                    f"unsigned pending GHA OIDC; n={len(items)} "
-                    f"{'unquotable n<30' if len(items) < 30 else 'quotable pending sign'}"
-                )
-                wrap = stage_unsigned(mid, ax, hits, len(items), reason)
-                blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
-                if len(blob) > MAX_PAYLOAD:
-                    skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})
-                    continue
-                if "SOVOS" in blob.decode().upper():
-                    skips.append({"id": mid, "axis": ax, "reason": "brand-gate SOVOS"})
-                    continue
-                fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
-                fp.write_text(json.dumps(wrap, indent=2) + "\n")
-                staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits})
+            fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
+            fp.write_text(json.dumps(wrap, indent=2) + "\n")
+            staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits})
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
         "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
