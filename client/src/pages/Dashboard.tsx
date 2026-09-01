@@ -31,8 +31,9 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
+import { downloadBoardCsv } from "@/lib/boardCsv";
 import { useQuery } from "@tanstack/react-query";
-import { ComplianceTrendChart, FrameworkComparisonChart } from "@/components/charts";
+import { ComplianceTrendChart } from "@/components/charts";
 
 interface DashboardStats {
   complianceScore: number | null;
@@ -438,11 +439,18 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2, delay: 0.3 }}
             >
-              <FrameworkComparisonChart
-                title="Framework Comparison"
-                description="Compare your compliance across regulatory frameworks"
-                height={300}
-              />
+              {/* HONESTY FIX (B3): this used to render <FrameworkComparisonChart>
+                  with NO data prop, which silently plotted the component's mock
+                  DEFAULT_DATA as if it were this account's measurements. No
+                  per-framework comparison is measured for the account yet, so the
+                  cell says so — it does not chart example numbers. */}
+              <div className="flex h-full flex-col justify-center rounded-xl border border-gray-200 bg-white p-8 text-center">
+                <p className="font-semibold text-gray-900">Framework comparison — UNMEASURED</p>
+                <p className="mt-1 text-sm text-gray-500">
+                  No per-framework scores are measured for this account, so nothing is plotted.
+                  Example data is never charted as yours.
+                </p>
+              </div>
             </motion.div>
           </div>
         ) : (
@@ -492,6 +500,24 @@ export default function Dashboard() {
                   until an assessment runs — start one at /assess, or read the live measured
                   board at /gspc-scoreboard.
                 </p>
+                <button
+                  type="button"
+                  data-testid="dashboard-board-csv"
+                  className="text-xs font-semibold text-emerald-700 underline underline-offset-2 hover:text-emerald-800"
+                  onClick={async () => {
+                    // One number source: the CSV is built from a fresh GET /api/gspc,
+                    // never from this dashboard's own cached stats (B3 — no second board).
+                    try {
+                      const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
+                      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                      downloadBoardCsv(await r.json());
+                    } catch {
+                      alert("GET /api/gspc did not answer — no CSV is written from cached numbers.");
+                    }
+                  }}
+                >
+                  Download the live board as CSV (fetched from /api/gspc on click)
+                </button>
               </CardContent>
             </Card>
           </motion.div>

@@ -8,6 +8,8 @@ import { accuracyCell, intervalCell, separationNote } from "@/lib/axisCells";
 import StatusChip, { chipFor } from "@/components/board/StatusChip";
 import BoardAttestation from "@/components/board/BoardAttestation";
 import AttestationDeepDive from "@/components/board/AttestationDeepDive";
+import XrplReaderRail from "@/components/gspc/XrplReaderRail";
+import { downloadBoardCsv } from "@/lib/boardCsv";
 import { Activity } from "lucide-react";
 
 /**
@@ -123,7 +125,7 @@ function ArenaEloPanel() {
           <h2 className="text-lg font-bold text-gray-900">Arena Elo — signed</h2>
           <p className="mt-1 text-sm text-gray-600">
             Per-axis winner-specific Elo from the live arena (<code>{elo.models || "—"}</code> models,{" "}
-            {elo.axes?.length || 0} <strong>arena</strong> axes — the arena&apos;s own set, not the
+            {elo.axes?.length || 0} <strong>arena</strong> axis — the arena&apos;s own set, not the
             board&apos;s count above). Every score carries n + 95% CI. This leaderboard is{" "}
             <strong>signed</strong> — verify it below.
           </p>
@@ -188,11 +190,11 @@ function ArenaEloPanel() {
         <table className="w-full min-w-[38rem] text-sm">
           <thead>
             <tr className="border-b">
-              <th className="py-2 px-3 text-left font-semibold">Model</th>
-              <th className="py-2 px-3 text-right font-semibold">Elo</th>
-              <th className="py-2 px-3 text-right font-semibold">Games</th>
-              <th className="py-2 px-3 text-right font-semibold">Win-rate</th>
-              <th className="py-2 px-3 text-right font-semibold">95% CI</th>
+              <th scope="col" className="py-2 px-3 text-left font-semibold">Model</th>
+              <th scope="col" className="py-2 px-3 text-right font-semibold">Elo</th>
+              <th scope="col" className="py-2 px-3 text-right font-semibold">Games</th>
+              <th scope="col" className="py-2 px-3 text-right font-semibold">Win-rate</th>
+              <th scope="col" className="py-2 px-3 text-right font-semibold">95% CI</th>
             </tr>
           </thead>
           <tbody>
@@ -326,7 +328,15 @@ export default function GspcScoreboard() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          {board.public_count} · deterministic grading on
+          {board.public_count}
+          {board.gspc_family && board.financial_family && (
+            <>
+              {" "}({board.gspc_family.axes} model-comparison + {board.financial_family.axes} fact
+              cards — the fact cards are deterministic disclosure/component reads with no fleet, so
+              they carry no leader and no accuracy)
+            </>
+          )}{" "}
+          · deterministic grading on
           frozen, published splits · a <strong>TIE</strong> means the leader&apos;s edge is{" "}
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
           as wins. Empty cells stay empty.
@@ -491,13 +501,15 @@ export default function GspcScoreboard() {
             <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b bg-emerald-50/60 text-left text-gray-700">
-                  <th className="p-3 whitespace-nowrap">Axis</th>
-                  <th className="p-3 whitespace-nowrap">Bench</th>
-                  <th className="p-3 whitespace-nowrap">n</th>
-                  <th className="p-3 whitespace-nowrap">Leader accuracy</th>
-                  <th className="p-3 whitespace-nowrap">95% CI</th>
-                  <th className="p-3 whitespace-nowrap">Separation</th>
-                  <th className="p-3 whitespace-nowrap w-10" title="Open traces / graphs"></th>
+                  <th scope="col" className="p-3 whitespace-nowrap">Axis</th>
+                  <th scope="col" className="p-3 whitespace-nowrap">Bench</th>
+                  <th scope="col" className="p-3 whitespace-nowrap">n</th>
+                  <th scope="col" className="p-3 whitespace-nowrap">Leader accuracy</th>
+                  <th scope="col" className="p-3 whitespace-nowrap">95% CI</th>
+                  <th scope="col" className="p-3 whitespace-nowrap">Separation</th>
+                  <th scope="col" className="p-3 whitespace-nowrap w-10">
+                    <span className="sr-only">Open traces / graphs</span>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -580,6 +592,28 @@ export default function GspcScoreboard() {
           </div>
         )}
 
+        {data && (
+          <p className="mt-3">
+            <button
+              type="button"
+              data-testid="board-csv-export"
+              onClick={() => downloadBoardCsv(data)}
+              className="rounded-lg border border-emerald-600/25 bg-white px-3 py-1.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-50"
+            >
+              Download CSV — the rows above, columns fixed to the published parquet schema
+            </button>
+            <span className="ml-2 text-[11px] text-gray-600">
+              axis,bench,status,n,accuracy,interval_lo,interval_hi,separation,fleet_mean,dataset,as_of ·
+              empty cells stay empty — never zeroed, never interpolated.
+            </span>
+          </p>
+        )}
+
+        {/* Side rail: the live XRPL reader — names quoted from GET /api/xrpl, never typed. */}
+        <div className="mt-10">
+          <XrplReaderRail heading="Side rail — XRPL reader, live" />
+        </div>
+
         {/* BOARD ATTESTATION CHROME — Ed25519, SHA-256, XRPL, Progress */}
         {data && (
           <div className="mt-10">
@@ -600,8 +634,8 @@ export default function GspcScoreboard() {
             <h2 className="text-lg font-bold text-gray-900">Unsigned financial slots — not board rows</h2>
             <p className="mt-1 text-sm text-gray-600">
               {data.measured_in_lane.length} unsigned financial slots. Published as <code>measured_in_lane</code> on GET /api/gspc.
-              NOT stamped onto the board 15. public_count stays 22 axis · 15 measured.
-              Click any card for traces + graphs.
+              NOT stamped onto the board count. public_count stays “{board.public_count}” — quoted
+              live, never typed. Click any card for traces + graphs.
             </p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
               {data.measured_in_lane.map((r: any) => (
