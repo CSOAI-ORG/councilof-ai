@@ -1,7 +1,12 @@
 /**
  * GET /api/swift/:bank — one DISCOVERED row, or UNCHECKABLE if the id is unknown.
  */
-import tape from "../../../../public/interop/swift-17.json";
+// Three ups, not four: wrangler compiles the repo-root functions/ dir, so this
+// file sits at functions/api/swift/ and the tape at <root>/public/interop/.
+// The extra ../ resolved outside the repo and failed every GHA deploy since
+// #1009 ("Could not resolve" in run 33472240842) — the whole estate stopped
+// shipping on it.
+import tape from "../../../public/interop/swift-17.json";
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
