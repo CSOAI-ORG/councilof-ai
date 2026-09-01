@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://councilof.ai/schema/card-v0.json",
   "title": "CSOAI public card v0",
-  "description": "Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root — not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf — never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf → GHA signs → one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks.",
+  "description": "Permissionless public-state card \u2014 OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload \u2014 not on the outer envelope. UNMEASURED[] required for missing fields \u2014 never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root \u2014 not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf \u2014 never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf \u2192 GHA signs \u2192 one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -32,7 +32,6 @@
         "swift.notice",
         "benji.supply",
         "rwa.reserve",
-        "dorado.gate",
         "erc8004.callable",
         "cobol.legacy",
         "xdc.document.state",
@@ -58,7 +57,7 @@
     },
     "payload": {
       "type": "object",
-      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only — never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites — never endorsement / never board MEASURED."
+      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only \u2014 never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites \u2014 never endorsement / never board MEASURED."
     },
     "sha256": {
       "type": "string",

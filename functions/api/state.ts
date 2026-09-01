@@ -67,6 +67,7 @@ import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
 import rwaRegistry from "../../public/interop/rwa-registry.json";
 import mcpRegistry from "../../evidence/mcp-registry.json";
+import councilMcpDoor from "../../evidence/council-mcp-door.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 
@@ -285,6 +286,21 @@ export const onRequestGet: PagesFunction = async () => {
       caveat:
         "Measurement, not certification. A score describes a measured run on a frozen split on a " +
         "date; it does not describe anyone's compliance with anything.",
+    },
+
+    // ── COUNCIL HTTP MCP DOOR (not the 2026-08-27 fleet probe) ──────────────
+    council_http_mcp: {
+      authority: "evidence/council-mcp-door.json",
+      url: (councilMcpDoor as { url: string }).url,
+      tools_count: fact(
+        (councilMcpDoor as { tools_count: number }).tools_count,
+        "probed",
+        "evidence/council-mcp-door.json → tools_count",
+        (councilMcpDoor as { as_of: string }).as_of,
+        "as_of",
+        "POST /mcp tools/list. Seven tools. Distinct from mcp_fleet.tools_probed (8 from two other servers on 2026-08-27). Do not add those numbers.",
+      ),
+      tools: (councilMcpDoor as { tools: string[] }).tools,
     },
 
     // ── THE MCP FLEET ────────────────────────────────────────────────────────
