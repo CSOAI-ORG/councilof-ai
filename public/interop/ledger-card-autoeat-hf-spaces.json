@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:40:01Z",
+ "as_of": "2026-09-01T08:51:18Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1287,
-   "live": 498,
+   "n_probed": 237,
+   "live": 237,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 789,
-   "live_fraction_of_probed": 0.3869,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "Rudesh0796/Groq-ChatBot-using-LLM (200)",
-    "KurdKod/huggingchat-artifact-pad30 (200)",
-    "001hlyu/hf.space (200)",
-    "yusram/road-eye-guard-yusra-app (200)",
-    "Rishu16Gamer/Cubestax (200)",
-    "zhisong-liu/TailWeather (200)"
+    "Ahmad170412/dash-agent (200)",
+    "ysharma/gr-workflow-microduck-school (200)",
+    "AbhavBhanot/sneha-portfolio-api (200)",
+    "PrompTart/Fashion-Retrieval-Demo (200)",
+    "Ghaziiee/chat_bot (200)",
+    "Ahmad170412/dash (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:01Z",
+  "as_of": "2026-09-01T08:51:18Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "f5d506d23f034af9b781b2fc0b59a32cc6525e303841d0a428fc76af6146dd60",
- "sig_ed25519": "29c00700f4f8edfe49890991ae0b652c9d20f908c312e4bc42ee6cd2d8bbfb60d8cc5478a2668880524e2b219df5b528a2e1c9557b96fc74f70d6e321ed6f00e",
+ "sha256": "420b09ddfae1a759e339c5c738faaa4eb6c86fb203fff1b8d546308f4fc4bbcf",
+ "sig_ed25519": "97b05b9d3791b16733e43710b590ebd91ee605c192ee98879215952193fc418b993e9fa5d2c8db134239dc04e6458b2d3c01465320772738ca9bff51815afb0f",
  "surface": "autoeat.hf.spaces",
- "subject": "auto-eat hf-space: 498 LIVE of 1287 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-space: 237 LIVE of 237 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/spaces"
  ],

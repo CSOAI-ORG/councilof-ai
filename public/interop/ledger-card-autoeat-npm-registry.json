@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:40:02Z",
+ "as_of": "2026-09-01T08:51:18Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 1286,
-   "live": 1286,
+   "n_probed": 220,
+   "live": 220,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "stitchkit (200)",
-    "@arizeai/phoenix-mcp (200)",
-    "ag-mcp (200)",
-    "notebooklm-mcp-server (200)",
-    "jules-orchestrator-kit (200)",
-    "gina (200)"
+    "correctover (200)",
+    "pushci (200)",
+    "mcp-sequentialthinking-tools (200)",
+    "csuite-sdk (200)",
+    "storybook-addon-oversight (200)",
+    "lifeos (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:02Z",
+  "as_of": "2026-09-01T08:51:18Z",
   "unmeasured": [
    "install_integrity",
    "malware",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "8e3e587fbfc7ddabee02f21da6d86deb7e6e6975403c142331daf3910336644a",
- "sig_ed25519": "070bdf4c08a0a3c1c15c872dec9d49ea11a9b71eb09978bfe75b1e3964e2e354e071ce255795677a3f0b899bde74f3e75e5fc7a00ead522bb93733206a7d040f",
+ "sha256": "2ff11a0ce25913e3ceab67bcbdb603cf99f00f3ad3a2284402e0def98c23cbdd",
+ "sig_ed25519": "3435c75624d658ccea99f4dfd94b987eb663d879281ea18a4df915e8a7269ac3d08d071ef7150590265919afa2173e95af504a4c8ebb20ad7fff957e34e37c01",
  "surface": "autoeat.npm.registry",
- "subject": "auto-eat npm-registry: 1286 LIVE of 1286 probed (read-only, ungraded)",
+ "subject": "auto-eat npm-registry: 220 LIVE of 220 probed (read-only, ungraded)",
  "source_urls": [
   "https://registry.npmjs.org/-/v1/search"
  ],

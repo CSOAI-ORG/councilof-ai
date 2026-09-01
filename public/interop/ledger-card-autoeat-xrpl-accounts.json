@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:40:02Z",
+ "as_of": "2026-09-01T08:51:18Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 27,
-   "live": 27,
+   "n_probed": 19,
+   "live": 19,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rpYNm4xpK7aPC9EVqdpkdrTZjCLUVGc4kA (exists)",
-    "rPQYDMsTA6bvEj8TSL6HEpAoDbTzEKh6cT (exists)",
-    "rM8ZH3cYgBPfYdhbpRY6sitNnaSVCgBfWX (exists)",
-    "rP4gybHF3astaSuih16DMpL16aFa6DjYkX (exists)",
-    "r3FZvGY7VsLez8ttA4xcKVZh9tJEnesffz (exists)",
-    "rLDyWWMiW6sQQGEz76s9vTYbWHBf6XuR2Y (exists)"
+    "rUrYCcn3UkgC2ZXDWDvWT1D8VmM2X5Yiws (exists)",
+    "rKEV78sZCBXQFQTyRNdCP6Xm1nRuH4rBPj (exists)",
+    "r9RXi1MCST6evTvozdiChzFuKfXGVSQ58C (exists)",
+    "rUkQ7nodJEhTKZ9ruGX3oGtHTqxdGqHjh7 (exists)",
+    "rP4pHjuJyaZ9RNVg48mMVRvGSwi7byj4BZ (exists)",
+    "rnqZnvzoJjdg7n1P9pmumJ7FQ5wxNH3gYC (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:02Z",
+  "as_of": "2026-09-01T08:51:18Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -39,10 +39,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "529bb9a510b72b6e90930b635352110029262b8d053024e84ef11dbf89735a37",
- "sig_ed25519": "8df12e02c0860811b072b17f92a89c3489dd6ab32e9ff8425eecefc4e78c1599e26b75b1edb58669dd7b7261a8f597c36860251536b6ea9bcad5e8ca02ed1c0b",
+ "sha256": "4003f708ecd901afc4c2a812bfe036a2e84b217601300534014ba3de43d6f2d8",
+ "sig_ed25519": "ade51297b8c704a141257186bf290e913b4f6e3eb8a49852748bacabd296159a02dff8a90d0909d3ef90601facb14ac92201e2f73020ced8724dcf878b71ba05",
  "surface": "autoeat.xrpl.accounts",
- "subject": "auto-eat xrpl-account: 27 LIVE of 27 probed (read-only, ungraded)",
+ "subject": "auto-eat xrpl-account: 19 LIVE of 19 probed (read-only, ungraded)",
  "source_urls": [
   "https://s1.ripple.com:51234"
  ],
