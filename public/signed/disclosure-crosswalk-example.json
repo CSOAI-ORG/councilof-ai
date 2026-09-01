@@ -1,0 +1,121 @@
+{
+  "schema": "csoai.disclosure-crosswalk/0.1",
+  "title": "Public-disclosure crosswalk — schema + one worked example",
+  "what_this_is": "A data model for carding a company's PUBLIC AI-compliance DISCLOSURE (its own published system card / transparency report / model card) against OWASP ASI controls and the regulators. It is a COVERAGE MAP of the disclosure document — which topics the company chose to disclose in public text — never a test, probe, or measurement of the company's actual system.",
+  "hard_boundaries": {
+    "public_sources_only": "Every row is DISCOVERED from a cited, publicly published document. No login, no API call against the company, no scan, no probe of any external system — ever.",
+    "not_a_determination": "coverage is DISCLOSED / PARTIAL / NOT-DISCLOSED-IN-THIS-DOC — a statement about the DOCUMENT, not about compliance. This crosswalk never says the company complies with or violates any provision.",
+    "not_a_measurement": "No accuracy, no score, no GSPC card is produced for an external company here. GSPC cards are only ever minted for models CSOAI itself measured on a frozen bank. A disclosure crosswalk is REPORTED-from-public-text, a different data state.",
+    "relation_vocabulary": "'discloses-relevant-to' only — the company publicly discloses something relevant to the control/article. Never 'satisfies', never 'breaches'.",
+    "fines": "Any fine shown is the STATUTORY MAXIMUM for the tier, cited to the provision — the legislature's ceiling for that obligation class, not a sum asserted against this or any company."
+  },
+  "row_schema": {
+    "control_or_article": "the OWASP ASI id or EU AI Act article the disclosure topic is relevant to",
+    "regulator": "eu-ai-act | owasp-asi | nist-ai-rmf | iso-42001",
+    "disclosure_topic": "the compliance topic (paraphrased, never quoted, to respect copyright)",
+    "coverage": "DISCLOSED | PARTIAL | NOT-DISCLOSED-IN-THIS-DOC",
+    "relation": "discloses-relevant-to",
+    "evidence": "where in the cited public document the topic appears (section/heading, paraphrased)",
+    "statutory_maximum": "tier ceiling, cited — or null for a no-fine framework/taxonomy",
+    "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+  },
+  "worked_example": {
+    "subject": "OpenAI — GPT-4o System Card",
+    "subject_note": "Chosen because it is an unambiguously public, self-published AI safety/compliance disclosure document. Nothing below is a probe of OpenAI's systems; it is a coverage map of what this public document discloses.",
+    "public_source": "https://openai.com/index/gpt-4o-system-card/",
+    "source_kind": "provider-self-published system card (public web)",
+    "based_on": "public disclosures only",
+    "carded_as_of": "2026-09-01",
+    "carded_by": "CSOAI Ltd (measurement body) — REPORTED from the cited public document, not measured",
+    "rows": [
+      {
+        "control_or_article": "ASI01 — Agent Goal Hijack",
+        "regulator": "owasp-asi",
+        "disclosure_topic": "adversarial-robustness / jailbreak and instruction-override red-teaming",
+        "coverage": "DISCLOSED",
+        "relation": "discloses-relevant-to",
+        "evidence": "system card's external red-teaming and preparedness sections describe adversarial testing of instruction-following boundaries",
+        "statutory_maximum": null,
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "ASI04 — Agentic Supply Chain Vulnerabilities",
+        "regulator": "owasp-asi",
+        "disclosure_topic": "training-data provenance and third-party evaluation",
+        "coverage": "PARTIAL",
+        "relation": "discloses-relevant-to",
+        "evidence": "data-and-evaluation sections reference external evaluators but give limited detail on upstream data provenance",
+        "statutory_maximum": null,
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "ASI09 — Human-Agent Trust Exploitation",
+        "regulator": "owasp-asi",
+        "disclosure_topic": "anthropomorphism / emotional-reliance risk of the voice interface",
+        "coverage": "DISCLOSED",
+        "relation": "discloses-relevant-to",
+        "evidence": "system card explicitly discusses anthropomorphisation and emotional-reliance risks of the audio modality",
+        "statutory_maximum": null,
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "Article 50 — transparency & marking of AI-generated content",
+        "regulator": "eu-ai-act",
+        "disclosure_topic": "synthetic-content provenance / watermarking of generated audio & images",
+        "coverage": "PARTIAL",
+        "relation": "discloses-relevant-to",
+        "evidence": "system card references provenance/watermarking work; the document does not map itself to Art 50 obligations",
+        "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))",
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "Article 55 — GPAI systemic-risk obligations",
+        "regulator": "eu-ai-act",
+        "disclosure_topic": "systemic-risk / frontier-capability evaluation and mitigation",
+        "coverage": "DISCLOSED",
+        "relation": "discloses-relevant-to",
+        "evidence": "Preparedness Framework categories (e.g. CBRN, persuasion, autonomy) are reported with mitigation status",
+        "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))",
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "Article 15 — accuracy, robustness & cybersecurity",
+        "regulator": "eu-ai-act",
+        "disclosure_topic": "evaluation of robustness and safety-relevant accuracy",
+        "coverage": "DISCLOSED",
+        "relation": "discloses-relevant-to",
+        "evidence": "evaluation sections report capability and safety benchmark results",
+        "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover (EU AI Act Art 99(4))",
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "Article 5 — prohibited manipulative practices",
+        "regulator": "eu-ai-act",
+        "disclosure_topic": "manipulation / persuasion-capability risk",
+        "coverage": "PARTIAL",
+        "relation": "discloses-relevant-to",
+        "evidence": "persuasion is assessed as a capability risk; the document does not frame this against the Art 5 prohibition",
+        "statutory_maximum": "up to €35,000,000 or 7% of worldwide annual turnover (EU AI Act Art 99(3))",
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      },
+      {
+        "control_or_article": "GOVERN — organisational AI governance",
+        "regulator": "nist-ai-rmf",
+        "disclosure_topic": "internal governance, preparedness team, and go/no-go process",
+        "coverage": "DISCLOSED",
+        "relation": "discloses-relevant-to",
+        "evidence": "governance and Preparedness-Framework decision process are described",
+        "statutory_maximum": null,
+        "data_state": "DISCOVERED-FROM-PUBLIC-DISCLOSURE"
+      }
+    ],
+    "coverage_summary": {
+      "rows": 8,
+      "DISCLOSED": 5,
+      "PARTIAL": 3,
+      "NOT-DISCLOSED-IN-THIS-DOC": 0,
+      "reading": "This document discloses topics relevant to 8 controls/articles across OWASP ASI, EU AI Act, and NIST AI RMF; 3 are only partially covered in this document. This is a map of the DISCLOSURE's coverage, not a compliance verdict — the company's actual conformance is a matter for counsel and the competent authority."
+    }
+  },
+  "how_to_extend": "Add a subject block per company, each with a cited public_source, based_on:'public disclosures only', and rows using row_schema. Never add a row whose evidence is not a public document. Never change relation away from 'discloses-relevant-to'. Never emit a GSPC measurement card for an external company from this file."
+}
