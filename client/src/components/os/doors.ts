@@ -1,8 +1,10 @@
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 
 /**
- * Council OS doors. One rail: Board · Verify · Space · Assess · Harness.
- * Cards stays a URL mapping, not a header tab.
+ * Council OS doors — six arms only:
+ * board · verify · cards · space · assess · harness.
+ * Cards stays a URL mapping; header rail shows five tabs (cards via deep-link).
+ * AG-UI / City host presents GspcStreamCard inside streams — not a seventh arm.
  */
 export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess";
 

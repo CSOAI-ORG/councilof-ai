@@ -10,6 +10,10 @@ import { Redirect, useSearch } from "wouter";
  * 2026-08-28: Redirect to /os?lobby= instead of /?lobby=home. The homepage
  * no longer mounts the lobby panes (832 lean homepage), so /?lobby=home
  * crashes with removeChild NotFoundError. /os is the AG-UI host now.
+ *
+ * AX 2026-09-01: City AG-UI host (OsShell) renders live GSPC inside streams
+ * via GspcStreamCard (GET /api/gspc + /root.json). Presentation only — not
+ * a seventh evidence atom. Agents are first-class on the same GETs.
  */
 export default function AgUiBridge() {
   const search = useSearch();
