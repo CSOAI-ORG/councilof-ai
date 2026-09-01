@@ -256,6 +256,26 @@ function discover() {
     console.error(`hive: could not derive /hive/:slug routes — ${e.message}`);
     process.exitCode = 1;
   }
+  // ── /answers/:slug — every AEO answer page, derived from answers.json ─────────
+  // App.tsx routes /answers/:slug to AnswerPage (deep answer from answers.json) and
+  // /answers to its index. Heuristic discovery never sees the :slug values, so each
+  // answer cold-loaded as an honest-404 on the static host. Derive the slugs from
+  // the data — as /hive does — so an answer added later is snapshotted without anyone
+  // remembering to edit this file.
+  found.add("/answers");
+  try {
+    const answers = JSON.parse(readFileSync("client/src/data/answers.json", "utf8"));
+    const slugs = (Array.isArray(answers) ? answers : [])
+      .map((a) => a && a.slug)
+      .filter((s) => typeof s === "string" && s);
+    if (slugs.length === 0) throw new Error("no slugs parsed from answers.json");
+    for (const s of slugs) found.add(`/answers/${s}`);
+    console.log(`answers: queued ${slugs.length} /answers/:slug deep links from answers.json`);
+  } catch (e) {
+    // Loud, not silent: a parse failure here means answer deep links ship as 404s.
+    console.error(`answers: could not derive /answers/:slug routes — ${e.message}`);
+    process.exitCode = 1;
+  }
   // /api/* are data endpoints served by Pages Functions — snapshotting them writes an
   // index.html that can shadow the JSON on the static host, and (2026-08-25) bakes live
   // data (incl. corrections-ledger text) into pages the brand gate then rejects.

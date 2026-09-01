@@ -177,7 +177,7 @@
     "slug": "verified-measurement-credential",
     "id": "aeo-verified-measurement-credential",
     "title": "Verified Measurement Credential — What It Means and How to Verify",
-    "body": "A verified measurement credential is a signed, auditable assertion that a specific measurement was taken at a specific time by a specific instrument, and that the result has not been altered since. The Council of AI issues signed measurement cards for AI-system evaluations on the living board (GET /api/gspc: 22 axis, 15 measured, 7 empty). Each card carries an Ed25519 signature over a canonical body hash, with a published public key at did:web:csoai.org#card-attestation-1. To verify: (1) obtain the signed JSON, (2) recompute the hash in the browser at /gspc-verify or with /signed/verify-card.mjs, (3) confirm VALID under the published key. Three states only: VALID, INVALID, UNCHECKABLE. This is not a security guarantee and not a certification. The card says the board was measured and the numbers are unaltered. Empty cells stay empty.",
+    "body": "A verified measurement credential is a signed, auditable assertion that a specific measurement was taken at a specific time by a specific instrument, and that the result has not been altered since. The Council of AI issues signed measurement cards for AI-system evaluations on the living board (GET /api/gspc: 22 axis, 22 measured). Each card carries an Ed25519 signature over a canonical body hash, with a published public key at did:web:csoai.org#card-attestation-1. To verify: (1) obtain the signed JSON, (2) recompute the hash in the browser at /gspc-verify or with /signed/verify-card.mjs, (3) confirm VALID under the published key. Three states only: VALID, INVALID, UNCHECKABLE. This is not a security guarantee and not a certification. The card says the board was measured and the numbers are unaltered. Empty cells stay empty.",
     "references": [
       "https://councilof.ai/gspc-verify",
       "https://councilof.ai/signed/HOW-TO-VERIFY.md",
@@ -196,9 +196,9 @@
     "slug": "council-signal-measurement",
     "id": "aeo-council-signal-measurement",
     "title": "Council Signal: How Governance Measurement Works",
-    "body": "Council Signal is the measurement backbone of the Council of AI. It answers one question: how do you verify that an AI governance claim is true, not just asserted? Every assertion is reduced to a measurable item, scored on a frozen bank, and signed Ed25519 so a third party can verify without the scoring models. The living board is 22 axis, 15 measured, 7 empty (GET /api/gspc). Ties are ties. Empty cells stay empty. A score is not a single marketing number: where separation is published it is SEPARATED or TIE with an interval. The signed card attests the measurement was performed and is unaltered. It does not certify the model is safe. No council vote, no self-assessment: measured, signed, verifiable.",
+    "body": "Council Signal is the measurement backbone of the Council of AI. It answers one question: how do you verify that an AI governance claim is true, not just asserted? Every assertion is reduced to a measurable item, scored on a frozen bank, and signed Ed25519 so a third party can verify without the scoring models. The living board is 22 axis, 22 measured (GET /api/gspc). Ties are ties. Empty cells stay empty. A score is not a single marketing number: where separation is published it is SEPARATED or TIE with an interval. The signed card attests the measurement was performed and is unaltered. It does not certify the model is safe. No council vote, no self-assessment: measured, signed, verifiable.",
     "references": [
-      "Council of AI board measurement methodology (22 axis · 15 measured · 7 empty (GET /api/gspc))",
+      "Council of AI board measurement methodology (22 axis · 22 measured (GET /api/gspc))",
       "CSOAI Verified Measurement Credential standard (signed GSPC card)",
       "ETSI EN 304 223: Cybersecurity for AI (13 principles, January 2026)"
     ],

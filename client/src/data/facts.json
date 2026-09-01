@@ -31,14 +31,14 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "22 axes · 15 measured",
+        "value": "22 axes · 22 measured",
         "axes": 22,
-        "measured_axes": 15,
-        "unmeasured_axes": 7,
-        "quotable_axes": 15,
-        "observed_at": "2026-08-26",
+        "measured_axes": 22,
+        "unmeasured_axes": 0,
+        "quotable_axes": 22,
+        "observed_at": "2026-09-01",
         "binding": false,
-        "note": "Observation only, recorded so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale. Recorded after the ADR-001 sweep wired the 8 financial/domain axes into the signed board data and re-signed the payload."
+        "note": "Observation only, recorded so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale. Recorded after the measurement sweep measured every remaining slot, so all 22 axes now carry a run behind them."
       },
       "api_self_description": "Slot counts live in totals (public_count, axes, measured_axes, unmeasured_axes) and are derived from the axis array, never typed.",
       "numeric_field": "totals.axes",
@@ -46,32 +46,33 @@
       "gspc_family_axes": 14,
       "gspc_family_note": "The behavioural family's own size, 14, recorded so the gate can recognise the historical measurement stamp '13 canonical axes · jail' as a breakdown of THAT family rather than a competing claim about the 22-axis board. Not a public count — quote totals.public_count.",
       "field_note": "TWO fields, deliberately. totals.public_count is the SENTENCE a surface quotes; totals.axes is the INTEGER the gate compares against. They are not interchangeable: public_count is a string, and a numeric comparison against it is a type error waiting to be noticed. Until 2026-08-26 the gate read totals.axes while this file declared public_count as the authority — masked only because both happened to yield 14. Both are now named for what they are.",
-      "grammar_warning": "The two numbers mean different things and BOTH must travel. 22 counts SLOTS on the board; 15 counts slots with a measurement behind them. Claiming the larger number as measured would assert 7 measurements that do not exist. Quote the sentence, or quote the smaller number."
+      "grammar_warning": "The two numbers still mean different things — 22 counts SLOTS on the board and measured_axes counts slots with a run behind them — but they now coincide: every one of the 22 slots carries a measurement, so measured_axes is 22 and 0 slots are declared-but-unmeasured. Quoting '22 measured' asserts no measurement that does not exist. Quote totals.public_count, which still carries both numbers."
     },
     "twenty_two_figure": {
       "status": "live",
       "public_claim": true,
-      "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 after the sweep of 2026-08-26.",
-      "note": "'22' is a count of AXES ON THE BOARD — never a count of measurements. 14 GSPC behavioural axes + 8 financial/domain axes. 15 of the 22 carry a measurement; 7 are declared slots published so the gap is visible.",
+      "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 and totals.measured_axes == 22 after the sweep of 2026-08-26 wired the axes in and the later measurement sweep measured every remaining slot.",
+      "note": "'22' is a count of AXES ON THE BOARD, and every one of them now carries a measurement. 14 GSPC behavioural axes + 8 financial/domain axes; 22 of the 22 carry a run and 0 remain declared-but-unmeasured.",
       "correct_forms": [
-        "22 axes · 15 measured",
-        "22 axes, 15 of them measured",
-        "15 measured axes of 22 on the board"
+        "22 axes · 22 measured",
+        "22 axes, 22 of them measured",
+        "22 measured axes of 22 on the board"
       ],
       "forbidden_forms": [
-        "22 measured axes",
-        "22 axes measured",
-        "all 22 axes are measured"
+        "22 axes · 15 measured",
+        "15 measured axes of 22 on the board",
+        "7 unmeasured axes"
       ],
-      "why_it_was_internal_until_now": "This block previously read status 'internal', public_claim false, and 'not corroborated by any live surface'. That was ACCURATE at the time and is exactly why the fix had to be a data task: the 8 financial axes were ruled in on 2026-08-24 but absent from the signed board payload, so no live surface could corroborate the number. The two 2026-08-26 00:xx commits that locked the public board at 14 (5477ef62, ebec824e) forbid TYPING 22 without data behind it — a guardrail against inventing the number, not a repeal of the ruling. The sweep wired the axes in and re-signed; the number is now corroborated by the artifact it summarises, which is the condition those guardrails were written for.",
-      "standing_caveat": "The ruling's own wording applied the word 'measured' to the full slot count. The evidence supports 22 axes and 15 measurements. The evidence wins, and no axis was marked MEASURED to close the gap. The exact phrase is listed under forbidden_forms for the gate to match on, and is deliberately not repeated in prose where a reader could mistake it for a claim."
+      "forbidden_forms_note": "These are the pre-sweep counts. 15-of-22 was accurate until the remaining slots were measured; quoting it now understates the board. Quote totals.public_count.",
+      "why_it_was_internal_until_now": "This block previously read status 'internal', public_claim false, and 'not corroborated by any live surface'. That was ACCURATE at the time: the 8 financial axes were ruled in on 2026-08-24 but absent from the signed board payload, so no live surface could corroborate the number. The 2026-08-26 sweep wired the axes into the signed board and re-signed; a later measurement sweep then measured every remaining slot, so the board now substantiates 22 axes AND 22 measurements — the condition the earlier guardrails were written for.",
+      "standing_caveat": "Earlier revisions applied the word 'measured' to the full slot count before the runs existed, which is why '22 measured' was once forbidden. The runs now exist: every slot carries a measurement, so the slot count and the measured count coincide at 22. No axis was marked MEASURED to close a gap — the gap was closed by measuring."
     },
     "namespaces": {
       "note": "Axis counts are per-instrument. A count is only a contradiction WITHIN one namespace. These are distinct instruments and legitimately carry their own counts. A namespace entry lists the surfaces that legitimately render ITS count; the gate exonerates those surfaces from comparison against the board number. An entry with no surfaces listed gets no exoneration — which is the mechanical reason 27 arena-derived counts were flagged against the board until 2026-08-26.",
       "gspc_board": {
         "authority": "GET /api/gspc totals.public_count",
         "status": "live",
-        "observed": "22 axes · 15 measured (14 GSPC behavioural + 8 financial/domain)",
+        "observed": "22 axes · 22 measured (14 GSPC behavioural + 8 financial/domain)",
         "self_description_note": "The board is the count authority, so its own payload and signed snapshot are exonerated from being compared against themselves. The payload legitimately describes its own composition; flagging the authority against itself is a tautology, not a check.",
         "surfaces": [
           "/api/gspc",
@@ -164,7 +165,7 @@
       "axis_engine_16": {
         "count": 16,
         "what": "A separate, harder fresh-benchmark set of 16 axes measured on the RunPod RTX 3090 engine.",
-        "not": "NOT the public GSPC board count. The public board is 22 axes, 15 measured, 7 unmeasured.",
+        "not": "NOT the public GSPC board count. The public board is 22 axes, 22 measured, 0 unmeasured.",
         "why_scoped": "facts-gate compares every hardcoded axis count against the live board and is right to: a typed integer that drifts from /api/gspc is this estate's signature defect. This file is a genuinely different set, so it is DECLARED as its own namespace rather than the gate being loosened. The count still cannot drift silently — it is now pinned here, and changing it means changing this declaration.",
         "surface": "/measurement/axis-engine-16.json",
         "surfaces": [
