@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/trace-trust-record-v0.json",
+  "title": "CSOAI TRACE Trust Record v0",
+  "description": "Binds a GSPC card hash to TRACE claim slots. Hardware fields are UNCHECKABLE until RATS evidence exists. Not a GSPC axis. Not a certificate.",
+  "type": "object",
+  "required": ["schema", "kind", "writes_board", "gspc_card_sha256", "claims", "honesty"],
+  "properties": {
+    "schema": { "const": "https://councilof.ai/schema/trace-trust-record-v0.json" },
+    "kind": { "const": "csoai.trace-trust-record/0.1" },
+    "writes_board": { "const": false },
+    "gspc_card_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "claims": {
+      "type": "object",
+      "required": ["rats", "eat", "slsa", "scitt", "spiffe", "ear", "silicon"]
+    },
+    "honesty": { "type": "string" }
+  }
+}
