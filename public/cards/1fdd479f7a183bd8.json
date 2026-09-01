@@ -1,0 +1,62 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "not_a_grade": true,
+      "not_a_measurement": true,
+      "framing": "Sign the press, not the models.",
+      "vendors": [
+        "OpenAI ChatGPT (ChatGPT Mil)",
+        "xAI Grok (Grok for Government / Starshield AI)",
+        "Google Gemini"
+      ],
+      "impact_level": "IL5",
+      "design_capacity_personnel": 3000000,
+      "current_users": 1500000,
+      "current_users_asof": "2026-06-12 (Pentagon CTO)",
+      "current_users_note": "1.5M sourced (Pentagon CTO, 12 Jun 2026). The ~1.7M figure in the operator brief is UNVERIFIED; the recorded number is the sourced 1.5M.",
+      "deployments_uncheckable": [
+        "ChatGPT Mil",
+        "Grok for Government"
+      ],
+      "uncheckable_reason": "The IL5 military instances are non-public. We measured neither. The classified/gov deployment is UNCHECKABLE by definition.",
+      "url_sha256": "978cc8170b06f2c519d18d895b2db3d8bdd017244726a243f28fed39f40dd9d8"
+    },
+    "schema": "https://councilof.ai/schema/card-v0.json",
+    "sha256": "1fdd479f7a183bd847b30555a237a7e696f1e987fcb89857414d94f93a5dde02",
+    "sig_ed25519": "b77621bb1296265a27d79cbd5cb3c73b69579fa24f38b1d40442965569374ca0b1578a0f935af3ab5b8f952657173b1b8ea353cc542688a89e5b3f65ae8fcf0e",
+    "source_urls": [
+      "https://www.war.gov/News/Releases/Release/Article/4354916/the-war-department-unleashes-ai-on-new-genaimil-platform/",
+      "https://defensescoop.com/2026/08/31/grok-chatgpt-added-to-genai-mil/",
+      "https://www.militarytimes.com/industry/techwatch/2026/08/31/the-militarys-chatgpt-is-now-live-via-the-pentagons-genai-platform/",
+      "https://techcrunch.com/2026/08/31/the-pentagon-now-has-its-own-version-of-chatgpt-and-grok/",
+      "https://x.ai/news/us-gov-dept-of-war"
+    ],
+    "subject": "GenAI.mil: 3 frontier vendors on IL5 (31 Aug 2026 War Dept release)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:wardept-public-press",
+      "coverage:UNCHECKABLE-deployments",
+      "coverage:UNMEASURED",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "deployment_behaviour",
+      "classified_gov_instance",
+      "il5_environment_bytes",
+      "press_html_body_403",
+      "the_14_behavioural_axes_on_these_deployments"
+    ]
+  },
+  "proof": [
+    "a91661409e7ef4996181540fb0a4fa352a4d650ea3863e421e6fe5e839036aeb",
+    "e5800c0944ee6106741dfab863ba984364a87da53f6f57800c10e1bcd047d7f6",
+    "f95a86edded0fa439766cb5d90ea5c50a0bbb5854e8d4507c395b2e4ec2c9f9d",
+    "fb41562aaf57a5919c9160887d4cddd5f7fefeb869652482b9ad2de5f65a2357",
+    "f4fb8ad5e9f685c43ad00c81abb3d4aaf07cbd21214ac4fe52e6ab95d1db9638",
+    "f38276f72cfb73b420bfff8bcf1773ba7e3675ea2513b4dc9b6abf9b950a9bdb"
+  ]
+}

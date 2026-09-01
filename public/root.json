@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-09-01T07:44:50Z",
-  "card_count": 43,
+  "as_of": "2026-09-01T08:44:15Z",
+  "card_count": 50,
   "card_sha256": [
     "b61bb14419b555c9db79612f091e465c6bb2cc66ea49aca7bceb4a285541d60b",
     "0b117db940e673613abfcc89ea00103cd050c80240e4b827f9bf3225a852c8d7",
@@ -44,12 +44,19 @@
     "dbc7eb7e46086cfc08cd327c1b9edd4ab1aa7b6ade66c5f1f905b2d8551946af",
     "59518ba5100da8d4b57e103b3bc32c35a87551712bdc038dd46dcc853106a301",
     "ad3aa07d16ac2de3496d79e2d49fdb47e729ce3bcdec43263beb41ab8409fe50",
-    "a91661409e7ef4996181540fb0a4fa352a4d650ea3863e421e6fe5e839036aeb"
+    "a91661409e7ef4996181540fb0a4fa352a4d650ea3863e421e6fe5e839036aeb",
+    "1fdd479f7a183bd847b30555a237a7e696f1e987fcb89857414d94f93a5dde02",
+    "5afa72ee3675e7a3d45022a439e4e93bbb5a6c3be6b41e41969a361ca2c3b10e",
+    "8d876a2dba25a755bd717042938743557a2da98c274a4c8caaa1228fec1344b4",
+    "467faee5cc8824d37e1dc94b5da57d346e69b1b3fff7895d64cb495ea592ed36",
+    "3437376d1e53b6888970adc9b742e75eebba7f3fcc61af45f01327b2296f3895",
+    "cafaceb39684ee2ee472480763f8ae2d5cf66ac9a024fc612441e210fa1a1620",
+    "264fce096a0991558e2382af0e4acbd341193e55c03553a102f3d6428d2df529"
   ],
   "did_intended": "did:web:csoai.org#board-attestation-1",
   "kind": "csoai.public-root/v0",
   "language": "coverage of public XRPL instruments + public notices. No bank names as clients. Not a certification.",
-  "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
+  "merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
   "note": "Envelope schema is public-root-v0, not card-v0. This root.json envelope is Ed25519-signed over the compact preimage under did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.",
   "schema": "https://councilof.ai/schema/public-root-v0.json",
   "sources": [
@@ -59,6 +66,6 @@
   "xrpl_basket_merkle": "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9",
   "xrpl_fi_assetCount": 16,
   "xrpl_fi_updatedAt": "2026-08-28T09:06:28.399Z",
-  "sig_ed25519": "7d20dbdc76490a72b3e89244b73e16111970dd65597fdacb1456a241de4a080469dff6166f0ba8c8044a2ceb9faaae594e677d90dab9bf0272422c855db3d304",
+  "sig_ed25519": "967826d2f8b4d865c3cf53913028994349ceaf17f697038949e1338592fc3945b722c977ed2ae64f5b61d35a93e7f08c1a13778853595b5edcea4a2837fdfd07",
   "sig_preimage": "Ed25519 over canonical JSON of {kind, schema, as_of, merkle_root, card_count, did_intended} only. card_sha256[] is bound by merkle_root. PKCS8 stays on Pages (OIDC). Not a certificate."
 }
