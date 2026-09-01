@@ -271,18 +271,6 @@ export default function CookiePolicy() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <Card className="bg-gray-50">
                     <CardContent className="p-4">
-                      <h4 className="font-semibold mb-2">Stripe (Payments)</h4>
-                      <p className="text-sm">
-                        When you make a payment, Stripe may set cookies for fraud prevention
-                        and payment processing. See{" "}
-                        <a href="https://stripe.com/privacy" className="text-emerald-600 hover:underline" target="_blank" rel="noopener noreferrer">
-                          Stripe's Privacy Policy
-                        </a>
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-gray-50">
-                    <CardContent className="p-4">
                       <h4 className="font-semibold mb-2">Embedded Content</h4>
                       <p className="text-sm">
                         Training videos or external content may set cookies from their
