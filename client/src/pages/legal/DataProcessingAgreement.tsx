@@ -136,7 +136,7 @@ export default function DataProcessingAgreement() {
                     <li>Organization affiliation</li>
                     <li>Training progress and certification status</li>
                     <li>Assessment scores and completion records</li>
-                    <li>Payment information (processed via Stripe)</li>
+                    <li>Payment information — card payments are retired; no live payment processor</li>
                     <li>IP addresses and usage analytics</li>
                   </ul>
                 </div>
@@ -223,7 +223,6 @@ export default function DataProcessingAgreement() {
                     </thead>
                     <tbody>
                       {[
-                        { name: "Stripe, Inc.", purpose: "Payment processing", location: "USA (EU SCCs)" },
                         { name: "OpenAI", purpose: "AI council processing", location: "USA (EU SCCs)" },
                         { name: "Anthropic", purpose: "AI council processing", location: "USA (EU SCCs)" },
                         { name: "Google Cloud", purpose: "AI council processing", location: "EU/USA" },
