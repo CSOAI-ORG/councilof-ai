@@ -124,9 +124,9 @@ export default function BoardAttestation({
   const bgCls = dark ? "bg-[#05140d]" : "bg-white";
   const textMuted = dark ? "text-emerald-100/70" : "text-gray-600";
   const textPrimary = dark ? "text-emerald-50" : "text-gray-900";
-  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? "text-emerald-300/60" : "text-emerald-700/70"}`;
-  const hoverCls = `cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md ${dark ? "hover:border-emerald-400/40" : "hover:border-emerald-500/40"}`;
-  const clickHintCls = `ml-auto shrink-0 ${dark ? "text-emerald-400/50" : "text-emerald-600/40"}`;
+  const labelCls = `text-[11px] font-bold uppercase tracking-wider ${dark ? 'text-emerald-300/60' : 'text-emerald-700/70'}`;
+  const hoverCls = `cursor-pointer transition-all hover:scale-[1.01] hover:shadow-md ${dark ? 'hover:border-emerald-400/40' : 'hover:border-emerald-500/40'}`;
+  const clickHintCls = `ml-auto shrink-0 ${dark ? 'text-emerald-400/50' : 'text-emerald-600/40'}`;
 
   return (
     <>
@@ -193,7 +193,7 @@ export default function BoardAttestation({
               <p className={`text-[10px] uppercase tracking-wide ${textMuted}`}>XRPL Ledger Height</p>
               <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
             </div>
-            <p className={`mt-1 text-[12px] font-semibold ${dark ? "text-amber-300" : "text-amber-700"}`}>
+            <p className={`mt-1 text-[12px] font-semibold ${dark ? 'text-amber-300' : 'text-amber-700'}`}>
               /api/xrpl is a reader
             </p>
             <p className={`mt-1 text-[10px] ${textMuted}`}>
@@ -230,11 +230,11 @@ export default function BoardAttestation({
 
         {/* Living Stamp Warning */}
         {stamp && (
-          <div className={`mt-3 rounded-lg border ${dark ? "border-amber-500/30 bg-amber-900/20" : "border-amber-300 bg-amber-50"} p-3`}>
-            <p className={`text-[10px] uppercase tracking-wide ${dark ? "text-amber-300/80" : "text-amber-700"}`}>
+          <div className={`mt-3 rounded-lg border ${dark ? 'border-amber-500/30 bg-amber-900/20' : 'border-amber-300 bg-amber-50'} p-3`}>
+            <p className={`text-[10px] uppercase tracking-wide ${dark ? 'text-amber-300/80' : 'text-amber-700'}`}>
               Living Stamp — {stamp.verification_state || "UNVERIFIABLE"}
             </p>
-            <p className={`mt-1 text-[11px] ${dark ? "text-amber-200/70" : "text-amber-800"}`}>
+            <p className={`mt-1 text-[11px] ${dark ? 'text-amber-200/70' : 'text-amber-800'}`}>
               {stamp.unverifiable_note
                 ? stamp.unverifiable_note.slice(0, 200) + (stamp.unverifiable_note.length > 200 ? "…" : "")
                 : "Do not treat this as a valid attestation. Check site_attestation instead."}
@@ -260,7 +260,7 @@ export default function BoardAttestation({
             <div className="flex items-center gap-4">
               {/* Progress Bar */}
               <div className="flex-1">
-                <div className={`h-3 rounded-full ${dark ? "bg-emerald-900/40" : "bg-gray-200"} overflow-hidden`}>
+                <div className={`h-3 rounded-full ${dark ? 'bg-emerald-900/40' : 'bg-gray-200'} overflow-hidden`}>
                   <div
                     className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-500"
                     style={{ width: `${progressPct}%` }}
@@ -302,10 +302,10 @@ export default function BoardAttestation({
                 <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
               </div>
               <div className="mt-2 flex flex-wrap gap-3 text-[11px]">
-                <span className={`rounded-full border ${dark ? "border-emerald-500/30 bg-emerald-900/30" : "border-emerald-300 bg-emerald-50"} px-2.5 py-1 font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
+                <span className={`rounded-full border ${dark ? 'border-emerald-500/30 bg-emerald-900/30' : 'border-emerald-300 bg-emerald-50'} px-2.5 py-1 font-semibold ${dark ? 'text-emerald-300' : 'text-emerald-800'}`}>
                   {totals.separated_leads} SEPARATED
                 </span>
-                <span className={`rounded-full border ${dark ? "border-amber-500/30 bg-amber-900/30" : "border-amber-300 bg-amber-50"} px-2.5 py-1 font-semibold ${dark ? "text-amber-300" : "text-amber-800"}`}>
+                <span className={`rounded-full border ${dark ? 'border-amber-500/30 bg-amber-900/30' : 'border-amber-300 bg-amber-50'} px-2.5 py-1 font-semibold ${dark ? 'text-amber-300' : 'text-amber-800'}`}>
                   {totals.ties ?? 0} TIE
                 </span>
                 <span className={textMuted}>
@@ -326,7 +326,7 @@ export default function BoardAttestation({
             </h3>
             <button
               onClick={() => setDeepDive({ kind: "in-lane" })}
-              className={`ml-2 text-[10px] ${dark ? "text-emerald-400" : "text-emerald-700"} hover:underline`}
+              className={`ml-2 text-[10px] ${dark ? 'text-emerald-400' : 'text-emerald-700'} hover:underline`}
             >
               view all traces →
             </button>
@@ -350,7 +350,7 @@ export default function BoardAttestation({
                     <p className={`font-semibold ${textPrimary}`}>{axis.axis}</p>
                     <p className={`text-[11px] ${textMuted}`}>{axis.bench || axis.task}</p>
                   </div>
-                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${dark ? "border-violet-500/40 bg-violet-900/30 text-violet-300" : "border-violet-300 bg-violet-50 text-violet-800"}`}>
+                  <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${dark ? 'border-violet-500/40 bg-violet-900/30 text-violet-300' : 'border-violet-300 bg-violet-50 text-violet-800'}`}>
                     IN-LANE
                   </span>
                 </div>
@@ -366,7 +366,7 @@ export default function BoardAttestation({
                   </div>
                 )}
                 {axis.separation === "UNTESTED" && (
-                  <p className={`mt-2 text-[10px] ${dark ? "text-amber-300/70" : "text-amber-700"}`}>
+                  <p className={`mt-2 text-[10px] ${dark ? 'text-amber-300/70' : 'text-amber-700'}`}>
                     Path to signed: needs n≥30 + 4-way separation test + keystone
                   </p>
                 )}
@@ -378,10 +378,10 @@ export default function BoardAttestation({
           {/* Unsigned-to-Signed Path */}
           <button
             onClick={() => setDeepDive({ kind: "in-lane" })}
-            className={`mt-4 w-full rounded-lg border ${dark ? "border-emerald-500/20 bg-emerald-900/20" : "border-emerald-200 bg-emerald-50/50"} p-3 text-left ${hoverCls}`}
+            className={`mt-4 w-full rounded-lg border ${dark ? 'border-emerald-500/20 bg-emerald-900/20' : 'border-emerald-200 bg-emerald-50/50'} p-3 text-left ${hoverCls}`}
           >
             <div className="flex items-center">
-              <p className={`text-[11px] font-semibold ${dark ? "text-emerald-300" : "text-emerald-800"}`}>
+              <p className={`text-[11px] font-semibold ${dark ? 'text-emerald-300' : 'text-emerald-800'}`}>
                 Unsigned → Signed path (honest)
               </p>
               <ChevronRight className={`h-3 w-3 ${clickHintCls}`} />
@@ -392,7 +392,7 @@ export default function BoardAttestation({
               <li>• Keystone attestation (Ed25519 over canonical JSON)</li>
               <li>• Board gate reconciliation (owner-gated)</li>
             </ul>
-            <p className={`mt-2 text-[10px] ${dark ? "text-amber-300/60" : "text-amber-600"}`}>
+            <p className={`mt-2 text-[10px] ${dark ? 'text-amber-300/60' : 'text-amber-600'}`}>
               No fake close: these axes are not marked signed, no completion date is invented,
               and no path is painted as complete.
             </p>
