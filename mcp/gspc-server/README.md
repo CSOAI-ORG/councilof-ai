@@ -29,7 +29,7 @@ transport your client speaks; the contracts are identical.
 
 ## Install
 
-Published as `csoai-gspc-mcp` on npm. No checkout required:
+Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) **0.1.0** (registry live); package.json tracks **0.1.1** for the next publish. No checkout required:
 
 ```sh
 npx -y csoai-gspc-mcp
