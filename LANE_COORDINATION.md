@@ -403,3 +403,13 @@ Live GET `/api/gspc` = **22 · 15 · 7**. Unsigned 4-axis unique n=30 on `/inter
 
 Landed leftovers: #1000 #1001 #1002 #992 (`ba90e87b`, living root-as-index + N→N+1 UNCHECKABLE).
 DIRTY stay open: #999 #997 #994 #978. #993 sits NAMED. No wrangler. No fill-7.
+
+## 2026-09-01 · lid pack + keystone path (append)
+
+Quote live GET: **22 · 15 · 7**, merkle `4a9a5036…`, envelope UNSIGNED until compact preimage. Ready ≠ measured.
+
+`BOARD_SIGN_KEY_PKCS8_B64` is **not** a GHA secret. Pages holds PKCS8. OIDC `POST /api/board-sign` is live (401 without GitHub OIDC). Do not copy the key to GHA or a laptop.
+
+HTTP MCP `https://councilof.ai/mcp` already lists seven tools (`get_root` `get_card` `verify_inclusion` VALID against that merkle). npm `0.1.0` still four.
+
+HF `whoami`: `Nicholastempleman` + org `csoai` role **admin**. Hub writes allowed under lowercase `csoai` only. KEEP 3090 RUNNING; other pods EXITED; pods do not sign. `cobolbridge.ai` 522 — do not demo.

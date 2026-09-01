@@ -64,16 +64,56 @@ def test_swift_17_unmeasured_notices() -> None:
     assert sidecar.get("swift_partnered") is False
 
 
-def test_live_root_unsigned_envelope() -> None:
+def test_envelope_preimage_under_3kb() -> None:
+    from publish_public_root import (
+        PAYLOAD_CAP,
+        canonical_bytes,
+        envelope_preimage,
+    )
+
+    fake = {
+        "kind": "csoai.public-root/v0",
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "as_of": "2026-09-01T01:48:00Z",
+        "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
+        "card_count": 43,
+        "did_intended": "did:web:csoai.org#board-attestation-1",
+        "card_sha256": ["ab"] * 43,
+        "note": "noise not in preimage",
+    }
+    pre = envelope_preimage(fake)
+    raw = canonical_bytes(pre)
+    assert set(pre) == {
+        "kind",
+        "schema",
+        "as_of",
+        "merkle_root",
+        "card_count",
+        "did_intended",
+    }
+    assert "card_sha256" not in pre
+    assert len(raw) <= PAYLOAD_CAP
+    assert len(raw) < 512
+
+
+def test_live_root_envelope() -> None:
     st, root = _get("https://councilof.ai/root.json")
     assert st == 200
-    assert root.get("sig_ed25519") in (None, "", False)
-    assert "did_intended" in root
-    assert "envelope is not itself" in (root.get("note") or "").lower() or root.get("did_intended")
+    assert root.get("did_intended")
+    assert root.get("merkle_root")
+    assert root.get("card_count")
+    sig = root.get("sig_ed25519")
+    if sig:
+        assert isinstance(sig, str) and len(sig) >= 64
+        assert root.get("sig_preimage")
+    else:
+        note = (root.get("note") or "").lower()
+        assert "unsigned" in note or "not ed25519-signed" in note
 
 
 if __name__ == "__main__":
     test_xrpl_locked_16_and_live_reader()
     test_swift_17_unmeasured_notices()
-    test_live_root_unsigned_envelope()
-    print("PASS public-root XRPL16 reader + SWIFT17 UNMEASURED notices + unsigned envelope")
+    test_envelope_preimage_under_3kb()
+    test_live_root_envelope()
+    print("PASS public-root XRPL16 reader + SWIFT17 UNMEASURED notices + envelope preimage")

@@ -83,6 +83,22 @@ def canonical_bytes(obj: Any) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
+# Compact envelope preimage — board-sign cap is 3KB; the full root with card_sha256[]
+# does not fit. merkle_root binds the leaf list. Never laptop-sign.
+ENVELOPE_PREIMAGE_KEYS = (
+    "kind",
+    "schema",
+    "as_of",
+    "merkle_root",
+    "card_count",
+    "did_intended",
+)
+
+
+def envelope_preimage(root_body: dict) -> dict:
+    return {k: root_body[k] for k in ENVELOPE_PREIMAGE_KEYS}
+
+
 def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
@@ -527,6 +543,29 @@ def main() -> int:
         "xrpl_fi_updatedAt": sidecar.get("xrpl_fi_updatedAt"),
     }
 
+    envelope_sig = None
+    pre = envelope_preimage(root_body)
+    pre_len = len(canonical_bytes(pre))
+    if pre_len > PAYLOAD_CAP:
+        print(f"envelope preimage {pre_len} exceeds {PAYLOAD_CAP}; leaving unsigned", file=sys.stderr)
+    elif have_key:
+        try:
+            envelope_sig = sign_payload(pre, key)
+        except Exception as e:
+            print(f"envelope sign failed ({type(e).__name__}); leaving unsigned", file=sys.stderr)
+    if envelope_sig:
+        root_body["sig_ed25519"] = envelope_sig
+        root_body["sig_preimage"] = (
+            "Ed25519 over canonical JSON of {kind, schema, as_of, merkle_root, "
+            "card_count, did_intended} only. card_sha256[] is bound by merkle_root. "
+            "PKCS8 stays on Pages (OIDC). Not a certificate."
+        )
+        root_body["note"] = (
+            "This root.json envelope is Ed25519-signed over the compact preimage "
+            "under did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
+            "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."
+        )
+
     proofs = []
     for i, sha in enumerate(shas):
         proofs.append(
@@ -544,6 +583,7 @@ def main() -> int:
         "writer": "scripts/publish_public_root.py",
         "dry_run": bool(args.dry_run),
         "key": "present" if have_key else "absent",
+        "envelope": "signed" if envelope_sig else "unsigned",
         "halt": {"split": False, "unsigned_new_leaves": 0, "missing_key": not have_key},
         "xrpl_basket_merkle": basket_hex,
         "represented_tvl": sidecar.get("represented_tvl"),
