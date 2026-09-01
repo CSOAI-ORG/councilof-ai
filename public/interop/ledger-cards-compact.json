@@ -236,25 +236,20 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 74,
-   "live": 74,
+   "n_probed": 1,
+   "live": 1,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "Kxck/Finance_500_v1_DPO_386_provisional (200)",
-    "RyanYr/asyncrl-math_adpklr_s128_b0p01_truncneg1_refinit_shuf-gs576 (200)",
-    "Hastagaras/z-image-vae-jax (200)",
-    "gridfm/gridfm-pf-reconstruction (200)",
-    "sfafasfa2324/MyAwesomeModel-TestRepo (200)",
-    "tadiecool29/STL-xlm-roberta-large-sentiment (200)"
+    "SergeyKurchev/cosmos3-domain30-mix-lora (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T09:41:42Z",
+  "as_of": "2026-09-01T11:41:31Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -274,25 +269,20 @@
   },
   "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 513,
-   "live": 376,
-   "placeholder": 105,
+   "n_probed": 1,
+   "live": 1,
+   "placeholder": 0,
    "held": 0,
-   "dead": 32,
+   "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.7329,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "ai.afmr/discovery (405)",
-    "ai.adside/adside (401)",
-    "ai.adplane/google-ads (401)",
-    "ai.adweave/meta-ads-mcp (401)",
-    "ai.agentdm/agentdm (200)",
-    "ai.adramp/google-ads (401)"
+    "ai.agentxray/mcp (405)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:01Z",
+  "as_of": "2026-09-01T10:55:39Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -312,25 +302,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 700,
-   "live": 25,
+   "n_probed": 500,
+   "live": 13,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 675,
-   "live_fraction_of_probed": 0.0357,
+   "uncheckable": 487,
+   "live_fraction_of_probed": 0.026,
    "live_examples": [
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266933 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:8955 (tokenURI resolvable)",
-    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1259 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266234 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:265982 (tokenURI resolvable)",
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266229 (tokenURI resolvable)"
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61164 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61163 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61155 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61160 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61158 (tokenURI resolvable)",
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:61156 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:51:18Z",
+  "as_of": "2026-09-01T08:58:43Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
@@ -349,25 +339,23 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 20,
-   "live": 20,
+   "n_probed": 4,
+   "live": 4,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rsSzY4b5NY5zHpawYWPdPJvyc4HbajKuge (exists)",
-    "rJmsb9rZrpL8EBnnCspgjpd1jJCgvHgUVz (exists)",
-    "rHMFVeXoyGCk31BDhsmehLunnCywttu7Sr (exists)",
-    "rBtVeRQ8NWUjco5scoivCQbUe7Lbdbb7Me (exists)",
-    "rRyaHnXhvPoJ7BtxuMfcWEgZbNBp6eYKu (exists)",
-    "rpVCrZ7EsAYCbbKhk6tSZvpxHg9d1XPU9M (exists)"
+    "raZVfCwti8Yn4GPe1URscmqYgog67aLZQZ (exists)",
+    "r9AYsTf9rGTKGWp81RSPQG146yNtZ8fbWE (exists)",
+    "rBY95cBdsEKmKyo9CpZ53YWTMx2vdQzXZS (exists)",
+    "rNbR4Gw9d9JRLdkb4rAhkWDcJyKRk39FoA (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T09:41:42Z",
+  "as_of": "2026-09-01T11:41:31Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -386,25 +374,20 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 26,
-   "live": 25,
+   "n_probed": 1,
+   "live": 1,
    "placeholder": 0,
-   "held": 1,
+   "held": 0,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.9615,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "prathmesh-jarvis/jarvis-backend (200)",
-    "syazwanhosen/mcp (200)",
-    "huntingislove/oidc-idp-probe (200)",
-    "ExpressedIt/Cag-ai-animator-2026 (200)",
-    "sangeetachintha/StudyAssistant (200)",
-    "extreme1122/deepfake-voicecoining-scam-detector (200)"
+    "travaydoma/ChinaVTB (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T09:41:42Z",
+  "as_of": "2026-09-01T11:41:31Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -423,25 +406,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 220,
-   "live": 220,
+   "n_probed": 6,
+   "live": 6,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "correctover (200)",
-    "pushci (200)",
-    "mcp-sequentialthinking-tools (200)",
-    "csuite-sdk (200)",
-    "storybook-addon-oversight (200)",
-    "lifeos (200)"
+    "figma-local-context (200)",
+    "warp-agent-mcp (200)",
+    "mnemodb (200)",
+    "@milcho0604/velog-mcp (200)",
+    "@scramble-cloud/lurus-code-cli (200)",
+    "@microsoft/m365agentstoolkit-mcp (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:51:18Z",
+  "as_of": "2026-09-01T11:41:31Z",
   "unmeasured": [
    "install_integrity",
    "malware",
