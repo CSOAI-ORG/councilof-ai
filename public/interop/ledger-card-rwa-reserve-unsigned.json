@@ -1,0 +1,56 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "rwa.reserve",
+ "subject": "BlackRock - BUIDL (USD Institutional Digital Liquidity Fund), Ethereum",
+ "as_of": "2026-09-01T05:07:20Z",
+ "source_urls": [
+  "https://eth.blockscout.com/token/0x7712c34205737192402172409a8F7ccef8aA2AEc",
+  "https://eth.blockscout.com/token/0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041",
+  "https://councilof.ai/interop/rwa-registry.json"
+ ],
+ "payload": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "reserve_page_keyless_reachable": false
+  },
+  "chain": "ethereum",
+  "classes": [
+   {
+    "symbol": "BUIDL",
+    "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+    "decimals": 6,
+    "total_supply_raw": "211864943860349",
+    "holders": 57
+   },
+   {
+    "symbol": "BUIDL-I",
+    "contract": "0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041",
+    "decimals": 6,
+    "total_supply_raw": "801395176980100",
+    "holders": 6
+   }
+  ],
+  "reserve_disclosure": "no keyless published reserve page reached at as_of (securitize.io/primary-market and /invest/buidl both 404 to keyless GET) - reserve figures stay UNMEASURED, supply is a cite only",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key); contract 0x7712c3... matches the live CSOAI rwa-registry entry (address_status evm-located)",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "reserve_attestation",
+   "nav",
+   "official_aum",
+   "share_class_reconciliation"
+  ]
+ },
+ "sha256": "7b19df33ba344a6055034b40678e77620ee6d2fbb713f6f5c485235142e16378",
+ "unmeasured": [
+  "reserve_attestation",
+  "nav",
+  "official_aum",
+  "share_class_reconciliation"
+ ],
+ "did": "did:web:csoai.org#card-attestation-1",
+ "sig_ed25519": null,
+ "note": "NO_LAPTOP_SIGN - unsigned atom; queued for GHA OIDC signing (hf-fin-shells-measure pattern) under did:web:csoai.org#card-attestation-1"
+}

@@ -1,0 +1,130 @@
+{
+ "benji.onchain.supply": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "issuer_published_address_match": true
+  },
+  "chain": "ethereum",
+  "contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+  "decimals": 18,
+  "total_supply_raw": "48095039789740699318737949",
+  "total_supply_benji": "48095039.7897",
+  "holders": 3,
+  "basis": "issuer states 1 share of FOBXX = 1 BENJI; Ethereum address published on issuer benji-contracts page (HTTP 200)",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key) + issuer contract-address page HTTP 200; a lookalike 'Franklin OnChain U.S. Government Money Fund' token 0x9ae41Ea995b217dA17181181ba398065D66c01f2 is NOT on the issuer page and is excluded",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "fund_aum_all_chains",
+   "supply_on_other_8_published_chains",
+   "nav_per_share",
+   "reserve_attestation"
+  ]
+ },
+ "erc8004.callable": {
+  "kind": "csoai.ledger-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "validation_mainnet": "PENDING",
+   "cited_not_endorsed": true
+  },
+  "registry": {
+   "chain_id": 8453,
+   "contract": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
+   "token_id": 56249,
+   "token_uri_kind": "data:application/json;base64 (eip-8004 registration-v1)",
+   "token_uri_sha256": "18932369e68159557e69922d6c0862a1c4bda00712ea6689c734b3a985357c79"
+  },
+  "probe": {
+   "state": "CALLABLE",
+   "endpoint": "https://econ.memoryapi.org",
+   "http": 200,
+   "answered": "live JSON service descriptor (AgentEcon v1.0.0, x402 endpoints listed); GET /x402/econ/inflation also answered HTTP 200; plain GETs only, no payment"
+  },
+  "sample": {
+   "n_probed": 3,
+   "callable": [
+    "56249 AgentEcon (200)"
+   ],
+   "not_callable": [
+    "56260 AgentFEC - declared endpoint fec.memoryapi.org answers HTTP 404 at / and /.well-known/agent-card.json"
+   ],
+   "registration_reachable_service_unprobed": [
+    "25975 Botoshi - registration JSON live at agentmoney.net"
+   ],
+   "census": "8004scan reported 473,941 mainnet registrations at 2026-09-01 (third-party indexer, quoted not verified)"
+  },
+  "verified_via": "keyless eth_call tokenURI(uint256) via base-rpc.publicnode.com (no key) + keyless HTTPS GET probes; three-state grammar callable/not-callable/unreachable",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "reputation_validity",
+   "validation_registry_mainnet",
+   "service_quality",
+   "census_total_verification"
+  ]
+ },
+ "rwa.reserve": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "reserve_page_keyless_reachable": false
+  },
+  "chain": "ethereum",
+  "classes": [
+   {
+    "symbol": "BUIDL",
+    "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+    "decimals": 6,
+    "total_supply_raw": "211864943860349",
+    "holders": 57
+   },
+   {
+    "symbol": "BUIDL-I",
+    "contract": "0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041",
+    "decimals": 6,
+    "total_supply_raw": "801395176980100",
+    "holders": 6
+   }
+  ],
+  "reserve_disclosure": "no keyless published reserve page reached at as_of (securitize.io/primary-market and /invest/buidl both 404 to keyless GET) - reserve figures stay UNMEASURED, supply is a cite only",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key); contract 0x7712c3... matches the live CSOAI rwa-registry entry (address_status evm-located)",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "reserve_attestation",
+   "nav",
+   "official_aum",
+   "share_class_reconciliation"
+  ]
+ },
+ "swift.notice": {
+  "kind": "csoai.ledger-notice/0.1",
+  "flags": {
+   "press_census": true,
+   "banks_are_targets_not_clients": true,
+   "not_a_grade": true,
+   "settlement_still_off_chain": true,
+   "api_swift_http": 404,
+   "api_swift_honest_404": true,
+   "gpi_not_graded": true
+  },
+  "press_date": "2026-07-09",
+  "press_fetch": "UNREACHABLE at as_of (curl HTTP:000 and fetch timeout from this vantage); body remains UNCHECKABLE",
+  "press_url_sha256_2026_08_31": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+  "tape": "csoai/swift-17 swift17.jsonl - 17 rows, every row status=DISCOVERED n=0 not_a_client=true",
+  "verified_via": "keyless HTTP GET only; live check of GET https://councilof.ai/api/swift returned 404 at as_of; press body not refetchable, prior url_sha256 quoted from the 2026-08-31 tape",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "official_html_body",
+   "bank_participation_status",
+   "gpi_performance",
+   "pilot_outcome"
+  ]
+ }
+}
