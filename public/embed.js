@@ -117,8 +117,32 @@ function safeHref(s) {
       return r.json();
     })
     .then(function (j) {
+      // fill-7 chrome honesty: never paint API "22 measured" while 7 financial slots are empty.
+      var axes = (j && Array.isArray(j.axes)) ? j.axes : [];
       var totals = (j && j.totals) || {};
-      var sentence = totals.public_count || totals.count_grammar;
+      var measured = typeof totals.measured_axes === "number" ? totals.measured_axes : null;
+      var unmeasured = typeof totals.unmeasured_axes === "number" ? totals.unmeasured_axes : null;
+      var emptyIds = {
+        "reserve-attestation": 1,
+        "regulatory-framework": 1,
+        "distribution-integrity": 1,
+        "custody-disclosure": 1,
+        "ai-adoption-components": 1,
+        "labour-components": 1,
+        "humanoid-labour-index": 1,
+        "ai-economy-index": 1,
+        "human-labour-index": 1
+      };
+      var emptyHit = 0;
+      for (var i = 0; i < axes.length; i++) {
+        var ax = axes[i] || {};
+        var id = String(ax.axis || "");
+        if (emptyIds[id] && String(ax.status || "").toUpperCase() === "MEASURED") emptyHit++;
+      }
+      var fill7 = axes.length === 22 && measured === 22 && unmeasured === 0 && emptyHit >= 7;
+      var sentence = fill7
+        ? "22 axis · 15 measured · 7 empty"
+        : (totals.public_count || totals.count_grammar);
       if (!sentence) throw new Error("no public_count");
       paint(sentence);
     })
