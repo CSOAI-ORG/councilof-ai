@@ -1,20 +1,24 @@
 # ASI AUTO-EAT — STATUS
 
-_regenerated 2026-09-01T06:05:02Z — every number counted, none invented_
+_regenerated 2026-09-01T06:09:13Z — every number counted, none invented_
 
 | field | value |
 |---|---|
-| queue DISCOVERED total | 0 |
-| probed total | 0 |
-| atoms staged (unsigned) | 0 |
-| staged LIVE fraction of probed | n/a |
-| surfaces staged | (none) |
+| queue DISCOVERED total | 83 |
+| probed total | 40 |
+| atoms staged (unsigned) | 2 |
+| staged LIVE fraction of probed | 0.9231 (36/39) |
+| surfaces staged | autoeat.hf.newmodels, autoeat.mcp.registry |
 | last signed batch | **none yet — no auto-eat card has signed green** |
 
 ## DISCOVERED by kind
 
 | kind | count |
 |---|---|
+| erc8004 | 25 |
+| hf-model | 25 |
+| mcp-server | 14 |
+| xrpl-account | 19 |
 
 ## Three-state invariant (structural)
 
