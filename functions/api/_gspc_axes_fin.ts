@@ -8,12 +8,18 @@
 // must be backed by the signed artifact it summarises.
 //
 // THE HONESTY POINT — READ BEFORE EDITING
-// Owner lock 1 Sep P0: board is **22 axis · 15 measured · 7 empty**.
-// ONLY provenance-controls is MEASURED in the financial family (n=6).
-// The other seven financial slots are declared-slot UNMEASURED n=0.
-// Unsigned 4-axis n30 lives at /interop/ only — NEVER stamp those MEASURED on this board.
-// Component/index slots stay UNMEASURED (C-2026-0826-05). humanoid empty until public registry.
-// genius.reserve must not cite a 22·22 payload.
+// Owner lock is 22·15·7. Of these 8 slots exactly ONE carries a board MEASURED
+// run: provenance-controls (deterministic MAINNET read of 6 issuer accounts).
+// The other 7 are DECLARED slots — published so the gap is visible — with no
+// board-grade SIGNED run behind them. They are therefore on the board and
+// counted in `axes`, and are NOT counted in `measured_axes`. Public grammar:
+// "22 axis · 15 measured".
+//
+// Marking any of these 7 MEASURED to make the two numbers agree is the exact
+// defect this board exists to catch. Unsigned leftovers may live under /interop/
+// (e.g. financial-4axis-unsigned-n30.json) — that must NOT write the board.
+// Do NOT rename ai-economy-index / human-labour-index to *-components as a
+// MEASURED board axis. C-2026-0826-05 stands (no MEASURED-INDEX-v0.1 sticker).
 //
 // A declared-slot axis has NO accuracy, NO leader and NO separation field. Those are
 // absent, not zero. A zero would be a measurement.
@@ -58,64 +64,61 @@ export const AXES_FIN: AxisScore[] = [
     bench: "—", task: "is a third-party reserve attestation publicly published and current? (deterministic Y/N + date)",
     n: 0, n_unit: "nothing measured",
     status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
+    evidence_url: "/interop/financial-4axis-unsigned-n30.json",
     colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. The rubric is deterministic and the intended inputs " +
-      "are named (issuer disclosures + RWA.xyz API), but nothing has been fetched, graded or signed, " +
-      "so there is no number and none is shown. Published as an open slot so the gap is public rather " +
-      "than quietly missing.",
+    note: "Slot declared, rubric written, NO BOARD-GRADE SIGNED RUN. Unsigned n=30 leftover may live " +
+      "under /interop/ — that must NOT write the board. SIGNED still needs n≥30 + 4way + keystone. " +
+      "Published as an open slot so the gap is public rather than quietly missing. Not a rating.",
   },
   {
     axis: "regulatory-framework", family: "financial", kind: "declared-slot",
     bench: "—", task: "is the governing regime declared and confirmable (MiCA / UCITS / Reg D / BVI)? (deterministic Y/N)",
     n: 0, n_unit: "nothing measured",
     status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
+    evidence_url: "/interop/financial-4axis-unsigned-n30.json",
     colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Intended inputs: RWA.xyz issuer metadata crosswalked " +
-      "against /api/locale. Declaring a regime is not complying with it, and this axis would only ever " +
-      "measure whether the declaration is present and confirmable — never whether it is satisfied. " +
-      "That distinction is why the slot is published before it is measured.",
+    note: "Slot declared, rubric written, NO BOARD-GRADE SIGNED RUN. Declaring a regime is not " +
+      "complying with it — this axis would only ever measure whether the declaration is present and " +
+      "confirmable. Unsigned leftover under /interop/ does not stamp MEASURED. Not a legal opinion.",
   },
   {
     axis: "distribution-integrity", family: "financial", kind: "declared-slot",
     bench: "—", task: "represented-vs-distributed classification and holder count",
     n: 0, n_unit: "nothing measured",
     status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
+    evidence_url: "/interop/financial-4axis-unsigned-n30.json",
     colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Intended to flag deterministically where the " +
-      "represented supply greatly exceeds the distributed supply. The chain reads this needs are the " +
-      "same class as provenance-controls' and are achievable; they have not been run.",
+    note: "Slot declared, rubric written, NO BOARD-GRADE SIGNED RUN. Intended to flag where represented " +
+      "supply greatly exceeds distributed supply. Unsigned leftover under /interop/ does not stamp " +
+      "MEASURED. Represented vs distributed never summed.",
   },
   {
     axis: "custody-disclosure", family: "financial", kind: "declared-slot",
     bench: "—", task: "are a custodian and an auditor named and confirmable? (deterministic Y/N)",
     n: 0, n_unit: "nothing measured",
     status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
+    evidence_url: "/interop/financial-4axis-unsigned-n30.json",
     colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Measures disclosure presence only — that a custodian " +
-      "and auditor are named and the naming is confirmable — never the quality of either.",
+    note: "Slot declared, rubric written, NO BOARD-GRADE SIGNED RUN. Measures disclosure presence only " +
+      "— never the quality of either. Unsigned leftover under /interop/ does not stamp MEASURED.",
   },
   {
-    axis: "ai-adoption-components", family: "financial", kind: "declared-slot",
+    axis: "ai-economy-index", family: "financial", kind: "declared-slot",
     bench: "—", task: "deterministic index over cited public AI-economy series (compute price, investment, adoption, sector output)",
     n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
     status: "UNMEASURED",
     evidence_url: "/interop/ai-economy-index.v0.1.json",
     colour: "#a3a3a3", hue: 0,
-    note: "CANDIDATE slot, UNMEASURED. Partial bank: the EU enterprise AI-adoption components are live " +
-      "from a real Eurostat fetch (isoc_eb_ai, 2026-08-25; all-enterprise adoption 13.48% in 2024). " +
-      "Compute-price, AI-investment and sector-output series are BANK GAPS — stated, not filled. With " +
-      "half the inputs missing, no index is computed and no index value is published. " +
-      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Eurostat components remain " +
-      "as reference inputs (13.48% 2024). This slot stays UNMEASURED until the missing series + " +
-      "formula are published and a NEW signed card exists. Do not restore the v0.1 sticker. " +
-      "Board GET /api/gspc is authority.",
+    note: "CANDIDATE slot, UNMEASURED. Partial bank: EU enterprise AI-adoption components are live " +
+      "from a real Eurostat fetch (isoc_eb_ai; all-enterprise adoption 13.48% in 2024). Compute-price, " +
+      "AI-investment and sector-output series are BANK GAPS — stated, not filled. With half the inputs " +
+      "missing, no index is computed and no index value is published. " +
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Do not restore the v0.1 " +
+      "sticker. Do NOT rename this slot to ai-adoption-components as a MEASURED board axis. " +
+      "Component leftovers under /interop/ must not write the board. Board GET /api/gspc is authority.",
   },
   {
-    axis: "labour-components", family: "financial", kind: "declared-slot",
+    axis: "human-labour-index", family: "financial", kind: "declared-slot",
     bench: "—", task: "deterministic index over cited public labour series (employment, hours, wages, displacement)",
     n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
     status: "UNMEASURED",
@@ -125,9 +128,9 @@ export const AXES_FIN: AxisScore[] = [
       "live from a real fetch (2024: participation 57.58%, unemployment 5.92%). Displacement " +
       "indicators, wage series and worker-hours-by-AI-exposure are BANK GAPS — stated, not filled. No " +
       "index is computed and none is published. " +
-      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Participation 57.58% and " +
-      "unemployment 5.92% remain as reference inputs. This slot stays UNMEASURED until the missing " +
-      "series + formula are published and a NEW signed card exists. Do not restore the v0.1 sticker.",
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Do not restore the v0.1 " +
+      "sticker. Do NOT rename this slot to labour-components as a MEASURED board axis. " +
+      "Component leftovers under /interop/ must not write the board.",
   },
   {
     axis: "humanoid-labour-index", family: "financial", kind: "declared-slot",
@@ -139,6 +142,7 @@ export const AXES_FIN: AxisScore[] = [
       "live surface. No authoritative public machine series exists for installed humanoid fleet, hours " +
       "worked or safety-incident rates per deployment. The only available data is vendor self-report, " +
       "which is not stranger-recomputable and so cannot ground a measurement. A deployment registry is " +
-      "the prerequisite and is NOT BUILT. Carries no evidence_url because there is no evidence to link.",
+      "the prerequisite and is NOT BUILT. Unsigned leftovers under /interop/ must not write the board. " +
+      "Carries no evidence_url because there is no board-grade evidence to link.",
   },
 ];
