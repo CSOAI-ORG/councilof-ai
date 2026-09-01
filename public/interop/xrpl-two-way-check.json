@@ -1,0 +1,261 @@
+{
+ "schema": "csoai.xrpl-two-way-check/0.1",
+ "as_of": "2026-09-01T08:37:04Z",
+ "method": "on-ledger Domain (account_info) <-> issuer .well-known/xrp-ledger.toml [[ACCOUNTS]] address. Both public, offline-recomputable.",
+ "roster": "GET https://councilof.ai/api/xrpl (n=16, writes_board=false)",
+ "n": 16,
+ "tally": {
+  "PASS": 4,
+  "FAIL": 9,
+  "UNCHECKABLE": 3
+ },
+ "honest_two_way_count": "4/16",
+ "note": "PASS = genuine two-way. FAIL = one-way/absent. UNCHECKABLE = toml unreachable, never FAIL. Signing stays in GHA; this only measures.",
+ "rows": [
+  {
+   "address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "state": "PASS",
+   "reason": "toml lists the address -> two-way",
+   "on_ledger_domain": "https://ripple.com/",
+   "toml": {
+    "url": "https://ripple.com/.well-known/xrp-ledger.toml",
+    "http": 200,
+    "addresses": [
+     "r9NpyVfLfUG8hatuCCHKzosyDtKnBdsEN3",
+     "r9UUEXn3cx2seufBkDa8F86usfjWM6HiYp",
+     "rB3WNZc45gxzW31zxfXdkx8HusAhoqscPn",
+     "rDdXiA3M4mYTQ4cFpWkVXfc2UaAXCFWeCK",
+     "rKDvgGUsNPZxsgmoemfrgXPS2Not4co2op",
+     "rKwJaGmB5Hz24Qs2iyCaTdUuL1WsEXUWy5",
+     "rN8pqRwLYuuvY7pUHurybPC8P6rLqVsu6o",
+     "rNASJdZjY9dToHnNURi3HAUku3duPwbtD1",
+     "rU9qmGM4Y6WWDhiNzkwVKBwwatcoE7YL1T",
+     "rfWPPQBYqYmoFMdVnjzXCagJbz5uajSBXL",
+     "rh2EsAe2xVE71ZBjx7oEL2zpD4zmSs3sY9",
+     "rhEwsCWDCVxDiKxGJAKM6VuXC8EFtJP5gQ",
+     "rncKvRcdDq9hVJpdLdTcKoxsS3NSkXsvfM",
+     "rp6aTJmW3nq1aKt3Jmuz4DPRxksT5PBjpH",
+     "rsjFB8mPWqiZgPUaVh8XYqdfa59PE2d5LG",
+     "rw2hzLZgiQ9q62KCuaTWuFHWfiX7JWg3wY",
+     "rDqGA2GfveHypDguQ1KXrJzYymFZmKxEsF",
+     "rGKHDyj4L6pc7DzRB6LWCR4YfZfzXj2Bdh",
+     "rHGfmgv54kpc3QCZGRXEQKUhLPndbasbQr",
+     "rMhkqz3DeU7GUUJKGZofusbrTwZe6bDyb1",
+     "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De"
+    ],
+    "n_bytes": 3817
+   },
+   "symbol": "RLUSD",
+   "issuer": "Ripple",
+   "reader_verified_via": "Bidirectional domain match",
+   "reader_signed": true
+  },
+  {
+   "address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+   "state": "PASS",
+   "reason": "toml lists the address -> two-way",
+   "on_ledger_domain": "ondo.finance",
+   "toml": {
+    "url": "https://ondo.finance/.well-known/xrp-ledger.toml",
+    "http": 200,
+    "addresses": [
+     "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p"
+    ],
+    "n_bytes": 301
+   },
+   "symbol": "OUSG",
+   "issuer": "Ondo Finance",
+   "reader_verified_via": "Bidirectional domain match",
+   "reader_signed": true
+  },
+  {
+   "address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+   "state": "PASS",
+   "reason": "toml lists the address -> two-way",
+   "on_ledger_domain": "tokens.brazacripto.com.br",
+   "toml": {
+    "url": "https://tokens.brazacripto.com.br/.well-known/xrp-ledger.toml",
+    "http": 200,
+    "addresses": [
+     "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+     "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+     "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+     "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc"
+    ],
+    "n_bytes": 1418
+   },
+   "symbol": "USDB",
+   "issuer": "Braza Bank",
+   "reader_verified_via": "Bidirectional domain match",
+   "reader_signed": true
+  },
+  {
+   "address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+   "state": "PASS",
+   "reason": "toml lists the address -> two-way",
+   "on_ledger_domain": "tokens.brazacripto.com.br",
+   "toml": {
+    "url": "https://tokens.brazacripto.com.br/.well-known/xrp-ledger.toml",
+    "http": 200,
+    "addresses": [
+     "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+     "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+     "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+     "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc"
+    ],
+    "n_bytes": 1418
+   },
+   "symbol": "BBRL",
+   "issuer": "Braza Bank",
+   "reader_verified_via": "Bidirectional domain match",
+   "reader_signed": true
+  },
+  {
+   "address": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "EURCV",
+   "issuer": "Société Générale-FORGE",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  },
+  {
+   "address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+   "state": "UNCHECKABLE",
+   "reason": ".well-known/xrp-ledger.toml HTTP 404 (unreachable, never FAIL)",
+   "on_ledger_domain": "bitstamp.net",
+   "toml": {
+    "url": "https://bitstamp.net/.well-known/xrp-ledger.toml",
+    "http": 404,
+    "addresses": [],
+    "n_bytes": 0
+   },
+   "symbol": "USD.bs",
+   "issuer": "Bitstamp",
+   "reader_verified_via": "XRPLMeta registry",
+   "reader_signed": true
+  },
+  {
+   "address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+   "state": "UNCHECKABLE",
+   "reason": ".well-known/xrp-ledger.toml HTTP 404 (unreachable, never FAIL)",
+   "on_ledger_domain": "bitstamp.net",
+   "toml": {
+    "url": "https://bitstamp.net/.well-known/xrp-ledger.toml",
+    "http": 404,
+    "addresses": [],
+    "n_bytes": 0
+   },
+   "symbol": "EUR.bs",
+   "issuer": "Bitstamp",
+   "reader_verified_via": "XRPLMeta registry",
+   "reader_signed": true
+  },
+  {
+   "address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "USD.gh",
+   "issuer": "GateHub",
+   "reader_verified_via": "XRPLMeta registry",
+   "reader_signed": true
+  },
+  {
+   "address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+   "state": "UNCHECKABLE",
+   "reason": ".well-known/xrp-ledger.toml HTTP 404 (unreachable, never FAIL)",
+   "on_ledger_domain": "https://circle.com",
+   "toml": {
+    "url": "https://circle.com/.well-known/xrp-ledger.toml",
+    "http": 404,
+    "addresses": [],
+    "n_bytes": 0
+   },
+   "symbol": "USDC",
+   "issuer": "Circle",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  },
+  {
+   "address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "EUR.gh",
+   "issuer": "GateHub",
+   "reader_verified_via": "XRPLMeta registry",
+   "reader_signed": true
+  },
+  {
+   "address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "EURQ",
+   "issuer": "Quantoz",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": false
+  },
+  {
+   "address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "USDQ",
+   "issuer": "Quantoz",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": false
+  },
+  {
+   "address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "EURØP",
+   "issuer": "Schuman Financial",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  },
+  {
+   "address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "XAU.gh",
+   "issuer": "GateHub",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  },
+  {
+   "address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "GBP.gh",
+   "issuer": "GateHub",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  },
+  {
+   "address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+   "state": "FAIL",
+   "reason": "no on-ledger Domain field (one-way at best)",
+   "on_ledger_domain": null,
+   "toml": null,
+   "symbol": "PSC",
+   "issuer": "Republic of Palau",
+   "reader_verified_via": "XRPScan well-known directory",
+   "reader_signed": true
+  }
+ ]
+}
