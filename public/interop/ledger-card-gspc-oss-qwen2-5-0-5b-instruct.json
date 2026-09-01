@@ -1,0 +1,40 @@
+{
+ "as_of": "2026-09-01T06:30:00Z",
+ "did": "did:web:csoai.org#board-attestation-1",
+ "payload": {
+  "kind": "gspc.axis-result/0.1",
+  "axis": "oss",
+  "model_ollama": "qwen2.5:0.5b-instruct",
+  "model_hf_sibling": "Qwen/Qwen2.5-0.5B-Instruct",
+  "status": "MEASURED",
+  "n": 32,
+  "correct": 18,
+  "unparsed": 0,
+  "accuracy": 0.5625,
+  "ci95": [
+   0.3933,
+   0.7183
+  ],
+  "deterministic_grade": true,
+  "model_as_judge": false,
+  "grader": "SOVOS board_v2.py (reused, not reinvented)",
+  "method": "exact-label; unparsed=incorrect; transport excluded as ours; canaries excluded; Wilson n>=30",
+  "serving": "ollama GGUF Q4 build on RTX 3090; not raw HF safetensors",
+  "axis_bank": "csoai/gspc-oss items.jsonl (32 real items; 1 canary excluded)",
+  "as_of": "2026-09-01T06:30:00Z"
+ },
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "sha256": "adc7aa307303e7162b23c05f61d006ccae1ebe8f82cd11a211b35ff622677374",
+ "sig_ed25519": "443fe8728c827ee3a61b496e51c09a88f4ce9b2d82ff4bb1b8bd5e2adb6a977d599125deff700c40c4d19a7ffa551b3f120af68f477175b9677edf2753b3910a",
+ "surface": "gspc.oss.qwen2.5-0.5b-instruct",
+ "subject": "GSPC oss axis (EU-AI-Act open-source obligation classify) — Qwen2.5-0.5B-Instruct via ollama: 18/32 correct",
+ "source_urls": [
+  "https://councilof.ai/api/gspc",
+  "https://huggingface.co/datasets/csoai/gspc-oss/resolve/main/items.jsonl"
+ ],
+ "unmeasured": [
+  "raw_hf_safetensors_variant",
+  "non_ollama_serving",
+  "other_21_axes"
+ ]
+}
