@@ -203,7 +203,7 @@ export function Footer() {
                 src: '/images/badges/frameworks/lot-network.svg',
                 alt: 'LOT Network',
                 href: 'https://lotnet.org/',
-                title: 'LOT Network — application submitted (membership pending)',
+                title: 'LOT Network — member',
               },
               {
                 src: '/images/badges/frameworks/dif.svg',

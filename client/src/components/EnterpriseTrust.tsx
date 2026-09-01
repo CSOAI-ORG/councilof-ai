@@ -34,10 +34,7 @@ export default function EnterpriseTrust() {
         </div>
         {/* Memberships & registrations — only EXECUTED agreements badge as members.
             C2PA: docusign 7C9592DB executed 2026-08-06 · OIN: signed 2026-08-15 ·
-            LOT Network: application submitted, membership pending (labelled). */}
-        {/* The pending badge was amber — a fourth accent hue on a page that owns
-            exactly one. Pending now reads as pending through WEIGHT (a dashed
-            border and muted text), not through a borrowed colour. */}
+            LOT Network: welcome mail 2026-08-24 (membership live). */}
         <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
           <a href="/about" className="ink-card flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold">
             <span aria-hidden>🪪</span> C2PA Contributor Member
@@ -47,9 +44,9 @@ export default function EnterpriseTrust() {
             <span aria-hidden>🛡</span> Open Invention Network
             <span className="ink-muted font-normal">· member</span>
           </a>
-          <a href="/about" className="ink-card flex items-center gap-2 rounded-full border-dashed px-4 py-2 text-[12px] font-semibold">
+          <a href="/about" className="ink-card flex items-center gap-2 rounded-full px-4 py-2 text-[12px] font-semibold">
             <span aria-hidden>🤝</span> LOT Network
-            <span className="ink-muted font-normal">· application submitted</span>
+            <span className="ink-muted font-normal">· member</span>
           </a>
         </div>
         {/* One CTA, not two, and the honesty line folded into it. This band previously
