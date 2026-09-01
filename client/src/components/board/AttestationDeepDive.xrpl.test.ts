@@ -20,3 +20,18 @@ describe("XRPL panel is a reader of /root.json, live 16, not a 404 leftover", ()
     expect(tile).toMatch(/reader/i);
   });
 });
+
+describe("living root-as-index + N→N+1 drift honesty", () => {
+  it("BoardAttestation links GET /root.json as living root-as-index", () => {
+    expect(tile).toContain('href="/root.json"');
+    expect(tile).toMatch(/living root-as-index/i);
+    expect(tile).toMatch(/unsigned envelope until keystone/i);
+  });
+
+  it("ProgressPanel renders N→N+1 drift as UNCHECKABLE without inventing a seal", () => {
+    expect(panel).toMatch(/N→N\+1 drift/i);
+    expect(panel).toContain("UNCHECKABLE");
+    expect(panel).toMatch(/do not invent drift/i);
+    expect(panel).not.toMatch(/fake Merkle seal invented/i);
+  });
+});
