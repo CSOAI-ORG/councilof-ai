@@ -1,26 +1,26 @@
 # ASI AUTO-EAT — STATUS
 
-_regenerated 2026-09-01T09:41:42Z — every number counted, none invented_
+_regenerated 2026-09-01T11:41:32Z — every number counted, none invented_
 
 | field | value |
 |---|---|
-| queue DISCOVERED total | 8466 |
-| probed total | 8466 |
+| queue DISCOVERED total | 10320 |
+| probed total | 10370 |
 | atoms staged (unsigned) | 6 |
-| staged LIVE fraction of probed | 0.4765 (740/1553) |
+| staged LIVE fraction of probed | 0.0507 (26/513) |
 | surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.hf.spaces, autoeat.mcp.registry, autoeat.npm.registry, autoeat.xrpl.accounts |
-| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T08:40:02Z (529bb9a510b72b6e) |
+| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T09:41:42Z (1db6aff59dd43597) |
 
 ## DISCOVERED by kind
 
 | kind | count |
 |---|---|
-| erc8004 | 1502 |
-| hf-model | 2168 |
-| hf-space | 2059 |
-| mcp-server | 527 |
-| npm-registry | 2000 |
-| xrpl-account | 210 |
+| erc8004 | 2000 |
+| hf-model | 2511 |
+| hf-space | 2191 |
+| mcp-server | 528 |
+| npm-registry | 2184 |
+| xrpl-account | 906 |
 
 ## Three-state invariant (structural)
 
