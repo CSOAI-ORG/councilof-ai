@@ -57,7 +57,7 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship): https://councilof.ai/mcp
-- Public root (https://councilof.ai/root.json): Merkle envelope over signed leaves. The envelope itself is not Ed25519-signed (field is did_intended, no sig_ed25519). Leaves may carry #board-attestation-1. Not MEASURED. Not a certificate. Free; not paywalled.
+- Public root (https://councilof.ai/root.json): Merkle envelope. The envelope itself is not Ed25519-signed (did_intended only; no sig_ed25519; unsigned until keystone). Leaves MAY carry GH-secret attestations — coverage harvest, not grades, not a sealed signed root. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.0` is published (https://www.npmjs.com/package/csoai-gspc-mcp ; registry https://registry.npmjs.org/csoai-gspc-mcp); four tools: board_totals, get_axis, verify_card, list_cards; same four board/card tools as /mcp, one shared definitions file
 - MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
 - Smithery: https://smithery.ai/servers/csoai/gspc

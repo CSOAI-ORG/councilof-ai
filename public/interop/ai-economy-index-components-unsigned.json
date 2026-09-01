@@ -6,13 +6,13 @@
   "signed": false,
   "keystone": null,
   "headline_index": null,
-  "formula": "unpublished \u2014 all four required inputs are not present",
+  "formula": "unpublished — all four required inputs are not present",
   "board_write": "NOT WRITTEN. GET https://councilof.ai/api/gspc ai-economy-index stays UNMEASURED n=0.",
   "do_not_restore": "MEASURED-INDEX-v0.1 (C-2026-0826-05). The v0.1 leftover remains an over-claim correction, not a board stamp.",
   "v0_1_leftover": "/interop/ai-economy-index.v0.1.json",
-  "certification": "NONE \u2014 never a certification, never a rating, never an endorsement",
-  "published_at": "2026-08-31T15:40:00Z",
-  "published_at_europe_london": "2026-08-31T16:40:00+01:00",
+  "certification": "NONE — never a certification, never a rating, never an endorsement",
+  "published_at": "2026-09-01T02:15:00Z",
+  "published_at_europe_london": "2026-09-01T03:15:00+01:00",
   "source_have": "index-bank-fill-2026-08-27 (HAVE 2026-08-27; not a board stamp)",
   "live_reconfirm": {
     "fetched_at": "2026-08-31T15:30:00Z",
@@ -83,7 +83,7 @@
       "id": "compute-price",
       "bank_status": "STILL_GAP",
       "stranger_recomputable": false,
-      "honesty": "Public reference prints exist (Silicon Data product-page FAQ; CCIR daily ladder). History/API is paywalled; vendor-compiled; a stranger cannot recompute from raw observations. CME announced Silicon Data H100/B200 rental-index futures (2026-08-11, list 2026-10-05 pending review) \u2014 CME did not put the index. No official Eurostat/OECD/BLS/IMF/ILO compute-price series. Not banked."
+      "honesty": "Public reference prints exist (Silicon Data product-page FAQ; CCIR daily ladder). History/API is paywalled; vendor-compiled; a stranger cannot recompute from raw observations. CME announced Silicon Data H100/B200 rental-index futures (2026-08-11, list 2026-10-05 pending review) — CME did not put the index. No official Eurostat/OECD/BLS/IMF/ILO compute-price series. Not banked."
     },
     {
       "id": "AI-sector-output",
@@ -184,7 +184,13 @@
       "volume_usd": null,
       "schema": "csoai.x402/0.1",
       "well_known": "https://councilof.ai/.well-known/x402.json",
-      "honesty": "Transaction count is not dollar economy. Pack-assembly rail; the board stays free. No invented $ volume. writes_board false."
+      "honesty": "Public series: LF standard; Visa/MC/Stripe/AWS/Circle + ~40 members; ~75M tx mostly sub-dollar. Payments rail solved; trust rail = signed root. Context for ai-economy-index only. No invented $ volume. writes_board false. Not a score. Not MEASURED.",
+      "public_series": {
+        "status": "CITED",
+        "what": "Linux Foundation standard; members include Visa, Mastercard, Stripe, AWS, Circle (~40 members). ~75M transactions mostly sub-dollar.",
+        "honesty": "Payments rail solved as public series context. Trust rail = signed root. Feeds ai-economy-index as labelled context only. writes_board false. Not a score. Not MEASURED.",
+        "writes_board": false
+      }
     },
     {
       "id": "ERC-8004",
@@ -194,7 +200,13 @@
       "writes_board": false,
       "not_dollar_economy": true,
       "volume_usd": null,
-      "honesty": "Registrations are not live services. Cite as a component, never the composite. Do not invent a callable fraction or $ volume. writes_board false."
+      "honesty": "Public series: ~531,269 registrations / 24 chains; only ~3–15% live service endpoint. Honest base = registered vs signed-and-callable. Cite as component, never the composite. No invented callable fraction or $ volume. writes_board false. Not MEASURED.",
+      "public_series": {
+        "status": "CITED",
+        "what": "~531,269 registrations across 24 chains; only ~3–15% expose a live service endpoint.",
+        "honesty": "Honest agent-economy base = registered vs signed-and-callable. No invented score. writes_board false. Not MEASURED.",
+        "writes_board": false
+      }
     }
   ],
   "still_gap": [
