@@ -33,7 +33,7 @@ export default function FindingsExplorer() {
         <div className="mt-5 flex flex-wrap gap-2 font-mono text-[11px] text-emerald-300/60">
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.findings} signed findings</span>
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.models} models</span>
-          <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.axes} axes</span>
+          <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.axes} mapped axis ids</span>
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.regulators} regulators</span>
           <span className="rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1">{index.counts.unmeasured_cells} pairs honestly UNMEASURED</span>
         </div>
@@ -78,7 +78,7 @@ export default function FindingsExplorer() {
                 <RegBadge id={r.id} name={r.name} />
                 <span className="text-sm text-emerald-100/70">{r.long_name || r.name}</span>
                 <span className="ml-auto font-mono text-[11px] text-emerald-300/55">
-                  {r.n_findings_relevant} findings · {r.axes_relevant.length} axes · {r.n_models_measured} models
+                  {r.n_findings_relevant} findings · {r.axes_relevant.length} mapped axis ids · {r.n_models_measured} models
                 </span>
               </div>
               <p className="mt-2 text-xs text-emerald-300/55">
