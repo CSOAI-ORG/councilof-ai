@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "npm 0.1.0 is four tools (stdio). HTTP /mcp is seven. Teach the live list.",
+    note: "Published npm 0.1.0 is four. HTTP /mcp and stdio source 0.1.1 wire seven. Owner: npm publish 0.1.1.",
     snippet: NPM_SNIPPET,
   },
   {

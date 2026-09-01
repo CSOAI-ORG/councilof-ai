@@ -1,0 +1,132 @@
+{
+  "schema": "csoai.reach-signal-ledger/0.1",
+  "as_of": "2026-09-01T08:55:00Z",
+  "cta": "https://councilof.ai/gspc-verify",
+  "doctrine": "HAVE vs EARN. Never fake logos, revenue, design partners, press, or endorsements. Advertise exactly what runs.",
+  "have": [
+    {
+      "id": "doi",
+      "state": "LIVE",
+      "fact": "Board DOI 10.5281/zenodo.21991104 on GET /api/gspc.",
+      "href": "https://doi.org/10.5281/zenodo.21991104"
+    },
+    {
+      "id": "npm-stdio",
+      "state": "LIVE",
+      "fact": "npm csoai-gspc-mcp@0.1.0 published (four tools). Source 0.1.1 wires seven; publish is owner 2FA.",
+      "href": "https://www.npmjs.com/package/csoai-gspc-mcp"
+    },
+    {
+      "id": "http-mcp",
+      "state": "LIVE",
+      "fact": "POST https://councilof.ai/mcp tools/list = seven: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion.",
+      "href": "https://councilof.ai/mcp"
+    },
+    {
+      "id": "mcp-registry",
+      "state": "LIVE",
+      "fact": "Official MCP id io.github.CSOAI-ORG/gspc (server.json v1.1.0, HTTP remote).",
+      "href": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/mcp/gspc-server/server.json"
+    },
+    {
+      "id": "action-verify",
+      "state": "LIVE",
+      "fact": "GitHub release action-verify-attestation tag v1 exists.",
+      "href": "https://github.com/CSOAI-ORG/action-verify-attestation/releases/tag/v1"
+    },
+    {
+      "id": "public-root",
+      "state": "LIVE",
+      "fact": "GET /root.json signed public-root-v0 (card_count and merkle_root on the file). Recompute at /gspc-verify.",
+      "href": "https://councilof.ai/root.json"
+    },
+    {
+      "id": "xrpl-reader",
+      "state": "LIVE",
+      "fact": "GET /api/xrpl 200 n=16 reader writes_board=false. Not 16/16 two-way. Two-way count UNMEASURED on this payload.",
+      "href": "https://councilof.ai/api/xrpl"
+    },
+    {
+      "id": "erc8004-census",
+      "state": "LIVE",
+      "fact": "Signed autoeat.erc8004.newagents + human erc8004.callable census (registry_totals on compact). Live-fraction of a probed sample, not a grade of 785k agents.",
+      "href": "https://councilof.ai/interop/ledger-card-autoeat-erc8004-newagents.json"
+    },
+    {
+      "id": "companies-house",
+      "state": "LIVE",
+      "fact": "CSOAI Ltd is a UK company. Company number is not printed on this ledger (owner-gated in public copy).",
+      "href": "https://councilof.ai"
+    }
+  ],
+  "earn": [
+    {
+      "id": "logos",
+      "state": "NOT_EARNED",
+      "fact": "No partner logos on the estate."
+    },
+    {
+      "id": "revenue",
+      "state": "NOT_EARNED",
+      "fact": "No claimed revenue on this ledger."
+    },
+    {
+      "id": "design-partners",
+      "state": "NOT_EARNED",
+      "fact": "No named design partners here."
+    },
+    {
+      "id": "press-endorsements",
+      "state": "NOT_EARNED",
+      "fact": "Press lists are not clients. No endorsement claimed."
+    }
+  ],
+  "owner_gated": [
+    {
+      "id": "npm-publish-011",
+      "need": "npm publish csoai-gspc-mcp@0.1.1 (2FA) so npx matches HTTP seven tools."
+    },
+    {
+      "id": "w3c-join",
+      "need": "W3C CG join + post. Computed ≠ asserted until posted."
+    },
+    {
+      "id": "mcp-so",
+      "need": "mcp.so submit ($39). Staged, not listed as live until the listing 200s."
+    },
+    {
+      "id": "hf-lowercase",
+      "need": "HF namespace lowercase csoai (admin)."
+    },
+    {
+      "id": "keystone-dispatch",
+      "need": "keystone / board-sign ops remain owner-gated."
+    }
+  ],
+  "tracked_not_spammed": [
+    {
+      "id": "eu-ai-act-art50",
+      "fact": "Art.50 transparency duties tracked as a watch item, not a GSPC axis."
+    },
+    {
+      "id": "cra-11-sep",
+      "fact": "CRA date tracked. Not a score."
+    },
+    {
+      "id": "genai-mil",
+      "fact": "GenAI.mil FACT cards exist on the public-root (permissionless eat). Not a partnership claim."
+    },
+    {
+      "id": "nist-ci-profile",
+      "fact": "NIST CI-Profile docket draft in-repo. COI / comment is owner-gated."
+    }
+  ],
+  "forbidden_on_this_ledger": [
+    "fake logos",
+    "16/16 two-way",
+    "clients for a press list",
+    "plugin-is-live before handshake",
+    "mass-send",
+    "minting"
+  ]
+}
