@@ -1,14 +1,14 @@
 # ASI AUTO-EAT — STATUS
 
-_regenerated 2026-09-01T06:09:13Z — every number counted, none invented_
+_regenerated 2026-09-01T06:21:43Z — every number counted, none invented_
 
 | field | value |
 |---|---|
-| queue DISCOVERED total | 83 |
-| probed total | 40 |
-| atoms staged (unsigned) | 2 |
-| staged LIVE fraction of probed | 0.9231 (36/39) |
-| surfaces staged | autoeat.hf.newmodels, autoeat.mcp.registry |
+| queue DISCOVERED total | 124 |
+| probed total | 80 |
+| atoms staged (unsigned) | 4 |
+| staged LIVE fraction of probed | 0.6296 (34/54) |
+| surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.mcp.registry, autoeat.xrpl.accounts |
 | last signed batch | **none yet — no auto-eat card has signed green** |
 
 ## DISCOVERED by kind
@@ -16,9 +16,9 @@ _regenerated 2026-09-01T06:09:13Z — every number counted, none invented_
 | kind | count |
 |---|---|
 | erc8004 | 25 |
-| hf-model | 25 |
+| hf-model | 50 |
 | mcp-server | 14 |
-| xrpl-account | 19 |
+| xrpl-account | 35 |
 
 ## Three-state invariant (structural)
 
