@@ -3,6 +3,7 @@ import { FOCUS } from "@/components/lobby/glass";
 import { AnswerText } from "@/components/lobby/answerText";
 import OsDoorBody from "./OsDoors";
 import OsGlassCard from "./OsGlassCard";
+import GspcStreamCard from "./GspcStreamCard";
 import OsSignGate from "./OsSignGate";
 import { DOORS, DOOR_TO_LOBBY, type DoorId } from "./doors";
 import { liveCountLine, OS_EMPTY, OS_PROMPT } from "./osChat";
@@ -183,6 +184,11 @@ export default function OsShell({
                   {t.role === "user" ? t.text : <AnswerText text={t.text} />}
                 </div>
                 {t.role === "council" && t.verdict && <OsGlassCard verdict={t.verdict} />}
+                {t.role === "council" && (t.streamAxis !== undefined || t.streamSha) && (
+                  <div className="mt-2">
+                    <GspcStreamCard axis={t.streamAxis} cardSha256={t.streamSha} />
+                  </div>
+                )}
                 {t.role === "council" && t.tool && (
                   <p className="mt-1 font-mono text-[10px] text-slate-500">{t.tool}</p>
                 )}
