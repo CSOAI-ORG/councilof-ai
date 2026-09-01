@@ -16,7 +16,7 @@ The cross-border card is a SEPARATE schema, never folded into the GSPC count.
 No agent may clamp the index to 150, 313, or any other constant.
 
 Live state (cite by field, not by number):
-- **GET /api/gspc** → 22 axis · 15 measured. `totals.public_count` is the live sentence.
+- **GET /api/gspc** → 22 axis · 22 measured. `totals.public_count` is the live sentence.
 - **public/signed/card_index.json** → n_cards and cards[].length (the verifying set)
 - **living_stamp verification_state** = UNVERIFIABLE (do not call it a signed freeze)
 - Measurement credential, never certification. Verification is free and loginless.
@@ -41,7 +41,7 @@ The cross-border card is a SEPARATE schema counted separately, never folded into
 the GSPC count. No agent may clamp the index to any constant.
 
 Historical live state at that ruling:
-- **GET /api/gspc** → 22 axis · 15 measured · 893 items.
+- **GET /api/gspc** → 22 axis · 15 measured · 893 items. (superseded; live is 22·22 after #1077)
 - **public/signed/card_index.json** → 313 cards
 - **living_stamp verification_state** = UNVERIFIABLE
 
