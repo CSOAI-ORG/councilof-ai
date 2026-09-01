@@ -144,7 +144,7 @@ BRIDGE BACKEND → TIER:
 | OLM tier cron | — | ✅ wired | reads cold V → emits C|care | **cold → hot** |
 | M4 RAM | — | ✅ 11 GB free / 52% | — | **hot** |
 | M4 SSD | — | ✅ | `~/.meok_one/memory.db` | **warm** |
-| GCP VM 35.242.143.249 | — | ✅ Ollama 3 models | gemma3:4b, moondream, nomic-embed-text | (right brain cold for VM, warm for tier) |
+| GCP VM (host held privately) | — | ✅ Ollama 3 models | gemma3:4b, moondream, nomic-embed-text | (right brain cold for VM, warm for tier) |
 | Disk | — | ✅ 11 GB free | — | (tier-2 cold object) |
 
 ## THE ONE-SENTENCE ANSWER

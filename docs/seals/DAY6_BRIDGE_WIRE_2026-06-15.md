@@ -30,12 +30,12 @@
 
 ### 3. GCP VM MEMORY + SIGIL — ALREADY CONFIGURED
 - `.env.local` at `meok-one/.env.local` has:
-  - `MEOK_VM_LLM=https://35.242.143.249.sslip.io/llm`
-  - `MEOK_VM_KEY=5f0dbb4a...` (40-char hex)
-  - `SOV3_MCP=https://35.242.143.249.sslip.io/sov3/mcp`
+  - `MEOK_VM_LLM=https://<gcp-vm-host held privately>/llm`
+  - `MEOK_VM_KEY=<redacted — held privately>` (40-char hex)
+  - `SOV3_MCP=https://<gcp-vm-host held privately>/sov3/mcp`
 - The router (`router.py` line 38) **checks `MEOK_VM_LLM` first**, falls back to local M4 Ollama
 - The bridge's `_PICK[("right", "local")]` is `qwen3:4b` — **on the GCP VM, that's `gemma3:4b` (3.3GB, loaded since 2026-06-07, same parameter count)**
-- **Verified live:** `curl -H "X-MEOK-Key: ..." https://35.242.143.249.sslip.io/llm/api/tags` returns the 3 models on the VM
+- **Verified live:** `curl -H "X-MEOK-Key: ..." https://<gcp-vm-host held privately>/llm/api/tags` returns the 3 models on the VM
 
 ### 4. SIGIL WIRE-FORMAT — ALREADY EXISTS
 - `meok-one/meok_one/sigil.py` (301 lines) — 9 opcodes: P/V/M/Q/C/H/S/A + L0 (Horus), plus F/D multimodal
