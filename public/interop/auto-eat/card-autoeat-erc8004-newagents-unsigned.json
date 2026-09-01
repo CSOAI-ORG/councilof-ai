@@ -1,8 +1,8 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
  "surface": "autoeat.erc8004.newagents",
- "subject": "auto-eat erc8004: 36 LIVE of 600 probed (read-only, ungraded)",
- "as_of": "2026-09-01T08:40:01Z",
+ "subject": "auto-eat erc8004: 25 LIVE of 700 probed (read-only, ungraded)",
+ "as_of": "2026-09-01T08:51:18Z",
  "source_urls": [
   "https://api.8004scan.io/api/v1/agents",
   "https://base-rpc.publicnode.com"
@@ -19,25 +19,25 @@
   },
   "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
   "sample": {
-   "n_probed": 600,
-   "live": 36,
+   "n_probed": 700,
+   "live": 25,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 564,
-   "live_fraction_of_probed": 0.06,
+   "uncheckable": 675,
+   "live_fraction_of_probed": 0.0357,
    "live_examples": [
-    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:292058 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:66178 (tokenURI resolvable)",
-    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:66980 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9014 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9012 (tokenURI resolvable)",
-    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:9010 (tokenURI resolvable)"
+    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266933 (tokenURI resolvable)",
+    "84532:0x8004a818bfb912233c491871b3d84c89a494bd9e:8955 (tokenURI resolvable)",
+    "42161:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:1259 (tokenURI resolvable)",
+    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266234 (tokenURI resolvable)",
+    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:265982 (tokenURI resolvable)",
+    "56:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:266229 (tokenURI resolvable)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:01Z",
+  "as_of": "2026-09-01T08:51:18Z",
   "unmeasured": [
    "reputation_validity",
    "validation_registry_mainnet",
