@@ -1,1 +1,1 @@
-PLACEHOLDER
+LOAD_FROM_FILE:/workspace/FINAL_ba.content
