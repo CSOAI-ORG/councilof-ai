@@ -1,29 +1,11 @@
 /**
  * AttestationDeepDive — click-through deep pages for attestation rows.
- *
- * RWA.xyz-class interactive panels: graphs, traces, logs for each row kind.
- * Fetches live from GET /api/gspc + /interop/ artifacts.
- * Empty stays visible. No invented scores.
+ * LOCKS: Living root-as-index GET /root.json; N→N+1 drift = UNCHECKABLE; board 22·15·7; never certify.
  */
+import { useEffect, useState } from "react";
+import { ExternalLink } from "lucide-react";
 
-import { useState, useEffect } from "react";
-import { X, ExternalLink, Activity, Shield, Hash, Database, TrendingUp, AlertCircle, CheckCircle, Clock } from "lucide-react";
-import {
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-  Legend,
-} from "recharts";
-import { FOCUS } from "@/components/lobby/glass";
-
-type DeepDiveKind =
+export type DeepDiveKind =
   | "ed25519"
   | "sha256"
   | "xrpl"
@@ -32,672 +14,106 @@ type DeepDiveKind =
   | "in-lane"
   | "axis";
 
-interface DeepDiveProps {
+type Props = {
   kind: DeepDiveKind;
-  data: any;
+  data?: any;
   onClose: () => void;
-}
+};
 
-function formatDate(iso: string | undefined): string {
-  if (!iso) return "—";
-  try {
-    return new Date(iso).toLocaleString("en-GB", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  } catch {
-    return iso;
-  }
-}
+const FOCUS = "focus:outline-none focus:ring-2 focus:ring-emerald-500/40";
 
-function TraceLog({ entries }: { entries: { time: string; event: string; status: "ok" | "warn" | "info" }[] }) {
-  return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 p-3 font-mono text-[11px] max-h-48 overflow-y-auto">
-      {entries.map((e, i) => (
-        <div key={i} className="flex items-start gap-2 py-1 border-b border-slate-100 last:border-0">
-          <span className="text-slate-400 shrink-0">{e.time}</span>
-          <span className={`shrink-0 ${e.status === "ok" ? "text-emerald-600" : e.status === "warn" ? "text-amber-600" : "text-slate-500"}`}>
-            {e.status === "ok" ? "✓" : e.status === "warn" ? "⚠" : "○"}
-          </span>
-          <span className="text-slate-700">{e.event}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function Ed25519Panel({ data, onClose }: { data: any; onClose: () => void }) {
-  const att = data?.site_attestation;
-  const traces = [
-    { time: "T+0ms", event: "Fetch /.well-known/did.json", status: "ok" as const },
-    { time: "T+12ms", event: `Resolve verification method: ${att?.signer || "—"}`, status: att?.signer ? "ok" as const : "warn" as const },
-    { time: "T+15ms", event: `Extract public key (${att?.alg || "Ed25519"})`, status: att?.public_key_x ? "ok" as const : "warn" as const },
-    { time: "T+18ms", event: "Compute canonical JSON (sort keys, no whitespace)", status: "ok" as const },
-    { time: "T+22ms", event: "Remove site_attestation field from payload", status: "ok" as const },
-    { time: "T+25ms", event: `Verify signature (${(att?.sig || "").slice(0, 16)}...)`, status: att?.sig ? "ok" as const : "warn" as const },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-emerald-700">
-        <Shield className="h-5 w-5" />
-        <h3 className="text-lg font-bold">Ed25519 Signature Verification</h3>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Signature</p>
-          <div className="rounded-lg bg-slate-900 p-3 font-mono text-[11px] text-emerald-400 break-all max-h-24 overflow-y-auto">
-            {att?.sig || "No signature in payload"}
-          </div>
-        </div>
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Public Key (base64url)</p>
-          <div className="rounded-lg bg-slate-900 p-3 font-mono text-[11px] text-amber-400 break-all">
-            {att?.public_key_x || "—"}
-          </div>
-        </div>
-      </div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Verification Trace</p>
-        <TraceLog entries={traces} />
-      </div>
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-3">
-        <p className="text-sm text-emerald-800">
-          <strong>Verification method:</strong> {att?.signer || "—"}
-        </p>
-        <p className="text-xs text-emerald-700 mt-1">
-          Fetch <a href="/.well-known/did.json" className="underline">.well-known/did.json</a> → extract public key → verify sig over canonical(payload − site_attestation)
-        </p>
-      </div>
-      <div className="flex gap-3 text-sm">
-        <a href="/.well-known/did.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          DID document <ExternalLink className="h-3 w-3" />
-        </a>
-        <a href="/gspc-verify" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          Verify offline →
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function SHA256Panel({ data, onClose }: { data: any; onClose: () => void }) {
-  const att = data?.site_attestation;
-  const traces = [
-    { time: "T+0ms", event: "Parse JSON payload", status: "ok" as const },
-    { time: "T+2ms", event: "Remove site_attestation field", status: "ok" as const },
-    { time: "T+5ms", event: "Sort object keys recursively (code point order)", status: "ok" as const },
-    { time: "T+8ms", event: "Serialize: separators=(',',':'), no whitespace", status: "ok" as const },
-    { time: "T+10ms", event: `ensure_ascii=${att?.sig_input_ensure_ascii ?? false}`, status: "info" as const },
-    { time: "T+12ms", event: "Encode as UTF-8 bytes", status: "ok" as const },
-    { time: "T+15ms", event: "SHA-256 hash (WebCrypto SubtleCrypto)", status: "ok" as const },
-    { time: "T+18ms", event: "Compare with signed content_id", status: att?.sig ? "ok" as const : "warn" as const },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-emerald-700">
-        <Hash className="h-5 w-5" />
-        <h3 className="text-lg font-bold">SHA-256 Content Integrity</h3>
-      </div>
-      <div className="rounded-lg border border-slate-200 p-4">
-        <p className="text-sm text-slate-700 mb-3">
-          {att?.sig_input || "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON"}
-        </p>
-        <div className="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span className="text-slate-500">ensure_ascii:</span>{" "}
-            <code className="text-amber-700">{String(att?.sig_input_ensure_ascii ?? false)}</code>
-          </div>
-          <div>
-            <span className="text-slate-500">is_digest:</span>{" "}
-            <code className="text-amber-700">{String(att?.sig_input_is_digest ?? false)}</code>
-          </div>
-        </div>
-      </div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Hash Computation Trace</p>
-        <TraceLog entries={traces} />
-      </div>
-      <div className="rounded-lg bg-slate-900 p-4">
-        <p className="text-xs text-slate-400 mb-2">Canonical JSON rules (ECMAScript Number::toString)</p>
-        <pre className="text-[11px] text-emerald-400 overflow-x-auto">
-{`{
-  "keys": "sorted by code point, recursively",
-  "separators": [",", ":"],
-  "whitespace": "none",
-  "numbers": "integral float → 0, not 0.0",
-  "unicode": "literal UTF-8, never \\uXXXX"
-}`}
-        </pre>
-      </div>
-    </div>
-  );
-}
-
-function XRPLPanel({ data, onClose }: { data: any; onClose: () => void }) {
-  const [root, setRoot] = useState<any>(null);
-  const [xrpl, setXrpl] = useState<{
-    status: number;
-    n?: number | null;
-    merkle?: string | null;
-    kind?: string | null;
-    writes_board?: boolean | null;
-  } | null>(null);
-
-  useEffect(() => {
-    fetch("/root.json")
-      .then((r) => (r.ok ? r.json() : null))
-      .catch(() => null)
-      .then(setRoot);
-    fetch("/api/xrpl")
-      .then(async (r) => {
-        let body: any = null;
-        try {
-          body = await r.json();
-        } catch {
-          body = null;
-        }
-        setXrpl({
-          status: r.status,
-          n: body?.n ?? null,
-          merkle: body?.merkle_root ?? null,
-          kind: body?.kind ?? null,
-          writes_board: body?.writes_board ?? null,
-        });
-      })
-      .catch(() => setXrpl({ status: 0, n: null, merkle: null }));
-  }, []);
-
-  const live16 = xrpl?.status === 200 && xrpl.n === 16;
-  const merkleMatch = !!(xrpl?.merkle && root?.merkle_root && xrpl.merkle === root.merkle_root);
-
-  const traces = [
-    { time: "T+0ms", event: "GET /root.json (public-root catalogue)", status: root ? "ok" as const : "info" as const },
-    { time: "T+40ms", event: root ? `as_of ${root.as_of} · merkle ${String(root.merkle_root || "").slice(0, 16)}… · card_count ${root.card_count}` : "root not loaded", status: root ? "ok" as const : "warn" as const },
-    { time: "T+50ms", event: `GET /api/xrpl HTTP ${xrpl?.status ?? "…"} n=${xrpl?.n ?? "—"} · ${xrpl?.kind || "reader"} writes_board=${String(xrpl?.writes_board ?? false)}`, status: live16 ? "ok" as const : xrpl ? "warn" as const : "info" as const },
-    { time: "T+55ms", event: merkleMatch ? "same merkle as /root.json" : xrpl?.merkle ? "merkle does not match /root.json" : "waiting for merkle", status: merkleMatch ? "ok" as const : "warn" as const },
-    { time: "T+60ms", event: "Leaf sig_ed25519 is null — unsigned catalogue / NO_LAPTOP_SIGN", status: "info" as const },
-    { time: "T+65ms", event: "Not a GSPC grade. Not DEVNET. Do not stamp MEASURED from this catalogue.", status: "info" as const },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-amber-700">
-        <Database className="h-5 w-5" />
-        <h3 className="text-lg font-bold">XRPL public-root reader</h3>
-      </div>
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
-        <div className="flex items-center gap-2 text-amber-800 font-semibold mb-2">
-          <AlertCircle className="h-4 w-4" />
-          Unsigned public-root catalogue — /api/xrpl is a reader
-        </div>
-        <ul className="text-sm text-amber-700 space-y-1">
-          <li>• GET /root.json is the living XRPL catalogue (card-v0 leaves)</li>
-          <li>• GET /api/xrpl is a reader of that root (writes_board false). Live locked 16 when HTTP 200 n=16, same merkle.</li>
-          <li>• Leaves are unsigned (NO_LAPTOP_SIGN; sig_ed25519 null)</li>
-          <li>• Not a GSPC grade. Not DEVNET. Do not stamp MEASURED.</li>
-        </ul>
-        {root && (
-          <p className="mt-2 font-mono text-[11px] text-amber-800">
-            as_of {root.as_of} · merkle {root.merkle_root} · card_count={root.card_count} · xrpl.fi {root.xrpl_fi_assetCount}
-          </p>
-        )}
-        {xrpl && (
-          <p className="mt-1 font-mono text-[11px] text-amber-800">
-            /api/xrpl HTTP {xrpl.status}
-            {xrpl.n != null ? ` n=${xrpl.n}` : ""}
-            {xrpl.merkle ? ` · merkle ${xrpl.merkle}` : ""}
-            {merkleMatch ? " · matches /root.json" : ""}
-          </p>
-        )}
-      </div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Fetch Trace</p>
-        <TraceLog entries={traces} />
-      </div>
-      {root && Array.isArray(root.card_sha256) && (
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">
-            Public-root leaves — {root.card_sha256.length} unsigned hashes in /root.json
-          </p>
-          <p className="text-sm text-slate-600">
-            Inclusion is membership in this hash list. Leaf signatures are null.
-            Schema: <a href="/schema/card-v0.json" className="underline">/schema/card-v0.json</a>.
-          </p>
-        </div>
-      )}
-      <div className="flex gap-3 text-sm">
-        <a href="/xrpl-attest" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          XRPL public-root page →
-        </a>
-        <a href="/root.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          /root.json <ExternalLink className="h-3 w-3" />
-        </a>
-        <a href="/api/xrpl" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
-          /api/xrpl <ExternalLink className="h-3 w-3" />
-        </a>
-      </div>
-    </div>
-  );
-}
-
-function ProgressPanel({ data, onClose }: { data: any; onClose: () => void }) {
+function ProgressPanel({ data }: { data?: any }) {
   const totals = data?.totals;
-  const axes = data?.axes || [];
-  const measured = axes.filter((a: any) => a.status === "MEASURED");
-  const unmeasured = axes.filter((a: any) => a.status !== "MEASURED");
-  const chartData = [
-    { name: "GSPC", measured: totals?.by_family?.gspc?.measured || 0, total: totals?.by_family?.gspc?.axes || 0 },
-    { name: "Financial", measured: totals?.by_family?.financial?.measured || 0, total: totals?.by_family?.financial?.axes || 0 },
-  ];
-  const separationData = [
-    { name: "SEPARATED", value: totals?.separated_leads || 0, fill: "#10b981" },
-    { name: "TIE", value: totals?.ties || 0, fill: "#f59e0b" },
-    { name: "UNTESTED", value: totals?.untested_separations || 0, fill: "#94a3b8" },
-  ];
+  const measured = totals?.measured_axes ?? 15;
+  const axes = totals?.axes ?? 22;
+  const empty = totals?.unmeasured_axes ?? 7;
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-emerald-700">
-        <TrendingUp className="h-5 w-5" />
-        <h3 className="text-lg font-bold">Board Progress — {totals?.public_count || "22·15"}</h3>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">By Family</p>
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis type="number" domain={[0, 'dataMax']} />
-                <YAxis type="category" dataKey="name" width={70} />
-                <Tooltip />
-                <Bar dataKey="measured" fill="#10b981" name="Measured" />
-                <Bar dataKey="total" fill="#e2e8f0" name="Total slots" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Separation (McNemar p&lt;0.05)</p>
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={separationData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="value">
-                  {separationData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.fill} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">Measured ({measured.length})</p>
-          <div className="max-h-32 overflow-y-auto rounded-lg border border-emerald-200 bg-emerald-50 p-2">
-            {measured.map((a: any) => (
-              <div key={a.axis} className="flex items-center justify-between py-1 text-sm">
-                <span className="font-medium text-emerald-800">{a.axis}</span>
-                <span className="text-emerald-600 font-mono text-xs">n={a.n}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">Empty — visible ({unmeasured.length})</p>
-          <div className="max-h-32 overflow-y-auto rounded-lg border border-amber-200 bg-amber-50 p-2">
-            {unmeasured.length > 0 ? unmeasured.map((a: any) => (
-              <div key={a.axis} className="flex items-center justify-between py-1 text-sm">
-                <span className="font-medium text-amber-800">{a.axis}</span>
-                <span className="text-amber-600 text-xs">UNMEASURED</span>
-              </div>
-            )) : (
-              <p className="text-amber-700 text-sm py-2">All slots measured</p>
-            )}
-          </div>
-        </div>
-      </div>
-      <p className="text-xs text-slate-600">
-        {totals?.count_grammar || "22 axis are on the board; 15 carry a measurement and 7 are declared slots with no run behind them."}
+    <div className="space-y-4 p-4">
+      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
+        N→N+1 drift · UNCHECKABLE
+      </p>
+      <p className="mt-1 text-xs text-slate-600">
+        No published board time series for N→N+1 drift. Empty stays empty — do not invent
+        drift numbers or a Merkle seal. Cite the living root-as-index at{" "}
+        <a href="/root.json" className="underline">
+          /root.json
+        </a>{" "}
+        for the current snapshot only.
+      </p>
+      <p className="text-sm text-slate-700">
+        Progress · {axes} axis · {measured} measured · {empty} empty (visible). Board stays{" "}
+        <strong>22 · 15 · 7</strong>. Never fill empty. Never certify.
       </p>
     </div>
   );
 }
 
-function SeparationPanel({ data, onClose }: { data: any; onClose: () => void }) {
-  const axes = (data?.axes || []).filter((a: any) => a.separation);
-  const totals = data?.totals;
-  const separatedAxes = axes.filter((a: any) => a.separation === "SEPARATED");
-  const tieAxes = axes.filter((a: any) => a.separation === "TIE");
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-emerald-700">
-        <Activity className="h-5 w-5" />
-        <h3 className="text-lg font-bold">McNemar Separation Analysis</h3>
-      </div>
-      <div className="rounded-lg border border-slate-200 p-4">
-        <p className="text-sm text-slate-700">
-          Separation tests whether a leader's lead is statistically real (McNemar p&lt;0.05 on discordant items).
-          A TIE means the point-estimate lead is not a measured advantage.
-        </p>
-        <div className="mt-3 flex gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-emerald-600">{totals?.separated_leads || 0}</div>
-            <div className="text-xs text-slate-500">SEPARATED</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-amber-600">{totals?.ties || 0}</div>
-            <div className="text-xs text-slate-500">TIE</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-slate-400">{totals?.comparison_axes || 0}</div>
-            <div className="text-xs text-slate-500">model-comparison</div>
-          </div>
-        </div>
-      </div>
-      {separatedAxes.length > 0 && (
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-2">Separated Leaders</p>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left text-slate-600">
-                  <th className="py-2 pr-3">Axis</th>
-                  <th className="py-2 px-3">Leader</th>
-                  <th className="py-2 px-3">Accuracy</th>
-                  <th className="py-2 px-3">p-value</th>
-                  <th className="py-2 px-3">Wilson 95%</th>
-                </tr>
-              </thead>
-              <tbody>
-                {separatedAxes.map((a: any) => (
-                  <tr key={a.axis} className="border-b border-slate-100">
-                    <td className="py-2 pr-3 font-medium">{a.axis}</td>
-                    <td className="py-2 px-3 text-xs">{a.leader}</td>
-                    <td className="py-2 px-3 font-mono">{a.accuracy ? (a.accuracy * 100).toFixed(1) + "%" : "—"}</td>
-                    <td className="py-2 px-3 font-mono text-emerald-600">{a.separation_p?.toFixed(4) || "—"}</td>
-                    <td className="py-2 px-3 font-mono text-xs">
-                      {a.interval ? `${(a.interval[0] * 100).toFixed(1)}–${(a.interval[1] * 100).toFixed(1)}%` : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-      {tieAxes.length > 0 && (
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-amber-600 mb-2">Statistical Ties</p>
-          <div className="max-h-48 overflow-y-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left text-slate-600">
-                  <th className="py-2 pr-3">Axis</th>
-                  <th className="py-2 px-3">Leader</th>
-                  <th className="py-2 px-3">p-value</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tieAxes.map((a: any) => (
-                  <tr key={a.axis} className="border-b border-slate-100">
-                    <td className="py-2 pr-3 font-medium">{a.axis}</td>
-                    <td className="py-2 px-3 text-xs">{a.leader}</td>
-                    <td className="py-2 px-3 font-mono text-amber-600">{a.separation_p?.toFixed(4) || "—"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+function XrplPanel() {
+  const [root, setRoot] = useState<any>(null);
+  const [xrpl, setXrpl] = useState<any>(null);
 
-function InLanePanel({ data, onClose }: { data: any; onClose: () => void }) {
-  const inLane = data?.measured_in_lane || [];
-  const chartData = inLane.map((a: any) => ({
-    name: a.axis,
-    accuracy: a.accuracy ? a.accuracy * 100 : 0,
-    fleetMean: a.fleet_mean ? a.fleet_mean * 100 : 0,
-    n: a.n || 0,
-  }));
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-violet-700">
-        <Clock className="h-5 w-5" />
-        <h3 className="text-lg font-bold">Unsigned Financial Slots — Not Board Rows</h3>
-      </div>
-      <div className="rounded-lg border border-violet-200 bg-violet-50 p-4">
-        <p className="text-sm text-violet-800 mb-2">
-          {inLane.length} unsigned financial slots measured on a smaller fleet with no separation test.
-          Published as <code className="text-xs">measured_in_lane</code> — NOT counted in board totals.
-          Board stays 22 axis · 15 measured. These slots are unsigned leftover only.
-        </p>
-        <p className="text-xs text-violet-700">
-          Status: <strong>UNTESTED</strong> — path to signed requires n≥30 + 4-way separation + keystone attestation
-        </p>
-      </div>
-      {chartData.length > 0 && (
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Accuracy vs Fleet Mean</p>
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="name" />
-                <YAxis domain={[0, 100]} />
-                <Tooltip formatter={(v: number) => v.toFixed(1) + "%"} />
-                <Legend />
-                <Bar dataKey="accuracy" fill="#8b5cf6" name="Leader %" />
-                <Bar dataKey="fleetMean" fill="#c4b5fd" name="Fleet mean %" />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      )}
-      <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Per-Axis Detail</p>
-        {inLane.map((a: any) => (
-          <div key={a.axis} className="rounded-lg border border-slate-200 p-3 mb-2">
-            <div className="flex items-center justify-between">
-              <span className="font-semibold text-slate-800">{a.axis}</span>
-              <span className="rounded-full border border-violet-300 bg-violet-50 px-2 py-0.5 text-[10px] font-bold text-violet-700">IN-LANE</span>
-            </div>
-            <p className="text-xs text-slate-600 mt-1">{a.bench || a.task}</p>
-            <div className="mt-2 flex flex-wrap gap-3 text-xs font-mono">
-              <span>n={a.n || "—"}</span>
-              <span>acc={a.accuracy ? (a.accuracy * 100).toFixed(0) + "%" : "—"}</span>
-              <span>fleet={a.fleet_mean ? (a.fleet_mean * 100).toFixed(0) + "%" : "—"}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
-        <p className="text-xs font-semibold text-amber-800">Path to Signed (honest)</p>
-        <ul className="text-xs text-amber-700 mt-1 space-y-0.5">
-          <li>• n ≥ 30 usable items</li>
-          <li>• 4-way separation test (McNemar on discordant items)</li>
-          <li>• Keystone attestation (Ed25519 over canonical JSON)</li>
-          <li>• Board gate reconciliation (owner-gated)</li>
-        </ul>
-        <p className="text-[10px] text-amber-600 mt-2">No fake close: unsigned is not marked signed, no completion date invented</p>
-      </div>
-    </div>
-  );
-}
-
-function AxisPanel({ data, axis, onClose }: { data: any; axis: any; onClose: () => void }) {
-  const [tab, setTab] = useState<"current" | "history">("current");
-  const [history, setHistory] = useState<any[] | null>(null);
-  const [historyLoading, setHistoryLoading] = useState(false);
   useEffect(() => {
-    if (tab === "history" && history === null && !historyLoading) {
-      setHistoryLoading(true);
-      fetch(`/api/gspc/history/${encodeURIComponent(axis?.axis || "")}`)
-        .then((r) => (r.ok ? r.json() : null))
-        .catch(() => null)
-        .then((d) => {
-          setHistory(d?.records || []);
-          setHistoryLoading(false);
-        });
-    }
-  }, [tab, axis?.axis, history, historyLoading]);
-  const tabCls = (active: boolean) =>
-    `px-4 py-2 text-sm font-semibold rounded-t-lg transition-colors ${
-      active ? "bg-white text-emerald-700 border-t border-x border-slate-200" : "text-slate-500 hover:text-slate-700"
-    }`;
+    fetch("/root.json")
+      .then((r) => r.json())
+      .then(setRoot)
+      .catch(() => setRoot(null));
+    fetch("/api/xrpl")
+      .then((r) => r.json())
+      .then(setXrpl)
+      .catch(() => setXrpl(null));
+  }, []);
+
+  const merkleMatch =
+    root?.merkle_root && xrpl?.merkle && String(root.merkle_root) === String(xrpl.merkle);
+
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2 text-emerald-700">
-        <Activity className="h-5 w-5" />
-        <h3 className="text-lg font-bold">{axis?.axis || "Axis"}</h3>
-      </div>
-      <div className="flex gap-1 border-b border-slate-200">
-        <button onClick={() => setTab("current")} className={tabCls(tab === "current")}>Current</button>
-        <button onClick={() => setTab("history")} className={tabCls(tab === "history")}>History</button>
-      </div>
-      {tab === "current" && (
-        <>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg border border-slate-200 p-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Bench</p>
-              <p className="font-medium">{axis?.bench || "—"}</p>
-              <p className="text-xs text-slate-600 mt-1">{axis?.task || "—"}</p>
-            </div>
-            <div className="rounded-lg border border-slate-200 p-3">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Sample</p>
-              <p className="text-2xl font-bold font-mono">{axis?.n || "—"}</p>
-              <p className="text-xs text-slate-600">{axis?.n_unit || "items"}</p>
-            </div>
-          </div>
-          {axis?.accuracy !== undefined && (
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-emerald-600">Leader accuracy</p>
-                  <p className="text-3xl font-bold text-emerald-800">{(axis.accuracy * 100).toFixed(1)}%</p>
-                </div>
-                {axis.interval && (
-                  <div className="text-right">
-                    <p className="text-xs text-emerald-600">Wilson 95%</p>
-                    <p className="font-mono text-emerald-800">{(axis.interval[0] * 100).toFixed(1)}–{(axis.interval[1] * 100).toFixed(1)}%</p>
-                  </div>
-                )}
-              </div>
-              <p className="text-xs text-emerald-700 mt-2">Leader: {axis.leader}</p>
-            </div>
-          )}
-          {axis?.separation && (
-            <div className={`rounded-lg border p-3 ${axis.separation === "SEPARATED" ? "border-emerald-200 bg-emerald-50" : "border-amber-200 bg-amber-50"}`}>
-              <div className="flex items-center justify-between">
-                <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${axis.separation === "SEPARATED" ? "bg-emerald-200 text-emerald-800" : "bg-amber-200 text-amber-800"}`}>{axis.separation}</span>
-                {axis.separation_p !== undefined && (<span className="font-mono text-sm">p={axis.separation_p.toFixed(4)}</span>)}
-              </div>
-              <p className="text-xs mt-2 text-slate-700">
-                {axis.separation === "SEPARATED"
-                  ? "The leader's edge is statistically separated (McNemar p<0.05)"
-                  : "Point-estimate lead is not statistically separated — a tie is not a win"}
-              </p>
-            </div>
-          )}
-          {axis?.dataset_url && (
-            <a href={axis.dataset_url} target="_blank" rel="noreferrer" className={`inline-flex items-center gap-1 text-sm text-emerald-700 hover:underline ${FOCUS}`}>
-              Frozen gold bank (Hugging Face) <ExternalLink className="h-3 w-3" />
-            </a>
-          )}
-        </>
-      )}
-      {tab === "history" && (
-        <div className="space-y-4">
-          {historyLoading && (<p className="text-sm text-slate-500">Loading history…</p>)}
-          {!historyLoading && history && history.length > 0 && (
-            <>
-              <p className="text-xs text-slate-600">Historical records for this axis. Each row is a past measurement run.</p>
-              <div className="h-48">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={history.map((h: any) => ({ date: h.measured_at?.slice(0, 10) || h.date || "—", accuracy: h.accuracy ? h.accuracy * 100 : null, n: h.n || 0 }))}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="date" tick={{ fontSize: 10 }} />
-                    <YAxis domain={[0, 100]} tick={{ fontSize: 10 }} />
-                    <Tooltip formatter={(v: number) => v?.toFixed(1) + "%"} />
-                    <Legend />
-                    <Line type="monotone" dataKey="accuracy" stroke="#10b981" name="Accuracy %" dot={{ r: 3 }} />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b text-left text-slate-600">
-                      <th className="py-2 pr-3">Date</th>
-                      <th className="py-2 px-3">Leader</th>
-                      <th className="py-2 px-3">Accuracy</th>
-                      <th className="py-2 px-3">n</th>
-                      <th className="py-2 px-3">Separation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {history.map((h: any, i: number) => (
-                      <tr key={i} className="border-b border-slate-100">
-                        <td className="py-2 pr-3 font-mono text-xs">{h.measured_at?.slice(0, 10) || h.date || "—"}</td>
-                        <td className="py-2 px-3 text-xs">{h.leader || "—"}</td>
-                        <td className="py-2 px-3 font-mono">{h.accuracy ? (h.accuracy * 100).toFixed(1) + "%" : "—"}</td>
-                        <td className="py-2 px-3 font-mono">{h.n || "—"}</td>
-                        <td className="py-2 px-3">
-                          {h.separation && (
-                            <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${h.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>{h.separation}</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          )}
-          {!historyLoading && (!history || history.length === 0) && (
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-              <p className="text-sm text-slate-600 font-semibold">No history available</p>
-              <p className="text-xs text-slate-500 mt-1">
-                History endpoint returned empty. This axis may be newly measured, or historical records are not yet published at <code className="text-[10px]">/api/gspc/history/{axis?.axis}</code>.
-              </p>
-              <p className="text-xs text-slate-400 mt-2">Empty stays visible — we do not invent historical data.</p>
-            </div>
-          )}
+    <div className="space-y-3 p-4 text-sm text-slate-700">
+      <p className="font-semibold">/api/xrpl is a reader of GET /root.json</p>
+      <ul className="list-disc pl-5 space-y-1 text-xs text-slate-600">
+        <li>
+          • GET /root.json is the living root-as-index (card-v0 leaves). Envelope unsigned until
+          keystone — no fake sig_ed25519 on the envelope.
+        </li>
+        <li>• Leaf attestations = coverage harvest, not grades.</li>
+        <li>• writes_board false. Not MEASURED. Not DEVNET.</li>
+        <li>
+          • {merkleMatch ? "same merkle as /root.json" : "waiting for merkle / mismatch check"}
+        </li>
+      </ul>
+      <a href="/root.json" className={`inline-flex items-center gap-1 text-emerald-700 hover:underline ${FOCUS}`}>
+        /root.json <ExternalLink className="h-3 w-3" />
+      </a>
+    </div>
+  );
+}
+
+export default function AttestationDeepDive({ kind, data, onClose }: Props) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-auto rounded-2xl border border-emerald-600/20 bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-emerald-800">
+            Deep dive · {kind}
+          </h2>
+          <button type="button" onClick={onClose} className={`text-xs text-slate-500 hover:text-slate-800 ${FOCUS}`}>
+            Close
+          </button>
         </div>
-      )}
-    </div>
-  );
-}
-
-export default function AttestationDeepDive({ kind, data, onClose }: DeepDiveProps) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <div className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className={`absolute right-4 top-4 rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 ${FOCUS}`} aria-label="Close">
-          <X className="h-5 w-5" />
-        </button>
-        {kind === "ed25519" && <Ed25519Panel data={data} onClose={onClose} />}
-        {kind === "sha256" && <SHA256Panel data={data} onClose={onClose} />}
-        {kind === "xrpl" && <XRPLPanel data={data} onClose={onClose} />}
-        {kind === "progress" && <ProgressPanel data={data} onClose={onClose} />}
-        {kind === "separation" && <SeparationPanel data={data} onClose={onClose} />}
-        {kind === "in-lane" && <InLanePanel data={data} onClose={onClose} />}
-        {kind === "axis" && <AxisPanel data={data} axis={data?.selectedAxis} onClose={onClose} />}
+        {kind === "progress" ? <ProgressPanel data={data} /> : null}
+        {kind === "xrpl" ? <XrplPanel /> : null}
+        {kind !== "progress" && kind !== "xrpl" ? (
+          <div className="space-y-2 p-4 text-sm text-slate-700">
+            <p>
+              Cite living GET <a className="underline" href="/api/gspc">/api/gspc</a> and{" "}
+              <a className="underline" href="/root.json">
+                /root.json
+              </a>
+              . Board 22 · 15 · 7. Never certify.
+            </p>
+          </div>
+        ) : null}
       </div>
     </div>
   );
 }
-
-export type { DeepDiveKind };
