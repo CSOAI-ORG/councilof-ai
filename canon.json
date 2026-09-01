@@ -1,20 +1,20 @@
 {
   "_comment": "Single source of truth for councilof.ai's ruled public invariants. The drift-guard asserts the LIVE site matches these. When a ruling changes a value (e.g. public_count moves), change it HERE in one place and the guard follows. Do not hand-edit the live site to a value that contradicts this file. Cite live GET /api/gspc for scores.",
-  "ruling": "LIVE \u00b7 2026-09-01 \u00b7 GSPC board swept under ADR-001: 22 axis \u00b7 22 measured (14 GSPC behavioural + 8 financial/domain, all measured). The eight financial/domain slots that were DECLARED and UNMEASURED under the 2026-08-26 reading now each carry a deterministic-facts run, so measured_axes moved 15 -> 22 and unmeasured_axes moved 7 -> 0. Verified against live GET /api/gspc totals on 2026-09-01.",
+  "ruling": "LIVE \u00b7 2026-09-01 \u00b7 GSPC board under ADR-001 + owner lock after #1074: 22 axis \u00b7 15 measured \u00b7 7 empty/UNMEASURED. Only provenance-controls is MEASURED in the financial family; the other seven financial slots stay declared UNMEASURED n=0. Empty cells stay empty. Never stamp the 7 empty MEASURED. Verified against the restored board grammar on 2026-09-01.",
   "ruling_ref": "council-os/ADR-001-axis-count.md",
   "title_contains": "Council of AI",
   "min_homepage_bytes": 20000,
   "api": {
     "_comment": "These are the guard's EXPECTED values, not a surface. A guard has to name the number it is checking for \u2014 that is what makes drift detectable \u2014 so this is the one place in the estate where an axis count is written down, and every rendered surface derives from the endpoint instead. Read off the signed board, not typed from memory: see _provenance.",
-    "_provenance": "Read from live GET /api/gspc totals on 2026-09-01: {axes:22, measured_axes:22, unmeasured_axes:0, quotable_axes:22, public_count:'22 axis \u00b7 22 measured'}. The eight financial/domain axes now each carry a deterministic-facts run (issuer-account flags off the public ledger + public statistical series, graded by rule), so the un-swept 15/7 reading was superseded by the data. Earlier states: 14/14/14 ('14 measured of 14 quotable'), then 22/15/7 ('22 axes \u00b7 15 measured'). Each was correct at its time and superseded by the data, not by copy. NOTE: own council-specialist models are excluded from the PUBLIC per-axis leaders (a neutral measurement body does not rank its own models); that exclusion changes leader attribution and separation/mean stats, NOT measured_axes \u2014 every axis still carries a measurement, so the count stays 22.",
+    "_provenance": "Read from GET /api/gspc grammar after #1074 restore: {axes:22, measured_axes:15, unmeasured_axes:7, quotable_axes:15, public_count:'22 axis \u00b7 15 measured'}. Earlier fill-7 / #1044/#1045/#1053 printers claimed 22/22/0 \u2014 that poison is retired. Earlier states: 14/14/14, then honest 22/15/7, then poisoned 22/22/0, then restored 22/15/7. Empty cells stay empty.",
     "path": "/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
     "axes_total": 22,
-    "measured_axes": 22,
-    "unmeasured_axes": 0,
-    "quotable_axes": 22,
-    "public_count_contains": "22 axis \u00b7 22 measured",
-    "_grammar": "axes_total counts SLOTS; measured_axes counts slots with a real run behind them; unmeasured_axes is published so the gap is visible. All 22 slots now carry a run, so measured_axes == axes_total and unmeasured_axes == 0. The two counts must still travel together in public copy so the grammar stays honest if a future slot is added with no run behind it."
+    "measured_axes": 15,
+    "unmeasured_axes": 7,
+    "quotable_axes": 15,
+    "public_count_contains": "22 axis \u00b7 15 measured",
+    "_grammar": "axes_total counts SLOTS; measured_axes counts slots with a real run behind them; unmeasured_axes is published so the gap is visible. measured_axes is 15 and unmeasured_axes is 7. The two counts must travel together in public copy. Empty cells stay empty."
   },
   "required_routes": {
     "/library": "reference pages across",
