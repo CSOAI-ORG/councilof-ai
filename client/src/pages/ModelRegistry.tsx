@@ -29,7 +29,7 @@ interface GspcResponse {
   issuer: string;
   measured_on: { date: string; model: string; note: string };
   axes: GspcAxis[];
-  totals: { measured: number; unmeasured: number; total: number };
+  totals: { public_count?: string; measured_axes?: number; unmeasured_axes?: number; axes?: number };
   limitations: string[];
 }
 interface AxesState {
@@ -39,16 +39,17 @@ interface AxesState {
   loading: true;
 }
 
-function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
+function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: string; publicCount: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
   const [state, setState] = useState<{
     axes: (GspcAxis | Axis)[];
     source: string;
     measuredOn: string;
+    publicCount: string;
     loading: boolean;
     error: string | null;
     limitations: string[];
     issuer: string;
-  }>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, loading: true, error: null, limitations: [], issuer: "" });
+  }>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, publicCount: "", loading: true, error: null, limitations: [], issuer: "" });
 
   useEffect(() => {
     const ac = new AbortController();
@@ -59,6 +60,8 @@ function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: str
           axes: d.axes,
           source: "wire",
           measuredOn: d.measured_on?.date ?? "",
+          // The whole board, derived by the API — never a slot number typed here.
+          publicCount: d.totals?.public_count ?? "",
           loading: false,
           error: null,
           limitations: d.limitations ?? [],
@@ -94,7 +97,7 @@ const AXIS_LABEL: Record<string, string> = {
 };
 
 export default function ModelRegistry() {
-  const { axes, source, measuredOn, loading, error, limitations, issuer } = useGspc();
+  const { axes, source, measuredOn, publicCount, loading, error, limitations, issuer } = useGspc();
   const framed = typeof window !== "undefined" && isEmbedded();
 
   if (loading) {
@@ -110,6 +113,10 @@ export default function ModelRegistry() {
 
   const wireAxes = axes.filter((a) => "leader" in a) as GspcAxis[];
   const measuredCount = wireAxes.filter((a) => a.status === "MEASURED").length;
+  // The board carries two families: model-comparison axes (they carry a leader)
+  // and deterministic-fact axes (they do not). Both are derived from the live
+  // array, never typed, so the split always sums to the whole board.
+  const factCount = axes.length - wireAxes.length;
 
   return (
     <div className="min-h-screen bg-[#04070d] text-slate-200">
@@ -130,7 +137,7 @@ export default function ModelRegistry() {
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
               {source === "wire"
-                ? `live · /api/gspc · ${measuredOn} · ${measuredCount}/${wireAxes.length} measured`
+                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${measuredCount} measured`}${factCount > 0 ? ` · ${wireAxes.length} model-comparison + ${factCount} fact` : ""}`
                 : `bundled snapshot (${measuredOn}) · /api/gspc unreachable`}
             </span>
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
