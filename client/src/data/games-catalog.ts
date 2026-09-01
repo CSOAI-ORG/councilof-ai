@@ -75,7 +75,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/gspc-quests.html",
     kind: "leftover",
     description:
-      "Six frozen axis-scoped quests with in-browser grader. Governance quest is retired v1 (24-item), NOT the living n=237. Your answers are graded by the same deterministic regex used to measure models. Playable but frozen — NOT the living 22-axis board.",
+      "Twelve behavioural axis-scoped quests with in-browser grader, plus a Humans-vs-the-Board view, a daily quest, and an on-device co-op round. Governance quest is retired v1 (24-item), NOT the living n=237. Your answers are graded by the same deterministic regex used to measure models, and your score sits beside the model leader read live from /api/gspc. Playable but frozen banks — NOT the living 22-axis board.",
     usesLiveBoard: false,
     badge: "frozen",
     frozen: true,
