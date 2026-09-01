@@ -36,6 +36,7 @@ const HTML_ANSWERED: DoorState = {
 };
 
 export default function EstateDoors() {
+  const [board, setBoard] = useState<DoorState>(PROBING);
   const [root, setRoot] = useState<DoorState>(PROBING);
   const [swift, setSwift] = useState<DoorState>(PROBING);
   const [xrpl, setXrpl] = useState<DoorState>(PROBING);
@@ -43,6 +44,20 @@ export default function EstateDoors() {
 
   useEffect(() => {
     const ac = new AbortController();
+
+    fetch("/api/gspc", { signal: ac.signal, headers: { accept: "application/json" } })
+      .then(async (r) => {
+        if (!r.ok) return setBoard({ label: `HTTP ${r.status}`, detail: "board not readable this load", tone: "warn" });
+        if (!isJson(r)) return setBoard(HTML_ANSWERED);
+        const d = await r.json().catch(() => ({}));
+        const count = typeof d?.totals?.public_count === "string" ? d.totals.public_count : null;
+        setBoard(
+          count
+            ? { label: count, detail: "totals.public_count, quoted from the living GET — never a remembered count", tone: "ok" }
+            : HTML_ANSWERED,
+        );
+      })
+      .catch(() => !ac.signal.aborted && setBoard({ label: "UNREACHABLE", detail: "GET /api/gspc did not answer", tone: "warn" }));
 
     fetch("/root.json", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {
@@ -103,6 +118,7 @@ export default function EstateDoors() {
   }, []);
 
   const doors: { name: string; href: string; state: DoorState }[] = [
+    { name: "/api/gspc", href: "/api/gspc", state: board },
     { name: "/root.json", href: "/root.json", state: root },
     { name: "/api/xrpl", href: "/api/xrpl", state: xrpl },
     { name: "/api/swift", href: "/api/swift", state: swift },
@@ -116,6 +132,11 @@ export default function EstateDoors() {
       name: "OpenTelemetry",
       href: "/methodology",
       state: { label: "not emitted", detail: "the runtime wire is missing and we say so — no probe can make that true", tone: "gap" },
+    },
+    {
+      name: "/plugin",
+      href: "/plugin",
+      state: { label: "alias → /tools", detail: "a route of this app — the tool count is probed on the /mcp door above, never typed here", tone: "ok" },
     },
   ];
 
@@ -143,6 +164,9 @@ export default function EstateDoors() {
           </li>
         ))}
       </ul>
+      <p className="mt-3 text-[11px] text-slate-500">
+        SWIFT / XRPL / TRACE / AIBOM / repro are tapes beside the board, not axes 23–27.
+      </p>
     </section>
   );
 }

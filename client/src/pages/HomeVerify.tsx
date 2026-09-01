@@ -79,20 +79,15 @@ export default function HomeVerify() {
             ]}
           />
 
+          {/* RECONCILED with #1013: the static estate-doors table that landed there
+              carried typed door states ("7 MCP tools", "signed envelope") and
+              duplicated the probed <EstateDoors/> strip below under the same
+              testid. Its copy line stays; its rows live on in the strip, which
+              probes each same-origin door on load instead of typing a state. */}
           <p className="mt-4 max-w-2xl text-sm text-slate-600">
             We measure AI against frozen tests, sign the card, and leave empty cells empty.
-            Live board is GET /api/gspc — not a remembered 15. Verify at /gspc-verify. Plugin at /plugin.
+            Live board is GET /api/gspc — not a remembered count. Verify at /gspc-verify. Plugin at /plugin.
           </p>
-          <table className="mt-4 text-left font-mono text-[11px] text-slate-600" data-testid="estate-doors">
-            <caption className="sr-only">Estate doors</caption>
-            <tbody>
-              <tr><th className="pr-4 font-semibold">Board</th><td>GET /api/gspc (living)</td></tr>
-              <tr><th className="pr-4 font-semibold">Root</th><td>/root.json — signed envelope, not a certificate</td></tr>
-              <tr><th className="pr-4 font-semibold">Plugin</th><td>/plugin → /tools · 7 MCP tools</td></tr>
-              <tr><th className="pr-4 font-semibold">COBOL</th><td>cobolbridge.ai 522 — infra</td></tr>
-              <tr><th className="pr-4 font-semibold">SWIFT / XRPL / TRACE</th><td>tapes beside the board, not axes 23–27</td></tr>
-            </tbody>
-          </table>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/gspc-verify"
