@@ -3,12 +3,22 @@
 // buyers (insurers, bond desks, vendors) behind an x402 payment gate. R8: this is
 // DATA-only — never scores, never ranked. Regulators + public get the signed stream
 // free (see /first-fine-watch).
+import { verifyX402Payment, type X402Env } from "./_x402";
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const key = url.searchParams.has("key") ? "keyed" : "public";
-  // x-payment header is the only accepted payment proof; ?x402=paid is NOT payment.
-  const paid = context.request.headers.get("x-payment") != null;
+  // Payment is VERIFIED, not assumed from header presence. This used to be
+  // `headers.get("x-payment") != null` — the identical fake-paywall bug proof.ts carried,
+  // handing the paid data to anyone who set ANY x-payment header. Now a receipt is only
+  // accepted when a configured x402 facilitator verifies it; no facilitator ⇒ fail-closed 402.
   const origin = url.origin;
+  const payment = await verifyX402Payment(
+    context.request,
+    context.env as X402Env,
+    `${origin}/api/eunomia-data`,
+  );
+  const paid = payment.ok;
   const fines = [
     { actor: "Clearview AI", jurisdiction: "EU/UK/IT", regime: "GDPR", amount: ">€100M", status: "cumulative (multi-MSA)" },
     { actor: "FTC (US)", jurisdiction: "US", regime: "FTC Act / ECOA", amount: "~$85M", status: "order (partly suspended)" },
