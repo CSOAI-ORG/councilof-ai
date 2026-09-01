@@ -1,26 +1,26 @@
 # ASI AUTO-EAT — STATUS
 
-_regenerated 2026-09-01T11:41:32Z — every number counted, none invented_
+_regenerated 2026-09-01T13:08:24Z — every number counted, none invented_
 
 | field | value |
 |---|---|
-| queue DISCOVERED total | 10320 |
-| probed total | 10370 |
-| atoms staged (unsigned) | 6 |
-| staged LIVE fraction of probed | 0.0507 (26/513) |
-| surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.hf.spaces, autoeat.mcp.registry, autoeat.npm.registry, autoeat.xrpl.accounts |
-| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T09:41:42Z (1db6aff59dd43597) |
+| queue DISCOVERED total | 11022 |
+| probed total | 11063 |
+| atoms staged (unsigned) | 8 |
+| staged LIVE fraction of probed | 0.0598 (31/518) |
+| surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.hf.spaces, autoeat.mcp.registry, autoeat.npm.registry, autoeat.swift.census, autoeat.xrpl.accounts, autoeat.xrpl.twoway |
+| last signed batch | autoeat.xrpl.twoway @ 2026-09-01T13:01:56Z (6c50e9ff0c0611d7) |
 
 ## DISCOVERED by kind
 
 | kind | count |
 |---|---|
 | erc8004 | 2000 |
-| hf-model | 2511 |
-| hf-space | 2191 |
-| mcp-server | 528 |
-| npm-registry | 2184 |
-| xrpl-account | 906 |
+| hf-model | 2731 |
+| hf-space | 2294 |
+| mcp-server | 529 |
+| npm-registry | 2265 |
+| xrpl-account | 1203 |
 
 ## Three-state invariant (structural)
 
