@@ -356,14 +356,24 @@ def parse_token(txt: str) -> str | None:
     return None
 
 
+def js_safe_number(x):
+    """Whole floats must be ints so JS JSON.stringify matches Python dumps (0 not 0.0)."""
+    if x is None:
+        return None
+    if isinstance(x, float) and x.is_integer():
+        return int(x)
+    return x
+
+
 def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str) -> dict:
+    acc = round(hits / n, 4) if n else None
     body = {
         "kind": "gspc.measurement-card",
         "axis": axis,
         "model": model_id,
         "issuer": "CSOAI Ltd",
         "n": n,
-        "accuracy": round(hits / n, 4) if n else None,
+        "accuracy": js_safe_number(acc),
         "status": "UNMEASURED",
         "unmeasured": [reason] if reason else ["unsigned pending GHA OIDC"],
         "public_framing": "Measurement, not certification. Empty is not zero.",

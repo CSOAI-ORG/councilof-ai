@@ -49,6 +49,11 @@ def test_unsigned_card_is_uncheckable_not_measured() -> None:
     assert wrap["body"]["status"] == "UNMEASURED"
     assert wrap["body"]["accuracy"] != 0 or wrap["body"]["n"] == 0
     assert "SOVOS" not in json.dumps(wrap).upper()
+    zero = stage_unsigned("unit/model", "governance", hits=0, n=30, reason="n>=30 pending sign")
+    dumped = json.dumps(zero["body"], sort_keys=True, separators=(",", ":"))
+    assert ":0.0" not in dumped
+    assert zero["body"]["accuracy"] == 0
+    assert type(zero["body"]["accuracy"]) is int
     raw = canonical_body_bytes(wrap["body"])
     import hashlib
 
