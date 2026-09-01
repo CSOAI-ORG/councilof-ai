@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-01T01:48:00Z",
+  "as_of": "2026-09-01T03:32:57Z",
   "card_count": 43,
   "card_sha256": [
     "b61bb14419b555c9db79612f091e465c6bb2cc66ea49aca7bceb4a285541d60b",
@@ -50,7 +50,7 @@
   "kind": "csoai.public-root/v0",
   "language": "coverage of public XRPL instruments + public notices. No bank names as clients. Not a certification.",
   "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
-  "note": "This root.json envelope is not Ed25519-signed (no sig_ed25519 on the envelope; unsigned until GHA/keystone signs). did_intended names the intended leaf attestation identity only. Individual leaves MAY carry GH-secret attestations when present — that is leaf coverage only, not a sealed root document and not grades. Layer-0 seals, if any, are a different key. Not MEASURED. Not a certificate. Free; not paywalled.",
+  "note": "This root.json envelope is Ed25519-signed over the compact preimage under did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.",
   "schema": "https://councilof.ai/schema/card-v0.json",
   "sources": [
     "https://xrpl.fi/api/metrics"
@@ -58,5 +58,7 @@
   "xrpl_asset_count_attempted": 16,
   "xrpl_basket_merkle": "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9",
   "xrpl_fi_assetCount": 16,
-  "xrpl_fi_updatedAt": "2026-08-28T09:06:28.399Z"
+  "xrpl_fi_updatedAt": "2026-08-28T09:06:28.399Z",
+  "sig_ed25519": "bbddade9b1cc11a971fb65035974920477228fc0addca5c4f2103f28c5779de1d1bd6c005cffc46ad997c6299f89013e5f5084c28df1ef6a337a02fdf2e1e50a",
+  "sig_preimage": "Ed25519 over canonical JSON of {kind, schema, as_of, merkle_root, card_count, did_intended} only. card_sha256[] is bound by merkle_root. PKCS8 stays on Pages (OIDC). Not a certificate."
 }
