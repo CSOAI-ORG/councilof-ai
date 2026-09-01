@@ -1,0 +1,39 @@
+{
+ "schema": "csoai.financial-measure-run/0.2",
+ "axis": "ai-adoption-components",
+ "as_of": "2026-09-01T04:12:34Z",
+ "network": "public HTTP + XRPL MAINNET account_info/gateway_balances",
+ "issuers": "RLUSD, Ondo OUSG, OpenEden TBILL, Archax×abrdn, Braza USDB, Braza BBRL",
+ "n": 2,
+ "status": "MEASURED",
+ "risk_verdict": "UNMEASURED",
+ "rubric": "deterministic cited public series. Not an index. No formula file.",
+ "measured": [
+  {
+   "series": "EU27 enterprises 10+ staff using any AI",
+   "year": 2024,
+   "value": 13.48,
+   "unit": "%",
+   "source": "Eurostat isoc_eb_ai (E_AI_TANY, PC_ENT, EU27_2020)",
+   "surface": "/interop/ai-economy-index.v0.1.json"
+  },
+  {
+   "series": "EU27 large enterprises 250+ using any AI",
+   "year": 2024,
+   "value": 41.17,
+   "unit": "%",
+   "source": "Eurostat isoc_eb_ai",
+   "surface": "/interop/ai-economy-index.v0.1.json"
+  }
+ ],
+ "honesty": "Facts MEASURED. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. Self-declare is not attestation. No model, no accuracy, no leader.",
+ "index_formula": false,
+ "bank_gaps": [
+  "compute-price",
+  "AI-investment",
+  "sector-output",
+  "published formula"
+ ],
+ "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
+ "content_id": "749dc30be408d1d9e925fd41475261bbb3e4018ce606df9fabaa7471122b8995"
+}

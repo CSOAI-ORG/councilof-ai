@@ -1,0 +1,44 @@
+name: hf-fin-shells-measure
+
+# Sign compact financial-measure payloads via OIDC → /api/board-sign.
+# Filename contains hf-fin-shells so Pages OIDC allowlist matches.
+# Never laptop-sign. Never invent a %. Risk verdict stays UNMEASURED.
+
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: hf-fin-shells-measure
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: sign compact runs
+        run: python3 scripts/sign_financial_runs.py
+      - name: commit signed cards
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-financial-measure"
+          git config user.email "board@csoai.org"
+          git add public/interop/financial-measure-card-*.json
+          if git diff --cached --quiet; then
+            echo "no card change"
+            exit 0
+          fi
+          git commit -m "financial-measure: sign compact cards under #card-attestation-1"
+          git push origin HEAD:master

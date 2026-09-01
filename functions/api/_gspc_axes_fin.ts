@@ -97,47 +97,34 @@ export const AXES_FIN: AxisScore[] = [
     note: "MEASURED for named-string presence on retrieved pages. Disclosure only — never custodian " +
       "or auditor quality. Same six issuers. Risk verdict UNMEASURED. Not a rating.",
   },
-  {
-    axis: "ai-economy-index", family: "financial", kind: "declared-slot",
-    bench: "—", task: "deterministic index over cited public AI-economy series (compute price, investment, adoption, sector output)",
-    n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
-    status: "UNMEASURED",
-    evidence_url: "/interop/ai-economy-index.v0.1.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "CANDIDATE slot, UNMEASURED. Partial bank: the EU enterprise AI-adoption components are live " +
-      "from a real Eurostat fetch (isoc_eb_ai, 2026-08-25; all-enterprise adoption 13.48% in 2024). " +
-      "Compute-price, AI-investment and sector-output series are BANK GAPS — stated, not filled. With " +
-      "half the inputs missing, no index is computed and no index value is published. " +
-      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Eurostat components remain " +
-      "as reference inputs (13.48% 2024). This slot stays UNMEASURED until the missing series + " +
-      "formula are published and a NEW signed card exists. Do not restore the v0.1 sticker. " +
-      "Board GET /api/gspc is authority.",
+    {
+    axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
+    bench: "Eurostat", task: "cited EU AI-adoption series (not an index)",
+    n: 2, n_unit: "public series",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-ai-adoption-components.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. " +
+      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
   },
   {
-    axis: "human-labour-index", family: "financial", kind: "declared-slot",
-    bench: "—", task: "deterministic index over cited public labour series (employment, hours, wages, displacement)",
-    n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
-    status: "UNMEASURED",
-    evidence_url: "/interop/human-labour-index.v0.1.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "CANDIDATE slot, UNMEASURED. Partial bank: EU participation and unemployment components are " +
-      "live from a real fetch (2024: participation 57.58%, unemployment 5.92%). Displacement " +
-      "indicators, wage series and worker-hours-by-AI-exposure are BANK GAPS — stated, not filled. No " +
-      "index is computed and none is published. " +
-      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Participation 57.58% and " +
-      "unemployment 5.92% remain as reference inputs. This slot stays UNMEASURED until the missing " +
-      "series + formula are published and a NEW signed card exists. Do not restore the v0.1 sticker.",
+    axis: "labour-components", family: "financial", kind: "deterministic-facts",
+    bench: "Eurostat", task: "cited EU labour series (not an index)",
+    n: 2, n_unit: "public series",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-labour-components.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. " +
+      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
   },
   {
-    axis: "humanoid-labour-index", family: "financial", kind: "declared-slot",
-    bench: "—", task: "deterministic index over cited deployment / utilisation series (installed fleet, hours worked, safety incidents)",
-    n: 0, n_unit: "nothing measured — no input bank exists at all",
-    status: "UNMEASURED",
-    colour: "#a3a3a3", hue: 0,
-    note: "CANDIDATE slot, UNMEASURED, and the emptiest of the eight: there is NO input bank and no " +
-      "live surface. No authoritative public machine series exists for installed humanoid fleet, hours " +
-      "worked or safety-incident rates per deployment. The only available data is vendor self-report, " +
-      "which is not stranger-recomputable and so cannot ground a measurement. A deployment registry is " +
-      "the prerequisite and is NOT BUILT. Carries no evidence_url because there is no evidence to link.",
+    axis: "humanoid-labour-index", family: "financial", kind: "deterministic-facts",
+    bench: "Disclosure", task: "named vendor publishes a dated deployment count on a stable URL? Y/N",
+    n: 8, n_unit: "frozen vendor URLs",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-humanoid-labour-index.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED " +
+      "inside the card. Vendor blogs are not a bank. Not an index.",
   },
 ];

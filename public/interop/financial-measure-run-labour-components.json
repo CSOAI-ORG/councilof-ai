@@ -1,0 +1,37 @@
+{
+ "schema": "csoai.financial-measure-run/0.2",
+ "axis": "labour-components",
+ "as_of": "2026-09-01T04:12:34Z",
+ "network": "public HTTP + XRPL MAINNET account_info/gateway_balances",
+ "issuers": "RLUSD, Ondo OUSG, OpenEden TBILL, Archax×abrdn, Braza USDB, Braza BBRL",
+ "n": 2,
+ "status": "MEASURED",
+ "risk_verdict": "UNMEASURED",
+ "rubric": "deterministic cited public series. Not an index. No formula file.",
+ "measured": [
+  {
+   "series": "EU participation rate",
+   "year": 2024,
+   "value": 57.58,
+   "unit": "%",
+   "surface": "/interop/human-labour-index.v0.1.json"
+  },
+  {
+   "series": "EU unemployment rate",
+   "year": 2024,
+   "value": 5.92,
+   "unit": "%",
+   "surface": "/interop/human-labour-index.v0.1.json"
+  }
+ ],
+ "honesty": "Facts MEASURED. Risk/compliance/quality UNMEASURED. Not a rating, not advice, not an endorsement. Self-declare is not attestation. No model, no accuracy, no leader.",
+ "index_formula": false,
+ "bank_gaps": [
+  "displacement",
+  "wages",
+  "hours-by-AI-exposure",
+  "published formula"
+ ],
+ "correction": "C-2026-0826-05 — do not restore MEASURED-INDEX-v0.1",
+ "content_id": "20b41e6c3f7a7ffffc9556b080c010c2f041953903617f0db15b0e0ac7df5a56"
+}

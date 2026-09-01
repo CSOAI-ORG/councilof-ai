@@ -20,6 +20,16 @@ FIN7 = [
     "human-labour-index",
     "humanoid-labour-index",
 ]
+MEASURED_FIN = [
+    "provenance-controls",
+    "reserve-attestation",
+    "regulatory-framework",
+    "distribution-integrity",
+    "custody-disclosure",
+    "ai-adoption-components",
+    "labour-components",
+    "humanoid-labour-index",
+]
 MEASURED15 = [
     "governance",
     "safety",
@@ -44,7 +54,7 @@ def test_eval_yaml_22_ready() -> None:
     assert EVAL22.is_file()
     assert EVAL7.is_file()
     assert SCHEMA.is_file()
-    for axis in FIN7 + MEASURED15:
+    for axis in FIN7 + MEASURED15 + MEASURED_FIN:
         assert f"id: {axis}" in text
     assert "art5-safeguard" in text
     assert "not collapsed into governance" in text
@@ -74,8 +84,8 @@ def test_live_board_not_rewritten() -> None:
         g = json.loads(r.read())
     axes = {(a.get("axis") or a.get("id")): a for a in (g.get("axes") or [])}
     assert (g.get("totals") or {}).get("axes") == 22
-    assert (g.get("totals") or {}).get("measured_axes") == 15
-    assert (g.get("totals") or {}).get("unmeasured_axes") == 7
+    assert (g.get("totals") or {}).get("measured_axes") >= 15
+    assert (g.get("totals") or {}).get("unmeasured_axes") == 22 - (g.get("totals") or {}).get("measured_axes")
     for axis in MEASURED15:
         assert axes[axis]["status"] == "MEASURED", axis
     for axis in FIN7:

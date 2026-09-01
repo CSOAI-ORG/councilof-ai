@@ -58,32 +58,42 @@ axes:
     status: MEASURED
     rubric: "facts pane; n=issuer accounts; not a model comparison"
   - id: reserve-attestation
-    status: UNMEASURED
-    n: 0
-    rubric: "is a third-party reserve attestation publicly published and current?"
+    status: MEASURED
+    n: 6
+    rubric: "third-party attestation published and current? facts only; risk UNMEASURED"
   - id: regulatory-framework
-    status: UNMEASURED
-    n: 0
-    rubric: "is the governing regime declared and confirmable?"
+    status: MEASURED
+    n: 6
+    rubric: "regime declared and confirmable? not compliant"
   - id: distribution-integrity
-    status: UNMEASURED
-    n: 0
-    rubric: "represented vs distributed never mixed"
+    status: MEASURED
+    n: 6
+    rubric: "chain supply measured; represented>>distributed UNCHECKABLE without same-unit pair"
   - id: custody-disclosure
-    status: UNMEASURED
-    n: 0
-    rubric: "are a custodian and an auditor named and confirmable?"
+    status: MEASURED
+    n: 6
+    rubric: "custodian/auditor named and confirmable? disclosure only"
+  - id: ai-adoption-components
+    status: MEASURED
+    n: 2
+    rubric: "cited Eurostat series; not an index; compute_composite false"
+    compute_composite: false
+  - id: labour-components
+    status: MEASURED
+    n: 2
+    rubric: "cited labour series; not an index; compute_composite false"
+    compute_composite: false
+  - id: humanoid-labour-index
+    status: MEASURED
+    n: 8
+    rubric: "dated deployment count on a stable URL? Y/N; fleet size UNMEASURED"
   - id: ai-economy-index
     status: UNMEASURED
     n: 0
-    rubric: "cited components only; no composite"
+    rubric: "withdrawn index sticker C-2026-0826-05; see ai-adoption-components"
     compute_composite: false
   - id: human-labour-index
     status: UNMEASURED
     n: 0
-    rubric: "cited components only; no composite"
+    rubric: "withdrawn index sticker C-2026-0826-05; see labour-components"
     compute_composite: false
-  - id: humanoid-labour-index
-    status: UNMEASURED
-    n: 0
-    rubric: "NOT_BUILT; no input bank"

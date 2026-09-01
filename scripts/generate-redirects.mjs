@@ -113,6 +113,8 @@ const EXISTING = [
   // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
   "/plugin                 /tools                       301",
   "/plugin/                /tools                       301",
+  "/gspc/ai-economy-index     /gspc-scoreboard#ai-adoption-components  308",
+  "/gspc/human-labour-index   /gspc-scoreboard#labour-components       308",
   "/scoreboard             /gspc-scoreboard             308",
   "/scorecard              /gspc-scoreboard             308",
   "/scorecard/             /gspc-scoreboard             308",
