@@ -7,9 +7,10 @@ import { spawnSync } from "node:child_process";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const bodyDir = join(__dirname, "_gate_body");
 const n = 4;
-const code = Array.from({ length: n }, (_, i) =>
-  readFileSync(join(bodyDir, `part${i}.txt`), "utf8")
-).join("");
+const code = Array.from({ length: n }, (_, i) => {
+  const b64 = readFileSync(join(bodyDir, `part${i}.b64`), "utf8").trim();
+  return Buffer.from(b64, "base64").toString("utf8");
+}).join("");
 mkdirSync(bodyDir, { recursive: true });
 const assembled = join(bodyDir, "_assembled.mjs");
 writeFileSync(assembled, code);
