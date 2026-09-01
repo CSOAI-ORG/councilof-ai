@@ -23,7 +23,6 @@ import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
 const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
-const RankingsBridge = lazy(() => import("./pages/AgUiBridge").then((m) => ({ default: m.RankingsBridge })));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -79,6 +78,7 @@ const Pricing = lazy(() => import("./pages/Pricing"));
 const Products = lazy(() => import("./pages/Products"));
 const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const Blog = lazy(() => import("./pages/Blog"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
@@ -383,6 +383,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/plans": "Plans | CSOAI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
+  "/leaderboard": "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI",
   "/gspc-verify": "GSPC Verify | CSOAI",
   "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
@@ -705,7 +706,7 @@ function App() {
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
-                  <Route path="/rankings" component={RankingsBridge} />
+                  <Route path="/rankings">{() => <Redirect to="/leaderboard" />}</Route>
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
@@ -960,7 +961,7 @@ function App() {
                   <Route path="/products" component={Products} />
                   <Route path="/catalog">{() => <Redirect to="/products" />}</Route>
                   <Route path="/pricing-legacy" component={Pricing} />
-                  <Route path="/leaderboard" component={WatchdogLeaderboard} />
+                  <Route path="/leaderboard" component={Leaderboard} />
                   <Route path="/regulator" component={RegulatorDashboard} />
                   <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />

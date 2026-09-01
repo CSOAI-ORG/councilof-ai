@@ -1289,8 +1289,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/leaderboard",
-  "comp": "WatchdogLeaderboard",
-  "title": "Watchdog Leaderboard"
+  "comp": "Leaderboard",
+  "title": "Leaderboard"
  },
  {
   "path": "/learn",
@@ -1714,8 +1714,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/rankings",
-  "comp": "RankingsBridge",
-  "title": "Rankings Bridge"
+  "comp": "Redirect",
+  "title": "Rankings"
  },
  {
   "path": "/rating-the-raters",
