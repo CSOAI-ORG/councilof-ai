@@ -110,21 +110,124 @@ We implement SCITT RFC 9942/9943; that is not a "report".
 
 ## TIER A (owner login)
 
-HN Show-HN, r/LocalLLaMA, dev.to, Medium, Hashnode, LinkedIn, X: same one-paragraph body as press. One post each. Never spam.
+Same floors as TIER S. One post each. Never spam. Never post as the agent. Verify: https://councilof.ai/gspc-verify
 
-OpenML / W&B / Kaggle: dataset pointer to the live board JSON, not a score.
+### OpenML
+- Open: https://www.openml.org/
+- Dataset pointer to live `GET https://councilof.ai/api/gspc`, not a score.
 
-mcp.directory / Cline / Zed / Windsurf: remote `https://councilof.ai/mcp`.
+### W&B
+- Open: https://wandb.ai/
+- Dataset/artifact pointer to the live board JSON, not a score.
 
-Ars / IEEE / MIT-TR / VentureBeat / Register: same press body, nicholas@csoai.org.
+### Kaggle
+- Open: https://www.kaggle.com/
+- Dataset pointer to the live board JSON, not a score. Do not invent a leaderboard win.
 
-G2 / Capterra / AlternativeTo: category measurement / AI governance. RaaS not SaaS.
+### mcp.directory
+- Open: https://mcp.directory/
+- Submit Server. Repo `https://github.com/CSOAI-ORG/councilof-ai`. npm `csoai-gspc-mcp`. Remote `https://councilof.ai/mcp`. Email nicholas@csoai.org.
+
+### Cline
+- Open: https://cline.bot/
+- Marketplace listing. Remote `https://councilof.ai/mcp`. npx `npx -y csoai-gspc-mcp@0.1.1`
+
+### Zed
+- Open: https://zed.dev/
+- Extension/directory listing. Same remote `https://councilof.ai/mcp`.
+
+### Windsurf
+- Open: https://codeium.com/windsurf
+- Directory listing. Same remote `https://councilof.ai/mcp`.
+
+### HN Show-HN
+- Open: https://news.ycombinator.com/submit
+- Owner account. Title: Show HN: live AI measurement board (not a certificate). Body: press body above.
+
+### r/LocalLLaMA
+- Open: https://www.reddit.com/r/LocalLLaMA/
+- Owner reddit. One post. Same press body. Never spam.
+
+### dev.to
+- Open: https://dev.to/new
+- Owner account. Same one-paragraph press body.
+
+### Medium
+- Open: https://medium.com/new-story
+- Owner account. Same press body.
+
+### Hashnode
+- Open: https://hashnode.com/
+- Owner account. Same press body.
+
+### LinkedIn
+- Open: https://www.linkedin.com/
+- Owner identity. Same press body. Never spam.
+
+### X
+- Open: https://x.com/
+- Owner identity. Same press body. Never spam.
+
+### Ars
+- Open: https://arstechnica.com/
+- From: nicholas@csoai.org (never Gmail). Same subject + press body.
+
+### IEEE
+- Open: https://spectrum.ieee.org/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### MIT-TR
+- Open: https://www.technologyreview.com/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### VentureBeat
+- Open: https://venturebeat.com/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### Register
+- Open: https://www.theregister.com/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### G2
+- Open: https://www.g2.com/
+- Vendor login. Category measurement / AI governance. RaaS not SaaS.
+
+### Capterra
+- Open: https://www.capterra.com/
+- Vendor login. Category measurement / AI governance. RaaS not SaaS.
+
+### AlternativeTo
+- Open: https://alternativeto.net/
+- Account. Category measurement / AI governance. RaaS not SaaS.
 
 ---
 
 ## TIER B
 
-F6S, Gust, EU-Startups, Failory, Indie Hackers, niche AI dirs, UK tech media: same paste. Owner sends.
+Same paste. Owner sends. Never spam. Verify: https://councilof.ai/gspc-verify
+
+### F6S
+- Open: https://www.f6s.com/
+
+### Gust
+- Open: https://gust.com/
+
+### EU-Startups
+- Open: https://www.eu-startups.com/
+
+### Failory
+- Open: https://www.failory.com/
+
+### Indie Hackers
+- Open: https://www.indiehackers.com/
+
+### niche AI dirs
+- Open: https://councilof.ai/gspc-verify
+- Batch pointer only. Never spam.
+
+### UK tech media
+- Open: https://councilof.ai/gspc-verify
+- From: nicholas@csoai.org never Gmail.
 
 ---
 
