@@ -3,11 +3,19 @@
   "kind": "leftover-honesty",
   "measured": false,
   "signed": false,
-  "never": ["MEASURED stamp", "certification", "issuer 7", "17 SWIFT clients"],
+  "never": [
+    "MEASURED stamp",
+    "certification",
+    "issuer 7",
+    "17 SWIFT clients",
+    "invent scores",
+    "zero-fill",
+    "restore MEASURED-INDEX-v0.1"
+  ],
   "fetched": "2026-08-31T08:30:00+01:00",
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
-    "totals": "22 axis · 15 measured · 7 unmeasured",
+    "totals": "22 axis · 22 measured · 0 unmeasured",
     "unique_n": 30,
     "unique_n_state": "UNSIGNED until n≥30 + 4way + keystone",
     "provenance_controls": {
@@ -15,7 +23,8 @@
       "n": 6,
       "n_unit": "issuer accounts, not bank items",
       "coverage": "6 of 16 instruments named in the registry"
-    }
+    },
+    "note": "After #1077 LIVE GET is 22·22·0. Cite totals.public_count."
   },
   "have_xrpl_issuers": [
     {
@@ -74,7 +83,11 @@
   },
   "swift_17_targets": {
     "kind": "TARGETS",
-    "not": ["clients", "MEASURED", "membership"],
+    "not": [
+      "clients",
+      "MEASURED",
+      "membership"
+    ],
     "press": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
     "press_date": "2026-07-09",
     "official_html_body": "UNCHECKABLE",
@@ -99,20 +112,16 @@
       "Wells Fargo"
     ]
   },
-  "empty_slots_unmeasured": [
-    "reserve-attestation",
-    "regulatory-framework",
-    "distribution-integrity",
-    "custody-disclosure",
-    "ai-economy-index",
-    "human-labour-index",
-    "humanoid-labour-index"
-  ],
+  "empty_slots_unmeasured": [],
   "cards_note_leftover": {
     "api_cards_count": 336,
     "card_index_pack": 335,
     "api_note_still_says": 313,
-    "do_not_rollback_to": [150, 313]
+    "do_not_rollback_to": [
+      150,
+      313
+    ]
   },
-  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n≥30 + 4way + keystone."
+  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n≥30 + 4way + keystone.",
+  "empty_slots_note": "Pre-#1077 list retired. LIVE unmeasured_axes=0. Risk verdict still UNMEASURED on financial facts."
 }
