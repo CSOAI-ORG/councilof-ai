@@ -27,7 +27,7 @@ export default function LegacyBridge() {
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Legacy Bridge</h1>
           <p className="mt-5 max-w-2xl text-lg text-emerald-50/90">COBOL and mainframe systems — securely tunneled into the agentic economy and governed by Layer 0. The trillions of lines still running the world, finally able to act through trusted AI without a rewrite.</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open CobolBridge SPEC (domain parked) →</a>
+            <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl bg-emerald-400 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-300">Open CobolBridge SPEC (in build) →</a>
             <a href="/trust-center" className="rounded-xl border border-emerald-300/40 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">See all 8 Layer 0 controls →</a>
           </div>
         </div>

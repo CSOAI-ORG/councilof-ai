@@ -5,12 +5,9 @@
 # this workflow NEVER laptop-signs and never mills Hub listings.
 name: eval-ci
 on:
+  # Bank gate on every PR so a silent bank edit cannot hide behind a path-filter miss.
+  # Delta emit stays cheap (no GPU; number UNCHECKABLE).
   pull_request:
-    paths:
-      - "public/datasets/**"          # a watched frozen bank
-      - "harness/owem/card_pipeline.py"  # the grader
-      - "packages/eval-ci/**"
-      - ".github/workflows/eval-ci.yml"
   push:
     branches: [master]
     paths:

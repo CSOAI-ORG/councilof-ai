@@ -59,7 +59,7 @@ export const navigation: NavGroup[] = [
       { name: 'Financial axis', href: '/financial-axes', description: 'The declared financial slots, coverage stated first — never a credit rating' },
       { name: 'Distribution integrity', href: '/distribution-integrity', description: 'Represented is not distributed: the committed-versus-distributed spread, coverage-first and UNMEASURED' },
       { name: 'Verify embed / white-label', href: '/embed', description: 'A self-verifying badge for your own site — WebCrypto checks the signature in the reader’s browser' },
-      { name: 'Legacy modernization on-ramp', href: '/cobolbridge', description: 'COBOL lineage under DORA / Basel / SOX carried into signed, continuous evidence' },
+      { name: 'Legacy modernization on-ramp', href: '/cobolbridge', description: 'In build — COBOL lineage under DORA / Basel / SOX. Apex 522. SPEC only, not a live mill' },
       { section: 'Who it is for', name: 'Enterprise', href: '/for/enterprise', description: 'Measure a portfolio of systems against the duties that actually bind them' },
       { name: 'Insurers and underwriters', href: '/insurers', description: 'An observed behavioural sample with a stated n and interval — something a risk model can price' },
       { name: 'Government and regulators', href: '/government', description: 'Independent measurement with a published method. We issue no conformity mark' },

@@ -48,7 +48,7 @@ export const onRequestGet: PagesFunction = async () => {
     universe_note: t.universe_note,
     honesty: t.honest_count_statement,
     sources: t.sources,
-    cobolbridge_ai: { http: 522, note: "Infra. Not this tape. Do not demo a 522." },
+    cobolbridge_ai: { http: 522, state: "IN_BUILD", note: "In build. Apex 522 is infra, not this tape. Do not demo." },
     rows: t.rows,
   });
 };
