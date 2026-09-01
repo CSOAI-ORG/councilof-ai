@@ -66,7 +66,10 @@ const boardCounts = () => {
   const measured = m.length;                  // a slot with a real run behind it
   const quotable = AXES.length;               // every slot on the board, gap included
   const unmeasured = quotable - measured;
-  const publicCount = `${quotable} axes · ${measured} measured`;
+  // "axis", never "axes" (owner display ruling), and character-for-character the
+  // grammar functions/api/gspc.ts serves as totals.public_count — so a README
+  // badge and GET /api/gspc can never drift apart by wording.
+  const publicCount = `${quotable} axis · ${measured} measured`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
     ? `${publicCount}; jail floor untested`
