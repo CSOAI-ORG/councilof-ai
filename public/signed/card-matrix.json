@@ -10,16 +10,16 @@
   "what_this_does_not_establish": "That a model is good, or better than another. A cell is one score on one small bank on one date. Several of these banks are small enough that a single item moves the number visibly, most cells in the matrix are empty, and a score of zero is a measured zero rather than a missing measurement.",
   "display_name_policy": {
     "rule": "A model whose recorded name carries a retired internal brand is indexed under a neutral key. Its measured work is kept and counted; only the label is withheld.",
-    "withheld_names": 1,
+    "withheld_names": 4,
     "where_the_name_still_lives": "In the card's own body, under the signature. The card is the evidence and it was not edited — editing it would invalidate every id downstream of it."
   },
   "counts": {
-    "cards_read": 313,
-    "cells": 313,
-    "models": 61,
+    "cards_read": 335,
+    "cells": 335,
+    "models": 64,
     "axes": 16,
-    "signed_cells": 313,
-    "possible_cells": 976,
+    "signed_cells": 335,
+    "possible_cells": 1024,
     "skipped_cards": 0,
     "coverage_note": "cells out of possible_cells. Most pairs were never measured, and the empty ones are the honest part of the picture — they are shown, not hidden."
   },
@@ -43,19 +43,19 @@
     },
     {
       "id": "care-refusal-help",
-      "cards": 25,
-      "models": 25,
-      "mean_accuracy": 0.9886,
+      "cards": 27,
+      "models": 27,
+      "mean_accuracy": 0.9709,
       "best_accuracy": 1,
-      "as_of": "2026-08-19T09:24:39.166922+00:00"
+      "as_of": "2026-08-19T09:24:39.167557+00:00"
     },
     {
       "id": "care-refusal-protect",
-      "cards": 25,
-      "models": 25,
-      "mean_accuracy": 0.2942,
+      "cards": 27,
+      "models": 27,
+      "mean_accuracy": 0.3226,
       "best_accuracy": 0.7742,
-      "as_of": "2026-08-19T09:24:39.166880+00:00"
+      "as_of": "2026-08-19T09:24:39.167509+00:00"
     },
     {
       "id": "gov",
@@ -75,51 +75,51 @@
     },
     {
       "id": "gspc-conformance",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.4444,
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.448,
       "best_accuracy": 0.6364,
-      "as_of": "2026-08-19T09:24:39.166724+00:00"
+      "as_of": "2026-08-19T09:24:39.167771+00:00"
     },
     {
       "id": "gspc-continuity",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.3675,
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.3623,
       "best_accuracy": 0.4615,
-      "as_of": "2026-08-19T09:24:39.166830+00:00"
+      "as_of": "2026-08-19T09:24:39.167919+00:00"
     },
     {
       "id": "gspc-governance",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.209,
-      "best_accuracy": 0.3684,
-      "as_of": "2026-08-19T09:24:39.166616+00:00"
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.2442,
+      "best_accuracy": 0.65,
+      "as_of": "2026-08-19T09:24:39.167611+00:00"
     },
     {
       "id": "gspc-openness",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.5598,
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.5531,
       "best_accuracy": 0.6923,
-      "as_of": "2026-08-19T09:24:39.166762+00:00"
+      "as_of": "2026-08-19T09:24:39.167857+00:00"
     },
     {
       "id": "gspc-provenance",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.5774,
-      "best_accuracy": 0.8,
-      "as_of": "2026-08-19T09:24:39.166688+00:00"
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.5969,
+      "best_accuracy": 0.8571,
+      "as_of": "2026-08-19T09:24:39.167692+00:00"
     },
     {
       "id": "gspc-safety",
-      "cards": 18,
-      "models": 18,
-      "mean_accuracy": 0.5714,
+      "cards": 21,
+      "models": 21,
+      "mean_accuracy": 0.5984,
       "best_accuracy": 1,
-      "as_of": "2026-08-19T09:24:39.166652+00:00"
+      "as_of": "2026-08-19T09:24:39.167654+00:00"
     },
     {
       "id": "jail-escape-detection",
@@ -1077,6 +1077,58 @@
       "mean_accuracy": 0.4938,
       "best_accuracy": 1,
       "as_of": "2026-08-19T09:24:39.166922+00:00"
+    },
+    {
+      "id": "withheld-name-2",
+      "name_published": false,
+      "cards": 8,
+      "axes": [
+        "care-refusal-help",
+        "care-refusal-protect",
+        "gspc-conformance",
+        "gspc-continuity",
+        "gspc-governance",
+        "gspc-openness",
+        "gspc-provenance",
+        "gspc-safety"
+      ],
+      "mean_accuracy": 0.6587,
+      "best_accuracy": 0.9231,
+      "as_of": "2026-08-19T09:24:39.167230+00:00"
+    },
+    {
+      "id": "withheld-name-3",
+      "name_published": false,
+      "cards": 8,
+      "axes": [
+        "care-refusal-help",
+        "care-refusal-protect",
+        "gspc-conformance",
+        "gspc-continuity",
+        "gspc-governance",
+        "gspc-openness",
+        "gspc-provenance",
+        "gspc-safety"
+      ],
+      "mean_accuracy": 0.4697,
+      "best_accuracy": 0.8571,
+      "as_of": "2026-08-19T09:24:39.167557+00:00"
+    },
+    {
+      "id": "withheld-name-4",
+      "name_published": false,
+      "cards": 6,
+      "axes": [
+        "gspc-conformance",
+        "gspc-continuity",
+        "gspc-governance",
+        "gspc-openness",
+        "gspc-provenance",
+        "gspc-safety"
+      ],
+      "mean_accuracy": 0.5925,
+      "best_accuracy": 1,
+      "as_of": "2026-08-19T09:24:39.167919+00:00"
     }
   ],
   "cells": [
@@ -1664,6 +1716,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-4",
+      "axis": "gspc-conformance",
+      "accuracy": 0.5,
+      "created": "2026-08-19T09:24:39.167771+00:00",
+      "card": "29a5b81b898ea75a7740b3f6da822967f0e06671da03bb5a53b83e27883ba76d",
+      "card_url": "/signed/cards/29a5b81b898ea75a7740b3f6da822967f0e06671da03bb5a53b83e27883ba76d.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov-mistral:latest",
       "axis": "gspc-openness",
       "accuracy": 0.4615,
@@ -1994,6 +2057,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-3",
+      "axis": "care-refusal-protect",
+      "accuracy": 0.6129,
+      "created": "2026-08-19T09:24:39.167509+00:00",
+      "card": "3f5a4f97b0fbec903d3f2d826e0fdb25fc57308db8533cd0c378b3d9b94e2f2e",
+      "card_url": "/signed/cards/3f5a4f97b0fbec903d3f2d826e0fdb25fc57308db8533cd0c378b3d9b94e2f2e.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "clan-law-plain:latest",
       "axis": "care-refusal-help",
       "accuracy": 1,
@@ -2055,6 +2129,17 @@
       "created": "2026-08-19T09:24:39.160202+00:00",
       "card": "45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813",
       "card_url": "/signed/cards/45724650575f8f40363728b42c54c5683fffab59a10d65e2991b666ba4d4a813.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-3",
+      "axis": "gspc-openness",
+      "accuracy": 0.3846,
+      "created": "2026-08-19T09:24:39.167436+00:00",
+      "card": "459f98159b09d3cd79c33a58157b02c467e990b4be514ba8bef3dd32598f3cb4",
+      "card_url": "/signed/cards/459f98159b09d3cd79c33a58157b02c467e990b4be514ba8bef3dd32598f3cb4.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -2368,12 +2453,34 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-2",
+      "axis": "gspc-governance",
+      "accuracy": 0.65,
+      "created": "2026-08-19T09:24:39.166965+00:00",
+      "card": "5327f30b4857d8fd31e55bdd8b764406922624fa23e38eaf25b3cd5e32d78def",
+      "card_url": "/signed/cards/5327f30b4857d8fd31e55bdd8b764406922624fa23e38eaf25b3cd5e32d78def.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "qwen3:4b",
       "axis": "swag-30",
       "accuracy": 0,
       "created": "2026-08-19T09:24:39.162429+00:00",
       "card": "53bf3e8b0e9806f7057d2e7e05c63dde7428ffc965f1043f93631aaa60153ccf",
       "card_url": "/signed/cards/53bf3e8b0e9806f7057d2e7e05c63dde7428ffc965f1043f93631aaa60153ccf.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-2",
+      "axis": "care-refusal-protect",
+      "accuracy": 0.7419,
+      "created": "2026-08-19T09:24:39.167192+00:00",
+      "card": "5449f85b5d39af3e7cdd0b4437e0522344559df1f577023ca81d8e96d673095d",
+      "card_url": "/signed/cards/5449f85b5d39af3e7cdd0b4437e0522344559df1f577023ca81d8e96d673095d.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -2544,6 +2651,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-3",
+      "axis": "gspc-provenance",
+      "accuracy": 0.5333,
+      "created": "2026-08-19T09:24:39.167363+00:00",
+      "card": "6171fc15c50ad03aef84309ffe505ba38d43f7f56232af48796d184bbfc5566c",
+      "card_url": "/signed/cards/6171fc15c50ad03aef84309ffe505ba38d43f7f56232af48796d184bbfc5566c.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "llama3.2:3b",
       "axis": "gspc-provenance",
       "accuracy": 0.8,
@@ -2654,6 +2772,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-3",
+      "axis": "gspc-continuity",
+      "accuracy": 0.3077,
+      "created": "2026-08-19T09:24:39.167473+00:00",
+      "card": "6b8b417eb80ea0c731f720360e3d12e08ca1e0a4f88bff0ce3b549da2cc30e6b",
+      "card_url": "/signed/cards/6b8b417eb80ea0c731f720360e3d12e08ca1e0a4f88bff0ce3b549da2cc30e6b.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "withheld-name-1",
       "axis": "care-refusal-protect",
       "accuracy": 0.4194,
@@ -2720,6 +2849,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-3",
+      "axis": "care-refusal-help",
+      "accuracy": 0.8571,
+      "created": "2026-08-19T09:24:39.167557+00:00",
+      "card": "7365312ab58b6d2b0427c3cb823527ae0eaf72a4afcc1c81018466261e722cf0",
+      "card_url": "/signed/cards/7365312ab58b6d2b0427c3cb823527ae0eaf72a4afcc1c81018466261e722cf0.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov6-agency-v3-light:latest",
       "axis": "arc-30",
       "accuracy": 0,
@@ -2775,12 +2915,45 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-2",
+      "axis": "gspc-continuity",
+      "accuracy": 0.3846,
+      "created": "2026-08-19T09:24:39.167155+00:00",
+      "card": "7703e66781360bea814f3589f566e85fc45298a45d25b0376f3ccab827627e4a",
+      "card_url": "/signed/cards/7703e66781360bea814f3589f566e85fc45298a45d25b0376f3ccab827627e4a.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov6-agency-v3-light:latest",
       "axis": "mmlu-30",
       "accuracy": 0,
       "created": "2026-08-19T09:24:39.168699+00:00",
       "card": "77d52bb2fad1da8aaf27ac3e1edc4826875d83ca950bfd928af4aa5732074fdd",
       "card_url": "/signed/cards/77d52bb2fad1da8aaf27ac3e1edc4826875d83ca950bfd928af4aa5732074fdd.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-2",
+      "axis": "gspc-provenance",
+      "accuracy": 0.8571,
+      "created": "2026-08-19T09:24:39.167042+00:00",
+      "card": "78ca73da4697e4733a3e1f67b10e34d78c3ee762dd2b9f9528325dfdac840b3c",
+      "card_url": "/signed/cards/78ca73da4697e4733a3e1f67b10e34d78c3ee762dd2b9f9528325dfdac840b3c.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-3",
+      "axis": "gspc-governance",
+      "accuracy": 0.25,
+      "created": "2026-08-19T09:24:39.167285+00:00",
+      "card": "79159bae8feedf33b837612e985d9f252af348fd7d857f210ce7388e0a1d3b88",
+      "card_url": "/signed/cards/79159bae8feedf33b837612e985d9f252af348fd7d857f210ce7388e0a1d3b88.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -2984,6 +3157,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-4",
+      "axis": "gspc-governance",
+      "accuracy": 0.4667,
+      "created": "2026-08-19T09:24:39.167611+00:00",
+      "card": "8a23cd9d29771a9067226006a1c4b3d88660775d0d44d048bd24cd150cdc8139",
+      "card_url": "/signed/cards/8a23cd9d29771a9067226006a1c4b3d88660775d0d44d048bd24cd150cdc8139.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov6-logic-v3-light:latest",
       "axis": "mmlu-30",
       "accuracy": 0,
@@ -3067,6 +3251,17 @@
       "created": "2026-08-19T09:24:39.163078+00:00",
       "card": "8fbf552908b905f6ec6fcc1c04e1b30cbcdd8ae5d9434acdd7cfff00b5337509",
       "card_url": "/signed/cards/8fbf552908b905f6ec6fcc1c04e1b30cbcdd8ae5d9434acdd7cfff00b5337509.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-4",
+      "axis": "gspc-safety",
+      "accuracy": 1,
+      "created": "2026-08-19T09:24:39.167654+00:00",
+      "card": "8fc4e0934c91222ad247179af099d09c455afaf742a1ecd534cd7156781e871c",
+      "card_url": "/signed/cards/8fc4e0934c91222ad247179af099d09c455afaf742a1ecd534cd7156781e871c.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -3391,6 +3586,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-2",
+      "axis": "care-refusal-help",
+      "accuracy": 0.6429,
+      "created": "2026-08-19T09:24:39.167230+00:00",
+      "card": "9e51e3abdb4a69519a0103f3a5b30eedb89a4ce36fc714b813d5ad4f0ab1f68d",
+      "card_url": "/signed/cards/9e51e3abdb4a69519a0103f3a5b30eedb89a4ce36fc714b813d5ad4f0ab1f68d.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "phi4:14b",
       "axis": "gov",
       "accuracy": 0,
@@ -3562,6 +3768,17 @@
       "created": "2026-08-19T09:24:39.161443+00:00",
       "card": "a8d59ff636083d515aad8a405eeff4be22a5908b52eb8b4ae413c31a41d5098b",
       "card_url": "/signed/cards/a8d59ff636083d515aad8a405eeff4be22a5908b52eb8b4ae413c31a41d5098b.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-2",
+      "axis": "gspc-conformance",
+      "accuracy": 0.4545,
+      "created": "2026-08-19T09:24:39.167080+00:00",
+      "card": "a984cfb7eb14b6d8851bd9e69be6b86fccbcf9900877e1304dedff8f5a54579c",
+      "card_url": "/signed/cards/a984cfb7eb14b6d8851bd9e69be6b86fccbcf9900877e1304dedff8f5a54579c.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -3798,6 +4015,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-4",
+      "axis": "gspc-continuity",
+      "accuracy": 0.3,
+      "created": "2026-08-19T09:24:39.167919+00:00",
+      "card": "b77fde240e060ab02670c6b3bac7729da56c8f74d990a3ea4db04630b553d7b2",
+      "card_url": "/signed/cards/b77fde240e060ab02670c6b3bac7729da56c8f74d990a3ea4db04630b553d7b2.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov6-relationality-v3-light:latest",
       "axis": "gsm8k-30",
       "accuracy": 0.5333,
@@ -3903,6 +4131,17 @@
       "created": "2026-08-19T09:24:39.162002+00:00",
       "card": "c14e8a400dc80506f984e3057ff6908bfa1b85ede7ab41762d3377be5c727180",
       "card_url": "/signed/cards/c14e8a400dc80506f984e3057ff6908bfa1b85ede7ab41762d3377be5c727180.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-4",
+      "axis": "gspc-openness",
+      "accuracy": 0.5385,
+      "created": "2026-08-19T09:24:39.167857+00:00",
+      "card": "c1e04a76b3054661054a7a317c0ff5a3d1eabd9883a54856f299983d188e14b0",
+      "card_url": "/signed/cards/c1e04a76b3054661054a7a317c0ff5a3d1eabd9883a54856f299983d188e14b0.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -4029,6 +4268,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-3",
+      "axis": "gspc-conformance",
+      "accuracy": 0.4545,
+      "created": "2026-08-19T09:24:39.167399+00:00",
+      "card": "ce0f47973e207eb1c15d162bca83df764f7a5beb8355c1754aa7124451d8bfe9",
+      "card_url": "/signed/cards/ce0f47973e207eb1c15d162bca83df764f7a5beb8355c1754aa7124451d8bfe9.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "sov-draw-sovereignty:latest",
       "axis": "care-refusal-help",
       "accuracy": 1,
@@ -4123,6 +4373,17 @@
       "created": "2026-08-19T09:24:39.160314+00:00",
       "card": "d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0",
       "card_url": "/signed/cards/d353007a873ad527cb39e99ef2ac8a77e0fe917f1affe124b0aa379c51c427e0.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-3",
+      "axis": "gspc-safety",
+      "accuracy": 0.3571,
+      "created": "2026-08-19T09:24:39.167326+00:00",
+      "card": "d5bf9ca1663e8c0f14ede9542ae99547bcd181872f467de11f59401f4c94ba3a",
+      "card_url": "/signed/cards/d5bf9ca1663e8c0f14ede9542ae99547bcd181872f467de11f59401f4c94ba3a.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
@@ -4326,6 +4587,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-2",
+      "axis": "gspc-openness",
+      "accuracy": 0.6154,
+      "created": "2026-08-19T09:24:39.167118+00:00",
+      "card": "ecab28b1d2d1d3d82192270906b9d8f45afc753612cddcf7757ed7b25414234b",
+      "card_url": "/signed/cards/ecab28b1d2d1d3d82192270906b9d8f45afc753612cddcf7757ed7b25414234b.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "deepseek-r1:8b",
       "axis": "arc-30",
       "accuracy": 0,
@@ -4491,6 +4763,17 @@
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
     },
     {
+      "model": "withheld-name-2",
+      "axis": "gspc-safety",
+      "accuracy": 0.9231,
+      "created": "2026-08-19T09:24:39.167004+00:00",
+      "card": "fa2b3a1763bc07a97a52f5c0ea98ebb704ff66d5163e973e32761375979f9cff",
+      "card_url": "/signed/cards/fa2b3a1763bc07a97a52f5c0ea98ebb704ff66d5163e973e32761375979f9cff.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
       "model": "deepseek-r1:8b",
       "axis": "swag-30",
       "accuracy": 0,
@@ -4519,6 +4802,17 @@
       "created": "2026-08-19T09:24:39.157597+00:00",
       "card": "fe8f09365fc702e65bedbb261349d6d1f838fd1252772b0a81d56f21fe98d039",
       "card_url": "/signed/cards/fe8f09365fc702e65bedbb261349d6d1f838fd1252772b0a81d56f21fe98d039.json",
+      "signed": true,
+      "alg": "Ed25519",
+      "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"
+    },
+    {
+      "model": "withheld-name-4",
+      "axis": "gspc-provenance",
+      "accuracy": 0.75,
+      "created": "2026-08-19T09:24:39.167692+00:00",
+      "card": "ffcac15c00fd9735d0f933d6560484b540852a026715d9cc33229764c2a6cb23",
+      "card_url": "/signed/cards/ffcac15c00fd9735d0f933d6560484b540852a026715d9cc33229764c2a6cb23.json",
       "signed": true,
       "alg": "Ed25519",
       "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38"

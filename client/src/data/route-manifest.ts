@@ -4,8 +4,8 @@ export interface RouteEntry { path: string; comp: string; title: string }
 export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/",
-  "comp": "NewHomeV3",
-  "title": "New Home"
+  "comp": "HomeVerify",
+  "title": "Home Verify"
  },
  {
   "path": "/404",
@@ -153,6 +153,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Analytics Dashboard"
  },
  {
+  "path": "/answers",
+  "comp": "AnswersIndex",
+  "title": "Answers Index"
+ },
+ {
   "path": "/api-docs",
   "comp": "ApiDocs",
   "title": "Api Docs"
@@ -203,9 +208,14 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Badges Page"
  },
  {
+  "path": "/badge",
+  "comp": "BadgeKit",
+  "title": "Badge Kit"
+ },
+ {
   "path": "/badges",
-  "comp": "BadgesPage",
-  "title": "Badges Page"
+  "comp": "Redirect",
+  "title": "Badges"
  },
  {
   "path": "/battlecards",
@@ -628,6 +638,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Documentation"
  },
  {
+  "path": "/doctrine",
+  "comp": "Doctrine",
+  "title": "Doctrine"
+ },
+ {
   "path": "/dora",
   "comp": "Dora",
   "title": "Dora"
@@ -918,6 +933,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Faq Page"
  },
  {
+  "path": "/get-listed",
+  "comp": "GetListed",
+  "title": "Get Listed"
+ },
+ {
   "path": "/global-ai-regulation",
   "comp": "GlobalAIRegulation",
   "title": "Global AIRegulation"
@@ -1036,6 +1056,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/gspc-verify",
   "comp": "GSPCVerify",
   "title": "GSPCVerify"
+ },
+ {
+  "path": "/gspc/jail",
+  "comp": "JailFolder",
+  "title": "Jail Folder"
  },
  {
   "path": "/guides/eu-ai-act",
@@ -1328,6 +1353,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Library"
  },
  {
+  "path": "/licence-manifest",
+  "comp": "LicenceManifest",
+  "title": "Licence Manifest"
+ },
+ {
   "path": "/licensing-agreement",
   "comp": "LicensingAgreement",
   "title": "Licensing Agreement"
@@ -1583,6 +1613,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Playbooks"
  },
  {
+  "path": "/plugin",
+  "comp": "ToolsPage",
+  "title": "Tools Page"
+ },
+ {
   "path": "/poc",
   "comp": "PocShowcase",
   "title": "Poc Showcase"
@@ -1694,7 +1729,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/readiness-assessment",
-  "comp": "ReadinessAssessment",
+  "comp": "Redirect",
   "title": "Readiness Assessment"
  },
  {
@@ -2000,7 +2035,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/sovereign-town",
   "comp": "Redirect",
-  "title": "Council Space"
+  "title": "Sovereign Town"
  },
  {
   "path": "/sovereign-twin",
@@ -2094,8 +2129,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/tools",
-  "comp": "ToolCommons",
-  "title": "Tool Commons"
+  "comp": "ToolsPage",
+  "title": "Tools Page"
  },
  {
   "path": "/tour",
@@ -2131,6 +2166,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/transparency",
   "comp": "PublicDashboard",
   "title": "Public Dashboard"
+ },
+ {
+  "path": "/transparency-cop",
+  "comp": "TransparencyCop",
+  "title": "Transparency Cop"
  },
  {
   "path": "/trust-center",
@@ -2169,8 +2209,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/verify-certificate",
-  "comp": "CertificateVerification",
-  "title": "Certificate Verification"
+  "comp": "Redirect",
+  "title": "Verify Certificate"
  },
  {
   "path": "/verify-leaderboard",
