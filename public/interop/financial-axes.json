@@ -1,6 +1,6 @@
 {
  "schema": "csoai.financial-axes/0.3",
- "note": "The 8 financial/domain axes (22-axis canon, ADR-001). Same spine, same three-state grammar. 1 of 8 is MEASURED (provenance-controls: deterministic on-chain control facts, v0.2 signed mainnet run, 6 issuers). The other 7 are DECLARED SLOTS with no run behind them, published so the gap is visible. On the board these 8 axes are counted in the axis count and NOT in the measured count.",
+ "note": "The 8 financial/domain axes (ADR-001). 5 of 8 are MEASURED deterministic-facts on the six-issuer set (provenance-controls + four 2026-09-01 disclosure/chain mills). Risk verdicts UNMEASURED. Two index slots stay UNMEASURED (C-2026-0826-05). humanoid-labour-index has no bank. Board GET /api/gspc is authority.",
  "axes": [
   {
    "id": "provenance-controls",
@@ -14,30 +14,42 @@
   {
    "id": "reserve-attestation",
    "name": "Reserve attestation present",
-   "status": "UNMEASURED",
+   "status": "MEASURED",
+   "measured_count": 6,
+   "surface": "/interop/financial-measure-run-reserve-attestation.json",
+   "risk_verdict": "UNMEASURED (needs counsel)",
    "rubric": "is a third-party reserve attestation (Deloitte/PwC/etc.) publicly published and current? deterministic Y/N + date",
-   "data": "issuer disclosures + RWA.xyz API"
+   "data": "issuer disclosures retrieved this run; named-firm PDF may be null (then current=N)"
   },
   {
    "id": "regulatory-framework",
    "name": "Declared regulatory framework",
-   "status": "UNMEASURED",
+   "status": "MEASURED",
+   "measured_count": 6,
+   "surface": "/interop/financial-measure-run-regulatory-framework.json",
+   "risk_verdict": "UNMEASURED (needs counsel)",
    "rubric": "is the governing regime declared and confirmable (MiCA/UCITS/Reg D/BVI)? deterministic Y/N",
-   "data": "RWA.xyz issuer metadata + /api/locale crosswalk"
+   "data": "issuer disclosure pages retrieved this run. Declaration only. Not compliant."
   },
   {
    "id": "distribution-integrity",
    "name": "Represented vs distributed",
-   "status": "UNMEASURED",
+   "status": "MEASURED",
+   "measured_count": 6,
+   "surface": "/interop/financial-measure-run-distribution-integrity.json",
+   "risk_verdict": "UNMEASURED (needs counsel)",
    "rubric": "RWA.xyz distributed-vs-represented classification + holder count; flag represented>>distributed (JMWH pattern) deterministically",
-   "data": "RWA.xyz API v4 + chain reads"
+   "data": "GET /api/xrpl + six-issuer set. Represented supply UNMEASURED without RWA.xyz key this hour."
   },
   {
    "id": "custody-disclosure",
    "name": "Named custodian/auditor",
-   "status": "UNMEASURED",
+   "status": "MEASURED",
+   "measured_count": 6,
+   "surface": "/interop/financial-measure-run-custody-disclosure.json",
+   "risk_verdict": "UNMEASURED (needs counsel)",
    "rubric": "are custodian + auditor named and confirmable? deterministic Y/N",
-   "data": "issuer disclosures"
+   "data": "issuer disclosures retrieved this run. Disclosure only. Not quality."
   },
   {
    "id": "ai-economy-index",
@@ -78,5 +90,5 @@
   }
  ],
  "honesty": "3 candidate axes (ai-economy, human-labour, humanoid-labour) have NO rubric and NO data yet — declared UNMEASURED so the slot is honest and public, never claimed as built. They become MEASURED only when a deterministic rubric + real data exist and a run is signed. Counted honestly on the board: a published slot is not a measurement.",
- "board": "GET /api/gspc — the authority. Swept 2026-08-26: totals.public_count == '22 axes · 15 measured'."
+ "board": "GET /api/gspc — the authority. Four-axis mill 2026-09-01: facts MEASURED on six issuers; indexes stay UNMEASURED (C-2026-0826-05)."
 }

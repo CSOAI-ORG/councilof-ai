@@ -8,17 +8,12 @@
 // must be backed by the signed artifact it summarises.
 //
 // THE HONESTY POINT — READ BEFORE EDITING
-// The ruling says "22 measured axes". The evidence does not support that word, and
-// the evidence wins. Of these 8 slots exactly ONE carries a real measurement:
-// provenance-controls, from a deterministic MAINNET read of 6 issuer accounts. The
-// other 7 are DECLARED slots — published so the gap is visible — with no run behind
-// them. They are therefore on the board and counted in `axes`, and are NOT counted
-// in `measured_axes`. The public grammar becomes "22 axes · 15 measured".
-//
-// Marking any of these MEASURED to make the two numbers agree would be the exact
-// defect this board exists to catch. Two of them (ai-economy-index,
-// human-labour-index) were previously over-claimed as "MEASURED-INDEX-v0.1" and had
-// to be reverted; see the note on each and the corrections ledger.
+// Five financial slots carry deterministic-facts runs on the same six issuers
+// (provenance-controls + reserve-attestation + regulatory-framework +
+// distribution-integrity + custody-disclosure). Risk verdicts stay UNMEASURED.
+// The two index slots stay UNMEASURED under C-2026-0826-05 (do not restore
+// MEASURED-INDEX-v0.1). humanoid-labour-index has no bank. Public grammar is
+// derived in gspc.ts from this array (22 · 19 after the four-axis mill).
 //
 // A declared-slot axis has NO accuracy, NO leader and NO separation field. Those are
 // absent, not zero. A zero would be a measurement.
@@ -59,49 +54,48 @@ export const AXES_FIN: AxisScore[] = [
       "not a ranking, and not an endorsement of any named instrument. Supersedes the v0.1 run.",
   },
   {
-    axis: "reserve-attestation", family: "financial", kind: "declared-slot",
-    bench: "—", task: "is a third-party reserve attestation publicly published and current? (deterministic Y/N + date)",
-    n: 0, n_unit: "nothing measured",
-    status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. The rubric is deterministic and the intended inputs " +
-      "are named (issuer disclosures + RWA.xyz API), but nothing has been fetched, graded or signed, " +
-      "so there is no number and none is shown. Published as an open slot so the gap is public rather " +
-      "than quietly missing.",
+    axis: "reserve-attestation", family: "financial", kind: "deterministic-facts",
+    bench: "ReserveFacts", task: "is a third-party reserve attestation publicly published and current? (deterministic Y/N + date)",
+    n: 6, n_unit: "issuer accounts (not bank items)",
+    n_note: "Same six issuers as provenance-controls v0.2. Instrument count, not bank items.",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-reserve-attestation.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED for disclosure facts only. Rubric: named third-party attestor on a retrieved " +
+      "page, plus current=Y/N. Self-declare of 'we publish attestations' without a named firm is N. " +
+      "This run retrieved product pages; no named attestor firm + dated PDF on the six, so current=N " +
+      "for all six — that is the measurement, not a missing run. Risk verdict UNMEASURED. Not a rating.",
   },
   {
-    axis: "regulatory-framework", family: "financial", kind: "declared-slot",
-    bench: "—", task: "is the governing regime declared and confirmable (MiCA / UCITS / Reg D / BVI)? (deterministic Y/N)",
-    n: 0, n_unit: "nothing measured",
-    status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Intended inputs: RWA.xyz issuer metadata crosswalked " +
-      "against /api/locale. Declaring a regime is not complying with it, and this axis would only ever " +
-      "measure whether the declaration is present and confirmable — never whether it is satisfied. " +
-      "That distinction is why the slot is published before it is measured.",
+    axis: "regulatory-framework", family: "financial", kind: "deterministic-facts",
+    bench: "RegimeFacts", task: "is the governing regime declared and confirmable (MiCA / UCITS / Reg D / BVI)? (deterministic Y/N)",
+    n: 6, n_unit: "issuer accounts (not bank items)",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-regulatory-framework.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED for declaration presence on a retrieved URL. Not compliance. Same six issuers as " +
+      "provenance-controls v0.2. Risk verdict UNMEASURED. Not a rating.",
   },
   {
-    axis: "distribution-integrity", family: "financial", kind: "declared-slot",
-    bench: "—", task: "represented-vs-distributed classification and holder count",
-    n: 0, n_unit: "nothing measured",
-    status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Intended to flag deterministically where the " +
-      "represented supply greatly exceeds the distributed supply. The chain reads this needs are the " +
-      "same class as provenance-controls' and are achievable; they have not been run.",
+    axis: "distribution-integrity", family: "financial", kind: "deterministic-facts",
+    bench: "DistributionFacts", task: "represented-vs-distributed classification and holder count",
+    n: 6, n_unit: "issuer accounts (not bank items)",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-distribution-integrity.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED from GET /api/xrpl (writes_board=false) plus the six-issuer set. Represented " +
+      "supply is UNMEASURED inside the card this hour (no RWA.xyz key). Represented TVL is not mixed " +
+      "into the 16. Risk verdict UNMEASURED. Not a rating.",
   },
   {
-    axis: "custody-disclosure", family: "financial", kind: "declared-slot",
-    bench: "—", task: "are a custodian and an auditor named and confirmable? (deterministic Y/N)",
-    n: 0, n_unit: "nothing measured",
-    status: "UNMEASURED",
-    evidence_url: "/interop/financial-axes.json",
-    colour: "#a3a3a3", hue: 0,
-    note: "Slot declared, rubric written, NO RUN. Measures disclosure presence only — that a custodian " +
-      "and auditor are named and the naming is confirmable — never the quality of either.",
+    axis: "custody-disclosure", family: "financial", kind: "deterministic-facts",
+    bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (deterministic Y/N)",
+    n: 6, n_unit: "issuer accounts (not bank items)",
+    status: "MEASURED",
+    evidence_url: "/interop/financial-measure-run-custody-disclosure.json",
+    colour: "#fbbf24", hue: 43,
+    note: "MEASURED for named-string presence on retrieved pages. Disclosure only — never custodian " +
+      "or auditor quality. Same six issuers. Risk verdict UNMEASURED. Not a rating.",
   },
   {
     axis: "ai-economy-index", family: "financial", kind: "declared-slot",

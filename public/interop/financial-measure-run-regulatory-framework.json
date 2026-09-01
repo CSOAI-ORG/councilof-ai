@@ -1,0 +1,157 @@
+{
+ "schema": "csoai.financial-measure-run/0.2",
+ "axis": "regulatory-framework",
+ "network": "issuer disclosure pages retrieved this hour",
+ "supersedes": null,
+ "clone_of": "/interop/financial-measure-run-v2.json",
+ "measured": [
+  {
+   "instrument": "RLUSD (Ripple USD)",
+   "mainnet_issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": true
+    },
+    "regime": "NYDFS (+ DFSA named on same page)",
+    "confirm_url": "https://ripple.com/products/stablecoin/",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 1.0,
+    "wilson95": [
+     0.207,
+     1.0
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Ondo OUSG (Short-Term US Treasuries)",
+   "mainnet_issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": true
+    },
+    "regime": "Delaware LP (Ondo I LP, USA)",
+    "confirm_url": "https://ondo.finance/ousg",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 1.0,
+    "wilson95": [
+     0.207,
+     1.0
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Archax x abrdn USD Liquidity Fund",
+   "mainnet_issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": false
+    },
+    "regime": null,
+    "confirm_url": "https://www.archax.com/",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.793
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "OpenEden TBILL (TBL)",
+   "mainnet_issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": false
+    },
+    "regime": null,
+    "confirm_url": "https://openeden.com/tbill",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 0.0,
+    "wilson95": [
+     0.0,
+     0.793
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza Bank USDB",
+   "mainnet_issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": true
+    },
+    "regime": "Banco Central do Brasil (named on issuer site)",
+    "confirm_url": "https://www.brazabank.com.br/",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 1.0,
+    "wilson95": [
+     0.207,
+     1.0
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  },
+  {
+   "instrument": "Braza Bank BBRL",
+   "mainnet_issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+   "control_facts": {
+    "status": "MEASURED",
+    "as_of": "2026-09-01T04:08:19Z",
+    "rubric": "Regime declared and confirmable on a retrieved URL? Y/N. Declaration only. Not compliant.",
+    "facts": {
+     "regime_declared_and_confirmable": true
+    },
+    "regime": "Banco Central do Brasil (named on issuer site)",
+    "confirm_url": "https://www.brazabank.com.br/",
+    "http": 200,
+    "n_facts": 1,
+    "coverage_rate": 1.0,
+    "wilson95": [
+     0.207,
+     1.0
+    ],
+    "honest_note": "Measures whether a regime string is present and the page retrieved. Never whether the issuer is compliant."
+   },
+   "risk_verdict_status": "UNMEASURED"
+  }
+ ],
+ "honesty": "Financial axis MEASURED for deterministic disclosure/chain facts on the same six issuers as provenance-controls v0.2. Risk verdicts remain UNMEASURED. Not ratings/advice/endorsements. Stranger re-runs this script + compares. Do not stamp from a Hub skeleton.",
+ "content_id": "29891f3c96c0a9568062c8d52a02e967680d70cb99f31f2e1cc6faf6dc2486b6",
+ "signature": {
+  "alg": "Ed25519",
+  "content_id": "29891f3c96c0a9568062c8d52a02e967680d70cb99f31f2e1cc6faf6dc2486b6",
+  "sig": "RnkxvIQJQxIrG6kWruPoGXa1iLPS5hqYBV9dKMXlCLRdz5T0uBWpgqp5Pq9/qa3lsCXqVbhHbb93S0anOKBlBg==",
+  "pubkey": "j5oAooz8duNgKf6AXz5CGVj019QsTxFIZZGKEAExORI=",
+  "mill": "same city_ed25519 mill as /interop/financial-measure-run-v2.json content_id 29369542cb537f38",
+  "note": "Ed25519 over sha256(canonical body sans envelope). Not #card-attestation-1 (that key stays off this laptop). Not a rating."
+ }
+}
