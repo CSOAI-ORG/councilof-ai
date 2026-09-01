@@ -30,8 +30,12 @@ export function heroStrip(payload: GspcPayload | null, unreachable = false): Her
   if (!counts) {
     return { text: "board unreachable — GET /api/gspc", live: false };
   }
+  // public_count may already carry "· N empty" (fill-7 chrome honesty). Do not double-append.
+  const alreadyEmpty = /\bempty\b/i.test(counts.public_count);
   const empty =
-    typeof counts.unmeasured_axes === "number" ? ` · ${counts.unmeasured_axes} empty` : "";
+    !alreadyEmpty && typeof counts.unmeasured_axes === "number" && counts.unmeasured_axes > 0
+      ? ` · ${counts.unmeasured_axes} empty`
+      : "";
   return { text: `${counts.public_count}${empty}`, live: true };
 }
 
