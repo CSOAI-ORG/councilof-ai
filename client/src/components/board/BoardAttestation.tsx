@@ -1,1 +1,1 @@
-@/workspace/pr_files_ba.txt
+LOADING_FROM_DISK
