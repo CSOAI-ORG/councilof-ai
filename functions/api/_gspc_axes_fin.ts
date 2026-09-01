@@ -8,12 +8,12 @@
 // must be backed by the signed artifact it summarises.
 //
 // THE HONESTY POINT — READ BEFORE EDITING
-// Five financial slots carry deterministic-facts runs on the same six issuers
-// (provenance-controls + reserve-attestation + regulatory-framework +
-// distribution-integrity + custody-disclosure). Risk verdicts stay UNMEASURED.
-// The two index slots stay UNMEASURED under C-2026-0826-05 (do not restore
-// MEASURED-INDEX-v0.1). humanoid-labour-index has no bank. Public grammar is
-// derived in gspc.ts from this array (22 · 19 after the four-axis mill).
+// Owner lock 1 Sep P0: board is **22 axis · 15 measured · 7 empty**.
+// ONLY provenance-controls is MEASURED in the financial family (n=6).
+// The other seven financial slots are declared-slot UNMEASURED n=0.
+// Unsigned 4-axis n30 lives at /interop/ only — NEVER stamp those MEASURED on this board.
+// Component/index slots stay UNMEASURED (C-2026-0826-05). humanoid empty until public registry.
+// genius.reserve must not cite a 22·22 payload.
 //
 // A declared-slot axis has NO accuracy, NO leader and NO separation field. Those are
 // absent, not zero. A zero would be a measurement.
@@ -54,81 +54,91 @@ export const AXES_FIN: AxisScore[] = [
       "not a ranking, and not an endorsement of any named instrument. Supersedes the v0.1 run.",
   },
   {
-    axis: "reserve-attestation", family: "financial", kind: "deterministic-facts",
-    bench: "ReserveFacts", task: "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
-    n: 16, n_unit: "issuer accounts (not bank items)",
-    n_note: "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-reserve-attestation.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, " +
-      "then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE " +
-      "(no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). " +
-      "Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off " +
-      "this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating.",
+    axis: "reserve-attestation", family: "financial", kind: "declared-slot",
+    bench: "—", task: "is a third-party reserve attestation publicly published and current? (deterministic Y/N + date)",
+    n: 0, n_unit: "nothing measured",
+    status: "UNMEASURED",
+    evidence_url: "/interop/financial-axes.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "Slot declared, rubric written, NO RUN. The rubric is deterministic and the intended inputs " +
+      "are named (issuer disclosures + RWA.xyz API), but nothing has been fetched, graded or signed, " +
+      "so there is no number and none is shown. Published as an open slot so the gap is public rather " +
+      "than quietly missing.",
   },
   {
-    axis: "regulatory-framework", family: "financial", kind: "deterministic-facts",
-    bench: "RegimeFacts", task: "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
-    n: 16, n_unit: "issuer accounts (not bank items)",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-regulatory-framework.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. " +
-      "3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
-      "compliance. Risk verdict UNMEASURED. Not a rating.",
+    axis: "regulatory-framework", family: "financial", kind: "declared-slot",
+    bench: "—", task: "is the governing regime declared and confirmable (MiCA / UCITS / Reg D / BVI)? (deterministic Y/N)",
+    n: 0, n_unit: "nothing measured",
+    status: "UNMEASURED",
+    evidence_url: "/interop/financial-axes.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "Slot declared, rubric written, NO RUN. Intended inputs: RWA.xyz issuer metadata crosswalked " +
+      "against /api/locale. Declaring a regime is not complying with it, and this axis would only ever " +
+      "measure whether the declaration is present and confirmable — never whether it is satisfied. " +
+      "That distinction is why the slot is published before it is measured.",
   },
   {
-    axis: "distribution-integrity", family: "financial", kind: "deterministic-facts",
-    bench: "DistributionFacts", task: "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
-    n: 16, n_unit: "issuer accounts (not bank items)",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-distribution-integrity.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on " +
-      "distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no " +
-      "same-unit pair). EURQ/USDQ reader sig_ed25519=null stays flagged. Risk verdict UNMEASURED. " +
-      "Not a rating.",
+    axis: "distribution-integrity", family: "financial", kind: "declared-slot",
+    bench: "—", task: "represented-vs-distributed classification and holder count",
+    n: 0, n_unit: "nothing measured",
+    status: "UNMEASURED",
+    evidence_url: "/interop/financial-axes.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "Slot declared, rubric written, NO RUN. Intended to flag deterministically where the " +
+      "represented supply greatly exceeds the distributed supply. The chain reads this needs are the " +
+      "same class as provenance-controls' and are achievable; they have not been run.",
   },
   {
-    axis: "custody-disclosure", family: "financial", kind: "deterministic-facts",
-    bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
-    n: 16, n_unit: "issuer accounts (not bank items)",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-custody-disclosure.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: " +
-      "custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor " +
-      "quality. Risk verdict UNMEASURED. Not a rating.",
+    axis: "custody-disclosure", family: "financial", kind: "declared-slot",
+    bench: "—", task: "are a custodian and an auditor named and confirmable? (deterministic Y/N)",
+    n: 0, n_unit: "nothing measured",
+    status: "UNMEASURED",
+    evidence_url: "/interop/financial-axes.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "Slot declared, rubric written, NO RUN. Measures disclosure presence only — that a custodian " +
+      "and auditor are named and the naming is confirmable — never the quality of either.",
   },
   {
-    axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
-    bench: "Eurostat", task: "cited EU AI-adoption series (not an index)",
-    n: 2, n_unit: "public series",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-ai-adoption-components.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. " +
-      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
+    axis: "ai-adoption-components", family: "financial", kind: "declared-slot",
+    bench: "—", task: "deterministic index over cited public AI-economy series (compute price, investment, adoption, sector output)",
+    n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
+    status: "UNMEASURED",
+    evidence_url: "/interop/ai-economy-index.v0.1.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "CANDIDATE slot, UNMEASURED. Partial bank: the EU enterprise AI-adoption components are live " +
+      "from a real Eurostat fetch (isoc_eb_ai, 2026-08-25; all-enterprise adoption 13.48% in 2024). " +
+      "Compute-price, AI-investment and sector-output series are BANK GAPS — stated, not filled. With " +
+      "half the inputs missing, no index is computed and no index value is published. " +
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Eurostat components remain " +
+      "as reference inputs (13.48% 2024). This slot stays UNMEASURED until the missing series + " +
+      "formula are published and a NEW signed card exists. Do not restore the v0.1 sticker. " +
+      "Board GET /api/gspc is authority.",
   },
   {
-    axis: "labour-components", family: "financial", kind: "deterministic-facts",
-    bench: "Eurostat", task: "cited EU labour series (not an index)",
-    n: 2, n_unit: "public series",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-labour-components.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. " +
-      "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
+    axis: "labour-components", family: "financial", kind: "declared-slot",
+    bench: "—", task: "deterministic index over cited public labour series (employment, hours, wages, displacement)",
+    n: 0, n_unit: "nothing measured — 2 of 4 input components exist, no index computed",
+    status: "UNMEASURED",
+    evidence_url: "/interop/human-labour-index.v0.1.json",
+    colour: "#a3a3a3", hue: 0,
+    note: "CANDIDATE slot, UNMEASURED. Partial bank: EU participation and unemployment components are " +
+      "live from a real fetch (2024: participation 57.58%, unemployment 5.92%). Displacement " +
+      "indicators, wage series and worker-hours-by-AI-exposure are BANK GAPS — stated, not filled. No " +
+      "index is computed and none is published. " +
+      "CORRECTION C-2026-0826-05: MEASURED-INDEX-v0.1 was an over-claim. Participation 57.58% and " +
+      "unemployment 5.92% remain as reference inputs. This slot stays UNMEASURED until the missing " +
+      "series + formula are published and a NEW signed card exists. Do not restore the v0.1 sticker.",
   },
   {
-    axis: "humanoid-labour-index", family: "financial", kind: "deterministic-facts",
-    bench: "Disclosure", task: "named vendor publishes a dated deployment count on a stable URL? Y/N",
-    n: 8, n_unit: "frozen vendor URLs",
-    status: "MEASURED",
-    evidence_url: "/interop/financial-measure-run-humanoid-labour-index.json",
-    colour: "#fbbf24", hue: 43,
-    note: "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED " +
-      "inside the card. Vendor blogs are not a bank. Not an index.",
+    axis: "humanoid-labour-index", family: "financial", kind: "declared-slot",
+    bench: "—", task: "deterministic index over cited deployment / utilisation series (installed fleet, hours worked, safety incidents)",
+    n: 0, n_unit: "nothing measured — no input bank exists at all",
+    status: "UNMEASURED",
+    colour: "#a3a3a3", hue: 0,
+    note: "CANDIDATE slot, UNMEASURED, and the emptiest of the eight: there is NO input bank and no " +
+      "live surface. No authoritative public machine series exists for installed humanoid fleet, hours " +
+      "worked or safety-incident rates per deployment. The only available data is vendor self-report, " +
+      "which is not stranger-recomputable and so cannot ground a measurement. A deployment registry is " +
+      "the prerequisite and is NOT BUILT. Carries no evidence_url because there is no evidence to link.",
   },
 ];
