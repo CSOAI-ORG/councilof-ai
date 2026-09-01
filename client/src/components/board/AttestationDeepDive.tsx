@@ -1,1 +1,1 @@
-LOAD_FROM_FILE:/workspace/FINAL_ad.content
+PLACEHOLDER_WILL_REPLACE
