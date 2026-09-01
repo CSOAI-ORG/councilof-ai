@@ -17,7 +17,7 @@ Live API axis names (order may update on the API; do not treat this list as a sc
 
 Behavioural (`family: gspc`): governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail.
 
-Financial/domain (`family: financial`): provenance-controls (MEASURED — deterministic on-chain control facts), reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index. All but provenance-controls are DECLARED SLOTS with no run behind them: published so the gap is visible, and never to be described as measured.
+Financial/domain (`family: financial`): provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-economy-index, human-labour-index, humanoid-labour-index. Whether each is MEASURED or a declared slot is on GET /api/gspc — never frozen here. Index-style slots stay UNMEASURED when the API says so (C-2026-0826-05).
 
 Jail is a measured containment floor on the behavioural half of the board — not a certification.
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
@@ -25,7 +25,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 
 ## Overlay notes (not a 23rd axis)
 
-notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Public GET https://councilof.ai/api/gspc stays 22·15·7. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
+notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze 22·15·7 or any other pair in this file. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
 
 ## Census leftover (not a grade)
 

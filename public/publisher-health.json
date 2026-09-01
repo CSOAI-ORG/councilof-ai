@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-01T04:03:48Z",
+  "as_of": "2026-09-01T07:44:50Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -10,9 +10,9 @@
     "unsigned_new_leaves": 0,
     "missing_key": false
   },
-  "xrpl_basket_merkle": "31601cd7af6974d9d7d041800b6c7d447e2980f21cfba8f68e67f621dc1f4980",
+  "xrpl_basket_merkle": "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9",
   "represented_tvl": {
-    "usd": 1189668596.106967,
+    "usd": 1075447304.2899997,
     "source": "https://xrpl.fi/api/metrics",
     "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
   },
@@ -56,9 +56,9 @@
       "http": 200,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. This writer does not write /api/gspc.",
       "totals_axes": 22,
-      "totals_measured_axes": 15,
-      "totals_unmeasured_axes": 7,
-      "public_count": "22 axis · 15 measured",
+      "totals_measured_axes": 22,
+      "totals_unmeasured_axes": 0,
+      "public_count": "22 axis · 22 measured",
       "measured_on": {
         "model": "13 canonical axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet.",
         "endpoint": "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
@@ -73,7 +73,7 @@
           "signer": "did:web:csoai.org#board-attestation-1",
           "signer_anchored": true,
           "alg": "Ed25519",
-          "signature": "3d292c1461bb6945054ac6e660201f45eecbe0b12a0201dd92525ef8599e4a3d288f6b9c8f63f0c65ab970fa7ed583eea4d98c4ef7146c6a5556ba7327b26b04",
+          "signature": "2d38b8398f687eb738e2b9e339e4b07fa8d8ed7098a02ef48094c5afcc890b2bc7adddc416638c5b4006a4781e95906af428d9311c25746da60887db51efb40b",
           "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
           "preimage": {
             "schema": "csoai.gspc-living/0.2",
@@ -218,63 +218,63 @@
               {
                 "axis": "reserve-attestation",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 16,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "regulatory-framework",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 16,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "distribution-integrity",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 16,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "custody-disclosure",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 16,
                 "accuracy": null,
                 "separation": null
               },
               {
-                "axis": "ai-economy-index",
+                "axis": "ai-adoption-components",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 2,
                 "accuracy": null,
                 "separation": null
               },
               {
-                "axis": "human-labour-index",
+                "axis": "labour-components",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 2,
                 "accuracy": null,
                 "separation": null
               },
               {
                 "axis": "humanoid-labour-index",
                 "family": "financial",
-                "kind": "declared-slot",
-                "status": "UNMEASURED",
-                "n": null,
+                "kind": "deterministic-facts",
+                "status": "MEASURED",
+                "n": 8,
                 "accuracy": null,
                 "separation": null
               }
