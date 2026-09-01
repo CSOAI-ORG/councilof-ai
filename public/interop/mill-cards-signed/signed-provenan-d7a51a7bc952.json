@@ -1,0 +1,25 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "provenance",
+    "model": "Qwen/Qwen3-30B-A3B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "unsigned pending GHA OIDC; n=30 quotable pending sign"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI"
+  },
+  "id": "0bc4d0be4ebff694c2e6dca24151f6efe0ea315811050273a53205cb2d7ea57e",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "6eb63217c5ab9eb28b7928f2c6e00c30b136ef0e8c17fb7ba4bc3fa840282fdc081ef7b8996cad1617918243cc4d0bcd3e767bc0cb745d3905785ff2a1664c09",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
