@@ -22,6 +22,7 @@ import { loadWatchlist, saveWatchlist, upsertWatch } from "@/lib/watchlist";
 import { formatComputeReply } from "@/lib/computeBridge";
 import { liveCountLine } from "@/components/os/osChat";
 import HfLivingRecord from "@/components/HfLivingRecord";
+import GspcStreamCard from "@/components/os/GspcStreamCard";
 
 export {
   BOARD_PANE,
@@ -54,6 +55,8 @@ export default function OsLauncher() {
   const board = useBoardCount();
   const [ask, setAsk] = useState("");
   const [fnNote, setFnNote] = useState<string | null>(null);
+  /** Live AG-UI stream card: axis id for GET /api/gspc, or "" for board totals only. */
+  const [streamAxis, setStreamAxis] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "Council OS | councilof.ai";
@@ -98,10 +101,14 @@ export default function OsLauncher() {
             }
             const parsed = parseTerminal(prompt);
             if (parsed.fn === "BOARD") {
+              setStreamAxis("");
               void fetch("/api/gspc", { headers: { accept: "application/json" } })
                 .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
                 .then((j) => setFnNote(`BOARD — ${liveCountLine(j?.totals ?? {})}. Empty stays empty.`))
-                .catch((err: Error) => setFnNote(`BOARD failed (${err.message}). Cite GET /api/gspc.`));
+                .catch((err: Error) => {
+                  setStreamAxis(null);
+                  setFnNote(`BOARD failed (${err.message}). Cite GET /api/gspc. UNCHECKABLE.`);
+                });
               setLocation("/os?lobby=board");
               return;
             }
@@ -110,8 +117,10 @@ export default function OsLauncher() {
               return;
             }
             if (parsed.fn === "AXIS") {
+              const axis = (parsed.arg || "").trim();
+              setStreamAxis(axis || "");
               setLocation("/os?lobby=board");
-              setFnNote(`AXIS ${parsed.arg || "—"}. Empty stays empty.`);
+              setFnNote(`AXIS ${axis || "—"}. Live row from GET /api/gspc. Empty stays empty.`);
               return;
             }
             if (parsed.fn === "CORRECT") {
@@ -167,6 +176,25 @@ export default function OsLauncher() {
           </div>
           <p className="mt-2 font-mono text-[11px] text-emerald-800">{TERMINAL_HINT}</p>
           {fnNote && <p className="mt-2 text-sm text-slate-700">{fnNote}</p>}
+          {streamAxis !== null && (
+            <div className="mt-3" data-testid="os-agui-stream-gspc">
+              <GspcStreamCard axis={streamAxis || undefined} />
+            </div>
+          )}
+          <p className="mt-3 text-[11px] text-slate-600" data-testid="w3c-agent-conformance-draft">
+            Draft opening only:{" "}
+            <a
+              className="font-medium text-emerald-800 underline-offset-2 hover:underline"
+              href="https://www.w3.org/community/agent-conformance/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              W3C Agent Conformance and Benchmarking Community Group
+            </a>
+            {" "}
+            — Nick joins. Measurement credential, never certification. No endorsement or “we conform”
+            claim.
+          </p>
         </form>
 
         <h2 className="mt-12 text-sm font-bold uppercase tracking-wide text-slate-500">

@@ -24,6 +24,10 @@ export type OsTurn = {
   tool?: string;
   verdict?: CardVerdict;
   card?: unknown;
+  /** Live stream card: axis id for GET /api/gspc row. */
+  streamAxis?: string;
+  /** Optional card content sha256 for /root.json membership. */
+  streamSha?: string;
 };
 
 const NAV: { re: RegExp; door: DoorId }[] = [
@@ -110,7 +114,7 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
           if (!r.ok) throw new Error("HTTP " + r.status);
           const j = await r.json();
           if (!j || !Array.isArray(j.axes)) throw new Error("not a GSPC payload");
-          push({ role: "council", text: formatBoardTotals(j), tool: "board_totals" });
+          push({ role: "council", text: formatBoardTotals(j), tool: "board_totals", streamAxis: "" });
           onDoor("board");
         } catch (e: any) {
           push({
@@ -130,6 +134,12 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
           const card = JSON.parse(parsed.fn === "VERIFY" && parsed.arg ? parsed.arg : question);
           const key = await fetchPinnedCardKey();
           const v = await verifyCard(card, key);
+          const sha =
+            typeof (card as any)?.content_sha256 === "string"
+              ? String((card as any).content_sha256)
+              : typeof (card as any)?.sha256 === "string"
+                ? String((card as any).sha256)
+                : undefined;
           push({
             role: "council",
             text:
@@ -138,6 +148,7 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
             tool: "verify_card",
             verdict: v,
             card: v.state === "VALID" ? card : undefined,
+            streamSha: v.state === "VALID" ? sha : undefined,
           });
           if (v.state === "VALID") onDoor("verify");
         } catch (e: any) {
@@ -201,7 +212,12 @@ export function useOsChat(onDoor: (id: DoorId) => void) {
           if (!r.ok) throw new Error("HTTP " + r.status);
           const j = await r.json();
           const row = Array.isArray(j?.axes) ? j.axes.find((a: any) => a?.axis === axis) : null;
-          push({ role: "council", text: formatAxis(row ?? null, axis), tool: "get_axis" });
+          push({
+            role: "council",
+            text: formatAxis(row ?? null, axis),
+            tool: "get_axis",
+            streamAxis: axis,
+          });
           onDoor("board");
         } catch (e: any) {
           push({

@@ -1,8 +1,9 @@
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 
 /**
- * Council OS doors. One rail: Board · Verify · Space · Assess · Harness.
- * Cards stays a URL mapping, not a header tab.
+ * Council OS doors — six arms only: board · verify · cards · harness · space · assess.
+ * Header rail: Board · Verify · Space · Assess · Harness (Cards is a URL mapping, not a tab).
+ * AG-UI is presentation only — not a 7th door. Do not add Cobol/Cobalt Bridge as a door.
  */
 export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess";
 
