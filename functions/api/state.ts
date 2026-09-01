@@ -160,11 +160,13 @@ const mcpCounts = (mcpRegistry as any).counts ?? {};
 const mcpFinished: string | null = mcpCounts.finished ?? null;
 
 // ── RWA instruments: recounted from the array, then compared to the header ───
-const instruments: Array<{ address_status?: string; status?: string }> =
+const instruments: Array<{ address_status?: string; status?: string; control_facts?: string; chain?: string }> =
   (rwaRegistry as any).instruments ?? [];
 const rwaNamed = instruments.length;
+const rwaLocated = instruments.filter((i) => i.address_status === "mainnet-verified" || i.address_status === "evm-located").length;
 const rwaAttested = instruments.filter((i) => i.address_status === "mainnet-verified").length;
 const rwaNotLocated = instruments.filter((i) => i.address_status === "not-located").length;
+const rwaControlFacts = instruments.filter((i) => String(i.control_facts || "").startsWith("MEASURED")).length;
 const rwaUnmeasuredRisk = instruments.filter((i) => i.status === "UNMEASURED").length;
 const rwaHeader = (rwaRegistry as any).counts ?? {};
 const rwaHeaderAgrees =
@@ -621,7 +623,15 @@ export const onRequestGet: PagesFunction = async () => {
         SRC_RWA + " → instruments[].length",
         null,
         null,
-        "Instruments the registry NAMES. Naming is not attesting and is not measuring.",
+        "Instruments the registry NAMES. Naming is not locating, attesting, or measuring. See /interop/xrpl-16.json for the 16-name catalogue (located 9 / not-located 7).",
+      ),
+      located: fact(
+        rwaLocated,
+        "catalogued",
+        SRC_RWA + " → instruments[].address_status in {mainnet-verified, evm-located}",
+        null,
+        null,
+        "Has a public r-address or EVM contract. Located is not attested and is not MEASURED.",
       ),
       mainnet_verified_and_attested: fact(
         rwaAttested,
@@ -629,8 +639,15 @@ export const onRequestGet: PagesFunction = async () => {
         SRC_RWA + " → instruments[].filter(address_status === 'mainnet-verified').length",
         null,
         null,
-        "Issuer accounts read from XRPL MAINNET with a locatable public r-address. This is a read of " +
-          "on-chain CONTROL FACTS only.",
+        "XRPL issuer accounts with a locatable public r-address (six). Not EVM. Not an attestation TX (those remain DEVNET). Control-facts MEASURED is a different field.",
+      ),
+      control_facts_measured: fact(
+        rwaControlFacts,
+        "measured",
+        SRC_RWA + " → instruments[].control_facts starts MEASURED",
+        null,
+        null,
+        "Signed control-facts run exists (XRPL v0.2 and EVM facts). Risk verdict stays UNMEASURED.",
       ),
       not_located: fact(
         rwaNotLocated,
