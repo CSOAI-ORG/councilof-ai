@@ -1,15 +1,15 @@
 # ASI AUTO-EAT — STATUS
 
-_regenerated 2026-09-01T09:12:28Z — every number counted, none invented_
+_regenerated 2026-09-01T09:37:56Z — every number counted, none invented_
 
 | field | value |
 |---|---|
 | queue DISCOVERED total | 8344 |
-| probed total | 8344 |
+| probed total | 9204 |
 | atoms staged (unsigned) | 6 |
-| staged LIVE fraction of probed | 0.4694 (720/1534) |
+| staged LIVE fraction of probed | 0.4396 (491/1117) |
 | surfaces staged | autoeat.erc8004.newagents, autoeat.hf.newmodels, autoeat.hf.spaces, autoeat.mcp.registry, autoeat.npm.registry, autoeat.xrpl.accounts |
-| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T08:40:02Z (529bb9a510b72b6e) |
+| last signed batch | autoeat.xrpl.accounts @ 2026-09-01T09:12:28Z (6e6b42ef1cff9fe7) |
 
 ## DISCOVERED by kind
 
