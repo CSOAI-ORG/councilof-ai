@@ -343,6 +343,26 @@ for (const slug of blogSlugs) {
   if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
 }
 
+// The AEO answer explainers. /answers/:slug is a :param route (skipped above), so the 12
+// detail pages — the regulator/procurement citation surface these pages exist for — were
+// absent from the sitemap. Unlike blog (content ≠ built), EVERY answers.json slug is
+// snapshotted: prerender.mjs derives its /answers/<slug> queue from this same file, so the
+// data file IS the built set. Push the bare path and let canonicalise() rewrite it to the
+// 200 trailing-slash form via the /answers/<slug> → /answers/<slug>/ rule generate-redirects
+// emits (do NOT pre-skip on "has a redirect" — that rule is the canonicaliser we want, not a
+// send-elsewhere).
+const ANSWERS_JSON = join(ROOT, "client/src/data/answers.json");
+let answerSlugs = [];
+try {
+  answerSlugs = JSON.parse(readFileSync(ANSWERS_JSON, "utf8")).map((a) => a && a.slug).filter(Boolean);
+} catch {
+  console.warn("[sitemap] answers.json unreadable — no /answers/:slug entries emitted");
+}
+for (const slug of answerSlugs) {
+  const ap = `/answers/${slug}`;
+  if (!seen.has(ap)) { seen.add(ap); paths.push(ap); }
+}
+
 // --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");

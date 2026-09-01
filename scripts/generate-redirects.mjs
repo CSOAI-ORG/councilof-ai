@@ -22,7 +22,7 @@
  * scripts/redirects-guard.mjs re-implements the parser and fails the build if the
  * catch-all ever falls outside the cap again.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -256,6 +256,74 @@ const IS_DYNAMIC = (line) => {
   return from.includes("*") || /:[A-Za-z]\w*/.test(from);
 };
 
+// ── bare → trailing-slash 308 for EVERY prerendered app route ───────────────
+// The SPA catch-all below is inert (Cloudflare rejects `/*  →  /index.html`) and this
+// build ships a 404.html, so Cloudflare does NOT auto-canonicalise a bare path to its
+// prerendered `/route/index.html`: an unlisted bare path gets the honest-404. That is
+// why `/leaderboard` 404'd while `/leaderboard/` served 200, and only the handful of
+// paths hand-listed in PERSONA_SLASH got a bare→slash 308 (the Will investor email
+// links to councilof.ai/leaderboard — a bare 404 there is a live regression). Derive
+// the rule from every concrete <Route> in App.tsx instead, so no prerendered surface
+// is a bare 404 and nobody has to remember to add each new page here.
+//
+// The exclusions stop this from hijacking a path already served/redirected another way
+// — which is also what prevents a redirect LOOP against a slash→slashless rule:
+//   · anything already used as a `from` in the hand-written rules above (normalised),
+//   · a path public/ serves directly (a real file at /p.html or /p/index.html),
+//   · a path owned by a Pages Function (functions/<p>.ts), e.g. /pricing,
+//   · retired internal-codename stubs owned by 308 functions.
+const normFrom = (p) => (String(p).replace(/\/+$/, "") || "/");
+const CLAIMED_FROM = new Set();
+for (const line of [...EXISTING, ...STOREFRONT]) {
+  const t = String(line).trim();
+  if (!t || t.startsWith("#")) continue;
+  CLAIMED_FROM.add(normFrom(t.split(/\s+/)[0]));
+}
+for (const p of PERSONA_SLASH) CLAIMED_FROM.add(normFrom(`/${p}`));
+for (const p of PERSONA_FOR_SLASH) CLAIMED_FROM.add(normFrom(`/for/${p}`));
+for (const d of STATIC_DIRS) CLAIMED_FROM.add(normFrom(d));
+const RETIRED_CODENAME = /^\/(sov3|sovos|ceasai|about-ceasai)\b/i;
+const publicOwnsPath = (p) => {
+  const rel = normFrom(p).replace(/^\//, "");
+  if (!rel) return false;
+  return (
+    existsSync(join(ROOT, "public", rel, "index.html")) ||
+    existsSync(join(ROOT, "public", rel + ".html"))
+  );
+};
+const funcOwnsPath = (p) => {
+  const rel = normFrom(p).replace(/^\//, "");
+  return !!rel && existsSync(join(ROOT, "functions", rel + ".ts"));
+};
+const ROUTE_SLASH = routes
+  .map(normFrom)
+  .filter((p) => p !== "/")
+  .filter((p) => !CLAIMED_FROM.has(p))
+  .filter((p) => !RETIRED_CODENAME.test(p))
+  .filter((p) => !publicOwnsPath(p))
+  .filter((p) => !funcOwnsPath(p))
+  .filter((p, i, a) => a.indexOf(p) === i)
+  .map((p) => `${p}  ${p}/  308`);
+
+// /answers/:slug is a :param route (never a concrete <Route>), so the 12 AEO explainer
+// detail pages the prerenderer now snapshots at /answers/<slug>/index.html had no
+// bare→slash rule either — a link to councilof.ai/answers/<slug> (the no-slash form the
+// pages self-canonicalise to) would 404. Derive one rule per slug from the same data the
+// page and the prerenderer read; this also lets generate-sitemap.mjs emit the 200
+// trailing-slash form for each explainer instead of a bare 404.
+let ANSWER_SLASH = [];
+try {
+  const answerSlugs = JSON.parse(readFileSync(join(ROOT, "client/src/data/answers.json"), "utf8"))
+    .map((a) => a && a.slug)
+    .filter(Boolean);
+  ANSWER_SLASH = answerSlugs
+    .map((s) => `/answers/${s}`)
+    .filter((p) => !CLAIMED_FROM.has(normFrom(p)))
+    .map((p) => `${p}  ${p}/  308`);
+} catch {
+  console.warn("[redirects] answers.json unreadable — no /answers/:slug bare→slash rules emitted");
+}
+
 // Everything with an exact `from`. These land on the 2000-rule STATIC budget.
 const STATIC_RULES = [
   "# --- hand-written consolidation redirects (preserved) ---",
@@ -264,6 +332,12 @@ const STATIC_RULES = [
   "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
+  "",
+  `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,
+  ...ROUTE_SLASH,
+  "",
+  `# --- /answers/:slug explainer bare paths → prerendered trailing-slash (${ANSWER_SLASH.length}) ---`,
+  ...ANSWER_SLASH,
   "",
   "# --- storefront static pages: served directly, trailing slash 308→slashless ---",
   ...STOREFRONT,
