@@ -228,20 +228,26 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
     tok = _hf_token()
     if not tok:
         return "UNCHECKABLE", "no-endpoint hf"
-    if slug in _DEAD or "hf" in _DEAD:
-        return "UNCHECKABLE", f"dead-hub {slug}"
+    if "hf" in _DEAD:
+        return "UNCHECKABLE", "dead-endpoints hf"
     last = "no-endpoint hf"
     unsupported = 0
     for suf in HF_PROVIDER_SUFFIX:
         name = f"{slug}{suf}"
+        if name in _DEAD:
+            continue
         st, txt = _chat(HF_ROUTER, tok, name, prompt)
         if st == "OK":
             return st, txt
         last = f"hf:{name}:{txt}"
-        if any(c in txt for c in ("401", "403")):
+        if "401" in txt:
             _DEAD.add("hf")
             return "UNCHECKABLE", last
+        if "403" in txt or "429" in txt:
+            _DEAD.add(name)
+            continue
         if "400" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
+            _DEAD.add(name)
             unsupported += 1
             continue
     if unsupported >= 2:
