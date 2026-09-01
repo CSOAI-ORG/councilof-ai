@@ -29,9 +29,9 @@ Live axis list and scores: **`GET https://councilof.ai/api/gspc`** (schema `csoa
 
 Live GET from that API (quote the API, not this file):
 
-- **22 slots · 22 measured** = **14 model-comparison + 8 fact runs**. Not 22/22 grades. Not certified.
-- **14 model-comparison** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail
-- **8 deterministic-facts** — provenance-controls, reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index (disclosure n=8; not a fleet grade)
+- **22 slots · 15 measured · 7 UNMEASURED** (declared empty, not a fail). Not 22/22 grades. Not certified. Empty cells stay empty.
+- **14 / 14 behavioural GSPC axes measured** — governance, safety, provenance, continuity, conformance, openness, machinery-conformity, care, cross-reality, detector-interop, art5-safeguard, swarm, affect, jail
+- **8 financial/domain slots** — only provenance-controls is MEASURED (n=6 issuer accounts); reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, ai-adoption-components, labour-components, humanoid-labour-index stay UNMEASURED
 - **councilof.ai/root.json SIGNED** public-root-v0 merkle `d438fb12…`. **csoai.org/root.json STALE unsigned** merkle `4a9a5036…`.
 - **Deterministic grading** on frozen instruments — no LLM-as-judge, no invented scores
 - **UNMEASURED is first-class** — gaps are reported with their n and limits

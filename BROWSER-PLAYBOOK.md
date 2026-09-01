@@ -83,7 +83,7 @@ We implement SCITT RFC 9942/9943; that is not a "report".
 ### TechCrunch
 - Open: https://techcrunch.com/got-a-tip/
 - From: nicholas@csoai.org (never Gmail)
-- Subject: Independent AI measurement board (not a certificate) — 22 axis · 22 measured
+- Subject: Independent AI measurement board (not a certificate) — 22 axis · 15 measured · 7 empty
 - Body: press body above
 
 ### FT
