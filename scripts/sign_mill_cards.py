@@ -39,17 +39,20 @@ def main() -> int:
             print(f"UNSIGNED {fp.name} — no body", file=sys.stderr)
             failures += 1
             continue
+        n = int(body.get("n") or 0)
+        # Honest body before the signature: never intern "still unsigned".
+        if n >= 30:
+            body["unmeasured"] = ["signed-pending-verify"]
+        else:
+            body["unmeasured"] = ["n<30 unquotable"]
+        body["status"] = "UNMEASURED"
+        wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:
             print(f"HALT {fp.name} {len(raw)}B", file=sys.stderr)
             failures += 1
             continue
         digest = hashlib.sha256(raw).hexdigest()
-        if wrap.get("id") and wrap["id"] != digest:
-            print(f"UNSIGNED {fp.name} — id != sha256(body)", file=sys.stderr)
-            failures += 1
-            continue
-        n = int(body.get("n") or 0)
         try:
             sig = sign_via_oidc(body)
         except Exception as e:

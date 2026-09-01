@@ -11,6 +11,9 @@ sys.path.insert(0, str(HERE))
 from mill_hub_queue import (  # noqa: E402
     MODEL_AXES,
     _DEAD,
+    apply_valid_flips,
+    axis_prompt,
+    mill_index_row,
     infer_hub,
     infer_one,
     load_bank,
@@ -54,6 +57,7 @@ def test_unsigned_card_is_uncheckable_not_measured() -> None:
     assert ":0.0" not in dumped
     assert zero["body"]["accuracy"] == 0
     assert type(zero["body"]["accuracy"]) is int
+    assert "unsigned pending" not in json.dumps(zero["body"]).lower()
     raw = canonical_body_bytes(wrap["body"])
     import hashlib
 
@@ -75,10 +79,10 @@ def test_mill_dry_skip_log_no_measured_flip(tmp_path: Path | None = None) -> Non
         + "\n"
         + json.dumps({"rank": 2, "id": "org/empty-b", "status": "UNMEASURED", "card_id": ""})
         + "\n"
-        + json.dumps({"rank": 3, "id": "org/done", "status": "MEASURED", "card_id": "deadbeef"})
+        + json.dumps({"rank": 3, "id": "org/done", "status": "MEASURED", "card_id": "deadbeef", "measured_axes": {"governance": {"status": "MEASURED", "card_id": "deadbeef"}}})
         + "\n"
     )
-    rep = mill(q, out, pick_n=100, grade_n=2, dry=True)
+    rep = mill(q, out, pick_n=2, grade_n=2, dry=True)
     assert rep["measured_flips"] == 0
     assert rep["queue_n"] == 3
     assert len(rep["skips"]) >= 2
@@ -148,7 +152,10 @@ def test_mill_dry_with_all_14_banks_has_no_frozen_bank_skip(tmp_path: Path | Non
     reasons = {s["reason"] for s in rep["skips"]}
     assert "UNCHECKABLE no frozen bank" not in reasons
     assert any("dry-run" in r for r in reasons)
-    assert {s["axis"] for s in rep["skips"]} == set(MODEL_AXES)
+    assert {s["axis"] for s in rep["skips"]} == {"governance"}
+    safety = mill(q, out / "safety", pick_n=1, grade_n=1, dry=True, banks_dir=banks, axis="safety")
+    assert {s["axis"] for s in safety["skips"]} == {"safety"}
+    assert safety["axis"] == "safety"
 
 
 def test_infer_one_uses_set_keys_not_no_free_keys() -> None:
@@ -231,6 +238,37 @@ def test_infer_hub_calls_the_hub_slug_not_a_proxy() -> None:
     assert not any("llama-3.3" in (s or "") for s in seen)
 
 
+def test_apply_valid_flips_equals_valid_count() -> None:
+    """Hub-queue (id, axis) flips MEASURED iff the wrap was VALID. Unsigned stays UNMEASURED."""
+    rows = [
+        {"id": "org/a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "org/b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+    ]
+    unsigned = stage_unsigned("org/a", "governance", hits=8, n=30, reason="signed-pending-verify")
+    unsigned["_verdict"] = "UNCHECKABLE"
+    valid = stage_unsigned("org/b", "governance", hits=8, n=30, reason="signed-pending-verify")
+    valid["_verdict"] = "VALID"
+    n = apply_valid_flips(rows, [unsigned, valid])
+    assert n == 1
+    assert rows[0].get("status") == "UNMEASURED"
+    assert (rows[0].get("measured_axes") or {}).get("governance") is None
+    cell = (rows[1].get("measured_axes") or {}).get("governance") or {}
+    assert cell.get("status") == "MEASURED"
+    assert cell.get("card_id") == valid["id"]
+    row = mill_index_row(valid, "https://councilof.ai/interop/mill-cards-signed/x.json")
+    assert row["status"] == "MEASURED"
+    assert row["model"] == "org/b"
+    assert row["card_sha256"] == valid["id"]
+    assert "unsigned pending" not in json.dumps(row)
+
+
+def test_axis_prompt_asks_for_one_token() -> None:
+    p = axis_prompt("governance", "a square is live-scanned", ["PROHIBITED", "HIGH_RISK"])
+    assert "EXACTLY ONE token" in p
+    assert "PROHIBITED" in p
+    assert "a square is live-scanned" in p
+
+
 def test_unknown_did_is_uncheckable_not_measured() -> None:
     wrap = stage_unsigned("unit/model", "governance", hits=8, n=30, reason="n>=30 pending sign")
     wrap["did"] = "did:web:csoai.org#no-such-key"
@@ -270,6 +308,8 @@ if __name__ == "__main__":
     test_mill_dry_with_all_14_banks_has_no_frozen_bank_skip()
     test_infer_one_uses_set_keys_not_no_free_keys()
     test_infer_hub_calls_the_hub_slug_not_a_proxy()
+    test_apply_valid_flips_equals_valid_count()
+    test_axis_prompt_asks_for_one_token()
     test_unknown_did_is_uncheckable_not_measured()
     test_live_hub_queue_not_2410_measured()
     print("PASS mill honesty")
