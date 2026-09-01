@@ -22,9 +22,14 @@ MAX_PAYLOAD = 3072
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
+HF_ROUTER = "https://router.huggingface.co/v1/chat/completions"
 EAT_NEXT = "llama-3.3-70b-versatile"
 EAT_NEXT_OR = "meta-llama/llama-3.3-70b-instruct"
 NIM_MODEL = "meta/llama-3.3-70b-instruct"
+HF_PROVIDER_SUFFIX = ("", ":featherless-ai", ":hf-inference", ":together", ":fireworks-ai", ":groq")
+GEN_TAGS = frozenset(
+    {"text-generation", "image-text-to-text", "conversational", "text2text-generation"}
+)
 GEMINI_MODELS = ("gemini-2.0-flash", "gemini-1.5-flash")
 MODEL_AXES = (
     "governance",
@@ -93,8 +98,12 @@ def load_queue(path: Path) -> list[dict]:
     return rows
 
 
-def pick_emptiest(rows: list[dict], n: int) -> list[dict]:
+def pick_emptiest(rows: list[dict], n: int, generative_only: bool = False) -> list[dict]:
     empty = [r for r in rows if str(r.get("status") or "").upper() != "MEASURED" or not r.get("card_id")]
+    if generative_only:
+        gen = [r for r in empty if r.get("pipeline_tag") in GEN_TAGS]
+        if gen:
+            empty = gen
     empty.sort(key=lambda r: int(r.get("rank") or 10**9))
     return empty[:n]
 
@@ -122,6 +131,8 @@ def _chat(url: str, key: str, model: str, prompt: str) -> tuple[str, str]:
     except Exception as e:
         return "UNCHECKABLE", type(e).__name__
     txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
+    if not txt:
+        return "UNCHECKABLE", "empty"
     return "OK", txt
 
 
@@ -204,16 +215,38 @@ def _cloudflare(prompt: str) -> tuple[str, str]:
     return ("OK", txt) if txt else ("UNCHECKABLE", "empty cloudflare")
 
 
-def _hf_router(prompt: str) -> tuple[str, str]:
+def _hf_router(prompt: str, slug: str | None = None) -> tuple[str, str]:
     tok = _hf_token()
     if not tok:
         return "UNCHECKABLE", "no-endpoint hf"
-    return _chat(
-        "https://router.huggingface.co/v1/chat/completions",
-        tok,
-        "Qwen/Qwen2.5-1.5B-Instruct:featherless-ai",
-        prompt,
-    )
+    target = slug or "Qwen/Qwen2.5-0.5B-Instruct:featherless-ai"
+    return _chat(HF_ROUTER, tok, target, prompt)
+
+
+def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
+    """Call the hub-queue model as itself on HF Inference Providers. Never stamp another model's answers."""
+    tok = _hf_token()
+    if not tok:
+        return "UNCHECKABLE", "no-endpoint hf"
+    if slug in _DEAD or "hf" in _DEAD:
+        return "UNCHECKABLE", f"dead-hub {slug}"
+    last = "no-endpoint hf"
+    unsupported = 0
+    for suf in HF_PROVIDER_SUFFIX:
+        name = f"{slug}{suf}"
+        st, txt = _chat(HF_ROUTER, tok, name, prompt)
+        if st == "OK":
+            return st, txt
+        last = f"hf:{name}:{txt}"
+        if any(c in txt for c in ("401", "403")):
+            _DEAD.add("hf")
+            return "UNCHECKABLE", last
+        if "400" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
+            unsupported += 1
+            continue
+    if unsupported >= 2:
+        _DEAD.add(slug)
+    return "UNCHECKABLE", last
 
 
 def _provider_configured(name: str) -> bool:
@@ -353,10 +386,11 @@ def mill(
     model: str = EAT_NEXT,
     dry: bool = False,
     banks_dir: Path | None = None,
-    items_cap: int = 3,
+    items_cap: int = 30,
+    generative_only: bool = True,
 ) -> dict:
     rows = load_queue(queue_path)
-    picked = pick_emptiest(rows, pick_n)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
@@ -365,12 +399,25 @@ def mill(
     for r in picked[grade_n:]:
         for ax in MODEL_AXES:
             skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
+    live: dict[str, bool] = {}
+    if not dry:
+        for r in to_grade:
+            mid = str(r.get("id") or "")
+            st, txt = infer_hub(mid, "Reply with one token: PING")
+            if st != "OK":
+                live[mid] = False
+                for ax in MODEL_AXES:
+                    skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE probe {txt}"})
+            else:
+                live[mid] = True
     for ax in MODEL_AXES:
         bank_path = banks_dir / f"{ax}.jsonl"
         bank = load_bank(bank_path)
         if not bank:
             for r in to_grade:
-                skips.append({"id": r.get("id"), "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
+                mid = str(r.get("id") or "")
+                if live.get(mid, True):
+                    skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE no frozen bank"})
             continue
         items = bank[: max(1, items_cap)]
         for r in to_grade:
@@ -378,9 +425,11 @@ def mill(
             if dry:
                 skips.append({"id": mid, "axis": ax, "reason": "UNCHECKABLE dry-run no-endpoint"})
                 continue
+            if not live.get(mid, False):
+                continue
             hits = 0
             for prompt, expected in items:
-                st, txt = infer_one(prompt, model)
+                st, txt = infer_hub(mid, prompt)
                 if st != "OK":
                     skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {txt}"})
                     break
@@ -415,7 +464,7 @@ def mill(
         "not_a_certificate": True,
         "eat_next_model": model,
         "axis": axis,
-        "note": "MEASURED only after GHA OIDC + VALID under #card-attestation-1. n<30 unquotable.",
+        "note": "MEASURED only after GHA OIDC + VALID. Hub-queue id is the model that answered. n<30 unquotable.",
     }
     (out_dir / "mill-report.json").write_text(json.dumps(report, indent=2) + "\n")
     (out_dir / "skip.jsonl").write_text("".join(json.dumps(s) + "\n" for s in skips))
@@ -431,7 +480,7 @@ def main() -> int:
     ap.add_argument("--axis", default="governance")
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
-    ap.add_argument("--items", type=int, default=3, help="items per (model,axis) this batch")
+    ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     args = ap.parse_args()
     rep = mill(
         Path(args.queue),

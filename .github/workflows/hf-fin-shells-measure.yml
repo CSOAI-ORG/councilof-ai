@@ -8,11 +8,12 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: "Which compact set to sign: financial (financial-measure-compact.json) or ledger (ledger-cards-compact.json)"
+        description: "Which compact set to sign: financial, ledger, or mill (hub-queue unsigned cards)"
         type: choice
         options:
           - financial
           - ledger
+          - mill
         default: financial
 
 concurrency:
@@ -39,8 +40,11 @@ jobs:
       - name: sign compact runs
         run: |
           set -euo pipefail
-          if [ "${{ inputs.target || 'financial' }}" = "ledger" ]; then
+          T="${{ inputs.target || 'financial' }}"
+          if [ "$T" = "ledger" ]; then
             python3 scripts/sign_ledger_cards.py
+          elif [ "$T" = "mill" ]; then
+            python3 scripts/sign_mill_cards.py
           else
             python3 scripts/sign_financial_runs.py
           fi
@@ -49,8 +53,11 @@ jobs:
           set -euo pipefail
           git config user.name "csoai-financial-measure"
           git config user.email "board@csoai.org"
-          if [ "${{ inputs.target || 'financial' }}" = "ledger" ]; then
+          T="${{ inputs.target || 'financial' }}"
+          if [ "$T" = "ledger" ]; then
             git add public/interop/ledger-card-*.json
+          elif [ "$T" = "mill" ]; then
+            git add public/interop/mill-cards-signed
           else
             git add public/interop/financial-measure-card-*.json
           fi
@@ -58,5 +65,5 @@ jobs:
             echo "no card change"
             exit 0
           fi
-          git commit -m "${{ inputs.target || 'financial' }}-measure: sign compact cards via OIDC board-sign"
+          git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
           git push origin HEAD:master
