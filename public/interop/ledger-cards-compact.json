@@ -236,20 +236,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
+   "n_probed": 6,
+   "live": 6,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "SergeyKurchev/cosmos3-domain30-mix-lora (200)"
+    "mrthor102/gun04 (200)",
+    "mrthor102/gun05 (200)",
+    "clear-blue-sky/cto10 (200)",
+    "mrthor102/gun02 (200)",
+    "Adeyemo260/Qwen3.8-Max (200)",
+    "mrthor102/gun01 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:08:24Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -277,12 +282,12 @@
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "ai.agentxray/mcp (405)"
+    "ai.avasis/quant-research (405)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T10:55:39Z",
+  "as_of": "2026-09-01T12:21:38Z",
   "unmeasured": [
    "tool_behavior",
    "capability_claims",
@@ -339,23 +344,21 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 4,
-   "live": 4,
+   "n_probed": 2,
+   "live": 2,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "raZVfCwti8Yn4GPe1URscmqYgog67aLZQZ (exists)",
-    "r9AYsTf9rGTKGWp81RSPQG146yNtZ8fbWE (exists)",
-    "rBY95cBdsEKmKyo9CpZ53YWTMx2vdQzXZS (exists)",
-    "rNbR4Gw9d9JRLdkb4rAhkWDcJyKRk39FoA (exists)"
+    "r9Ms1uHdCdjsb6dRj2S1nuFFgvpmE9cXUy (exists)",
+    "rDLKK2DDMMtWWpfq96e9cvVaXfy3gWi21 (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:08:24Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
@@ -374,20 +377,21 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1,
-   "live": 1,
+   "n_probed": 2,
+   "live": 2,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "travaydoma/ChinaVTB (200)"
+    "sabbiccan/deteksilamunmangrove (200)",
+    "madarchik/minimax-h3 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:07:33Z",
   "unmeasured": [
    "runtime_behavior",
    "hardware_claim",
@@ -406,25 +410,25 @@
   },
   "method": "keyless HTTPS GET registry.npmjs.org/{name}; three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 6,
-   "live": 6,
+   "n_probed": 7,
+   "live": 7,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "figma-local-context (200)",
-    "warp-agent-mcp (200)",
-    "mnemodb (200)",
-    "@milcho0604/velog-mcp (200)",
-    "@scramble-cloud/lurus-code-cli (200)",
-    "@microsoft/m365agentstoolkit-mcp (200)"
+    "grok-taskflow (200)",
+    "grok-search-rs-pc (200)",
+    "zubeid-youtube-mcp-server (200)",
+    "@hivelore/cli (200)",
+    "@facilio/cli (200)",
+    "@slatesvideo/cli (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T11:41:31Z",
+  "as_of": "2026-09-01T13:04:55Z",
   "unmeasured": [
    "install_integrity",
    "malware",
