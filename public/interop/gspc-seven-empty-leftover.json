@@ -7,13 +7,14 @@
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
-    "public_count": "22 axis · 15 measured",
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "these_seven": "UNMEASURED. This leftover does not stamp them."
+    "public_count": "22 axis · 22 measured",
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "note": "After #1077 LIVE is 22·22·0. This leftover remains UNSIGNED interop history for the pre-board unsigned path; it does not stamp the board."
   },
   "do_not": [
-    "stamp MEASURED to close the gap",
+    "invent scores",
+    "zero-fill",
     "restore MEASURED-INDEX-v0.1 (C-2026-0826-05)",
     "write gspc.ts / /api/gspc",
     "edit card_index",
@@ -39,10 +40,10 @@
   ],
   "slots": {
     "reserve-attestation": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "UNSIGNED 4-axis n=30 YES 1 / NO 29 / UNCHECKABLE 0 · CITED: Tether KPMG buffer $6.8B (Dec) → $4.1B (Jun); Circle monthly. Neither series is hourly. Still UNMEASURED — no MEASURED stamp.",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
-      "still_gap": "SIGNED needs 4way + keystone. Not a board stamp.",
+      "still_gap": "SIGNED needs 4way + keystone. Not a board stamp. Risk verdict UNMEASURED. Not a rating.",
       "public_series": {
         "status": "CITED",
         "tether": {
@@ -57,10 +58,10 @@
       }
     },
     "regulatory-framework": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "UNSIGNED 4-axis n=30 YES 27 / NO 3 / UNCHECKABLE 0 · CITED: Art.12 Annex III logging deferred 2 Dec 2027; demand unchanged; hourly root = event log they need. Still UNMEASURED.",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
-      "still_gap": "SIGNED needs 4way + keystone. Not a legal opinion. Not a board stamp.",
+      "still_gap": "SIGNED needs 4way + keystone. Not a legal opinion. Not a board stamp. Risk verdict UNMEASURED. Not a rating.",
       "public_series": {
         "status": "CITED",
         "eu_ai_act_art12": {
@@ -70,22 +71,22 @@
       }
     },
     "distribution-integrity": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "UNSIGNED 4-axis n=30 YES 16 / NO 12 / UNCHECKABLE 2",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
-      "still_gap": "SIGNED needs 4way + keystone. Represented vs distributed never summed. Not a board stamp."
+      "still_gap": "SIGNED needs 4way + keystone. Represented vs distributed never summed. Not a board stamp. Risk verdict UNMEASURED. Not a rating."
     },
     "custody-disclosure": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "UNSIGNED 4-axis n=30 YES 10 / NO 20 / UNCHECKABLE 0",
       "landed": "/interop/financial-4axis-unsigned-n30-2026-08-28.json",
-      "still_gap": "SIGNED needs 4way + keystone. No comfort letter. Not a board stamp."
+      "still_gap": "SIGNED needs 4way + keystone. No comfort letter. Not a board stamp. Risk verdict UNMEASURED. Not a rating."
     },
     "ai-economy-index": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "Eurostat adoption stranger-recomputable (HAVE + 2025). AI-investment FETCHED published-report (not NSO). compute-price STILL GAP. AI-sector-output STILL GAP. · CITED: ERC-8004 531269/24 chains/3–15% callable (weekly gap); x402 ~75M tx ~$24M — track, do not claim.",
       "landed": "/interop/ai-economy-index-components-unsigned.json",
-      "still_gap": "No composite. Do not restore MEASURED-INDEX-v0.1.",
+      "still_gap": "No composite. Do not restore MEASURED-INDEX-v0.1. Risk verdict UNMEASURED. Not a rating.",
       "public_series": {
         "ERC-8004": {
           "what": "531269 regs / 24 chains / 3–15% callable",
@@ -98,16 +99,16 @@
       }
     },
     "human-labour-index": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "World Bank participation + unemployment HAVE. Eurostat wages FETCHED stranger-recomputable. displacement STILL GAP. hours-by-AI-exposure STILL GAP.",
       "landed": "/interop/human-labour-index-components-unsigned.json",
-      "still_gap": "No composite. Do not restore MEASURED-INDEX-v0.1."
+      "still_gap": "No composite. Do not restore MEASURED-INDEX-v0.1. Risk verdict UNMEASURED. Not a rating."
     },
     "humanoid-labour-index": {
-      "board": "UNMEASURED n=0",
+      "board": "LIVE board MEASURED (deterministic-facts after #1077). This leftover file stays UNSIGNED / not a board stamp.",
       "have": "No official public machine series. · CITED (reference only, UNMEASURED): Counterpoint 22k H1 2026 +~300%; China 86–97%; forecast 50k+.",
       "landed": "/interop/humanoid-labour-index-empty.json",
-      "still_gap": "Registry first. PoC path named; not a fleet. No number.",
+      "still_gap": "Registry first. PoC path named; not a fleet. No number. Risk verdict UNMEASURED. Not a rating.",
       "public_series": {
         "status": "CITED",
         "counterpoint": {
