@@ -9,43 +9,9 @@ Shields (OPEN, live GET):
 
 ---
 
-## Fastest gated (TIER S)
+## Fastest gated (TIER S) — one click-path each
 
-### 1. Smithery gateway
-- Open: https://smithery.ai/new
-- URL: `https://councilof.ai/mcp`
-- Name: Council of AI GSPC
-- Body: Read-only MCP. Seven tools on HTTP. Measurement, never certification. Verify: https://councilof.ai/gspc-verify
-
-### 2. PulseMCP
-- Open: https://www.pulsemcp.com/submit
-- Official registry id: `io.github.CSOAI-ORG/gspc`
-- Remote: `https://councilof.ai/mcp`
-
-### 3. Glama
-- Open: https://glama.ai/mcp/servers — claim via GitHub OAuth on `CSOAI-ORG/councilof-ai`.
-
-### 4. VS Code MCP gallery / Cursor dir
-- VS Code: publisher account → MCP gallery listing pointing at `https://councilof.ai/mcp`.
-- Cursor: directory form, same URL. npx: `npx -y csoai-gspc-mcp@0.1.1`
-
-### 5. Product Hunt
-- Open: https://www.producthunt.com/posts/new
-- Tagline: Independent AI-behaviour measurement. We measure, never certify.
-- Link: https://councilof.ai/gspc-verify
-- Do not say SaaS. Do not say clients.
-
-### 6. Zenodo Communities
-- Open: https://zenodo.org/communities/new (login)
-- Join/create a community that already holds DOI 10.5281/zenodo.21991104. Do not mint a new fake DOI.
-
-### 7. Investors (OpenVC / Signal / Dealroom / Wellfound)
-Crunchbase is already DONE. Others: claim CSOAI Ltd, UK. Category: measurement infrastructure, RaaS not SaaS. No Stripe. Verify: https://councilof.ai/gspc-verify
-
-### 8. Press top — send from nicholas@csoai.org
-Subject: Independent AI measurement board (not a certificate) — 22 axis · 22 measured
-
-Body:
+Press body (reuse):
 
 ```
 Council of AI publishes a live measurement board, not a certification.
@@ -55,11 +21,90 @@ XRPL two-way check is 4/16 (never 16/16). SWIFT names on our site are a press li
 We implement SCITT RFC 9942/9943; that is not a "report".
 ```
 
-TechCrunch tip / FT contact / Politico tip / 404 tips — paste the same body. Never Gmail.
+### Smithery gateway
+- Open: https://smithery.ai/new
+- Server URL: `https://councilof.ai/mcp`
+- Name: Council of AI GSPC
+- Body: Read-only MCP. Seven tools. Measurement, never certification. Verify: https://councilof.ai/gspc-verify
 
-### 9. W3C CG / NIST
-- W3C: https://www.w3.org/community/ — join, then post. Computed ≠ asserted until the post exists.
-- NIST CI-Profile comment: owner docket. Do not invent a submitted comment.
+### PulseMCP
+- Open: https://www.pulsemcp.com/submit
+- Official registry id: `io.github.CSOAI-ORG/gspc`
+- Remote: `https://councilof.ai/mcp`
+
+### Glama
+- Open: https://glama.ai/mcp/servers
+- Claim via GitHub OAuth: repo `CSOAI-ORG/councilof-ai`
+
+### VS Code MCP gallery
+- Open: https://code.visualstudio.com/docs/copilot/customization/mcp-servers
+- Publisher account. Remote: `https://councilof.ai/mcp`. npx: `npx -y csoai-gspc-mcp@0.1.1`
+
+### Cursor dir
+- Open: https://cursor.com/docs/context/mcp
+- Directory listing. Same remote `https://councilof.ai/mcp`. npx: `npx -y csoai-gspc-mcp@0.1.1`
+
+### Product Hunt
+- Open: https://www.producthunt.com/posts/new
+- Tagline: Independent AI-behaviour measurement. We measure, never certify.
+- Link: https://councilof.ai/gspc-verify
+- Do not say SaaS. Do not say clients.
+
+### Communities
+- Open: https://zenodo.org/communities/new
+- Login. Point at existing DOI 10.5281/zenodo.21991104. Do not mint a fake DOI.
+
+### OpenSSF Best-Practices
+- Open: https://www.bestpractices.dev/en/projects/new
+- GitHub login. Project URL: `https://github.com/CSOAI-ORG/councilof-ai`
+- Verify: https://councilof.ai/gspc-verify
+- Measurement not certification.
+
+### OpenVC
+- Open: https://www.openvc.app/
+- Claim CSOAI Ltd, UK. Category: measurement infrastructure. RaaS not SaaS. No Stripe. Verify: https://councilof.ai/gspc-verify
+
+### Signal
+- Open: https://signal.nfx.com/
+- Same company paste as OpenVC.
+
+### Dealroom
+- Open: https://dealroom.co/
+- Claim profile. Same paste. Crunchbase is already DONE — do not re-claim as if missing.
+
+### Wellfound
+- Open: https://wellfound.com/
+- Founder login. Same paste.
+
+### Crunchbase
+- Open: https://www.crunchbase.com/
+- Already DONE. Do not invent a new listing.
+
+### TechCrunch
+- Open: https://techcrunch.com/got-a-tip/
+- From: nicholas@csoai.org (never Gmail)
+- Subject: Independent AI measurement board (not a certificate) — 22 axis · 22 measured
+- Body: press body above
+
+### FT
+- Open: https://www.ft.com/contact-us
+- From: nicholas@csoai.org. Same subject + press body.
+
+### Politico
+- Open: https://www.politico.eu/tip-line/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### 404
+- Open: https://www.404media.co/tips/
+- From: nicholas@csoai.org. Same subject + press body.
+
+### W3C CG
+- Open: https://www.w3.org/community/
+- Join, then post. Computed ≠ asserted until the post exists.
+
+### NIST
+- Open: https://www.nist.gov/
+- CI-Profile comment is owner docket. Do not invent a submitted comment.
 
 ---
 
