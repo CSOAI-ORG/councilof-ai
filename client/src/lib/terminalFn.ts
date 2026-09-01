@@ -16,6 +16,13 @@ export const TERMINAL_FNS = [
   "WATCH",
   "COMPUTE",
   "HELP",
+  "XRPL",
+  "SWIFT",
+  "JAIL",
+  "TRACE",
+  "AIBOM",
+  "REPRO",
+  "ROOT",
 ] as const;
 export type TerminalFn = (typeof TERMINAL_FNS)[number];
 export type TerminalPaste = "card" | "hub-id" | "text";
@@ -27,7 +34,7 @@ export type TerminalParse = {
 };
 
 export const TERMINAL_HINT =
-  "Functions: VERIFY · BOARD · AXIS {name} · CENSUS {id} · CORRECT · WATCH {id} · COMPUTE";
+  "Functions: VERIFY · BOARD · AXIS {name} · CENSUS {id} · CORRECT · WATCH {id} · COMPUTE · XRPL · SWIFT · JAIL · TRACE · AIBOM · REPRO · ROOT";
 
 export const TERMINAL_FN_RULING =
   "Type a function, get a dated vital sign. A Hub listing is DISCOVERED, never MEASURED.";
@@ -46,7 +53,9 @@ export function parseTerminal(raw: string): TerminalParse {
   if (!t) return { fn: null, arg: "", paste: "text" };
   if (looksLikeCardJson(t)) return { fn: "VERIFY", arg: t, paste: "card" };
 
-  const headed = t.match(/^(VERIFY|BOARD|AXIS|CENSUS|CORRECT|WATCH|COMPUTE|HELP)\b\s*([\s\S]*)$/i);
+  const headed = t.match(
+    /^(VERIFY|BOARD|AXIS|CENSUS|CORRECT|WATCH|COMPUTE|HELP|XRPL|SWIFT|JAIL|TRACE|AIBOM|REPRO|ROOT)\b\s*([\s\S]*)$/i,
+  );
   if (headed) {
     const fn = headed[1].toUpperCase() as TerminalFn;
     const arg = headed[2].trim();
