@@ -9,7 +9,7 @@ This document unifies product evidence behind one **card-v0** atom and one publi
 
 ## Thesis
 
-OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-8004 (six arms + AG-UI presentation) all emit the **same outer card-v0 envelope**. Root indexes cards. External chains witness the **root hash only**.
+OTel spans / TRACE records / GSPC / SWIFT / XRPL / BENJI / RWA / Dorado / ERC-8004 / COBOL Bridge (`cobol.legacy`, ours) / XDC document-state (six arms + Layer-0 + AG-UI presentation) all emit the **same outer card-v0 envelope**. Root indexes cards. External chains witness the **root hash only**.
 
 ---
 
@@ -42,6 +42,7 @@ Live also carries optional `did` / `tags` — keep; do not invent a thinner fork
 - **`gspc.behavioural`:** GSPC measure fields nest **inside `payload`** (axis, model, accuracy/status, bank cites, …). Never lift them to the outer envelope. Historical shape-A `gspc.measurement-card` under `public/signed/cards/` stays frozen and separate.
 - Other surfaces keep their facts in `payload` the same way.
 - **Cobalt:** leave alone this leftover (no Cobalt schema/product edits).
+- **COBOL Bridge:** OURS (`CSOAI-ORG/cobol-bridge-mcp`) — Layer-0; `cobol.legacy`; same root as GSPC. Not a CSGA competitor.
 
 
 Machine schema (path is singular): [`public/schema/card-v0.json`](../public/schema/card-v0.json).
@@ -76,6 +77,8 @@ Live probe (2026-09-01): ~78 leaves under `public/cards/`; payload sizes well un
 - `rwa.reserve`
 - `dorado.gate`
 - `erc8004.callable`
+- `cobol.legacy`
+- `xdc.document.state`
 
 ### Live (shipped — align, do not fork)
 
@@ -109,6 +112,20 @@ adapters → make_card → merkle(leaf sha256s) → public/root.json (+ proofs) 
 Board authority remains living GET [`/api/gspc`](https://councilof.ai/api/gspc) — **22 · 15 · 7**. Empty stays empty.
 
 ---
+
+
+## COBOL Bridge — Layer-0 note (correction)
+
+**COBOL Bridge is OURS.** Repo: [`CSOAI-ORG/cobol-bridge-mcp`](https://github.com/CSOAI-ORG/cobol-bridge-mcp). It is the Layer-0 mainframe arm and shares the **same public root as GSPC**. It is **not** a CSGA competitor. Kill any leftover competitor framing.
+
+- Grammar surface: `cobol.legacy` (copybook / CICS / JCL / VSAM evidence leaf).  
+- Outer card-v0 envelope unchanged; payload nests artifacts + PII flags + GDPR/PCI/SOX/Art.12 crosswalk + `source_hash`.  
+- Read-only sidecar contract in upstream `SPEC.md` — never writes bank core / ledger / CICS / VSAM / JCL submit.  
+- `cobolbridge.ai` HTTP 522 sits — this leftover does not attach the domain.  
+- Commercial (owner, out of band from parse tools): Free **10/day**; Pro **£79/mo** + signed root inclusion. Paid inclusion does not stamp MEASURED on the board.  
+- Cobalt Bridge remains untouched (different product).
+
+Also reserved additively: `xdc.document.state` (XDC document-state leaf; same outer envelope; no live writer from this leftover).
 
 ## Out of scope (this leftover)
 
