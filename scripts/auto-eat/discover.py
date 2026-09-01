@@ -24,11 +24,18 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import common as c
 
-PAGE = 100
+# Empirically measured 2026-09-01: MCP 422 at limit=200; 8004scan 422 at
+# limit=200 (less_than_equal); HF limit=1000+skip=1000 200; npm size=250 200.
+PAGE = 1000
+HF_PAGE = 1000
+NPM_PAGE = 250
+MCP_PAGE = 100
+ERC_PAGE = 100
 HF_MODELS = "https://huggingface.co/api/models?sort=createdAt&direction=-1&limit={n}&skip={skip}"
 HF_SPACES = "https://huggingface.co/api/spaces?sort=createdAt&direction=-1&limit={n}&skip={skip}"
 NPM_SEARCH = "https://registry.npmjs.org/-/v1/search?text=keywords:mcp&size={n}&from={skip}"
@@ -40,7 +47,7 @@ XRPL_RPC = "https://s1.ripple.com:51234"
 def discover_hf(n: int) -> list[dict]:
     out, skip = [], 0
     while len(out) < n:
-        take = min(PAGE, n - len(out))
+        take = min(HF_PAGE, n - len(out))
         st, body = c.http_get(HF_MODELS.format(n=take, skip=skip))
         if st != 200 or not body:
             if not out:
@@ -74,7 +81,7 @@ def discover_hf(n: int) -> list[dict]:
 def discover_hf_space(n: int) -> list[dict]:
     out, skip = [], 0
     while len(out) < n:
-        take = min(PAGE, n - len(out))
+        take = min(HF_PAGE, n - len(out))
         st, body = c.http_get(HF_SPACES.format(n=take, skip=skip))
         if st != 200 or not body:
             if not out:
@@ -108,7 +115,7 @@ def discover_hf_space(n: int) -> list[dict]:
 def discover_npm(n: int) -> list[dict]:
     out, skip = [], 0
     while len(out) < n:
-        take = min(250, n - len(out))
+        take = min(NPM_PAGE, n - len(out))
         st, body = c.http_get(NPM_SEARCH.format(n=take, skip=skip))
         if st != 200 or not body:
             if not out:
@@ -142,38 +149,51 @@ def discover_npm(n: int) -> list[dict]:
 
 
 def discover_mcp(n: int) -> list[dict]:
-    st, body = c.http_get(MCP_REGISTRY.format(n=n))
-    if st != 200 or not body:
-        print(f"  mcp-server UNREACHABLE (status={st})", file=sys.stderr)
-        return []
-    try:
-        data = json.loads(body)
-    except Exception:
-        print("  mcp-server UNCHECKABLE (bad json)", file=sys.stderr)
-        return []
     out = []
-    for row in data.get("servers", []):
-        s = row.get("server", row)
-        name = s.get("name")
-        if not name:
-            continue
-        remotes = s.get("remotes") or []
-        url = remotes[0].get("url") if remotes else None
-        out.append({
-            "kind": "mcp-server",
-            "id": name,
-            "status": "DISCOVERED",
-            "source": "registry.modelcontextprotocol.io",
-            "as_of": c.utcnow(),
-            "meta": {"remote_url": url, "has_remote": bool(url)},
-        })
-    return out
+    cursor = None
+    while len(out) < n:
+        take = min(MCP_PAGE, n - len(out))
+        url = MCP_REGISTRY.format(n=take)
+        if cursor:
+            url += "&cursor=" + urllib.parse.quote(cursor)
+        st, body = c.http_get(url)
+        if st != 200 or not body:
+            if not out:
+                print(f"  mcp-server UNREACHABLE (status={st})", file=sys.stderr)
+            break
+        try:
+            data = json.loads(body)
+        except Exception:
+            print("  mcp-server UNCHECKABLE (bad json)", file=sys.stderr)
+            break
+        rows = data.get("servers") or []
+        if not rows:
+            break
+        for row in rows:
+            s = row.get("server", row)
+            name = s.get("name")
+            if not name:
+                continue
+            remotes = s.get("remotes") or []
+            url_r = remotes[0].get("url") if remotes else None
+            out.append({
+                "kind": "mcp-server",
+                "id": name,
+                "status": "DISCOVERED",
+                "source": "registry.modelcontextprotocol.io",
+                "as_of": c.utcnow(),
+                "meta": {"remote_url": url_r, "has_remote": bool(url_r)},
+            })
+        cursor = (data.get("metadata") or {}).get("nextCursor")
+        if not cursor:
+            break
+    return out[:n]
 
 
 def discover_erc8004(n: int) -> list[dict]:
     out, skip = [], 0
     while len(out) < n:
-        take = min(PAGE, n - len(out))
+        take = min(ERC_PAGE, n - len(out))
         st, body = c.http_get(ERC8004.format(n=take, skip=skip), timeout=30)
         if st != 200 or not body:
             if not out:
@@ -211,32 +231,41 @@ def discover_erc8004(n: int) -> list[dict]:
 
 def discover_a2a(n: int) -> list[dict]:
     """A2A agents that 8004scan already indexed with an http(s) uri."""
-    st, body = c.http_get(ERC8004.format(n=n, skip=0), timeout=30)
-    if st != 200 or not body:
-        print(f"  a2a-agent UNREACHABLE (status={st})", file=sys.stderr)
-        return []
-    try:
-        data = json.loads(body)
-    except Exception:
-        print("  a2a-agent UNCHECKABLE (bad json)", file=sys.stderr)
-        return []
-    out = []
-    for a in data.get("items", []):
-        uri = a.get("agent_uri") or a.get("url") or a.get("endpoint") or ""
-        if not isinstance(uri, str) or not uri.startswith("http"):
-            continue
-        aid = a.get("agent_id") or uri
-        out.append({
-            "kind": "a2a-agent",
-            "id": str(aid),
-            "status": "DISCOVERED",
-            "source": "api.8004scan.io/api/v1/agents (http uri)",
-            "as_of": c.utcnow(),
-            "meta": {"card_url": uri.rstrip("/"), "chain_id": a.get("chain_id")},
-        })
-        if len(out) >= n:
+    out, skip = [], 0
+    while len(out) < n:
+        take = ERC_PAGE
+        st, body = c.http_get(ERC8004.format(n=take, skip=skip), timeout=30)
+        if st != 200 or not body:
+            if not out:
+                print(f"  a2a-agent UNREACHABLE (status={st})", file=sys.stderr)
             break
-    return out
+        try:
+            data = json.loads(body)
+        except Exception:
+            print("  a2a-agent UNCHECKABLE (bad json)", file=sys.stderr)
+            break
+        items = data.get("items") or []
+        if not items:
+            break
+        for a in items:
+            uri = a.get("agent_uri") or a.get("url") or a.get("endpoint") or ""
+            if not isinstance(uri, str) or not uri.startswith("http"):
+                continue
+            aid = a.get("agent_id") or uri
+            out.append({
+                "kind": "a2a-agent",
+                "id": str(aid),
+                "status": "DISCOVERED",
+                "source": "api.8004scan.io/api/v1/agents (http uri)",
+                "as_of": c.utcnow(),
+                "meta": {"card_url": uri.rstrip("/"), "chain_id": a.get("chain_id")},
+            })
+            if len(out) >= n:
+                break
+        skip += len(items)
+        if len(items) < take or len(out) >= n:
+            break
+    return out[:n]
 
 
 def discover_xrpl(n: int) -> list[dict]:
