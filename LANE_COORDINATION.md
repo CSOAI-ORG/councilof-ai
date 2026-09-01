@@ -378,3 +378,28 @@ Bytes, not a clamp:
 - chain.json still carries historical `body_published:false` on those 22; we did not
   re-sign the envelope. derive-chain-facts now measures files, so withheld=0.
 - Do not restore a 150 floor. Do not claim 150 "verify" when 335 do.
+
+## 2026-08-31 · JEEVES/Grok — Vercel cutover eaten (append)
+
+Live is Cloudflare only. Vercel Git unlinked; `csoai-v2-app` + `councilof-ai-src` **deleted**.
+Do not wait for Vercel checks. Merge gate = GHA `deploy.yml` + live councilof.ai.
+
+Board: **22 · 15 measured · 7 UNMEASURED**, cards **335/335**, stamp SIGNED.
+os/app.csoai.org CNAME `csoai-site.pages.dev`. GitHub profile README updated (csoai-org).
+GitHub sudo mail → **nicholas@csoai.org** Private Email (https://privateemail.com). Do not use Gmail.
+
+Canon: `_alignment/ALIGNMENT_2026-08-31.md` · grokbot `JEEVES-SESSION-NOTE-2026-08-31.md`
+CLAUDE.md on origin: commit 9b1b70b7.
+
+## 2026-09-01 · grokbot EAT lane takeover (append)
+
+Cursor Grok session `01a0558f` (ttys000) owns the grokbot EAT lane.
+Chrome TUI tab stays TUI — do not grab it. Do not restart DSH. KEEP 3090 `fpowppss5ngtkw` RUNNING; A100s stay EXITED.
+
+Eat order: `~/.grokbot/tui-help/tui-help-2026-09-01-eat.md`.
+Session note: `~/.grokbot/JEEVES-SESSION-NOTE-2026-09-01.md`.
+
+Live GET `/api/gspc` = **22 · 15 · 7**. Unsigned 4-axis unique n=30 on `/interop/` only (`writes_board` not written). Do not stamp the 7 MEASURED. Hub writes halted until `whoami()` is `csoai` or `orgs` contains `csoai`.
+
+Landed leftovers: #1000 #1001 #1002 #992 (`ba90e87b`, living root-as-index + N→N+1 UNCHECKABLE).
+DIRTY stay open: #999 #997 #994 #978. #993 sits NAMED. No wrangler. No fill-7.
