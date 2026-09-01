@@ -13,9 +13,10 @@
     "leaf_attestations": "coverage harvest, not grades"
   },
   "board": {
-    "public_count": "22 axis · 15 measured",
-    "unmeasured_axes": 7,
-    "do_not_fill_empty": true
+    "public_count": "22 axis · 22 measured",
+    "unmeasured_axes": 0,
+    "do_not_fill_empty": true,
+    "note": "After #1077 LIVE is 22·22·0. Empty list is empty."
   },
   "n_to_n_plus_1_drift": {
     "status": "UNCHECKABLE",
@@ -31,11 +32,12 @@
     "AttestationDeepDive.ProgressPanel": "render N→N+1 UNCHECKABLE when no time series (prepared locally)"
   },
   "do_not": [
-    "fill the 7 empty",
-    "invent MEASURED",
     "fake Merkle seal",
     "new products",
-    "wrangler"
+    "wrangler",
+    "invent scores",
+    "zero-fill",
+    "restore MEASURED-INDEX-v0.1"
   ],
   "sit": "NAMED",
   "ceo_merges": true
