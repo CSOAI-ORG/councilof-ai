@@ -14,7 +14,36 @@ import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import LiveLeaderboard from "@/components/board/LiveLeaderboard";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import HfLivingRecord from "@/components/HfLivingRecord";
+import XrplReaderRail from "@/components/gspc/XrplReaderRail";
+import EstateDoors from "@/components/home/EstateDoors";
+import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
+
+// schema.org for the homepage (B5.3): the estate as a SoftwareApplication plus
+// the board Dataset. The Dataset node is DERIVED from the axis registry
+// (gspcDatasetLd) — no bank is asserted that is not in the single source of
+// truth. No prices, no ratings, no "certified": measurement, not certification.
+const HOME_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      name: "Council of AI — GSPC board and verify",
+      url: "https://councilof.ai/",
+      applicationCategory: "DeveloperApplication",
+      operatingSystem: "Web",
+      description:
+        "Read the live GSPC measurement board (GET /api/gspc) and verify signed measurement cards in the browser. Verification is free; a rank is never sold. Measurement, not certification.",
+      publisher: {
+        "@type": "Organization",
+        name: "CSOAI Ltd",
+        url: "https://councilof.ai",
+        identifier: "UK Companies House 16939677",
+      },
+    },
+    gspcDatasetLd(false),
+  ],
+};
 
 export default function HomeVerify() {
   const [axis, setAxis] = useState<string | null>(null);
@@ -28,6 +57,7 @@ export default function HomeVerify() {
 
   return (
     <div data-testid="home-verify">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
       <HeroSlides />
 
       <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
@@ -98,6 +128,11 @@ export default function HomeVerify() {
         </div>
 
         <HfLivingRecord />
+
+        <div className="mt-16 grid items-start gap-6 lg:grid-cols-2">
+          <XrplReaderRail />
+          <EstateDoors />
+        </div>
 
         <section aria-labelledby="ask-h" className="mt-20 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:mt-24 sm:p-8">
           <h2 id="ask-h" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">
