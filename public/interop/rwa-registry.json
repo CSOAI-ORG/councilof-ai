@@ -3,7 +3,13 @@
  "chain": "XRPL",
  "generated_for": "live registry — instruments with located issuers (verified on-chain addresses); declared-not-located listed in coverage-register",
  "counts": {
-  "located": 8
+  "named": 8,
+  "located": 8,
+  "xrpl_located": 6,
+  "evm_located": 2,
+  "mainnet_verified_and_attested": 6,
+  "not_located": 0,
+  "control_facts_measured": 8
  },
  "honesty": "Only instruments with REAL verified addresses are listed; control-facts status quoted from signed runs. Never an endorsement.",
  "instruments": [
@@ -11,6 +17,7 @@
    "instrument": "Ondo OUSG (Short-Term US Treasuries)",
    "chain": "XRPL",
    "issuer": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": "clean"
   },
@@ -18,6 +25,7 @@
    "instrument": "Ripple USD (RLUSD)",
    "chain": "XRPL",
    "issuer": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": "clean"
   },
@@ -25,6 +33,7 @@
    "instrument": "Archax x abrdn USD Liquidity Fund",
    "chain": "XRPL",
    "issuer": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": null
   },
@@ -32,6 +41,7 @@
    "instrument": "OpenEden TBILL (TBL)",
    "chain": "XRPL",
    "issuer": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": null
   },
@@ -39,6 +49,7 @@
    "instrument": "Braza Bank USDB",
    "chain": "XRPL",
    "issuer": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": null
   },
@@ -46,6 +57,7 @@
    "instrument": "Braza Bank BBRL",
    "chain": "XRPL",
    "issuer": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+   "address_status": "mainnet-verified",
    "control_facts": "MEASURED (see financial-measure-run-v2)",
    "watch": null
   },
@@ -53,6 +65,7 @@
    "instrument": "BlackRock BUIDL (USD Institutional Digital Liquidity Fund)",
    "chain": "EVM",
    "contract": "0x7712c34205737192402172409a8f7ccef8aa2aec",
+   "address_status": "evm-located",
    "control_facts": "MEASURED (see evm-control-facts)",
    "watch": "clean"
   },
@@ -60,6 +73,7 @@
    "instrument": "Franklin Templeton BENJI (FOBXX)",
    "chain": "EVM",
    "contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+   "address_status": "evm-located",
    "control_facts": "MEASURED (see evm-control-facts)",
    "watch": "clean"
   }

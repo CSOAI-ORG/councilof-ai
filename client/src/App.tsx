@@ -14,6 +14,7 @@ import { Header } from "./components/Header";
 import OsLauncher from "./pages/OsLauncher";
 import HomeVerify from "./pages/HomeVerify";
 import ToolsPage from "./pages/ToolsPage";
+import JailFolder from "./pages/JailFolder";
 import { Footer } from "./components/Footer";
 import WidgetLayout from "./components/widget/WidgetLayout";
 import WidgetCourses from "./components/widget/WidgetCourses";
@@ -668,6 +669,7 @@ function App() {
                   <Route path="/board" component={MeasurementBoard} />
                   <Route path="/gspc-scoreboard" component={GspcScoreboard} />
                   <Route path="/financial-axes" component={FinancialAxes} />
+                  <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
                   <Route path="/insurers" component={Insurers} />
                   <Route path="/instrument" component={Instrument} />
