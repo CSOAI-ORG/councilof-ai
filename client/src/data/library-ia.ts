@@ -36,6 +36,11 @@ export const PRIMARY_PATHS = new Set<string>([
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
   "/models", "/tools", "/plugin", "/report",
+  // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
+  // A promoted self-serve destination (footer + /tools + /mcp cross-link); unregistered
+  // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
+  // the same page under a shorter alias.
+  "/connect-gspc", "/connect-ai",
   // Specialist boards + signed registers (all live in Measure)
   "/eunomia", "/eunomia-data", "/registers", "/first-fine-watch",
   "/eunomia-catalog", "/eunomia-crosswalk", "/eunomia-indices",

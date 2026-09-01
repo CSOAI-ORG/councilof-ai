@@ -1,0 +1,55 @@
+{
+  "_about": "Canonical function-calling tool definitions for the Council of AI GSPC measurement API, for platforms that consume raw function/tool specs rather than an OpenAPI document (OpenAI Chat Completions / Responses, xAI Grok API, Perplexity — all OpenAI-compatible — plus a Gemini function_declarations variant). MCP-native clients should use https://councilof.ai/mcp instead. The functions are read-only. Byte-exact Ed25519 card verification runs client-side / via MCP verify_card, never as a server POST, so nothing a user checks is uploaded. We measure, never certify.",
+  "_endpoints": {
+    "getBoard": "GET https://councilof.ai/api/gspc  (optional ?axis=<name>)",
+    "getCards": "GET https://councilof.ai/api/cards",
+    "human_verify": "https://councilof.ai/gspc-verify"
+  },
+  "openai_tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "gspc_get_board",
+        "description": "Get the live Council of AI GSPC governance board (totals + all axes) from https://councilof.ai/api/gspc. Read this before trusting an AI model: it returns the slot count and the measured count as two distinct labelled numbers, plus each axis with n, accuracy, confidence interval, and MEASURED/UNMEASURED status. Pass axis to get one row. Quote totals.public_count verbatim; never invent a number.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "axis": {
+              "type": "string",
+              "description": "Optional case-insensitive axis name (e.g. governance, safety, provenance, continuity). Omit for the full board."
+            }
+          },
+          "required": []
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "gspc_get_cards",
+        "description": "Get the published index of Ed25519-signed GSPC measurement cards from https://councilof.ai/api/cards. Use to discover which measurements were signed and to fetch a card URL. Byte-exact verification is client-side only (open https://councilof.ai/gspc-verify) so nothing is uploaded; verdicts are VALID / INVALID / UNCHECKABLE against the pinned key did:web:csoai.org#card-attestation-1.",
+        "parameters": { "type": "object", "properties": {}, "required": [] }
+      }
+    }
+  ],
+  "gemini_function_declarations": [
+    {
+      "name": "gspc_get_board",
+      "description": "Get the live Council of AI GSPC governance board (totals + all axes) from https://councilof.ai/api/gspc. Read before trusting a model. Optional axis returns one row. Quote totals.public_count verbatim; never invent a number. We measure, never certify.",
+      "parameters": {
+        "type": "OBJECT",
+        "properties": {
+          "axis": {
+            "type": "STRING",
+            "description": "Optional case-insensitive axis name (e.g. governance, safety, provenance, continuity). Omit for the full board."
+          }
+        }
+      }
+    },
+    {
+      "name": "gspc_get_cards",
+      "description": "Get the published index of Ed25519-signed GSPC measurement cards from https://councilof.ai/api/cards. Byte-exact verification is client-side (https://councilof.ai/gspc-verify); verdicts are VALID / INVALID / UNCHECKABLE against the pinned key.",
+      "parameters": { "type": "OBJECT", "properties": {} }
+    }
+  ]
+}
