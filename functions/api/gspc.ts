@@ -141,10 +141,10 @@ export const onRequestGet: PagesFunction = async (context) => {
           },
           financial: {
             ...bySelectedFamily("financial"),
-            note: "The 8 financial/domain axis (ADR-001). One is measured — provenance-controls, from a " +
-              "deterministic mainnet read of 6 issuer accounts. The other seven are declared slots with " +
-              "no run. None of the eight is a model comparison, so none has a leader, an accuracy or a " +
-              "separation determination, and none contributes to any mean below.",
+            note: "The 8 financial/domain axis (ADR-001). Deterministic-facts runs on the six-issuer " +
+              "set where status is MEASURED. Index slots stay UNMEASURED (C-2026-0826-05). None of the " +
+              "eight is a model comparison, so none has a leader, an accuracy or a separation " +
+              "determination, and none contributes to any mean below.",
           },
         },
         sweep_note:
@@ -222,8 +222,8 @@ export const onRequestGet: PagesFunction = async (context) => {
     ],
     limitations: [
       `${separatedNames.length} of the ${measuredCount} measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.`,
-      "22 axes are on the board and 15 carry a measurement. The 7 declared slots (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, and the three candidate indices) have NO run behind them — they are published so the gap is visible, and must never be quoted as measured. See totals.count_grammar.",
-      "The one measured financial axis, provenance-controls, measures on-chain CONTROL FACTS only — which flags an issuer account carries — for ONE axis family over SIX instruments. What those facts imply about an instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. It is not a rating, not investment advice, not a ranking, and not an endorsement of any named instrument.",
+      `${selected.length} axes are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. Financial facts axes are not model comparisons.`,
+      "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
       "C-2026-0826-05 stands: MEASURED-INDEX-v0.1 was an over-claim. ai-economy-index and human-labour-index stay UNMEASURED until missing series + formula are published and NEW signed cards exist. Reference components (Eurostat 13.48%, WB 57.58%/5.92%) are not an index. Do not restore the v0.1 sticker. Board GET /api/gspc is authority.",
       "Jail (slot 14) separation determination 2026-08-25: TIE — the leader's Wilson 95% interval [0.475, 0.698] contains the fleet mean 0.5455, so the point-estimate lead is not a measured advantage. Measured on a 7-model gold-bank fleet (all models n≥30 usable, 68–71), not the 19-model board fleet; the gold bank is published (csoai/gspc-jail-goldbank, HF 2026-08-25).",
