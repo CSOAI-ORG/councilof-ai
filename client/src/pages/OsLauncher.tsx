@@ -23,6 +23,7 @@ import { formatComputeReply } from "@/lib/computeBridge";
 import { liveCountLine } from "@/components/os/osChat";
 import HfLivingRecord from "@/components/HfLivingRecord";
 import GspcStreamCard from "@/components/os/GspcStreamCard";
+import XrplReaderRail from "@/components/gspc/XrplReaderRail";
 
 export {
   BOARD_PANE,
@@ -84,6 +85,12 @@ export default function OsLauncher() {
           Board, verify, get measured, arena, and the harness — in this window.
           GSPC counts come from GET /api/gspc.{" "}
           <span className="font-semibold text-emerald-900">{board.public_count}</span>
+          {board.gspc_family && board.financial_family && (
+            <>
+              {" "}({board.gspc_family.axes} model-comparison + {board.financial_family.axes} fact
+              cards — fact cards carry no leader and no accuracy)
+            </>
+          )}
           . Hugging Face is the parallel record — a Hub repo is not a grade.
           We measure. We do not certify.
         </p>
@@ -93,6 +100,13 @@ export default function OsLauncher() {
         </section>
 
         <HfLivingRecord compact />
+
+        {/* OS side rail — the live XRPL reader. Names come from GET /api/xrpl on
+            this load, never typed (P0.3). writes_board=false is quoted, and the
+            unsigned-leaf honesty flag is computed from the payload. */}
+        <div className="mt-8">
+          <XrplReaderRail heading="Side rail — XRPL reader, live" />
+        </div>
 
         <form
           className="mt-10 rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4"

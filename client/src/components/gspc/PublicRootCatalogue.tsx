@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 
 /**
  * Public-root catalogue (GET /root.json) + GET /api/xrpl reader.
- * Live /api/xrpl: 14/16 GH-secret sigs; EURQ/USDQ unsigned (NO_LAPTOP_SIGN).
+ * Sig counts are COMPUTED from the live /api/xrpl payload on every load — never
+ * typed. (This file used to hard-code "14/16 GH-secret sigs; EURQ/USDQ unsigned"
+ * and the live reader moved under it. Bytes adjudicate; typed tallies rot.)
  * Inclusion is membership in card_sha256[]. Paste-hash also hits live GET /api/proof?sha=.
  * DEVNET historical. Do not restamp. Do not mix represented TVL. Do not add /api/swift.
  */
@@ -24,6 +26,10 @@ type XrplReader = {
   writes_board?: boolean;
   n?: number;
   status?: number;
+  /** Leaves with a non-null sig_ed25519, computed from the payload this load. */
+  signed?: number;
+  /** Symbols whose sig_ed25519 is null this load (NO_LAPTOP_SIGN gaps). */
+  unsignedSymbols?: string[];
 };
 
 type ProofDoc = {
@@ -61,7 +67,17 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
     fetch("/api/xrpl", { signal: ac.signal, headers: { accept: "application/json" } })
       .then(async (r) => {
         const body = r.ok ? await r.json().catch(() => ({})) : {};
-        setXrpl({ status: r.status, kind: body.kind, writes_board: body.writes_board, n: body.n });
+        const assets: { symbol?: string; sig_ed25519?: string | null }[] = Array.isArray(body.assets)
+          ? body.assets
+          : [];
+        setXrpl({
+          status: r.status,
+          kind: body.kind,
+          writes_board: body.writes_board,
+          n: body.n,
+          signed: assets.filter((a) => a.sig_ed25519 != null).length,
+          unsignedSymbols: assets.filter((a) => a.sig_ed25519 == null).map((a) => a.symbol || "?"),
+        });
       })
       .catch(() => setXrpl({ status: 0 }));
     return () => ac.abort();
@@ -97,6 +113,17 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
     return () => ac.abort();
   }, [q]);
 
+  // The sig tally, computed from the live reader on THIS load — never typed.
+  // While the fetch is in flight the tally says loading; a failed fetch says
+  // UNCHECKABLE, never a remembered number.
+  const xrplLive = xrpl?.status === 200 && typeof xrpl.n === "number" && typeof xrpl.signed === "number";
+  const unsignedNames = xrpl?.unsignedSymbols ?? [];
+  const sigLine = xrplLive
+    ? `${xrpl!.signed}/${xrpl!.n} leaves carry sig_ed25519${unsignedNames.length > 0 ? `; ${unsignedNames.join("/")} unsigned` : ""}`
+    : xrpl == null
+      ? "sig tally loading — no number shown until the reader answers"
+      : `sig tally UNCHECKABLE this load (GET /api/xrpl ${xrpl.status ? `HTTP ${xrpl.status}` : "unreachable"})`;
+
   const box =
     variant === "dark"
       ? "rounded-2xl border border-amber-400/30 bg-amber-500/5 p-6"
@@ -107,12 +134,16 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
   return (
     <div className={box} data-testid="public-root-catalogue">
       <p className={`text-xs font-bold uppercase tracking-wide ${mono}`}>
-        Public-root catalogue · 14/16 GH-secret sigs
+        Public-root catalogue · live sig tally
       </p>
       <p className={`mt-2 text-sm ${muted}`}>
         Load GET <a className="underline" href="/root.json">/root.json</a>. GET{" "}
-        <code>/api/xrpl</code>: <strong>14/16 GH-secret sigs</strong>; <code>EURQ</code>/<code>USDQ</code>{" "}
-        unsigned (<code>sig_ed25519</code> null, NO_LAPTOP_SIGN). Do not say all leaves unsigned.
+        <code>/api/xrpl</code>: <strong>{sigLine}</strong>
+        {xrplLive && unsignedNames.length > 0 && (
+          <> (<code>sig_ed25519</code> null, NO_LAPTOP_SIGN)</>
+        )}
+        . The tally is computed from the reader on this load — do not say all leaves unsigned, and
+        do not quote a remembered count.
         Inclusion is membership in <code>card_sha256[]</code> plus live GET <code>/api/proof?sha=</code>{" "}
         (kind=inclusion). This is not a signed-card verify of the two unsigned leaves. Do not fake
         Ed25519. DEVNET historical. Not a second scoreboard. Intended DID fragment:{" "}
@@ -123,7 +154,9 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
           : xrpl?.status != null
             ? ` (HTTP ${xrpl.status} this load)`
             : ""}
-        . Not a GSPC mill. Hugging Face mirror:{" "}
+        . Not a GSPC mill. The writer of this root is <strong>councilof.ai/root.json</strong>;
+        the csoai.org twin can lag behind it and is STALE whenever the bytes differ (issue #1010
+        tracks the twin) — verify against this host. Hugging Face mirror:{" "}
         <a className="underline" href="https://huggingface.co/datasets/csoai/gspc-boards">
           csoai/gspc-boards
         </a>{" "}
@@ -150,7 +183,7 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
           </div>
           <div>
             <dt className="uppercase tracking-wide opacity-70">/api/xrpl sigs</dt>
-            <dd>14/16 GH-secret; EURQ/USDQ unsigned</dd>
+            <dd>{sigLine}</dd>
           </div>
         </dl>
       )}
@@ -169,8 +202,8 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       {checked && (
         <p className={`mt-2 text-sm font-semibold ${included ? "text-emerald-300" : "text-amber-300"}`}>
           {included
-            ? "INCLUDED in card_sha256[] — catalogue membership. Not a signature check. EURQ/USDQ stay unsigned (NO_LAPTOP_SIGN)."
-            : "NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check. EURQ/USDQ stay unsigned."}
+            ? `INCLUDED in card_sha256[] — catalogue membership. Not a signature check. ${unsignedNames.length > 0 ? `${unsignedNames.join("/")} stay unsigned (NO_LAPTOP_SIGN).` : ""}`
+            : `NOT IN THIS ROOT — hash is not in card_sha256[]. Still not a signature check.${unsignedNames.length > 0 ? ` ${unsignedNames.join("/")} stay unsigned.` : ""}`}
         </p>
       )}
       {checked && proofErr && (
@@ -179,9 +212,9 @@ export default function PublicRootCatalogue({ variant = "dark" }: { variant?: "d
       {checked && proofHttp != null && (
         <p className={`mt-2 text-sm font-semibold ${proofHttp === 200 && proof?.kind === "inclusion" ? "text-emerald-300" : "text-amber-300"}`}>
           {proofHttp === 200 && proof?.kind === "inclusion"
-            ? `LIVE INCLUSION HTTP 200 — GET /api/proof?sha= kind=inclusion index=${proof.index ?? "—"}. merkle_root=${(proof.merkle_root || "").slice(0, 16) || "—"}… 14/16 GH-secret sigs on /api/xrpl; EURQ/USDQ unsigned. Not a score. Not a second scoreboard.`
+            ? `LIVE INCLUSION HTTP 200 — GET /api/proof?sha= kind=inclusion index=${proof.index ?? "—"}. merkle_root=${(proof.merkle_root || "").slice(0, 16) || "—"}… /api/xrpl this load: ${sigLine}. Not a score. Not a second scoreboard.`
             : proofHttp === 404
-              ? `NOT A LEAF of the last published root (GET /api/proof HTTP 404). EURQ/USDQ stay unsigned. Not a score.`
+              ? `NOT A LEAF of the last published root (GET /api/proof HTTP 404).${unsignedNames.length > 0 ? ` ${unsignedNames.join("/")} stay unsigned.` : ""} Not a score.`
               : `GET /api/proof HTTP ${proofHttp}. Inclusion UNCHECKABLE this load.`}
         </p>
       )}
