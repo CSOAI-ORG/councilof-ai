@@ -133,6 +133,7 @@ F6S, Gust, EU-Startups, Failory, Indie Hackers, niche AI dirs, UK tech media: sa
 | Door | URL | Paste |
 |---|---|---|
 | NVIDIA Inception | https://www.nvidia.com/en-us/startups/ | CSOAI Ltd. Independent measurement. Not a model vendor. Credits only. |
+| Microsoft Founders Hub | https://portal.startups.microsoft.com/ | Open: https://portal.startups.microsoft.com/ — CSOAI Ltd. Measurement infrastructure. RaaS not SaaS. No Stripe. Verify: https://councilof.ai/gspc-verify |
 | Google for Startups | https://startup.google.com/ | Same. Cloud credits. No Stripe. |
 | AWS Activate | https://aws.amazon.com/activate/ | Same. |
 | OCI | https://www.oracle.com/cloud/free/ | Always Free tenancy already running; extra credits owner. |
