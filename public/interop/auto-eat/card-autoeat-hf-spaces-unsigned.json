@@ -1,10 +1,10 @@
 {
  "schema": "https://councilof.ai/schema/card-v0.json",
- "surface": "autoeat.hf.newmodels",
- "subject": "auto-eat hf-model: 10 LIVE of 10 probed (read-only, ungraded)",
+ "surface": "autoeat.hf.spaces",
+ "subject": "auto-eat hf-space: 10 LIVE of 10 probed (read-only, ungraded)",
  "as_of": "2026-09-01T07:53:04Z",
  "source_urls": [
-  "https://huggingface.co/api/models"
+  "https://huggingface.co/api/spaces"
  ],
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -16,7 +16,7 @@
    "auto_measured": false,
    "cited_not_endorsed": true
   },
-  "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+  "method": "keyless HTTPS GET huggingface.co/api/spaces/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
    "n_probed": 10,
    "live": 10,
@@ -26,30 +26,28 @@
    "uncheckable": 0,
    "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "alpha3627/2b0a4272-8300-48f6-bfaf-1c59770a21cb (200)",
-    "taniguchitakara/my_so101_groot_policy (200)",
-    "SD12DSA21EAS/MyAwesomeModel-TestRepo (200)",
-    "cosmos1030/gmp-kd3e-1-s50pct-lr5e-5_20260901_165041 (200)",
-    "Lynxpda/micro-qwen4exp (200)",
-    "tadiecool29/STL-rasyosef-roberta-base-amharic-sentiment-finetuned (200)"
+    "arjunyonjan/pragya-h3 (200)",
+    "eric-tron/test_app_2 (200)",
+    "lavanya2007/Late_attendance (200)",
+    "saif2040ai/marc21-training (200)",
+    "ahmedrihana/Amharic_Gurage_Translator (200)",
+    "Slakade/suryaocr (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
   "as_of": "2026-09-01T07:53:04Z",
   "unmeasured": [
-   "gspc_score",
-   "weights_integrity",
-   "lineage",
-   "runtime_variant"
+   "runtime_behavior",
+   "hardware_claim",
+   "lineage"
   ]
  },
  "sig_ed25519": null,
  "state": "queued",
  "unmeasured": [
-  "gspc_score",
-  "weights_integrity",
-  "lineage",
-  "runtime_variant"
+  "runtime_behavior",
+  "hardware_claim",
+  "lineage"
  ]
 }
