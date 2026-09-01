@@ -6,17 +6,17 @@
 ### ✅ DONE — shipped, live, verified
 | What | Surface | Evidence |
 |---|---|---|
-| 22-axis board truth | councilof.ai/api/gspc + gspc + HF | `22 axis · 15 measured` (7 declared UNMEASURED slots) |
+| 22-axis board truth | councilof.ai/api/gspc + gspc + HF | `22 axis · 22 measured` (0 unmeasured; after #1077) |
 | Count-honesty sweep | gspc app.html + llms.txt | 0 stale "12 of 13"/"13 core"/"14 axes" references |
-| HF mirror | csoai/gspc-board + 14 per-axis + gspc-bench-results | living-board.json (22/15) + rwa-registry.json (14 instruments) |
+| HF mirror | csoai/gspc-board + 14 per-axis + gspc-bench-results | living-board.json (cite LIVE 22/22) + rwa-registry.json |
 | MCP server | gspc /api/mcp + estate /mcp | both live, initialize → tools/list → tools/call proven |
-| llms.txt (Grok-first-read) | gspc + HF | corrected from "13 measured" → 22/15 + MCP + RWA + verify |
+| llms.txt (Grok-first-read) | gspc + HF | corrected from "13 measured" → 22/22 + MCP + RWA + verify |
 | Wilson-CI axis cards | gspc renderAxes | live per-axis measured + Wilson 95% CI + n |
 | Hero code-snippet (OpenRouter #1) | gspc renderOverview | "Try it — no sign-up, no key, £0" + copyable curl |
 | Mobile-first CSS | gspc app.html | <600px card-stacking, centered header, full-width inputs |
 | Cache + security headers | gspc _headers | max-age=300, X-Frame DENY, X-Content nosniff |
 | Offline verifier | verify-card Action + card logic | VALID/INVALID/UNCHECKABLE proven with forged card |
-| RAG corpus corrected | estate harness/rag_corpus.jsonl | 4 appended truth entries (22/15, catalog=11, signed surfaces, OpenSkill) |
+| RAG corpus corrected | estate harness/rag_corpus.jsonl | 4 appended truth entries (22/22, catalog=11, signed surfaces, OpenSkill) |
 | JCS canonicalization (roadmap #1) | gspc signlib | 4 signers now use JCS-correct canon (big-float 1e+100 fixed; 6/6 edge cases pass) |
 | Parallel key-consumers | estate harness/rwa-attest/ | etherscan_source_verify.py + rwa_xyz_resolve.py + hf_publish.py (ready, honest when no key) |
 | Spray map | estate docs/PRODUCT_DEMO_SPRAY_MAP.md | 11 products × 6 demographics × 364-venue DB × 3 lever orders |
@@ -84,7 +84,7 @@
 010. **Sign-up stack kick-off** (the 68 owner-signup rows, filter owner_needed=YES)
 
 ### LEVER 2: Agent-lane permissionless spray (17 sites, JEEVES + Claude execute)
-011. **PyPI csoai publish** (trusted publishing — live, verify + update description to 22/15)
+011. **PyPI csoai publish** (trusted publishing — live, verify + update description to 22/22)
 012. **GitHub MCP registry PR** (one genuine PR for `io.github.CSOAI-ORG/gspc`)
 013. **awesome-mcp-servers PR** (one entry, correct endpoint)
 014. **cursor.directory PR** (rules/prompts listing)
@@ -133,14 +133,14 @@
 061. **Regulator white-label render** (ditto — free forever, branded)
 
 ### LEVER 6: Data + measurement engine (the 24/7 grind)
-062–070. **9-axis extension** (the 7 UNMEASURED declared slots → wire real measurement runs: reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure, 3 candidate indices)
+062–070. **Post-#1077:** financial/domain axes are MEASURED on LIVE GET. Keep risk-verdict UNMEASURED honesty; do not invent composites. (Historical wave text referred to 7 empty slots — retired.)
 071. **Jail bank freeze** (the jailed-model evidence pack — frozen bank, consent gate, signed card)
 072. **McNemar paired-test pipeline** (the differentiation nobody else publishes — re-probe every axis)
 073. **OpenSkill multi-team rating** (wire the validated k=3 Plackett-Luce into the leaderboard — replaces pairwise Elo for team/swarm populations)
 074. **Inspect AI harness integration** (UK AISI primary evaluation — sign each run as MEASUREMENT with config digest + instrument version)
 075–080. **6 per-axis gold-bank updates** (refresh the frozen measurement banks with the latest data)
 081. **Ongoing RWA re-measurement** (every 30 days, re-probe on-chain instruments — the living audit)
-082. **Honey/flywheel data** (91,716 rows — republish to HF with updated 22/15 framing)
+082. **Honey/flywheel data** (91,716 rows — republish to HF with updated 22/22 framing)
 083. **AI-economy indices** (13.48% Eurostat, 57.58% World Bank — publish with signed evidence pack)
 084. **RAG corpus refresh** (sync the corrected corpus to HF as a dataset)
 085. **HF DOI minting** (every HF dataset gets a Zenodo-linked DOI — the cite-us flywheel)
