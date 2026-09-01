@@ -7,7 +7,7 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 ## The asset
 - Public repo: `https://github.com/CSOAI-ORG/councilof-ai` (server in `mcp/gspc-server/`)
 - Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **7 tools**)
-- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — **4 tools** (see reconcile note)
+- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — **source 0.1.1 wires 7**; published npm **0.1.0 is still 4** until owner `npm publish` (2FA)
 - A2A agent card: `https://councilof.ai/.well-known/agent-card.json`
 - OpenAPI 3.1: `https://councilof.ai/openapi/gspc.json`
 
@@ -16,12 +16,12 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 · `provenance` · `Ed25519`. Lead use-case: **the verify-before-you-trust check every
 agent should run before trusting a model.**
 
-## ⚠ Reconcile before re-publishing anywhere
-The live HTTP server exposes **7** tools; the stdio npm package + `server.json` describe
-**4** ("Four tools"). Options for the owner: (a) add `get_root` / `get_card` /
-`verify_inclusion` to `mcp/gspc-server/index.mjs` + `gspc-tools.json` so stdio matches
-HTTP, then bump `version` and re-publish; or (b) keep 4 on stdio and correct copy to
-"4 (stdio) / 7 (HTTP)". Do NOT advertise 7 on the stdio package until the tools exist.
+## Reconcile
+HTTP `POST https://councilof.ai/mcp` **7 tools** (live `tools/list`). Stdio source
+`mcp/gspc-server/index.mjs` **wires the same 7** (`get_root` / `get_card` /
+`verify_inclusion` included). Published npm `csoai-gspc-mcp@0.1.0` still ships **4** —
+owner door: `npm publish` 0.1.1 (2FA). Do not claim the published package is 7 until
+`npm view` says 0.1.1.
 
 ---
 

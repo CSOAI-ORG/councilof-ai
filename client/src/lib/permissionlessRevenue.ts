@@ -32,7 +32,7 @@ export const EARN_WEDGE =
 
 export const OPEN_SDKS = [
   { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Seven read tools in Claude, Cursor, Kimi, Grok." },
-  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Latest 0.1.0 is four tools; HTTP /mcp is seven." },
+  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Published 0.1.0 is four tools; HTTP /mcp and source 0.1.1 are seven. Owner npm publish." },
   { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc v1.0.3." },
   { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },

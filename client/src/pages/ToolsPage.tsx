@@ -72,8 +72,10 @@ export default function ToolsPage() {
       <p className="mt-3 text-slate-600">
         Ask: board totals. Paste a card to verify. Seven tools:
         board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion.
-        HTTP <code>https://councilof.ai/mcp</code>. npm <code>csoai-gspc-mcp@0.1.0</code> is
-        still four (stdio). Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
+        HTTP <code>https://councilof.ai/mcp</code> lists and runs seven. Stdio source
+        <code>mcp/gspc-server</code> wires the same seven. Published npm{" "}
+        <code>csoai-gspc-mcp@0.1.0</code> is still four until owner <code>npm publish</code> 0.1.1.
+        Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
       </p>
       <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
       <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
@@ -94,6 +96,13 @@ export default function ToolsPage() {
       >
         {copied ? "Copied" : "Copy the snippet"}
       </button>
+      <p className="mt-6 text-slate-700">
+        A third party verifying a card is the signal.{" "}
+        <a className="font-semibold text-emerald-800 underline" href="/gspc-verify">
+          /gspc-verify
+        </a>{" "}
+        — paste a signed card; the browser recomputes Ed25519. Free. Not a certificate.
+      </p>
       <ol className="mt-8 space-y-4">
         {HOSTS.map((h) => (
           <li key={h.name} className="rounded-xl border border-slate-200 bg-white p-4">

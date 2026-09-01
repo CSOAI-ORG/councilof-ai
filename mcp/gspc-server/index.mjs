@@ -76,7 +76,11 @@ async function fetchJson(path) {
     headers: { accept: "application/json" },
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
-  if (!r.ok) throw new Error(`GET ${url} returned HTTP ${r.status}`);
+  if (!r.ok) {
+    const err = new Error(`GET ${url} returned HTTP ${r.status}`);
+    err.status = r.status;
+    throw err;
+  }
   return r.json();
 }
 
@@ -271,11 +275,89 @@ async function listCards(args) {
   return out;
 }
 
+async function getRoot() {
+  try {
+    const d = await fetchJson("/root.json");
+    return {
+      state: "VALID",
+      source: `${ORIGIN}/root.json`,
+      kind: d.kind ?? null,
+      as_of: d.as_of ?? null,
+      card_count: d.card_count ?? null,
+      merkle_root: d.merkle_root ?? null,
+      note: d.note ?? null,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  } catch (e) {
+    return { ...unreachable("/root.json", e), state: "UNREACHABLE", not_gspc: true };
+  }
+}
+
+async function getCard(args) {
+  const sha = String(args.sha256 || "").trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(sha)) {
+    return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
+  }
+  try {
+    const d = await fetchJson(`/cards/${sha.slice(0, 16)}.json`);
+    const card = d.card || d;
+    const match = String(card.sha256 || "") === sha;
+    return {
+      state: match ? "VALID" : "INVALID",
+      sha256: sha,
+      source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
+      surface: card.surface ?? null,
+      unmeasured: card.unmeasured ?? [],
+      sig_ed25519: card.sig_ed25519 ?? null,
+      not_a_certification: true,
+      not_gspc: true,
+    };
+  } catch (e) {
+    if (e && e.status === 404) {
+      return {
+        state: "INVALID",
+        sha256: sha,
+        reason: "not a leaf of the live root",
+        source: `${ORIGIN}/cards/${sha.slice(0, 16)}.json`,
+        not_a_certification: true,
+        not_gspc: true,
+      };
+    }
+    return { ...unreachable(`/cards/${sha.slice(0, 16)}.json`, e), state: "UNCHECKABLE", sha256: sha };
+  }
+}
+
+async function verifyInclusion(args) {
+  const sha = String(args.sha256 || "").trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(sha)) {
+    return { state: "UNCHECKABLE", reason: "sha256 must be 64 hex", not_a_certification: true };
+  }
+  try {
+    const d = await fetchJson(`/api/proof?sha=${sha}`);
+    if (d.kind === "inclusion") {
+      return { state: "VALID", sha256: sha, merkle_root: d.merkle_root ?? null, not_a_certification: true };
+    }
+    if (d.error === "not_found") {
+      return { state: "INVALID", sha256: sha, reason: d.reason ?? "not a leaf", not_a_certification: true };
+    }
+    return { state: "UNCHECKABLE", sha256: sha, reason: d.reason ?? "unexpected proof body", not_a_certification: true };
+  } catch (e) {
+    if (e && e.status === 404) {
+      return { state: "INVALID", sha256: sha, reason: "not a leaf", not_a_certification: true };
+    }
+    return { ...unreachable(`/api/proof?sha=${sha}`, e), state: "UNCHECKABLE", sha256: sha };
+  }
+}
+
 const HANDLERS = {
   board_totals: boardTotals,
   get_axis: getAxis,
   verify_card: verifyCardTool,
   list_cards: listCards,
+  get_root: getRoot,
+  get_card: getCard,
+  verify_inclusion: verifyInclusion,
 };
 
 /* ----------------------------------------------------------------- transport */
@@ -311,6 +393,12 @@ function summaryLine(name, payload) {
       const b = payload.card_store_count_endpoint?.count ?? "?";
       return `index declares ${a} card rows; the store's count endpoint reports ${b}. Two labelled numbers, not reconciled here.`;
     }
+    case "get_root":
+      return `${payload.state ?? "?"} — public-root merkle ${(String(payload.merkle_root || "")).slice(0, 16) || "none"}. Not GSPC.`;
+    case "get_card":
+      return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
+    case "verify_inclusion":
+      return `${payload.state ?? "?"} — inclusion against live merkle.`;
     default:
       return name;
   }
