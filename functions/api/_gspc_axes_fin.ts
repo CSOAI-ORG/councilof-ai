@@ -97,7 +97,7 @@ export const AXES_FIN: AxisScore[] = [
     note: "MEASURED for named-string presence on retrieved pages. Disclosure only — never custodian " +
       "or auditor quality. Same six issuers. Risk verdict UNMEASURED. Not a rating.",
   },
-    {
+  {
     axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
     bench: "Eurostat", task: "cited EU AI-adoption series (not an index)",
     n: 2, n_unit: "public series",
