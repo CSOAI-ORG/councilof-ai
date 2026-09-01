@@ -32,6 +32,7 @@ import { useEffect, useState } from "react";
 // Relative, not "@/data/facts.json": vitest.config.ts declares no path aliases, so
 // an aliased import here breaks every test that transitively reaches this module.
 import facts from "../data/facts.json";
+import { applyFill7ChromeHonesty } from "./fill7ChromeHonesty";
 
 /**
  * Separation over the MODEL-COMPARISON axis only. A separation test asks whether
@@ -136,7 +137,10 @@ function familyFrom(raw: any): FamilyCount | null {
  * actually carry the counts — a surface must then fall back, never invent.
  */
 export function boardCountFromPayload(payload: any): BoardCount | null {
-  const t = payload?.totals;
+  // fill-7 chrome honesty: never quote API 22-measured while the seven financial
+  // empty slots are wrongly stamped MEASURED. Measure owns GET restore.
+  const honest = applyFill7ChromeHonesty(payload);
+  const t = honest?.totals;
   if (!t || typeof t.axes !== "number" || typeof t.measured_axes !== "number") return null;
   const unmeasured =
     typeof t.unmeasured_axes === "number" ? t.unmeasured_axes : t.axes - t.measured_axes;
