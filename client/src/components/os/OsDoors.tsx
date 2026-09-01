@@ -4,6 +4,7 @@ import { FOCUS } from "@/components/lobby/glass";
 import { osDoorHref, osPanelHref } from "@/lib/lobbyLink";
 import { BOARD_PANE, type DoorId } from "./doors";
 import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
+import GspcStreamCard from "./GspcStreamCard";
 
 const VerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const CardsPane = lazy(() => import("@/components/lobby/LobbyCardsPane"));
@@ -266,6 +267,24 @@ function HarnessDoor() {
         <p className="mt-1 text-sm text-slate-600">
           MCP is the portable OS. Never an iframe of /os or /products. The RunPod wire is{" "}
           <code className="font-mono">AGUI_WIRE_URL</code> → <code className="font-mono">/api/agui/*</code>.
+          AG-UI presents live GSPC inside streams — GET /api/agui/gspc-state (STATE_DELTA) and GET /api/gspc. Never paste scores.
+        </p>
+        <div className="mt-3">
+          <GspcStreamCard />
+        </div>
+        <p className="mt-3 text-xs text-slate-600" data-testid="w3c-agent-conformance-draft">
+          Draft opening only:{" "}
+          <a
+            className="font-medium underline-offset-2 hover:underline"
+            href="https://www.w3.org/community/agent-conformance/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            W3C Agent Conformance and Benchmarking Community Group
+          </a>
+          {" "}
+          — Nick joins. Measurement credential, never certification. No endorsement, affiliation, or
+          “we conform” claim.
         </p>
         <div className="mt-3 space-y-1.5 font-mono text-xs">
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("board")}</div>
