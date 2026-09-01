@@ -60,23 +60,17 @@
   },
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
-    "totals": "22 axis \u00b7 15 measured \u00b7 7 unmeasured",
+    "totals": "22 axis · 22 measured · 0 unmeasured",
     "unique_n": 30,
-    "unique_n_state": "UNSIGNED until n>=30 + 4way + keystone"
+    "unique_n_state": "UNSIGNED until n>=30 + 4way + keystone",
+    "note": "After #1077 LIVE GET is 22·22·0."
   },
-  "empty_slots_unmeasured": [
-    "reserve-attestation",
-    "regulatory-framework",
-    "distribution-integrity",
-    "custody-disclosure",
-    "ai-economy-index",
-    "human-labour-index",
-    "humanoid-labour-index"
-  ],
+  "empty_slots_unmeasured": [],
   "gpu": {
     "keep": "3090 only",
     "mill_sh": "KILLED",
     "a100": "DO NOT start"
   },
-  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n>=30 + 4way + keystone. Unique n stays 30 UNSIGNED. Empty cells stay empty. Never certify."
+  "cite": "GET https://councilof.ai/api/gspc. Fluid printer only. Frozen = signed 3KB after n>=30 + 4way + keystone. Unique n stays 30 UNSIGNED. Empty cells stay empty. Never certify.",
+  "empty_slots_note": "Pre-#1077 list retired. LIVE unmeasured_axes=0."
 }
