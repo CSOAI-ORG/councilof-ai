@@ -21,8 +21,28 @@ DID = "did:web:csoai.org#card-attestation-1"
 MAX_PAYLOAD = 3072
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+NIM_URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 EAT_NEXT = "llama-3.3-70b-versatile"
 EAT_NEXT_OR = "meta-llama/llama-3.3-70b-instruct"
+NIM_MODEL = "meta/llama-3.3-70b-instruct"
+GEMINI_MODELS = ("gemini-2.0-flash", "gemini-1.5-flash")
+MODEL_AXES = (
+    "governance",
+    "safety",
+    "provenance",
+    "continuity",
+    "conformance",
+    "openness",
+    "machinery-conformity",
+    "care",
+    "cross-reality",
+    "detector-interop",
+    "art5-safeguard",
+    "swarm",
+    "affect",
+    "jail",
+)
+BANKED_AXIS = "governance"
 
 # Tiny locked EU AI Act bank (10 items). n<30 → unquotable; never flip MEASURED.
 GOV_ITEMS = [
@@ -93,18 +113,65 @@ def _chat(url: str, key: str, model: str, prompt: str) -> tuple[str, str]:
     return "OK", txt
 
 
-def groq_one(prompt: str, model: str) -> tuple[str, str]:
+def _gemini(prompt: str) -> tuple[str, str]:
+    key = (os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY") or "").strip()
+    if not key:
+        return "UNCHECKABLE", "no-endpoint GEMINI"
+    last = "UNCHECKABLE no-endpoint GEMINI"
+    for mid in GEMINI_MODELS:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{mid}:generateContent?key={key}"
+        payload = json.dumps(
+            {
+                "contents": [{"parts": [{"text": prompt}]}],
+                "generationConfig": {"maxOutputTokens": 8, "temperature": 0},
+            }
+        ).encode()
+        req = urllib.request.Request(url, data=payload, method="POST", headers={"Content-Type": "application/json"})
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                d = json.loads(r.read())
+        except urllib.error.HTTPError as e:
+            last = f"UNCHECKABLE HTTP {e.code} gemini"
+            continue
+        except Exception as e:
+            last = f"UNCHECKABLE {type(e).__name__} gemini"
+            continue
+        parts = (((d.get("candidates") or [{}])[0].get("content") or {}).get("parts") or [{}])
+        txt = (parts[0].get("text") or "").strip()
+        if txt:
+            return "OK", txt
+        last = "UNCHECKABLE empty gemini"
+    return last.split(" ", 1)[0] if last.startswith("UNCHECKABLE") else "UNCHECKABLE", last
+
+
+def infer_one(prompt: str, groq_model: str) -> tuple[str, str]:
+    """Groq → Gemini-flash → NVIDIA NIM → OpenRouter. First OK wins."""
+    errors: list[str] = []
     groq = (os.environ.get("GROQ_API_KEY") or "").strip()
     if groq:
-        st, txt = _chat(GROQ_URL, groq, model, prompt)
+        st, txt = _chat(GROQ_URL, groq, groq_model, prompt)
         if st == "OK":
             return st, txt
+        errors.append(f"groq:{txt}")
+    st, txt = _gemini(prompt)
+    if st == "OK":
+        return st, txt
+    errors.append(f"gemini:{txt}")
+    nim = (os.environ.get("NVIDIA_API_KEY") or "").strip()
+    if nim:
+        st, txt = _chat(NIM_URL, nim, NIM_MODEL, prompt)
+        if st == "OK":
+            return st, txt
+        errors.append(f"nim:{txt}")
     ork = (os.environ.get("OPENROUTER_API_KEY") or "").strip()
     if ork:
-        return _chat(OPENROUTER_URL, ork, EAT_NEXT_OR, prompt)
-    if groq:
-        return "UNCHECKABLE", "GROQ failed and no OPENROUTER_API_KEY"
-    return "UNCHECKABLE", "no-endpoint GROQ_API_KEY missing"
+        st, txt = _chat(OPENROUTER_URL, ork, EAT_NEXT_OR, prompt)
+        if st == "OK":
+            return st, txt
+        errors.append(f"openrouter:{txt}")
+    if not errors:
+        return "UNCHECKABLE", "no-endpoint no free keys"
+    return "UNCHECKABLE", errors[-1]
 
 
 def parse_token(txt: str) -> str | None:
@@ -146,7 +213,7 @@ def mill(
     out_dir: Path,
     *,
     pick_n: int = 100,
-    grade_n: int = 2,
+    grade_n: int = 100,
     axis: str = "governance",
     model: str = EAT_NEXT,
     dry: bool = False,
@@ -157,42 +224,58 @@ def mill(
     skips: list[dict] = []
     staged: list[dict] = []
     to_grade = picked[:grade_n]
+    for ax in MODEL_AXES:
+        if ax != BANKED_AXIS:
+            for r in picked:
+                skips.append(
+                    {
+                        "id": r.get("id"),
+                        "axis": ax,
+                        "reason": "UNCHECKABLE no frozen bank in mill checkout",
+                    }
+                )
     for r in picked[grade_n:]:
-        skips.append({"id": r.get("id"), "axis": axis, "reason": "not-in-this-batch-pick"})
+        skips.append({"id": r.get("id"), "axis": BANKED_AXIS, "reason": "not-in-this-batch-pick"})
     for r in to_grade:
         mid = str(r.get("id") or "")
-        if dry or not os.environ.get("GROQ_API_KEY"):
-            skips.append({"id": mid, "axis": axis, "reason": "UNCHECKABLE no-endpoint" if dry else "UNCHECKABLE no-endpoint GROQ"})
+        if dry:
+            skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "UNCHECKABLE dry-run no-endpoint"})
             continue
         hits = 0
-        calls_ok = 0
         refused = False
         for prompt, expected in GOV_ITEMS:
-            st, txt = groq_one(INSTR + prompt, model)
+            st, txt = infer_one(INSTR + prompt, model)
             if st != "OK":
-                if "HTTP 429" in txt or "refused" in txt.lower():
+                if "429" in txt or "refused" in txt.lower():
                     refused = True
-                skips.append({"id": mid, "axis": axis, "reason": f"UNCHECKABLE {txt}"})
+                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": f"UNCHECKABLE {txt}"})
                 break
-            calls_ok += 1
             if parse_token(txt) == expected:
                 hits += 1
         else:
-            reason = "n<30 unquotable — practice bank 10 items; not MEASURED"
-            wrap = stage_unsigned(mid, axis, hits, len(GOV_ITEMS), reason)
+            reason = "unsigned pending GHA OIDC; n=10 practice bank unquotable until n>=30"
+            wrap = stage_unsigned(mid, BANKED_AXIS, hits, len(GOV_ITEMS), reason)
             blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
             if len(blob) > MAX_PAYLOAD:
-                skips.append({"id": mid, "axis": axis, "reason": f"HALT {len(blob)}B>3KB"})
+                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": f"HALT {len(blob)}B>3KB"})
                 continue
             if "SOVOS" in blob.decode().upper():
-                skips.append({"id": mid, "axis": axis, "reason": "brand-gate SOVOS"})
+                skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "brand-gate SOVOS"})
                 continue
             fp = out_dir / f"unsigned-{wrap['id'][:16]}.json"
             fp.write_text(json.dumps(wrap, indent=2) + "\n")
-            staged.append({"id": mid, "axis": axis, "card": fp.name, "bytes": len(blob), "n": len(GOV_ITEMS), "hits": hits})
-            skips.append({"id": mid, "axis": axis, "reason": reason})
+            staged.append(
+                {
+                    "id": mid,
+                    "axis": BANKED_AXIS,
+                    "card": fp.name,
+                    "bytes": len(blob),
+                    "n": len(GOV_ITEMS),
+                    "hits": hits,
+                }
+            )
         if refused:
-            skips.append({"id": mid, "axis": axis, "reason": "refused"})
+            skips.append({"id": mid, "axis": BANKED_AXIS, "reason": "refused"})
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
         "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
@@ -218,7 +301,7 @@ def main() -> int:
     ap.add_argument("--queue", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--pick", type=int, default=100)
-    ap.add_argument("--grade", type=int, default=2, help="tiny representative pick")
+    ap.add_argument("--grade", type=int, default=100, help="how many of the 100 emptiest to grade this batch")
     ap.add_argument("--axis", default="governance")
     ap.add_argument("--dry", action="store_true")
     args = ap.parse_args()
