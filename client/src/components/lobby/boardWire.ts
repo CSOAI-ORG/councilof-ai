@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { applyFill7ChromeHonesty } from "@/lib/fill7ChromeHonesty";
 
 /**
  * boardWire — the FULL live board, read in-process by the Council OS native panes.
@@ -132,7 +133,7 @@ export async function fetchBoard(signal?: AbortSignal): Promise<WireBoard> {
   if (!r.ok) throw new Error(`GET /api/gspc → HTTP ${r.status}`);
   const ct = (r.headers.get("content-type") || "").toLowerCase();
   if (ct.includes("text/html")) throw new Error("GET /api/gspc returned HTML, not JSON");
-  const j: any = await r.json();
+  const j: any = applyFill7ChromeHonesty(await r.json());
   const rows: WireAxis[] = (Array.isArray(j?.axes) ? j.axes : [])
     .map(readAxis)
     .filter((a: WireAxis | null): a is WireAxis => a !== null);
