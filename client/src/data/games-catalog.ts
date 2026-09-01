@@ -12,7 +12,7 @@
  *   - "leftover" means frozen/broken surface catalogued for honesty.
  *   - Every path must be in PRIMARY_PATHS (enforced by test).
  *   - No typed board counts — live surfaces read from GET /api/gspc.
- *   - Counts: 22 axis · 22 measured (from GET /api/gspc).
+ *   - Counts: quote GET /api/gspc (chrome honesty 22·15·7 while fill-7 is on the wire).
  *
  * WHAT DOES NOT EXIST (verified, never catalog as working):
  *   - /town 404; /towns 308 → /gspc-arena?view=towns
