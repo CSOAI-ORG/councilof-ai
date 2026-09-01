@@ -33,6 +33,9 @@ export default function DenseBoard({
   const [measuredOn, setMeasuredOn] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // "wire" only after a real live read. A snapshot fallback must never wear the
+  // "Live from GET /api/gspc" header (A3: UNREACHABLE, never last-cached-as-live).
+  const [source, setSource] = useState<"wire" | "snapshot">("snapshot");
   const [sortKey, setSortKey] = useState<SortKey>("status");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
 
@@ -44,6 +47,7 @@ export default function DenseBoard({
         setPublicCount(r.publicCount || "");
         setMeasuredOn(r.measuredOn || "");
         setLoading(false);
+        setSource(r.source);
         if (r.error) setError(r.error);
       })
       .catch((e) => {
@@ -122,8 +126,19 @@ export default function DenseBoard({
             The GSPC Board
           </h2>
           <p className="mt-1 text-sm text-slate-500">
-            Live from <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">GET /api/gspc</code>
-            {publicCount && <span className="ml-2 font-semibold text-slate-900">{publicCount}</span>}
+            {source === "wire" && !loading ? (
+              <>
+                Live from <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">GET /api/gspc</code>
+                {publicCount && <span className="ml-2 font-semibold text-slate-900">{publicCount}</span>}
+              </>
+            ) : loading ? (
+              <>Reading <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-xs">GET /api/gspc</code>…</>
+            ) : (
+              <span className="font-semibold text-amber-800">
+                UNREACHABLE — GET /api/gspc did not answer this load. Rows below are the bundled
+                snapshot, not a live read; the endpoint is the authority.
+              </span>
+            )}
           </p>
         </div>
         {showScoreboardLink && (

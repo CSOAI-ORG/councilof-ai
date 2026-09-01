@@ -1,4 +1,5 @@
 import { EUNOMIA_AXES } from "@/data/eunomia";
+import { useBoardCount } from "@/lib/boardCount";
 
 /**
  * EUNOMIA indices — the three aspirational index axes, UNMEASURED on GET /api/gspc.
@@ -10,12 +11,15 @@ const INDEXES = ["ai-economy-index", "human-labour", "humanoid-labour"];
 
 export default function EunomiaIndices() {
   const axes = EUNOMIA_AXES.filter((a) => INDEXES.includes(a.axis));
+  // Derived from GET /api/gspc — this line used to carry a typed count and it rotted.
+  const board = useBoardCount();
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
       <h1 className="text-2xl font-bold">EUNOMIA indices — UNMEASURED</h1>
       <p className="mt-1 text-sm text-emerald-300/80">
-        The three aspirational index axes · living board GET /api/gspc is authority · 22 axis · 15 measured · 7 UNMEASURED
+        The three aspirational index axis · living board GET /api/gspc is authority · {board.public_count}
+        {!board.live && " (last recorded observation — the endpoint wins)"}
       </p>
       <p className="mt-2 text-xs text-slate-400">
         Each index slot on the living board is UNMEASURED (ai-economy-index, human-labour-index, humanoid-labour-index).

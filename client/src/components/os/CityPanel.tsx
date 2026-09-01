@@ -114,8 +114,8 @@ export default function CityPanel() {
               <>
                 {" "}
                 <em className="text-amber-800">
-                  (GET /api/gspc did not answer — these are the last recorded figures bundled with
-                  the page, not a live read. The endpoint is the authority.)
+                  (UNREACHABLE — GET /api/gspc did not answer this load. These are the last recorded
+                  figures bundled with the page, not a live read. The endpoint is the authority.)
                 </em>
               </>
             )}
