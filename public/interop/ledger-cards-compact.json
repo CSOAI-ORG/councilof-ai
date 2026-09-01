@@ -223,5 +223,27 @@
    "push_actual",
    "broad_registry_crawl"
   ]
+ },
+ "gspc.oss.qwen2.5-0.5b-instruct": {
+  "kind": "gspc.axis-result/0.1",
+  "axis": "oss",
+  "model_ollama": "qwen2.5:0.5b-instruct",
+  "model_hf_sibling": "Qwen/Qwen2.5-0.5B-Instruct",
+  "status": "MEASURED",
+  "n": 32,
+  "correct": 18,
+  "unparsed": 0,
+  "accuracy": 0.5625,
+  "ci95": [
+   0.3933,
+   0.7183
+  ],
+  "deterministic_grade": true,
+  "model_as_judge": false,
+  "grader": "SOVOS board_v2.py (reused, not reinvented)",
+  "method": "exact-label; unparsed=incorrect; transport excluded as ours; canaries excluded; Wilson n>=30",
+  "serving": "ollama GGUF Q4 build on RTX 3090; not raw HF safetensors",
+  "axis_bank": "csoai/gspc-oss items.jsonl (32 real items; 1 canary excluded)",
+  "as_of": "2026-09-01T06:30:00Z"
  }
 }
