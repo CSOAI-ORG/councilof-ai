@@ -11,25 +11,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 13,
-   "live": 12,
+   "n_probed": 15,
+   "live": 15,
    "placeholder": 0,
-   "held": 1,
+   "held": 0,
    "dead": 0,
    "uncheckable": 0,
-   "live_fraction_of_probed": 0.9231,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "Stephen123456/mt-s92-code-mt3g-qwen05-q4 (200)",
-    "weepiess2383/arc-v3-libero-ft-arm1-fullft-cotrain (200)",
-    "RoboSynChallenge/DP_sim_items_handover (200)",
-    "sangamw/finetunedLLamaModel7b (200)",
-    "Ichiro1007/Affine-chal-00155 (200)",
-    "sam01ghsh/experiments_Qwen3-8b_fps (200)"
+    "cvl-uestc/PixSGR (200)",
+    "Reubencf/llama-3.2-3b-react-lora (200)",
+    "oxyllina/vara (200)",
+    "Rahul001t/ppo-LunarLander-v2 (200)",
+    "AfriMentor/chioma-dpo-v1 (200)",
+    "brother-winter/bro10 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T06:21:43Z",
+  "as_of": "2026-09-01T06:23:26Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -119,25 +119,25 @@
   },
   "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
   "sample": {
-   "n_probed": 13,
-   "live": 10,
+   "n_probed": 15,
+   "live": 15,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 3,
-   "live_fraction_of_probed": 0.7692,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "rHjUEuGTbiSc2KowsvATgfFQwP8rWGyMvK (exists)",
-    "rdmFzEkMmPWyySaYCvptaLjyT6sSbYJKx (exists)",
-    "raVjAgqAUgBK26zPWBt4WAM8BKmfRsfDfa (exists)",
-    "rBTwLga3i2gz3doX6Gva3MgEV8ZCD8jjah (exists)",
-    "rLd1uW7jJK2h7yj6xcuW4hheLvoPAYeUiS (exists)",
-    "rogue5HnPRSszD9CWGSUz8UGHMVwSSKF6 (exists)"
+    "rwZgP2w2qg6BdXDDAACoAEuKKeBQsekcvd (exists)",
+    "rDQSFBVK7Nrh2tTCmPPRjpjxdTZ2afhvFz (exists)",
+    "rGoDKcxnc2ky6cqXepNkXwD8tfaD7jcVCW (exists)",
+    "rsWLaT8GQiX9hAwTZxW7Tu6AUYPBawCtTQ (exists)",
+    "rp8P5og5ag92tpn8fnkbMXSLPMHgrRxkGa (exists)",
+    "rwnJpjMn18m7xdF3whfGtQaPZRCS2ijhQ4 (exists)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T06:21:43Z",
+  "as_of": "2026-09-01T06:23:26Z",
   "unmeasured": [
    "issuer_identity",
    "reserve_attestation",
