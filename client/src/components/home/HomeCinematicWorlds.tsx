@@ -82,9 +82,23 @@ function isVideoHead(r: Response): boolean {
   return type.startsWith("video/");
 }
 
+// Progressive enhancement: the still ships now, and the film swaps in only once
+// its .mp4 is actually on the path. But we NEVER HEAD-probe a film we have not
+// published — a probe for a missing file logs a 404 to every visitor's console
+// (three of them, sitewide, for the reels that do not exist yet), which is exactly
+// the kind of unbacked noise this site refuses. A reel joins this set in the SAME
+// commit that adds its file under public/videos/, and the probe + click-to-play
+// turn on for it then. Empty today: none of the three cinematic reels are built.
+const PUBLISHED_CINEMATIC = new Set<string>([]);
+
 function useVideoArrived(src: string): boolean {
   const [ok, setOk] = useState(false);
   useEffect(() => {
+    // Unpublished reel: show the still, issue no request, keep the console clean.
+    if (!PUBLISHED_CINEMATIC.has(src)) {
+      setOk(false);
+      return;
+    }
     let alive = true;
     fetch(src, { method: "HEAD" })
       .then((r) => {
