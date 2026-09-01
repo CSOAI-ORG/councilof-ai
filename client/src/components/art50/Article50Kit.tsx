@@ -170,7 +170,7 @@ export default function Article50Kit() {
 
         {/* THE RISK */}
         <section className="mb-16">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight">The €35,000,000 Risk</h2>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight">The €15,000,000 Risk</h2>
           <p className="text-lg leading-relaxed text-emerald-100/75">
             Under the EU AI Act, providers and deployers failing to meet Article 50
             transparency + watermarking obligations face fines up to{" "}
