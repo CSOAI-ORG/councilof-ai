@@ -1,0 +1,28 @@
+# Continuous eval skeleton. Frozen-bank path changes only.
+# Does not mill Hub listings. Does not stamp MEASURED from a listing.
+# A real delta card is UNCHECKABLE until the harness job is wired.
+name: eval-ci
+on:
+  push:
+    paths:
+      - "harness/**"
+      - "fixtures/**"
+      - "packages/eval-ci/**"
+      - ".github/workflows/eval-ci.yml"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "do not write cards"
+        default: "true"
+jobs:
+  frozen-bank-delta:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: honesty
+        run: |
+          echo "eval-ci skeleton. No LLM-as-judge. No Hub mill."
+          echo "Signed delta card: UNCHECKABLE until packages/eval-ci/run.sh exists and a frozen bank job is wired."
+          test -f packages/eval-ci/README.md
