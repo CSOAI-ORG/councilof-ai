@@ -1,0 +1,74 @@
+name: auto-eat-sign
+
+# OPTIONAL end-to-end autonomy for the ASI AUTO-EAT loop.
+#
+# What it does: takes the newest auto-eat feed batch (branch auto-eat-feed),
+# folds the namespaced autoeat.* atoms into ledger-cards-compact.json, signs
+# them via the EXISTING OIDC board-sign path (scripts/sign_ledger_cards.py),
+# and opens a PR to master. A human merge is the ONLY gate.
+#
+# HONESTY / STRUCTURAL GATE (read before enabling):
+#   1. SCHEDULE IS COMMENTED. Flip it on deliberately to go fully autonomous.
+#   2. board-sign's OIDC allowlist (functions/api/board-sign.ts, allowedWf) is
+#      ["public-root","hf-fin-shells","hf-inference-mill"]. This workflow's name
+#      is NOT in it, so sign_ledger_cards.py will HALT LOUD ("workflow" refusal)
+#      and sign NOTHING until the owner deliberately adds "auto-eat" to allowedWf
+#      and redeploys Pages. Until then this workflow is structurally inert at the
+#      keystone — it can fold and open a PR, but it cannot mint a signature.
+#   3. It never pushes master. It only opens a PR. Merge is the human gate.
+#
+# To go fully autonomous the owner makes TWO deliberate changes:
+#   (a) add "auto-eat" to allowedWf in functions/api/board-sign.ts + deploy Pages
+#   (b) uncomment the schedule below
+# Leaving either undone keeps a human in the loop.
+
+on:
+  workflow_dispatch: {}
+  # schedule:
+  #   - cron: "17 * * * *"   # hourly, :17 — ENABLE TO GO FULLY AUTONOMOUS (see notes above)
+
+concurrency:
+  group: auto-eat-sign
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: auto-eat-feed
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: fold auto-eat atoms into the ledger signer inputs
+        run: python3 scripts/auto-eat/fold_auto_eat.py
+      - name: sign folded cards via OIDC board-sign (existing signer)
+        run: python3 scripts/sign_ledger_cards.py
+      - name: open PR to master with signed auto-eat cards
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-auto-eat-sign"
+          git config user.email "board@csoai.org"
+          BR="auto-eat-signed-$(date -u +%Y%m%dT%H%M%SZ)"
+          git checkout -b "$BR"
+          git add public/interop/ledger-card-autoeat-*.json public/interop/ledger-cards-compact.json public/interop/ledger-card-autoeat-*-unsigned.json
+          if git diff --cached --quiet; then
+            echo "no signed auto-eat card change — nothing to PR"; exit 0
+          fi
+          git commit -m "auto-eat: signed feed batch via OIDC board-sign"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "auto-eat: signed feed batch" \
+            --body "Autonomous auto-eat batch, signed via OIDC board-sign. Human merge is the gate. Three-state preserved; nothing MEASURED beyond what verifies."
