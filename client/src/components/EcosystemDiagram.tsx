@@ -123,11 +123,11 @@ const ecosystemNodes: EcosystemNode[] = [
     id: "council",
     label: "Measurement Council",
     shortLabel: "Council",
-    description: "33 AI Agents - Real-time monitoring",
+    description: "Multi-provider cross-checking — designed 33-seat council (measured n_eff 1.21/3)",
     category: "core",
     icon: Shield,
     link: "/agent-council",
-    stats: "33 Agents",
+    stats: "Designed",
     connections: ["charter", "maternal", "watchdog", "enterprises", "governments"],
   },
 
