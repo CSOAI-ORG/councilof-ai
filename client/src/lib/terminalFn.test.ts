@@ -34,7 +34,11 @@ describe("terminal functions", () => {
       "AIBOM",
       "REPRO",
       "ROOT",
+      "PQC",
+      "OTEL",
     ]);
+    expect(parseTerminal("PQC").fn).toBe("PQC");
+    expect(parseTerminal("OTEL").fn).toBe("OTEL");
     expect(parseTerminal("XRPL").fn).toBe("XRPL");
     expect(parseTerminal("SWIFT").fn).toBe("SWIFT");
     expect(parseTerminal("JAIL").fn).toBe("JAIL");

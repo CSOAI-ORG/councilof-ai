@@ -24,6 +24,18 @@
       "items": { "type": "string", "minLength": 64, "maxLength": 64 }
     },
     "sig_ed25519": { "type": "string" },
+    "sig_pqc": {
+      "type": ["string", "null"],
+      "description": "Optional ML-DSA-65 / hybrid signature. Absent or null = UNCHECKABLE, not hidden. Ed25519 stays so old verifiers work."
+    },
+    "otel_trace_id": {
+      "type": ["string", "null"],
+      "description": "Optional OTel trace id for the publish job. Absent = UNCHECKABLE."
+    },
+    "otel_trace_hash": {
+      "type": ["string", "null"],
+      "description": "SHA-256 of the exported OTLP file. Absent = UNCHECKABLE."
+    },
     "sig_preimage": { "type": "string" },
     "note": { "type": "string" },
     "language": { "type": "string" },

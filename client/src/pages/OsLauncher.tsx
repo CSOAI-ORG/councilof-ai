@@ -203,6 +203,36 @@ export default function OsLauncher() {
               setLocation("/os?lobby=harness");
               return;
             }
+            if (parsed.fn === "PQC") {
+              void fetch("/api/pqc", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) => {
+                  const c = j?.continuity_axis || {};
+                  const e = j?.estate_signatures || {};
+                  setFnNote(
+                    `PQC — continuity ${c.status} n=${c.n} acc=${c.accuracy} ${c.separation} (${c.bench}). Estate signatures: ${e.algorithm} only (${e.status}). sig_pqc ${e.sig_pqc ?? "absent"} = ${e.pq_migration}. Continuity MEASURED ≠ we are PQC.`,
+                  );
+                })
+                .catch((err: Error) =>
+                  setFnNote(
+                    `PQC (${err.message}). Continuity is MEASURED on GET /api/gspc. Estate signatures: Ed25519 only until GET /api/pqc 200.`,
+                  ),
+                );
+              return;
+            }
+            if (parsed.fn === "OTEL") {
+              void fetch("/api/otel", { headers: { accept: "application/json" } })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+                .then((j) =>
+                  setFnNote(
+                    `OTEL — collector ${j?.collector}. OTLP ${j?.otlp}. Not an axis. Cards without otel_trace_id stay valid GSPC.`,
+                  ),
+                )
+                .catch((err: Error) =>
+                  setFnNote(`OTEL (${err.message}). Collector UNCHECKABLE. Not a 23rd axis.`),
+                );
+              return;
+            }
             if (parsed.fn === "CENSUS" || parsed.fn === "WATCH") {
               const id = parsed.arg.trim();
               if (id) {

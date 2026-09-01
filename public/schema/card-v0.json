@@ -70,6 +70,27 @@
       ],
       "description": "Hex Ed25519 over canonical payload. null = unsigned / gap. Laptop cannot use did:web:csoai.org#board-attestation-1."
     },
+    "sig_pqc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional ML-DSA-65 (FIPS 204) or hybrid beside Ed25519. Absent or null = UNCHECKABLE, not hidden. Continuity MEASURED does not make this field exist."
+    },
+    "otel_trace_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional OpenTelemetry trace id (GenAI spans). Absent = UNCHECKABLE. Card stays valid GSPC without it."
+    },
+    "otel_trace_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "SHA-256 of the OTLP export. Absent = UNCHECKABLE."
+    },
     "did": {
       "type": "string",
       "description": "Intended verify DID. Layer-0 seals of the Merkle root are a different key."
