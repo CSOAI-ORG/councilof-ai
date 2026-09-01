@@ -348,6 +348,9 @@ const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
 const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
 const RegulatorFindings = lazy(() => import("./pages/RegulatorFindings"));
+const FindingsExplorer = lazy(() => import("./pages/FindingsExplorer"));
+const ModelFindings = lazy(() => import("./pages/ModelFindings"));
+const RegulatorFindingsDetail = lazy(() => import("./pages/RegulatorFindingsDetail"));
 import { sectorsdata } from "./data/sectors-content";
 import { industriesdata } from "./data/industries-content";
 import { blogdata } from "./data/blog-content";
@@ -387,6 +390,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
   "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
+  "/findings": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
   // No count in this title. A static title cannot derive one, and ADR-001 forbids
   // typing it — every count on /board renders in the body from the artifact that owns it.
@@ -702,6 +706,9 @@ function App() {
                   <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={RegulatorFindings} />
+                  <Route path="/findings" component={FindingsExplorer} />
+                  <Route path="/model/:id" component={ModelFindings} />
+                  <Route path="/regulator/:id" component={RegulatorFindingsDetail} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />

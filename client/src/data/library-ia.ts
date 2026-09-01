@@ -46,6 +46,10 @@ export const PRIMARY_PATHS = new Set<string>([
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
+  // Regulation findings — the signed (model × axis) findings joined to regulator + fine tier.
+  // /findings is the hub; /model/:id and /regulator/:id detail views are covered by
+  // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
+  "/findings", "/regulator-findings",
   // Products — the family, and who it is for
   "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
@@ -111,7 +115,7 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/", "/model/", "/regulator/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));

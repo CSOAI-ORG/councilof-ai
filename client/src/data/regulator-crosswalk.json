@@ -1,0 +1,460 @@
+{
+  "schema": "csoai.regulator-crosswalk/0.1",
+  "title": "Axis ↔ regulator crosswalk pointers (informative only)",
+  "informative_only": "This file is a CROSSWALK of POINTERS, never a legal determination. Each entry says an axis is 'relevant-to' an obligation — it never says a model 'violates' or 'complies with' any provision. That is a legal question for counsel and the competent authority, not a measured one. Mapping a measured axis to a control does not mean the control is fully covered, nor that any fine is owed.",
+  "measure_not_certify": "CSOAI is a measurement body, not a notified body, not an enforcer. We measure; we do not certify. UNMEASURED is first-class.",
+  "fine_note": "Fine figures below are the STATUTORY MAXIMUM for the named tier, cited to the provision. They are the ceiling the legislature set for a tier, NOT an assertion that any sum is owed by any party. The live, edge-signed source of these tiers is GET /api/regulation (penalty_tiers_eu_ai_act); the figures here are transcribed from EU AI Act Art 99 and match that feed.",
+  "fine_tiers": {
+    "eu_ai_act": {
+      "prohibited_practices": {
+        "statutory_maximum": "up to €35,000,000 or 7% of worldwide annual turnover, whichever is higher",
+        "cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(3)",
+        "applies_to": "infringement of the Article 5 prohibited-practices ban"
+      },
+      "most_obligations_incl_art50_and_gpai": {
+        "statutory_maximum": "up to €15,000,000 or 3% of worldwide annual turnover, whichever is higher",
+        "cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(4)",
+        "applies_to": "non-compliance with obligations other than Art 5 (incl. high-risk duties, Art 50 transparency, GPAI provider obligations)"
+      },
+      "incorrect_or_misleading_info": {
+        "statutory_maximum": "up to €7,500,000 or 1% of worldwide annual turnover, whichever is higher",
+        "cited_to": "EU AI Act (Reg (EU) 2024/1689) Art 99(5)",
+        "applies_to": "supply of incorrect, incomplete or misleading information to notified bodies or authorities"
+      }
+    },
+    "no_fine": {
+      "statutory_maximum": null,
+      "cited_to": null,
+      "applies_to": "voluntary frameworks and security taxonomies carry no statutory fine of their own"
+    }
+  },
+  "regulators": [
+    {
+      "id": "eu-ai-act",
+      "name": "EU AI Act",
+      "long_name": "Regulation (EU) 2024/1689 laying down harmonised rules on artificial intelligence",
+      "authority": "European Commission AI Office + national market-surveillance authorities",
+      "kind": "statute-with-fines",
+      "fine_regime": "Article 99 administrative fines (tiers above)",
+      "source": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+    },
+    {
+      "id": "nist-ai-rmf",
+      "name": "NIST AI RMF 1.0",
+      "long_name": "NIST AI Risk Management Framework 1.0 (AI 100-1)",
+      "authority": "US National Institute of Standards and Technology",
+      "kind": "voluntary-framework-no-fine",
+      "fine_regime": null,
+      "controls_are": "the four core functions — GOVERN, MAP, MEASURE, MANAGE (function-level references; voluntary, no statutory penalty)",
+      "source": "https://doi.org/10.6028/NIST.AI.100-1"
+    },
+    {
+      "id": "owasp-asi",
+      "name": "OWASP Top 10 for Agentic Applications (2026)",
+      "long_name": "OWASP GenAI Security Project / Agentic Security Initiative — ASI01–ASI10",
+      "authority": "OWASP Foundation (community security taxonomy, not a regulator)",
+      "kind": "security-taxonomy-no-fine",
+      "fine_regime": null,
+      "non_claim": "Not an OWASP product, not endorsed by OWASP. ASI ids are NOT GSPC axes. Mapping a risk to an axis does not mean the axis fully covers the risk. See docs/owasp-agentic-crosswalk.md.",
+      "controls": {
+        "ASI01": "Agent Goal Hijack",
+        "ASI02": "Tool Misuse & Exploitation",
+        "ASI03": "Identity & Privilege Abuse",
+        "ASI04": "Agentic Supply Chain Vulnerabilities",
+        "ASI05": "Unexpected Code Execution",
+        "ASI06": "Memory & Context Poisoning",
+        "ASI07": "Insecure Inter-Agent Communication",
+        "ASI08": "Cascading Failures",
+        "ASI09": "Human-Agent Trust Exploitation",
+        "ASI10": "Rogue Agents"
+      },
+      "source": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/"
+    },
+    {
+      "id": "iso-42001",
+      "name": "ISO/IEC 42001:2023",
+      "long_name": "ISO/IEC 42001:2023 — AI management system",
+      "authority": "ISO/IEC (management-system standard, certifiable by accredited bodies — not a statutory fine regime)",
+      "kind": "management-standard-no-fine",
+      "fine_regime": null,
+      "source": "https://www.iso.org/standard/81230.html"
+    }
+  ],
+  "axes": {
+    "gspc-governance": {
+      "label": "Governance",
+      "kind": "governance-axis",
+      "bench": "GovBench — EU AI Act risk-tier classification",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 6 — classification of high-risk AI systems (Annex III)",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 9 — risk-management system for high-risk AI",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "GOVERN + MAP core functions",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI01 Agent Goal Hijack",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "governance risk-tier high-risk classification annex iii govbench eu ai act"
+    },
+    "gov": {
+      "label": "Governance (bank)",
+      "kind": "governance-axis",
+      "bench": "governance bank",
+      "same_as": "gspc-governance",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 6 — classification of high-risk AI systems (Annex III)",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 9 — risk-management system for high-risk AI",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "GOVERN + MAP core functions",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "governance risk-tier high-risk classification annex iii"
+    },
+    "gspc-safety": {
+      "label": "Safety",
+      "kind": "governance-axis",
+      "bench": "DefBench — calibrated refusal on paired requests",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 5 — prohibited manipulative / harmful AI practices",
+          "tier": "prohibited_practices"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Annex III high-risk safety obligations (Arts 8–15)",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MEASURE + MANAGE core functions",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI05 Unexpected Code Execution",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "safety refusal harmful manipulation calibrated defbench prohibited"
+    },
+    "gspc-provenance": {
+      "label": "Provenance",
+      "kind": "governance-axis",
+      "bench": "ProvBench — Article 50 marking survival by validity",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 50 — transparency & marking of AI-generated content",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MAP core function (context & provenance)",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI04 Agentic Supply Chain Vulnerabilities",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "provenance watermark marking article 50 art50 c2pa synthetic content transparency"
+    },
+    "gspc-continuity": {
+      "label": "Continuity",
+      "kind": "governance-axis",
+      "bench": "PQCBench — post-quantum status of a cryptographic assumption",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 15 — accuracy, robustness & cybersecurity",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 55 — GPAI systemic-risk obligations",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MANAGE core function",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI08 Cascading Failures",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "continuity robustness post-quantum pqc systemic risk resilience cybersecurity"
+    },
+    "gspc-conformance": {
+      "label": "Conformance",
+      "kind": "governance-axis",
+      "bench": "MCPBench — MCP tool conformance",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 11 + Annex IV — technical documentation",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 13 — transparency & provision of information to deployers",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MAP core function",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI02 Tool Misuse & Exploitation",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "conformance mcp tool interoperability technical documentation deployer"
+    },
+    "gspc-openness": {
+      "label": "Openness",
+      "kind": "governance-axis",
+      "bench": "OSSBench — licence reasoning versus intended use",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 53 — GPAI provider transparency & documentation",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "GOVERN core function",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI04 Agentic Supply Chain Vulnerabilities",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "openness open source licence gpai transparency oss"
+    },
+    "care": {
+      "label": "Care",
+      "kind": "governance-axis",
+      "bench": "care bank — proportional protection of vulnerable users",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 5(1)(b) — exploitation of vulnerabilities of persons",
+          "tier": "prohibited_practices"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MEASURE core function (harmful outputs)",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI09 Human-Agent Trust Exploitation",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "care vulnerable vulnerability protection exploitation proportional"
+    },
+    "care-refusal-help": {
+      "label": "Care — refusal (helpfulness side)",
+      "kind": "governance-axis",
+      "bench": "paired-request bank — does not over-refuse the benign twin",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 5(1)(b) — exploitation of vulnerabilities of persons",
+          "tier": "prohibited_practices"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MEASURE core function (validity & reliability)",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI09 Human-Agent Trust Exploitation",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "care refusal helpfulness over-refusal benign vulnerable"
+    },
+    "care-refusal-protect": {
+      "label": "Care — refusal (protection side)",
+      "kind": "governance-axis",
+      "bench": "paired-request bank — refuses the harmful twin",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 5(1)(b) — exploitation of vulnerabilities of persons",
+          "tier": "prohibited_practices"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MEASURE + MANAGE core functions",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI09 Human-Agent Trust Exploitation",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "care refusal protection harmful vulnerable jailbreak-adjacent"
+    },
+    "jail-escape-detection": {
+      "label": "Jail-escape detection",
+      "kind": "governance-axis",
+      "bench": "jail floor — containment measurement (TIE floor)",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 15 — robustness & cybersecurity against manipulation",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 5 — circumvention of prohibited-practice safeguards",
+          "tier": "prohibited_practices"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "MANAGE core function (incident & abuse)",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI05 Unexpected Code Execution + ASI10 Rogue Agents",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "jailbreak jail break escape prompt injection containment guardrail bypass circumvention robustness"
+    },
+    "swarm-candidates": {
+      "label": "Swarm candidates",
+      "kind": "governance-axis",
+      "bench": "multi-agent oversight bank",
+      "pointers": [
+        {
+          "regulator": "eu-ai-act",
+          "relation": "relevant-to",
+          "obligation": "Article 14 — human oversight",
+          "tier": "most_obligations_incl_art50_and_gpai"
+        },
+        {
+          "regulator": "nist-ai-rmf",
+          "relation": "relevant-to",
+          "obligation": "GOVERN + MAP core functions",
+          "tier": "no_fine"
+        },
+        {
+          "regulator": "owasp-asi",
+          "relation": "relevant-to",
+          "obligation": "ASI07 Insecure Inter-Agent Communication + ASI08 Cascading Failures",
+          "tier": "no_fine"
+        }
+      ],
+      "keywords": "swarm multi-agent orchestration oversight agent-to-agent a2a cascading"
+    },
+    "arc-30": {
+      "label": "ARC (abstract reasoning)",
+      "kind": "capability-benchmark",
+      "bench": "ARC-30 general-reasoning bank",
+      "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
+      "pointers": [],
+      "keywords": "capability reasoning abstraction benchmark arc"
+    },
+    "gsm8k-30": {
+      "label": "GSM8K (grade-school math)",
+      "kind": "capability-benchmark",
+      "bench": "GSM8K-30 arithmetic-reasoning bank",
+      "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
+      "pointers": [],
+      "keywords": "capability math arithmetic reasoning benchmark gsm8k"
+    },
+    "mmlu-30": {
+      "label": "MMLU (knowledge)",
+      "kind": "capability-benchmark",
+      "bench": "MMLU-30 knowledge bank",
+      "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
+      "pointers": [],
+      "keywords": "capability knowledge benchmark mmlu"
+    },
+    "swag-30": {
+      "label": "SWAG (commonsense)",
+      "kind": "capability-benchmark",
+      "bench": "SWAG-30 commonsense-inference bank",
+      "no_obligation_reason": "General-capability benchmark, not a governance axis. No direct statutory obligation is mapped — included only as capability evidence, never as a compliance finding.",
+      "pointers": [],
+      "keywords": "capability commonsense inference benchmark swag"
+    }
+  }
+}
