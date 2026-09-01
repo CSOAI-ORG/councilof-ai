@@ -239,11 +239,10 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 // ruleAxisCount only compares against the SLOT count. A sentence like "N measured
 // axes" passes that check whenever N equals the slot total, even when fewer slots
 // actually carry a run — historically the estate's single most damaging class of
-// claim, because a published slot is not a measurement. The board now carries a run
-// on every slot (22 of 22), but the rule stays: it reads the live MEASURED count and
-// fails any surface asserting that MORE axes are measured than actually are. An
-// axis-count rule cannot catch that, because the error is in the word "measured",
-// not in the number.
+// claim, because a published slot is not a measurement. Owner lock 22·15·7: seven
+// slots remain empty. The rule reads the live MEASURED count and fails any surface
+// asserting that MORE axes are measured than actually are. An axis-count rule
+// cannot catch that, because the error is in the word "measured", not in the number.
 const MEASURED_RE = /\b(\d{1,3})\s+(?:of\s+\d{1,3}\s+)?measured\s+(?:axes|axis|slots)\b/gi;
 const ALL_MEASURED_RE = /\ball\s+(\d{1,3})\s+(?:axes|axis|slots)\s+(?:are|were|have\s+been)\s+measured\b/gi;
 
@@ -444,23 +443,21 @@ const SELFTEST_CASES = [
   ["VIOLATION: we certify", "<p>We certify that this model meets the standard.</p>", true],
   ["VIOLATION: our certification", "<p>Ask about our certification programme for vendors.</p>", true],
   ["VIOLATION: accredited by us", "<p>Labs accredited by us receive a badge.</p>", true],
-  // ── the 22-axis canon (ADR-001, swept into the signed data 2026-08-26; every
-  //    remaining slot measured in the later measurement sweep) ───────────────────
+  // ── the 22-axis canon (ADR-001) + owner lock 22·15·7 after #1074 ───────────────
   // These cases were first written when the board was 14 axes and "22" was a number
-  // nobody was allowed to say, then again when the board was "22 axes · 15 measured"
-  // and "22 MEASURED" was the forbidden overclaim. The canon has moved once more:
-  // every slot now carries a run, so the board is "22 axes · 22 measured" and
-  // "22 measured" is simply true. The overclaim rule still guards the line — it
-  // catches a claim of MORE measured axes than the board actually carries (now 22).
+  // nobody was allowed to say, then when the board was "22 axes · 15 measured"
+  // and "22 MEASURED" was the forbidden overclaim. Fill-7 briefly claimed 22/22;
+  // owner lock restores 15 measured · 7 empty. Empty cells stay empty. The
+  // overclaim rule catches any claim of MORE measured axes than liveMeasured (15).
   ["prohibition form still passes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
   ["22 axes is now the canon and matches the live board", "<p>The board carries 22 axes across both families.</p>", false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
-  ["honest swept grammar", "<p>22 axes · 22 measured — every slot has a run behind it.</p>", false],
-  ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
-  ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
+  ["honest swept grammar", "<p>22 axes · 15 measured — seven slots remain empty. Empty cells stay empty.</p>", false],
+  ["22 measured is an overclaim while 7 are empty", "<p>The board publishes 22 measured axes.</p>", true],
+  ["all 22 axes are measured is an overclaim", "<p>All 22 axes are measured and signed.</p>", true],
   ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
-  ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
+  ["exact measured count passes", "<p>The board carries 15 measured axes today.</p>", false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
