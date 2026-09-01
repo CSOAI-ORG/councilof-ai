@@ -11,5 +11,7 @@ Live board: `GET https://councilof.ai/api/gspc`. Verify: https://councilof.ai/gs
 6. **Bind, don’t migrate.** Pins and adapters. No 600-repo monorepo. Lifestyle MCPs are not the product.
 7. **Mainnet copy needs stamp + law.** No GSPC credential as a grade. No token, bond, or “everyone gets a cut.”
 8. **We eat our own cooking.** If we cannot verify it, we do not ship it.
+9. **AX — agent-native.** Agents are first-class on the same living GETs as humans (`/api/gspc`, `/root.json`, `/api/xrpl`). Human UI is thin over those GETs — never a second source of truth. Six arms only; AG-UI is presentation, not a seventh arm. See `docs/AX_AGENT_NATIVE_2026-09-01.md`.
+10. **COBOL Bridge is ours** (`CSOAI-ORG/cobol-bridge-mcp`). Kill competitor framing. Shares root; does not fill empty axes.
 
 Route: `client/src/pages/Doctrine.tsx` → `/doctrine` (lane `xrpl-hash-labels`). Live apex is **404** until this lane merges. Counts on the page come from `GET /api/gspc`, not typed.
