@@ -1,0 +1,29 @@
+);
+  process.exit(2);
+}
+const facts = JSON.parse(readFileSync(FACTS_PATH, "utf8"));
+
+if (args.includes("--selftest")) {
+  await selftest(facts);
+  process.exit(0);
+}
+
+const root = args[0];
+if (!root || !existsSync(root)) {
+  console.error("usage: node scripts/facts-gate.mjs <dist/client> | --selftest");
+  process.exit(2);
+}
+
+const liveCount = await liveAxisCount(facts);
+const liveMeasured = await liveMeasuredCount(facts);
+const files = walk(root);
+console.log(`facts-gate: scanning ${files.length} prerendered files in ${root} (live axis count = ${liveCount})`);
+
+const violations = runRules(facts, files, root, liveCount, liveMeasured);
+report(violations);
+
+if (violations.length) {
+  console.error(`\nfacts-gate FAILED: ${violations.length} contradiction(s) against facts.json.`);
+  process.exit(1);
+}
+console.log("facts-gate OK: no claim contradicts facts.json.\n");
