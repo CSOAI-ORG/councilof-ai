@@ -1,372 +1,372 @@
 {
-  "benji.onchain.supply": {
-    "kind": "csoai.ledger-cite/0.1",
-    "flags": {
-      "cited_not_endorsed": true,
-      "auto_measured": false,
-      "off_xrpl16_rail": true,
-      "issuer_published_address_match": true
-    },
-    "chain": "ethereum",
-    "contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
-    "decimals": 18,
-    "total_supply_raw": "48095039789740699318737949",
-    "total_supply_benji": "48095039.7897",
-    "holders": 3,
-    "basis": "issuer states 1 share of FOBXX = 1 BENJI; Ethereum address published on issuer benji-contracts page (HTTP 200)",
-    "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key) + issuer contract-address page HTTP 200; a lookalike 'Franklin OnChain U.S. Government Money Fund' token 0x9ae41Ea995b217dA17181181ba398065D66c01f2 is NOT on the issuer page and is excluded",
-    "as_of": "2026-09-01T05:07:20Z",
-    "unmeasured": [
-      "fund_aum_all_chains",
-      "supply_on_other_8_published_chains",
-      "nav_per_share",
-      "reserve_attestation"
-    ]
+ "benji.onchain.supply": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "issuer_published_address_match": true
   },
-  "erc8004.callable": {
-    "kind": "csoai.ledger-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "no_tx": true,
-      "nothing_minted": true,
-      "no_payment_made": true,
-      "handshake_only": true,
-      "validation_mainnet": "PENDING",
-      "cited_not_endorsed": true
-    },
-    "method": "keyless 8004scan real-agent filter (min_feedbacks>=1) + keyless eth_call tokenURI(uint256) per-chain publicnode RPC + keyless HTTPS three-state GET",
-    "registry_totals": {
-      "registered_all_indexer": 785448,
-      "with_feedback_ge1": 138967,
-      "is_verified_filter_returns_all_UNTRUSTED": 785448
-    },
-    "sample": {
-      "selector": "min_feedbacks>=1 + x402 pool, ranked, resolvable chains only",
-      "n_probed": 45,
-      "live": 25,
-      "placeholder": 14,
-      "dead": 6,
-      "live_fraction_of_probed": 0.5556,
-      "live_examples": [
-        "70394 tephra-renderer (200)",
-        "63912 NEURAL_MESH (200)",
-        "74072 IFF x402 Evidence Monitor (200)",
-        "302257 Brain on BNB \u2014 Venus Health Factor Monitor (200)",
-        "303779 marketplace-operated-grid-planner (200)"
-      ]
-    },
-    "story": "measured the REAL agents (feedback-bearing/x402), not the ~785k registration headline",
-    "verified_via": "keyless eth_call + keyless HTTPS GET; three-state LIVE/PLACEHOLDER/DEAD",
-    "as_of": "2026-09-01T05:35:13Z",
-    "unmeasured": [
-      "reputation_validity",
-      "validation_registry_mainnet",
-      "service_quality",
-      "census_total_verification",
-      "non_resolvable_chains"
-    ]
+  "chain": "ethereum",
+  "contract": "0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+  "decimals": 18,
+  "total_supply_raw": "48095039789740699318737949",
+  "total_supply_benji": "48095039.7897",
+  "holders": 3,
+  "basis": "issuer states 1 share of FOBXX = 1 BENJI; Ethereum address published on issuer benji-contracts page (HTTP 200)",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key) + issuer contract-address page HTTP 200; a lookalike 'Franklin OnChain U.S. Government Money Fund' token 0x9ae41Ea995b217dA17181181ba398065D66c01f2 is NOT on the issuer page and is excluded",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "fund_aum_all_chains",
+   "supply_on_other_8_published_chains",
+   "nav_per_share",
+   "reserve_attestation"
+  ]
+ },
+ "erc8004.callable": {
+  "kind": "csoai.ledger-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "handshake_only": true,
+   "validation_mainnet": "PENDING",
+   "cited_not_endorsed": true
   },
-  "rwa.reserve": {
-    "kind": "csoai.ledger-cite/0.1",
-    "flags": {
-      "cited_not_endorsed": true,
-      "auto_measured": false,
-      "off_xrpl16_rail": true,
-      "reserve_page_keyless_reachable": false
-    },
-    "chain": "ethereum",
-    "classes": [
-      {
-        "symbol": "BUIDL",
-        "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
-        "decimals": 6,
-        "total_supply_raw": "211864943860349",
-        "holders": 57
-      },
-      {
-        "symbol": "BUIDL-I",
-        "contract": "0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041",
-        "decimals": 6,
-        "total_supply_raw": "801395176980100",
-        "holders": 6
-      }
-    ],
-    "reserve_disclosure": "no keyless published reserve page reached at as_of (securitize.io/primary-market and /invest/buidl both 404 to keyless GET) - reserve figures stay UNMEASURED, supply is a cite only",
-    "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key); contract 0x7712c3... matches the live CSOAI rwa-registry entry (address_status evm-located)",
-    "as_of": "2026-09-01T05:07:20Z",
-    "unmeasured": [
-      "reserve_attestation",
-      "nav",
-      "official_aum",
-      "share_class_reconciliation"
-    ]
+  "method": "keyless 8004scan real-agent filter (min_feedbacks>=1) + keyless eth_call tokenURI(uint256) per-chain publicnode RPC + keyless HTTPS three-state GET",
+  "registry_totals": {
+   "registered_all_indexer": 785448,
+   "with_feedback_ge1": 138967,
+   "is_verified_filter_returns_all_UNTRUSTED": 785448
   },
-  "swift.notice": {
-    "kind": "csoai.ledger-notice/0.1",
-    "flags": {
-      "press_census": true,
-      "banks_are_targets_not_clients": true,
-      "not_a_grade": true,
-      "settlement_still_off_chain": true,
-      "api_swift_http": 404,
-      "api_swift_honest_404": true,
-      "gpi_not_graded": true
-    },
-    "press_date": "2026-07-09",
-    "press_fetch": "UNREACHABLE at as_of (curl HTTP:000 and fetch timeout from this vantage); body remains UNCHECKABLE",
-    "press_url_sha256_2026_08_31": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
-    "tape": "csoai/swift-17 swift17.jsonl - 17 rows, every row status=DISCOVERED n=0 not_a_client=true",
-    "verified_via": "keyless HTTP GET only; live check of GET https://councilof.ai/api/swift returned 404 at as_of; press body not refetchable, prior url_sha256 quoted from the 2026-08-31 tape",
-    "as_of": "2026-09-01T05:07:20Z",
-    "unmeasured": [
-      "official_html_body",
-      "bank_participation_status",
-      "gpi_performance",
-      "pilot_outcome"
-    ]
+  "sample": {
+   "selector": "min_feedbacks>=1 + x402 pool, ranked, resolvable chains only",
+   "n_probed": 45,
+   "live": 25,
+   "placeholder": 14,
+   "dead": 6,
+   "live_fraction_of_probed": 0.5556,
+   "live_examples": [
+    "70394 tephra-renderer (200)",
+    "63912 NEURAL_MESH (200)",
+    "74072 IFF x402 Evidence Monitor (200)",
+    "302257 Brain on BNB — Venus Health Factor Monitor (200)",
+    "303779 marketplace-operated-grid-planner (200)"
+   ]
   },
-  "mcp.server": {
-    "kind": "csoai.mcp-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "handshake_only": true,
-      "no_tools_call": true,
-      "nothing_published": true,
-      "cited_not_endorsed": true
-    },
-    "method": "keyless registry census + MCP initialize+tools/list ONLY (never tools/call)",
-    "registries": {
-      "modelcontextprotocol_io": {
-        "keyless": true,
-        "fetched": 2000,
-        "with_remote_url": 455
-      },
-      "smithery_ai": {
-        "keyless": true,
-        "total_reported": 11191,
-        "fetched": 300
-      },
-      "glama_ai": {
-        "keyless": false,
-        "note": "needs API key; DISCOVERED not probed"
-      },
-      "pulsemcp": {
-        "keyless": "sunsetting"
-      }
-    },
-    "own_first": {
-      "surface": "councilof.ai/mcp",
-      "server": "csoai-gspc-mcp",
-      "tools": 7,
-      "schema_valid": true,
-      "also": "npm csoai-gspc-mcp@0.1.0 (stdio, 4 tools); Grok plugin"
-    },
-    "sample": {
-      "n_probed_incl_own": 41,
-      "reachable_live": 21,
-      "dead": 20,
-      "tools_readable": 20,
-      "live_fraction": 0.5122,
-      "stranger_live_examples": [
-        "inference.sh (25t)",
-        "ac.tandem/docs-mcp (13t)",
-        "inside-ads (3t)",
-        "hood (5t)",
-        "goji (9t)"
-      ]
-    },
-    "verified_via": "MCP JSON-RPC handshake; three-state LIVE/PLACEHOLDER/DEAD + schema_valid",
-    "as_of": "2026-09-01T05:37:09Z",
-    "unmeasured": [
-      "tool_correctness",
-      "auth_gated_servers",
-      "smithery_deep_probe",
-      "glama_full_registry",
-      "server_uptime"
-    ]
+  "story": "measured the REAL agents (feedback-bearing/x402), not the ~785k registration headline",
+  "verified_via": "keyless eth_call + keyless HTTPS GET; three-state LIVE/PLACEHOLDER/DEAD",
+  "as_of": "2026-09-01T05:35:13Z",
+  "unmeasured": [
+   "reputation_validity",
+   "validation_registry_mainnet",
+   "service_quality",
+   "census_total_verification",
+   "non_resolvable_chains"
+  ]
+ },
+ "rwa.reserve": {
+  "kind": "csoai.ledger-cite/0.1",
+  "flags": {
+   "cited_not_endorsed": true,
+   "auto_measured": false,
+   "off_xrpl16_rail": true,
+   "reserve_page_keyless_reachable": false
   },
-  "a2a.agent": {
-    "kind": "csoai.a2a-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "one_controlled_probe": true,
-      "no_real_task": true,
-      "nothing_published": true,
-      "cited_not_endorsed": true
-    },
-    "method": "crawl /.well-known/agent-card.json (legacy agent.json fallback); A2A v1.0 AgentCard conformance; capability-honesty = ONE controlled tasks/get(bogus-id) graded declared-vs-actual transport",
-    "sample": {
-      "n_seeds": 18,
-      "conformant_cards": 5,
-      "no_card": 13,
-      "unique_probed": 4,
-      "honesty_verdicts": [
-        "marketplace-operated-grid-planner:TRANSPORT_MISMATCH",
-        "A-Identity Trust Oracle:TRANSPORT_HONEST",
-        "Brain On BNB AI \u2014 hireable agents:TRANSPORT_HONEST",
-        "hosted-erc8183-seller-fixture:TRANSPORT_MISMATCH"
-      ]
-    },
-    "citation_reported": {
-      "claim": "worst model failed 92.6% of real office tasks; best still 70%",
-      "source": "CMU 'TheAgentCompany', arXiv:2412.14161 (May 2025)",
-      "url": "https://arxiv.org/abs/2412.14161",
-      "framing": "reported; general agent-task benchmark, NOT A2A-specific"
-    },
-    "story": "most on-chain-live agents serve NO conformant AgentCard; some conformant cards show declared-vs-actual transport mismatch",
-    "verified_via": "keyless HTTPS crawl + one deterministic JSON-RPC probe",
-    "as_of": "2026-09-01T05:39:07Z",
-    "unmeasured": [
-      "skill_execution_correctness",
-      "auth_gated_agents",
-      "streaming_actual",
-      "push_actual",
-      "broad_registry_crawl"
-    ]
+  "chain": "ethereum",
+  "classes": [
+   {
+    "symbol": "BUIDL",
+    "contract": "0x7712c34205737192402172409a8F7ccef8aA2AEc",
+    "decimals": 6,
+    "total_supply_raw": "211864943860349",
+    "holders": 57
+   },
+   {
+    "symbol": "BUIDL-I",
+    "contract": "0x6a9DA2D710BB9B700acde7Cb81F10F1fF8C89041",
+    "decimals": 6,
+    "total_supply_raw": "801395176980100",
+    "holders": 6
+   }
+  ],
+  "reserve_disclosure": "no keyless published reserve page reached at as_of (securitize.io/primary-market and /invest/buidl both 404 to keyless GET) - reserve figures stay UNMEASURED, supply is a cite only",
+  "verified_via": "keyless public reads: Blockscout /api/v2/tokens (no key); contract 0x7712c3... matches the live CSOAI rwa-registry entry (address_status evm-located)",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "reserve_attestation",
+   "nav",
+   "official_aum",
+   "share_class_reconciliation"
+  ]
+ },
+ "swift.notice": {
+  "kind": "csoai.ledger-notice/0.1",
+  "flags": {
+   "press_census": true,
+   "banks_are_targets_not_clients": true,
+   "not_a_grade": true,
+   "settlement_still_off_chain": true,
+   "api_swift_http": 404,
+   "api_swift_honest_404": true,
+   "gpi_not_graded": true
   },
-  "autoeat.hf.newmodels": {
-    "kind": "csoai.auto-eat-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "no_tx": true,
-      "nothing_minted": true,
-      "no_payment_made": true,
-      "auto_measured": false,
-      "cited_not_endorsed": true
-    },
-    "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
-    "sample": {
-      "n_probed": 12,
-      "live": 12,
-      "placeholder": 0,
-      "held": 0,
-      "dead": 0,
-      "uncheckable": 0,
-      "live_fraction_of_probed": 1.0,
-      "live_examples": [
-        "AMAImedia/Qwimi-3.6-27B-Coder-MTP-NOESIS-BF16 (200)",
-        "mamunmk007/squad-answerability (200)",
-        "mahdi2020/distilbert-base-uncased-News-Category-Classifier (200)",
-        "noname1992/loras (200)",
-        "IntoLayer/Affine-5g94ihdxwu-v8a (200)",
-        "latency-sensitive-bench/mikasa-robo (200)"
-      ]
-    },
-    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-    "as_of": "2026-09-01T06:25:18Z",
-    "unmeasured": [
-      "gspc_score",
-      "weights_integrity",
-      "lineage",
-      "runtime_variant"
-    ]
+  "press_date": "2026-07-09",
+  "press_fetch": "UNREACHABLE at as_of (curl HTTP:000 and fetch timeout from this vantage); body remains UNCHECKABLE",
+  "press_url_sha256_2026_08_31": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+  "tape": "csoai/swift-17 swift17.jsonl - 17 rows, every row status=DISCOVERED n=0 not_a_client=true",
+  "verified_via": "keyless HTTP GET only; live check of GET https://councilof.ai/api/swift returned 404 at as_of; press body not refetchable, prior url_sha256 quoted from the 2026-08-31 tape",
+  "as_of": "2026-09-01T05:07:20Z",
+  "unmeasured": [
+   "official_html_body",
+   "bank_participation_status",
+   "gpi_performance",
+   "pilot_outcome"
+  ]
+ },
+ "mcp.server": {
+  "kind": "csoai.mcp-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "handshake_only": true,
+   "no_tools_call": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
   },
-  "autoeat.mcp.registry": {
-    "kind": "csoai.auto-eat-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "no_tx": true,
-      "nothing_minted": true,
-      "no_payment_made": true,
-      "auto_measured": false,
-      "cited_not_endorsed": true
-    },
-    "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
-    "sample": {
-      "n_probed": 14,
-      "live": 11,
-      "placeholder": 2,
-      "held": 0,
-      "dead": 1,
-      "uncheckable": 0,
-      "live_fraction_of_probed": 0.7857,
-      "live_examples": [
-        "ac.inference.sh/mcp (401)",
-        "ad.inside/inside-ads (405)",
-        "ae.propick/propick (405)",
-        "ag.hood/name-service (200)",
-        "agency.goji/goji (405)",
-        "agency.lona/trading (401)"
-      ]
-    },
-    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-    "as_of": "2026-09-01T06:09:13Z",
-    "unmeasured": [
-      "tool_behavior",
-      "capability_claims",
-      "auth_scope",
-      "service_quality"
-    ]
+  "method": "keyless registry census + MCP initialize+tools/list ONLY (never tools/call)",
+  "registries": {
+   "modelcontextprotocol_io": {
+    "keyless": true,
+    "fetched": 2000,
+    "with_remote_url": 455
+   },
+   "smithery_ai": {
+    "keyless": true,
+    "total_reported": 11191,
+    "fetched": 300
+   },
+   "glama_ai": {
+    "keyless": false,
+    "note": "needs API key; DISCOVERED not probed"
+   },
+   "pulsemcp": {
+    "keyless": "sunsetting"
+   }
   },
-  "autoeat.erc8004.newagents": {
-    "kind": "csoai.auto-eat-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "no_tx": true,
-      "nothing_minted": true,
-      "no_payment_made": true,
-      "auto_measured": false,
-      "cited_not_endorsed": true
-    },
-    "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
-    "sample": {
-      "n_probed": 14,
-      "live": 1,
-      "placeholder": 0,
-      "held": 0,
-      "dead": 0,
-      "uncheckable": 13,
-      "live_fraction_of_probed": 0.0714,
-      "live_examples": [
-        "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:74072 (tokenURI resolvable)"
-      ]
-    },
-    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-    "as_of": "2026-09-01T06:21:43Z",
-    "unmeasured": [
-      "reputation_validity",
-      "validation_registry_mainnet",
-      "service_quality"
-    ]
+  "own_first": {
+   "surface": "councilof.ai/mcp",
+   "server": "csoai-gspc-mcp",
+   "tools": 7,
+   "schema_valid": true,
+   "also": "npm csoai-gspc-mcp@0.1.0 (stdio, 4 tools); Grok plugin"
   },
-  "autoeat.xrpl.accounts": {
-    "kind": "csoai.auto-eat-probe/0.1",
-    "flags": {
-      "read_only": true,
-      "no_tx": true,
-      "nothing_minted": true,
-      "no_payment_made": true,
-      "auto_measured": false,
-      "cited_not_endorsed": true
-    },
-    "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
-    "sample": {
-      "n_probed": 24,
-      "live": 24,
-      "placeholder": 0,
-      "held": 0,
-      "dead": 0,
-      "uncheckable": 0,
-      "live_fraction_of_probed": 1.0,
-      "live_examples": [
-        "rPqBXzNTjK4B8stZnsmH7tvvc8eFsph1G9 (exists)",
-        "r9uoGPwfeQi5TLeKoTLhpPvU7fFf7qAfW9 (exists)",
-        "rUqqN1KKvLSknssUXrLX48vtnNdpvaqsZ7 (exists)",
-        "rdGzD9oHEUJkiWxiuVA4UnB9f4kF7giQn (exists)",
-        "rBERMc8i2DoMkMDHGF38acFMfudsBffdwA (exists)",
-        "rsnbU4EG66bXZrHcpuE9XZQQe5V6BGiFyz (exists)"
-      ]
-    },
-    "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
-    "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-    "as_of": "2026-09-01T06:25:18Z",
-    "unmeasured": [
-      "issuer_identity",
-      "reserve_attestation",
-      "off_ledger_backing"
-    ]
-  }
+  "sample": {
+   "n_probed_incl_own": 41,
+   "reachable_live": 21,
+   "dead": 20,
+   "tools_readable": 20,
+   "live_fraction": 0.5122,
+   "stranger_live_examples": [
+    "inference.sh (25t)",
+    "ac.tandem/docs-mcp (13t)",
+    "inside-ads (3t)",
+    "hood (5t)",
+    "goji (9t)"
+   ]
+  },
+  "verified_via": "MCP JSON-RPC handshake; three-state LIVE/PLACEHOLDER/DEAD + schema_valid",
+  "as_of": "2026-09-01T05:37:09Z",
+  "unmeasured": [
+   "tool_correctness",
+   "auth_gated_servers",
+   "smithery_deep_probe",
+   "glama_full_registry",
+   "server_uptime"
+  ]
+ },
+ "a2a.agent": {
+  "kind": "csoai.a2a-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "one_controlled_probe": true,
+   "no_real_task": true,
+   "nothing_published": true,
+   "cited_not_endorsed": true
+  },
+  "method": "crawl /.well-known/agent-card.json (legacy agent.json fallback); A2A v1.0 AgentCard conformance; capability-honesty = ONE controlled tasks/get(bogus-id) graded declared-vs-actual transport",
+  "sample": {
+   "n_seeds": 18,
+   "conformant_cards": 5,
+   "no_card": 13,
+   "unique_probed": 4,
+   "honesty_verdicts": [
+    "marketplace-operated-grid-planner:TRANSPORT_MISMATCH",
+    "A-Identity Trust Oracle:TRANSPORT_HONEST",
+    "Brain On BNB AI — hireable agents:TRANSPORT_HONEST",
+    "hosted-erc8183-seller-fixture:TRANSPORT_MISMATCH"
+   ]
+  },
+  "citation_reported": {
+   "claim": "worst model failed 92.6% of real office tasks; best still 70%",
+   "source": "CMU 'TheAgentCompany', arXiv:2412.14161 (May 2025)",
+   "url": "https://arxiv.org/abs/2412.14161",
+   "framing": "reported; general agent-task benchmark, NOT A2A-specific"
+  },
+  "story": "most on-chain-live agents serve NO conformant AgentCard; some conformant cards show declared-vs-actual transport mismatch",
+  "verified_via": "keyless HTTPS crawl + one deterministic JSON-RPC probe",
+  "as_of": "2026-09-01T05:39:07Z",
+  "unmeasured": [
+   "skill_execution_correctness",
+   "auth_gated_agents",
+   "streaming_actual",
+   "push_actual",
+   "broad_registry_crawl"
+  ]
+ },
+ "autoeat.hf.newmodels": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
+  "sample": {
+   "n_probed": 25,
+   "live": 25,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "aixk/FastHyperNet16-200M (200)",
+    "anorim/bertweetbr-fusion-5-dareties-p0.99-k0.2-l0.9-bestcross-hatebr-hspt-olidbr-tupy-v52 ",
+    "mradermacher/prose-rewriter-1.7b-v1.5-GGUF (200)",
+    "Deepikard/agentic-ai-multitool (200)",
+    "thamini-17-satoru/rag-image-generator (200)",
+    "Attila115/co5 (200)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:53:19Z",
+  "unmeasured": [
+   "gspc_score",
+   "weights_integrity",
+   "lineage",
+   "runtime_variant"
+  ]
+ },
+ "autoeat.mcp.registry": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless HTTPS reachability of registry remote endpoint; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 11,
+   "placeholder": 2,
+   "held": 0,
+   "dead": 1,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 0.7857,
+   "live_examples": [
+    "ac.inference.sh/mcp (401)",
+    "ad.inside/inside-ads (405)",
+    "ae.propick/propick (405)",
+    "ag.hood/name-service (200)",
+    "agency.goji/goji (405)",
+    "agency.lona/trading (401)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:09:13Z",
+  "unmeasured": [
+   "tool_behavior",
+   "capability_claims",
+   "auth_scope",
+   "service_quality"
+  ]
+ },
+ "autoeat.erc8004.newagents": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless eth_call tokenURI(uint256) per-chain publicnode RPC; three-state LIVE/PLACEHOLDER/DEAD",
+  "sample": {
+   "n_probed": 14,
+   "live": 1,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 13,
+   "live_fraction_of_probed": 0.0714,
+   "live_examples": [
+    "8453:0x8004a169fb4a3325136eb29fa0ceb6d2e539a432:74072 (tokenURI resolvable)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:21:43Z",
+  "unmeasured": [
+   "reputation_validity",
+   "validation_registry_mainnet",
+   "service_quality"
+  ]
+ },
+ "autoeat.xrpl.accounts": {
+  "kind": "csoai.auto-eat-probe/0.1",
+  "flags": {
+   "read_only": true,
+   "no_tx": true,
+   "nothing_minted": true,
+   "no_payment_made": true,
+   "auto_measured": false,
+   "cited_not_endorsed": true
+  },
+  "method": "keyless XRPL account_info (validated); three-state LIVE/DEAD",
+  "sample": {
+   "n_probed": 11,
+   "live": 11,
+   "placeholder": 0,
+   "held": 0,
+   "dead": 0,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
+   "live_examples": [
+    "rEWw5NtgMHduW5HGrVcNJnrft3cmX8eohT (exists)",
+    "rnqoGe1u5BxMtxfXREd1XrAThpWeSCFzSN (exists)",
+    "rMWVf1qJsgHgEd1Tuy378Zs53noKh4BujK (exists)",
+    "rGexjC9cQtQp5u7YcRYnCQh29sRft8kd3D (exists)",
+    "r3cpW3M3nKHfSgkJiEh1BaAy6GJXeZvMLU (exists)",
+    "rPy2dmDG57tZHBVMoxQVdPfowkChNx28SV (exists)"
+   ]
+  },
+  "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
+  "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
+  "as_of": "2026-09-01T06:53:19Z",
+  "unmeasured": [
+   "issuer_identity",
+   "reserve_attestation",
+   "off_ledger_backing"
+  ]
+ }
 }
