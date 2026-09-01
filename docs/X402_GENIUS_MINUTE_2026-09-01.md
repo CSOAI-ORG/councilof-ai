@@ -64,7 +64,7 @@ Placeholders stay **UNMEASURED**. Does not fill empty board axes.
 ## 4. Revenue wedge (honesty)
 
 | Rail | Role |
-|---|---|---|
+|---|---|
 | x402 | Pay-to-recompute / request-attestation (agents as measure/sign targets) |
 | Drift refresh | Paid refresh of N vs N+1 drift on card+root — not a rank SKU |
 | Passport | ERC-8004 passport to **card+root** — never model tokens |
