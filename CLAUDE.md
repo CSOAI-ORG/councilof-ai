@@ -7,11 +7,11 @@ Shared working agreement for ALL agents on this repo. Read this first.
   Vercel Git unlinked; leftover Vercel projects (`csoai-v2-app`, `councilof-ai-src`, …)
   **deleted 31 Aug 2026**. Do not `vercel deploy`. Do not wait for Vercel GitHub checks.
   Merge gate = GHA `deploy.yml` + `curl -I https://councilof.ai`.
-- Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 15 measured · 7 UNMEASURED**.
+- Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 22 measured · 0 UNMEASURED**.
   Cards **335/335**. Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
 - csoai.org = Cloudflare Pages `csoai-site` (DID apex). `os`/`app`.csoai.org CNAME there.
 - Mailbox is **nicholas@csoai.org** on Namecheap Private Email (https://privateemail.com). GitHub sudo codes go there. **Do not use Gmail.**
-- Full eat: `_alignment/ALIGNMENT_2026-08-31.md` (Mac). Cursor feed already has 22/15/335 grammar.
+- Full eat: `_alignment/ALIGNMENT_2026-08-31.md` (Mac). Cursor feed grammar: cite live totals.public_count (22·22·0 after #1077).
 
 ## Deployed truth (build — still true)
 - Build from `client/` (Vite + React + wouter + Tailwind). Root `src/` is DEAD — ignore it.
@@ -47,4 +47,4 @@ Shared working agreement for ALL agents on this repo. Read this first.
 - Grok / JEEVES: alignment, hosting, profile eat
 - Nick: logins, spend, sudo, Namecheap, merges
 
-_Last updated: JEEVES/Grok 2026-08-31 — Vercel cutover eaten; board 22/15/335; Cloudflare only._
+_Last updated: Grok 2026-09-01 — board LIVE 22·22·0 after #1077; Cloudflare only. Never reopen 15/7 leftover PRs._

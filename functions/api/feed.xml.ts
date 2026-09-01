@@ -14,10 +14,16 @@ interface FeedItem {
 
 const ITEMS: FeedItem[] = [
   {
-    title: "GSPC board: 22 axis · 15 measured — living lock",
+    title: "GSPC board: 22 axis · 22 measured — living lock (after #1077)",
+    link: "https://councilof.ai/api/gspc",
+    date: "Tue, 01 Sep 2026 17:21:00 GMT",
+    desc: "Live board is 22 axis · 22 measured · 0 empty. Cite totals.public_count from GET /api/gspc. #1077 restored all eight financial/domain deterministic-facts runs after the #1074 15/7 regression. Historical RSS items below keep their sitting-day wording; counts typed there are superseded by the live board.",
+  },
+  {
+    title: "GSPC board: 22 axis · 15 measured — historical sitting-day (28 Aug)",
     link: "https://councilof.ai/api/gspc",
     date: "Thu, 28 Aug 2026 04:55:00 GMT",
-    desc: "Live board is 22 axis · 15 measured · 7 empty. Cite totals.public_count from GET /api/gspc. Historical RSS items below keep their sitting-day wording; counts typed there are superseded by the live board.",
+    desc: "Sitting-day wording for 28 Aug 2026: board then derived 22 axis · 15 measured · 7 empty. Superseded by the live board — cite totals.public_count from GET /api/gspc (now 22 axis · 22 measured).",
   },
   {
     title: "The carder is live: deterministic fact-cards, and it caught us first",

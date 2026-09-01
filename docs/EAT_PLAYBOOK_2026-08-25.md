@@ -30,7 +30,7 @@ canonical runbook — where things live, what gates hold, who may touch what.
 - No LLM judge in measurement path (CI hook — queued)
 
 ## 3. Surfaces (where truth is served)
-- **Site/API:** councilof.ai + /api/gspc (**22 axis · 15 measured · 7 UNMEASURED** —
+- **Site/API:** councilof.ai + /api/gspc (**22 axis · 22 measured · 0 UNMEASURED** —
   cite `totals.public_count`, never type it), /api/cards, /signals/*
 - **Living data:** `public/signed/` (board_living, gspc-measurement, card_index) · `public/interop/` (rwa corpus, measure runs, sbom) · `public/signals/` (signed signals)
 - **HF mirrors:** csoai/gspc-* (boards/bench results) · **csoai/rwa-attest** (this week)
@@ -43,7 +43,7 @@ canonical runbook — where things live, what gates hold, who may touch what.
 - **K3/DSH:** measurement + signing + interop + docs + CI rules (EAT loop).
 - **Claude:** products, MCP, lobby/play, **single dist builder**. Close stale
   150-floor PRs. Do not counter-push #876.
-- **Cursor:** Council OS / AG-UI / doors / e2e. Quote live 22·15·7. Do not
+- **Cursor:** Council OS / AG-UI / doors / e2e. Quote live 22·22·0. Do not
   edit `public/signed/card_index.json`. Do not restore 14-of-14.
 - **Bots:** floor/reject no longer restore 150. `signed-json-guard` is the gate.
 - **Owner:** merge-to-master if required; insurance; grants; secrets; I-D.
