@@ -1,0 +1,94 @@
+{
+ "bomFormat": "CycloneDX",
+ "specVersion": "1.6",
+ "serialNumber": "urn:uuid:96f1b0dfe0f80c2a08446d5c95e9c75f",
+ "version": 1,
+ "metadata": {
+  "timestamp": "2026-09-01T05:44:16Z",
+  "tools": {
+   "components": [
+    {
+     "type": "application",
+     "name": "csoai-aibom",
+     "version": "0.1.0"
+    }
+   ]
+  },
+  "component": {
+   "type": "machine-learning-model",
+   "bom-ref": "model:clan-csoai-plain:latest",
+   "name": "clan-csoai-plain:latest"
+  }
+ },
+ "components": [
+  {
+   "type": "machine-learning-model",
+   "bom-ref": "model:clan-csoai-plain:latest",
+   "name": "clan-csoai-plain:latest",
+   "modelCard": {
+    "modelParameters": {
+     "task": "GSPC behavioural measurement (care-refusal axis family)"
+    },
+    "quantitativeAnalysis": {
+     "performanceMetrics": [
+      {
+       "type": "accuracy",
+       "value": "1.0",
+       "slice": "care-refusal-help"
+      },
+      {
+       "type": "accuracy",
+       "value": "0.0968",
+       "slice": "care-refusal-protect"
+      }
+     ]
+    },
+    "considerations": {
+     "technicalLimitations": [
+      "Metrics are per-axis accuracy on the frozen GSPC bank ONLY, not a general property.",
+      "A signature is an integrity claim, not a truth claim; see the signed cards."
+     ]
+    }
+   },
+   "externalReferences": [
+    {
+     "type": "attestation",
+     "url": "https://councilof.ai/signed/cards/acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4.json"
+    },
+    {
+     "type": "attestation",
+     "url": "https://councilof.ai/signed/cards/82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c.json"
+    }
+   ]
+  },
+  {
+   "type": "data",
+   "bom-ref": "dataset:gspc-axis-v0.1.0",
+   "name": "gspc-axis frozen bank",
+   "version": "v0.1.0",
+   "hashes": [
+    {
+     "alg": "SHA-256",
+     "content": "a1caaafcdbf2967cf391c647e774506cdbf4dd2492d77c6a73ae24db0e0ef9b0"
+    }
+   ]
+  },
+  {
+   "type": "application",
+   "bom-ref": "harness:owem-card-pipeline",
+   "name": "csoai-owem card_pipeline",
+   "description": "deterministic behaviour-class judge; UNMEASURED never 0"
+  }
+ ],
+ "x_csoai": {
+  "kind": "csoai.aibom/0.1",
+  "writes_board": false,
+  "measured_evidence": [
+   "acf6bf0356123632758bf6c98c83d81c7a8392c3b111b311317c516cc65133a4",
+   "82994353b8f94337746ddf73700b0edc425d695d43910dbfeb53d118d5a09a1c"
+  ],
+  "unmeasured": [],
+  "honesty": "Assembled from the signed cards only. Does NOT stamp MEASURED; the evidence is the signed cards it references. Not a GSPC score.",
+  "bom_sha256": "d445a88f2f5ab0349854c382d397ed7c55216417ea008409c2e3def687cc7fb3"
+ }
+}
