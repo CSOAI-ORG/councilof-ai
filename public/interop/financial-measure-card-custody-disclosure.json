@@ -1,79 +1,100 @@
 {
- "as_of": "2026-09-01T04:12:34Z",
+ "as_of": "2026-09-01T04:44:08Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "axis": "custody-disclosure",
-  "kind": "csoai.financial-measure-run/0.2",
-  "n": 6,
-  "risk_verdict": "UNMEASURED",
+  "kind": "csoai.financial-measure-run/0.3",
+  "n": 16,
+  "roster": "xrpl-reader-16",
   "status": "MEASURED",
-  "as_of": "2026-09-01T04:12:34Z",
+  "risk_verdict": "UNMEASURED",
+  "as_of": "2026-09-01T04:44:08Z",
   "rows": [
    {
     "id": "RLUSD",
-    "instrument": "RLUSD (Ripple USD)",
-    "custodian_named": true,
-    "custodian": "Bank of New York Mellon",
-    "auditor_named": true,
-    "auditor": "independent US CPA",
-    "confirm_url": "https://ripple.com/reports/rlusd-whitepaper.pdf",
-    "http": 200
+    "s": "PASS",
+    "a": "PASS"
    },
    {
     "id": "OUSG",
-    "instrument": "Ondo OUSG (Short-Term US Treasuries)",
-    "custodian_named": false,
-    "custodian": null,
-    "auditor_named": false,
-    "auditor": null,
-    "confirm_url": "https://ondo.finance/ousg",
-    "http": 200
-   },
-   {
-    "id": "AAULF",
-    "instrument": "Archax x abrdn USD Liquidity Fund",
-    "custodian_named": true,
-    "custodian": "Archax Ltd",
-    "auditor_named": true,
-    "auditor": "KPMG",
-    "confirm_url": "https://app.rwa.xyz/assets/AAULF",
-    "http": 200
-   },
-   {
-    "id": "TBILL",
-    "instrument": "OpenEden TBILL (TBL)",
-    "custodian_named": true,
-    "custodian": "BNY",
-    "auditor_named": true,
-    "auditor": "TJ Assurance Partners PAC",
-    "confirm_url": "https://docs.openeden.com/tbill/faq",
-    "http": 200
+    "s": "FAIL",
+    "a": "FAIL"
    },
    {
     "id": "USDB",
-    "instrument": "Braza Bank USDB",
-    "custodian_named": false,
-    "custodian": null,
-    "auditor_named": false,
-    "auditor": null,
-    "confirm_url": "https://app.rwa.xyz/assets/USDB",
-    "http": 200
+    "s": "FAIL",
+    "a": "FAIL"
    },
    {
     "id": "BBRL",
-    "instrument": "Braza Bank BBRL",
-    "custodian_named": false,
-    "custodian": null,
-    "auditor_named": false,
-    "auditor": null,
-    "confirm_url": "https://app.rwa.xyz/assets/USDB",
-    "http": 200
+    "s": "FAIL",
+    "a": "FAIL"
+   },
+   {
+    "id": "EURCV",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "USD.bs",
+    "s": "FAIL",
+    "a": "FAIL"
+   },
+   {
+    "id": "EUR.bs",
+    "s": "FAIL",
+    "a": "FAIL"
+   },
+   {
+    "id": "USD.gh",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "USDC",
+    "s": "FAIL",
+    "a": "FAIL"
+   },
+   {
+    "id": "EUR.gh",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "EURQ",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "USDQ",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "EURØP",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "XAU.gh",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "GBP.gh",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
+   },
+   {
+    "id": "PSC",
+    "s": "UNCHECKABLE",
+    "a": "UNCHECKABLE"
    }
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "52be9293a82804d6d4b11137be2abec7ea8844b272225f27f9774c076786689f",
- "sig_ed25519": "6d188c2b8122c58267853c584641c562a2174f7ad0b937aaac591423b9c0f856c8ceb5a21d7e78643906272fcfb79dabf21065b572ee44299094cf5f90acdd04",
+ "sha256": "23b197c08cb94cc535c68661d5f60ed6e6cd15da03df0e4bd8c4c790fab9f04f",
+ "sig_ed25519": "8262e03e4fd8d9fa72997f57634c166c5129ab2f957a59bf43f2f76418c36084837d72795ac0c4c78029f514d800a48fc1ffb300bd03fa60c72e001e83c0d606",
  "surface": "public.notice",
  "subject": "financial-measure:custody-disclosure",
  "source_urls": [

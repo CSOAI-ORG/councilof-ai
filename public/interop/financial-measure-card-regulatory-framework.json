@@ -1,73 +1,84 @@
 {
- "as_of": "2026-09-01T04:12:34Z",
+ "as_of": "2026-09-01T04:44:08Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "axis": "regulatory-framework",
-  "kind": "csoai.financial-measure-run/0.2",
-  "n": 6,
-  "risk_verdict": "UNMEASURED",
+  "kind": "csoai.financial-measure-run/0.3",
+  "n": 16,
+  "roster": "xrpl-reader-16",
   "status": "MEASURED",
-  "as_of": "2026-09-01T04:12:34Z",
+  "risk_verdict": "UNMEASURED",
+  "as_of": "2026-09-01T04:44:08Z",
   "rows": [
    {
     "id": "RLUSD",
-    "instrument": "RLUSD (Ripple USD)",
-    "regime": "NYDFS",
-    "declared": true,
-    "confirm_url": "https://ripple.com/solutions/stablecoin/transparency/",
-    "http": 200,
-    "not_compliant_claim": true
+    "s": "PASS"
    },
    {
     "id": "OUSG",
-    "instrument": "Ondo OUSG (Short-Term US Treasuries)",
-    "regime": "Reg D 506(c)",
-    "declared": true,
-    "confirm_url": "https://ondo.finance/ousg",
-    "http": 200,
-    "not_compliant_claim": true
-   },
-   {
-    "id": "AAULF",
-    "instrument": "Archax x abrdn USD Liquidity Fund",
-    "regime": "Luxembourg MMFR",
-    "declared": true,
-    "confirm_url": "https://archax.com/invest/abrdn-usd",
-    "http": 200,
-    "not_compliant_claim": true
-   },
-   {
-    "id": "TBILL",
-    "instrument": "OpenEden TBILL (TBL)",
-    "regime": "BVI SIBA",
-    "declared": true,
-    "confirm_url": "https://docs.openeden.com/tbill/introduction",
-    "http": 200,
-    "not_compliant_claim": true
+    "s": "FAIL"
    },
    {
     "id": "USDB",
-    "instrument": "Braza Bank USDB",
-    "regime": "BACEN",
-    "declared": true,
-    "confirm_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
-    "http": 200,
-    "not_compliant_claim": true
+    "s": "PASS"
    },
    {
     "id": "BBRL",
-    "instrument": "Braza Bank BBRL",
-    "regime": "BACEN",
-    "declared": true,
-    "confirm_url": "https://ripple.com/ripple-press/usdb-stablecoin-on-xrp-ledger/",
-    "http": 200,
-    "not_compliant_claim": true
+    "s": "PASS"
+   },
+   {
+    "id": "EURCV",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "USD.bs",
+    "s": "FAIL"
+   },
+   {
+    "id": "EUR.bs",
+    "s": "FAIL"
+   },
+   {
+    "id": "USD.gh",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "USDC",
+    "s": "FAIL"
+   },
+   {
+    "id": "EUR.gh",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "EURQ",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "USDQ",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "EURØP",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "XAU.gh",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "GBP.gh",
+    "s": "UNCHECKABLE"
+   },
+   {
+    "id": "PSC",
+    "s": "UNCHECKABLE"
    }
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "b656b465aead6ee783dec4f6f9adf9e06d4f72c02f308be6bc2ea8e2c1bc783c",
- "sig_ed25519": "d51c4f1b064868c821f0da776f640ee2102e7f5928ebbc2c3c857d21edd3e5088a0df8356fa29ea61bfe46ba1cc020dbd13ed1580b44cb39dc8e75adbcc94508",
+ "sha256": "5f03211c26ba67fedc17fef9f6f6a5859246fd815e7ce614b7eb48220d3868e2",
+ "sig_ed25519": "346ca4185e6593ebdabe6f75940383613571bf741bb5a00e387213d06d313a1f910bb5f374fd7b8e6d3bd22d18f4276f4042184a073b71c8c97ff2f9f83c1902",
  "surface": "public.notice",
  "subject": "financial-measure:regulatory-framework",
  "source_urls": [
