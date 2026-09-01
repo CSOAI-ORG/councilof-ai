@@ -63,7 +63,7 @@ export interface BoardCount {
   measured_axes: number;
   /** Slots published so the gap is visible, with no run behind them. */
   unmeasured_axes: number;
-  /** The short sentence a surface quotes, e.g. "22 axis · 22 measured". */
+  /** The short sentence a surface quotes, e.g. "22 axis · 15 measured". */
   public_count: string;
   /** The long sentence that explains why both numbers are printed. */
   count_grammar: string;
