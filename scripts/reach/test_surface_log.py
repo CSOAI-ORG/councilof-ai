@@ -23,7 +23,7 @@ OBJECTIVE_NAMES = [
     "VS Code MCP gallery", "Cursor dir", "Product Hunt",
     "OpenVC", "Signal", "Dealroom", "Wellfound", "Crunchbase",
     "TechCrunch", "FT", "Politico", "404",
-    "W3C CG", "SCITT", "C2PA", "NIST",
+    "W3C CG", "SCITT", "C2PA", "NIST", "OpenSSF Best-Practices",
     "OpenML", "W&B", "Kaggle", "mcp.directory", "Cline", "Zed", "Windsurf",
     "HN Show-HN", "r/LocalLLaMA", "dev.to", "Medium", "Hashnode", "LinkedIn", "X",
     "Ars", "IEEE", "MIT-TR", "VentureBeat", "Register",
@@ -48,6 +48,24 @@ def test_coverage() -> None:
     print(f"coverage OK: {len(OBJECTIVE_NAMES)} OBJECTIVE names, {len(rows)} rows")
 
 
+def test_gated_tier_s_click_paths() -> None:
+    """Every GATED TIER S evidence URL is a click-path in the shipped playbook."""
+    d = json.loads(LOG.read_text(encoding="utf-8"))
+    play = PLAYBOOK.read_text(encoding="utf-8")
+    missing = []
+    for r in d["surfaces"]:
+        if r.get("tier") != "S" or r.get("openness") != "GATED":
+            continue
+        url = (r.get("evidence") or "").strip()
+        if not url:
+            missing.append(r["name"] + " (empty evidence)")
+            continue
+        if url not in play:
+            missing.append(f"{r['name']} {url}")
+    assert not missing, f"GATED TIER S click-paths missing from playbook: {missing}"
+    print(f"click-paths OK: {sum(1 for r in d['surfaces'] if r.get('tier')=='S' and r.get('openness')=='GATED')} TIER S GATED URLs in playbook")
+
+
 def test_honesty_floors() -> None:
     blob = LOG.read_text(encoding="utf-8") + PLAYBOOK.read_text(encoding="utf-8")
     blob += X402.read_text(encoding="utf-8") if X402.exists() else ""
@@ -70,6 +88,7 @@ def test_honesty_floors() -> None:
 def main() -> int:
     test_coverage()
     test_honesty_floors()
+    test_gated_tier_s_click_paths()
     return 0
 
 
