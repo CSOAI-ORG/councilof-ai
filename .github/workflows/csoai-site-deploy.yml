@@ -20,6 +20,8 @@ name: csoai-site deploy — full static site from csoai-static-deploy2 main
 # Push on this file starts a deploy.
 # 2026-09-01 leftover: strip cwd functions before pages deploy (fix #55 308) 1808Z.
 # 2026-09-01 leftover: drop functions so #55 _redirects 308 (#57) fire 1803Z.
+# 2026-09-01: Advanced Mode ignores _redirects — inject redirect-only
+# functions/_middleware.js (keep /.well-known for did:web).
 # this token does not have it. Merging a change to this workflow is the
 # agent-reachable path to refresh did:web:csoai.org.
 
@@ -85,16 +87,27 @@ jobs:
                   print(kind, s16, dest.stat().st_size)
           print('twinned cards+proofs only; no SPA')
           PY
-      - name: Drop repo-root functions so _redirects can win
+      - name: Inject redirect-only middleware (OWNER one-site)
         working-directory: src
         run: |
-          # wrangler pages deploy _site still bundles cwd/functions/ even when
-          # build_site omittted functions from _site (see #55/#57). Pages
-          # Functions override _redirects — remove before upload.
+          # Advanced Mode ignores _redirects. Old API functions overrode
+          # redirects; bare strip left sticky 200 HTML. Ship ONLY a
+          # middleware that 308s everything except /.well-known/* (did:web).
           rm -rf functions _site/functions
-          test ! -d functions
-          test -f _site/_redirects
-          echo "functions stripped; _redirects present"
+          mkdir -p functions
+          cat > functions/_middleware.js <<'JS'
+          export async function onRequest(context) {
+            const url = new URL(context.request.url);
+            if (url.pathname === '/.well-known' || url.pathname.startsWith('/.well-known/')) {
+              return context.next();
+            }
+            const dest = new URL(url.pathname + url.search + url.hash, 'https://councilof.ai');
+            return Response.redirect(dest.toString(), 308);
+          }
+          JS
+          test -f functions/_middleware.js
+          test -f _site/.well-known/did.json
+          echo "redirect-only middleware ready"
       - name: Deploy to csoai-site production
         working-directory: src
         env:
@@ -143,16 +156,10 @@ jobs:
                   print(f'FAIL: {host} did.json still stale after 6 attempts ({last})')
                   sys.exit(1)
           PY
-          curl -s -o /dev/null -w "redirect: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
-          python3 - <<'PY'
-          import json, subprocess, sys
-          root = json.loads(subprocess.check_output(['curl','-sS','--max-time','20','https://csoai.org/root.json'], text=True))
-          merkle = root['merkle_root']
-          sha16 = root['card_sha256'][0][:16]
-          card = subprocess.check_output(['curl','-sS','-o','/tmp/csoai-card.json','-w','%{http_code}','--max-time','20', f'https://csoai.org/cards/{sha16}.json'], text=True)
-          proof = subprocess.check_output(['curl','-sS','-o','/tmp/csoai-proof.json','-w','%{http_code}','--max-time','20', f'https://csoai.org/proofs/{sha16}.json'], text=True)
-          print('live merkle', merkle, 'card', card, 'proof', proof, 'sha16', sha16)
-          if card != '200' or proof != '200':
-              print('WAIT GHA: cards/proofs not live yet')
-              sys.exit(1)
-          PY
+          # Prove OWNER one-site redirect (not twin HTML)
+          code=$(curl -sS -o /dev/null -w "%{http_code}" --max-time 20 -I https://csoai.org/)
+          loc=$(curl -sS -o /dev/null -w "%{redirect_url}" --max-time 20 -I https://csoai.org/)
+          echo "apex / : $code -> $loc"
+          echo "$code" | grep -q '^308$' || { echo "FAIL: expected 308 on /"; exit 1; }
+          echo "$loc" | grep -q 'councilof.ai' || { echo "FAIL: Location must be councilof.ai"; exit 1; }
+          curl -s -o /dev/null -w "redirect-path: %{http_code} -> %{redirect_url}\n" https://csoai.org/some-page
