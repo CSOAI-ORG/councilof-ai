@@ -1,0 +1,43 @@
+{
+ "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+ "@graph": [
+  {
+   "type": "CreationInfo",
+   "@id": "_:creationinfo",
+   "specVersion": "3.0.1",
+   "created": "2026-09-01T05:44:16Z",
+   "createdBy": [
+    "_:csoai"
+   ]
+  },
+  {
+   "type": "Agent",
+   "@id": "_:csoai",
+   "name": "CSOAI Ltd (UK 16939677)"
+  },
+  {
+   "type": "SpdxDocument",
+   "@id": "_:document",
+   "creationInfo": "_:creationinfo",
+   "profileConformance": [
+    "core",
+    "software",
+    "ai"
+   ],
+   "rootElement": [
+    "_:aipackage-f1161153"
+   ]
+  },
+  {
+   "type": "ai_AIPackage",
+   "@id": "_:aipackage-f1161153",
+   "creationInfo": "_:creationinfo",
+   "name": "clan-csoai-plain:latest",
+   "ai_typeOfModel": [
+    "behavioural-measurement-subject"
+   ],
+   "ai_informationAboutTraining": "NOASSERTION",
+   "ai_limitation": "Per-axis accuracy on the frozen GSPC bank only; not a general property."
+  }
+ ]
+}

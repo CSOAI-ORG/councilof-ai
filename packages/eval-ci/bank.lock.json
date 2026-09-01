@@ -1,0 +1,20 @@
+{
+  "kind": "csoai.eval-ci.bank-lock/0.1",
+  "note": "Pins the sha256 of each frozen bank / prompt set / grader watched by eval-ci. A bank edited without updating its pin here is a SILENT edit and MUST fail the PR (see check_bank.py). Updating a pin is a visible, reviewable diff that declares the change and triggers a re-run + delta card.",
+  "banks": [
+    {
+      "axis": "gspc-axis",
+      "path": "public/datasets/gspc-axis-v0.1.0/gspc-axis.jsonl",
+      "sha256": "a1caaafcdbf2967cf391c647e774506cdbf4dd2492d77c6a73ae24db0e0ef9b0",
+      "lines": 10226
+    }
+  ],
+  "graders": [
+    {
+      "name": "behaviour-class-judge",
+      "path": "harness/owem/card_pipeline.py",
+      "pins": "REFUSE_RE + judge()",
+      "note": "The grader is code; its pin is the file it lives in. A grader change is a declared edit and re-runs the axis."
+    }
+  ]
+}
