@@ -1,5 +1,7 @@
 /* CSOAI-GSPC public board. Live GET /api/gspc. */
 const API = "https://councilof.ai/api/gspc";
+// ONE lid everywhere: print totals.lid verbatim (Blueprint §2.3); never derive a second sentence.
+function printLid(data){ const el=document.getElementById("lid"); if(!el) return; const lid=data&&data.totals&&data.totals.lid; el.textContent = lid ? ("Lid: "+lid) : "Lid: UNCHECKABLE — /api/gspc did not answer"; }
 const CARDS = "https://councilof.ai/signed/card_index.json";
 const CORRECTIONS = "https://councilof.ai/api/corrections";
 const QUEUE = "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/SUMMARY.json";
