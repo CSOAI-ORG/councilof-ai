@@ -30,7 +30,7 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, swift_notices, xrpl  # noqa: E402
+from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, staged_leaves, swift_notices, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
@@ -400,6 +400,7 @@ def main() -> int:
     benji_out = benji.collect()
     fin7_out = fin7_coverage.collect()
     genai_mil_out = genai_mil_notices.collect()
+    staged_out = staged_leaves.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
 
     leaves: list[dict] = []
@@ -411,6 +412,10 @@ def main() -> int:
     # claim-vs-card x4, NIST crosswalk). Facts, not measurements. New leaves stay
     # UNSIGNED until the GHA OIDC job signs them; deployments UNCHECKABLE.
     leaves.extend(genai_mil_out["leaves"])
+    # Staged UNSIGNED atoms from the XRPL/SWIFT eater (file reader, no network,
+    # never raises). public.notice only; PROBED/DISCOVERED/UNMEASURED on the
+    # payload; signed here or not at all. See scripts/adapters/staged_leaves.py.
+    leaves.extend(staged_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -494,6 +499,7 @@ def main() -> int:
                 "swift_notices": {"status": "halt-before-write", "note": "TARGETS not clients"},
                 "benji": {"status": "halt-before-write", "note": "GraphQL dark. Not issuer 7"},
                 "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
+                "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
             },
         }
         if not have_key:
@@ -598,6 +604,7 @@ def main() -> int:
         "cites": hub_out.get("sidecar") or {},
         "swift": notices_out.get("sidecar") or {},
         "benji": benji_out.get("sidecar") or {},
+        "staged_leaves": staged_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (
