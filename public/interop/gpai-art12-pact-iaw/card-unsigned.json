@@ -1,0 +1,94 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "GPAI Art.12 / EU AI Pact IAW crosswalk — statute URLs + related GSPC axes (NOT compliance)",
+  "as_of": "2026-09-02T03:32:11Z",
+  "source_urls": [
+    "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689",
+    "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+    "https://artificialintelligenceact.eu/article/12/",
+    "https://digital-strategy.ec.europa.eu/en/policies/ai-pact"
+  ],
+  "payload": {
+    "kind": "csoai.crosswalk/0.1",
+    "title": "GPAI Art.12 / EU AI Pact — IAW related-measures crosswalk (not compliance)",
+    "iaw": "measure_cite_only",
+    "endorsement": false,
+    "not_a_legal_determination": true,
+    "not_a_certification": true,
+    "not_a_conformity_assessment": true,
+    "not_compliance_claim": true,
+    "writes_board": false,
+    "statutes": [
+      {
+        "label": "EU AI Act Art.12 (Record-keeping)",
+        "instrument": "Regulation (EU) 2024/1689",
+        "article": "12",
+        "urls": [
+          "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32024R1689",
+          "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+          "https://artificialintelligenceact.eu/article/12/"
+        ]
+      },
+      {
+        "label": "EU AI Pact (voluntary pledges)",
+        "urls": [
+          "https://digital-strategy.ec.europa.eu/en/policies/ai-pact"
+        ]
+      }
+    ],
+    "related_gspc_axes": [
+      {
+        "axis": "provenance",
+        "relation": "related_measure",
+        "why": "Logging / record-keeping artefacts are neighbouring evidence for provenance transparency — not Art.12 compliance."
+      },
+      {
+        "axis": "continuity",
+        "relation": "related_measure",
+        "why": "Lifetime event logs over a system lifetime neighbour continuity measurement — not a conformity mark."
+      },
+      {
+        "axis": "detector-interop",
+        "relation": "related_measure",
+        "why": "Traceability of outputs/events can neighbour detector-interop evidence — not Pact membership as compliance."
+      },
+      {
+        "axis": "governance",
+        "relation": "related_measure",
+        "why": "AI Pact voluntary governance pledges neighbour governance behavioural measurement — not notified-body status."
+      },
+      {
+        "axis": "art5-safeguard",
+        "relation": "related_measure",
+        "why": "Prohibited-practice behavioural axis shares domain with AI Act enforcement machinery — domain expertise, not exposure claim."
+      },
+      {
+        "axis": "care",
+        "relation": "related_measure",
+        "why": "Care axis can carry behavioural measures adjacent to early Pact transparency pledges — never Art.12 compliant."
+      }
+    ],
+    "disclaimer": "IAW = measure/cite only. Crosswalk lists which GSPC axes are related measures for Art.12 record-keeping / AI Pact voluntary pledges. It is not a legal determination, conformity assessment, certification, or compliance claim."
+  },
+  "sha256": "PLACEHOLDER",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "art12_compliance",
+    "ai_pact_membership",
+    "notified_body_status",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "gpai",
+    "art12",
+    "ai-pact",
+    "iaw",
+    "crosswalk",
+    "endorsement-false",
+    "unsigned"
+  ]
+}
