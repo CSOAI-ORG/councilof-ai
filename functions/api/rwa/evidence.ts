@@ -302,7 +302,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.rwa-evidence/0.1", error: "bad_request", reason: "pass asset=<XRPL symbol from /api/xrpl or an r-address>", free_reader: `${origin}/api/xrpl`, preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` }, 400);
   }
 
-  const description = `XRPL asset evidence card (${asset}): AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, cited raw-fetch hashes — one canonical card-v0, Ed25519 when the Pages key is present. Historical state, not a rating, not a guarantee. Measurement, not a conformity mark. ${CSOAI_LID}.`;
+  const description = `XRPL asset evidence card (${asset}): AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, cited raw-fetch hashes — one canonical card-v0, Ed25519 when the Pages key is present. Historical state, not a rating, not a guarantee. Measurement, not a conformity mark.`;
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });
   const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 
