@@ -81,7 +81,7 @@ describe("dashboardCrumbs — the Council software trail", () => {
 
   it("a sub-page links back to the overview", () => {
     const crumbs = dashboardCrumbs("/dashboard/progress");
-    expect(crumbs.map((c) => c.label)).toEqual(["Council software", "progress"]);
+    expect(crumbs.map((c) => c.label)).toEqual(["Council OS", "progress"]);
     expect(crumbs[0].path).toBe("/dashboard");
     expect(crumbs[1].current).toBe(true);
   });
