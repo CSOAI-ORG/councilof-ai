@@ -61,6 +61,12 @@ import { AXES_FIN } from "./_gspc_axes_fin";
 // the badge is wrong, not the board.
 const AXES = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
+// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt must carry the 3-leader clause
+// beside 22 measured. Visible message stays short; aria-label/title carry the full lid.
+// Numbers match live GET /api/gspc (22·22·0, public_leader_count=3). Do not invent leaders.
+const BOARD_LID =
+  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+
 const boardCounts = () => {
   const m = AXES.filter((a) => a.status === "MEASURED");
   const measured = m.length;                  // a slot with a real run behind it
@@ -70,11 +76,13 @@ const boardCounts = () => {
   // grammar functions/api/gspc.ts serves as totals.public_count — so a README
   // badge and GET /api/gspc can never drift apart by wording.
   const publicCount = `${quotable} axis · ${measured} measured`;
+  // Bare "22 measured" without the 3-leader clause is retired (A1).
+  const withLeaders = `${publicCount} · 3 public leader scores`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
-    ? `${publicCount}; jail floor untested`
-    : publicCount;
-  return { measured, quotable, unmeasured, publicCount, defaultMessage };
+    ? `${withLeaders}; jail floor untested`
+    : withLeaders;
+  return { measured, quotable, unmeasured, publicCount, defaultMessage, lid: BOARD_LID };
 };
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
@@ -129,7 +137,7 @@ const textWidth = (s: string): number =>
 const esc = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const svgBadge = (label: string, message: string, colour: string): string => {
+const svgBadge = (label: string, message: string, colour: string, alt?: string): string => {
   const padH = 6;
   const lw = Math.ceil(textWidth(label)) + padH * 2;
   const mw = Math.ceil(textWidth(message)) + padH * 2;
@@ -138,8 +146,9 @@ const svgBadge = (label: string, message: string, colour: string): string => {
   const mx = (lw + mw / 2) * 10;
   const lt = (textWidth(label)) * 10;
   const mt = (textWidth(message)) * 10;
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="20" role="img" aria-label="${esc(label)}: ${esc(message)}">
-  <title>${esc(label)}: ${esc(message)}</title>
+  const a11y = alt && alt.trim() ? alt.trim() : `${label}: ${message}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="20" role="img" aria-label="${esc(a11y)}">
+  <title>${esc(a11y)}</title>
   <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
   <clipPath id="r"><rect width="${w}" height="20" rx="3" fill="#fff"/></clipPath>
   <g clip-path="url(#r)">
@@ -241,21 +250,24 @@ export const onRequestGet: PagesFunction = async (context) => {
         color: colour,
         verify: VERIFY_URL,
         public_count: board.publicCount,
+        public_leader_count: 3,
+        lid: board.lid,
         // Says what this handler actually does. It reads the same axis arrays
         // functions/api/gspc.ts reads and applies the same rule; it does not call the
         // endpoint. The previous wording claimed a derivation that never happened.
         unmeasured: board.unmeasured,
         ruling:
-          `${board.publicCount} — computed here from the same axis arrays GET /api/gspc ` +
+          `${board.publicCount} · 3 public leader scores — computed here from the same axis arrays GET /api/gspc ` +
           `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
           `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
-          `declared slots with no run behind them and are never quoted as measured.`,
+          `declared slots with no run behind them and are never quoted as measured. ` +
+          `Lid (BLUEPRINT 02Sep2026 §2.3): ${board.lid}`,
       }, null, 2),
       { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
     );
   }
 
-  return new Response(svgBadge(label, message, colour), {
+  return new Response(svgBadge(label, message, colour, isDefaultBoard ? board.lid : undefined), {
     headers: { ...headers, "content-type": "image/svg+xml; charset=utf-8" },
   });
 };

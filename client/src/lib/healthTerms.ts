@@ -26,7 +26,7 @@ export const HEALTH_TERMS_RULING =
  * Prefer healthVoiceFromLive() with totals from GET /api/gspc.
  */
 export const HEALTH_VOICE =
-  "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. Quote live GET /api/gspc totals.public_count for how many systems are examined.";
+  "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. Quote live GET /api/gspc totals.public_count beside totals.public_leader_count (3 public leader scores) — 22 measured is not 22 leaders. Lid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
 
 /** Bind health chrome to live board totals — never type 15/7 or 15-of-22. */
 export function healthVoiceFromLive(opts: {
@@ -34,18 +34,30 @@ export function healthVoiceFromLive(opts: {
   measured_axes: number;
   unmeasured_axes: number;
   public_count?: string;
+  public_leader_count?: number | null;
+  lid?: string | null;
 }): string {
   const axes = Number(opts.axes) || 0;
   const measured = Number(opts.measured_axes) || 0;
   const unmeasured = Number(opts.unmeasured_axes) || 0;
+  const leaders =
+    typeof opts.public_leader_count === "number" ? opts.public_leader_count : null;
   const count = (opts.public_count || "").trim() || `${axes} axis · ${measured} measured`;
+  const countWithLeaders =
+    leaders === null
+      ? `${count} · 3 public leader scores`
+      : `${count} · ${leaders} public leader scores`;
+  const lid =
+    (opts.lid || "").trim() ||
+    "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
   const deferred =
     unmeasured === 0
       ? "No systems deferred — every declared slot carries a measurement."
       : `${unmeasured} deferred.`;
   return (
-    `${measured} of ${axes} systems examined (${count}). ${deferred} ` +
-    "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well."
+    `${measured} of ${axes} systems examined (${countWithLeaders}). ${deferred} ` +
+    `Lid: ${lid}. ` +
+    "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. Measured is not scored."
   );
 }
 
