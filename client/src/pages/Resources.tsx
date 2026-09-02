@@ -31,7 +31,7 @@ export default function Resources() {
       category: "Training",
     },
     {
-      title: "33-Agent Council Technical Specification",
+      title: "33-seat Council design specification",
       description: "Detailed documentation of the designed multi-agent review mechanism and agent architecture.",
       type: "PDF",
       pages: 35,

@@ -244,7 +244,7 @@ export default function Council() {
               Designed distribution — not provisioned providers
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              33 Agents, <span className="text-emerald-400">7 Providers</span>
+              33-seat design · measured n_eff 1.21 of 3 · <span className="text-emerald-400">7 Providers</span>
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto">
               The designed agent distribution ensures no single AI company could dominate decisions.

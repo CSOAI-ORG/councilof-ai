@@ -59,7 +59,7 @@ const suggestionPrompts = [
     subtitle: "33-agent voting status",
     icon: Users,
     action: "/agent-council",
-    prompt: "Explain how the 33-Agent Council multi-leg voting system works."
+    prompt: "Explain how the designed 33-seat council voting works, and what n_eff 1.21/3 means."
   },
   {
     title: "Check Watchdog reports",

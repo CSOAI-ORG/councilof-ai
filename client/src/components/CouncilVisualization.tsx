@@ -1,5 +1,5 @@
 /**
- * Real-time 33-Agent Council Voting Visualization
+ * Design simulation of the 33-seat council vote (not live; measured n_eff 1.21/3)
  * Displays actual voting data from the council API
  */
 

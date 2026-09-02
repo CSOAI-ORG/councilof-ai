@@ -66,7 +66,7 @@ const PHASES: PhaseData[] = [
       'Establish baseline compliance requirements',
     ],
     councilRecommendations: [
-      '🤖 33-Agent Council Analysis: "High-risk medical AI system requires enhanced oversight under EU AI Act Article 6"',
+      '🤖 Designed council (simulation, not a live vote) — analysis: "High-risk medical AI system requires enhanced oversight under EU AI Act Article 6"',
       '🔍 Bias Detection: "Recommend demographic fairness audit across age, gender, ethnicity, and socioeconomic factors"',
       '📊 Risk Priority: "Focus on diagnostic accuracy disparities (Critical), data privacy (High), and explainability (High)"',
       '✅ Compliance Gap: "HIPAA compliance verified. EU AI Act conformity assessment required before deployment in EU"',
@@ -357,7 +357,7 @@ export default function PDCASimulator() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-6 w-6 text-green-600" />
-                33-Agent AI Council Recommendations
+                Designed council recommendations (simulation)
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
                 Democratic consensus from 33 AI agents across multiple providers (OpenAI, Anthropic,

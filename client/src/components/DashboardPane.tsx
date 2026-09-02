@@ -6,6 +6,7 @@ const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
+const DashboardStatePane = lazy(() => import("@/components/DashboardStatePane"));
 const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
 const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
 const Page_Products = lazy(() => import("@/pages/Products"));
@@ -20,6 +21,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   leaderboard: Page_Leaderboard, // the full model × axis table, in-shell
   terminal: LobbyBoardPane,
   verify: LobbyVerifyPane,
+  state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
   results: Page_Benchmarks,
   models: Page_ModelRegistry,
   products: Page_Products,
