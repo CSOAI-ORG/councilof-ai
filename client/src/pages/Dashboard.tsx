@@ -72,8 +72,8 @@ const quickActions = [
   { label: "My Progress", href: "/dashboard/progress", icon: Target },
   { label: "Register AI System", href: "/ai-systems", icon: Shield },
   { label: "Run Assessment", href: "/compliance", icon: FileCheck },
-  { label: "View Council", href: "/agent-council", icon: Users },
-  { label: "Check Watchdog", href: "/watchdog", icon: Eye },
+  { label: "View Council", href: "/dashboard?tab=space", icon: Users },
+  { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
 ];
 
 export default function Dashboard() {

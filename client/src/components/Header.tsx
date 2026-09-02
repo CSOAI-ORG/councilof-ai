@@ -199,7 +199,7 @@ export function Header() {
           </div>
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
-            <a href="/os" className="hidden xl:inline-flex rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Council OS</a>
+            <a href="/dashboard" className="hidden xl:inline-flex rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Council OS</a>
             <button onClick={() => setSearchOpen(true)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>

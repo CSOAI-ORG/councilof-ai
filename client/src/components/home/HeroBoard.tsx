@@ -67,7 +67,7 @@ export default function HeroBoard() {
             Open the board
           </a>
           <a
-            href="/os"
+            href="/dashboard?tab=board"
             className="inline-flex items-center justify-center rounded-xl border border-white/20 px-7 py-3.5 text-sm font-semibold text-emerald-100/90 transition-colors hover:bg-white/10"
           >
             Council OS

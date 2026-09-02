@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
 import { DASHBOARD_TABS } from "@/components/lobby/tabs";
+import DashboardPane from "@/components/DashboardPane";
+import { useSearch as useTabSearch } from "wouter";
 import { dashboardCrumbs } from "@/components/lobby/breadcrumbs";
 import { openLobby } from "@/lib/lobbyLink";
 
@@ -41,6 +43,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   const current = DASHBOARD_TABS.find((t) => t.path && location.startsWith(t.path));
+  const tabSearch = useTabSearch();
+  const activeTab = new URLSearchParams(tabSearch.startsWith("?") ? tabSearch.slice(1) : tabSearch).get("tab") || "home";
+  // Council OS = this shell. A tab renders its pane HERE; it never navigates out to the site.
+  const pane = activeTab !== "home" && activeTab !== "software" ? <DashboardPane id={activeTab} /> : null;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -74,9 +80,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5"
         >
           {DASHBOARD_TABS.map((tab) => {
-            const isActive = !!tab.path && location.startsWith(tab.path);
+            const isActive = activeTab === tab.id;
             return (
-              <Link key={tab.id} href={tab.path}>
+              <Link key={tab.id} href={`/dashboard?tab=${tab.id}`}>
                 <div
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
@@ -180,7 +186,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             transition={{ duration: 0.15 }}
             className="h-full"
           >
-            {children}
+            {pane ?? children}
           </motion.div>
         </main>
       </div>

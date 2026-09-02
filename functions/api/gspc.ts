@@ -304,6 +304,8 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
+        model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
+        fact_runs: selected.filter((a: any) => a.kind === "deterministic-facts").length,
         count_grammar:
           unmeasured === 0
             ? `${selected.length} axis are on the board and every one carries a measurement — no ` +

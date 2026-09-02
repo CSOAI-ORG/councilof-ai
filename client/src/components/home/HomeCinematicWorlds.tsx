@@ -71,7 +71,7 @@ const WORLDS: World[] = [
       "Nine products. Each tile opens a page that exists today.",
       "We measure. We do not certify.",
     ],
-    primary: { href: "/os", label: "Open Council OS" },
+    primary: { href: "/dashboard", label: "Open Council OS" },
     secondary: { href: "/gspc-scoreboard", label: "Read the board" },
   },
 ];
