@@ -203,17 +203,14 @@ function discover() {
     // so each needs an explicit snapshot or the static host serves an honest-404.
     "/blog/ai-insurance-verified-measurement",
     "/blog/ai-audit-best-practices", // listed on /blog but 404 live (Pages serves 404.html for non-prerendered paths); brand-gate-checked
-    "/blog/ai-governance-legislation-2026",
     "/blog/ai-governance-trends-2026",
     "/blog/ai-risk-register",
     "/blog/algorithmic-accountability",
-    "/blog/byzantine-consensus",
     "/blog/casa-certification-launch",
     "/blog/casa-certification-levels",
     "/blog/cmmc-for-ai",
     "/blog/eu-ai-act-compliance",
     "/blog/global-ai-governance-harmonization",
-    "/blog/iso-42001-nist-ai-rmf",
     "/blog/proof-of-ai",
     "/blog/red-teaming-adversarial-testing",
     "/blog/rd-tax-credits-uk-ai-startups",
