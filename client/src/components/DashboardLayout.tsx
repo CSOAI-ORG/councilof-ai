@@ -187,6 +187,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             className="h-full"
           >
             {pane ?? children}
+            {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold. */}
+            <p className="mt-6 text-xs text-muted-foreground" data-testid="free-rail">
+              Verify is free. A grade is never sold. No public prices — measurement, not certification.
+            </p>
           </motion.div>
         </main>
       </div>
