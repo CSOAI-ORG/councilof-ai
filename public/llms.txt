@@ -58,7 +58,7 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Agent card: https://councilof.ai/.well-known/agent-card.json
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — seven tools live: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion. Same definitions file as stdio. No CSOAI account.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.0` is four tools; source tracks 0.1.1 with the same seven as /mcp. Registry https://www.npmjs.com/package/csoai-gspc-mcp. Prefer the remote URL until 0.1.1 is on the registry.
+- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.1` (seven tools, same as /mcp). Registry https://registry.npmjs.org/csoai-gspc-mcp
 - MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai
