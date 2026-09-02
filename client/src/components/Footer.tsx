@@ -211,6 +211,12 @@ export function Footer() {
                 href: 'https://identity.foundation/',
                 title: 'Decentralized Identity Foundation — did:web trust root',
               },
+              {
+                src: '/images/badges/frameworks/linux-foundation.svg',
+                alt: 'Linux Foundation',
+                href: 'https://www.linuxfoundation.org/',
+                title: 'Linux Foundation — hosts our DIF and C2PA memberships (LFX profile). Not a Linux Foundation corporate membership.',
+              },
             ].map((b) => (
               <li key={b.alt}>
                 <a
