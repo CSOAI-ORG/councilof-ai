@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0902-09",
+      date: "2026-09-02",
+      what_was_wrong:
+        "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis · 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
+      how_caught:
+        "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      fix:
+        "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots · 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used — it is a 3KB card-sign and cannot carry this snapshot.",
+      status: "CORRECTED — signed freeze is 22/22 and agrees with the live axis arrays",
+    },
+    {
       id: "C-2026-0902-08",
       date: "2026-09-02",
       what_was_wrong:

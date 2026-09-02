@@ -160,10 +160,10 @@ const boardAgrees =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
 const SNAPSHOT_DISAGREEMENT =
   "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
-  "committed axis arrays. The signed snapshot at public/signed/gspc-board.signed.json is a " +
-  "historical freeze (15 measured / 7 empty) under a 3-party MPC key that does not exist as a " +
-  "whole number here. Do not file the snapshot's 15/7. Re-signing that file is an owner MPC " +
-  "ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
+  "committed axis arrays. The signed snapshot at public/signed/gspc-board.signed.json disagrees " +
+  "with that live derivation. Do not file the snapshot's counts while signed_snapshot_agrees is " +
+  "false. Re-signing that file is an owner MPC ceremony, not a laptop sign and not the Pages " +
+  "3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
@@ -259,7 +259,7 @@ export const onRequestGet: PagesFunction = async () => {
         liveMeasuredOn,
         "MEASURED_ON.date",
         "Slots with a real graded run behind them. This is the number to quote if you quote only one. " +
-          "Same derivation as GET /api/gspc totals.measured_axes. Joel files this, not the 15/7 snapshot.",
+          "Same derivation as GET /api/gspc totals.measured_axes. This is the number to file.",
       ),
       unmeasured_axes: fact(
         liveUnmeasuredAxes,
@@ -296,9 +296,9 @@ export const onRequestGet: PagesFunction = async () => {
       ),
       live_derivation_crosscheck: {
         note:
-          "The signed file is a historical snapshot of an earlier /api/gspc computation. Live " +
-          "counts above are derived from the committed axis arrays — the same source GET /api/gspc " +
-          "uses. Drift is published rather than silently inherited.",
+          "Live counts above are derived from the committed axis arrays — the same source GET " +
+          "/api/gspc uses. The signed file is an MPC freeze of that computation. Drift is " +
+          "published rather than silently inherited.",
         source: SRC_AXES,
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
@@ -311,7 +311,9 @@ export const onRequestGet: PagesFunction = async () => {
           unmeasured_axes: boardTotals.unmeasured_axes ?? null,
           public_count: boardTotals.public_count ?? null,
           as_of: boardMeasuredOn,
-          status: "historical freeze — do not file",
+          status: boardAgrees
+            ? "signed freeze agrees with live axis arrays"
+            : "historical freeze — do not file",
         },
         on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
