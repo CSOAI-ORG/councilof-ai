@@ -19,7 +19,12 @@ from mill_hub_queue import (  # noqa: E402
     infer_one,
     openrouter_id,
     load_bank,
+    append_dead_slugs,
+    dead_rows_from_skips,
+    is_dead_reason,
+    load_dead_slugs,
     load_only_ids,
+    provider_mapping_live,
     mill,
     pick_emptiest,
     stage_unsigned,
@@ -81,9 +86,9 @@ def test_mill_dry_skip_log_no_measured_flip(tmp_path: Path | None = None) -> Non
         shutil.rmtree(out, ignore_errors=True)
     q = HERE / "_mill_test_queue.jsonl"
     q.write_text(
-        json.dumps({"rank": 1, "id": "org/empty-a", "status": "UNMEASURED", "card_id": ""})
+        json.dumps({"rank": 1, "id": "org/empty-a", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"})
         + "\n"
-        + json.dumps({"rank": 2, "id": "org/empty-b", "status": "UNMEASURED", "card_id": ""})
+        + json.dumps({"rank": 2, "id": "org/empty-b", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"})
         + "\n"
         + json.dumps({"rank": 3, "id": "org/done", "status": "MEASURED", "card_id": "deadbeef", "measured_axes": {"governance": {"status": "MEASURED", "card_id": "deadbeef"}}})
         + "\n"
@@ -151,7 +156,7 @@ def test_mill_dry_with_all_14_banks_has_no_frozen_bank_skip(tmp_path: Path | Non
         )
         banks.joinpath(f"{ax}.jsonl").write_text(json.dumps({key: f"{ax} prompt", "expected": "X"}) + "\n")
     q = root / "queue.jsonl"
-    q.write_text(json.dumps({"rank": 1, "id": "org/empty-a", "status": "UNMEASURED", "card_id": ""}) + "\n")
+    q.write_text(json.dumps({"rank": 1, "id": "org/empty-a", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"}) + "\n")
     out = root / "out"
     rep = mill(q, out, pick_n=1, grade_n=1, dry=True, banks_dir=banks)
     assert rep["measured_flips"] == 0
@@ -650,6 +655,101 @@ def test_land_mill_cards_dedupes_and_rejects_signed(tmp_path: Path | None = None
     assert rep["signed_here"] is False and rep["writes_board"] is False
 
 
+def test_pick_honours_dead_slugs_and_servable_tags_only() -> None:
+    """Rank-top unservable repos are skipped once dead; VL / embedding tags are never picked for a text bank."""
+    rows = [
+        {"rank": 1, "id": "openai-community/gpt2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+        {"rank": 2, "id": "Qwen/Qwen2.5-VL-7B-Instruct", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "image-text-to-text"},
+        {"rank": 3, "id": "sentence-transformers/all-MiniLM-L6-v2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "sentence-similarity"},
+        {"rank": 4, "id": "Qwen/Qwen3-8B", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+    ]
+    picked = pick_emptiest(rows, 10, generative_only=True, axis="governance", dead={"openai-community/gpt2"})
+    assert [r["id"] for r in picked] == ["Qwen/Qwen3-8B"]
+    assert is_dead_reason("UNCHECKABLE probe hf:openai-community/gpt2:no-endpoint (all 6 provider suffixes 400/404); last HTTP 400")
+    assert is_dead_reason("UNCHECKABLE no live inference provider (probe-first)")
+    assert is_dead_reason("UNCHECKABLE HTTP 404 model not on the Hub (probe-first)")
+    # one provider suffix saying 400 is that provider's miss, never a dead model
+    assert not is_dead_reason("UNCHECKABLE probe hf:Qwen/Qwen3-8B:groq:HTTP 400; no-endpoint openrouter")
+    assert not is_dead_reason("UNCHECKABLE probe hf:Qwen/Qwen3-8B:groq:HTTP 403")
+    assert not is_dead_reason("UNCHECKABLE probe hf:x:HTTP 429")
+    assert not is_dead_reason("not-in-this-batch-pick")
+
+
+def test_dead_slugs_file_roundtrip_dedupes(tmp_path: Path | None = None) -> None:
+    import tempfile
+
+    root = tmp_path or Path(tempfile.mkdtemp())
+    f = root / "dead_slugs.jsonl"
+    skips = [
+        {"id": "openai-community/gpt2", "axis": "governance", "reason": "UNCHECKABLE probe hf:openai-community/gpt2:no-endpoint (all 6 provider suffixes 400/404); last HTTP 400"},
+        {"id": "openai-community/gpt2", "axis": "governance", "reason": "UNCHECKABLE probe hf:openai-community/gpt2:no-endpoint (all 6 provider suffixes 400/404); last HTTP 400"},
+        {"id": "Qwen/Qwen3-8B", "axis": "governance", "reason": "UNCHECKABLE probe hf:Qwen/Qwen3-8B:groq:HTTP 403"},
+        {"id": "b/empty", "axis": "governance", "reason": "not-in-this-batch-pick"},
+    ]
+    rows = dead_rows_from_skips(skips, "2026-09-02T00:00:00Z")
+    assert [r["id"] for r in rows] == ["openai-community/gpt2"]
+    assert append_dead_slugs(f, rows) == 1
+    assert append_dead_slugs(f, rows) == 0
+    assert load_dead_slugs(f) == {"openai-community/gpt2"}
+    assert load_dead_slugs(root / "missing.jsonl") == set()
+
+
+def test_probe_first_spends_grades_only_on_live_slugs(tmp_path: Path | None = None) -> None:
+    """--probe-first walks rank, asks the Hub mapping, and grades only slugs a provider serves."""
+    import tempfile
+    from unittest.mock import patch
+
+    root = tmp_path or Path(tempfile.mkdtemp())
+    q = root / "queue.jsonl"
+    q.write_text(
+        "".join(
+            json.dumps(r) + "\n"
+            for r in [
+                {"rank": 1, "id": "openai-community/gpt2", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+                {"rank": 2, "id": "facebook/opt-125m", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+                {"rank": 3, "id": "Qwen/Qwen3-8B", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+                {"rank": 4, "id": "meta-llama/Llama-3.1-8B-Instruct", "status": "UNMEASURED", "card_id": "", "pipeline_tag": "text-generation"},
+            ]
+        )
+    )
+    mapping = {
+        "openai-community/gpt2": {"inferenceProviderMapping": {}},
+        "facebook/opt-125m": {"inferenceProviderMapping": []},
+        "Qwen/Qwen3-8B": {"inferenceProviderMapping": [{"provider": "featherless-ai", "status": "live", "task": "conversational"}]},
+        "meta-llama/Llama-3.1-8B-Instruct": {"inferenceProviderMapping": [{"provider": "novita", "status": "error", "task": "conversational"}]},
+    }
+
+    def fetch(url: str):
+        slug = url.split("/api/models/", 1)[1].split("?", 1)[0]
+        return mapping[slug]
+
+    assert provider_mapping_live("Qwen/Qwen3-8B", fetch=fetch) == (True, "featherless-ai")
+    assert provider_mapping_live("openai-community/gpt2", fetch=fetch)[0] is False
+    graded: list[str] = []
+
+    def fake_infer(slug, prompt):  # noqa: ARG001
+        graded.append(slug)
+        return "UNCHECKABLE", "no bank in this test"
+
+    _DEAD.clear()
+    with patch("mill_hub_queue.infer_hub", fake_infer):
+        dead = root / "dead_slugs.jsonl"
+        rep = mill(q, root / "out", pick_n=10, grade_n=1, axis="governance", dead_path=dead, probe_first=True, probe_fetch=fetch)
+    assert graded == ["Qwen/Qwen3-8B"]
+    reasons = {s["id"]: s["reason"] for s in rep["skips"]}
+    assert "no live inference provider (probe-first)" in reasons["openai-community/gpt2"]
+    assert "no live inference provider (probe-first)" in reasons["facebook/opt-125m"]
+    assert reasons["meta-llama/Llama-3.1-8B-Instruct"] == "not-in-this-batch-pick"
+    assert rep["probe_first"] is True and rep["dead_new"] == 2 and rep["dead_appended"] == 2
+    assert load_dead_slugs(dead) == {"openai-community/gpt2", "facebook/opt-125m"}
+    assert rep["measured_flips"] == 0 and rep["staged_unsigned"] == []
+    # second run honours the file: the two dead slugs are not even picked
+    with patch("mill_hub_queue.infer_hub", fake_infer):
+        rep2 = mill(q, root / "out2", pick_n=10, grade_n=1, axis="governance", dead_path=dead, probe_first=True, probe_fetch=fetch)
+    assert rep2["dead_known"] == 2 and rep2["picked"] == 2
+    assert not any(s["id"] == "openai-community/gpt2" for s in rep2["skips"])
+
+
 if __name__ == "__main__":
     test_pick_emptiest_skips_measured()
     test_pick_emptiest_prefers_generative()
@@ -671,3 +771,6 @@ if __name__ == "__main__":
     test_infer_hub_falls_back_to_openrouter_under_the_same_id()
     test_flip_hub_queue_only_valid_n30_cells()
     test_land_mill_cards_dedupes_and_rejects_signed()
+    test_pick_honours_dead_slugs_and_servable_tags_only()
+    test_dead_slugs_file_roundtrip_dedupes()
+    test_probe_first_spends_grades_only_on_live_slugs()
