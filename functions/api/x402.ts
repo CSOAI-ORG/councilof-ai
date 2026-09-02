@@ -74,6 +74,16 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         attests: "existence of this digest at the root's as_of — nothing about its content, legality, or provenance",
         never: ["storage or republication of the bytes", "a bypass of a login, paywall, robots.txt or bot check (UNCHECKABLE, no charge)", "a verdict on the content", "a certificate", "a legal presumption"],
       },
+      {
+        tier: 1,
+        tier: 4,
+        id: "provider_diff_feed",
+        name: "Provider document diff feed (signed historical batch / bespoke partner feed)",
+        resource: u("/api/feeds/provider-diff?history=1"),
+        free_preview: u("/api/feeds/provider-diff") + " (recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/)",
+        deliverable: "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)",
+        never: ["a verdict on any change", "the content of any page (never captured)", "a grade"],
+      },
     ],
     free_forever: [u("/gspc-verify"), u("/api/gspc"), u("/root.json"), u("/api/fines"), u("/api/proof?sha=<64-hex>"), u("/api/witness/status?sha256=<64-hex>"), u("/methodology")],
     invariants: {

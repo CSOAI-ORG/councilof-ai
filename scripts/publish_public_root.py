@@ -30,7 +30,7 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, staged_leaves, swift_notices, witness_queue, xrpl  # noqa: E402
+from adapters import _coverage, benji, fin, genai_mil_notices, hub_cite, provider_diff, staged_leaves, swift_notices, witness_queue, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
@@ -401,6 +401,7 @@ def main() -> int:
     fin7_out = fin7_coverage.collect()
     genai_mil_out = genai_mil_notices.collect()
     staged_out = staged_leaves.collect(ROOT)
+    provider_diff_out = provider_diff.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
     witness_out = witness_queue.collect(ROOT)
 
@@ -422,6 +423,10 @@ def main() -> int:
     # landing). Hash only — never the bytes, never the URL. public.notice, PROBED,
     # kind csoai.witness.hash/0.1. Absent config → no leaves, never a halt.
     leaves.extend(witness_out["leaves"])
+    # Provider-diff leaves (hash-only document change notices + daily capture
+    # summary) staged by scripts/watch/provider_watch.py. File reader, no
+    # network, never raises. See scripts/adapters/provider_diff.py.
+    leaves.extend(provider_diff_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -507,6 +512,7 @@ def main() -> int:
                 "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
                 "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
                 "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
+                "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
             },
         }
         if not have_key:
@@ -613,6 +619,7 @@ def main() -> int:
         "benji": benji_out.get("sidecar") or {},
         "staged_leaves": staged_out.get("sidecar") or {},
         "witness_queue": witness_out.get("sidecar") or {},
+        "provider_diff": provider_diff_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (

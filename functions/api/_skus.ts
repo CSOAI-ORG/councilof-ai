@@ -193,6 +193,36 @@ export const SKUS: Record<string, Sku> = {
       "card carries no legal presumption. Invoice path for a human deal (owner-decision).",
   },
 
+  // SKU — Provider Document Diff Feed (ASSEMBLY). The signed, timestamped, hash-only record that
+  // an AI provider's public document (terms / usage policy / model cards / pricing / safety policy /
+  // Article 50 marking statement) changed between two captures. Not reproducible after the fact —
+  // you had to have captured it at time T. Recent diffs are free (/api/feeds/provider-diff); the
+  // assembled signed historical batch and a bespoke per-partner target list are what is sold.
+  // Never sold: a verdict on any change, the content of any page (never captured). See
+  // docs/PROVIDER-DIFF-FEED.md.
+  provider_diff_feed: {
+    id: "provider_diff_feed",
+    name: "Provider Document Diff Feed (assembly)",
+    artifact:
+      "one assembled document: every csoai.diff.provider-terms/0.1 leaf to date (provider, surface, url, " +
+      "prev/new normalised sha256, prev/new fetched_at, robots) with its inclusion proof to the signed " +
+      "root.json, plus the append-only state; or a bespoke per-partner target list captured on the same method",
+    unit: "1 historical batch (all diffs to date) OR 1 partner-year (bespoke target list, daily cadence)",
+    sells: "assembly",
+    prices: {
+      // The batch is assembly of already-public leaves + the durable signature — priced as work, not as facts.
+      history_batch: band(25, [10, 250], "X402_PRICE_PROVIDER_DIFF_BATCH_USD"),
+      // Design-partner line: a governance/procurement team, insurer or law firm names its own URLs.
+      // GBP invoice (owner issues it; an agent never moves funds). Anchor only — an owner decision.
+      partner_feed_yr: band(5000, [2500, 25000], "PRICE_PROVIDER_DIFF_PARTNER_YR_USD"),
+    },
+    rail: "x402-or-invoice",
+    notes:
+      "Hash-only by design (no republication of content, no third-party personal-data payload); robots.txt " +
+      "honoured; logins/paywalls/anti-bot never bypassed (UNCHECKABLE). A leaf attests that bytes changed " +
+      "between two times — nothing about what changed or why. Verify stays free; the leaves stay free.",
+  },
+
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.
   enterprise_rail: {
     id: "enterprise_rail",
