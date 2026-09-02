@@ -65,12 +65,26 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — seven tools live: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion. Same definitions file as stdio. No CSOAI account.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.1` (seven tools, same as /mcp). Registry https://registry.npmjs.org/csoai-gspc-mcp
-- MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
+- MCP registry: io.github.CSOAI-ORG/gspc (1.1.1 → https://councilof.ai/mcp)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
 - ClaimGuard (claim-vs-signed-artifact integrity checker; audit any claim against a signed board, deterministic, never a model opinion): https://councilof.ai/claimguard
+
+
+## Where it's published (distribution — not authority)
+
+Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
+
+- Hugging Face org: https://huggingface.co/csoai
+- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc **1.1.1** (isLatest)
+- npm stdio: https://www.npmjs.com/package/csoai-gspc-mcp (`csoai-gspc-mcp`)
+- Glama (claimed): https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc
+- Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
+- Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
+
+Lid (quote live `totals.lid`): 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
 
 ## For agents
 
