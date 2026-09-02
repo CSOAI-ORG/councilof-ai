@@ -202,7 +202,7 @@ export function Footer() {
               {
                 src: '/images/badges/frameworks/lot-network.svg',
                 alt: 'LOT Network',
-                href: 'https://lotnet.org/',
+                href: 'https://lotnet.com/',
                 title: 'LOT Network — member',
               },
               {

@@ -72,6 +72,20 @@ const BADGES: VerifyBadge[] = [
     logo: '/images/badges/verify/companies-house.svg',
   },
   {
+    label: 'ORCID 0009-0001-3869-1068',
+    href: 'https://orcid.org/0009-0001-3869-1068',
+    title:
+      'ORCID iD of the author of record. It is what makes authorship on a deposited DOI machine-resolvable rather than a name string.',
+    logo: '/images/badges/verify/orcid.svg',
+  },
+  {
+    label: 'Software Heritage · archived',
+    href: 'https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai',
+    title:
+      'The source of this site is permanently archived by Software Heritage (UNESCO). Archived 2 September 2026, visit status full, SWHID swh:1:ori:8725f4054f527b3abdd47868de7fac5c956069f0 — a third party holds a copy that does not depend on us or on GitHub.',
+    logo: '/images/badges/verify/software-heritage.svg',
+  },
+  {
     label: 'Sigstore Rekor · root witnessed',
     href: 'https://councilof.ai/interop/root-witness-pointer.json',
     title:
