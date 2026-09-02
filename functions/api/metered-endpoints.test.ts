@@ -142,12 +142,16 @@ describe("Tier 3 — /api/eunomia-data", () => {
 describe("catalog + discovery", () => {
   it("/api/x402 and /.well-known/x402.json name no amounts and report the honest mode", async () => {
     const c = await (await catalog(ctx("/api/x402"))).json();
-    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "witness_hash", "provider_diff_feed"]);
+    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "witness_hash", "provider_diff_feed", "receipts_batch"]);
+    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "witness_hash", "receipts_batch"]);
+    expect(JSON.stringify(c.mcp)).not.toMatch(/\bsafe\b|verified registry/i);
     expect(c.rail).toMatchObject({ mode: "challenge-only", pay_to: ESTATE_PAY_TO });
     expect(JSON.stringify(c)).not.toMatch(/[£$€]\s?\d|"amount":\s*"\d/);
     const w = await (await wellKnown(ctx("/.well-known/x402.json"))).json();
     expect(w).toMatchObject({ schema: "csoai.x402/0.2", mode: "challenge-only", payTo: ESTATE_PAY_TO, network: "eip155:8453" });
     expect(w.resources.every((r: { url: string }) => r.url.startsWith(ORIGIN))).toBe(true);
+    expect(w.resources.map((r: { url: string }) => r.url)).toContain(`${ORIGIN}/api/receipts/batch?from=<iso>&to=<iso>`);
+    expect(w.mcp.paid_tools).toContain("receipts_batch");
     expect(JSON.stringify(w)).not.toMatch(/mock|pack\.councilof\.ai/);
     const live = await (await catalog(ctx("/api/x402", { X402_FACILITATOR_URL: "https://f.example" }))).json();
     expect(live.rail.mode).toBe("live");

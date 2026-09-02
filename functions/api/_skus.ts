@@ -223,6 +223,32 @@ export const SKUS: Record<string, Sku> = {
       "between two times — nothing about what changed or why. Verify stays free; the leaves stay free.",
   },
 
+  // SKU — Receipts batch (ASSEMBLY). One historical batch of signed card-v0 leaves (the estate's
+  // measurement receipts) for a time window, each with its inclusion path and the root(s) that
+  // carried it. Recent = the current root, free at /root.json, /cards/, /api/proof?sha=. History is
+  // the assembly sold. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) —
+  // this SKU never claims one.
+  receipts_batch: {
+    id: "receipts_batch",
+    name: "Receipts batch (historical, assembly)",
+    artifact:
+      "one canonical batch document (csoai.receipts.batch/0.1): every card-v0 leaf whose as_of falls in " +
+      "[from,to] (≤200 per batch), each with its Merkle inclusion path and the merkle_root(s) that carried " +
+      "it, plus the root index for the window and one signed manifest card-v0 (surface receipts.batch) " +
+      "citing the batch sha256; Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+    unit: "1 batch = 1 time window × ≤200 leaves",
+    sells: "assembly",
+    prices: {
+      per_batch: band(0.1, [0.05, 0.25], "X402_PRICE_RECEIPTS_BATCH_USD"),
+    },
+    rail: "x402-or-invoice",
+    notes:
+      "Free preview (?preview=1) returns count, span, root count and the sha256 of the exact batch bytes " +
+      "the paid path returns — so a buyer can verify the deliverable against the preview. Every leaf is " +
+      "individually free (/cards/<sha16>.json, /api/proof?sha=); the batch sells assembly across history, " +
+      "never a conclusion about any leaf. Invoice path: quote the preview sha256 to nicholas@csoai.org.",
+  },
+
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.
   enterprise_rail: {
     id: "enterprise_rail",
