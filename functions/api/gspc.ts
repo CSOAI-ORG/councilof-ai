@@ -275,7 +275,8 @@ export const onRequestGet: PagesFunction = async (context) => {
     state_enum: {
       status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
       separation: ["SEPARATED", "TIE", "UNTESTED"],
-      public_leader_state: ["PUBLIC", "EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+      public_leader_state: ["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+      public_leader_state_absent: "the leader is shown (a public score)",
       verification: ["VALID", "INVALID", "UNCHECKABLE"],
       note: "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.",
     },
