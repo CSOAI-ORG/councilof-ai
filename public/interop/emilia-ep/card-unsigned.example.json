@@ -91,7 +91,27 @@
       "live_inclusion_proof": "NOT_CLAIMED",
       "out_of_band_keys": "REQUIRED_FOR_FULL_VERIFY",
       "independent_emilia_verify": "UNCHECKABLE_IN_THIS_CARD",
-      "note": "Consumers may fetch pinned URLs and re-verify offline with @emilia-protocol/verify or emilia-verify under their own key pins. CSOAI does not mint EP receipts or SCITT inclusion proofs."
+      "note": "Consumers may fetch pinned URLs and re-verify offline with @emilia-protocol/verify or emilia-verify under their own key pins. CSOAI does not mint EP receipts or SCITT inclusion proofs. UNCHECKABLE states carry reasons (nothing-to-check \u2260 failed-to-check).",
+      "uncheckable_reasons": [
+        {
+          "id": "EP-AUTHORIZATION-PAYLOAD-IDENTITY-VERIFIES",
+          "state": "UNCHECKABLE",
+          "reason": "pinned vectors.reference.json has no EP receipt payload; nothing-to-check (not failed-to-check); payload not invented",
+          "note": "Reason required beside state. Public method alignment with joel-freeze-discipline \u2014 cite only, no endorsement."
+        }
+      ],
+      "peer_declared_boundary_ids_cite_only": [
+        {
+          "id": "P256-PAIR-IS-NOT-EP-PROFILE",
+          "role": "boundary",
+          "note": "Peer-declared boundary ID \u2014 cite only; not a computed check in this card."
+        },
+        {
+          "id": "ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION",
+          "role": "boundary",
+          "note": "Peer-declared boundary ID \u2014 entry digest \u2260 authorization; cite only."
+        }
+      ]
     },
     "ras": {
       "path": "/assess",
@@ -106,7 +126,7 @@
     },
     "status": "UNSIGNED_STUB"
   },
-  "sha256": "955b4317646ff124b3016d5086a6f1e08300bec44eedfd8bf990a699b06bfe13",
+  "sha256": "73d10ebaa045b72294287fbd318482ccdd8290e39696b9285fe0be5d3d5282bf",
   "sig_ed25519": null,
   "did": "did:web:csoai.org#card-attestation-1",
   "unmeasured": [
@@ -119,7 +139,10 @@
     "n>=30",
     "4way",
     "keystone",
-    "gspc_axis_projection_forbidden"
+    "gspc_axis_projection_forbidden",
+    "EP-AUTHORIZATION-PAYLOAD-IDENTITY-VERIFIES:UNCHECKABLE:no-ep-receipt-payload-in-vectors",
+    "P256-PAIR-IS-NOT-EP-PROFILE:boundary-cite-only",
+    "ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION:boundary-cite-only"
   ],
   "tags": [
     "emilia-ep",
@@ -130,6 +153,8 @@
     "digest-only",
     "ep-ne-scitt-inclusion",
     "not-a-ts",
-    "no-endorsement"
+    "no-endorsement",
+    "uncheckable-reason",
+    "joel-freeze-discipline-cite"
   ]
 }

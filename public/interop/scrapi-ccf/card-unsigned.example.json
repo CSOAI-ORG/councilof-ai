@@ -29,7 +29,9 @@
       "hash_alg": "SHA-256",
       "candidate": "complete Signed Statement (COSE_Sign1) bytes, or the declared digest payload when the statement is hash-bound",
       "status": "UNCHECKABLE_HERE",
-      "note": "Offline consumers MUST enforce this equality before trusting a receipt. This card does not run the check live; it records the requirement and pins public vectors that claim to satisfy it."
+      "note": "Offline consumers MUST enforce this equality before trusting a receipt. This card does not run the check live; it records the requirement and pins public vectors that claim to satisfy it.",
+      "authorization_note": "Data-hash binding checks statement/entry bytes under the receipt leaf; it does not prove authorization. ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION (peer-declared boundary ID, cite-only).",
+      "reason": "no live TS / no live check on councilof.ai \u2014 nothing-to-check here (not failed-to-check)"
     },
     "pinned_vectors": {
       "action_state_group_scitt_cose": {
@@ -97,7 +99,19 @@
       "live_ts_registration": "UNCHECKABLE",
       "live_scitt_keys_fetch_on_councilof_ai": "404_BY_DESIGN",
       "independent_reverify_with_scitt_cose": "UNCHECKABLE_IN_THIS_CARD",
-      "note": "Consumers may fetch pinned URLs and re-verify offline with action-state-group/scitt-cose. CSOAI does not mint receipts."
+      "note": "Consumers may fetch pinned URLs and re-verify offline with action-state-group/scitt-cose. CSOAI does not mint receipts. UNCHECKABLE states carry reasons (nothing-to-check \u2260 failed-to-check).",
+      "uncheckable_reasons": [
+        {
+          "id": "data-hash-binding-live",
+          "state": "UNCHECKABLE",
+          "reason": "requirement recorded; live check not run on councilof.ai (not a TS)"
+        },
+        {
+          "id": "ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION",
+          "state": "boundary-cite-only",
+          "reason": "entry digest cannot substitute for authorization \u2014 peer-declared boundary ID"
+        }
+      ]
     },
     "board_axis_fill": false,
     "denser_root": {
@@ -107,7 +121,7 @@
     },
     "status": "UNSIGNED_STUB"
   },
-  "sha256": "18bf761ce2303fc10edfa4fadf08cf2fd1e7ce6123b507f16ce45c0741dac81a",
+  "sha256": "ac74aafbe65631f1e7099ed771d7cbd2a23626963d958b9ac554973ef7fa86b5",
   "sig_ed25519": null,
   "did": "did:web:csoai.org#card-attestation-1",
   "unmeasured": [
@@ -118,7 +132,9 @@
     "n>=30",
     "4way",
     "keystone",
-    "gspc_axis_projection_forbidden"
+    "gspc_axis_projection_forbidden",
+    "ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION:boundary-cite-only",
+    "data-hash-binding-live:UNCHECKABLE:no-live-ts-check"
   ],
   "tags": [
     "scrapi-ccf",
@@ -127,6 +143,9 @@
     "eat",
     "unsigned",
     "fixtures-consumer",
-    "not-a-ts"
+    "not-a-ts",
+    "uncheckable-reason",
+    "joel-freeze-discipline-cite",
+    "no-endorsement"
   ]
 }

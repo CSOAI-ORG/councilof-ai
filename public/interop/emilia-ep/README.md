@@ -63,6 +63,23 @@ upstream pin digests → unsigned card-v0 (surface=eval.delta)
 - Preimage rule (join table): `ep-scitt-statement-identity-v0.1`
 - Wire: consume vectors at that SHA; **do not vendor main**
 
+## Honesty: UNCHECKABLE must carry a reason
+
+Public method alignment with the Joel / Certisyn freeze habit (see
+[`../joel-freeze-discipline/`](../joel-freeze-discipline/)) — **cite only, no
+affiliation / endorsement**.
+
+- `UNCHECKABLE` without a reason is incomplete.
+- **nothing-to-check ≠ failed-to-check.** Absent preimage is not a failed eval.
+- Case ID **`EP-AUTHORIZATION-PAYLOAD-IDENTITY-VERIFIES`** stays **UNCHECKABLE**
+  when the pinned vector set has **no EP receipt payload** (and we do not invent
+  one). The reason must sit **beside** the state (card + README), not be dropped.
+- Peer-declared **boundary** case IDs (cite-only; not computed checks here):
+  - `P256-PAIR-IS-NOT-EP-PROFILE`
+  - `ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION`
+- Entry digest ≠ authorization. Data-hash / envelope identity does not prove EP
+  authorization payload identity.
+
 ## Gaps (declared in `unmeasured[]`)
 
 - `out-of-band-keys` — receipt / statement issuer keys are not published by CSOAI

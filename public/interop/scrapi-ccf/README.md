@@ -56,6 +56,20 @@ requirement; it does **not** claim a live check ran on councilof.ai.
 ASG `scitt-cose` is explicitly **NOT a Transparency Service** (substrate /
 verifier only). Matching our posture.
 
+## Honesty: data-hash binding ≠ authorization
+
+Public method alignment with the Joel / Certisyn freeze habit (see
+[`../joel-freeze-discipline/`](../joel-freeze-discipline/)) — **cite only, no
+affiliation / endorsement**.
+
+- Offline verifiers MUST check `proof.leaf.data-hash == HASH(candidate)`.
+- That binding proves **statement / entry bytes** under the receipt leaf — it does
+  **not** prove EP (or any other) **authorization**.
+- **Entry digest cannot substitute for authorization** (peer-declared boundary ID
+  `ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION`, cite-only).
+- When a check is out of scope or preimage is absent, mark **UNCHECKABLE** with an
+  explicit **reason** (nothing-to-check ≠ failed-to-check). Do not silently drop it.
+
 ## Non-goals / hard stops
 
 - Do **not** invent MEASURED / SIGNED.
