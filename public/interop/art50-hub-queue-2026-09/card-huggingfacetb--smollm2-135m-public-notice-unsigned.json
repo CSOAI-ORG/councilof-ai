@@ -1,0 +1,81 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "HuggingFaceTB/SmolLM2-135M \u2014 Art 50 marking disclosure public.notice (absent; grace to 2026-12-02)",
+  "as_of": "2026-09-02T05:09:24Z",
+  "source_urls": [
+    "https://huggingface.co/HuggingFaceTB/SmolLM2-135M",
+    "https://huggingface.co/HuggingFaceTB/SmolLM2-135M/raw/main/README.md"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "ABSENT",
+    "honest_sentence": "Public model card hashed. Art 50-style marking/disclosure language ABSENT from card text this fetch. Not independently verified (no watermark/C2PA detector run).",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "gspc_axis_projection_forbidden": true,
+    "axes_cite": [
+      "detector-interop",
+      "provenance",
+      "conformance"
+    ],
+    "n_measured": 0,
+    "art50": {
+      "schema": "csoai.art50-marking-disclosure/0.1",
+      "grace_ends": "2026-12-02",
+      "wedge": "Switchboard Part B wedge 5 / Part G 30-day \u2014 hub-queue Art 50 marking disclosure",
+      "model_id": "HuggingFaceTB/SmolLM2-135M",
+      "queue_rank": 162,
+      "downloads_at_queue": 2488117,
+      "pipeline_tag": "text-generation",
+      "queue_as_of": "2026-08-29T09:40:48Z",
+      "source_queue": "https://huggingface.co/datasets/csoai/hub-queue",
+      "disclosure": "absent",
+      "method": "regex scan of public Hugging Face model card README text only",
+      "hit_labels": [],
+      "hit_snippets": [],
+      "note": "DISCOVERED/ABSENT refers to language on the public model card. Does not mean a watermark was detected or C2PA verified. Detector runs stay UNMEASURED."
+    },
+    "artefacts": [
+      {
+        "role": "hf_model_card_readme",
+        "source_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-135M/raw/main/README.md",
+        "model_page": "https://huggingface.co/HuggingFaceTB/SmolLM2-135M",
+        "fetched_at": "2026-09-02T05:09:24Z",
+        "body_state": "HASHED",
+        "http_ok": true,
+        "sha256": "d1ba68cae64a89b6b434b11526e6e2271ee5ffd2c914ec35ed515f9d84c6085c",
+        "bytes": 6340
+      }
+    ],
+    "fetched_at": "2026-09-02T05:09:24Z",
+    "verified_via": "keyless HTTPS GET of HF model card README; sha256 of exact bytes when reachable; text regex for Art 50-style marking language; no detector run; no recompute"
+  },
+  "sha256": "e939cd6c972ec27eae550c119a4098642d8debda7fb51fce59c60cf12d570c30",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "watermark detector run",
+    "C2PA verification",
+    "SynthID detection",
+    "output sample marking survival",
+    "independent recompute of disclosure claim",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED"
+  ],
+  "tags": [
+    "public-notice",
+    "art50",
+    "hub-queue",
+    "marking-disclosure",
+    "absent",
+    "absent",
+    "unsigned",
+    "n-measured-0",
+    "grace-2026-12-02"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Model-card text discovery only \u2014 not a certificate of Art 50 compliance."
+}

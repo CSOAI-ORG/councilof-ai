@@ -1,0 +1,81 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "TinyLlama/TinyLlama-1.1B-Chat-v1.0 \u2014 Art 50 marking disclosure public.notice (absent; grace to 2026-12-02)",
+  "as_of": "2026-09-02T05:09:24Z",
+  "source_urls": [
+    "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+    "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0/raw/main/README.md"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "ABSENT",
+    "honest_sentence": "Public model card hashed. Art 50-style marking/disclosure language ABSENT from card text this fetch. Not independently verified (no watermark/C2PA detector run).",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "gspc_axis_projection_forbidden": true,
+    "axes_cite": [
+      "detector-interop",
+      "provenance",
+      "conformance"
+    ],
+    "n_measured": 0,
+    "art50": {
+      "schema": "csoai.art50-marking-disclosure/0.1",
+      "grace_ends": "2026-12-02",
+      "wedge": "Switchboard Part B wedge 5 / Part G 30-day \u2014 hub-queue Art 50 marking disclosure",
+      "model_id": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "queue_rank": 222,
+      "downloads_at_queue": 1969250,
+      "pipeline_tag": "text-generation",
+      "queue_as_of": "2026-08-29T09:40:48Z",
+      "source_queue": "https://huggingface.co/datasets/csoai/hub-queue",
+      "disclosure": "absent",
+      "method": "regex scan of public Hugging Face model card README text only",
+      "hit_labels": [],
+      "hit_snippets": [],
+      "note": "DISCOVERED/ABSENT refers to language on the public model card. Does not mean a watermark was detected or C2PA verified. Detector runs stay UNMEASURED."
+    },
+    "artefacts": [
+      {
+        "role": "hf_model_card_readme",
+        "source_url": "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0/raw/main/README.md",
+        "model_page": "https://huggingface.co/TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "fetched_at": "2026-09-02T05:09:24Z",
+        "body_state": "HASHED",
+        "http_ok": true,
+        "sha256": "6f620f661ce3f8425b49301b64a642aa7451ce9fbd3b8115e899de59147121c8",
+        "bytes": 3196
+      }
+    ],
+    "fetched_at": "2026-09-02T05:09:24Z",
+    "verified_via": "keyless HTTPS GET of HF model card README; sha256 of exact bytes when reachable; text regex for Art 50-style marking language; no detector run; no recompute"
+  },
+  "sha256": "1b1c47be2e2a593add2446a1203c6a7a09aa37df1f22dd892888230fd936c6a3",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "watermark detector run",
+    "C2PA verification",
+    "SynthID detection",
+    "output sample marking survival",
+    "independent recompute of disclosure claim",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED"
+  ],
+  "tags": [
+    "public-notice",
+    "art50",
+    "hub-queue",
+    "marking-disclosure",
+    "absent",
+    "absent",
+    "unsigned",
+    "n-measured-0",
+    "grace-2026-12-02"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Model-card text discovery only \u2014 not a certificate of Art 50 compliance."
+}
