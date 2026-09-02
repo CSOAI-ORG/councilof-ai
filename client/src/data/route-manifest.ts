@@ -1658,6 +1658,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Plans Page"
  },
  {
+  "path": "/pricing-free",
+  "comp": "PricingFree",
+  "title": "Pricing Free"
+ },
+ {
   "path": "/pricing-legacy",
   "comp": "Pricing",
   "title": "Pricing"

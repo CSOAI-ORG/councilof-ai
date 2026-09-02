@@ -15,12 +15,24 @@
 // receipt cannot be confirmed settled, so verification FAILS CLOSED: the caller returns 402 and
 // never grants on header presence.
 //
-// TODO(x402 live): provision the X402_* bindings below (Cloudflare secrets) and confirm the
-//   facilitator implements the standard x402 `POST {facilitator}/verify` (and `/settle`) contract
-//   — see https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp. Until then verification
-//   returns { ok:false } by design; that is the honest state, not a regression.
+// SETTLEMENT (2026-09-02): `/verify` only proves the client's EIP-3009 authorization is well
+// formed and funded — it moves NO money. The facilitator's `/settle` is what submits the
+// transfer on-chain. Granting on /verify alone would hand out paid artefacts for free, so this
+// module calls /verify THEN /settle and reports ok only when settle succeeds. The X-PAYMENT-
+// RESPONSE echo is built from the settle result (tx hash, network, payer) — never fabricated.
+//
+// Owner switch: `X402_FACILITATOR_URL` (Cloudflare Pages env). payTo comes from _x402_config.ts
+// (estate default, env-overridable). Until the facilitator is set, verification returns
+// { ok:false } by design — the honest state of a rail that has not been switched on.
 
 import { SKUS, USDC_BASE, usdToAtomic, resolvePriceUsd } from "./_skus";
+import {
+  resolvePayTo,
+  facilitatorUrl,
+  USDC_BASE_EIP712,
+  NETWORK_SLUG_BASE,
+  NETWORK_CAIP2_BASE,
+} from "./_x402_config";
 
 export type X402Env = {
   // The x402 facilitator that verifies (and settles) a receipt. Absent → metered endpoints
@@ -28,7 +40,7 @@ export type X402Env = {
   X402_FACILITATOR_URL?: string;
   X402_ASSET?: string; // ERC-20 asset contract the receipt must pay (e.g. USDC on base)
   X402_NETWORK?: string; // e.g. "base"
-  X402_PAY_TO?: string; // the address the receipt must pay
+  X402_PAY_TO?: string; // overrides the estate default in _x402_config.ts
   X402_AMOUNT?: string; // atomic units required (string, as x402 encodes it)
   // Per-SKU price overrides (strings, as Cloudflare passes them) are read via _skus.ts.
   [k: string]: string | undefined;
@@ -40,6 +52,8 @@ export type X402Result = {
   // Present only when a facilitator confirmed settlement — the value to echo back in the
   // X-PAYMENT-RESPONSE header per the x402 spec. Never fabricated; absent when fail-closed.
   paymentResponse?: string;
+  // Settlement facts as the facilitator reported them (never invented). Absent when not paid.
+  settlement?: { transaction: string | null; network: string | null; payer: string | null };
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -49,12 +63,13 @@ export type X402Accept = {
   maxAmountRequired: string; // atomic units, decimal string (v1 + dual)
   amount?: string; // atomic units — required by x402 v2 / CDP Bazaar validate
   asset: string;
-  payTo: string | null; // null until the owner provisions the receiving address (X402_PAY_TO)
+  payTo: string | null; // estate default from _x402_config.ts, env X402_PAY_TO overrides; null only if malformed
   resource?: string; // v1 clients; v2 moves this to top-level resource.url
   description?: string; // v1; v2 prefers resource.description
   mimeType?: string;
   maxTimeoutSeconds: number;
-  extra: { name: string; decimals?: number; version?: string };
+  // EIP-712 domain of the token (name/version) — what the client signs under. decimals/symbol are informational.
+  extra: { name: string; version: string; decimals?: number; symbol?: string };
 };
 
 /**
@@ -93,31 +108,71 @@ export function x402Accepts(
       maxAmountRequired: atomic,
       amount: atomic,
       asset: env.X402_ASSET || USDC_BASE.asset,
-      payTo: env.X402_PAY_TO || null,
+      payTo: resolvePayTo(env),
       resource: resourceUrl,
       description,
       mimeType: "application/json",
       maxTimeoutSeconds: 300,
-      extra: { name: USDC_BASE.symbol, decimals: USDC_BASE.decimals, version: "2" },
+      extra: {
+        name: USDC_BASE_EIP712.name,
+        version: USDC_BASE_EIP712.version,
+        decimals: USDC_BASE.decimals,
+        symbol: USDC_BASE.symbol,
+      },
     },
   ];
 }
 
+/** The v1-shaped paymentRequirements a v1 facilitator/client expects for one accepts entry. */
+export function toV1Requirements(a: X402Accept): Record<string, unknown> {
+  return {
+    scheme: a.scheme,
+    network: toLegacyNetwork(a.network),
+    maxAmountRequired: a.maxAmountRequired,
+    resource: a.resource,
+    description: a.description || "",
+    mimeType: a.mimeType || "application/json",
+    payTo: a.payTo,
+    maxTimeoutSeconds: a.maxTimeoutSeconds,
+    asset: a.asset,
+    extra: { name: a.extra.name, version: a.extra.version },
+  };
+}
+
+/** The v2-shaped paymentRequirements (CAIP-2 network, `amount`). */
+export function toV2Requirements(a: X402Accept): Record<string, unknown> {
+  return {
+    scheme: a.scheme,
+    network: toCaip2Network(a.network),
+    amount: a.amount || a.maxAmountRequired,
+    asset: a.asset,
+    payTo: a.payTo,
+    maxTimeoutSeconds: a.maxTimeoutSeconds,
+    extra: { name: a.extra.name, version: a.extra.version },
+  };
+}
+
 /**
- * verifyX402Payment — returns { ok:true } ONLY for a facilitator-verified receipt. Never grants
- * on header presence or structure alone.
+ * verifyX402Payment — returns { ok:true } ONLY for a facilitator-verified AND settled receipt.
+ * Never grants on header presence, structure, or /verify alone.
+ *
+ * `accept` is the SAME challenge entry the 402 advertised (from x402Accepts), so the
+ * requirements sent to the facilitator match what the client signed against — the previous
+ * version rebuilt them from bare env vars (asset:null, amount:null when unset) and would have
+ * rejected every honest receipt.
  */
 export async function verifyX402Payment(
   request: Request,
   env: X402Env,
   resourceUrl: string,
+  accept?: X402Accept,
 ): Promise<X402Result> {
-  const header = request.headers.get("x-payment");
+  const header = request.headers.get("x-payment") || request.headers.get("payment-signature");
   if (!header) return { ok: false, reason: "no x-payment header" };
 
   // Decode the X-PAYMENT header (x402 sends it base64-encoded JSON). A header that does not
   // decode to a structured payload is not a receipt — reject it rather than trust its presence.
-  let payload: unknown;
+  let payload: { x402Version?: number; scheme?: string; network?: string } & Record<string, unknown>;
   try {
     let text = header.trim();
     if (!text.startsWith("{")) text = atob(text);
@@ -129,56 +184,75 @@ export async function verifyX402Payment(
     return { ok: false, reason: "x-payment payload is not an object" };
   }
 
-  // Real settlement verification requires a facilitator. None provisioned ⇒ we cannot confirm
-  // the receipt settled ⇒ fail closed. NEVER grant on structure alone.
-  const facilitator = (env.X402_FACILITATOR_URL || "").replace(/\/$/, "");
+  // Real settlement requires a facilitator. None provisioned ⇒ we cannot settle ⇒ fail closed.
+  const facilitator = facilitatorUrl(env);
   if (!facilitator) {
     return {
       ok: false,
       reason:
-        "x402 verification is not provisioned (no X402_FACILITATOR_URL). The receipt cannot be " +
-        "confirmed settled, so the paid resource is not granted. This is fail-closed by design.",
+        "x402 settlement is not provisioned (no X402_FACILITATOR_URL). The receipt cannot be " +
+        "settled, so the paid resource is not granted. This is fail-closed by design.",
     };
   }
 
-  const paymentRequirements = {
-    scheme: "exact",
-    network: toCaip2Network(env.X402_NETWORK || USDC_BASE.network),
-    asset: env.X402_ASSET || null,
-    payTo: env.X402_PAY_TO || null,
-    maxAmountRequired: env.X402_AMOUNT || null,
-    resource: resourceUrl,
-    mimeType: "application/json",
-  };
+  const entry =
+    accept ||
+    ({
+      scheme: "exact",
+      network: toCaip2Network(env.X402_NETWORK || USDC_BASE.network),
+      maxAmountRequired: env.X402_AMOUNT || "0",
+      amount: env.X402_AMOUNT || "0",
+      asset: env.X402_ASSET || USDC_BASE.asset,
+      payTo: resolvePayTo(env),
+      resource: resourceUrl,
+      mimeType: "application/json",
+      maxTimeoutSeconds: 300,
+      extra: { name: USDC_BASE_EIP712.name, version: USDC_BASE_EIP712.version },
+    } as X402Accept);
+  if (!entry.payTo) return { ok: false, reason: "no payTo configured — refusing to settle to nowhere" };
+  if (entry.maxAmountRequired === "0") return { ok: false, reason: "no amount configured for this resource" };
+
+  // Speak the client's dialect: a v1 payload names the network by slug ("base"); v2 by CAIP-2.
+  const v = payload.x402Version === 2 ? 2 : 1;
+  const paymentRequirements = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
+  const body = JSON.stringify({ x402Version: v, paymentPayload: payload, paymentRequirements });
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  if (env.X402_FACILITATOR_TOKEN) headers.authorization = `Bearer ${env.X402_FACILITATOR_TOKEN}`;
 
   try {
-    const vr = await fetch(`${facilitator}/verify`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ x402Version: 1, paymentPayload: payload, paymentRequirements }),
-    });
+    const vr = await fetch(`${facilitator}/verify`, { method: "POST", headers, body });
     if (!vr.ok) return { ok: false, reason: `facilitator /verify HTTP ${vr.status}` };
-    const out = (await vr.json()) as {
-      isValid?: boolean;
-      invalidReason?: string;
-      payment?: unknown;
-      txHash?: string;
-    };
-    if (out && out.isValid === true) {
-      // A verified receipt carries a settlement echo to return in X-PAYMENT-RESPONSE (x402 spec).
-      // Only ever set from what the facilitator actually returned — never fabricated.
-      const paymentResponse =
-        out.txHash || out.payment
-          ? btoa(JSON.stringify({ txHash: out.txHash ?? null, payment: out.payment ?? null }))
-          : undefined;
-      return { ok: true, reason: "facilitator verified receipt", paymentResponse };
+    const vout = (await vr.json()) as { isValid?: boolean; invalidReason?: string };
+    if (!vout || vout.isValid !== true) {
+      return { ok: false, reason: `facilitator rejected receipt: ${vout?.invalidReason || "not valid"}` };
     }
-    return { ok: false, reason: `facilitator rejected receipt: ${out?.invalidReason || "not valid"}` };
+    // Verified ≠ settled. Settle moves the USDC; only then is the artefact paid for.
+    const sr = await fetch(`${facilitator}/settle`, { method: "POST", headers, body });
+    if (!sr.ok) return { ok: false, reason: `facilitator /settle HTTP ${sr.status}` };
+    const sout = (await sr.json()) as {
+      success?: boolean;
+      errorReason?: string;
+      error?: string;
+      transaction?: string;
+      txHash?: string;
+      network?: string;
+      payer?: string;
+    };
+    if (!sout || sout.success !== true) {
+      return { ok: false, reason: `facilitator settle failed: ${sout?.errorReason || sout?.error || "not settled"}` };
+    }
+    const settlement = {
+      transaction: sout.transaction || sout.txHash || null,
+      network: sout.network || toLegacyNetwork(entry.network),
+      payer: sout.payer || null,
+    };
+    // X-PAYMENT-RESPONSE echo per the x402 spec — only ever what the facilitator returned.
+    const paymentResponse = btoa(JSON.stringify({ success: true, ...settlement }));
+    return { ok: true, reason: "facilitator verified and settled receipt", paymentResponse, settlement };
   } catch (e) {
-    return { ok: false, reason: `facilitator /verify error: ${(e as Error).message}` };
+    return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
   }
 }
-
 
 // ─── x402 v2 + Bazaar discovery ─────────────────────────────────────────────
 // Brief language said "Bazaar extension discoverable: true". Current CDP / x402
@@ -208,7 +282,15 @@ export function toCaip2Network(network: string): string {
   if (n === "base") return "eip155:8453";
   if (n === "base-sepolia") return "eip155:84532";
   if (n.includes(":")) return network.trim();
-  return network || "eip155:8453";
+  return network || NETWORK_CAIP2_BASE;
+}
+
+/** Map CAIP-2 back to the v1 slug a v1 client/facilitator expects ("eip155:8453" → "base"). */
+export function toLegacyNetwork(network: string): string {
+  const n = (network || "").trim().toLowerCase();
+  if (n === NETWORK_CAIP2_BASE || n === "base") return NETWORK_SLUG_BASE;
+  if (n === "eip155:84532" || n === "base-sepolia") return "base-sepolia";
+  return network;
 }
 
 /**
@@ -297,9 +379,7 @@ export function buildPaymentRequiredV2(opts: PaymentRequiredV2Opts): Record<stri
       asset: a.asset,
       payTo: a.payTo,
       maxTimeoutSeconds: a.maxTimeoutSeconds,
-      extra: a.extra?.version
-        ? a.extra
-        : { ...a.extra, version: "2" },
+      extra: a.extra,
     };
   });
   return {

@@ -89,6 +89,7 @@ const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase"));
 const EnterpriseOnboarding = lazy(() => import("./pages/EnterpriseOnboarding"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Products = lazy(() => import("./pages/Products"));
+const PricingFree = lazy(() => import("./pages/PricingFree"));
 const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
@@ -984,6 +985,7 @@ function App() {
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
                   <Route path="/pricing" component={PlansPage} />
                   <Route path="/products" component={Products} />
+                  <Route path="/pricing-free" component={PricingFree} />
                   <Route path="/catalog">{() => <Redirect to="/products" />}</Route>
                   <Route path="/pricing-legacy" component={Pricing} />
                   <Route path="/leaderboard">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>

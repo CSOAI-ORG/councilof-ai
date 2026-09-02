@@ -190,7 +190,7 @@ function discover() {
     // route-manifest paths). Council OS layer URLs carry ?view= query strings that
     // heuristic discovery never sees; snapshot each so the static host serves them
     // exactly as it does for arena/towns (query-string-named snapshot dirs).
-    "/products", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
+    "/products", "/pricing-free", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
     "/gspc-arena?view=training",

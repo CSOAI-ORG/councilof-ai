@@ -33,8 +33,18 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const bundle = url.searchParams.get("bundle") === "1";
   // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
   // (bundle) branch; the free ?sha= inclusion never needs it.
+  const resourceUrl = u("/api/proof?bundle=1");
+  const description =
+    "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. " +
+    CSOAI_LID +
+    ".";
+  // The SAME accepts entry is advertised in the 402 and handed to the facilitator, so what the
+  // client signed against is what gets verified and settled.
+  const accepts = bundle
+    ? x402Accepts(env as X402Env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
+    : [];
   const payment = bundle
-    ? await verifyX402Payment(request, env as X402Env, u("/api/proof?bundle=1"))
+    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0])
     : { ok: false, reason: "not a bundle request" };
   const paid = payment.ok;
 
@@ -42,16 +52,6 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     if (!paid) {
       // x402 v2 + Bazaar: declare extensions.bazaar (discoverable via CDP after settle).
       // Do not emit invalid `discoverable: true` inside bazaar (x402 #2112 / #2207).
-      const resourceUrl = u("/api/proof?bundle=1");
-      const description =
-        "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. " +
-        CSOAI_LID +
-        ".";
-      const accepts = x402Accepts(env as X402Env, resourceUrl, {
-        skuId: "issuance",
-        tier: "reserve",
-        description,
-      });
       const paymentRequired = buildPaymentRequiredV2({
         resourceUrl,
         description,
@@ -91,7 +91,8 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
             "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
           not_paid_reason: payment.reason,
           bazaar_note:
-            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until X402_PAY_TO + facilitator settle exist (and CDP EXTENSION-RESPONSES / #2112).",
+            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+          catalog: u("/api/x402"),
         },
       });
       return paymentRequiredResponse(paymentRequired);
