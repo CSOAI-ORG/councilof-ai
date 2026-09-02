@@ -6,6 +6,7 @@ import {
   HEALTH_TERMS,
   HEALTH_TERMS_RULING,
   HEALTH_VOICE,
+  healthVoiceFromLive,
   termsWeRefuse,
   termsWeUse,
 } from "./healthTerms";
@@ -16,8 +17,18 @@ describe("Health terms we can borrow", () => {
   it("uses chart language and refuses NEWS-style composites", () => {
     expect(HEALTH_TERMS_RULING).toMatch(/vital signs/i);
     expect(HEALTH_TERMS_RULING).toMatch(/Do not speak like NEWS/);
-    expect(HEALTH_VOICE).toMatch(/15 of 22 systems examined/);
     expect(HEALTH_VOICE).toMatch(/Do not say the patient is well/);
+    expect(HEALTH_VOICE).not.toMatch(/15 of 22|Seven deferred|7 unmeasured/i);
+    const liveVoice = healthVoiceFromLive({
+      axes: 22,
+      measured_axes: 22,
+      unmeasured_axes: 0,
+      public_count: "22 axis · 22 measured",
+    });
+    expect(liveVoice).toMatch(/22 of 22 systems examined/);
+    expect(liveVoice).toMatch(/22 axis · 22 measured/);
+    expect(liveVoice).toMatch(/No systems deferred/);
+    expect(liveVoice).not.toMatch(/Seven deferred|7 unmeasured|15 of 22/i);
     expect(GSPC_HEALTH_PITCH).toMatch(/open-source systems and AI models/);
     expect(GSPC_HEALTH_PITCH).toMatch(/never issue a clean bill of health/);
     expect(termsWeUse().some((t) => t.id === "vital-signs")).toBe(true);

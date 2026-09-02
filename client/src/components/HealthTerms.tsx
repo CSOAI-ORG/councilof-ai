@@ -2,9 +2,21 @@ import {
   HEALTH_TERMS,
   HEALTH_TERMS_RULING,
   HEALTH_VOICE,
+  healthVoiceFromLive,
 } from "@/lib/healthTerms";
+import { useBoardCount } from "@/lib/boardCount";
 
 export default function HealthTerms({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  const board = useBoardCount();
+  const voice =
+    board.axes > 0
+      ? healthVoiceFromLive({
+          axes: board.axes,
+          measured_axes: board.measured_axes,
+          unmeasured_axes: board.unmeasured_axes,
+          public_count: board.public_count,
+        })
+      : HEALTH_VOICE;
   const dark = tone === "dark";
   const panel = dark
     ? "rounded-2xl border border-emerald-400/20 bg-emerald-950/40 p-4"
@@ -23,7 +35,7 @@ export default function HealthTerms({ tone = "dark" }: { tone?: "dark" | "light"
         <h2 id="health-terms-h" className={`mt-2 text-xl font-bold ${head}`}>
           {HEALTH_TERMS_RULING}
         </h2>
-        <p className={`mt-3 text-sm ${title}`}>{HEALTH_VOICE}</p>
+        <p className={`mt-3 text-sm ${title}`}>{voice}</p>
       </div>
 
       <ul className="grid gap-3 sm:grid-cols-2">

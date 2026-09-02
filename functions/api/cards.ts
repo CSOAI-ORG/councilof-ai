@@ -8,7 +8,7 @@
  *
  * The signed measurement pack is 14 behavioural axes. Living board counts come
  * from GET /api/gspc (quote totals.public_count). Do not treat 14 as the living
- * slot count. Do not type a fake 22 MEASURED. Empty financial cells stay empty.
+ * slot count. Do not type a fake MEASURED count. Cite live GET /api/gspc totals.
  */
 
 interface CardIndexEntry {
@@ -46,7 +46,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
         measured_axes: gspc.totals.measured_axes ?? null,
         unmeasured_axes: gspc.totals.unmeasured_axes ?? null,
         note:
-          "14 behavioural + see GET /api/gspc for the living board. Do not treat 14 as the living slot count. Empty financial cells stay empty. Do not stamp MEASURED here.",
+          "14 behavioural + see GET /api/gspc for the living board. Do not treat 14 as the living slot count. Financial status is live from GET /api/gspc — do not stamp MEASURED here.",
       }
     : {
         see: "/api/gspc",
