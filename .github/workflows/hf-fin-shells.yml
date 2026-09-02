@@ -167,7 +167,7 @@ jobs:
               except Exception as e:
                   print("MERGE_SKIP", repo, num, type(e).__name__, str(e)[:160])
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: fin-signed-cards
           path: fin-signed

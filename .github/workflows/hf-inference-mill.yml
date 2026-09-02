@@ -117,7 +117,7 @@ jobs:
           python3 scripts/mill_hf_inference.py
       - name: upload mill JSON (not a board rewrite)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hf-inference-mill
           path: mill-out

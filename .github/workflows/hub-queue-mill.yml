@@ -66,7 +66,7 @@ jobs:
           python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 2>&1 | tail -40
       - name: upload staged cards (not a board rewrite)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hub-queue-mill-${{ github.run_id }}
           path: mill-out
