@@ -1,6 +1,7 @@
 {
   "schema": "csoai.bank-stub/cedulon.recon/0.1",
   "profile": "abak-00-population",
+  "status": "SUPERSEDED_BY_bank/",
   "pin": {
     "repo": "https://github.com/dogrucanemek-alt/cedulon",
     "path": "interop/abak-00/population-probe.mjs",
@@ -10,12 +11,17 @@
       "@cedulon/x402-adapter@0.8.0"
     ]
   },
+  "see": [
+    "bank/probe-pin.json",
+    "bank/class-counts-expected.json",
+    "bank/conservation-fixtures.jsonl",
+    "card-unsigned.example.json"
+  ],
   "atom_path": "probe → unsigned card-v0 surface=cedulon.recon → (later n≥30+4way+keystone) → root → witness root only",
   "never": [
     "gspc axis MEASURED fill",
     "certify",
     "on-list outreach",
     "fake scitt-keys"
-  ],
-  "rows_note": "Next increment: freeze MCC conservation fixtures from probe Parts 3–4 as JSONL rows with expected class counts."
+  ]
 }
