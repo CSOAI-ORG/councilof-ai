@@ -26,6 +26,9 @@ from mill_hub_queue import (  # noqa: E402
 )
 from verify_card import canonical_body_bytes, verify_signed_card, verify_signed_card_with_did_doc  # noqa: E402
 
+sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+import flip_hub_queue as fq  # noqa: E402
+
 
 def test_pick_emptiest_skips_measured() -> None:
     rows = [
@@ -256,13 +259,29 @@ def test_apply_valid_flips_equals_valid_count() -> None:
     assert rows[0].get("status") == "UNMEASURED"
     assert (rows[0].get("measured_axes") or {}).get("governance") is None
     cell = (rows[1].get("measured_axes") or {}).get("governance") or {}
+    # Queue cell flips regardless of body status. But the INDEX ROW must mirror
+    # the signed body, not the queue state. See #1155.
     assert cell.get("status") == "MEASURED"
     assert cell.get("card_id") == valid["id"]
+    # valid._verdict must be "VALID" for the index row to potentially say MEASURED.
+    # BUT: body says status=UNMEASURED (signed-pending-verify), so the index row
+    # must also say UNMEASURED — body wins (Issue #1155).
+    valid["_verdict"] = "VALID"
+    unsigned["_verdict"] = "UNCHECKABLE"
     row = mill_index_row(valid, "https://councilof.ai/interop/mill-cards-signed/x.json")
-    assert row["status"] == "MEASURED"
+    assert row["status"] == "UNMEASURED", (
+        "Issue #1155: index row status must mirror body.status (UNMEASURED), "
+        "never silently upgrade to MEASURED."
+    )
     assert row["model"] == "org/b"
     assert row["card_sha256"] == valid["id"]
+    assert "signed-pending-verify" in (row.get("unmeasured") or [])
     assert "unsigned pending" not in json.dumps(row)
+    # The UNCHECKABLE wrap must NOT produce a MEASURED index row
+    unsigned_row = mill_index_row(unsigned, "https://councilof.ai/interop/mill-cards-signed/x.json")
+    assert unsigned_row["status"] == "UNMEASURED"
+    assert unsigned_row["signed"] is False
+    assert "signed-pending-verify" in (unsigned_row.get("unmeasured") or []) or unsigned_row.get("status") == "UNMEASURED"
 
 
 def test_live_provider_slugs_file_has_twelve() -> None:
@@ -499,9 +518,100 @@ def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> No
     assert summ["n_measured"] == 0 and summ["n_measured_axes"] == 1 and summ["n"] == 3
     assert "3 measured" not in summ["note"].replace("Not 3 measured", "")
     idx = (root / "out" / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
-    assert len(idx) == 1 and json.loads(idx[0])["status"] == "MEASURED"
-    assert (root / "out" / "mill-cards" / "signed-govern-valid.json").is_file()
-    assert not (root / "out" / "mill-cards" / "signed-govern-bad.json").is_file()
+    # Index row for the VALID card: since body says UNMEASURED (signed-pending-verify
+    # is the test's staged reason), the index row mirrors that — NOT MEASURED.
+    # This is the fix for #1155: index status mirrors body, never lies.
+    assert len(idx) == 1
+    idx_row = json.loads(idx[0])
+    assert idx_row["status"] == "UNMEASURED"
+    assert "signed-pending-verify" in idx_row["unmeasured"]
+
+
+def test_index_row_mirrors_body_status_issue_1155() -> None:
+    """#1155: the hub-cards index must NOT upgrade a card body's state. A signed
+    card with body.status=UNMEASURED, unmeasured=[signed-pending-verify] must
+    produce an index row with status=UNMEASURED, not MEASURED."""
+    from base64 import urlsafe_b64encode
+
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    key = Ed25519PrivateKey.generate()
+    pub = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    did = "did:web:csoai.org#board-attestation-1"
+    did_doc = {"verificationMethod": [{"id": did, "publicKeyJwk": {"x": urlsafe_b64encode(pub).decode().rstrip("=")}}]}
+
+    # Three cards: VALID+MEASURED body, VALID+UNMEASURED body, INVALID sig.
+    cards = []
+    # Case 1: signed, body says MEASURED → index row MEASURED
+    w_ok = stage_unsigned("unit/a", "governance", hits=25, n=30, reason="ok")
+    w_ok["body"]["status"] = "MEASURED"
+    w_ok["body"]["unmeasured"] = []
+    # Regenerate id + signature after body mutation (stage_unsigned computes id
+    # from the body, so any body change requires re-signing).
+    from hashlib import sha256
+    raw = canonical_body_bytes(w_ok["body"])
+    w_ok["id"] = sha256(raw).hexdigest()
+    w_ok["signature"] = key.sign(raw).hex()
+    w_ok["did"] = did
+    cards.append(w_ok)
+    # Case 2: signed, body says UNMEASURED (signed-pending-verify) → index row UNMEASURED
+    w_pv = stage_unsigned("unit/b", "safety", hits=25, n=30, reason="signed-pending-verify")
+    w_pv["body"]["status"] = "UNMEASURED"
+    w_pv["body"]["unmeasured"] = ["signed-pending-verify"]
+    raw = canonical_body_bytes(w_pv["body"])
+    w_pv["id"] = sha256(raw).hexdigest()
+    w_pv["signature"] = key.sign(raw).hex()
+    w_pv["did"] = did
+    cards.append(w_pv)
+    # Case 3: signed, body says UNMEASURED n<30 → index row UNMEASURED with reason
+    w_nq = stage_unsigned("unit/c", "openness", hits=4, n=10, reason="n<30 unquotable")
+    w_nq["body"]["status"] = "UNMEASURED"
+    w_nq["body"]["unmeasured"] = ["n<30", "signed-pending-verify"]
+    raw = canonical_body_bytes(w_nq["body"])
+    w_nq["id"] = sha256(raw).hexdigest()
+    w_nq["signature"] = key.sign(raw).hex()
+    w_nq["did"] = did
+    cards.append(w_nq)
+
+    rows = [
+        {"id": "unit/a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "unit/b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "unit/c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+    ]
+    from pathlib import Path as _P
+    import shutil
+    root = _P("/tmp/issue_1155_test")
+    if root.exists():
+        shutil.rmtree(root)
+    cards_dir = root / "cards"
+    cards_dir.mkdir(parents=True, exist_ok=True)
+    out = root / "out"
+    q = root / "queue.jsonl"
+    q.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    # Write the 3 cards
+    for i, w in enumerate(cards):
+        path = cards_dir / f"signed-{['govern','safe','open'][i]}.json"
+        path.write_text(json.dumps(w, indent=2) + "\n")
+    rep = fq.run(cards_dir, q, did_doc, out)
+    # unit/a (governance, n=30, body.status=MEASURED, valid sig) MUST flip.
+    # unit/b (safety, n=30, body.status=UNMEASURED, valid sig) flips the queue
+    # cell (the queue flip is unconditional on body status), but its INDEX ROW
+    # reports UNMEASURED because the body says so (Issue #1155).
+    # unit/c (openness, n=10, valid sig) is UNQUOTABLE — never flips, never indexed.
+    assert rep["cells_after"] == 2, f"expected 2 cells flipped (a+b), got {rep['cells_after']}"
+    idx = (out / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
+    assert len(idx) == 2, f"expected 2 VALID index rows, got {len(idx)}: {idx}"
+    by_status = {json.loads(l)["model"]: json.loads(l)["status"] for l in idx}
+    assert by_status["unit/a"] == "MEASURED", by_status  # body=MEASURED
+    assert by_status["unit/b"] == "UNMEASURED", by_status  # body=UNMEASURED
+    # And the unmeasured[] field must carry the reason through
+    by_unmeasured = {json.loads(l)["model"]: json.loads(l)["unmeasured"] for l in idx}
+    assert by_unmeasured["unit/a"] == [], by_unmeasured
+    assert "signed-pending-verify" in by_unmeasured["unit/b"], by_unmeasured
+    # The signed cards landed (with their original filenames)
+    assert (root / "out" / "mill-cards" / "signed-govern.json").is_file()
+    assert (root / "out" / "mill-cards" / "signed-safe.json").is_file()
 
 
 def test_land_mill_cards_dedupes_and_rejects_signed(tmp_path: Path | None = None) -> None:

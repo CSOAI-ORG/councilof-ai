@@ -162,21 +162,45 @@ def flip_queue_axis(rows: list[dict], model_id: str, axis: str, card_id: str) ->
 
 
 def mill_index_row(wrap: dict, card_url: str) -> dict:
-    """HF gspc-hub-cards index row. status=MEASURED only for interned VALID wraps."""
+    """HF gspc-hub-cards index row. status mirrors the card body, NOT a hardcoded
+    MEASURED. Unsigned / signed-pending-verify cards report UNMEASURED with an
+    unmeasured[] list — never lie about state. Caller passes the verdict via
+    wrap._verdict; we honour it. (Issue #1155.)"""
     body = wrap.get("body") if isinstance(wrap.get("body"), dict) else {}
+    verdict = (wrap.get("_verdict") or "").upper()
+    body_status = str(body.get("status") or "").upper()
+    # If the card body is signed-pending-verify, the truth is UNMEASURED.
+    # Same for non-VALID verdicts.
+    if verdict == "VALID":
+        status = "MEASURED"
+    elif verdict in ("UNQUOTABLE",):
+        # Signed but n<30: truth is UNMEASURED with reason.
+        status = "UNMEASURED"
+    else:
+        # INVALID / UNCHECKABLE / blank: truth is UNMEASURED with reason.
+        status = "UNMEASURED"
+    # If the body explicitly says UNMEASURED (e.g. signed-pending-verify), respect it.
+    if body_status == "UNMEASURED" and status == "MEASURED":
+        # Body wins: an UNMEASURED body cannot be flipped to MEASURED by the
+        # index. Caller bug if this branch ever fires — but guard regardless.
+        status = "UNMEASURED"
     return {
         "model": body.get("model"),
         "axis": body.get("axis"),
         "accuracy": body.get("accuracy"),
-        "status": "MEASURED",
+        "status": status,
         "card_sha256": wrap.get("id"),
         "card_url": card_url,
         "verify": "https://councilof.ai/gspc-verify",
-        "signed": True,
+        "signed": verdict == "VALID",
         "alg": wrap.get("alg") or "Ed25519",
         "did": wrap.get("did"),
         "n": body.get("n"),
         "name_published": True,
+        # Carry the unmeasured[] list forward so the index never omits WHY a
+        # cell is empty — the same way the card body does.
+        "unmeasured": body.get("unmeasured") or [],
+        "verdict": verdict or "UNCHECKABLE",
     }
 
 
