@@ -1,0 +1,28 @@
+{
+  "kind": "csoai.nsites-sites/0.1",
+  "as_of": "2026-09-02",
+  "doctrine": "N-Sites: the same fail-closed instrument on every free site; pull -> run -> push; INCOMPLETE never passes; one account per site; published free allowance only. Every site stages UNSIGNED bytes; MEASURED exists only after a VALID Ed25519 signature under did:web:csoai.org#board-attestation-1 verifies. A rank is never sold.",
+  "source_note": "Copy of the operator's nsites_sites.json doctrine (corpus-watch is another lane's repo and is not written from here). The corpus-watch file was not present on this machine at copy time; this entry is the first site registered in-repo.",
+  "sites": {
+    "hf_jobs": {
+      "role": "GSPC mill N-site",
+      "provider": "Hugging Face Jobs (org csoai)",
+      "instrument": "ci/hf-jobs/mill-all-axes.sh -> harness/gspc-top100/mill_hub_queue.py --pick 300 --grade 8 --probe-first --dead harness/gspc-top100/dead_slugs.jsonl --items 30",
+      "pull": ["csoai/hub-queue queue.jsonl", "csoai/gspc-<short> items.jsonl (public frozen banks)", "csoai/councilof-ai-mirror bundle (code)"],
+      "push": "csoai/gspc-hub-cards staged-unsigned/<date>/<axis>/ + MANIFEST.json (UNSIGNED only; never mill-cards/, INDEX.jsonl, cards.jsonl or hub-queue)",
+      "gpu": false,
+      "flavor": "cpu-basic",
+      "cost": "org prepaid inference + cpu-basic",
+      "schedule": "0 5 * * *",
+      "schedule_note": "daily, not hourly - inference is org prepaid",
+      "schedule_id": "PENDING - filled by the owner step in the PR body after `hf jobs scheduled run`",
+      "status": "live",
+      "account": "one account per site: the org-scoped HF token in the scheduled job's HF_TOKEN secret",
+      "fail_closed": ["HF_TOKEN missing -> exit 2", "unfixed picker (no --probe-first) -> exit 2", "any MEASURED flip -> exit 2", "inference balance/credit error -> exit 3 and HALTED-BALANCE in MANIFEST", "any axis mill rc != 0 -> INCOMPLETE, exit 4"],
+      "first_run": {"day": "2026-09-02", "manifest": "https://huggingface.co/datasets/csoai/gspc-hub-cards/resolve/main/staged-unsigned/2026-09-02/MANIFEST.json"},
+      "lookup": "https://huggingface.co/spaces/csoai/gspc-lookup"
+    }
+  },
+  "lid_source": "GET https://councilof.ai/api/gspc totals.lid (quoted verbatim, never typed)",
+  "not_a_certificate": true
+}
