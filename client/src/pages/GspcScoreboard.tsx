@@ -329,7 +329,10 @@ export default function GspcScoreboard() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          {board.public_count}
+          {board.lid ?? board.public_count}
+          {board.public_leader_count != null && !board.lid && (
+            <> · {board.public_leader_count} public leader scores</>
+          )}
           {board.gspc_family && board.financial_family && (
             <>
               {" "}({board.gspc_family.axes} model-comparison + {board.financial_family.axes} fact
@@ -340,7 +343,7 @@ export default function GspcScoreboard() {
           · deterministic grading on
           frozen, published splits · a <strong>TIE</strong> means the leader&apos;s edge is{" "}
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
-          as wins. Empty cells stay empty.
+          as wins. Empty cells stay empty. Measured axes are not the same as public leader scores.
         </p>
         <p className="mt-2 max-w-3xl text-sm text-gray-600" data-testid="board-count-grammar">
           {board.count_grammar}

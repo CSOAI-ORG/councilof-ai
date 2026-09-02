@@ -56,6 +56,12 @@ export default function GSPCVerify() {
             leaf sig_ed25519 is null). Inclusion is membership in that hash list. This is not
             a certificate, and it is not a training record.
           </p>
+          <p className="mt-3 max-w-3xl text-sm text-emerald-200/75 leading-relaxed">
+            Attestation trio for strangers: <strong>VALID</strong> (signature and payload match),{" "}
+            <strong>INVALID</strong> (signature fails), <strong>UNCHECKABLE</strong> (superseded
+            living stamp, missing PQC seal, or verify path not wired) — never paint UNCHECKABLE as
+            INVALID by default.
+          </p>
           <div className="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Verify mode">
             <button
               type="button"
