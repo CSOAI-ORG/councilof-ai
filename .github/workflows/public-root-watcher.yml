@@ -32,11 +32,23 @@ jobs:
           python3 - <<'PY'
           import hashlib, json, urllib.request, sys
           UA = {"User-Agent": "csoai-public-root-watcher/0"}
+            # OWNER RULING 2 Sep 2026: csoai.org is the old domain and 308s to councilof.ai.
+            # Follow redirects; the twin IS the canonical root, never DRIFT.
+            import urllib.request as _ur, urllib.error, urllib.parse
+            _opener = _ur.build_opener(_ur.HTTPRedirectHandler())
           def get(url):
               req = urllib.request.Request(url, headers=UA)
               try:
-                  with urllib.request.urlopen(req, timeout=20) as r:
-                      return r.status, r.read()
+                  # follow 301/302/307/308 explicitly (old runners' urllib does not follow 308)
+                  for _hop in range(5):
+                      try:
+                          with _opener.open(req, timeout=20) as r:
+                              return r.status, r.read()
+                      except urllib.error.HTTPError as e:
+                          loc = e.headers.get("Location") if e.code in (301, 302, 307, 308) else None
+                          if not loc: raise
+                          req = urllib.request.Request(urllib.parse.urljoin(req.full_url, loc), headers=UA)
+                  return 0, b""
               except Exception as e:
                   return getattr(e, "code", 0), str(e).encode()
           hosts = {
