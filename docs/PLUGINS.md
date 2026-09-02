@@ -36,7 +36,7 @@ Findings the inventory surfaced (not fixed here; owner to rule):
   `unrecognised_family`, so `/gspc-verify` and the `/mcp` `verify_card` tool return
   "nothing was checked" for a genuinely signed card, and the stdio MCP returns
   UNCHECKABLE. The extension resolves the DID from the pinned anchor table and verifies
-  them (12/12 VALID in the committed set). Whether the site verifier should do the same,
+  them (83/83 signed files in the committed set VALID, per test/verify.test.mjs). Whether the site verifier should do the same,
   or whether mill cards should carry `pubkey`, is a policy call.
 - The hub index row for a mill card says `status: MEASURED` while the signed body says
   `status: "UNMEASURED", unmeasured: ["signed-pending-verify"]`. The extension prints the
