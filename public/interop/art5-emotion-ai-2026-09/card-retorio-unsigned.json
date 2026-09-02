@@ -1,0 +1,41 @@
+{
+  "schema": "https://councilof.ai/interop/regulatory-exposure-card.schema.json",
+  "id": "art5-emotion-retorio",
+  "pack": "art5-emotion-ai-2026-09",
+  "as_of": "2026-09-02T05:44:00Z",
+  "obligation": {
+    "cite": "Regulation (EU) 2024/1689 Art 5(1)(f)",
+    "text": "the placing on the market, the putting into service for this specific purpose, or the use of AI systems to infer emotions of a natural person in the areas of workplace and education institutions, except where the use of the AI system is intended to be put in place or into the market for medical or safety reasons"
+  },
+  "binds": "providers AND deployers (Commission Guidelines Feb 2025: workplace/education emotion inference based on biometric data)",
+  "fine_ceiling": {
+    "cite": "Regulation (EU) 2024/1689 Art 99(3)",
+    "text": "administrative fines of up to EUR 35 000 000 or, if the offender is an undertaking, up to 7 % of its total worldwide annual turnover for the preceding financial year, whichever is higher",
+    "short": "€35M / 7%"
+  },
+  "enforcer": "national market-surveillance authorities (Art 74)",
+  "enforcement_start": "2025-02-02",
+  "measured_fact": {
+    "vendor": "Retorio",
+    "product_page_url": "https://www.retorio.com/",
+    "retrieval_iso_date": "2026-09-02",
+    "verbatim_quote": "Impactful because the feedback goes beyond content. Retorio reads facial expressions, voice, body language, and language patterns to give people an honest picture of how they come across, not just what they said.",
+    "http_status": 200
+  },
+  "UNMEASURED": [
+    "workplace_or_education_deployment_context",
+    "biometric_basis_confirmation",
+    "national_MSA_enforcement_action",
+    "independent_recompute",
+    "keystone_signature"
+  ],
+  "status": "PROBED",
+  "witness": {
+    "retrieved_at": "2026-09-02T05:44:00Z",
+    "method": "HTTPS GET of public product page; quote copied verbatim; no classification",
+    "writes_board": false,
+    "sig_ed25519": null
+  },
+  "honest_sentence": "Article 5(1)(f) text (quoted). Vendor public page dated retrieval states the verbatim quote (quoted). Enforcer: national MSA. Ceiling: €35M/7% (Art 99(3), quoted). Reader concludes. No conclusion field.",
+  "forbidden_note": "NEVER: non-compliant / violated / fined / unsafe / hacked / absent-as-verdict / classify."
+}

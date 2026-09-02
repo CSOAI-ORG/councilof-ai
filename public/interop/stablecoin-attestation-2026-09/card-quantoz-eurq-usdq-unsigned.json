@@ -1,0 +1,64 @@
+{
+  "schema": "https://councilof.ai/interop/regulatory-exposure-card.schema.json",
+  "id": "stablecoin-attestation-quantoz-eurq-usdq",
+  "pack": "stablecoin-attestation-2026-09",
+  "as_of": "2026-09-02T05:44:00Z",
+  "obligation": {
+    "multi": [
+      {
+        "cite": "P.L. 119-27 (GENIUS Act) §4(a)(3) / 12 U.S.C. §5903 monthly certification & examination",
+        "text": "A permitted payment stablecoin issuer shall, each month, have the information disclosed in the previous month-end report required under paragraph (1)(D) examined by a registered public accounting firm. Each month, the Chief Executive Officer and Chief Financial Officer of a permitted payment stablecoin issuer shall submit a certification as to the accuracy of the monthly report to, as applicable, the primary Federal payment stablecoin regulator of the permitted payment stablecoin issuer; or the State payment stablecoin regulator of the permitted payment stablecoin issuer."
+      },
+      {
+        "cite": "Regulation (EU) 2023/1114 Art 54",
+        "text": "Funds received by issuers of e-money tokens in exchange for e-money tokens and safeguarded in accordance with Article 7(1) of Directive 2009/110/EC shall comply with the following: (a) at least 30 % of the funds received is always deposited in separate accounts in credit institutions; (b) the remaining funds received are invested in secure, low-risk assets that qualify as highly liquid financial instruments with minimal market risk, credit risk and concentration risk, in accordance with Article 38(1) of this Regulation, and are denominated in the same official currency as the one referenced by the e-money token."
+      }
+    ]
+  },
+  "binds": "permitted payment stablecoin issuers (GENIUS); e-money token issuers (MiCA Art 54)",
+  "fine_ceiling": {
+    "cite": "see regime-specific statutes; this card densifies cadence facts only",
+    "text": "Fine ceiling not asserted on this densify leaf; obligation texts are quoted for side-by-side reading only.",
+    "short": "UNMEASURED_on_this_leaf"
+  },
+  "enforcer": "GENIUS: primary Federal / State payment stablecoin regulator; MiCA EMT: national competent authorities / EBA for significant tokens",
+  "enforcement_start": "GENIUS effective earlier of 2027-01-18 or 120 days after final regs; MiCA EMT regime in force (cite Art 54 text beside measured fact)",
+  "measured_fact": {
+    "issuer": "Quantoz (EURQ / USDQ)",
+    "tokens": [
+      "EURQ",
+      "USDQ"
+    ],
+    "product_page_url": "https://www.quantoz.com/products/eurq-usdq",
+    "retrieval_iso_date": "2026-09-02",
+    "http_status": 200,
+    "stated_cadence": "transparency dashboard stated (continuous visibility); reserve status overview dated June 30th, 2026 on transparency page",
+    "stated_examiner": "transparent auditing stated; registered public accounting firm for monthly GENIUS-style exam not named on retrieved pages",
+    "verbatim_quote": "EURQ and USDQ are fully backed by reserves held in Tier 1 European banks and safe government bonds, segregated from the company assets, and with transparent auditing.",
+    "additional_public_page": {
+      "url": "https://quantoz.com/transparency",
+      "retrieval_iso_date": "2026-09-02",
+      "verbatim_quote": "UPDATED: June 30th, 2026 … 100% Highly Liquid Reserves All Quantoz stablecoins are backed entirely by a combination of cash deposits, government bonds from the Netherlands, Germany, and US Government."
+    }
+  },
+  "UNMEASURED": [
+    "one_to_one_reserve_match_recompute",
+    "under_reserved_never_asserted",
+    "non_compliant_never_asserted",
+    "keystone_signature",
+    "board_MEASURED"
+  ],
+  "status": "PROBED",
+  "witness": {
+    "retrieved_at": "2026-09-02T05:44:00Z",
+    "method": "HTTPS GET of public transparency/product page; quote verbatim or UNCHECKABLE reason",
+    "writes_board": false,
+    "sig_ed25519": null,
+    "regimes_cited": [
+      "MiCA",
+      "GENIUS"
+    ]
+  },
+  "honest_sentence": "Last public attestation/cadence language as retrieved (quoted) beside GENIUS monthly attestation text and/or MiCA Art 54 text. Never under-reserved / non-compliant. Reader concludes.",
+  "forbidden_note": "NEVER: under-reserved / non-compliant / violated / fined / absent-as-verdict."
+}
