@@ -27,9 +27,10 @@ export default function HealthInventory({ tone = "dark" }: { tone?: "dark" | "li
           {HEALTH_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
-          How healthy the record is: {LIVE_HEALTH_PIN.board}, {LIVE_HEALTH_PIN.empty} empty,{" "}
-          {LIVE_HEALTH_PIN.index_rows} signed index rows, {LIVE_HEALTH_PIN.corrections}{" "}
-          corrections. That is coverage. It is not a grade of the model.
+          How healthy the record is, as at {LIVE_HEALTH_PIN.as_at}: {LIVE_HEALTH_PIN.board},{" "}
+          {LIVE_HEALTH_PIN.empty} empty, {LIVE_HEALTH_PIN.index_rows} signed index rows,{" "}
+          {LIVE_HEALTH_PIN.corrections} corrections. That is coverage. It is not a grade of
+          the model, and it is a snapshot — the living board is GET /api/gspc.
         </p>
         <p className={`mt-3 font-mono text-[13px] ${title}`}>{HEALTH_PUBLIC_LINE}</p>
         <p className={`mt-2 text-sm ${body}`}>Board today: {boardHealthLine()}</p>

@@ -94,7 +94,9 @@ const comparisonRows = [
   {
     approach: "CSOAI measurement credential",
     time: "20 weeks",
-    cost: "£3.5K-£7.5K",
+    // No public price. Doctrine: a rank is never sold and amounts appear only
+    // in an x402 402 `accepts[]`, never in prose. Verification is free forever.
+    cost: "Not priced in prose",
     risk: "Low",
     result: "Signed measurement",
     highlight: true,
