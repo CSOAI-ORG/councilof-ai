@@ -54,7 +54,7 @@ Retire or repoint it after the new manifest lands so no agent follows a stale do
 | **PayAI** `https://facilitator.payai.network` | **No** for the free tier: "Up to 1,000 free settlements" per receiving wallet, then $0.001/tx; "No API key is required for the free tier" ([pricing](https://docs.payai.network/x402/facilitators/pricing.md), fetched 2026-09-02) | yes | v1 `exact/base` **and** v2 `exact/eip155:8453` | free ≤1,000 settlements, then $0.001 | `GET /supported` lists both kinds; unauthenticated `POST /verify` with a junk body returned **HTTP 400 `invalid_payment_requirements`** — i.e. reachable without auth (a keyed endpoint would 401) |
 | **Coinbase CDP** `https://api.cdp.coinbase.com/platform/v2/x402` | **Yes** — CDP API key; `GET /supported` without a key → **401 Unauthorized** (probed) | yes | v1 + v2 | "first 1,000 onchain Facilitator transactions each month are free, then $0.001" ([wavect comparison](https://wavect.io/blog/x402-payments-comparison-2026/), [Phemex](https://phemex.com/news/article/coinbase-to-introduce-0001-fee-for-x402-facilitator-transactions-41549)); KYT/OFAC on every tx | doc + probe |
 | x402.org public facilitator `https://x402.org/facilitator` | no | **no** — `/supported` lists only `eip155:84532` (Base Sepolia) plus Solana/Algorand/Aptos | v2 | — | probed: testnet-only for EVM |
-| MetaMask facilitator (Smart Accounts Kit, ERC-7710 delegations) | MetaMask smart account | yes (Base 8453, Base Sepolia, Monad) | v2, `PAYMENT-SIGNATURE` | UNVERIFIED | [SKILL.md](https://github.com/MetaMask/smart-accounts-kit/blob/main/skills/x402-payments/SKILL.md) — requires smart accounts, **not** a plain EOA, and a different scheme; not a drop-in for our `exact`/EIP-3009 rail |
+| **MetaMask facilitator** `https://tx-sentinel-base-mainnet.dev-api.cx.metamask.io/platform/v2/x402` | **No key** (unauthenticated `POST /verify` → 400 `paymentRequirements.network is required`, not 401) | **yes** — `/supported` lists `eip155:8453`, `x402Version:2`, `scheme:"exact"`, `assetTransferMethods:["eip3009","permit2","erc7710"]` (+15 other chains) | v2 only | UNVERIFIED (none stated) | probed 2026-09-02. Speaks our plain EIP-3009 flow **and** ERC-7710 delegations; a v1 client would not be served (v2-only). Note the `dev-api` hostname — treat as beta. |
 | xpay `facilitator.xpay.sh` | no key claimed | claimed | — | "zero fees, gas-sponsored" | **UNVERIFIED** (vendor blog only, [xpay](https://www.xpay.sh/blog/article/xpay-x402-facilitator/)) |
 
 **Choice for today: PayAI.** Keyless, mainnet, both dialects our `_x402.ts` speaks, 1,000 free settlements
@@ -67,7 +67,7 @@ be worth a CDP account (see 1.3).
   `wrapFetchWithPaymentFromConfig(fetch, { schemes: [{ network: "eip155:8453", client: new ExactEvmScheme(account) }] })`
   ([README](https://raw.githubusercontent.com/x402-foundation/x402/main/typescript/packages/http/fetch/README.md), fetched 2026-09-02). Legacy v1 `x402-fetch` 1.2.0 still on npm.
 - **Coinbase AgentKit** — `make_http_request_with_x402` / auto-retry on 402 ([agentkit README](https://github.com/coinbase/agentkit/blob/main/typescript/agentkit/README.md)); LangChain/CrewAI/Vercel AI SDK integrations sit on top of it.
-- **Vercel `x402-mcp`** — `server.paidTool(name, { price }, schema, handler)`; default facilitator = CDP, CDP-managed wallets on the client side ([Vercel blog, 2025-09-12](https://vercel.com/blog/introducing-x402-mcp-open-protocol-payments-for-mcp-tools); [changelog](https://vercel.com/changelog/402-mcp-enables-x402-payments-in-mcp)).
+- **Vercel `x402-mcp`** (Next.js/AI-SDK oriented; wire format is what matters to us) — `server.paidTool(name, { price }, schema, handler)`; default facilitator = CDP, CDP-managed wallets on the client side ([Vercel blog, 2025-09-12](https://vercel.com/blog/introducing-x402-mcp-open-protocol-payments-for-mcp-tools); [changelog](https://vercel.com/changelog/402-mcp-enables-x402-payments-in-mcp)).
 - **MetaMask Smart Accounts Kit x402 skill** — pays via ERC-7710 delegation (smart accounts only).
 - **Open alternatives** — `agentpay-mcp` (non-custodial MCP payment layer, [GitHub](https://github.com/up2itnow0822/agentpay-mcp)); Zuplo/Nodit/Simplescraper guides all use `@x402/fetch` + viem.
 - **CDP buyer quickstart** uses `CdpX402Client` (CDP-managed wallet) — a CDP account is needed *for that path*, not for x402 in general ([quickstart](https://docs.cdp.coinbase.com/x402/buyer/quickstart)).
@@ -151,7 +151,40 @@ What "our MetaMask" means after step 6: any agent with a funded Base wallet can 
 tiers with no account, no Stripe, no invoice, and the USDC is in the owner's self-custody wallet within
 one block. That is the whole rail. The thing it cannot do is make anyone want to pay — §2.
 
-### 1.5 Tax and VAT facts that come with the first receipt (accountant gate, not counsel)
+**Doctrine lines re-checked against bytes (2026-09-02):** `GET /api/gspc` → 200, `/root.json` → 200,
+`/gspc-verify` → 308 (redirect, free) — none behind a 402, and `/api/x402` on master lists them under
+`free_forever`. Paid = commissioned cards (Tier 1), obligation bundles (Tier 2), the signed feed (Tier 3),
+plus the proof-bundle re-serve; a single inclusion proof stays free. Every card and proof attests
+**historical state as-of its timestamp** (a root that was witnessed, cards that were signed) — never a
+live guarantee, never "certified", never "Proof of Alignment". Buyer-led only: the payer is whoever
+wants the artefact; a measured party paying to be measured is refused by doctrine, not by code — so
+the honest gap is that `request-attestation` cannot tell a deployer from the vendor; a follow-up should
+declare `commissioned_by` on the card so the board can show it. Stack: Vite client + Cloudflare Pages
+Functions; nothing here assumes Next.js (`x402-next`, Vercel's `x402-mcp` and MetaMask's Express
+middleware are references for the *wire format* only).
+
+### 1.5 Three external claims the owner pasted — verified by bytes (2026-09-02)
+
+**Claim 1 — `@x402/fetch` is a drop-in fetch that pays 402s.** TRUE.
+- npm `@x402/fetch` 2.24.0 (created 2025-12-11, modified 2026-08-27), Apache-2.0, maintainers
+  `carsonroscoe_cb` / `erik_cb` (**coinbase.com**), sole dependency `@x402/core ~2.24.0`; sibling `@x402/evm` 2.24.0 same publishers.
+- Exports: `wrapFetchWithPayment`, `wrapFetchWithPaymentFromConfig`, `x402Client`, `x402HTTPClient`, `decodePaymentResponseHeader`.
+- Byte-level check of the shipped dist: it reads the v2 `PAYMENT-REQUIRED` header and sends `PAYMENT-SIGNATURE` (with `X-PAYMENT` kept for v1) — exactly the two header names `_x402.ts verifyX402Payment` accepts.
+- **Dry run against our own challenge format** (local server replaying our real 402 body + `PAYMENT-REQUIRED` header; ephemeral zero-funds key, no money, no facilitator):
+  - against the **live** prod body (`payTo: null`, `extra.name:"USDC"`): client throws `Failed to create payment payload: Address "null" is invalid` — i.e. the live challenge is unpayable, as §0 says;
+  - against the **master** body (`payTo` = estate address, `extra.name:"USD Coin"/"2"`): client signs an EIP-3009 authorization `to: 0x2126…ae31, value: 20000` and retries with `PAYMENT-SIGNATURE` → **our v2 + Bazaar-extended challenge is accepted unmodified**. The `extensions.bazaar` block is ignored by the client, as it should be.
+- Conclusion: the moment master is on prod, any `@x402/fetch` (or AgentKit / Vercel AI SDK, which wrap the same core) buyer can pay us with no glue.
+
+**Claim 2 — MetaMask Smart Accounts / ERC-7710 lets a human pre-authorise a USDC spending limit for repeat 402 purchases on Base.** TRUE with caveats.
+- `@metamask/x402` 1.0.0 on npm (modified 2026-08-26, MIT-0/Apache-2.0): "x402 adapters for MetaMask smart accounts and ERC-7710"; scheme stays `"exact"` with `extra.assetTransferMethod: "erc7710"` (seller workflow); MetaMask runs its own facilitator per chain ([SKILL.md](https://raw.githubusercontent.com/MetaMask/smart-accounts-kit/main/skills/x402-payments/SKILL.md)); the Base-mainnet one is **live and keyless** (probed, see table above) and lists `erc7710` for `eip155:8453`.
+- Two modes: (a) *delegation payments* — a buyer **smart account** signs an open delegation once, the facilitator redeems per request; (b) *recurring / "periodic budget"* — the user grants an `erc20-token-periodic` permission via `requestExecutionPermissions` (ERC-7715). The recurring workflow is documented only against **Base Sepolia**; which MetaMask builds (extension/Flask/mobile) support 7715 in production is **UNVERIFIED**.
+- What it means for us: a plain-EOA MetaMask user cannot do this today — it needs a MetaMask smart account (EIP-7702-style upgrade). To *accept* delegations our server would have to (i) point `X402_FACILITATOR_URL` at MetaMask's facilitator (it also settles plain EIP-3009, so nothing is lost) and (ii) advertise `extra.assetTransferMethod` / `facilitatorAddresses` per their seller workflow — a small `_x402.ts` change, not a rewrite. Their examples are Express; we are **Vite + Cloudflare Pages Functions**, so only the challenge shape transfers, not their middleware.
+- Verdict: real, on Base, today, for smart-account buyers; not needed for the first dollar; worth a follow-up PR once a repeat buyer exists.
+
+**Claim 3 — Facilitators settle `exact` USDC on Base mainnet keylessly, vs Coinbase CDP.** TRUE.
+- Keyless on Base mainnet, probed: **PayAI** (v1 + v2; 1,000 free settlements then $0.001) and **MetaMask** (v2; beta hostname). **CDP** requires a CDP API key (`/supported` → 401 without one; first 1,000/month free then $0.001; KYT/OFAC screening; Bazaar indexing only via CDP and currently unreliable per #2112). The x402.org public facilitator is testnet-only for EVM.
+
+### 1.6 Tax and VAT facts that come with the first receipt (accountant gate, not counsel)
 
 - HMRC CRYPTO40350: a company that "accepts exchange tokens as payment from customers … will need to
   account for [them] within the taxable trading profits" — sterling value on receipt
@@ -178,12 +211,21 @@ signature** into their existing evidence flow — never a grade, never a determi
 | 2 | **AIUC / Schellman** (AIUC-1 agent standard; Schellman first accredited auditor, 2026-02-03) | "The vendor chooses its auditor, which collects evidence and writes reports while AIUC conducts the technical testing"; partner categories include *adversarial testing providers* and GRC integrators (Drata, IBM) ([schellman.com](https://www.schellman.com/blog/news/schellman-becomes-the-first-accredited-auditor-for-aiuc-1), [aiuc-1.com](https://www.aiuc-1.com/)) | "A signed observation feed that drops straight into AIUC-1 evidence collection — reliability/safety pillars, no pass/fail, recomputable by the auditor." | 3 |
 | 3 | **Munich Re aiSure** | "AI solutions must undergo Munich Re's thorough technical due diligence" before a premium; aiSure pays out on a missed accuracy benchmark ([munichre.com](https://www.munichre.com/en/insights/cyber/the-new-frontier-of-underwriting-ai-risk.html)) | "A frozen-bank, independently signed performance baseline for the model you are pricing — the 'prediction vs outcome' data your SLA trigger needs, from a body with no stake in the outcome." | 2 |
 | 4 | **Relm Insurance** (NOVAAI / PONTAAI / RESCAAI, launched 2025) | Products cover bias, IP, regulatory issues for AI vendors ([relminsurance.com](https://relminsurance.com/relm-insurance-launches-ai-suite/)) | "Signed evidence bundle mapped to the obligation your policy names (Art 50/53, DORA, CRA) — observations only, your underwriter keeps the call." | 2 |
-| 5 | **Mistral AI** (GPAI provider, Code of Practice signatory) | Pebblous review (2026-08-07): Google/Meta/Microsoft/OpenAI filled the Art 53(1)(d) template; **Mistral, Anthropic, xAI "replaced the boxes with narrative prose"**; AI Office enforcement powers live since 2026-08-02 ([pebblous](https://blog.pebblous.ai/blog/eu-training-data-summary-gap/en/); [WilmerHale](https://www.wilmerhale.com/en/insights/blogs/wilmerhale-privacy-and-cybersecurity-law/european-commission-releases-mandatory-template-for-public-disclosure-of-ai-training-data)) | "An OSCAL-wrapped, signed Article-53 evidence bundle over your public models — third-party observations you can attach to the template, from an EU-adjacent UK body; never a conformity claim." | 2 |
-| 6 | **xAI** | Same Pebblous finding (prose, not template) | Same offer as #5. | 2 |
+| 5 | **Enzai** (EU AI Act Compliance Framework; API that "continuously measure[s] … AUC, Bias, Fairness") | [OECD.AI catalogue](https://oecd.ai/en/catalogue/tools/enzai-eu-ai-act-compliance-framework) | "A signed, independent third-party measurement source your framework API can cite per model — observations relevant-to Art 53/50, never a determination." | 3 |
+| 6 | **Vanta** (formal integration-partner programme; wants OAuth push integrations that "pull data into their compliance program") | [developer.vanta.com](https://developer.vanta.com/docs/guides/become-partner) | "An evidence integration that pushes signed CSOAI cards for the models your customers deploy — no tier, no seat, every block verifiable offline." | 3 |
 | 7 | **Drata** (AIUC-1 framework integrator, "8,000+ companies") | Listed by AIUC-1 as GRC integrator ([aiuc-1.com](https://www.aiuc-1.com/)) | "License the Tier-3 signed feed as an evidence source your customers connect — every block carries its own signature, nothing is a score." | 3 |
 | 8 | **Credo AI** (vendor-risk portal, GenAI Vendor Registry, "AI agents that retrieve evidence") | Product page ([credo.ai/product](https://www.credo.ai/product)) | "A machine-readable, signed third-party measurement feed for your vendor registry — independent evidence your retrieval agents can pull, not a rating." | 3 |
 | 9 | **Paramify / RegScale** (OSCAL-first FedRAMP 20x tooling) | FedRAMP RFC-0024 mandates machine-readable (OSCAL) packages by **Sept 2026**; AI/LLM-as-a-service named among the most affected categories ([Quzara](https://quzara.com/fedramp/oscal), [Platform28](https://www.platform28.com/blog/fedramp-20x-complete-guide)) | "OSCAL 1.1.0 assessment-results you can import today — signed observations over public AI components, relevant-to a control, never a finding." | 2 + 3 |
 | 10 | **Epoch AI** (benchmarking hub; MirrorCode with METR) | Hiring a *Software Engineer, Benchmarking* to "run and maintain benchmarking infrastructure" ([lever](https://jobs.lever.co/epoch-ai/d172645e-a11f-44a0-88d0-7a989e0a28f6), Dec 2025 brief); eval costs "tens of thousands of dollars per benchmark run" ([EvalEval, 2026-04-29](https://evalevalai.com/research/2026/04/29/eval-costs-bottleneck/)) | "Paid reproduction: we re-run your published eval on a frozen split on our public harness and sign the result; you get an independent replication line for the paper, we get a card." | recompute contract |
+
+**Subjects, not buyers (buyer-led rule).** The strongest Article-53 signal of the month — Pebblous
+(2026-08-07): Google/Meta/Microsoft/OpenAI filled the Art 53(1)(d) template while **Mistral, Anthropic
+and xAI answered in narrative prose**, with AI Office enforcement live since 2026-08-02
+([pebblous](https://blog.pebblous.ai/blog/eu-training-data-summary-gap/en/)) — names *subjects*, not
+customers. We never charge a vendor to be measured, and a ranked party's money must never touch the
+board. The buyers of an Article-53 evidence bundle over those models are their **downstream deployers,
+insurers, auditors and GRC platforms** (rows 1–9), who need independent observations about a model they
+did not build. Mistral/xAI are told the bundle exists, for free, via the right-of-reply path — nothing more.
 
 Also worth one line each (not in the ten, but real signals):
 - **UK AISI / Inspect** — Inspect is the UK's eval framework; the repo already has `inspect-adoption-gate.yml`. Their evals bounty paid "£3,000–£15,000 for a successful task" but closed 2025-03-15 ([aisi.gov.uk](https://www.aisi.gov.uk/blog/evals-bounty)); watch for the next round.
