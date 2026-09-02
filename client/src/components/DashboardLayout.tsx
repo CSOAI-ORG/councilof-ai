@@ -70,7 +70,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 alt=""
                 className="w-8 h-8 rounded-lg"
               />
-              <span className="font-semibold">Council software</span>
+              <span className="font-semibold">Council OS</span>
             </Button>
           </Link>
         </div>
