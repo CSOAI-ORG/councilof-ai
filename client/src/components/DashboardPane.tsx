@@ -8,6 +8,9 @@ import type React from "react";
  *  open the standalone URL when clicked). Falling back to LobbyBoardPane for any
  *  rail tab is the duplicate the OS audit flagged. */
 import { lazy, Suspense } from "react";
+import { useLocation } from "wouter";
+import RequireAuth from "@/components/RequireAuth";
+import { LOBBY_TABS } from "@/components/lobby/tabs";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const LobbyMatrixPane = lazy(() => import("@/components/lobby/LobbyMatrixPane"));
@@ -24,6 +27,7 @@ const Page_Products = lazy(() => import("@/pages/Products"));
 const Page_Harness = lazy(() => import("@/pages/Harness"));
 const Page_CouncilSpace = lazy(() => import("@/pages/CouncilSpace"));
 const Page_Assess = lazy(() => import("@/pages/AssessTool"));
+const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const Page_IncidentReport = lazy(() => import("@/pages/IncidentReport"));
 const Page_Honesty = lazy(() => import("@/pages/Honesty"));
 const Page_Library = lazy(() => import("@/pages/Library"));
@@ -34,6 +38,8 @@ const LobbyArt50Pane = lazy(() => import("@/components/lobby/LobbyArt50Pane"));
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: LobbyHome is rendered by the layout (local kind) — no pane needed.
   board: HomeGspcBoard, // the living HF Space board + 22-axis strip, inside the shell (owner ruling 2 Sep)
+  leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
+  terminal: LobbyBoardPane, // GSPC terminal
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
   results: Page_Benchmarks,
@@ -59,11 +65,45 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   ras: Page_Assess,
 };
 
+/** Extra in-shell panes that are not sidebar tabs (they have no page of their own). */
+const EXTRA_LABELS: Record<string, string> = {
+  leaderboard: "Leaderboard",
+  terminal: "GSPC terminal",
+  state: "Estate state",
+};
+
+export function resolvePaneId(id: string): string {
+  return ALIASES[id] ?? id;
+}
+
+export function hasPane(id: string): boolean {
+  return Object.prototype.hasOwnProperty.call(PANES, resolvePaneId(id));
+}
+
+/** Human label for a pane id — the rail tab's label, an extra pane's label, or null when nothing owns it. */
+export function paneLabel(id: string): string | null {
+  const r = resolvePaneId(id);
+  const tab = LOBBY_TABS.find((t) => t.id === r);
+  if (tab) return tab.label;
+  return EXTRA_LABELS[r] ?? null;
+}
+
+export const PANE_IDS: string[] = Object.keys(PANES);
+
 export default function DashboardPane({ id }: { id: string }) {
-  const C = PANES[id] ?? LobbyBoardPane;
+  const r = resolvePaneId(id);
+  const C = PANES[r] ?? HomeGspcBoard;
+  const unknown = !PANES[r];
   return (
-    <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading {id}…</div>}>
-      <div data-testid={`dashboard-pane-${id}`}><C /></div>
+    <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading {r}…</div>}>
+      <div className="coai-pane" data-testid={`dashboard-pane-${r}`} data-pane-known={unknown ? "no" : "yes"}>
+        {unknown && (
+          <p className="px-6 pt-6 text-sm text-muted-foreground" data-testid="dashboard-pane-unknown">
+            No pane is named “{id}” — showing the live board instead.
+          </p>
+        )}
+        <C />
+      </div>
     </Suspense>
   );
 }

@@ -195,7 +195,7 @@ export function BoardStrip({
                 className="rounded-xl border border-slate-200/80 bg-white p-2.5 dark:border-emerald-900/40 dark:bg-[#0a1a13]"
               >
                 <p className="flex flex-wrap items-baseline gap-x-2">
-                  <a href={`/leaderboard#${encodeURIComponent(a.axis)}`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
+                  <a href={`/dashboard?tab=leaderboard#${encodeURIComponent(a.axis)}`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
                     {boardAxisLabel(a.axis)}
                   </a>
                   {nText(a) ? <span className="text-xs text-slate-500 dark:text-emerald-100/60">{nText(a)}</span> : null}

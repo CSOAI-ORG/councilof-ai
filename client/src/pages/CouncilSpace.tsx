@@ -453,7 +453,9 @@ export default function CouncilSpace() {
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
   }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
-  useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
+  // Scroll the narration box only. scrollIntoView() also scrolled every ancestor, which yanked the
+  // whole Council OS pane down to the log on mount — the reader landed mid-page with no header.
+  useEffect(() => { const box = endRef.current?.parentElement; if (box && log.length) box.scrollTop = box.scrollHeight; }, [log]);
   useEffect(() => () => { timers.current.forEach(clearTimeout); stopVoice(); }, []);
 
   useEffect(() => {

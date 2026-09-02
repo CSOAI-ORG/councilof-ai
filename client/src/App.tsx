@@ -729,7 +729,8 @@ function App() {
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
-                  <Route path="/rankings">{() => <Redirect to="/leaderboard" />}</Route>
+                  {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
+                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
