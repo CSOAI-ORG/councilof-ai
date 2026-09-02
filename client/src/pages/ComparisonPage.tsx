@@ -938,7 +938,7 @@ export default function ComparisonPage() {
             >
               {[
                 { label: "40+ Nations", icon: Globe },
-                { label: "33-Agent Council", icon: Users },
+                { label: "33-seat council (design)", icon: Users },
                 { label: "Open Standards", icon: GitBranch },
                 { label: "Free Training", icon: BookOpen },
                 { label: "Job Marketplace", icon: Award },

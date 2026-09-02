@@ -172,7 +172,7 @@ export default function Traction() {
         <h2 className="text-3xl font-bold mb-2">Council MCP — live on councilof.ai</h2>
         <p className="text-slate-600 mb-6 max-w-3xl">
           6 servers and {soverTotal} tools under the canonical <code className="bg-slate-100 px-1 rounded">/api/mcp</code>.
-          Deterministic, not LLM-as-judge. Every response is signed. Broader estate: 291 governed MCP servers (registry-backed, separate metric — not interchangeable with council count).
+          Deterministic, not LLM-as-judge. Every response is signed. Broader estate: MCP servers (count from the live registry, never typed here) (registry-backed, separate metric — not interchangeable with council count).
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {SOVEREIGN_SERVERS.map(s => (

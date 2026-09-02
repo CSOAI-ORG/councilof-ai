@@ -31,7 +31,7 @@ export default function Resources() {
       category: "Training",
     },
     {
-      title: "33-Agent Council Technical Specification",
+      title: "33-seat Council design specification",
       description: "Detailed documentation of the designed multi-agent review mechanism and agent architecture.",
       type: "PDF",
       pages: 35,
@@ -93,7 +93,7 @@ export default function Resources() {
       thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
-      title: "Understanding the 33-Agent Council",
+      title: "Understanding the 33-seat council design",
       duration: "15:42",
       views: "3.1K",
       thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
