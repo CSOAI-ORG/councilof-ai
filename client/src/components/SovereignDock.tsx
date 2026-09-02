@@ -7,9 +7,9 @@ import { askSovereign } from "../lib/sovAsk";
 import { fetchHealth } from "../lib/sovHealth";
 import { subscribeBus, busHealth, fetchAnchors, fetchLedgerStats, fetchFlywheelSnapshot, fetchHiveCoverage } from "../lib/sovDataBus";
 import { useGeolibre, GEO_REGION_OPTIONS } from "../lib/geolibre";
-import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, stopVoice, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
+import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
-// SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
+// SovereignDock - the persistent right-hand AI OS sidebar. Type and it
 // acts: routes you to the right surface, answers from the framework knowledge
 // base, and now answers any question with live world data via the measurement API.
 
@@ -116,8 +116,6 @@ export default function SovereignDock() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [msgs, setMsgs] = useState<Msg[]>([{ role: "sov", text: "Hi. I'm the Council assistant. Ask about a measurement, a statute, or tell me which pane to open." }]);
-  const [listening, setListening] = useState(false);
-  const [voiceOn, setVoiceOn] = useState(true);
   const [hz, setHz] = useState<any>(null);
   const [brainOpen, setBrainOpen] = useState(false);
   const [brainMode, setBrainMode] = useState<string>(() => { try { return localStorage.getItem("sov_brain_mode") || "hosted"; } catch (e) { return "hosted"; } });
@@ -158,14 +156,6 @@ export default function SovereignDock() {
 
   useEffect(() => { const el = endRef.current && (endRef.current.parentElement as HTMLElement | null); if (el) el.scrollTop = el.scrollHeight; }, [msgs, open]);
 
-  useEffect(() => {
-    if (!voiceOn || msgs.length <= 1) return;
-    var last = msgs[msgs.length - 1];
-    if (last && last.role === "sov") {
-      personaSpeak(last.text);
-    }
-  }, [msgs, voiceOn]);
-
   async function act(text: string) {
     const t = (text || "").trim();
     if (!t) return;
@@ -189,7 +179,7 @@ export default function SovereignDock() {
       return;
     }
     // SOV3: the Council assistant is page-aware. For a command or an "explain this page"
-    // request, orchestrate over the live brain - it speaks and opens the right surface.
+    // request, orchestrate over the live brain - it answers and opens the right surface.
     const ctx = getScreenContext();
     const commandLike = navVerb || /\bexplain (this|the) page\b|\bwhat can i do here\b|\bwhere am i\b|\bhelp me (here|with this)\b|\bwhat is this page\b|\bwalk me through\b|\btake me\b|\bopen \b/i.test(t);
     if (commandLike) {
@@ -224,18 +214,6 @@ export default function SovereignDock() {
       }
     } catch (e) {}
     setMsgs((m) => m.concat({ role: "sov", text: "I could not reach live reasoning just now - try: regulations, crosswalks, evidence, certify, or open the Governance Graph." }));
-  }
-
-  function voice() {
-    const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-    if (!SR) { setMsgs((m) => m.concat({ role: "sov", text: "Voice needs a Chromium browser - type your command and I will act." })); return; }
-    try {
-      const rec = new SR(); rec.lang = "en-US"; rec.interimResults = false; rec.maxAlternatives = 1;
-      rec.onstart = () => setListening(true);
-      rec.onend = () => setListening(false);
-      rec.onresult = (e: any) => { const said = e.results[0][0].transcript; act(said); };
-      rec.start();
-    } catch (e) { setListening(false); }
   }
 
   return (
@@ -279,14 +257,12 @@ export default function SovereignDock() {
                 </select>
               </div>
             </div>
-            <button onClick={() => { setVoiceOn((x) => !x); stopVoice(); }} aria-label="Toggle voice" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{voiceOn ? "On" : "Off"}</button>
             <button onClick={() => setOpen(false)} aria-label="Close" className="rounded-lg px-2 py-1 text-emerald-300/70 hover:bg-white/5">{"\u2715"}</button>
           </div>
           <div className="flex flex-wrap gap-1.5 border-b border-emerald-500/10 px-3 py-2">
             {(Object.keys(PERSONAS) as SovPersonaId[]).map((id) => (
-              <button key={id} onClick={() => switchPersona(id)} title={id === "assurance" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "assurance" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "assurance" ? "✦ Assurance" : "◉ Civil"}</button>
+              <button key={id} onClick={() => switchPersona(id)} title={id === "assurance" ? "Defence assurance mode — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance mode"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "assurance" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "assurance" ? "✦ Assurance" : "◉ Civil"}</button>
             ))}
-            <button onClick={() => go("/demo")} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live demo</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<button key={q.label} onClick={() => go(q.href)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</button>))}
           </div>
@@ -314,7 +290,6 @@ export default function SovereignDock() {
             <div className="flex items-center gap-1.5 rounded-xl border border-emerald-400/30 bg-white/[0.04] px-2 py-1.5">
               <button onClick={() => fileRef.current && fileRef.current.click()} aria-label="Upload files or photos" title="Upload files / photos — governed under Layer 0" className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-500/15 text-lg font-bold text-emerald-200 hover:bg-emerald-500/25">+</button>
               <button onClick={() => setBrainOpen((b) => !b)} aria-label="Council engine setup" title="Brain setup — offline / hosted / PAYG" className={"flex h-8 w-8 items-center justify-center rounded-lg text-sm " + (brainOpen ? "bg-emerald-500/30 text-emerald-100" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>{"◉"}</button>
-              <button onClick={voice} aria-label="Speak to your Council assistant" className={"flex h-8 w-8 items-center justify-center rounded-lg text-[10px] font-bold " + (listening ? "bg-rose-500/30 text-rose-200 animate-pulse" : "bg-emerald-500/15 text-emerald-200 hover:bg-emerald-500/25")}>MIC</button>
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>

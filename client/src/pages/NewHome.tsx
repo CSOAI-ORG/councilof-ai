@@ -7,7 +7,6 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import AnimatedParticles from "@/components/AnimatedParticles";
-import PlatformTour from "@/components/PlatformTour";
 
 export default function NewHome() {
   const [email, setEmail] = useState("");
@@ -26,7 +25,6 @@ export default function NewHome() {
 
   return (
     <>
-      <PlatformTour />
       <div className="min-h-screen bg-gradient-to-b from-[#0A2540] via-[#1E3A5F] to-[#0A2540]">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

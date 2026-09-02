@@ -7,7 +7,6 @@ import { flyAndConvene, neutralize } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
 import { setMetaDescription } from "@/lib/utils";
 import AISystemNotice from "../components/AISystemNotice";
-import { personaSpeak, stopVoice } from "../lib/sovPersona";
 import { useLedger, type DecisionRecord } from "../hooks/useLedger";
 import JSpaceTimeline, { type TimelineEvent } from "../components/JSpaceTimeline";
 import CouncilGalaxy, { type FlywheelPlanet, type HiveLayer, type CitizenNode } from "../components/CouncilGalaxy";
@@ -282,7 +281,6 @@ export default function CouncilSpace() {
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
   const [verdictText, setVerdictText] = useState("");
-  const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
   const [busEvents, setBusEvents] = useState<TimelineEvent[]>(() => getCards().map(cardToTimeline));
@@ -454,7 +452,7 @@ export default function CouncilSpace() {
   }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
   useEffect(() => { if (endRef.current) endRef.current.scrollIntoView({ behavior: "smooth" }); }, [log]);
-  useEffect(() => () => { timers.current.forEach(clearTimeout); stopVoice(); }, []);
+  useEffect(() => () => { timers.current.forEach(clearTimeout); }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -503,8 +501,6 @@ export default function CouncilSpace() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", size); };
   }, []);
 
-  function speak(t: string) { if (!voiceOn) return; personaSpeak(t); }
-
   function playSteps(steps: Step[], verdict?: string) {
     let i = 0;
     const runStart = Date.now();
@@ -543,7 +539,7 @@ export default function CouncilSpace() {
           .catch(() => { });
         return;
       }
-      const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
+      const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t));
       const phaseTag = st.phase === 1 ? "OPEN" : st.phase === 2 ? "ACTION" : st.phase === 3 ? "CONFIRMED" : "ACTION";
       const phaseWeight = st.phase === 1 ? 0.4 : st.phase === 2 ? 0.55 : st.phase === 3 ? 0.7 : 0.9;
       const stepEvent: TimelineEvent = {
@@ -622,7 +618,7 @@ export default function CouncilSpace() {
     }
     playSteps(buildRun(scen));
   }
-  function reset() { timers.current.forEach(clearTimeout); stopVoice(); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
+  function reset() { timers.current.forEach(clearTimeout); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
 
   if (view !== "console") {
     return (
@@ -652,7 +648,7 @@ export default function CouncilSpace() {
         <div className="relative"><CouncilNav /><ViewSwitcher view={view} /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
         <h1 className="relative mt-2 text-4xl sm:text-5xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
-        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
+        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate while the workspace records each step as text. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
         <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">
           <span className="font-semibold text-emerald-200">{loc.greeting}</span>
@@ -682,7 +678,6 @@ export default function CouncilSpace() {
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <button onClick={() => run()} disabled={running} className="rounded-xl bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400 disabled:opacity-50">{running ? "Running..." : "Run experiment"}</button>
             <button onClick={reset} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm font-semibold text-emerald-100 hover:bg-white/5">Reset</button>
-            <button onClick={() => { setVoiceOn((x) => !x); stopVoice(); }} className="rounded-xl border border-emerald-400/40 px-3 py-2 text-sm text-emerald-100 hover:bg-white/5">{voiceOn ? "Voice on" : "Voice off"}</button>
             <a href={"/gspc-arena?view=globe" + (scenario ? "&ask=" + encodeURIComponent(scenario) : "")} className="rounded-xl border border-sky-400/40 px-3 py-2 text-sm font-semibold text-sky-100 hover:bg-white/5">See it on the Council Globe →</a>
             <button onClick={() => stampPresence("walk-around", { pov: "all", zoom: "all" })} className="rounded-xl border border-amber-400/40 px-3 py-2 text-sm font-semibold text-amber-100 hover:bg-white/5" title="Stamp your POV as 'all-of-data'">EAT ALL</button>
           </div>
@@ -690,7 +685,7 @@ export default function CouncilSpace() {
             You are interacting with an AI system.
           </div>
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
-            {log.length === 0 && <div className="text-emerald-300/40">The Council assistant will narrate here as your experiment runs.</div>}
+            {log.length === 0 && <div className="text-emerald-300/40">Each step will appear here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
             {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council answer (grounded lane):</b> {verdictText}</div> : <div className="mb-2 leading-relaxed"><b className="text-emerald-200">No live verdict.</b> The Council&rsquo;s grounded lane answers only from published measurement — it does not adjudicate a hypothetical scenario, and this page will not invent a ruling. The run above is a narrated simulation of how a review proceeds.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
             <div ref={endRef} />

@@ -271,7 +271,6 @@ const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCent
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
-const SovereignTour = lazy(() => import("./pages/SovereignTour"));
 const SovereignAcademy = lazy(() => import("./pages/SovereignAcademy"));
 const SovereignRegistry = lazy(() => import("./pages/SovereignRegistry"));
 const SovereignHives = lazy(() => import("./pages/SovereignHives"));
@@ -305,7 +304,6 @@ const Agents = lazy(() => import("./pages/Agents"));
 const Academy = lazy(() => import("./pages/Academy"));
 import ArchivedBanner from "./components/ArchivedBanner";
 import PageSchema from "./components/PageSchema";
-import DemoTour from "./components/DemoTour";
 const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
 const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
@@ -324,7 +322,6 @@ const Article50 = lazy(() => import("./pages/Article50"));
 const VerifyLeaderboard = lazy(() => import("./pages/VerifyLeaderboard"));
 const GovernanceLayer = lazy(() => import("./pages/GovernanceLayer"));
 const Dora = lazy(() => import("./pages/Dora"));
-const DemoOS = lazy(() => import("./pages/DemoOS"));
 const PocShowcase = lazy(() => import("./pages/PocShowcase"));
 const CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
 const BadgesPage = lazy(() => import("./pages/BadgesPage"));
@@ -546,16 +543,7 @@ function App() {
   // not claiming the path at all, and wouter falls through to the /os route.
   // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
   if (location === '/demo' || location === '/os-demo') {
-    return (
-      <ErrorBoundary>
-        <ThemeProvider defaultTheme="dark">
-          <TooltipProvider>
-            <DemoOS />
-            <Toaster position="top-right" />
-          </TooltipProvider>
-        </ThemeProvider>
-      </ErrorBoundary>
-    );
+    return <Redirect to="/os" />;
   }
   if (path === "/ag-ui" || path === "/chat" || path === "/console" || path === "/sov-os") {
     return <Redirect to="/os" />;
@@ -784,10 +772,11 @@ function App() {
                       navigation and a cold load of /council-os land in the same place. */}
                   <Route path="/council-os">{() => <Redirect to="/os" />}</Route>
                   <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
-                  <Route path="/demo" component={DemoOS} />
-                  <Route path="/os-demo" component={DemoOS} />
+                  {/* Owner removal: retire the narrated/voice demo into the typed Council OS. */}
+                  <Route path="/demo">{() => <Redirect to="/os" />}</Route>
+                  <Route path="/os-demo">{() => <Redirect to="/os" />}</Route>
                   <Route path="/enter" component={OsEnter} />
-                  <Route path="/tour" component={SovereignTour} />
+                  <Route path="/tour">{() => <Redirect to="/os" />}</Route>
                   <Route path="/academy" component={SovereignAcademy} />
                   <Route path="/register" component={SovereignRegistry} />
                   <Route path="/hives" component={SovereignHives} />
@@ -1094,7 +1083,6 @@ function App() {
                     SUMMON/escort implementation, exactly as its docstring intends — it is
                     simply not mounted as a second floating chat. */}
                 <Suspense fallback={null}><CouncilLobby /></Suspense>
-                <DemoTour />
                 <CookieConsent />
               </div>
               <Toaster position="top-right" toastOptions={{ style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', color: 'hsl(var(--foreground))' } }} />

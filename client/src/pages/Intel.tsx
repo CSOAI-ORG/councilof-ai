@@ -3,15 +3,6 @@ import { ECOSYSTEM, PLAY_META, type Account } from "../data/ecosystem";
 import { scoreAccount } from "../lib/hiveScore";
 import { flyAndConvene } from "../lib/globeDrive";
 import CouncilNav from "../components/CouncilNav";
-import { personaSpeak, stopVoice } from "../lib/sovPersona";
-
-// Short, honest spoken line per play (kept tight for speech synthesis).
-const SPEAK_PLAY: Record<string, string> = {
-  align: "You set the rules; we make them provable.",
-  absorb: "No governance tooling yet — CSOAI from zero.",
-  integrate: "The signed governance layer under your stack.",
-  displace: "Side by side against your current tool, on the axis it's weak.",
-};
 
 // /intel — the Distribution Hive command view. Renders the ecosystem dataset as
 // account cards, runs the fixed testing rubric per account, and tailors demo links.
@@ -24,15 +15,9 @@ export default function Intel() {
   const [sector, setSector] = useState<string>("all");
   const [sel, setSel] = useState<Account | null>(null);
   const globeRef = useRef<HTMLIFrameElement | null>(null);
-  const [touring, setTouring] = useState(false);
-  const [voiceOn, setVoiceOn] = useState(true);
-  const tourTimers = useRef<number[]>([]);
-  function speak(t: string) { if (!voiceOn) return; personaSpeak(t); }
-  function sayLine(a: Account): string { const s = scoreAccount(a); if (s.confidence === "authority") return `${a.name}. ${a.country}. Regulator — we implement their regime and make it provable.`; return `${a.name}. ${a.country}. ${SPEAK_PLAY[a.play] || ""} Gap ${s.totalGap} of 21.`; }
   // Persistent globe, mounted once: whenever you pick an account, the Council assistant flies it
-  // to that account's exact HQ, pulses the point, and narrates the play — the market lights up.
-  useEffect(() => { if (sel) { flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); speak(sayLine(sel)); } }, [sel]);
-  useEffect(() => () => { tourTimers.current.forEach(clearTimeout); stopVoice(); }, []);
+  // to that account's exact HQ and pulses the point — the market lights up without audio.
+  useEffect(() => { if (sel) flyAndConvene(globeRef.current?.contentWindow, sel.hq[0], sel.hq[1], { height: 1400000, duration: 2.8, spiral: false }); }, [sel]);
   useEffect(() => { document.title = "Distribution Hive — account intelligence | CSOAI"; }, []);
   const REGIONS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.region)))];
   const SECTORS = ["all", ...Array.from(new Set(ECOSYSTEM.map((a) => a.sector).filter(Boolean) as string[]))];
@@ -46,26 +31,6 @@ export default function Intel() {
   const playCount = scored.reduce((m, x) => { m[x.s.play] = (m[x.s.play] || 0) + 1; return m; }, {} as Record<string, number>);
   // worst-gap leaderboard — ranked across the WHOLE dataset (not the current tab)
   const topGaps = ECOSYSTEM.map((a) => ({ a, s: scoreAccount(a) })).filter((x) => x.s.confidence !== "authority").sort((x, y) => y.s.totalGap - x.s.totalGap).slice(0, 8);
-  // Auto-fly tour: the Council assistant walks the globe through the biggest market opportunities,
-  // flying + pulsing each HQ in turn (reuses the fly-on-select effect via setSel).
-  function tourGaps() {
-    tourTimers.current.forEach(clearTimeout); tourTimers.current = [];
-    if (touring) { setTouring(false); return; }
-    setTouring(true);
-    const order = [...topGaps].reverse(); // build UP to the single biggest gap = the climax
-    order.forEach(({ a }, i) => {
-      const last = i === order.length - 1;
-      tourTimers.current.push(window.setTimeout(() => {
-        setSel(a); // flies + pulses + narrates via the sel effect
-        if (last) {
-          // Climax: convene the full 33-agent council over the single biggest opportunity.
-          tourTimers.current.push(window.setTimeout(() => { flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 }); speak(`The single biggest opportunity: ${a.name}. Convening the full thirty-three agent council.`); }, 1600));
-          tourTimers.current.push(window.setTimeout(() => setTouring(false), 7200));
-        }
-      }, i * 3800));
-    });
-  }
-
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
       <div className="mx-auto max-w-6xl px-6 py-12">
@@ -133,8 +98,6 @@ export default function Intel() {
           <div className="flex items-center justify-between bg-[#05140d] px-4 py-2">
             <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">Live globe — {sel ? "flown to " + sel.name + " · " + sel.country : "pick an account to fly the market"}</div>
             <div className="flex items-center gap-3">
-              <button onClick={tourGaps} className={"rounded-full border px-3 py-1 text-[11px] font-bold " + (touring ? "border-amber-400 bg-amber-500/20 text-amber-100" : "border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/10")}>{touring ? "◉ touring the market…" : "▶ Tour the top gaps"}</button>
-              <button onClick={() => { setVoiceOn((v) => !v); stopVoice(); }} className="rounded-full border border-emerald-400/30 px-3 py-1 text-[11px] font-semibold text-emerald-200/80 hover:bg-emerald-500/10">{voiceOn ? "Voice on" : "Muted"}</button>
               {sel && <a href={"/brief?id=" + sel.id} className="text-[11px] font-semibold text-emerald-200 hover:underline">Open tailored brief →</a>}
             </div>
           </div>
