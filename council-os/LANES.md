@@ -21,3 +21,7 @@ six gates before any dist build claim, browser-verify (green build ≠ working p
 display language is "axis" never "axes", counts derive from /api/gspc//api/state,
 card_index rule (OWNER RULING, 2026-08-27, supersedes the 150 freeze): the index lists EVERY verifying published GSPC card — today 313 — enriched with sig/pubkey/card_url; chain.json is published; the cross-border card is a SEPARATE schema counted separately, never folded into the GSPC count. No agent may clamp the index to any constant.
 deploys via scripts/deploy-site.sh --via-actions (direct wrangler = owner only).
+
+## lane/os-unify-home-board — Claude (2 Sep 2026) — PR #1093
+Writer: Claude (one writer). Files: client/src/App.tsx (/os route → OsRoute), components/DashboardLayout.tsx, components/DashboardPane.tsx (new), components/Header.tsx, components/HeaderNav.tsx, components/HeroSlides.tsx, components/home/{HeroBoard,HomeCinematicWorlds,HomeWorlds,HomeGspcBoard(new)}.tsx, pages/{Dashboard,HomeVerify}.tsx, functions/api/gspc.ts (totals.public_leader_count/model_fleets/fact_runs, derived), public/llms.txt (lid line).
+Ruling executed (owner, 2 Sep): Dashboard IS Council OS · tabs render in-shell, never navigate out · /os?lobby=X → /dashboard?tab=X (embed=1 keeps AG-UI pane) · home board = living HF Space csoai/gspc-board + derived lid + 22-axis strip. Other lanes: do not re-point CTAs back to /os; do not add a second board.
