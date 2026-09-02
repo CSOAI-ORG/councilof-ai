@@ -1,0 +1,76 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Meta/Muse Image — Art 53(1)(d) summary locate 2026-09",
+  "as_of": "2026-09-02T05:51:28Z",
+  "source_urls": [
+    "https://transparency.meta.com/reports/regulatory-transparency-reports/",
+    "https://aial.ie/research/gpai-training-transparency/evals/muse-image/"
+  ],
+  "payload": {
+    "kind": "csoai.art53-training-summary/0.1",
+    "status": "UNCHECKABLE",
+    "honest_sentence": "Training-content summary located/not located/uncheckable vs AI Office template (24 Jul 2025). Prior art DOI only. No compliance language.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "provider": "Meta",
+    "model_or_family": "Muse Image",
+    "open_weight": false,
+    "obligation_focus": "Art 53(1)(d)",
+    "template_ref": {
+      "title": "AI Office Template — Public Summary of Training Content",
+      "date": "2025-07-24",
+      "url": "https://digital-strategy.ec.europa.eu/en/library/explanatory-notice-and-template-public-summary-training-content-general-purpose-ai-models",
+      "implements": "Art 53(1)(d)"
+    },
+    "prior_art_only": {
+      "doi": "10.1145/3805689.3806755",
+      "url": "https://doi.org/10.1145/3805689.3806755",
+      "observatory": "https://aial.ie/research/gpai-training-transparency/",
+      "role": "prior art only"
+    },
+    "location": {
+      "hub": "https://transparency.meta.com/reports/regulatory-transparency-reports/",
+      "aial_archive_prior_art": "https://aial.ie/research/gpai-training-transparency/archive/Muse_Image_2026_07_21.pdf"
+    },
+    "reason": "Regulatory hub HTTP 200; no direct public PDF URL located via keyless GET 2026-09-02. AIAL archive prior-art pointer only.",
+    "sources": [
+      {
+        "url": "https://transparency.meta.com/reports/regulatory-transparency-reports/",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "role": "hub"
+      },
+      {
+        "url": "https://aial.ie/research/gpai-training-transparency/evals/muse-image/",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "role": "prior_art_index"
+      }
+    ],
+    "measured_fact": "Meta hub reachable; direct Muse Image summary PDF not located via keyless GET — UNCHECKABLE.",
+    "fetched_at": "2026-09-02T05:51:28Z"
+  },
+  "sha256": "edf353b5d847ec8ed55cfabc93d256cf70cb33fd0feb4e0d525a8a2c0cbcea23",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "template-section completeness grade",
+    "Art 53(1)(c) copyright-policy locate",
+    "AI Office enforcement outcome",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED",
+    "vendor_direct_pdf_bytes"
+  ],
+  "tags": [
+    "public-notice",
+    "art53",
+    "training-summary",
+    "meta-muse-image",
+    "unsigned"
+  ],
+  "note": "UNSIGNED. Located/not located/uncheckable only. DOI prior art only."
+}
