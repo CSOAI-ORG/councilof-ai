@@ -19,7 +19,6 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
 import HomeGspcBoard, {
   BoardStrip,
-  SPACE_EMBED_ORIGIN,
   SPACE_PAGE_URL,
   STRIP_N,
   leaderStateOf,
@@ -77,12 +76,13 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain(MOCK_COUNT);
   });
 
-  it("embeds the living Space at the verified origin and links to its page", () => {
+  it("does not iframe the dead HF Space; renders the BoardStrip from /api/gspc data and links to the HF page", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
-    expect(SPACE_EMBED_ORIGIN).toBe("https://csoai-gspc-board.static.hf.space");
-    expect(html).toContain(`<iframe src="${SPACE_EMBED_ORIGIN}"`);
-    expect(html).toContain('loading="lazy"');
-    expect(html).toContain('sandbox="allow-scripts allow-same-origin allow-popups"');
+    // The 2026-09-02 fix: csoai-gspc-board.static.hf.space was sunset. The
+    // iframe is gone — the page renders the live /api/gspc data directly
+    // and links out to the HF Space page (where the mirror lives, if any).
+    expect(html).not.toContain("<iframe");
+    expect(html).not.toContain("csoai-gspc-board.static.hf.space");
     expect(html).toContain(`href="${SPACE_PAGE_URL}"`);
     expect(html).toContain("Open the living board on Hugging Face");
     expect(html).not.toContain("gspc-governance-leaderboard");
@@ -157,6 +157,6 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={null} error="offline" />);
     expect(html).toContain("Board is unreachable right now. Empty stays empty.");
     expect(html).not.toContain("data-axis-row=");
-    expect(html).toContain(`<iframe src="${SPACE_EMBED_ORIGIN}"`);
+    expect(html).not.toContain("<iframe");
   });
 });

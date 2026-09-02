@@ -26,9 +26,11 @@ import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcB
 import { axisMeta } from "../../lib/axisRegulation";
 
 /** Verified static-SDK embed origin of the living Space. */
-export const SPACE_EMBED_ORIGIN = "https://csoai-gspc-board.static.hf.space";
+// 2026-09-02: the csoai-gspc-board.static.hf.space iframe was removed (Space
+// sunset). The page now renders the live /api/gspc data directly and links
+// out to the HF mirror page (where it still exists, if anywhere) — no third-
+// party origin to break.
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
-export const SPACE_IFRAME_TITLE = "GSPC board — living, on Hugging Face";
 /** Rows the strip shows before "Load more". A UI constant, not a board count. */
 export const STRIP_N = 9;
 
@@ -281,26 +283,13 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
         </p>
       </div>
 
-      <figure className="mt-4">
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 dark:border-emerald-900/40 dark:bg-[#0a1a13]">
-          <iframe
-            src={SPACE_EMBED_ORIGIN}
-            title={SPACE_IFRAME_TITLE}
-            loading="lazy"
-            sandbox="allow-scripts allow-same-origin allow-popups"
-            referrerPolicy="strict-origin-when-cross-origin"
-            className="block h-[720px] min-h-[720px] w-full border-0"
-          />
-        </div>
-        <figcaption className="mt-2 text-sm">
-          <a href={SPACE_PAGE_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
-            Open the living board on Hugging Face
-          </a>
-          <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board</span>
-        </figcaption>
-      </figure>
-
-      <div className="mt-5">
+      {/* 2026-09-02: removed the dead iframe to csoai-gspc-board.static.hf.space
+          (the Space has been sunset; the URL 302s and the HF API returns 404).
+          The /api/gspc data is the source of truth, so we render it directly
+          below as a self-contained table — no iframe dependency, no third-
+          party origin to break. Anyone can still open the HF mirror from
+          the figcaption link. */}
+      <div className="mt-4">
         {error ? (
           <p className="text-sm text-slate-600 dark:text-emerald-100/70">The axis strip needs GET /api/gspc and it did not answer. Empty stays empty.</p>
         ) : loading ? (
@@ -310,6 +299,13 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
         ) : (
           <BoardStrip axes={axes} />
         )}
+      </div>
+
+      <div className="mt-3 text-sm">
+        <a href={SPACE_PAGE_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
+          Open the living board on Hugging Face
+        </a>
+        <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board (HF mirror; live data still served from this page)</span>
       </div>
 
       <p className="mt-4 text-sm text-slate-600 dark:text-emerald-100/70">Measurement, not certification. Empty stays empty.</p>
