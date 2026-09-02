@@ -71,7 +71,7 @@ import councilMcpDoor from "../../evidence/council-mcp-door.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 
-import type { AxisScore } from "./_gspc_types";
+import { MEASURED_ON, type AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
@@ -131,8 +131,39 @@ const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
+const livePublicCount = `${liveAxisSlots} axis · ${liveMeasuredAxes} measured`;
+const liveCountGrammar =
+  liveUnmeasuredAxes === 0
+    ? `${liveAxisSlots} axis are on the board and every one carries a measurement — no ` +
+      `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
+      `future slot is added with no run behind it, this line separates the two again on its own.`
+    : `${liveAxisSlots} axis are on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
+      `${liveUnmeasuredAxes} are declared slots with no run behind them. The larger number counts slots, ` +
+      `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
+      `so the gap is visible; it is not evidence of anything having been measured.`;
+const liveByFamily = {
+  gspc: {
+    axes: LIVE_AXES.filter((a) => a.family === "gspc").length,
+    measured: LIVE_AXES.filter((a) => a.family === "gspc" && a.status === "MEASURED").length,
+    note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+  },
+  financial: {
+    axes: LIVE_AXES.filter((a) => a.family === "financial").length,
+    measured: LIVE_AXES.filter((a) => a.family === "financial" && a.status === "MEASURED").length,
+    note:
+      "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs. " +
+      "Measured is not scored. None has a leader, an accuracy or a separation determination.",
+  },
+};
+const liveMeasuredOn: string = MEASURED_ON.date;
 const boardAgrees =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+const SNAPSHOT_DISAGREEMENT =
+  "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
+  "committed axis arrays. The signed snapshot at public/signed/gspc-board.signed.json is a " +
+  "historical freeze (15 measured / 7 empty) under a 3-party MPC key that does not exist as a " +
+  "whole number here. Do not file the snapshot's 15/7. Re-signing that file is an owner MPC " +
+  "ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
@@ -210,71 +241,79 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── THE BOARD ────────────────────────────────────────────────────────────
     board: {
-      authority: SRC_BOARD,
+      authority: SRC_AXES,
       live_endpoint: "/api/gspc",
       axis_slots: fact(
-        boardTotals.axes ?? null,
+        liveAxisSlots,
         "declared",
-        SRC_BOARD + " → totals.axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → length",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "A count of SLOTS on the board. A slot is published so a gap is visible; it is not " +
-          "evidence that anything was measured. Never quote this number alone.",
+          "evidence that anything was measured. Never quote this number alone. Same derivation as GET /api/gspc.",
       ),
       measured_axes: fact(
-        boardTotals.measured_axes ?? null,
+        liveMeasuredAxes,
         "measured",
-        SRC_BOARD + " → totals.measured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
-        "Slots with a real graded run behind them. This is the number to quote if you quote only one.",
+        SRC_AXES + " → filter(status === 'MEASURED').length",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "Slots with a real graded run behind them. This is the number to quote if you quote only one. " +
+          "Same derivation as GET /api/gspc totals.measured_axes. Joel files this, not the 15/7 snapshot.",
       ),
       unmeasured_axes: fact(
-        boardTotals.unmeasured_axes ?? null,
+        liveUnmeasuredAxes,
         "declared",
-        SRC_BOARD + " → totals.unmeasured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → length - measured",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "Declared slots with no run behind them. Published so the gap is visible.",
       ),
       public_count: fact(
-        boardTotals.public_count ?? null,
+        livePublicCount,
         "declared",
-        SRC_BOARD + " → totals.public_count",
-        boardMeasuredOn,
-        "measured_on.date",
-        "The short sentence. Safe to quote verbatim because it carries both numbers.",
+        SRC_AXES + " → derived public_count",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "The short sentence. Safe to quote verbatim because it carries both numbers. Same grammar as GET /api/gspc.",
       ),
       count_grammar: fact(
-        boardTotals.count_grammar ?? null,
+        liveCountGrammar,
         "declared",
-        SRC_BOARD + " → totals.count_grammar",
-        boardMeasuredOn,
-        "measured_on.date",
-        "The long form, verbatim from the signed payload. Quote this when a report has room for it.",
+        SRC_AXES + " → derived count_grammar",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "The long form, derived from the same axis arrays /api/gspc uses.",
       ),
       by_family: fact(
-        boardTotals.by_family ?? null,
+        liveByFamily,
         "declared",
-        SRC_BOARD + " → totals.by_family",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → by family",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "The two families are measured by two different instruments and their counts are not " +
           "interchangeable. A behavioural-family figure is not a board figure.",
       ),
       live_derivation_crosscheck: {
         note:
-          "The signed file is a snapshot of what /api/gspc computes from the axis arrays. Both are " +
-          "computed here so a drift between them is published rather than silently inherited by " +
-          "whichever surface a lane happened to read.",
+          "The signed file is a historical snapshot of an earlier /api/gspc computation. Live " +
+          "counts above are derived from the committed axis arrays — the same source GET /api/gspc " +
+          "uses. Drift is published rather than silently inherited.",
         source: SRC_AXES,
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
         live_unmeasured_axes: liveUnmeasuredAxes,
         signed_snapshot_agrees: boardAgrees,
-        on_disagreement:
-          "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
-          "re-derived and re-signed. Do not pick the one you prefer.",
+        signed_snapshot: {
+          source: SRC_BOARD,
+          axis_slots: boardTotals.axes ?? null,
+          measured_axes: boardTotals.measured_axes ?? null,
+          unmeasured_axes: boardTotals.unmeasured_axes ?? null,
+          public_count: boardTotals.public_count ?? null,
+          as_of: boardMeasuredOn,
+          status: "historical freeze — do not file",
+        },
+        on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
       signature: {
         signer: boardCustody.signer ?? null,
