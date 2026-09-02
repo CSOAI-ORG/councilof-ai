@@ -1,0 +1,61 @@
+name: hub-queue-mill
+# The OSS spray: grade hub-queue models on the frozen banks via direct provider APIs
+# (keys as GHA secrets, by name). Stages UNSIGNED ≤3KB cards only; MEASURED happens
+# only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
+on:
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+    inputs:
+      axis: { description: "axis to grade this run", type: string, default: "governance" }
+      grade: { description: "how many of the emptiest models to grade", type: string, default: "8" }
+concurrency: { group: hub-queue-mill, cancel-in-progress: false }
+permissions: { contents: read }
+jobs:
+  mill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY }}
+      CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY }}
+      TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
+      SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      AXIS: ${{ github.event.inputs.axis || 'governance' }}
+      GRADE: ${{ github.event.inputs.grade || '8' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: master }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: fetch public inputs (hub-queue + frozen bank) — public HF, no token needed
+        run: |
+          set -euo pipefail
+          mkdir -p mill-in/banks mill-out
+          curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o mill-in/queue.jsonl
+          curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${AXIS}/resolve/main/gspc-${AXIS}.jsonl" -o "mill-in/banks/${AXIS}.jsonl" \
+            || curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${AXIS}/resolve/main/bank.jsonl" -o "mill-in/banks/${AXIS}.jsonl" \
+            || { echo "no public bank for ${AXIS} — UNMEASURED, exiting clean"; exit 0; }
+          wc -l mill-in/queue.jsonl "mill-in/banks/${AXIS}.jsonl"
+      - name: keys present? (fail closed, never fake)
+        id: keys
+        run: |
+          n=0; for k in GROQ_API_KEY GEMINI_API_KEY NVIDIA_API_KEY CEREBRAS_API_KEY TOGETHER_API_KEY MISTRAL_API_KEY SAMBANOVA_API_KEY OPENROUTER_API_KEY HF_INFERENCE_TOKEN; do [ -n "${!k:-}" ] && n=$((n+1)); done
+          echo "providers_with_keys=$n"; echo "n=$n" >> "$GITHUB_OUTPUT"
+          [ "$n" -gt 0 ] || echo "NO PROVIDER KEYS — staging nothing (add secrets by name; see issue #1102)"
+      - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
+        if: steps.keys.outputs.n != '0'
+        run: |
+          set -euo pipefail
+          python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 2>&1 | tail -40
+      - name: upload staged cards (not a board rewrite)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with: { name: hub-queue-mill-${{ github.run_id }}, path: mill-out, if-no-files-found: warn }
