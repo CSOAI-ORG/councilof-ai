@@ -1,4 +1,6 @@
-import type { RefObject } from "react";
+import sys
+
+content = """import type { RefObject } from "react";
 import { useState } from "react";
 import { MEASURE_CHAT, TYPE, TONE, SURFACE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
@@ -138,3 +140,7 @@ export default function LobbyThread({
     </div>
   );
 }
+"""
+
+with open("client/src/components/lobby/LobbyThread.tsx", "w") as f:
+    f.write(content)

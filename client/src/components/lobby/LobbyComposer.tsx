@@ -110,7 +110,7 @@ export default function LobbyComposer({
   }
 
   return (
-    <div className="relative shrink-0 border-t border-slate-900/10 bg-white/85 px-4 py-3 sm:px-6">
+    <div className="relative shrink-0 bg-white/85 backdrop-blur-xl px-4 py-3 sm:px-6 border-t border-white/60 shadow-[0_-12px_32px_-14px_rgba(15,23,42,0.1)]">
       {seeded && (
         <p
           role="status"
@@ -133,9 +133,9 @@ export default function LobbyComposer({
                 submit();
               }
             }}
-            aria-label="Ask the Council, or name a pane to open"
+            aria-label="Message Antigravity OS"
             aria-describedby="coai-lobby-chat-note"
-            placeholder='Ask the Council — or say "show the board"'
+            placeholder='Message Antigravity OS — or hit /probe'
             className="max-h-28 min-h-[2.75rem] w-full resize-none rounded-xl border border-slate-900/15 bg-white px-4 py-2.5 text-[15px] leading-snug text-slate-900 placeholder-slate-500 shadow-inner transition outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/30 motion-reduce:transition-none"
           />
         </div>

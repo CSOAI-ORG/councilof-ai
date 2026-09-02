@@ -347,7 +347,7 @@ export function Header() {
                                   {subItem.section}
                                 </div>
                               )}
-                              <a
+                              <Link
                                 href={subItem.href}
                                 target={subItem.external ? '_blank' : undefined}
                                 rel={subItem.external ? 'noreferrer' : undefined}
@@ -365,19 +365,19 @@ export function Header() {
                                 <div className="text-xs text-muted-foreground mt-0.5">
                                   {subItem.description}
                                 </div>
-                              </a>
+                              </Link>
                             </div>
                           ))}
                         </div>
                         {/* Footer Link */}
                         <div className="px-4 py-2 bg-muted border-t border-border">
-                          <a
+                          <Link
                             href={item.href}
                             className="text-xs text-emerald-600 hover:text-emerald-700 font-medium"
                             onClick={() => setActiveDropdown(null)}
                           >
                             View all {item.name.toLowerCase()} &rarr;
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -520,7 +520,7 @@ export function Header() {
 
               {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
-                  <a
+                  <Link
                     href={item.href}
                     className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium ${
                       isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
@@ -529,7 +529,7 @@ export function Header() {
                   >
                     <item.icon className="h-5 w-5 text-emerald-600" />
                     {item.name}
-                  </a>
+                  </Link>
                   <div className="ml-12 space-y-1">
                     {item.submenu.map((subItem) => (
                       <div key={subItem.href + subItem.name}>
