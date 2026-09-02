@@ -271,6 +271,14 @@ export const onRequestGet: PagesFunction = async (context) => {
       "unparsed_rate is the share of responses no label could be read from — reported " +
       "as UNMEASURED, never scored as a wrong answer. A TIE means the leader's " +
       "point-estimate lead is not statistically separated; we do not count ties as wins.",
+    // Playbook T2 (2 Sep 2026): serve the closed state vocabularies so no client hardcodes them.
+    state_enum: {
+      status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
+      separation: ["SEPARATED", "TIE", "UNTESTED"],
+      public_leader_state: ["PUBLIC", "EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+      verification: ["VALID", "INVALID", "UNCHECKABLE"],
+      note: "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.",
+    },
     totals: (() => {
       const m = selected.filter((a) => a.status === "MEASURED");
       const cmp = m.filter((a) => a.kind === "model-comparison");
