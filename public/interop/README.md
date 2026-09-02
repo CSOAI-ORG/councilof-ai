@@ -12,8 +12,9 @@ root-as-index. Not a second board, second scorer, or TS.
 
 | Bank | Path | Surface | Role |
 | --- | --- | --- | --- |
-| OpenAI↔HF Jul 2026 incident | [`incident-openai-hf-2026-07/`](./incident-openai-hf-2026-07/) | `public.notice` | Hashed public reports only — DISCOVERED; **not** recomputed; unsigned |
-| XRPL toml gap (strict_two_way_toml) | [`xrpl-toml-gap-2026-09/`](./xrpl-toml-gap-2026-09/) | `public.notice` | 12/16 issuers still listing failed check — DISCOVERED; **not** bidirectional; unsigned |
+| OpenAI↔HF Jul 2026 incident | [`incident-openai-hf-2026-07/`](./incident-openai-hf-2026-07/) (alias [`incident-openai-hf/`](./incident-openai-hf/)) | `public.notice` | Hashed public reports only — DISCOVERED; **not** recomputed; unsigned |
+| XRPL toml gap (strict_two_way_toml) | [`xrpl-toml-gap-2026-09/`](./xrpl-toml-gap-2026-09/) (alias [`xrpl-toml-gap/`](./xrpl-toml-gap/)) | `public.notice` | 12/16 issuers still listing failed check — DISCOVERED; **not** bidirectional; unsigned |
+| SWIFT 26 census | [`swift-census-2026-09/`](./swift-census-2026-09/) (alias [`swift-census/`](./swift-census/)) | `public.notice` | Unsigned bank cards; live authority [`GET /api/swift`](https://councilof.ai/api/swift) — **not** MEASURED |
 | x402 challenge | [`x402-challenge/`](./x402-challenge/) | `cedulon.recon` | Live HTTP 402 probe; `settlement` stays **UNCHECKABLE** |
 | Cedulon / Abak | [`cedulon-recon/`](./cedulon-recon/) | `cedulon.recon` | Peer conservation fixtures as unsigned bank input |
 | SCRAPI / CCF | [`scrapi-ccf/`](./scrapi-ccf/) | `eval.delta` | Public MS + ASG receipt fixtures — consumer only, not a TS |
