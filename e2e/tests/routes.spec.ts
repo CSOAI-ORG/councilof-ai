@@ -67,7 +67,9 @@ test.describe('Homepage', () => {
     // "Measured, not modelled." copy and "Describe an AI system" kicker were
     // removed. "Verify a card" appears multiple times (hero + body + footer),
     // so we use .first() to disambiguate.
-    await expect(page.locator('h1').first()).toContainText(/Council of AI/);
+    // 2026-09-02 canon (HomeVerify): the h1 is "Check a claim. Measure a system." and the
+    // hero CTA pair is Verify a card / the Dashboard board tab.
+    await expect(page.locator('h1').first()).toContainText(/Check a claim/);
     await expect(page.locator('text=Verify a card').first()).toBeVisible();
   });
 
@@ -77,23 +79,32 @@ test.describe('Homepage', () => {
     // gone in the Council OS redesign ("Sovereign" no longer appears anywhere on
     // the homepage). The Honest Board cites live totals.public_count —
     // "14 measured of 14" as of 2026-08-25 (jail MEASURED · separation TIE).
-    await expect(page.getByTestId('live-strip')).toBeVisible();
+    // 2026-09-02: the home board IS the living Hugging Face Space (HomeGspcBoard embeds it and
+    // quotes GET /api/gspc beside it). The old `live-strip` testid no longer exists.
+    await expect(page.locator('iframe[src*=".hf.space"]')).toHaveCount(1);
+    await expect(page.locator('a[href="/api/gspc"]').first()).toBeAttached();
   });
 
   test('CTA banners render', async ({ page }) => {
     // The previous "Now Live" / "100% Free Training" banners were removed in the
     // 2026-08-01 hero cleanup (TUI-3). Assert the two focused CTAs that replaced them.
     await expect(page.locator('text=Verify a card').first()).toBeVisible();
-    await expect(page.locator('text=Open the board').first()).toBeVisible();
+    // The board CTA is a direct Dashboard door (owner ruling 2 Sep: the Dashboard IS Council OS).
+    await expect(page.locator('a[href="/dashboard?tab=board"]').first()).toBeAttached();
   });
 
   test('navigation bar has all sections', async ({ page }) => {
     // The pre-2026-08-01 nav had ~70 sub-items; the 2026-08-01 cleanup trimmed
     // it to ~45 items, and the Council OS redesign further trimmed the top
     // level. Current top-level nav items: Home, Measure, Regulation, Solutions,
-    const navItems = ['Board', 'Verify', 'OS', 'Pack', 'Company'];
+    // 2026-09-02 desktop (xl+) top level: Measure · Products · Regulation · Evidence · Company
+    // dropdowns plus the Council OS door. (Board / Verify / Get measured are the compact
+    // below-xl quick links, hidden at desktop width — Header.tsx `xl:hidden`.)
+    const navItems = ['Measure', 'Products', 'Regulation', 'Evidence', 'Company', 'Council OS'];
+    await page.setViewportSize({ width: 1440, height: 900 });
     for (const item of navItems) {
-      await expect(page.locator(`nav >> text=${item}`).first()).toBeVisible();
+      // Labels also exist in the closed mobile drawer, so ask for a VISIBLE control.
+      await expect(page.locator('nav :is(a,button):visible', { hasText: item }).first()).toBeVisible();
     }
   });
 
@@ -102,11 +113,13 @@ test.describe('Homepage', () => {
     await page.waitForTimeout(1000);
     await expect(page.locator('footer')).toBeVisible();
     // header + footer both render these; we only assert the footer copy once
-    await expect(page.locator('footer >> text=Privacy Policy').first()).toBeVisible();
-    await expect(page.locator('footer >> text=Terms of Service').first()).toBeVisible();
+    await expect(page.locator('footer >> text=Privacy').first()).toBeVisible();
+    await expect(page.locator('footer >> text=Terms').first()).toBeVisible();
   });
 
   test('no console errors on homepage', async ({ page }) => {
+    // The living board is a third-party frame; a defect in its script is not a defect in this page.
+    await page.route(/hf\.space/, r => r.abort());
     const errors: string[] = [];
     page.on('console', msg => { if (msg.type() === 'error') errors.push(msg.text()); });
     await page.goto('/', { waitUntil: 'networkidle' });

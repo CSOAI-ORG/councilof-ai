@@ -109,11 +109,13 @@ export default function LobbyEvidencePane({
   /** axis -> included. Seeded once, from the board, to every quotable+determined axis. */
   const [picked, setPicked] = useState<Record<string, boolean> | null>(null);
 
-  const axis = wire.phase === "ready" ? wire.board.axes : [];
+  // Was `const axis = …` while every reader below said `axes` — a ReferenceError that took the
+  // whole Evidence pack pane down to the error boundary (Council OS overlay and Dashboard alike).
+  const axes = wire.phase === "ready" ? wire.board.axes : [];
   const selection = useMemo<Record<string, boolean>>(() => {
     if (picked) return picked;
     const seed: Record<string, boolean> = {};
-    for (const a of axis) seed[a.axis] = quotableWire(a) && determined(a);
+    for (const a of axes) seed[a.axis] = quotableWire(a) && determined(a);
     return seed;
   }, [picked, axes]);
 

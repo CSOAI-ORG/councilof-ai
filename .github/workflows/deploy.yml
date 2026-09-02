@@ -58,6 +58,15 @@ jobs:
       - name: Build client
         run: npm run build:client
 
+      # Council OS shell smoke — every /dashboard?tab= door renders its own pane inside the
+      # shell with no uncaught exception, at desktop and phone widths, against the build that
+      # is about to ship. Runs BEFORE the 20-minute prerender so a broken shell fails in a
+      # minute, not after it. e2e/tests/dashboard-shell.spec.ts asserts structure, never a number.
+      - name: Council OS shell smoke (e2e/tests/dashboard-shell.spec.ts)
+        run: |
+          npx playwright install --with-deps chromium
+          npm run test:e2e:shell
+
       - name: Prerender all routes
         run: |
           npx playwright install --with-deps chromium

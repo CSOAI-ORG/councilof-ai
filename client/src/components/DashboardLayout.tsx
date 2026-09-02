@@ -19,10 +19,16 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
 import { DASHBOARD_TABS } from "@/components/lobby/tabs";
-import DashboardPane from "@/components/DashboardPane";
+import DashboardPane, { paneLabel, resolvePaneId } from "@/components/DashboardPane";
 import { useSearch as useTabSearch } from "wouter";
 import { dashboardCrumbs } from "@/components/lobby/breadcrumbs";
-import { openLobby } from "@/lib/lobbyLink";
+
+/** Route crumbs, plus the open pane as the current crumb when a tab is selected. */
+function crumbsFor(location: string, paneCrumbLabel: string | null) {
+  const base = dashboardCrumbs(location);
+  if (!paneCrumbLabel) return base;
+  return [...base.map((c) => (c.current ? { ...c, current: false, path: c.path ?? "/dashboard" } : c)), { label: paneCrumbLabel, current: true }];
+}
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -47,6 +53,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
   const { theme, toggleTheme } = useTheme();
+  // Every hook runs before the framed early-return below — React's hook order must
+  // not depend on a render-time branch.
+  const tabSearch = useTabSearch();
   const framed = isEmbedded();
 
   if (framed) {
@@ -58,10 +67,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   const current = DASHBOARD_TABS.find((t) => t.path && location.startsWith(t.path));
-  const tabSearch = useTabSearch();
-  const activeTab = new URLSearchParams(tabSearch.startsWith("?") ? tabSearch.slice(1) : tabSearch).get("tab") || "home";
+  const rawTab = new URLSearchParams(tabSearch.startsWith("?") ? tabSearch.slice(1) : tabSearch).get("tab") || "home";
+  const activeTab = resolvePaneId(rawTab);
   // Council OS = this shell. A tab renders its pane HERE; it never navigates out to the site.
-  const pane = activeTab !== "home" && activeTab !== "software" ? <DashboardPane id={activeTab} /> : null;
+  const pane = activeTab !== "home" && activeTab !== "software" ? <DashboardPane id={rawTab} /> : null;
+  // The header trail names the pane that is open: "Council OS › Live board". A pane id nothing
+  // owns is printed as typed, so the crumb never pretends an unknown door exists.
+  const paneCrumbLabel = pane ? (paneLabel(rawTab) ?? rawTab) : null;
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -112,13 +124,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               </Link>
             );
           })}
-          <button
-            type="button"
-            onClick={() => { window.location.assign("/dashboard?tab=home"); }}
-            className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+          <Link
+            href="/dashboard?tab=home"
+            onClick={() => { if (isSmall) setSidebarCollapsed(true); }}
+            className={cn(
+              "mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors",
+              activeTab === "home" ? "bg-accent text-foreground font-medium" : "text-muted-foreground hover:bg-accent hover:text-foreground",
+            )}
           >
-            Chat
-          </button>
+            Overview
+          </Link>
         </nav>
       </motion.aside>
       {isSmall && !sidebarCollapsed && (
@@ -153,7 +168,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 and the current one is text. The sidebar tab's label names the
                 current destination when it owns this exact route. */}
             <nav aria-label="You are here" className="flex min-w-0 items-center gap-1 text-sm">
-              {dashboardCrumbs(location).map((c, i, all) => {
+              {crumbsFor(location, paneCrumbLabel).map((c, i, all) => {
                 const label =
                   c.current && current?.path && location.startsWith(current.path) && i === all.length - 1 && current.path === location
                     ? current.label
@@ -213,7 +228,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           >
             {pane ?? children}
             {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold. */}
-            <p className="mt-6 text-xs text-muted-foreground" data-testid="free-rail">
+            <p className="mt-6 px-6 pb-6 text-xs text-muted-foreground" data-testid="free-rail">
               Verify is free. A grade is never sold. No public prices — measurement, not certification.
             </p>
           </motion.div>

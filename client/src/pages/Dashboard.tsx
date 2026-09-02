@@ -159,14 +159,14 @@ export default function Dashboard() {
     <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
             <p className="text-muted-foreground text-sm">
               Your Council OS — governance across every framework, signed to Layer 0
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline"
               size="sm"

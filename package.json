@@ -25,6 +25,7 @@
     "test:planned-ready": "node --test council-os/planned-ready.lock.test.mjs council-os/embed-escape.node-test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:shell": "playwright test --config e2e/playwright.shell.config.ts",
     "test:cypress": "cypress run",
     "test:cypress:open": "cypress open",
     "test:pre-deploy": "npx vite preview --config client/vite.config.ts --port 4173 --strictPort & PREVIEW_PID=$!; sleep 3; BASE_URL=http://localhost:4173 npx playwright test --config e2e/playwright.config.ts e2e/tests/pre-deploy-smoke.spec.ts --project=chromium --reporter=line; RC=$?; kill $PREVIEW_PID 2>/dev/null; wait $PREVIEW_PID 2>/dev/null; exit $RC",

@@ -177,6 +177,7 @@ export default function Benchmarks() {
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
         <div className="container max-w-6xl">
           <img
+            data-pane-hide=""
             src="/images/detail/board_arena_detail.jpg"
             alt="The measurement estate — six surfaces, one signed foundation"
             className="mb-8 h-44 w-full rounded-2xl object-cover sm:h-56"

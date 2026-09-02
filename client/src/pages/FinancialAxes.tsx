@@ -226,14 +226,19 @@ export default function FinancialAxes() {
                               </td>
                               <td className="py-2 px-3 font-mono text-xs text-gray-500">{m.control_facts.as_of}</td>
                               <td className="py-2 pl-3">
-                                <a
-                                  className="font-mono text-xs text-emerald-700 underline"
-                                  href={m.explorer}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {m.devnet_tx.slice(0, 10)}…
-                                </a>
+                                {/* A row with no tx recorded used to throw here (undefined.slice) and take the whole page down. */}
+                                {m.devnet_tx && m.explorer ? (
+                                  <a
+                                    className="font-mono text-xs text-emerald-700 underline"
+                                    href={m.explorer}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    {m.devnet_tx.slice(0, 10)}…
+                                  </a>
+                                ) : (
+                                  <span className="font-mono text-xs text-gray-500">no tx recorded</span>
+                                )}
                               </td>
                             </tr>
                           ))}

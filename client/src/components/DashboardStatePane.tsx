@@ -6,7 +6,7 @@ const XrplReaderRail = lazy(() => import("@/components/gspc/XrplReaderRail"));
 export default function DashboardStatePane() {
   return (
     <Suspense fallback={<div className="p-6 text-sm text-muted-foreground">Loading state…</div>}>
-      <div className="space-y-6" data-testid="dashboard-pane-state-body">
+      <div className="space-y-6 p-6" data-testid="dashboard-pane-state-body">
         <p className="text-sm text-muted-foreground">Readers and doors, probed on this load. They write nothing onto the board — quote <code>GET /api/gspc</code> for scores.</p>
         <XrplReaderRail />
         <EstateDoors />
