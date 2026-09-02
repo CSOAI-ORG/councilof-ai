@@ -12,6 +12,18 @@ CSOAI Ltd · 2026-09-01 · every row below was verified in bytes on this date (b
 | XRPL reader | **READER ONLY.** `GET /api/xrpl` serves 16 live instruments (`xrpl_fi_assetCount=16` echoed in the root envelope). `writes_board=false` — the reader never writes the board. | root envelope fields; live lid doctrine. |
 | Board counts | **LIVE FROM API.** `GET /api/gspc` → `public_count` "22 axis · 22 measured", composed of 14 `model-comparison` + 8 `deterministic-facts` axes (derived from the payload's `axes[].kind`, never typed). Quote the composition, never a bare 22/22. | payload fetched; kinds counted. |
 
+
+
+### B1 LIVE 2026-09-02 (existence/time witnesses — not certification)
+
+| witness | state | locator |
+|---|---|---|
+| OpenTimestamps of signed `root.json` | **STAMPED** (PendingAttestation; Bitcoin upgrade later) | `public/interop/root-2026-09-02.json.ots` · root sha256 `61a6d86d…c94bd6` · card_count 50 |
+| Sigstore Rekor (`rekord` + SSH Ed25519 witness key) | **INCLUDED** | UUID [`108e9186e8c5677aebb3ebde460b76fde571d1c0fdab0bbfd5524abcfa8fecacbc336690962e10fa`](https://rekor.sigstore.dev/api/v1/log/entries/108e9186e8c5677aebb3ebde460b76fde571d1c0fdab0bbfd5524abcfa8fecacbc336690962e10fa) · logIndex 2683310457 · index [`public/interop/root-witness-2026-09-02.json`](../public/interop/root-witness-2026-09-02.json) |
+| XRPL memo of 32-byte merkle root | **UNCHECKABLE** this run | need existing XRPL account in estate; not asked; no token minted |
+
+See also `docs/ROOT_WITNESS_B1_2026-09-02.md`. Items below remain planned where not superseded.
+
 ## 2. What the signed root ANCHORS NEXT (planned, in order — none claimed until the bytes exist)
 
 1. **OpenTimestamps → Bitcoin** of the signed `root.json` (the SCITT time-anchor pattern). Per the standing correction, `timestamp_authority` was "none" and OTS/RFC-3161 anchoring was publicly corrected as not-yet-real — it stays PLANNED until an actual `.ots` proof for the signed root exists and is published. One OTS stamp of one signed root time-anchors every leaf under its merkle root at once.
