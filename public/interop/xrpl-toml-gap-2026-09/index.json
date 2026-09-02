@@ -1,0 +1,157 @@
+{
+  "schema": "csoai.xrpl-toml-gap-index/0.1",
+  "pack": "xrpl-toml-gap-2026-09",
+  "as_of": "2026-09-02T04:40:00Z",
+  "fetched_at": "2026-09-02T04:36:44Z",
+  "honest_sentence": "strict_two_way_toml named as the failed check. Not a bidirectional domain match. DISCOVERED only.",
+  "writes_board": false,
+  "status": "DISCOVERED",
+  "roster_probe": {
+    "url": "https://councilof.ai/api/xrpl",
+    "as_of": "2026-09-01T23:15:51Z",
+    "n": 16,
+    "still_listing_strict_two_way_toml": 12,
+    "symbols": [
+      "EURCV",
+      "USD.bs",
+      "EUR.bs",
+      "USD.gh",
+      "USDC",
+      "EUR.gh",
+      "EURQ",
+      "USDQ",
+      "EURØP",
+      "XAU.gh",
+      "GBP.gh",
+      "PSC"
+    ],
+    "pass_no_gap": [
+      "RLUSD",
+      "OUSG",
+      "USDB",
+      "BBRL"
+    ]
+  },
+  "cards": [
+    {
+      "issuer": "Circle",
+      "slug": "circle-usdc",
+      "path": "card-circle-usdc-public-notice-unsigned.json",
+      "sha256": "dde95d4af9b6e4101939022378fffc8a37304c718ab0c4b1c26f774cbc747e40",
+      "symbols": [
+        "USDC"
+      ],
+      "two_way_state": "UNCHECKABLE",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "GateHub",
+      "slug": "gatehub",
+      "path": "card-gatehub-public-notice-unsigned.json",
+      "sha256": "84b3c4c3e4437f58eced75740ea32e94c13f9e9cea236eca30ff633590b1e99b",
+      "symbols": [
+        "USD.gh",
+        "EUR.gh",
+        "XAU.gh",
+        "GBP.gh"
+      ],
+      "two_way_state": "FAIL",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "Bitstamp",
+      "slug": "bitstamp",
+      "path": "card-bitstamp-public-notice-unsigned.json",
+      "sha256": "9f51e88085532a7de5a8a3588ebbbfb4d84f999517aadf26edd87c9d8f5aebc3",
+      "symbols": [
+        "USD.bs",
+        "EUR.bs"
+      ],
+      "two_way_state": "UNCHECKABLE",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "Société Générale-FORGE",
+      "slug": "socgen-forge-eurcv",
+      "path": "card-socgen-forge-eurcv-public-notice-unsigned.json",
+      "sha256": "5d35b8a131881d7276a4600835703fe3f17d42382260c91e2a23674d324658b3",
+      "symbols": [
+        "EURCV"
+      ],
+      "two_way_state": "FAIL",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "Schuman Financial",
+      "slug": "schuman-europ",
+      "path": "card-schuman-europ-public-notice-unsigned.json",
+      "sha256": "721e4b4264b1cf510cf47b2b909e811d3d13190bad3754facef5db11f6a5bdcc",
+      "symbols": [
+        "EURØP"
+      ],
+      "two_way_state": "FAIL",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "Republic of Palau",
+      "slug": "palau-psc",
+      "path": "card-palau-psc-public-notice-unsigned.json",
+      "sha256": "5d85c4a4ce29020f25324ebbbc09bfcaa25a537048e31bec08ab4482ac8267f8",
+      "symbols": [
+        "PSC"
+      ],
+      "two_way_state": "FAIL",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    },
+    {
+      "issuer": "Quantoz",
+      "slug": "quantoz",
+      "path": "card-quantoz-public-notice-unsigned.json",
+      "sha256": "bcb60e01fe783ea80bd796e6b36ff3d6aa90e859f8be734a9175a5a4dde37f40",
+      "symbols": [
+        "EURQ",
+        "USDQ"
+      ],
+      "two_way_state": "FAIL",
+      "axes_cite": [
+        "provenance-controls"
+      ]
+    }
+  ],
+  "manifest": "artefact-manifest.json",
+  "uncheckable": [
+    {
+      "item": "circle/bitstamp/quantoz xrp-ledger.toml",
+      "reason": "HTTP 404 at on-ledger Domain /.well-known/xrp-ledger.toml — two-way UNCHECKABLE, never FAIL."
+    },
+    {
+      "item": "forge.societegenerale.com xrp-ledger.toml",
+      "reason": "TLS handshake failure on fetch — UNCHECKABLE."
+    },
+    {
+      "item": "psc.gov.pw",
+      "reason": "DNS NXDOMAIN — UNCHECKABLE hostname."
+    },
+    {
+      "item": "eas_base_attestation_of_root_sha",
+      "reason": "Estate EAS signer key is owner-gated; no new keys / no Nick funding this turn."
+    },
+    {
+      "item": "keystone signature",
+      "reason": "sig_ed25519=null until keystone. Quantoz reader assets also still NO_LAPTOP_SIGN."
+    }
+  ],
+  "signed_note": "UNSIGNED only. SIGNED needs keystone. Do not stamp GSPC axis MEASURED from this. Do not claim bidirectional domain match."
+}
