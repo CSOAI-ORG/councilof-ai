@@ -51,6 +51,11 @@ const LEDGER = {
       fix:
         "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled do-not-file. Re-signing that 38KB file is an owner MPC ceremony — the Pages /api/board-sign path is a 3KB card-sign and cannot carry the snapshot.",
       status: "CORRECTED — live 22/22 is the quotable count; snapshot 15/7 is historical pending owner MPC re-sign",
+        "The published verification rule (/signed/HOW-TO-VERIFY.md and HOW-TO-VERIFY-ROOT.md) did not state that a verifying signature says nothing about whether the signing key is still valid. A reader verifying with yesterday's trust anchor would get the same VALID verdict after a revocation this morning, and nothing in the text said so.",
+      how_caught: "IETF agentproto list, 31 Aug–2 Sep 2026: an objection to the offline-verification sentence in a proposed charter amendment (offline verification is a computation over the past; revocation is a fact about the present). CSOAI committed on the list to add the sentence and note the correction.",
+      fix:
+        "Both rules now carry a section stating what a verifying signature does not establish, that no revocation mechanism or key-freshness requirement is defined here, that a consumer must not treat a verifying signature as evidence the key is still valid, and that key-resolution path and accepted staleness are deployment parameters the card does not carry.",
+      status: "CORRECTED — rule amended; second unstated property caught by that thread (the first was a signed flag with no signature bytes behind it)",
     },
     {
       id: "C-2026-0902-07",
