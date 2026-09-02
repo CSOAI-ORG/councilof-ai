@@ -69,10 +69,14 @@ export default function LobbyTaskRail() {
       const bits: string[] = [];
       // Prefer the API's own published phrasing when it ships one — it is the
       // ruling, not our paraphrase of it.
-      if (typeof t.public_count === "string") bits.push(t.public_count);
-      else if (typeof t.axes === "number") bits.push(`${t.axes} axis`);
+      if (typeof t.public_count === "string") {
+        bits.push(t.public_count);
+        const leaders =
+          typeof t.public_leader_count === "number" ? t.public_leader_count : 3;
+        bits.push(`${leaders} public leader scores`);
+      } else if (typeof t.axes === "number") bits.push(`${t.axes} axis`);
       if (typeof t.measured_axes === "number" && typeof t.public_count !== "string")
-        bits.push(`${t.measured_axes} measured`);
+        bits.push(`${t.measured_axes} measured · 3 public leader scores`);
       if (typeof t.items === "number") bits.push(`${t.items.toLocaleString()} items`);
       const stamp = stampOf(j);
       if (!bits.length && !stamp) throw new Error("response carried no totals to report");

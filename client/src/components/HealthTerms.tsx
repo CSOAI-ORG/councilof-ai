@@ -15,6 +15,8 @@ export default function HealthTerms({ tone = "dark" }: { tone?: "dark" | "light"
           measured_axes: board.measured_axes,
           unmeasured_axes: board.unmeasured_axes,
           public_count: board.public_count,
+          public_leader_count: board.public_leader_count,
+          lid: board.lid,
         })
       : HEALTH_VOICE;
   const dark = tone === "dark";

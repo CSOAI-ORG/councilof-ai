@@ -65,6 +65,10 @@ export interface BoardCount {
   unmeasured_axes: number;
   /** The short sentence a surface quotes, e.g. "22 axis · 22 measured". */
   public_count: string;
+  /** Carded external public leaders only (BLUEPRINT A1). Not equal to measured_axes. */
+  public_leader_count: number | null;
+  /** Full lid sentence from GET /api/gspc totals.lid when present. */
+  lid: string | null;
   /** The long sentence that explains why both numbers are printed. */
   count_grammar: string;
   /** The behavioural (GSPC) half, when the board publishes the breakdown. */
@@ -104,6 +108,8 @@ export const BOARD_COUNT_OBSERVED: BoardCount = {
     typeof observed.value === "string" && observed.value.trim()
       ? observed.value
       : publicCountSentence(Number(observed.axes) || 0, Number(observed.measured_axes) || 0),
+  public_leader_count: null,
+  lid: null,
   count_grammar: grammarSentence(
     Number(observed.axes) || 0,
     Number(observed.measured_axes) || 0,
@@ -148,6 +154,9 @@ export function boardCountFromPayload(payload: any): BoardCount | null {
       typeof t.public_count === "string" && t.public_count.trim()
         ? t.public_count
         : publicCountSentence(t.axes, t.measured_axes),
+    public_leader_count:
+      typeof t.public_leader_count === "number" ? t.public_leader_count : null,
+    lid: typeof t.lid === "string" && t.lid.trim() ? t.lid.trim() : null,
     count_grammar:
       typeof t.count_grammar === "string" && t.count_grammar.trim()
         ? t.count_grammar

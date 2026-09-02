@@ -61,6 +61,10 @@ export interface GspcTotals {
   measured_axes?: number;
   quotable_axes?: number;
   public_count?: string;
+  /** Carded external public leaders only — not equal to measured_axes (BLUEPRINT A1). */
+  public_leader_count?: number;
+  /** Lid sentence: measured · fleets · public leaders · fact runs · not a certificate. */
+  lid?: string;
   separated_leads?: number;
   ties?: number;
   untested_separations?: number;
@@ -174,9 +178,20 @@ export function orderedRows(data: GspcPayload | null): GspcAxis[] {
 export function countLine(data: GspcPayload | null): string | null {
   const t = data?.totals;
   if (!t) return null;
-  if (typeof t.public_count === "string" && t.public_count.trim()) return t.public_count;
+  if (typeof t.lid === "string" && t.lid.trim()) return t.lid.trim();
+  if (typeof t.public_count === "string" && t.public_count.trim()) {
+    const base = t.public_count.trim();
+    if (typeof t.public_leader_count === "number") {
+      return `${base} · ${t.public_leader_count} public leader scores`;
+    }
+    return base;
+  }
   if (typeof t.measured_axes === "number" && typeof t.axes === "number") {
-    return `${t.measured_axes} measured of ${t.axes}`;
+    const base = `${t.measured_axes} measured of ${t.axes}`;
+    if (typeof t.public_leader_count === "number") {
+      return `${base} · ${t.public_leader_count} public leader scores`;
+    }
+    return base;
   }
   return null;
 }

@@ -31,6 +31,10 @@ import { useEffect, useState } from "react";
  * it carries both numbers in one string ("22 axis · 22 measured"); rebuilding
  * that sentence here would put the grammar of the count back in a component's
  * hands, which is exactly the failure /api/state exists to end.
+ *
+ * BLUEPRINT 02Sep2026 §2.3 / BLOCK A1: chrome that prints public_count MUST also
+ * carry the 3-public-leader-scores clause (or totals.lid from GET /api/gspc).
+ * Measured axes ≠ public leader scores. Do not invent leaders for withheld axes.
  */
 
 export type FactKind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";

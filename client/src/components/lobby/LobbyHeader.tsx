@@ -405,6 +405,8 @@ export default function LobbyHeader({
  * carrying its own provenance in `title`: the kind, the source file and the
  * `as_of` the endpoint read out of that file.
  *
+ * The board readout quotes `board.public_count` verbatim, then appends the A1 lid
+ * clause (3 public leader scores) so bare "22 measured" never stands alone.
  * The board readout quotes `board.public_count` verbatim. That string carries the
  * slot count and the measured count together, and the endpoint publishes it for
  * that reason: the slot number alone is not a measurement, and quoting it alone
@@ -415,6 +417,10 @@ export default function LobbyHeader({
  * answered, the other has no endpoint and has never been contacted — and adding
  * across kinds is how a fleet of one reachable server got published as 378.
  * ───────────────────────────────────────────────────────────────────────────── */
+
+// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — never print bare "22 measured" without leaders.
+const BOARD_LID =
+  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
 
 function LiveStateBar({
   live,
@@ -457,11 +463,17 @@ function LiveStateBar({
     <span className="flex w-full min-w-0 items-center gap-1.5 overflow-x-auto pb-0.5 sm:w-auto sm:flex-wrap sm:overflow-x-visible sm:pb-0">
       <Readout
         label="Board"
-        value={quote(board.publicCount)}
+        value={
+          quotable(board.publicCount)
+            ? `${quote(board.publicCount)} · 3 public leader scores`
+            : quote(board.publicCount)
+        }
         ok={quotable(board.publicCount)}
         title={
           (grammar !== UNMEASURED ? `${grammar}\n\n` : "") +
           provenance(board.publicCount) +
+          "\n\nLid: " +
+          BOARD_LID +
           "\n\nOpens the living board."
         }
         onClick={() => onOpenHit({ tab: tabOf("board"), label: "Live board" })}

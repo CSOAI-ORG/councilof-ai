@@ -356,6 +356,13 @@ export const onRequestGet: PagesFunction = async (context) => {
         // Our own tuned council specialists are removed from the PUBLIC leader slots. These
         // counts make the effect explicit and are DERIVED from the axis array, never typed.
         externally_led_axes: externallyLedAxes.length,
+        // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — public leaders ≠ measured axes.
+        // Same derivation as externally_led_axes (carded external leaders only).
+        // Keep measured_axes unchanged; do not invent leaders for withheld axes.
+        public_leader_count: externallyLedAxes.length,
+        lid:
+          `${measured} axes measured · ${cmp.length} model fleets · ${externallyLedAxes.length} public leader scores · ` +
+          `${bySelectedFamily("financial").measured} fact runs · TIE is TIE · not a certificate.`,
         own_leaders_excluded: ownLedExcludedAxes.length,
         own_leaders_excluded_axes: ownLedExcludedAxes,
         own_model_exclusion_note:

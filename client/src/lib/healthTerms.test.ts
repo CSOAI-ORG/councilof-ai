@@ -27,6 +27,8 @@ describe("Health terms we can borrow", () => {
     });
     expect(liveVoice).toMatch(/22 of 22 systems examined/);
     expect(liveVoice).toMatch(/22 axis · 22 measured/);
+    expect(liveVoice).toMatch(/3 public leader scores/);
+    expect(HEALTH_VOICE).toMatch(/3 public leader scores/);
     expect(liveVoice).toMatch(/No systems deferred/);
     expect(liveVoice).not.toMatch(/Seven deferred|7 unmeasured|15 of 22/i);
     expect(GSPC_HEALTH_PITCH).toMatch(/open-source systems and AI models/);
