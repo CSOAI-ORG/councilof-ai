@@ -170,6 +170,29 @@ export const SKUS: Record<string, Sku> = {
       "owner invoices; the Function only issues the reference. Never a compliance conclusion.",
   },
 
+  // SKU — Witness a digest (attest what you're shown). Existence of a SHA-256 at a time: one
+  // public.notice leaf in the next hourly signed root + an RFC-3161 timestamp + the ONE root's
+  // free anchors (Rekor, OTS). Never the content; never a verdict on it.
+  witness_hash: {
+    id: "witness_hash",
+    name: "Witness a digest (attest what you're shown)",
+    artifact:
+      "one public.notice leaf (csoai.witness.hash/0.1) in the next hourly public root, Ed25519 under " +
+      "did:web:csoai.org#board-attestation-1, plus an RFC-3161 timestamp reply over the digest and the " +
+      "root's Rekor + OpenTimestamps anchors; queued in WITNESS_KV, read back free at /api/witness/status",
+    unit: "1 digest witnessed (1 sha256 × 1 fetched_at)",
+    sells: "independent-signature",
+    prices: {
+      per_digest: band(0.05, [0.02, 0.5], "X402_PRICE_WITNESS_USD"),
+    },
+    rail: "x402-or-invoice",
+    notes:
+      "Hash-only: buyer-supplied bytes are hashed and dropped; a URL is fetched once with our UA, " +
+      "robots.txt honoured, never past a login/paywall/bot check (UNCHECKABLE, no charge). Existence of " +
+      "the digest at the root's as_of — nothing about content, legality or provenance. A self-signed " +
+      "card carries no legal presumption. Invoice path for a human deal (owner-decision).",
+  },
+
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.
   enterprise_rail: {
     id: "enterprise_rail",

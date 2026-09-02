@@ -49,6 +49,11 @@ jobs:
           HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
           HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
           HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+          # Witness queue (/api/witness → WITNESS_KV) read over the KV REST API. All three
+          # absent/empty → the adapter yields no KV leaves and never halts the root.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WITNESS_KV_NAMESPACE_ID: ${{ vars.WITNESS_KV_NAMESPACE_ID }}
         run: |
           set -euo pipefail
           # GHA on master only: this workflow is not registered on pull_request.
@@ -73,6 +78,13 @@ jobs:
           set -euo pipefail
           npm i --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2 >/dev/null 2>&1 || echo "eas deps unavailable"
           node scripts/eas_attest_root.mjs || echo "EAS step did not attest (recorded honestly in eas-root-attestations.json)"
+      - name: mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WITNESS_KV_NAMESPACE_ID: ${{ vars.WITNESS_KV_NAMESPACE_ID }}
+        run: python scripts/adapters/witness_queue.py --mark
       - name: commit published tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
@@ -81,6 +93,7 @@ jobs:
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
           git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
+          git add public/interop/witness/*.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0

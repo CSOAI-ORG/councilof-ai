@@ -1,0 +1,109 @@
+{
+ "note": "Recorded shape of the Cloudflare KV REST API v4 (list keys + read value) for a witness queue with three entries: A queued+timestamped (url), B queued with a verdict word in its label (must be skipped), C queued with the TSA UNCHECKABLE. Values are entries exactly as functions/api/witness.ts writes them. The url field is a buyer secret: it must never reach a leaf or a mirror.",
+ "keys_page": {
+  "result": [
+   {
+    "name": "witness:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+   },
+   {
+    "name": "witness:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+   },
+   {
+    "name": "witness:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+   }
+  ],
+  "success": true,
+  "errors": [],
+  "messages": [],
+  "result_info": {
+   "count": 3,
+   "cursor": ""
+  }
+ },
+ "values": {
+  "witness:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa": {
+   "schema": "csoai.witness-entry/0.1",
+   "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "label": "release 1.2 tarball",
+   "url": "https://example.org/private-path?token=SECRET",
+   "url_hash": "1eeff7a0e5de260d4ea55450344f2b2cac2ba0d2e2fa10fcd579d690762618e5",
+   "fetched_at": "2026-09-02T08:00:00Z",
+   "http_status": 200,
+   "headers": {
+    "content-type": "text/plain"
+   },
+   "payment_ref": "0xaaaaaaaa",
+   "payer": "0xpayer",
+   "network": "base",
+   "rfc3161_tsa": "https://freetsa.org/tsr",
+   "rfc3161_status": "TIMESTAMPED",
+   "rfc3161_reason": null,
+   "rfc3161_token": "MIIBAA==",
+   "rfc3161_token_sha256": "bfeb185ff864c2953a8ffb32ac29ea65bc53b4d8665ac7dfb8a4e8fda0951ed9",
+   "status": "queued",
+   "queued_at": "2026-09-02T08:00:01Z",
+   "witnessed": null
+  },
+  "witness:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb": {
+   "schema": "csoai.witness-entry/0.1",
+   "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+   "label": "certified clean build",
+   "url": null,
+   "url_hash": null,
+   "fetched_at": "2026-09-02T08:00:00Z",
+   "http_status": null,
+   "headers": null,
+   "payment_ref": "0xbbbbbbbb",
+   "payer": "0xpayer",
+   "network": "base",
+   "rfc3161_tsa": "https://freetsa.org/tsr",
+   "rfc3161_status": "TIMESTAMPED",
+   "rfc3161_reason": null,
+   "rfc3161_token": "MIIBAA==",
+   "rfc3161_token_sha256": "48eb83b8672993f4207a710e9d0544e6b74d483bb049913380a789395b6b1aff",
+   "status": "queued",
+   "queued_at": "2026-09-02T08:00:01Z",
+   "witnessed": null
+  },
+  "witness:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc": {
+   "schema": "csoai.witness-entry/0.1",
+   "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+   "label": "",
+   "url": null,
+   "url_hash": null,
+   "fetched_at": "2026-09-02T08:00:00Z",
+   "http_status": null,
+   "headers": null,
+   "payment_ref": "0xcccccccc",
+   "payer": "0xpayer",
+   "network": "base",
+   "rfc3161_tsa": "https://freetsa.org/tsr",
+   "rfc3161_status": "UNCHECKABLE",
+   "rfc3161_reason": "TSA HTTP 500",
+   "rfc3161_token": null,
+   "rfc3161_token_sha256": null,
+   "status": "queued",
+   "queued_at": "2026-09-02T08:00:01Z",
+   "witnessed": null
+  }
+ },
+ "root_witness_latest": {
+  "kind": "csoai.root-witness/v1",
+  "artifact": {
+   "merkle_root": "<filled by the test>"
+  },
+  "witnesses": {
+   "rekor": {
+    "status": "WITNESSED",
+    "logIndex": 2684053226,
+    "uuid": "108e",
+    "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2684053226"
+   },
+   "ots": {
+    "status": "STAMPED_PENDING_BITCOIN",
+    "path": "public/interop/root-728e8c5e.json.ots",
+    "url": "https://councilof.ai/interop/root-728e8c5e.json.ots"
+   }
+  }
+ }
+}

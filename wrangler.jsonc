@@ -21,5 +21,11 @@
       "binding": "SOV_ARENA_STATE",
       "id": "00634697bf5744edba3625905a922e96"
     }
+    // WITNESS_KV — the /api/witness queue (functions/api/witness.ts). OWNER STEP: create the
+    // namespace (dashboard → Storage & Databases → KV → Create, name `witness`), then add
+    //   , { "binding": "WITNESS_KV", "id": "<namespace id>" }
+    // here and set the GitHub Actions variable WITNESS_KV_NAMESPACE_ID to the same id so
+    // scripts/adapters/witness_queue.py can read the queue at publish time. Until then the
+    // endpoint answers 503 {"status":"NOT_YET"} before any settlement — nothing is charged.
   ]
 }

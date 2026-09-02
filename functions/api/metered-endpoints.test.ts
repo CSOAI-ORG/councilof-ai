@@ -142,7 +142,7 @@ describe("Tier 3 — /api/eunomia-data", () => {
 describe("catalog + discovery", () => {
   it("/api/x402 and /.well-known/x402.json name no amounts and report the honest mode", async () => {
     const c = await (await catalog(ctx("/api/x402"))).json();
-    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence"]);
+    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "witness_hash"]);
     expect(c.rail).toMatchObject({ mode: "challenge-only", pay_to: ESTATE_PAY_TO });
     expect(JSON.stringify(c)).not.toMatch(/[£$€]\s?\d|"amount":\s*"\d/);
     const w = await (await wellKnown(ctx("/.well-known/x402.json"))).json();
