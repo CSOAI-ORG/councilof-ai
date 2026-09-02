@@ -129,6 +129,24 @@ export const SKUS: Record<string, Sku> = {
       "or a CSOAI LTD invoice for a first human deal (owner-decision; agent never moves funds).",
   },
 
+  // SKU — Request Attestation (RAS). Per-request pay-to-recompute / re-attest. Never a rank.
+  request_attestation: {
+    id: "request_attestation",
+    name: "Request Attestation (RAS)",
+    artifact:
+      "one request-attestation response for a named subject on the frozen bank — lid " +
+      "22 axes · 14 fleets · 3 public leaders · 8 fact runs; never a certificate, never a rank sale",
+    unit: "1 request (per subject × optional axis)",
+    sells: "issuance",
+    prices: {
+      per_request: band(0.02, [0.02, 0.5], "X402_PRICE_REQUEST_ATTESTATION_USD"),
+    },
+    rail: "x402",
+    notes:
+      "Agent rail only (x402 USDC). Sells the recompute / re-attest work product, not a grade. " +
+      "Board stays free. Verify stays free. Human rail remains Paddle — do not wire Stripe.",
+  },
+
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.
   enterprise_rail: {
     id: "enterprise_rail",

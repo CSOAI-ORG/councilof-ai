@@ -4,7 +4,15 @@
  * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.
  * 402 without payment is OK. May trail the last published root (≤24h).
  */
-import { verifyX402Payment, x402Accepts, type X402Env } from "./_x402";
+import {
+  verifyX402Payment,
+  x402Accepts,
+  buildPaymentRequiredV2,
+  declareBazaarHttpGet,
+  paymentRequiredResponse,
+  CSOAI_LID,
+  type X402Env,
+} from "./_x402";
 
 const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -32,35 +40,61 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
 
   if (bundle) {
     if (!paid) {
-      return json(
-        {
-          schema: "csoai.public-root-proof/0.1",
-          error: "payment_required",
-          // Canonical x402 challenge: an off-the-shelf x402 client pays straight off `accepts`.
-          // Price atom is the issuance re-serve tier ($0.02, ESTIMATE, owner-overridable); payTo
-          // is null until the owner provisions X402_PAY_TO (no address is invented here).
-          accepts: x402Accepts(env as X402Env, u("/api/proof?bundle=1"), {
-            skuId: "issuance",
-            tier: "reserve",
-            description: "Bundle of inclusion proofs for the last published root (re-serve). Not a grade.",
-          }),
-          x402Version: 1,
-          payment_required: {
-            kind: "x402",
-            amount: 0.02,
-            per: "proof-bundle",
-            instruction:
-              "One inclusion is free (?sha=). The full bundle is x402. Settle via the estate x402 receipt MCP, then retry with the x-payment header carrying the settled receipt.",
-            settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+      // x402 v2 + Bazaar: declare extensions.bazaar (discoverable via CDP after settle).
+      // Do not emit invalid `discoverable: true` inside bazaar (x402 #2112 / #2207).
+      const resourceUrl = u("/api/proof?bundle=1");
+      const description =
+        "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. " +
+        CSOAI_LID +
+        ".";
+      const accepts = x402Accepts(env as X402Env, resourceUrl, {
+        skuId: "issuance",
+        tier: "reserve",
+        description,
+      });
+      const paymentRequired = buildPaymentRequiredV2({
+        resourceUrl,
+        description,
+        serviceName: "CSOAI Proof Bundle",
+        tags: ["proof", "merkle", "measurement", "attestation"],
+        accepts,
+        bazaar: declareBazaarHttpGet({
+          method: "GET",
+          queryParams: { bundle: "1" },
+          queryParamsSchema: {
+            properties: {
+              bundle: {
+                type: "string",
+                const: "1",
+                description: "Must be 1 to request the paid proof bundle",
+              },
+            },
+            required: ["bundle"],
           },
-          // Fail-closed: a receipt is only accepted when a configured x402 facilitator
-          // verifies it. Header presence alone is NOT payment and never grants the bundle.
-          verification: "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
-          not_paid_reason: payment.reason,
+          outputExample: {
+            schema: "csoai.public-root-proof/0.1",
+            kind: "bundle",
+            merkle_root: "<hex>",
+            n: 0,
+            proofs: [],
+            note: "Paid bundle of inclusion proofs. Not a grade.",
+          },
+        }),
+        csoai: {
+          schema: "csoai.public-root-proof/0.1",
+          per: "proof-bundle",
+          lid: CSOAI_LID,
+          never: ["grade", "rank", "certificate"],
           free: { one_inclusion: "/api/proof?sha=<64-hex>" },
+          settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+          verification:
+            "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
+          not_paid_reason: payment.reason,
+          bazaar_note:
+            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until X402_PAY_TO + facilitator settle exist (and CDP EXTENSION-RESPONSES / #2112).",
         },
-        402,
-      );
+      });
+      return paymentRequiredResponse(paymentRequired);
     }
   }
 
