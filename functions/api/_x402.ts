@@ -264,7 +264,7 @@ export async function verifyX402Payment(
 
 /** Board lid language — never a certificate. */
 export const CSOAI_LID =
-  "22 axes · 14 fleets · 3 public leaders · 8 fact runs · not a certificate";
+  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
 
 export type BazaarHttpGetOpts = {
   method?: "GET" | "HEAD" | "DELETE";
