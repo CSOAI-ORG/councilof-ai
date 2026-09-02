@@ -471,13 +471,23 @@ function loadFinancialRegister(raw: unknown): LoadedSet {
     };
   });
 
+  const asOf = typeof d.as_of === "string" && d.as_of.trim() ? String(d.as_of).trim() : null;
+  const boardNote =
+    typeof d.board_authority_note === "string"
+      ? String(d.board_authority_note)
+      : "Board counts (axes/measured/unmeasured) authority is live GET /api/gspc. This register is not the board.";
+  const aside = [
+    { label: "Board authority", value: boardNote },
+    ...(d.honesty ? [{ label: "The register's own caveat", value: String(d.honesty) }] : []),
+  ];
   return {
     rows,
-    asOf: null,
-    asOfField: null,
-    aside: d.honesty ? [{ label: "The register's own caveat", value: String(d.honesty) }] : [],
+    asOf,
+    asOfField: asOf ? "as_of" : null,
+    aside,
     live: rows.length > 0,
-    provenance: "Read from the published register file.",
+    provenance:
+      "Read from the published register file. Board counts defer to live GET /api/gspc — this file is dated detail, not the board.",
   };
 }
 
@@ -758,26 +768,26 @@ export const AXIS_SETS: AxisSet[] = [
     id: "financial-register",
     name: "The financial register",
     headline:
-      "The per-row detail behind the financial half of the public board: what each row would check, and which single row has anything behind it so far.",
+      "The per-row rubric/evidence detail behind the financial half of the public board. Board counts (axes/measured/unmeasured) come from live GET /api/gspc — this register is not the board.",
     measures:
-      "Deterministic facts about financial instruments — which flags an issuing account carries on a public ledger. No model is asked anything.",
-    subject: "issuing accounts of named financial instruments",
+      "Deterministic facts about financial instruments and public series — issuer-account flags, disclosure presence, and cited component series. No model is asked anything.",
+    subject: "issuing accounts of named financial instruments, and cited public series for component/disclosure rows",
     establishes: [
       "Which control flags a named account carried, read directly off a public ledger, for the accounts we could locate.",
-      "Exactly what each unmeasured row would need before it could carry a number — the data source is named for every one of them.",
+      "Which financial/domain rows have a signed deterministic-facts run behind them, and which evidence surface to open.",
     ],
     doesNotEstablish: [
       "Any view on risk, solvency or creditworthiness. What a control flag implies is explicitly unmeasured and would need legal advice, not a benchmark.",
-      "Coverage of the instruments the register names. Only the accounts we could locate publicly were read; the rest were never attested, and that is a gap in scope, not a stale number.",
-      "A rating, a ranking, or an endorsement of any named instrument.",
+      "Board totals. Quote GET /api/gspc totals.public_count for axes/measured/unmeasured — never invent board counts from this file.",
+      "A rating, a ranking, an index formula, or an endorsement of any named instrument. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
     ],
     relation:
-      "These rows are also carried on the public board, where they count toward its slot count and NOT toward its measured count. This register is the detail behind those same rows, so its number is a breakdown of the board's, not a competing claim.",
-    countAuthority: "/interop/financial-axes.json → axes[]",
+      "These rows are also carried on the public board. Board slot and measured counts are derived live from GET /api/gspc. This register is dated per-row detail behind those same rows — not a competing board claim, and not a place to stamp MEASURED onto unsigned runs.",
+    countAuthority: "GET /api/gspc → totals.by_family.financial / axes[] (family=financial). /interop/financial-axes.json is dated register detail only.",
     artifact: { href: "/interop/financial-axes.json", label: "/interop/financial-axes.json" },
     detailPage: { href: "/financial-axes", label: "the financial axes page" },
     freshness:
-      "This artifact carries no timestamp of any kind, so no date is shown for it. Borrowing a neighbouring file's date would assert a freshness nobody established — unknown is left unknown.",
+      "as_of on the register file when present. Board counts always re-fetch from GET /api/gspc; the register date is not the board's measured_on.",
     fetchUrl: "/interop/financial-axes.json",
     load: loadFinancialRegister,
   },

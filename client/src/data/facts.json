@@ -136,17 +136,17 @@
         "selftest_case": "unsigned interop file: 4 axes is scoped (reproduces #841)"
       },
       "financial_axes_register": {
-        "authority": "/interop/financial-axes.json — the register for the 8 financial/domain axes",
+        "authority": "GET /api/gspc for board counts (axes/measured/unmeasured). /interop/financial-axes.json is a dated register of per-row rubric/evidence — not the board.",
         "status": "live",
-        "observed": "8 financial axes; measured_axes is derived from signed runs on GET /api/gspc",
-        "note": "These 8 are also carried on the GSPC board, where they count toward the axis count and NOT the measured count. This register is the per-axis detail behind those rows and legitimately states its own family's count of 8.",
+        "observed": "8 financial axes on the board; live board shows all 8 MEASURED as deterministic-facts (22·22·0 overall). Register as_of is a snapshot date, not a competing count.",
+        "note": "These 8 are carried on the GSPC board. Quote totals.public_count / totals.by_family.financial from GET /api/gspc for board counts. The register must not assert UNMEASURED board slots that conflict with the live board, and must not stamp MEASURED onto unsigned /interop/ financial measure artifacts.",
         "surfaces": [
           "/interop/financial-axes.json",
           "/interop/financial-4axis-unsigned.json",
           "/financial-axes",
           "/board"
         ],
-        "unsigned_runs_note": "Unsigned run artifacts (financial-4axis-unsigned.json) carry '4 unsigned financial slots' (NOT '4 axes') to avoid tripping the 22-axis board-count lock. The word 'unsigned' or 'slots' before 'axes/axis/slots' breaks the COUNT_RE pattern."
+        "unsigned_runs_note": "Unsigned run artifacts (financial-4axis-unsigned*.json) stay UNSIGNED — do not stamp MEASURED to close gaps. They are a different instrument from the public board."
       },
       "signed_card_set": {
         "authority": "/signed/card-matrix.json — derived at build time by scripts/build-card-matrix.mjs from public/signed/cards/*.json. Every count in it is an array length; nothing is typed.",
