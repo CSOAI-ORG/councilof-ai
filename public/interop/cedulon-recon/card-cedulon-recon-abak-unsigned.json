@@ -1,0 +1,54 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "cedulon.recon",
+  "subject": "cedulon:abak-00-population-probe",
+  "as_of": "2026-09-02T02:25:00Z",
+  "source_urls": [
+    "https://github.com/dogrucanemek-alt/cedulon/blob/main/interop/abak-00/population-probe.mjs",
+    "https://github.com/dogrucanemek-alt/cedulon/blob/main/interop/abak-00/README.md",
+    "https://datatracker.ietf.org/doc/draft-abak-agent-control-delivery-evidence/"
+  ],
+  "payload": {
+    "profile": "abak-00-population",
+    "package_pin": "@cedulon/audit@0.8.0",
+    "probe_source": "https://github.com/dogrucanemek-alt/cedulon/blob/main/interop/abak-00/population-probe.mjs",
+    "probe_sha256": "031f84fda2054b1427a510baa45f880d379ea60dced408a4a74028da12b1fceb",
+    "class_counts": {
+      "instruction": 0,
+      "record": 0,
+      "excluded": 0,
+      "either-side": 0,
+      "issuer-evidence": 0,
+      "not-a-disposition": 0
+    },
+    "conservation_rows": [],
+    "open_defects": [
+      "closing-boundary unmatched receipt may drop silent (Cedulon README)",
+      "aborted receipt invisible in some recon paths"
+    ],
+    "x402_challenge": {
+      "status": 402,
+      "price_usd": 0.02,
+      "settlement": "UNCHECKABLE",
+      "note": "challenge advertised on councilof.ai; header≠receipt"
+    },
+    "board_axis_fill": false,
+    "status": "UNSIGNED_STUB"
+  },
+  "sha256": "0db8623c5522e82c3cfcf4b0c5f1b632980bb1f3780997f4d331dd15d3a72924",
+  "sig_ed25519": null,
+  "unmeasured": [
+    "independent_re_run_of_population_probe",
+    "n>=30_windows",
+    "4way_vs_parents",
+    "keystone_signature",
+    "x402_facilitator_receipt",
+    "gspc_axis_projection_forbidden"
+  ],
+  "tags": [
+    "scitt-eat",
+    "cedulon",
+    "abak-00",
+    "unsigned"
+  ]
+}
