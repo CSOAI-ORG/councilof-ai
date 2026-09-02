@@ -71,10 +71,6 @@ export default function SovereignSpot({
         <div className="flex flex-wrap gap-2">
           <a
             href={task ? `/dashboard?tab=home&task=${encodeURIComponent(task)}&ctx=${encodeURIComponent(topic)}` : `/dashboard?tab=home&ask=${encodeURIComponent(seed)}`}
-            onClick={(e) => {
-              e.preventDefault();
-              open();
-            }}
             className="rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-bold text-[#03110b] transition hover:bg-emerald-400"
           >
             Open Council OS
