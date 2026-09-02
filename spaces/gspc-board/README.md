@@ -25,3 +25,5 @@ CENSUS_3M leftover: census + digest + queue + lock. Remainder UNMEASURED. Hub li
 - Leftover honesty: https://councilof.ai/census-digest-leftover.json
 
 Source lives in councilof-ai under `spaces/gspc-board/`.
+
+Verify is free. A rank is never sold. Measurement, not certification.

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 
 /**
  * Public-root catalogue (GET /root.json) + GET /api/xrpl reader.
+ * Do not fake Ed25519: this UI never signs (NO_LAPTOP_SIGN) — it only reads published bytes and
+ * recomputes membership. An unsigned public root is shown as unsigned, never dressed as VALID.
  * Sig counts are COMPUTED from the live /api/xrpl payload on every load — never
  * typed. (This file used to hard-code "14/16 GH-secret sigs; EURQ/USDQ unsigned"
  * and the live reader moved under it. Bytes adjudicate; typed tallies rot.)

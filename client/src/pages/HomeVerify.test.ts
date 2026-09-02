@@ -18,7 +18,10 @@ const src = [
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
-const header = readFileSync(resolve(here, "../components/Header.tsx"), "utf8");
+// The menu data moved to HeaderNav.tsx; the header behaviour stays in Header.tsx. Pin both.
+const header =
+  readFileSync(resolve(here, "../components/Header.tsx"), "utf8") +
+  readFileSync(resolve(here, "../components/HeaderNav.tsx"), "utf8");
 const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
 const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
 

@@ -18,11 +18,11 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { Router } from "wouter";
 import Blog from "./Blog";
 import { blogdata } from "../data/blog-content";
-import { REDIRECTED_AWAY } from "../lib/blogIndex";
+import { REDIRECTED_AWAY, UNLISTED_UNTIL_REWRITTEN } from "../lib/blogIndex";
 import { readFileSync } from "node:fs";
 
 /** Articles that must be reachable: everything except the ones whose URL redirects away. */
-const expectedSlugs = blogdata.map((e) => e.slug).filter((s) => !REDIRECTED_AWAY.has(s));
+const expectedSlugs = blogdata.map((e) => e.slug).filter((s) => !REDIRECTED_AWAY.has(s) && !UNLISTED_UNTIL_REWRITTEN.has(s));
 
 const html = renderToStaticMarkup(
   <Router ssrPath="/blog">

@@ -30,6 +30,16 @@ const LEDGER = {
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
+    {
+      id: "C-2026-0902-07",
+      date: "2026-09-02",
+      what_was_wrong:
+        "On 2026-08-28 a commit edited the text of a signed card in place (public/signals/cross-border-card.signed.json, field measured_axes: the 18 Aug count was replaced with a pointer to the live count) without re-signing. The content_id no longer derived and the Ed25519 signature no longer verified — a silent edit of a signed artefact, which this ledger's own policy forbids.",
+      how_caught: "The unit suite (cardVerify: content_id derives and signature verifies) failed on master; found during the 2 Sep test-truth pass.",
+      fix:
+        "The original signed bytes are restored so the card verifies again. The caveat lives here instead: the card's measured_axes text quotes the 18 Aug 2026 count; the live count is only ever GET https://councilof.ai/api/gspc totals. Signed bytes are never edited — they are superseded by a new signed card or annotated in this ledger.",
+      status: "CORRECTED — signed bytes restored; caveat carried by this entry",
+    },
     // ── 2026-09-02: six contradictions named in the owner's "what governs" ruling ──
     {
       id: "C-2026-0902-01",

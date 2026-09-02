@@ -17,6 +17,7 @@ import { GlobalSearch } from '@/components/GlobalSearch';
 import { PRIMARY_LINKS, navigation } from '@/components/HeaderNav';
 export { HOME_NAV, ARCHIVE_NAV } from '@/components/HeaderNav';
 
+// SPA hops keep this header mounted: it lives above the router in App.tsx.
 export function Header() {
   const [location] = useLocation();
   const { user, logout } = useAuth();

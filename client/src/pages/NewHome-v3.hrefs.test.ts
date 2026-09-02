@@ -29,8 +29,8 @@ describe("/home-v3 is not the live homepage", () => {
 
 describe("ToolStack hrefs are real pages, not /?lobby=", () => {
   it("maps the nine tools onto living doors", () => {
-    expect(hrefFor({ kind: "pane", pane: "home" })).toBe("/os?lobby=board");
-    expect(hrefFor({ kind: "pane", pane: "board" })).toBe("/os?lobby=board");
+    expect(hrefFor({ kind: "pane", pane: "home" })).toBe("/dashboard?tab=board");
+    expect(hrefFor({ kind: "pane", pane: "board" })).toBe("/dashboard?tab=board");
     expect(hrefFor({ kind: "pane", pane: "verify" })).toBe("/gspc-verify");
     expect(hrefFor({ kind: "pane", pane: "measured" })).toBe("/assess");
     expect(hrefFor({ kind: "pane", pane: "evidence" })).toBe("/gpai-evidence");

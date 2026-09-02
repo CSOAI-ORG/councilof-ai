@@ -302,7 +302,7 @@ export default function OsLauncher() {
               W3C Agent Conformance and Benchmarking Community Group
             </a>
             {" "}
-            — Nick joins. Measurement credential, never certification. No endorsement or “we conform”
+            — Nick joins. Measurement credential, never certification. No endorsement claim, no conformance claim
             claim.
           </p>
         </form>
