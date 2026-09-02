@@ -80,7 +80,7 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
 
 function Row({ a, active }: { a: GspcAxis; active: boolean }) {
   const st = String(a.status || "UNMEASURED");
-  const href = `/gspc-scoreboard#${encodeURIComponent(a.axis)}`;
+  const href = `/dashboard?tab=board#${encodeURIComponent(a.axis)}`;
   return (
     <tr
       id={`axis-${a.axis}`}

@@ -27,7 +27,7 @@ export function Footer() {
       links: [
         { name: 'Verify a card', href: '/gspc-verify' },
         { name: 'Get measured', href: '/assess' },
-        { name: 'Board', href: '/gspc-scoreboard' },
+        { name: 'Board', href: '/dashboard?tab=board' },
         { name: 'Tools — plugin snippet', href: '/tools' },
         { name: 'Run / re-attest', href: '/assess' },
         { name: 'Ledger', href: '/contact?arm=ledger' },

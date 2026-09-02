@@ -660,7 +660,7 @@ export const AXIS_SETS: AxisSet[] = [
       "This is the set every other count on this page should be compared against, and the only one whose number belongs in a sentence about 'the board'. The other six measure different things over different populations, so they carry their own numbers by design, not by drift.",
     countAuthority: "GET /api/gspc → totals.public_count",
     artifact: { href: "/api/gspc", label: "/api/gspc" },
-    detailPage: { href: "/gspc-scoreboard", label: "the full board, axis by axis" },
+    detailPage: { href: "/dashboard?tab=board", label: "the full board, axis by axis" },
     freshness:
       "The date is the measurement stamp carried inside the signed board payload — when the runs happened. It is not the time this page was rendered or deployed, so it moves only when new runs are measured and signed.",
     fetchUrl: "/api/gspc",
