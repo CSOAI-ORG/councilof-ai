@@ -1,0 +1,75 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "eval.delta",
+  "subject": "emilia-ep digest-only → unsigned eval.delta (EP≠SCITT inclusion)",
+  "as_of": "2026-09-02T03:30:20Z",
+  "source_urls": [
+    "https://github.com/emiliaprotocol/emilia-protocol",
+    "https://github.com/emiliaprotocol/emilia-protocol/blob/e507acdf8efbe8951cb4294801d4c440f0b86a5a/docs/EP-RECEIPT-SCITT-PROFILE.md",
+    "https://www.rfc-editor.org/rfc/rfc9943.html"
+  ],
+  "payload": {
+    "profile": "emilia-ep-digest-only",
+    "role": "digest_ore_consumer_only",
+    "endorsement": false,
+    "csoai_is_transparency_service": false,
+    "ep_ne_scitt_inclusion": {
+      "note": "EP authorization receipt != SCITT transparency/inclusion receipt",
+      "this_card_claims_inclusion": false,
+      "ep": "EP-RECEIPT-v1 (who approved what)",
+      "scitt": "COSE Receipt / RFC 9942 (statement was logged)"
+    },
+    "pin": {
+      "repo": "https://github.com/emiliaprotocol/emilia-protocol",
+      "commit": "e507acdf8efbe8951cb4294801d4c440f0b86a5a",
+      "preimage_rule": "ep-scitt-statement-identity-v0.1",
+      "wire": "digest pointers only; do not vendor main"
+    },
+    "ep_receipt_digest": {
+      "pattern": "pointer",
+      "pointers": [
+        {
+          "id": "conformance/composition/scitt-statement-identity-v0.1/report.reference.json",
+          "sha256": "f84a65f3b1a1c88cfbf3b97782c5821b6651c37c7d0e407d2ff02594481395c3"
+        },
+        {
+          "id": "conformance/composition/scitt-statement-identity-v0.1/vectors.reference.json",
+          "sha256": "889e410cceec75f4c0955ca9a373d4a8375c00300cbe4d2be375a559958de697"
+        },
+        {
+          "id": "conformance/composition/scitt-statement-identity-v0.1/source-lock.json",
+          "sha256": "ca2a707100b0f6871912efe00dd4aa0b7fce91c15d22572cf382d3a4bf0a8232"
+        },
+        {
+          "id": "docs/EP-RECEIPT-SCITT-PROFILE.md",
+          "sha256": "75ff4ffc798b2ab893d1814560055c0446f52130228c66935eb45371acfb86f6"
+        }
+      ]
+    },
+    "board_axis_fill": false,
+    "never_certify": true,
+    "status": "UNSIGNED_DIGEST_ORE"
+  },
+  "sha256": "89830d7d6c23209fd297663f49473b4ce41f2af63ce382e3c99380b9aecb983d",
+  "sig_ed25519": null,
+  "unmeasured": [
+    "out-of-band-keys",
+    "not-inclusion-proof",
+    "csoai-not-a-ts",
+    "no-live-scitt-keys",
+    "live_emilia_verify_run",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_axis_projection_forbidden"
+  ],
+  "tags": [
+    "emilia-ep",
+    "eval.delta",
+    "unsigned",
+    "digest-only",
+    "ep-ne-scitt-inclusion",
+    "not-a-ts",
+    "harness-consumer"
+  ]
+}
