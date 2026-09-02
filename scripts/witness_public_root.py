@@ -114,6 +114,17 @@ def ots_stamp(path: Path, out: Path) -> dict:
     return {"status": "PENDING", "reason": "no .ots produced"}
 
 
+def eas_status(sha: str) -> dict:
+    p = INTEROP / "eas-root-attestations.json"
+    if not p.exists():
+        return {"status": "NOT_YET", "reason": "no attester key in GitHub secrets (EAS_ATTESTER_PRIVATE_KEY); schema bytes32 sha256,string as_of,string did"}
+    log = json.loads(p.read_text())
+    hit = next((a for a in log.get("attestations", []) if a.get("sha256") == sha), None)
+    if hit:
+        return {"status": "ATTESTED", "uid": hit.get("uid"), "url": hit.get("url"), "attester": hit.get("attester"), "chain": "base-mainnet"}
+    return {"status": log.get("status", "NOT_YET"), "reason": log.get("reason", "this root not yet attested"), "log": "https://councilof.ai/interop/eas-root-attestations.json"}
+
+
 def main() -> int:
     raw = ROOT_JSON.read_bytes(); root = json.loads(raw)
     sha = hashlib.sha256(raw).hexdigest(); short = sha[:8]
@@ -141,7 +152,7 @@ def main() -> int:
         "witnesses": {
             "rekor": {k: v for k, v in rek.items() if k != "entry"} | ({"url": f"{REKOR}/api/v1/log/entries?logIndex={rek['logIndex']}", "type": "rekord/x509 over the preimage bytes with the board signature", "entry_file": f"https://councilof.ai/interop/rekor-root-{short}.json"} if rek.get("logIndex") is not None else {}),
             "ots": ots,
-            "eas_base": {"status": "NOT_YET", "reason": "needs a funded wallet (owner); schema {sha256, as_of, did}"},
+            "eas_base": eas_status(sha),
             "xrpl_memo": {"status": "NOT_YET", "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"},
         },
         "verify_hints": ["https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md"],
