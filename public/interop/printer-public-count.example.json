@@ -1,0 +1,274 @@
+{
+  "schema": "csoai.printer-board-totals/0.1",
+  "kind": "printer.board-totals",
+  "status": "EXAMPLE",
+  "signed": false,
+  "sig_ed25519": null,
+  "as_of_bake": "2026-09-02T03:35:00Z",
+  "source": "https://councilof.ai/api/gspc",
+  "method": "live GET \u2014 printers must re-fetch; do not freeze this example's counts into copy",
+  "totals": {
+    "axes": 22,
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "public_count": "22 axis \u00b7 22 measured",
+    "count_grammar": "22 axis are on the board and every one carries a measurement \u2014 no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own."
+  },
+  "measured_on": {
+    "model": "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet \u2014 smaller, stated on the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model comparison: they are measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
+    "endpoint": "A100 \u00b7 local Ollama (board v2) \u00b7 OpenRouter (cross-lab models) \u00b7 3090 pod (jail)",
+    "date": "behavioural axes 2026-08-12 \u00b7 jail 2026-08-18 \u00b7 financial-fact axes 2026-08-25",
+    "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) \u2014 reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
+    "note": "GSPC (Governance \u00b7 Safety \u00b7 Provenance \u00b7 Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads \u2014 tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) \u2014 a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only \u2014 see measured_in_lane, not the board.",
+    "living_stamp": {
+      "schema": "csoai.gspc-living/0.2",
+      "gold_run": "2026-08-18T03:22:16Z",
+      "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+      "signed": true,
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "signer_anchored": true,
+      "alg": "Ed25519",
+      "signature": "76e91fcc71019631376ff312924c88ebd028b254968708d83f6dd2f8b473e48b9085818764bed45bb168c75e7bc270a6c3618e9eea318ad87346f7849f6f250e",
+      "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+      "preimage": {
+        "schema": "csoai.gspc-living/0.2",
+        "gold_run": "2026-08-18T03:22:16Z",
+        "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+        "axes": [
+          {
+            "axis": "governance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 237,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "safety",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 36,
+            "accuracy": 0.944,
+            "separation": "TIE"
+          },
+          {
+            "axis": "provenance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "continuity",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "conformance",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 35,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "openness",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "machinery-conformity",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "care",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 199,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "cross-reality",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 32,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "detector-interop",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 33,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "art5-safeguard",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 36,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "swarm",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 37,
+            "accuracy": 0.384,
+            "separation": "SEPARATED"
+          },
+          {
+            "axis": "affect",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 41,
+            "accuracy": null,
+            "separation": "UNTESTED"
+          },
+          {
+            "axis": "jail",
+            "family": "gspc",
+            "kind": "model-comparison",
+            "status": "MEASURED",
+            "n": 71,
+            "accuracy": 0.5915,
+            "separation": "TIE"
+          },
+          {
+            "axis": "provenance-controls",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 6,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "reserve-attestation",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "regulatory-framework",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "distribution-integrity",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "custody-disclosure",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 16,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "ai-adoption-components",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 2,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "labour-components",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 2,
+            "accuracy": null,
+            "separation": null
+          },
+          {
+            "axis": "humanoid-labour-index",
+            "family": "financial",
+            "kind": "deterministic-facts",
+            "status": "MEASURED",
+            "n": 8,
+            "accuracy": null,
+            "separation": null
+          }
+        ]
+      },
+      "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
+      "sig_input_ensure_ascii": false,
+      "sig_input_is_digest": false,
+      "verification_state": "SIGNED",
+      "verifiable": true,
+      "verify": "fetch https://csoai.org/.well-known/did.json \u2192 #board-attestation-1 \u2192 Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
+      "superseded": {
+        "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+        "updated": "2026-08-18T03:22:16Z",
+        "signed": true,
+        "verification_state": "UNVERIFIABLE",
+        "verifiable": false,
+        "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+        "signer_anchored": false,
+        "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+        "sig_input": "sha256(canonical board minus signature fields, sort_keys) \u2014 AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+        "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa\u2026 in /signed/board_living.json, bd199fd3\u2026 here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date \u2014 so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
+        "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served \u2014 it does not substantiate the living stamp, and must not be read as doing so.",
+        "reproduction_attempts": 58184,
+        "reproduction_verified": 0,
+        "tracked_as": "/api/corrections C-2026-0826-08"
+      },
+      "tracked_as": "/api/corrections C-2026-0826-08"
+    }
+  },
+  "not_a_certification": true,
+  "hf_hub_push": "blocked_unless_whoami_csoai",
+  "kaggle_push": "docs_only",
+  "mcp_helper": "mcp/gspc-server board_totals \u2192 public_count from live GET",
+  "do_not": [
+    "type public_count into printer copy",
+    "push HF as non-csoai",
+    "invent scores",
+    "certify",
+    "wrangler"
+  ]
+}
