@@ -1,0 +1,84 @@
+{
+  "schema": "csoai.gspc-mcp-paid-tools/1",
+  "note": "PAID tools on the HTTP MCP door (councilof.ai/mcp) only. Each wraps one x402-metered Pages route. Unpaid, the tool returns the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED) so an MCP client pays from its own wallet and calls again with x_payment. The stdio server (mcp/gspc-server, npm csoai-gspc-mcp) does not carry these: stdio has no payment header, so stdio stays free-only — seven tools, unchanged. Every deliverable is measurement, not certification; no tool here carries or awards a trust label of any kind, and the catalogue is free. Amounts appear only inside a 402 challenge, never here.",
+  "doctrine": "measurement, not certification",
+  "tools": [
+    {
+      "name": "commission_card",
+      "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "subject": { "type": "string", "description": "Subject to commission: a model id, instrument id or card sha (1-120 chars of [A-Za-z0-9._:/@+-])." },
+          "axis": { "type": "string", "description": "Optional axis slug; omit for the subject-level commission." },
+          "x_payment": { "type": "string", "description": "The X-PAYMENT header value (base64 x402 payload) signed by your wallet against accepts[] from the previous 402. Omit to receive the challenge." }
+        },
+        "required": ["subject"],
+        "additionalProperties": false
+      },
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/request-attestation", "sku": "request_attestation", "free_preview": "the 402 body (csoai.preview)", "deliverable": "one card-v0 leaf, surface ras.commission, Ed25519 when the Pages key is present" }
+    },
+    {
+      "name": "art50_marking_evidence",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1162) the tool says NOT_DEPLOYED rather than inventing a result.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": { "type": "string", "description": "Public http(s) URL of the generative output to measure (≤20 MiB)." },
+          "bytes_b64": { "type": "string", "description": "Alternatively the output bytes, base64 (≤20 MiB decoded)." },
+          "manifest_b64": { "type": "string", "description": "Alternatively a detached C2PA manifest store, base64 (manifest-only mode)." },
+          "preview": { "type": "boolean", "description": "true = free unsigned measurement (no card sha, no signature)." },
+          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+        },
+        "additionalProperties": false
+      },
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "PR #1162" }
+    },
+    {
+      "name": "rwa_evidence",
+      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1158) the tool says NOT_DEPLOYED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "asset": { "type": "string", "description": "Symbol (as listed by https://councilof.ai/api/xrpl) or issuer r-address." },
+          "preview": { "type": "boolean", "description": "true = free unsigned state." },
+          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+        },
+        "required": ["asset"],
+        "additionalProperties": false
+      },
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "PR #1158" }
+    },
+    {
+      "name": "witness_hash",
+      "description": "PAID (x402 or CSOAI LTD invoice). Witness a SHA-256 digest — 'attest what you're shown' — via https://councilof.ai/api/witness: one public.notice leaf (csoai.witness.hash/0.1) in the next hourly signed public root, an RFC-3161 timestamp over the digest, and the root's Rekor + OpenTimestamps anchors. Hash-only: name a digest, or a public URL fetched once (robots honoured, never past a login, paywall or bot check → UNCHECKABLE, nothing charged). Attests existence of the digest at the root's as_of — nothing about content, legality or provenance; a self-signed card carries no legal presumption. Measurement, not certification. Status is free at /api/witness/status. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1163) the tool says NOT_DEPLOYED.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The digest to witness (64 lowercase hex). Or pass url." },
+          "url": { "type": "string", "description": "Optional public https URL, fetched once with our UA, hashed, never stored." },
+          "label": { "type": "string", "description": "Optional label (≤120 chars, no verdict words); appears on the leaf." },
+          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+        },
+        "additionalProperties": false
+      },
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/witness", "sku": "witness_hash", "free_status": "/api/witness/status?sha256=", "deliverable": "one public.notice leaf in the next hourly root + RFC-3161 reply + Rekor/OTS anchors", "deployed_by": "PR #1163" }
+    },
+    {
+      "name": "receipts_batch",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string", "description": "Window start, ISO-8601. Required." },
+          "to": { "type": "string", "description": "Window end, ISO-8601. Defaults to now." },
+          "preview": { "type": "boolean", "description": "true = free: count, span, roots and batch sha256 without the leaves." },
+          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
+        },
+        "required": ["from"],
+        "additionalProperties": false
+      },
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
+    }
+  ]
+}

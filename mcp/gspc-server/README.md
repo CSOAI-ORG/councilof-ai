@@ -29,6 +29,18 @@ The same seven tools, from the same definitions file
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.
 
+
+### Paid tools live on HTTP `/mcp` only — stdio stays free
+
+`https://councilof.ai/mcp` also lists five **paid** tools (`commission_card`, `art50_marking_evidence`,
+`rwa_evidence`, `witness_hash`, `receipts_batch`; definitions in `functions/mcp/paid-tools.json`). Each
+wraps one x402-metered route: called without `x_payment` it returns the route's 402 challenge as
+`structuredContent`, so an MCP client can pay from its own wallet and call again with the signed
+`x_payment`. This stdio server does **not** carry them, by design: stdio has no payment header to forward,
+and a tool that cannot settle must not pretend to. The seven tools here stay free and identical to the
+seven free tools on HTTP. Every paid deliverable is measurement, not certification; no tool on either
+transport carries a trust label; amounts appear only inside a 402 challenge.
+
 ## Install
 
 Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) **0.1.0** (registry live); package.json tracks **0.1.1** for the next publish. No checkout required:
