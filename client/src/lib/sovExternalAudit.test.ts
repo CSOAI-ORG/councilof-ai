@@ -18,8 +18,10 @@ describe("External SOV / XRPL / T-REX form", () => {
     expect(keepCount()).toBeGreaterThanOrEqual(10);
     expect(LIVE_PIN.public_count).toBe("22 axis · 22 measured");
     expect(LIVE_PIN.measured_axes).toBe(22);
-    expect(LIVE_PIN.items).toBe(893);
-    expect(LIVE_PIN.corrections).toBe(30);
+    expect(LIVE_PIN.items).toBe(969);
+    expect(LIVE_PIN.corrections).toBe(39);
+    // A pinned count is a dated snapshot, so it must carry its date.
+    expect(LIVE_PIN.as_at).toBeTruthy();
     expect(LIVE_PIN.index_schema).toBe("csoai.sov-signal-index/1");
     expect(LIVE_PIN.index_not_certification).toBe(true);
     expect(KEEP_ARMS).toHaveLength(3);

@@ -7,9 +7,13 @@
  * how healthy the RECORD is. It is not how healthy the model is, not a
  * fused SOV grade, and not an investable index.
  *
- * Live 2026-09-01: GET /api/gspc → 22 axis · 22 measured · 0 empty ·
- * 893 items. csoai.sov-signal-index/1 → 15 signed rows,
- * not_a_certification: true, never predicts. GET /api/corrections → 30.
+ * SNAPSHOT, not a live read. Taken 2026-09-02 from GET /api/gspc
+ * (22 axis · 22 measured · 0 empty · 969 items) and GET /api/corrections (39).
+ *
+ * These two numbers move: corrections went 30 → 38 → 39 inside 2026-09-02
+ * alone. Any figure pinned here is stale the moment the ledger appends, so it
+ * MUST be rendered as "as at <date>" and never as a live count. The living
+ * board is GET https://councilof.ai/api/gspc.
  */
 
 export type FactState = "present" | "empty" | "unknown";
@@ -44,7 +48,8 @@ export const LIVE_HEALTH_PIN = {
   index_rows: 15,
   index_schema: "csoai.sov-signal-index/1",
   not_a_certification: true,
-  corrections: 30,
+  corrections: 39,
+  as_at: "2 September 2026",
   board: "22 axis · 22 measured",
 } as const;
 
@@ -160,6 +165,14 @@ export function healthLine(input: {
 }
 
 export function boardHealthLine(): string {
+  // FLAGGED 2026-09-02, owner ruling needed — NOT fixed here.
+  // healthLine() renders this field as "corrections touching this digest N",
+  // but LIVE_HEALTH_PIN.corrections is the WHOLE ledger count from
+  // GET /api/corrections (39), which counts corrections to everything in the
+  // estate, not the ones touching this digest. Those are different numbers and
+  // the smaller one is almost certainly the truthful answer here. Passing the
+  // ledger total makes the sentence overstate. Left as-is only because
+  // narrowing it needs a per-digest correction query that does not exist yet.
   return healthLine({
     measured: LIVE_HEALTH_PIN.measured,
     declared: LIVE_HEALTH_PIN.declared,

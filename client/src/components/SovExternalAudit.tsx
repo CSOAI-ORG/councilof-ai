@@ -50,8 +50,10 @@ export default function SovExternalAudit({ tone = "dark" }: { tone?: "dark" | "l
           {SOV_AUDIT_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
-          {SOV_AUDIT_SOURCE.title}. {SOV_AUDIT_SOURCE.role} Living pin: {LIVE_PIN.public_count},{" "}
-          {LIVE_PIN.corrections} corrections, index {LIVE_PIN.index_schema}. Issuer {LIVE_PIN.issuer}.
+          {SOV_AUDIT_SOURCE.title}. {SOV_AUDIT_SOURCE.role} Pinned as at {LIVE_PIN.as_at}:{" "}
+          {LIVE_PIN.public_count}, {LIVE_PIN.corrections} corrections, index {LIVE_PIN.index_schema}.{" "}
+          Issuer {LIVE_PIN.issuer}. Corrections and items move — the living board is{" "}
+          <a className="underline" href="/api/gspc">GET /api/gspc</a>.
         </p>
       </div>
 

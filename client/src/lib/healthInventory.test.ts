@@ -20,7 +20,8 @@ describe("Health inventory — correct facts, not a score", () => {
     expect(LIVE_HEALTH_PIN.declared).toBe(22);
     expect(LIVE_HEALTH_PIN.measured).toBe(22);
     expect(LIVE_HEALTH_PIN.empty).toBe(0);
-    expect(LIVE_HEALTH_PIN.corrections).toBe(30);
+    expect(LIVE_HEALTH_PIN.corrections).toBe(39);
+    expect(LIVE_HEALTH_PIN.as_at).toBeTruthy();
     expect(LIVE_HEALTH_PIN.not_a_certification).toBe(true);
     expect(HEALTH_NEVER.some((n) => /0–100 health score|0-100 health score/i.test(n))).toBe(true);
     expect(HEALTH_NEVER.some((n) => /mean of axis/i.test(n))).toBe(true);
@@ -44,7 +45,7 @@ describe("Health inventory — correct facts, not a score", () => {
       "22 measured of 22 declared; verify pass; evidence present; rerun empty; eligibility ELIGIBLE; corrections touching this digest 0.",
     );
     expect(boardHealthLine()).toMatch(/22 measured of 22 declared/);
-    expect(boardHealthLine()).toMatch(/corrections touching this digest 30/);
+    expect(boardHealthLine()).toMatch(/corrections touching this digest 39/);
     const blob = JSON.stringify({ HEALTH_RULING, HEALTH_NEVER, HEALTH_FACTS, LIVE_HEALTH_PIN });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
     expect(products).toContain("HealthInventory");
