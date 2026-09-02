@@ -4,5 +4,5 @@
 import { Redirect } from "wouter";
 
 export default function SovOS() {
-  return <Redirect to="/dashboard?tab=home" />;
+  return <Redirect to="/os?lobby=home" />;
 }
