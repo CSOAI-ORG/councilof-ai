@@ -30,14 +30,14 @@ const SLIDES: Slide[] = [
     kicker: "THE INSTRUMENTS",
     headline: ["Measured,", "not modelled."],
     sub: "Living GET /api/gspc. Every verdict is a predicate an auditor can recompute. Empty cells stay empty.",
-    cta: { label: "See the board", href: "/gspc-scoreboard" },
+    cta: { label: "See the board", href: "/dashboard?tab=board" },
     scene: "cells",
   },
   {
     kicker: "THE PROVING GROUND",
     headline: ["The arena is open.", "Not a badge."],
     sub: "Frozen tests. A signed card you can hold. Anyone re-checks it without asking us. Measurement, not certification.",
-    cta: { label: "See the board", href: "/gspc-scoreboard" },
+    cta: { label: "See the board", href: "/dashboard?tab=board" },
     image: {
       src: "/images/coliseum_hero_arena.jpg",
       alt: "Clay figures and green verification seals gathered in a marble arena",
@@ -81,7 +81,7 @@ const SLIDES: Slide[] = [
     kicker: "HUMAN OVERSIGHT",
     headline: ["Humans stay", "in the loop."],
     sub: "People set the tests, read the results, and can challenge any card. The system is steered, not hidden.",
-    cta: { label: "See how it is judged", href: "/gspc-scoreboard" },
+    cta: { label: "See how it is judged", href: "/dashboard?tab=board" },
     image: {
       src: "/images/coliseum_humans_vs_humanoids.jpg",
       alt: "Humans directing AI figures with beams of light, keeping oversight",
