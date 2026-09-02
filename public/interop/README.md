@@ -12,6 +12,7 @@ root-as-index. Not a second board, second scorer, or TS.
 
 | Bank | Path | Surface | Role |
 | --- | --- | --- | --- |
+| OpenAI↔HF Jul 2026 incident | [`incident-openai-hf-2026-07/`](./incident-openai-hf-2026-07/) | `public.notice` | Hashed public reports only — DISCOVERED; **not** recomputed; unsigned |
 | x402 challenge | [`x402-challenge/`](./x402-challenge/) | `cedulon.recon` | Live HTTP 402 probe; `settlement` stays **UNCHECKABLE** |
 | Cedulon / Abak | [`cedulon-recon/`](./cedulon-recon/) | `cedulon.recon` | Peer conservation fixtures as unsigned bank input |
 | SCRAPI / CCF | [`scrapi-ccf/`](./scrapi-ccf/) | `eval.delta` | Public MS + ASG receipt fixtures — consumer only, not a TS |

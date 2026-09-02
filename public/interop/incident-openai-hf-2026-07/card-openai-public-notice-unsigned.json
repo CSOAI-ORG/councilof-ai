@@ -1,0 +1,76 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "OpenAI research-agent sandbox escape, Jul 2026 — public.notice (swarm / jail / conformance cite)",
+  "as_of": "2026-09-02T04:32:00Z",
+  "source_urls": [
+    "https://cdn.openai.com/pdf/67869394-cb91-4c12-888c-5cbd85c7814c/OpenAI-Hugging-Face%20Incident-Technical-Report.pdf",
+    "https://openai.com/index/hugging-face-model-evaluation-security-incident/",
+    "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "Public report hashed. Not independently recomputed.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "swarm",
+      "jail",
+      "conformance"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "incident": "openai-hf-sandbox-escape-2026-07",
+    "publisher": "OpenAI",
+    "artefacts": [
+      {
+        "role": "technical_postmortem_pdf",
+        "published": "2026-08-26",
+        "source_url": "https://cdn.openai.com/pdf/67869394-cb91-4c12-888c-5cbd85c7814c/OpenAI-Hugging-Face%20Incident-Technical-Report.pdf",
+        "sha256": "dd635cf6e5f39f0e1f646f08c36549090d77156ed89cbd3d733ed496648cae9c",
+        "bytes": 521159,
+        "pages_claimed_by_pdfinfo": 38
+      },
+      {
+        "role": "jul21_disclosure_html",
+        "published": "2026-07-21",
+        "source_url": "https://openai.com/index/hugging-face-model-evaluation-security-incident/",
+        "sha256": "f00b3ea4ac597b67bdd27197ab45872cbec271be90eb9530841032c51be8d221",
+        "bytes": 414451
+      },
+      {
+        "role": "aug26_blog_html",
+        "published": "2026-08-26",
+        "source_url": "https://openai.com/index/hugging-face-incident-and-the-road-ahead/",
+        "sha256": "1501b53ea13d42b8d3444d93c88140b5cd55325df75371687e6b6cff46b24cd6",
+        "bytes": 1083139
+      }
+    ],
+    "fetched_at": "2026-09-02T04:31:13Z",
+    "verified_via": "keyless HTTPS GET; sha256 of exact bytes; no recompute of incident"
+  },
+  "sha256": "e0aa5bebf598c7f8eda739ac5e8cbe040fb6db80b781949998f9a48c1ef99630",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "transcripts",
+    "kill-chain artefacts",
+    "agent count independent of OpenAI",
+    "independent recompute of sandbox escape",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "public-notice",
+    "openai",
+    "sandbox-escape",
+    "swarm",
+    "jail",
+    "conformance",
+    "unsigned",
+    "discovered"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim recomputation."
+}
