@@ -15,6 +15,6 @@ describe("HOME_NAV", () => {
   });
 
   it("OS is a named lobby, not a raw /os iframe target", () => {
-    expect(HOME_NAV.find((i) => i.name === "OS")?.href).toBe("/os?lobby=home");
+    expect(HOME_NAV.find((i) => i.name === "OS")?.href).toBe("/dashboard?tab=home");
   });
 });

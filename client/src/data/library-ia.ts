@@ -26,6 +26,7 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 // /first-fine-watch /xrpl-attest. They are registered below, along with the
 // surfaces this front-door pass promotes (/report, /workbench, /start).
 export const PRIMARY_PATHS = new Set<string>([
+  "/compliance-training-world/catalog.html", // games-catalog entry; a catalogued path ships primary, never archived
   "/",
   // Measure
   // /board is the navigator ACROSS every axis set — the one route that is allowed

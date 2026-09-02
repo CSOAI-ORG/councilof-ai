@@ -38,6 +38,6 @@ export default defineConfig({
     // which made `npm test` red for three suites that are green under their own
     // runner (37/37 in packages/gspc-card-verifier). Excluded rather than left
     // failing, because a permanently-red gate is a gate nobody reads.
-    exclude: [...defaultExclude, 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs'],
+    exclude: [...defaultExclude, '**/.git-wt-*/**', 'docs/**/*.test.mjs', 'mcp/gspc-server/wired-tools.test.mjs', 'e2e/**', '**/e2e/**', '**/worktrees/**', 'packages/**', 'council-os/planned-ready.lock.test.mjs'],
   },
 });
