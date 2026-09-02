@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { CSOAI_LID } from "../_x402";
 import { onRequestGet as evidence, VERDICT_RE, LSF, decodeHexDomain, decodeCurrency, fitToCap, toPreview, ATTESTS } from "./evidence";
 import { ESTATE_PAY_TO } from "../_x402_config";
 import { canonicalBytes, PAYLOAD_CAP_BYTES } from "../../_lib/cardSign";
@@ -68,7 +69,13 @@ describe("/api/rwa/evidence — doors", () => {
     expect(b.accepts[0]).toMatchObject({ scheme: "exact", network: "eip155:8453", payTo: ESTATE_PAY_TO, asset: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", extra: { name: "USD Coin", version: "2" } });
     expect(b.csoai.free_preview).toBe(`${ORIGIN}/api/rwa/evidence?asset=BBRL&preview=1`);
     expect(b.csoai.free_reader).toBe(`${ORIGIN}/api/xrpl`);
-    expect(VERDICT_RE.test(JSON.stringify(b))).toBe(false);
+    // The board lid is a fixed, reviewed sentence carried verbatim in EVERY 402
+    // challenge (owner ruling, PR #1159). It contains "22 axes measured" — a board
+    // count, not a verdict about this asset — and it ends "not a certificate".
+    // Scan the whole body with ONLY that constant excised, so any other verdict
+    // word anywhere in the response still fails this test.
+    const bodyWithoutLid = JSON.stringify(b).split(JSON.stringify(CSOAI_LID).slice(1, -1)).join("");
+    expect(VERDICT_RE.test(bodyWithoutLid)).toBe(false);
   });
 
   it("preview is free: unsigned state, no signature, no raw-fetch hashes, same payload keys as the staged free leaf", async () => {
