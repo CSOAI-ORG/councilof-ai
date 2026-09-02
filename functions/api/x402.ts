@@ -54,6 +54,15 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["scores as a product", "a ranking", "a rating"],
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
       },
+      {
+        tier: 1,
+        id: "rwa_evidence",
+        name: "XRPL asset evidence card (per request)",
+        resource: u("/api/rwa/evidence?asset=<symbol|issuer_address>"),
+        free_preview: u("/api/rwa/evidence?asset=<symbol>&preview=1") + " (unsigned state, no raw-fetch hashes; symbols at /api/xrpl)",
+        deliverable: "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 — the same schema as the free public-root leaf), ≤3072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+        never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
+      },
     ],
     free_forever: [u("/gspc-verify"), u("/api/gspc"), u("/root.json"), u("/api/fines"), u("/api/proof?sha=<64-hex>"), u("/methodology")],
     invariants: {
