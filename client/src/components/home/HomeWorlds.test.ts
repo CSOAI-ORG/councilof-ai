@@ -15,7 +15,7 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
       "/assess",
       "/evidence-rail",
     ]);
-    expect(src).toContain('href="/gspc-scoreboard"');
+    expect(src).toContain('href="/dashboard?tab=board"');
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/dashboard?tab=home"');
     expect(src).toContain("VALID ·");
