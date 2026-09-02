@@ -662,6 +662,7 @@ async function boot() {
   renderLookup();
   try {
     BOARD = await loadJson(API);
+  printLid(BOARD);
     renderRuling();
     renderTape(BOARD);
     renderMap();
