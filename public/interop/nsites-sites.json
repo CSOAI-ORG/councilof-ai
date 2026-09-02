@@ -8,19 +8,41 @@
       "role": "GSPC mill N-site",
       "provider": "Hugging Face Jobs (org csoai)",
       "instrument": "ci/hf-jobs/mill-all-axes.sh -> harness/gspc-top100/mill_hub_queue.py --pick 300 --grade 8 --probe-first --dead harness/gspc-top100/dead_slugs.jsonl --items 30",
-      "pull": ["csoai/hub-queue queue.jsonl", "csoai/gspc-<short> items.jsonl (public frozen banks)", "csoai/councilof-ai-mirror bundle (code)"],
+      "pull": [
+        "csoai/hub-queue queue.jsonl",
+        "csoai/gspc-<short> items.jsonl (public frozen banks)",
+        "csoai/councilof-ai-mirror bundle (code)"
+      ],
       "push": "csoai/gspc-hub-cards staged-unsigned/<date>/<axis>/ + MANIFEST.json (UNSIGNED only; never mill-cards/, INDEX.jsonl, cards.jsonl or hub-queue)",
       "gpu": false,
       "flavor": "cpu-basic",
       "cost": "org prepaid inference + cpu-basic",
       "schedule": "0 5 * * *",
       "schedule_note": "daily, not hourly - inference is org prepaid",
-      "schedule_id": "PENDING - filled by the owner step in the PR body after `hf jobs scheduled run`",
+      "schedule_id": "6a9828d50718b0f6d8910f72",
       "status": "live",
       "account": "one account per site: the org-scoped HF token in the scheduled job's HF_TOKEN secret",
-      "fail_closed": ["HF_TOKEN missing -> exit 2", "unfixed picker (no --probe-first) -> exit 2", "any MEASURED flip -> exit 2", "inference balance/credit error -> exit 3 and HALTED-BALANCE in MANIFEST", "any axis mill rc != 0 -> INCOMPLETE, exit 4"],
-      "first_run": {"day": "2026-09-02", "manifest": "https://huggingface.co/datasets/csoai/gspc-hub-cards/resolve/main/staged-unsigned/2026-09-02/MANIFEST.json"},
-      "lookup": "https://huggingface.co/spaces/csoai/gspc-lookup"
+      "fail_closed": [
+        "HF_TOKEN missing -> exit 2",
+        "unfixed picker (no --probe-first) -> exit 2",
+        "any MEASURED flip -> exit 2",
+        "inference balance/credit error -> exit 3 and HALTED-BALANCE in MANIFEST",
+        "any axis mill rc != 0 -> INCOMPLETE, exit 4"
+      ],
+      "first_run": {
+        "day": "2026-09-02",
+        "manifest": "https://huggingface.co/datasets/csoai/gspc-hub-cards/resolve/main/staged-unsigned/2026-09-02/MANIFEST.json",
+        "axes": 10,
+        "staged_unsigned": 56,
+        "measured_flips": 0,
+        "dead_slugs": 6,
+        "dead_slugs_added": 1,
+        "status": "COMPLETE"
+      },
+      "lookup": "https://huggingface.co/spaces/csoai/gspc-lookup",
+      "schedule_namespace": "csoai",
+      "schedule_created": "2026-09-02T13:58Z",
+      "bootstrap": "newest csoai/councilof-ai-mirror *.bundle -> checkout lane/gspc-on-hf (fallback master) -> overlay picker from lane/mill-picker if the branch lacks --probe-first -> bash ci/hf-jobs/mill-all-axes.sh (boot test job 6a9828d40718b0f6d8910f6f: BOOT-OK)"
     }
   },
   "lid_source": "GET https://councilof.ai/api/gspc totals.lid (quoted verbatim, never typed)",
