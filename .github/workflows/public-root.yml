@@ -58,6 +58,12 @@ jobs:
           else
             python scripts/publish_public_root.py
           fi
+      - name: witness the ONE root (Rekor rekord + OpenTimestamps; public bytes only, no key)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          pip install -q opentimestamps-client || true
+          python scripts/witness_public_root.py
       - name: commit published tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
@@ -65,6 +71,7 @@ jobs:
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0
