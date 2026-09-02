@@ -1,0 +1,28 @@
+{
+ "request": [
+  {
+   "id": 1,
+   "jsonrpc": "2.0",
+   "method": "eth_getProof",
+   "params": [
+    "0x5b4681F0d7A01B817675F25892D3Ad73572FD1D9",
+    [
+     "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+     "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103"
+    ],
+    "0x71fcad5"
+   ]
+  }
+ ],
+ "response": [
+  {
+   "error": {
+    "code": -32005,
+    "message": "method eth_getProof in batch triggered rate limit"
+   },
+   "id": null,
+   "jsonrpc": "2.0"
+  }
+ ],
+ "url": "https://bsc-dataseed.bnbchain.org"
+}

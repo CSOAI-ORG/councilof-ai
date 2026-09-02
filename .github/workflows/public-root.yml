@@ -1,6 +1,7 @@
 name: public-root
 
-# One writer. Commits public/root.json + cards + proofs + publisher-health.
+# One writer. Commits public/root.json + cards + proofs + publisher-health + public/archive (provable-archive index,
+# EIP-1186 proof bytes, evm-events cursor).
 # Does NOT prerender the site. Does NOT add a fourth overlapping full-site deploy.
 # Existing Pages deploy on master picks up the JSON. GHA on master only.
 # If BOARD_SIGN_KEY_PKCS8_B64 is missing, fail closed (exit 3). Never publish unsigned NEW leaves.
@@ -85,6 +86,11 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           WITNESS_KV_NAMESPACE_ID: ${{ vars.WITNESS_KV_NAMESPACE_ID }}
         run: python scripts/adapters/witness_queue.py --mark
+      - name: provable archive index (append-only; bytes from this tree + witnesses; no key, no network)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/build_archive_index.py
       - name: commit published tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
@@ -92,6 +98,7 @@ jobs:
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/archive 2>/dev/null || true
           git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
           git add public/interop/witness/*.json 2>/dev/null || true
           if git diff --cached --quiet; then
