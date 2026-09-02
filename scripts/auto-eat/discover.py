@@ -348,6 +348,8 @@ def main() -> int:
                     continue
                 if str(r["id"]) in carded:
                     continue
+                if SECRETISH.search(str(r.get("id") or "")):
+                    continue
                 seen.add(key)
                 fresh.append(r)
             found.extend(fresh)
