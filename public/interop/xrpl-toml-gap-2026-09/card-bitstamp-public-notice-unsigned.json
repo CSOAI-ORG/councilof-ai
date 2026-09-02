@@ -1,0 +1,123 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Bitstamp USD/EUR on XRPL — public.notice: strict_two_way_toml UNCHECKABLE (toml HTTP 404)",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://councilof.ai/api/xrpl",
+    "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "https://bitstamp.net/.well-known/xrp-ledger.toml",
+    "https://www.bitstamp.net/.well-known/xrp-ledger.toml",
+    "https://api.xrpscan.com/api/v1/account/rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+    "https://s1.xrplmeta.org/tokens"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "strict_two_way_toml failed (UNCHECKABLE): on-ledger Domain present (bitstamp.net) but https://bitstamp.net/.well-known/xrp-ledger.toml returned HTTP 404 — not a bidirectional domain match.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "provenance-controls"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "failed_check": "strict_two_way_toml",
+    "two_way_state": "UNCHECKABLE",
+    "two_way_reason": ".well-known/xrp-ledger.toml HTTP 404 (unreachable, never FAIL)",
+    "issuer": "Bitstamp",
+    "symbols": [
+      "USD.bs",
+      "EUR.bs"
+    ],
+    "issuer_addresses": {
+      "USD.bs": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "EUR.bs": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B"
+    },
+    "on_ledger_domain": "bitstamp.net",
+    "reader_verified_via": "XRPLMeta registry",
+    "reader_as_of": "2026-09-01T23:15:51Z",
+    "roster_source": "https://councilof.ai/api/xrpl",
+    "two_way_check_source": "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "artefacts": [
+      {
+        "id": "api-xrpl",
+        "role": "api-xrpl",
+        "source_url": "https://councilof.ai/api/xrpl",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 9039,
+        "sha256": "8097c2a815f42dda08d55a11e623b8004104514791104a140aad3956488ec1cf"
+      },
+      {
+        "id": "xrpl-two-way-check",
+        "role": "xrpl-two-way-check",
+        "source_url": "https://councilof.ai/interop/xrpl-two-way-check.json",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 7938,
+        "sha256": "85848181b51f74c610c27de5c3f98a599e994fd31577f21f7475b19bfccb095f"
+      },
+      {
+        "id": "bitstamp-toml",
+        "role": "bitstamp-toml",
+        "source_url": "https://bitstamp.net/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 41547,
+        "sha256": "5138f49fa322a4c5dd1b6bf667035e8cf1f25bb2ef638e1906fa340e621fc5c2",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "bitstamp-www-toml",
+        "role": "bitstamp-www-toml",
+        "source_url": "https://www.bitstamp.net/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 41547,
+        "sha256": "300b50fefe010d6fbf293feddba0ca0320778b85383035cae4d1d57973c4bea7",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "xrpscan-bitstamp",
+        "role": "xrpscan-bitstamp",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1647,
+        "sha256": "a46eced0739478e82462a55767a8580a6277476eb91831759c596c8e84ecc9c0"
+      },
+      {
+        "id": "xrplmeta-tokens",
+        "role": "xrplmeta-tokens",
+        "source_url": "https://s1.xrplmeta.org/tokens",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 94705,
+        "sha256": "d17280398d9eb7d289786a72b611211fd6c167febb94169486c11dec1f1cbe8a"
+      }
+    ],
+    "fetched_at": "2026-09-02T04:36:44Z",
+    "verified_via": "keyless HTTPS GET + sha256 of exact bytes; two-way check re-cited, not invented"
+  },
+  "sha256": "9f51e88085532a7de5a8a3588ebbbfb4d84f999517aadf26edd87c9d8f5aebc3",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "strict_two_way_toml",
+    "bidirectional domain match",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_score"
+  ],
+  "tags": [
+    "public-notice",
+    "xrpl",
+    "strict_two_way_toml",
+    "unsigned",
+    "discovered",
+    "bitstamp"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim bidirectional domain match when strict_two_way_toml failed."
+}
