@@ -2,15 +2,22 @@
   "schema": "csoai.gspc-seven-empty-leftover/0.1",
   "status": "UNSIGNED",
   "signed": false,
+  "authority": "NOT LIVE. Historical leftover only. Live board counts: GET https://councilof.ai/api/gspc — never freeze 15·7 from this file.",
+  "superseded": true,
+  "supersession_note": "Published when the board still reported 22 axis · 15 measured · 7 unmeasured. That freeze is historical leftover, not live. Live authority is GET /api/gspc (as_of this fix check: measured_axes 22, unmeasured_axes 0, public_count \"22 axis · 22 measured\", lid \"22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.\").",
   "published_at": "2026-09-01T02:30:41Z",
   "published_at_europe_london": "2026-09-01T03:30:41+01:00",
   "live_board": {
     "get": "https://councilof.ai/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
-    "public_count": "22 axis · 15 measured",
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "these_seven": "UNMEASURED. This leftover does not stamp them."
+    "counts_authority": "GET /api/gspc only — this leftover does not freeze live counts",
+    "historical_leftover_when_published": {
+      "note": "NOT LIVE. Snapshot of board shape when this leftover was published (pre full-board sweep). Superseded historical leftover — do not present as current.",
+      "public_count": "22 axis · 15 measured",
+      "measured_axes": 15,
+      "unmeasured_axes": 7
+    },
+    "these_seven": "Were UNMEASURED when this leftover was published. This leftover does not stamp them. Live authority is GET /api/gspc."
   },
   "do_not": [
     "stamp MEASURED to close the gap",
