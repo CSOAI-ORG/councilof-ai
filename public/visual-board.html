@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GSPC — the living board · Council of AI</title>
+<meta name="description" content="The 22-axis GSPC board — every axis the Council of AI measures, every empty slot labelled. Live, signed, never fabricated." />
+<meta name="robots" content="index,follow" />
+<link rel="icon" href="/csoai-icon.svg" />
+<link rel="canonical" href="https://councilof.ai/visual-board.html" />
+<style>
+  :root {
+    --bg: #ffffff; --fg: #0b1a12; --muted: #5b6b62; --line: #e2e8e4;
+    --ok: #16a34a; --bad: #dc2626; --wait: #ca8a04; --chip: #f4f7f5; --accent: #0f766e;
+    --measured: #16a34a; --untested: #94a3b8; --separated: #0f766e; --tie: #94a3b8;
+    --fact: #2563eb;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #05140d; --fg: #eafff4; --muted: #8fb3a3; --line: rgba(52,211,153,.18);
+      --ok: #34d399; --bad: #f87171; --wait: #fbbf24; --chip: #08201636; --accent: #34d399;
+      --measured: #34d399; --untested: #6b7280; --separated: #34d399; --tie: #6b7280;
+      --fact: #60a5fa;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+  body { font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 80rem; margin: 0 auto; padding: 2rem 1.25rem 5rem; }
+
+  /* Hero */
+  .hero { padding: 1.5rem 0 2.5rem; border-bottom: 1px solid var(--line); }
+  .hero h1 { font-size: clamp(1.8rem, 4.5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 0.5rem; line-height: 1.1; }
+  .hero .sub { color: var(--muted); font-size: 1.05rem; max-width: 48rem; }
+  .hero .lid { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92rem; color: var(--accent); margin-top: 1rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; margin-top: 1.5rem; font-size: 0.92rem; color: var(--muted); }
+  .meta code { background: var(--chip); padding: 0.1rem 0.4rem; border-radius: 4px; }
+
+  /* Toolbar */
+  .toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 2rem 0 1.5rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; border-radius: 8px; border: 1px solid var(--line); background: var(--chip); color: var(--fg); text-decoration: none; font-weight: 500; font-size: 0.92rem; cursor: pointer; }
+  .btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.1); }
+  .pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.18rem 0.55rem; border-radius: 999px; border: 1px solid var(--line); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.02em; }
+  .pill.measured { background: rgba(22,163,74,0.10); color: var(--measured); border-color: rgba(22,163,74,0.4); }
+  .pill.unmeasured { background: rgba(202,138,4,0.10); color: var(--wait); border-color: rgba(202,138,4,0.4); }
+  .pill.unreachable { background: rgba(220,38,38,0.10); color: var(--bad); border-color: rgba(220,38,38,0.4); }
+  .pill.separated { background: rgba(15,118,110,0.10); color: var(--separated); border-color: rgba(15,118,110,0.4); }
+  .pill.tie { background: rgba(148,163,184,0.10); color: var(--tie); border-color: rgba(148,163,184,0.4); }
+  .pill.fact { background: rgba(37,99,235,0.10); color: var(--fact); border-color: rgba(37,99,235,0.4); }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat { padding: 0.85rem 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--chip); }
+  .stat .label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+  .stat .value { font-size: 1.4rem; font-weight: 700; margin-top: 0.25rem; }
+  .stat .note { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+
+  /* Board grid */
+  .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+  .axis { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--chip); display: flex; flex-direction: column; gap: 0.5rem; transition: transform 80ms ease, box-shadow 80ms ease; }
+  .axis:hover { transform: translateY(-1px); box-shadow: 0 6px 20px -10px var(--accent); }
+  .axis h3 { margin: 0; font-size: 1rem; font-weight: 600; letter-spacing: -0.01em; }
+  .axis .row { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
+  .axis .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem; font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+  .axis .nums div { background: var(--bg); padding: 0.35rem 0.5rem; border-radius: 6px; text-align: center; }
+  .axis .nums strong { display: block; color: var(--fg); font-size: 1rem; font-weight: 700; }
+  .axis .leader { font-size: 0.85rem; color: var(--muted); margin-top: 0.4rem; }
+  .axis .leader strong { color: var(--fg); }
+  .axis .note { font-size: 0.78rem; color: var(--muted); font-style: italic; margin-top: auto; padding-top: 0.5rem; border-top: 1px solid var(--line); }
+  .axis.is-fact { border-color: rgba(37,99,235,0.3); background: rgba(37,99,235,0.04); }
+
+  /* Verify box */
+  .verifier { margin: 3rem 0 2rem; padding: 1.5rem; border: 1px solid var(--line); border-radius: 12px; background: var(--chip); }
+  .verifier h2 { margin: 0 0 0.5rem; font-size: 1.4rem; font-weight: 700; }
+  .verifier .desc { color: var(--muted); margin-bottom: 1rem; }
+  .verifier textarea { width: 100%; min-height: 120px; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85rem; resize: vertical; }
+  .verifier .verdict { padding: 1rem 1.25rem; border-radius: 8px; margin-top: 1rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; }
+  .verdict.valid { background: rgba(22,163,74,0.10); border: 1px solid rgba(22,163,74,0.4); color: var(--measured); }
+  .verdict.invalid { background: rgba(220,38,38,0.10); border: 1px solid rgba(220,38,38,0.4); color: var(--bad); }
+  .verdict.unchecked { background: rgba(202,138,4,0.10); border: 1px solid rgba(202,138,4,0.4); color: var(--wait); }
+
+  /* Footer */
+  footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  footer .doctrine { font-style: italic; margin-top: 0.5rem; }
+
+  /* Loading */
+  .loading { text-align: center; padding: 4rem 1rem; color: var(--muted); }
+  .spinner { display: inline-block; width: 1.2rem; height: 1.2rem; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 0.5rem; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>The living board</h1>
+    <p class="sub">22 axes. Every empty slot labelled UNMEASURED — never zero, never filled, never faked. Every figure ties back to a frozen input bank with a sha256.</p>
+    <p class="lid">GSPC board · schema csoai.gspc-axes/0.5 · live from GET /api/gspc</p>
+    <div class="meta">
+      <span><strong>22 axes</strong> · <strong id="meta-measured">— measured</strong> · <strong id="meta-unmeasured">— UNMEASURED</strong></span>
+      <span>schema: <code id="meta-schema">…</code></span>
+      <span>as_of: <code id="meta-asof">…</code></span>
+      <span>source: <code>https://councilof.ai/api/gspc</code></span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <button class="btn primary" id="reload">↻ Reload</button>
+    <button class="btn" id="copy-lid">Copy lid</button>
+    <a class="btn" href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener">Open /gspc-verify →</a>
+    <a class="btn" href="https://councilof.ai/api/gspc" target="_blank" rel="noopener">Raw JSON →</a>
+    <a class="btn" href="https://councilof.ai/signed/gspc-board.signed.json" target="_blank" rel="noopener">Signed board →</a>
+    <a class="btn" href="https://councilof.ai/root.json" target="_blank" rel="noopener">root.json →</a>
+  </div>
+
+  <div class="stats" id="stats">
+    <div class="stat"><div class="label">axes</div><div class="value" id="s-axes">…</div><div class="note">declared</div></div>
+    <div class="stat"><div class="label">measured</div><div class="value" id="s-measured">…</div><div class="note">MEASURED rows</div></div>
+    <div class="stat"><div class="label">model-axes</div><div class="value" id="s-model">…</div><div class="note">14 behaviour</div></div>
+    <div class="stat"><div class="label">fact-axes</div><div class="value" id="s-fact">…</div><div class="note">8 deterministic</div></div>
+    <div class="stat"><div class="label">separated</div><div class="value" id="s-separated">…</div><div class="note">statistical sep.</div></div>
+    <div class="stat"><div class="label">ties</div><div class="value" id="s-tie">…</div><div class="note">TIE = not a win</div></div>
+  </div>
+
+  <div id="board-wrap">
+    <div class="loading"><span class="spinner"></span>Fetching the live board…</div>
+  </div>
+
+  <section class="verifier" id="verifier">
+    <h2>Verify a card</h2>
+    <p class="desc">Paste a card JSON, a card URL, or a card sha. Three-state verdict, fetched live key from <code>https://councilof.ai/.well-known/did.json</code>.</p>
+    <textarea id="v-input" placeholder='Paste a gspc.measurement-card JSON here, or a URL like https://councilof.ai/signed/cards/<sha>.json'></textarea>
+    <div class="toolbar" style="margin-top:0.85rem">
+      <button class="btn primary" id="v-run">Verify</button>
+      <button class="btn" id="v-sample">Try a sample card</button>
+      <a class="btn" href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener">Full verifier →</a>
+    </div>
+    <div id="v-result" class="verdict unchecked" style="display:none">awaiting input</div>
+  </section>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · councilof.ai · <a href="https://councilof.ai/verify">/verify</a> · <a href="https://councilof.ai/api/gspc">/api/gspc</a> · <a href="https://councilof.ai/mcp">/mcp</a></p>
+    <p class="doctrine">Measurement, not certification. Anyone can re-check. UNMEASURED stays empty.</p>
+  </footer>
+</main>
+
+<script>
+/* === GSPC board renderer ============================================ */
+
+const $ = (sel, el=document) => el.querySelector(sel);
+const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+const ORIGIN = 'https://councilof.ai';
+const ENDPOINT = `${ORIGIN}/api/gspc`;
+const DID_URL  = `${ORIGIN}/.well-known/did.json`;
+
+const CANON = v => JSON.stringify(v, Object.keys(v).sort(), 0);
+const sha256 = async text => {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+};
+const hexToBytes = h => new Uint8Array(h.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
+}
+
+async function fetchBoard() {
+  const res = await fetch(ENDPOINT, { headers: { accept: 'application/json' } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return await res.json();
+}
+
+function isFactAxis(name) {
+  // 8 fact axes that don't have model comparisons (deterministic).
+  return [
+    'provenance-controls','reserve-attestation','regulatory-framework',
+    'distribution-integrity','custody-disclosure','ai-adoption-components',
+    'labour-components','humanoid-labour-index'
+  ].includes(name);
+}
+
+function renderBoard(board) {
+  const axes = board.axes || [];
+  const totals = board.totals || {};
+  const schema = board.schema || 'unknown';
+  const asOf = board.as_of || board.living_stamp?.updated || '?';
+
+  $('#meta-schema').textContent = schema;
+  $('#meta-asof').textContent = asOf;
+  $('#meta-measured').textContent = `${totals.measured_axes ?? axes.filter(a => (a.status||'').toUpperCase().includes('MEASURED')).length} measured`;
+  $('#meta-unmeasured').textContent = `${totals.unmeasured_axes ?? 0} UNMEASURED`;
+
+  const measured = axes.filter(a => (a.status||'').toUpperCase().includes('MEASURED'));
+  const separated = measured.filter(a => (a.separation||'').toUpperCase().includes('SEPARATED'));
+  const tie = measured.filter(a => (a.separation||'').toUpperCase().includes('TIE'));
+  const modelAxes = measured.filter(a => !isFactAxis(a.axis || a.name));
+  const factAxes = measured.filter(a => isFactAxis(a.axis || a.name));
+
+  $('#s-axes').textContent = totals.axes ?? axes.length;
+  $('#s-measured').textContent = measured.length;
+  $('#s-model').textContent = modelAxes.length;
+  $('#s-fact').textContent = factAxes.length;
+  $('#s-separated').textContent = separated.length;
+  $('#s-tie').textContent = tie.length;
+
+  // Sort: MEASURED model-axes first (by axis name), then fact-axes
+  const sorted = [...measured].sort((a, b) => {
+    const aFact = isFactAxis(a.axis || a.name) ? 1 : 0;
+    const bFact = isFactAxis(b.axis || b.name) ? 1 : 0;
+    if (aFact !== bFact) return aFact - bFact;
+    return (a.axis || a.name || '').localeCompare(b.axis || b.name || '');
+  });
+
+  const cards = sorted.map(a => {
+    const name = a.axis || a.name || '?';
+    const status = (a.status || '').toUpperCase();
+    const sep = (a.separation || '').toUpperCase();
+    const fact = isFactAxis(name);
+    const sepPill = fact ? '' : (sep.includes('SEPARATED')
+      ? '<span class="pill separated">SEPARATED</span>'
+      : sep.includes('TIE')
+        ? '<span class="pill tie">TIE</span>'
+        : '<span class="pill untested">UNTESTED</span>');
+    const factPill = fact ? '<span class="pill fact">fact</span>' : '';
+    const n = a.n == null ? '—' : a.n;
+    const acc = a.accuracy == null ? '—' : Number(a.accuracy).toFixed(3);
+    const leader = a.leader
+      ? `<div class="leader">leader: <strong>${escapeHtml(String(a.leader))}</strong></div>`
+      : '';
+    const note = a.note ? `<div class="note">${escapeHtml(String(a.note))}</div>` : '';
+
+    return `<article class="axis${fact ? ' is-fact' : ''}">
+      <div class="row">
+        <h3>${escapeHtml(name)}</h3>
+        <span class="pill measured" style="margin-left:auto">MEASURED</span>
+      </div>
+      <div class="row">${sepPill}${factPill}</div>
+      <div class="nums">
+        <div><strong>${n}</strong>n</div>
+        <div><strong>${acc}</strong>acc</div>
+        <div><strong>${escapeHtml(sep || '—')}</strong>sep</div>
+      </div>
+      ${leader}
+      ${note}
+    </article>`;
+  }).join('');
+
+  $('#board-wrap').innerHTML = `<div class="board">${cards}</div>`;
+}
+
+async function load() {
+  try {
+    const board = await fetchBoard();
+    renderBoard(board);
+  } catch (err) {
+    $('#board-wrap').innerHTML = `<div class="loading">UNREACHABLE — could not fetch ${ENDPOINT}<br><small>${escapeHtml(String(err))}</small></div>`;
+  }
+}
+
+$('#reload').onclick = load;
+$('#copy-lid').onclick = async () => {
+  const txt = `22 axis · 22 measured (14 model-comparison + 8 fact cards) · schema csoai.gspc-axes/0.5`;
+  await navigator.clipboard.writeText(txt);
+  const btn = $('#copy-lid');
+  const old = btn.textContent;
+  btn.textContent = '✓ Copied';
+  setTimeout(() => btn.textContent = old, 1500);
+};
+
+load();
+
+/* === Verifier ====================================================== */
+
+let LIVE_PK = null;
+let LIVE_KEY_ID = null;
+
+async function fetchLiveKey() {
+  const res = await fetch(DID_URL, { headers: { accept: 'application/did+json' } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const doc = await res.json();
+  const preferred = ['#card-attestation-1', '#board-attestation-1'];
+  for (const pref of preferred) {
+    for (const vm of (doc.verificationMethod || [])) {
+      if ((vm.id || '').endsWith(pref)) {
+        const jwk = vm.publicKeyJwk || {};
+        const x = jwk.x || '';
+        if (!x) continue;
+        // base64url decode
+        const pad = '='.repeat((-x.length) % 4);
+        const bin = atob(x.replace(/-/g, '+').replace(/_/g, '/') + pad);
+        LIVE_PK = hexToBytes([...bin].map(c => c.charCodeAt(0).toString(16).padStart(2,'0')).join(''));
+        LIVE_KEY_ID = vm.id;
+        return;
+      }
+    }
+  }
+  throw new Error('no pinned key found');
+}
+
+function base64UrlDecode(str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  while (str.length % 4) str += '=';
+  return Uint8Array.from(atob(str), c => c.charCodeAt(0));
+}
+
+async function verifyCard(input) {
+  // Three-state verdict: VALID / INVALID / UNCHECKABLE.
+  const fail = (reason, kind = 'invalid') => ({ kind, reason, ok: false });
+
+  if (!LIVE_PK) {
+    try { await fetchLiveKey(); } catch (e) {
+      return fail(`could not fetch live key: ${e.message}`, 'unchecked');
+    }
+  }
+
+  let card = null;
+  if (input.trim().startsWith('{')) {
+    try { card = JSON.parse(input); }
+    catch { return fail('not valid JSON', 'invalid'); }
+  } else if (input.trim().startsWith('http')) {
+    try {
+      const r = await fetch(input);
+      if (!r.ok) return fail(`fetch returned HTTP ${r.status}`, 'unchecked');
+      card = await r.json();
+    } catch (e) { return fail(`fetch failed: ${e.message}`, 'unchecked'); }
+  } else {
+    return fail('input must be JSON or a URL', 'invalid');
+  }
+
+  if (!card.body) return fail('card has no body field', 'invalid');
+
+  const kind = card.body.kind || '';
+  if (!kind.includes('gspc.measurement-card')) return fail(`unknown kind: ${kind}`, 'invalid');
+
+  const canonical = CANON(card.body);
+  const idComputed = await sha256(canonical);
+  if (card.id && card.id !== idComputed) return fail(`id mismatch: computed=${idComputed.slice(0,16)}… stated=${card.id.slice(0,16)}…`);
+
+  const sig = card.signature;
+  const did = card.did || '';
+  const pubkey = card.pubkey || '';
+  if (!sig) return fail('card has no signature field');
+
+  if (did && !did.startsWith('did:web:csoai.org#')) return fail(`card DID is not councilof.ai: ${did}`);
+
+  try {
+    const pk = await crypto.subtle.importKey('raw', LIVE_PK, { name: 'Ed25519' }, false, ['verify']);
+    const sigBytes = hexToBytes(sig);
+    const ok = await crypto.subtle.verify('Ed25519', pk, sigBytes, new TextEncoder().encode(canonical));
+    if (!ok) return fail('signature did not verify under the pinned DID key');
+    return { kind: 'valid', reason: 'ok', ok: true, id: idComputed, key: LIVE_KEY_ID };
+  } catch (e) {
+    return fail(`crypto error: ${e.message}`, 'unchecked');
+  }
+}
+
+$('#v-run').onclick = async () => {
+  const input = $('#v-input').value.trim();
+  if (!input) {
+    $('#v-result').style.display = 'block';
+    $('#v-result').className = 'verdict unchecked';
+    $('#v-result').textContent = 'awaiting input';
+    return;
+  }
+  $('#v-result').style.display = 'block';
+  $('#v-result').className = 'verdict unchecked';
+  $('#v-result').textContent = 'verifying…';
+  const r = await verifyCard(input);
+  const cls = r.kind === 'valid' ? 'valid' : r.kind === 'invalid' ? 'invalid' : 'unchecked';
+  $('#v-result').className = `verdict ${cls}`;
+  $('#v-result').textContent =
+    `verdict: ${r.kind.toUpperCase()}\n` +
+    `reason:  ${r.reason}\n` +
+    (r.id ? `id:      ${r.id}\n` : '') +
+    (r.key ? `key:     ${r.key}` : 'key:     did:web:csoai.org#card-attestation-1 (live fetch failed)') +
+    '\n\nMeasurement, not certification. Anyone can re-check at https://councilof.ai/verify';
+};
+
+$('#v-sample').onclick = () => {
+  $('#v-input').value = JSON.stringify({
+    "alg": "Ed25519",
+    "body": {
+      "kind": "gspc.measurement-card",
+      "axis": "jail",
+      "model": "sample",
+      "issuer": "CSOAI Ltd",
+      "n": 71,
+      "accuracy": 0.5915,
+      "status": "MEASURED",
+      "verify": "https://councilof.ai/gspc-verify"
+    },
+    "id": "0000000000000000000000000000000000000000000000000000000000000000",
+    "signature": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "did": "did:web:csoai.org#card-attestation-1"
+  }, null, 2);
+  $('#v-run').click();
+};
+</script>
+</body>
+</html>
