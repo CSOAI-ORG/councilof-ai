@@ -210,6 +210,22 @@ export const onRequestGet: PagesFunction = async () => {
     schema: "csoai.live-state/1",
     title: "CSOAI live state — the numbers a lane may quote",
 
+    // Top-level lid — same as /api/gspc totals.public_count, lifted here so
+    // a stranger reading /api/state does not have to know to look at
+    // `board.public_count.value` for the short sentence. Both paths carry
+    // the same derived fact. Note: public_leader_count is NOT lifted to the
+    // top level — it lives at board.public_leader_count because the per-axis
+    // attribution table is the honest way to read it (one number per metric,
+    // one file per number — see quoting doc).
+    public_count: fact(
+      livePublicCount,
+      "declared",
+      SRC_AXES + " → derived public_count (also published at board.public_count)",
+      liveMeasuredOn,
+      "MEASURED_ON.date",
+      "The short sentence. Safe to quote verbatim. Same grammar as GET /api/gspc.",
+    ),
+
     contract: {
       quote_this: "Every count a lane publishes must come from this endpoint, by field name.",
       not_here_not_established:
