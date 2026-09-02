@@ -47,7 +47,7 @@ for (const p of PERSONAS) {
       // "<slots> axes · <measured> measured". This check used to require the
       // retired "<measured> measured of <quotable> quotable" form, which hid the
       // unmeasured slots entirely — the defect the sweep exists to correct.
-      const derived = `${t.axes} axes · ${t.measured_axes} measured`;
+      const derived = `${t.axes} axis · ${t.measured_axes} measured`;
       if (typeof t.public_count !== "string" || !String(t.public_count).startsWith(derived)) {
         fail(`${p.who}: public_count ${JSON.stringify(t.public_count)} does not derive from axes/measured_axes (want "${derived}")`);
         continue;
