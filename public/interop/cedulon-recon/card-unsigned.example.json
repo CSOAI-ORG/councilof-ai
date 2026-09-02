@@ -1,0 +1,108 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "cedulon.recon",
+  "subject": "cedulon:abak-00-population-probe#bank-fixtures-2026-09-02",
+  "as_of": "2026-09-02T02:59:00Z",
+  "source_urls": [
+    "https://github.com/dogrucanemek-alt/cedulon/blob/master/interop/abak-00/population-probe.mjs",
+    "https://github.com/dogrucanemek-alt/cedulon/blob/master/interop/abak-00/README.md",
+    "https://raw.githubusercontent.com/dogrucanemek-alt/cedulon/master/interop/abak-00/population-probe.mjs",
+    "https://datatracker.ietf.org/doc/draft-abak-agent-control-delivery-evidence/"
+  ],
+  "payload": {
+    "profile": "abak-00-population",
+    "package_pin": "@cedulon/audit@0.8.0",
+    "probe_source": "https://github.com/dogrucanemek-alt/cedulon/blob/master/interop/abak-00/population-probe.mjs",
+    "probe_sha256": "031f84fda2054b1427a510baa45f880d379ea60dced408a4a74028da12b1fceb",
+    "class_counts": {
+      "instruction": 16,
+      "record": 1,
+      "excluded": 1,
+      "either-side": 2,
+      "issuer-evidence": 3,
+      "not-a-disposition": 26
+    },
+    "class_counts_total": 49,
+    "conservation_rows": [
+      {
+        "id": "mcc-matching",
+        "expected": "CONFIRMED",
+        "observed": "CONFIRMED"
+      },
+      {
+        "id": "mcc-issuer-only",
+        "expected": "UNCONFIRMED",
+        "observed": "UNCONFIRMED"
+      },
+      {
+        "id": "mcc-substitution",
+        "expected": "SUBSTITUTION",
+        "observed": "SUBSTITUTION"
+      },
+      {
+        "id": "mcc-receiver-only",
+        "expected": null,
+        "observed": null,
+        "orphan_records": 1
+      },
+      {
+        "id": "mcc-malformed-issuer",
+        "expected": "INVALID",
+        "observed": "INVALID"
+      },
+      {
+        "id": "part4-a-opening-boundary-deferred",
+        "exclusion_reported": true
+      },
+      {
+        "id": "part4-b-closing-boundary-silent",
+        "exclusion_reported": false,
+        "gap": "silent_exclusion_of_issuer_instruction"
+      },
+      {
+        "id": "part4-c-aborted-invisible",
+        "gap": "aborted_receipt_absent_from_class_counts"
+      }
+    ],
+    "bank_paths": [
+      "public/interop/cedulon-recon/bank/class-counts-expected.json",
+      "public/interop/cedulon-recon/bank/conservation-fixtures.jsonl",
+      "public/interop/cedulon-recon/bank/probe-pin.json"
+    ],
+    "open_defects": [
+      "closing-boundary unmatched receipt may drop silent (Cedulon README / Part 4b)",
+      "aborted receipt invisible in some recon paths (Part 4c)",
+      "report publishes findings+aggregate, not Section 6.4 class counts"
+    ],
+    "x402_challenge": {
+      "status": 402,
+      "price_usd": 0.02,
+      "settlement": "UNCHECKABLE",
+      "note": "challenge advertised on councilof.ai; header≠receipt; see public/interop/x402-challenge/"
+    },
+    "pin_rerun": {
+      "as_of": "2026-09-02T02:59:00Z",
+      "exit_code": 0,
+      "status": "probe_observed"
+    },
+    "board_axis_fill": false,
+    "status": "UNSIGNED_BANK_FIXTURE"
+  },
+  "sha256": "638659e68aa3f20b43c77f9d985a01e6ce9db4e2aa336c54617dcd1d752803e2",
+  "sig_ed25519": null,
+  "unmeasured": [
+    "n>=30_windows",
+    "4way_vs_parents",
+    "keystone_signature",
+    "x402_facilitator_receipt",
+    "gspc_axis_projection_forbidden",
+    "MEASURED_forbidden_here"
+  ],
+  "tags": [
+    "scitt-eat",
+    "cedulon",
+    "abak-00",
+    "unsigned",
+    "bank-fixture"
+  ]
+}
