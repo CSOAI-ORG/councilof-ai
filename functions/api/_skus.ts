@@ -147,6 +147,29 @@ export const SKUS: Record<string, Sku> = {
       "Board stays free. Verify stays free. Human rail remains Paddle — do not wire Stripe.",
   },
 
+  // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a
+  // machine-readable mark DETECTABLE in these bytes (C2PA manifest recomputed in the Function;
+  // watermarks UNCHECKABLE where no public detector exists), beside the verbatim Art 50(2)
+  // excerpt hash and the Art 99(4) ceiling. Point-in-time detection, never a conformity opinion.
+  art50_marking_evidence: {
+    id: "art50_marking_evidence",
+    name: "Article 50 marking evidence (issuance)",
+    artifact:
+      "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1 — asset sha256, " +
+      "C2PA manifest/assertion/data-hash/signature status, watermark statuses, Art 50(2) excerpt hash, " +
+      "Art 99(4) ceiling, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
+    unit: "1 pack = 1 output (URL or uploaded bytes) × 1 point in time",
+    sells: "issuance",
+    prices: {
+      pack: band(25, [5, 250], "X402_PRICE_ART50_MARKING_USD"),
+    },
+    rail: "x402-or-invoice",
+    notes:
+      "Free preview (?preview=1) returns the same measurement unsigned. The signed pack settles on " +
+      "x402 (agent rail) or on a CSOAI LTD GBP invoice (?commissioned_by=<org>&invoice=gbp) — the " +
+      "owner invoices; the Function only issues the reference. Never a compliance conclusion.",
+  },
+
   // SKU-3 — Enterprise Rail Licence. Metered per issuance/bundle, or annual band + overage.
   enterprise_rail: {
     id: "enterprise_rail",

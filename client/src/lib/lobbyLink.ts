@@ -333,6 +333,7 @@ export const OS_DOOR_LOBBIES = new Set([
   "ras",
   "assess",
   "harness",
+  "art50",
 ]);
 
 /** Native instrument ids a harness panel may open. */

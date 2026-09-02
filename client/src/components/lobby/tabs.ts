@@ -47,6 +47,7 @@ export type LobbyTabId =
   | "state"
   | "evidence"
   | "embed"
+  | "art50"
   | "products"
   | "space"
   | "measured"
@@ -181,6 +182,14 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(white[- ]?label|embed kit|snippet|badge|embed)\b/i,
+  },
+  {
+    id: "art50",
+    label: "Article 50 marking evidence",
+    blurb: "Measure whether one generative output carries a detectable machine-readable mark — C2PA recomputed by bytes, watermarks named UNCHECKABLE — and commission the signed pack.",
+    path: "",
+    kind: "native",
+    cues: /\b(article ?50|art\.? ?50|marking evidence|content credentials|c2pa|watermark(?:s|ing)?)\b/i,
   },
   {
     id: "products",

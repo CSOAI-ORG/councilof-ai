@@ -12,6 +12,7 @@ import LobbyCardsPane from "./LobbyCardsPane";
 import LobbyStatePane from "./LobbyStatePane";
 import LobbyEvidencePane from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
+import LobbyArt50Pane from "./LobbyArt50Pane";
 import LobbyMatrixPane from "./LobbyMatrixPane";
 import LobbyPlay from "./LobbyPlay";
 import LobbyHome from "./LobbyHome";
@@ -535,6 +536,8 @@ export default function LobbyOverlay({
                   <LobbyEvidencePane onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "embed" ? (
                   <LobbyEmbedPane onOpenRoute={openRoute} />
+                ) : nativePane && tab.id === "art50" ? (
+                  <LobbyArt50Pane onOpenRoute={openRoute} />
                 ) : (
                   <>
                     {/* The pane was asked for a destination behind RequireAuth and the
