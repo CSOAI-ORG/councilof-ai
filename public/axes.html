@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>All 22 GSPC axes · Council of AI</title>
+<meta name="description" content="The full list of 22 GSPC axes — 14 model-comparison + 8 deterministic-fact. Every axis links to its page. Every empty slot is labelled UNMEASURED." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://councilof.ai/axes.html" />
+<style>
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --fact:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#05140d; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --fact:#60a5fa; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:60rem; margin:0 auto; padding:2.5rem 1.25rem 5rem; }
+  h1 { font-size:clamp(2rem,5vw,2.8rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.1; }
+  h2 { font-size:1.4rem; margin:2.5rem 0 0.75rem; }
+  .lede { color:var(--muted); font-size:1.05rem; max-width:48rem; margin-bottom:1rem; }
+  .lid { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.92rem; color:var(--accent); margin:1rem 0 2rem; }
+  .axes { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:0.85rem; }
+  .axis { display:flex; flex-direction:column; gap:0.4rem; padding:0.85rem 1rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.04); text-decoration:none; color:var(--fg); transition:transform 80ms,box-shadow 80ms; }
+  .axis:hover { transform:translateY(-1px); box-shadow:0 6px 20px -10px var(--accent); }
+  .axis .name { font-weight:600; font-size:1rem; }
+  .axis .meta { font-size:0.78rem; color:var(--muted); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .axis .pill { display:inline-flex; align-items:center; padding:0.1rem 0.45rem; border-radius:999px; border:1px solid var(--line); font-size:0.7rem; font-weight:600; margin-left:0.3rem; vertical-align:1px; }
+  .axis .pill.model { background:rgba(15,118,110,0.10); color:var(--accent); border-color:rgba(15,118,110,0.4); }
+  .axis .pill.fact { background:rgba(37,99,235,0.10); color:var(--fact); border-color:rgba(37,99,235,0.4); }
+  .axis .pill.measured { background:rgba(22,163,74,0.10); color:var(--ok); border-color:rgba(22,163,74,0.4); }
+  .footer { margin-top:4rem; padding-top:2rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  .footer a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>All 22 GSPC axes</h1>
+  <p class="lede">Every axis the Council of AI measures. Every empty slot is labelled <strong>UNMEASURED</strong> — never zero, never faked, never filled. Every figure is a signed card you can re-check.</p>
+  <p class="lid">22 axis · 22 measured (14 model-comparison + 8 deterministic-fact)</p>
+
+  <h2>14 model-comparison axes</h2>
+  <p class="lede">A model fleet answers a frozen bank. Graded deterministically. No model in the verdict.</p>
+  <div class="axes">
+    <a class="axis" href="/axis/governance.html"><span class="name">governance <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=237 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/safety.html"><span class="name">safety <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=36 · sep=TIE</span></a>
+    <a class="axis" href="/axis/provenance.html"><span class="name">provenance <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=32 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/continuity.html"><span class="name">continuity <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=33 · sep=TIE</span></a>
+    <a class="axis" href="/axis/conformance.html"><span class="name">conformance <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=35 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/openness.html"><span class="name">openness <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=32 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/machinery-conformity.html"><span class="name">machinery-conformity <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=33 · uncarded leader</span></a>
+    <a class="axis" href="/axis/care.html"><span class="name">care <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=199 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/cross-reality.html"><span class="name">cross-reality <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=32 · uncarded leader</span></a>
+    <a class="axis" href="/axis/detector-interop.html"><span class="name">detector-interop <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=33 · uncarded leader</span></a>
+    <a class="axis" href="/axis/art5-safeguard.html"><span class="name">art5-safeguard <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=36 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/swarm.html"><span class="name">swarm <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=37 · sep=SEPARATED</span></a>
+    <a class="axis" href="/axis/affect.html"><span class="name">affect <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=41 · sep=UNTESTED</span></a>
+    <a class="axis" href="/axis/jail.html"><span class="name">jail <span class="pill model">model</span><span class="pill measured">MEASURED</span></span><span class="meta">n=71 · sep=TIE</span></a>
+  </div>
+
+  <h2>8 deterministic-fact axes</h2>
+  <p class="lede">A rule with no model, no fleet, no judgement. Reads the public ledger and labels what it can and cannot prove. <strong>None is an index. None is a score.</strong></p>
+  <div class="axes">
+    <a class="axis" href="/axis/provenance-controls.html"><span class="name">provenance-controls <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 ChainFacts</span></a>
+    <a class="axis" href="/axis/reserve-attestation.html"><span class="name">reserve-attestation <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 issuers</span></a>
+    <a class="axis" href="/axis/regulatory-framework.html"><span class="name">regulatory-framework <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 declarations</span></a>
+    <a class="axis" href="/axis/distribution-integrity.html"><span class="name">distribution-integrity <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 issuers</span></a>
+    <a class="axis" href="/axis/custody-disclosure.html"><span class="name">custody-disclosure <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=6 issuers</span></a>
+    <a class="axis" href="/axis/ai-adoption-components.html"><span class="name">ai-adoption-components <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">Eurostat n=2</span></a>
+    <a class="axis" href="/axis/labour-components.html"><span class="name">labour-components <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=2 components</span></a>
+    <a class="axis" href="/axis/humanoid-labour-index.html"><span class="name">humanoid-labour-index <span class="pill fact">fact</span><span class="pill measured">MEASURED</span></span><span class="meta">n=8 disclosure URLs</span></a>
+  </div>
+
+  <div class="footer">
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="/visual-board.html">Visual board</a> · <a href="/visual-verify.html">Verifier</a> · <a href="https://councilof.ai/api/gspc">/api/gspc</a></p>
+    <p>Measurement, not certification. Anyone can re-check at <a href="https://councilof.ai/verify">/verify</a>.</p>
+  </div>
+</main>
+</body>
+</html>
