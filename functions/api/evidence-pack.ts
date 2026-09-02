@@ -66,8 +66,14 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     ],
     signature_envelope: {
       schema: "csoai.signed-surface/0.1",
-      kid: "did:web:csoai.org#estate-chain-1",
-      note: "recompute content_id at /gspc-verify — the evidence pack is a signed surface like the board",
+      signed: false,
+      sig_ed25519: null,
+      kid: null,
+      note:
+        "UNSIGNED surface (corrected 2026-09-02: this envelope used to name a kid without carrying a signature). " +
+        "The signed artefacts are the cards it cites (verify free at /gspc-verify) and the x402-metered bundle at " +
+        "/api/evidence-bundle, whose manifest card is signed when the Pages key is present.",
+      metered_bundle: "/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<s>",
     },
   }, {
     headers: { "content-type": "application/json", "cache-control": "public, max-age=1800", "access-control-allow-origin": "*" },

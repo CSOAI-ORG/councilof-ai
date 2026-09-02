@@ -3,6 +3,8 @@
  * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.
  * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade.
  */
+import { canonicalBytes } from "../_lib/cardSign";
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -24,20 +26,9 @@ function b64urlToBytes(s: string): Uint8Array {
   return Uint8Array.from(bin, (c) => c.charCodeAt(0));
 }
 
-/** Canonical UTF-8 JSON, sorted keys, compact, ensure_ascii=false analogue. */
-function canonical(obj: unknown): Uint8Array {
-  const rec = (v: unknown): unknown => {
-    if (Array.isArray(v)) return v.map(rec);
-    if (v && typeof v === "object") {
-      const o = v as Record<string, unknown>;
-      const out: Record<string, unknown> = {};
-      for (const k of Object.keys(o).sort()) out[k] = rec(o[k]);
-      return out;
-    }
-    return v;
-  };
-  return new TextEncoder().encode(JSON.stringify(rec(obj)));
-}
+// Canonical form lives in ONE place (functions/_lib/cardSign.ts) — shared with the metered
+// endpoints that issue card-v0 leaves, so no two signers can disagree on the preimage.
+const canonical = canonicalBytes;
 
 async function verifyOidc(token: string): Promise<void> {
   const parts = token.split(".");

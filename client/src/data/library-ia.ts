@@ -61,7 +61,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
   "/findings", "/regulator-findings",
   // Products — the family, and who it is for
-  "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
+  "/products", "/pricing-free", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
