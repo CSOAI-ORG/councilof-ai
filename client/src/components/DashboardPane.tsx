@@ -28,6 +28,7 @@ const Page_Honesty = lazy(() => import("@/pages/Honesty"));
 const Page_Library = lazy(() => import("@/pages/Library"));
 const Page_Workbench = lazy(() => import("@/pages/Workbench"));
 const LobbyPlay = lazy(() => import("@/components/lobby/LobbyPlay"));
+const LobbyArt50Pane = lazy(() => import("@/components/lobby/LobbyArt50Pane"));
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: LobbyHome is rendered by the layout (local kind) — no pane needed.
@@ -51,6 +52,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   workbench: Page_Workbench, // auth-required (the layout shows the auth flag)
   // software: signed-in dashboard at /dashboard, the layout redirects there
   play: LobbyPlay, // gold local-play gallery (local kind)
+  art50: LobbyArt50Pane, // Article 50 marking evidence — native workflow pane, no standalone URL
   // ras: legacy alias — route to the Assess tool until a dedicated RAS pane ships
   ras: Page_Assess,
 };
