@@ -4,14 +4,14 @@ import type React from "react";
 import { lazy, Suspense } from "react";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
-const Page_Benchmarks = lazy(() => import("./pages/Benchmarks"));
-const Page_ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
-const Page_Products = lazy(() => import("./pages/Products"));
-const Page_Harness = lazy(() => import("./pages/Harness"));
-const Page_CouncilSpace = lazy(() => import("./pages/CouncilSpace"));
-const Page_IncidentReport = lazy(() => import("./pages/IncidentReport"));
-const Page_Honesty = lazy(() => import("./pages/Honesty"));
-const Page_Library = lazy(() => import("./pages/Library"));
+const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
+const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
+const Page_Products = lazy(() => import("@/pages/Products"));
+const Page_Harness = lazy(() => import("@/pages/Harness"));
+const Page_CouncilSpace = lazy(() => import("@/pages/CouncilSpace"));
+const Page_IncidentReport = lazy(() => import("@/pages/IncidentReport"));
+const Page_Honesty = lazy(() => import("@/pages/Honesty"));
+const Page_Library = lazy(() => import("@/pages/Library"));
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   board: LobbyBoardPane,
