@@ -211,7 +211,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     // NOT a bare "readiness": three destinations answer to that word (this
     // assessment, the guided Readiness assessment, and the CRA Readiness Kit), so
     // the bare cue silently swallowed the other two. Each now owns a phrase.
-    cues: /\b(assess|assessment|get measured|measure me|measure my)\b/i,
+    cues: /\b(assess|assessment|get measured|measure me|measure my)\b|\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
     id: "watchdog",
@@ -226,13 +226,6 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "Where our own systems lose our own arena — the ladder, published. Measurement, never a badge.",
     path: "/honesty",
     cues: /\b(honesty|honest|claimguard|claim.?guard|claim check|verify claim|ladder)\b/i,
-  },
-  {
-    id: "ras",
-    label: "Readiness assessment",
-    blurb: "The guided readiness route — structured questions, human-readable output.",
-    path: "/assess",
-    cues: /\b(ras|readiness assessment|booking|human.?rail)\b/i,
   },
   {
     id: "library",
