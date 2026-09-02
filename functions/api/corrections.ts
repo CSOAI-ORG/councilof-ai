@@ -30,6 +30,67 @@ const LEDGER = {
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
+    // ── 2026-09-02: six contradictions named in the owner's "what governs" ruling ──
+    {
+      id: "C-2026-0902-01",
+      date: "2026-09-02",
+      what_was_wrong:
+        "The Switchboard research brief recorded OUSG's XRPL domain check as unverified (directory only) while GET /api/xrpl showed it bidirectional with a signature.",
+      how_caught: "Owner reconciliation of the 2 Sep research briefs against the live API.",
+      fix:
+        "GET wins. /api/xrpl is the authority: OUSG verified_via 'Bidirectional domain match'. The brief's cell is superseded; no data change.",
+      status: "RECONCILED — live API authoritative",
+    },
+    {
+      id: "C-2026-0902-02",
+      date: "2026-09-02",
+      what_was_wrong:
+        "A secondary planning state file attributed USDB to Bitstamp. USDB is issued by Braza Bank (issuer address rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc).",
+      how_caught: "Owner reconciliation; the Switchboard brief confirms Braza.",
+      fix:
+        "GET /api/xrpl already carries issuer 'Braza Bank'; the mis-attribution lived only in a planning file and is corrected there.",
+      status: "CORRECTED",
+    },
+    {
+      id: "C-2026-0902-03",
+      date: "2026-09-02",
+      what_was_wrong:
+        "The OpenAI incident post-mortem was cited as 37 pages by one source and 38 by an internal state file.",
+      how_caught: "Owner reconciliation of the incident-card inputs.",
+      fix:
+        "No incident card hashes that artefact until the primary PDF is fetched, hashed and its page count read from the file itself.",
+      status: "PENDING VERIFICATION — card withheld until the primary PDF is hashed",
+    },
+    {
+      id: "C-2026-0902-04",
+      date: "2026-09-02",
+      what_was_wrong:
+        "GPAI Code of Practice signatory counts differed: 26 per the Commission's 1 Aug 2025 list versus '28 frozen' in secondary sources.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "Only the live, dated Commission page is carded (interop/gpai-signatory-2026-09). Secondary counts are not quoted.",
+      status: "CORRECTED — primary source only, dated",
+    },
+    {
+      id: "C-2026-0902-05",
+      date: "2026-09-02",
+      what_was_wrong:
+        "One playbook stated 2 Feb 2027 as the Article 50 detector-interoperability date as fact; a market-map brief records it as unsettled.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "The date is not published anywhere until verified against Regulation (EU) 2026/1744 in the Official Journal.",
+      status: "UNVERIFIED — withheld",
+    },
+    {
+      id: "C-2026-0902-06",
+      date: "2026-09-02",
+      what_was_wrong:
+        "councilof.ai states a £5M professional-indemnity policy while the Series A pack's infrastructure-gaps sheet says insurance is unknown. One of them is wrong in a data room.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "Owner to confirm the policy document; the losing statement is corrected in place and this entry updated.",
+      status: "OPEN — owner confirmation pending",
+    },
     // ── 2026-08-26: six entries from an outside SCITT/COSE audit ───────────────
     // Not self-caught. A working SCITT implementer with no CSOAI code, no CSOAI
     // credentials and no prior knowledge of the estate ran the published recipe
