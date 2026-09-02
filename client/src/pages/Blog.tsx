@@ -35,6 +35,11 @@ import {
   periodGradient,
 } from "@/lib/blogIndex";
 
+// Three posts are rejected by brand-gate (certification claims / the retracted BFT post) and are
+// not prerendered, so linking them is a dead link. Unlisted until rewritten; the entries stay in the data.
+const UNLISTED_SLUGS = new Set(["ai-governance-legislation-2026", "byzantine-consensus", "iso-42001-nist-ai-rmf"]);
+const LISTED_POSTS = blogdata.filter((p) => !UNLISTED_SLUGS.has(p.slug));
+
 export default function Blog() {
   // 2026-08-26: this form used to call preventDefault(), flip a boolean, and show
   // "Thanks for subscribing! Check your email for confirmation." — while never
