@@ -1,0 +1,87 @@
+name: hub-queue-flip
+
+# After a human merges signed mill cards to master, print the census: flip the matching
+# hub-queue (id, axis) cells MEASURED — iff the card verifies VALID under the live DID and
+# n>=30 — and write csoai/hub-queue (queue.jsonl + queue.parquet + SUMMARY.json) and
+# csoai/gspc-hub-cards (mill-cards/ + INDEX.jsonl) on the Hub with the GHA HF token,
+# main first, PR if main refuses. Never signs. Never writes GET /api/gspc. Top-level
+# hub-queue status is untouched. Empty stays empty. Never a count the cards don't back.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "public/interop/mill-cards-signed/**"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Verify + flip locally, upload nothing"
+        type: boolean
+        default: true
+
+concurrency:
+  group: hub-queue-flip
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  flip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run == true }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: deps
+        run: pip install -q cryptography pandas pyarrow huggingface_hub
+      - name: fetch public inputs (queue.jsonl from the Hub, live DID document)
+        run: |
+          set -euo pipefail
+          mkdir -p flip-in flip-out
+          curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o flip-in/queue.jsonl
+          curl -fsSL -A "Mozilla/5.0 csoai-hub-queue-flip" https://councilof.ai/.well-known/did.json -o flip-in/did.json
+          wc -l flip-in/queue.jsonl
+      - name: verify VALID + flip cells + build index (files only)
+        id: flip
+        run: |
+          set -euo pipefail
+          python3 scripts/flip_hub_queue.py --queue flip-in/queue.jsonl --did flip-in/did.json --out flip-out
+          python3 -c 'import json;r=json.load(open("flip-out/flip-report.json"));print("changed=%s"%str(r["changed"]).lower())' >> "$GITHUB_OUTPUT"
+          cat flip-out/SUMMARY.json
+      - name: write the census to the Hub (main, else PR) — only when a cell actually flipped
+        if: env.DRY_RUN != 'true' && steps.flip.outputs.changed == 'true'
+        run: |
+          python3 - <<'PY'
+          import os
+          from huggingface_hub import HfApi
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          def put(folder, repo, path_in_repo, msg):
+              try:
+                  info = api.upload_folder(folder_path=folder, repo_id=repo, repo_type="dataset", path_in_repo=path_in_repo, create_pr=False, commit_message=msg)
+                  print("MAIN", repo, getattr(info, "commit_url", info))
+              except Exception as e:
+                  print("MAIN_FAIL", repo, type(e).__name__, str(e)[:200])
+                  info = api.upload_folder(folder_path=folder, repo_id=repo, repo_type="dataset", path_in_repo=path_in_repo, create_pr=True, commit_message=msg)
+                  print("PR", repo, getattr(info, "pr_url", info))
+          import shutil, pathlib
+          q = pathlib.Path("hub-queue-out"); q.mkdir(exist_ok=True)
+          for f in ("queue.jsonl", "queue.parquet", "SUMMARY.json"):
+              shutil.copyfile(f"flip-out/{f}", q / f)
+          put(str(q), "csoai/hub-queue", "", "hub-queue-flip: (id,axis) cells MEASURED only after VALID verify, n>=30. Top-level status untouched. Not a certificate.")
+          put("flip-out/mill-cards", "csoai/gspc-hub-cards", "mill-cards", "hub-queue-flip: VALID OIDC-signed mill cards + INDEX.jsonl. MEASURED cells only. Not a certificate.")
+          PY
+      - name: upload flip output (the census as files)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hub-queue-flip-${{ github.run_id }}
+          path: flip-out
+          if-no-files-found: warn

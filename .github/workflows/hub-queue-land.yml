@@ -1,0 +1,130 @@
+name: hub-queue-land
+
+# The consumer hub-queue-mill lacked. The mill stages UNSIGNED ≤3KB cards as a run artifact;
+# until this workflow nothing read that artifact, so nothing ever reached the sign path.
+# This lands them in public/interop/mill-cards-unsigned/ (what scripts/sign_mill_cards.py reads),
+# on a branch — never master — dispatches the EXISTING OIDC signer (hf-fin-shells-measure.yml,
+# target=mill; its filename is the /api/board-sign allowlist key), waits, verifies the signed
+# cards VALID under the live DID, and opens a PR. Human merge is the only gate.
+# Never signs here. Never stamps MEASURED. n<30 stays unquotable. Empty stays empty.
+
+on:
+  workflow_run:
+    workflows: ["hub-queue-mill"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "hub-queue-mill run id whose artifact to land"
+        type: string
+        required: true
+
+concurrency:
+  group: hub-queue-land
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  land:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN_ID: ${{ github.event.inputs.run_id || github.event.workflow_run.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: deps
+        run: pip install -q cryptography
+      - name: download the mill artifact (hub-queue-mill-<run_id>)
+        run: |
+          set -euo pipefail
+          mkdir -p staged
+          if ! gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" -n "hub-queue-mill-$RUN_ID" -D staged; then
+            echo "no artifact hub-queue-mill-$RUN_ID (mill staged nothing or run had no keys) — nothing to land"
+          fi
+          ls -la staged || true
+      - name: land honest UNSIGNED cards into the sign inbox (dedupe per (model, axis))
+        id: land
+        run: |
+          set -euo pipefail
+          python3 scripts/land_mill_cards.py --staged staged --run-id "$RUN_ID" --pr-body staged/PR-BODY.md --github-output "$GITHUB_OUTPUT"
+      - name: branch, push, PR, dispatch the OIDC signer on the branch
+        id: pr
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          AXIS="${{ steps.land.outputs.axis }}"
+          BR="mill/land-${AXIS}-${RUN_ID}"
+          echo "branch=$BR" >> "$GITHUB_OUTPUT"
+          git config user.name "csoai-hub-queue-land"
+          git config user.email "board@csoai.org"
+          git checkout -b "$BR"
+          git add public/interop/mill-cards-unsigned
+          git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED ${AXIS} cards from hub-queue-mill run ${RUN_ID} (sign pending; nothing MEASURED)"
+          git push origin "HEAD:$BR"
+          gh pr create --base master --head "$BR" \
+            --title "mill: ${{ steps.land.outputs.landed }} ${AXIS} cards from run ${RUN_ID} — OIDC sign pending, nothing MEASURED" \
+            --body-file staged/PR-BODY.md
+          gh workflow run hf-fin-shells-measure.yml --ref "$BR" -f target=mill
+      - name: wait for the signer, then verify VALID under the live DID (verification only — no key here)
+        if: steps.land.outputs.landed != '0'
+        run: |
+          set -euo pipefail
+          BR="${{ steps.pr.outputs.branch }}"
+          sleep 20
+          RID=""
+          for i in $(seq 1 40); do
+            RID=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json databaseId,status,conclusion -L 1 -q '.[0].databaseId' || true)
+            ST=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json databaseId,status,conclusion -L 1 -q '.[0].status' || true)
+            CO=$(gh run list --workflow hf-fin-shells-measure.yml --branch "$BR" --json databaseId,status,conclusion -L 1 -q '.[0].conclusion' || true)
+            echo "signer run=$RID status=$ST conclusion=$CO"
+            if [ "$ST" = "completed" ]; then break; fi
+            sleep 15
+          done
+          git fetch origin "$BR"
+          git checkout -q FETCH_HEAD -- public/interop/mill-cards-signed || true
+          curl -fsSL -A "Mozilla/5.0 csoai-hub-queue-land" https://councilof.ai/.well-known/did.json -o did.json
+          python3 - <<'PY' | tee verify.md
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, "harness/gspc-top100")
+          from verify_card import verify_signed_card_with_did_doc
+          did = json.loads(Path("did.json").read_text())
+          landed = json.loads(Path("staged/land-report.json").read_text())["landed"]
+          rows = []
+          for r in landed:
+              name = r["file"].replace("unsigned-", "signed-", 1)
+              p = Path("public/interop/mill-cards-signed") / name
+              if not p.is_file():
+                  rows.append((name, "UNSIGNED", "signer did not write it"))
+                  continue
+              v, why = verify_signed_card_with_did_doc(p.read_bytes(), did)
+              rows.append((name, v, why))
+          from collections import Counter
+          c = Counter(v for _, v, _ in rows)
+          print(f"Signer result on this branch: {dict(c)} (VALID under the live DID; nothing MEASURED until merge + hub-queue-flip)\n")
+          print("| card | verdict | detail |\n|---|---|---|")
+          for n, v, w in rows:
+              print(f"| `{n}` | {v} | {w} |")
+          PY
+          gh pr comment "$BR" --body-file verify.md
+      - name: upload land report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hub-queue-land-${{ github.run_id }}
+          path: |
+            staged/land-report.json
+            staged/PR-BODY.md
+          if-no-files-found: ignore

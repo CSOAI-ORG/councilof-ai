@@ -310,13 +310,50 @@ def _hf_router(prompt: str, slug: str | None = None) -> tuple[str, str]:
     return _chat(HF_ROUTER, tok, target, prompt)
 
 
+# OpenRouter serves open weights under lowercase HF-style ids (qwen/qwen3-8b, meta-llama/llama-3.2-1b-instruct).
+# Only the org spellings below differ from the Hub. Anything else unmapped → 400/404 → honest skip.
+OPENROUTER_ORG_MAP = {"deepseek-ai": "deepseek"}
+# slug → route that produced the last OK answer ("hf-router" | "openrouter:<id>"); written onto the card body.
+_ROUTE: dict[str, str] = {}
+
+
+def openrouter_id(slug: str) -> str:
+    org, _, name = slug.partition("/")
+    return f"{OPENROUTER_ORG_MAP.get(org.lower(), org.lower())}/{name.lower()}" if name else slug.lower()
+
+
+def _infer_openrouter(slug: str, prompt: str) -> tuple[str, str]:
+    """Same model, second door: OpenRouter under the slug's own id. Never a proxy model."""
+    key = _env("OPENROUTER_API_KEY")
+    if not key:
+        return "UNCHECKABLE", "no-endpoint openrouter"
+    if "openrouter" in _DEAD:
+        return "UNCHECKABLE", "dead-endpoints openrouter"
+    oid = openrouter_id(slug)
+    if f"or:{oid}" in _DEAD:
+        return "UNCHECKABLE", f"openrouter:{oid}:dead"
+    st, txt = _chat(OPENROUTER_URL, key, oid, prompt)
+    if st == "OK":
+        _ROUTE[slug] = f"openrouter:{oid}"
+        return st, txt
+    if "401" in txt or "402" in txt:
+        _DEAD.add("openrouter")
+    elif any(c in txt for c in ("400", "403", "404", "429")):
+        _DEAD.add(f"or:{oid}")
+    return "UNCHECKABLE", f"openrouter:{oid}:{txt}"
+
+
 def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
-    """Call the hub-queue model as itself on HF Inference Providers. Never stamp another model's answers."""
+    """Call the hub-queue model as itself: HF Inference Providers first, OpenRouter under the same id second.
+
+    Never stamp another model's answers. The route that answered is recorded in _ROUTE.
+    """
     tok = _hf_token()
-    if not tok:
-        return "UNCHECKABLE", "no-endpoint hf"
-    if "hf" in _DEAD:
-        return "UNCHECKABLE", "dead-endpoints hf"
+    if not tok or "hf" in _DEAD:
+        st, txt = _infer_openrouter(slug, prompt)
+        if st == "OK":
+            return st, txt
+        return "UNCHECKABLE", ("no-endpoint hf" if not tok else "dead-endpoints hf") + "; " + txt
     last = "no-endpoint hf"
     unsupported = 0
     for suf in HF_PROVIDER_SUFFIX:
@@ -325,11 +362,12 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
             continue
         st, txt = _chat(HF_ROUTER, tok, name, prompt)
         if st == "OK":
+            _ROUTE[slug] = "hf-router"
             return st, txt
         last = f"hf:{name}:{txt}"
         if "401" in txt:
             _DEAD.add("hf")
-            return "UNCHECKABLE", last
+            break
         if "403" in txt or "429" in txt:
             _DEAD.add(name)
             continue
@@ -339,7 +377,10 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
             continue
     if unsupported >= 2:
         _DEAD.add(slug)
-    return "UNCHECKABLE", last
+    st, txt = _infer_openrouter(slug, prompt)
+    if st == "OK":
+        return st, txt
+    return "UNCHECKABLE", f"{last}; {txt}"
 
 
 def _provider_configured(name: str) -> bool:
@@ -452,7 +493,7 @@ def js_safe_number(x):
     return x
 
 
-def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str) -> dict:
+def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, route: str | None = None) -> dict:
     acc = round(hits / n, 4) if n else None
     body = {
         "kind": "gspc.measurement-card",
@@ -467,6 +508,8 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str) -> 
         "verify": "https://councilof.ai/gspc-verify",
         "brand": "Council of AI",
     }
+    if route:
+        body["route"] = route
     raw = canonical_body_bytes(body)
     wrap = {
         "alg": "Ed25519",
@@ -543,7 +586,7 @@ def mill(
                 hits += 1
         else:
             reason = "n<30 unquotable" if len(items) < 30 else "signed-pending-verify"
-            wrap = stage_unsigned(mid, ax, hits, len(items), reason)
+            wrap = stage_unsigned(mid, ax, hits, len(items), reason, route=_ROUTE.get(mid))
             blob = json.dumps(wrap, separators=(",", ":"), ensure_ascii=True).encode()
             if len(blob) > MAX_PAYLOAD:
                 skips.append({"id": mid, "axis": ax, "reason": f"HALT {len(blob)}B>3KB"})
@@ -553,7 +596,7 @@ def mill(
                 continue
             fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
             fp.write_text(json.dumps(wrap, indent=2) + "\n")
-            staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits})
+            staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits, "route": _ROUTE.get(mid)})
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
         "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),

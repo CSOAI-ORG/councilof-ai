@@ -14,8 +14,10 @@ from mill_hub_queue import (  # noqa: E402
     apply_valid_flips,
     axis_prompt,
     mill_index_row,
+    _ROUTE,
     infer_hub,
     infer_one,
+    openrouter_id,
     load_bank,
     load_only_ids,
     mill,
@@ -391,6 +393,153 @@ def test_live_hub_queue_not_2410_measured() -> None:
     assert not (n == 2410 and n_m == 2410)
 
 
+def test_infer_hub_falls_back_to_openrouter_under_the_same_id() -> None:
+    """HF router 403 (token without Inference Providers scope) → OpenRouter under the slug's own id.
+
+    Never a proxy model: the OpenRouter id is the hub slug lowercased, and the route is recorded.
+    """
+    import json
+    import os
+    import urllib.error
+    from email.message import Message
+    from unittest.mock import patch
+
+    _DEAD.clear()
+    _ROUTE.clear()
+    os.environ["HF_TOKEN"] = "hf_test_not_real"
+    os.environ["OPENROUTER_API_KEY"] = "or_test_not_real"
+    seen: list[tuple[str, str]] = []
+
+    def fake_urlopen(req, timeout=60):  # noqa: ARG001
+        body = json.loads(req.data.decode())
+        seen.append((req.full_url, body.get("model")))
+        if "router.huggingface.co" in req.full_url:
+            raise urllib.error.HTTPError(req.full_url, 403, "Forbidden", Message(), None)
+
+        class R:
+            def read(self):
+                return json.dumps({"choices": [{"message": {"content": "HIGH_RISK"}}]}).encode()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *a):
+                return False
+
+        return R()
+
+    try:
+        with patch("mill_hub_queue.urllib.request.urlopen", fake_urlopen):
+            st, txt = infer_hub("Qwen/Qwen3-8B", "classify this")
+            wrap = stage_unsigned("Qwen/Qwen3-8B", "governance", hits=20, n=30, reason="signed-pending-verify", route=_ROUTE.get("Qwen/Qwen3-8B"))
+    finally:
+        os.environ.pop("HF_TOKEN", None)
+        os.environ.pop("OPENROUTER_API_KEY", None)
+        _DEAD.clear()
+        _ROUTE.clear()
+    assert st == "OK" and txt == "HIGH_RISK"
+    or_calls = [m for u, m in seen if "openrouter.ai" in u]
+    assert or_calls == ["qwen/qwen3-8b"]
+    assert all(m.startswith("Qwen/Qwen3-8B") for u, m in seen if "huggingface" in u)
+    assert not any("llama" in (m or "") for _, m in seen)
+    assert wrap["body"]["route"] == "openrouter:qwen/qwen3-8b"
+    assert wrap["body"]["status"] == "UNMEASURED"
+    assert openrouter_id("deepseek-ai/DeepSeek-V3.2") == "deepseek/deepseek-v3.2"
+
+
+def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> None:
+    """flip_hub_queue: a cell flips iff the signed card verifies VALID under the DID and n>=30."""
+    import shutil
+    from base64 import urlsafe_b64encode
+
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+    import flip_hub_queue as fq  # noqa: E402
+
+    root = tmp_path or (HERE / "_flip_test")
+    if tmp_path is None:
+        shutil.rmtree(root, ignore_errors=True)
+    cards = root / "signed"
+    cards.mkdir(parents=True, exist_ok=True)
+    key = Ed25519PrivateKey.generate()
+    pub = key.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    did = "did:web:csoai.org#board-attestation-1"
+    did_doc = {"verificationMethod": [{"id": did, "publicKeyJwk": {"x": urlsafe_b64encode(pub).decode().rstrip("=")}}]}
+
+    def signed(model, axis, n, ok=True):
+        w = stage_unsigned(model, axis, hits=n // 2, n=n, reason="signed-pending-verify")
+        raw = canonical_body_bytes(w["body"])
+        w["signature"] = key.sign(raw).hex() if ok else ("ab" * 32)
+        w["did"] = did
+        return w
+
+    (cards / "signed-govern-valid.json").write_text(json.dumps(signed("org/a", "governance", 30)))
+    (cards / "signed-safety-small.json").write_text(json.dumps(signed("org/a", "safety", 10)))
+    (cards / "signed-govern-bad.json").write_text(json.dumps(signed("org/b", "governance", 30, ok=False)))
+    unsigned = stage_unsigned("org/c", "governance", hits=1, n=30, reason="signed-pending-verify")
+    (cards / "signed-govern-unsigned.json").write_text(json.dumps(unsigned))
+    rows = [
+        {"rank": 1, "id": "org/a", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"rank": 2, "id": "org/b", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"rank": 3, "id": "org/c", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+    ]
+    q = root / "queue.jsonl"
+    q.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    rep = fq.run(cards, q, did_doc, root / "out")
+    assert rep["cells_after"] == 1 and rep["flipped_this_run"] == 1
+    assert rep["verdicts"] == {"VALID": 1, "UNQUOTABLE": 1, "INVALID": 1, "UNCHECKABLE": 1}
+    out_rows = [json.loads(l) for l in (root / "out" / "queue.jsonl").read_text().splitlines()]
+    a = next(r for r in out_rows if r["id"] == "org/a")
+    assert a["measured_axes"]["governance"]["status"] == "MEASURED"
+    assert "safety" not in a["measured_axes"]
+    assert all(r["status"] == "UNMEASURED" and r["card_id"] == "" for r in out_rows)
+    summ = json.loads((root / "out" / "SUMMARY.json").read_text())
+    assert summ["n_measured"] == 0 and summ["n_measured_axes"] == 1 and summ["n"] == 3
+    assert "3 measured" not in summ["note"].replace("Not 3 measured", "")
+    idx = (root / "out" / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
+    assert len(idx) == 1 and json.loads(idx[0])["status"] == "MEASURED"
+    assert (root / "out" / "mill-cards" / "signed-govern-valid.json").is_file()
+    assert not (root / "out" / "mill-cards" / "signed-govern-bad.json").is_file()
+
+
+def test_land_mill_cards_dedupes_and_rejects_signed(tmp_path: Path | None = None) -> None:
+    """land_mill_cards: honest unsigned cards land once; signed/tampered/duplicate cells are skipped."""
+    import shutil
+
+    sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+    import land_mill_cards as lm  # noqa: E402
+
+    root = tmp_path or (HERE / "_land_test")
+    if tmp_path is None:
+        shutil.rmtree(root, ignore_errors=True)
+    staged, inbox, signed_dir = root / "staged", root / "inbox", root / "signed"
+    for d in (staged, signed_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    good = stage_unsigned("org/new", "governance", hits=15, n=30, reason="signed-pending-verify")
+    (staged / "unsigned-governan-aaaaaaaaaaaa.json").write_text(json.dumps(good))
+    dup = stage_unsigned("org/done", "governance", hits=15, n=30, reason="signed-pending-verify")
+    (staged / "unsigned-governan-bbbbbbbbbbbb.json").write_text(json.dumps(dup))
+    already = dict(dup, signature="ab" * 32, did="did:web:csoai.org#board-attestation-1")
+    (signed_dir / "signed-governan-bbbbbbbbbbbb.json").write_text(json.dumps(already))
+    tampered = stage_unsigned("org/tamper", "governance", hits=15, n=30, reason="signed-pending-verify")
+    tampered["body"]["accuracy"] = 1
+    (staged / "unsigned-governan-cccccccccccc.json").write_text(json.dumps(tampered))
+    presigned = dict(stage_unsigned("org/pre", "governance", hits=15, n=30, reason="x"), signature="ab" * 32)
+    (staged / "unsigned-governan-dddddddddddd.json").write_text(json.dumps(presigned))
+    rep = lm.land(staged, inbox, signed_dir)
+    assert [r["model"] for r in rep["landed"]] == ["org/new"]
+    reasons = {s["file"]: s["reason"] for s in rep["skipped"]}
+    assert reasons["unsigned-governan-bbbbbbbbbbbb.json"].startswith("already-signed")
+    assert "sha256" in reasons["unsigned-governan-cccccccccccc.json"]
+    assert "signature" in reasons["unsigned-governan-dddddddddddd.json"]
+    rep2 = lm.land(staged, inbox, signed_dir)
+    assert rep2["landed"] == []
+    assert any(s["reason"] == "already-landed same id" for s in rep2["skipped"])
+    assert rep["signed_here"] is False and rep["writes_board"] is False
+
+
 if __name__ == "__main__":
     test_pick_emptiest_skips_measured()
     test_pick_emptiest_prefers_generative()
@@ -409,3 +558,6 @@ if __name__ == "__main__":
     test_unknown_did_is_uncheckable_not_measured()
     test_live_hub_queue_not_2410_measured()
     print("PASS mill honesty")
+    test_infer_hub_falls_back_to_openrouter_under_the_same_id()
+    test_flip_hub_queue_only_valid_n30_cells()
+    test_land_mill_cards_dedupes_and_rejects_signed()
