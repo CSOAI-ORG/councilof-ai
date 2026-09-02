@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Verify a card · Council of AI</title>
+<meta name="description" content="Recompute a Council of AI signed measurement card and verify its Ed25519 signature in your browser. Three-state verdict. Live pinned key." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://councilof.ai/visual-verify.html" />
+<style>
+  :root {
+    --bg: #ffffff; --fg: #0b1a12; --muted: #5b6b62; --line: #e2e8e4;
+    --ok: #16a34a; --bad: #dc2626; --wait: #ca8a04; --accent: #0f766e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #05140d; --fg: #eafff4; --muted: #8fb3a3; --line: rgba(52,211,153,.18);
+      --ok: #34d399; --bad: #f87171; --wait: #fbbf24; --accent: #34d399;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 56rem; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 0.5rem; }
+  h2 { font-size: 1.3rem; margin: 2rem 0 0.5rem; }
+  .lede { color: var(--muted); font-size: 1.05rem; margin-bottom: 1.5rem; }
+  .meta { color: var(--muted); font-size: 0.92rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin-bottom: 1.5rem; padding: 0.5rem 0.85rem; background: var(--muted-color, rgba(91,107,98,0.08)); border-radius: 6px; border: 1px solid var(--line); }
+  textarea { width: 100%; min-height: 160px; padding: 0.85rem; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85rem; resize: vertical; }
+  input[type=url], input[type=text] { width: 100%; padding: 0.65rem 0.85rem; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9rem; }
+  .row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.85rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.95rem; border-radius: 8px; border: 1px solid var(--line); background: rgba(91,107,98,0.06); color: var(--fg); font-weight: 500; font-size: 0.92rem; cursor: pointer; text-decoration: none; }
+  .btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .verdict { padding: 1.25rem 1.5rem; border-radius: 10px; margin-top: 1.5rem; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.95rem; line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; }
+  .verdict.valid { background: rgba(22,163,74,0.10); border: 1px solid rgba(22,163,74,0.4); color: var(--ok); }
+  .verdict.invalid { background: rgba(220,38,38,0.10); border: 1px solid rgba(220,38,38,0.4); color: var(--bad); }
+  .verdict.unchecked { background: rgba(202,138,4,0.10); border: 1px solid rgba(202,138,4,0.4); color: var(--wait); }
+  details { margin-top: 1rem; padding: 0.75rem 1rem; border: 1px solid var(--line); border-radius: 8px; }
+  details summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+  details pre { font-size: 0.78rem; overflow-x: auto; padding: 0.5rem; background: rgba(91,107,98,0.05); border-radius: 6px; }
+  footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .loading { color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Verify a signed measurement card</h1>
+  <p class="lede">Three states only: <strong style="color:var(--ok)">VALID</strong>, <strong style="color:var(--bad)">INVALID</strong> (with reason), <strong style="color:var(--wait)">UNCHECKABLE</strong>. The live pinned key is fetched from <code>https://councilof.ai/.well-known/did.json</code> on every check. Nothing is cached.</p>
+
+  <div class="meta" id="meta">
+    <div>live key: <span id="key-id">fetching…</span></div>
+    <div>pinned DID: <code>did:web:csoai.org</code></div>
+  </div>
+
+  <h2>Option A — paste JSON</h2>
+  <textarea id="card-input" placeholder='Paste a gspc.measurement-card JSON here…'></textarea>
+
+  <h2>Option B — fetch by URL or sha</h2>
+  <input type="text" id="card-url" placeholder="https://councilof.ai/signed/cards/<sha>.json OR just a 64-char sha" />
+
+  <div class="row">
+    <button class="btn primary" id="verify">Verify</button>
+    <button class="btn" id="clear">Clear</button>
+    <button class="btn" id="sample">Sample card</button>
+    <a class="btn" href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener">Full /gspc-verify →</a>
+  </div>
+
+  <div id="result" class="verdict unchecked">awaiting input</div>
+
+  <details>
+    <summary>What this checks</summary>
+    <pre>1. Card kind = gspc.measurement-card
+2. Recompute id = sha256(canonical_json(body))
+3. Card id matches the recomputed id
+4. Fetch /.well-known/did.json → pick #card-attestation-1 (or #board-attestation-1)
+5. Verify Ed25519 signature under the pinned public key
+6. Report verdict + reason + key used
+
+A card that is internally consistent but signed with a freshly
+generated key is INVALID — the signature must be under the
+councilof.ai pinned key, not a self-keyed one.
+    </pre>
+  </details>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://councilof.ai/visual-board.html">visual-board.html</a></p>
+    <p>Measurement, not certification. Anyone can re-check.</p>
+  </footer>
+</main>
+
+<script>
+const ORIGIN = 'https://councilof.ai';
+const DID_URL = `${ORIGIN}/.well-known/did.json`;
+const CANON = v => JSON.stringify(v, Object.keys(v).sort(), 0);
+const sha256 = async text => {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+};
+const hexToBytes = h => new Uint8Array(h.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
+}
+
+let LIVE_PK = null, LIVE_KEY_ID = null;
+
+async function fetchLiveKey() {
+  const res = await fetch(DID_URL, { headers: { accept: 'application/did+json' } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const doc = await res.json();
+  for (const pref of ['#card-attestation-1', '#board-attestation-1']) {
+    for (const vm of (doc.verificationMethod || [])) {
+      if ((vm.id || '').endsWith(pref)) {
+        const jwk = vm.publicKeyJwk || {};
+        const x = jwk.x || '';
+        if (!x) continue;
+        const pad = '='.repeat((-x.length) % 4);
+        const bin = atob(x.replace(/-/g, '+').replace(/_/g, '/') + pad);
+        LIVE_PK = hexToBytes([...bin].map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(''));
+        LIVE_KEY_ID = vm.id;
+        document.getElementById('key-id').textContent = vm.id;
+        return;
+      }
+    }
+  }
+  throw new Error('no pinned key found');
+}
+
+async function getCard() {
+  const raw = document.getElementById('card-input').value.trim();
+  const url = document.getElementById('card-url').value.trim();
+  if (raw) {
+    try { return JSON.parse(raw); }
+    catch { throw new Error('input is not valid JSON'); }
+  }
+  if (url) {
+    let fetchUrl = url;
+    if (/^[a-f0-9]{64}$/i.test(url)) fetchUrl = `${ORIGIN}/signed/cards/${url}.json`;
+    const r = await fetch(fetchUrl);
+    if (!r.ok) throw new Error(`fetch returned HTTP ${r.status}`);
+    return await r.json();
+  }
+  throw new Error('no input — paste JSON or URL/sha');
+}
+
+async function verify() {
+  const el = document.getElementById('result');
+  el.className = 'verdict unchecked';
+  el.textContent = 'verifying…';
+  try {
+    if (!LIVE_PK) await fetchLiveKey();
+    const card = await getCard();
+    if (!card.body) throw new Error('card has no body field');
+    const kind = card.body.kind || '';
+    if (!kind.includes('gspc.measurement-card')) throw new Error(`unknown kind: ${kind}`);
+    const canonical = CANON(card.body);
+    const idComputed = await sha256(canonical);
+    if (card.id && card.id !== idComputed) {
+      throw new Error(`id mismatch: computed=${idComputed.slice(0,16)}… stated=${card.id.slice(0,16)}…`);
+    }
+    const sig = card.signature;
+    if (!sig) throw new Error('card has no signature field');
+    const did = card.did || '';
+    if (did && !did.startsWith('did:web:csoai.org#')) throw new Error(`card DID is not councilof.ai: ${did}`);
+    const pk = await crypto.subtle.importKey('raw', LIVE_PK, { name: 'Ed25519' }, false, ['verify']);
+    const sigBytes = hexToBytes(sig);
+    const ok = await crypto.subtle.verify('Ed25519', pk, sigBytes, new TextEncoder().encode(canonical));
+    if (!ok) throw new Error('signature did not verify under the pinned DID key');
+    el.className = 'verdict valid';
+    el.textContent = `verdict: VALID\nreason:  ok — signature checks under the pinned Ed25519 key\nid:      ${idComputed}\nkey:     ${LIVE_KEY_ID}\n\nMeasurement, not certification. Anyone can re-check at ${ORIGIN}/verify`;
+  } catch (e) {
+    const msg = String(e.message || e);
+    const isUnreachable = /fetch|HTTP|could not/i.test(msg);
+    el.className = `verdict ${isUnreachable ? 'unchecked' : 'invalid'}`;
+    el.textContent = `verdict: ${isUnreachable ? 'UNCHECKABLE' : 'INVALID'}\nreason:  ${msg}`;
+  }
+}
+
+document.getElementById('verify').onclick = verify;
+document.getElementById('clear').onclick = () => {
+  document.getElementById('card-input').value = '';
+  document.getElementById('card-url').value = '';
+  const el = document.getElementById('result');
+  el.className = 'verdict unchecked';
+  el.textContent = 'awaiting input';
+};
+document.getElementById('sample').onclick = () => {
+  document.getElementById('card-input').value = JSON.stringify({
+    alg: 'Ed25519',
+    body: {
+      kind: 'gspc.measurement-card',
+      axis: 'jail',
+      model: 'sample',
+      issuer: 'CSOAI Ltd',
+      n: 71,
+      accuracy: 0.5915,
+      status: 'MEASURED',
+      verify: 'https://councilof.ai/gspc-verify',
+    },
+    id: '0000000000000000000000000000000000000000000000000000000000000000',
+    signature: '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
+    did: 'did:web:csoai.org#card-attestation-1',
+  }, null, 2);
+  verify();
+};
+
+// Fetch live key on page load so the verifier is ready.
+fetchLiveKey().catch(() => {
+  document.getElementById('key-id').textContent = '(fetch failed)';
+});
+</script>
+</body>
+</html>
