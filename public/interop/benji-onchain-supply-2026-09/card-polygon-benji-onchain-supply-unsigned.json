@@ -1,0 +1,41 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "benji.onchain.supply",
+  "subject": "Franklin Templeton BENJI (FOBXX) on-chain supply — Polygon",
+  "as_of": "2026-09-02T04:51:26Z",
+  "source_urls": [
+    "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "https://polygon.blockscout.com/api/v2/tokens/0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+    "https://polygon.blockscout.com/token/0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A"
+  ],
+  "payload": {
+    "kind": "csoai.ledger-cite/0.1",
+    "flags": {
+      "cited_not_endorsed": true,
+      "auto_measured": false,
+      "writes_board": false,
+      "issuer_published_address_match": true
+    },
+    "status": "DISCOVERED",
+    "chain": "Polygon",
+    "contract": "0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+    "decimals": 18,
+    "basis": "Issuer states 1 share of FOBXX = 1 BENJI; on-chain is explicitly a secondary register to the transfer agent's books.",
+    "verified_via": "Blockscout /api/v2/tokens total_supply (symbol=BENJI) + issuer benji-contracts address match",
+    "as_of": "2026-09-02T04:51:26Z",
+    "unmeasured": [
+      "primary_register_reconciliation"
+    ],
+    "honest_sentence": "Public contract totalSupply for BENJI on Polygon read as 32133268.426128809533454758 (raw=32133268426128809533454758, decimals=18) at 2026-09-02T04:51:26Z; transfer-agent primary register not reconciled (unmeasured=['primary_register_reconciliation']). Never invent AUM.",
+    "total_supply_raw": "32133268426128809533454758",
+    "total_supply_benji": "32133268.426128809533454758"
+  },
+  "sha256": "309d79530397bdefba0d2e97c27fc28ea13ee67c4e2ec1f82fce7e8f31d68725",
+  "unmeasured": [
+    "primary_register_reconciliation"
+  ],
+  "did": "did:web:csoai.org#card-attestation-1",
+  "sig_ed25519": null,
+  "note": "NO_LAPTOP_SIGN — unsigned atom; writes_board:false. On-chain secondary register only. Never invent AUM / MEASURED.",
+  "writes_board": false
+}

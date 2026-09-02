@@ -23,6 +23,8 @@ root-as-index. Not a second board, second scorer, or TS.
 | transparency anchor retry | [`transparency-anchor-retry/`](./transparency-anchor-retry/) | `public.notice` | Rekor v1/v2 + OTS attempt log for `root.json` hash — no fake seal |
 | cross-border SCAFFOLD | [`cross-border-scaffold/`](./cross-border-scaffold/) | (domain leaves) | Six unsigned domain stubs `status=SCAFFOLD` — **not** board slots |
 | printer public_count | [`printer-public-count.example.json`](./printer-public-count.example.json) | (printer) | Example totals from live GET — printers re-fetch `totals.public_count` |
+| EAS Base root scaffold | [`eas-base-root-2026-09/`](./eas-base-root-2026-09/) | `public.notice` | UNCHECKABLE — no estate Base signer; gas-only path documented; attestation_uid=null |
+| BENJI per-chain on-chain supply | [`benji-onchain-supply-2026-09/`](./benji-onchain-supply-2026-09/) | `benji.onchain.supply` | 8/9 chains public totalSupply; BNB UNCHECKABLE (iBENJI≠BENJI); primary_register unmeasured; unsigned |
 | Financial measure runs | `financial-measure-run*.json` (this directory) | (run cards) | Signed / unsigned financial measure runs + compact cards |
 
 ## Hard stops (every bank)
