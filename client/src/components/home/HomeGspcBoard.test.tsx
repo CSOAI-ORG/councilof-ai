@@ -146,7 +146,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
 
   it("links to the leaderboard and the endpoint, ends on the footer line, uses no forbidden strings", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
-    expect(html).toContain('href="/leaderboard"');
+    expect(html).toContain('href="/dashboard?tab=leaderboard"');
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
     expect(html).not.toMatch(/sovereign|ceasai|byzantine|\bBFT\b/i);

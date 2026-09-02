@@ -292,7 +292,7 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
           <a href={SPACE_PAGE_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
             Open the living board on Hugging Face
           </a>
-          <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board</span>
+          <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-live-board</span>
         </figcaption>
       </figure>
 
