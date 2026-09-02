@@ -1,0 +1,100 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "eval.delta",
+  "subject": "scrapi-ccf pin-verify → unsigned eval.delta",
+  "as_of": "2026-09-02T03:30:20Z",
+  "source_urls": [
+    "https://github.com/microsoft/scitt-ccf-ledger",
+    "https://github.com/action-state-group/scitt-cose",
+    "https://datatracker.ietf.org/doc/draft-ietf-scitt-scrapi/",
+    "https://councilof.ai/.well-known/scitt.json"
+  ],
+  "payload": {
+    "profile": "scrapi-ccf-public-fixtures",
+    "role": "consumer_of_fixtures_only",
+    "csoai_is_transparency_service": false,
+    "scitt_keys": "absent_by_design",
+    "data_hash_binding_check": "proof.leaf.data-hash == HASH(candidate)",
+    "pinned_digest_count": 10,
+    "pinned_digests": [
+      {
+        "id": "interop/ccf/shared-vector.json",
+        "sha256": "1034697d531aba43a9a115bb599ec7542b2997cf16f4510c812e45d16a1aaa6d",
+        "url": "https://raw.githubusercontent.com/action-state-group/scitt-cose/7bbfaffd9730969ffbb49259980741b7bac1d83e/interop/ccf/shared-vector.json"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/statement.cose",
+        "sha256": "cdd87929ead61eca8f5a30a743eca3a625a287b85b9b8c85ae497c68899644f8"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/receipt.cose",
+        "sha256": "c958efd5944b049d162194593cd87a8a83e8d40085a0cf1a5b1aa06ae1407c1a"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/payload.bin",
+        "sha256": "04935e9a37f6d7c6e12724a69c9c31599c1d3fe9c08232c15fa37a671f8747b9"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/issuer-key.pub",
+        "sha256": "07c630cdcf81b73cc40477d5af03dad67eb8ac279ffdbb85cd077d2249a6a5f1"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/log-key.pub",
+        "sha256": "e2beb44155a0fab01dcd719715c5b1f5d4a276b18d1fe08c309a7fc4d18653d3"
+      },
+      {
+        "id": "test-vectors/v1/valid-ccf-vds2/expected.json",
+        "sha256": "e484e717249b770c4d025c1d54f3b41bd51b62750a2f2196cf84f8f6afd9ddc6"
+      },
+      {
+        "id": "test/payloads/manifest.spdx.json.sha384.digest.cose",
+        "sha256": "feed68f19b4b8a5278fa1a79096caa8c9cd604eecccb71dea7a3e44112eccc90",
+        "url": "https://raw.githubusercontent.com/microsoft/scitt-ccf-ledger/83062aac2b453cec7e98e4b5c335deba8f4cfc32/test/payloads/manifest.spdx.json.sha384.digest.cose"
+      },
+      {
+        "id": "test/payloads/cts-hashv-cwtclaims-b64url.cose",
+        "sha256": "213105fdc0da9022c20e8f49195d0bb621cedf87fdee29aad80e2e605af94c87",
+        "url": "https://raw.githubusercontent.com/microsoft/scitt-ccf-ledger/83062aac2b453cec7e98e4b5c335deba8f4cfc32/test/payloads/cts-hashv-cwtclaims-b64url.cose"
+      },
+      {
+        "id": "test/payloads/cosesign1tool-scitt-a3be7e5.cose",
+        "sha256": "c61c91d522c0f14c5f2f389ae78ddf132bb2665e754b2f3dbd3a8047a1afb0cc",
+        "url": "https://raw.githubusercontent.com/microsoft/scitt-ccf-ledger/83062aac2b453cec7e98e4b5c335deba8f4cfc32/test/payloads/cosesign1tool-scitt-a3be7e5.cose"
+      }
+    ],
+    "source_commits": {
+      "action-state-group/scitt-cose": "7bbfaffd9730969ffbb49259980741b7bac1d83e",
+      "microsoft/scitt-ccf-ledger": "83062aac2b453cec7e98e4b5c335deba8f4cfc32"
+    },
+    "pin_verify": {
+      "shape_ok": true,
+      "fetch": {
+        "mode": "shape_only",
+        "digest_count": 10,
+        "note": "Pass --fetch to re-hash raw.githubusercontent.com pins"
+      }
+    },
+    "board_axis_fill": false,
+    "never_certify": true,
+    "status": "UNSIGNED_PIN_VERIFY"
+  },
+  "sha256": "905a67bc6636641e87ca84a4170219da44ed94bf28116604457af3905e956be9",
+  "sig_ed25519": null,
+  "unmeasured": [
+    "csoai-not-a-ts",
+    "no-live-scitt-keys",
+    "live_receipt_reverify",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_axis_projection_forbidden"
+  ],
+  "tags": [
+    "scrapi-ccf",
+    "eval.delta",
+    "unsigned",
+    "fixtures-consumer",
+    "not-a-ts",
+    "harness-consumer"
+  ]
+}
