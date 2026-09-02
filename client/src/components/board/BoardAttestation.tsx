@@ -13,10 +13,12 @@
  * - living_stamp is UNVERIFIABLE (explicitly stated in the payload).
  * - XRPL public-root: GET /root.json (unsigned leaves, NO_LAPTOP_SIGN).
  *   /api/xrpl is a reader of that root (writes_board false). Live locked 16.
+ * - N→N+1 drift: render UNCHECKABLE when living-root-as-index-honesty says so.
+ *   Link GET /root.json. Never invent drift numbers or a Merkle seal.
  * - Never certify. Verify stays free and loginless.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ChevronRight } from "lucide-react";
 import AttestationDeepDive, { type DeepDiveKind } from "./AttestationDeepDive";
@@ -107,7 +109,15 @@ export default function BoardAttestation({
   compact = false,
 }: BoardAttestationProps) {
   const [deepDive, setDeepDive] = useState<{ kind: DeepDiveKind; extra?: any } | null>(null);
-  
+  const [drift, setDrift] = useState<{ status?: string; note?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/interop/living-root-as-index-honesty.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => setDrift(j?.n_to_n_plus_1_drift ?? null))
+      .catch(() => setDrift(null));
+  }, []);
+
   const dark = variant === "dark";
   const att = data?.site_attestation;
   const stamp = data?.measured_on?.living_stamp;
@@ -282,6 +292,33 @@ export default function BoardAttestation({
             </div>
           </button>
 
+          {/* N→N+1 drift — honesty-driven; fail closed to UNCHECKABLE */}
+          <div
+            className={`mt-3 rounded-lg border ${
+              dark ? "border-amber-500/30 bg-amber-900/15" : "border-amber-300 bg-amber-50"
+            } p-3`}
+          >
+            <p
+              className={`text-[10px] uppercase tracking-wide ${
+                dark ? "text-amber-300/80" : "text-amber-700"
+              }`}
+            >
+              N→N+1 drift · {drift?.status || "UNCHECKABLE"}
+            </p>
+            <p className={`mt-1 text-[11px] ${dark ? "text-amber-200/70" : "text-amber-800"}`}>
+              {drift?.note ||
+                "No published board time series for N→N+1 drift. Empty stays empty — do not invent drift numbers or a Merkle seal."}{" "}
+              Living snapshot only — cite{" "}
+              <a
+                href="/root.json"
+                className={dark ? "text-emerald-300 underline" : "text-emerald-700 underline"}
+              >
+                GET /root.json
+              </a>
+              .
+            </p>
+          </div>
+
           {/* Count Grammar */}
           {!compact && totals.count_grammar && (
             <p className={`mt-3 text-[11px] ${textMuted}`}>
@@ -418,6 +455,12 @@ export default function BoardAttestation({
             className={dark ? "text-emerald-300 hover:underline" : "text-emerald-700 hover:underline"}
           >
             Raw JSON →
+          </a>
+          <a
+            href="/root.json"
+            className={dark ? "text-emerald-300 hover:underline" : "text-emerald-700 hover:underline"}
+          >
+            Living root-as-index · GET /root.json →
           </a>
           <Link
             href="/xrpl-attest"
