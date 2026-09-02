@@ -1,5 +1,7 @@
 # csoai-gspc-mcp
 
+[![22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. Three states only: VALID · INVALID · UNCHECKABLE.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
+
 Stdio MCP server for the live GSPC board and the signed measurement cards at
 [councilof.ai](https://councilof.ai). Zero dependencies. Node >= 20.
 
