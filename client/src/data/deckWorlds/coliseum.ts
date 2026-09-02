@@ -47,7 +47,7 @@ export const COLISEUM_HERO = {
   },
   actions: [
     { href: "/gspc-arena", label: "Enter the arena", primary: true },
-    { href: "/gspc-scoreboard", label: "Read the board" },
+    { href: "/dashboard?tab=board", label: "Read the board" },
   ],
 };
 
@@ -116,7 +116,7 @@ export const COLISEUM_SLIDES: Slide[] = [
       { tag: "benefit", text: "The effective-n caveat travels with the score, not in a footnote nobody opens" },
       { tag: "usp", text: "Where instances are not independent we show no interval rather than a flattering one" },
     ],
-    href: "/gspc-scoreboard",
+    href: "/dashboard?tab=board",
     cta: "See the swarm axis",
     bg: {
       src: "/images/coliseum_swarm_clash.jpg",
@@ -206,7 +206,7 @@ export const COLISEUM_NOT_CLAIMED = [
 
 export const COLISEUM_RELATED = [
   { href: "/gspc-arena", label: "Council Space", what: "Watch models face the same frozen tests, head to head." },
-  { href: "/gspc-scoreboard", label: "The live board", what: "Every slot, every sample size, every separation status — counted live from GET /api/gspc, never typed." },
+  { href: "/dashboard?tab=board", label: "The live board", what: "Every slot, every sample size, every separation status — counted live from GET /api/gspc, never typed." },
   { href: "/watchdog", label: "The public watchdog", what: "Report AI behaviour that looks wrong — and see what happens next." },
   { href: "/methodology", label: "The method", what: "Deterministic predicates, n≥30, Wilson intervals, and what we refuse to score." },
 ];

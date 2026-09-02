@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { lobbyHref, openLobby } from "@/lib/lobbyLink";
+import { openLobby } from "@/lib/lobbyLink";
 
 /**
  * SovereignSpot — globe + Council OS entry for topic-scoped pages.
@@ -70,11 +70,7 @@ export default function SovereignSpot({
         </p>
         <div className="flex flex-wrap gap-2">
           <a
-            href={task ? lobbyHref({ task, ctx: topic }) : lobbyHref({ prompt: seed, pane: "home" })}
-            onClick={(e) => {
-              e.preventDefault();
-              open();
-            }}
+            href={task ? `/dashboard?tab=home&task=${encodeURIComponent(task)}&ctx=${encodeURIComponent(topic)}` : `/dashboard?tab=home&ask=${encodeURIComponent(seed)}`}
             className="rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-bold text-[#03110b] transition hover:bg-emerald-400"
           >
             Open Council OS
