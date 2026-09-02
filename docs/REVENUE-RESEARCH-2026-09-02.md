@@ -31,7 +31,7 @@ date; anything I could not confirm is marked **UNVERIFIED**.
 | `csoai-gspc-mcp` on npm | `0.1.1`, modified 2026-09-01T09:45Z | 7 read tools, no paid tool | REAL |
 | `gspc-card-verifier` on npm | **E404** (`gspc-card-verifier` and `@csoai/gspc-card-verifier`) | `packages/gspc-card-verifier` 1.0.0 Apache-2.0, 37 tests | MISSING — owner `npm publish` |
 | Signed corpus | `/signed/card_index.json` → 335 positions, 313 bodies verify, 22 withheld (verifier README) | — | REAL, with the 21-unsigned-tombstone caveat the README states |
-| `gh` on this Mac | `gh auth status`: **token in keyring invalid** (HTTP 401) | — | cannot inspect GHA runs or open PRs from here until `gh auth refresh -h github.com` |
+| `gh` on this Mac | `gh auth status`: **keyring token invalid**; `gh run list` → HTTP 401; yet `gh pr create` succeeded (PR #1152) via the git-credential path | — | GHA run inspection is blind from here until `gh auth refresh -h github.com`; PR creation works |
 
 **Reading of the table.** The rail described in `docs/REVENUE-LOOPS.md` is real on master but was *not yet
 on prod* at probe time. PR #1150 merged at 08:02Z; the probe was 08:04–08:09Z; `deploy.yml` (prerender +
