@@ -64,6 +64,15 @@ jobs:
           set -euo pipefail
           pip install -q opentimestamps-client || true
           python scripts/witness_public_root.py
+      - name: EAS on Base — attest the ONE root (fails closed without EAS_ATTESTER_PRIVATE_KEY)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        env:
+          EAS_ATTESTER_PRIVATE_KEY: ${{ secrets.EAS_ATTESTER_PRIVATE_KEY }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+        run: |
+          set -euo pipefail
+          npm i --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2 >/dev/null 2>&1 || echo "eas deps unavailable"
+          node scripts/eas_attest_root.mjs || echo "EAS step did not attest (recorded honestly in eas-root-attestations.json)"
       - name: commit published tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
@@ -71,7 +80,7 @@ jobs:
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
-          git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots 2>/dev/null || true
+          git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0
