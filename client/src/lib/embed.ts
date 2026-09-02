@@ -16,7 +16,7 @@
  */
 import { useEffect } from "react";
 import { isSiteDoor, LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";
-import { isUnframeable, withoutEmbed } from "./unframeable";
+import { pathBare, isUnframeable, withoutEmbed } from "./unframeable";
 
 export const EMBED_PARAM = "embed";
 export const EMBED_NAV_TYPE = "coai:embed-nav";
@@ -190,7 +190,12 @@ export function useEmbedNavigation(): void {
 
     // Chrome branches and DSH only work with their own nav. Break out before
     // stamping embed=1 or pinging the parent (a `/` ping must not become an override).
-    if (isUnframeable(window.location.pathname)) {
+    // "OS must never nest inside OS" is the FRAMED case. A top-level `/os?embed=1&lobby=…`
+    // is the harness AG-UI panel minted by osPanelHref() — it must keep embed=1, not be
+    // broken out (which stripped the flag and, post-#1093, bounced it into the Dashboard).
+    const framed = (() => { try { return window.self !== window.top; } catch { return true; } })();
+    const topLevelOsPanel = !framed && pathBare(window.location.pathname) === "/os";
+    if (isUnframeable(window.location.pathname) && !topLevelOsPanel) {
       breakOutOfFrame(window.location.pathname + window.location.search + window.location.hash);
       return;
     }

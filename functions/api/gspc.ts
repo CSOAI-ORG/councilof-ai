@@ -304,10 +304,6 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
-        // Blueprint 2 Sep §2.3 lid — DERIVED, never typed: model-comparison axes whose leader is
-        // actually public (not withheld by own-model exclusion / no signed card).
-        public_leader_count: selected.filter((a: any) => a.kind === "model-comparison"
-          && a.leader && !["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"].includes(String(a.public_leader_state || ""))).length,
         model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
         fact_runs: selected.filter((a: any) => a.kind === "deterministic-facts").length,
         count_grammar:
