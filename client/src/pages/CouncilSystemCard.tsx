@@ -25,7 +25,7 @@ function Section({ title, children }: { title: string; children: any }) {
   );
 }
 
-export default function Sov3SystemCard() {
+export default function CouncilSystemCard() {
   useEffect(() => { document.title = "Council system & safety card | CSOAI"; }, []);
 
   return (

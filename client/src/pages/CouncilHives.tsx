@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// SovereignHives — the Hive Grid. Every tool/feature is its own hive with an
+// CouncilHives — the Hive Grid. Every tool/feature is its own hive with an
 // inner sovereign queen (sov3) that learns from your interactions, self-improves,
 // stays aware, and ensembles with the others — all governed by Layer 0. The
 // architecture for a self-improving, never-stuck OS. Queens learn live once the
@@ -31,7 +31,7 @@ const stateColor: Record<State, string> = {
   Evolving: "bg-violet-100 text-violet-700",
 };
 
-export default function SovereignHives() {
+export default function CouncilHives() {
   const [pulse, setPulse] = useState(0);
   useEffect(() => {
     document.title = "The Hive Grid — CSOAI";

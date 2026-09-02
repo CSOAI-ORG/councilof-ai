@@ -232,7 +232,7 @@ const ACRONYMS: [RegExp, string][] = [
   [/\bVs\b/g, "vs"],
 ];
 // Killed display strings (mirror scripts/brand-gate.mjs RULES). Manifest titles are derived from
-// stale component names (SovereignTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
+// stale component names (CouncilTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
 // archive must SCRUB them before display or the Library page ships a forbidden brand string and
 // the deploy gate blocks. The pages' own rendered copy is already de-branded; only these derived
 // titles are stale. Removing the killed word yields a clean label ("Sovereign Tour" → "Tour").

@@ -25,7 +25,7 @@ function Section({ title, children }: { title: string; children: any }) {
   );
 }
 
-export default function Sov3ModelCard() {
+export default function CouncilModelCard() {
   useEffect(() => { document.title = "Council model card — architecture, status, honest limits | CSOAI"; }, []);
 
   return (

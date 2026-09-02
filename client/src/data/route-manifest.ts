@@ -34,7 +34,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/academy",
-  "comp": "SovereignAcademy",
+  "comp": "CouncilAcademy",
   "title": "Sovereign Academy"
  },
  {
@@ -1144,7 +1144,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/hives",
-  "comp": "SovereignHives",
+  "comp": "CouncilHives",
   "title": "Sovereign Hives"
  },
  {
@@ -1274,7 +1274,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/join",
-  "comp": "SovereignRegistry",
+  "comp": "CouncilRegistry",
   "title": "Sovereign Registry"
  },
  {
@@ -1434,7 +1434,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/me",
-  "comp": "SovereignHub",
+  "comp": "CouncilHub",
   "title": "Sovereign Hub"
  },
  {
@@ -1459,7 +1459,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/minds",
-  "comp": "SovereignMinds",
+  "comp": "CouncilMinds",
   "title": "Sovereign Minds"
  },
  {
@@ -1789,7 +1789,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/register",
-  "comp": "SovereignRegistry",
+  "comp": "CouncilRegistry",
   "title": "Sovereign Registry"
  },
  {
@@ -2149,7 +2149,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/tour",
-  "comp": "SovereignTour",
+  "comp": "CouncilTour",
   "title": "Sovereign Tour"
  },
  {
@@ -2234,7 +2234,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/voice",
-  "comp": "SovereignMinds",
+  "comp": "CouncilMinds",
   "title": "Sovereign Minds"
  },
  {

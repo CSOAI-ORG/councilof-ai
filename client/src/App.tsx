@@ -6,7 +6,6 @@ import RequireAuth from "./components/RequireAuth";
 import { useEffect, lazy, Suspense } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { SectionLoader } from "./components/PageLoader";
-const SovOS = lazy(() => import("./pages/SovOS"));
 const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -118,9 +117,9 @@ const Signup = lazy(() => import("./pages/Signup"));
 const Welcome = lazy(() => import("./pages/Welcome"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
 const SystemCard = lazy(() => import("./pages/SystemCard"));
-const CouncilModelCard = lazy(() => import("./pages/Sov3ModelCard"));
-const CouncilSystemCard = lazy(() => import("./pages/Sov3SystemCard"));
-const CouncilWhitepaper = lazy(() => import("./pages/Sov3Whitepaper"));
+const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
+const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
+const CouncilWhitepaper = lazy(() => import("./pages/CouncilWhitepaper"));
 const ResearchTransparency = lazy(() => import("./pages/ResearchTransparency"));
 const ProvenanceFinding = lazy(() => import("./pages/ProvenanceFinding"));
 const Article50Pack = lazy(() => import("./pages/Article50Pack"));
@@ -285,15 +284,15 @@ const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCent
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
-const SovereignTour = lazy(() => import("./pages/SovereignTour"));
-const SovereignAcademy = lazy(() => import("./pages/SovereignAcademy"));
-const SovereignRegistry = lazy(() => import("./pages/SovereignRegistry"));
-const SovereignHives = lazy(() => import("./pages/SovereignHives"));
+const CouncilTour = lazy(() => import("./pages/CouncilTour"));
+const CouncilAcademy = lazy(() => import("./pages/CouncilAcademy"));
+const CouncilRegistry = lazy(() => import("./pages/CouncilRegistry"));
+const CouncilHives = lazy(() => import("./pages/CouncilHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
 const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
 const CobolBridge = lazy(() => import("./pages/CobolBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
-const SovereignMinds = lazy(() => import("./pages/SovereignMinds"));
+const CouncilMinds = lazy(() => import("./pages/CouncilMinds"));
 const TryCouncil = lazy(() => import("./pages/TryCouncil"));
 const Lineage = lazy(() => import("./pages/Lineage"));
 const RelevanceMap = lazy(() => import("./pages/RelevanceMap"));
@@ -310,7 +309,7 @@ const RegionsMap = lazy(() => import("./pages/RegionsMap"));
 const RegistryAll = lazy(() => import("./pages/RegistryAll"));
 const SocialConnect = lazy(() => import("./pages/SocialConnect"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
-const SovereignHub = lazy(() => import("./pages/SovereignHub"));
+const CouncilHub = lazy(() => import("./pages/CouncilHub"));
 const Pressroom = lazy(() => import("./pages/Pressroom"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
@@ -801,12 +800,12 @@ function App() {
                   <Route path="/demo" component={DemoOS} />
                   <Route path="/os-demo" component={DemoOS} />
                   <Route path="/enter" component={OsEnter} />
-                  <Route path="/tour" component={SovereignTour} />
-                  <Route path="/academy" component={SovereignAcademy} />
-                  <Route path="/register" component={SovereignRegistry} />
-                  <Route path="/hives" component={SovereignHives} />
+                  <Route path="/tour" component={CouncilTour} />
+                  <Route path="/academy" component={CouncilAcademy} />
+                  <Route path="/register" component={CouncilRegistry} />
+                  <Route path="/hives" component={CouncilHives} />
                   <Route path="/pulse" component={GovernancePulse} />
-                  <Route path="/join" component={SovereignRegistry} />
+                  <Route path="/join" component={CouncilRegistry} />
                   <Route path="/distribution" component={Distribution} />
                   <Route path="/legacy" component={LegacyBridge} />
                   <Route path="/social" component={SocialOS} />
@@ -814,7 +813,7 @@ function App() {
                   <Route path="/jewels">{() => <Redirect to="/" />}</Route>
                   {/* 2026-08-01 unification: the towns live INSIDE Sov Space as a layer */}
                   <Route path="/towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
-                  <Route path="/minds" component={SovereignMinds} />
+                  <Route path="/minds" component={CouncilMinds} />
                   <Route path="/try" component={TryCouncil} />
                   <Route path="/lineage" component={Lineage} />
                   <Route path="/map" component={RelevanceMap} />
@@ -867,7 +866,7 @@ function App() {
                   <Route path="/connect-gspc" component={ConnectGSPC} />
                   <Route path="/connect-ai" component={ConnectGSPC} />
                   <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
-                  <Route path="/me" component={SovereignHub} />
+                  <Route path="/me" component={CouncilHub} />
                   <Route path="/nist-vs-eu-ai-act" component={NistVsEuAct} />
                   <Route path="/nist-eu" component={NistVsEuAct} />
                   <Route path="/iso-42001-vs-eu-ai-act" component={Iso42001VsEuAct} />
@@ -914,7 +913,7 @@ function App() {
                   <Route path="/framework-temples" component={Temples} />
                   <Route path="/relevance-map" component={RelevanceMap} />
                   <Route path="/rediscovered" component={Lineage} />
-                  <Route path="/voice" component={SovereignMinds} />
+                  <Route path="/voice" component={CouncilMinds} />
                   <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>

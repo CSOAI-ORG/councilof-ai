@@ -31,7 +31,7 @@ const PATHS: Path[] = [
   ] },
 ];
 
-export default function SovereignAcademy() {
+export default function CouncilAcademy() {
   useEffect(() => { document.title = "Council Academy — CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">

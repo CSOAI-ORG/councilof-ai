@@ -17,7 +17,7 @@ import ArenaDoorPanel from "../components/gspc/ArenaDoorPanel";
 // INSIDE it as layers, not as separate products (Nick's unification law,
 // 2026-08-01). The old routes redirect here with ?view=.
 const ArenaView = lazy(() => import("./GSPCArena"));
-const TownsView = lazy(() => import("./SovereignTown"));
+const TownsView = lazy(() => import("./CouncilTown"));
 const BenchmarkView = lazy(() => import("./BenchmarkView"));
 const TrainingView = lazy(() => import("./TrainingView"));
 

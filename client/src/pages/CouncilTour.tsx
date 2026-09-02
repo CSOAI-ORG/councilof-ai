@@ -83,7 +83,7 @@ const LOCAL_CORPUS_URL = "/corpus-watch/status.json";
 const HF_LEDGER_URL = "https://csoai-csoai-measurement-ledger.hf.space/snapshot.json";
 const PASSPORT_URL = "/api";
 
-export default function SovereignTour() {
+export default function CouncilTour() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [loc, setLoc] = useLocation();
   const search = typeof window !== "undefined" ? window.location.search : "";

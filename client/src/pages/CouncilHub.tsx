@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-// SovereignHub - one end-user identity, 100% integrated into the OS: voice + cognition,
+// CouncilHub - one end-user identity, 100% integrated into the OS: voice + cognition,
 // social character + avatar, compliance passport, and chosen BFT setup. Reachable
 // everywhere, shared across CSOAI and MEOK OS. This is the thing that helps the user.
 type Layer = { name: string; what: string; status: string; href: string; glyph: string };
@@ -10,7 +10,7 @@ const LAYERS: Layer[] = [
   { name: "Compliance Passport", what: "Your Ed25519-signed governance identity - provable, portable, never deniable.", status: "Live", href: "/readiness", glyph: "PASS" },
   { name: "Your Council Setup", what: "Choose how much designed multi-agent review your decisions run on - 5, 12, or 33.", status: "Live", href: "/council", glyph: "33" },
 ];
-export default function SovereignHub() {
+export default function CouncilHub() {
   useEffect(() => { document.title = "Your Council assistant - one identity across the OS | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">

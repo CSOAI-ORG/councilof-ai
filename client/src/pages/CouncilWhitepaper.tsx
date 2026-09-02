@@ -17,7 +17,7 @@ function Section({ n, title, children }: { n: string; title: string; children: a
   );
 }
 
-export default function Sov3Whitepaper() {
+export default function CouncilWhitepaper() {
   useEffect(() => { document.title = "Growth by Accretion — the Council Workbench architecture paper | CSOAI"; }, []);
 
   return (

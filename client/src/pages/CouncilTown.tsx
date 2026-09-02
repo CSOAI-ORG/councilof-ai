@@ -95,7 +95,7 @@ const EXPLAINERS = [
   },
 ];
 
-export default function SovereignTown() {
+export default function CouncilTown() {
   const [s, setS] = useState<SovTownStats>(FALLBACK);
 
   useEffect(() => {

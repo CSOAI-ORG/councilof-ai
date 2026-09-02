@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-// SovereignMinds — the cognition + voice layer. Every Sov Town, humanoid and node
+// CouncilMinds — the cognition + voice layer. Every Sov Town, humanoid and node
 // is inhabited by a Sovereign mind: it perceives, remembers, reflects, plans and acts
 // — governed end to end. Memory that compounds, a voice that speaks, a character that
 // walks you through the world. Absorbed from Smallville, agent-village, A-MEM,
@@ -32,7 +32,7 @@ const VOICE: Cap[] = [
   { name: "Converses", src: "Council Dock", body: "The right-hand dock already turns speech and chat into governed actions, live now." },
 ];
 
-export default function SovereignMinds() {
+export default function CouncilMinds() {
   useEffect(() => { document.title = "Council Minds — the cognition & voice layer · CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">

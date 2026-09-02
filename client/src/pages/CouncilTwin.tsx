@@ -5,12 +5,12 @@ const EMG_GW = "/api";
  * experience WOULD look like. The visualizer is an illustrative canvas; the
  * "charge" meter is a UI affordance. The passport-mint flow hits a real signing
  * endpoint, but the resulting "twin" is a signed personalisation record, not
- * a claim about emergent AI behaviour. See Sov3ModelCard for the canonical
+ * a claim about emergent AI behaviour. See CouncilModelCard for the canonical
  * disclaimer: "Not AGI, not conscious in the literal sense — any language
  * about emergent behaviour or 'consciousness' in internal material is a
  * metaphor for the substrate's evolving-memory design, never a literal claim."
  */
-export default function SovereignTwin() {
+export default function CouncilTwin() {
   const cv = useRef<HTMLCanvasElement | null>(null);
   const chargeRef = useRef(0); const personaliseRef = useRef(false);
   const [charge, setCharge] = useState(0); const [personalised, setPersonalised] = useState(false);

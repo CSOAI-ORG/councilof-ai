@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// SovereignRegistry — the learning-loop front door. Humanoids, enterprises and
+// CouncilRegistry — the learning-loop front door. Humanoids, enterprises and
 // governments mint a sovereign node onto the grid. Every registration deepens the
 // governance of all. (v1 stages your node locally; full network registration +
 // the learning loop activate when the Layer 0 gateway is live. No personal data
@@ -20,7 +20,7 @@ function load(): Record<Kind, number> {
   try { var r = JSON.parse(localStorage.getItem("csoai_nodes") || "{}"); return { humanoid: r.humanoid || 0, enterprise: r.enterprise || 0, government: r.government || 0 }; } catch (e) { return { humanoid: 0, enterprise: 0, government: 0 }; }
 }
 
-export default function SovereignRegistry() {
+export default function CouncilRegistry() {
   const [pick, setPick] = useState<Kind | null>(null);
   const [label, setLabel] = useState("");
   const [mine, setMine] = useState<Record<Kind, number>>({ humanoid: 0, enterprise: 0, government: 0 });
