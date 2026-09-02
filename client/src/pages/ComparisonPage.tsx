@@ -179,7 +179,7 @@ const comparisonFeatures = [
         consulting: "✗",
       },
       {
-        name: "Council (33-agent consensus)",
+        name: "Council (33-seat consensus)",
         csoai: "✓",
         traditional: "✗",
         aiTools: "✗",
@@ -340,7 +340,7 @@ const uniqueAdvantages = [
     icon: Users,
     title: "Council",
     description:
-      "33-agent consensus mechanism ensures transparent, unbiased decision-making. Distributed governance prevents any single entity from controlling AI safety outcomes.",
+      "33-seat consensus mechanism ensures transparent, unbiased decision-making. Distributed governance prevents any single entity from controlling AI safety outcomes.",
   },
   {
     icon: DollarSign,
@@ -865,7 +865,7 @@ export default function ComparisonPage() {
               },
               {
                 q: "Is the Council approach proven?",
-                a: "Yes, multi-agent council mechanisms are well-established in distributed systems. Our 33-agent council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
+                a: "Yes, multi-agent council mechanisms are well-established in distributed systems. Our 33-seat council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
               },
               {
                 q: "What happens to our data if we leave?",

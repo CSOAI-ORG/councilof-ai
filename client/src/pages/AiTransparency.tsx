@@ -137,7 +137,7 @@ export default function AiTransparency() {
               >
                 <div className="flex flex-wrap items-center gap-3">
                   <a
-                    href={s.route}
+                    href={s.route.includes(":") ? undefined : s.route}
                     className="font-mono text-[13px] font-bold text-emerald-50 underline decoration-dotted underline-offset-4"
                   >
                     {s.route}
@@ -201,7 +201,7 @@ export default function AiTransparency() {
                 >
                   <div className="flex flex-wrap items-center gap-3">
                     <a
-                      href={s.route}
+                      href={s.route.includes(":") ? undefined : s.route}
                       className="font-mono text-[12px] font-bold text-emerald-50 underline decoration-dotted underline-offset-4"
                     >
                       {s.route}

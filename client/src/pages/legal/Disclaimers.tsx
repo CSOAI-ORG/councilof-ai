@@ -157,7 +157,7 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    Our platform incorporates artificial intelligence, including the designed 33-agent Council of AI (a design, not a measured live pipeline).
+                    Our platform incorporates artificial intelligence, including the designed 33-seat Council of AI (a design, not a measured live pipeline).
                     Users should understand:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">

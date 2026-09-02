@@ -9,7 +9,7 @@ type Agent = { name: string; domain: string; purpose: string; tools: string; sta
 const AGENTS: Agent[] = [
   { name: "ProofOf", domain: "proofof.ai", purpose: "Identity + provenance attestation for agents & content", tools: "sign · verify · agent-card", status: "signed" },
   { name: "SafetyOf", domain: "safetyof.ai", purpose: "Safety evaluation + red-team gating before action", tools: "evaluate · gate · escalate", status: "signed" },
-  { name: "Council", domain: "csoai.org", purpose: "designed 33-agent council reviewing high-impact decisions (design, not a live claim; measured cross-checking n_eff 1.21 of 3)", tools: "council-vote · care-floor", status: "signed" },
+  { name: "Council", domain: "csoai.org", purpose: "designed 33-seat council reviewing high-impact decisions (design, not a live claim; measured cross-checking n_eff 1.21 of 3)", tools: "council-vote · care-floor", status: "signed" },
   { name: "Crosswalk", domain: "councilof.ai", purpose: "Map any control across published frameworks", tools: "govern · crosswalk", status: "signed" },
   { name: "Watchdog", domain: "csoai.org/watchdog", purpose: "Incident intake + cryptographic logging", tools: "report · seal", status: "signed" },
   { name: "OSCAL Signer", domain: "councilof.ai", purpose: "Machine-readable OSCAL + Ed25519 (RFC-0024)", tools: "oscal · sign", status: "signed" },

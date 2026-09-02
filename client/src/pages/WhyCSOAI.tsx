@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 // /why — measurement body, not a certificate shop.
 // A grade is never sold. Verify is free. We do not remediate.
-// Do not type public prices, certification, or a 33-agent consensus guarantee.
+// Do not type public prices, certification, or a 33-seat consensus guarantee.
 
 const MATRIX: { cap: string; csoai: string; others: string }[] = [
   { cap: "What we do", csoai: "Measure a system and return a signed artefact", others: "Sell a certificate or a remediation package" },

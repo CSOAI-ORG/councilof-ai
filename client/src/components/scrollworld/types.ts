@@ -12,7 +12,7 @@
  *   jail (slot 14) is MEASURED with separation TIE · the anchor is Ed25519 +
  *   SHA-256 hash-chain against did:web:csoai.org (no time-stamping authority) ·
  *   nothing "expires" — when the law moves we re-measure and issue a delta card ·
- *   the 33-agent council is a DESIGNED structure, never a fault-tolerance guarantee.
+ *   the 33-seat council is a DESIGNED structure, never a fault-tolerance guarantee.
  *
  *   THE COUNT, precisely: 22 is a count of AXES ON THE BOARD (14 GSPC + 8
  *   financial/domain, ADR-001). All 22 now carry a measurement; 0 are declared

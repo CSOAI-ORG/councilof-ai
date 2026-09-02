@@ -9,7 +9,7 @@ export function drive(win: GlobeWin, cmd: any) { try { win?.postMessage(cmd, "*"
 
 // Fly the camera to a point — the globe auto-fires __focusPulse there (an expanding ring),
 // so narration lands exactly where the Council assistant is speaking. Optionally convene the
-// 33-agent council spiral at the same point.
+// 33-seat council spiral at the same point.
 export function flyAndConvene(
   win: GlobeWin, lng: number, lat: number,
   opts?: { spiral?: boolean; height?: number; duration?: number; col?: string }

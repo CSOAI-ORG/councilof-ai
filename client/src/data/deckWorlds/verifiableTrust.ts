@@ -20,7 +20,7 @@ import type { Slide } from "@/components/scrollworld";
  *     these cards. Rewritten as Ed25519 over a SHA-256 hash chain vs did:web:csoai.org.
  *  4. Deck slide 9 "MMLU expert (~89.8%)" and the named third-party human panels — figures
  *     not evidenced here. The human-baseline argument is kept; the borrowed numbers are not.
- *  5. Deck slide 13's "33" shield — the 33-agent council is a DESIGNED structure and its
+ *  5. Deck slide 13's "33" shield — the 33-seat council is a DESIGNED structure and its
  *     fault-tolerance property was RETRACTED (DR-0007: measured n_eff 1.21 against 3
  *     nominal legs). Rather than drop it, this page uses it as the worked example: it is
  *     the largest thing we have withdrawn about ourselves.
@@ -178,7 +178,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
 
 export const VERIFIABLE_TRUST_NOT_CLAIMED = [
   "We do not claim the fourteenth slot is gated or unmeasured. Jail is measured across 71 gold items on a seven-model fleet; its separation is TIE on the live board — a tie is not a separated leader — so it is never ranked.",
-  "We do not claim our 33-agent council delivers a resilience or consensus guarantee. That claim was retracted under DR-0007 after we measured an effective independence of about 1.21 against 3 nominal legs. The 33 seats and the 23-of-33 threshold are a design figure only.",
+  "We do not claim our 33-seat council delivers a resilience or consensus guarantee. That claim was retracted under DR-0007 after we measured an effective independence of about 1.21 against 3 nominal legs. The 33 seats and the 23-of-33 threshold are a design figure only.",
   "We do not claim any independent time-stamping or sealing authority. Records are Ed25519-signed over a SHA-256 hash chain, verifiable against did:web:csoai.org, and nothing more.",
   "We do not publish third-party human-baseline scores as if they were ours. Where we have not measured a human baseline ourselves, no number appears.",
   "We do not claim our provenance result was retracted and replaced. The 13.9% one-sided upper bound stands; what we corrected was the denominator it is computed against — n=20 assets, not n=180 cells.",

@@ -73,7 +73,7 @@ export default function Resources() {
     },
     {
       title: "Council Session Report Template",
-      description: "Template for documenting 33-agent council voting sessions and decisions.",
+      description: "Template for documenting 33-seat council voting sessions and decisions.",
       type: "Word",
       format: ".docx",
     },

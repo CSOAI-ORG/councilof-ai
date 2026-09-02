@@ -235,7 +235,7 @@ const glossaryTerms: GlossaryTerm[] = [
     definition:
       "CSOAI's governance body and the conceptual foundation of the Council of Safety for AI. Represents the collective expertise and consensus-driven approach to AI governance across 33 specialized agent perspectives.",
     category: "Governance",
-    relatedTerms: ["CSOAI", "Governance", "Designed 33-agent Council"],
+    relatedTerms: ["CSOAI", "Governance", "Designed 33-seat Council"],
   },
 
   // D

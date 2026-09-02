@@ -97,7 +97,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
   },
   {
     id: "false-bft",
-    claim: "A designed 33-agent council is a live harness layer.",
+    claim: "A designed 33-seat council is a live harness layer.",
     verdict: "false",
     live: "DR-0007 retracted that claim. Do not revive it as AutoHarness drop-in.",
   },

@@ -1,6 +1,6 @@
 /**
  * Council Page
- * Dedicated page explaining the designed 33-agent oversight system
+ * Dedicated page explaining the designed 33-seat oversight system
  */
 
 import { motion } from "framer-motion";
@@ -112,7 +112,7 @@ export default function Council() {
               The <span className="text-emerald-400">Council</span>
             </h1>
             <p className="text-xl text-gray-300 mb-4 leading-relaxed">
-              A designed 33-agent oversight architecture across 7 providers — so no single company
+              A designed 33-seat oversight architecture across 7 providers — so no single company
               could manipulate a safety decision.
             </p>
             <p className="text-sm text-amber-300/90 mb-8 leading-relaxed max-w-2xl mx-auto">

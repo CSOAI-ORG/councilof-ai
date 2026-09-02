@@ -292,7 +292,7 @@ export default function SovereignDock() {
           </div>
           <div className="px-4 pt-3">
             {/* Art 50(1): the dock chats with a live model — disclosed at first interaction. */}
-            <AISystemNotice route="/sovereign-dock" />
+            <AISystemNotice route="/dashboard?tab=home" />
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}

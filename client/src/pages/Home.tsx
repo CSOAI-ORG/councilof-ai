@@ -56,7 +56,7 @@ const suggestionPrompts = [
   },
   {
     title: "View agent council",
-    subtitle: "33-agent voting status",
+    subtitle: "33-seat voting status",
     icon: Users,
     action: "/agent-council",
     prompt: "Explain how the designed 33-seat council voting works, and what n_eff 1.21/3 means."

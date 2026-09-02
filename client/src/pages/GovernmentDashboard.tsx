@@ -982,7 +982,7 @@ export default function GovernmentDashboard() {
               AI-Powered Regulatory Support
             </h2>
             <p className="text-lg text-emerald-100 max-w-3xl mx-auto">
-              The designed 33-agent Council of AI is intended to support regulatory
+              The designed 33-seat Council of AI is intended to support regulatory
               decision-making with signed, replayable records. It is a design, not a measured
               live pipeline — effective independence is measured, not assumed, and the current
               status is published on the Refutation Ledger.
@@ -1019,7 +1019,7 @@ export default function GovernmentDashboard() {
                 Recent Council Actions
               </CardTitle>
               <CardDescription className="text-emerald-200">
-                Decisions routed through the designed 33-agent Council of AI
+                Decisions routed through the designed 33-seat Council of AI
               </CardDescription>
             </CardHeader>
             <CardContent>

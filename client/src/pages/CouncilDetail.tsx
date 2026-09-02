@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 /**
- * 33-Agent Council Detail Page
+ * 33-Seat Council Detail Page
  * Comprehensive explanation of the designed multi-agent review system
  */
 

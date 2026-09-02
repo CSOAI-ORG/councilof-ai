@@ -40,7 +40,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       title: "Council Review",
-      description: "Submit your AI systems for independent review by the designed 33-agent Council of AI",
+      description: "Submit your AI systems for independent review by the designed 33-seat Council of AI",
       icon: Shield,
       details: "Impartial assessment, no vendor bias, detailed compliance report, public transparency"
     },

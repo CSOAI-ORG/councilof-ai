@@ -83,7 +83,7 @@ export const CANON = {
    *  (the NewHome-v2 FAQ does) and point at /refutation-ledger for measured status. */
   councilAgents: {
     value: 33,
-    source: "33-agent council design (AGENTS.md: 33-seat council, 12 Generals) — DESIGN, not a live count",
+    source: "33-seat council design (AGENTS.md: 33-seat council, 12 Generals) — DESIGN, not a live count",
     measuredAt: "2026-08-01",
     note: "DESIGN figure — never render as measured. Measured status lives on /refutation-ledger.",
   },

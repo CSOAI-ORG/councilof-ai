@@ -93,7 +93,7 @@ Safety verification shall be proportionate to risk level and reviewed by trained
     title: "Council",
     part: 1,
     partTitle: "Foundational Principles",
-    content: `Establishment of the designed 33-agent Council of AI (measured status on the public Refutation Ledger). This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
+    content: `Establishment of the designed 33-seat Council of AI (measured status on the public Refutation Ledger). This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
 
 The Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
 
