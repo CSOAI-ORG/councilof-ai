@@ -17,7 +17,7 @@ export { default as BoardAttestation } from "./BoardAttestation";
 export { default as AttestationDeepDive } from "./AttestationDeepDive";
 export type { DeepDiveKind } from "./AttestationDeepDive";
 
-export { default as StatusChip, chipFor } from "./StatusChip";
+export { default as StatusChip, chipFor, figureChip } from "./StatusChip";
 export type { BoardChipKind } from "./StatusChip";
 
 export { useGspcBoard } from "./useGspcBoard";

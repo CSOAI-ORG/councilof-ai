@@ -37,6 +37,13 @@ const faqData: FAQItem[] = [
   },
   {
     category: "GENERAL",
+    question: "What do VALID, INVALID, and UNCHECKABLE mean on a verify page?",
+    answer:
+      "Those are the three attestation states for a signed measurement card. VALID means the Ed25519 signature and payload match the published key. INVALID means the signature check failed. UNCHECKABLE means the verify path cannot decide yet — for example a superseded living stamp, a missing PQC seal, or an unwired helper. UNCHECKABLE is never painted as INVALID by default. This is measurement attestation, not a conformity certificate.",
+    tags: ["verify", "attestation", "basics"],
+  },
+  {
+    category: "GENERAL",
     question: "What does the Council of Safety for AI do?",
     answer:
       "CSOAI operates as both a governance platform and a watchdog organization. We provide AI governance frameworks, compliance tools, training with completion records, and a global network of AI safety analysts who monitor and audit AI systems. Our mission is to protect humanity from AI risks while creating meaningful employment in AI safety.",

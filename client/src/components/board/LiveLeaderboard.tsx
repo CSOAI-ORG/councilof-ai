@@ -7,7 +7,7 @@ import {
   useGspcBoard,
   type GspcAxis,
 } from "./useGspcBoard";
-import StatusChip, { chipFor } from "./StatusChip";
+import StatusChip, { chipFor, figureChip } from "./StatusChip";
 import HumanVsAiPanel from "./HumanVsAiPanel";
 import { lobbyTaskHref, openLobby } from "@/lib/lobbyLink";
 
@@ -103,7 +103,9 @@ export default function LiveLeaderboard({
           {count ? <><strong className="font-bold text-foreground">{count}</strong> · </> : null}
           deterministic grading on frozen, published splits. A <strong>TIE</strong> means the
           leader&apos;s edge is statistically indistinguishable — ties are never counted as wins. A
-          slot with no measurement says so in words; it is never shown as a zero.
+          MEASURED axis with a withheld public leader is labelled as such — never as UNMEASURED.
+          A slot with no measurement says so in words; it is never shown as a zero. This board is a
+          switchboard of recomputable signed records over time, not a certificate.
         </p>
 
         {/* ── unreachable: say it plainly, render no figures at all ────── */}
@@ -215,10 +217,21 @@ export default function LiveLeaderboard({
 function AxisResult({ a }: { a: GspcAxis }) {
   const measured = hasFigure(a);
   const kind = typeof a.kind === "string" ? a.kind : undefined;
-  const chip = chipFor(a.status, a.separation, kind);
+  const chip = measured
+    ? chipFor(a.status, a.separation, kind)
+    : figureChip({ status: a.status, kind, hasPublicFigure: false });
   const width = measured ? Math.max(2, Math.min(100, (a.accuracy as number) * 100)) : 0;
   const lo = Array.isArray(a.interval) ? a.interval[0] : null;
   const hi = Array.isArray(a.interval) ? a.interval[1] : null;
+  const fleetMean =
+    typeof a.fleet_mean === "number" && Number.isFinite(a.fleet_mean) ? a.fleet_mean : null;
+  const figureLabel = measured
+    ? `${a.accuracy_is ? "≥" : ""}${pct(a.accuracy as number)}`
+    : a.status === "MEASURED"
+      ? fleetMean != null
+        ? `no public leader · fleet mean ${pct(fleetMean)}`
+        : "MEASURED — no public leader"
+      : "no figure — empty stays empty";
   return (
     <aside
       id="board-result"
@@ -235,7 +248,7 @@ function AxisResult({ a }: { a: GspcAxis }) {
         <div className="flex items-baseline justify-between gap-3 text-sm">
           <span className="font-semibold text-slate-800">Measured figure</span>
           <span className="font-mono font-bold text-slate-900">
-            {measured ? `${a.accuracy_is ? "≥" : ""}${pct(a.accuracy as number)}` : "no figure — empty stays empty"}
+            {figureLabel}
           </span>
         </div>
         <div className="mt-2 h-3 overflow-hidden rounded-full bg-white ring-1 ring-emerald-200">
@@ -287,9 +300,13 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
   // measured but by deterministic facts, which have no leader and so no
   // accuracy. Without it, provenance-controls — a signed mainnet run over 6
   // issuer accounts — rendered as UNMEASURED on this table.
+  // Figure column: MEASURED ∧ ¬public accuracy is WITHHELD, never UNMEASURED.
   const kind = typeof a.kind === "string" ? a.kind : undefined;
   const chip = chipFor(a.status, a.separation, kind);
   const facts = kind === "deterministic-facts";
+  const figChip = figureChip({ status: a.status, kind, hasPublicFigure: measured });
+  const fleetMean =
+    typeof a.fleet_mean === "number" && Number.isFinite(a.fleet_mean) ? a.fleet_mean : null;
 
   return (
     <tr
@@ -325,6 +342,20 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
             no leader accuracy
             {typeof a.coverage === "string" && a.coverage && (
               <span className="mt-0.5 block text-[11px] text-gray-500">{a.coverage}</span>
+            )}
+          </span>
+        ) : figChip === "WITHHELD" ? (
+          // MEASURED model-comparison with withheld public leader (EXCLUDED_OWN_MODEL /
+          // NO_SIGNED_CARD). Fleet may have run; do not paint UNMEASURED.
+          <span className="inline-flex flex-col items-start gap-1">
+            <StatusChip kind="WITHHELD" />
+            {fleetMean != null && (
+              <span
+                className="font-mono text-[11px] tabular-nums text-muted-foreground"
+                title="Fleet mean when the public per-axis leader is withheld"
+              >
+                fleet mean {pct(fleetMean)}
+              </span>
             )}
           </span>
         ) : (

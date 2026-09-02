@@ -15,7 +15,7 @@
  */
 
 export type BoardChipKind =
-  | "SEPARATED" | "TIE" | "UNTESTED" | "UNMEASURED" | "REPORTED" | "IN-LANE" | "FACTS";
+  | "SEPARATED" | "TIE" | "UNTESTED" | "UNMEASURED" | "REPORTED" | "IN-LANE" | "FACTS" | "WITHHELD";
 
 const CHIP: Record<BoardChipKind, { text: string; className: string; title: string }> = {
   SEPARATED: {
@@ -37,6 +37,16 @@ const CHIP: Record<BoardChipKind, { text: string; className: string; title: stri
     text: "UNMEASURED — not yet gated",
     className: "border-border bg-muted text-muted-foreground",
     title: "No measured figure exists for this slot yet. Reported as absent, never as zero.",
+  },
+  // MEASURED axis whose public leader score is withheld (own-model excluded or
+  // uncarded). Not the same as UNMEASURED: the fleet ran; only the public
+  // leader attribution is absent. Never sell bare measured_axes as leader scores.
+  WITHHELD: {
+    text: "MEASURED — no public leader",
+    className: "border-emerald-600/25 bg-emerald-500/8 text-emerald-900 dark:text-emerald-100",
+    title:
+      "This axis is measured. The public per-axis leader is withheld (own council model " +
+      "excluded, or no signed card). Fleet evidence may still exist; no public leader score is asserted.",
   },
   REPORTED: {
     text: "REPORTED — cited, not ours",
@@ -89,5 +99,28 @@ export function chipFor(status?: string, separation?: string, kind?: string): Bo
   if (separation === "TIE") return "TIE";
   if (separation === "UNTESTED") return "UNTESTED";
   if (kind === "deterministic-facts") return "FACTS";
+  // MEASURED model-comparison with no separation label yet — still measured.
+  // Callers that need the figure-column chip should use figureChip().
+  return "UNTESTED";
+}
+
+/**
+ * Figure-column chip: distinguishes three absences that used to collapse into
+ * one UNMEASURED lie on the home board.
+ *   - true unmeasured / declared slot → UNMEASURED
+ *   - deterministic facts (no leader by kind) → FACTS
+ *   - MEASURED model-comparison with withheld public leader → WITHHELD
+ */
+export function figureChip(opts: {
+  status?: string;
+  kind?: string;
+  hasPublicFigure?: boolean;
+}): BoardChipKind {
+  if (opts.hasPublicFigure) {
+    // Caller already renders the number; chip unused. Keep a safe default.
+    return "SEPARATED";
+  }
+  if (opts.status === "MEASURED" && opts.kind === "deterministic-facts") return "FACTS";
+  if (opts.status === "MEASURED") return "WITHHELD";
   return "UNMEASURED";
 }
