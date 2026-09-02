@@ -1,0 +1,41 @@
+{
+  "kind": "csoai.gspc-board-freeze-witness-pointer/v0",
+  "as_of": "2026-09-02T15:34:13Z",
+  "note": "Honest pointer for the current GSPC board freeze witness. Existence/time of bytes — not certification. Do not hard-code a Rekor logIndex; this file is the live entry.",
+  "live_freeze": {
+    "url": "https://councilof.ai/signed/gspc-board.signed.json",
+    "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+    "preimage_bytes": 50839,
+    "totals": "22 axis · 22 measured",
+    "signer": "did:web:csoai.org#gspc-board-22axis-2026",
+    "verify": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json"
+  },
+  "witness_sidecar": {
+    "url": "https://councilof.ai/interop/gspc-board-freeze-witness-2026-09-02.json",
+    "path": "public/interop/gspc-board-freeze-witness-2026-09-02.json",
+    "status": "PUBLISHED"
+  },
+  "drift": {
+    "status": "MATCH",
+    "witness_content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+    "reason": "witness computed from the freeze bytes committed as 3b3f3706 (#1174)"
+  },
+  "witnesses": {
+    "rekor": "WITNESSED",
+    "ots": "NOT_YET",
+    "eas_base": "NOT_YET",
+    "xrpl_memo": "NOT_YET"
+  },
+  "rekor": {
+    "logIndex": 2687278151,
+    "uuid": "108e9186e8c5677a1f40af31e464eb3f8f6cfa3981eab515a4cb39aa69b99d3ab940385c7e6402aa",
+    "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2687278151",
+    "index_retrieve": "POST https://rekor.sigstore.dev/api/v1/index/retrieve {\"hash\":\"sha256:72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10\"}"
+  },
+  "hard_stops": [
+    "Do not invent an .ots file or fake Rekor UUID.",
+    "Do not treat Rekor as a re-measurement or a certification.",
+    "Do not mix this freeze key with #board-attestation-1 (3KB living stamp).",
+    "did:web resolution of the signer is https://csoai.org/.well-known/did.json — the councilof.ai copy is a mirror."
+  ]
+}
