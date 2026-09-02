@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/interop/regulatory-exposure-card.schema.json",
+  "title": "CSOAI regulatory-exposure card (unsigned fact leaf)",
+  "description": "Side-by-side obligation text + measured public fact. NO conclusion field. Never assert non-compliant / violated / fined / unsafe / hacked / absent-as-verdict. Quote product pages verbatim; classify nothing. Status: DISCOVERED | PROBED | UNCHECKABLE.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "obligation",
+    "binds",
+    "fine_ceiling",
+    "enforcer",
+    "enforcement_start",
+    "measured_fact",
+    "UNMEASURED",
+    "status",
+    "witness"
+  ],
+  "properties": {
+    "obligation": {
+      "type": "object",
+      "required": [
+        "cite",
+        "text"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "cite": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "Verbatim obligation text"
+        }
+      }
+    },
+    "binds": {
+      "type": "string",
+      "description": "Who the obligation binds (providers/deployers/issuers etc.)"
+    },
+    "fine_ceiling": {
+      "type": "object",
+      "required": [
+        "cite",
+        "text"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "cite": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "enforcer": {
+      "type": "string"
+    },
+    "enforcement_start": {
+      "type": "string",
+      "description": "ISO date YYYY-MM-DD"
+    },
+    "measured_fact": {
+      "type": "object",
+      "description": "Public fact only: verbatim quote + URL + retrieval date, or UNCHECKABLE reason",
+      "additionalProperties": true
+    },
+    "UNMEASURED": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Named gaps; empty is not zero"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "DISCOVERED",
+        "PROBED",
+        "UNCHECKABLE"
+      ]
+    },
+    "witness": {
+      "type": "object",
+      "description": "Retrieval / sha / HTTP metadata; not a verdict",
+      "additionalProperties": true
+    }
+  },
+  "not": {
+    "required": [
+      "conclusion"
+    ]
+  }
+}

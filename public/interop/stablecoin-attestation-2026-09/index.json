@@ -1,0 +1,143 @@
+{
+  "schema": "csoai.stablecoin-attestation-index/0.1",
+  "pack": "stablecoin-attestation-2026-09",
+  "as_of": "2026-09-02T05:44:00Z",
+  "fetched_at": "2026-09-02T05:44:00Z",
+  "status": "PROBED",
+  "writes_board": false,
+  "sig_ed25519": null,
+  "honest_sentence": "Cadence densify: stated attestation language beside GENIUS monthly text + MiCA Art 54. Never under-reserved / non-compliant. No conclusion field.",
+  "genius_obligation": {
+    "cite": "P.L. 119-27 (GENIUS Act) §4(a)(3) / 12 U.S.C. §5903 monthly certification & examination",
+    "text": "A permitted payment stablecoin issuer shall, each month, have the information disclosed in the previous month-end report required under paragraph (1)(D) examined by a registered public accounting firm. Each month, the Chief Executive Officer and Chief Financial Officer of a permitted payment stablecoin issuer shall submit a certification as to the accuracy of the monthly report to, as applicable, the primary Federal payment stablecoin regulator of the permitted payment stablecoin issuer; or the State payment stablecoin regulator of the permitted payment stablecoin issuer."
+  },
+  "mica_art54_obligation": {
+    "cite": "Regulation (EU) 2023/1114 Art 54",
+    "text": "Funds received by issuers of e-money tokens in exchange for e-money tokens and safeguarded in accordance with Article 7(1) of Directive 2009/110/EC shall comply with the following: (a) at least 30 % of the funds received is always deposited in separate accounts in credit institutions; (b) the remaining funds received are invested in secure, low-risk assets that qualify as highly liquid financial instruments with minimal market risk, credit risk and concentration risk, in accordance with Article 38(1) of this Regulation, and are denominated in the same official currency as the one referenced by the e-money token."
+  },
+  "n": 9,
+  "cards": [
+    {
+      "id": "rlusd-ripple",
+      "issuer": "Ripple / Standard Custody (RLUSD)",
+      "tokens": [
+        "RLUSD"
+      ],
+      "path": "card-rlusd-ripple-unsigned.json",
+      "sha256": "d821484a60c87f608b1beb17597495a722a5cb1285d35c0b80b014e63e54d62d",
+      "status": "PROBED",
+      "url": "https://docs.ripple.com/products/stablecoin/overview/rlusd",
+      "cadence": "monthly",
+      "examiner": "Deloitte (independent third-party accounting firm / US CPA per docs)"
+    },
+    {
+      "id": "circle-usdc-eurc",
+      "issuer": "Circle (USDC / EURC)",
+      "tokens": [
+        "USDC",
+        "EURC"
+      ],
+      "path": "card-circle-usdc-eurc-unsigned.json",
+      "sha256": "67bed648ab0c6e331c5ab8829fa23f211d3facc4f94e02ac9b30287e3532d384",
+      "status": "PROBED",
+      "url": "https://www.circle.com/transparency",
+      "cadence": "monthly (USDC third-party assurance); weekly reserve holdings disclosure stated for USDC",
+      "examiner": "Big Four accounting firm (page); Deloitte & Touche LLP named as Circle’s independent auditor"
+    },
+    {
+      "id": "ousg-ondo",
+      "issuer": "Ondo Finance (OUSG)",
+      "tokens": [
+        "OUSG"
+      ],
+      "path": "card-ousg-ondo-unsigned.json",
+      "sha256": "68fb59566d850be952e08178e6c5311dc6533c44acbf3165186f2ab4d59ad17c",
+      "status": "PROBED",
+      "url": "https://ondo.finance/ousg",
+      "cadence": "page states daily 3rd-party administrator financial reporting; Attestation Reports linked on page",
+      "examiner": "3rd-party administrator (named on page as publishing daily reporting); attestation reports linked"
+    },
+    {
+      "id": "braza-usdb-bbrl",
+      "issuer": "Braza (USDB / BBRL)",
+      "tokens": [
+        "USDB",
+        "BBRL"
+      ],
+      "path": "card-braza-usdb-bbrl-unsigned.json",
+      "sha256": "f0e1fbd7e007d15344333691c1b2ee267744aca357b2905f06744eaf7b193b2d",
+      "status": "PROBED",
+      "url": "https://www.bpn.finance/stable-coins/bbrl",
+      "cadence": "page states independently audited on a monthly basis; transparency dashboard described as finalizing",
+      "examiner": "top-tier audit firm (page); Big Four review described as underway"
+    },
+    {
+      "id": "sg-forge-eurcv",
+      "issuer": "Société Générale-FORGE (EURCV / CoinVertible)",
+      "tokens": [
+        "EURCV"
+      ],
+      "path": "card-sg-forge-eurcv-unsigned.json",
+      "sha256": "f71e94bca1f87e1e51721c9d5480dac88ae92d47f8bb6f59f00b219e98625664",
+      "status": "PROBED",
+      "url": "https://www.sgforge.com/product/coinvertible/",
+      "cadence": "daily public reserve composition/valuation disclosure (page)",
+      "examiner": "page emphasizes daily public disclosure on Societe Generale-Forge website (attestation firm not named in retrieved product copy)"
+    },
+    {
+      "id": "quantoz-eurq-usdq",
+      "issuer": "Quantoz (EURQ / USDQ)",
+      "tokens": [
+        "EURQ",
+        "USDQ"
+      ],
+      "path": "card-quantoz-eurq-usdq-unsigned.json",
+      "sha256": "34ace4c2f2f4ff8f673aecc9fabd39a5477c58f3a6718cd18d8c5cb01d9844fa",
+      "status": "PROBED",
+      "url": "https://www.quantoz.com/products/eurq-usdq",
+      "cadence": "transparency dashboard stated (continuous visibility); reserve status overview dated June 30th, 2026 on transparency page",
+      "examiner": "transparent auditing stated; registered public accounting firm for monthly GENIUS-style exam not named on retrieved pages"
+    },
+    {
+      "id": "gatehub",
+      "issuer": "GateHub",
+      "tokens": [
+        "USD.gh",
+        "EUR.gh"
+      ],
+      "path": "card-gatehub-unsigned.json",
+      "sha256": "2fc11953b3a05542c59ca5bd92be90b497e7df398de910d35e4e6d9c3e16b35f",
+      "status": "UNCHECKABLE",
+      "url": "https://gatehub.net/transparency",
+      "cadence": null,
+      "examiner": null
+    },
+    {
+      "id": "schuman-europ",
+      "issuer": "Schuman Financial (EURØP)",
+      "tokens": [
+        "EURØP"
+      ],
+      "path": "card-schuman-europ-unsigned.json",
+      "sha256": "fe5d4a00017352318bc41f3e96816753d8295b4e2449f1c91eee15aa13a74066",
+      "status": "PROBED",
+      "url": "https://schuman.io/reserve-audits/",
+      "cadence": "quarterly",
+      "examiner": "KPMG"
+    },
+    {
+      "id": "palau-psc",
+      "issuer": "Republic of Palau (PSC)",
+      "tokens": [
+        "PSC"
+      ],
+      "path": "card-palau-psc-unsigned.json",
+      "sha256": "12dce127750dc1a68439f801e45350d75f2c70100d669da4b8662da686169d68",
+      "status": "UNCHECKABLE",
+      "url": "https://stablecoin.pw/",
+      "cadence": null,
+      "examiner": null
+    }
+  ],
+  "schema_card": "../regulatory-exposure-card.schema.json"
+}
