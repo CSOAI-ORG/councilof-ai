@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0902-08",
+      date: "2026-09-02",
+      what_was_wrong:
+        "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots · 15 measured · 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis · 22 measured · 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
+      how_caught:
+        "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
+      fix:
+        "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled do-not-file. Re-signing that 38KB file is an owner MPC ceremony — the Pages /api/board-sign path is a 3KB card-sign and cannot carry the snapshot.",
+      status: "CORRECTED — live 22/22 is the quotable count; snapshot 15/7 is historical pending owner MPC re-sign",
+    },
+    {
       id: "C-2026-0902-07",
       date: "2026-09-02",
       what_was_wrong:

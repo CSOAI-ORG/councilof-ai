@@ -233,8 +233,11 @@ export const onRequestGet: PagesFunction = async () => {
       signed_measured_axes: boardTotals.measured_axes ?? null,
       signed_snapshot_agrees: boardAgrees,
       on_disagreement:
-        "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
-        "re-derived and re-signed. Do not pick the one you prefer.",
+        "Quote the live counters above and GET /api/gspc — both derive from the committed axis " +
+        "arrays. The signed snapshot is a historical freeze (15 measured / 7 empty) under a " +
+        "3-party MPC key that does not exist as a whole number here. Do not file the snapshot's " +
+        "15/7. Re-signing that file is an owner MPC ceremony, not a laptop sign and not the " +
+        "Pages 3KB card-sign path.",
     },
 
     note:
