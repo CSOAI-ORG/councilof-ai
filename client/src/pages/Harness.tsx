@@ -399,7 +399,7 @@ export default function Harness() {
 
         <div className="mt-12 flex flex-wrap gap-3">
           <Link
-            href="/gspc-scoreboard"
+            href="/dashboard?tab=board"
             className="rounded-lg bg-emerald-600 px-5 py-3 font-bold text-white hover:bg-emerald-700"
           >
             See the live board

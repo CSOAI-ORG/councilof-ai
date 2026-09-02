@@ -9,7 +9,7 @@ interface NavGroup { name: string; href: string; icon: typeof Globe2; descriptio
 export const PRIMARY_LINKS: { name: string; href: string }[] = [
   { name: "Verify", href: "/gspc-verify" },
   { name: "Get measured", href: "/assess" },
-  { name: "Board", href: "/gspc-scoreboard" },
+  { name: "Board", href: "/dashboard?tab=board" },
   { name: "Council OS", href: "/dashboard" },
   { name: "Tools", href: "/tools" },
 ];

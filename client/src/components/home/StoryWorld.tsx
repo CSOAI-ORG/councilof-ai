@@ -303,7 +303,7 @@ function HeroActions() {
           Verify a card — free
         </a>
         <a
-          href="/gspc-scoreboard"
+          href="/dashboard?tab=board"
           className="inline-flex items-center justify-center rounded-xl border border-white/45 bg-white/10 px-6 py-3.5 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
         >
           Open the live board

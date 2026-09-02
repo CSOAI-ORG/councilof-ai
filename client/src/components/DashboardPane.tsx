@@ -3,6 +3,8 @@ import type React from "react";
  *  (Board, Verify) or the product page mounted in-shell. Unknown ids fall back to the board. */
 import { lazy, Suspense } from "react";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
+const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
+const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
 const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
@@ -14,7 +16,9 @@ const Page_Honesty = lazy(() => import("@/pages/Honesty"));
 const Page_Library = lazy(() => import("@/pages/Library"));
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
-  board: LobbyBoardPane,
+  board: HomeGspcBoard, // the living HF Space board + 22-axis strip, inside the shell (owner ruling 2 Sep)
+  leaderboard: Page_Leaderboard, // the full model × axis table, in-shell
+  terminal: LobbyBoardPane,
   verify: LobbyVerifyPane,
   results: Page_Benchmarks,
   models: Page_ModelRegistry,

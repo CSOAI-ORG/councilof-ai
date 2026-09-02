@@ -328,7 +328,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">See the board it powers</h2>
             <div className="flex items-center justify-center gap-4">
-              <Link href="/leaderboard">
+              <Link href="/dashboard?tab=leaderboard">
                 <Button size="lg" className="gap-2">
                   GSPC board v2 <ArrowRight className="w-4 h-4" />
                 </Button>

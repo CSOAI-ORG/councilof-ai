@@ -578,7 +578,7 @@ export default function GovernmentDashboard() {
             No live national AI registry feeds this dashboard. Every figure below — compliance
             rates, system counts, penalties — is illustrative sample data showing the layout.
             None of it is a measurement, and none of it should be quoted. Our real, signed
-            measurements are on the board at <a className="underline" href="/gspc-scoreboard">/gspc-scoreboard</a>.
+            measurements are on the board at <a className="underline" href="/dashboard?tab=board">/gspc-scoreboard</a>.
           </p>
         </div>
       </section>

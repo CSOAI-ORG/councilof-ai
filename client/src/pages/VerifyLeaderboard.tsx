@@ -136,7 +136,7 @@ export default function VerifyLeaderboard() {
         </div>
 
         <div className="mt-6 flex flex-wrap gap-3 text-sm">
-          <a href="/gspc-scoreboard" className="rounded-xl border border-emerald-600/20 px-4 py-2 font-semibold text-emerald-700 hover:bg-emerald-50">
+          <a href="/dashboard?tab=board" className="rounded-xl border border-emerald-600/20 px-4 py-2 font-semibold text-emerald-700 hover:bg-emerald-50">
             The full board — {board.public_count} →
           </a>
           <a href="/arena/elo_reference.json" className="rounded-xl border border-emerald-600/20 px-4 py-2 font-semibold text-emerald-700 hover:bg-emerald-50">

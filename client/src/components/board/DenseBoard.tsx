@@ -143,7 +143,7 @@ export default function DenseBoard({
         </div>
         {showScoreboardLink && (
           <a
-            href="/gspc-scoreboard"
+            href="/dashboard?tab=board"
             onClick={onOpenScoreboard ? (e) => { e.preventDefault(); onOpenScoreboard(); } : undefined}
             className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90"
           >
