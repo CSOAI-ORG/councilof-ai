@@ -72,7 +72,7 @@ export default function PublicHome() {
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               The first open-source AI safety governance platform for the West. 
-              Multi-framework measurement, a designed 33-agent Council of AI, 
+              Multi-framework measurement, a designed 33-seat Council of AI, 
               and public accountability through The Watchdog program.
             </p>
 
@@ -224,7 +224,7 @@ export default function PublicHome() {
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                   <Shield className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Designed 33-agent council</h3>
+                <h3 className="font-semibold text-lg mb-2">Designed 33-seat council</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   designed multi-agent review with 11 Guardian, 11 Arbiter, and 11 Scribe agents. 
                   Requires 22/33 consensus for decisions.
@@ -567,7 +567,7 @@ export default function PublicHome() {
                 <li><Link href="/dashboard" className="hover:text-foreground">Dashboard</Link></li>
                 <li><Link href="/ai-systems" className="hover:text-foreground">AI Systems</Link></li>
                 <li><Link href="/compliance" className="hover:text-foreground">Compliance</Link></li>
-                <li><Link href="/agent-council" className="hover:text-foreground">Designed 33-agent council</Link></li>
+                <li><Link href="/agent-council" className="hover:text-foreground">Designed 33-seat council</Link></li>
               </ul>
             </div>
 

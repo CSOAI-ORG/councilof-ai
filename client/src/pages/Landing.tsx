@@ -123,7 +123,7 @@ export default function Landing() {
               
               <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
                 The first comprehensive AI safety compliance platform for the West. 
-                Multi-framework support, designed 33-agent council, and public accountability 
+                Multi-framework support, designed 33-seat council, and public accountability 
                 through The Watchdog.
               </p>
               

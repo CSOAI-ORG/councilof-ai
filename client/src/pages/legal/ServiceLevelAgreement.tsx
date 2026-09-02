@@ -82,7 +82,7 @@ export default function ServiceLevelAgreement() {
                     <li>Core platform access (login, dashboard, training)</li>
                     <li>Certification exam availability</li>
                     <li>API endpoint availability</li>
-                    <li>Designed 33-agent Council voting system</li>
+                    <li>Designed 33-seat Council voting system</li>
                   </ul>
                 </div>
 
@@ -231,7 +231,7 @@ export default function ServiceLevelAgreement() {
                   {[
                     { metric: "Page Load Time", target: "< 3 seconds", current: 92, desc: "95th percentile" },
                     { metric: "API Response Time", target: "< 500ms", current: 95, desc: "Average response" },
-                    { metric: "Council Voting", target: "< 60 seconds", current: 88, desc: "Full designed 33-agent consensus" },
+                    { metric: "Council Voting", target: "< 60 seconds", current: 88, desc: "Full designed 33-seat consensus" },
                     { metric: "Certificate Generation", target: "< 10 seconds", current: 97, desc: "PDF generation" },
                   ].map((item, i) => (
                     <div key={i} className="bg-gray-50 rounded-lg p-4">

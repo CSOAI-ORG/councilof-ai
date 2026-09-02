@@ -147,7 +147,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "What is SOAI-PDCA?",
-      answer: "SOAI-PDCA combines Safety Oversight AI (the 33-agent Council of AI) with the Deming Cycle (Plan-Do-Check-Act). It's a continuous improvement methodology that ensures your compliance keeps improving over time."
+      answer: "SOAI-PDCA combines Safety Oversight AI (the 33-seat Council of AI) with the Deming Cycle (Plan-Do-Check-Act). It's a continuous improvement methodology that ensures your compliance keeps improving over time."
     },
     {
       question: "How often should we run SOAI-PDCA cycles?",
@@ -227,7 +227,7 @@ export default function ComplianceHowItWorks() {
         <div className="mb-20">
           <h2 className="text-4xl font-bold mb-12 text-center">SOAI-PDCA Continuous Improvement</h2>
           <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto">
-            SOAI-PDCA combines Safety Oversight AI (the 33-agent Council of AI) with the Deming Cycle to ensure your compliance keeps improving over time.
+            SOAI-PDCA combines Safety Oversight AI (the 33-seat Council of AI) with the Deming Cycle to ensure your compliance keeps improving over time.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {soaiPdcaSteps.map((step, idx) => (
@@ -275,7 +275,7 @@ export default function ComplianceHowItWorks() {
               <div>
                 <Shield className="w-12 h-12 text-emerald-600 mb-4" />
                 <h3 className="text-xl font-bold text-emerald-900 mb-3">Independent Review</h3>
-                <p className="text-gray-700">The 33-agent Council of AI independently reviews your AI systems and compliance practices. No vendor bias, no conflicts of interest.</p>
+                <p className="text-gray-700">The 33-seat Council of AI independently reviews your AI systems and compliance practices. No vendor bias, no conflicts of interest.</p>
               </div>
               <div>
                 <Globe className="w-12 h-12 text-emerald-600 mb-4" />

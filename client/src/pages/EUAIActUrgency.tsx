@@ -409,7 +409,7 @@ export default function EUAIActUrgency() {
                   <Shield className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  33-agent Council of AI
+                  33-seat Council of AI
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
                   After certification, your AI systems receive continuous

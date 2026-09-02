@@ -5,7 +5,7 @@ import { setMetaDescription } from "@/lib/utils";
 /**
  * /council-licensing — Council Ledger door.
  *
- * Replaces the Era-A "33-agent council fleet licence" landing (retracted BFT
+ * Replaces the Era-A "33-seat council fleet licence" landing (retracted BFT
  * claim, certification-shaped copy). The route is kept so inbound links do
  * not 404. The product is the signed evidence feed, not a vote theatre.
  */

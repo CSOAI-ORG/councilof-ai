@@ -60,7 +60,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "How is CSOAI different from other AI governance platforms?",
     answer:
-      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. The designed 33-agent Council of AI is our consensus-review design; its effective independence is measured, not assumed, and published on the Refutation Ledger.",
+      "CSOAI uniquely combines automated governance tools with human expertise through our Watchdog analyst network. Unlike competitors like Credo AI, Holistic AI, or OneTrust, we focus on solving two problems simultaneously: ensuring AI safety AND creating jobs for workers displaced by automation. The designed 33-seat Council of AI is our consensus-review design; its effective independence is measured, not assumed, and published on the Refutation Ledger.",
     tags: ["comparison", "differentiation"],
   },
   {
@@ -72,9 +72,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "GENERAL",
-    question: "What is the designed 33-agent Council?",
+    question: "What is the designed 33-seat Council?",
     answer:
-      "A designed 33-agent council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed: guaranteed fault tolerance is unproven, and we do not claim it.",
+      "A designed 33-seat council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed: guaranteed fault tolerance is unproven, and we do not claim it.",
     tags: ["technology", "council"],
   },
   {
@@ -406,9 +406,9 @@ const faqData: FAQItem[] = [
   },
   {
     category: "TECHNICAL",
-    question: "How does the designed 33-agent council work?",
+    question: "How does the designed 33-seat council work?",
     answer:
-      "The 33-Agent Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — guaranteed fault tolerance is unproven, and we do not claim it.",
+      "The 33-Seat Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — guaranteed fault tolerance is unproven, and we do not claim it.",
     tags: ["technical", "council"],
   },
   {

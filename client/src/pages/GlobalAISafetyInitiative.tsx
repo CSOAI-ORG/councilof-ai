@@ -273,7 +273,7 @@ export default function GlobalAISafetyInitiative() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />
-                    <span>Designed 33-agent Council of AI access</span>
+                    <span>Designed 33-seat Council of AI access</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-5 w-5 text-green-500 shrink-0 mt-0.5" />

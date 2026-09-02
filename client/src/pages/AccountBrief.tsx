@@ -58,7 +58,7 @@ export default function AccountBrief() {
           <iframe ref={globeRef} src={`/globe3d.html?region=${gr}`} title="globe" className="h-full w-full" style={{ border: 0 }} />
         </div>
         <p className="mt-1.5 text-[11px] text-emerald-300/75">Globe flown to {a.name}'s HQ ({a.country}). Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
-        <button onClick={() => flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 })} className="mt-2 rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-100 hover:bg-white/5">▶ Convene the 33-agent council over {a.country}</button>
+        <button onClick={() => flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 })} className="mt-2 rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-100 hover:bg-white/5">▶ Convene the 33-seat council over {a.country}</button>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {/* what governs them */}

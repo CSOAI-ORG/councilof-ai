@@ -149,7 +149,7 @@ export default function NewHome() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Accountability</h3>
               <p className="text-gray-600">
-                designed 33-agent council with human oversight ensures no single entity controls AI safety decisions.
+                designed 33-seat council with human oversight ensures no single entity controls AI safety decisions.
               </p>
             </Card>
 
@@ -510,7 +510,7 @@ export default function NewHome() {
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
-                  <span className="text-gray-700">Transparent 33-Agent Council decisions</span>
+                  <span className="text-gray-700">Transparent 33-Seat Council decisions</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle className="w-5 h-5 text-gray-900 flex-shrink-0 mt-0.5" />
@@ -616,7 +616,7 @@ export default function NewHome() {
         </div>
       </section>
 
-      {/* 33-Agent Council Transparency Section */}
+      {/* 33-Seat Council Transparency Section */}
       <section className="py-24 bg-gradient-to-b from-gray-900 to-gray-800 text-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
@@ -625,7 +625,7 @@ export default function NewHome() {
               Transparent AI Oversight
             </Badge>
             <h2 className="text-4xl md:text-4xl font-bold mb-6">
-              33-Agent Council: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Human Oversight Meets AI Efficiency</span>
+              33-Seat Council: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Human Oversight Meets AI Efficiency</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               We've created a transparent AI safety council with designed multi-agent review. 
@@ -773,7 +773,7 @@ export default function NewHome() {
                 <Shield className="h-6 w-6 text-green-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-4">
-                Designed 33-Agent Council
+                Designed 33-Seat Council
               </h3>
               <p className="text-gray-600">
                 Decentralized decision-making — a designed multi-agent vote runs today,

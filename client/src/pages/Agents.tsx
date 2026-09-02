@@ -5,7 +5,7 @@ import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 // Credo GAIA, and ServiceNow AI Control Tower. A council of agents beats one agent.
 const POINTS = [
   { t: "One agent is a single point of capture", d: "A lone governance agent can be wrong, biased, or compromised - and nobody checks it." },
-  { t: "A council can't be captured", d: "A designed 33-agent council reviews high-impact decisions under a supermajority threshold - no single node decides. It is a design, not a live claim: measured cross-architecture decorrelation today is n_eff 1.21 of 3, published on the Refutation Ledger." },
+  { t: "A council can't be captured", d: "A designed 33-seat council reviews high-impact decisions under a supermajority threshold - no single node decides. It is a design, not a live claim: measured cross-architecture decorrelation today is n_eff 1.21 of 3, published on the Refutation Ledger." },
   { t: "Every verdict is provable", d: ANCHORING_CLAIM + " Outcomes are replayable — not a black-box recommendation." },
   { t: "Open and cross-vendor", d: "MCP-native and cross-vendor - it governs agents wherever they run, not just inside one suite." },
 ];
@@ -23,7 +23,7 @@ export default function Agents() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the governance agent</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Everyone shipped one agent. We designed a Council.</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">2026 is the year of the governance agent. But a single agent deciding your compliance is a single point of failure. CSOAI's answer is a designed 33-agent council under a supermajority threshold - no single node decides. It is a design, not a live claim: measured cross-checking today is n_eff 1.21 of 3.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">2026 is the year of the governance agent. But a single agent deciding your compliance is a single point of failure. CSOAI's answer is a designed 33-seat council under a supermajority threshold - no single node decides. It is a design, not a live claim: measured cross-checking today is n_eff 1.21 of 3.</p>
         </div>
       </section>
       <section className="max-w-6xl mx-auto px-6 py-12">

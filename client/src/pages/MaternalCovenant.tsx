@@ -67,7 +67,7 @@ const implementationArticles = [
   {
     num: 3,
     title: "Council of AI",
-    desc: "33-agent oversight ensuring no single AI can override protective instincts",
+    desc: "33-seat oversight ensuring no single AI can override protective instincts",
     icon: Users,
     color: "purple"
   },

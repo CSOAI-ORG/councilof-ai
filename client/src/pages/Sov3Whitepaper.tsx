@@ -68,7 +68,7 @@ export default function Sov3Whitepaper() {
           <p>
             Six invariants never change as the substrate grows: the care-floor, Article 0 (no equity, board seats,
             revenue-share or success fees from certified institutions), the 12 governance pillars, the designed
-            33-agent council quorum, signed measurement-card attestation, and owner-binding. Growth that would violate an invariant is rejected outright —
+            33-seat council quorum, signed measurement-card attestation, and owner-binding. Growth that would violate an invariant is rejected outright —
             this is what separates accretive growth from unconstrained drift.
           </p>
         </Section>

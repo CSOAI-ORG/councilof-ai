@@ -1,7 +1,7 @@
 /**
  * Interactive PDCA Cycle Simulator
  * Walk through a sample PDCA cycle with a fictional AI system
- * and see 33-Agent Council recommendations at each phase
+ * and see 33-Seat Council recommendations at each phase
  */
 
 import { useState } from 'react';
@@ -228,7 +228,7 @@ export default function PDCASimulator() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Interactive PDCA Cycle Simulator</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Walk through a complete SOAI-PDCA cycle with a fictional AI system and see how the
-            designed 33-Agent Council provides recommendations at each phase.
+            designed 33-Seat Council provides recommendations at each phase.
           </p>
           <p className="mt-3 inline-block rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
             Everything on this page — the system, the figures, and every &ldquo;council
@@ -352,7 +352,7 @@ export default function PDCASimulator() {
             </CardContent>
           </Card>
 
-          {/* 33-Agent Council Recommendations */}
+          {/* 33-Seat Council Recommendations */}
           <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">

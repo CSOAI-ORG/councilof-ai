@@ -49,7 +49,7 @@ export interface Surface {
 
 
 export const SURFACES: Surface[] = [
-  { route: "/sovereign-dock", label: "Council Signal (global)", nature: "ai_system",
+  { route: "/dashboard?tab=home", label: "Council Signal (global) — inside Council OS", nature: "ai_system",
     mechanism: "The dock sends your message to the live Council gateway (councilof.ai/api/gspc) and a model writes the reply. It is mounted on every page; the notice below the dock header discloses this at first interaction, per Article 50(1).",
     evidence: ["client/src/components/SovereignDock.tsx", "client/src/lib/sovAsk.ts"] },
   { route: "/", label: "Home + Council Console", nature: "rule_based",

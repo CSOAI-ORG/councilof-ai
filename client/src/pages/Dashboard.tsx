@@ -133,7 +133,7 @@ export default function Dashboard() {
       icon: Users,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      description: "Designed 33-Agent Council decisions",
+      description: "Designed 33-Seat Council decisions",
     },
   ];
 
@@ -307,7 +307,7 @@ export default function Dashboard() {
                       phase: "CHECK", 
                       fullName: "Evaluation Phase",
                       status: pdcaStats?.phaseDistribution?.check ? "active" : (watchdogReports?.length ? "active" : "pending"),
-                      description: "Monitor via Watchdog reports and designed 33-agent council",
+                      description: "Monitor via Watchdog reports and designed 33-seat council",
                       items: [
                         `${watchdogReports?.length || 0} Watchdog reports`,
                         `${councilStats?.totalSessions || 0} Council sessions`,

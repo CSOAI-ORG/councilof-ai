@@ -10,7 +10,7 @@ const DOCS_ARTICLE_SCHEMA = {
   '@type': 'TechArticle',
   headline: 'CSOAI Technical Documentation',
   description:
-    'Architecture, API references and integration guides for the CSOAI platform — the designed 33-agent Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
+    'Architecture, API references and integration guides for the CSOAI platform — the designed 33-seat Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
   author: { '@type': 'Organization', name: 'CSOAI' },
   publisher: { '@type': 'Organization', name: 'CSOAI', url: 'https://csoai.org' },
   url: 'https://csoai.org/docs',
@@ -196,7 +196,7 @@ export default function Documentation() {
             <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">33-agent Council of AI</CardTitle>
+                  <CardTitle className="text-2xl">33-seat Council of AI</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-700 mb-4">

@@ -22,7 +22,7 @@ async function sha256(s: string): Promise<string> { try { const buf = await cryp
 const PDCA = [
   { k: "Plan", t: "Classify the intended action against Layer 0 and every applicable framework." },
   { k: "Do", t: "Simulate the outcomes across thousands of branches - who is harmed, what breaks." },
-  { k: "Check", t: "The designed 33-agent council votes: is this governable, or must it be halted? A design figure — its measured effective independence is n_eff 1.21 of 3 (DR-0007)." },
+  { k: "Check", t: "The designed 33-seat council votes: is this governable, or must it be halted? A design figure — its measured effective independence is n_eff 1.21 of 3 (DR-0007)." },
   { k: "Act", t: "Halt, quarantine the actor, re-govern, and sign the intervention to the ledger." },
 ];
 

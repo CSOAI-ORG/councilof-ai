@@ -51,7 +51,7 @@ export default function Technology() {
       id: 'analysis-engine',
       title: 'Analysis Engine',
       icon: Brain,
-      description: 'The designed 33-agent Council of AI reviews in parallel',
+      description: 'The designed 33-seat Council of AI reviews in parallel',
       details: [
         'Distributed processing across multiple nodes',
         'designed multi-agent review algorithm',
@@ -114,7 +114,7 @@ export default function Technology() {
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Built on a designed multi-agent review architecture. The 33-agent council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
+            Built on a designed multi-agent review architecture. The 33-seat council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard?task=pricing-overview&tab=measured">
@@ -135,7 +135,7 @@ export default function Technology() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-white mb-4">How the designed 33-agent Council reviews decisions</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">How the designed 33-seat Council reviews decisions</h2>
             <p className="text-blue-200 text-lg">Signed, checkable multi-perspective review — measurement, not certification</p>
           </div>
 
@@ -263,7 +263,7 @@ export default function Technology() {
                 <Brain className="text-blue-400 flex-shrink-0" size={28} />
                 <div>
                   <h4 className="font-bold text-white">Analysis Engine</h4>
-                  <p className="text-sm text-blue-200">Designed 33-agent Council of AI (23-of-33 supermajority)</p>
+                  <p className="text-sm text-blue-200">Designed 33-seat Council of AI (23-of-33 supermajority)</p>
                 </div>
               </div>
 

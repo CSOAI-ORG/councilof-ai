@@ -70,7 +70,7 @@ export default function ROICalculator() {
     },
     {
       icon: <Users className="w-8 h-8 text-blue-400" />,
-      title: "33-agent Council of AI",
+      title: "33-seat Council of AI",
       description: "Diverse expert agents ensuring robust governance decisions"
     },
     {

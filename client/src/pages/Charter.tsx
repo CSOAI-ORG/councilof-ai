@@ -55,7 +55,7 @@ const charterSections = [
     items: [
       { num: 1, title: "The Maternal Covenant", desc: "Foundational relationship between humanity and AI", highlight: true },
       { num: 2, title: "Provable Safety Requirements", desc: "Mathematical and empirical safety standards" },
-      { num: 3, title: "Council Oversight", desc: "33-agent AI-to-AI monitoring architecture" },
+      { num: 3, title: "Council Oversight", desc: "33-seat AI-to-AI monitoring architecture" },
       { num: 4, title: "Value Uncertainty Principles", desc: "Handling moral and ethical uncertainty" },
       { num: 5, title: "Constitutional AI Principles", desc: "Core values embedded in AI systems" },
       { num: 6, title: "Consciousness Preparedness", desc: "Protocols for potential AI consciousness" },
@@ -207,7 +207,7 @@ const faqItems = [
   },
   {
     question: "How is the Charter enforced?",
-    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-agent AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Trained Analysts—human professionals who review AI systems and validate Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
+    answer: "Enforcement operates through four mechanisms: (1) the designed Council—a 33-seat AI system using 12 different AI providers intended to monitors licensed systems 24/7 for safety violations; (2) Public Watchdog—a transparency platform where safety incidents are publicly disclosed; (3) Trained Analysts—human professionals who review AI systems and validate Council decisions; (4) License Revocation—organizations that violate Charter terms lose their license, which is publicly disclosed. The combination of AI monitoring, human oversight, and public transparency creates accountability at every level."
   },
   {
     question: "Can the Charter be amended?",
@@ -509,7 +509,7 @@ export default function Charter() {
             {[
               { num: 1, title: "Maternal Covenant", icon: Heart, color: "emerald", desc: "Care-based safety relationship" },
               { num: 2, title: "Provable Safety", icon: Shield, color: "green", desc: "Mathematical proof requirements" },
-              { num: 3, title: "Council", icon: Users, color: "teal", desc: "33-agent AI monitoring" },
+              { num: 3, title: "Council", icon: Users, color: "teal", desc: "33-seat AI monitoring" },
               { num: 4, title: "Value Uncertainty", icon: Scale, color: "lime", desc: "Epistemic humility in ethics" },
               { num: 5, title: "Constitutional", icon: BookOpen, color: "emerald", desc: "10 core embedded principles" },
               { num: 6, title: "Consciousness", icon: Brain, color: "green", desc: "14 sentience indicators" },

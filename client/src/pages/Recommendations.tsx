@@ -727,7 +727,7 @@ export default function Recommendations() {
                 </div>
                 <h4 className="font-semibold mb-2">Council Learning</h4>
                 <p className="text-sm text-muted-foreground">
-                  Learns from 33-Agent Council voting patterns.
+                  Learns from 33-Seat Council voting patterns.
                 </p>
               </div>
               
