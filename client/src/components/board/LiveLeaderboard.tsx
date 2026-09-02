@@ -184,8 +184,7 @@ export default function LiveLeaderboard({
               )}
 
               <a
-                href={lobbyTaskHref("read-the-board")}
-                onClick={(e) => { e.preventDefault(); openLobby({ task: "read-the-board" }); }}
+                href="/dashboard?tab=board&task=read-the-board"
                 className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
               >
                 Open in the Council Lobby →
@@ -386,8 +385,7 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
 
       <td className="p-4 text-right">
         <a
-          href={lobbyTaskHref("explain-axis", { ctx: a.axis })}
-          onClick={(e) => { e.preventDefault(); openLobby({ task: "explain-axis", ctx: a.axis }); }}
+          href={`/dashboard?tab=board&task=explain-axis&ctx=${encodeURIComponent(a.axis)}`}
           className="whitespace-nowrap rounded-full border border-primary/25 px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary/10"
           aria-label={`Ask the Council Lobby about the ${a.axis} axis`}
         >

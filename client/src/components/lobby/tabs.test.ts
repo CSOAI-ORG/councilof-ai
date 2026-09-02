@@ -94,7 +94,7 @@ describe("Council OS tabs", () => {
     const seen = new Map<string, number>();
     for (const p of paths) seen.set(p, (seen.get(p) ?? 0) + 1);
     // measured + ras both name /assess (Get-measured vs Readiness). Not on the OS rail.
-    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([["/assess", 2]]);
+    expect([...seen.entries()].filter(([, n]) => n > 1)).toEqual([]);
   });
 
   it("keeps /honesty on the rail tab only — the audited duplicate is gone", () => {
@@ -148,7 +148,7 @@ describe("Council OS tabs", () => {
 
   it("no longer lets a bare 'readiness' swallow the CRA kit", () => {
     expect(matchRoute("open the cra readiness kit")?.path).toBe("/cra-readiness");
-    expect(matchTab("open the readiness assessment")?.id).toBe("ras");
+    expect(matchTab("open the readiness assessment")?.id).toBe("measured");
     expect(matchTab("open the assessment")?.id).toBe("measured");
   });
 

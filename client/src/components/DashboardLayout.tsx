@@ -5,7 +5,7 @@
  * (?embed=1) the rail is dropped so there is only one tab list.
  */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { motion } from "framer-motion";
 import {
@@ -30,7 +30,22 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // P2 (mobile): phones start with the rail closed and open it as a drawer over the pane —
+  // a 260px rail beside a 375px viewport squeezed the board to one word per line.
+  const smallQuery = "(max-width: 767px)";
+  const [isSmall, setIsSmall] = useState<boolean>(() =>
+    typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(smallQuery).matches : false,
+  );
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() =>
+    typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(smallQuery).matches : false,
+  );
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia(smallQuery);
+    const onChange = (e: MediaQueryListEvent) => { setIsSmall(e.matches); setSidebarCollapsed(e.matches); };
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
   const { theme, toggleTheme } = useTheme();
   const framed = isEmbedded();
 
@@ -56,6 +71,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         transition={{ duration: 0.2, ease: "easeInOut" }}
         className={cn(
           "flex flex-col border-r border-sidebar-border bg-sidebar overflow-hidden",
+          isSmall && "fixed inset-y-0 left-0 z-40 shadow-xl",
           sidebarCollapsed && "border-r-0",
         )}
       >
@@ -82,7 +98,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           {DASHBOARD_TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
-              <Link key={tab.id} href={`/dashboard?tab=${tab.id}`}>
+              <Link key={tab.id} href={`/dashboard?tab=${tab.id}`} onClick={() => { if (isSmall) setSidebarCollapsed(true); }}>
                 <div
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
@@ -105,6 +121,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </button>
         </nav>
       </motion.aside>
+      {isSmall && !sidebarCollapsed && (
+        <button
+          type="button"
+          aria-label="Close menu"
+          data-testid="sidebar-backdrop"
+          className="fixed inset-0 z-30 bg-black/40"
+          onClick={() => setSidebarCollapsed(true)}
+        />
+      )}
 
       <div className="flex flex-1 flex-col overflow-hidden">
         <header className="flex h-12 items-center justify-between border-b border-border px-4">

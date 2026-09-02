@@ -28,7 +28,8 @@ export function isOsOpen(): boolean {
 /** /os is the product frame. Marketing Header/Footer must not stack on OsHeader. */
 export function isOsProductPath(pathname: string): boolean {
   const p = (pathname || "/").split(/[?#]/)[0].replace(/\/$/, "") || "/";
-  return p === "/os";
+  // Owner ruling 2 Sep: the Dashboard IS Council OS — one product frame, no marketing chrome stacked on it.
+  return p === "/os" || p === "/dashboard" || p.startsWith("/dashboard/");
 }
 
 /** Hide marketing chrome: framed pane, OS overlay, or the /os product page. */

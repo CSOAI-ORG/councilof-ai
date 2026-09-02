@@ -198,7 +198,7 @@ export default function CouncilConsole() {
                       <span className={"rounded-full px-1.5 text-[9px] font-bold " + (a.separation === "SEPARATED" ? "bg-emerald-100 text-emerald-700" : a.separation === "TIE" ? "bg-amber-100 text-amber-700" : "bg-gray-100 text-gray-500")}>{a.separation ?? (a.kind === "deterministic-facts" ? "N/A — no fleet" : "UNMEASURED")}</span>
                     </div>
                   ))}
-                  <button onClick={() => navigate("/gspc-scoreboard")} className={CHIP_CLS + " mt-2"}>Open the full board →</button>
+                  <button onClick={() => navigate("/dashboard?tab=board")} className={CHIP_CLS + " mt-2"}>Open the full board →</button>
                 </div>
               );
               if (m.kind === "arena") return (

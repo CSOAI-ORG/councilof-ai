@@ -125,7 +125,7 @@ export default function ArenaScoreboard() {
           The arena measures a different thing over a different axis set from the GSPC board, so
           the two counts are not the same number and are not reconciled. The count on this page is
           the arena&apos;s own, read from <code>axis_pass_rates</code>. The board&apos;s count is{" "}
-          <Link to="/gspc-scoreboard" className="underline hover:text-emerald-200">
+          <Link to="/dashboard?tab=board" className="underline hover:text-emerald-200">
             {board.public_count}
           </Link>
           , derived from <code>GET /api/gspc</code>.
