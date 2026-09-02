@@ -30,7 +30,21 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import _coverage, benji, fin, genai_mil_notices, hub_cite, provider_diff, staged_leaves, swift_notices, witness_queue, xrpl  # noqa: E402
+from adapters import (  # noqa: E402
+    _coverage,
+    benji,
+    evm_permission_events,
+    evm_permissions,
+    fin,
+    fin7_coverage,
+    genai_mil_notices,
+    hub_cite,
+    provider_diff,
+    staged_leaves,
+    swift_notices,
+    witness_queue,
+    xrpl,
+)
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
@@ -404,6 +418,12 @@ def main() -> int:
     provider_diff_out = provider_diff.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
     witness_out = witness_queue.collect(ROOT)
+    # EVM permission state (+ EIP-1186 proofs) and permission-event history for
+    # the tokenised-RWA roster. Public RPCs only; never raise; dark RPC = fewer
+    # leaves. See scripts/adapters/evm_permissions.py / evm_permission_events.py
+    # and docs/PROVABLE-ARCHIVE-METHOD.md.
+    evm_out = evm_permissions.collect()
+    evm_events_out = evm_permission_events.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -427,6 +447,8 @@ def main() -> int:
     # summary) staged by scripts/watch/provider_watch.py. File reader, no
     # network, never raises. See scripts/adapters/provider_diff.py.
     leaves.extend(provider_diff_out["leaves"])
+    leaves.extend(evm_out["leaves"])
+    leaves.extend(evm_events_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -513,6 +535,8 @@ def main() -> int:
                 "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
                 "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
                 "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
+                "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
+                "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
             },
         }
         if not have_key:
@@ -620,6 +644,8 @@ def main() -> int:
         "staged_leaves": staged_out.get("sidecar") or {},
         "witness_queue": witness_out.get("sidecar") or {},
         "provider_diff": provider_diff_out.get("sidecar") or {},
+        "evm_permissions": evm_out.get("sidecar") or {},
+        "evm_permission_events": evm_events_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (
@@ -662,7 +688,15 @@ def main() -> int:
         write_pretty(proofs_dir / f"{sha[:16]}.json", pr)
     write_pretty(ROOT / "public" / "root.json", root_body)
     write_pretty(ROOT / "public" / "publisher-health.json", health)
-    print("wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json")
+    # Provable-archive bytes that travel with this root: the full EIP-1186 proofs
+    # the leaves point at (content-addressed) and the event-indexer cursor, which
+    # advances ONLY once the root carrying its leaves is on disk.
+    n_proofs = len(evm_permissions.write_proof_blobs(ROOT, evm_out.get("proof_blobs") or {}))
+    state_path = evm_permission_events.save_state(ROOT, evm_events_out["state"]) if evm_events_out.get("state") else None
+    print(
+        "wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json "
+        f"public/archive/proofs/eip1186/ (+{n_proofs}) {state_path or 'no evm-events state'}"
+    )
     return EXIT_OK
 
 

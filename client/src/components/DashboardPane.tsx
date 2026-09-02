@@ -11,6 +11,7 @@ import { lazy, Suspense } from "react";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const LobbyMatrixPane = lazy(() => import("@/components/lobby/LobbyMatrixPane"));
+const DashboardArchivePane = lazy(() => import("@/components/DashboardArchivePane"));
 const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
 const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
 const Page_Tools = lazy(() => import("@/pages/ToolsPage"));
@@ -34,6 +35,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: LobbyHome is rendered by the layout (local kind) — no pane needed.
   board: HomeGspcBoard, // the living HF Space board + 22-axis strip, inside the shell (owner ruling 2 Sep)
   matrix: LobbyMatrixPane, // industry × regulation grid, native
+  archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
   results: Page_Benchmarks,
   models: Page_ModelRegistry,
   tools: Page_Tools,

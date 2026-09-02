@@ -45,6 +45,7 @@ export type LobbyTabId =
   | "verify"
   | "cards"
   | "state"
+  | "archive"
   | "evidence"
   | "embed"
   | "art50"
@@ -166,6 +167,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(estate state|state endpoint|which number|counts?|how many (?:of )?(?:everything|things)|derived state|api\/state)\b/i,
+  },
+  {
+    id: "archive",
+    label: "Provable archive",
+    blurb:
+      "The hourly signed history of on-chain permission-state leaves — each entry names its root, inclusion proof and third-party witnesses. Point-in-time. Not a rate.",
+    path: "",
+    kind: "native",
+    cues: /\b(provable archive|permission[- ]state|permission[- ]events?|archive index|evm archive|signed history|eip[- ]?1186|getproof|proof of state)\b/i,
   },
   {
     id: "evidence",

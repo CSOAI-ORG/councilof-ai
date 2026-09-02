@@ -10,6 +10,7 @@ import LobbyBoardPane from "./LobbyBoardPane";
 import LobbyVerifyPane from "./LobbyVerifyPane";
 import LobbyCardsPane from "./LobbyCardsPane";
 import LobbyStatePane from "./LobbyStatePane";
+import DashboardArchivePane from "@/components/DashboardArchivePane";
 import LobbyEvidencePane from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
 import LobbyArt50Pane from "./LobbyArt50Pane";
@@ -532,6 +533,8 @@ export default function LobbyOverlay({
                   <LobbyCardsPane onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "state" ? (
                   <LobbyStatePane onOpenRoute={openRoute} />
+                ) : nativePane && tab.id === "archive" ? (
+                  <DashboardArchivePane />
                 ) : nativePane && tab.id === "evidence" ? (
                   <LobbyEvidencePane onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "embed" ? (

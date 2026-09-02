@@ -1,0 +1,28 @@
+{
+ "request": [
+  {
+   "id": 1,
+   "jsonrpc": "2.0",
+   "method": "eth_getProof",
+   "params": [
+    "0xCA30c93B02514f86d5C86a6e375E3A330B435Fb5",
+    [
+     "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+     "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103"
+    ],
+    "0x59e9473"
+   ]
+  }
+ ],
+ "response": [
+  {
+   "error": {
+    "code": -32000,
+    "message": "firewood database does not yet support getProof"
+   },
+   "id": 1,
+   "jsonrpc": "2.0"
+  }
+ ],
+ "url": "https://api.avax.network/ext/bc/C/rpc"
+}
