@@ -1,0 +1,46 @@
+{
+ "kind": "csoai.gspc-board-freeze-witness/v1",
+ "as_of": "2026-09-02T15:34:13Z",
+ "note": "Existence/time witness for the 22/22 GSPC board freeze (MPC Ed25519). Not certification, not endorsement, not a rank. The signature is the custody attestation already on public/signed/gspc-board.signed.json; Rekor only logs that those bytes existed at integratedTime.",
+ "artifact": {
+  "url": "https://councilof.ai/signed/gspc-board.signed.json",
+  "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+  "preimage_bytes": 50839,
+  "totals": {
+   "axes": 22,
+   "measured_axes": 22,
+   "unmeasured_axes": 0,
+   "public_count": "22 axis \u00b7 22 measured"
+  },
+  "signer": "did:web:csoai.org#gspc-board-22axis-2026",
+  "public_key_hex": "d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c",
+  "verify": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json"
+ },
+ "witnesses": {
+  "rekor": {
+   "status": "WITNESSED",
+   "uuid": "108e9186e8c5677a1f40af31e464eb3f8f6cfa3981eab515a4cb39aa69b99d3ab940385c7e6402aa",
+   "logIndex": 2687278151,
+   "integratedTime": 1788363253,
+   "integratedTime_iso": "2026-09-02T15:34:13Z",
+   "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+   "new": true,
+   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2687278151",
+   "index_retrieve": "POST https://rekor.sigstore.dev/api/v1/index/retrieve {\"hash\":\"sha256:72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10\"}",
+   "type": "rekord/x509 over the freeze preimage (canonical JSON minus custody_attestation) with the MPC Ed25519 signature",
+   "entry_file": "https://councilof.ai/interop/rekor-gspc-board-72ba8a33.json"
+  },
+  "ots": {
+   "status": "NOT_YET",
+   "reason": "ots client not installed on this runner; Bitcoin upgrade of an .ots is a later step"
+  },
+  "eas_base": {
+   "status": "NOT_YET",
+   "reason": "needs a funded wallet (owner); schema {sha256, as_of, did}"
+  },
+  "xrpl_memo": {
+   "status": "NOT_YET",
+   "reason": "needs a funded XRPL account (owner); one memo tx carrying content_id. Never mint a token."
+  }
+ }
+}
