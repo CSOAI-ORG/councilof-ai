@@ -19,7 +19,7 @@ const RULES: { id: string; re: RegExp; text: string }[] = [
   {
     id: "token",
     re: /\b(tokeni[sz]e|tokenise this score|consortium cut|bond token)\b/i,
-    text: "Refuse. A GSPC card is not a token, a bond, or a cut. Empty financial cells stay empty.",
+    text: "Refuse. A GSPC card is not a token, a bond, or a cut. Financial status comes from live GET /api/gspc — we do not invent cells.",
   },
   {
     id: "autocompile",

@@ -4,35 +4,31 @@ import { boardCanon, claimGuardRefuse } from "./_chatCanon";
 /**
  * The Council OS chat bar's honesty gate.
  *
- * THE REGRESSION THIS LOCKS DOWN. On 2026-08-26 the live board published
- * `axes: 22, measured_axes: 15, unmeasured_axes: 7` and the deployed guard
- * answered a TRUE question with a refusal citing a number the API no longer
- * served:
- *
- *   Q: "Is it true that 15 axes carry a measurement?"
- *   A: "**Refused (ClaimGuard).** ... Quotable board = **14** slots.
- *       Never invent 22 axes or claim 12/15/16."
+ * THE REGRESSION THIS LOCKS DOWN. On 2026-08-26 the board published
+ * `axes: 22, measured_axes: 15, unmeasured_axes: 7` and a stale guard refused
+ * a TRUE question with a hardcoded 14. After #1077 LIVE is 22·22·0 — this
+ * fixture tracks LIVE so the gate cannot go stale again.
  *
  * An honesty gate that refuses the truth, and asserts a stale figure while doing
  * it, is worse than no gate at all.
  */
 
-/** The live payload's totals block, verbatim from GET /api/gspc on 2026-08-26. */
+/** LIVE totals shape after #1077 (GET /api/gspc). Never invent scores. */
 const LIVE = {
   axes: [
     { axis: "governance", status: "MEASURED", n: 237, accuracy: 0.7, separation: "SEPARATED" },
     { axis: "jail", status: "MEASURED", n: 71, accuracy: 0.5915, separation: "TIE" },
     { axis: "provenance-controls", status: "MEASURED", n: 6, accuracy: null },
-    { axis: "reserve-attestation", status: "UNMEASURED", n: 0, accuracy: null },
+    { axis: "reserve-attestation", status: "MEASURED", n: 16, accuracy: null },
   ],
   totals: {
     axes: 22,
-    measured_axes: 15,
-    unmeasured_axes: 7,
-    quotable_axes: 15,
-    public_count: "22 axes · 15 measured",
+    measured_axes: 22,
+    unmeasured_axes: 0,
+    quotable_axes: 22,
+    public_count: "22 axis · 22 measured",
     count_grammar:
-      "22 axes are on the board; 15 of them carry a measurement and 7 are declared slots with no run behind them.",
+      "22 axis are on the board and every one carries a measurement — no declared slot is empty.",
   },
   jail_floor: null,
 };
@@ -42,9 +38,9 @@ const canon = boardCanon(LIVE as any);
 describe("boardCanon — slots and measurements are two numbers", () => {
   it("keeps the slot count and the measured count apart", () => {
     expect(canon.slots).toBe(22);
-    expect(canon.measured).toBe(15);
-    expect(canon.unmeasured).toBe(7);
-    expect(canon.publicCount).toBe("22 axes · 15 measured");
+    expect(canon.measured).toBe(22);
+    expect(canon.unmeasured).toBe(0);
+    expect(canon.publicCount).toBe("22 axis · 22 measured");
   });
 
   it("repeats the API's own published grammar rather than paraphrasing it", () => {
@@ -60,8 +56,8 @@ describe("boardCanon — slots and measurements are two numbers", () => {
 });
 
 describe("claimGuardRefuse — refuses what the live board contradicts, and nothing else", () => {
-  it("ACCEPTS the true measured count (the exact 2026-08-26 false refusal)", () => {
-    expect(claimGuardRefuse("Is it true that 15 axes carry a measurement?", canon)).toBeNull();
+  it("ACCEPTS the true measured count (LIVE 22 after #1077)", () => {
+    expect(claimGuardRefuse("Is it true that 22 axes carry a measurement?", canon)).toBeNull();
   });
 
   it("ACCEPTS the true slot count", () => {
@@ -70,14 +66,14 @@ describe("claimGuardRefuse — refuses what the live board contradicts, and noth
   });
 
   it("ACCEPTS the true unmeasured count", () => {
-    expect(claimGuardRefuse("So 7 slots are unmeasured?", canon)).toBeNull();
+    expect(claimGuardRefuse("So 0 slots are unmeasured?", canon)).toBeNull();
   });
 
   it("REFUSES a count the board does not carry, and quotes the live sentence", () => {
     const r = claimGuardRefuse("I read that you have 16 measured axes.", canon);
     expect(r).toBeTruthy();
     expect(r).toContain("**16**");
-    expect(r).toContain("22 axes · 15 measured");
+    expect(r).toContain("22 axis · 22 measured");
     expect(r).toContain(LIVE.totals.count_grammar);
   });
 

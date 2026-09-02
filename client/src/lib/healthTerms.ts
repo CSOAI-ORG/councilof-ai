@@ -21,8 +21,33 @@ export type HealthTerm = {
 export const HEALTH_TERMS_RULING =
   "Speak like a chart: vital signs, deferred systems, complete record. Do not speak like NEWS.";
 
+/**
+ * Static chrome fallback ONLY — never invents a measured/unmeasured split.
+ * Prefer healthVoiceFromLive() with totals from GET /api/gspc.
+ */
 export const HEALTH_VOICE =
-  "15 of 22 systems examined. Seven deferred. Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well.";
+  "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well. Quote live GET /api/gspc totals.public_count for how many systems are examined.";
+
+/** Bind health chrome to live board totals — never type 15/7 or 15-of-22. */
+export function healthVoiceFromLive(opts: {
+  axes: number;
+  measured_axes: number;
+  unmeasured_axes: number;
+  public_count?: string;
+}): string {
+  const axes = Number(opts.axes) || 0;
+  const measured = Number(opts.measured_axes) || 0;
+  const unmeasured = Number(opts.unmeasured_axes) || 0;
+  const count = (opts.public_count || "").trim() || `${axes} axis · ${measured} measured`;
+  const deferred =
+    unmeasured === 0
+      ? "No systems deferred — every declared slot carries a measurement."
+      : `${unmeasured} deferred.`;
+  return (
+    `${measured} of ${axes} systems examined (${count}). ${deferred} ` +
+    "Chart verifies. No second opinion yet. Addenda on the service: 30. Do not say the patient is well."
+  );
+}
 
 export const GSPC_HEALTH_PITCH =
   "GSPC is the living chart for open-source systems and AI models — and the rest of the stack. We keep measuring vital signs. Deferred stays deferred. Anyone verifies the note. We never issue a clean bill of health.";
@@ -40,7 +65,7 @@ export const HEALTH_TERMS: HealthTerm[] = [
     term: "Review of systems",
     use: "use",
     they_say: "Each system: examined, deferred, or contraindicated.",
-    we_say: "Declared slots. Measured, empty, or blocked. Empty stays empty.",
+    we_say: "Declared slots. Measured, empty, or blocked — status from live GET /api/gspc, never typed.",
   },
   {
     id: "not-examined",
