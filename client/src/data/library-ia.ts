@@ -74,7 +74,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // "Reference / archive" banner while being the pages a buyer is sent to.
   "/compare", "/competitors", "/vs", "/for",
   // Council OS — the product frame and its hops
-  "/dashboard?tab=home", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
+  "/dashboard?tab=home", "/dashboard?tab=attestations", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
   // Council OS Games catalog — every game path must be here (enforced by test).
   // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
   "/coliseum",

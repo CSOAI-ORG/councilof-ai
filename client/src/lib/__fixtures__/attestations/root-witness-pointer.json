@@ -1,0 +1,41 @@
+{
+ "kind": "csoai.root-witness-pointer/v0",
+ "as_of": "2026-09-02T07:13:32Z",
+ "note": "Honest pointer for the current root witness. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
+ "live_root": {
+  "url": "https://councilof.ai/root.json",
+  "also": "https://councilof.ai/api/root",
+  "sha256": "728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3",
+  "bytes": 4948,
+  "merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+  "card_count": 50,
+  "as_of": "2026-09-02T07:13:27Z"
+ },
+ "witness_sidecar": {
+  "url": "https://councilof.ai/interop/root-witness-latest.json",
+  "path": "public/interop/root-witness-latest.json",
+  "status": "PUBLISHED",
+  "dated_copy": "public/interop/root-witness-2026-09-02-728e8c5e.json"
+ },
+ "drift": {
+  "status": "MATCH",
+  "witness_artifact_sha256": "728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3",
+  "live_root_sha256": "728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3",
+  "witness_artifact_merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+  "live_root_merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+  "match_sha256": true,
+  "match_merkle_root": true,
+  "reason": "witness computed from the same root.json bytes this publish committed"
+ },
+ "witnesses": {
+  "rekor": "WITNESSED",
+  "ots": "STAMPED_PENDING_BITCOIN",
+  "eas_base": "NOT_YET",
+  "xrpl_memo": "NOT_YET"
+ },
+ "hard_stops": [
+  "Do not invent an .ots file or fake Rekor UUID for current live root.",
+  "Do not claim the published OTS/Rekor verify current live root bytes.",
+  "Do not modify signed public/root.json in this PR."
+ ]
+}
