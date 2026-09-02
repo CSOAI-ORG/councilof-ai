@@ -24,22 +24,21 @@ def canonical_bytes(obj: dict) -> bytes:
     return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
-def sign_via_oidc(payload: dict) -> str:
+def sign_response_via_oidc(payload: dict, *, sign_url: str = SIGN_URL, audience: str = "https://councilof.ai/api/board-sign") -> dict:
     req_url = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_URL") or ""
     req_tok = os.environ.get("ACTIONS_ID_TOKEN_REQUEST_TOKEN") or ""
     if not req_url or not req_tok:
         raise RuntimeError("OIDC unavailable — refuse laptop sign")
     sep = "&" if "?" in req_url else "?"
-    aud = "https://councilof.ai/api/board-sign"
     token_req = urllib.request.Request(
-        req_url + sep + "audience=" + urllib.parse.quote(aud, safe=""),
+        req_url + sep + "audience=" + urllib.parse.quote(audience, safe=""),
         headers={"Authorization": f"Bearer {req_tok}", "Accept": "application/json"},
     )
     with urllib.request.urlopen(token_req, timeout=20) as resp:
         oidc = json.loads(resp.read().decode("utf-8")).get("value")
     body = json.dumps({"payload": payload}, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     sign_req = urllib.request.Request(
-        SIGN_URL,
+        sign_url,
         data=body,
         method="POST",
         headers={
@@ -52,7 +51,12 @@ def sign_via_oidc(payload: dict) -> str:
         with urllib.request.urlopen(sign_req, timeout=30) as resp:
             out = json.loads(resp.read().decode("utf-8"))
     except urllib.error.HTTPError as e:
-        raise RuntimeError(f"board-sign HTTP {e.code} {e.read()[:300]!r}") from e
+        raise RuntimeError(f"sign endpoint HTTP {e.code} {e.read()[:300]!r}") from e
+    return out
+
+
+def sign_via_oidc(payload: dict) -> str:
+    out = sign_response_via_oidc(payload)
     sig = out.get("sig_ed25519")
     if not isinstance(sig, str) or len(sig) < 64:
         raise RuntimeError("no sig")

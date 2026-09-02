@@ -1,9 +1,10 @@
 // functions/api/_chatGrounded.ts - Ask SOV handlers (private)
 import {
-  boardCanon, claimGuardRefuse, isJailAxis, loadAxes, loadBoard, wilson,
+  boardCanon, claimGuardRefuse, isJailAxis, loadAxes, loadBoard,
 } from "./_chatCanon";
 import { ART5, ART5_CUES, why } from "./_chatArt5";
 import { lobbyGround } from "./_chatLobby";
+import { formatAxisHit } from "./_chatAxis";
 
 interface Env { SOV_GATE_URL?: string; SOV_GATE_TOKEN?: string }
 
@@ -82,17 +83,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
         `.\n\n_Grounded in GET /api/gspc jail axis, not by a model._`
       );
     }
-    if (!(hit.status === "MEASURED" && hit.n > 0)) {
-      return `**${hit.axis}** (${hit.bench}) is **${hit.status}** - it carries no score. I will not invent one.`;
-    }
-    const usable = hit.n * (1 - (hit.unparsed_rate ?? 0));
-    const [lo, hi] = wilson(hit.accuracy, hit.n);
-    return `**${hit.axis}** (${hit.bench}) is **MEASURED**.\n\n` +
-      `Accuracy **${hit.accuracy.toFixed(3)}**` +
-      (usable >= 30
-        ? `, Wilson 95% [${lo.toFixed(3)}, ${hi.toFixed(3)}], n=${hit.n}.`
-        : `, n=${hit.n} - below the 30 usable-item floor, so no interval is reported.`) +
-      `\nMacro F1 ${Number(hit.macro_f1).toFixed(3)}. Unparsed ${(100 * (hit.unparsed_rate ?? 0)).toFixed(1)}% (counted incorrect).`;
+    return formatAxisHit(hit);
   }
 
   if (/\bjail\b/i.test(q) && canon.jail && !axes.some(isJailAxis)) {

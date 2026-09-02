@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.measurement-card-candidate/1",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "issuer": "CSOAI Ltd (UK 16939677)",
+    "brand": "Council of AI",
+    "axis": "gspc-governance",
+    "model": "Qwen/Qwen3-0.6B",
+    "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "lineage_id": "765795125635a35501355f33a936e3ad5c9896ecc0116852007eb549681a08bf",
+    "weight_manifest_sha256": "b6aa29c4b05f0d90c92a87d111cb90b1a52f3ea2cf0b5642fecf37a58a81338b",
+    "tokenizer_manifest_sha256": "14ce5ec0801fa31994437d74bc8b3b97eb33ef0680ca44acc98c50dce3731cf5",
+    "bank": "csoai/gspc-gov",
+    "bank_revision": "8bc08873027f86c3500d32c733945603d2984a0f",
+    "bank_file": "items.jsonl",
+    "bank_file_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+    "bank_id": "be7faa5d962f47ffce0c2ed64cf19c672cad6acc60ab6242dd42e930d7ed73fd",
+    "n": 30,
+    "hits": 7,
+    "accuracy": 0.233333,
+    "responses_sha256": "ccb5c07f162e0a67c73813bd55e62504ab497edfae007041bfe4e79b06d69f2a",
+    "evidence_sha256": "85cb73c304d0f07ed67e67396719bc9978b3e8d7b5a03e2f02f1dcf2b250a1fe",
+    "measured_at": "2026-09-02T02:53:32Z",
+    "runtime": {
+      "gpu": "NVIDIA A100 80GB PCIe",
+      "torch": "2.4.1+cu124",
+      "transformers": "4.56.1",
+      "dtype": "bfloat16"
+    },
+    "admission_state": "REPRODUCED",
+    "reproduction_exact": true,
+    "reproduction_kind": "same-pod fresh-process deterministic repeat",
+    "independent_provider": false,
+    "status": "CANDIDATE",
+    "public_framing": "Measurement, not certification. One pinned lineage, one frozen axis, n=30.",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "signature": null,
+  "did_intended": "did:web:csoai.org#card-attestation-1",
+  "writes_board": false,
+  "not_a_certificate": true
+}

@@ -216,7 +216,10 @@ def main() -> int:
     p = out_dir / f"hf_inf_{int(time.time())}.json"
     p.write_text(json.dumps(blob, indent=2) + "\n")
     print("wrote", p)
-    return 0
+    # A green job means at least one provider returned runtime evidence. An all-
+    # UNCHECKABLE batch remains useful as an uploaded diagnostic, but it is not a
+    # successful mill and must not paint the scheduler green.
+    return 0 if any(row["status"] == "practice-mill" for row in rows) else 2
 
 
 if __name__ == "__main__":

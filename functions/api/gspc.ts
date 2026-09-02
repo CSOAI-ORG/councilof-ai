@@ -8,6 +8,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { MEASURED_IN_LANE } from "./_gspc_lane";
+import { deriveBoardCounts } from "./_boardCounts";
 
 // 22-axis canon (ADR-001): 14 GSPC behavioural axes + 8 financial/domain axes.
 // Swept into the payload 2026-08-26. Before this, the 8 financial axes were ruled
@@ -290,46 +291,13 @@ export const onRequestGet: PagesFunction = async (context) => {
       // still DERIVES both from the axis array rather than typing either: if a
       // future slot is added with no run, the gap re-appears honestly on its own.
       // Every number below is computed from the axis array.
-      const measured = m.length;                       // status MEASURED — a run exists
-      const unmeasured = selected.length - measured;   // slot published, no run
-      const bySelectedFamily = (fam: "gspc" | "financial") => {
-        const all = selected.filter((a) => a.family === fam);
-        return { axes: all.length, measured: all.filter((a) => a.status === "MEASURED").length };
-      };
+      const boardCounts = deriveBoardCounts(selected);
+      const measured = boardCounts.measured_axes;
       return {
-        axes: selected.length,
-        measured_axes: measured,
-        unmeasured_axes: unmeasured,
+        ...boardCounts,
         // Retained for consumers that read it. Under the swept canon we quote only
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
-        public_count: `${selected.length} axis · ${measured} measured`,
-        count_grammar:
-          unmeasured === 0
-            ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
-              `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
-              `future slot is added with no run behind it, this line separates the two again on its own.`
-            : `${selected.length} axis are on the board; ${measured} of them carry a measurement and ` +
-              `${unmeasured} are declared slots with no run behind them. The larger number counts slots, ` +
-              `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
-              `so the gap is visible; it is not evidence of anything having been measured.`,
-        by_family: {
-          gspc: {
-            ...bySelectedFamily("gspc"),
-            note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
-          },
-          financial: {
-            ...bySelectedFamily("financial"),
-            note: "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — " +
-              "issuer-account flags read off the public ledger (financial n=16 on the live XRPL " +
-              "reader; provenance-controls n=6) and public statistical series, graded by rule with no " +
-              "model, no fleet and no judgement. None of the eight is a model comparison, so none has " +
-              "a leader, an accuracy or a separation determination, and none contributes to any mean " +
-              "below — measured is not the same as scored. The two former index slots are measured as " +
-              "component facts (ai-adoption-components, labour-components), never restored to the " +
-              "retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05).",
-          },
-        },
         sweep_note:
           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +

@@ -3,8 +3,8 @@ name: hf-inference-mill
 # FLEET-B mill via Hugging Face Inference Providers (router.huggingface.co/v1).
 # Weights stay on the Hub. Never a GSPC board rewrite. n<30 unquotable.
 # Needs secrets.HF_INFERENCE_TOKEN with Inference Providers scope.
-# Fail-closed 403 is an overnight SUCCESS (artifact INFERENCE_FAIL), so GitHub
-# does not disable the hourly cron. Do not invent scores.
+# An unavailable provider is evidence, but it is not a successful measurement.
+# The artifact is uploaded and the job then fails closed. Do not invent scores.
 
 on:
   schedule:
@@ -72,7 +72,7 @@ jobs:
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
               print("INFERENCE_FAIL empty-token")
               emit("0")
-              sys.exit(0)
+              sys.exit(1)
           payload = json.dumps({
               "model": "Qwen/Qwen3-8B:featherless-ai",
               "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
@@ -107,7 +107,7 @@ jobs:
               open("mill-out/probe.json", "w", encoding="utf-8").write(json.dumps(out, indent=2) + "\n")
               print("INFERENCE_FAIL", code, body)
               emit("0")
-              sys.exit(0)
+              sys.exit(1)
           PY
       - name: mill FLEET-B via router
         if: steps.probe.outputs.ok == '1'

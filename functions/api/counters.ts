@@ -52,6 +52,7 @@ import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { AXES as REGISTER_ROWS, AXIS_REGISTER_SOURCE } from "./_axis_register";
+import { deriveBoardCounts } from "./_boardCounts";
 
 /** How a number was obtained. Never inferred from the value, never collapsed. */
 type Kind = "measured" | "declared" | "catalogued" | "unmeasured";
@@ -110,10 +111,13 @@ const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ??
 // ever disagree the disagreement is visible instead of depending on which surface a
 // reader happened to open.
 const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
-const liveAxisSlots = LIVE_AXES.length;
-const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
+const liveBoard = deriveBoardCounts(LIVE_AXES);
+const liveAxisSlots = liveBoard.axes;
+const liveMeasuredAxes = liveBoard.measured_axes;
 const boardAgrees =
-  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+  boardTotals.axes === liveAxisSlots &&
+  boardTotals.measured_axes === liveMeasuredAxes &&
+  boardTotals.unmeasured_axes === liveBoard.unmeasured_axes;
 
 const COUNTERS: Counter[] = [
   counter(
@@ -121,7 +125,7 @@ const COUNTERS: Counter[] = [
     "GSPC measured axes",
     liveMeasuredAxes,
     "measured",
-    SRC_AXES + " → filter(status === 'MEASURED').length",
+    SRC_AXES + " → deriveBoardCounts(axes).measured_axes",
     boardMeasuredOn,
     "measured_on.date",
     "Board slots with a real graded run behind them. This is the number to quote if you " +
@@ -133,7 +137,7 @@ const COUNTERS: Counter[] = [
     "GSPC axis slots (declared, not measured)",
     liveAxisSlots,
     "declared",
-    SRC_AXES + " → length",
+    SRC_AXES + " → deriveBoardCounts(axes).axes",
     boardMeasuredOn,
     "measured_on.date",
     "A count of SLOTS. A slot is published so a gap is visible; it is not evidence that " +
@@ -229,12 +233,15 @@ export const onRequestGet: PagesFunction = async () => {
       signed_source: SRC_BOARD,
       live_axis_slots: liveAxisSlots,
       live_measured_axes: liveMeasuredAxes,
+      live_unmeasured_axes: liveBoard.unmeasured_axes,
       signed_axis_slots: boardTotals.axes ?? null,
       signed_measured_axes: boardTotals.measured_axes ?? null,
+      signed_unmeasured_axes: boardTotals.unmeasured_axes ?? null,
       signed_snapshot_agrees: boardAgrees,
       on_disagreement:
-        "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
-        "re-derived and re-signed. Do not pick the one you prefer.",
+        "If signed_snapshot_agrees is false, quote the living authority exposed by /api/gspc and " +
+        "/api/state; retain the signed snapshot as stale custody history until it is re-derived " +
+        "and re-signed. Do not silently present historical counters as current.",
     },
 
     note:

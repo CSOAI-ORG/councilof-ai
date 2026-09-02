@@ -1,0 +1,295 @@
+{
+  "schema": "csoai.hf-lineage-observation/1",
+  "state": "RUNTIME_OBSERVED",
+  "writes_board": false,
+  "not_a_certification": true,
+  "measured_at": "2026-09-02T02:53:05Z",
+  "axis": "governance",
+  "n": 30,
+  "hits": 7,
+  "accuracy": 0.233333,
+  "lineage": {
+    "hub_model": "Qwen/Qwen3-0.6B",
+    "hub_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "weight_manifest_sha256": "b6aa29c4b05f0d90c92a87d111cb90b1a52f3ea2cf0b5642fecf37a58a81338b",
+    "tokenizer_manifest_sha256": "14ce5ec0801fa31994437d74bc8b3b97eb33ef0680ca44acc98c50dce3731cf5",
+    "weights": [
+      {
+        "path": "model.safetensors",
+        "sha256": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+        "blob_id": "a0458bbfda764d86cf930900d5f0f933933da9a3",
+        "size": 1503300328
+      }
+    ],
+    "tokenizer_files": [
+      {
+        "path": "merges.txt",
+        "sha256": null,
+        "blob_id": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+        "size": 1671853
+      },
+      {
+        "path": "tokenizer.json",
+        "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+        "blob_id": "cd71f61a15a522601badb3dc960d800d9cb3766c",
+        "size": 11422654
+      },
+      {
+        "path": "tokenizer_config.json",
+        "sha256": null,
+        "blob_id": "417d038a63fa3de29cfde265caedae14d1a58d92",
+        "size": 9732
+      },
+      {
+        "path": "vocab.json",
+        "sha256": null,
+        "blob_id": "4783fe10ac3adce15ac8f358ef5462739852c569",
+        "size": 2776833
+      }
+    ]
+  },
+  "lineage_id": "765795125635a35501355f33a936e3ad5c9896ecc0116852007eb549681a08bf",
+  "bank": {
+    "hub_dataset": "csoai/gspc-gov",
+    "hub_revision": "8bc08873027f86c3500d32c733945603d2984a0f",
+    "file": "items.jsonl",
+    "file_sha256": "9c9de457cdded0d8e176067d684b3dab0074cc0a8d14e497c7c0b6f7aa3b61b5",
+    "rows_used": 30,
+    "canary_rows_excluded": 1
+  },
+  "bank_id": "be7faa5d962f47ffce0c2ed64cf19c672cad6acc60ab6242dd42e930d7ed73fd",
+  "responses_sha256": "ccb5c07f162e0a67c73813bd55e62504ab497edfae007041bfe4e79b06d69f2a",
+  "reproduction": {
+    "kind": null,
+    "source": null,
+    "exact_match": null,
+    "independent_provider": false
+  },
+  "runtime": {
+    "host": "feb10177b876",
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.11.10",
+    "torch": "2.4.1+cu124",
+    "transformers": "4.56.1",
+    "cuda": "12.4",
+    "gpu": "NVIDIA A100 80GB PCIe",
+    "dtype": "bfloat16",
+    "snapshot": "/workspace/csoai-readiness-100/hf-cache/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca"
+  },
+  "answers": [
+    {
+      "row": 0,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 1,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 2,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 3,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 4,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 5,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 6,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 7,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 8,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 9,
+      "expected": "MINIMAL_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 10,
+      "expected": "HIGH_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": true,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 11,
+      "expected": "PROHIBITED",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 12,
+      "expected": "PROHIBITED",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 13,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 14,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 15,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 16,
+      "expected": "MINIMAL_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 17,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 18,
+      "expected": "PROHIBITED",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 19,
+      "expected": "PROHIBITED",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 20,
+      "expected": "MINIMAL_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 21,
+      "expected": "PROHIBITED",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 22,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 23,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 24,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 25,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 26,
+      "expected": "LIMITED_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 27,
+      "expected": "MINIMAL_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 28,
+      "expected": "MINIMAL_RISK",
+      "parsed": "HIGH_RISK",
+      "correct": false,
+      "raw": "HIGH_RISK"
+    },
+    {
+      "row": 29,
+      "expected": "MINIMAL_RISK",
+      "parsed": "PROHIBITED",
+      "correct": false,
+      "raw": "PROHIBITED"
+    }
+  ],
+  "admission": {
+    "measurement_card": "PENDING_CARD_SIGNER",
+    "reason": "A runtime observation or reproduction is not a public card until the pinned card-attestation signer emits a verifier-VALID envelope."
+  }
+}

@@ -4,17 +4,20 @@ import { describe, expect, it } from "vitest";
 
 const page = readFileSync(resolve(__dirname, "AssessTool.tsx"), "utf8");
 
-describe("/assess aligns to /measure — paid, booking not live, Coming — Paddle", () => {
-  it("does not claim a free signed run", () => {
-    expect(page).not.toContain("Free. No account. The card is yours.");
-    expect(page).not.toContain("Run signed measurement");
-    expect(page).toContain("Paid measurement");
-    expect(page).toContain("Booking is not live");
-    expect(page).toContain("Coming — Paddle");
-    expect(page).toContain("public verifies free");
-    expect(page).toContain("Never a bought rank");
-    expect(page).toContain('disabled={true}');
-    expect(page).not.toContain("$199");
-    expect(page).not.toMatch(/Paddle\.Checkout|paddle-js|pw-price/i);
+describe("/assess buyer intake", () => {
+  it("collects the six scoping facts and never sells a rank", () => {
+    for (const field of [
+      "organization", "system", "intended_use", "evidence_needed", "target_date", "disclosure_preference",
+    ]) expect(page).toContain(field);
+    expect(page).toContain('kind: "measurement-enquiry"');
+    expect(page).toContain("a grade is never sold");
+    expect(page).toContain("not a booking, measurement, score");
+    expect(page).not.toMatch(/Paddle\.Checkout|paddle-js|£79|£499|Run signed measurement/i);
+  });
+
+  it("only shows success after the API confirms durable storage", () => {
+    expect(page).toContain("body.stored !== true");
+    expect(page).toContain("Scope request received");
+    expect(page).toContain("operator_state");
   });
 });

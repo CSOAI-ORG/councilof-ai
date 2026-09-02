@@ -1,8 +1,9 @@
 name: hf-fin-shells-measure
 
-# Sign compact financial-measure payloads via OIDC → /api/board-sign.
+# Sign compact evidence through the signer appropriate to its object type.
 # Filename contains hf-fin-shells so Pages OIDC allowlist matches.
-# Never laptop-sign. Never invent a %. Risk verdict stays UNMEASURED.
+# Financial/ledger notices use board-sign. Reproduced mill measurements use the
+# separate card-sign key pinned by the public verifier. Never laptop-sign.
 
 on:
   workflow_dispatch:
@@ -30,6 +31,7 @@ jobs:
     timeout-minutes: 15
     env:
       BOARD_SIGN_URL: https://councilof.ai/api/board-sign
+      CARD_SIGN_URL: https://councilof.ai/api/card-sign
     steps:
       - uses: actions/checkout@v4
         with:
@@ -66,7 +68,7 @@ jobs:
             echo "no card change"
             exit 0
           fi
-          git commit -m "${T}-measure: sign compact cards via OIDC board-sign"
+          git commit -m "${T}-measure: sign compact cards via pinned OIDC signer"
           if [ "$T" = "mill" ]; then
             git push origin "HEAD:${{ github.ref_name }}"
           else

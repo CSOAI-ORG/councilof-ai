@@ -72,9 +72,11 @@ import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 
 import type { AxisScore } from "./_gspc_types";
+import { MEASURED_ON } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { deriveBoardCounts } from "./_boardCounts";
 
 /** How a number was obtained. Never collapsed, never inferred from the value. */
 type Kind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -128,11 +130,14 @@ const boardCustody = (boardSigned as any).custody_attestation ?? {};
 // failure this endpoint exists to end. So both are computed and compared here,
 // and the disagreement (if any) is published rather than resolved silently.
 const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
-const liveAxisSlots = LIVE_AXES.length;
-const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
-const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
+const liveBoard = deriveBoardCounts(LIVE_AXES);
+const liveAxisSlots = liveBoard.axes;
+const liveMeasuredAxes = liveBoard.measured_axes;
+const liveUnmeasuredAxes = liveBoard.unmeasured_axes;
 const boardAgrees =
-  boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+  boardTotals.axes === liveAxisSlots &&
+  boardTotals.measured_axes === liveMeasuredAxes &&
+  boardTotals.unmeasured_axes === liveUnmeasuredAxes;
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
@@ -210,80 +215,83 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── THE BOARD ────────────────────────────────────────────────────────────
     board: {
-      authority: SRC_BOARD,
+      authority: SRC_AXES,
       live_endpoint: "/api/gspc",
       axis_slots: fact(
-        boardTotals.axes ?? null,
+        liveBoard.axes,
         "declared",
-        SRC_BOARD + " → totals.axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).axes",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "A count of SLOTS on the board. A slot is published so a gap is visible; it is not " +
           "evidence that anything was measured. Never quote this number alone.",
       ),
       measured_axes: fact(
-        boardTotals.measured_axes ?? null,
+        liveBoard.measured_axes,
         "measured",
-        SRC_BOARD + " → totals.measured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).measured_axes",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "Slots with a real graded run behind them. This is the number to quote if you quote only one.",
       ),
       unmeasured_axes: fact(
-        boardTotals.unmeasured_axes ?? null,
+        liveBoard.unmeasured_axes,
         "declared",
-        SRC_BOARD + " → totals.unmeasured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).unmeasured_axes",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "Declared slots with no run behind them. Published so the gap is visible.",
       ),
       public_count: fact(
-        boardTotals.public_count ?? null,
+        liveBoard.public_count,
         "declared",
-        SRC_BOARD + " → totals.public_count",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).public_count",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "The short sentence. Safe to quote verbatim because it carries both numbers.",
       ),
       count_grammar: fact(
-        boardTotals.count_grammar ?? null,
+        liveBoard.count_grammar,
         "declared",
-        SRC_BOARD + " → totals.count_grammar",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).count_grammar",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "The long form, verbatim from the signed payload. Quote this when a report has room for it.",
       ),
       by_family: fact(
-        boardTotals.by_family ?? null,
+        liveBoard.by_family,
         "declared",
-        SRC_BOARD + " → totals.by_family",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → deriveBoardCounts(axes).by_family",
+        MEASURED_ON.date,
+        "MEASURED_ON.date",
         "The two families are measured by two different instruments and their counts are not " +
           "interchangeable. A behavioural-family figure is not a board figure.",
       ),
-      live_derivation_crosscheck: {
+      signed_snapshot: {
         note:
-          "The signed file is a snapshot of what /api/gspc computes from the axis arrays. Both are " +
-          "computed here so a drift between them is published rather than silently inherited by " +
-          "whichever surface a lane happened to read.",
-        source: SRC_AXES,
-        live_axis_slots: liveAxisSlots,
-        live_measured_axes: liveMeasuredAxes,
-        live_unmeasured_axes: liveUnmeasuredAxes,
-        signed_snapshot_agrees: boardAgrees,
-        on_disagreement:
-          "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
-          "re-derived and re-signed. Do not pick the one you prefer.",
-      },
-      signature: {
-        signer: boardCustody.signer ?? null,
-        alg: boardCustody.alg ?? null,
-        keyid: boardCustody.keyid ?? null,
-        content_id: boardCustody.content_id ?? null,
-        custody: boardCustody.custody ?? null,
-        verify: boardCustody.verify ?? null,
-        sig_input: boardCustody.sig_input ?? null,
+          "Historical custody snapshot. Its signature remains checkable for its original bytes, but " +
+          "its counters do not govern the living board after the axis arrays changed. It is exposed " +
+          "as stale rather than deleted or silently treated as current.",
+        source: SRC_BOARD,
+        state: boardAgrees ? "CURRENT" : "STALE",
+        counters: {
+          axes: boardTotals.axes ?? null,
+          measured_axes: boardTotals.measured_axes ?? null,
+          unmeasured_axes: boardTotals.unmeasured_axes ?? null,
+          public_count: boardTotals.public_count ?? null,
+        },
+        as_of: boardMeasuredOn,
+        as_of_field: "measured_on.date",
+        agrees_with_authority: boardAgrees,
+        signature: {
+          signer: boardCustody.signer ?? null,
+          alg: boardCustody.alg ?? null,
+          keyid: boardCustody.keyid ?? null,
+          content_id: boardCustody.content_id ?? null,
+          custody: boardCustody.custody ?? null,
+          verify: boardCustody.verify ?? null,
+          sig_input: boardCustody.sig_input ?? null,
+        },
       },
       caveat:
         "Measurement, not certification. A score describes a measured run on a frozen split on a " +
