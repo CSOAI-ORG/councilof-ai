@@ -9,15 +9,15 @@ describe("HomeWorlds — named OS doors, not leftover tiles", () => {
   it("ships World A / World B / OS named links", () => {
     expect(OS_DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Cards", "Assess", "Evidence"]);
     expect(OS_DOORS.map((d) => d.href)).toEqual([
-      "/os?lobby=board",
-      "/os?lobby=verify",
-      "/os?lobby=cards",
+      "/dashboard?tab=board",
+      "/dashboard?tab=verify",
+      "/dashboard?tab=cards",
       "/assess",
       "/evidence-rail",
     ]);
     expect(src).toContain('href="/gspc-scoreboard"');
     expect(src).toContain('href="/gspc-verify"');
-    expect(src).toContain('href="/os?lobby=home"');
+    expect(src).toContain('href="/dashboard?tab=home"');
     expect(src).toContain("VALID ·");
     expect(src).toContain("UNCHECKABLE");
   });
