@@ -21,7 +21,7 @@ const LINKS = [
   { c: "#6ee7b7", n: "signs", d: "every decision is sealed to Layer 0 — provable" },
 ];
 const ACTIONS = [
-  { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/os?lobby=home" },
+  { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/dashboard?tab=home" },
   { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/gspc-arena" },
   { n: "Stop", d: "halt a rogue agent or humanoid before harm — signed.", href: "/poc" },
   { n: "Prove", d: "issue a signed, offline-verifiable record of governance.", href: "/system-card" },

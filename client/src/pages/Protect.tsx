@@ -97,7 +97,7 @@ export default function Protect() {
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             <a href="/system-card" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">See how signing works</a>
             <a href="/safe-space" className="rounded-full border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">The safe space</a>
-            <a href="/os?lobby=assess&task=pricing-overview" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How the free rail works</a>
+            <a href="/dashboard?task=pricing-overview&tab=measured" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How the free rail works</a>
           </div>
         </div>
       </section>

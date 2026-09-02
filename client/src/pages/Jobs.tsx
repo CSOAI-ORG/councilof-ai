@@ -5,5 +5,5 @@ import { Redirect } from "wouter";
  * The public door is Council OS Home. Deep-link stays ?lobby= &task=.
  */
 export default function Jobs() {
-  return <Redirect to="/os?lobby=home" />;
+  return <Redirect to="/dashboard?tab=home" />;
 }

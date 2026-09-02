@@ -57,7 +57,7 @@ export default function Welcome() {
             </ul>
             <div className="mt-4 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">The rail is free. Verification is free forever — explore the full OS now.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os?lobby=home")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
+              <button onClick={() => go("/dashboard?tab=home")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function Welcome() {
             {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> pack is noted.</div>}
             <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. The rail is free; verification is free forever.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os?lobby=home")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
+              <button onClick={() => go("/dashboard?tab=home")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>

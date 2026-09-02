@@ -117,7 +117,7 @@ export default function Technology() {
             Built on a designed multi-agent review architecture. The 33-agent council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <a className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2">
                 How the free rail works <ArrowRight size={20} />
               </a>
@@ -491,12 +491,12 @@ export default function Technology() {
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Deploy Enterprise-Grade AI Governance?</h2>
           <p className="text-xl text-blue-100 mb-8">Join leading organizations using CSOAI to ensure compliance, reduce risk, and build trust in their AI systems.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <a className="px-8 py-3 bg-white hover:bg-blue-50 text-blue-900 rounded-lg font-semibold transition flex items-center justify-center gap-2">
                 How the free rail works <ArrowRight size={20} />
               </a>
             </Link>
-            <Link href="/os?lobby=assess&task=enterprise-start">
+            <Link href="/dashboard?task=enterprise-start&tab=measured">
               <a className="px-8 py-3 border-2 border-white text-white hover:bg-white/10 rounded-lg font-semibold transition">
                 Enterprise lobby
               </a>

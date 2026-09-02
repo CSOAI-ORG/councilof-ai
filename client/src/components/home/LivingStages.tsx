@@ -296,7 +296,7 @@ function Independence() {
       <Cta
         // /pricing is an ARCHIVED path (library-ia REPLACEMENTS maps it forward), so this CTA
         // was landing a front-door reader on a page carrying the "reference / archive" banner.
-        href="/os?lobby=assess&task=pricing-overview"
+        href="/dashboard?task=pricing-overview&tab=measured"
         label="How the free rail works"
         secondary={{ href: "/about", label: "Who we are" }}
       />

@@ -78,7 +78,7 @@ const TOOLS: Tool[] = [
     ],
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
-    door: { kind: "route", path: "/os?lobby=home" },
+    door: { kind: "route", path: "/dashboard?tab=home" },
   },
   {
     id: "tool-board",
@@ -236,9 +236,9 @@ export function hrefFor(door: Door): string {
     if (door.pane === "embed") return "/embed";
     if (door.pane === "watchdog") return "/report";
     if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
-      return `/os?lobby=${door.pane}`;
+      return `/dashboard?tab=${door.pane}`;
     }
-    return "/os?lobby=board";
+    return "/dashboard?tab=board";
   }
   if (door.task === "insurer-rail") return "/insurers";
   if (door.task === "specialist-registers") return "/registers";
@@ -249,7 +249,7 @@ export function hrefFor(door: Door): string {
   ) {
     return "/assess";
   }
-  return "/os?lobby=board";
+  return "/dashboard?tab=board";
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */

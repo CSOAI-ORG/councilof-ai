@@ -21,10 +21,10 @@ export default function AgUiBridge() {
   if (qs === "lobby=home") {
     return <Redirect to="/os?lobby=home" />;
   }
-  return <Redirect to={`/os?${qs}`} />;
+  return <Redirect to={`/os?lobby=home`} />;
 }
 
 /** OpenRouter-shaped /rankings → living GSPC board. */
 export function RankingsBridge() {
-  return <Redirect to="/os?lobby=board" />;
+  return <Redirect to="/dashboard?tab=board" />;
 }

@@ -690,7 +690,7 @@ function App() {
                   <Route path="/transparency-cop" component={TransparencyCop} />
                   <Route path="/board/models" component={MeasuredModels} />
                   <Route path="/board" component={MeasurementBoard} />
-                  <Route path="/gspc-scoreboard" component={GspcScoreboard} />
+                  <Route path="/gspc-scoreboard">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/financial-axes" component={FinancialAxes} />
                   <Route path="/gspc/jail" component={JailFolder} />
                   <Route path="/gspc/:axis" component={GspcScoreboard} />
@@ -986,7 +986,7 @@ function App() {
                   <Route path="/products" component={Products} />
                   <Route path="/catalog">{() => <Redirect to="/products" />}</Route>
                   <Route path="/pricing-legacy" component={Pricing} />
-                  <Route path="/leaderboard" component={Leaderboard} />
+                  <Route path="/leaderboard">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
                   <Route path="/regulator" component={RegulatorDashboard} />
                   <Route path="/blog" component={Blog} />
                   <Route path="/recommendations" component={Recommendations} />

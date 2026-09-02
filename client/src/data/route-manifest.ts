@@ -1064,7 +1064,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gspc-scoreboard",
-  "comp": "GspcScoreboard",
+  "comp": "Redirect",
   "title": "Gspc Scoreboard"
  },
  {
@@ -1304,7 +1304,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/leaderboard",
-  "comp": "Leaderboard",
+  "comp": "Redirect",
   "title": "Leaderboard"
  },
  {

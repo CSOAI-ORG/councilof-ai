@@ -98,10 +98,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           })}
           <button
             type="button"
-            onClick={() => openLobby({ pane: "home" })}
+            onClick={() => { window.location.assign("/dashboard?tab=home"); }}
             className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
           >
-            Open chat (Council OS)
+            Chat
           </button>
         </nav>
       </motion.aside>

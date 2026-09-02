@@ -285,7 +285,7 @@ export default function WorldGlobe() {
           ))}
           <span className="hidden text-emerald-100/40 md:inline">{COUNTS.live} LIVE · {COUNTS.unknown} UNKNOWN · {COUNTS.candidate} candidate</span>
           <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Instrument</a>
-          <a href="/os?lobby=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+          <a href="/dashboard?tab=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">

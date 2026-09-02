@@ -199,7 +199,7 @@ export default function TryCouncil() {
                   <div className="mt-2 flex flex-wrap gap-2">
                     <a href={"/hive?q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open the Framework Hive →</a>
                     <a href="/system-card" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-800 hover:bg-amber-100">Get a signed System Card →</a>
-                    <a href={"/os?lobby=home&q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open it in Council OS →</a>
+                    <a href={"/dashboard?q=&tab=home" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open it in Council OS →</a>
                   </div>
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function TryCouncil() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
-          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a signed gap report; it switches on with the Layer 0 backend. Explore Council OS at <a href="/os?lobby=home" className="text-emerald-700 font-semibold">/os</a>.
+          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a signed gap report; it switches on with the Layer 0 backend. Explore Council OS at <a href="/dashboard?tab=home" className="text-emerald-700 font-semibold">/os</a>.
         </div>
       </section>
     </div>

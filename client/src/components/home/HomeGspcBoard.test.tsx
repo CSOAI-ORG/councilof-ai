@@ -79,7 +79,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
 
   it("embeds the living Space at the verified origin and links to its page", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
-    expect(SPACE_EMBED_ORIGIN).toBe("https://csoai-gspc-board.static.hf.space");
+    expect(SPACE_EMBED_ORIGIN).toBe("https://csoai-gspc-live-board.static.hf.space");
     expect(html).toContain(`<iframe src="${SPACE_EMBED_ORIGIN}"`);
     expect(html).toContain('loading="lazy"');
     expect(html).toContain('sandbox="allow-scripts allow-same-origin allow-popups"');
@@ -146,7 +146,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
 
   it("links to the leaderboard and the endpoint, ends on the footer line, uses no forbidden strings", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
-    expect(html).toContain('href="/leaderboard"');
+    expect(html).toContain('href="/dashboard?tab=leaderboard"');
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
     expect(html).not.toMatch(/sovereign|ceasai|byzantine|\bBFT\b/i);

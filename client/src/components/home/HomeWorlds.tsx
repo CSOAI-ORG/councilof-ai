@@ -93,7 +93,7 @@ function WorldMeasure() {
           Read the board <ChevronRight className="h-4 w-4" />
         </a>
         <a
-          href="/os?lobby=board"
+          href="/dashboard?tab=board"
           className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/20"
         >
           Open the matrix <ChevronRight className="h-4 w-4" />
@@ -153,7 +153,7 @@ function OsNamedLinks({ id }: { id?: string }) {
           ))}
         </ul>
         <a
-          href="/os?lobby=home"
+          href="/dashboard?tab=home"
           className="mt-8 inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-6 py-3 text-sm font-bold text-white hover:bg-emerald-500"
         >
           Open OS <ChevronRight className="h-4 w-4" />

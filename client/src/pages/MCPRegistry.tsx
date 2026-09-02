@@ -256,12 +256,12 @@ export default function MCPRegistry() {
                 Book a free 15-min EU AI Act diagnostic <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 How the free rail works
               </Button>
             </Link>
-            <Link href="/os?lobby=assess&task=enterprise-start">
+            <Link href="/dashboard?task=enterprise-start&tab=measured">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Enterprise lobby
               </Button>

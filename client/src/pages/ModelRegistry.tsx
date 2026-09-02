@@ -124,7 +124,7 @@ export default function ModelRegistry() {
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {!framed && (
-            <a href="/os?lobby=home" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
+            <a href="/dashboard?tab=home" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
               ← Open in Council OS
             </a>
           )}

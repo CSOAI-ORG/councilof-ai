@@ -310,7 +310,7 @@ export const SURFACES: Surface[] = [
   { route: "/open-media", label: "OpenMedia", nature: "rule_based",
     mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
     evidence: ["client/src/pages/OpenMedia.tsx"] },
-  { route: "/os", label: "OsLauncher", nature: "ai_system",
+  { route: "/dashboard?tab=home", label: "OsLauncher", nature: "ai_system",
     mechanism: "The launcher command box posts to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
     evidence: ["client/src/pages/OsLauncher.tsx"] },
   { route: "/os-demo", label: "DemoOS", nature: "ai_system",
