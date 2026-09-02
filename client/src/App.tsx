@@ -12,6 +12,19 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
 import OsLauncher from "./pages/OsLauncher";
+import { isEmbedded } from "@/lib/embed";
+import { useSearch as useOsSearch } from "wouter";
+/** Council OS = the Dashboard. Legacy /os?lobby=X lands on /dashboard?tab=X so every old door
+ *  stays inside one workspace. Embedded (?embed=1 / framed) keeps the AG-UI harness pane. */
+function OsRoute() {
+  const search = useOsSearch();
+  const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  if (isEmbedded() || p.get("legacy") === "1") return <OsLauncher />;
+  const lobby = p.get("lobby") || "home";
+  p.delete("lobby"); p.set("tab", lobby);
+  return <Redirect to={"/dashboard?" + p.toString()} />;
+}
+
 import HomeVerify from "./pages/HomeVerify";
 import ToolsPage from "./pages/ToolsPage";
 import JailFolder from "./pages/JailFolder";
@@ -455,7 +468,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/demo": "Demo | CSOAI",
   "/assess": "Get measured — paid measurement; booking not live | Council of AI",
   "/login": "Sign in | Council of AI",
-  "/dashboard": "Council software | Council of AI",
+  "/dashboard": "Council OS | Council of AI",
   "/os": "Council OS | Council of AI",
   "/enterprise": "Enterprise | CSOAI",
   "/government": "Government | CSOAI",
@@ -779,7 +792,7 @@ function App() {
                   <Route path="/command-center" component={ComplianceCommandCenter} />
                   <Route path="/policy-generator" component={PolicyGenerator} />
                   <Route path="/mcp-fleet" component={McpFleet} />
-                  <Route path="/os" component={OsLauncher} />
+                  <Route path="/os" component={OsRoute} />
                   {/* Same destination as the 308 in public/_redirects, so an in-app
                       navigation and a cold load of /council-os land in the same place. */}
                   <Route path="/council-os">{() => <Redirect to="/os" />}</Route>

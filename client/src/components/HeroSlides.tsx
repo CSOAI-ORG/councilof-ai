@@ -47,7 +47,7 @@ const SLIDES: Slide[] = [
     kicker: "THE COUNCIL OS",
     headline: ["Every seat signed.", "Every vote an artefact."],
     sub: "A council architecture where every seat is signed and every vote is an artefact — shown, not claimed.",
-    cta: { label: "Open Council OS", href: "/os" },
+    cta: { label: "Open Council OS", href: "/dashboard" },
     scene: "council",
   },
   {

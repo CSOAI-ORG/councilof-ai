@@ -11,9 +11,9 @@ import { type ReactNode, useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 
 export const OS_DOORS = [
-  { label: "Board", href: "/os?lobby=board" },
-  { label: "Verify", href: "/os?lobby=verify" },
-  { label: "Cards", href: "/os?lobby=cards" },
+  { label: "Board", href: "/dashboard?tab=board" },
+  { label: "Verify", href: "/dashboard?tab=verify" },
+  { label: "Cards", href: "/dashboard?tab=cards" },
   { label: "Assess", href: "/assess" },
   { label: "Evidence", href: "/evidence-rail" },
 ] as const;
