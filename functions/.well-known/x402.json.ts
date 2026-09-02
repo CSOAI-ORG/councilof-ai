@@ -24,6 +24,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<id>&subject=<s>&bundle=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
+      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
     ],
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
