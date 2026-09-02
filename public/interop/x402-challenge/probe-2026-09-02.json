@@ -1,0 +1,39 @@
+{
+  "probed_at": "2026-09-02T02:32:04Z",
+  "url": "https://councilof.ai/api/eunomia-data?x402=1",
+  "http_status": 402,
+  "body": {
+    "lane": "commercial-data",
+    "schema": "csoai.eunomia-data/0.1",
+    "gate": {
+      "kind": "x402",
+      "price_usd": 0.02,
+      "per": "query",
+      "pay_url": "https://councilof.ai/api/eunomia-data",
+      "settle_mcp": "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+      "data_only": true
+    },
+    "accepts": [
+      {
+        "scheme": "exact",
+        "network": "base",
+        "maxAmountRequired": "20000",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "payTo": null,
+        "resource": "https://councilof.ai/api/eunomia-data",
+        "description": "Commercial enforcement-corpus + deadline data (DATA only \u2014 never scores, never ranked).",
+        "mimeType": "application/json",
+        "maxTimeoutSeconds": 300,
+        "extra": {
+          "name": "USDC",
+          "decimals": 6
+        }
+      }
+    ],
+    "x402Version": 1,
+    "payment_required": {
+      "amount_usd": 0.02,
+      "instruction": "Complete x402 settlement via settle_mcp, then retry with x-payment header."
+    }
+  }
+}

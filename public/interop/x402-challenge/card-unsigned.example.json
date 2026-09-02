@@ -1,0 +1,49 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "cedulon.recon",
+  "subject": "councilof.ai/api/eunomia-data#x402-challenge",
+  "as_of": "2026-09-02T02:32:04Z",
+  "source_urls": [
+    "https://councilof.ai/api/eunomia-data?x402=1",
+    "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp"
+  ],
+  "payload": {
+    "x402": {
+      "challenge": {
+        "challenge_http_status": 402,
+        "gate_kind": "x402",
+        "lane": "commercial-data",
+        "price_usd": 0.02,
+        "per": "query",
+        "network": "base",
+        "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+        "asset_name": "USDC",
+        "max_amount_required": "20000",
+        "decimals": 6,
+        "pay_to": null,
+        "resource": "https://councilof.ai/api/eunomia-data",
+        "settle_mcp": "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+        "x402_version": 1,
+        "settlement": "UNCHECKABLE",
+        "note": "Live probe only. No payment made. Settlement stays UNCHECKABLE until facilitator receipt exists. Never a GSPC axis fill."
+      }
+    }
+  },
+  "sha256": "b2e824194fe5eedef04ea4b26fa6ff533e6be895133205169676b9bb9280618a",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#board-attestation-1",
+  "unmeasured": [
+    "settlement_receipt",
+    "payTo_address",
+    "facilitator_attestation",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "x402",
+    "eat",
+    "unsigned",
+    "settlement-uncheckable"
+  ]
+}
