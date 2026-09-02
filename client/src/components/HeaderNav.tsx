@@ -50,7 +50,7 @@ export const navigation: NavGroup[] = [
     description: 'Signed evidence — and who it is for',
     submenu: [
       { section: 'The four SKUs', name: 'All products', href: '/products', description: 'Council OS is the workspace. Verify free. Ledger and Data on enquiry. A grade is never sold' },
-      { name: 'Council OS', href: '/os', description: 'The workspace a stranger opens — board, verifier, assess, evidence in one window' },
+      { name: 'Council OS', href: '/dashboard?tab=home', description: 'The workspace a stranger opens — board, verifier, assess, evidence in one window' },
       { name: 'Council Verify', href: '/gspc-verify', description: 'Paste a card. Your browser recomputes the signature. Free forever' },
       { name: 'Council Ledger', href: '/council-licensing', description: 'Signed evidence feed for insurers, procurement and deployers — never a purchased rank' },
       { name: 'Council Data', href: '/licensing-agreement', description: 'Licensed signed corpus. Buy data, never a score' },
@@ -66,7 +66,7 @@ export const navigation: NavGroup[] = [
       { name: 'Industries', href: '/industries', description: 'Sector by sector: the provisions that apply, and when they bite' },
       { name: 'Sector tooling', href: '/sectors', description: 'White-label tooling per sector — regulator, insurer, bond, legacy, vendor' },
       { name: 'Integrations', href: '/integrations', description: 'Wire the measurement into the tools you already run' },
-      { name: 'How the free rail works', href: '/os?lobby=assess&task=pricing-overview', description: 'Verify is free. A grade is never sold. There are no public prices' },
+      { name: 'How the free rail works', href: '/dashboard?task=pricing-overview&tab=measured', description: 'Verify is free. A grade is never sold. There are no public prices' },
     ],
   },
   {

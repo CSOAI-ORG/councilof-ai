@@ -113,7 +113,7 @@ const MODULES = [
   },
   {
     name: "Get measured",
-    href: "/os?lobby=assess",
+    href: "/dashboard?tab=measured",
     tag: "Free card",
     what: "We run your system against the frozen tests that apply to it and hand you a signed record you keep. Publishing it is your decision.",
   },

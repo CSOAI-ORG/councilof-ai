@@ -501,13 +501,13 @@ export default function Integrations() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <button className="bg-white text-blue-900 hover:bg-blue-50 px-8 py-3 rounded-lg font-semibold inline-flex items-center gap-2 transition-colors">
                 How the free rail works
                 <ArrowRight className="w-5 h-5" />
               </button>
             </Link>
-            <Link href="/os?lobby=assess&task=enterprise-start">
+            <Link href="/dashboard?task=enterprise-start&tab=measured">
               <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold inline-flex items-center gap-2 transition-colors border border-blue-500">
                 Enterprise lobby
                 <ExternalLink className="w-5 h-5" />

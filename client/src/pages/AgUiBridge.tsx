@@ -19,12 +19,12 @@ export default function AgUiBridge() {
   // Default /ag-ui is Council OS home (one-door-guard literal). A harness
   // panel keeps embed=1 and lobby=board via the query string, never nested /.
   if (qs === "lobby=home") {
-    return <Redirect to="/os?lobby=home" />;
+    return <Redirect to="/dashboard?tab=home" />;
   }
-  return <Redirect to={`/os?${qs}`} />;
+  return <Redirect to={`/dashboard?tab=home`} />;
 }
 
 /** OpenRouter-shaped /rankings → living GSPC board. */
 export function RankingsBridge() {
-  return <Redirect to="/os?lobby=board" />;
+  return <Redirect to="/dashboard?tab=board" />;
 }

@@ -73,7 +73,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // "Reference / archive" banner while being the pages a buyer is sent to.
   "/compare", "/competitors", "/vs", "/for",
   // Council OS — the product frame and its hops
-  "/os", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
+  "/dashboard?tab=home", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
   // Council OS Games catalog — every game path must be here (enforced by test).
   // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
   "/coliseum",
@@ -192,11 +192,11 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  "/roi-calculator": { path: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
-  "/pricing": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  "/pricing": { path: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/training-hub": { path: "/academy", label: "Council Academy" },

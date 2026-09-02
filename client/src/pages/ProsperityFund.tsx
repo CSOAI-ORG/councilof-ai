@@ -570,7 +570,7 @@ export default function ProsperityFund() {
             or simply want to learn more—there's a place for you in building shared AI prosperity.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white px-8">
                 How the Free Rail Works
                 <ArrowRight className="ml-2 h-5 w-5" />

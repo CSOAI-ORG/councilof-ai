@@ -85,7 +85,7 @@ export default function NetworkPage() {
           <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/70">No agent acts alone. Each is answerable to the council, held to the care floor, and every decision is sealed to Layer 0 — provable, not promised. That's what makes it a network and not just a list of sites.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Meet the council →</a>
-            <a href="/os?lobby=home" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
+            <a href="/dashboard?tab=home" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
             <a href="/protect" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Protect a person →</a>
           </div>
         </div>

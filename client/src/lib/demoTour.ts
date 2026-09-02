@@ -12,14 +12,14 @@ export const TOUR: TourStep[] = [
     say: "A short walk. Other tools hand you a checklist. Here you get signed cards, the living board, and a proof you can check. I'll show you.",
   },
   {
-    path: "/os?lobby=home",
+    path: "/dashboard?tab=home",
     title: "The Council OS — signed measurement tools",
     usp: "An operating system for AI governance, not a dashboard",
     say: "This is the OS. Every capability - crosswalks, risk, cyber, attestation - is a live tool running on the Council engine, keyless and on-demand. Nobody else ships governance as a working operating system. Open any tile and it just runs.",
     tip: "Click any tool - it opens live in a window.",
   },
   {
-    path: "/os?lobby=home",
+    path: "/dashboard?tab=home",
     title: "Map any AI to every law",
     usp: "One system, every framework, cross-walked",
     say: "Name any company, place or AI system and I map the jurisdiction and every framework that applies - EU AI Act, NIST, ISO 42001, TC260, NIS2, DORA - all crosswalked to one control set. Watch: a hospital in Texas.",

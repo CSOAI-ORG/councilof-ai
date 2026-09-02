@@ -17,7 +17,7 @@
  * The board read is the repo's shared hook (../board/useGspcBoard): one request per
  * page, no seeded fallback payload. If it fails, the strip says so in words.
  *
- * Embed origin verified 2026-09-02: https://csoai-gspc-board.static.hf.space
+ * Embed origin verified 2026-09-02: https://csoai-gspc-live-board.static.hf.space
  * (302 → /index.html, 200, no frame-ancestors). https://csoai-gspc-board.hf.space
  * answers 404 and is not used. csoai/gspc-governance-leaderboard is PAUSED; not used.
  */
@@ -26,8 +26,8 @@ import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcB
 import { axisMeta } from "../../lib/axisRegulation";
 
 /** Verified static-SDK embed origin of the living Space. */
-export const SPACE_EMBED_ORIGIN = "https://csoai-gspc-board.static.hf.space";
-export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
+export const SPACE_EMBED_ORIGIN = "https://csoai-gspc-live-board.static.hf.space";
+export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-live-board";
 export const SPACE_IFRAME_TITLE = "GSPC board — living, on Hugging Face";
 /** Rows the strip shows before "Load more". A UI constant, not a board count. */
 export const STRIP_N = 9;

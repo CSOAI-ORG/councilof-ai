@@ -103,7 +103,7 @@ export default function HomeVerify() {
               Get measured
             </Link>
             <Link
-              href="/os"
+              href="/dashboard?tab=home"
               className="inline-flex rounded-xl border border-emerald-700 bg-emerald-50 px-5 py-3 text-sm font-semibold text-emerald-900 hover:bg-emerald-100"
             >
               Open Council OS

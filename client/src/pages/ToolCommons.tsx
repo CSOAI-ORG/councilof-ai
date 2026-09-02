@@ -102,7 +102,7 @@ export default function ToolCommons() {
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(800px 380px at 50% -10%, rgba(16,185,129,.20), transparent 60%)" }} />
         <div className="relative mx-auto max-w-4xl px-6 pt-16 pb-10 text-center">
           {!framed && (
-            <a href="/os?lobby=home" className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 hover:text-emerald-200">Council OS · tools</a>
+            <a href="/dashboard?tab=home" className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70 hover:text-emerald-200">Council OS · tools</a>
           )}
           <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
             The open <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">tool commons.</span>

@@ -104,7 +104,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
   {
     id: "council-city-printer",
     name: "Council City",
-    path: "/os",
+    path: "/dashboard?tab=home",
     kind: "printer",
     description:
       "Living printer of the public board. Axis and model counts come from GET /api/gspc. Empty cells stay empty. Measurement credential, never certification. Not a game.",
@@ -114,7 +114,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
   {
     id: "council-town-external",
     name: "Council Town",
-    path: "/os",
+    path: "/dashboard?tab=home",
     kind: "leftover",
     description:
       "External game at council-town.pages.dev linked from /os. First load broken: /ai-town/assets/ serves HTML instead of JS. Catalogued as leftover, not as working play surface.",

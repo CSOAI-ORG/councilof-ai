@@ -3,7 +3,7 @@
  * Do not add VRO / Emilia / XRPL / OTS fields here; the widget hashes card-v1.
  *
  * `?embed=1` is for partners framing THIS snippet on their origin (n-site spray).
- * It is not how Council OS frames `/` `/os` `/dashboard` — those paths are
+ * It is not how Council OS frames `/` `/dashboard?tab=home` `/dashboard` — those paths are
  * unframeable and break out. Spray is /embed + /badge + glass on *their* site.
  */
 export const EMBED_ORIGIN = "https://councilof.ai";

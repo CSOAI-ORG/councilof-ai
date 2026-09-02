@@ -16,8 +16,8 @@ import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, per
 type Msg = { role: "you" | "sov"; text: string };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
-  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/os?lobby=home", label: "the Governance Graph" },
-  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/os?lobby=home", label: "the Governance Graph" },
+  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/dashboard?tab=home", label: "the Governance Graph" },
+  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/dashboard?tab=home", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/gspc-arena", label: "Council Space" },
   { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns layer of Council Space" },
@@ -30,7 +30,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
   { re: /oscal|fedramp/i, href: "/oscal", label: "OSCAL Studio" },
   { re: /model|bias|fairness/i, href: "/models", label: "Model Registry" },
-  { re: /price|pricing|plan|cost/i, href: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  { re: /price|pricing|plan|cost/i, href: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
@@ -39,7 +39,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
-  { re: /\bos\b|launch|grid|everything/i, href: "/os?lobby=home", label: "the OS launcher" },
+  { re: /\bos\b|launch|grid|everything/i, href: "/dashboard?tab=home", label: "the OS launcher" },
 ];
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
@@ -48,12 +48,12 @@ const KNOWLEDGE: { re: RegExp; a: string }[] = [
 ];
 
 const QUICK: { label: string; href: string }[] = [
-  { label: "Governance Graph", href: "/os?lobby=home" },
+  { label: "Governance Graph", href: "/dashboard?tab=home" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
-  { label: "Free rail", href: "/os?lobby=assess&task=pricing-overview" },
+  { label: "Free rail", href: "/dashboard?task=pricing-overview&tab=measured" },
   { label: "Status", href: "/status" },
-  { label: "Full OS", href: "/os?lobby=home" },
+  { label: "Full OS", href: "/dashboard?tab=home" },
 ];
 
 const GW = "/api";
@@ -75,13 +75,13 @@ async function askGovern(q: string): Promise<any | null> {
 // SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
 // page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
 const APP_ROUTES: Record<string, string> = {
-  revenue: "/os?lobby=assess&task=pricing-overview", pricing: "/os?lobby=assess&task=pricing-overview", plans: "/os?lobby=assess&task=pricing-overview", billing: "/os?lobby=assess&task=pricing-overview",
+  revenue: "/dashboard?task=pricing-overview&tab=measured", pricing: "/dashboard?task=pricing-overview&tab=measured", plans: "/dashboard?task=pricing-overview&tab=measured", billing: "/dashboard?task=pricing-overview&tab=measured",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
-  graph: "/os?lobby=home", knowledge: "/os?lobby=home", search: "/os?lobby=home",
+  graph: "/dashboard?tab=home", knowledge: "/dashboard?tab=home", search: "/dashboard?tab=home",
   space: "/gspc-arena", sim: "/gspc-arena", simulation: "/gspc-arena", experiment: "/gspc-arena", sovspace: "/gspc-arena",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
-  status: "/status", system: "/status", os: "/os?lobby=home", home: "/os?lobby=home", grid: "/os?lobby=home",
+  status: "/status", system: "/status", os: "/dashboard?tab=home", home: "/dashboard?tab=home", grid: "/dashboard?tab=home",
   twin: "/me",
   certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
@@ -98,7 +98,7 @@ function routeForAction(a: any): string | null {
   if (!a || !a.command) return null;
   if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url);
   if (a.command === "open_app" && a.args && a.args.id) return APP_ROUTES[String(a.args.id).toLowerCase()] || null;
-  if (a.command === "govern") return "/os?lobby=home";
+  if (a.command === "govern") return "/dashboard?tab=home";
   return null;
 }
 async function orchestrate(message: string, context: any): Promise<{ say: string; actions: any[] } | null> {
