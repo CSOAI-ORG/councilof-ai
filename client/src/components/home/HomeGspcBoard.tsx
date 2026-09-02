@@ -268,7 +268,7 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The living board below is the master. This page embeds it and does not redraw it.</p>
         </div>
         <p className="flex flex-wrap items-center gap-3 text-sm">
-          <a href="/leaderboard" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
+          <a href="/dashboard?tab=leaderboard" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
             Full leaderboard
           </a>
           <a href="/api/gspc" className="text-slate-600 hover:underline dark:text-emerald-100/70">

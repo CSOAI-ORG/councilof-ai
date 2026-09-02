@@ -143,7 +143,7 @@ export default function IncidentReport() {
                 : null}
             </p>
             <div className="mt-4 flex gap-2">
-              <a href="/gspc-scoreboard" className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Open the live board →</a>
+              <a href="/dashboard?tab=board" className="rounded-lg bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Open the live board →</a>
               <button onClick={() => { setAck(null); setWhat(""); setSystem(""); setWhere(""); }} className="rounded-lg border border-emerald-500/30 px-4 py-2 text-sm font-semibold text-emerald-200/80 hover:bg-white/5">Report another</button>
             </div>
           </div>

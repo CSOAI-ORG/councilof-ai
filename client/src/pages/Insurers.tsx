@@ -366,7 +366,7 @@ function InsurersEvidencePack() {
         )}
         <p className="mt-3 text-xs text-gray-600">
           Full per-axis detail — Wilson intervals, fleet means, harm tails, the signature:{" "}
-          <Link href="/gspc-scoreboard" className="font-semibold text-emerald-700 underline">
+          <Link href="/dashboard?tab=board" className="font-semibold text-emerald-700 underline">
             /gspc-scoreboard
           </Link>{" "}
           and <code>GET /api/gspc</code>.
@@ -421,7 +421,7 @@ function InsurersEvidencePack() {
         {/* 7 — Footer CTA row */}
         <div className="mt-14 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <Link
-            href="/gspc-scoreboard"
+            href="/dashboard?tab=board"
             className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50"
           >
             The full live board →

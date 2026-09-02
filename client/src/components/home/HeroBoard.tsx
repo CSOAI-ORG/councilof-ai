@@ -61,7 +61,7 @@ export default function HeroBoard() {
             Verify a card
           </a>
           <a
-            href="/gspc-scoreboard"
+            href="/dashboard?tab=board"
             className="inline-flex items-center justify-center rounded-xl border border-white/35 bg-transparent px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
           >
             Open the board

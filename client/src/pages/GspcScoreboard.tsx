@@ -438,7 +438,7 @@ export default function GspcScoreboard() {
                 {board.financial_family ? `All ${board.financial_family.axes} financial axis` : "All financial axis"}
               </Link>
               <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">Raw JSON</a>
-              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">The behavioural board</Link>
+              <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">The behavioural board</Link>
             </p>
           </div>
         )}
@@ -502,7 +502,7 @@ export default function GspcScoreboard() {
               )}
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-verify">Verify the signed chain</Link>
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
-              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">Full board</Link>
+              <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">Full board</Link>
             </p>
           </div>
         )}

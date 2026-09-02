@@ -192,7 +192,7 @@ export default function LiveLeaderboard({
               </a>
 
               <a
-                href="/gspc-scoreboard"
+                href="/dashboard?tab=board"
                 className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
               >
                 The full board, with intervals and harm tails

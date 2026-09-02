@@ -252,7 +252,7 @@ export default function FinancialAxes() {
         )}
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3 text-sm">
-          <Link href="/gspc-scoreboard" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
+          <Link href="/dashboard?tab=board" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">
             The full board{board.gspc_family ? ` — behavioural half, ${board.gspc_family.sentence}` : ` — ${board.public_count}`} →
           </Link>
           <Link href="/honesty" className="rounded-xl border border-emerald-600/20 bg-white p-4 font-semibold text-emerald-700 hover:bg-emerald-50">

@@ -642,7 +642,7 @@ function LiveBoard() {
       )}
 
       <Cta
-        href="/gspc-scoreboard"
+        href="/dashboard?tab=board"
         label="Open the scoreboard"
         secondary={{ href: "/benchmark-index", label: "Reported beside measured" }}
       />
