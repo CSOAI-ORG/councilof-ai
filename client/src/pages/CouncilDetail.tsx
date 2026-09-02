@@ -22,7 +22,7 @@ export default function CouncilDetail() {
               Multi-Agent Council
             </Badge>
             <h1 className="text-4xl font-bold text-gray-900 mb-6">
-              The 33-Agent Council
+              The 33-seat council — design, measured n_eff 1.21/3
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               A revolutionary voting system combining 33 AI agents with human oversight to ensure fair, transparent, and tamper-proof AI safety decisions

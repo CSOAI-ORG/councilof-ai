@@ -434,7 +434,7 @@ export default function NewHome() {
                   <Eye className="h-8 w-8 text-white" />
                 </div>
                 <h4 className="font-bold text-gray-900 mb-2">Oversight</h4>
-                <p className="text-sm text-gray-600">33-Agent Council + Human Analysts</p>
+                <p className="text-sm text-gray-600">33-seat council design + human analysts</p>
               </Card>
 
               <Card className="p-6 text-center border-2 border-green-200 hover:shadow-xl transition-all">

@@ -93,7 +93,7 @@ export default function Resources() {
       thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
     },
     {
-      title: "Understanding the 33-Agent Council",
+      title: "Understanding the 33-seat council design",
       duration: "15:42",
       views: "3.1K",
       thumbnail: "https://placehold.co/400x225/1a1a2e/e2e8f0?text=CSOAI+Training",
