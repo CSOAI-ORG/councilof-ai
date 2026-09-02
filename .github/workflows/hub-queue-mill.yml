@@ -41,8 +41,18 @@ jobs:
           set -euo pipefail
           mkdir -p mill-in/banks mill-out
           curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o mill-in/queue.jsonl
-          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${AXIS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then echo "inputs=1" >> "$GITHUB_OUTPUT"; else echo "no public bank for ${AXIS} — stays UNMEASURED"; echo "inputs=0" >> "$GITHUB_OUTPUT"; fi
-          wc -l mill-in/queue.jsonl mill-in/banks/*.jsonl || true
+          # hub-queue uses the board's long axis ids; the frozen banks live at csoai/gspc-<short>/items.jsonl (public)
+          case "$AXIS" in
+            governance) DS=gov ;; machinery-conformity) DS=mach ;; detector-interop) DS=det ;;
+            art5-safeguard) DS=art5 ;; cross-reality) DS=xr ;; provenance) DS=prv ;;
+            *) DS="$AXIS" ;;
+          esac
+          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
+            echo "bank csoai/gspc-${DS} → banks/${AXIS}.jsonl ($(wc -l < mill-in/banks/${AXIS}.jsonl) items)"; echo "inputs=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "no public frozen bank for ${AXIS} (tried csoai/gspc-${DS}) — stays UNMEASURED"; echo "inputs=0" >> "$GITHUB_OUTPUT"
+          fi
+          wc -l mill-in/queue.jsonl
       - name: keys present? (fail closed, never fake)
         id: keys
         run: |
