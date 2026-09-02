@@ -1,0 +1,83 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Saudi Awwal Bank \u2014 SWIFT shared-ledger public.notice (COMMITTED)",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "COMMITTED",
+    "honest_sentence": "Public notice hashed. Not independently recomputed. Settlement still off-chain.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "not_a_client": true,
+    "settlement_still_off_chain": true,
+    "n_measured": 0,
+    "gspc_axis_projection_forbidden": true,
+    "axes_cite": [
+      "distribution-integrity",
+      "provenance-controls"
+    ],
+    "census": {
+      "schema": "csoai.swift-census/0.1",
+      "api": "https://councilof.ai/api/swift",
+      "as_of_census": "2026-09-01",
+      "bank_id": "saudi-awwal",
+      "bank_name": "Saudi Awwal Bank",
+      "event_date": null,
+      "census_note": "Named in construction phase (40+ cohort). Not in pilot. No live transaction sourced."
+    },
+    "artefacts": [
+      {
+        "role": "ethers_mvp_2apr",
+        "published": "2026-04-02",
+        "source_url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026",
+        "publisher": "Ethers News",
+        "url_sha256_census": "e21d759ae5bf9bfd1bb5a8f4341a2d053f98c5bb993f372453dae8a278202056",
+        "fetched_at": "2026-09-02T04:37:10Z",
+        "sha256": "86fa654f76144032ae2bc6a3838a2941d521a572baacfe77768085049f46cd42",
+        "bytes": 108091,
+        "body_state": "HASHED",
+        "http_ok": true
+      }
+    ],
+    "fetched_at": "2026-09-02T04:37:10Z",
+    "verified_via": "keyless HTTPS GET; sha256 of exact response bytes when reachable; no ISO 20022 / on-ledger claim; no recompute",
+    "cobolbridge_ai": {
+      "url": "https://cobolbridge.ai/",
+      "fetched_at": "2026-09-02T04:37:10Z",
+      "http_status": 522,
+      "state": "UNCHECKABLE",
+      "note": "cobolbridge.ai HTTP 522 \u2014 infra, not this tape. ISO 20022 / copybook / MT artefact path unavailable. Do not demo."
+    },
+    "gaps": []
+  },
+  "sha256": "52a1497412094221ca6f8886bf37c17e447351fd726fa19274be5c49b1ecc78c",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "ISO 20022 artefact",
+    "copybook",
+    "MT artefact",
+    "on-ledger object",
+    "independent recompute of notice claim",
+    "cobolbridge",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED"
+  ],
+  "tags": [
+    "public-notice",
+    "swift-census-2026-09",
+    "saudi-awwal",
+    "committed",
+    "unsigned",
+    "settlement-off-chain",
+    "n-measured-0"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim ISO 20022 / on-ledger object. Press-notice hashes only."
+}
