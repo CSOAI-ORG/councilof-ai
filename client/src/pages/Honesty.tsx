@@ -181,7 +181,7 @@ export default function Honesty() {
         </p>
 
         {/* ── 1. our own fine-tunes lose ─────────────────────────────── */}
-        <h2 className="mt-12 text-xl font-bold">1. Our own fine-tunes lose our own arena</h2>
+        <h2 id="council-inhouse-ft" className="mt-12 text-xl font-bold">1. Our own fine-tunes lose our own arena</h2>
         <p className="mt-3 leading-relaxed text-slate-700">
           We built council fine-tunes on small base models. They are beaten by the bases we started
           from. This is the most credible thing we can publish, because it contradicts our own
