@@ -1,0 +1,115 @@
+{
+  "schema": "csoai.artefact-manifest/0.1",
+  "pack": "benji-onchain-supply-2026-09",
+  "as_of": "2026-09-02T04:51:26Z",
+  "artefacts": [
+    {
+      "id": "benji-contracts.html",
+      "role": "issuer-contracts-page",
+      "source_url": "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 135956,
+      "sha256": "58176ad2c221176d74e2a405a50482fcc7f4d525582bee5b7b633b95cda202fc"
+    },
+    {
+      "id": "ethereum-blockscout.json",
+      "role": "token-supply",
+      "source_url": "https://eth.blockscout.com/api/v2/tokens/0x3DDc84940Ab509C11B20B76B466933f40b750dc9",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 417,
+      "sha256": "ad5bf191d31577c05dd74f33112eb22a3b352cec4f0159c5d90fd81c0664dd15"
+    },
+    {
+      "id": "polygon-blockscout.json",
+      "role": "token-supply",
+      "source_url": "https://polygon.blockscout.com/api/v2/tokens/0x408A634B8a8f0dE729B48574a3a7Ec3fE820B00A",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 411,
+      "sha256": "190f572c6bc434b1e1a16d7aacfe26bbb39e4044315c304d6124d91643a730e5"
+    },
+    {
+      "id": "arbitrum-blockscout.json",
+      "role": "token-supply",
+      "source_url": "https://arbitrum.blockscout.com/api/v2/tokens/0xB9e4765BCE2609bC1949592059B17Ea72fEe6C6A",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 417,
+      "sha256": "c0ff7dc562fc4259b7ef94b729c329875e8bcac9b1b510dce266f5f058b7769c"
+    },
+    {
+      "id": "base-blockscout.json",
+      "role": "token-supply",
+      "source_url": "https://base.blockscout.com/api/v2/tokens/0x60CfC2b186a4CF647486e42c42B11cC6D571d1E4",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 417,
+      "sha256": "6f906ee2a5069bb433085a78507566990fedea7737155b6cce6e0c104b47d455"
+    },
+    {
+      "id": "avalanche-snowtrace-tokensupply.json",
+      "role": "token-supply",
+      "source_url": "https://api.snowtrace.io/api?module=stats&action=tokensupply&contractaddress=0xE08b4c1005603427420e64252a8b120cacE4D122",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 67,
+      "sha256": "d620cae2e8b273098fee0ede4531db6e55a3fc800238d0bd0628e7e0be8e446d"
+    },
+    {
+      "id": "stellar-horizon-asset.json",
+      "role": "token-supply",
+      "source_url": "https://horizon.stellar.org/assets?asset_code=BENJI&asset_issuer=GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 2082,
+      "sha256": "eadb11630a350190dc74146f9a81af0dff8417de471fb37500aaf7d2aa938266"
+    },
+    {
+      "id": "stellar-expert-asset.json",
+      "role": "token-supply-crosscheck",
+      "source_url": "https://api.stellar.expert/explorer/public/asset/BENJI-GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 871,
+      "sha256": "3a4e16b194655a63ed6c1a0d487aeac266a1b320fa53e6eaaa155d5b687fe84b"
+    },
+    {
+      "id": "solana-getTokenSupply.json",
+      "role": "token-supply",
+      "source_url": "https://api.mainnet-beta.solana.com (getTokenSupply 5Tu84fKBpe9vfXeotjvfvWdWbAjy3hqsExvuHgFqFxA1)",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 191,
+      "sha256": "6a0fc30ab4b091cc651623b42e14e291e076bbbb278188a0296244c9a9a4dec4"
+    },
+    {
+      "id": "aptos-fa-resources.json",
+      "role": "token-supply",
+      "source_url": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739/resources",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 1465,
+      "sha256": "40bbe33ee4d0b4f408a35fca4fcc52772884ce302c0bb99c1a6c4e099b8663ce"
+    },
+    {
+      "id": "aptoscan-fa.json",
+      "role": "token-supply-crosscheck",
+      "source_url": "https://api.aptoscan.com/public/v1.0/fungible_assets/0x7b5e9cac3433e9202f28527f707c89e1e47b19de2c33e4db9521a63ad219b739",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 591,
+      "sha256": "85ab34db3c618647e9ddfa2b2df30abf3a21698d3390e28d5585eccf67118e62"
+    },
+    {
+      "id": "bnb-iBENJI-rpc-probe.json",
+      "role": "negative-probe-iBENJI-not-BENJI",
+      "source_url": "https://bsc-dataseed.binance.org eth_call totalSupply/name/symbol on 0x3d0a2A3a30a43a2C1C4b92033609245E819ae6a6",
+      "fetched_at": "2026-09-02T04:51:26Z",
+      "http": 200,
+      "bytes": 976,
+      "sha256": "cde6f3bf88ef286be9e1cbd7b4db25960b9c521ccf8dd6cd5b0c8bc4aab344dc"
+    }
+  ]
+}

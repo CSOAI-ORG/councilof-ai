@@ -1,0 +1,46 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "benji.onchain.supply",
+  "subject": "Franklin Templeton BENJI (FOBXX) on-chain supply — Stellar",
+  "as_of": "2026-09-02T04:51:26Z",
+  "source_urls": [
+    "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "https://horizon.stellar.org/assets?asset_code=BENJI&asset_issuer=GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+    "https://www.franklintempleton.com/.well-known/stellar.toml",
+    "https://api.stellar.expert/explorer/public/asset/BENJI-GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5"
+  ],
+  "payload": {
+    "kind": "csoai.ledger-cite/0.1",
+    "flags": {
+      "cited_not_endorsed": true,
+      "auto_measured": false,
+      "writes_board": false,
+      "issuer_published_address_match": true
+    },
+    "status": "DISCOVERED",
+    "chain": "Stellar",
+    "contract": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+    "decimals": 7,
+    "basis": "Issuer states 1 share of FOBXX = 1 BENJI; on-chain is explicitly a secondary register to the transfer agent's books.",
+    "verified_via": "Horizon /assets balances.authorized + issuer stellar.toml + benji-contracts page; stellar.expert supply cross-check",
+    "as_of": "2026-09-02T04:51:26Z",
+    "unmeasured": [
+      "primary_register_reconciliation"
+    ],
+    "honest_sentence": "Public contract totalSupply for BENJI on Stellar read as 447966470.9497616 (raw=4479664709497616, decimals=7) at 2026-09-02T04:51:26Z; transfer-agent primary register not reconciled (unmeasured=['primary_register_reconciliation']). Never invent AUM.",
+    "total_supply_raw": "4479664709497616",
+    "total_supply_benji": "447966470.9497616",
+    "asset_code": "BENJI",
+    "asset_issuer": "GBHNGLLIE3KWGKCHIKMHJ5HVZHYIK7WTBE4QF5PLAKL4CJGSEU7HZIW5",
+    "horizon_balances_authorized": "447966470.9497616",
+    "accounts_authorized": 1355
+  },
+  "sha256": "64a47781243e73435608a2585cf86a5d0e2ec48d12582a5fb34de3031c80e6f9",
+  "unmeasured": [
+    "primary_register_reconciliation"
+  ],
+  "did": "did:web:csoai.org#card-attestation-1",
+  "sig_ed25519": null,
+  "note": "NO_LAPTOP_SIGN — unsigned atom; writes_board:false. On-chain secondary register only. Never invent AUM / MEASURED.",
+  "writes_board": false
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "benji.onchain.supply",
+  "subject": "Franklin Templeton BENJI (FOBXX) on-chain supply — Avalanche",
+  "as_of": "2026-09-02T04:51:26Z",
+  "source_urls": [
+    "https://digitalassets.franklintempleton.com/benji/benji-contracts/",
+    "https://api.snowtrace.io/api?module=stats&action=tokensupply&contractaddress=0xE08b4c1005603427420e64252a8b120cacE4D122",
+    "https://api.avax.network/ext/bc/C/rpc"
+  ],
+  "payload": {
+    "kind": "csoai.ledger-cite/0.1",
+    "flags": {
+      "cited_not_endorsed": true,
+      "auto_measured": false,
+      "writes_board": false,
+      "issuer_published_address_match": true
+    },
+    "status": "DISCOVERED",
+    "chain": "Avalanche",
+    "contract": "0xE08b4c1005603427420e64252a8b120cacE4D122",
+    "decimals": 18,
+    "basis": "Issuer states 1 share of FOBXX = 1 BENJI; on-chain is explicitly a secondary register to the transfer agent's books.",
+    "verified_via": "Snowtrace tokensupply + Avalanche C-Chain eth_call totalSupply(); symbol/name via eth_call match BENJI; issuer page address match",
+    "as_of": "2026-09-02T04:51:26Z",
+    "unmeasured": [
+      "primary_register_reconciliation"
+    ],
+    "honest_sentence": "Public contract totalSupply for BENJI on Avalanche read as 34231383.654052522372342291 (raw=34231383654052522372342291, decimals=18) at 2026-09-02T04:51:26Z; transfer-agent primary register not reconciled (unmeasured=['primary_register_reconciliation']). Never invent AUM.",
+    "total_supply_raw": "34231383654052522372342291",
+    "total_supply_benji": "34231383.654052522372342291",
+    "rpc_totalSupply_hex": "0x1c50c706b80530776fa213"
+  },
+  "sha256": "1d9148c7ab88a4e48404728428abb839add6e623a82d340891a668808c704cc1",
+  "unmeasured": [
+    "primary_register_reconciliation"
+  ],
+  "did": "did:web:csoai.org#card-attestation-1",
+  "sig_ed25519": null,
+  "note": "NO_LAPTOP_SIGN — unsigned atom; writes_board:false. On-chain secondary register only. Never invent AUM / MEASURED.",
+  "writes_board": false
+}
