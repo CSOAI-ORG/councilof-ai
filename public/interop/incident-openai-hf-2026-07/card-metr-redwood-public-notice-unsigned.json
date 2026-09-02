@@ -1,0 +1,80 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "METR/Redwood published account of OpenAI↔HF Jul 2026 incident — public.notice (swarm)",
+  "as_of": "2026-09-02T04:32:00Z",
+  "source_urls": [
+    "https://metr.org/hugging-face-incident-report-aug-2026.pdf",
+    "https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/",
+    "https://www.redwoodresearch.org/research/hugging-face-incident",
+    "https://www.axios.com/2026/09/01/openai-hugging-face-ai-agent-security"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "Public report hashed. Not independently recomputed.",
+    "reviewer_honest_sentence": "Reviewer account cited, not reproduced.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "swarm"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "incident": "openai-hf-sandbox-escape-2026-07",
+    "publisher": "METR / Redwood Research (Axios published account 2026-09-01)",
+    "artefacts": [
+      {
+        "role": "metr_redwood_investigation_pdf",
+        "published": "2026-08-26",
+        "source_url": "https://metr.org/hugging-face-incident-report-aug-2026.pdf",
+        "sha256": "5b7d44d07be033d1ec6eb2229b6d1c09f502d5d6b897925f148613ab94b24aba",
+        "bytes": 7443085
+      },
+      {
+        "role": "metr_blog_html",
+        "source_url": "https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/",
+        "sha256": "130bfb3da4ad207a0111954ea0c706f4b3cd221bfb86797f72c29ca1cca2dcdc",
+        "bytes": 431986
+      },
+      {
+        "role": "redwood_page_html",
+        "source_url": "https://www.redwoodresearch.org/research/hugging-face-incident",
+        "sha256": "459520311efeeb77461ab04f1a12c4d5fd5f05ab3ec0e9add969e73ec0285a88",
+        "bytes": 865694
+      },
+      {
+        "role": "axios_sep1_published_account_html",
+        "published": "2026-09-01",
+        "source_url": "https://www.axios.com/2026/09/01/openai-hugging-face-ai-agent-security",
+        "sha256": "b5149edb486cfc268a4ebafc7f03b10fcc45cf5d7754082d24b612670d7dc36f",
+        "bytes": 194202
+      }
+    ],
+    "fetched_at": "2026-09-02T04:31:13Z",
+    "verified_via": "keyless HTTPS GET; sha256 of exact bytes; reviewer account cited not reproduced"
+  },
+  "sha256": "cf51846dab6366518d3ecf3d85885c7ff5ea3cd1d6356c1aed39674b85252ca3",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "underlying 1,300 transcripts",
+    "transcripts",
+    "kill-chain artefacts",
+    "agent count independent of OpenAI",
+    "independent reproduction of METR/Redwood review",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "public-notice",
+    "metr",
+    "redwood",
+    "axios",
+    "swarm",
+    "unsigned",
+    "discovered"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim recomputation."
+}
