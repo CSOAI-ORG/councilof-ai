@@ -261,7 +261,11 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
               ? (data?.totals as any).public_leader_count
               : mc.filter((a) => a.leader && !["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"].includes(String(a.public_leader_state || ""))).length;
             const facts = ax.filter((a) => a.kind === "deterministic-facts").length;
-            return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · not a certificate.` : "";
+            // Owner ruling 2 Sep: ONE lid everywhere — the Blueprint §2.3 sentence. Quote the live
+            // `totals.lid` verbatim when the API carries it; derive the same shape only as a fallback.
+            const liveLid = typeof (data?.totals as any)?.lid === "string" ? String((data?.totals as any).lid).trim() : "";
+            if (liveLid) return liveLid;
+            return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
           <span className="block">Root is signed and witnessed. Verify is free. Empty cells stay empty.</span>
         </p>
