@@ -1,57 +1,19 @@
-import type { Metadata } from 'next';
-import { Shield, Lock, ExternalLink, Award, FileCode, Scale, Database, Cpu } from 'lucide-react';
-import './globals.css';
+import sys
+import re
+from bs4 import BeautifulSoup
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://councilof.ai'),
-  title: {
-    default: 'CouncilOf.AI — Cryptographic AI Governance & Measurement OS',
-    template: '%s | CouncilOf.AI',
-  },
-  description: 'Enterprise AI governance platform. Multi-AI consensus, Ed25519-signed cards, and deterministic regulatory compliance for sovereign AI systems.',
-  keywords: ['AI governance', 'AI safety', 'enterprise compliance', 'agent catalogue', 'multi-AI consensus', 'byzantine fault tolerance', 'Ed25519', 'EU AI Act'],
-  openGraph: {
-    type: 'website',
-    locale: 'en_GB',
-    url: 'https://councilof.ai',
-    siteName: 'CouncilOf.AI',
-    title: 'CouncilOf.AI — Cryptographic AI Governance & Measurement OS',
-    description: 'Enterprise AI governance platform with multi-AI consensus and sovereign compliance.',
-    images: [{ url: 'https://councilof.ai/og-image.png', width: 1200, height: 630, alt: 'CouncilOf.AI' }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'CouncilOf.AI — Cryptographic AI Governance & Measurement OS',
-    description: 'Enterprise AI governance platform with multi-AI consensus and sovereign compliance.',
-  },
-  alternates: { canonical: 'https://councilof.ai' },
-  robots: { index: true, follow: true, googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 } },
-};
+# Load live footer html
+with open('footer.html', 'r') as f:
+    footer_html = f.read()
 
-import { Providers } from './Providers';
-import { LayoutWrapper } from './LayoutWrapper';
+# Load our layout.tsx
+with open('src/app/layout.tsx', 'r') as f:
+    layout_content = f.read()
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet" />
-        <link rel="icon" type="image/svg+xml" href="/csoai-icon.svg" />
-      </head>
-      <body className="min-h-screen bg-background text-foreground antialiased flex flex-col">
-        <Providers>
-          <LayoutWrapper footer={<Footer />}>
-            {children}
-          </LayoutWrapper>
-        </Providers>
-      </body>
-    </html>
-  );
-}
+# I will write a simple function to replace the footer component in layout.tsx.
+# The footer component in layout.tsx starts with `function Footer() {` and ends at the end of the file.
 
-function Footer() {
+footer_react = f"""function Footer() {{
   return (
     <footer className="border-t border-border bg-card">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -68,16 +30,16 @@ function Footer() {
           <div>
             <h3 className="font-bold text-emerald-900 mb-4">Regulation (EU)</h3>
             <ul className="space-y-3">
-              <li><a href="/gpai" className="text-muted-foreground hover:text-emerald-700 text-sm">GPAI Evidence Pack</a></li>
-              <li><a href="/assess" className="text-muted-foreground hover:text-emerald-700 text-sm">Article 5 Rail</a></li>
-              <li><a href="/underwriting" className="text-muted-foreground hover:text-emerald-700 text-sm">Underwriting Evidence</a></li>
-              <li><a href="/assess" className="text-muted-foreground hover:text-emerald-700 text-sm">Vendor Procurement</a></li>
+              <li><a href="/?lobby=evidence" className="text-muted-foreground hover:text-emerald-700 text-sm">GPAI Evidence Pack</a></li>
+              <li><a href="/?task=art5-rail" className="text-muted-foreground hover:text-emerald-700 text-sm">Article 5 Rail</a></li>
+              <li><a href="/?task=insurer-rail" className="text-muted-foreground hover:text-emerald-700 text-sm">Underwriting Evidence</a></li>
+              <li><a href="/?task=vendor-dsh" className="text-muted-foreground hover:text-emerald-700 text-sm">Vendor Procurement</a></li>
             </ul>
           </div>
           <div>
             <h3 className="font-bold text-emerald-900 mb-4">Integrations</h3>
             <ul className="space-y-3">
-              <li><a href="/embed" className="text-muted-foreground hover:text-emerald-700 text-sm">Embed / White-label</a></li>
+              <li><a href="/?lobby=embed" className="text-muted-foreground hover:text-emerald-700 text-sm">Embed / White-label</a></li>
               <li><a href="/github-action" className="text-muted-foreground hover:text-emerald-700 text-sm">GitHub Action</a></li>
               <li><a href="https://pypi.org/project/csoai/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-emerald-700 text-sm">PyPI (csoai)</a></li>
               <li><a href="https://pypi.org/project/proofof-ai-mcp/" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-emerald-700 text-sm">MCP (Model Context Protocol)</a></li>
@@ -114,4 +76,10 @@ function Footer() {
       </div>
     </footer>
   );
-}
+}}
+"""
+
+new_layout = re.sub(r'function Footer\(\) \{.*', footer_react, layout_content, flags=re.DOTALL)
+
+with open('src/app/layout.tsx', 'w') as f:
+    f.write(new_layout)
