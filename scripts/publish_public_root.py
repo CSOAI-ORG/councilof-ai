@@ -30,7 +30,7 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, staged_leaves, swift_notices, xrpl  # noqa: E402
+from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, staged_leaves, swift_notices, witness_queue, xrpl  # noqa: E402
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
@@ -402,6 +402,7 @@ def main() -> int:
     genai_mil_out = genai_mil_notices.collect()
     staged_out = staged_leaves.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
+    witness_out = witness_queue.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -416,6 +417,11 @@ def main() -> int:
     # never raises). public.notice only; PROBED/DISCOVERED/UNMEASURED on the
     # payload; signed here or not at all. See scripts/adapters/staged_leaves.py.
     leaves.extend(staged_out["leaves"])
+    # Witnessed digests from the x402 rail (/api/witness → WITNESS_KV, read over the
+    # Cloudflare KV REST API; mirrors under public/interop/witness/ keep a landed leaf
+    # landing). Hash only — never the bytes, never the URL. public.notice, PROBED,
+    # kind csoai.witness.hash/0.1. Absent config → no leaves, never a halt.
+    leaves.extend(witness_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -500,6 +506,7 @@ def main() -> int:
                 "benji": {"status": "halt-before-write", "note": "GraphQL dark. Not issuer 7"},
                 "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
                 "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
+                "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
             },
         }
         if not have_key:
@@ -605,6 +612,7 @@ def main() -> int:
         "swift": notices_out.get("sidecar") or {},
         "benji": benji_out.get("sidecar") or {},
         "staged_leaves": staged_out.get("sidecar") or {},
+        "witness_queue": witness_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (
