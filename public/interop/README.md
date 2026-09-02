@@ -16,6 +16,10 @@ root-as-index. Not a second board, second scorer, or TS.
 | Cedulon / Abak | [`cedulon-recon/`](./cedulon-recon/) | `cedulon.recon` | Peer conservation fixtures as unsigned bank input |
 | SCRAPI / CCF | [`scrapi-ccf/`](./scrapi-ccf/) | `eval.delta` | Public MS + ASG receipt fixtures — consumer only, not a TS |
 | Emilia EP | [`emilia-ep/`](./emilia-ep/) | `eval.delta` | Digest-only EP receipt ore; **EP ≠ SCITT inclusion** |
+| auto-eat leaf list | [`auto-eat-root-leaf-list.json`](./auto-eat-root-leaf-list.json) | (index) | Living unsigned leaf list of staged auto-eat surfaces — does **not** mutate signed root |
+| transparency anchor retry | [`transparency-anchor-retry/`](./transparency-anchor-retry/) | `public.notice` | Rekor v1/v2 + OTS attempt log for `root.json` hash — no fake seal |
+| cross-border SCAFFOLD | [`cross-border-scaffold/`](./cross-border-scaffold/) | (domain leaves) | Six unsigned domain stubs `status=SCAFFOLD` — **not** board slots |
+| printer public_count | [`printer-public-count.example.json`](./printer-public-count.example.json) | (printer) | Example totals from live GET — printers re-fetch `totals.public_count` |
 | Financial measure runs | `financial-measure-run*.json` (this directory) | (run cards) | Signed / unsigned financial measure runs + compact cards |
 
 ## Hard stops (every bank)
