@@ -1,5 +1,5 @@
 {
-  "probed_at": "2026-09-02T02:40:03Z",
+  "probed_at": "2026-09-02T03:32:11Z",
   "url": "https://councilof.ai/api/eunomia-data?x402=1",
   "http_status": 402,
   "body": {
@@ -21,7 +21,7 @@
         "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
         "payTo": null,
         "resource": "https://councilof.ai/api/eunomia-data",
-        "description": "Commercial enforcement-corpus + deadline data (DATA only \u2014 never scores, never ranked).",
+        "description": "Commercial enforcement-corpus + deadline data (DATA only — never scores, never ranked).",
         "mimeType": "application/json",
         "maxTimeoutSeconds": 300,
         "extra": {
@@ -35,5 +35,7 @@
       "amount_usd": 0.02,
       "instruction": "Complete x402 settlement via settle_mcp, then retry with x-payment header."
     }
-  }
+  },
+  "settlement": "UNCHECKABLE",
+  "note": "Live probe only. No payment made. Settlement stays UNCHECKABLE until facilitator receipt exists."
 }

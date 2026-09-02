@@ -1,0 +1,81 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "erc8004.callable",
+  "subject": "ERC-8004 registered-vs-callable labelled fact — indexer registered=803294; sample n=24 (LIVE=14); population fraction UNCHECKABLE",
+  "as_of": "2026-09-02T03:30:51Z",
+  "source_urls": [
+    "https://api.8004scan.io/api/v1/agents",
+    "https://base-rpc.publicnode.com",
+    "https://bsc-rpc.publicnode.com",
+    "https://ethereum-rpc.publicnode.com"
+  ],
+  "payload": {
+    "kind": "csoai.ledger-probe/0.1",
+    "flags": {
+      "read_only": true,
+      "no_tx": true,
+      "nothing_minted": true,
+      "no_payment_made": true,
+      "handshake_only": true,
+      "validation_mainnet": "PENDING",
+      "cited_not_endorsed": true,
+      "writes_board": false
+    },
+    "method": "keyless 8004scan totals + min_feedbacks>=1 sample on Base/BNB/ETH; eth_call tokenURI + HTTPS three-state; NO invented population fraction",
+    "registry_totals": {
+      "registered_all_indexer": 803294,
+      "with_feedback_ge1": 138979
+    },
+    "sample": {
+      "selector": "min_feedbacks>=1 on Base(8453)/BNB(56)/Ethereum(1); tokenURI eth_call + HTTPS GET; n<=24",
+      "n_probed": 24,
+      "live": 14,
+      "placeholder": 10,
+      "dead": 0,
+      "uncheckable": 0,
+      "held": 0,
+      "callable_fraction_of_registered": "UNCHECKABLE",
+      "live_examples": [
+        "74072 IFF x402 Evidence Monitor (LIVE)",
+        "73232 A-Identity Trust Oracle (LIVE)",
+        "307487 Agent #307487 (LIVE)",
+        "307486 Agent #307486 (LIVE)",
+        "302610 test.agent (LIVE)",
+        "292939 bnb-grid-trader-test.agent (LIVE)",
+        "50375 Agent #50375 (LIVE)",
+        "50286 Agent #50286 (LIVE)"
+      ]
+    },
+    "labelled_fact": "registered totals + sample three-state counts only; not a board MEASURED stamp",
+    "as_of": "2026-09-02T03:30:51Z",
+    "unmeasured": [
+      "callable_fraction_of_registered",
+      "reputation_validity",
+      "validation_registry_mainnet",
+      "service_quality",
+      "census_total_verification",
+      "non_resolvable_chains"
+    ]
+  },
+  "sha256": "15bb26d583b1ed81c08446c47eac4c5011839b0eced1000c7ba0ce2b453f215c",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "callable_fraction_of_registered",
+    "reputation_validity",
+    "validation_registry_mainnet",
+    "service_quality",
+    "census_total_verification",
+    "non_resolvable_chains",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "erc8004",
+    "labelled-fact",
+    "unsigned",
+    "no-invented-percent"
+  ],
+  "note": "NO_LAPTOP_SIGN — unsigned labelled-fact atom. Never invent %. Never MEASURED-from-listing."
+}
