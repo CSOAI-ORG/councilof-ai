@@ -27,19 +27,32 @@ function ProgressPanel({ data }: { data?: any }) {
   const axes = totals?.axes ?? 0;
   const measured = totals?.measured_axes ?? 0;
   const empty = totals?.unmeasured_axes ?? Math.max(axes - measured, 0);
+  const [drift, setDrift] = useState<{ status?: string; note?: string } | null>(null);
+
+  useEffect(() => {
+    fetch("/interop/living-root-as-index-honesty.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => setDrift(j?.n_to_n_plus_1_drift ?? null))
+      .catch(() => setDrift(null));
+  }, []);
+
+  // Fail closed: absent honesty / no time series → UNCHECKABLE. Never invent a delta or seal.
+  const status = drift?.status || "UNCHECKABLE";
+  const note =
+    drift?.note ||
+    "No published board time series for N→N+1 drift. Empty stays empty — do not invent drift numbers or a Merkle seal. Cite GET /root.json and GET /api/gspc for the living snapshot only.";
 
   return (
     <div className="space-y-4 p-4">
       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">
-        N→N+1 drift · UNCHECKABLE
+        N→N+1 drift · {status}
       </p>
       <p className="mt-1 text-xs text-slate-600">
-        No published board time series for N→N+1 drift. Empty stays empty — do not invent
-        drift numbers or a Merkle seal. Cite the living root-as-index at{" "}
+        {note} Living root-as-index:{" "}
         <a href="/root.json" className="underline">
-          /root.json
-        </a>{" "}
-        for the current snapshot only.
+          GET /root.json
+        </a>
+        .
       </p>
       <p className="text-sm text-slate-700">
         Progress ·{" "}
