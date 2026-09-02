@@ -72,6 +72,13 @@ const BADGES: VerifyBadge[] = [
     logo: '/images/badges/verify/companies-house.svg',
   },
   {
+    label: 'Sigstore Rekor · root witnessed',
+    href: 'https://councilof.ai/interop/root-witness-pointer.json',
+    title:
+      'Every published root is witnessed in the Sigstore Rekor public transparency log. This pointer carries the CURRENT entry URL and a MATCH/DRIFTED verdict — the log index changes on every publish, so it is not hard-coded here.',
+    logo: '/images/badges/verify/sigstore.svg',
+  },
+  {
     label: 'did:web trust root',
     href: 'https://csoai.org/.well-known/did.json',
     title: 'did:web:csoai.org DID document — the signing trust root',
