@@ -372,12 +372,12 @@ export interface RegistryRow {
 }
 
 export const REGISTRIES: RegistryRow[] = [
-  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live, v1.1.0, via mcp-publisher. Downstream aggregators ingest from here." },
+  { name: "Official MCP Registry", status: "listed", permissionless: true, where: "io.github.CSOAI-ORG/gspc", note: "Live, v1.1.1 → https://councilof.ai/mcp. Downstream aggregators ingest from here." },
   { name: "A2A agent directories", status: "staged", permissionless: true, where: "/.well-known/agent-card.json", note: "Our A2A agent card is live; registration by well-known URI." },
   { name: "Smithery", status: "staged", permissionless: true, where: "smithery.ai/new", note: "Submit the HTTPS URL; auto-scans tools. Rich tool descriptions raise placement." },
   { name: "mcp.so", status: "staged", permissionless: true, where: "mcp.so/submit", note: "Submit the public repo; saving auto-publishes." },
   { name: "awesome-mcp-servers", status: "staged", permissionless: true, where: "punkpeye/awesome-mcp-servers", note: "One README line, alphabetical; 🤖🤖🤖 in the PR title fast-tracks the merge." },
-  { name: "Glama", status: "staged", permissionless: true, where: "glama.ai/mcp", note: "Claim via GitHub / glama.json. Search visibility follows the Tool-Definition-Quality score." },
+  { name: "Glama", status: "listed", permissionless: true, where: "glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc", note: "Claimed connector. Directory reach, not a grade." },
   { name: "PulseMCP", status: "staged", permissionless: true, where: "pulsemcp.com", note: "Ingests the official registry automatically; a submit form also exists." },
   { name: "cursor.directory", status: "staged", permissionless: false, where: "cursor.directory/plugins/new", note: "Reviewed listing; auto-detects via a repo .mcp.json." },
   { name: "Docker MCP Catalog", status: "staged", permissionless: false, where: "docker/mcp-registry", note: "PR (server.yaml + tools.json + readme.md) with Docker-team review." },

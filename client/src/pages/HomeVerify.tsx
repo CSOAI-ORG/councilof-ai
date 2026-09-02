@@ -14,6 +14,7 @@ import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import LiveLeaderboard from "@/components/board/LiveLeaderboard";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import HfLivingRecord from "@/components/HfLivingRecord";
+import ReachStrip from "@/components/ReachStrip";
 import HomeGspcBoard from "@/components/home/HomeGspcBoard";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
@@ -122,6 +123,8 @@ export default function HomeVerify() {
         </div>
 
         <HfLivingRecord />
+
+        <ReachStrip />
 
         <div className="mt-16 grid items-start gap-6 lg:grid-cols-2">
           {/* Owner ruling 2 Sep: the home board IS the living HF Space board; XRPL reader + estate doors are tapes beside the board (Council OS → state), not the home. */}
