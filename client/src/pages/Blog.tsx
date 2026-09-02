@@ -35,7 +35,7 @@ import {
   periodGradient,
 } from "@/lib/blogIndex";
 
-const UNLISTED_SLUGS = new Set(["ai-governance-legislation-2026", "byzantine-consensus", "iso-42001-nist-ai-rmf"]);
+const UNLISTED_SLUGS = new Set(["ai-governance-legislation-2026", "byzantine-consensus", "iso-42001-nist-ai-rmf", "ai-governance-trends-2026"]);
 
 export default function Blog() {
   // 2026-08-26: this form used to call preventDefault(), flip a boolean, and show
