@@ -27,7 +27,9 @@ NGI_ZERO_APPLICATION = {
     "call": "NGI Zero Discovery",
     "requestor": "Nicholas Templeman",
     "email": "nicholas@csoai.org",
-    "phone": "+44 20 0000 0000",
+    # Left blank deliberately: a fabricated number is worse than an absent one on a
+    # page that is served publicly. The owner must supply the real number.
+    "phone": "",
     "organization": "CSOAI Ltd (UK 16939677)",
     "country": "United Kingdom",
     "project": "CSOAI - Open Measurement Substrate",
@@ -55,8 +57,9 @@ NGI_ZERO_APPLICATION = {
         "- The signed card-v0 attestation format (canonical JSON, Ed25519, 3KB or less)\n"
         "- The measurement anchor stack: HuggingFace, Sigstore Rekor and a public corrections\n"
         "  ledger, all live; Bitcoin OpenTimestamps is the planned fourth\n"
-        "- 570+ PyPI packages (core libraries, configuration packages and OS products)\n"
-        "- The MCP server csoai-gspc-mcp on PyPI + npm\n"
+        "- Published Python and npm packages across the measurement, agent-configuration\n"
+        "  and OS product lines\n"
+        "- The MCP server csoai-gspc-mcp on npm\n"
         "- A2A agent card + x402 priced attestation rail + C2PA Article 50 detector\n"
         "- Open contributions to the IETF SCITT WG (issue #13, conformance test vectors)\n"
         "- The corrections ledger (public-write, anyone can append)"
