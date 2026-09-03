@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-08-28T09:06:28.399Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 310,
+      "issuer": "Schuman Financial",
+      "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 359973,
+      "symbol": "EURØP",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "634644aed60dcd2be45d8a2e4cf31bfdc5357311fa7bb66b979720e45ef780b3",
+    "sig_ed25519": "e47ef11a18aab4df3fae28f90c5a2b3455c4a4a62f34b474e23decd26700052eeeea38e92da0146019ce6f08036a283ad1e6dc403aa7b723d0503f515b055a0c",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL EURØP public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "79d00bc65a472ac3f27500a7227157278837ef2e67c1310ae53f29a5b8d58f12",
+    "83a2f8770d9b40d24fe9add1c92418b384e3ce2cc893b9e67d63e0e011a7f1cc",
+    "a627f0598ff8d31fdc18955c796b1d6b2c2b3e8f3fb5c1b215787762447d17a9",
+    "a6b43af90a2536ff1ddab5b8065c0fe3f2b974cce761a2c1fa33b107af4e3fda",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "bbcf5edd1418f43feb25a758ad2620b81e1fd927a6d3fc489589449fe63ee515",
+    "fdb61524db1b0a3fa684f6b1b50c44b634ec7e9c6884add85ecef6ff5fe6d639",
+    "f89f14204720d5180d4a405d78c58c4a2795d5f40219f8700ba616d824416707"
+  ]
+}

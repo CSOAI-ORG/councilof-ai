@@ -1,0 +1,63 @@
+{
+  "card": {
+    "as_of": "2026-09-03T09:06:34Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:mantle",
+      "chain": "mantle",
+      "chain_id": 5000,
+      "head": {
+        "block": 100148041,
+        "block_hash": "0xef6a0a87f16559931b075c68fa67ae8a8c1b0a93b4374c29a667b19a3e8a95eb",
+        "block_time": "2026-09-03T09:06:34Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:USDY:mantle",
+          "from": 100123850,
+          "to": 100135849,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 100099850,
+          "rpc": "mantle.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on mantle that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "935ce289651551b26cd8cdecb28d291628fe45f97b905b7e120550efa58f7776",
+    "sig_ed25519": "ebebb351d1feca620cf85cc21b15ffe7006e5afcd0ab3f8c07ec3c5d4b60ff87440a47a8ce8f269b648254a923e085907f25ec741eaa44c7a4841e28c9204e0a",
+    "source_urls": [
+      "https://mantle.drpc.org"
+    ],
+    "subject": "evm-events:scan:mantle coverage at block 100148041",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:mantle",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "7c6fc5dc5bb3b8eb9bf83c2038a17f146dbe67d9c0694a934aa66bd49542790e",
+    "73c4bced402d810eee557c2b8c4202723e398009c56256ce9585b16bce7eabc3",
+    "f54c5c5a9dfae624f2ba279e949e51764243a06e2aa6539aa5288b96d8f1fa6c",
+    "6ca6ca0577f52d64f6b7b97be81f5a141f1d68d819c96a19d904a75d779547ce",
+    "2f06a39c3d572beb7312f6d508db4529c0208ca803791e14a93892d2f22206e8",
+    "c1522d5e3123558a879aaaeca1041de6876d6f553a5dec955e5b1e0d7bf06230",
+    "84915034a4fa40c7b49d411863603614a2798251322f7200f028c1b37b98cdaa",
+    "1a48751387cc2afcfc3794855ff5589af1f048eae1ddf897a3d810685198fb7a"
+  ]
+}
