@@ -101,6 +101,19 @@ if ok; then
   fi
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
+# The workflow dispatches deploy.yml here, because a push made with GITHUB_TOKEN
+# does NOT trigger other workflows — GitHub's loop prevention. Without an explicit
+# dispatch a published tree waits for the 3-hourly catch-up cron or an unrelated
+# human push, so master is correct while production is hours behind and nothing
+# reports a failure.
+#
+# This runner cannot dispatch: it has no GitHub token and is not running inside
+# Actions. It announces the step and records that it was skipped, rather than
+# omitting it and drifting from the workflow it mirrors. Skipped is a state; a
+# missing step is a lie about what the pipeline does.
+step 'trigger site deploy'
+skipped 'no GitHub token on this runner — dispatch is Actions-only'
+
 # Halt is still fail-closed (publish step failed). Persist health only — never the unsigned tree.
 step 'commit halt health'
 if [ "$PUBLISH_RC" -ne 0 ] && [ "$DRY_RUN" != "1" ]; then
