@@ -23,7 +23,12 @@ jobs:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
       XAI_API_KEY: ${{ secrets.XAI_API_KEY || secrets.GROK_TOKEN }}
-      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GROQ_TOKEN || secrets.GROK_TOKEN }}
+      # NOT secrets.GROK_TOKEN. Groq (api.groq.com, LPU inference) and Grok (api.x.ai,
+      # xAI's model) are different companies whose names differ by one letter. Neither
+      # GROQ_API_KEY nor GROQ_TOKEN is set, so that fallback handed xAI's key to Groq's
+      # endpoint — a guaranteed 401 — while the "keys present?" step below counted Groq
+      # as a live provider. A provider that cannot authenticate must count as absent.
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GROQ_TOKEN }}
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.GEMINI_TOKEN || secrets.GOOGLE_API_KEY }}
       NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY || secrets.NVIDIA_NIM_TOKEN }}
       CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY || secrets.CEREBRAS_TOKEN }}
