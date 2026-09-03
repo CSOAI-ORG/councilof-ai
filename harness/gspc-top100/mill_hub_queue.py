@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import time
 import os
 import sys
 import urllib.error
@@ -524,7 +525,25 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
         if "401" in txt:
             _DEAD.add("hf")
             break
-        if "403" in txt or "429" in txt:
+        if "429" in txt:
+            # A rate limit is a statement about US, not about the model. featherless-ai
+            # enforces a per-user concurrency cap, so running the axes in parallel makes
+            # 429s routine — and marking the route _DEAD on one turned a transient limit
+            # into a permanent "no endpoint" verdict that also got persisted to
+            # dead_slugs.jsonl, poisoning later runs. Measured: models recorded dead this
+            # way answer 200 on a quiet endpoint. Back off and retry instead.
+            for _wait in (2, 5, 11):
+                time.sleep(_wait)
+                st, txt = _chat(HF_ROUTER, tok, name, prompt)
+                if st == "OK":
+                    _ROUTE[slug] = "hf-router"
+                    return st, txt
+                if "429" not in txt:
+                    break
+            if "429" in txt:
+                last = f"hf:{name}:rate-limited (not dead; lower concurrency and retry)"
+                continue
+        if "403" in txt:
             _DEAD.add(name)
             continue
         if "400" in txt or "404" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
