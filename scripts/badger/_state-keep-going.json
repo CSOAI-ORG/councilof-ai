@@ -1,0 +1,276 @@
+{
+  "finished": "2026-09-03T10:18:56Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.keep-going",
+  "n_fail": 7,
+  "n_jobs": 33,
+  "n_ok": 26,
+  "results": {
+    "ARCHIVE": {
+      "elapsed_s": 0.06,
+      "exit_code": 0,
+      "name": "ARCHIVE",
+      "script": "csoai-archive-deep.py",
+      "stdout_lines": 9,
+      "tail": "  total written: 35\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/archive-deep"
+    },
+    "AUTO-STAGE": {
+      "elapsed_s": 1.01,
+      "exit_code": 0,
+      "name": "AUTO-STAGE",
+      "script": "csoai-auto-stage.py",
+      "stdout_lines": 44,
+      "tail": "\n  state: scripts/badger/_state.json"
+    },
+    "BANK-COMPLETE": {
+      "elapsed_s": 0.05,
+      "exit_code": 0,
+      "name": "BANK-COMPLETE",
+      "script": "csoai-bank-complete.py",
+      "stdout_lines": 17,
+      "tail": "  Every DISCOVERED card (XRPL-direct only) has a real r_address.\n  Every UNCHECKABLE card is honest \u2014 we do not invent on-chain data."
+    },
+    "BRIDGES": {
+      "elapsed_s": 140.87,
+      "exit_code": 0,
+      "name": "BRIDGES",
+      "script": "csoai-bridges.py",
+      "stdout_lines": 70,
+      "tail": "  anchors are submitted to a.pool.opentimestamps.org (which\n  upgrades to Bitcoin blocks within ~2 hours)."
+    },
+    "BURNER": {
+      "elapsed_s": 0.05,
+      "exit_code": 0,
+      "name": "BURNER",
+      "script": "csoai-burner-wallet.py",
+      "stdout_lines": 23,
+      "tail": "\n  saved: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/burner-wallet/latest.json"
+    },
+    "CHECKLIST": {
+      "elapsed_s": 1.7,
+      "exit_code": 0,
+      "name": "CHECKLIST",
+      "script": "csoai-checklist.py",
+      "stdout_lines": 29,
+      "tail": "  JSON: scripts/badger/_queue/checklist/checklist-20260903T101851Z.json\n  MD:   scripts/badger/_queue/checklist/checklist-20260903T101851Z.md"
+    },
+    "COMPASS": {
+      "elapsed_s": 0.19,
+      "exit_code": 0,
+      "name": "COMPASS",
+      "script": "csoai-compass.py",
+      "stdout_lines": 47,
+      "tail": "  The COMPASS guide is the canonical reference for this work.\n  Each piece has a card here. The card is the action."
+    },
+    "COSE-WRAP": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "COSE-WRAP",
+      "script": "csoai-cose-wrap.py --limit 5",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "DONATION": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "DONATION",
+      "script": "csoai-donation-mining.py",
+      "stdout_lines": 24,
+      "tail": "  canonical receipt for ALL of these rails. Anyone can donate\n  USDC / ETH / GTC directly. No Stripe. No KYC. No operator click."
+    },
+    "DOOR-EXPAND": {
+      "elapsed_s": 0.04,
+      "exit_code": 0,
+      "name": "DOOR-EXPAND",
+      "script": "csoai-door-expand.py",
+      "stdout_lines": 50,
+      "tail": "\n  Next: build the discovery doc generators, ship one per door"
+    },
+    "DOORS": {
+      "elapsed_s": 0.07,
+      "exit_code": 0,
+      "name": "DOORS",
+      "script": "csoai-door-docs.py",
+      "stdout_lines": 46,
+      "tail": "\n  wrote 39 discovery docs to public/.well-known/ (1 hand-authored skipped)"
+    },
+    "EAT-4": {
+      "elapsed_s": 4.31,
+      "exit_code": 0,
+      "name": "EAT-4",
+      "script": "csoai-eat-4.py",
+      "stdout_lines": 11,
+      "tail": "  total written: 25\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/eat-4"
+    },
+    "EVIDENCE": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "EVIDENCE",
+      "script": "csoai-bank-pack.py --no-ots",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "FACILITATOR": {
+      "elapsed_s": 0.04,
+      "exit_code": 0,
+      "name": "FACILITATOR",
+      "script": "csoai-open-facilitator.py",
+      "stdout_lines": 26,
+      "tail": "\n    # 3. Open MetaMask client: https://metamask.io"
+    },
+    "FACILITATOR-T": {
+      "elapsed_s": 2.32,
+      "exit_code": 0,
+      "name": "FACILITATOR-T",
+      "script": "csoai-x402-tester.py",
+      "stdout_lines": 63,
+      "tail": "  The rail is honest about its state. Setting X402_FACILITATOR_URL\n  is the ONE switch that turns the challenge into a settled dollar."
+    },
+    "FILL-GRANTS": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "FILL-GRANTS",
+      "script": "csoai-fill-grants.py",
+      "stdout_lines": 4,
+      "tail": "  The NGI Zero Discovery form is ready to fill.\n  Use the browser script csoai-browser-fill.py to fill it."
+    },
+    "FRONT-AUDIT": {
+      "elapsed_s": 0.03,
+      "exit_code": 2,
+      "name": "FRONT-AUDIT",
+      "script": "csoai-frontend-audit.py --limit 30",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "FRONT-IMPROVE": {
+      "elapsed_s": 0.05,
+      "exit_code": 0,
+      "name": "FRONT-IMPROVE",
+      "script": "csoai-frontend-improve.py",
+      "stdout_lines": 9,
+      "tail": "\n  Re-run the audit to verify scores went up."
+    },
+    "IMPROVE": {
+      "elapsed_s": 0.38,
+      "exit_code": 0,
+      "name": "IMPROVE",
+      "script": "csoai-improve.py",
+      "stdout_lines": 26,
+      "tail": "\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/improve-20260903T101529Z.json"
+    },
+    "LAYER0": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "LAYER0",
+      "script": "csoai-layer0-ceremony.py --no-ots",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "LEARN": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "LEARN",
+      "script": "csoai-learn.py --limit 10000",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "MASTER-CATALOG": {
+      "elapsed_s": 0.06,
+      "exit_code": 0,
+      "name": "MASTER-CATALOG",
+      "script": "csoai-master-catalog.py",
+      "stdout_lines": 20,
+      "tail": "\n  TOTAL: 8 catalogs, 45 discovery docs, 66 openapi paths, 67 functions, 482 sitemap URLs, 66597 queued atoms"
+    },
+    "MASTER-PLAN": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "MASTER-PLAN",
+      "script": "csoai-master-plan.py",
+      "stdout_lines": 18,
+      "tail": "  JSON: scripts/badger/_queue/master-plan/master-plan-20260903T101851Z.json\n  MD:   scripts/badger/_queue/master-plan/master-plan-20260903T101851Z.md"
+    },
+    "OPTIMIZE": {
+      "elapsed_s": 0.29,
+      "exit_code": 0,
+      "name": "OPTIMIZE",
+      "script": "csoai-optimize.py",
+      "stdout_lines": 58,
+      "tail": "  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/optimize-20260903T101528Z.json\n  next_actions: focus on TOP harvesters, investigate ZERO harvesters"
+    },
+    "PUBLIC-A2A": {
+      "elapsed_s": 16.75,
+      "exit_code": 0,
+      "name": "PUBLIC-A2A",
+      "script": "csoai-public-a2a-x402-harvest.py",
+      "stdout_lines": 39,
+      "tail": "  Next: each attestation can be re-checked at /gspc-verify\n        The 402 surfaces (x402 facilitators) can be re-priced via the rail"
+    },
+    "PUBLIC-COUSINS": {
+      "elapsed_s": 0.05,
+      "exit_code": 0,
+      "name": "PUBLIC-COUSINS",
+      "script": "csoai-public-models.py",
+      "stdout_lines": 23,
+      "tail": "  NEXT: per-atom probe (a separate cron) for the public cousins only\n        Restricted cousins stay UNCHECKABLE forever"
+    },
+    "PUBLIC-DATA": {
+      "elapsed_s": 8.46,
+      "exit_code": 0,
+      "name": "PUBLIC-DATA",
+      "script": "csoai-public-data-mine.py",
+      "stdout_lines": 12,
+      "tail": "  total written: 28\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/public-data"
+    },
+    "REGULATORY": {
+      "elapsed_s": 0.04,
+      "exit_code": 0,
+      "name": "REGULATORY",
+      "script": "csoai-regulatory-mine.py",
+      "stdout_lines": 9,
+      "tail": "  total written: 168\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/regulatory"
+    },
+    "REVENUE-LOOP": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "REVENUE-LOOP",
+      "script": "csoai-revenue-loop.py --dry-run --limit 2",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "SEM-SCHOLAR": {
+      "elapsed_s": 29.5,
+      "exit_code": 0,
+      "name": "SEM-SCHOLAR",
+      "script": "csoai-semantic-scholar.py",
+      "stdout_lines": 28,
+      "tail": "  total written: 60\n  queue: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/semantic-scholar"
+    },
+    "TOP-MODELS": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "TOP-MODELS",
+      "script": "csoai-top-models.py --limit 100",
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "UK-DATA": {
+      "elapsed_s": 0.59,
+      "exit_code": 0,
+      "name": "UK-DATA",
+      "script": "csoai-uk-open-data.py",
+      "stdout_lines": 8,
+      "tail": "  total written: 34\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/uk-open-data"
+    },
+    "X402-CHECKLIST": {
+      "elapsed_s": 1.46,
+      "exit_code": 0,
+      "name": "X402-CHECKLIST",
+      "script": "csoai-checklist.py",
+      "stdout_lines": 29,
+      "tail": "  JSON: scripts/badger/_queue/checklist/checklist-20260903T101855Z.json\n  MD:   scripts/badger/_queue/checklist/checklist-20260903T101855Z.md"
+    }
+  },
+  "started": "2026-09-03T10:15:28Z",
+  "total_elapsed_s": 208.6
+}

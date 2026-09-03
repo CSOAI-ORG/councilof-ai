@@ -1,0 +1,374 @@
+{
+  "as_of": "2026-09-03T10:18:51Z",
+  "horizon": "90 days",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.master-execution-plan",
+  "plan": {
+    "awareness": {
+      "current": {
+        "44 discovery docs": "live \u2014 every standard we connect to",
+        "5x grant drafts": "live \u2014 NLnet, NGI Zero, Sloan, Ford + 1 more",
+        "Defence-AI public framing": "DEFONEOS / meok-defoneos / csoai-defoneos",
+        "HF badge": "live \u2014 csoai badge in HuggingFace docs",
+        "Layer 0 ceremony": "live \u2014 28/29 rails attested",
+        "Public Root": "live \u2014 signed + Rekor witnessed + OTS anchored"
+      },
+      "metrics": {
+        "n_arxiv_preprints": {
+          "target_d30": 2,
+          "target_d90": 10
+        },
+        "n_blog_posts": {
+          "target_d30": 4,
+          "target_d90": 12
+        },
+        "n_podcast_appearances": {
+          "target_d30": 0,
+          "target_d90": 5
+        },
+        "n_press_mentions": {
+          "target_d30": 1,
+          "target_d90": 10
+        }
+      },
+      "moves_lane_doable": [
+        "Write 10 arXiv preprints covering each axis family",
+        "Write 1 long-form blog post per week (50 over 12 months)",
+        "Build /press.html \u2014 the press kit (logos, screenshots, FAQ, contacts)",
+        "Build /media.html \u2014 the media list + reach-out template",
+        "Build /talks.html \u2014 the conference talk archive",
+        "Build /citations.html \u2014 every citation of CSOAI work",
+        "Wire the corrections ledger to be public-write (anyone can submit)"
+      ],
+      "owner_gates": [
+        "Submit the first arXiv preprint (needs endorsement)",
+        "Pitch the first journalist (needs Nick's voice)",
+        "Submit the first conference talk (needs travel)"
+      ],
+      "target": {
+        "arxiv_preprints": "10+ preprints with the CSOAI seal",
+        "conference_talks": "3+ conference talks (NeurIPS, ICML, AIES, FAccT)",
+        "media_list": "100 journalists who cover AI safety",
+        "openreview_submissions": "5+ submissions to AI safety venues",
+        "podcast_appearances": "5+ AI safety podcast appearances",
+        "press_kit": "the CSOAI press kit at /press.html"
+      }
+    },
+    "n_sites": {
+      "current": {
+        "Chrome Web Store": "pending owner",
+        "Grok plugin (x-cli host)": "in repo",
+        "Hermes skill (council-of-ai)": "live in this terminal",
+        "PyPI csoai-gspc-mcp": "live \u2014 the MCP server",
+        "councilof.ai": "live \u2014 22-axis board + 29 rails",
+        "csoai.org": "live \u2014 DID + apex + Layer 0",
+        "github.com/CSOAI-ORG/councilof-ai": "active \u2014 PyPI + npm + 2 GitHub orgs",
+        "huggingface.co/csoai": "active \u2014 60+ datasets, 42 Spaces, 3 models",
+        "npm csoai-gspc-mcp": "live \u2014 the stdio MCP server"
+      },
+      "metrics": {
+        "n_discovery_docs": {
+          "target_d30": 50,
+          "target_d90": 80
+        },
+        "n_pages_per_subdomain": {
+          "target_d30": 5,
+          "target_d90": 20
+        },
+        "n_subdomains_live": {
+          "target_d30": 3,
+          "target_d90": 6
+        }
+      },
+      "moves_lane_doable": [
+        "Build proofs.councilof.ai \u2014 the proof portal (Cloudflare Pages, single repo)",
+        "Build issuance.councilof.ai \u2014 the issuance portal (MetaMask + x402)",
+        "Build verifier.councilof.ai \u2014 the verifier portal (offline WebCrypto)",
+        "Build marketplace.councilof.ai \u2014 the packs marketplace (Stripe-free, MetaMask)",
+        "Build blog.councilof.ai \u2014 the long-form blog (MDX + RSS)",
+        "Wire each subdomain as a CF Pages project (independent deploys)",
+        "Each project gets its own discovery doc at /.well-known/<project>.json"
+      ],
+      "owner_gates": [
+        "Add the 6 subdomains to Cloudflare DNS (1 click per subdomain)",
+        "Verify each subdomain in Search Console",
+        "Submit each sitemap to Bing + Yandex"
+      ],
+      "target": {
+        "blog.councilof.ai": "the long-form blog \u2014 methodology, findings, doctrine",
+        "councilof.ai": "the unified console \u2014 all rails, all tools, all axes in one place",
+        "csoai.org": "the public measurement body \u2014 DID, Layer 0, EU AI Act portal",
+        "issuance.councilof.ai": "the issuance portal \u2014 pay via MetaMask, get a signed card",
+        "marketplace.councilof.ai": "the packs marketplace \u2014 gpai-evidence, cra-readiness, insurers",
+        "proofs.councilof.ai": "the proof portal \u2014 bulk history + inclusion proofs",
+        "verifier.councilof.ai": "the verifier portal \u2014 paste any signed card, verify offline"
+      }
+    },
+    "outreach": {
+      "current": {
+        "email_drafts": "5+ \u2014 NLnet, NGI Zero, Sloan, Ford, plus more",
+        "linkedin_posts": "0 (none yet)",
+        "warm_intros": "0 (no outreach yet)",
+        "x_twitter_posts": "0 (none yet)"
+      },
+      "metrics": {
+        "n_grants_submitted": {
+          "target_d30": 1,
+          "target_d90": 4
+        },
+        "n_journalist_interviews": {
+          "target_d30": 0,
+          "target_d90": 3
+        },
+        "n_regulator_responses": {
+          "target_d30": 0,
+          "target_d90": 2
+        },
+        "n_vendor_responses": {
+          "target_d30": 1,
+          "target_d90": 5
+        }
+      },
+      "moves_lane_doable": [
+        "Write 10 vendor CTO cold emails (with the EU AI Act pack pitch)",
+        "Write 5 regulator outreach emails (with the corrections ledger pitch)",
+        "Write 3 insurer outreach emails (with the Lloyd's syndicate pitch)",
+        "Write 10 journalist pitches (with the war.gov release as the hook)",
+        "Write 10 researcher collaboration emails (with the OWEM pitch)",
+        "Build /outreach/<persona>.html \u2014 the public outreach playbook",
+        "Build /contact.html \u2014 the public contact page (one form per persona)"
+      ],
+      "owner_gates": [
+        "Send the 4 grant applications (operator-only)",
+        "Send the first 10 vendor outreach emails (operator-only)",
+        "Send the first 5 regulator outreach emails (operator-only)"
+      ],
+      "target": {
+        "grants_submitted": "4 (NLnet, NGI Zero, Sloan, Ford)",
+        "insurer_outreach": "3 insurers contacted (Lloyd's, Munich Re, Zurich)",
+        "journalist_outreach": "10 journalists pitched",
+        "regulator_outreach": "5 regulators contacted (ICO, CNIL, BfK, AgID, AEPD)",
+        "researcher_outreach": "10 researchers contacted for collaboration",
+        "vendor_outreach": "10 vendor CTOs contacted"
+      }
+    },
+    "pr": {
+      "current": {
+        "defoneos_alignment": "DEFONEOS / meok-defoneos / csoai-defoneos",
+        "fedramp_marketplace_card": "live \u2014 /api/badge returns the badge",
+        "openai_mil_card": "live \u2014 UNCHECKABLE (mil requires login)",
+        "war.gov_press_card": "live \u2014 the FACT card for the 31 Aug war.gov release",
+        "what_is_new_page": "live \u2014 /what-is-new.html"
+      },
+      "metrics": {
+        "n_media_inquiries": {
+          "target_d30": 0,
+          "target_d90": 10
+        },
+        "n_press_pickups": {
+          "target_d30": 0,
+          "target_d90": 10
+        },
+        "n_press_releases": {
+          "target_d30": 1,
+          "target_d90": 3
+        }
+      },
+      "moves_lane_doable": [
+        "Build /press-releases.html \u2014 the press release archive",
+        "Build /press-releases/<slug>.html \u2014 each individual press release",
+        "Wire an RSS feed for /press-releases.xml",
+        "Wire an Atom feed for /press-releases.atom",
+        "Build the press release template (/press-release-template.html)",
+        "Wire OpenGraph tags on every press release page",
+        "Wire the press release metadata as JSON-LD NewsArticle schema"
+      ],
+      "owner_gates": [
+        "Write the first press release (needs Nick's voice)",
+        "Distribute via PR Newswire (needs budget)",
+        "Set up the journalist database (needs Nick's network)"
+      ],
+      "target": {
+        "embargoed_pre_releases": "for journalists under embargo",
+        "press_release_archive": "/press-releases.html \u2014 every release",
+        "press_release_distribution": "PR Newswire, Business Wire, EIN Presswire",
+        "press_releases": "1 per month \u2014 public, dated, signed"
+      }
+    },
+    "press": {
+      "current": {
+        "arxiv_preprints": "0 (none yet \u2014 needs endorsement)",
+        "blog_posts": "0 (no blog yet)",
+        "openreview_submissions": "0 (none yet)",
+        "publications_citing_csoai": "0 (CSOAI is new)"
+      },
+      "metrics": {
+        "n_arxiv_preprints": {
+          "target_d30": 2,
+          "target_d90": 10
+        },
+        "n_blog_posts": {
+          "target_d30": 4,
+          "target_d90": 12
+        },
+        "n_citations": {
+          "target_d30": 0,
+          "target_d90": 5
+        },
+        "n_openreview_submissions": {
+          "target_d30": 1,
+          "target_d90": 5
+        }
+      },
+      "moves_lane_doable": [
+        "Write preprint 001: 'The 22-axis GSPC measurement instrument' (cs.AI)",
+        "Write preprint 002: 'Ed25519-signed measurement cards for AI governance' (cs.CR)",
+        "Write preprint 003: 'The corrections ledger: public-write accountability for AI' (cs.CY)",
+        "Write preprint 004: 'Bitcoin OTS anchors for AI measurement' (cs.CR)",
+        "Write preprint 005: 'Per-axis jail evaluation: 8B language models' (cs.CL)",
+        "Write preprint 006: 'The 26-bank SWIFT census + XRPL' (cs.CE)",
+        "Write preprint 007: 'EU AI Act Article 50 marking evidence' (cs.CY)",
+        "Write preprint 008: 'OWASP LLM Top 10 as measurement axes' (cs.CR)",
+        "Write preprint 009: 'NIST AI RMF crosswalk to GSPC' (cs.CY)",
+        "Write preprint 010: 'COSE_Sign1 wrapper for card-v0 attestations' (cs.CR)",
+        "Blog 001: 'Why measurement, not certification'",
+        "Blog 002: 'Three live anchors, and the fourth we have not earned yet'",
+        "Blog 003: 'UNCHECKABLE is honest: what we refuse to claim'",
+        "Blog 004: 'The 26-bank honest answer: 5 XRPL, 3 EVM, 18 permissioned'"
+      ],
+      "owner_gates": [
+        "arXiv endorsement for cs.AI submissions (one email)",
+        "OpenReview profile + venue submissions (one signup)",
+        "Each preprint reviewed by Nick before submission"
+      ],
+      "target": {
+        "arxiv_preprints": "10 covering each axis family",
+        "blog_posts": "1 per week (50 over 12 months)",
+        "openreview_submissions": "5+ to AI safety venues (NeurIPS, ICML, AIES)",
+        "publications_citing_csoai": "1+ per preprint (organic)"
+      }
+    },
+    "traffic": {
+      "current": {
+        "Brand gate": "PASS \u2014 106 pages/txt scanned",
+        "JSON-LD": "now on every page (Organization + WebSite)",
+        "llms-full.txt": "20KB (new this session)",
+        "llms-sitemap.xml": "35 entries",
+        "llms.txt": "8KB",
+        "og tags": "now on every page (8.8/10 average)",
+        "openapi.json": "66 paths, 24KB",
+        "sitemap.xml": "482 entries, 81KB \u2014 481 unique"
+      },
+      "metrics": {
+        "llms_crawler_pings_daily": {
+          "target_d30": 50,
+          "target_d90": 500
+        },
+        "n_citations": {
+          "target_d30": 5,
+          "target_d90": 50
+        },
+        "n_inbound_links": {
+          "target_d30": 50,
+          "target_d90": 500
+        },
+        "organic_traffic_daily": {
+          "target_d30": 100,
+          "target_d90": 1000
+        }
+      },
+      "moves_lane_doable": [
+        "Cross-post every preprint to arXiv (cs.AI + cs.CY)",
+        "Cross-post every blog post to LessWrong + EA Forum + AI Alignment Forum",
+        "Submit every dataset to HuggingFace datasets (with DOI)",
+        "Submit every model card to HuggingFace models (with DOI)",
+        "Submit every preprint to OpenReview (with venue tag)",
+        "Wire AEO markers (SpeakableSpecification, ClaimReview) on every page",
+        "Wire WebSub (PubSubHubbub) on the blog",
+        "Wire IndieAuth on every author page"
+      ],
+      "owner_gates": [
+        "arXiv endorsement for cs.AI submissions",
+        "OpenReview profile + venue submissions",
+        "HuggingFace dataset namespace `csoai` permissions"
+      ],
+      "target": {
+        "Cross-post to": "arXiv, OpenReview, LessWrong, EA Forum, AI Alignment Forum",
+        "HuggingFace datasets": "100+ (currently 60+)",
+        "Schema.org": "every page has Organization + WebSite + SoftwareApplication + Dataset",
+        "llms-full.txt": "20KB \u2192 200KB \u2014 full corpus dump for AI agents",
+        "llms-sitemap.xml": "200+ entries \u2014 every axis + every standard",
+        "llms.txt": "20KB \u2192 50KB \u2014 every public surface described",
+        "openapi.json": "100+ paths \u2014 every priced + free endpoint",
+        "sitemap.xml": "1,000+ entries \u2014 every public surface indexed"
+      }
+    },
+    "users": {
+      "current": {
+        "end_users": "developers, researchers, journalists, regulators, vendors",
+        "persona_walks": "e2e-persona-walk.mjs script in scripts/",
+        "personas_documented": "5+ (developer, journalist, regulator, vendor, affected person)",
+        "verified_walks": "12 of 12 must pass"
+      },
+      "metrics": {
+        "n_active_users_daily": {
+          "target_d30": 50,
+          "target_d90": 500
+        },
+        "n_corrections_submitted": {
+          "target_d30": 1,
+          "target_d90": 50
+        },
+        "n_paid_users": {
+          "target_d30": 0,
+          "target_d90": 5
+        },
+        "n_persona_dashboards": {
+          "target_d30": 5,
+          "target_d90": 5
+        }
+      },
+      "moves_lane_doable": [
+        "Build /dashboards/eu-ai-office.html \u2014 the regulator's view",
+        "Build /dashboards/vendor.html \u2014 the vendor's view",
+        "Build /dashboards/insurer.html \u2014 the insurer's view",
+        "Build /dashboards/journalist.html \u2014 the journalist's view",
+        "Build /dashboards/affected-person.html \u2014 the public's view",
+        "Wire persona-aware copy on every page (5 variants per page)",
+        "Add persona-aware 404.html (different copy per persona)"
+      ],
+      "owner_gates": [
+        "Set up email routing for <persona>@csoai.org",
+        "Set up the chat widget for live support",
+        "Set up the booking link for 1:1 demo calls"
+      ],
+      "target": {
+        "persona_dashboard": "/dashboards/<persona>.html \u2014 one URL per persona",
+        "persona_email": "<persona>@csoai.org \u2014 routed to the right human",
+        "primary_users": [
+          "EU AI Office: Article 5, Article 50, GPAI duties",
+          "Member state regulators: ICO, CNIL, BfK, AgID, AEPD, AP",
+          "Vendors: Meta, Mistral, Aleph Alpha, OpenAI, Anthropic, Google",
+          "Insurers: Lloyd's syndicates, Munich Re, Zurich, Allianz",
+          "Journalists: tech journalists covering AI safety",
+          "Researchers: AI safety, alignment, governance",
+          "Affected communities: anyone who can submit a correction"
+        ]
+      }
+    }
+  },
+  "totals": {
+    "n_gates": 21,
+    "n_metrics": 26,
+    "n_moves": 57
+  },
+  "vectors": [
+    "n_sites",
+    "traffic",
+    "users",
+    "awareness",
+    "pr",
+    "press",
+    "outreach"
+  ]
+}

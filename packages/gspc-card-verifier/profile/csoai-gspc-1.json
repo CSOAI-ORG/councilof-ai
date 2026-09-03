@@ -1,21 +1,55 @@
 {
   "$comment": "The verification profile: everything a verifier must be TOLD, in one file, so it can be swapped for your own without editing code. Pass a different one with --profile.",
   "id": "csoai-gspc-1",
-  "description": "Council of AI GSPC measurement cards, card-attestation key 1.",
+  "description": "Council of AI GSPC measurement cards. Pins every published did:web:csoai.org key; cards name theirs by `did`.",
   "alg": "Ed25519",
   "pinnedPubkeyHex": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
   "pinnedKeyId": "did:web:csoai.org#card-attestation-1",
-  "pinnedKeySource": "https://csoai.org/.well-known/did.json — fetch ONCE, out of band, and keep a copy. It is not fetched at verification time.",
+  "pinnedKeySource": "https://csoai.org/.well-known/did.json \u2014 fetch ONCE, out of band, and keep a copy. It is not fetched at verification time.",
   "preimageRules": [
-    "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')"
+    "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+    "sha256(canonical body)"
   ],
-  "bodyKinds": ["gspc.measurement-card"],
-  "genesisMarkers": ["GSPC-CARD-FACTORY-GENESIS"],
+  "bodyKinds": [
+    "gspc.measurement-card"
+  ],
+  "genesisMarkers": [
+    "GSPC-CARD-FACTORY-GENESIS"
+  ],
   "numbers": {
     "$comment": "JavaScript cannot tell 0 from 0.0. These lists are how the schema tells it. An integral number in an unlisted field is OUT_OF_PROFILE_DOMAIN, not a guess.",
-    "floatFields": ["accuracy", "ci_low", "ci_high", "precision", "recall", "f1"],
-    "floatSuffixes": ["_ci_low", "_ci_high", "_accuracy"],
-    "intFields": ["n", "n_items", "n_cards", "n_cells", "count"],
-    "intSuffixes": ["_count", "_n"]
-  }
+    "floatFields": [
+      "accuracy",
+      "ci_low",
+      "ci_high",
+      "precision",
+      "recall",
+      "f1"
+    ],
+    "floatSuffixes": [
+      "_ci_low",
+      "_ci_high",
+      "_accuracy"
+    ],
+    "intFields": [
+      "n",
+      "n_items",
+      "n_cards",
+      "n_cells",
+      "count"
+    ],
+    "intSuffixes": [
+      "_count",
+      "_n"
+    ]
+  },
+  "pinnedKeys": {
+    "did:web:csoai.org#site-release-1": "d3783d97e75534654401555642b254f5a2ed9184cddee011779d8fec312afbc8",
+    "did:web:csoai.org#estate-chain-1": "33472e026871db20cdbd99e76c47532ebfcf84b37abed5b260dae3589df5696d",
+    "did:web:csoai.org#board-attestation-1": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "did:web:csoai.org#card-attestation-1": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    "did:web:csoai.org#gspc-board-22axis-2026": "d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c"
+  },
+  "ensureAscii": false,
+  "$comment_ensureAscii": "The mill signer canonicalises with ensure_ascii=False (scripts/sign_financial_runs.py). Declaring True was byte-identical for every ASCII card published so far and would have failed the first card carrying an accent."
 }

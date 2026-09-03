@@ -47,9 +47,17 @@ export async function verifyCard(card, profile) {
   if (card.body === null || typeof card.body !== "object" || Array.isArray(card.body))
     return uncheckable("MALFORMED_CARD", "`body` is not a JSON object");
 
+  // A card identifies its key one of two ways: an inline `pubkey`, or a `did` reference
+  // resolved against the profile's pins. Requiring `pubkey` made every DID-keyed card —
+  // which is every card currently published — read MALFORMED_CARD.
+  const hasPubkey = typeof card.pubkey === "string";
+  const hasDid = typeof card.did === "string" && card.did.length > 0;
+  if (!hasPubkey && !hasDid)
+    return uncheckable("MALFORMED_CARD", "card names no key: neither `pubkey` nor `did`");
+
   for (const [field, re, what] of [
     ["id", HEX64, "64 lowercase hex characters"],
-    ["pubkey", HEX64, "64 lowercase hex characters"],
+    ...(hasPubkey ? [["pubkey", HEX64, "64 lowercase hex characters"]] : []),
     ["signature", HEX128, "128 lowercase hex characters"],
   ]) {
     if (typeof card[field] !== "string")
@@ -76,8 +84,26 @@ export async function verifyCard(card, profile) {
   // A card carries its own pubkey. Verifying against THAT proves only self-consistency:
   // anyone can alter a body and sign it with a key generated a second ago. Mismatch here is
   // a completed judgement — the card is not from the pinned issuer — so it is INVALID.
-  if (card.pubkey !== profile.pinnedPubkeyHex)
+  // The pin still comes from the profile — fetched out of band, never from the card and
+  // never from the network at verification time. A DID-keyed card is pinned by matching its
+  // key REFERENCE against the profile's pins; the key itself never travels with the card,
+  // which is strictly stronger than trusting an inline pubkey we then have to ignore.
+  let pinnedHex = profile.pinnedPubkeyHex;
+  if (hasDid) {
+    const pins = profile.pinnedKeys && typeof profile.pinnedKeys === "object" ? profile.pinnedKeys : {};
+    const known = Object.prototype.hasOwnProperty.call(pins, card.did)
+      ? pins[card.did]
+      : card.did === profile.pinnedKeyId
+        ? profile.pinnedPubkeyHex
+        : null;
+    if (!known)
+      return uncheckable("KEY_NOT_PINNED", `card is signed under ${card.did}, which this profile does not pin; supply a profile that pins it, or --did with that key document`);
+    if (!HEX64.test(known))
+      return uncheckable("MALFORMED_PROFILE", `the profile pins ${card.did} to something that is not 64 lowercase hex characters`);
+    pinnedHex = known;
+  } else if (card.pubkey !== profile.pinnedPubkeyHex) {
     return invalid("PUBKEY_NOT_PINNED", `signed by ${card.pubkey.slice(0, 16)}…, not the pinned key ${profile.pinnedPubkeyHex.slice(0, 16)}…`);
+  }
 
   // ---- 4. Reproduce the signed bytes.
   let preimage;
@@ -97,7 +123,7 @@ export async function verifyCard(card, profile) {
   // ---- 6. The signature must verify under the pinned key.
   let key;
   try {
-    key = await crypto.subtle.importKey("raw", unhex(card.pubkey), "Ed25519", false, ["verify"]);
+    key = await crypto.subtle.importKey("raw", unhex(pinnedHex), "Ed25519", false, ["verify"]);
   } catch {
     return uncheckable("NO_ED25519_RUNTIME", "this runtime has no WebCrypto Ed25519 (Node 19+ required); the card was NOT checked");
   }
