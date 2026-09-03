@@ -160,6 +160,60 @@ def detect_no_aid_meta() -> list[dict]:
     return problems
 
 
+def detect_no_og_image() -> list[dict]:
+    """Check that every public HTML has an og:image meta tag."""
+    problems = []
+    for f in PUBLIC.glob("*.html"):
+        text = f.read_text(errors="ignore")
+        head = text[:4000]
+        if "og:image" not in head:
+            problems.append({
+                "id": f"og-image-missing::{f.name}",
+                "kind": "og-image-missing",
+                "file": f.name,
+                "severity": "low",
+                "fix_kind": "lane-doable",
+                "description": f"{f.name} missing <meta property=\"og:image\">",
+            })
+    return problems
+
+
+def detect_no_canonical() -> list[dict]:
+    """Check that every public HTML has a canonical link."""
+    problems = []
+    for f in PUBLIC.glob("*.html"):
+        text = f.read_text(errors="ignore")
+        head = text[:3000]
+        if 'rel="canonical"' not in head:
+            problems.append({
+                "id": f"canonical-missing::{f.name}",
+                "kind": "canonical-missing",
+                "file": f.name,
+                "severity": "low",
+                "fix_kind": "lane-doable",
+                "description": f"{f.name} missing <link rel=\"canonical\">",
+            })
+    return problems
+
+
+def detect_no_h1() -> list[dict]:
+    """Check that every public HTML has at least one h1."""
+    problems = []
+    for f in PUBLIC.glob("*.html"):
+        text = f.read_text(errors="ignore")
+        if "<h1" not in text:
+            problems.append({
+                "id": f"h1-missing::{f.name}",
+                "kind": "h1-missing",
+                "file": f.name,
+                "tag": "h1",
+                "severity": "low",
+                "fix_kind": "lane-doable",
+                "description": f"{f.name} missing <h1> heading",
+            })
+    return problems
+
+
 def detect_no_jsonld() -> list[dict]:
     """Pages that should have schema.org JSON-LD but don't."""
     must_have = {"index.html": "WebSite", "products": "Product",
@@ -231,6 +285,9 @@ DETECTORS = [
     ("missing-page", detect_missing_pages),
     ("lid-drift", detect_lid_drift),
     ("aeo-missing", detect_no_aid_meta),
+    ("og-image-missing", detect_no_og_image),
+    ("canonical-missing", detect_no_canonical),
+    ("h1-missing", detect_no_h1),
     ("jsonld-missing", detect_no_jsonld),
     ("card-drift", detect_signed_card_drift),
 ]
@@ -331,10 +388,28 @@ def fix_aeo_missing(p: dict) -> dict:
     """Lane-doable: add the missing meta tag."""
     f = PUBLIC / p["file"]
     text = f.read_text()
-    tag = p["tag"]
-    if f'name="{tag}"' in text or tag in text.lower():
+    tag = p.get("tag", "description")
+    if tag in text.lower() or f'name="{tag}"' in text or f'property="{tag}"' in text or f'rel="{tag}"' in text:
         return {"ok": False, "reason": f"{tag} already present"}
-    snippet = f'  <meta name="{tag}" content="{fallback_for(tag, p["file"])}" />\n'
+    # Specialised snippets
+    if tag == "og:image":
+        snippet = f'  <meta property="og:image" content="https://councilof.ai/og-image.png" />\n'
+    elif tag == "canonical":
+        snippet = f'  <link rel="canonical" href="https://councilof.ai/{p["file"]}" />\n'
+    elif tag == "h1":
+        # Inject an h1 just inside <main> or after <body>
+        title = p["file"].replace(".html", "").replace("-", " ").title()
+        snippet = f'\n<h1>{title}</h1>\n'
+        if "<main" in text:
+            text = re.sub(r"(<main[^>]*>)", r"\1" + snippet, text, count=1)
+        elif "<body" in text:
+            text = re.sub(r"(<body[^>]*>)", r"\1" + snippet, text, count=1)
+        else:
+            text = text + snippet
+        f.write_text(text)
+        return {"ok": True, "diff": f"appended <h1> to {p['file']}"}
+    else:
+        snippet = f'  <meta name="{tag}" content="{fallback_for(tag, p["file"])}" />\n'
     if "</title>" in text:
         text = text.replace("</title>", "</title>\n" + snippet, 1)
     else:
@@ -366,6 +441,9 @@ FIXERS = {
     "missing-page": fix_missing_page,
     "lid-drift": fix_lid_drift,
     "aeo-missing": fix_aeo_missing,
+    "og-image-missing": fix_aeo_missing,  # shares the meta-tag inserter
+    "canonical-missing": fix_aeo_missing,  # shares the meta-tag inserter
+    "h1-missing": fix_aeo_missing,  # shares the meta-tag inserter
     "jsonld-missing": fix_jsonld_missing,
     "card-drift": fix_card_drift,
 }
