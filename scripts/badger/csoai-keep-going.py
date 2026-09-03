@@ -56,7 +56,9 @@ JOBS = [
 
 
 def run(name: str, script: str, timeout: int, desc: str) -> dict:
-    args = ["python3", f"scripts/badger/{script}"]
+    # Split the script + args so subprocess gets a proper argv list
+    parts = script.split()
+    args = ["python3", f"scripts/badger/{parts[0]}"] + parts[1:]
     t0 = time.time()
     try:
         r = subprocess.run(args, capture_output=True, text=True, timeout=timeout,
