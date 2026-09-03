@@ -2064,8 +2064,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/start",
-  "comp": "OnboardOS",
-  "title": "Onboard OS"
+  "comp": "Start",
+  "title": "Start"
  },
  {
   "path": "/status",

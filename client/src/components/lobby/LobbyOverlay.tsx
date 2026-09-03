@@ -128,8 +128,10 @@ export default function LobbyOverlay({
   });
   const [leftOpen, setLeftOpen] = useState(() => readOpen(LEFT_KEY, LEFT_DEFAULT));
   const [rightOpen, setRightOpen] = useState(() => readOpen(RIGHT_KEY, RIGHT_DEFAULT));
-  // The composer is opened on demand, and stays open once a conversation exists.
-  const [composerOpen, setComposerOpen] = useState(false);
+  // Chat is the OS. The composer is the main surface and is open on arrival — a pane
+  // renders beside it, it does not replace it. (It used to start closed and open "on
+  // demand", which made the workspace a tile grid with a chat hidden behind a click.)
+  const [composerOpen, setComposerOpen] = useState(true);
   const [size, setSize] = useState<"comfortable" | "full">(readSize);
   const [minimised, setMinimised] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);

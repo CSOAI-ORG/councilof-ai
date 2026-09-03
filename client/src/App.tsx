@@ -180,6 +180,7 @@ const Status = lazy(() => import("./pages/Status"));
 const PublicWatchdogHub = lazy(() => import("./pages/PublicWatchdogHub"));
 const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProtectHumanity"));
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
+const Start = lazy(() => import("./pages/Start"));
 const Benchmarks = lazy(() => import("./pages/Benchmarks"));
 const BenchmarkIndex = lazy(() => import("./pages/BenchmarkIndex"));
 const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
@@ -445,6 +446,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/statute-to-predicate": "From statute to predicate — how a law becomes a test | Council of AI",
   "/instrument": "The Instrument | CSOAI",
   "/harness": "The measurement harness | Council of AI",
+  "/start": "Start here — what applies to you, and how to check a claim | Council of AI",
   "/benchmarks": "Benchmarks | CSOAI",
   "/benchmark-index": "Meta-benchmark index — what other benchmarks report, beside what we measure | Council of AI",
   "/benchmark-quality": "Benchmark-quality register — deterministic predicates on third-party AI benchmarks | Council of AI",
@@ -676,6 +678,7 @@ function App() {
                   <Route path="/watchdog/help-protect-humanity" component={WatchdogHelpProtectHumanity} />
                   <Route path="/watchdog/incident" component={WatchdogIncidentReport} />
                   <Route path="/watchdog/report" component={PublicWatchdogHub} />
+                  <Route path="/start" component={Start} />
                   <Route path="/benchmarks" component={Benchmarks} />
                   <Route path="/benchmark-index" component={BenchmarkIndex} />
                   <Route path="/benchmark-quality" component={BenchmarkQuality} />
@@ -1108,7 +1111,14 @@ function App() {
                     badge is the launcher. The component stays on disk as the deterministic
                     SUMMON/escort implementation, exactly as its docstring intends — it is
                     simply not mounted as a second floating chat. */}
-                <Suspense fallback={null}><CouncilLobby /></Suspense>
+                {/* 2026-09-03, owner call: the floating temple badge is not mounted on
+                    site chrome. It opened a Council OS overlay whose tabs are a second,
+                    older navigation over the same surfaces — a reader who found it was
+                    taken sideways out of the page they were on. The workspace has its own
+                    door in the nav (Council OS) and at /dashboard; the launcher does not
+                    also need to float over every marketing page. CouncilLobby stays on
+                    disk and still owns the overlay for surfaces that mount it directly —
+                    it is simply not site chrome. */}
                 <DemoTour />
                 <CookieConsent />
               </div>

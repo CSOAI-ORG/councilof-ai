@@ -7,6 +7,7 @@ interface NavItem { name: string; href: string; description: string; external?: 
 interface NavGroup { name: string; href: string; icon: typeof Globe2; description: string; submenu: NavItem[] }
 
 export const PRIMARY_LINKS: { name: string; href: string }[] = [
+  { name: "Start here", href: "/start" },
   { name: "Verify", href: "/gspc-verify" },
   { name: "Board", href: "/dashboard?tab=board" },
   { name: "Council OS", href: "/dashboard" },
@@ -20,6 +21,7 @@ export const navigation: NavGroup[] = [
     icon: BarChart2,
     description: 'The instrument and its living board',
     submenu: [
+      { section: 'Start here', name: 'What applies to me', href: '/start', description: 'Four steps: your deadlines, check a claim, what we measured, get measured. Free, no account' },
       { section: 'The board', name: 'The GSPC board', href: '/dashboard?tab=board', description: 'Every published axis. Counts and the stamp date come from GET /api/gspc — never typed into a page' },
       { name: 'The arena', href: '/gspc-arena', description: 'Head-to-head on the same frozen items. Deterministic grading — no model judges another' },
       { name: 'Arena — benchmarks', href: '/gspc-arena?view=benchmarks', description: 'The per-bank view of the arena: which instrument, which rows, which result' },
