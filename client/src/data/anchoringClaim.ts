@@ -26,7 +26,11 @@ export const ANCHORING_CLAIM =
   "NO_LAPTOP_SIGN). GET /api/xrpl is a reader of that root (writes_board false, live " +
   "locked 16, same merkle). Historical DEVNET Payment-memo / CredentialCreate hashes " +
   "are not this feed. XLS-70 Credentials are live on XRPL mainnet as an allowlist " +
-  "primitive; we are not issuing GSPC grades on-ledger.";
+  "primitive; we are not issuing GSPC grades on-ledger. Separately from the card " +
+  "trust path, the published roots carry OpenTimestamps proofs attested at Bitcoin " +
+  "blocks 965121, 965138 and 965268; queued atoms are committed to a Merkle root " +
+  "that is stamped and not yet anchored \u2014 a stamp is a request to a calendar, " +
+  "not a proof.";
 
 /** Short badge form for nav entries and link descriptions that mention the ledger. */
 export const XRPL_STATUS_LABEL = "public-root reader — not a grade";

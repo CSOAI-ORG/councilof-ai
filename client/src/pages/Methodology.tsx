@@ -284,8 +284,7 @@ export default function Methodology() {
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
               tamper-evidence; authorship is carried by the signed card, which is under a kilobyte and carries nine fields — not the sample size or interval, which live on the board. {ANCHORING_CLAIM}{" "}
-              OpenTimestamps anchoring is roadmap, not yet wired. The post-quantum ML-DSA-65
-              (FIPS-204) signer is built, not shipped.
+              The post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
             </li>
           </ul>
         </section>
