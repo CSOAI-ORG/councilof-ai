@@ -39,7 +39,7 @@ PLAN = {
         "current": {
             "councilof.ai": "live — 22-axis board + 29 rails",
             "csoai.org": "live — DID + apex + Layer 0",
-            "github.com/CSOAI-ORG/councilof-ai": "active — 570 PyPI + npm + 2 GitHub orgs",
+            "github.com/CSOAI-ORG/councilof-ai": "active — PyPI + npm + 2 GitHub orgs",
             "huggingface.co/csoai": "active — 60+ datasets, 42 Spaces, 3 models",
             "PyPI csoai-gspc-mcp": "live — the MCP server",
             "npm csoai-gspc-mcp": "live — the stdio MCP server",

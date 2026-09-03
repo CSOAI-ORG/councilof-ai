@@ -75,7 +75,7 @@ We already have:
   - The standards: EU AI Act (60 articles), NIST AI RMF (51 controls),
     OWASP (20 categories), ISO 42001 (37 controls) as 168 atoms
   - The distribution: Chrome extension, Grok plugin, Hermes skill, MCP
-    on PyPI/npm, ~570 PyPI packages
+    on npm; the csoai package on PyPI
 
 We are not pitching. We are executing. The €50K accelerates a 90-day plan.
 
@@ -118,7 +118,7 @@ a stamp is a request to a calendar, not a proof, and we say so. The Discovery fu
 OPEN BY DEFAULT
 ===============
 
-All 570+ PyPI packages are MIT/Apache 2.0. The substrate is reproducible
+Every published package is MIT/Apache 2.0. The substrate is reproducible
 from a clean checkout. The verifier works offline. The corrections ledger
 is public-write.
 
