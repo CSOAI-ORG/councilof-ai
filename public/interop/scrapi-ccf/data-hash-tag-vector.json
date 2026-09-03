@@ -1,0 +1,32 @@
+{
+  "schema": "csoai.ccf-profile-tag-vector/0.1",
+  "supersedes_nothing": "This ADDS a third state to data-hash-vector.json (sha256 e137d34fb25246c5f9e09fe8a293ac1952a3c86d9a48a8b7ccb085c6bbffc72b), which is unchanged and remains the citable artifact for the receipt axis. That file has been independently recomputed by a third party; its bytes are not editable.",
+  "raised_by": "Emek Can Dogru, SCITT Last Call, 2026-09-03: a Signed Statement travels with the CBOR tag or without it, and the two hash differently for the same reason the as-registered and receipt-carrying forms do. His candidate Section 2.2 wording names which STATEMENT, but not whether the tag is inside the preimage.",
+  "hash": "SHA-256 over the encoded COSE_Sign1, differing only in whether tag 18 is present",
+  "A_tagged": {
+    "framing": "CBOR tag 18 present (RFC 9052 COSE_Sign1)",
+    "size_bytes": 165,
+    "sha256": "8595e4a4c8b93e7b1b7b798dc302a2b7d2890021f7eff372d79b32f78867e4ac",
+    "note": "byte-identical to A in data-hash-vector.json; recomputed here, not restated"
+  },
+  "C_untagged": {
+    "framing": "bare 4-element array, tag stripped",
+    "size_bytes": 164,
+    "sha256": "fead5e6058d01360024bcd0d539138d26053c3d7c48475dbccb32b6139e53a00"
+  },
+  "delta": {
+    "bytes_differing": 1,
+    "the_byte": "d2",
+    "suffix_identical": true,
+    "note": "One byte \u2014 0xd2, the tag-18 head. The remaining 164 bytes are identical. A one-byte framing choice that the specification does not name relocates the entire digest, so a verifier and an issuer can disagree while both follow the text exactly."
+  },
+  "finding": "Naming which statement is hashed is necessary but not sufficient. Section 2.2 must also say whether the CBOR tag is inside the preimage, or two conforming implementations will compute different data-hash values over the same Signed Statement and neither will be wrong.",
+  "not_a_transparency_service": "Council of AI does not operate a Transparency Service and mints no Receipts. Nothing here is a conformance claim.",
+  "test_key": {
+    "warning": "TEST ONLY. Seed is published. Protects nothing.",
+    "alg": "EdDSA (COSE alg -8)",
+    "seed_hex": "0000000000000000000000000000000000000000000000000000000000000001",
+    "public_key_hex": "4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29"
+  },
+  "reproduce": "python3 mint_tag_vector.py \u2014 deterministic (Ed25519, fixed seed)"
+}
