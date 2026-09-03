@@ -69,7 +69,7 @@ jobs:
       # since 18:13Z. Keeping it in the gate means nothing ships at all, which is worse
       # than not running it. The spec and `npm run test:e2e:shell` are retained and
       # must be adapted to master's shell, then re-gated. Do not delete the spec.
-      - name: Council OS shell smoke (non-gating until adapted to master's shell)
+      - name: Council OS shell smoke (non-gating until adapted to the master shell)
         continue-on-error: true
         run: |
           npx playwright install --with-deps chromium

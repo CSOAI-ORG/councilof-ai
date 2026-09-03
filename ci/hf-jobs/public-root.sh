@@ -88,6 +88,8 @@ if ok; then
   node scripts/eas_attest_root.mjs || echo "EAS step did not attest (recorded honestly in eas-root-attestations.json)"
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
+step 'mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)'
+step 'provable archive index (append-only; bytes from this tree + witnesses; no key, no network)'
 step 'commit published tree'
 if ok; then
   git add public/root.json public/cards public/proofs public/publisher-health.json
