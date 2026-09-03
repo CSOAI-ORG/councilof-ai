@@ -179,7 +179,13 @@ def source_companies_house() -> dict:
         return out
     # Parse company numbers from the HTML — quick regex
     import re
-    nums = set(re.findall(r"/company/(\w{8})", body))[:20]
+    # sorted(), not list(): a set cannot be sliced (this raised
+    # "'set' object is not subscriptable" on the source's first ever execution),
+    # and set iteration order varies between runs, so an unsorted list would emit
+    # a different 20 of the same page each time. In an estate whose atoms are
+    # addressed by content digest, non-determinism here means duplicate atoms
+    # for identical input.
+    nums = sorted(set(re.findall(r"/company/(\w{8})", body)))[:20]
     for cn in nums:
         w = emit("companies-house",
                  subject={"kind": "company", "jurisdiction": "UK", "company_number": cn},
