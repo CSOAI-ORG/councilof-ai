@@ -232,7 +232,7 @@ def main():
     print(f"=== Summary ===")
     print(f"  banks:     {len(banks)}")
     print(f"  cards:     {n_written} written, {n_oversized} oversized")
-    print(f"  OTS:       {n_ots} anchored to Bitcoin (a.pool.opentimestamps.org)")
+    print(f"  OTS:       {n_ots} STAMPED (not anchored until a calendar commits)")
     print(f"  queue:     {out_path}")
     print()
     print(f"Next step: the mill (functions/_lib/cardSign.ts) signs each card")

@@ -194,7 +194,7 @@ def main():
         if ots:
             ceremony["ots_proof"] = ots[:200]
             ceremony["ots_anchor"] = "https://a.pool.opentimestamps.org"
-            print(f"  OTS:    {len(ots)}B  anchored to Bitcoin")
+            print(f"  OTS:    {len(ots)}B  STAMPED - anchors only once a calendar commits")
         else:
             print(f"  OTS:    FAILED (rate-limited?)")
 

@@ -19,7 +19,7 @@
 - [x] csoai-archive-deep.py (35 atoms)
 - [x] csoai-public-data-mine.py (28 atoms from 5/8 sources)
 - [x] csoai-bank-ledger.py (26 banks × 5 axes = 130 atoms)
-- [x] csoai-bank-pack.py (130 signable cards, 111 OTS-anchored)
+- [x] csoai-bank-pack.py (130 signable cards, 111 OTS-stamped — stamped is not anchored)
 - [x] csoai-bank-classify.py (26 honest chain attributions)
 
 ### Engines (already built + live)

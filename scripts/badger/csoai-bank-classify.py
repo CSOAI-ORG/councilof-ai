@@ -429,7 +429,7 @@ def main():
     print(f"=== Summary ===")
     print(f"  banks:     {len(banks)}")
     print(f"  cards:     {n_written} written, {n_oversized} oversized")
-    print(f"  OTS:       {n_ots} anchored to Bitcoin")
+    print(f"  OTS:       {n_ots} STAMPED (not anchored until a calendar commits)")
     print(f"  queue:     {out_path}")
     return 0
 

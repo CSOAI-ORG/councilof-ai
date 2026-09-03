@@ -3,7 +3,8 @@
 
 Lane-doable: every 15 minutes, walk all 12+ queue directories, dedupe
 by sha256, build a single _state.json manifest that tracks every atom
-in the queue (and which have been OTS-anchored). Writes to
+in the queue, and their MEASURED OTS state — anchored / pending / unreadable /
+absent, never a count of stamps requested. Writes to
 scripts/badger/_state.json which the dashboard reads.
 
 Reads:

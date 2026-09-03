@@ -43,9 +43,11 @@ CSOAI is the independent measurement body for AI behaviour. We publish:
   - A 22-axis GSPC board (Governance · Safety · Provenance · Continuity)
   - Per-axis attestations signed under did:web:csoai.org#card-attestation-1
   - A corrections ledger anyone can append to
-  - Bitcoin OTS anchors for every measurement
+  - Bitcoin OTS: every measurement is stamped; a stamp becomes an anchor only
+    once a calendar commits it to a block
   - A2A + MCP + x402 + C2PA discovery surfaces
-  - 50 signed cards in /public/signed/, 700+ OTS-anchored atoms, 2,224+ queued
+  - 50 signed cards in /public/signed/, 37,522 atoms under one Merkle root
+    (stamped, not yet anchored), 2,224+ queued
 
 OUR DOCTRINE
 ============

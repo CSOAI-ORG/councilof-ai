@@ -299,7 +299,7 @@ def main():
         ots_proof = c["measurement"].get("ots_proof")
         if ots_proof:
             n_anchored += 1
-            print(f"  ✓ OTS-anchored")
+            print(f"  ✓ OTS-stamped (not anchored until a calendar commits)")
         else:
             print(f"  ◐ Card written (OTS pending or not applicable)")
         if c["measurement"].get("evidence", {}).get("digest"):
@@ -324,7 +324,7 @@ def main():
 
     print()
     print(f"  wrote: {n_written} compass cards")
-    print(f"  OTS-anchored: {n_anchored}")
+    print(f"  OTS-stamped (not anchored): {n_anchored}")
     print(f"  queue: {path}")
     print()
     print("  SUMMARY:")
