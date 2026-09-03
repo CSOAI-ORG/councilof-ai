@@ -29,23 +29,59 @@ jobs:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.OPENROUTER_TOKEN }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      AXIS: ${{ github.event.inputs.axis || 'governance' }}
+      AXIS_INPUT: ${{ github.event.inputs.axis }}
       GRADE: ${{ github.event.inputs.grade || '8' }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
+      - name: choose the axis (dispatch wins; the schedule rotates)
+        run: |
+          set -euo pipefail
+          # The cron used to grade 'governance' every hour, so 12 of the 13 millable axes were
+          # never sprayed at all. Rotate by hour: hourly cron covers all 13 in ~13 hours, and the
+          # choice is derived from the clock, so any run's axis can be checked after the fact.
+          # jail is not in the rotation — its bank is not items.jsonl-shaped (see the map below).
+          ROTATION=(governance safety provenance continuity conformance openness \
+                    machinery-conformity care cross-reality detector-interop \
+                    art5-safeguard swarm affect)
+          if [ -n "${AXIS_INPUT:-}" ]; then
+            AXIS="$AXIS_INPUT"; WHY="workflow_dispatch input"
+          else
+            H=$(date -u +%-H); AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="rotation slot $((H % ${#ROTATION[@]})) of ${#ROTATION[@]} (UTC hour $H)"
+          fi
+          echo "AXIS=$AXIS" >> "$GITHUB_ENV"
+          echo "axis=$AXIS ($WHY)"
       - name: fetch public inputs (hub-queue + frozen bank) — public HF, no token needed
         id: inputs
         run: |
           set -euo pipefail
           mkdir -p mill-in/banks mill-out
           curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o mill-in/queue.jsonl
-          # hub-queue uses the board's long axis ids; the frozen banks live at csoai/gspc-<short>/items.jsonl (public)
+          # hub-queue uses the board's LONG axis ids; the frozen banks live at csoai/gspc-<short>/items.jsonl.
+          # The map must cover every axis in mill_hub_queue.MODEL_AXES: an unmapped long id fell through to
+          # csoai/gspc-<long-id>, which does not exist (401/404), so the axis printed "no public frozen bank"
+          # and stayed UNMEASURED for a reason that was a typo, not a fact. Verified live 2026-09-03.
           case "$AXIS" in
-            governance) DS=gov ;; machinery-conformity) DS=mach ;; detector-interop) DS=det ;;
-            art5-safeguard) DS=art5 ;; cross-reality) DS=xr ;; provenance) DS=prv ;;
+            governance) DS=gov ;;
+            safety) DS=agi ;;
+            provenance) DS=prv ;;
+            continuity) DS=asi ;;
+            conformance) DS=mcp ;;
+            openness) DS=oss ;;
+            machinery-conformity) DS=mach ;;
+            care) DS=care ;;
+            cross-reality) DS=xr ;;
+            detector-interop) DS=det ;;
+            art5-safeguard) DS=art5 ;;
+            swarm) DS=swarm ;;
+            affect) DS=affect ;;
+            # jail's bank is csoai/gspc-jail-goldbank/goldbank_jail.json — a code-execution bank
+            # (items[] with code/kind), not an items.jsonl prompt bank. The generic grader cannot
+            # read it, so jail fails closed below and is kept out of the rotation until it has a
+            # reader of its own. Naming it here beats an unmapped fall-through that looks like a typo.
+            jail) DS=jail-goldbank ;;
             *) DS="$AXIS" ;;
           esac
           if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
