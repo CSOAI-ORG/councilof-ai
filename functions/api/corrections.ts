@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0903-01",
+      date: "2026-09-03",
+      what_was_wrong:
+        "The Layer-0 ceremony artifact (/interop/layer0-ceremony-2026-09-03.json, v0.2) listed /api/intoto as one of 15 machine rails, recorded it as returning 404, and explained the 404 as 'the handler exists in master but is inside an undeployed window'. There is no handler. functions/api/intoto.ts exports only helpers (subjectDigest, toInTotoStatement, toDsse) and is imported by functions/api/detect.ts and functions/api/detector-interop.ts, both of which serve 200. No deploy would ever have turned it into a route. A ceremony whose purpose is to attest our own machine surface had invented a door and then explained away its absence.",
+      how_caught:
+        "Live sweep of 25 published surfaces on 2026-09-03: exactly one non-200, /api/intoto. Tracing it showed the file has no onRequest export, and that the ONLY thing on the estate advertising /api/intoto as an endpoint was the ceremony artifact itself.",
+      fix:
+        "Ceremony superseded at v0.3: the rail is removed and the correction is stated in the artifact's own what_this_does_not_claim, first line. The count becomes 14 of 14 serving rather than 14 of 15. in-toto capability is real and reachable through /api/detect and /api/detector-interop. v0.2 was superseded in place rather than kept, because it had no external reference and its OpenTimestamps stamp was still PENDING with no Bitcoin attestation to preserve; had the stamp been upgraded, the bytes would have been kept and a new file issued.",
+      status: "CORRECTED — 14 of 14 rails; the invented door is gone",
+    },
+    {
       id: "C-2026-0902-09",
       date: "2026-09-02",
       what_was_wrong:
