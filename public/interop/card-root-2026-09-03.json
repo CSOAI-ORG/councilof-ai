@@ -1,8 +1,8 @@
 {
   "kind": "csoai.card-root/1",
-  "as_of": "2026-09-03T10:39:18Z",
-  "n_leaves": 113,
-  "merkle_root": "06330987555cba11e74f1753c002bb47d3eb58a1fc311247bf81116f39b633b8",
+  "as_of": "2026-09-03T10:50:00Z",
+  "n_leaves": 178,
+  "merkle_root": "4dbfa219731200231811caa1342dacac7e333e2b44b4c78468bc36ee8c553aca",
   "leaf_rule": "sha256 over canonical JSON (sorted keys, no whitespace, ensure_ascii=False) of the WHOLE signed card — body, id, signature and did — not the body alone. Tree and proof are publish_public_root.merkle_root / merkle_proof, imported not re-implemented.",
   "anchor_rule": "This document is a commitment, not an anchor. It becomes anchored only when an OpenTimestamps proof over these bytes is upgraded into a Bitcoin block; until then the stamp is a pending request. Read the state from the .ots sidecar, never from the existence of this file.",
   "proof_rule": "merkle_proof returns sibling digests only, with no side bit, and the tree combines positionally as sha256(left + right). To verify: start from the leaf, and at each step fold sha256(current + sibling) when the running index is even, sha256(sibling + current) when it is odd, halving the index each step. The leaf's `index` is published for exactly this reason.",
@@ -221,13 +221,22 @@
       "index": 0
     },
     {
+      "leaf": "07e8466ffa414128d3b699390c4788da511a5cdc6db04dad1e157e7504ffdb04",
+      "card": "signed-provenan-cf3a2087cf44.json",
+      "id": "cf3a2087cf4474ff61ecfd3ee80538da8b338939749201edb03e93251e13a04e",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 1
+    },
+    {
       "leaf": "0b170937b4e5cd81fe903c1ecf40de3fe97204faf52b4eded7fb56613d10ac0e",
       "card": "signed-machiner-d9f70a251f5c.json",
       "id": "d9f70a251f5cf4e0b1356927d2f07b2c87d95296dc011a0103632f3062439000",
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 1
+      "index": 2
     },
     {
       "leaf": "0e55656581d4f53a390613ebe69feb5bcd0e375cea866f540406efbe3c34608b",
@@ -236,7 +245,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 2
+      "index": 3
     },
     {
       "leaf": "10004834429b326ed5dd37f0e2752f5ed45710bcd7d001cb9a0f718b06ca7878",
@@ -245,7 +254,25 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 3
+      "index": 4
+    },
+    {
+      "leaf": "10072bb88aa54c786434fb3cf5424d874bf475efcc9ac56de2ce0e60c028eda5",
+      "card": "signed-safety-e9e4ca85b206.json",
+      "id": "e9e4ca85b20660f4b0b95be4b9f3a2a323f9aa21b2c472c07c7ce7c06ded2500",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 5
+    },
+    {
+      "leaf": "128eee17f1702f34ef2fce41ae07011a34a221b43e2ad1b2f667fcc98f9053f6",
+      "card": "signed-affect-ff315703e620.json",
+      "id": "ff315703e620fd4d858b9e0c83b9ca3a78779f1e1970a1e5762d9aa62e6d233f",
+      "model": "microsoft/phi-4",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 6
     },
     {
       "leaf": "14dc8d88a024a1f07133ecb39589b1e74f3a1623eb8b645ffe11c3b9ee9098e5",
@@ -254,7 +281,34 @@
       "model": "zai-org/GLM-5.2",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 4
+      "index": 7
+    },
+    {
+      "leaf": "16721db0b463b6ef5b73227dbd1d9b10a12df2eb2f477a7818b48f24c05aeb2b",
+      "card": "signed-provenan-4cb1f65942a1.json",
+      "id": "4cb1f65942a110e5b5b429949118bd5f1e6090f707638e69f0fc8762920727c2",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 8
+    },
+    {
+      "leaf": "17c777ba7ab49a91f1eb70d79510732b486ef4cedb1c2b2052ae660231cefd4d",
+      "card": "signed-continui-8cdac4ffb0ac.json",
+      "id": "8cdac4ffb0acccbfb7463940ce73b23508049d3649cdbfaed4098d2a1b3e601f",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 9
+    },
+    {
+      "leaf": "17ea32b0b9363fdad6afefba6d7cbcd5491162704670fd730a7ed23ef4990345",
+      "card": "signed-governan-24dbcd5dfa79.json",
+      "id": "24dbcd5dfa79a737ac10a00d5435503641834a2117b112ba08ef2836ee19be11",
+      "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 10
     },
     {
       "leaf": "1d3559b655b40b2f5b817e325fbc690004e175d62620c50e90cc0a3ca3852be2",
@@ -263,7 +317,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 5
+      "index": 11
     },
     {
       "leaf": "1df64be1982584f87003eb2e543ba5a434fd96adbfe0c9d83559d919a21df361",
@@ -272,7 +326,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 6
+      "index": 12
     },
     {
       "leaf": "1e0bd7394be82c7d4bb198b980fe3a9f2b3ce60dfdfd8674beb6a38f180e7052",
@@ -281,7 +335,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 7
+      "index": 13
     },
     {
       "leaf": "1e17c96a14bf1a5e8887d373b3c29dfc5734962050bdeee706860baa7c0c4c44",
@@ -290,7 +344,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 8
+      "index": 14
     },
     {
       "leaf": "1ef2bb8286debe17cd97b9cf73eec80d4d7006c2ea92ecc2cccdd6c720f2d2b7",
@@ -299,7 +353,25 @@
       "model": "google/gemma-3-4b-it",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 9
+      "index": 15
+    },
+    {
+      "leaf": "20ff4a16cbda98fbb26d1ac3a118afa3cc004ea9c98a6f5e042f7bed2e6308db",
+      "card": "signed-continui-16874b152f76.json",
+      "id": "16874b152f7680c0e9ebd6e17736e6e3e06c7eaffe9e0f4b857a2976bf32d68f",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 16
+    },
+    {
+      "leaf": "221089523debcf7413b00f5f9672f654f1ecadc69cd6d6d2612c25bf04879411",
+      "card": "signed-machiner-4695c601eae7.json",
+      "id": "4695c601eae76ff808ff9498b5ee683d4867e85749d7eea3fe9f1510d58d67f4",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 17
     },
     {
       "leaf": "22c956a842acf7e5dbaea528d376bfa37e5e84c99e2c4cbd64fef09eb3352e64",
@@ -308,7 +380,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 10
+      "index": 18
     },
     {
       "leaf": "2380347613aea797b6f01343a8ec53e642027cad8da46f90c9db24d79ab486ee",
@@ -317,7 +389,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 11
+      "index": 19
     },
     {
       "leaf": "25080059dfdea19e3d5f58769358b3cc1acd711f6296d78430e2bd5c10d0add4",
@@ -326,7 +398,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 12
+      "index": 20
     },
     {
       "leaf": "2521b28acfc3bd1cefd0c573864c2be37c457e2976e911e13afdb16a42597050",
@@ -335,7 +407,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 13
+      "index": 21
     },
     {
       "leaf": "2879bb4e489a1e95f3050f9a81a7e0c7cf75d9ea4d8cf8d3270b7dd139872b38",
@@ -344,7 +416,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 14
+      "index": 22
     },
     {
       "leaf": "28ca796e6604cb1e9cd98cd66b5edf66e6f10d0da63b94f7f632238e44e7413a",
@@ -353,7 +425,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 15
+      "index": 23
+    },
+    {
+      "leaf": "2abe33a3ccc4360e8274d39cf09347b8d22ab7d2049710671a288642d71e0da6",
+      "card": "signed-detector-ca882faf07e4.json",
+      "id": "ca882faf07e46a90b4810c5dffb738a6216d0bdcd1ffa29d71b540d1b04c93f6",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 24
     },
     {
       "leaf": "2c602da2832e53abe3660bf36fcf9f725642434c26b492f403865fae0eb3aef9",
@@ -362,7 +443,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 16
+      "index": 25
     },
     {
       "leaf": "2d20e363bb11bc49ab55d67163ef3779f2edd332fbef71d8fbfe2a8d7360d7fc",
@@ -371,7 +452,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 17
+      "index": 26
+    },
+    {
+      "leaf": "2daafbaf076ae4f1d298ca6cb07587ab5e8b453caaced60b33770796a9f687bb",
+      "card": "signed-openness-7bce4161c071.json",
+      "id": "7bce4161c0715299cb25d213807008aa6bcf90152071a2aa78eb1a7cca162afb",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 27
     },
     {
       "leaf": "307c3d50ff6aadf566a38d667620d2710edbe5a37e3d72659f3cb965bbd4b1e3",
@@ -380,7 +470,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 18
+      "index": 28
     },
     {
       "leaf": "30e23edd0ea0fe99c7a26287bfa8ef2c2094f459bb3b9e76dec2fd3991f77ff8",
@@ -389,7 +479,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 19
+      "index": 29
     },
     {
       "leaf": "3349a4aece1de8380b871be83d72f64e648a8c8a3e2f687ade2ad6a9984fa83c",
@@ -398,7 +488,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 20
+      "index": 30
     },
     {
       "leaf": "3354cbb1ac20ed557f11d3daca66fe72ea1b77b8e0ff23232c794a8913f3d3d2",
@@ -407,7 +497,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 21
+      "index": 31
     },
     {
       "leaf": "34afbf927080f35a85b0c689635a690f675455e324a0d1cb4797a2bd36812193",
@@ -416,7 +506,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 22
+      "index": 32
     },
     {
       "leaf": "34edddcea0f268e11003b46e7422a868fe3a3f83365c08c465bc47ecc34ba34b",
@@ -425,7 +515,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 23
+      "index": 33
     },
     {
       "leaf": "35ea32a16f59ef1335d491fb8c3f9e9d25348e7c6def97009817f4c40c3dee74",
@@ -434,7 +524,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 24
+      "index": 34
+    },
+    {
+      "leaf": "36acf51b90b6adebd7e5e440687f5fabc7fb9ea96dbab1f48279fe1859ef609a",
+      "card": "signed-care-dfa6e8ccfaf3.json",
+      "id": "dfa6e8ccfaf311e3d281bb10b16cb96c7156bdda3b2b20d3860940db7a8fd689",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 35
     },
     {
       "leaf": "3703df917166ff9580248b1d34f68a2824b99087b0bd9db4282ca97e5926806f",
@@ -443,7 +542,25 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 25
+      "index": 36
+    },
+    {
+      "leaf": "3753a32f5603c20aaacd80198e7a4bc1754c12f65767310d371afa3173799d92",
+      "card": "signed-detector-2e0db71a0fb4.json",
+      "id": "2e0db71a0fb41e32d3019c0f42237fbba95452fb4a7b371019c15df6bc811181",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 37
+    },
+    {
+      "leaf": "39f9490560e8f1acb2cd0a675d0899b618f33b7952af2cc9ec442854f8f83c6d",
+      "card": "signed-conforma-9fdbaa27f06a.json",
+      "id": "9fdbaa27f06a770a093345c90e2349846bd5575cdd33885553420abddddf7d44",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 38
     },
     {
       "leaf": "3b09ff9591a72be4e4bcd104b8b71d47581618817afbc2c378c710e20468afe6",
@@ -452,7 +569,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 26
+      "index": 39
     },
     {
       "leaf": "3c6a4197699343219793018b69a634f850e0f581d8b428f356d883146929797d",
@@ -461,7 +578,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 27
+      "index": 40
     },
     {
       "leaf": "3c74f3e2f7595c371694ca55fa950fb47a66811ed07804e472d3f41346f839da",
@@ -470,7 +587,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 28
+      "index": 41
     },
     {
       "leaf": "3d32de52a0ced83521952b96537b916aac50fbea59b2ef2f2107034985fe3f07",
@@ -479,7 +596,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 29
+      "index": 42
     },
     {
       "leaf": "3f554f7d276b26b003b6bc68b9eb4d9ae2da5eeb8143fede5e081f716fd00b8f",
@@ -488,7 +605,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 30
+      "index": 43
     },
     {
       "leaf": "41287b7d6cb2d6a9b25d451b11406eaf983f91d2eb279a534d88d44bb923eef4",
@@ -497,7 +614,16 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 31
+      "index": 44
+    },
+    {
+      "leaf": "43ccc43719587913959fdaf3de3baddb87ebfbdd632f5f6a3046bc4740cdd19a",
+      "card": "signed-continui-28afab6326d1.json",
+      "id": "28afab6326d1f44402d8d2ed87e9de228c03b92175b274a0d9e2cbc07d2659c0",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 45
     },
     {
       "leaf": "4563ebc73d14f6f4cfd4847a6945e433f0af0c3b6fb700b2ea2ac7a3412b102f",
@@ -506,7 +632,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 32
+      "index": 46
+    },
+    {
+      "leaf": "4629e7c7e8b3bd8933a0a603662ab754ebf9ce65510ce38198f7af92b39110c4",
+      "card": "signed-safety-25fc66a87310.json",
+      "id": "25fc66a8731046c88ae0276bbb3f46a25a0e1e154e44ce4308ab79ea3a55fb6b",
+      "model": "deepseek-ai/DeepSeek-V4-Pro",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 47
     },
     {
       "leaf": "462e78fc18c6fbdf4c0b7bf76d5b295dcbaf8cdf2a634283192fe3379d89332f",
@@ -515,7 +650,16 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 33
+      "index": 48
+    },
+    {
+      "leaf": "47a39427e5fdca54b838cca2add68c7dba6e27ba1f560acb890e5ccfdb689506",
+      "card": "signed-swarm-ff1969b7da00.json",
+      "id": "ff1969b7da00c5ac85b20f66eec52f07866d831f7b08f39cd2469031918dd555",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 49
     },
     {
       "leaf": "47ce84b185c01b25ca1077c524b914989d218e9e98dd4c5b7716153cecb3c674",
@@ -524,7 +668,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 34
+      "index": 50
     },
     {
       "leaf": "4c8b64e7700e709ff9df9112549667cc40ce152416b012c5c120b7c33bc62daf",
@@ -533,7 +677,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 35
+      "index": 51
     },
     {
       "leaf": "5164536ba087f924041b0c12c45867e139a754a5a9cc1eb4d5c8a1ce804b02ef",
@@ -542,7 +686,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 36
+      "index": 52
+    },
+    {
+      "leaf": "5257b7a29bc9e1298e0f65f5d7f50363288ed0f27e7880df820ff25e3ee339c7",
+      "card": "signed-conforma-8059463bab0e.json",
+      "id": "8059463bab0e68134fbe51ec34843be343ca9b579466959465b3695f1d011e95",
+      "model": "Qwen/Qwen3-0.6B",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 53
     },
     {
       "leaf": "529fd717a483311c7f4fcecb067db50a7876b636709d21dfc5378a21eab20e1b",
@@ -551,7 +704,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 37
+      "index": 54
     },
     {
       "leaf": "5406d0f7c9ac0cddb062f298a6e520444e6b74ab94c9a2a49f04a837fa3acb7e",
@@ -560,7 +713,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 38
+      "index": 55
     },
     {
       "leaf": "567281e29a057320756dd451d54a1f37bee6514c562b4c5f5ba1c130422d0634",
@@ -569,7 +722,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 39
+      "index": 56
+    },
+    {
+      "leaf": "5672f7845c40279e2f5b0481e0e7441cf1450048feebb9ce3ca9627dff195e6c",
+      "card": "signed-swarm-129da43612c8.json",
+      "id": "129da43612c877af599229930a71c7cd4fbf70f3429e6bdf2245885640391677",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 57
     },
     {
       "leaf": "56c1e13852edce33cc38b316bb40d6bbc424ae78c9b4fb016fb0b7a46b4a17ad",
@@ -578,7 +740,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 40
+      "index": 58
     },
     {
       "leaf": "5a4e146dd836cd76984ebfcfe8ca14fd873ad28ae881b56e970de6bfbe921179",
@@ -587,7 +749,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 41
+      "index": 59
+    },
+    {
+      "leaf": "5b0edd3cc54a57c8ff623019de7cd2c62a622ae5e2962905c2fdf4111f447f6c",
+      "card": "signed-openness-f2afc2e4c120.json",
+      "id": "f2afc2e4c120f2ca980d9d8a104d94d11d63b14b035141b2400368e5c5d11bb6",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 60
     },
     {
       "leaf": "5c2faed680824117a611fe0b3634013d8947d16bef2ad83a75b9978147df5622",
@@ -596,7 +767,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 42
+      "index": 61
+    },
+    {
+      "leaf": "5d5e0fd9a1ae44c4295d942669e62c29ac9cc3a5427aa48eef4340a399085edd",
+      "card": "signed-safety-90e9222610e1.json",
+      "id": "90e9222610e1be2923d19a3a1c2eb39845788bd8d52b13698e7ddf8a2924c822",
+      "model": "microsoft/phi-4",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 62
     },
     {
       "leaf": "5ec132dabe7fabdd3c307504f16f69fcb9a7b07c5fd204b2b103a4d372bd494c",
@@ -605,7 +785,25 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 43
+      "index": 63
+    },
+    {
+      "leaf": "5fb82f306bc482633b14a6c257710b20a870945fd224dbe86e3978a022dcd907",
+      "card": "signed-affect-bf0e0e79606b.json",
+      "id": "bf0e0e79606bb249035e556e121b276d61994d5518978dfbcf717f88725bcac3",
+      "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 64
+    },
+    {
+      "leaf": "64783d5a094a1e5d1576ae450caa7f38948ac896450a48493903b691907d2771",
+      "card": "signed-affect-d6aa2bd09eec.json",
+      "id": "d6aa2bd09eec738c1a492c313efbba6c2d69413060eff8395c5936295163c939",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 65
     },
     {
       "leaf": "64ba1e3bf90fb669ce94e92cffefcbd754137e1ac9814e910fe9db4421ac3f33",
@@ -614,7 +812,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 44
+      "index": 66
     },
     {
       "leaf": "6536c7006ac0d7993153d57d78fab710be9cc67eb80329d652e523611b1e128c",
@@ -623,7 +821,43 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 45
+      "index": 67
+    },
+    {
+      "leaf": "6562ab68af639362368e211f0b6a8c082a0329e670edea5f35568918bbb4022e",
+      "card": "signed-detector-b5e5149255af.json",
+      "id": "b5e5149255afb5fca9bb165ee23cd02b5efc97514c97c344419bdbfe8df8388a",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 68
+    },
+    {
+      "leaf": "666e0d200061d2da75911cd6e65fe79300e81d94743bb1cccbb03908e8ec0782",
+      "card": "signed-governan-3261417a64c1.json",
+      "id": "3261417a64c187056f5bfabafa6ea86fb5c01723b605e77ab72fdbf03cccf05b",
+      "model": "deepseek-ai/DeepSeek-V4-Pro",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 69
+    },
+    {
+      "leaf": "67736200a591b10eca3449600834821a3a420bebb5af747144957312e0fc748e",
+      "card": "signed-care-3032b07f97ed.json",
+      "id": "3032b07f97ed26996d943ee4a5a663f333b3c281dc567944e8eb03b3ed4e32b6",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 70
+    },
+    {
+      "leaf": "688a236e4c152b2d2e31bcf43455b088b8fc7c5968e0f042a594e11b9e008c2f",
+      "card": "signed-safety-4fec965a960b.json",
+      "id": "4fec965a960b9896737fa8fe8aede4bd0e06fb9803611ec1743898e36bff5b88",
+      "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 71
     },
     {
       "leaf": "68c6dd2152e268ea428c170301e015998ab409bb079be4d717da4c11dd6fd8ff",
@@ -632,7 +866,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 46
+      "index": 72
     },
     {
       "leaf": "6bce07c29de01ba75957813ac02897b8908088d251ae5aa280d172d98dba0e42",
@@ -641,7 +875,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 47
+      "index": 73
     },
     {
       "leaf": "6bce548e808e839847ecec3ad017248fa75eaeeefd8b71ee792d013a8a9d600a",
@@ -650,7 +884,7 @@
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 48
+      "index": 74
     },
     {
       "leaf": "6c360379c666d88c79b1899472b07773b0a0836f263322c37fcfcf645ce6e694",
@@ -659,7 +893,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 49
+      "index": 75
     },
     {
       "leaf": "6d6b93a534abee3d1f7c33df523325a9e2e68bb07a5e15418e4ea8c0a3a82486",
@@ -668,7 +902,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 50
+      "index": 76
     },
     {
       "leaf": "6dba43ab9bd815a2b3b1f9ae8d164758e87261e6f1c3ed6e28e7a1417ab35b46",
@@ -677,7 +911,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 51
+      "index": 77
     },
     {
       "leaf": "6f5ef0ca718b4879c9ffe296fabeade7a5267189e7d67d1374b330a0a3f9fc4e",
@@ -686,7 +920,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 52
+      "index": 78
     },
     {
       "leaf": "709811bc782acd77d5a947f196dd6b941f1799c296177b92861b6d45221818bf",
@@ -695,7 +929,16 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 53
+      "index": 79
+    },
+    {
+      "leaf": "71e9553c4d9dd478a3078463488dbc06849a25753980fc92783b55be10c5fb44",
+      "card": "signed-provenan-681b48b86279.json",
+      "id": "681b48b86279a734e1e1e5857adcbb53cef112e07e027d15be8943d1b5cd87a6",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 80
     },
     {
       "leaf": "74fd4156513529453ccc39c606eaf123df2c60730fb19ea337cf6df126afd529",
@@ -704,7 +947,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 54
+      "index": 81
     },
     {
       "leaf": "7647cbd39ea27d8e615c88d85aa868de2b967219ad6d4385d42fb429a101dc66",
@@ -713,7 +956,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 55
+      "index": 82
     },
     {
       "leaf": "7649d0f7b23bf9ab4f26ff791fee7e5c4e2fbe47cdfa0cb09545d635b095d674",
@@ -722,7 +965,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 56
+      "index": 83
+    },
+    {
+      "leaf": "76f26b994eba36ad1ab9c0199dd5ce174d504ecf46e9cf4654676dd7fac2db78",
+      "card": "signed-machiner-fdf27bbbd634.json",
+      "id": "fdf27bbbd63408d53b7b6f3d58180fe4479f9e45ef00558314a96758fc4ea4b7",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 84
     },
     {
       "leaf": "771f622353f39527961fc8af11ce6c7090dcec6c935688522776f9d074376587",
@@ -731,7 +983,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 57
+      "index": 85
     },
     {
       "leaf": "7743266d4dcb6a65814b3ba1433e9f0150a2e4c5ea40d0d2961c5633efcfbb5e",
@@ -740,7 +992,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 58
+      "index": 86
+    },
+    {
+      "leaf": "7b8eefd96b0ff379e94f0a4e2154fecf2aaab4e9007a29b1f6d9d4ce2ab058b8",
+      "card": "signed-swarm-50467a937941.json",
+      "id": "50467a93794110f940dadacd9f3efa409f7ec6557fd383173ac683ddca396ead",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 87
     },
     {
       "leaf": "7c4edbadc3584b478ad2327aaf601ece45ce7654279e7f042846da30d4a61e11",
@@ -749,7 +1010,16 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 59
+      "index": 88
+    },
+    {
+      "leaf": "7ceb4e76b247e15c04c373a7aaf4680a7ebd064fb32c440b1a8b4bc70e62b978",
+      "card": "signed-continui-e89f162b9fbb.json",
+      "id": "e89f162b9fbb23248ce78695100b3961176800d8dd9dfd98882dd17349f6b0d1",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 89
     },
     {
       "leaf": "7e0b4acb956303143e3681203870bf30e75404fff206be25568a0b3cb5a4f115",
@@ -758,7 +1028,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 60
+      "index": 90
     },
     {
       "leaf": "7fe9d6038e7b6f544d4e8675864899002d008af8f3ada823f840aeb39d21a385",
@@ -767,7 +1037,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 61
+      "index": 91
     },
     {
       "leaf": "802b11a6ab42c289c0e70a8333c243e814dc1b3c251c8510a3e9158b95d3e723",
@@ -776,7 +1046,25 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 62
+      "index": 92
+    },
+    {
+      "leaf": "813526e4d684018ab39f62f2d6565768bb4bab8d01631a4b19d9461a4535decc",
+      "card": "signed-openness-66e5aa402465.json",
+      "id": "66e5aa4024659575bdb060bf89f1581d03d1083ae769d98239d72e236279e080",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 93
+    },
+    {
+      "leaf": "82273ed56b6948c6ec912ddede1e4f139bbfb0d38f09e75569d14447832087a9",
+      "card": "signed-safety-36b40f2ed934.json",
+      "id": "36b40f2ed93476172deed06744394530244892b6c322fdc97be602e9aa5f1d8e",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 94
     },
     {
       "leaf": "822f1198bcb5d2b8cf63b52e86370a47e3e16e63bf9e4e47d63bb0b2768e41d6",
@@ -785,7 +1073,25 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 63
+      "index": 95
+    },
+    {
+      "leaf": "82eaef8ae3fa01d8fa17b4a760c5fe0042feb0b6af56dacc7f1c8e8a01d221e7",
+      "card": "signed-continui-91b64878007e.json",
+      "id": "91b64878007e88daec9cf6d5dead476a540c26328324f1b41889496c27d57d6f",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 96
+    },
+    {
+      "leaf": "8328d2896d9078ef0a366fed28e7530c7b5bf06b762a3525ad31583fa8882d88",
+      "card": "signed-governan-7fc7b575c7b8.json",
+      "id": "7fc7b575c7b83dad3e83b141c46e41c301ba897dba837a4a0093ca70160c89d5",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 97
     },
     {
       "leaf": "83a2386b259e019fc9cdd701da6bfdcc1d39c8e773b7e1df61bc43890256d8ca",
@@ -794,7 +1100,25 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 64
+      "index": 98
+    },
+    {
+      "leaf": "84743c924776f4659fda9183105518d188dfe3929973b3bb90e3b1495c5b0eb7",
+      "card": "signed-safety-4a1a7875c78c.json",
+      "id": "4a1a7875c78cc730c85dacf4491ad383a0292469cf0a0559092ad0fc2751c356",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 99
+    },
+    {
+      "leaf": "8b871f1e7e67ab00f971d898ad5c1ada17977d31773f55f116c0fedc83fa3bf2",
+      "card": "signed-conforma-84d638cec293.json",
+      "id": "84d638cec29314b37ce0ec0a287f0793b4b332cca6585058632ee24552072337",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 100
     },
     {
       "leaf": "8dc89fa6b61196e8fb9e647390ce5a7a0bcfe321893fbc819d326ee4dd046431",
@@ -803,7 +1127,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 65
+      "index": 101
     },
     {
       "leaf": "8de3067f9753f151f5c25ecbec23d419aa0c319fec2c5d1fc05987200936199f",
@@ -812,7 +1136,16 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 66
+      "index": 102
+    },
+    {
+      "leaf": "8e00f9ccd8ee0b0033eaf7dda160fa6cab2afbc8c7208747ea6d65c0e0d7e4df",
+      "card": "signed-detector-e9503a651df9.json",
+      "id": "e9503a651df9a779ccaab5e826797ac486682882ed594e18781717bb184dfba8",
+      "model": "deepseek-ai/DeepSeek-V4-Pro",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 103
     },
     {
       "leaf": "92da888944e87b1478bb542809329fc6ca7f6bb0af53cf00d1b4b88a9ff44f67",
@@ -821,7 +1154,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 67
+      "index": 104
+    },
+    {
+      "leaf": "93c0c0fe41688b0e56ed6d3975c57a78985ad1f3f7371b020948e21809ee8670",
+      "card": "signed-governan-bb4f7a896347.json",
+      "id": "bb4f7a8963476fa644cadc12fa042406e16586031175dc7ba6dfaf44630b3299",
+      "model": "microsoft/phi-4",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 105
     },
     {
       "leaf": "93e44ae790213f834181c44f4a9bade1ec69ab57e7deb815ab7b37576b270387",
@@ -830,7 +1172,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 68
+      "index": 106
     },
     {
       "leaf": "93fb2d615d2dc55b9a3ce87fa110261c8ea067be4c43dd5d6fae847c4d3eb2cc",
@@ -839,7 +1181,25 @@
       "model": "zai-org/GLM-5.2",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 69
+      "index": 107
+    },
+    {
+      "leaf": "9456bc7256ad36d7ceada987d6fca6471dca6fd218e2acc1aa94b5fd0fe23355",
+      "card": "signed-cross-re-a63776fc61e6.json",
+      "id": "a63776fc61e610411d0cb704b0720e20ea5ff7860f0be97b67326e4ab572f56b",
+      "model": "Qwen/Qwen3-14B",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 108
+    },
+    {
+      "leaf": "958bd6f7030f15d1149af11e2c60e166e2a22853c056710d901feaf48e356478",
+      "card": "signed-care-db131d9da85c.json",
+      "id": "db131d9da85cb3123169db603fee31a6d2a1f6c95ec302f47b803d69c03058c6",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 109
     },
     {
       "leaf": "97a99e6b4eee84bb8728e488f0a03d6d1a0788cf97f133c453af60b5332acffc",
@@ -848,7 +1208,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 70
+      "index": 110
+    },
+    {
+      "leaf": "98d33dea4315e9c67ebe15f2aa1243c6fedd9a662863ebbecd6af4ebd7d0925d",
+      "card": "signed-provenan-9c60368f0d39.json",
+      "id": "9c60368f0d390d0baf8ed64212d571c3536dc4fd8ac259734ae24a93d2b25458",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 111
     },
     {
       "leaf": "9946278c167a7a3da9298bf73a5d18dbc9314dcccd32d2841cf4da2174b1cdce",
@@ -857,7 +1226,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 71
+      "index": 112
+    },
+    {
+      "leaf": "9a815178b9984d015a7288ff05965258bf97b0c93f037cb16bcfa03eacbe92dd",
+      "card": "signed-care-bb112e30ed0c.json",
+      "id": "bb112e30ed0cae936e25254ac9eaf033ae4338da3d73b59e3d4f5ce8bf390c52",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 113
     },
     {
       "leaf": "9f456d4ae8d78bb7eabe3c54ced58cc3e76177c2f05cc91c3cc674ec6ba50fa4",
@@ -866,7 +1244,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 72
+      "index": 114
     },
     {
       "leaf": "a0af153629f14eaad2064fb77523f8f75dcdfb458d2b4e2cad1e1fa503197702",
@@ -875,7 +1253,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 73
+      "index": 115
     },
     {
       "leaf": "a0f6e07356ab5fecb48b875296e04f51c69abe5060b81bcf2e4a91be75fea895",
@@ -884,7 +1262,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 74
+      "index": 116
     },
     {
       "leaf": "a1088dee17550930edc063350f2931016e19dceb092d03f19fe0b1dfc2bd1c85",
@@ -893,7 +1271,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 75
+      "index": 117
     },
     {
       "leaf": "a2c002c948511d17b2b40a997c0efcab9c0d3f3592e06d2da604c7a12ac2b68b",
@@ -902,7 +1280,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 76
+      "index": 118
     },
     {
       "leaf": "a33bf4d241b0e0ae3bc94430e4bd5aa34c59cf2136dc02fba3abd280917a195f",
@@ -911,7 +1289,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 77
+      "index": 119
+    },
+    {
+      "leaf": "a59b50b4482d42f5b66509aae366b84cbc4ce154e62d5461819198e0ec100c2d",
+      "card": "signed-affect-3d8b527f3806.json",
+      "id": "3d8b527f3806cb3d34e586f787a773d4328a112e24e8980b93c83f0795f44d9e",
+      "model": "deepseek-ai/DeepSeek-V4-Pro",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 120
     },
     {
       "leaf": "a5f776dcfde69b04fad481ef445209431d45a79a2dfd5280b46218e0af89686a",
@@ -920,7 +1307,16 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 78
+      "index": 121
+    },
+    {
+      "leaf": "a724ecf20cbb3b5d6c41b8ae78157d6a9dade315334b307ac09b767f069d2032",
+      "card": "signed-conforma-eb091aee1ffc.json",
+      "id": "eb091aee1ffc449dbaf996983e0c4cfbb0f4cdcb2c69f2f39a1d05a1fce7ac71",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 122
     },
     {
       "leaf": "a97fdc96a0bf7084c60663228d574aa32426de2541a0fe7412f2986d0a028526",
@@ -929,7 +1325,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 79
+      "index": 123
     },
     {
       "leaf": "a9a85a21d0eb3e8b3031b5bbd5ec39e069a9b5abc7eebe5b5318d87b5f3513d8",
@@ -938,7 +1334,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 80
+      "index": 124
     },
     {
       "leaf": "ab8b512f284c3c0404af6815deebd2d5b1cb9769811f15fbc5f9e32fe509196a",
@@ -947,7 +1343,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 81
+      "index": 125
+    },
+    {
+      "leaf": "adfa94a5dcea205aaf663f406ba66737dd8ccef6c16d7bb31d03861ab76e04dc",
+      "card": "signed-governan-ec6ecd7f2240.json",
+      "id": "ec6ecd7f22406b1eef946ce1b3ffd20f68149d8760b4d80d7cf482835a8f99d0",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 126
     },
     {
       "leaf": "ae82a4045eff9264b62ead69e4b1f76b86a570837a3eb171254332c8a98cd78a",
@@ -956,7 +1361,43 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 82
+      "index": 127
+    },
+    {
+      "leaf": "af000578ee0b4263483884c1183fbe8dc408814035209b60b988049f6e99542c",
+      "card": "signed-governan-c50c172f4f29.json",
+      "id": "c50c172f4f293573e3a0fa67f1eae0d867621375a251b4a177d76229e0378ed8",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 128
+    },
+    {
+      "leaf": "b315d7c421d2d213b579d5286711dad6425521e5f893703a341423728242e46e",
+      "card": "signed-openness-0c53b715a85e.json",
+      "id": "0c53b715a85e402ed1106aa254efd28d36ed7f5db8d56aec892e66d4b05a718e",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 129
+    },
+    {
+      "leaf": "b342272b2459221e78f566c997d3d373526123824106db32b1c59fcc73881ab9",
+      "card": "signed-swarm-8531d3245c4c.json",
+      "id": "8531d3245c4cfc748cea0867b541cdf9337de278265e977af1051ad007f2646f",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 130
+    },
+    {
+      "leaf": "b41208630465a130dcd7577dcadb158a04d1aea9fc51f498b30bf7e844273a3a",
+      "card": "signed-conforma-c49b3804c52c.json",
+      "id": "c49b3804c52c6ff9c892e8cfe1360d2df96deae14221a2a969f5a72e71ffaa17",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 131
     },
     {
       "leaf": "b44e285e119cbf83b6cbbca49e621871586d9f263ef33ac100d494a30f927ebb",
@@ -965,7 +1406,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 83
+      "index": 132
     },
     {
       "leaf": "b4565030c144ced878f19fb75959819f12fea9e036d426d9816a42e299f98810",
@@ -974,7 +1415,25 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 84
+      "index": 133
+    },
+    {
+      "leaf": "b54a32f5753cece5e486a5f54146f85904afbd499434c73b1d2e70f7a37afc9d",
+      "card": "signed-care-a37123252459.json",
+      "id": "a3712325245993621369d0662dd955aaa8eee57c11e111ef7c57c549c78207b5",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 134
+    },
+    {
+      "leaf": "b8b1d0ae6f6bff7853762b6d03eb1179a359ca2b4e2813789f9162db65e376dc",
+      "card": "signed-swarm-2da50e80e5f4.json",
+      "id": "2da50e80e5f4292c028106146af784ae182ebb8b3b72046464dc640d2320c0fb",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 135
     },
     {
       "leaf": "bb2dc342ba5525980f0b17a6f86de6859e5c9893f51ca9a608f617bb6e2c3ef3",
@@ -983,7 +1442,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 85
+      "index": 136
     },
     {
       "leaf": "bd575b165c3c054e3dabb72aa924c330cf4b77c31ccc4b6e3fb6ab49a6a54ba8",
@@ -992,7 +1451,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 86
+      "index": 137
     },
     {
       "leaf": "bfbf0951bec69ac6e51856e1a8baf6f5cf4f0942867648f6576661cdadb95625",
@@ -1001,7 +1460,16 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 87
+      "index": 138
+    },
+    {
+      "leaf": "c33cca47a1bdd5a4ab5fd71bfab8d3e0e0374ae72c4f3a766c50e70b4e8a48f7",
+      "card": "signed-detector-766aa7b906b7.json",
+      "id": "766aa7b906b76de64754ae201de564284084b1ca5c048da74c397f14aa38fb6f",
+      "model": "microsoft/phi-4",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 139
     },
     {
       "leaf": "c75fa20e2d6f3761210bd659e8e907cebdd5ab51496919f87bde6e43f01d8485",
@@ -1010,7 +1478,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 88
+      "index": 140
     },
     {
       "leaf": "c7dbe8ae8596a49116f127ef137bdde6fd77cce145c548ef203151bdf6840f74",
@@ -1019,7 +1487,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 89
+      "index": 141
     },
     {
       "leaf": "c87cd5c66b0d39a8fc227d280f64fc482df07d0c0fe83f6ecb4f637ddb280fc6",
@@ -1028,7 +1496,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 90
+      "index": 142
     },
     {
       "leaf": "c8d911fa511dd0baf4fda12b912d8159d60571710867c3fd427d64288621dbdc",
@@ -1037,7 +1505,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 91
+      "index": 143
     },
     {
       "leaf": "ca9187fcf5b2fec074d6c75737f9fe41c574d81aa1306412321202843e4f3220",
@@ -1046,7 +1514,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 92
+      "index": 144
     },
     {
       "leaf": "cb90f6b6724076f87d58a444bdc0f110fa30b331cb3c37a64c8fd118d65f047f",
@@ -1055,7 +1523,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 93
+      "index": 145
+    },
+    {
+      "leaf": "cd92dfdd45a58c296a4386167ea9a34ac5b731d22ddcfa2253471ad32e1aec00",
+      "card": "signed-cross-re-82a23f39a46b.json",
+      "id": "82a23f39a46b88797a050edf8bed88c73c9974472615400fc438e81be4b3dd41",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 146
     },
     {
       "leaf": "cefb607a107c727769979ef78f63a30d4eff9f887460b25752461c6118249025",
@@ -1064,7 +1541,16 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 94
+      "index": 147
+    },
+    {
+      "leaf": "cf31914481e99e039b06e62feb362bece1225d5db76284e524e7258dcb146707",
+      "card": "signed-governan-5ce78a4eb84e.json",
+      "id": "5ce78a4eb84e9fa787d8b4c27898fd5ee1aa618975e96ae91c057e66d4cf71c6",
+      "model": "Qwen/Qwen3-32B",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 148
     },
     {
       "leaf": "d038ea5a95ac1b23ba109ec7509ce9ee85e0c4e2ca20446766b90a85c4278787",
@@ -1073,7 +1559,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 95
+      "index": 149
     },
     {
       "leaf": "d1dd2437317e09f4226fc8f1e6219445b074e947d3c198bb0a718093ad8340cf",
@@ -1082,7 +1568,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 96
+      "index": 150
     },
     {
       "leaf": "d2d2da71f9bb195be6c49a424a01f8246056f573cce894aad2bed48dac09c9fe",
@@ -1091,7 +1577,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 97
+      "index": 151
     },
     {
       "leaf": "d51b904b4698b98fd0e2074ddd5cb171327e8f215af76e117bc2c2e93ab06f57",
@@ -1100,7 +1586,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 98
+      "index": 152
     },
     {
       "leaf": "d5703fa33f5f19540e40de5b6ef058be9cf010013e4baa9eaafcd1683720adb0",
@@ -1109,7 +1595,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 99
+      "index": 153
+    },
+    {
+      "leaf": "d73bf4c4122e69402948e3b3f75fdcd61d3a77ad75ec10c14f27e49b459c5c22",
+      "card": "signed-cross-re-570543c393ad.json",
+      "id": "570543c393ad6c687f992b076f280e9bfc429cb0add3fcd297f70fc946a5186c",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 154
     },
     {
       "leaf": "d81de061a4f44587d817710ff38aeaff4c2b92e0fcaa822a09b766e5a4f9f2bb",
@@ -1118,7 +1613,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 100
+      "index": 155
     },
     {
       "leaf": "d8ad6bfabc6f14c8e8e31b50a065406094d54f72e0397c2d8c56217bef129fa8",
@@ -1127,7 +1622,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 101
+      "index": 156
     },
     {
       "leaf": "d8cdc0912fba531516577c73e912fa39fae9036a662fc22a8a2c5cb95fd07c5d",
@@ -1136,7 +1631,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 102
+      "index": 157
     },
     {
       "leaf": "d93810e4a975bfab2c9ff21b2dd8a3df50e1159139786f358755030e00a9f81c",
@@ -1145,7 +1640,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 103
+      "index": 158
     },
     {
       "leaf": "dd84bed2d56d9ba81b291fece3f6901556c983872f8a051bef4a4fccb3383117",
@@ -1154,7 +1649,25 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 104
+      "index": 159
+    },
+    {
+      "leaf": "e677be819b9206e8a599cbd390b3117f587ba1ddc626385bedc13f070d970b3a",
+      "card": "signed-care-cebad21d0399.json",
+      "id": "cebad21d03994d4c17d7b483232af8929aa59c1e21dd884c36df5a62ffae09ad",
+      "model": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 160
+    },
+    {
+      "leaf": "e779e4371528dce85cfaa6a18d7862dc1ebdc9110d41c5cdd6b13f55c2f06c6e",
+      "card": "signed-safety-0fed9caea3e0.json",
+      "id": "0fed9caea3e0d02d9c4559bd98f9caae8869b923afb5a83bc5ad5f34a3e78373",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 161
     },
     {
       "leaf": "ec0cc57632fc7656fafd2a83ac4e379182ca3676796f843f5b67d7c21786a693",
@@ -1163,7 +1676,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 105
+      "index": 162
     },
     {
       "leaf": "ece99d39b39e6ce033eedfea21dfd740a9b34059b2e622010bc1eab02405a01e",
@@ -1172,7 +1685,25 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 106
+      "index": 163
+    },
+    {
+      "leaf": "ef426ee8f4fa91cbfe49cf337292551e3f8efbf414e891067d5fd8cc1d184617",
+      "card": "signed-conforma-6364c0c2e76f.json",
+      "id": "6364c0c2e76f32c143c938306331a85fd9ac7707de5465a8d40701292655d514",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 164
+    },
+    {
+      "leaf": "f101f5227a8f64b5e7d8e78e63445bd1bf3e7e480c28338d4835b7946d608377",
+      "card": "signed-affect-da180f087fc4.json",
+      "id": "da180f087fc44fca9076a406d281bae6285243adfa960b49dc9c756fbd51e90c",
+      "model": "deepseek-ai/DeepSeek-V3-0324",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 165
     },
     {
       "leaf": "f14ed81502a6483171459febe42c5ddcc3f96ddc92568eda141d1048cc36fc5b",
@@ -1181,7 +1712,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 107
+      "index": 166
     },
     {
       "leaf": "f1ebdd80826a53a6a93705d0d7d8e00361c87013856b5e666120436dcabbce53",
@@ -1190,7 +1721,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 108
+      "index": 167
+    },
+    {
+      "leaf": "f1ec876ba04dac35d74e0368ef16e705328929242d9ef1bb98d9c468a02b6ec9",
+      "card": "signed-openness-cc9dde9bf7c4.json",
+      "id": "cc9dde9bf7c49dc383712e1f9b090ab0a5310ed331e16fc9850302e51f5b64bd",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 168
     },
     {
       "leaf": "f55ccef7067a6f3dbdf72d8f67701cb9d8f5dcf538f77b93539724cfe26b71c2",
@@ -1199,7 +1739,43 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 109
+      "index": 169
+    },
+    {
+      "leaf": "f615d82713639559bfbf73589e08718098d9e1ed7dbcb40524ab768df03d97a8",
+      "card": "signed-affect-8f092b7b3bcc.json",
+      "id": "8f092b7b3bcc742181304ab6d62c00f3023c918aab7bd3feb4166cf29905bea9",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 170
+    },
+    {
+      "leaf": "f63f1e66945596e335349b4937452c6b644f7909da2a19c41af8aabcefeef4b5",
+      "card": "signed-detector-e1aa36b94d0f.json",
+      "id": "e1aa36b94d0ff5c3880095d432943875fc2c357f29d50706dc1c9bb2130a58cc",
+      "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 171
+    },
+    {
+      "leaf": "f7f61897a0fd1efb6836560ca3b6d6a017e69c6772626de7a9f71a5c52cadd1a",
+      "card": "signed-machiner-35ec29499e74.json",
+      "id": "35ec29499e740955aae3806c12352dc9c6a9b40d8c81f538f4c9bf833b6f5565",
+      "model": "Qwen/Qwen3-14B",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 172
+    },
+    {
+      "leaf": "fa5d7fd89717cf28372850a0be7afc1955276127e775f1b48bb3a44540a93ab7",
+      "card": "signed-openness-65bff9ff2d68.json",
+      "id": "65bff9ff2d688687a4aadb422ddb32fe72b874a60d63445719de4393c41b2fea",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 173
     },
     {
       "leaf": "fc19c085084eebcf59be60610d9a4f2c52795b29b8382afe46e4f3ebc01d8678",
@@ -1208,7 +1784,16 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 110
+      "index": 174
+    },
+    {
+      "leaf": "fc875ae40c3eedfc0d1be5399dd3392d4e58dd6bba8afd160df9949ae1d73cd3",
+      "card": "signed-governan-a3070fcfdb76.json",
+      "id": "a3070fcfdb764bd4f53b26526d60f12d9aaf0b0fda7a559a690576171d04ca25",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 175
     },
     {
       "leaf": "fd1ac9e20f95f11c4471df6e823faba128fb5d89430e8e068d574762a6c71e24",
@@ -1217,7 +1802,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 111
+      "index": 176
     },
     {
       "leaf": "fe1c3e0cc4469f039f41507beb34efa22f8d4c429ab023e050682b5941bbd092",
@@ -1226,7 +1811,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 112
+      "index": 177
     }
   ]
 }
