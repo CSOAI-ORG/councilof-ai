@@ -1,0 +1,555 @@
+# Council of AI — llms-full.txt (AI-agent discovery companion to llms.txt)
+
+## 1. THE LID
+
+The 22-axis GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
+Measurement, not certification. Anyone can re-check.
+
+## 2. THE LIVE BOARD
+
+```json
+{
+  "schema": "csoai.gspc-axes/0.5",
+  "as_of": null,
+  "totals": {
+    "axes": 22,
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "quotable_axes": 22,
+    "public_count": "22 axis \u00b7 22 measured",
+    "model_fleets": 14,
+    "fact_runs": 8,
+    "count_grammar": "22 axis are on the board and every one carries a measurement \u2014 no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
+    "by_family": {
+      "gspc": {
+        "axes": 14,
+        "measured": 14,
+        "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically."
+      },
+      "financial": {
+        "axes": 8,
+        "measured": 8,
+        "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs \u2014 issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below \u2014 measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05)."
+      }
+    },
+    "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 \u2014 the un-swept state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader \u2014 measured is not the same as scored \u2014 but each has a signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
+    "license": "CC-BY-4.0",
+    "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field \u2014 fixed same day.",
+    "items": 969,
+    "items_note": "items sums each axis's n. The n of the one measured financial axis counts ISSUER ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+    "comparison_axes": 14,
+    "separated_leads": 1,
+    "ties": 2,
+    "untested_separations": 11,
+    "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
+    "externally_led_axes": 3,
+    "public_leader_count": 3,
+    "lid": "22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
+    "own_leaders_excluded": 8,
+    "own_leaders_excluded_axes": [
+      "governance",
+      "provenance",
+      "continuity",
+      "conformance",
+      "openness",
+      "care",
+      "art5-safeguard",
+      "affect"
+    ],
+    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 3 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched \u2014 measurement happened; it is simply not published as a public ranking of our own model.",
+    "uncarded_leaders_dropped": 3,
+    "uncarded_leaders_dropped_axes": [
+      "machinery-conformity",
+      "cross-reality",
+      "detector-interop"
+    ],
+    "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED \u2014 the fleet aggregate (fleet_mean) is a real measurement \u2014 so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
+    "mean_macro_f1": 0.944,
+    "mean_accuracy": 0.6398,
+    "mean_fleet_mean": 0.5447,
+    "mean_harm": 0.4877,
+    "mean_unparsed_rate": 0.0541,
+    "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet \u2014 the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
+  },
+  "axes_count": 22,
+  "axes": [
+    {
+      "axis": "governance",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 237,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "safety",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 36,
+      "accuracy": 0.944,
+      "separation": "TIE"
+    },
+    {
+      "axis": "provenance",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 32,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "continuity",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 33,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "conformance",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 35,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "openness",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 32,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "machinery-conformity",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 33,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "care",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 199,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "cross-reality",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 32,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "detector-interop",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 33,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "art5-safeguard",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 36,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "swarm",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 37,
+      "accuracy": 0.384,
+      "separation": "SEPARATED"
+    },
+    {
+      "axis": "affect",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 41,
+      "accuracy": null,
+      "separation": "UNTESTED"
+    },
+    {
+      "axis": "jail",
+      "status": "MEASURED",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "n": 71,
+      "accuracy": 0.5915,
+      "separation": "TIE"
+    },
+    {
+      "axis": "provenance-controls",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 6,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "reserve-attestation",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 16,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "regulatory-framework",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 16,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "distribution-integrity",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 16,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "custody-disclosure",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 16,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "ai-adoption-components",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 2,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "labour-components",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 2,
+      "accuracy": null,
+      "separation": null
+    },
+    {
+      "axis": "humanoid-labour-index",
+      "status": "MEASURED",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 8,
+      "accuracy": null,
+      "separation": null
+    }
+  ]
+}
+```
+
+## 3. THE 22 AXES — deep reference
+
+### governance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 237
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/governance.html
+
+### safety
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 36
+- accuracy: 0.944
+- separation: `TIE`
+- page: https://councilof.ai/axis/safety.html
+
+### provenance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/provenance.html
+
+### continuity
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/continuity.html
+
+### conformance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 35
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/conformance.html
+
+### openness
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/openness.html
+
+### machinery-conformity
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/machinery-conformity.html
+
+### care
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 199
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/care.html
+
+### cross-reality
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/cross-reality.html
+
+### detector-interop
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/detector-interop.html
+
+### art5-safeguard
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 36
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/art5-safeguard.html
+
+### swarm
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 37
+- accuracy: 0.384
+- separation: `SEPARATED`
+- page: https://councilof.ai/axis/swarm.html
+
+### affect
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 41
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/affect.html
+
+### jail
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 71
+- accuracy: 0.5915
+- separation: `TIE`
+- page: https://councilof.ai/axis/jail.html
+
+### provenance-controls
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 6
+- separation: `None`
+- page: https://councilof.ai/axis/provenance-controls.html
+
+### reserve-attestation
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/reserve-attestation.html
+
+### regulatory-framework
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/regulatory-framework.html
+
+### distribution-integrity
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/distribution-integrity.html
+
+### custody-disclosure
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/custody-disclosure.html
+
+### ai-adoption-components
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 2
+- separation: `None`
+- page: https://councilof.ai/axis/ai-adoption-components.html
+
+### labour-components
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 2
+- separation: `None`
+- page: https://councilof.ai/axis/labour-components.html
+
+### humanoid-labour-index
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 8
+- separation: `None`
+- page: https://councilof.ai/axis/humanoid-labour-index.html
+
+## 4. THE CORRECTIONS LEDGER
+
+```json
+{
+  "schema": "csoai.corrections/0.1",
+  "policy": "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on.",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "corrections": [
+    {
+      "id": "C-2026-0902-09",
+      "date": "2026-09-02",
+      "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
+      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
+      "status": "CORRECTED \u2014 signed freeze is 22/22 and agrees with the live axis arrays"
+    },
+    {
+      "id": "C-2026-0902-08",
+      "date": "2026-09-02",
+      "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
+      "how_caught": "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
+      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled 
+```
+
+## 5. THE SWIFT CENSUS (26 banks)
+
+```json
+{
+  "schema": "csoai.swift-census/0.1",
+  "kind": "reader",
+  "writes_board": false,
+  "supersedes": "csoai.swift-17/0.1",
+  "n": 26,
+  "n_measured": 0,
+  "n_live": 3,
+  "n_committed": 9,
+  "n_discovered": 14,
+  "status_all": "THREE_STATE",
+  "as_of": "2026-09-01",
+  "universe_note": "Swift cites 40+ financial institutions in the MVP construction phase, up from 30 named at Sibos Frankfurt Sept 2025. Only 26 could be sourced to a real, reachable, dated press URL and named here. The remaining ~14+ are NOT enumerated \u2014 no name is invented to reach 50.",
+  "honesty": "This is a sourced census of 26 named banks (3 LIVE, 9 COMMITTED, 14 DISCOVERED), not a '50'. Every row cites a real press URL with a date. No bank is a Council client. Not a Swift relationship. Not MEASURED \u2014 no ISO 20022 / copybook / MT artifact fetched. cobolbridge.ai HTTP 522 is infra, not this tape.",
+  "sources": {
+    "swift_pilot_9jul": {
+      "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "date": "2026-07-09",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "note": "Swift press release, 17-bank pilot cohort. HTML body UNREACHABLE from this vantage; URL hashed."
+    },
+    "gfmag_pilot_10jul": {
+      "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+      "date": "2026-07-10",
+      "url_sha256": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+      "note": "Reachable secondary source confirming the same 17 pilot banks."
+    },
+    "sc_live_19aug": {
+      "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+      "date": "2026-08-19",
+      "url_sha256": "1870ceb4dbd25dd87e8c80505dc06a061cf2197a8a1e7e9d4be10e264a7f9d70",
+      "quote": "Swift's blockchain-based ledger acted as a secure orchestration layer, enabling the obligations to be matched and netted between the two banks prior to final settlement through existing systems.",
+      "note": "Standard Chartered primary press release: first live tokenised deposit transaction with HSBC, 19 Aug 2026. Settlement still through existing systems."
+    },
+    "fintechnews_uob_28aug": {
+      "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+      "date": "2026-08-28",
+      "url_sha256
+```
+
+## 6. THE 4 ANCHORS
+
+Every measurement is bound to 4 independent anchors:
+1. HuggingFace Hub — `huggingface.co/csoai` — 60+ datasets, 42 Spaces, 3 models
+2. Sigstore Rekor — witness receipt at `/signed/rekor-*.json`
+3. Corrections ledger — public witness at `/api/corrections`
+4. Bitcoin OpenTimestamps — irrevocable timestamp at `/api/state`
+
+## 7. THE MCP DOOR
+
+`POST https://councilof.ai/mcp` with the 4 free tools:
+- `board_totals` — the 22 axis summary
+- `get_axis` — one axis row
+- `verify_card` — verify any signed card
+- `list_cards` — the signed card index
+Plus 5 paid tools (x402): `request-attestation`, `evidence-bundle`, `data-feed`
+
+## 8. THE 5 ACCESS SURFACES
+
+1. MCP — `POST https://councilof.ai/mcp`
+2. Chrome MV3 extension — `/extension/`
+3. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
+4. Hermes skill — `~/.hermes/skills/council-of-ai/`
+5. REST + curl — `curl https://councilof.ai/api/gspc`
+
+---
+# Generated 2026-09-03 by the relentless JEEVES lane
+# Live at https://councilof.ai/llms-full.txt
+# Mill: functions/_lib/cardSign.ts signs under did:web:csoai.org#card-attestation-1

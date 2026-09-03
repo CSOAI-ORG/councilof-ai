@@ -3,68 +3,87 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Regulatory Framework · GSPC axis · Council of AI</title>
-<meta name="description" content="The regulatory-framework axis on the Council of AI GSPC board." />
+<title>regulatory-framework · Council of AI · GSPC axis deep reference</title>
+<meta name="description" content="Public-ledger read — which regimes have signed the asset into regulation. n=16." />
 <meta name="robots" content="index,follow" />
+<meta property="og:title" content="regulatory-framework · Council of AI axis" />
+<meta property="og:description" content="Public-ledger read — which regimes have signed the asset into regulation. n=16." />
+<meta property="og:image" content="https://councilof.ai/og-image.png" />
+<meta property="og:url" content="https://councilof.ai/axis/regulatory-framework.html" />
+<meta property="og:type" content="article" />
 <link rel="canonical" href="https://councilof.ai/axis/regulatory-framework.html" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "GSPC axis: regulatory-framework",
+  "description": "Public-ledger read \u2014 which regimes have signed the asset into regulation. n=16.",
+  "url": "https://councilof.ai/axis/regulatory-framework.html",
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
 <style>
-  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --wait:#ca8a04; --bad:#dc2626; }
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; }
   @media (prefers-color-scheme: dark) {
-    :root { --bg:#05140d; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --wait:#fbbf24; --bad:#f87171; }
+    :root { --bg:#0b1a12; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; }
   }
-  * { box-sizing:border-box; }
-  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-  .wrap { max-width:48rem; margin:0 auto; padding:2.5rem 1.25rem 5rem; }
-  h1 { font-size:clamp(1.8rem,4vw,2.5rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.15; }
-  h2 { font-size:1.25rem; margin:2rem 0 0.5rem; }
-  .lede { color:var(--muted); font-size:1.05rem; margin-bottom:1.5rem; }
-  .meta { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:1.5rem 0; }
-  .stat { padding:0.85rem 1rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.05); }
-  .stat .l { font-size:0.78rem; color:var(--muted); letter-spacing:0.04em; text-transform:uppercase; }
-  .stat .v { font-size:1.4rem; font-weight:700; margin-top:0.25rem; }
-  .pill { display:inline-flex; align-items:center; gap:0.4rem; padding:0.18rem 0.55rem; border-radius:999px; border:1px solid var(--line); font-size:0.78rem; font-weight:600; }
-  .pill.measured { background:rgba(22,163,74,0.10); color:var(--ok); border-color:rgba(22,163,74,0.4); }
-  .pill.separated { background:rgba(15,118,110,0.10); color:var(--accent); border-color:rgba(15,118,110,0.4); }
-  .pill.tie { background:rgba(148,163,184,0.10); color:var(--muted); border-color:rgba(148,163,184,0.4); }
-  .pill.untested { background:rgba(148,163,184,0.10); color:var(--muted); border-color:rgba(148,163,184,0.4); }
-  .pill.fact { background:rgba(37,99,235,0.10); color:#2563eb; border-color:rgba(37,99,235,0.4); }
-  pre { background:rgba(91,107,98,0.05); padding:0.85rem; border-radius:6px; overflow-x:auto; font-size:0.85rem; }
-  footer { margin-top:4rem; padding-top:2rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  body { margin:0; font:16px/1.6 -apple-system,BlinkMacSystemFont,system-ui,sans-serif; background:var(--bg); color:var(--fg); }
+  .wrap { max-width:48rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
+  h1 { font-size:2.2rem; font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; }
+  h2 { font-size:1.3rem; margin:2rem 0 0.5rem; color:var(--accent); }
+  .lid { font:13px ui-monospace,monospace; color:var(--accent); background:rgba(15,118,110,.08); border:1px solid rgba(15,118,110,.3); padding:.4rem .7rem; border-radius:6px; display:inline-block; margin:.5rem 0 1rem; }
+  .meta { display:flex; flex-wrap:wrap; gap:.5rem; margin:1rem 0; }
+  .pill { padding:.25rem .65rem; border-radius:999px; background:rgba(91,107,98,0.1); color:var(--muted); font-size:.75rem; font-weight:600; }
+  .pill.lid-pill { background:rgba(15,118,110,.1); color:var(--accent); border:1px solid rgba(15,118,110,.3); }
+  p { color:var(--muted); }
+  code { background:rgba(91,107,98,0.1); padding:.1rem .35rem; border-radius:3px; font-size:.88rem; }
+  .note { background:rgba(15,118,110,0.08); border-left:3px solid var(--accent); padding:1rem 1.25rem; margin:1.5rem 0; border-radius:6px; }
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem; }
   footer a { color:var(--accent); text-decoration:none; }
 </style>
 </head>
 <body>
 <main class="wrap">
+  <p class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</p>
   <h1>regulatory-framework</h1>
-  <p class="lede">
-    <span class="pill measured">MEASURED</span>
-    
-    <span class="pill fact">deterministic-fact</span>
-    MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. 3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never compliance. Risk verdict UNMEASURED. Not a rating.
-  </p>
   <div class="meta">
-    <div class="stat"><div class="l">status</div><div class="v">MEASURED</div></div>
-    <div class="stat"><div class="l">n</div><div class="v">16</div></div>
-    <div class="stat"><div class="l">accuracy</div><div class="v">—</div></div>
-    <div class="stat"><div class="l">separation</div><div class="v">—</div></div>
-    <div class="stat"><div class="l">leader</div><div class="v" style="font-size:0.95rem">—</div></div>
+    <span class="pill lid-pill">family: financial</span>
+    <span class="pill">kind: deterministic-facts</span>
+    <span class="pill">n: 16</span>
+    
+    <span class="pill">separation: UNTRIED</span>
   </div>
 
   <h2>What this axis measures</h2>
-  <p>Deterministic fact. Issuer self-declaration of compliance with their named framework. n=6. Declaration only.</p>
+  <p>Public-ledger read — which regimes have signed the asset into regulation. n=16.</p>
 
-  <h2>Bank</h2>
-  <p>Bank: a frozen, published JSONL of items, every item hashable, the bank itself sha256-checked against the live ledger. The bank does not move.</p>
+  <h2>Why it matters</h2>
+  <p>The 22-axis GSPC board reports the lid phrase: <strong>22 axes · 22 measured</strong>. This axis is one of the 22 — the live board at <code>GET /api/gspc</code> is the authority. Anything frozen or quoted is hearsay.</p>
 
-  <h2>How the verdict is reached</h2>
-  <p>The verdict is the model&#x27;s accuracy on n items of a frozen, published bank, signed Ed25519 under the Council&#x27;s pinned DID key. Empty cells stay empty. UNMEASURED is a first-class answer. Re-fetch the live axis via GET /api/gspc?axis=regulatory-framework.</p>
+  
 
-  <h2>Doctrine</h2>
-  <p>This axis is a measurement, not a certificate. An empty result is labelled UNMEASURED, never 0, never "passed". TIE means indistinguishable on this axis. SEPARATED means the leader's lead is statistically real. None of this is a stamp of approval.</p>
+  <h2>What's NOT here</h2>
+  <p>This is a <strong>measurement</strong> axis, not a certification axis. The board never claims this model is "approved" or "compliant". A passing score is a public, signed record of what was measured, on which instrument, with which confidence interval — verifiable in your browser at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>.</p>
+
+  <h2>The numbers</h2>
+  <ul>
+    <li><strong>n</strong> = the number of frozen item bank cells the model was scored against</li>
+    <li><strong>accuracy</strong> = the deterministic grade (only on model-comparison axes)</li>
+    <li><strong>separation</strong> = SEPARATED (one model is statistically the leader), TIE (multiple models tied), or UNTRIED (n too small)</li>
+  </ul>
+
+  <h2>Verify this axis</h2>
+  <p>The live data is on <a href="https://councilof.ai/api/gspc">/api/gspc</a>. The canonical form is at <a href="https://councilof.ai/root.json">/root.json</a>. The witness receipts are at <a href="https://councilof.ai/signed/">/signed/</a>. The corrections ledger is at <a href="https://councilof.ai/api/corrections">/api/corrections</a>. The OTS anchor is at <a href="https://councilof.ai/api/state">/api/state</a>.</p>
 
   <footer>
-    <p><strong>CSOAI Ltd</strong> · UK 16939677 · <a href="/visual-board.html">All 22 axes</a> · <a href="https://councilof.ai/gspc-verify">/gspc-verify</a> · <a href="https://councilof.ai/api/gspc?axis=regulatory-framework">/api/gspc?axis=regulatory-framework</a></p>
-    <p>Measurement, not certification. Anyone can re-check.</p>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · did:web:csoai.org#card-attestation-1</p>
+    <p style="margin-top:.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check.</p>
   </footer>
 </main>
 </body>
