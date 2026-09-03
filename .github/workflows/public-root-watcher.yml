@@ -2,6 +2,15 @@ name: public-root-watcher
 
 # D1.11 — three-host fetch after a successful public-root run.
 # Reader only. Never a second writer. Logs OK or DRIFT.
+#
+# KNOWN GAP, 2026-09-03: the HF host below has NO PUBLISHER. Grep the repo for
+# `gspc-boards` — the only hit is this file, reading it. The mirror was seeded once
+# and never updated, so it sat 3 days stale while this workflow was itself dead on an
+# IndentationError and reported nothing. Both were fixed and the mirror synced by hand
+# with a local token; it will drift again on the next root, because the GHA token
+# cannot write HF main (#1102, see memory hub-queue-flip-cannot-write-hf-main).
+# Until a publisher exists, a DRIFT here most likely means "the mirror is stale",
+# not "the roots disagree" — check as_of on each copy before concluding anything.
 
 on:
   workflow_run:
