@@ -1,0 +1,61 @@
+{
+  "arm": "x402",
+  "lane": "owner-gated (Stripe + x402 facilitator)",
+  "manifest": {
+    "as_of": "2026-09-03",
+    "asset": "USDC",
+    "doc": "The x402 rail as of 2026-09-03 is the ONLY paid surface. The 4 anchors (HF Hub, Sigstore Rekor, Corrections ledger, Bitcoin OTS) are all free. Every other SKUs in this file is owner-gated; this arm goes live when the owner flips the Stripe + x402 facilitator tokens.",
+    "endpoint": "POST /v1/measure",
+    "free_skus": [
+      {
+        "deliverable": "VALID/INVALID/UNCHECKABLE verdict",
+        "id": "x402-verify-free",
+        "price": "0",
+        "scope": "verify any signed card"
+      },
+      {
+        "deliverable": "live board JSON",
+        "id": "x402-board-read-free",
+        "price": "0",
+        "scope": "GET /api/gspc"
+      }
+    ],
+    "method": "x402 (HTTP 402 + payment-required header)",
+    "network": "eip155:8453 (Base) \u2014 free per lane (the rail accepts Base, Polygon, Optimism)",
+    "schema": "csoai.x402-pricing/0.1",
+    "skus": [
+      {
+        "deliverable": "1 signed card",
+        "id": "x402-axis-run",
+        "price": "0.10 USDC",
+        "scope": "one axis run on one model"
+      },
+      {
+        "deliverable": "1 signed card per axis",
+        "id": "x402-model-run",
+        "price": "1.00 USDC",
+        "scope": "all axes on one model"
+      },
+      {
+        "deliverable": "14 signed cards",
+        "id": "x402-fleet-run",
+        "price": "10.00 USDC",
+        "scope": "all axes on all 19-model fleet"
+      },
+      {
+        "deliverable": "1 corrections bundle card",
+        "id": "x402-historical-bundle",
+        "price": "5.00 USDC",
+        "scope": "all corrections-ledger entries, full history"
+      },
+      {
+        "deliverable": "1 witness binding card",
+        "id": "x402-witness-bundle",
+        "price": "2.00 USDC",
+        "scope": "all 4 anchors (HF, Rekor, corrections, Bitcoin OTS) bindings"
+      }
+    ],
+    "total_atoms_possible": "uncapped \u2014 every run produces a new signed card under #card-attestation-1"
+  },
+  "year1_floor": "\u00a310K-\u00a350K at 1% conversion of 1M monthly live board reads"
+}
