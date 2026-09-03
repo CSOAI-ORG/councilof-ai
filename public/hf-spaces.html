@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HuggingFace spaces · Council of AI · the live csoai org catalog</title>
+<meta name="description" content="Every Council of AI Space on HuggingFace — the live catalog of csoai/gspc-* measurement surfaces, verifier demos, and the GSPC board. All Spaces stream from the same public-root. Independent AI governance." />
+<meta name="robots" content="index,follow" />
+<meta name="keywords" content="huggingface, spaces, csoai, GSPC, measurement, AI governance, verifier, board" />
+<link rel="canonical" href="https://councilof.ai/hf-spaces.html" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Council of AI HuggingFace Spaces",
+  "description": "Live catalog of every csoai/* Space on HuggingFace — measurement surfaces, verifier demos, and the GSPC board.",
+  "url": "https://councilof.ai/hf-spaces.html",
+  "numberOfItems": 42,
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "url": "https://huggingface.co/csoai/gspc-board", "name": "gspc-board"},
+    {"@type": "ListItem", "position": 2, "url": "https://huggingface.co/csoai/measurement-card-verifier", "name": "measurement-card-verifier"},
+    {"@type": "ListItem", "position": 3, "url": "https://huggingface.co/csoai/gspc-verify", "name": "gspc-verify"}
+  ]
+}
+</script>
+
+<style>
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --warn:#ca8a04; --fact:#2563eb; --hf:#fb923c; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b1a12; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --warn:#fbbf24; --fact:#60a5fa; --hf:#fb923c; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:64rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
+
+  header.hero { padding:1.5rem 0 2rem; border-bottom:1px solid var(--line); margin-bottom:2rem; }
+  header.hero h1 { font-size:clamp(2rem,5vw,2.8rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.1; }
+  header.hero .sub { color:var(--muted); font-size:1.05rem; max-width:48rem; }
+
+  .lid { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.95rem; color:var(--accent); margin:1rem 0 0.5rem; padding:0.6rem 0.85rem; border-radius:8px; border:1px solid rgba(15,118,110,0.3); background:rgba(15,118,110,0.06); display:inline-block; }
+
+  /* The big featured surfaces */
+  .featured { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .featured a { padding:1.1rem 1.2rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.04); text-decoration:none; color:inherit; display:block; transition:border-color 0.2s; }
+  .featured a:hover { border-color:var(--accent); }
+  .featured h3 { margin:0 0 0.4rem; font-size:1rem; color:var(--accent); }
+  .featured p { margin:0; font-size:0.83rem; color:var(--muted); }
+
+  /* Catalog grid */
+  .catalog { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.5rem; margin:1.5rem 0; }
+  .catalog a { padding:0.5rem 0.7rem; border:1px solid var(--line); border-radius:6px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.78rem; text-decoration:none; color:var(--fg); background:rgba(91,107,98,0.02); }
+  .catalog a:hover { border-color:var(--hf); color:var(--hf); }
+  .catalog .sdk { display:block; font-size:0.65rem; color:var(--muted); margin-top:0.1rem; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .stat { padding:1rem; border:1px solid var(--line); border-radius:8px; text-align:center; }
+  .stat .num { font-size:1.8rem; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .stat .label { font-size:0.75rem; color:var(--muted); margin-top:0.2rem; text-transform:uppercase; letter-spacing:0.06em; }
+
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  footer a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>Council of AI on HuggingFace</h1>
+    <p class="sub">The full catalog of <strong style="color:var(--hf);">csoai/*</strong> Spaces. Every Space is a measurement surface, a verifier, or a board renderer — all driven by the same signed public-root.</p>
+    <p class="lid" id="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+  </header>
+
+  <section class="stats" id="stats">
+    <div class="stat"><div class="num" id="stat-spaces">—</div><div class="label">spaces live</div></div>
+    <div class="stat"><div class="num" id="stat-datasets">—</div><div class="label">datasets published</div></div>
+    <div class="stat"><div class="num" id="stat-models">—</div><div class="label">models hosted</div></div>
+    <div class="stat"><div class="num">0</div><div class="label">money in</div></div>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.3rem;margin-bottom:0.5rem;">Featured spaces — start here</h2>
+    <div class="featured">
+      <a href="https://huggingface.co/csoai/gspc-board" target="_blank" rel="noreferrer">
+        <h3>gspc-board</h3>
+        <p>The full 22-axis GSPC board, rendered live. Click a row to see its n, axis, and signed card sha256.</p>
+      </a>
+      <a href="https://huggingface.co/csoai/measurement-card-verifier" target="_blank" rel="noreferrer">
+        <h3>measurement-card-verifier</h3>
+        <p>Paste a signed card body or sha256. Your browser checks the hash, the Ed25519 sig, and the witness chain.</p>
+      </a>
+      <a href="https://huggingface.co/csoai/gspc-verify" target="_blank" rel="noreferrer">
+        <h3>gspc-verify</h3>
+        <p>The public verifier Surface — drops in anywhere, no JS framework. Streamable.</p>
+      </a>
+      <a href="https://huggingface.co/csoai/gspc-live-board" target="_blank" rel="noreferrer">
+        <h3>gspc-live-board</h3>
+        <p>Live board with WebSocket refresh. For dashboards that want the latest.</p>
+      </a>
+      <a href="https://huggingface.co/csoai/council-os" target="_blank" rel="noreferrer">
+        <h3>council-os</h3>
+        <p>Council OS — the workspace. 22 panes, dockview, no fake demo data.</p>
+      </a>
+      <a href="https://huggingface.co/csoai/council-coliseum" target="_blank" rel="noreferrer">
+        <h3>council-coliseum</h3>
+        <p>The arena — compare models head-to-head on the GSPC axes.</p>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.3rem;margin-bottom:0.5rem;">All spaces — the live catalog</h2>
+    <p style="color:var(--muted);font-size:0.9rem;">Loaded live from <code>GET https://huggingface.co/api/spaces?author=csoai</code>. SDK badge shows whether it's static HTML, Gradio, or Docker.</p>
+    <div class="catalog" id="catalog">
+      <!-- filled by JS from /api/hf-spaces -->
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a></p>
+    <p style="margin-top:0.5rem;font-style:italic;">Measurement, not certification. <a href="https://councilof.ai/gspc-verify">Verify free.</a></p>
+  </footer>
+</main>
+
+<script>
+// Live fetch from the HF API + the councilof.ai mirror
+(async () => {
+  const catalog = document.getElementById("catalog");
+  let spaces = [];
+  try {
+    const r = await fetch("https://huggingface.co/api/spaces?author=csoai&limit=200");
+    if (r.ok) {
+      spaces = await r.json();
+      document.getElementById("stat-spaces").textContent = spaces.length;
+    }
+  } catch {}
+  try {
+    const r = await fetch("https://huggingface.co/api/datasets?author=csoai&limit=200");
+    if (r.ok) {
+      const ds = await r.json();
+      document.getElementById("stat-datasets").textContent = ds.length;
+    }
+  } catch {}
+  try {
+    const r = await fetch("https://huggingface.co/api/models?author=csoai&limit=200");
+    if (r.ok) {
+      const ms = await r.json();
+      document.getElementById("stat-models").textContent = ms.length;
+    }
+  } catch {}
+  // Render the catalog
+  if (catalog && spaces.length) {
+    catalog.innerHTML = spaces.map(s => {
+      const sdk = s.sdk || "static";
+      const slug = s.id.replace(/^csoai\//, "");
+      return `<a href="https://huggingface.co/csoai/${slug}" target="_blank" rel="noreferrer">csoai/${slug}<span class="sdk">${sdk}</span></a>`;
+    }).join("");
+  } else {
+    catalog.innerHTML = '<p style="color:var(--muted);grid-column:1/-1;">HF API unreachable. <a href="https://huggingface.co/csoai">View the org on HuggingFace →</a></p>';
+  }
+  // Lid
+  try {
+    const r = await fetch("https://councilof.ai/api/gspc");
+    if (r.ok) {
+      const b = await r.json();
+      if (b.totals?.public_count) {
+        document.getElementById("lid").textContent = b.totals.public_count + " · live";
+      }
+    }
+  } catch {}
+})();
+</script>
+</body>
+</html>
