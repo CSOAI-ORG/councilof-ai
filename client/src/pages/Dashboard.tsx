@@ -27,7 +27,6 @@ import {
   Target,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { useLocation, Link } from "wouter";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -285,8 +284,7 @@ export default function Dashboard() {
                       ],
                       color: "blue",
                       icon: FileCheck,
-                      progress: pdcaStats?.phaseDistribution?.plan ? 100 : 0,
-                      count: pdcaStats?.phaseDistribution?.plan || 0,
+                      count: pdcaStats?.phaseDistribution?.plan ?? null,
                     },
                     { 
                       phase: "DO", 
@@ -300,8 +298,7 @@ export default function Dashboard() {
                       ],
                       color: "emerald",
                       icon: Play,
-                      progress: pdcaStats?.phaseDistribution?.do ? 65 : 0,
-                      count: pdcaStats?.phaseDistribution?.do || 0,
+                      count: pdcaStats?.phaseDistribution?.do ?? null,
                     },
                     { 
                       phase: "CHECK", 
@@ -315,8 +312,7 @@ export default function Dashboard() {
                       ],
                       color: "amber",
                       icon: Eye,
-                      progress: watchdogReports?.length ? Math.min(100, (watchdogReports.length / 10) * 100) : 0,
-                      count: pdcaStats?.phaseDistribution?.check || 0,
+                      count: pdcaStats?.phaseDistribution?.check ?? null,
                     },
                     { 
                       phase: "ACT", 
@@ -330,8 +326,7 @@ export default function Dashboard() {
                       ],
                       color: "purple",
                       icon: RefreshCw,
-                      progress: pdcaStats?.completedCycles ? Math.min(100, (pdcaStats.completedCycles / 5) * 100) : 0,
-                      count: pdcaStats?.phaseDistribution?.act || 0,
+                      count: pdcaStats?.phaseDistribution?.act ?? null,
                     },
                   ].map((item, idx) => {
                     const Icon = item.icon;
@@ -372,13 +367,15 @@ export default function Dashboard() {
                         <h3 className={`font-bold text-xl ${colorClasses?.text}`}>{item.phase}</h3>
                         <p className="text-xs text-muted-foreground mb-3">{item.fullName}</p>
                         
-                        {/* Progress bar */}
+                        {/* Cycles in this phase. There is no measured completion
+                            percentage for a PDCA phase, so none is shown. */}
                         <div className="mb-3">
-                          <div className="flex justify-between text-xs mb-1">
-                            <span className="text-muted-foreground">Progress</span>
-                            <span className={`font-medium ${colorClasses?.text}`}>{item.progress}%</span>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-muted-foreground">Cycles in this phase</span>
+                            <span className={`font-medium ${item.count == null ? 'text-muted-foreground' : colorClasses?.text}`}>
+                              {item.count == null ? 'UNMEASURED' : item.count}
+                            </span>
                           </div>
-                          <Progress value={item.progress} className="h-1.5" />
                         </div>
                         
                         <p className="text-xs text-muted-foreground mb-3">{item.description}</p>
