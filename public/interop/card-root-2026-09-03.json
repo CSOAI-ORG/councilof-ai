@@ -1,8 +1,8 @@
 {
   "kind": "csoai.card-root/1",
-  "as_of": "2026-09-03T12:36:05Z",
-  "n_leaves": 531,
-  "merkle_root": "83094b57e60b499c4f9eb0900c6ce07bf7f7b59829fe4a1044464c8865a1d8ab",
+  "as_of": "2026-09-03T12:36:59Z",
+  "n_leaves": 532,
+  "merkle_root": "3e9bb4ef5aecc1ede31f57aa78a4bff86cae6823ca3ce63e9638e9d40086c9f4",
   "leaf_rule": "sha256 over canonical JSON (sorted keys, no whitespace, ensure_ascii=False) of the WHOLE signed card — body, id, signature and did — not the body alone. Tree and proof are publish_public_root.merkle_root / merkle_proof, imported not re-implemented.",
   "anchor_rule": "This document is a commitment, not an anchor. Bitcoin anchoring via OpenTimestamps is a planned rail: these bytes will be anchored once a proof over them is upgraded into a block, and not before. Until then any stamp is a pending request, never a proof. Read the state from the .ots sidecar, never from the existence of this file.",
   "proof_rule": "merkle_proof returns sibling digests only, with no side bit, and the tree combines positionally as sha256(left + right). To verify: start from the leaf, and at each step fold sha256(current + sibling) when the running index is even, sha256(sibling + current) when it is odd, halving the index each step. The leaf's `index` is published for exactly this reason.",
@@ -4865,13 +4865,22 @@
       "index": 516
     },
     {
+      "leaf": "f9973b42ba70614e8c214acf91a747a4062fe2113f99bc413109070cb23172c0",
+      "card": "signed-machiner-f3fb67ffc38a.json",
+      "id": "f3fb67ffc38a696f237931f1cc9b9dcf2ae77bf4adf50dd681bf260d49137877",
+      "model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 517
+    },
+    {
       "leaf": "f9d6a8af3df4eb2b5a5038a09df0051b36bec8b55eae58f16b856bed4557254e",
       "card": "signed-safety-c9880a0f7029.json",
       "id": "c9880a0f7029f9603ee018771aac1cda76fac748e6e058c3f5588d8377b29fd2",
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 517
+      "index": 518
     },
     {
       "leaf": "fa5d7fd89717cf28372850a0be7afc1955276127e775f1b48bb3a44540a93ab7",
@@ -4880,7 +4889,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 518
+      "index": 519
     },
     {
       "leaf": "fa9ae905c26804238d4cfb5889292e05dee2edc8d8e3c3e5832fc718ba08d835",
@@ -4889,7 +4898,7 @@
       "model": "Qwen/Qwen3-8B-Base",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 519
+      "index": 520
     },
     {
       "leaf": "fab5d5f5c378660e4a9ba38aaeae637fd27dcb658206ddf7d3de340834d70593",
@@ -4898,7 +4907,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 520
+      "index": 521
     },
     {
       "leaf": "fb13a18d265ad7344e75639fd4725152646710bb20eb0e522e07dd5458b5e98b",
@@ -4907,7 +4916,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 521
+      "index": 522
     },
     {
       "leaf": "fb33d5c5d4f7858dae8223daecf2245e3fd98e3ecd79f86c6c23d53713f4d335",
@@ -4916,7 +4925,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 522
+      "index": 523
     },
     {
       "leaf": "fc19c085084eebcf59be60610d9a4f2c52795b29b8382afe46e4f3ebc01d8678",
@@ -4925,7 +4934,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 523
+      "index": 524
     },
     {
       "leaf": "fc875ae40c3eedfc0d1be5399dd3392d4e58dd6bba8afd160df9949ae1d73cd3",
@@ -4934,7 +4943,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 524
+      "index": 525
     },
     {
       "leaf": "fcfab46298f530b09c01d39ca3558798cb85b432410cfcd732fed73c2a9b1b63",
@@ -4943,7 +4952,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 525
+      "index": 526
     },
     {
       "leaf": "fd1ac9e20f95f11c4471df6e823faba128fb5d89430e8e068d574762a6c71e24",
@@ -4952,7 +4961,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 526
+      "index": 527
     },
     {
       "leaf": "fd9e53e12a35f6ea5b61af20aa8bf0f8731857cedd551e799d9d1545f82c15e7",
@@ -4961,7 +4970,7 @@
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 527
+      "index": 528
     },
     {
       "leaf": "fdbf85b2a54febb7286ee82a93fc7fac884391e742e6fab57b9d2e84fbe2ce98",
@@ -4970,7 +4979,7 @@
       "model": "Qwen/Qwen2.5-Coder-3B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 528
+      "index": 529
     },
     {
       "leaf": "fe1c3e0cc4469f039f41507beb34efa22f8d4c429ab023e050682b5941bbd092",
@@ -4979,7 +4988,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 529
+      "index": 530
     },
     {
       "leaf": "fe8dd7cec917ad1e1bbaf854a688025e0f6d4a8e139c07740680b12b180ee7d5",
@@ -4988,7 +4997,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 530
+      "index": 531
     }
   ]
 }
