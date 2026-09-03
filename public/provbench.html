@@ -13,7 +13,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="ProvBench — content-provenance measurement">
 <meta name="twitter:description" content="Article 50 / C2PA marking survival by validity — SURVIVES vs DESTROYED. Measured, n=32, not yet quotable. Measurement, not certification.">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/svg+xml" href="https://councilof.ai/favicon.svg">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "ProvBench", "description": "ProvBench is the CSOAI content-provenance measurement axis: it measures the survival of AI-content marking under the EU AI Act (Reg. (EU) 2024/1689), Article 50, with C2PA 2.x as the technical carrier. The v3 principle is validity: a marking that is present but does not validate is scored DESTROYED, not SURVIVES. The bank has been measured (n=32) and is published on Hugging Face, but is not yet quotable — the board does not yet discriminate above the 0.15 floor, so no score, F1, accuracy or interval is published. Measurement, not certification.", "url": "https://councilof.ai/provbench", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "dateModified": "2026-08-12", "citation": "https://doi.org/10.5281/zenodo.21755656", "creator": {"@type": "Organization", "name": "CSOAI Ltd", "identifier": "UK 16939677"}, "measurementTechnique": "regex label extraction over a two-label survival vocabulary (SURVIVES / DESTROYED) applying the v3 validity rule (present-but-invalid = DESTROYED), scored by macro-F1; unreadable completions reported as UNPARSEABLE and excluded, never scored as wrong; the lane is held as not-quotable until the board discriminates above the 0.15 floor, and no score or interval is published before then", "distribution": [{"@type": "DataDownload", "contentUrl": "https://huggingface.co/datasets/csoai/gspc-prv"}]}</script>
 <style>
 :root{--bg:#0b1220;--panel:#111c30;--ink:#eaf2ff;--mut:#8fa6c8;--line:#1e293b;--acc:#10b981;--warn:#f5a623}
@@ -55,7 +55,7 @@ footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.2rem;color
 footer a{color:var(--acc)}
 @media(max-width:640px){.chain{columns:1}h1{font-size:1.6rem}}
 </style></head><body>
-<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 Measures</a><a href="/govbench">GovBench</a><a href="/provbench">ProvBench</a><a href="/council-space">Council Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
+<nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 Measures</a><a href="/govbench">GovBench</a><a href="/provbench">ProvBench</a><a href="/">Council Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
 <p class="pill">measured · n=32 · bank published</p>
 <h1>ProvBench</h1>

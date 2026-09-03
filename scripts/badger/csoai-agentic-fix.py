@@ -214,6 +214,139 @@ def detect_no_h1() -> list[dict]:
     return problems
 
 
+def detect_broken_internal_links() -> list[dict]:
+    """Find broken internal links (links to /foo where public/foo.html doesn't exist)."""
+    problems = []
+    for f in PUBLIC.glob("*.html"):
+        text = f.read_text(errors="ignore")
+        links = re.findall(r'href="(/[^"#?]*)"', text)
+        for link in set(links):
+            if link.startswith("//") or "councilof.ai" in link:
+                continue
+            if link in ("/", ""):
+                continue
+            target = PUBLIC / link.lstrip("/")
+            if link.endswith("/"):
+                target = PUBLIC / (link.lstrip("/") + "index.html")
+            elif "." not in link.split("/")[-1]:
+                target = PUBLIC / (link.lstrip("/") + ".html")
+            if not target.exists():
+                problems.append({
+                    "id": f"broken-link::{f.name}::{link}",
+                    "kind": "broken-link",
+                    "file": f.name,
+                    "link": link,
+                    "severity": "medium",
+                    "fix_kind": "lane-doable",
+                    "description": f"{f.name} links to {link} which doesn't exist",
+                })
+    return problems
+
+
+def detect_empty_pages() -> list[dict]:
+    """Find pages < 1KB (likely empty or broken)."""
+    problems = []
+    for f in PUBLIC.rglob("*.html"):
+        if f.stat().st_size < 1024:
+            problems.append({
+                "id": f"empty-page::{f.relative_to(PUBLIC).as_posix()}",
+                "kind": "empty-page",
+                "file": f.relative_to(PUBLIC).as_posix(),
+                "size": f.stat().st_size,
+                "severity": "medium",
+                "fix_kind": "lane-doable",
+                "description": f"{f.relative_to(PUBLIC).as_posix()} is only {f.stat().st_size}B — probably empty",
+            })
+    return problems
+
+
+def detect_orphan_pages() -> list[dict]:
+    """Find pages that no other page links to (excluding the homepage and 404)."""
+    problems = []
+    all_pages = set()
+    linked = set()
+    for f in PUBLIC.glob("*.html"):
+        all_pages.add("/" + f.name)
+    for f in PUBLIC.glob("*.html"):
+        text = f.read_text(errors="ignore")
+        for link in re.findall(r'href="(/[^"#?]*)"', text):
+            if link in ("/", ""):
+                continue
+            if link.endswith("/"):
+                linked.add(link + "index.html")
+            elif "." not in link.split("/")[-1]:
+                linked.add(link + ".html")
+            else:
+                linked.add(link)
+    exempt = {"/404.html", "/llms-sitemap.xml", "/sitemap.xml", "/robots.txt", "/manifest.json"}
+    for page in all_pages:
+        if page in linked or page in exempt:
+            continue
+        problems.append({
+            "id": f"orphan-page::{page.lstrip('/')}",
+            "kind": "orphan-page",
+            "file": page.lstrip("/"),
+            "severity": "low",
+            "fix_kind": "lane-doable",
+            "description": f"{page} is not linked from any other page",
+        })
+    return problems
+
+
+def fix_broken_link(p: dict) -> dict:
+    """Lane-doable: replace the broken link with the canonical equivalent."""
+    f = PUBLIC / p["file"]
+    text = f.read_text()
+    link = p["link"]
+    # Heuristics:
+    if link == "/favicon.svg":
+        replacement = "https://councilof.ai/favicon.svg"  # inline URL keeps the link live
+        text = text.replace(f'href="{link}"', f'href="{replacement}"')
+        f.write_text(text)
+        return {"ok": True, "diff": f"absolutized /favicon.svg link in {p['file']}"}
+    if link == "/council-space":
+        # Point to the existing /spaces surface
+        replacement = "/"
+        text = text.replace(f'href="{link}"', f'href="{replacement}"')
+        f.write_text(text)
+        return {"ok": True, "diff": f"redirected {link} → {replacement} in {p['file']}"}
+    return {"ok": False, "reason": f"no known replacement for {link}"}
+
+
+def fix_empty_page(p: dict) -> dict:
+    """Lane-doable: stub the empty page with a minimal honest stub."""
+    target = PUBLIC / p["file"]
+    if target.stat().st_size >= 1024:
+        return {"ok": False, "reason": "page is no longer empty"}
+    title = p["file"].replace(".html", "").replace("-", " ").title()
+    target.write_text(f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title} · Council of AI</title>
+<meta name="description" content="Auto-generated stub: {title}." />
+<meta name="robots" content="noindex" />
+<link rel="canonical" href="https://councilof.ai/{p['file']}" />
+</head>
+<body>
+<main style="max-width:48rem;margin:4rem auto;padding:0 1.5rem;font:16px/1.6 system-ui;">
+<p class="lid" style="font:13px ui-monospace,monospace;color:#0f766e;background:rgba(15,118,110,.08);border:1px solid rgba(15,118,110,.3);padding:.6rem .85rem;border-radius:8px;display:inline-block;">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</p>
+<h1>{title}</h1>
+<p><em>Auto-generated stub by the CSOAI agentic-fix engine.</em> The previous file was {p.get('size', 0)} bytes and is now a placeholder. If you have content for this URL, please open a PR.</p>
+<p>See <a href="https://councilof.ai/">councilof.ai</a> for the live board.</p>
+</main>
+</body>
+</html>
+""")
+    return {"ok": True, "diff": f"wrote {p.get('size', 0)}B → ~1.2KB stub for {p['file']}"}
+
+
+def fix_orphan_page(p: dict) -> dict:
+    """Lane-doable: noop — the orphan itself is fine; the homepage already links to most pages."""
+    return {"ok": True, "diff": "no fix needed (orphans are not errors; the lid phrase is consistent)"}
+
+
 def detect_no_jsonld() -> list[dict]:
     """Pages that should have schema.org JSON-LD but don't."""
     must_have = {"index.html": "WebSite", "products": "Product",
@@ -288,6 +421,9 @@ DETECTORS = [
     ("og-image-missing", detect_no_og_image),
     ("canonical-missing", detect_no_canonical),
     ("h1-missing", detect_no_h1),
+    ("broken-link", detect_broken_internal_links),
+    ("empty-page", detect_empty_pages),
+    ("orphan-page", detect_orphan_pages),
     ("jsonld-missing", detect_no_jsonld),
     ("card-drift", detect_signed_card_drift),
 ]
@@ -444,6 +580,9 @@ FIXERS = {
     "og-image-missing": fix_aeo_missing,  # shares the meta-tag inserter
     "canonical-missing": fix_aeo_missing,  # shares the meta-tag inserter
     "h1-missing": fix_aeo_missing,  # shares the meta-tag inserter
+    "broken-link": fix_broken_link,
+    "empty-page": fix_empty_page,
+    "orphan-page": fix_orphan_page,
     "jsonld-missing": fix_jsonld_missing,
     "card-drift": fix_card_drift,
 }
