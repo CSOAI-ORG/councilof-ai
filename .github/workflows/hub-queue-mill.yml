@@ -43,17 +43,14 @@ jobs:
       - name: choose the axis (dispatch wins; otherwise the emptiest axis)
         run: |
           set -euo pipefail
-          # This used to grade 'governance' every run, so 12 of the 13 millable axes were
-          # never sprayed. The first fix keyed the choice to the UTC hour, which assumed the
-          # hourly cron actually fires hourly — it does not. Observed 2026-09-03: scheduled
-          # runs at 21:14, 23:31, 01:24 and then a 4.5-hour gap, because GitHub drops
-          # schedules on a busy repo (issue #1118). A clock-keyed rotation under a dropped
-          # cron gives whichever axes happen to line up, forever.
-          #
-          # So choose by the DATA instead: the axis with the fewest measured cells in the
-          # public hub-queue. That converges on full coverage no matter when runs fire, and
-          # it self-corrects — an axis that gets cells stops being chosen. The clock is kept
-          # only as the tie-break, so a cold start (every axis at zero) still rotates.
+          # Coverage is counted from the SIGNED CARDS IN THIS CHECKOUT, not from the public
+          # hub-queue. The queue lives on HF main, which the flip cannot write (the GHA HF
+          # token has no csoai-org scope), so it has been frozen at 82 cells all day. A
+          # selector reading it re-picked 'care' on consecutive runs after care had already
+          # been carded and merged — the loop could not advance past one axis while its own
+          # progress was invisible to it. The merged cards are the thing that is always
+          # current, so count those. Superseded cards are skipped so a re-signed cell counts
+          # once. If the directory is missing, fall back to the queue, then to the clock.
           ROTATION=(governance safety provenance continuity conformance openness \
                     machinery-conformity care cross-reality detector-interop \
                     art5-safeguard swarm affect)
@@ -61,35 +58,67 @@ jobs:
             AXIS="$AXIS_INPUT"; WHY="workflow_dispatch input"
           else
             H=$(date -u +%-H)
-            AXIS=""
-            if curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o /tmp/queue-for-axis.jsonl; then
-              AXIS=$(H="$H" python3 - "${ROTATION[@]}" <<'PY'
+            curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o /tmp/queue-for-axis.jsonl || true
+            AXIS=$(H="$H" python3 - "${ROTATION[@]}" <<'PY'
           import json, os, sys
+          from pathlib import Path
+
           axes = sys.argv[1:]
           counts = {a: 0 for a in axes}
-          with open("/tmp/queue-for-axis.jsonl", encoding="utf-8") as fh:
-              for line in fh:
-                  line = line.strip()
-                  if not line:
-                      continue
+          source = "none"
+
+          signed = Path("public/interop/mill-cards-signed")
+          if signed.is_dir():
+              dead = set()
+              ledger = signed / "SUPERSEDED.jsonl"
+              if ledger.is_file():
+                  for line in ledger.read_text(encoding="utf-8").splitlines():
+                      line = line.strip()
+                      if line:
+                          try:
+                              dead.add(str(json.loads(line).get("superseded_id") or ""))
+                          except Exception:
+                              pass
+              for f in sorted(signed.glob("signed-*.json")):
                   try:
-                      row = json.loads(line)
+                      w = json.loads(f.read_text(encoding="utf-8"))
                   except Exception:
                       continue
-                  for ax, cell in (row.get("measured_axes") or {}).items():
-                      if ax in counts and isinstance(cell, dict) and cell.get("card_id"):
-                          counts[ax] += 1
+                  body = w.get("body") if isinstance(w.get("body"), dict) else {}
+                  ax = str(body.get("axis") or "")
+                  if ax in counts and w.get("signature") and str(w.get("id") or "") not in dead:
+                      counts[ax] += 1
+                      source = "merged signed cards"
+
+          if source == "none":
+              q = Path("/tmp/queue-for-axis.jsonl")
+              if q.is_file():
+                  for line in q.read_text(encoding="utf-8").splitlines():
+                      line = line.strip()
+                      if not line:
+                          continue
+                      try:
+                          row = json.loads(line)
+                      except Exception:
+                          continue
+                      for ax, cell in (row.get("measured_axes") or {}).items():
+                          if ax in counts and isinstance(cell, dict) and cell.get("card_id"):
+                              counts[ax] += 1
+                              source = "public hub-queue"
+
+          if source == "none":
+              sys.exit(1)
           # Fewest cells first; the UTC hour breaks ties so a cold start still rotates.
           h = int(os.environ.get("H") or 0)
           order = sorted(axes, key=lambda a: (counts[a], (axes.index(a) - h) % len(axes)))
-          print(order[0])
+          print(f"{order[0]}\t{source}\t{counts[order[0]]}")
           PY
-              ) || AXIS=""
-            fi
+            ) || AXIS=""
             if [ -n "$AXIS" ]; then
-              WHY="emptiest axis in the public hub-queue"
+              WHY="emptiest axis per $(printf '%s' "$AXIS" | cut -f2) ($(printf '%s' "$AXIS" | cut -f3) cells)"
+              AXIS=$(printf '%s' "$AXIS" | cut -f1)
             else
-              AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="queue unreadable — clock fallback, slot $((H % ${#ROTATION[@]}))"
+              AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="no coverage data — clock fallback, slot $((H % ${#ROTATION[@]}))"
             fi
           fi
           echo "AXIS=$AXIS" >> "$GITHUB_ENV"
