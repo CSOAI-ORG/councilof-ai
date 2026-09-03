@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GSPC lookup — one Hub model, every axis, verbatim state | Council of AI</title>
+<meta name="description" content="Type a Hugging Face model id. Read its GSPC state per axis, verbatim: MEASURED, STAGED-UNSIGNED, QUEUED, DEAD or UNMEASURED. Measurement, not certification.">
+<link rel="icon" href="https://councilof.ai/csoai-icon.svg" type="image/svg+xml">
+<style>
+  :root{--bg:#06140f;--panel:#0d2419;--line:rgba(120,200,150,.16);--ink:#e8ede6;--dim:#9db3a1;--acc:#34d399;--warn:#fbbf24;--bad:#f87171;--slate:#94a3b8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;line-height:1.5}
+  header,main,footer{max-width:980px;margin:0 auto;padding:0 20px}
+  header{padding-top:28px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  h1{font-size:1.3rem;margin:0 0 6px}
+  .sub{color:var(--dim);font-size:.9rem}
+  a{color:var(--acc)}
+  code,pre,.mono{font-family:ui-monospace,Menlo,monospace}
+  .lid{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:12px/1.45 ui-monospace,Menlo,monospace;color:var(--acc);white-space:pre-wrap}
+  .lid.bad{border-color:var(--bad);color:var(--warn)}
+  form{display:flex;gap:8px;margin:18px 0 8px;flex-wrap:wrap}
+  input[type=text]{flex:1 1 320px;padding:10px 12px;border-radius:8px;border:1px solid var(--slate);background:var(--panel);color:var(--ink);font:inherit}
+  button{background:transparent;border:1px solid var(--acc);color:var(--acc);border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit}
+  .note{color:var(--dim);font-size:.86rem}
+  #status{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font:13px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.9rem}
+  th,td{text-align:left;padding:8px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:500;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em}
+  .st{font-family:ui-monospace,Menlo,monospace;font-weight:600}
+  .MEASURED{color:var(--acc)} .STAGED-UNSIGNED{color:var(--warn)} .QUEUED{color:var(--slate)} .DEAD{color:var(--bad)} .UNMEASURED{color:var(--slate)} .UNCHECKABLE{color:var(--warn)}
+  .scroll{overflow-x:auto}
+  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:14px 0}
+  .legend div{padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:.84rem}
+  footer{padding:22px 20px;border-top:1px solid var(--line);color:var(--dim);font-size:.8rem}
+  #sources{font-size:.8rem;color:var(--dim)}
+  #sources li{margin:2px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>GSPC lookup <span style="color:var(--acc)">— one Hub model, every axis, verbatim</span></h1>
+  <div class="sub">
+    Council of AI · CSOAI Ltd (UK #16939677). Reads the public files and prints the model's state per axis.
+    It is a <strong>printer</strong>, not a mill and not a second engine. Board authority:
+    <a href="https://councilof.ai/api/gspc"><code>GET https://councilof.ai/api/gspc</code></a>.
+  </div>
+  <div id="lid" class="lid">Lid: loading live GET https://councilof.ai/api/gspc …</div>
+</header>
+<main>
+  <form id="f" autocomplete="off">
+    <input id="model" type="text" placeholder="owner/name — e.g. Qwen/Qwen3-8B" spellcheck="false">
+    <button type="submit">Look up</button>
+    <button type="button" id="refresh" title="Re-fetch the public files">Refresh files</button>
+  </form>
+  <p class="note">A Hub listing is a name on a census. It becomes MEASURED for one axis only after an Ed25519 signature on that (model, axis) card verifies VALID under <code>did:web:csoai.org#board-attestation-1</code>. Staged cards are UNSIGNED. n&lt;30 is unquotable. TIE is never a win. Nothing here is a rank.</p>
+  <div id="status">Loading public files …</div>
+  <div class="scroll">
+    <table id="t" hidden>
+      <thead><tr><th>Axis</th><th>State</th><th>Detail (verbatim from the file)</th><th>Source</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <div class="legend">
+    <div><span class="st MEASURED">MEASURED</span> — a signed card row exists in <code>mill-cards/INDEX.jsonl</code> for this (model, axis). The card link, n and the signature check result are printed. Only VALID counts.</div>
+    <div><span class="st STAGED-UNSIGNED">STAGED-UNSIGNED</span> — a mill job graded the frozen bank and staged a card with <code>signature: null</code>. hits/n are card bytes, <strong>not a score</strong>. It is UNMEASURED until signed and VALID.</div>
+    <div><span class="st QUEUED">QUEUED</span> — the model is on the hub-queue census for this axis with no card. A listing is not a grade.</div>
+    <div><span class="st DEAD">DEAD</span> — the Hub reports no live inference provider for this id; the mill cannot grade it. Not a judgement of the model.</div>
+    <div><span class="st UNMEASURED">UNMEASURED</span> — not on the hub-queue census, or no row for this axis. Empty is not zero.</div>
+    <div><span class="st UNCHECKABLE">UNCHECKABLE</span> — a public file failed to load. Nothing is guessed.</div>
+  </div>
+  <ul id="sources"></ul>
+</main>
+<footer>
+  measurement, not certification · verify is free · a rank is never sold ·
+  <a href="https://councilof.ai/gspc-verify">councilof.ai/gspc-verify</a> ·
+  board <a href="https://huggingface.co/spaces/csoai/gspc-board">csoai/gspc-board</a> ·
+  source in councilof-ai under <code>spaces/gspc-lookup/</code>
+</footer>
+<script src="./app.js"></script>
+</body>
+</html>
