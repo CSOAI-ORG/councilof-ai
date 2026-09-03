@@ -314,10 +314,25 @@ def fix_broken_link(p: dict) -> dict:
 
 
 def fix_empty_page(p: dict) -> dict:
-    """Lane-doable: stub the empty page with a minimal honest stub."""
+    """NEVER overwrites. A small page is not a broken page.
+
+    On 2026-09-03 this fixer destroyed nine working files because they were
+    under 1 KB. Seven were /interop/ redirects (a meta-refresh page IS ~580
+    bytes); one was the spray embed demo, whose whole point is to be a minimal
+    3 KB-glass example. It replaced each with a stub reading "Auto-generated
+    stub", including on the SWIFT, XRPL, GPAI and OpenAI-incident evidence
+    surfaces.
+
+    Size is not a defect signal. The only genuinely empty page is one with no
+    content at all, and even then, overwriting a file the operator wrote is not
+    a "fix" — it is data loss dressed as maintenance. This now reports only.
+    """
     target = PUBLIC / p["file"]
-    if target.stat().st_size >= 1024:
-        return {"ok": False, "reason": "page is no longer empty"}
+    if target.exists() and target.stat().st_size > 0:
+        return {"ok": False,
+                "reason": "REFUSED: will not overwrite an existing file. "
+                          "Small pages are usually redirects or minimal demos, "
+                          "not defects. Report only."}
     title = p["file"].replace(".html", "").replace("-", " ").title()
     target.write_text(f"""<!doctype html>
 <html lang="en">
