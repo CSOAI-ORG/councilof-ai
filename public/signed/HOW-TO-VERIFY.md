@@ -182,8 +182,12 @@ is ~3.3KB and **cannot live inside** the card. There is no PQC field on card-v0 
 - Do not claim a card is PQC-signed. The verify UI has no PQC helper wired; fail-closed.
 - Hybrid, when it ships, is a **second receipt** on the ROOT / DID / inclusion bundle
   (or a Falcon/ML-DSA envelope *beside* the 3KB, not inside it). Ed25519 is not replaced.
-- OpenTimestamps: `tsa.status: err`. No `.ots` proof is published on a `content_id`.
-  The card trust path is Ed25519 + SHA-256 hash-chain only.
+- OpenTimestamps: an `.ots` stamp IS now published, but on the ROOT, not on a card.
+  `/interop/root-witness-latest.json` reports `ots.status: STAMPED_PENDING_BITCOIN` and
+  serves the proof at `/interop/root-<sha16>.json.ots`. Stamped is not confirmed: it is
+  waiting on a Bitcoin block and until then it attests nothing about time.
+  No `.ots` proof is published on a `content_id`, so the CARD trust path is still
+  Ed25519 + SHA-256 hash-chain only. The ROOT additionally carries a Rekor entry.
 - **PQCBench** on the GSPC board is the continuity arena (`csoai/gspc-asi`) — a
   model-comparison task about cryptographic *assumptions*, not a post-quantum
   signature on these cards. Do not conflate.

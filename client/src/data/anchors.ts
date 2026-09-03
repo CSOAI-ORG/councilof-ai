@@ -29,12 +29,12 @@ export const ANCHORS: Anchor[] = [
   {
     id: "UK-legislation",
     name: "UK legislation.gov.uk",
-    last_passed: "2026-07-30T05:17:00Z",
+    last_passed: "2026-09-03T02:45:00Z",
     status: "live",
-    source_uri: "https://www.legislation.gov.uk/data.xml",
+    source_uri: "https://www.legislation.gov.uk/new/data.feed",
     licence: "OGL v3.0",
     description:
-      "UK primary and secondary legislation. Data XML feed for automated ingestion.",
+      "UK primary and secondary legislation. Atom data feed of new items, for automated ingestion.",
     jurisdiction: "UK",
     kind: "statute",
   },
@@ -77,11 +77,13 @@ export const ANCHORS: Anchor[] = [
   {
     id: "NIST-IR8547",
     name: "NIST IR 8547 (PQC transition)",
-    last_passed: "2026-07-29T21:00:00Z",
+    last_passed: "2026-09-03T02:45:00Z",
     status: "live",
-    source_uri: "https://csrc.nist.gov/pubs/ir/8547",
+    source_uri: "https://csrc.nist.gov/pubs/ir/8547/ipd",
     licence: "NIST publication",
-    description: "NIST guidance on post-quantum cryptography transition timeline.",
+    description:
+      "NIST IR 8547, INITIAL PUBLIC DRAFT — transition to post-quantum cryptography standards. " +
+      "A draft, not final guidance; cited as a draft and never as a settled requirement.",
     jurisdiction: "US",
     kind: "standard",
   },
