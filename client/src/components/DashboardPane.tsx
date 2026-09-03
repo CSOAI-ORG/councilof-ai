@@ -15,6 +15,10 @@ const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const LobbyMatrixPane = lazy(() => import("@/components/lobby/LobbyMatrixPane"));
 const DashboardArchivePane = lazy(() => import("@/components/DashboardArchivePane"));
+const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
+const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
+const DashboardStatePane = lazy(() => import("@/components/DashboardStatePane"));
+const DashboardAttestationsPane = lazy(() => import("@/components/DashboardAttestationsPane")); (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
 const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
 const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
 const Page_Tools = lazy(() => import("@/pages/ToolsPage"));
@@ -42,6 +46,11 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   terminal: LobbyBoardPane, // GSPC terminal
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
+  leaderboard: Page_Leaderboard, // the full model × axis table, in-shell
+  terminal: LobbyBoardPane,
+  verify: LobbyVerifyPane,
+  state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
+  attestations: DashboardAttestationsPane, // the one root, its witnesses (states verbatim), search, corrections ledger (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
   results: Page_Benchmarks,
   models: Page_ModelRegistry,
   tools: Page_Tools,
@@ -94,6 +103,8 @@ export function paneLabel(id: string): string | null {
 }
 
 export const PANE_IDS: string[] = Object.keys(PANES);
+/** Every tab id this shell renders natively — the door `/dashboard?tab=<id>` works for each. */
+export const PANE_IDS: readonly string[] = Object.keys(PANES); (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
 
 export default function DashboardPane({ id }: { id: string }) {
   const r = resolvePaneId(id);
