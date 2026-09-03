@@ -32,9 +32,19 @@ import {
   USDC_BASE_EIP712,
   NETWORK_SLUG_BASE,
   NETWORK_CAIP2_BASE,
+  toCaip2Network,
+  toLegacyNetwork,
 } from "./_x402_config";
+import { maybeMintCdpJwt, type CdpEnv } from "./_cdp_jwt";
+import { facilitatorDialect, toDialectPayload } from "./_x402_negotiate";
 
-export type X402Env = {
+// Re-exported so existing importers (and tests) keep their entry point after the converters moved
+// to _x402_config.ts to break an import cycle with _x402_negotiate.ts.
+export { toCaip2Network, toLegacyNetwork };
+
+// CdpEnv carries CDP_API_KEY_ID/SECRET — declared once in _cdp_jwt.ts so the credential shape
+// cannot drift between the minter and its caller.
+export type X402Env = CdpEnv & {
   // The x402 facilitator that verifies (and settles) a receipt. Absent → metered endpoints
   // stay 402: an unverified receipt is never accepted.
   X402_FACILITATOR_URL?: string;
@@ -212,22 +222,60 @@ export async function verifyX402Payment(
   if (!entry.payTo) return { ok: false, reason: "no payTo configured — refusing to settle to nowhere" };
   if (entry.maxAmountRequired === "0") return { ok: false, reason: "no amount configured for this resource" };
 
-  // Speak the client's dialect: a v1 payload names the network by slug ("base"); v2 by CAIP-2.
-  const v = payload.x402Version === 2 ? 2 : 1;
+  // Auth is per-endpoint, not per-session: CDP binds each JWT to the exact method+host+path via
+  // its `uri` claim, so /supported, /verify and /settle each need their own bearer. A non-CDP
+  // facilitator falls back to the static token (or to no auth, as the public facilitators want).
+  const headersFor = async (suffix: string, method = "POST"): Promise<Record<string, string>> => {
+    const h: Record<string, string> = { "content-type": "application/json" };
+    const path = `${new URL(facilitator).pathname.replace(/\/$/, "")}${suffix}`;
+    const jwt = await maybeMintCdpJwt(env, facilitator, method, path);
+    if (jwt) h.authorization = `Bearer ${jwt}`;
+    else if (env.X402_FACILITATOR_TOKEN) h.authorization = `Bearer ${env.X402_FACILITATOR_TOKEN}`;
+    return h;
+  };
+
+  // Speak the FACILITATOR's dialect, not the client's. Facilitators differ: PayAI serves Base
+  // mainnet in v1 only, while our own challenge advertises v2 — so mirroring the client would send
+  // v2 requirements to a v1 facilitator and fail AFTER the buyer signed. Ask /supported instead.
+  // A facilitator that cannot serve our chain at all is a configuration error we report as such,
+  // rather than attempting a settlement that cannot succeed.
+  const clientVersion: 1 | 2 = payload.x402Version === 2 ? 2 : 1;
+  const neg = await facilitatorDialect(
+    facilitator,
+    entry.network,
+    await headersFor("/supported", "GET"),
+  );
+  if (neg.version === null && neg.reason.includes("no exact scheme")) {
+    return {
+      ok: false,
+      reason: `facilitator does not serve ${entry.network} with the exact scheme (${neg.reason}) — refusing to attempt a settlement that cannot succeed`,
+    };
+  }
+  const v: 1 | 2 = neg.version ?? clientVersion;
   const paymentRequirements = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
-  const body = JSON.stringify({ x402Version: v, paymentPayload: payload, paymentRequirements });
-  const headers: Record<string, string> = { "content-type": "application/json" };
-  if (env.X402_FACILITATOR_TOKEN) headers.authorization = `Bearer ${env.X402_FACILITATOR_TOKEN}`;
+  const body = JSON.stringify({
+    x402Version: v,
+    paymentPayload: toDialectPayload(payload as Record<string, unknown>, v),
+    paymentRequirements,
+  });
 
   try {
-    const vr = await fetch(`${facilitator}/verify`, { method: "POST", headers, body });
+    const vr = await fetch(`${facilitator}/verify`, {
+      method: "POST",
+      headers: await headersFor("/verify"),
+      body,
+    });
     if (!vr.ok) return { ok: false, reason: `facilitator /verify HTTP ${vr.status}` };
     const vout = (await vr.json()) as { isValid?: boolean; invalidReason?: string };
     if (!vout || vout.isValid !== true) {
       return { ok: false, reason: `facilitator rejected receipt: ${vout?.invalidReason || "not valid"}` };
     }
     // Verified ≠ settled. Settle moves the USDC; only then is the artefact paid for.
-    const sr = await fetch(`${facilitator}/settle`, { method: "POST", headers, body });
+    const sr = await fetch(`${facilitator}/settle`, {
+      method: "POST",
+      headers: await headersFor("/settle"),
+      body,
+    });
     if (!sr.ok) return { ok: false, reason: `facilitator /settle HTTP ${sr.status}` };
     const sout = (await sr.json()) as {
       success?: boolean;
@@ -276,22 +324,6 @@ export type BazaarHttpGetOpts = {
   outputExample?: Record<string, unknown>;
 };
 
-/** Map legacy network names to CAIP-2 (CDP Bazaar validate requires CAIP-2). */
-export function toCaip2Network(network: string): string {
-  const n = (network || "").trim().toLowerCase();
-  if (n === "base") return "eip155:8453";
-  if (n === "base-sepolia") return "eip155:84532";
-  if (n.includes(":")) return network.trim();
-  return network || NETWORK_CAIP2_BASE;
-}
-
-/** Map CAIP-2 back to the v1 slug a v1 client/facilitator expects ("eip155:8453" → "base"). */
-export function toLegacyNetwork(network: string): string {
-  const n = (network || "").trim().toLowerCase();
-  if (n === NETWORK_CAIP2_BASE || n === "base") return NETWORK_SLUG_BASE;
-  if (n === "eip155:84532" || n === "base-sepolia") return "base-sepolia";
-  return network;
-}
 
 /**
  * declareBazaarHttpGet — hand-rolled equivalent of `@x402/extensions/bazaar`

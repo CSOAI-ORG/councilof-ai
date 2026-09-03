@@ -55,10 +55,29 @@ on Pages — an EIP-3009 authorization names the recipient; a facilitator can on
 1. **Switch settlement on (one env var).** Cloudflare dashboard → Workers & Pages → `councilof-ai` →
    Settings → Environment variables → Production → Add:
    - `X402_FACILITATOR_URL` — either
-     - `https://facilitator.payai.network` (keyless; `/supported` lists `exact` on `base` mainnet, x402 v1), or
-     - `https://api.cdp.coinbase.com/platform/v2/x402` plus `X402_FACILITATOR_TOKEN` (CDP API key — needed for Bazaar indexing).
+     - **`https://facilitator.payai.network`** — RECOMMENDED first switch. Keyless (no credential
+       to provision) and it is the only facilitator probed that settles on Base **mainnet**.
+       Re-probed 2026-09-03: `/supported` lists `exact` on `base` — **x402 v1 only**. The edge now
+       negotiates that automatically (see below), so a v2 client still settles. Or
+     - `https://api.cdp.coinbase.com/platform/v2/x402` plus `CDP_API_KEY_ID` + `CDP_API_KEY_SECRET`
+       (CDP portal → API keys → create a **Secret API Key**, Ed25519 recommended). Needed for
+       Bazaar indexing. CDP auth is NOT a static token: it is a per-request JWT, valid 2 minutes,
+       whose `uri` claim binds method+host+path. `functions/api/_cdp_jwt.ts` mints it; the legacy
+       `X402_FACILITATOR_TOKEN` alone would return `facilitator /verify HTTP 401` on every payment.
    - (optional) `X402_PAY_TO` if the receiving wallet ever changes.
    Redeploy (any push to master). `/api/x402` flips `rail.mode` from `challenge-only` to `live`.
+
+   > **Do NOT use `https://x402.org/facilitator`.** Probed 2026-09-03, its `/supported` lists
+   > `eip155:84532` — Base **Sepolia** — only. It can never move real USDC. It is useful for a
+   > testnet dress rehearsal and nothing else.
+
+   > **Dialect negotiation (2026-09-03).** The edge asks the facilitator's `/supported` and speaks
+   > the dialect IT advertises, rather than mirroring the client. Before this, a stock v2 client
+   > paying through the v1-only PayAI facilitator was rejected with `invalid_payment_requirements`
+   > *after signing*. Rewriting the envelope is safe: the EIP-3009 authorization is signed under the
+   > token's EIP-712 domain over (from, to, value, validAfter, validBefore, nonce) — the x402
+   > wrapper is transport, and `payTo` sits inside the signed tuple, untouched.
+   > See `functions/api/_x402_negotiate.ts`.
 2. **Confirm the signing key is on Pages.** Same screen: `BOARD_SIGN_KEY_PKCS8_B64` must be present
    (it is what `/api/board-sign` uses). If absent, paid cards ship `sig_ed25519:null` with the reason declared —
    honest, but a design partner wants the signed one.

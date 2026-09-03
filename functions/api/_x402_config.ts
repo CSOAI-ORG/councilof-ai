@@ -69,3 +69,20 @@ export function railMode(env: { X402_PAY_TO?: string; X402_FACILITATOR_URL?: str
       : "402 challenges are complete (asset, amount, payTo) but no facilitator is provisioned, so no receipt can settle and no paid artefact is granted. Nothing is charged. Verification stays free.",
   };
 }
+
+/** Map legacy network names to CAIP-2 (CDP Bazaar validate requires CAIP-2). */
+export function toCaip2Network(network: string): string {
+  const n = (network || "").trim().toLowerCase();
+  if (n === "base") return "eip155:8453";
+  if (n === "base-sepolia") return "eip155:84532";
+  if (n.includes(":")) return network.trim();
+  return network || NETWORK_CAIP2_BASE;
+}
+
+/** Map CAIP-2 back to the v1 slug a v1 client/facilitator expects ("eip155:8453" → "base"). */
+export function toLegacyNetwork(network: string): string {
+  const n = (network || "").trim().toLowerCase();
+  if (n === NETWORK_CAIP2_BASE || n === "base") return NETWORK_SLUG_BASE;
+  if (n === "eip155:84532" || n === "base-sepolia") return "base-sepolia";
+  return network;
+}

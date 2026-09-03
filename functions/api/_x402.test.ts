@@ -62,6 +62,7 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     const calls: string[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
       calls.push(String(u));
+      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
       const body = JSON.parse(String(init?.body));
       expect(body.paymentRequirements.payTo).toBe(ESTATE_PAY_TO);
       if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
@@ -71,12 +72,20 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example/" }, RESOURCE, a);
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/settle failed: insufficient_funds/);
-    expect(calls).toEqual(["https://f.example/verify", "https://f.example/settle"]);
+    // /supported is asked first: the facilitator's dialect decides the envelope, not the client's.
+    expect(calls).toEqual([
+      "https://f.example/supported",
+      "https://f.example/verify",
+      "https://f.example/settle",
+    ]);
   });
 
-  it("grants only after settle, echoing the facilitator's settlement facts and speaking the client's dialect", async () => {
+  // With no usable /supported (404 here) negotiation is inconclusive and we fall back to the
+  // client's dialect — the pre-negotiation behaviour, preserved deliberately.
+  it("grants only after settle, echoing the facilitator's settlement facts and falling back to the client's dialect when /supported is absent", async () => {
     const seen: { url: string; body: { x402Version: number; paymentRequirements: { network: string } } }[] = [];
     vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
+      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
       seen.push({ url: String(u), body: JSON.parse(String(init?.body)) });
       if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
       return new Response(JSON.stringify({ success: true, transaction: "0xabc", network: "base", payer: "0xpayer" }), { status: 200 });
@@ -94,5 +103,40 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     expect(v2.ok).toBe(true);
     expect(seen[0].body.x402Version).toBe(2);
     expect(seen[0].body.paymentRequirements.network).toBe("eip155:8453");
+  });
+
+  // THE MONEY BUG, end to end. Our /.well-known/x402.json advertises x402Version 2, so a stock
+  // client pays in v2. PayAI is the only keyless facilitator that settles on Base MAINNET and it
+  // speaks v1 only. Before negotiation we mirrored the client and sent v2 — which PayAI rejects as
+  // invalid_payment_requirements AFTER the buyer has signed. The envelope must be downgraded.
+  it("downgrades a v2 client receipt to v1 for a v1-only mainnet facilitator (PayAI)", async () => {
+    const seen: { url: string; body: Record<string, any> }[] = [];
+    vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
+      if (String(u).endsWith("/supported")) {
+        return new Response(
+          JSON.stringify({ kinds: [{ x402Version: 1, scheme: "exact", network: "base" }] }),
+          { status: 200 },
+        );
+      }
+      seen.push({ url: String(u), body: JSON.parse(String(init?.body)) });
+      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true, transaction: "0xfeed", network: "base", payer: "0xp" }),
+        { status: 200 },
+      );
+    });
+    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(
+      req(receipt(2)), // the client signed a v2 receipt
+      { X402_FACILITATOR_URL: "https://payai.example" },
+      RESOURCE,
+      a,
+    );
+    expect(r.ok).toBe(true);
+    expect(seen[0].body.x402Version).toBe(1);
+    expect(seen[0].body.paymentPayload.x402Version).toBe(1);
+    expect(seen[0].body.paymentRequirements.network).toBe("base");
+    // the recipient must survive the downgrade untouched
+    expect(seen[0].body.paymentRequirements.payTo).toBe(ESTATE_PAY_TO);
   });
 });
