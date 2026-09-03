@@ -23,6 +23,14 @@ if [ -f scripts/badger/csoai-auto-ots.py ]; then
   python3 scripts/badger/csoai-auto-ots.py || echo "  stamp step returned $?"
 fi
 
+# 1b. Re-root the whole atom queue and stamp it ONCE. This is what actually gets
+#     the queue anchored: 37k+ atoms under a single commitment, each provable by
+#     inclusion. Stamping them individually would mean ~112,000 submissions to
+#     volunteer-run calendars, and would still anchor nothing.
+if [ -f scripts/badger/atom-root.py ]; then
+  python3 scripts/badger/atom-root.py || echo "  atom-root step returned $?"
+fi
+
 # 2. Upgrade every proof we hold. This is the step that turns pending into proof.
 #    ots-upgrade.py exits 1 when nothing improved, which is NOT an error: the
 #    calendars simply have not committed yet. Never let that fail the job.
@@ -44,6 +52,22 @@ print(f"  ANCHORED (Bitcoin block) : {c['bitcoin']}")
 print(f"  pending (not a proof)    : {c['pending']}")
 print(f"  unreadable (not a stamp) : {c['unreadable']}")
 print("  Only the first number may be described as anchored.")
+
+# The atom root is the one that matters: it covers the whole queue.
+import glob as _g
+roots = sorted(_g.glob("public/interop/atom-root-*.json.ots"))
+if roots:
+    import json as _j
+    latest = roots[-1]
+    st = attestation_state(pathlib.Path(latest).read_bytes())
+    body = _j.loads(pathlib.Path(latest[:-4]).read_text())
+    n = body.get("n_leaves", "?")
+    if st["state"] == "bitcoin":
+        print(f"  ATOM ROOT: {n} atoms ANCHORED via block {st['block_height']}")
+    else:
+        print(f"  ATOM ROOT: {n} atoms covered by a {st['state']} stamp - NOT yet anchored")
+else:
+    print("  ATOM ROOT: none built")
 PY
 
 echo "=== ots-anchor done $(date -u +%Y-%m-%dT%H:%M:%SZ) ==="

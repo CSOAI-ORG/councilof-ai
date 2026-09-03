@@ -34,11 +34,12 @@ NGI_ZERO_APPLICATION = {
     "website": "https://councilof.ai",
     "amount": "50000",
     "abstract": (
-        "CSOAI publishes the only signed, anchored, open-source AI measurement board. "
+        "CSOAI publishes a signed, open-source AI measurement board. "
         "The GSPC board measures AI behaviour across 22 axes (14 model-comparison + 8 "
         "deterministic-fact). Every measurement is signed under "
-        "did:web:csoai.org#card-attestation-1 (Ed25519), witnessed in Sigstore Rekor, "
-        "and OTS-anchored to Bitcoin.\n\n"
+        "did:web:csoai.org#card-attestation-1 (Ed25519) and witnessed in Sigstore Rekor. "
+        "Bitcoin anchoring via OpenTimestamps is planned: a stamp is not an anchor, and we "
+        "will report the anchored count only once calendars commit the stamps to blocks.\n\n"
         "OUTCOME: a 4-anchor machine that gives the EU AI Office, member state regulators "
         "(ICO, CNIL, BfK, AgID, AESIA), insurers (Lloyd's syndicates, Munich Re, Zurich), "
         "and vendors (Meta, Mistral, OpenAI, Anthropic) an independently verifiable measurement "
@@ -52,8 +53,9 @@ NGI_ZERO_APPLICATION = {
         "PAST CONTRIBUTIONS:\n"
         "- The 22-axis GSPC measurement board (Governance, Safety, Provenance, Continuity)\n"
         "- The signed card-v0 attestation format (canonical JSON, Ed25519, 3KB or less)\n"
-        "- The 4-anchor machine (HuggingFace + Rekor + Corrections ledger + Bitcoin OTS)\n"
-        "- 570+ PyPI packages (core libraries + brain configs + mindsets + OS products)\n"
+        "- The measurement anchor stack: HuggingFace, Sigstore Rekor and a public corrections\n"
+        "  ledger, all live; Bitcoin OpenTimestamps is the planned fourth\n"
+        "- 570+ PyPI packages (core libraries, configuration packages and OS products)\n"
         "- The MCP server csoai-gspc-mcp on PyPI + npm\n"
         "- A2A agent card + x402 priced attestation rail + C2PA Article 50 detector\n"
         "- Open contributions to the IETF SCITT WG (issue #13, conformance test vectors)\n"
@@ -72,10 +74,11 @@ NGI_ZERO_APPLICATION = {
     ),
     "comparison": (
         "There are no comparable open-source projects that combine:\n"
-        "- A signed, anchored measurement board (vs unsigned benchmarks like EleutherAI's "
-        "lm-evaluation-harness or MLCommons)\n"
+        "- A signed measurement board, each card verifiable against a published DID key (vs "
+        "unsigned benchmarks like EleutherAI's lm-evaluation-harness or MLCommons)\n"
         "- A public corrections ledger (vs private vendor QA loops)\n"
-        "- A 4-anchor machine (vs single-anchor solutions like IPFS CIDs or Arweave only)\n"
+        "- Three independent live anchors — HuggingFace, Sigstore Rekor and a public corrections\n"
+        "  ledger (vs single-anchor solutions like IPFS CIDs or Arweave only)\n"
         "- A permissionless RaaS over x402 (vs SaaS seats with Stripe)\n\n"
         "The closest analogue is the model-transparency (model-signing) project from OpenSSF, "
         "but it signs the model files, not the measurement results. We sign the measurement results. "
