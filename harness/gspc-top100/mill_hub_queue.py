@@ -248,10 +248,22 @@ def axis_prompt(axis: str, item: str, labels: list[str]) -> str:
     )
 
 
-def flip_queue_axis(rows: list[dict], model_id: str, axis: str, card_id: str) -> bool:
-    """Record MEASURED for one (id, axis) only. Does not invent a card."""
+def flip_queue_axis(
+    rows: list[dict], model_id: str, axis: str, card_id: str, body: dict | None = None
+) -> bool:
+    """Record one (id, axis) cell, MIRRORING the signed card body. Does not invent a card.
+
+    The cell never upgrades a state: whatever the signed bytes say is what the cell
+    says, and an UNMEASURED cell carries the body's reason so it reads as
+    nothing-to-count rather than failure-to-check (#1155). A body is required to
+    state anything positive — without one the cell is UNMEASURED and says why."""
     if not model_id or not axis or not card_id:
         return False
+    body = body if isinstance(body, dict) else {}
+    status = str(body.get("status") or "").upper() or "UNMEASURED"
+    why = [str(x) for x in (body.get("unmeasured") or [])]
+    if not body:
+        why = ["no card body"]
     for r in rows:
         if str(r.get("id") or "") != model_id:
             continue
@@ -259,7 +271,10 @@ def flip_queue_axis(rows: list[dict], model_id: str, axis: str, card_id: str) ->
         if not isinstance(ma, dict):
             ma = {}
             r["measured_axes"] = ma
-        ma[axis] = {"status": "MEASURED", "card_id": card_id}
+        cell = {"status": status, "card_id": card_id}
+        if status != "MEASURED":
+            cell["unmeasured"] = why or ["unstated"]
+        ma[axis] = cell
         return True
     return False
 
@@ -308,7 +323,10 @@ def mill_index_row(wrap: dict, card_url: str) -> dict:
 
 
 def apply_valid_flips(rows: list[dict], verified: list[dict]) -> int:
-    """Flip hub-queue (id, axis) MEASURED iff wrap was VALID. Returns flip count."""
+    """Write one hub-queue (id, axis) cell per VALID wrap, mirroring its body.
+
+    VALID is what earns a cell at all; the body is what the cell then says. Returns
+    the number of cells written, which is not the same as the number MEASURED."""
     n = 0
     for wrap in verified:
         if wrap.get("_verdict") != "VALID":
@@ -317,7 +335,7 @@ def apply_valid_flips(rows: list[dict], verified: list[dict]) -> int:
         mid = str(body.get("model") or "")
         ax = str(body.get("axis") or "")
         cid = str(wrap.get("id") or "")
-        if flip_queue_axis(rows, mid, ax, cid):
+        if flip_queue_axis(rows, mid, ax, cid, body):
             n += 1
     return n
 
@@ -644,7 +662,10 @@ def stage_unsigned(model_id: str, axis: str, hits: int, n: int, reason: str, rou
         "n": n,
         "accuracy": js_safe_number(acc),
         "status": "UNMEASURED",
-        "unmeasured": [reason] if reason else ["signed-pending-verify"],
+        # At staging the card is unsigned — that, and not a "pending verify" state,
+        # is what is true when these bytes are written. The signer replaces this
+        # with the state that is true at signature time (see scripts/sign_mill_cards.py).
+        "unmeasured": [reason] if reason else ["unsigned"],
         "public_framing": "Measurement, not certification. Empty is not zero.",
         "verify": "https://councilof.ai/gspc-verify",
         "brand": "Council of AI",
