@@ -1,0 +1,236 @@
+{
+  "finished": "2026-09-03T07:11:07Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.batch-all",
+  "n_fail": 7,
+  "n_jobs": 21,
+  "n_ok": 14,
+  "results": {
+    "ANCHOR": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "ANCHOR",
+      "priority": 7,
+      "script": "csoai-auto-ots.py --limit 200",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "ARCHIVE": {
+      "elapsed_s": 0.05,
+      "exit_code": 0,
+      "name": "ARCHIVE",
+      "priority": 17,
+      "script": "csoai-archive-deep.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "tail": "\n  total written: 35\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/archive-deep"
+    },
+    "BANK-CLASSIFY": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "BANK-CLASSIFY",
+      "priority": 12,
+      "script": "csoai-bank-classify.py --dry-run",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "BANK-PACK": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "BANK-PACK",
+      "priority": 13,
+      "script": "csoai-bank-pack.py --no-ots",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "COSE": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "COSE",
+      "priority": 11,
+      "script": "csoai-cose-wrap.py --limit 10",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "DOOR-EXPAND": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "DOOR-EXPAND",
+      "priority": 10,
+      "script": "csoai-door-expand.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 50,
+      "tail": "  queue: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/door-expand/door-expand-20260903T071037Z.jsonl\n\n  Next: build the discovery doc generators, ship one per door"
+    },
+    "DOORS": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "DOORS",
+      "priority": 9,
+      "script": "csoai-door-docs.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 46,
+      "tail": "  \u2713 IL5 / DoD CMMC               \u2192 /public/.well-known/cmmc.json\n\n  wrote 40 discovery docs to public/.well-known/"
+    },
+    "EAT-4": {
+      "elapsed_s": 3.43,
+      "exit_code": 0,
+      "name": "EAT-4",
+      "priority": 19,
+      "script": "csoai-eat-4.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 11,
+      "tail": "\n  total written: 25\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/eat-4"
+    },
+    "FEEDBACK": {
+      "elapsed_s": 0.06,
+      "exit_code": 0,
+      "name": "FEEDBACK",
+      "priority": 21,
+      "script": "csoai-learn-from-feedback.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 43,
+      "tail": "\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/learn-feedback/feedback-20260903T071107Z.json\n  total fixes: 22"
+    },
+    "FRONT-AUDIT": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "FRONT-AUDIT",
+      "priority": 5,
+      "script": "csoai-frontend-audit.py --limit 30",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "FRONT-POLISH": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "FRONT-POLISH",
+      "priority": 6,
+      "script": "csoai-frontend-improve.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "tail": "  already:  16\n\n  Re-run the audit to verify scores went up."
+    },
+    "IMPROVE": {
+      "elapsed_s": 6.19,
+      "exit_code": 0,
+      "name": "IMPROVE",
+      "priority": 3,
+      "script": "csoai-improve.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 32,
+      "tail": "      exit=2  elapsed=0.0s\n\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/improve-20260903T071037Z.json"
+    },
+    "LAYER0": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "LAYER0",
+      "priority": 18,
+      "script": "csoai-layer0-ceremony.py --no-ots",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "LEARN": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "LEARN",
+      "priority": 2,
+      "script": "csoai-learn.py --limit 10000",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "MINE": {
+      "elapsed_s": 121.75,
+      "exit_code": 0,
+      "name": "MINE",
+      "priority": 1,
+      "script": "csoai-1000x.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 61,
+      "tail": "  finished: 2026-09-03T07:10:31Z\n  jobs:     18  ok: 18  fail: 0\n  state:    scripts/badger/_state-1000x.json"
+    },
+    "OPTIMIZE": {
+      "elapsed_s": 0.24,
+      "exit_code": 0,
+      "name": "OPTIMIZE",
+      "priority": 4,
+      "script": "csoai-optimize.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 50,
+      "tail": "\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/optimize-20260903T071037Z.json\n  next_actions: focus on TOP harvesters, investigate ZERO harvesters"
+    },
+    "PUBLIC-DATA": {
+      "elapsed_s": 5.31,
+      "exit_code": 0,
+      "name": "PUBLIC-DATA",
+      "priority": 16,
+      "script": "csoai-public-data-mine.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 12,
+      "tail": "\n  total written: 28\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/public-data"
+    },
+    "REG-MINE": {
+      "elapsed_s": 0.04,
+      "exit_code": 0,
+      "name": "REG-MINE",
+      "priority": 14,
+      "script": "csoai-regulatory-mine.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "tail": "\n  total written: 168\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/regulatory"
+    },
+    "SEM-SCHOLAR": {
+      "elapsed_s": 20.27,
+      "exit_code": 0,
+      "name": "SEM-SCHOLAR",
+      "priority": 20,
+      "script": "csoai-semantic-scholar.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 28,
+      "tail": "\n  total written: 60\n  queue: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/semantic-scholar"
+    },
+    "SIGN-PREP": {
+      "elapsed_s": 0.33,
+      "exit_code": 0,
+      "name": "SIGN-PREP",
+      "priority": 8,
+      "script": "csoai-auto-stage.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 34,
+      "tail": "    witness-receipts             80\n\n  state: scripts/badger/_state.json"
+    },
+    "UK-DATA": {
+      "elapsed_s": 0.65,
+      "exit_code": 0,
+      "name": "UK-DATA",
+      "priority": 15,
+      "script": "csoai-uk-open-data.py",
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 8,
+      "tail": "\n  total written: 34\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/uk-open-data"
+    }
+  },
+  "started": "2026-09-03T07:08:29Z",
+  "total_elapsed_s": 158.56
+}
