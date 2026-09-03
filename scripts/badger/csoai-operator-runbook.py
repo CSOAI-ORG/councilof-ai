@@ -167,7 +167,7 @@ RUNBOOK = [
     # ===== GRANTS =====
     {
         "id": "grants-01",
-        "name": "Send NLnet Privacy & Trust application (€50K, deadline 2026-09-03)",
+        "name": "Submit NLnet Privacy & Trust application via nlnet.nl/propose (€50K, deadline 2026-11-03 12:00 CET)",
         "url": "file:///Users/nicholas/Downloads/CSOAI_OWNER_CHECKLIST_02Sep2026.md",
         "sequence": [
             "1. Open drafts/nlnet-privacy-and-trust.txt",
@@ -330,7 +330,7 @@ def main():
     md.append("4. **Bind REVENUE_KV** — 5 min")
     md.append("5. **npm publish gspc-card-verifier** — 5 min")
     md.append("6. **npm provenance** — 5 min")
-    md.append("7. **NLnet grant** (deadline TODAY) — 30 min")
+    md.append("7. **NLnet grant** (deadline 2026-11-03 12:00 CET — web form at nlnet.nl/propose) — 30 min")
     md.append("8. **Re-mint HF DOIs** — 30 min per dataset")
     md.append("9. **SWH archive** — 5 min (waits for archive to complete)")
     md.append("10. **Other 3 grants** (NGI, Sloan, Ford) — 30 min each")
@@ -371,7 +371,7 @@ def main():
     print(f"  {len(RUNBOOK)} steps, ~6-8 hours of operator clicks")
     print()
     print(f"  HIGHEST-IMPACT FIRST:")
-    print(f"    1. NLnet grant (deadline TODAY — €50K)")
+    print(f"    1. NLnet grant (deadline 2026-11-03 12:00 CET — €50K, submit at nlnet.nl/propose)")
     print(f"    2. x402 facilitator URL (the ONE click for first $)")
     print(f"    3. EAS schema on Base (MetaMask)")
     print(f"    4. npm publish gspc-card-verifier")

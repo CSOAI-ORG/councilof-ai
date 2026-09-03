@@ -27,9 +27,11 @@ NGI_ZERO_APPLICATION = {
     "call": "NGI Zero Discovery",
     "requestor": "Nicholas Templeman",
     "email": "nicholas@csoai.org",
-    # Left blank deliberately: a fabricated number is worse than an absent one on a
-    # page that is served publicly. The owner must supply the real number.
-    "phone": "",
+    # Supplied by the owner on 2026-09-03. It replaced "+44 20 0000 0000", a
+    # placeholder that had been rendering on a publicly-served page under the
+    # heading "Phone number" in what presents as a real application. Stated in
+    # international form because the recipient (NLnet) is outside the UK.
+    "phone": "+44 7300 517092",
     "organization": "CSOAI Ltd (UK 16939677)",
     "country": "United Kingdom",
     "project": "CSOAI - Open Measurement Substrate",

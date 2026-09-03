@@ -108,7 +108,7 @@ def main():
     items.append(("◐", "IN PROGRESS", "7 subdomains → CF Pages projects", "Need owner: DNS records + CF Pages project per subdomain"))
 
     # === FUNDING (drafts ready) ===
-    items.append(("✓", "DONE", "NLnet grant draft", "€50K, deadline 2026-09-03 — staged"))
+    items.append(("✓", "DONE", "NLnet grant draft", "€50K, deadline 2026-11-03 12:00 CET — staged"))
     items.append(("✓", "DONE", "NGI Zero grant draft", "€50K, rolling — staged"))
     items.append(("✓", "DONE", "Sloan Foundation draft", "$75K, rolling — staged"))
     items.append(("✓", "DONE", "Ford Foundation draft", "$100K, rolling — staged"))
@@ -132,7 +132,7 @@ def main():
     items.append(("⚠", "BLOCKED", "npm publish gspc-card-verifier", "Owner runs: cd packages/gspc-card-verifier && npm publish"))
 
     # === OWNER GATES ===
-    items.append(("⚠", "BLOCKED", "Send 4 grant applications", "Operator-only — NLnet €50K deadline TODAY"))
+    items.append(("⚠", "BLOCKED", "Send 4 grant applications", "Operator-only — NLnet €50K deadline 2026-11-03"))
     items.append(("⚠", "BLOCKED", "Send 10 vendor outreach emails", "Operator-only"))
     items.append(("⚠", "BLOCKED", "Send 5 regulator outreach emails", "Operator-only"))
     items.append(("⚠", "BLOCKED", "Submit arXiv preprint #1", "Operator needs arXiv endorsement"))

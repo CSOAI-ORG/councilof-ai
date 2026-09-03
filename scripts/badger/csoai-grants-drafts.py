@@ -5,7 +5,7 @@ Lane-doable: produces the bodies + metadata for 4 active grants.
 Email-only content; the operator sends when ready.
 
 Grants targeted:
-  1. NLnet — Privacy & Trust (deadline 2026-09-03 / 2026-12-01)
+  1. NLnet — Privacy & Trust (next deadline 2026-11-03 12:00 CET; web form, not email)
   2. NGI Zero — Discovery (rolling)
   3. Sloan Foundation — Digital Technology (rolling)
   4. Ford Foundation — Public Interest Tech (rolling)

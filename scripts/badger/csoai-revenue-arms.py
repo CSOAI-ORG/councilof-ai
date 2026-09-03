@@ -149,7 +149,7 @@ def arm_grants() -> dict:
     return {
         "arm": "grants",
         "active": [
-            {"name": "NLnet / NGI Zero", "amount_eur": 20000, "deadline": "2026-09-03", "status": "owner-gated (account)"},
+            {"name": "NLnet / NGI Zero", "amount_eur": 20000, "deadline": "2026-11-03", "status": "owner-gated (account)"},
             {"name": "EF Ecosystem Support Program", "amount_usd": 30000, "deadline": "rolling", "status": "owner-gated (email)"},
             {"name": "Longview Philanthropy", "amount_usd": "tbd", "deadline": "rolling", "status": "owner-gated (email)"},
             {"name": "Mozilla Responsible AI grants", "amount_usd": 30000, "deadline": "rolling", "status": "owner-gated"},
