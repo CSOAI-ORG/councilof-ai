@@ -89,7 +89,7 @@ describe("N-sites permissionless flags", () => {
     expect(PLUGIN_HARVEST.publisher_path).toMatch(/No mass mail/);
     const blob = JSON.stringify({ NSITES_FLAGS, PLUGIN_HARVEST, NSITES_RULING });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|all millions/i);
-    expect(toolsPage).toContain("NSitesFlags");
+    expect(toolsPage).not.toContain("NSitesFlags"); // internal planning envelope — never on a public page
     expect(flagsUi).toContain("n-sites-flags");
     expect(flagsUi).toContain("n-sites-plugin-harvest");
     expect(flagsUi).toContain("/products");

@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import HundredGate from "@/components/HundredGate";
-import NSitesFlags from "@/components/NSitesFlags";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
 import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
@@ -191,10 +189,8 @@ export default function ToolsPage() {
         </a>
         , free.
       </p>
-      <HundredGate />
       <SignedAgentTravel />
       <TwoSpeed />
-      <NSitesFlags />
       <WatchlistPane />
     </main>
   );

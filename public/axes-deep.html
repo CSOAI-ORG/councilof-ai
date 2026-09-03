@@ -77,7 +77,7 @@
   </header>
 
   <section class="family" id="family-model-comparison">
-    <h2><span class="family-tag">14 axes</span> Model-comparison · <code>family: gspc</code></h2>
+    <h2><span class="family-tag" id="tag-model-comparison">…</span> Model-comparison · <code>family: gspc</code></h2>
     <p class="family-desc">
       A 19-model fleet answers a frozen item bank, graded deterministically. TIE is TIE.
       Fleet means the fleet; not a single winner. Where the lead is statistically separated
@@ -89,7 +89,7 @@
   </section>
 
   <section class="family" id="family-deterministic-fact">
-    <h2><span class="family-tag">8 axes</span> Deterministic-fact · <code>family: financial</code></h2>
+    <h2><span class="family-tag" id="tag-deterministic-fact">…</span> Deterministic-fact · <code>family: financial</code></h2>
     <p class="family-desc">
       Read from public ledgers (XRPL issuer accounts, Companies House, public statistical series)
       and graded by rule. No model, no fleet, no judgement. <em>Measured is not scored.</em>
@@ -207,6 +207,15 @@
       mc.map(render).join("") || "<p>LOADING…</p>";
     document.getElementById("grid-deterministic-fact").innerHTML =
       df.map(render).join("") || "<p>LOADING…</p>";
+
+    // Family counts come from the live board, never typed into the page.
+    // facts-gate.mjs rejects a hardcoded "14 axes" / "8 axes" precisely because
+    // a typed integer goes stale the moment the board moves — which is exactly
+    // what happened here and hard-blocked every deploy for 44 commits.
+    const mcTag = document.getElementById("tag-model-comparison");
+    const dfTag = document.getElementById("tag-deterministic-fact");
+    if (mcTag) mcTag.textContent = mc.length ? mc.length + " axis" : "—";
+    if (dfTag) dfTag.textContent = df.length ? df.length + " axis" : "—";
 
     // Lid
     const lid = document.getElementById("lid");
