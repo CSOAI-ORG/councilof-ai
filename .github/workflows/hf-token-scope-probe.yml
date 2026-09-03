@@ -60,8 +60,7 @@ jobs:
               code, body = call("https://huggingface.co/api/whoami-v2", tok)
               row["whoami_http"] = code
               if code == 200:
-                  who = json.loads(body.decode() or "{}") if body.strip().startswith(b"{") else {}
-                  # body is truncated for safety; refetch fully only for the JSON we print
+                  # call() truncates its body on purpose, so parse a full response here.
                   req = urllib.request.Request("https://huggingface.co/api/whoami-v2")
                   req.add_header("Authorization", f"Bearer {tok}")
                   who = json.load(urllib.request.urlopen(req, timeout=25))
