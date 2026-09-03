@@ -47,3 +47,36 @@ Both are `NOT_YET` in the sidecar until a funded wallet exists. When they land, 
 ## What a verifying signature does not establish (revocation)
 
 Verifying a signature establishes that the key named under `alg` / the DID key reference produced the signed bytes and that the bytes have not changed since. It says nothing about the state of that key now. Offline verification is a computation over the verification parameters you hold (the published key, the card bytes); revocation is a property of the present, and this rule defines no revocation mechanism and places no freshness requirement on key material. **A consumer must not treat a signature that verifies as evidence that the signing key is still valid.** Where a decision depends on revocation state, the key-resolution path and the staleness you accept are operational parameters of your deployment and must be stated by it; the card does not carry them. (Stated after the IETF agentproto thread of 31 Aug–2 Sep 2026; recorded as correction C-2026-0902-09.)
+
+## What a card's `sha256` covers — read this before trusting an inclusion proof
+
+**card-v1** (`https://councilof.ai/schema/card-v1.json`, from 2026-09-03):
+
+```
+sha256 = SHA-256( canonical JSON of the whole card, minus `sha256` and `sig_ed25519` )
+```
+
+Every field a relying party reads is bound: `subject`, `source_urls`, `as_of`,
+`did`, `surface`, `tags`, `unmeasured`, `payload`. The card states this itself in
+`digest_covers`. A field cannot be inside its own hash, so the digest and the
+signature are the only exclusions.
+
+**card-v0** (cards already inside a published root) hashed the **payload only**.
+On those cards `subject` and `source_urls` are **outside** the merkle tree: the
+claim text and its evidence URL could be rewritten and the leaf, the root and the
+inclusion proof would all still verify. Demonstrated against the real code:
+
+```
+subject honest   : Qwen/Qwen3-30B governance run
+subject tampered : TOTALLY DIFFERENT CLAIM
+source  tampered : https://evil.example/fake
+leaf digest      : e52f814957f02a0aef7de67ca93250f9…    IDENTICAL
+```
+
+This is stated rather than quietly repaired. v0 cards are **superseded by a newer
+root, never edited** — editing signed bytes breaks the signature and the history.
+
+**So: check `schema` before you rely on an inclusion proof.** A v0 proof tells you
+the payload was in the tree. It does **not** tell you the subject or the source URL
+was in the tree.
+
