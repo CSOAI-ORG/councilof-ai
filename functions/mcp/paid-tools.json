@@ -20,7 +20,7 @@
     },
     {
       "name": "art50_marking_evidence",
-      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1162) the tool says NOT_DEPLOYED rather than inventing a result.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Article 50 marking-evidence pack via https://councilof.ai/api/art50/marking-evidence: is a machine-readable mark DETECTABLE in these bytes right now (C2PA manifest store, assertion hashes, hard binding, claim signature; IPTC digitalSourceType), beside the verbatim Art 50(2) excerpt hash and the Art 99(4) ceiling. Watermarks are UNCHECKABLE where no public detector exists and the pack says so. Point-in-time detection — never a conformity opinion, never a compliance word of any kind. preview=true is free and returns the same measurement unsigned. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED rather than inventing a result.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -32,11 +32,11 @@
         },
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "PR #1162" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/art50/marking-evidence", "sku": "art50_marking_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "rwa_evidence",
-      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1158) the tool says NOT_DEPLOYED.",
+      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -47,11 +47,11 @@
         "required": ["asset"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "PR #1158" }
+      "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "witness_hash",
-      "description": "PAID (x402 or CSOAI LTD invoice). Witness a SHA-256 digest — 'attest what you're shown' — via https://councilof.ai/api/witness: one public.notice leaf (csoai.witness.hash/0.1) in the next hourly signed public root, an RFC-3161 timestamp over the digest, and the root's Rekor + OpenTimestamps anchors. Hash-only: name a digest, or a public URL fetched once (robots honoured, never past a login, paywall or bot check → UNCHECKABLE, nothing charged). Attests existence of the digest at the root's as_of — nothing about content, legality or provenance; a self-signed card carries no legal presumption. Measurement, not certification. Status is free at /api/witness/status. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin yet (PR #1163) the tool says NOT_DEPLOYED.",
+      "description": "PAID (x402 or CSOAI LTD invoice). Witness a SHA-256 digest — 'attest what you're shown' — via https://councilof.ai/api/witness: one public.notice leaf (csoai.witness.hash/0.1) in the next hourly signed public root, an RFC-3161 timestamp over the digest, and the root's Rekor + OpenTimestamps anchors. Hash-only: name a digest, or a public URL fetched once (robots honoured, never past a login, paywall or bot check → UNCHECKABLE, nothing charged). Attests existence of the digest at the root's as_of — nothing about content, legality or provenance; a self-signed card carries no legal presumption. Measurement, not certification. Status is free at /api/witness/status. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -62,7 +62,7 @@
         },
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/witness", "sku": "witness_hash", "free_status": "/api/witness/status?sha256=", "deliverable": "one public.notice leaf in the next hourly root + RFC-3161 reply + Rekor/OTS anchors", "deployed_by": "PR #1163" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/witness", "sku": "witness_hash", "free_status": "/api/witness/status?sha256=", "deliverable": "one public.notice leaf in the next hourly root + RFC-3161 reply + Rekor/OTS anchors", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
       "name": "receipts_batch",

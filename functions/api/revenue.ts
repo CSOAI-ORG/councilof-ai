@@ -6,7 +6,8 @@
  * and /api/state:
  *   · No new Date() — nothing here follows the clock.
  *   · A count is null, NEVER 0, when there is no source. 0 asserts a measured zero; there is no
- *     live settle path yet (x402 is fail-closed, the manifest is mode:mock), so every SKU count
+ *     live settle path until a facilitator is provisioned; the rail state is READ from
+ *     railMode(env) rather than asserted here, so every SKU count
  *     is honestly null until a receipt actually settles.
  *   · The north-of-truth number is settled_usdc — USDC that cleared to the estate pay_to on Base.
  *     Bytes/chain adjudicate revenue, not intent and not a CRM.
@@ -19,6 +20,7 @@
  * has not yet taken money.
  */
 import countersDoc from "../../counters.json";
+import { railMode } from "./_x402_config";
 
 type CanonCounter = {
   value: string | number | null;
@@ -120,10 +122,18 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       derivation:
         "Counts read from counters.json (the counter canon) and, where bound, the REVENUE_KV " +
         "tallies. Nothing is fetched over HTTP and no count is typed by hand.",
+      // DERIVED, never asserted. This sentence used to hardcode "x402 fail-closed, manifest
+      // mode:mock". The facilitator was provisioned on 2026-09-03 and /.well-known/x402.json
+      // began reporting mode:live from railMode(env) — while this endpoint went on telling the
+      // public the rail was mock. Two neighbouring surfaces contradicting each other, and the
+      // stale one was the surface about money. The counts stay null either way; only the reason
+      // was wrong, which is exactly the kind of claim that has to read itself off the env.
       null_rule:
-        "A count is null, never 0, when there is no source. There is no live settle path yet " +
-        "(x402 fail-closed, manifest mode:mock), so every count is honestly null until a receipt " +
-        "settles.",
+        `A count is null, never 0, when there is no source. The x402 rail is currently ` +
+        `${railMode(env).mode}` +
+        (railMode(env).facilitator_configured
+          ? ` — a facilitator is provisioned, so a settled receipt can be counted; every count stays null until one settles.`
+          : ` — no facilitator is provisioned, so no receipt can settle and every count is honestly null.`),
       north_of_truth:
         "settled_usdc is the honest revenue number: USDC that cleared to the estate pay_to on " +
         "Base, single-use. Chain adjudicates, not the CRM.",

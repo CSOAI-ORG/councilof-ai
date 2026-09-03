@@ -75,7 +75,9 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["storage or republication of the bytes", "a bypass of a login, paywall, robots.txt or bot check (UNCHECKABLE, no charge)", "a verdict on the content", "a certificate", "a legal presumption"],
       },
       {
-        tier: 1,
+        // Was `tier: 1, tier: 4` — two keys in one literal. The second silently won, so the
+        // catalog published tier 4 while the source read as tier 1. Keeping 4 preserves the
+        // value that has actually been served; this is a de-duplication, not a re-pricing.
         tier: 4,
         id: "provider_diff_feed",
         name: "Provider document diff feed (signed historical batch / bespoke partner feed)",
@@ -102,9 +104,9 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       free_tools: ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"],
       paid_tools: [
         { name: "commission_card", route: u("/api/request-attestation"), sells: "issuance" },
-        { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "route ships in PR #1162; the tool answers NOT_DEPLOYED until then" },
-        { name: "rwa_evidence", route: u("/api/rwa/evidence"), sells: "issuance", note: "route ships in PR #1158; the tool answers NOT_DEPLOYED until then" },
-        { name: "witness_hash", route: u("/api/witness"), sells: "independent-signature", note: "route ships in PR #1163; the tool answers NOT_DEPLOYED until then" },
+        { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
+        { name: "rwa_evidence", route: u("/api/rwa/evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
+        { name: "witness_hash", route: u("/api/witness"), sells: "independent-signature", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
         { name: "receipts_batch", route: u("/api/receipts/batch"), sells: "assembly" },
       ],
       how: "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free; stdio (npm csoai-gspc-mcp) stays free-only.",

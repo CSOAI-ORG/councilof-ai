@@ -117,7 +117,13 @@ describe("/mcp tools/call — paid tools", () => {
     ] as const) {
       const r = await (await call(rpc("tools/call", { name, arguments: args }))).json();
       expect(r.result.structuredContent.status, name).toBe("NOT_DEPLOYED");
-      expect(r.result.structuredContent.reason, name).toMatch(/PR #11(58|62|63)/);
+      // Assert the CONTRACT, not a changelog reference. This previously matched /PR #11(58|62|63)/,
+      // which pinned the reason text to three pull requests that have long since merged — so the
+      // test enforced stale prose and went red when the prose was corrected to say the routes are
+      // live. What must hold is that the refusal names the route and invents nothing.
+      expect(r.result.structuredContent.reason, name).toMatch(/is not deployed on this origin/);
+      expect(r.result.structuredContent.reason, name).toContain(String(args && "url" in args ? "/api/art50/marking-evidence" : ""));
+      expect(r.result.structuredContent.reason, name).not.toMatch(/\b(charged|settled|paid)\b/);
       expect(r.result.isError, name).toBe(false);
     }
   });
