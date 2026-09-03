@@ -104,7 +104,7 @@ export async function handleSharedTool(
               ? await getCardTool(origin, args)
               : name === "verify_inclusion"
                 ? await verifyInclusionTool(origin, args)
-          : await verifyCardThreeState(args, origin);
+              : await verifyCardThreeState(args, origin);
   return rpc(id, {
     content: [
       {
