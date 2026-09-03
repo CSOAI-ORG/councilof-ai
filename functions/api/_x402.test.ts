@@ -45,6 +45,25 @@ describe("x402 rail — money destination and token domain", () => {
     expect(railMode({})).toMatchObject({ mode: "challenge-only", pay_to_configured: true, facilitator_configured: false });
     expect(railMode({ X402_FACILITATOR_URL: "https://f.example" })).toMatchObject({ mode: "live" });
   });
+
+  // pay_to_configured is env-INDEPENDENT (payTo falls back to the ESTATE_PAY_TO constant), so it
+  // must never be used to infer that an environment has bindings. Two readers have already read a
+  // half-configured rail out of it by comparing hosts on this field. facilitator_configured is the
+  // one that actually varies with env. Pinned here so the distinction is enforced, not just noted.
+  it("pay_to_configured cannot distinguish environments; facilitator_configured is the one that can", () => {
+    const noEnv = railMode({});
+    const withFacilitator = railMode({ X402_FACILITATOR_URL: "https://f.example" });
+    // identical on the field that looks like evidence and is not
+    expect(noEnv.pay_to_configured).toBe(true);
+    expect(withFacilitator.pay_to_configured).toBe(true);
+    // and it stays true even when an env override is present, so "true" never implies "unset"
+    expect(railMode({ X402_PAY_TO: "0x000000000000000000000000000000000000dEaD" }).pay_to_configured).toBe(true);
+    // the field that does carry the signal
+    expect(noEnv.facilitator_configured).toBe(false);
+    expect(withFacilitator.facilitator_configured).toBe(true);
+    expect(noEnv.mode).toBe("challenge-only");
+    expect(withFacilitator.mode).toBe("live");
+  });
 });
 
 describe("x402 rail — settlement is fail-closed and verify≠settle", () => {

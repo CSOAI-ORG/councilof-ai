@@ -50,7 +50,25 @@ export function facilitatorUrl(env: { X402_FACILITATOR_URL?: string } = {}): str
   return (env.X402_FACILITATOR_URL || "").trim().replace(/\/$/, "");
 }
 
-/** Honest rail mode, derived from env — never typed by hand on any surface. */
+/**
+ * Honest rail mode, derived from env — never typed by hand on any surface.
+ *
+ * READ THIS BEFORE USING `pay_to_configured` AS EVIDENCE. It is env-INDEPENDENT: payTo falls back
+ * to the ESTATE_PAY_TO constant above, so `pay_to_configured` is true on a host with nothing bound
+ * at all (see the railMode({}) case in _x402.test.ts). It answers "is there an address to pay?",
+ * never "is an env var set here?". Two readers have already inferred a binding from it and
+ * concluded the rail was half-configured across environments.
+ *
+ * `facilitator_configured` is the field that actually varies with env — it has no code default,
+ * by deliberate design (see the FACILITATOR note at the top of this file). Any check comparing
+ * environments, or asserting that a deployment has the rail switched on, must read that one.
+ *
+ * A worked example of the confusion, for the next reader: preview deployments
+ * (master./production.<project>.pages.dev) legitimately report challenge-only while the apex
+ * reports live, because the facilitator secret is set on production only — on purpose, since a
+ * preview build able to settle real mainnet USDC would put a live money rail on every branch.
+ * Compare the APEX, per the rule in scripts/deploy-site.sh.
+ */
 export function railMode(env: { X402_PAY_TO?: string; X402_FACILITATOR_URL?: string } = {}): {
   mode: "live" | "challenge-only";
   pay_to_configured: boolean;
