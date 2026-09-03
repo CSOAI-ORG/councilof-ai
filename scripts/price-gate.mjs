@@ -34,9 +34,18 @@ const args = process.argv.slice(2).filter((a) => a !== "--report");
 const REPORT_ONLY = process.argv.includes("--report");
 const DIST = path.resolve(REPO, args[0] || "dist/client");
 
-// A currency amount and nothing else: "£5k", "$1,200", "€35", "£10k/yr", "Free".
+// A currency amount and nothing else: "£5k", "$1,200", "€35", "£10k/yr", "£3.5K-£7.5K".
 // Anchored to the whole string, so it only matches a standalone display element.
-const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/;
+//
+// THE RANGE ARM IS NOT DECORATION. "£3.5K-£7.5K" shipped live on /eu-ai-act-urgency
+// against the words "CSOAI measurement credential" and passed BOTH gates. brand-gate
+// requires a cadence (/mo, per card) to tell our pricing from a regulation penalty, and
+// this pattern required a SINGLE amount. A bare range has neither, so it fell straight
+// between them. Ranges are how a price is usually written when it is a quote rather than
+// a rate, which is exactly the shape most likely to appear beside a product name.
+// Prose is still safe because of the ^...$ anchor: "providers charge £500-2,000" and
+// "fines up to €35M" do not match.
+const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:[-–—]\s*(?:[£$€]\s?)?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*)?(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/;
 
 // Popularity claims — assertions about what OTHER CUSTOMERS chose.
 // "Recommended" was in this list and was WRONG: on /regulatory-compliance it is a
@@ -113,9 +122,16 @@ const leafTexts = (html) => {
     const text = m[2].replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim();
     if (!text) continue;
     // Keep the neighbourhood, tags stripped, so a rule can ask what this money is FOR.
-    const ctx = cleaned
-      .slice(Math.max(0, m.index - CONTEXT_WINDOW), m.index + m[0].length + CONTEXT_WINDOW)
-      .replace(/<[^>]+>/g, " ");
+    //
+    // STRIP FIRST, THEN MEASURE. This used to slice CONTEXT_WINDOW chars of RAW HTML and
+    // strip afterwards, so markup ate the budget: around a price in a table cell, 480 raw
+    // chars carried only 123 chars of readable text — not enough to reach the column
+    // header saying whose money it is. That is why "£500-2,000" under an "Other Providers"
+    // heading was not stood down by FOREIGN_MONEY. Stripping first makes CONTEXT_WINDOW
+    // mean what it says: characters a reader would actually see.
+    const before = cleaned.slice(0, m.index).replace(/<[^>]+>/g, " ");
+    const after = cleaned.slice(m.index + m[0].length).replace(/<[^>]+>/g, " ");
+    const ctx = before.slice(-CONTEXT_WINDOW) + " " + text + " " + after.slice(0, CONTEXT_WINDOW);
     out.push({ text, ctx });
   }
   return out;
