@@ -58,3 +58,18 @@
 
 /signed/cards/index.html
   Cache-Control: no-cache, must-revalidate
+
+# Interop evidence must be READABLE in a browser, not downloaded.
+# Cloudflare Pages serves .py as application/octet-stream, and the global
+# `X-Content-Type-Options: nosniff` above means a browser will not second-guess it: the tab
+# renders blank while the bytes arrive intact. Reported 2026-09-03 after a reviewer opened
+# /interop/scrapi-ccf/mint_data_hash_vector.py and saw an apparently empty file — 7818 bytes
+# had in fact been served. These files are cited in IETF Last Call mail so that reviewers can
+# read the minter and recompute the digests themselves; one that downloads instead of
+# rendering reads as an empty publication, which is worse than no citation at all.
+# Both patterns are listed because the splat form is what matches nested directories.
+/interop/*.py
+  Content-Type: text/plain; charset=utf-8
+
+/interop/scrapi-ccf/mint_data_hash_vector.py
+  Content-Type: text/plain; charset=utf-8
