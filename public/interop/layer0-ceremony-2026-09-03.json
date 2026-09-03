@@ -1,13 +1,14 @@
 {
- "schema": "csoai.layer0-ceremony/0.2",
+ "schema": "csoai.layer0-ceremony/0.3",
  "kind": "layer0.surface-attestation",
  "as_of": "2026-09-03T05:10:26Z",
  "publisher": "Council of AI (CSOAI Ltd, UK 16939677)",
  "supersedes": {
-  "file": "/interop/layer0-ceremony.json",
-  "as_of": "2026-09-03T05:10:55Z",
-  "reason": "v0.1 embedded the OpenTimestamps proof as a JSON STRING field (`ots_proof`). Binary through JSON string encoding is lossy: the re-encoded bytes fail DetachedTimestampFile.deserialize with BadMagicError, so `ots verify` cannot read it. The stamp was real; the published form was unusable. v0.2 publishes the proof as a detached sidecar file, which round-trips.",
-  "prior_bytes_kept": true
+  "file": "/interop/layer0-ceremony-2026-09-03.json (v0.2)",
+  "as_of": "2026-09-03T05:10:26Z",
+  "reason": "v0.2 claimed /api/intoto was an endpoint pending deploy. It is a helper module with no request handler. A ceremony that attests the machine surface must not invent a door.",
+  "prior_bytes_kept": false,
+  "note": "v0.2 is superseded in place because it had not been referenced externally and its OTS stamp was still PENDING (no Bitcoin attestation to preserve). Had the stamp been upgraded, the bytes would have been kept and a new file issued."
  },
  "what_this_is": "A dated attestation of the MACHINE SURFACE this estate actually serves: every protocol rail, probed live at as_of, with the HTTP status returned and what each rail exposes. It is a measurement of our own doors, made by the same rule we apply to anyone else.",
  "digest_covers": "whole-artifact-except-sha256-and-seal",
@@ -351,14 +352,6 @@
    "serving": true
   },
   {
-   "rail": "intoto",
-   "path": "/api/intoto",
-   "description": "in-toto attestation",
-   "http": "404",
-   "content_type": "application/json",
-   "serving": false
-  },
-  {
    "rail": "witness",
    "path": "/api/witness",
    "description": "hash witness",
@@ -368,7 +361,7 @@
   }
  ],
  "rails_serving": 14,
- "rails_total": 15,
+ "rails_total": 14,
  "surface": {
   "a2a": {
    "name": "Council of AI — Measurement Agent",
@@ -467,10 +460,10 @@
   "signed_root": "https://councilof.ai/root.json"
  },
  "what_this_does_not_claim": [
+  "CORRECTION (v0.3). v0.2 listed /api/intoto as a rail returning 404 and said 'the handler exists in master but is inside an undeployed window'. That was WRONG. functions/api/intoto.ts exports no onRequest handler at all — it is a helper module (subjectDigest, toInTotoStatement, toDsse) imported by functions/api/detect.ts and functions/api/detector-interop.ts, both of which serve 200. It was never a route and no deploy would ever have made it one. The only thing on the estate advertising /api/intoto as an endpoint was this artifact. It is removed from the rail list; in-toto capability is real and reachable through /api/detect and /api/detector-interop.",
   "Not a certification, conformity mark, or trust label. We measure; we never certify.",
   "A 200 means the door answered at as_of. It does not mean the content behind it is correct, current, or complete.",
   "The A2A card carries version 1.0.0 (the AGENT's version). protocolVersion is ABSENT; a strict A2A client may reject the card on that basis. Recorded, not hidden.",
-  "/api/intoto returned 404 at as_of: the handler exists in master but is inside an undeployed window. UNMEASURED, not removed.",
   "x402 is challenge-only: pay_to is configured, facilitator_configured is FALSE. Nothing can currently be paid for. Stated by the rail itself.",
   "The signed card index was packaged 2026-08-28; it is STALE relative to as_of.",
   "This artifact carries NO Ed25519 seal. The board signing key is on an isolated signing node and is deliberately unreachable from any tool that could produce this file. seal.state is UNMEASURED until an owner ceremony signs it.",
@@ -499,5 +492,5 @@
   "reason": "no board signing key is reachable from here",
   "expected_kid": "did:web:csoai.org#board-attestation-1"
  },
- "sha256": "904ff1f81e3a94e3c835e29a25bf091acaee3f687c60df98456429e122e60497"
+ "sha256": "672bd5416c4c8d33fc0d03293495bcb3a5c5a0a95d8a13657f2e1d65661abbbc"
 }
