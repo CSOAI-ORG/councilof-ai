@@ -131,7 +131,7 @@ SUBDOMAINS = [
     (
         "press",
         "Press Portal — CSOAI",
-        "Press releases, the press kit (logos, screenshots, FAQ, contacts), and the media list. Every press release is signed under did:web:csoai.org#card-attestation-1 and OTS-anchored to Bitcoin.",
+        "Press releases, the press kit (logos, screenshots, FAQ, contacts), and the media list. Every press release is signed under did:web:csoai.org#card-attestation-1 and stamped with OpenTimestamps; a stamp will anchor to Bitcoin once a calendar commits it.",
         "WebSite",
         "Open the Press Portal →",
         "/press.html",

@@ -1,38 +1,61 @@
-# The .ots files in this queue are NOT proofs — 2026-09-03
+# A stamp is not an anchor — measured 2026-09-03
 
-112 of the 115 `.ots` files under `scripts/badger/_queue/` **cannot be read by
-`ots verify`**. Measured, not estimated:
+Re-measured with `scripts/badger/ots_stamp.py::attestation_state`, which reads what
+each proof **actually carries** rather than what was requested of it:
 
 ```
-total .ots            115
-in public/ (published)  3
-WITH Bitcoin blocks     2
-pending only            1
-unparseable           112     <- 100 x BadMagicError
+total .ots in repo        261
+  BITCOIN-ATTESTED          6   <- the only files that may be called anchored
+  pending (valid stamp)   243   <- accepted by a calendar, not yet in a block
+  unreadable (not a stamp) 12   <- BadMagicError; in scripts/ots/
 ```
 
-They carry no OpenTimestamps magic header. They are raw calendar responses
-written straight to disk by `csoai-auto-ots.py`, which had four faults:
+The six anchored files are three published artifacts (each also copied into `dist/`):
 
-1. It appended a hardcoded constant to the digest —
-   `payload_hex = digest_hex + "0123456789abcdef"` — so the calendar was asked
-   to stamp `sha256(atom)||0123456789abcdef`, never the atom's digest. Even a
-   perfectly formatted file would not have attested the atom.
-2. It wrote the raw HTTP body as the `.ots`. A calendar returns a timestamp
-   *fragment*; the magic header and digest binding were never written.
-3. It passed a Python `bytes` object as a curl argument, coercing it to `str`.
-4. It decoded the binary response as UTF-8 with `errors="ignore"`.
+- `public/interop/root-2026-09-02.json.ots` — Bitcoin block 965121
+- `public/interop/root-728e8c5e.json.ots`
+- `public/interop/layer0-ceremony-2026-09-03.json.ots` — Bitcoin block 965268
 
-`csoai-auto-ots.py` is fixed and now emits real `DetachedTimestampFile` bytes,
-verified to parse and to bind to the submitted digest.
+**No queued atom is anchored.** Any sentence of the form "N atoms OTS-anchored" is
+false unless N is drawn from the BITCOIN-ATTESTED line above. The estate published
+"700+ already OTS-anchored to Bitcoin" on `/pay` and reported "42/45 OTS-anchored"
+in session; both were counts of stamps requested.
 
-**The 112 existing files are left in place and are NOT proofs.** They are not
-deleted, because deleting them would hide that they were once counted. Any
-figure of the form "N atoms OTS-anchored" that includes them is wrong: at the
-time of writing the number of published proofs carrying a Bitcoin attestation
-is **2** — `public/interop/root-2026-09-02.json.ots` and
-`public/interop/root-728e8c5e.json.ots`.
+## What went wrong, in order
 
-To make the queue real, re-stamp with the fixed writer and upgrade with
-`scripts/ots-upgrade.py` once a calendar commits. An unupgraded stamp is not a
-proof either.
+1. **The writer was broken.** `csoai-auto-ots.py` had four faults: it appended a
+   constant to the digest (`digest_hex + "0123456789abcdef"`), wrote the raw HTTP
+   body instead of a `DetachedTimestampFile`, passed a `bytes` object as a curl
+   argument, and decoded the binary response as UTF-8 with `errors="ignore"`.
+   It was fixed on 2026-09-03 and the queue re-stamped: 243 of the files now parse.
+   The 12 that do not are left in place, because deleting them would hide that they
+   were once counted.
+
+2. **The fix did not travel.** Hours later `csoai-bridges.py` shipped with all four
+   faults again — written by copying the pre-fix body. Both callers now import
+   `scripts/badger/ots_stamp.py`; there is one stamper and adding a third caller
+   means importing it.
+
+3. **Nothing ever upgraded.** `com.csoai.ots-anchor.plist` fires daily at 07:00
+   pointed at `scripts/badger/ots-anchor.sh`, **which did not exist**. The job died
+   before it could open its log, so there was no log to notice. Stamps therefore
+   stayed pending indefinitely even where Bitcoin had long since committed them —
+   the two roots upgraded on first run once the script was written.
+
+4. **No gate could see any of it.** `facts.json` still declared "No RFC-3161, no
+   OpenTimestamps" as a live fact, so the whole programme was unregistered and no
+   anchoring claim was ever checked. It now carries two rails: `ots_root_anchor`
+   (live) and `ots_atom_anchor` (planned). A rail with no term in the gate's
+   `RAIL_TERMS` now fails loudly instead of being skipped in silence.
+
+## Re-checking
+
+```
+python3 scripts/ots-upgrade.py <files>        # pending -> proof, once committed
+bash scripts/badger/ots-anchor.sh             # daily: stamp, upgrade, then COUNT
+node scripts/facts-gate.mjs dist/client       # catches "anchored" copy that isn't
+```
+
+`CommitmentNotFoundError` from every calendar is not a failure: it means the digest
+was stamped too recently to be in a block. Wait and re-run. An unupgraded stamp is
+not a failed stamp — but it is not a proof either.

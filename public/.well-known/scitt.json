@@ -1,4 +1,18 @@
 {
+  "_do_not_template_reason": "Hand-authored RFC 9943 SCITT profile. The generic door-doc template does not carry statements[]/transparency_service/verification/coordination; templating over it on 2a8e46c8 destroyed them and turned the crawler-view gate red. Restored 2026-09-03.",
+  "coordination": {
+    "mailing_lists": [
+      "scitt@ietf.org",
+      "agent2agent@ietf.org",
+      "agentproto@ietf.org"
+    ],
+    "related_drafts": [
+      "draft-ietf-scitt-scrapi",
+      "draft-sirkkavaara-vaara-receipt (near-twin format \u2014 coordinate, differentiate on credible-neutrality firewall)",
+      "draft-kuehlewind-audit-architecture (pre-charter AUDIT WG proposal)"
+    ]
+  },
+  "do_not_template": true,
   "door": {
     "canonical_form": "JCS (RFC 8785)-style canonical JSON \u2014 Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
     "endpoints": {
@@ -22,13 +36,51 @@
     "Anyone can re-check the measurement at /gspc-verify.",
     "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
   ],
-  "publisher": "CSOAI Ltd (UK 16939677)",
-  "schema": "csoai.door/scitt/0.1",
-  "standard": {
-    "description": "RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
-    "kind": "supply-chain-transparency",
-    "name": "IETF SCITT",
-    "url": "https://www.rfc-editor.org/rfc/rfc9943.html"
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "schema": "csoai.scitt-profile/0.1",
+  "standards": {
+    "payload_binding": "JCS (RFC 8785)-style canonical JSON \u2014 the estate's canonical form: Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
+    "scitt_architecture": "RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
+    "scitt_reference_api": "draft-ietf-scitt-scrapi (IESG review, near publication)"
+  },
+  "statements": [
+    {
+      "cadence": "signed snapshot, re-issued on board change",
+      "canonical_form": "JSON body minus signature fields, recursive sort_keys, compact separators, ensure_ascii escapes",
+      "registration_policy": "append-only",
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "type": "csoai.gspc-board/0.1",
+      "url": "https://councilof.ai/api/gspc"
+    },
+    {
+      "cadence": "quarterly reverification + provision-change events",
+      "canonical_form": "JSON body minus signature fields, recursive sort_keys, compact separators, ensure_ascii escapes",
+      "registration_policy": "append-only; corrections appended never edited",
+      "signer": "did:web:csoai.org#board-attestation-1",
+      "type": "csoai.regulation-deadlines/0.1",
+      "url": "https://councilof.ai/api/regulation"
+    },
+    {
+      "cadence": "per append",
+      "canonical_form": "sha256(canonical LEDGER minus signature fields, sort_keys)",
+      "registration_policy": "append-only; serve-time staleness guard flags stale signatures visibly",
+      "signer": "did:web:csoai.org#card-attestation-1",
+      "type": "csoai.corrections-ledger/0.1",
+      "url": "https://councilof.ai/api/corrections"
+    },
+    {
+      "cadence": "per measurement",
+      "canonical_form": "3KB capsule, ed25519-chained, prev-chain, MANIFEST indexed",
+      "registration_policy": "append-only",
+      "signer": "did:web:csoai.org#card-attestation-1",
+      "type": "csoai.measurement-card/0.1",
+      "url": "https://councilof.ai/verify"
+    }
+  ],
+  "transparency_service": {
+    "doctrine": "measurement-not-certification; signing keys never leave the estate; no fees from measured entities",
+    "note": "Registration to a SCITT transparency service (SCRAPI) once draft-ietf-scitt-scrapi is near publication; DNS-anchored log candidates under evaluation. Registration provides a receipt proving the statement was logged \u2014 evidence of registration, never certification.",
+    "status": "planned"
   },
   "trust_anchor": {
     "did": "did:web:csoai.org",
@@ -43,5 +95,10 @@
         "purpose": "22-axis board snapshot"
       }
     ]
+  },
+  "verification": {
+    "evidence": "corrections ledger content_id 20ef8ec4 (brick key), board + regulation edge-signed (board-attestation-1)",
+    "live_verifier": "https://councilof.ai/gspc-verify",
+    "stranger_walk": "fetch did.json \u2192 resolve signer key \u2192 recompute canonical JSON \u2192 verify Ed25519"
   }
 }

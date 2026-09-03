@@ -15,7 +15,8 @@ This script:
   4. The signature is computed via Ed25519 (the CSOAI standard,
      NOT P-256 — SCITT supports multiple algs, Ed25519 is what
      we actually publish under)
-  5. The wrapped statement is OTS-anchored to Bitcoin
+  5. The wrapped statement is OTS-stamped; it anchors to Bitcoin only after a
+     calendar commits the digest and scripts/ots-upgrade.py completes the proof
 
 This is the same wrapping pattern that Joel Hillier independently
 implemented and that Iman asked for in issue #2.

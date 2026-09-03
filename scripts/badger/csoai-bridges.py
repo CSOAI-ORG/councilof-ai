@@ -27,7 +27,8 @@ systems can verify against:
 The bridges all share one rule: every artifact in the estate has
 a CSOAI card. The card is the same size (≤3KB), the same schema
 (csoai.gspc-axes/0.5), the same issuer (did:web:csoai.org#card-attestation-1),
-and OTS-anchored to Bitcoin.
+and OTS-stamped. A stamp anchors only once a calendar commits it to a Bitcoin
+block and the proof is upgraded; until then the card says so.
 
 This is the substrate that gives CSOAI standing: every artifact
 the estate produces is independently verifiable.
@@ -141,7 +142,7 @@ def sha256_hex(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
 
-def card(kind: str, source_id: str, evidence: dict, source_url: str, ots_proof: str | None) -> dict:
+def card(kind: str, source_id: str, evidence: dict, source_url: str, ots_state: dict | None = None) -> dict:
     """Build a bridge card."""
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     return {
@@ -153,10 +154,13 @@ def card(kind: str, source_id: str, evidence: dict, source_url: str, ots_proof: 
         "subject": {"kind": kind, "source": source_id},
         "scope": {"axis": "bridge-artifact", "kind": kind},
         "measurement": {
-            "status": "DISCOVERED" if ots_proof else "UNCHECKABLE",
+            "status": "DISCOVERED",
             "evidence": evidence,
             "source_url": source_url,
-            "ots_anchor": "https://a.pool.opentimestamps.org" if ots_proof else None,
+            # The measured state of the proof, never the fact that one was
+            # requested. Only {"state":"bitcoin"} means anchored; a calendar URL
+            # is not an anchor.
+            "ots": ots_state or {"state": "absent"},
         },
         "links": {
             "live_board": "https://councilof.ai/api/gspc",
@@ -166,37 +170,32 @@ def card(kind: str, source_id: str, evidence: dict, source_url: str, ots_proof: 
         "notes": [
             f"Bridge: {kind}",
             f"Source: {source_id}",
-            f"Anchor: OTS to Bitcoin" if ots_proof else "Anchor: pending OTS submission",
+            describe(ots_state or {"state": "absent"}),
             "This card is the bridge between the source artifact and the CSOAI substrate.",
             "Verify at /gspc-verify.",
         ],
     }
 
 
-def submit_ots(digest_hex: str) -> str | None:
-    """Submit a digest to OpenTimestamps. Returns the OTS proof hex."""
-    payload_hex = digest_hex + "0123456789abcdef"
-    try:
-        r = subprocess.run(
-            ["curl", "-L", "-s", "-X", "POST",
-             "-H", "Content-Type: application/octet-stream",
-             "--data-binary", bytes.fromhex(payload_hex),
-             "-w", "\n%{http_code}",
-             "--max-time", "15",
-             "https://a.pool.opentimestamps.org/digest"],
-            capture_output=True, timeout=20,
-        )
-        out = r.stdout.decode("utf-8", errors="ignore")
-        if "\n" in out:
-            body, code = out.rsplit("\n", 1)
-            try:
-                if int(code) == 200 and body:
-                    return body
-            except ValueError:
-                pass
-    except Exception:
-        pass
-    return None
+# The stamper lives in ots_stamp.py. This file once carried its own copy with
+# all four faults the shared module documents - it was written by copying the
+# pre-fix body hours after the fix landed elsewhere. Import, never re-type.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ots_stamp import submit_ots, attestation_state, describe  # noqa: E402
+
+
+def stamp_to_file(digest_hex: str, path: Path) -> dict:
+    """Stamp a digest, write the proof beside the card, return its MEASURED state.
+
+    Returns attestation_state of what was actually written - which, for a stamp
+    made seconds ago, is always "pending". A fresh stamp is never an anchor.
+    """
+    data = submit_ots(digest_hex)
+    if not data:
+        return {"state": "absent"}
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(data)
+    return attestation_state(data)
 
 
 def emit(records: list[dict]) -> tuple[int, int]:
@@ -242,14 +241,13 @@ def bridge_hf_datasets() -> list[dict]:
         }
         c = card("hf-dataset", dataset_id, evidence, f"https://huggingface.co/datasets/{dataset_id}", None)
         digest = sha256_hex(canonical(c))
-        # Try OTS
-        ots = submit_ots(digest)
-        if ots:
-            c["measurement"]["ots_proof"] = ots[:200]
-            c["measurement"]["status"] = "DISCOVERED"
+        # Stamp the card's digest and record what the proof ACTUALLY carries.
+        ots_path = QUEUE / "bridges-ots" / f"{digest[:16]}.ots"
+        c["measurement"]["ots"] = stamp_to_file(digest, ots_path)
+        c["measurement"]["ots_file"] = str(ots_path.relative_to(QUEUE.parent))
         c["digest"] = digest
         cards.append(c)
-        print(f"  ✓ HF dataset: {dataset_id:<40} {evidence['downloads']:>10,} downloads  ots={'yes' if ots else 'no'}")
+        print(f"  ✓ HF dataset: {dataset_id:<40} {evidence['downloads']:>10,} downloads  ots={c['measurement']['ots']['state']}")
         time.sleep(0.5)
     return cards
 
@@ -274,13 +272,12 @@ def bridge_hf_models() -> list[dict]:
         }
         c = card("hf-model", model_id, evidence, f"https://huggingface.co/{model_id}", None)
         digest = sha256_hex(canonical(c))
-        ots = submit_ots(digest)
-        if ots:
-            c["measurement"]["ots_proof"] = ots[:200]
-            c["measurement"]["status"] = "DISCOVERED"
+        ots_path = QUEUE / "bridges-ots" / f"{digest[:16]}.ots"
+        c["measurement"]["ots"] = stamp_to_file(digest, ots_path)
+        c["measurement"]["ots_file"] = str(ots_path.relative_to(QUEUE.parent))
         c["digest"] = digest
         cards.append(c)
-        print(f"  ✓ HF model:   {model_id:<40} {evidence['downloads']:>10,} downloads  ots={'yes' if ots else 'no'}")
+        print(f"  ✓ HF model:   {model_id:<40} {evidence['downloads']:>10,} downloads  ots={c['measurement']['ots']['state']}")
         time.sleep(0.5)
     return cards
 
@@ -298,13 +295,12 @@ def bridge_public_notices() -> list[dict]:
         }
         c = card("public-notice", notice_url, evidence, notice_url, None)
         digest = sha256_hex(canonical(c))
-        ots = submit_ots(digest)
-        if ots:
-            c["measurement"]["ots_proof"] = ots[:200]
-            c["measurement"]["status"] = "DISCOVERED"
+        ots_path = QUEUE / "bridges-ots" / f"{digest[:16]}.ots"
+        c["measurement"]["ots"] = stamp_to_file(digest, ots_path)
+        c["measurement"]["ots_file"] = str(ots_path.relative_to(QUEUE.parent))
         c["digest"] = digest
         cards.append(c)
-        print(f"  ✓ Notice:     {notice_url:<60} {code}  ots={'yes' if ots else 'no'}")
+        print(f"  ✓ Notice:     {notice_url:<60} {code}  ots={c['measurement']['ots']['state']}")
         time.sleep(0.5)
     return cards
 

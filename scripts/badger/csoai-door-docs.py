@@ -129,15 +129,31 @@ def main():
     print("================================================================")
     print()
     n_written = 0
+    n_skipped = 0
     for standard, kind, description, url, sl in DOORS:
         doc = discovery_doc(standard, kind, description, url, sl)
         path = PUBLIC / f"{sl}.json"
+        # Never template over a hand-authored surface. This loop wrote unconditionally until
+        # 2026-09-03, and on 2a8e46c8 it overwrote the RFC 9943 SCITT profile with the generic
+        # door doc — destroying statements[], transparency_service, verification and coordination,
+        # which is what turned the crawler-view gate red. A file may opt out by declaring
+        # "do_not_template": true; the generator now respects that.
+        if path.exists():
+            try:
+                existing = json.loads(path.read_text())
+            except (ValueError, OSError):
+                existing = {}
+            if isinstance(existing, dict) and existing.get("do_not_template") is True:
+                n_skipped += 1
+                print(f"  · {standard:<28} → SKIPPED (hand-authored, do_not_template)")
+                continue
         if not args.dry_run:
             path.write_text(json.dumps(doc, indent=2, sort_keys=True))
         n_written += 1
         print(f"  ✓ {standard:<28} → /public/.well-known/{sl}.json")
     print()
-    print(f"  wrote {n_written} discovery docs to public/.well-known/")
+    print(f"  wrote {n_written} discovery docs to public/.well-known/"
+          + (f" ({n_skipped} hand-authored skipped)" if n_skipped else ""))
     return 0
 
 

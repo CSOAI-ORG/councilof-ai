@@ -319,6 +319,10 @@ const RAIL_TERMS = {
   index_product: /\bindex product\b/i,
   data_business: /\bdata business\b/i,
   rating_the_raters: /rating[-\s]the[-\s]raters/i,
+  // A blanket "anchored to Bitcoin" is the claim to catch. Naming a specific
+  // block ("anchored at Bitcoin block 965268") is not in LIVE_TENSE and passes,
+  // which is the discipline we want: cite the block or speak in future tense.
+  ots_atom_anchor: /OpenTimestamps|\bOTS\b|\bBitcoin\b/i,
 };
 
 function ruleCapabilityTense(facts, file, text, add) {
@@ -327,7 +331,20 @@ function ruleCapabilityTense(facts, file, text, add) {
   );
   for (const rail of rails) {
     const term = RAIL_TERMS[rail.id];
-    if (!term) continue;
+    if (!term) {
+      // A rail declared in facts.json with no term here was SILENTLY UNENFORCED.
+      // That is how the OTS programme ran for a day with no gate over any of its
+      // anchoring claims. A fact nobody can check is not a fact; fail loudly.
+      add({
+        rule: "capability-tense",
+        file: "client/src/data/facts.json",
+        text: rail.id,
+        why: `rail "${rail.id}" is status "${rail.status}" but has no entry in RAIL_TERMS, ` +
+             `so no copy is ever checked against it. Add a term or the rail is decoration.`,
+        ctx: rail.claim,
+      });
+      continue;
+    }
     const re = new RegExp(term.source, "gi");
     let m;
     while ((m = re.exec(text))) {
@@ -484,6 +501,15 @@ const SELFTEST_CASES = [
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
   ["VIOLATION: XRPL mainnet carrier", "<p>Our attestations are published to XRPL mainnet in production.</p>", true],
   ["honest XRPL devnet", "<p>Network: XRPL DEVNET · evidence card 82994353b8f94337…</p>", false],
+  // ── OTS: a stamp is not an anchor (2026-09-03) ────────────────────────────────
+  // A card carrying a fresh OpenTimestamps stamp was described as "OTS-anchored to
+  // Bitcoin" while its proof held only a PendingAttestation. 245 of 261 .ots files
+  // in the repo were pending; the estate reported "42/45 OTS-anchored". The
+  // ots_atom_anchor rail is `planned` precisely so this copy cannot ship.
+  ["VIOLATION: atoms asserted OTS-anchored", "<p>Every queued atom is anchored to Bitcoin via OpenTimestamps.</p>", true],
+  ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
+  ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
+  ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
   // ── unsigned interop scoping (#841 regression) ────────────────────────────────
   // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
   // It legitimately says "4 axes" when measuring 4 axes on its own population.

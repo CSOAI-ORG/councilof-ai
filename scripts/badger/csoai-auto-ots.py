@@ -44,76 +44,23 @@ def canonical(obj: dict) -> bytes:
 
 
 
+# One stamper for the estate. This file's own fixed implementation was moved to
+# ots_stamp.py after a second caller shipped with the pre-fix body copied in.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ots_stamp import submit_ots, attestation_state, ots_reads  # noqa: E402
+
+
 def _ots_reads(path) -> bool:
-    """True only if the file is a detached timestamp `ots verify` could read.
+    """True only if the file on disk is a proof `ots verify` could read.
 
     An unreadable .ots is worse than an absent one: it sits beside an atom
-    looking like evidence. This is the guard that lets the writer heal its own
-    past output instead of skipping it on a size check.
+    looking like evidence. This guard lets the writer heal its own past output
+    instead of skipping it on a size check.
     """
-    import io
-
-    from opentimestamps.core.serialize import StreamDeserializationContext
-    from opentimestamps.core.timestamp import DetachedTimestampFile
-
     try:
-        DetachedTimestampFile.deserialize(
-            StreamDeserializationContext(io.BytesIO(path.read_bytes()))
-        )
-        return True
+        return ots_reads(path.read_bytes())
     except Exception:
         return False
-
-
-def submit_ots(digest_hex: str, timeout: int = 15) -> bytes | None:
-    """Stamp a digest and return REAL detached-timestamp bytes, or None.
-
-    Replaces a version that produced 112 unverifiable files. Four faults, each
-    enough on its own:
-
-      1. It appended a hardcoded constant to the digest:
-             payload_hex = digest_hex + "0123456789abcdef"
-         so the calendar received sha256(atom)||0123456789abcdef, never the
-         atom's digest. The resulting proof could not attest the atom even if
-         everything else had been right.
-      2. It wrote the raw HTTP response body straight to a .ots file. A
-         calendar returns a timestamp FRAGMENT, not a detached proof file; the
-         OTS magic header and the digest binding were never written. Every
-         file failed DetachedTimestampFile.deserialize with BadMagicError -
-         100 of them, confirmed.
-      3. It passed a Python bytes object as a curl argument, which coerces it
-         to str.
-      4. It decoded the binary response as UTF-8 with errors="ignore", which
-         silently destroys any byte the codec dislikes.
-
-    This version uses the opentimestamps library: the real digest, merged
-    across calendars, serialised as a DetachedTimestampFile that `ots verify`
-    can read. Returns None rather than a broken file when no calendar answers -
-    an unverifiable proof is worse than an absent one, because it looks like
-    evidence.
-    """
-    import io
-
-    from opentimestamps.calendar import RemoteCalendar
-    from opentimestamps.core.op import OpSHA256
-    from opentimestamps.core.serialize import StreamSerializationContext
-    from opentimestamps.core.timestamp import DetachedTimestampFile, Timestamp
-
-    digest = bytes.fromhex(digest_hex)
-    ts = Timestamp(digest)
-    answered = 0
-    for url in CALENDARS:
-        try:
-            ts.merge(RemoteCalendar(url).submit(digest))
-            answered += 1
-        except Exception:
-            continue
-    if not answered:
-        return None
-    out = io.BytesIO()
-    DetachedTimestampFile(OpSHA256(), ts).serialize(StreamSerializationContext(out))
-    return out.getvalue()
-
 
 
 def main():

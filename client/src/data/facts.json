@@ -227,9 +227,10 @@
     },
     {
       "id": "timestamp_authority",
-      "claim": "No independent time-stamping authority is claimed.",
+      "claim": "OpenTimestamps is used as the time-stamping authority for published roots. A stamp is not an anchor until a calendar commits it to Bitcoin.",
       "status": "live",
-      "evidence": "Records declare timestamp_authority: none. No RFC-3161, no OpenTimestamps."
+      "evidence": "Measured 2026-09-03 over every .ots in the repo: 6 carry a Bitcoin block attestation, 243 are valid stamps still pending a calendar commit, 12 parse as nothing. Anchored files: public/interop/layer0-ceremony-2026-09-03.json.ots (block 965268); public/interop/root-2026-09-02.json.ots (block 965121); public/interop/root-728e8c5e.json.ots (block 965138). Re-check with scripts/ots-upgrade.py and scripts/badger/ots_stamp.py.",
+      "note": "This replaced 'No RFC-3161, no OpenTimestamps', which had gone false: the OTS programme was running and unregistered here, so no gate could police a single anchoring claim about it."
     }
   ],
   "rails": [
@@ -282,6 +283,20 @@
       "status": "planned",
       "note": "Still planned as a PRODUCT, and the status is deliberately not flipped. What exists is a programme with one result in it: RTR-001, an independent recomputation of the ARC Prize project's published ARC-AGI-2 human baseline from ARC's own MIT-licensed rows, on one criterion. One organisation measured is not a survey, a comparison or a product. Surface: /rating-the-raters. Artifact: /interop/rating-the-raters-001-arc.json.",
       "surface": "/rating-the-raters"
+    },
+    {
+      "id": "ots_root_anchor",
+      "claim": "Anchoring the published root to Bitcoin via OpenTimestamps",
+      "status": "live",
+      "note": "True only for the files under public/interop that have been upgraded past pending.",
+      "evidence": "Measured 2026-09-03: public/interop/layer0-ceremony-2026-09-03.json.ots at block 965268; public/interop/root-2026-09-02.json.ots at block 965121; public/interop/root-728e8c5e.json.ots at block 965138. Verify with `ots verify` or scripts/ots-upgrade.py."
+    },
+    {
+      "id": "ots_atom_anchor",
+      "claim": "Anchoring every queued atom, bridge card and press release to Bitcoin via OpenTimestamps",
+      "status": "planned",
+      "note": "Only describable in future tense. Stamping an atom is not anchoring it: a fresh stamp carries a PendingAttestation and becomes a proof only when a calendar commits it to a Bitcoin block, hours later, and the proof is then UPGRADED. Copy of the form 'N atoms OTS-anchored' is a violation while this rail is planned.",
+      "evidence": "Measured 2026-09-03 over 261 .ots files: only 6 carry a Bitcoin attestation and all are published roots, not atoms. 243 are pending; 12 are unreadable bytes from a writer with four faults, retained rather than deleted so the miscount stays visible. See scripts/badger/_queue/UNVERIFIABLE-OTS-README.md."
     }
   ],
   "canonical_phrasings": {
