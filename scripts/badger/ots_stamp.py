@@ -116,7 +116,14 @@ def attestation_state(data: bytes | None) -> dict:
     atts = _attestations(d.timestamp)
     heights = [a.height for a in atts if isinstance(a, BitcoinBlockHeaderAttestation)]
     if heights:
-        return {"state": "bitcoin", "block_height": min(heights)}
+        # chain_verified is False and stays False. This reads the attestation the
+        # proof CARRIES; it does not walk the operation chain from the document
+        # digest to that block header and check it against Bitcoin. A proof with a
+        # corrupted merkle path still parses and still names a block — proven by
+        # the flipped-byte case in _selftest. Calling that "anchored" without
+        # saying so would be this module's own version of counting Path.exists().
+        # Real validation needs `ots verify` against a Bitcoin node.
+        return {"state": "bitcoin", "block_height": min(heights), "chain_verified": False}
     cals = sorted({
         a.uri.decode() if isinstance(a.uri, bytes) else a.uri
         for a in atts if isinstance(a, PendingAttestation)
@@ -130,10 +137,95 @@ def describe(state: dict) -> str:
     """One honest sentence for a card's notes."""
     s = state.get("state")
     if s == "bitcoin":
-        return f"Anchored: Bitcoin block {state['block_height']}."
+        return (f"Carries a Bitcoin attestation naming block {state['block_height']}. "
+                "The operation chain has not been validated against the chain itself "
+                "(`ots verify` with a Bitcoin node does that).")
     if s == "pending":
         return ("Not anchored: a calendar holds this digest and has not yet committed it "
                 "to Bitcoin. Re-run scripts/ots-upgrade.py to complete the proof.")
     if s == "unreadable":
         return "Not anchored: the stamp bytes do not parse. Treat as no stamp."
     return "Not anchored: no OTS stamp was made."
+
+
+def _selftest() -> int:
+    """Prove attestation_state goes RED. A guard that has never failed is untested.
+
+    Every case here is the shape that produced a false "anchored" count somewhere
+    in this estate: bytes that look like evidence, a truthy value standing in for a
+    verdict, or a key that silently returns None.
+
+        python3 scripts/badger/ots_stamp.py --selftest
+    """
+    import glob
+    import pathlib
+
+    cases, failed = [], 0
+
+    def check(name, got, want):
+        nonlocal failed
+        ok = got == want
+        if not ok:
+            failed += 1
+        cases.append((ok, name, got, want))
+
+    check("no stamp is not an anchor", attestation_state(None)["state"], "absent")
+    check("empty bytes are not an anchor", attestation_state(b"")["state"], "absent")
+    check("arbitrary bytes are not an anchor",
+          attestation_state(b"looks like evidence")["state"], "unreadable")
+    # The 12 pre-fix files: raw calendar fragments with no magic header. They sat
+    # beside atoms and were counted as anchors.
+    check("a raw calendar fragment is not an anchor",
+          attestation_state(bytes.fromhex("00" * 64))["state"], "unreadable")
+
+    real = [f for f in glob.glob("**/*.ots", recursive=True) if "node_modules" not in f]
+    anchored = [f for f in real if attestation_state(pathlib.Path(f).read_bytes())["state"] == "bitcoin"]
+    pending = [f for f in real if attestation_state(pathlib.Path(f).read_bytes())["state"] == "pending"]
+
+    if anchored:
+        data = pathlib.Path(anchored[0]).read_bytes()
+        st = attestation_state(data)
+        check("a real proof reports bitcoin", st["state"], "bitcoin")
+        check("a real proof names a block height", isinstance(st.get("block_height"), int), True)
+        # Flip one byte in the middle and watch it stop claiming an anchor.
+        i = len(data) // 2
+        corrupt = data[:i] + bytes([data[i] ^ 0xFF]) + data[i + 1:]
+        # DOCUMENTED LIMIT, not a passing guard. A byte flipped in the merkle path
+        # leaves the file parseable and the attestation intact, so this still says
+        # "bitcoin". That is precisely why the result carries chain_verified=False
+        # and why no caller may render it as a bare "anchored".
+        check("a corrupted proof STILL claims a block — the limit is real",
+              attestation_state(corrupt)["state"], "bitcoin")
+        check("...so every bitcoin result declares it is not chain-verified",
+              attestation_state(corrupt).get("chain_verified"), False)
+        check("a genuine proof declares it too", st.get("chain_verified"), False)
+        check("a truncated proof stops it reporting bitcoin",
+              attestation_state(data[: len(data) // 3])["state"] != "bitcoin", True)
+    else:
+        cases.append((True, "SKIPPED: no anchored file present to corrupt", "-", "-"))
+
+    if pending:
+        st = attestation_state(pathlib.Path(pending[0]).read_bytes())
+        check("a pending stamp is NEVER reported as bitcoin", st["state"], "pending")
+        check("a pending stamp carries no block height", "block_height" in st, False)
+        check("a pending stamp names its calendars", bool(st.get("calendars")), True)
+    else:
+        cases.append((True, "SKIPPED: no pending file present", "-", "-"))
+
+    for ok, name, got, want in cases:
+        print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + ("" if ok else f"  -> got {got!r}, want {want!r}"))
+    print(f"\n  {len(cases) - failed} passed, {failed} failed")
+    if failed:
+        print("\nots_stamp SELFTEST FAILED — attestation_state does not behave as specified.")
+        return 1
+    print("\nots_stamp selftest OK — a stamp, a calendar fragment and arbitrary bytes are")
+    print("never reported as an anchor, and every bitcoin result declares chain_verified")
+    print("False, because a proof with a corrupted merkle path still names a block.")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys as _sys
+    if "--selftest" in _sys.argv:
+        raise SystemExit(_selftest())
+    print(__doc__)

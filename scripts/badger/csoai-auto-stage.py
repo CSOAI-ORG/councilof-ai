@@ -97,7 +97,26 @@ def stage():
                 by_kind[kind] = by_kind.get(kind, 0) + 1
                 by_source[source] = by_source.get(source, 0) + 1
                 total += 1
-                ots_state_counts[ots_state] = ots_state_counts.get(ots_state, 0) + 1
+                # NOT .get(state, 0): that silently invents a bucket for an
+                # unexpected state while only four keys are published, so atoms
+                # would vanish from the totals with nothing going red. A wrong key
+                # turning a guard into a rubber stamp is the same shape as the
+                # Path.exists() count this replaced. Unknown state is a hard error.
+                if ots_state not in ots_state_counts:
+                    raise SystemExit(
+                        f"attestation_state returned unknown state {ots_state!r} for "
+                        f"{ots_path}. Refusing to publish a total that does not account "
+                        f"for it."
+                    )
+                ots_state_counts[ots_state] += 1
+
+    # The four published OTS fields must account for every atom, or the totals
+    # understate silently. Proven here rather than assumed.
+    if sum(ots_state_counts.values()) != total:
+        raise SystemExit(
+            f"OTS state counts sum to {sum(ots_state_counts.values())} but {total} atoms "
+            f"were counted. The published totals would not account for every atom."
+        )
 
     now = datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
     state = {
