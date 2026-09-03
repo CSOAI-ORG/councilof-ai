@@ -1,0 +1,174 @@
+{
+  "finished": "2026-09-03T08:07:18Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.relentless",
+  "n_fail": 4,
+  "n_jobs": 18,
+  "n_ok": 14,
+  "results": {
+    "AUTO-STAGE": {
+      "elapsed_s": 0.64,
+      "exit_code": 0,
+      "name": "AUTO-STAGE",
+      "script": "csoai-auto-stage.py",
+      "stderr_lines": 0,
+      "stdout_lines": 40,
+      "tail": "    witness-receipts             88\n\n  state: scripts/badger/_state.json"
+    },
+    "BANK-COMPLETE": {
+      "elapsed_s": 0.07,
+      "exit_code": 0,
+      "name": "BANK-COMPLETE",
+      "script": "csoai-bank-complete.py",
+      "stderr_lines": 0,
+      "stdout_lines": 17,
+      "tail": "  Every card verifiable at /gspc-verify.\n  Every DISCOVERED card (XRPL-direct only) has a real r_address.\n  Every UNCHECKABLE card is honest \u2014 we do not invent on-chain data."
+    },
+    "BRIDGES": {
+      "elapsed_s": 149.82,
+      "exit_code": 0,
+      "name": "BRIDGES",
+      "script": "csoai-bridges.py",
+      "stderr_lines": 0,
+      "stdout_lines": 70,
+      "tail": "  Every card in this batch has a deterministic digest. The OTS\n  anchors are submitted to a.pool.opentimestamps.org (which\n  upgrades to Bitcoin blocks within ~2 hours)."
+    },
+    "CHECKLIST": {
+      "elapsed_s": 2.05,
+      "exit_code": 0,
+      "name": "CHECKLIST",
+      "script": "csoai-checklist.py",
+      "stderr_lines": 0,
+      "stdout_lines": 29,
+      "tail": "\n  JSON: scripts/badger/_queue/checklist/checklist-20260903T080716Z.json\n  MD:   scripts/badger/_queue/checklist/checklist-20260903T080716Z.md"
+    },
+    "COMPASS": {
+      "elapsed_s": 0.22,
+      "exit_code": 0,
+      "name": "COMPASS",
+      "script": "csoai-compass.py",
+      "stderr_lines": 0,
+      "stdout_lines": 47,
+      "tail": "\n  The COMPASS guide is the canonical reference for this work.\n  Each piece has a card here. The card is the action."
+    },
+    "EVIDENCE": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "EVIDENCE",
+      "script": "csoai-bank-pack.py --no-ots",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "FEEDBACK": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "FEEDBACK",
+      "script": "csoai-learn-from-feedback.py",
+      "stderr_lines": 0,
+      "stdout_lines": 43,
+      "tail": "\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/learn-feedback/feedback-20260903T080657Z.json\n  total fixes: 22"
+    },
+    "FRONT-AUDIT": {
+      "elapsed_s": 0.03,
+      "exit_code": 2,
+      "name": "FRONT-AUDIT",
+      "script": "csoai-frontend-audit.py --limit 30",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "FRONT-IMPROVE": {
+      "elapsed_s": 0.08,
+      "exit_code": 0,
+      "name": "FRONT-IMPROVE",
+      "script": "csoai-frontend-improve.py",
+      "stderr_lines": 0,
+      "stdout_lines": 9,
+      "tail": "  already:  16\n\n  Re-run the audit to verify scores went up."
+    },
+    "IMPROVE": {
+      "elapsed_s": 0.42,
+      "exit_code": 0,
+      "name": "IMPROVE",
+      "script": "csoai-improve.py",
+      "stderr_lines": 0,
+      "stdout_lines": 29,
+      "tail": "      exit=2  elapsed=0.0s\n\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/improve-20260903T080657Z.json"
+    },
+    "LEARN": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "LEARN",
+      "script": "csoai-learn.py --limit 10000",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    },
+    "MASTER-CATALOG": {
+      "elapsed_s": 0.08,
+      "exit_code": 0,
+      "name": "MASTER-CATALOG",
+      "script": "csoai-master-catalog.py",
+      "stderr_lines": 0,
+      "stdout_lines": 20,
+      "tail": "  MD:   scripts/badger/_queue/master-catalog/master-catalog-20260903T080718Z.md\n\n  TOTAL: 8 catalogs, 45 discovery docs, 66 openapi paths, 67 functions, 482 sitemap URLs, 44964 queued atoms"
+    },
+    "MASTER-PLAN": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "MASTER-PLAN",
+      "script": "csoai-master-plan.py",
+      "stderr_lines": 0,
+      "stdout_lines": 18,
+      "tail": "\n  JSON: scripts/badger/_queue/master-plan/master-plan-20260903T080716Z.json\n  MD:   scripts/badger/_queue/master-plan/master-plan-20260903T080716Z.md"
+    },
+    "OPTIMIZE": {
+      "elapsed_s": 0.28,
+      "exit_code": 0,
+      "name": "OPTIMIZE",
+      "script": "csoai-optimize.py",
+      "stderr_lines": 0,
+      "stdout_lines": 57,
+      "tail": "\n  report: /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/optimize/optimize-20260903T080657Z.json\n  next_actions: focus on TOP harvesters, investigate ZERO harvesters"
+    },
+    "PUBLIC-A2A": {
+      "elapsed_s": 17.98,
+      "exit_code": 0,
+      "name": "PUBLIC-A2A",
+      "script": "csoai-public-a2a-x402-harvest.py",
+      "stderr_lines": 0,
+      "stdout_lines": 39,
+      "tail": "\n  Next: each attestation can be re-checked at /gspc-verify\n        The 402 surfaces (x402 facilitators) can be re-priced via the rail"
+    },
+    "PUBLIC-COUSINS": {
+      "elapsed_s": 0.03,
+      "exit_code": 0,
+      "name": "PUBLIC-COUSINS",
+      "script": "csoai-public-models.py",
+      "stderr_lines": 0,
+      "stdout_lines": 23,
+      "tail": "\n  NEXT: per-atom probe (a separate cron) for the public cousins only\n        Restricted cousins stay UNCHECKABLE forever"
+    },
+    "REGULATORY": {
+      "elapsed_s": 0.04,
+      "exit_code": 0,
+      "name": "REGULATORY",
+      "script": "csoai-regulatory-mine.py",
+      "stderr_lines": 0,
+      "stdout_lines": 9,
+      "tail": "\n  total written: 168\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/regulatory"
+    },
+    "TOP-MODELS": {
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "name": "TOP-MODELS",
+      "script": "csoai-top-models.py --limit 100",
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "tail": ""
+    }
+  },
+  "started": "2026-09-03T08:04:27Z",
+  "total_elapsed_s": 171.88
+}
