@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSPC Leaderboard — Council of AI</title>
+  <meta name="description" content="Live GSPC leaderboard. 22 axes. 14 model families. Empty cells stay empty. We measure; we do not sell a rank.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://councilof.ai/gspc-leaderboard.html">
+  <meta property="og:title" content="GSPC Leaderboard — Council of AI">
+  <meta property="og:description" content="Live GSPC leaderboard. 22 axes. 14 model families. Empty cells stay empty.">
+  <meta property="og:url" content="https://councilof.ai/gspc-leaderboard.html">
+  <meta property="og:image" content="https://councilof.ai/og-default.png">
+  <meta property="og:site_name" content="Council of AI">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GSPC Leaderboard — Council of AI">
+  <meta name="twitter:description" content="Live GSPC leaderboard. 22 axes. 14 model families. Empty cells stay empty.">
+  <link rel="icon" href="https://councilof.ai/csoai-icon.svg">
+  <link rel="stylesheet" href="https://councilof.ai/styles/main.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "GSPC Leaderboard",
+    "url": "https://councilof.ai/gspc-leaderboard.html",
+    "description": "Live GSPC leaderboard. 22 axes. 14 model families. Empty cells stay empty. We measure; we do not sell a rank.",
+    "publisher": {"@type": "Organization", "name": "Council of AI", "url": "https://councilof.ai/"}
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="https://councilof.ai/" class="lid">CS<strong>O</strong>AI</a>
+      <nav class="site-nav">
+        <a href="https://councilof.ai/pay">Pay</a>
+        <a href="https://councilof.ai/dashboard">Dashboard</a>
+        <a href="https://councilof.ai/ag-ui">AG-UI</a>
+        <a href="https://councilof.ai/gspc-verify">Verify</a>
+        <a href="https://councilof.ai/api/x402">API</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>GSPC Leaderboard</h1>
+    <p class="lead">22 axes. 14 model families. Empty cells stay empty.</p>
+
+    <section class="card">
+      <h2>The leaderboard</h2>
+      <p>The full live GSPC board lives at <a href="https://councilof.ai/api/gspc">/api/gspc</a>. Refresh the JSON, see the same numbers we see. Every cell verifies offline against the public root.</p>
+      <p>No vendor can hide behind their own private rubric. Every model gets the same axes. The leader scores a TIE; the worst scores an honest UNMEASURABLE.</p>
+      <p>Last measured: <code>2026-09-03 12:00 UTC</code>. Refresh interval: 12 hours.</p>
+      <p><a href="https://councilof.ai/api/gspc">/api/gspc</a> · <a href="https://councilof.ai/gspc-console">/gspc-console</a> · <a href="https://councilof.ai/axes-deep">/axes-deep</a></p>
+    </section>
+
+    <section class="card">
+      <h2>How to verify</h2>
+      <ol>
+        <li>GET <a href="https://councilof.ai/api/gspc">/api/gspc</a></li>
+        <li>GET <a href="https://councilof.ai/.well-known/did.json">/.well-known/did.json</a> for the public key</li>
+        <li>Run <code>csoai-verify card &lt;sha256&gt;</code> (CLI ships on PyPI + npm)</li>
+        <li>Or open <a href="https://councilof.ai/gspc-verify">/gspc-verify</a> + paste the SHA-256</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>&copy; 2026 CSOAI — Council of AI. We measure; we sign; we do not sell a rank.</p>
+      <p><a href="https://councilof.ai/pay">x402 pay</a> · <a href="https://councilof.ai/api/state">/api/state</a> · <a href="https://councilof.ai/.well-known/did.json">DID</a></p>
+    </div>
+  </footer>
+</body>
+</html>

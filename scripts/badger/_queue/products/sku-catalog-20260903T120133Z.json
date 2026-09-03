@@ -1,0 +1,220 @@
+{
+  "ts": "20260903T120133Z",
+  "skus": [
+    {
+      "id": "card-single",
+      "name": "Single signed card",
+      "price_usdc": 0.02,
+      "endpoint": "/api/x402?sku=card-single",
+      "description": "Sign one atom + return Ed25519-signed card."
+    },
+    {
+      "id": "card-batch-10",
+      "name": "10-card batch",
+      "price_usdc": 0.15,
+      "endpoint": "/api/x402?sku=card-batch-10",
+      "description": "Sign 10 atoms in one Merkle root."
+    },
+    {
+      "id": "card-batch-100",
+      "name": "100-card batch",
+      "price_usdc": 1.2,
+      "endpoint": "/api/x402?sku=card-batch-100",
+      "description": "Sign 100 atoms in one Merkle root."
+    },
+    {
+      "id": "benchmark-single",
+      "name": "Single benchmark",
+      "price_usdc": 0.5,
+      "endpoint": "/api/x402?sku=benchmark-single",
+      "description": "Run one model on one axis."
+    },
+    {
+      "id": "benchmark-full",
+      "name": "Full 22-axis benchmark",
+      "price_usdc": 5.0,
+      "endpoint": "/api/x402?sku=benchmark-full",
+      "description": "Run one model on all 22 GSPC axes."
+    },
+    {
+      "id": "anchor-daily",
+      "name": "Daily anchor subscription",
+      "price_usdc": 1.0,
+      "endpoint": "/api/x402?sku=anchor-daily",
+      "description": "Subscribe to daily OTS anchors for one year."
+    },
+    {
+      "id": "council-vote",
+      "name": "Council vote (1 of 33)",
+      "price_usdc": 0.1,
+      "endpoint": "/api/x402?sku=council-vote",
+      "description": "Cast one vote in the 33-agent BFT council."
+    },
+    {
+      "id": "council-quorum",
+      "name": "Full quorum vote",
+      "price_usdc": 3.3,
+      "endpoint": "/api/x402?sku=council-quorum",
+      "description": "Cast a full 23/33 quorum vote."
+    },
+    {
+      "id": "verification-public",
+      "name": "Public verification",
+      "price_usdc": 0.0,
+      "endpoint": "/api/verify",
+      "description": "Free. Verify any signed card against the public root."
+    },
+    {
+      "id": "verification-bulk",
+      "name": "Bulk verification",
+      "price_usdc": 0.05,
+      "endpoint": "/api/x402?sku=verification-bulk",
+      "description": "Verify 100 cards at once."
+    },
+    {
+      "id": "correction",
+      "name": "File a correction",
+      "price_usdc": 1.0,
+      "endpoint": "/api/x402?sku=correction",
+      "description": "File a correction to the public root."
+    },
+    {
+      "id": "witness-receipt",
+      "name": "Witness receipt",
+      "price_usdc": 0.05,
+      "endpoint": "/api/x402?sku=witness-receipt",
+      "description": "Get a witness receipt for any claim."
+    },
+    {
+      "id": "regwatch-monthly",
+      "name": "Monthly regulation watch",
+      "price_usdc": 50.0,
+      "endpoint": "/api/x402?sku=regwatch-monthly",
+      "description": "Subscribe to monthly regulation-change reports."
+    },
+    {
+      "id": "fleet-run",
+      "name": "Fleet run",
+      "price_usdc": 25.0,
+      "endpoint": "/api/x402?sku=fleet-run",
+      "description": "Run your private fleet of N models on all 22 axes."
+    },
+    {
+      "id": "subdomain-pro",
+      "name": "Pro subdomain",
+      "price_usdc": 100.0,
+      "endpoint": "/api/x402?sku=subdomain-pro",
+      "description": "Get a branded subdomain on councilof.ai."
+    }
+  ],
+  "total_skus": 15,
+  "free_skus": [
+    {
+      "id": "verification-public",
+      "name": "Public verification",
+      "price_usdc": 0.0,
+      "endpoint": "/api/verify",
+      "description": "Free. Verify any signed card against the public root."
+    }
+  ],
+  "paid_skus": [
+    {
+      "id": "card-single",
+      "name": "Single signed card",
+      "price_usdc": 0.02,
+      "endpoint": "/api/x402?sku=card-single",
+      "description": "Sign one atom + return Ed25519-signed card."
+    },
+    {
+      "id": "card-batch-10",
+      "name": "10-card batch",
+      "price_usdc": 0.15,
+      "endpoint": "/api/x402?sku=card-batch-10",
+      "description": "Sign 10 atoms in one Merkle root."
+    },
+    {
+      "id": "card-batch-100",
+      "name": "100-card batch",
+      "price_usdc": 1.2,
+      "endpoint": "/api/x402?sku=card-batch-100",
+      "description": "Sign 100 atoms in one Merkle root."
+    },
+    {
+      "id": "benchmark-single",
+      "name": "Single benchmark",
+      "price_usdc": 0.5,
+      "endpoint": "/api/x402?sku=benchmark-single",
+      "description": "Run one model on one axis."
+    },
+    {
+      "id": "benchmark-full",
+      "name": "Full 22-axis benchmark",
+      "price_usdc": 5.0,
+      "endpoint": "/api/x402?sku=benchmark-full",
+      "description": "Run one model on all 22 GSPC axes."
+    },
+    {
+      "id": "anchor-daily",
+      "name": "Daily anchor subscription",
+      "price_usdc": 1.0,
+      "endpoint": "/api/x402?sku=anchor-daily",
+      "description": "Subscribe to daily OTS anchors for one year."
+    },
+    {
+      "id": "council-vote",
+      "name": "Council vote (1 of 33)",
+      "price_usdc": 0.1,
+      "endpoint": "/api/x402?sku=council-vote",
+      "description": "Cast one vote in the 33-agent BFT council."
+    },
+    {
+      "id": "council-quorum",
+      "name": "Full quorum vote",
+      "price_usdc": 3.3,
+      "endpoint": "/api/x402?sku=council-quorum",
+      "description": "Cast a full 23/33 quorum vote."
+    },
+    {
+      "id": "verification-bulk",
+      "name": "Bulk verification",
+      "price_usdc": 0.05,
+      "endpoint": "/api/x402?sku=verification-bulk",
+      "description": "Verify 100 cards at once."
+    },
+    {
+      "id": "correction",
+      "name": "File a correction",
+      "price_usdc": 1.0,
+      "endpoint": "/api/x402?sku=correction",
+      "description": "File a correction to the public root."
+    },
+    {
+      "id": "witness-receipt",
+      "name": "Witness receipt",
+      "price_usdc": 0.05,
+      "endpoint": "/api/x402?sku=witness-receipt",
+      "description": "Get a witness receipt for any claim."
+    },
+    {
+      "id": "regwatch-monthly",
+      "name": "Monthly regulation watch",
+      "price_usdc": 50.0,
+      "endpoint": "/api/x402?sku=regwatch-monthly",
+      "description": "Subscribe to monthly regulation-change reports."
+    },
+    {
+      "id": "fleet-run",
+      "name": "Fleet run",
+      "price_usdc": 25.0,
+      "endpoint": "/api/x402?sku=fleet-run",
+      "description": "Run your private fleet of N models on all 22 axes."
+    },
+    {
+      "id": "subdomain-pro",
+      "name": "Pro subdomain",
+      "price_usdc": 100.0,
+      "endpoint": "/api/x402?sku=subdomain-pro",
+      "description": "Get a branded subdomain on councilof.ai."
+    }
+  ]
+}
