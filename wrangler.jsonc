@@ -37,6 +37,16 @@
     {
       "binding": "WITNESS_KV",
       "id": "8244f80354c24a9ebadd227a8192a045"
+    },
+    // LEADS — the store behind POST /api/lead (functions/api/lead.ts), the "email me the
+    // signed report" form on /assess. Namespace `leads` created 2026-09-03. Until this
+    // binding existed the endpoint returned {"stored": false} on every submission and told
+    // the visitor to email nicholas@csoai.org instead: GET /api/lead on production answered
+    // {"bound": false}, so no enquiry the form ever took was kept. It is the only demand
+    // capture on the site. Binding it does not invent leads — it stops discarding them.
+    {
+      "binding": "LEADS",
+      "id": "212bba5647514d02855ba451cac8977b"
     }
   ]
 }
