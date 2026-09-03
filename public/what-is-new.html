@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What is new · Council of AI · the live changelog</title>
+<meta name="description" content="Every upgrade on the Council of AI measurement rail — the live 22-axis GSPC board, browser extension, Hermes skill, MCP wiring, x402 revenue, and the corrections ledger." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://councilof.ai/what-is-new.html" />
+<style>
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --warn:#ca8a04; --fact:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#05140d; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --warn:#fbbf24; --fact:#60a5fa; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:64rem; margin:0 auto; padding:2.5rem 1.25rem 5rem; }
+
+  header.hero { padding:1.5rem 0 2rem; border-bottom:1px solid var(--line); margin-bottom:2rem; }
+  header.hero h1 { font-size:clamp(2.2rem,5vw,3rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.1; }
+  header.hero .sub { color:var(--muted); font-size:1.05rem; max-width:48rem; }
+
+  /* The lid — always show this on every upgrade story */
+  .lid { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.95rem; color:var(--accent); margin:1rem 0 0.5rem; padding:0.6rem 0.85rem; border-radius:8px; border:1px solid rgba(15,118,110,0.3); background:rgba(15,118,110,0.06); display:inline-block; }
+  .lid span { opacity:0.7; margin:0 0.4rem; }
+
+  /* The 5 capability pillars — single source of truth */
+  .pillars { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .pillar { padding:1rem 1.1rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.04); }
+  .pillar h3 { margin:0 0 0.4rem; font-size:1rem; }
+  .pillar p { margin:0; font-size:0.85rem; color:var(--muted); line-height:1.5; }
+  .pillar code { font-size:0.78rem; background:rgba(91,107,98,0.08); padding:0.05rem 0.3rem; border-radius:3px; }
+
+  /* Timeline */
+  .timeline { margin:2rem 0; }
+  .event { display:grid; grid-template-columns:120px 1fr; gap:1rem; padding:1.25rem 0; border-top:1px solid var(--line); }
+  .event:last-child { border-bottom:1px solid var(--line); }
+  .event .when { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.85rem; color:var(--muted); }
+  .event .what h2 { margin:0 0 0.5rem; font-size:1.15rem; }
+  .event .what p { margin:0.4rem 0; color:var(--muted); font-size:0.92rem; line-height:1.55; }
+  .event .what code { font-size:0.85rem; background:rgba(91,107,98,0.08); padding:0.05rem 0.35rem; border-radius:3px; }
+  .event .what ul { margin:0.4rem 0; padding-left:1.2rem; font-size:0.92rem; color:var(--muted); }
+  .event .what ul li { margin:0.2rem 0; }
+  .event .pill { display:inline-block; padding:0.12rem 0.55rem; border-radius:999px; border:1px solid var(--line); font-size:0.72rem; font-weight:600; letter-spacing:0.02em; margin-right:0.3rem; }
+  .event .pill.up { background:rgba(22,163,74,0.10); color:var(--ok); border-color:rgba(22,163,74,0.4); }
+  .event .pill.fix { background:rgba(37,99,235,0.10); color:var(--fact); border-color:rgba(37,99,235,0.4); }
+  .event .pill.live { background:rgba(15,118,110,0.10); color:var(--accent); border-color:rgba(15,118,110,0.4); }
+
+  .try { background:rgba(91,107,98,0.04); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem; margin:1rem 0; }
+  .try pre { background:transparent; border:0; padding:0; margin:0.4rem 0 0; overflow-x:auto; font-size:0.85rem; }
+  .try code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  footer a { color:var(--accent); text-decoration:none; }
+  footer a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>What is new</h1>
+    <p class="sub">Every upgrade on the Council of AI measurement rail. Live from the Git log, the corrections ledger, and the live board.</p>
+    <p class="lid" id="lid">22 axis · 22 measured (14 model-comparison · 8 deterministic-fact) · live</p>
+  </header>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">The five capability pillars</h2>
+    <p style="color:var(--muted);margin:0 0 1rem;">Council of AI is a measurement rail, not a certification authority. Every surface below lives because the doctrine said so.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <h3>GSPC board</h3>
+        <p>The living board — <strong>22 axes</strong>, every figure quoted from <code>GET /api/gspc</code>. 14 model-comparison, 8 deterministic-fact. TIE is TIE; UNMEASURED stays empty.</p>
+      </div>
+      <div class="pillar">
+        <h3>Ed25519 + Rekor witness</h3>
+        <p>Every measurement is a signed card under <code>did:web:csoai.org#card-attestation-1</code>. The root.json witness is published; Rekor/OTS are on the roadmap.</p>
+      </div>
+      <div class="pillar">
+        <h3>MCP server</h3>
+        <p>Four tools live at <code>https://councilof.ai/mcp</code>: <code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, <code>list_cards</code>. Drop into Claude Code, Cursor, Kimi, Grok.</p>
+      </div>
+      <div class="pillar">
+        <h3>Plugin + extension</h3>
+        <p>Council of AI Grok plugin (4 skills, 4 commands). Chrome MV3 extension overlays the badge + verify on Hugging Face, OpenRouter, Replicate. <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">repo</a> · <a href="/extension/">extension</a>.</p>
+      </div>
+      <div class="pillar">
+        <h3>x402 + SWIFT + XRPL</h3>
+        <p>Three revenue rails: per-request signed RWA evidence on XRPL, SWIFT census, and x402 paywalls. Every figure signed; nothing typed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline">
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem;">The upgrade timeline (last 14 days)</h2>
+
+    <article class="event">
+      <div class="when">2026-09-02<br/>(today)</div>
+      <div class="what">
+        <h2>Hub-cards index honesty — #1155 fixed</h2>
+        <span class="pill fix">fix</span> <span class="pill up">live</span>
+        <p>The HF <code>gspc-hub-cards</code> index used to claim <code>status: MEASURED</code> even when the signed card body said <code>status: UNMEASURED, unmeasured: [signed-pending-verify]</code>. The index now mirrors the card body. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1181">PR #1181</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>Dashboard shell panes — 9 wired, 1 duplicate pointer retired</h2>
+        <span class="pill fix">fix</span> <span class="pill live">live</span>
+        <p>9 Council OS rail tabs (matrix / tools / cards / state / evidence / embed / measured / claimguard / play) used to fall back to the board. Each pane is now real. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1182">PR #1182</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>/dashboard production bug — ALIASES ReferenceError</h2>
+        <span class="pill fix">fix</span> <span class="pill live">live</span>
+        <p><code>DashboardLayout</code> threw <code>ReferenceError: ALIASES is not defined</code> on every /dashboard render. <code>resolvePaneId</code> referenced a deleted alias map. Now returns the id directly. The 12-test e2e shell smoke is re-gated. <a href="https://github.com/CSOAI-ORG/councilof-ai/issues/1189">#1189</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>256 dead CTA links on 68 sector pages — fixed</h2>
+        <span class="pill fix">fix</span>
+        <p>Sector pages linked to <code>/certify</code>, <code>/asti</code>, and five <code>/frameworks/&lt;name&gt;</code> pages that 404. Each repointed to the canonical URL or removed. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1183">PR #1183</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-01</div>
+      <div class="what">
+        <h2>22/22 freeze — corrections ledger entry C-2026-0902-09</h2>
+        <span class="pill up">live</span>
+        <p>The 15/7 freeze has been retired. The signed 22-axis board is the live one. The 39-entry <a href="/api/corrections">corrections ledger</a> is the public witness of every change.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-01</div>
+      <div class="what">
+        <h2>Council of AI Grok plugin — 4 skills + 4 commands</h2>
+        <span class="pill up">live</span>
+        <p><code>/gspc</code>, <code>/verify</code>, <code>/sign</code>, <code>/council</code>. Doctrine-first: empty cells stay empty, TIE means TIE. Source in <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">council-of-ai-grok</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-30</div>
+      <div class="what">
+        <h2>Chrome extension (MV3) — badge + verify overlay</h2>
+        <span class="pill up">live</span>
+        <p>Overlay the GSPC badge on Hugging Face, OpenRouter, Replicate, Anthropic, OpenAI, Google, DeepSeek, Mistral, Meta, Cohere. Click → open the card → verify in your browser. <a href="/extension/">install</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-29</div>
+      <div class="what">
+        <h2>x402 revenue rail — 402 paywalls for signed evidence</h2>
+        <span class="pill up">live</span>
+        <p>Per-request signed RWA evidence: $1.00 USDC on Base. The <a href="/api/xrpl">XRPL state reader</a> (16 assets) and <a href="/api/swift">SWIFT census</a> (26 members) back the pack. No MEASURED claim on financial axes (that's a measurement, not a score).</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-29</div>
+      <div class="what">
+        <h2>Hermes skill — <code>council-of-ai</code> for Hermes Agent</h2>
+        <span class="pill up">live</span>
+        <p>6/6 tests pass. Scripts: <code>gspc-board.sh</code>, <code>verify-card.sh</code>, <code>sign-bytes.sh</code>. References for verify / sign / EU AI Act pack / x402. <a href="https://github.com/CSOAI-ORG/councilof-ai/tree/main/client/src/components/lobby/tabs.ts">Install</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-28</div>
+      <div class="what">
+        <h2>SOV3 → Council rename — best-version consolidation</h2>
+        <span class="pill fix">fix</span>
+        <p>12 page files renamed, 3 dead stubs deleted (SovOS, SovTownLab, SovTowns). <a href="https://github.com/CSOAI-ORG/councilof-ai/commit/41f33277">commit</a>.</p>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem;">Try it</h2>
+
+    <div class="try">
+      <strong>Pull the live board</strong>
+      <pre><code>curl -s https://councilof.ai/api/gspc | python3 -m json.tool | head -30</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>Verify any signed card</strong>
+      <pre><code>curl -s https://councilof.ai/signed/cards/&lt;sha&gt;.json | bash &lt;(curl -s https://councilof.ai/visual-verify.html)</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>Drop into your agent</strong>
+      <pre><code>npm install -g @csoai/council-of-ai-grok
+# or
+npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>One line for Claude Code / Cursor / Kimi</strong>
+      <pre><code>{"mcpServers":{"gspc":{"url":"https://councilof.ai/mcp"}}}</code></pre>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a> · <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">Grok plugin</a></p>
+    <p style="margin-top:0.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check at <a href="https://councilof.ai/verify">/verify</a>.</p>
+  </footer>
+</main>
+
+<script>
+// Live lid refresh from /api/gspc
+(async () => {
+  try {
+    const r = await fetch("https://councilof.ai/api/gspc");
+    if (!r.ok) return;
+    const b = await r.json();
+    const tot = b.totals || {};
+    const live = `${tot.axes ?? b.axes?.length ?? 22} axis · ${tot.measured_axes ?? "?"} measured (14 model-comparison · 8 deterministic-fact) · live`;
+    const el = document.getElementById("lid");
+    if (el) el.textContent = live;
+  } catch {}
+})();
+</script>
+</body>
+</html>
