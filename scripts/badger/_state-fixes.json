@@ -161,6 +161,13 @@
         "ok": true
       }
     },
+    "aeo-missing::pay.html::robots": {
+      "fixed_at": "2026-09-03T05:59:08.906044+00:00",
+      "result": {
+        "diff": "added <meta name=\"robots\"> to pay.html",
+        "ok": true
+      }
+    },
     "aeo-missing::pqcbench.html::robots": {
       "fixed_at": "2026-09-03T03:50:09.813570+00:00",
       "result": {
@@ -411,6 +418,34 @@
       "result": {
         "ok": false,
         "reason": "no known replacement for /library"
+      }
+    },
+    "broken-link::pay.html::/api/corrections": {
+      "fixed_at": "2026-09-03T05:59:08.906778+00:00",
+      "result": {
+        "ok": false,
+        "reason": "no known replacement for /api/corrections"
+      }
+    },
+    "broken-link::pay.html::/api/gspc": {
+      "fixed_at": "2026-09-03T05:59:08.906711+00:00",
+      "result": {
+        "ok": false,
+        "reason": "no known replacement for /api/gspc"
+      }
+    },
+    "broken-link::pay.html::/gspc-verify": {
+      "fixed_at": "2026-09-03T05:59:08.906623+00:00",
+      "result": {
+        "ok": false,
+        "reason": "no known replacement for /gspc-verify"
+      }
+    },
+    "broken-link::pay.html::/mcp": {
+      "fixed_at": "2026-09-03T05:59:08.906847+00:00",
+      "result": {
+        "ok": false,
+        "reason": "no known replacement for /mcp"
       }
     },
     "broken-link::pqcbench.html::/council-space": {
@@ -3192,6 +3227,13 @@
         "reason": "description already present"
       }
     },
+    "og-image-missing::pay.html": {
+      "fixed_at": "2026-09-03T05:59:08.906534+00:00",
+      "result": {
+        "ok": false,
+        "reason": "description already present"
+      }
+    },
     "og-image-missing::pqcbench.html": {
       "fixed_at": "2026-09-03T03:56:13.038324+00:00",
       "result": {
@@ -3341,6 +3383,13 @@
     },
     "orphan-page::paper-district.html": {
       "fixed_at": "2026-09-03T03:57:35.167766+00:00",
+      "result": {
+        "diff": "no fix needed (orphans are not errors; the lid phrase is consistent)",
+        "ok": true
+      }
+    },
+    "orphan-page::pay.html": {
+      "fixed_at": "2026-09-03T05:59:08.906887+00:00",
       "result": {
         "diff": "no fix needed (orphans are not errors; the lid phrase is consistent)",
         "ok": true
