@@ -929,6 +929,32 @@
         "summary": ""
       }
     },
+    "/api/hub-cards": {
+      "get": {
+        "operationId": "get__api_hub-cards",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "as_of",
+                    "source",
+                    "population",
+                    "honesty",
+                    "counts",
+                    "cells"
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
     "/api/interop-bulk": {
       "get": {
         "operationId": "get__api_interop-bulk",
