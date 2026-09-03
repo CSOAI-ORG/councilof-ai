@@ -341,18 +341,24 @@ def apply_valid_flips(rows: list[dict], verified: list[dict]) -> int:
     return n
 
 
-def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32) -> tuple[str, str]:
-    payload = json.dumps(
-        {
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens,
-            "temperature": 0,
-            # Qwen3-class "thinking" models otherwise spend max_tokens on reasoning and return content null.
-            # vLLM-style providers honour this; others ignore the key.
-            "chat_template_kwargs": {"enable_thinking": False},
-        }
-    ).encode()
+def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32,
+          _thinking_kwarg: bool = True) -> tuple[str, str]:
+    body = {
+        "model": model,
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_tokens,
+        "temperature": 0,
+    }
+    if _thinking_kwarg:
+        # Qwen3-class "thinking" models otherwise spend max_tokens on reasoning and return
+        # content null. vLLM-style providers honour this. The old comment here claimed
+        # "others ignore the key" — they do not: groq and several router providers answer
+        # HTTP 400 "property 'chat_template_kwargs' is unsupported". The mill recorded that
+        # as the MODEL having no endpoint and retired it, so openai/gpt-oss-20b — which
+        # answers 200 on a bare request — was skipped on every axis. The caller retries
+        # without the key below, so an unsupported parameter costs one request, not a model.
+        body["chat_template_kwargs"] = {"enable_thinking": False}
+    payload = json.dumps(body).encode()
     req = urllib.request.Request(
         url,
         data=payload,
@@ -546,6 +552,13 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
         if "403" in txt:
             _DEAD.add(name)
             continue
+        if "chat_template_kwargs" in txt:
+            # The parameter was refused, not the model. Ask again without it.
+            st, txt = _chat(HF_ROUTER, tok, name, prompt, _thinking_kwarg=False)
+            if st == "OK":
+                _ROUTE[slug] = "hf-router"
+                return st, txt
+            last = f"hf:{name}:{txt}"
         if "400" in txt or "404" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
             _DEAD.add(name)
             unsupported += 1
