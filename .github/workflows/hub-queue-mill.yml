@@ -12,7 +12,7 @@ on:
       # and silently shadowed the selector, which is the bug this input was meant to
       # let you work around in the first place.
       axis: { description: "axis to grade this run (blank = the emptiest axis)", type: string, default: "" }
-      grade: { description: "how many of the emptiest models to grade", type: string, default: "8" }
+      grade: { description: "how many probe-live models to grade", type: string, default: "12" }
 concurrency: { group: hub-queue-mill, cancel-in-progress: false }
 permissions: { contents: read }
 jobs:
@@ -34,7 +34,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       AXIS_INPUT: ${{ github.event.inputs.axis }}
-      GRADE: ${{ github.event.inputs.grade || '8' }}
+      GRADE: ${{ github.event.inputs.grade || '12' }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
@@ -141,7 +141,18 @@ jobs:
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
         run: |
           set -euo pipefail
-          python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 2>&1 | tail -40
+          # --probe-first asks the Hub which slugs a provider actually serves BEFORE spending
+          # a grade. Without it a run picks the 100 emptiest by rank, grades the first 8, and
+          # 7 of those 8 are gpt2/opt-125m/GGUF/tiny-test repos that nothing serves — one card
+          # per run, seven wasted grades (run 33703522343, run 33715973211: graded 8, staged 1).
+          # --dead carries the ids already proven to have no endpoint so they are never picked
+          # again. Deliberately NOT --only live_provider_slugs.txt: that list was built when HF
+          # Inference Providers answered, and today it does not (#1102) — it omits the one model
+          # currently staging cards through openrouter. Probe live routing, do not trust a
+          # snapshot of routing that has since changed.
+          python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out \
+            --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 \
+            --probe-first --dead harness/gspc-top100/dead_slugs.jsonl 2>&1 | tail -40
       - name: upload staged cards (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4
