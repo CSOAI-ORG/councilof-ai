@@ -1,0 +1,196 @@
+{
+  "finished": "2026-09-03T05:55:45Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.1000x-orchestrator",
+  "n_fail": 18,
+  "n_jobs": 18,
+  "n_ok": 0,
+  "results": {
+    "a2a-findings": {
+      "args": [
+        "scripts/badger/harvest-a2a-findings.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "agentic-fix": {
+      "args": [
+        "scripts/badger/csoai-agentic-fix.py",
+        "--auto"
+      ],
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "archive-deep": {
+      "args": [
+        "scripts/badger/csoai-archive-deep.py"
+      ],
+      "elapsed_s": 0.08,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "axes-deep": {
+      "args": [
+        "scripts/badger/csoai-axis-deep-builder.py"
+      ],
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "bank-classify": {
+      "args": [
+        "scripts/badger/csoai-bank-classify.py",
+        "--dry-run"
+      ],
+      "elapsed_s": 0.07,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "bank-pack": {
+      "args": [
+        "scripts/badger/csoai-bank-pack.py",
+        "--no-ots"
+      ],
+      "elapsed_s": 0.07,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "corrections-diff": {
+      "args": [
+        "scripts/badger/harvest-corrections-diff-cards.py"
+      ],
+      "elapsed_s": 0.05,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "layer0": {
+      "args": [
+        "scripts/badger/csoai-layer0-ceremony.py",
+        "--no-ots"
+      ],
+      "elapsed_s": 0.07,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "mineral-4": {
+      "args": [
+        "scripts/badger/csoai-mineral-4.py"
+      ],
+      "elapsed_s": 0.07,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "openapi": {
+      "args": [
+        "scripts/badger/csoai-openapi-gen.py",
+        "--probe"
+      ],
+      "elapsed_s": 0.02,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "per-issuer": {
+      "args": [
+        "scripts/badger/harvest-per-issuer-cards.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "per-item": {
+      "args": [
+        "scripts/badger/harvest-per-item-cards.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "per-model": {
+      "args": [
+        "scripts/badger/harvest-per-model-cards.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "public-data": {
+      "args": [
+        "scripts/badger/csoai-public-data-mine.py"
+      ],
+      "elapsed_s": 0.07,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "regulatory": {
+      "args": [
+        "scripts/badger/csoai-regulatory-mine.py"
+      ],
+      "elapsed_s": 0.06,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "tie-attestations": {
+      "args": [
+        "scripts/badger/harvest-tie-attestations.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "uk-open-data": {
+      "args": [
+        "scripts/badger/csoai-uk-open-data.py"
+      ],
+      "elapsed_s": 0.05,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    },
+    "witness-receipts": {
+      "args": [
+        "scripts/badger/harvest-witness-receipts.py"
+      ],
+      "elapsed_s": 0.04,
+      "exit_code": 2,
+      "stderr_lines": 1,
+      "stdout_lines": 0,
+      "stdout_tail": ""
+    }
+  },
+  "started": "2026-09-03T05:55:45Z"
+}
