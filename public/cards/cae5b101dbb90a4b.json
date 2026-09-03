@@ -1,0 +1,53 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "chains_claimed_public": [
+        "Stellar",
+        "Polygon",
+        "Avalanche",
+        "Base",
+        "Arbitrum",
+        "Aptos"
+      ],
+      "graphql": "DARK",
+      "xrpl_toml": "ABSENT",
+      "stellar_toml": "HAVE",
+      "stellar_toml_http": 200,
+      "not_issuer_7": true
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "cae5b101dbb90a4bc5fa60892c3060b391ed1becd7f60a913433686cb57ca66c",
+    "sig_ed25519": "358293e15e5fcac355a1759a4ec0bae4c17186adbb56b9fe0bf7abfff194052873c0633818edc83c5645fc4a9677b3ee93f457620cd9422630643e2311037f0f",
+    "source_urls": [
+      "https://www.theblock.co/news/defi/2026-08-12-sec-clears-franklin-templeton-funds-use-onchain-benji-system-cash-management-411654",
+      "https://www.franklintempleton.com/.well-known/stellar.toml"
+    ],
+    "subject": "BENJI/FOBXX on-chain supply (public layer)",
+    "surface": "benji.onchain.supply",
+    "tags": [
+      "jurisdiction:US",
+      "framework:sec-staff-no-action",
+      "subject:BENJI"
+    ],
+    "unmeasured": [
+      "onchain_supply_per_chain",
+      "dune_query",
+      "graphql",
+      "xrpl_toml"
+    ]
+  },
+  "proof": [
+    "95f6ad4db490385856f37c0feb7ef368344174e8395c09d42095a35bf0a776ef",
+    "f82866f8931c3576ecb26654d9c8aa614f8e7bc6bb2459c1095cfbe3e3562d69",
+    "163673d248d8cf102d881df40ec9498de402ac81fafa1dc1701f0a7f777b6480",
+    "dd2fff3269a5ea6bad4ba6bf6534a94e641ff90e6592718ae286eac9998d3241",
+    "0130955e6f131b9cce06da2030cd37e862ba91a66f5979cb6bf37ccfa8161a2e",
+    "5ee6e227fabe228ad6ce9a91dd709b8124f98deb2200ee56ceabb40abd384b20",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

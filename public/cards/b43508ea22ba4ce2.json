@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "vendor": "Google Gemini",
+      "vendor_disclosure": "Vendor published a public Gemini model cards documenting safety evaluations and known limitations.",
+      "vendor_claim_type": "self-reported safety testing (public disclosure)",
+      "our_card": "UNMEASURED",
+      "our_card_note": "CSOAI has no signed GSPC card for this public model yet. Grading the public models on the 14 behavioural axes is an owner step (OpenRouter key). Public disclosures compared, not certified. Measurement, not certification. Not defamatory.",
+      "url_sha256": "32f83c1b97cebd0628f428d9b1d8501a719a9c72b25e863964b7f6a567ffdf45"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b43508ea22ba4ce2e686001747b8c9df3e4a2e4e2177b663af5a74880b12a0b6",
+    "sig_ed25519": "1f0108c2e3679f295b86c3faa60cd8b7093ef6fde27d24006dd788f8e5c248c6b33e199ba93ac17dd79a2b09262eea96eab4ab41e5a56ba6051fedd2021f940e",
+    "source_urls": [
+      "https://deepmind.google/models/model-cards/"
+    ],
+    "subject": "Vendor system-card claim vs CSOAI card: Google Gemini - UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "framework:vendor-system-card",
+      "coverage:claim-vs-card",
+      "coverage:UNMEASURED",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "our_gspc_measurement_of_this_public_model",
+      "the_matching_axis_score"
+    ]
+  },
+  "proof": [
+    "f66ae0a64f2ef20b907601ac7d1834ede6f0600c884272bec0dadff61e31bd82",
+    "99748d73d0f60bc66af22cb4eeda6b7e7505cde72a19d31b5e4f97090a4b8736",
+    "de68b8fa0df626f20e6e18c3b0a9de41a56612732601222c8dfd10da5bcc7cd0",
+    "f2d30aabc0c9806b29a6125023f0dc8f72eedaf0ff0ad1f42a1dcbe34947c761",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

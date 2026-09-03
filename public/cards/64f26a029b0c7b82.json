@@ -1,0 +1,99 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:56Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:56Z",
+      "inputs_sha256": "56b3d03014e77916143311451e9962c5017fdffd2ab05e62311014f6ef2e19c0",
+      "issuer": "GateHub",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:56Z",
+          "http": 200,
+          "n_bytes": 8898,
+          "robots": "allowed",
+          "sha256": "09c1ef6d58f8ff3cea54ec0b76d6c3e1ea23c609826e3ef3b2acc10444871dc3",
+          "url": "https://gatehub.net/"
+        }
+      ],
+      "pdf_links_n": 0,
+      "state": "PROBED",
+      "symbols": [
+        "USD.gh",
+        "EUR.gh",
+        "XAU.gh",
+        "GBP.gh"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 0,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "64f26a029b0c7b8293a381a7723e18f7725f9f98f55ea577d67c4e2456e7632d",
+    "sig_ed25519": "7f9b130e880731de8c391b541b546c4eb04e2d2cd93d3d716d25efe9309473a65dab96f250d94a8d6e9acb8ba5481b01f427d5c07d22f04f06b1cd525fec5404",
+    "source_urls": [
+      "https://gatehub.net/"
+    ],
+    "subject": "GateHub disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "53c0444b503d748a2a9006aeb849e38077bcfc25a700689c8afc463801972d61",
+    "67f678230fd9320eda7b8a3f8610a281c821f17b1baf6691e74ff1cf137f1456",
+    "9e42a4e8aa31c19461a1ea6a74fc55d027d76f107afc92fb7493dd990e6c645a",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

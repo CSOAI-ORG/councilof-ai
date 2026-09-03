@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "Westpac",
+      "bank_id": "westpac",
+      "census_as_of": "2026-09-01",
+      "census_status": "COMMITTED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:44Z",
+      "inputs_sha256": "47f4c73f1e25f0af1d67e14e5ecdc144b945fb9c539b1f6e0b28fba02d674b5e",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:44Z",
+          "http": 200,
+          "id": "ethers_mvp_2apr",
+          "n_bytes": 107732,
+          "named_in_body": "PASS",
+          "published": "2026-04-02",
+          "sha256": "c963d571f467f6be7f0cb5454b70f02ae74bfff7c1884628e9c8ab5258463c6e",
+          "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3793193ad49a21e5676869bd3f1950e1631d62af245d7893cca0a949e3dc4302",
+    "sig_ed25519": "31929a12dc3589c2f1e8cf8f9bd6e2cc9acd94f04d9dc2bcb7d78ac5bd5aea2153ee6ce50a285d352a7781793be027567ab47bc0510c722bb4dbef78f61e860e",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+    ],
+    "subject": "Swift shared-ledger census: Westpac — COMMITTED; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:committed",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "513c03368d10a10ef891c2c3f2eb085d263e56f825d33d7ee5ef4f1f192b5253",
+    "bd7f69158df318f698a2c4bc110aa65d70f4eb9a5591bc51db2e24567f992b07",
+    "e6ac7fa06d9f01073d2e722b1a491138c019a465736c2f95597440aba7ea4c63",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

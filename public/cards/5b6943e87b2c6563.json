@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "HSBC",
+      "bank_id": "hsbc",
+      "census_as_of": "2026-09-01",
+      "census_status": "LIVE",
+      "event_date": "2026-08-19",
+      "fetched_at": "2026-09-02T07:56:43Z",
+      "inputs_sha256": "e21b18158ca6403dedde72a3e624bb812b7f9dbcc6700a982fc507c4437bdfef",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 2,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:42Z",
+          "http": 200,
+          "id": "sc_live_19aug",
+          "n_bytes": 131983,
+          "named_in_body": "PASS",
+          "published": "2026-08-19",
+          "sha256": "fa6400a99c4d89a438a0ae7f03f34c3c6f799a8a60d36786a7c457f83542b8f8",
+          "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:43Z",
+          "http": 200,
+          "id": "fintechnews_uob_28aug",
+          "n_bytes": 958207,
+          "named_in_body": "PASS",
+          "published": "2026-08-28",
+          "sha256": "f6487997bd12f44392c20149ac0895d2309ecbdf2a92f0d0bab3a60329fa4d9b",
+          "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "5b6943e87b2c6563964eb96636404cf396f0264d366c81d867067de5ab96c10c",
+    "sig_ed25519": "3b858c8766493088259eb0356e467cd0391d54b709a5c9313670aae96010f2f1a40d73db5a651c42a8247b94d2d8b36d9eb8f2cbcd644a499b191f6ded886e0c",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+      "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+    ],
+    "subject": "Swift shared-ledger census: HSBC — LIVE; named in 2/2 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:live",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "1c2f522d2080aaa6754dd601cd75fa5f4694146606f23268eeac6ce558d5a20c",
+    "16ca8ccc87206ca6b4473fd7d8a52b11ad65a243b9218d12bec258763607519d",
+    "7d6a950e404dc1ad4e15ff4f224acd8d2003e263bf4e8b74be3eb2481cbd1fa8",
+    "666f4bd48e29bbb8ce8fb25fe1e6d9dd9f1fe8096499239a35221c6f9ea75843",
+    "76c9594e85ed5fd49fdfd2c866f26c8180fe44df42de8e035f4efd18adcd907e",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

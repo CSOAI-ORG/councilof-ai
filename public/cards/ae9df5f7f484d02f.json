@@ -1,0 +1,122 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:39Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [],
+      "account_root": {
+        "domain": "tokens.brazacripto.com.br",
+        "domain_hex": "746F6B656E732E6272617A6163726970746F2E636F6D2E6272",
+        "flags": 8388608,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": false
+        },
+        "ledger_index": 106707162,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 90560014
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://tokens.brazacripto.com.br/.well-known/xrp-ledger.toml"
+      ],
+      "directory": {
+        "domain": "usdb.braza.com.br",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "USDB",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:39Z",
+      "inputs_sha256": "7cb838b960f19e8ef41d77d3efdc28597cd51b255f241d4bbb09b1529fd8d0a2",
+      "issuer": "Braza Bank",
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "5553444200000000000000000000000000000000",
+        "currency_decoded": "USDB",
+        "ledger_index": 106707162,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "24142878.89000001"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 60,
+        "sig_ed25519_present": true,
+        "supply": 119782236,
+        "unmeasured": [],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "Bidirectional domain match"
+      },
+      "state": "PROBED",
+      "symbol": "USDB",
+      "toml": {
+        "accounts_listed_n": 2,
+        "content_type": "text/plain",
+        "fetched_at": "2026-09-02T07:55:39Z",
+        "http": 200,
+        "is_toml": true,
+        "issuer_address_listed": true,
+        "n_bytes": 1418,
+        "sha256": "69bbfbf793aaa3916366f03809e91cf14219046d2c0814745fb3328cd86b0d35",
+        "url": "https://tokens.brazacripto.com.br/.well-known/xrp-ledger.toml"
+      },
+      "two_way_domain": "PASS",
+      "two_way_reason": "on-ledger Domain -> TOML lists this issuer address",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ae9df5f7f484d02f265c1dcbbc5d5ec21ea6bfa78dfef8a1b060d352f5c686b9",
+    "sig_ed25519": "3bc0ed80aa37c653bd17b01e96cda1b97007ba2c3bbd4680d07267da0e73900536ab5f39360875bf807f3ea697a95b853c32f351af52780e3f7ec9436245fa03",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://tokens.brazacripto.com.br/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL USDB (Braza Bank) two-way domain PASS + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:PASS",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "9a89b3e1151a4ef58823e37f0406cf640820f39e92a40ed371a8e31d6103662d",
+    "17eec892eb54a2abb574756599b745b198da1dee8a6a01204b44df671cbcef83",
+    "a85b87051a1429fab06e967928bbfefe829358fc3279fdaf9b694241ecc185d2",
+    "e2ced9238817b56cac778667e0ad36afdee18c58d25421a1f403273873dd6c59",
+    "13ae5319342612ba81ef1669dec52e1a063a934a6628391ce7e949eb07ab505c",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:43Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "UOB",
+      "bank_id": "uob",
+      "census_as_of": "2026-09-01",
+      "census_status": "LIVE",
+      "event_date": "2026-08-28",
+      "fetched_at": "2026-09-02T07:56:43Z",
+      "inputs_sha256": "52ece288581d5c977d9ea759301fbae53ec838de079ad8f6185b3d9e21e6bae1",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:43Z",
+          "http": 200,
+          "id": "fintechnews_uob_28aug",
+          "n_bytes": 958207,
+          "named_in_body": "PASS",
+          "published": "2026-08-28",
+          "sha256": "f6487997bd12f44392c20149ac0895d2309ecbdf2a92f0d0bab3a60329fa4d9b",
+          "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "78adec60e880ad9f8392e2fe522a46f8df5b9a52a61d69bf0286e3dee4664f7b",
+    "sig_ed25519": "e35bb547369914ae2cebb322985bcf1d0b5e18df0238dc750f0a7f9441ecec187fa98545e06ddea1e6fffcb201ea7400580a263a0f568e2f55eb8647428abf03",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
+    ],
+    "subject": "Swift shared-ledger census: UOB — LIVE; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:live",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "c8bd03a5d3d28fd480c57e33e908472dbf2c3a413146e2283dd9844c273c03fe",
+    "a3ff3673b7520820e3d4a49bd667ff87b1409c9da354c833ee801d26c8ba52f1",
+    "276298860bf0da6630b3b11b44c4540d626ba3cb71c2835121b96b2a813d0642",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

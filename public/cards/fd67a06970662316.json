@@ -1,0 +1,52 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "not_a_grade": true,
+      "gap_note": "The security WRAPPER is authorised. MODEL BEHAVIOUR on the 14 behavioural GSPC axes is unsigned. That gap is us.",
+      "wrappers_authorised": {
+        "OpenAI ChatGPT Enterprise + API": "FedRAMP (marketplace FR2533155773; ongoing as of 2026-01-09)",
+        "Google Gemini": "FedRAMP High (Mar 2025)",
+        "Anthropic Claude": "FedRAMP High via AWS/GCP (Apr 2 / Jun 11 2025)"
+      },
+      "what_fedramp_covers": "cloud security controls of the wrapper",
+      "what_fedramp_does_not_cover": "model behaviour on the behavioural axes"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "fd67a069706623168898ff8c4d7f7784353493f3d96895f91784ba2709e36150",
+    "sig_ed25519": "a69af7090dd98cb3440b7117094b906b0f38b7507b7034787542291f8f493e497c68b1dea70d8d6c6f44d52a87df97222d687fd33c25a553898bea298d01fc03",
+    "source_urls": [
+      "https://marketplace.fedramp.gov/products",
+      "https://www.fedramp.gov/marketplace/products/FR2533155773/",
+      "https://cloud.google.com/blog/topics/public-sector/gemini-in-workspace-apps-and-the-gemini-app-are-first-to-achieve-fedramp-high-authorization"
+    ],
+    "subject": "FedRAMP wrapper authorised, model behaviour unsigned - the gap (1 Sep 2026)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:fedramp-marketplace",
+      "coverage:wrapper-authorised",
+      "coverage:behaviour-unsigned",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "model_behaviour_on_gspc_axes",
+      "runtime_conduct",
+      "in_deployment_measurement"
+    ]
+  },
+  "proof": [
+    "eec48c8e109d0cf1f9b8b2d0a95e4dbcd1f6de28c5022c669c04f672de84e8c8",
+    "75a1d52581eb2f5598ceaa40acd2d9db6ac5aa23edc758251fcfe4a59854800f",
+    "de68b8fa0df626f20e6e18c3b0a9de41a56612732601222c8dfd10da5bcc7cd0",
+    "f2d30aabc0c9806b29a6125023f0dc8f72eedaf0ff0ad1f42a1dcbe34947c761",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

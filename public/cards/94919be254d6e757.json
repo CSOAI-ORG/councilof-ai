@@ -1,0 +1,122 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:37Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [],
+      "account_root": {
+        "domain": "ondo.finance",
+        "domain_hex": "6F6E646F2E66696E616E6365",
+        "flags": 2147745792,
+        "flags_decoded": {
+          "allow_trustline_clawback": true,
+          "default_ripple": false,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": true,
+          "require_dest_tag": false
+        },
+        "ledger_index": 106707162,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 96699793
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://ondo.finance/.well-known/xrp-ledger.toml"
+      ],
+      "directory": {
+        "domain": "ondo.finance/ousg",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "OUSG",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:37Z",
+      "inputs_sha256": "a3bea13ec2cd0fb6947ac867087bb63c91e498d44fab8664337b904d462475bd",
+      "issuer": "Ondo Finance",
+      "issuer_address": "rHuiXXjHLpMP8ZE9sSQU5aADQVWDwv6h5p",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "4F55534700000000000000000000000000000000",
+        "currency_decoded": "OUSG",
+        "ledger_index": 106707162,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "1657065.565236341"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 50,
+        "sig_ed25519_present": true,
+        "supply": 1986128,
+        "unmeasured": [],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "Bidirectional domain match"
+      },
+      "state": "PROBED",
+      "symbol": "OUSG",
+      "toml": {
+        "accounts_listed_n": 1,
+        "content_type": "text/plain",
+        "fetched_at": "2026-09-02T07:55:37Z",
+        "http": 200,
+        "is_toml": true,
+        "issuer_address_listed": true,
+        "n_bytes": 301,
+        "sha256": "7bd520326d9bb8522dbb94b77588b96759f74ae46501ae66a0f1a496d19c330a",
+        "url": "https://ondo.finance/.well-known/xrp-ledger.toml"
+      },
+      "two_way_domain": "PASS",
+      "two_way_reason": "on-ledger Domain -> TOML lists this issuer address",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "94919be254d6e757dffb65ce494ef988852a34bbc8b401634a007118c68728f0",
+    "sig_ed25519": "b5f68c88a9b5e092db1801c513894711fcc23ee83cf831cd32ed45881095457bee3244bce3dbea57d948454a131de63e59fe26240ae875ab75931a7380c82c07",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://ondo.finance/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL OUSG (Ondo Finance) two-way domain PASS + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:PASS",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "ceadda4815a9e9e517b4674dc9efdee6fb672973eb4d9377a5f1e23f116900e3",
+    "95a6d432b1c01f2ffd56f9ebeeeb45144422bd41067d6d04c1a1d7fe814da9e7",
+    "c8320880a6d71eb2ca08a1073e278a0205f13db2bf73f87e91adf241a0bd73a4",
+    "6cc78e7841aa02f659f2848cee81f1ad5cf660dfa2fd047de2e208775e8c3eff",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

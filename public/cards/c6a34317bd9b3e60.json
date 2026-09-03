@@ -1,0 +1,106 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:48Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:48Z",
+      "inputs_sha256": "fca11a65baf9369563e4e908959f6f4acd1f5782b0ee627891e4d9ba83e006a1",
+      "issuer": "Ondo Finance",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:47Z",
+          "http": 200,
+          "n_bytes": 181068,
+          "robots": "allowed",
+          "sha256": "7d307d9e3a9b2105e4fe193ab360435ff42b57f8c328c6fae11e354fcbdc30f9",
+          "url": "https://app.ondo.finance/legal-documentation/us"
+        },
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:48Z",
+          "http": 200,
+          "n_bytes": 744892,
+          "robots": "allowed",
+          "sha256": "a27b62b311cae84fc3e6fbda759d4776d2cfb2eee5283b7bd0787d2253f592a4",
+          "url": "https://ondo.finance/ousg"
+        }
+      ],
+      "pdf_links_n": 0,
+      "state": "PROBED",
+      "symbols": [
+        "OUSG"
+      ],
+      "term_hits": {
+        "custody_terms": 8,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 31,
+        "reserve_attestation_terms": 14
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c6a34317bd9b3e600de8b4583f7d2c2bf9a41980608916c18b2d94b2fb29dd18",
+    "sig_ed25519": "d70c5af6fb5aece903bfdf1e7da09c9bb7d7f5ce73df7805da15be550eb74d267339708fecad025fcaac649d7ebc4db826831b723032570498ddb17db7e04506",
+    "source_urls": [
+      "https://app.ondo.finance/legal-documentation/us",
+      "https://ondo.finance/ousg"
+    ],
+    "subject": "Ondo Finance disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "391225db052ece7c755804e818d9aa156b88c4d6ae7fe6d74aa26ad6379049c5",
+    "b5f005facc23b8976579d3a520a8fd959e6f900d04d5a75ed87c06ac145aab12",
+    "9e42a4e8aa31c19461a1ea6a74fc55d027d76f107afc92fb7493dd990e6c645a",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

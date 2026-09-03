@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "Saudi Awwal Bank",
+      "bank_id": "saudi-awwal",
+      "census_as_of": "2026-09-01",
+      "census_status": "COMMITTED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:44Z",
+      "inputs_sha256": "47f4c73f1e25f0af1d67e14e5ecdc144b945fb9c539b1f6e0b28fba02d674b5e",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:44Z",
+          "http": 200,
+          "id": "ethers_mvp_2apr",
+          "n_bytes": 107732,
+          "named_in_body": "PASS",
+          "published": "2026-04-02",
+          "sha256": "c963d571f467f6be7f0cb5454b70f02ae74bfff7c1884628e9c8ab5258463c6e",
+          "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "521f3e12498e305923928727e3d8086d9f73035a3832df29f7b1b22733d7339c",
+    "sig_ed25519": "9b67a86a15be7ae1fea25d782b58d2715af09dce1884d9eff95d1740a956b15155560b7ea9c7ff4f08ba34187af65a93ab5b7a4fb808100d3e9bf9f90f894601",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+    ],
+    "subject": "Swift shared-ledger census: Saudi Awwal Bank — COMMITTED; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:committed",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "75b1f25599c397cd7d4ac927ba8237a4b14ba7cc1315e2e6fecd71c318bb356e",
+    "037fdbc65e49ecd856577df93e2c4dfe130ecede6d93886cb352f2cfcd8aa07c",
+    "b8bc372ddd93e156be3350a1da1bdad2cd9ade851795049d5c0f07311ab19e03",
+    "5a42215dd69d1837b0fb28d46a53fe5a3a2e19ac3f4a8abbe2946a1c9d462795",
+    "76c9594e85ed5fd49fdfd2c866f26c8180fe44df42de8e035f4efd18adcd907e",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

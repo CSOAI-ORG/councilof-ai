@@ -1,0 +1,44 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "note": "Public product notice. No external wallet deposit/withdraw/transfer on that venue per reporting. GraphQL dark.",
+      "status": "public_notice",
+      "who": [
+        "Franklin Templeton"
+      ],
+      "url_sha256": "d54dc45a28ef0c42b8e10652ded20baa6fd22ed1525557225eea07a99ea4b23f"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f665bd1bb20e699d4c4dffc2065367ccc34a2dedb3333ad5709f1e9ee38f15dc",
+    "sig_ed25519": "8636c4905ef712d34e8b5a81ee649540cbf5dfd3e436f677be6ad892b0963741b5e4f6ae19217eacaec6c880d7059d40b935fdfcec919d22d2a21aea758f600b",
+    "source_urls": [
+      "https://www.cryptotimes.io/2026/08/25/hashkey-exchange-brings-franklin-templetons-grbenji-tokenized-fund-to-asia/"
+    ],
+    "subject": "HashKey Earn listing of grBENJI (24 Aug 2026 notice) — professional investors only",
+    "surface": "public.notice",
+    "tags": [
+      "jurisdiction:US",
+      "framework:sec-staff-no-action",
+      "coverage:public-notice-only"
+    ],
+    "unmeasured": [
+      "hashkey_primary_press_pdf",
+      "onchain_supply",
+      "graphql"
+    ]
+  },
+  "proof": [
+    "a0fc34675858bddf50cb5926d0abe20c86dd13424ce4a31387d0ffe5d14f6334",
+    "7419936bc6f39f3b976f405905a2b5e63193be9d8d5f8d89c74e913090f86ac1",
+    "163673d248d8cf102d881df40ec9498de402ac81fafa1dc1701f0a7f777b6480",
+    "dd2fff3269a5ea6bad4ba6bf6534a94e641ff90e6592718ae286eac9998d3241",
+    "0130955e6f131b9cce06da2030cd37e862ba91a66f5979cb6bf37ccfa8161a2e",
+    "5ee6e227fabe228ad6ce9a91dd709b8124f98deb2200ee56ceabb40abd384b20",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

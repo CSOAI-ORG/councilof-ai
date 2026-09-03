@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "bank": "ANZ",
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "n": 0,
+      "not_a_grade": true,
+      "not_a_client": true,
+      "settlement": "off_chain",
+      "settlement_still_off_chain": true,
+      "note": "TARGET not client. Official public notice hashed. Tokenised deposits orchestrated 24/7; final settlement still through existing systems. Not a GPI firehose.",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a0fc34675858bddf50cb5926d0abe20c86dd13424ce4a31387d0ffe5d14f6334",
+    "sig_ed25519": "7f0252a57c424f2f1ab62021e806b3c17e11cd5a4156942da37735f4f3bc424c2f8c3ec83508cfe4277e0fb34bc11aaa961f8f6db2ab2d5476c090f12b77b405",
+    "source_urls": [
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+    ],
+    "subject": "SWIFT shared-ledger TARGET: ANZ (9 Jul 2026 press)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:swift-public-press",
+      "coverage:TARGETS-not-clients",
+      "coverage:UNMEASURED",
+      "settlement:off-chain"
+    ],
+    "unmeasured": [
+      "press_html_body",
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "gpi_firehose"
+    ]
+  },
+  "proof": [
+    "f665bd1bb20e699d4c4dffc2065367ccc34a2dedb3333ad5709f1e9ee38f15dc",
+    "7419936bc6f39f3b976f405905a2b5e63193be9d8d5f8d89c74e913090f86ac1",
+    "163673d248d8cf102d881df40ec9498de402ac81fafa1dc1701f0a7f777b6480",
+    "dd2fff3269a5ea6bad4ba6bf6534a94e641ff90e6592718ae286eac9998d3241",
+    "0130955e6f131b9cce06da2030cd37e862ba91a66f5979cb6bf37ccfa8161a2e",
+    "5ee6e227fabe228ad6ce9a91dd709b8124f98deb2200ee56ceabb40abd384b20",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.crosswalk/0.1",
+      "status": "MAPPING",
+      "not_a_legal_determination": true,
+      "not_a_certification": true,
+      "mou": "CAISI (NIST) x GSA, signed 18 Mar 2026, for the USAi platform",
+      "public_behavioural_axes": 14,
+      "crosswalk_artifact": "https://councilof.ai/interop/nist-airmf-gspc-crosswalk.json",
+      "open_docket": "NIST 'Trustworthy AI in Critical Infrastructure' Profile - Community of Interest (OPEN; mailing list + Slack; concept note 7 Apr 2026)",
+      "closed_docket": "GSA GSAR clause 552.239-7001 comment window CLOSED 2026-08-03 - do not file there"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "62610855447e9f87f9ba7f992244e85ebce8a365df261faa7a9d3dffd8d92bfe",
+    "sig_ed25519": "728c0f3d70d0d956567e016a712a45e10920a4431985f2e3cd81c44b5b7006455d90d08cdd711c864a007348f1004647be06794cafbe75a022f2ac4f81eac702",
+    "source_urls": [
+      "https://www.nist.gov/news-events/news/2026/03/caisi-signs-mou-gsa-boost-ai-evaluation-science-federal-procurement-through",
+      "https://www.gsa.gov/about-gsa/newsroom/news-releases/gsa-and-nist-partner-to-boost-ai-evaluation-science-in-federal-procurement-03182026",
+      "https://www.nist.gov/programs-projects/concept-note-ai-rmf-profile-trustworthy-ai-critical-infrastructure",
+      "https://www.federalregister.gov/documents/2026/06/17/2026-12205/general-services-acquisition-regulation-acquisition-of-information-and-communication-technology",
+      "https://councilof.ai/interop/nist-airmf-gspc-crosswalk.json"
+    ],
+    "subject": "Crosswalk: NIST AI RMF -> GSPC axes (CAISI x GSA MOU, 18 Mar 2026)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:nist-ai-rmf",
+      "coverage:crosswalk",
+      "docket:open-nist-ci-profile",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "legal_conformity_determination",
+      "certification_of_any_model"
+    ]
+  },
+  "proof": [
+    "44e4749bdab577a5e0905fed9b7d3da0e73c166f29de440794653820165484fa",
+    "ca00d5a3f3cf732684dbdfe180fd564e623e7743a6dc252a3696ed3ef722da07",
+    "992ab0079bd73bc5353ea530b6352d529d70037f80107b244abb7a84b3f52132",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

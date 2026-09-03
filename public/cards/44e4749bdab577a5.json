@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-01T00:00:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "vendor": "xAI Grok",
+      "vendor_disclosure": "Vendor published a public Grok model card documenting safety evaluations and known limitations.",
+      "vendor_claim_type": "self-reported safety testing (public disclosure)",
+      "our_card": "UNMEASURED",
+      "our_card_note": "CSOAI has no signed GSPC card for this public model yet. Grading the public models on the 14 behavioural axes is an owner step (OpenRouter key). Public disclosures compared, not certified. Measurement, not certification. Not defamatory.",
+      "url_sha256": "4388a267a3b5f3332d37384302ed06a5048181e025032b231b48c2f5589ab2b3"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "44e4749bdab577a5e0905fed9b7d3da0e73c166f29de440794653820165484fa",
+    "sig_ed25519": "8d5d71ddbddffc7051f01ae0f92b5665439f13f11fac2cc59d1d258a87d119ed7841775a3f19c6126c7526c50afba27dcd99e2ad385ec89872ce641cb8918a06",
+    "source_urls": [
+      "https://data.x.ai/2025-08-20-grok-4-model-card.pdf"
+    ],
+    "subject": "Vendor system-card claim vs CSOAI card: xAI Grok - UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "framework:vendor-system-card",
+      "coverage:claim-vs-card",
+      "coverage:UNMEASURED",
+      "genai-mil"
+    ],
+    "unmeasured": [
+      "our_gspc_measurement_of_this_public_model",
+      "the_matching_axis_score"
+    ]
+  },
+  "proof": [
+    "62610855447e9f87f9ba7f992244e85ebce8a365df261faa7a9d3dffd8d92bfe",
+    "ca00d5a3f3cf732684dbdfe180fd564e623e7743a6dc252a3696ed3ef722da07",
+    "992ab0079bd73bc5353ea530b6352d529d70037f80107b244abb7a84b3f52132",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

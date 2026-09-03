@@ -1,0 +1,123 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:54Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain",
+        "TOML at https://quantoz.com/.well-known/xrp-ledger.toml (HTTP 404)"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 2155872256,
+        "flags_decoded": {
+          "allow_trustline_clawback": true,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": false
+        },
+        "ledger_index": 106707166,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 99671820
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://quantoz.com/.well-known/xrp-ledger.toml (directory domain, one-way probe)"
+      ],
+      "directory": {
+        "domain": "quantoz.com",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "Quantoz",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": {
+        "error": "HTTP 404",
+        "fetched_at": "2026-09-02T07:55:54Z",
+        "http": 404,
+        "url": "https://quantoz.com/.well-known/xrp-ledger.toml"
+      },
+      "fetched_at": "2026-09-02T07:55:54Z",
+      "inputs_sha256": "78c4120526dc960695b8afda30070a46a230a31f0f863462899f52ed760fabf9",
+      "issuer": "Quantoz",
+      "issuer_address": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "4555525100000000000000000000000000000000",
+        "currency_decoded": "EURQ",
+        "ledger_index": 106707166,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "1000000"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 2,
+        "sig_ed25519_present": false,
+        "supply": 1000000,
+        "unmeasured": [
+          "strict_two_way_toml",
+          "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPScan well-known directory"
+      },
+      "state": "PROBED",
+      "symbol": "EURQ",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "45e4265dfb4f08d9f242d2d5d575888cf2eba7e1927a494503eaf77131a1023b",
+    "sig_ed25519": "16937e2f7483e1242e1649e7600d50ec1eb61d8999880bb1999f0008bd7ae715048fd20de3c0ccd16877347da92e8987de6deafe33fb5764352080d015f9bf03",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://quantoz.com/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL EURQ (Quantoz) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "7696923a62eb690449907d699341ea9031a490d2b7a2c7cd26708d0fc36f1859",
+    "f72464484c848636db152739f78af816542631ed9de82c210dfa896bb2f46e6f",
+    "8e65fdd7c27900bc760af6d0fe0bd097702226c21f8676361e76ceeec4c00972",
+    "6cc78e7841aa02f659f2848cee81f1ad5cf660dfa2fd047de2e208775e8c3eff",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

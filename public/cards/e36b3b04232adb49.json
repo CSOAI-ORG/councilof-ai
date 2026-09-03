@@ -1,0 +1,112 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 8519680,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": false,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707165,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 3278
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory"
+      ],
+      "directory": {
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": false,
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:51Z",
+      "inputs_sha256": "2a23cab16c05e38bb1e50a23344873c51758ba8e24f3d46e8381904646c04721",
+      "issuer": "GateHub",
+      "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "USD",
+        "currency_decoded": "USD",
+        "ledger_index": 106707165,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "4937190.52964858"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 19800,
+        "sig_ed25519_present": true,
+        "supply": 4839276,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPLMeta registry"
+      },
+      "state": "PROBED",
+      "symbol": "USD.gh",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "e36b3b04232adb49cbf57830007281903bee7e8269c35a0f36ca21e06f9b2acb",
+    "sig_ed25519": "62772a6469c410bd834e5a193ab7aaa1b0d1bc71a76b7ac2b9151bd20e4244774b457e268536c7d0defb53cf8604b08bf32378bac0a6a1b40de8f251a7dd2406",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known"
+    ],
+    "subject": "XRPL USD.gh (GateHub) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "455a05ff2d66855c779d0edff419dce114ddd6cd3903d8e6f8c3903637f34128",
+    "7e8c76b83fe245b40638908f362a5fefb81c468aaee346b7ec9ad9e44271a85e",
+    "a85b87051a1429fab06e967928bbfefe829358fc3279fdaf9b694241ecc185d2",
+    "e2ced9238817b56cac778667e0ad36afdee18c58d25421a1f403273873dd6c59",
+    "13ae5319342612ba81ef1669dec52e1a063a934a6628391ce7e949eb07ab505c",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

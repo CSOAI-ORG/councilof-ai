@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "Deutsche Bank",
+      "bank_id": "deutsche-bank",
+      "census_as_of": "2026-09-01",
+      "census_status": "COMMITTED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:44Z",
+      "inputs_sha256": "47f4c73f1e25f0af1d67e14e5ecdc144b945fb9c539b1f6e0b28fba02d674b5e",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:44Z",
+          "http": 200,
+          "id": "ethers_mvp_2apr",
+          "n_bytes": 107732,
+          "named_in_body": "PASS",
+          "published": "2026-04-02",
+          "sha256": "c963d571f467f6be7f0cb5454b70f02ae74bfff7c1884628e9c8ab5258463c6e",
+          "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b193a1f76790f43757889d16165e17c90344b7ec71428841143eebaceb689545",
+    "sig_ed25519": "b2c33572f64ed5aac9ed59fdb861eeb079f19e97333c337a2aa104d120f84a7247f1d75ec44b09dc33caf40e040b81e76760fa4392f636141e59b7605fa5bb02",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+    ],
+    "subject": "Swift shared-ledger census: Deutsche Bank — COMMITTED; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:committed",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "064210a10b775b868a8e8e049767589f31b95b0c103fd91a503afffafdcb865e",
+    "8d2ee36135e929b40f26f4933ac703ca67cee832a9196c3691fc68ebf7d2141c",
+    "b5b5df940c4190417d8696ba207e9a2258c0b7fb901b0e60a306d6c3bd0604ab",
+    "666f4bd48e29bbb8ce8fb25fe1e6d9dd9f1fe8096499239a35221c6f9ea75843",
+    "76c9594e85ed5fd49fdfd2c866f26c8180fe44df42de8e035f4efd18adcd907e",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

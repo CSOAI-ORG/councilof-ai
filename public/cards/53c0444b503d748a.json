@@ -1,0 +1,107 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:51Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "^(?=.*usdc)(?=.*(attest|examination))",
+      "attestation_pdf_latest": [
+        "https://6778953.fs1.hubspotusercontent-na1.net/hubfs/6778953/USDCAttestationReports/2026/2026%20USDC_Examination%20Report%20May%2026.pdf",
+        "https://6778953.fs1.hubspotusercontent-na1.net/hubfs/6778953/USDCAttestationReports/2026/2026%20USDC_Examination%20Report%20June%2026.pdf",
+        "https://6778953.fs1.hubspotusercontent-na1.net/hubfs/6778953/USDCAttestationReports/2026/2026%20USDC_Examination%20Report%20July%2026%20(1).pdf"
+      ],
+      "attestation_pdf_links_n": 43,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": {
+        "basis": "year+month parsed from attestation PDF link filenames on the fetched page (2-digit years read as 20yy); bodies not opened",
+        "consecutive_monthly": true,
+        "dated_reports_n": 43,
+        "first": "2023-01",
+        "last": "2026-07",
+        "max_gap_months": 1
+      },
+      "fetched_at": "2026-09-02T07:56:51Z",
+      "inputs_sha256": "6a550ebfe714ddf0d5c36d2780d9cd31f2ac59ec180fd3490d52880f67756e59",
+      "issuer": "Circle",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:51Z",
+          "http": 200,
+          "n_bytes": 454517,
+          "robots": "allowed",
+          "sha256": "0ea91bd597d72b92f13908e6f5ec01f949a5745be3b28e9f479b0b02da1871af",
+          "url": "https://www.circle.com/transparency"
+        }
+      ],
+      "pdf_links_n": 144,
+      "state": "PROBED",
+      "symbols": [
+        "USDC"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 3,
+        "regulatory_terms": 2,
+        "reserve_attestation_terms": 1
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "53c0444b503d748a2a9006aeb849e38077bcfc25a700689c8afc463801972d61",
+    "sig_ed25519": "f033262ad969a803708f61b9be4f431e6071a770722227df3bc6466b372324e6284a54d871d7e5741799ec3ca8fa6f2aba259015f65b415570ae504c648aa808",
+    "source_urls": [
+      "https://www.circle.com/transparency"
+    ],
+    "subject": "Circle disclosure page facts: 43 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "64f26a029b0c7b8293a381a7723e18f7725f9f98f55ea577d67c4e2456e7632d",
+    "67f678230fd9320eda7b8a3f8610a281c821f17b1baf6691e74ff1cf137f1456",
+    "9e42a4e8aa31c19461a1ea6a74fc55d027d76f107afc92fb7493dd990e6c645a",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

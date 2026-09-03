@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "TD Bank Group",
+      "bank_id": "td",
+      "census_as_of": "2026-09-01",
+      "census_status": "COMMITTED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:44Z",
+      "inputs_sha256": "47f4c73f1e25f0af1d67e14e5ecdc144b945fb9c539b1f6e0b28fba02d674b5e",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "fetched_at": "2026-09-02T07:56:44Z",
+          "http": 200,
+          "id": "ethers_mvp_2apr",
+          "n_bytes": 107732,
+          "named_in_body": "PASS",
+          "published": "2026-04-02",
+          "sha256": "c963d571f467f6be7f0cb5454b70f02ae74bfff7c1884628e9c8ab5258463c6e",
+          "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "109142587f9fb9172c291ec53782921a8d68c68afd332b6b5b9240ef3621fe6f",
+    "sig_ed25519": "c06ecfb1ee46c5b401993879f6ee7740c45736ebd511154c70a9531a6ddb53dc20a54dd3fae28c5b0ac98ea59b174bbfb8ac20b0e18ac91f6eeb26a4c230820c",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+    ],
+    "subject": "Swift shared-ledger census: TD Bank Group — COMMITTED; named in 1/1 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:committed",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "c188c3b108b195d6427a2b21e023d0721c62b5e8591bc92e7e9defc87ebe08eb",
+    "b46bf2e818183736fcc01490dd4a3be608aa3656adf2f790e53eec6d5f922254",
+    "276298860bf0da6630b3b11b44c4540d626ba3cb71c2835121b96b2a813d0642",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

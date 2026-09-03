@@ -1,0 +1,100 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:56Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:56Z",
+      "inputs_sha256": "0ba6405340b559b36f44770a1aa8473bab1a767e24f1538a7ae09bc1efc60d11",
+      "issuer": "Bitstamp",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "SHELL",
+          "fetched_at": "2026-09-02T07:56:56Z",
+          "http": 200,
+          "n_bytes": 212,
+          "note": "response is a script shell; content is rendered client-side and was not executed",
+          "robots": "allowed",
+          "sha256": "d02032286070b4dd9d8fbd985a7bdca8af8edf52b89ff177db3bfcb2c8a9c43d",
+          "url": "https://www.bitstamp.net/"
+        }
+      ],
+      "pdf_links_n": 0,
+      "state": "UNMEASURED",
+      "symbols": [
+        "USD.bs",
+        "EUR.bs"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 0,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)",
+        "disclosure_page (no readable body this run)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4f57abef61de3d9ddd3464fc6238c94a6613ffeabab13517916f2598edee062b",
+    "sig_ed25519": "704ede0475c9941784e2cea7f333e726a3e8eb7be6ddd01d7132000773cc606da59b340702717bcd5b3283be322b1858bfb2502522dfd48a9ba3e34e3a081802",
+    "source_urls": [
+      "https://www.bitstamp.net/"
+    ],
+    "subject": "Bitstamp disclosure page facts: 0 attestation PDF links, term hits, cadence — UNMEASURED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)",
+      "disclosure_page (no readable body this run)"
+    ]
+  },
+  "proof": [
+    "a7844b20cf2350cdb1ecec2165eaeff9592e9f4c0d0e8a9d967ae0fed046133f",
+    "08d262d60427f8d9ae16e90dbf29dadb5c78c043f5da681457a642dcfc6a1154",
+    "992ab0079bd73bc5353ea530b6352d529d70037f80107b244abb7a84b3f52132",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

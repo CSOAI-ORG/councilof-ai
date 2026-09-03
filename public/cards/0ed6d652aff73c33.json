@@ -1,0 +1,96 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:53Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:53Z",
+      "inputs_sha256": "13862de00ca8bf4785ba1be0a81a95c35b7eed289a4ffacbe27565e363088568",
+      "issuer": "Schuman Financial",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:53Z",
+          "http": 200,
+          "n_bytes": 395965,
+          "robots": "allowed",
+          "sha256": "e82e3d446580fce76de6b72912548bd1b9154223a6da5d302561179dbfd3b92f",
+          "url": "https://schuman.io/europ"
+        }
+      ],
+      "pdf_links_n": 1,
+      "state": "PROBED",
+      "symbols": [
+        "EURØP"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 2,
+        "regulatory_terms": 10,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0ed6d652aff73c330a22e7addc27e885caa70a7400732442c7b1635ac138a8a8",
+    "sig_ed25519": "c1458e70633202f106d4a7e1705df2c1038919e0bff1bb1cc3253114d295bc673a0a3302153709bc4bbf4552bb4661449a5f56c7441cddfe81029b9677d5cb07",
+    "source_urls": [
+      "https://schuman.io/europ"
+    ],
+    "subject": "Schuman Financial disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "209de6073d132aa5e314cbe5b2cac9f5c947295e4433d92959db431dd43d18a7",
+    "08d666877d79d5d086f8c66ef118d387ccbf96ef44f1b013abdf47ce70a69877",
+    "d6e61ac69bbac42510cfb8eb2aa3bc2e19c917d9190132fd7469ae4da67cd8a5",
+    "0b3cfb239667d7b5b04c91d322d831e6a0132527da5188f353582101173cd51a",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

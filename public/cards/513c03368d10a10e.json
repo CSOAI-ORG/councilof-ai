@@ -1,0 +1,102 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:44Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "Wells Fargo",
+      "bank_id": "wells-fargo",
+      "census_as_of": "2026-09-01",
+      "census_status": "DISCOVERED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:44Z",
+      "inputs_sha256": "14597250eab045bd799dcd54355db12a8a3694e7f20731a1490d4a3b6d819837",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 2,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "error": "TimeoutError: The read operation timed out",
+          "fetched_at": "2026-09-02T07:56:02Z",
+          "http": 0,
+          "id": "swift_pilot_9jul",
+          "n_bytes": null,
+          "named_in_body": "UNCHECKABLE",
+          "published": "2026-07-09",
+          "sha256": null,
+          "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:40Z",
+          "http": 200,
+          "id": "gfmag_pilot_10jul",
+          "n_bytes": 109323,
+          "named_in_body": "PASS",
+          "published": "2026-07-10",
+          "sha256": "491411ebe38687ccf771265e27ec607e532255569550a351cec4359e78ae27da",
+          "url": "https://gfmag.com/technology/swift-blockchain-ledger/"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:44Z",
+          "http": 200,
+          "id": "ethers_mvp_2apr",
+          "n_bytes": 107732,
+          "named_in_body": "PASS",
+          "published": "2026-04-02",
+          "sha256": "c963d571f467f6be7f0cb5454b70f02ae74bfff7c1884628e9c8ab5258463c6e",
+          "url": "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "513c03368d10a10ef891c2c3f2eb085d263e56f825d33d7ee5ef4f1f192b5253",
+    "sig_ed25519": "e78a17dd0f76c1cd0eca4688f0e4bdb956fc138734a90f615f661b68fbdef72f65147d2fddca9030f4e2acfe8aaffb1a5cf21ef27ce292a2e520c6c586df3d00",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "https://gfmag.com/technology/swift-blockchain-ledger/",
+      "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
+    ],
+    "subject": "Swift shared-ledger census: Wells Fargo — DISCOVERED; named in 2/3 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:discovered",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "3793193ad49a21e5676869bd3f1950e1631d62af245d7893cca0a949e3dc4302",
+    "bd7f69158df318f698a2c4bc110aa65d70f4eb9a5591bc51db2e24567f992b07",
+    "e6ac7fa06d9f01073d2e722b1a491138c019a465736c2f95597440aba7ea4c63",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

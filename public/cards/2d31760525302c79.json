@@ -1,0 +1,50 @@
+{
+  "card": {
+    "as_of": "2026-08-31T07:38:20Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "bank": "MUFG Bank",
+      "kind": "gspc.coverage-card/0.1",
+      "status": "UNMEASURED",
+      "n": 0,
+      "not_a_grade": true,
+      "not_a_client": true,
+      "settlement": "off_chain",
+      "settlement_still_off_chain": true,
+      "note": "TARGET not client. Official public notice hashed. Tokenised deposits orchestrated 24/7; final settlement still through existing systems. Not a GPI firehose.",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2d31760525302c7946309abb1426fb1e2f3d04deaf6f24cb920084eb300eb60a",
+    "sig_ed25519": "d9e0815d4eed89e44c2d74e7e061b87f919b7a1bc222d76bd11d222a665a961cfdffbc9ab3e124a15c8be408c5fab82a52690c5ccd7ce86a5cd575f49ba2fb0c",
+    "source_urls": [
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+    ],
+    "subject": "SWIFT shared-ledger TARGET: MUFG Bank (9 Jul 2026 press)",
+    "surface": "public.notice",
+    "tags": [
+      "framework:swift-public-press",
+      "coverage:TARGETS-not-clients",
+      "coverage:UNMEASURED",
+      "settlement:off-chain"
+    ],
+    "unmeasured": [
+      "press_html_body",
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "gpi_firehose"
+    ]
+  },
+  "proof": [
+    "8a93949a89c9da46fa4221f45776e6b4466ad95794d15757ee807f0d6bd27dc4",
+    "d375e8db93505853ff6da56a97171a3635caaf84dc04f1e55489496df29d3184",
+    "82c18af307fb6e7ab1c59ac323ae23ef1027d15d4ea407c5b65c43c510b0006e",
+    "87aee88c95f1605847c845007b1e56a06a8a4c811ba6957a7a48e72e7c40cdb0",
+    "0130955e6f131b9cce06da2030cd37e862ba91a66f5979cb6bf37ccfa8161a2e",
+    "5ee6e227fabe228ad6ce9a91dd709b8124f98deb2200ee56ceabb40abd384b20",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

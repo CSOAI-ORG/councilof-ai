@@ -1,0 +1,119 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:52Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [],
+      "account_root": {
+        "domain": "https://circle.com",
+        "domain_hex": "68747470733A2F2F636972636C652E636F6D",
+        "flags": 26804224,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": true,
+          "disable_master": true,
+          "disallow_xrp": true,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": false
+        },
+        "ledger_index": 106707166,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 95329853
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://circle.com/.well-known/xrp-ledger.toml"
+      ],
+      "directory": {
+        "domain": "circle.com",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "USDC",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:52Z",
+      "inputs_sha256": "5da5e1ef1c638e362f5297146d01aef06448cb3d613279d0b24a25e796d6035f",
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "5553444300000000000000000000000000000000",
+        "currency_decoded": "USDC",
+        "ledger_index": 106707166,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "4848725.538900756"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 80,
+        "sig_ed25519_present": true,
+        "supply": 4133340,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPScan well-known directory"
+      },
+      "state": "PROBED",
+      "symbol": "USDC",
+      "toml": {
+        "error": "HTTP 404",
+        "fetched_at": "2026-09-02T07:55:52Z",
+        "http": 404,
+        "url": "https://circle.com/.well-known/xrp-ledger.toml"
+      },
+      "two_way_domain": "UNCHECKABLE",
+      "two_way_reason": "TOML not retrievable (HTTP 404); never counted as FAIL",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "9a89b3e1151a4ef58823e37f0406cf640820f39e92a40ed371a8e31d6103662d",
+    "sig_ed25519": "a97829513e43e16e569741185acf298a997a9a496210d3857b470e35b01eb47c46fe8efd8ef273f311e47cce89ae7d8a8ac91aef9d8f23776ae748302c870f0f",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://circle.com/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL USDC (Circle) two-way domain UNCHECKABLE + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:UNCHECKABLE",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "ae9df5f7f484d02f265c1dcbbc5d5ec21ea6bfa78dfef8a1b060d352f5c686b9",
+    "17eec892eb54a2abb574756599b745b198da1dee8a6a01204b44df671cbcef83",
+    "a85b87051a1429fab06e967928bbfefe829358fc3279fdaf9b694241ecc185d2",
+    "e2ced9238817b56cac778667e0ad36afdee18c58d25421a1f403273873dd6c59",
+    "13ae5319342612ba81ef1669dec52e1a063a934a6628391ce7e949eb07ab505c",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

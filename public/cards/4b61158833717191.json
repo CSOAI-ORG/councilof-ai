@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:55:45Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [],
+      "account_root": {
+        "domain": "bitstamp.net",
+        "domain_hex": "6269747374616D702E6E6574",
+        "flags": 10092544,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": true,
+          "disallow_xrp": true,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707164,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 4827
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://bitstamp.net/.well-known/xrp-ledger.toml"
+      ],
+      "directory": {
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": false,
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": null,
+      "fetched_at": "2026-09-02T07:55:45Z",
+      "inputs_sha256": "8580e4af416e6941028f5b111b35f2e3bbf2865b762d724a2051a071f691460b",
+      "issuer": "Bitstamp",
+      "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "EUR",
+        "currency_decoded": "EUR",
+        "ledger_index": 106707164,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "4960395.483820634"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 430,
+        "sig_ed25519_present": true,
+        "supply": 4960396,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPLMeta registry"
+      },
+      "state": "PROBED",
+      "symbol": "EUR.bs",
+      "toml": {
+        "error": "HTTP 404",
+        "fetched_at": "2026-09-02T07:55:45Z",
+        "http": 404,
+        "url": "https://bitstamp.net/.well-known/xrp-ledger.toml"
+      },
+      "two_way_domain": "UNCHECKABLE",
+      "two_way_reason": "TOML not retrievable (HTTP 404); never counted as FAIL",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4b6115883371719160ac11f5c8bb03a8df0c985ab520abb4bda1fce6cf1572e3",
+    "sig_ed25519": "703e58bb61b6bb4319b8e4a0c8c171bc03b1db8652ee83969f8efb358c1899c69363d3425343b8764ef5e3867722877b58b700d3c674e6fa5c10f1342871a103",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://bitstamp.net/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL EUR.bs (Bitstamp) two-way domain UNCHECKABLE + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:UNCHECKABLE",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "bf3b0c95cf5dd6272bfb6f3c2632aaab8dd48dbc598648a910616779a1b7cb00",
+    "d42b5fc28bdcfa9aee41e9b1ad71a5ba55ea339cd69b0f356cf7ae3748107dfa",
+    "e6ac7fa06d9f01073d2e722b1a491138c019a465736c2f95597440aba7ea4c63",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

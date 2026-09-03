@@ -1,0 +1,97 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:49Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attest|examination|reserve|lastro",
+      "attestation_pdf_latest": [],
+      "attestation_pdf_links_n": 0,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": null,
+      "fetched_at": "2026-09-02T07:56:49Z",
+      "inputs_sha256": "ad263ec8fab9b961fdd2c852817b8fb7c9a1e4c0935ae705619830908dd6847f",
+      "issuer": "Braza Bank",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:49Z",
+          "http": 200,
+          "n_bytes": 198005,
+          "robots": "no-robots",
+          "sha256": "9d2a5cf5ad9b7ee25c7f1f4620c1e65b3c389b5de696eabe97d5eb169ec06a96",
+          "url": "https://tokens.brazacripto.com.br"
+        }
+      ],
+      "pdf_links_n": 11,
+      "state": "PROBED",
+      "symbols": [
+        "USDB",
+        "BBRL"
+      ],
+      "term_hits": {
+        "custody_terms": 0,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 2,
+        "reserve_attestation_terms": 0
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "a7844b20cf2350cdb1ecec2165eaeff9592e9f4c0d0e8a9d967ae0fed046133f",
+    "sig_ed25519": "9e2c4a58a39dc6e24fe587d93ecdde36c94a5a6b0a91b85bca2635f8b6c34788cd4e0c007558fd2aa8cb872e4d4d3d02ca5390d63775a0bcd890cdf3fb931d0b",
+    "source_urls": [
+      "https://tokens.brazacripto.com.br"
+    ],
+    "subject": "Braza Bank disclosure page facts: 0 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "4f57abef61de3d9ddd3464fc6238c94a6613ffeabab13517916f2598edee062b",
+    "08d262d60427f8d9ae16e90dbf29dadb5c78c043f5da681457a642dcfc6a1154",
+    "992ab0079bd73bc5353ea530b6352d529d70037f80107b244abb7a84b3f52132",
+    "3ec54b4be7224f23d9bc15acf9d4b7e493dfae7017aa563142e9a71c54e5e4c7",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

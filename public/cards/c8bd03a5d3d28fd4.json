@@ -1,0 +1,91 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:40Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axes": [
+        "swift-rails"
+      ],
+      "bank": "UBS",
+      "bank_id": "ubs",
+      "census_as_of": "2026-09-01",
+      "census_status": "DISCOVERED",
+      "event_date": null,
+      "fetched_at": "2026-09-02T07:56:40Z",
+      "inputs_sha256": "ba60ffcdfbeba920fb8e617c2ab08f89cf1a67c4ae294a85e68514a7cd6f2f51",
+      "kind": "csoai.eater.swift-rail/0.1",
+      "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "named_in_fetched_body_n": 1,
+      "not_a_client": true,
+      "not_a_grade": true,
+      "settlement_still_off_chain": true,
+      "sources": [
+        {
+          "error": "TimeoutError: The read operation timed out",
+          "fetched_at": "2026-09-02T07:56:02Z",
+          "http": 0,
+          "id": "swift_pilot_9jul",
+          "n_bytes": null,
+          "named_in_body": "UNCHECKABLE",
+          "published": "2026-07-09",
+          "sha256": null,
+          "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+        },
+        {
+          "fetched_at": "2026-09-02T07:56:40Z",
+          "http": 200,
+          "id": "gfmag_pilot_10jul",
+          "n_bytes": 109323,
+          "named_in_body": "PASS",
+          "published": "2026-07-10",
+          "sha256": "491411ebe38687ccf771265e27ec607e532255569550a351cec4359e78ae27da",
+          "url": "https://gfmag.com/technology/swift-blockchain-ledger/"
+        }
+      ],
+      "state": "PROBED",
+      "unmeasured": [
+        "iso20022_message",
+        "settlement_rail_bytes",
+        "on_ledger_object",
+        "transaction_recompute"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c8bd03a5d3d28fd480c57e33e908472dbf2c3a413146e2283dd9844c273c03fe",
+    "sig_ed25519": "3b71d4676bb5a12ea1210b3cae0f083fed42dfd419e9b1aa400b454a539c02ad3cc07a7075c281994958f4beaf2d077106e5a980d51896503ba957e9dfabba07",
+    "source_urls": [
+      "https://councilof.ai/api/swift",
+      "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "https://gfmag.com/technology/swift-blockchain-ledger/"
+    ],
+    "subject": "Swift shared-ledger census: UBS — DISCOVERED; named in 1/2 fetched notice bodies",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:swift-rails",
+      "census:discovered",
+      "not-a-client",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "iso20022_message",
+      "settlement_rail_bytes",
+      "on_ledger_object",
+      "transaction_recompute"
+    ]
+  },
+  "proof": [
+    "78adec60e880ad9f8392e2fe522a46f8df5b9a52a61d69bf0286e3dee4664f7b",
+    "a3ff3673b7520820e3d4a49bd667ff87b1409c9da354c833ee801d26c8ba52f1",
+    "276298860bf0da6630b3b11b44c4540d626ba3cb71c2835121b96b2a813d0642",
+    "a67d89080bb276dc83b8d306895bf84596cfcbc96da93e918cd5094227120dd4",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

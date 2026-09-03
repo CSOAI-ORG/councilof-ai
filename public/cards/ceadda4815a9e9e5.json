@@ -1,0 +1,125 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:00Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "absent": [
+        "AccountRoot.Domain",
+        "TOML body at https://gatehub.net/.well-known/xrp-ledger.toml (HTML returned)"
+      ],
+      "account_root": {
+        "domain": null,
+        "domain_hex": null,
+        "flags": 9043968,
+        "flags_decoded": {
+          "allow_trustline_clawback": false,
+          "default_ripple": true,
+          "deposit_auth": false,
+          "disable_master": false,
+          "disallow_xrp": true,
+          "global_freeze": false,
+          "no_freeze": false,
+          "require_auth": false,
+          "require_dest_tag": true
+        },
+        "ledger_index": 106707168,
+        "rpc": "https://xrplcluster.com/",
+        "sequence": 76537573
+      },
+      "axes": [
+        "xrpl-issuers",
+        "distribution-integrity"
+      ],
+      "checked": [
+        "account_info.Domain (validated ledger)",
+        "gateway_balances.obligations",
+        "xrpscan well-known directory",
+        "GET https://gatehub.net/.well-known/xrp-ledger.toml (directory domain, one-way probe)"
+      ],
+      "directory": {
+        "domain": "gatehub.net",
+        "fetched_at": "2026-09-02T07:55:32Z",
+        "listed": true,
+        "name": "GateHub GBP",
+        "sha256": "d6d74f001477d2b803ce42defbe91a9b59b5ff35b228f833582b3c5256afe92f",
+        "url": "https://api.xrpscan.com/api/v1/names/well-known"
+      },
+      "directory_domain_toml": {
+        "fetched_at": "2026-09-02T07:56:00Z",
+        "http": 200,
+        "is_toml": false,
+        "issuer_address_listed": false,
+        "n_bytes": 8898,
+        "sha256": "09c1ef6d58f8ff3cea54ec0b76d6c3e1ea23c609826e3ef3b2acc10444871dc3",
+        "url": "https://gatehub.net/.well-known/xrp-ledger.toml"
+      },
+      "fetched_at": "2026-09-02T07:56:00Z",
+      "inputs_sha256": "e7ae1ebef297e6b8aa62eb453bb11374a119f0e93ae1ed1714dbc18cae8cb8d3",
+      "issuer": "GateHub",
+      "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+      "kind": "csoai.eater.xrpl-issuer/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "onchain_obligation": {
+        "currency_code": "GBP",
+        "currency_decoded": "GBP",
+        "ledger_index": 106707168,
+        "method": "gateway_balances.obligations (validated ledger)",
+        "rpc": "https://xrplcluster.com/",
+        "value": "199432.4099058955"
+      },
+      "reader": {
+        "as_of": "2026-09-02T07:13:27Z",
+        "holders": 2400,
+        "sig_ed25519_present": true,
+        "supply": 199467,
+        "unmeasured": [
+          "strict_two_way_toml"
+        ],
+        "url": "https://councilof.ai/api/xrpl",
+        "verified_via": "XRPScan well-known directory"
+      },
+      "state": "PROBED",
+      "symbol": "GBP.gh",
+      "toml": null,
+      "two_way_domain": "FAIL",
+      "two_way_reason": "no Domain field on the AccountRoot; two-way check has no first leg",
+      "unmeasured": [
+        "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ceadda4815a9e9e517b4674dc9efdee6fb672973eb4d9377a5f1e23f116900e3",
+    "sig_ed25519": "593949f65b3e147ba1fa6569fd8b32b27eb16050eb06c2bb30230d3c9eced34276d25469e17f0bb08c0295611ba99725d8ea9fede084a23e22f819af1eca880d",
+    "source_urls": [
+      "https://councilof.ai/api/xrpl",
+      "https://api.xrpscan.com/api/v1/names/well-known",
+      "https://gatehub.net/.well-known/xrp-ledger.toml"
+    ],
+    "subject": "XRPL GBP.gh (GateHub) two-way domain FAIL + on-chain obligation",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:xrpl-issuers",
+      "axis:distribution-integrity",
+      "two-way:FAIL",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "holders (account_lines not paginated this run; reader value cited, not recomputed)"
+    ]
+  },
+  "proof": [
+    "94919be254d6e757dffb65ce494ef988852a34bbc8b401634a007118c68728f0",
+    "95a6d432b1c01f2ffd56f9ebeeeb45144422bd41067d6d04c1a1d7fe814da9e7",
+    "c8320880a6d71eb2ca08a1073e278a0205f13db2bf73f87e91adf241a0bd73a4",
+    "6cc78e7841aa02f659f2848cee81f1ad5cf660dfa2fd047de2e208775e8c3eff",
+    "bf35fc45b002e8ed222889ddc5e3bf9522c833739c271d2bc813a47e593f4a62",
+    "e07e18afd5d57b01fef8fe75f52f012625265918f750ede005f443d5804f28dd",
+    "6573d3cc8976d00f7ad88d8cbb00df45b9fe00b052d69d4b08933a2482577550",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}

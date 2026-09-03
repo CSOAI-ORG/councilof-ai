@@ -1,0 +1,107 @@
+{
+  "card": {
+    "as_of": "2026-09-02T07:56:46Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "attestation_pdf_filter": "attestation|reserves? report",
+      "attestation_pdf_latest": [
+        "https://cdn.sanity.io/files/ior4a5y3/production/00bb3899f244c392ab77e55e65dee33cf271dfce.pdf/RLUSD_Attestation_Report_-_May_2026_Final.pdf",
+        "https://cdn.sanity.io/files/ior4a5y3/production/5a9121caa4206788930869cac0f868e5841d7fae.pdf/RLUSD_Attestation_Report_-_June&#x27;26_FINAL.pdf",
+        "https://cdn.sanity.io/files/ior4a5y3/production/42b2ca149329bbf0e34d5d687d30cbb750eea6b8.pdf/RLUSD_Attestation_Report_-_July_26.docx (Final).pdf"
+      ],
+      "attestation_pdf_links_n": 20,
+      "attestation_pdf_undated_n": 0,
+      "axes": [
+        "reserve-attestation",
+        "stablecoin-attestation-cadence",
+        "custody-disclosure",
+        "regulatory-framework"
+      ],
+      "cadence": {
+        "basis": "year+month parsed from attestation PDF link filenames on the fetched page (2-digit years read as 20yy); bodies not opened",
+        "consecutive_monthly": true,
+        "dated_reports_n": 20,
+        "first": "2024-12",
+        "last": "2026-07",
+        "max_gap_months": 1
+      },
+      "fetched_at": "2026-09-02T07:56:46Z",
+      "inputs_sha256": "58a039e9de27d43c527b44d48565e681f77d95fce05b94c1bf9dfbcd93310669",
+      "issuer": "Ripple",
+      "kind": "csoai.eater.issuer-disclosure/0.1",
+      "method_id": "csoai.eater.xrpl-swift/0.1",
+      "not_a_grade": true,
+      "pages": [
+        {
+          "body_state": "HASHED",
+          "fetched_at": "2026-09-02T07:56:46Z",
+          "http": 200,
+          "n_bytes": 122710,
+          "robots": "allowed",
+          "sha256": "d868ab693342ed198372b3b4dc06abdae2f8b9fee871b9131b7b26c7ad35ce90",
+          "url": "https://ripple.com/solutions/stablecoin/transparency/"
+        }
+      ],
+      "pdf_links_n": 20,
+      "state": "PROBED",
+      "symbols": [
+        "RLUSD"
+      ],
+      "term_hits": {
+        "custody_terms": 34,
+        "named_accounting_firms": 0,
+        "regulatory_terms": 6,
+        "reserve_attestation_terms": 28
+      },
+      "term_lexicon": {
+        "custody_terms": "custodian|custody|trust company|bny mellon|bank of new york|state street|coinbas",
+        "named_accounting_firms": "deloitte|pricewaterhousecoopers|\\bpwc\\b|\\bkpmg\\b|ernst\\s*&\\s*young|\\bbdo\\b|grant",
+        "regulatory_terms": "\\bmica\\b|e-money token|electronic money|\\bnydfs\\b|new york department of financi",
+        "reserve_attestation_terms": "attestation|attested|proof of reserves?|reserve report|examination report"
+      },
+      "unmeasured": [
+        "attestation_pdf_bodies (not opened)",
+        "reserve_composition",
+        "custodian_confirmation (name presence only)",
+        "regime_confirmation (term presence only)",
+        "risk_verdict (counsel)"
+      ],
+      "writes_board": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "52d46ff71d3d7cadd455f190abd23bc3b4e7567a686a7ee670e12d88fea9e501",
+    "sig_ed25519": "8466a03419a651ad05038976ad152edbb0f2762c01bcbccb5f162fb4c978a5a3ff37dc34b4550b6859d7067248ffff33cc4b91b2dd91d835ab9509f5fff14d0f",
+    "source_urls": [
+      "https://ripple.com/solutions/stablecoin/transparency/"
+    ],
+    "subject": "Ripple disclosure page facts: 20 attestation PDF links, term hits, cadence — PROBED",
+    "surface": "public.notice",
+    "tags": [
+      "eater:xrpl-swift",
+      "axis:reserve-attestation",
+      "axis:stablecoin-attestation-cadence",
+      "axis:custody-disclosure",
+      "axis:regulatory-framework",
+      "unsigned"
+    ],
+    "unmeasured": [
+      "attestation_pdf_bodies (not opened)",
+      "reserve_composition",
+      "custodian_confirmation (name presence only)",
+      "regime_confirmation (term presence only)",
+      "risk_verdict (counsel)"
+    ]
+  },
+  "proof": [
+    "501d779c5eb912e24c1f894f80d4b39eedaaa61b0d9218bee23227047b5f338a",
+    "58d8e80519c128fca4f75d1ea1cc56056556d655fea01287ff7a4c9b9f9ea56e",
+    "d6e61ac69bbac42510cfb8eb2aa3bc2e19c917d9190132fd7469ae4da67cd8a5",
+    "0b3cfb239667d7b5b04c91d322d831e6a0132527da5188f353582101173cd51a",
+    "a520bbccf7bc867ae04b971710618b93b249a825b7a40993fce7828c73addc84",
+    "9cccb51387afbbf2540924013c32d4ef4d91beca3b8b7197077c7ca205e71edf",
+    "ad34456fe15ba57fafbad8220047729495f14ecb5eaabe0aa33d1f915c87eaef",
+    "a852e24b509a44724afb550f94bb78b218479c0c6bc61287f9367754cbeb24e6"
+  ]
+}
