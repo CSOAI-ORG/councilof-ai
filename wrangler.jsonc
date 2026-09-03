@@ -20,12 +20,23 @@
     {
       "binding": "SOV_ARENA_STATE",
       "id": "00634697bf5744edba3625905a922e96"
+    },
+    // REVENUE_KV — the replay/tally store behind /api/revenue (functions/api/revenue.ts).
+    // Namespace `revenue` created 2026-09-03 on account 52092e4d…f2528. Without this binding the
+    // revenue counts stay null (never 0) — null is the honest value for "not counted", and
+    // /api/revenue says so itself. Binding it does NOT invent revenue: the number stays null
+    // until a facilitator receipt actually settles.
+    {
+      "binding": "REVENUE_KV",
+      "id": "91e1b7a78f2a4edbbe5f67459b2a79db"
+    },
+    // WITNESS_KV — the /api/witness queue (functions/api/witness.ts). Namespace `witness` created
+    // 2026-09-03. The endpoint answered 503 {"status":"NOT_YET"} until now. STILL OUTSTANDING:
+    // set the GitHub Actions variable WITNESS_KV_NAMESPACE_ID to this same id so
+    // scripts/adapters/witness_queue.py can read the queue at publish time.
+    {
+      "binding": "WITNESS_KV",
+      "id": "8244f80354c24a9ebadd227a8192a045"
     }
-    // WITNESS_KV — the /api/witness queue (functions/api/witness.ts). OWNER STEP: create the
-    // namespace (dashboard → Storage & Databases → KV → Create, name `witness`), then add
-    //   , { "binding": "WITNESS_KV", "id": "<namespace id>" }
-    // here and set the GitHub Actions variable WITNESS_KV_NAMESPACE_ID to the same id so
-    // scripts/adapters/witness_queue.py can read the queue at publish time. Until then the
-    // endpoint answers 503 {"status":"NOT_YET"} before any settlement — nothing is charged.
   ]
 }
