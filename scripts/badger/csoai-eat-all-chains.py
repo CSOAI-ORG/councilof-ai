@@ -3,7 +3,8 @@
 
 Relentless harvest loop. Polls every public surface we have a reader for,
 detects new atoms since the last run, stages unsigned ≤3KB cards under
-scripts/badger/_queue/ for the mill to sign + upload.
+scripts/badger/_queue/. Only the HF-model subset is gradeable by the mill;
+badger_to_hub_queue.py does that selection and names what it drops.
 
 Lane-doable:
 - Reads only; no keys; no writes outside scripts/badger/_queue/
@@ -409,7 +410,11 @@ def main():
     print(f"State saved → {STATE_FILE}")
     print(f"Queue dir   → {QUEUE}")
     print()
-    print("Next step: let mill_hub_queue.py sign + upload the staged atoms.")
+    print("Next step: python3 scripts/badger/badger_to_hub_queue.py --out mill-in/queue.jsonl")
+    print("  mill_hub_queue.py cannot read this directory. It grades HF model")
+    print("  subjects from a queue.jsonl; badger stages card bodies. The adapter")
+    print("  bridges the two and reports how many atoms are NOT gradeable, which")
+    print("  is most of them — a company number is not an inference endpoint.")
     return 0
 
 

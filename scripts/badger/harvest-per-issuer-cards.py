@@ -3,7 +3,8 @@
 
 Lane-doable: reads /api/xrpl + /api/swift, emits one unsigned ≤3KB card
 per (issuer, deterministic-fact-axis) pair. Staged under scripts/badger/
-_queue/per-issuer/ for the mill to sign + upload.
+_queue/per-issuer/ for the atom root to commit. The mill cannot read this directory;
+badger_to_hub_queue.py selects the gradeable subset.
 
 Why: an XRPL issuer can pin "RLUSD passed reserve-attestation on 2026-09-03"
 as a signed evidence card — value for insurers, auditors, RWA wrappers.

@@ -2,7 +2,8 @@
 """harvest-per-model-cards.py — mine per-model × per-axis signed cards.
 
 Lane-doable: reads the live board, emits ≤3KB unsigned cards per (model, axis)
-pair, stages them under scripts/badger/_queue/ for the mill to sign + upload.
+pair, stages them under scripts/badger/_queue/ for the atom root to commit. The mill cannot read this directory;
+badger_to_hub_queue.py selects the gradeable subset.
 
 The board has 22 axes. The model-comparison axes (14) carry per-model rows
 that we re-emit as signed atoms. Each card is the model-as-subject, the axis-
