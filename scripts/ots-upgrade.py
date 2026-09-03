@@ -56,14 +56,25 @@ def upgrade(t) -> bool:
 
 def main(paths: list[str]) -> int:
     any_btc = False
+    unreadable = 0
     for p in paths:
         path = Path(p)
         if not path.exists():
             print(f"  MISSING {path}")
             continue
-        dtf = DetachedTimestampFile.deserialize(
-            StreamDeserializationContext(io.BytesIO(path.read_bytes()))
-        )
+        # An unparseable .ots must NOT stop the run. Before this, one BadMagicError
+        # raised out of main() and every remaining file in the batch went unupgraded
+        # — so a handful of pre-fix fragments could silently hold the whole estate
+        # at "pending". Report it and carry on; that file is a non-proof, not a
+        # reason to abandon the real ones behind it.
+        try:
+            dtf = DetachedTimestampFile.deserialize(
+                StreamDeserializationContext(io.BytesIO(path.read_bytes()))
+            )
+        except Exception as exc:
+            print(f"  {path.name}: NOT A TIMESTAMP ({type(exc).__name__}) — skipped, never a proof")
+            unreadable += 1
+            continue
         upgrade(dtf.timestamp)
         after = attestations(dtf.timestamp)
         blocks = sorted(
@@ -77,6 +88,9 @@ def main(paths: list[str]) -> int:
             any_btc = True
         else:
             print(f"  {path.name}: still pending — not rewritten")
+    if unreadable:
+        print(f"\n  {unreadable} file(s) are not timestamps at all. They are not stamps and never")
+        print("  proofs; re-stamp them from source with scripts/badger/ots_stamp.py.")
     return 0 if any_btc else 1
 
 
