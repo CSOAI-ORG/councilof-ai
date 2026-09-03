@@ -57,6 +57,13 @@
   .state{padding:2rem;text-align:center;color:var(--muted);font-family:var(--mono);font-size:.85rem}
   code{font-family:var(--mono);font-size:.92em}
 </style>
+
+<meta property="og:title" content="GSPC Console — every model, every axis, live" />
+<meta property="og:description" content="The GSPC console: every measured model against every axis, live from GET /api/gspc and /api/findings. Empty is empty. Measurement, not certification." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/gspc-console.html" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
 <div class="wrap">
@@ -207,5 +214,40 @@ function render(filter) {
   }
 })();
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://csoai.org/#organization",
+      "name": "CSOAI Ltd",
+      "url": "https://csoai.org",
+      "logo": "https://councilof.ai/favicon.ico",
+      "description": "Independent AI-governance measurement body. The lid phrase: 22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact. Measurement, not certification.",
+      "foundingDate": "2025",
+      "areaServed": "Worldwide",
+      "sameAs": [
+        "https://huggingface.co/csoai",
+        "https://github.com/CSOAI-ORG/councilof-ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://councilof.ai/#website",
+      "url": "https://councilof.ai/",
+      "name": "GSPC Console \u2014 every model, every axis, live",
+      "description": "The GSPC console: every measured model against every axis, live from GET /api/gspc and /api/findings. Empty is empty. Measurement, not certification.",
+      "publisher": {
+        "@id": "https://csoai.org/#organization"
+      }
+    }
+  ]
+}
+</script>
+
+<!-- 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. -->
+<noscript><p style="text-align:center;font-size:12px;color:#666;padding:8px">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</p></noscript>
 </body>
 </html>

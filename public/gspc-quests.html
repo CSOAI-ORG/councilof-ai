@@ -55,7 +55,16 @@ td.n{font-variant-numeric:tabular-nums;text-align:right}
 .note{font-size:11px;color:#5a7a6d;margin-top:16px;line-height:1.5;border-top:1px solid var(--line);padding-top:10px}
 .share{background:#03130c;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:12px/1.5 ui-monospace,Menlo,monospace;color:#bfe9d8;white-space:pre-wrap;margin-top:8px}
 a{color:var(--green)}
-</style></head><body>
+</style>
+<meta property="og:title" content="GSPC Quests — play the board the models are measured on | CSOAI" />
+<meta property="og:description" content="Play twelve behavioural GSPC axes over the frozen quest banks the models are measured on, graded by the same deterministic rule. Your score sits beside the measured model leader, read live from /api/gspc. Local play, not a measurement — the model" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/gspc-quests.html" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="canonical" href="https://councilof.ai/gspc-quests.html" />
+</head><body>
 <h1>GSPC QUESTS<small>play the same frozen banks the models are measured on · graded by the same rule · your score sits beside the model's, live from /api/gspc</small></h1>
 
 <div class="tabs" role="tablist">
@@ -563,4 +572,39 @@ readBoard(GSPC_ENDPOINT)
   });
 
 home();
-</script></body></html>
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://csoai.org/#organization",
+      "name": "CSOAI Ltd",
+      "url": "https://csoai.org",
+      "logo": "https://councilof.ai/favicon.ico",
+      "description": "Independent AI-governance measurement body. The lid phrase: 22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact. Measurement, not certification.",
+      "foundingDate": "2025",
+      "areaServed": "Worldwide",
+      "sameAs": [
+        "https://huggingface.co/csoai",
+        "https://github.com/CSOAI-ORG/councilof-ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://councilof.ai/#website",
+      "url": "https://councilof.ai/",
+      "name": "GSPC Quests \u2014 play the board the models are measured on | CSOAI",
+      "description": "Play twelve behavioural GSPC axes over the frozen quest banks the models are measured on, graded by the same deterministic rule. Your score sits beside the measured model leader, read live from /api/gspc. Local play, not a measurement \u2014 the model",
+      "publisher": {
+        "@id": "https://csoai.org/#organization"
+      }
+    }
+  ]
+}
+</script>
+
+<!-- 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. -->
+<noscript><p style="text-align:center;font-size:12px;color:#666;padding:8px">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</p></noscript>
+</body></html>
