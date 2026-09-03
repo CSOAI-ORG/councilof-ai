@@ -472,7 +472,7 @@ def write_halt_health(
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v0")
+    ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
     ap.add_argument(
         "--validate-committed",
@@ -668,14 +668,26 @@ def main() -> int:
         "card_count": len(shas),
         "card_sha256": shas,
         "did_intended": DID,
-        "kind": "csoai.public-root/v0",
+        # v1 since 2026-09-03: the leaf is the WHOLE-CARD digest, not the payload
+        # digest. `kind` is inside ENVELOPE_PREIMAGE_KEYS, so this is a SIGNED
+        # declaration of which leaf rule applies. Publishing v1 leaves under a v0
+        # label would tell a stranger to apply the payload rule, fail to reproduce
+        # the leaf, and reasonably conclude the cards had been tampered with.
+        # Roots already published as v0 stay v0 and stay checkable.
+        "kind": "csoai.public-root/v1",
+        "leaf_definition": (
+            "sha256(canonical(card minus sha256 and sig_ed25519)) — binds subject, "
+            "source_urls, tags, as_of, did, surface, unmeasured and payload"
+        ),
         "language": (
             "coverage of public XRPL instruments + public notices. "
             "No bank names as clients. Not a certification."
         ),
         "merkle_root": root_merkle,
         "note": (
-            "Envelope schema is public-root-v0, not card-v0. Leaves stay card-v0. "
+            "Envelope schema is public-root-v1, not card-v0. Leaves are card-v1: "
+            "the digest covers the whole card, so a card's subject and source_urls "
+            "cannot be rewritten without moving the root. "
             "Unsigned until GHA signs this envelope (sig_ed25519). "
             "did_intended names the intended leaf attestation identity only. "
             "Leaves MAY carry attestations — coverage harvest, not grades. "

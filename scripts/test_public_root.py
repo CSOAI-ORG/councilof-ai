@@ -72,7 +72,7 @@ def test_envelope_preimage_under_3kb() -> None:
     )
 
     fake = {
-        "kind": "csoai.public-root/v0",
+        "kind": "csoai.public-root/v1",
         "schema": "https://councilof.ai/schema/public-root-v0.json",
         "as_of": "2026-09-01T01:48:00Z",
         "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
