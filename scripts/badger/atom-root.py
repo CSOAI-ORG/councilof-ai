@@ -94,6 +94,24 @@ def main() -> int:
     root_path = OUT / f"atom-root-{stamp}.json"
     ots_path = OUT / f"atom-root-{stamp}.json.ots"
 
+    # NEVER overwrite an anchored proof. The queue grows all day, so re-rooting is
+    # normal — but the previous root's .ots may already carry a Bitcoin attestation,
+    # and those bytes are evidence. Writing a fresh pending stamp over them destroys
+    # a proof that cost hours of calendar time to earn. (It happened once: a root
+    # anchored at block 965299 covering 42,118 atoms was clobbered by a re-root
+    # minutes later.) An anchored root is superseded, never edited: it keeps its
+    # name and the new one takes the next suffix.
+    if not args.verify and ots_path.exists():
+        prior = attestation_state(ots_path.read_bytes())
+        if prior["state"] == "bitcoin":
+            n = 2
+            while (OUT / f"atom-root-{stamp}-{n}.json.ots").exists():
+                n += 1
+            root_path = OUT / f"atom-root-{stamp}-{n}.json"
+            ots_path = OUT / f"atom-root-{stamp}-{n}.json.ots"
+            print(f"  prior root is ANCHORED at block {prior['block_height']} — superseding,")
+            print(f"  not overwriting. New root -> {root_path.name}")
+
     if args.verify:
         if not root_path.exists():
             print(f"no root at {root_path}")

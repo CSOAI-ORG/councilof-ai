@@ -134,6 +134,12 @@ def stage():
             "ots_pending_not_anchored": ots_state_counts["pending"],
             "ots_unreadable": ots_state_counts["unreadable"],
             "ots_absent": ots_state_counts["absent"],
+            # Per-atom counts above are literal: almost no atom carries its own
+            # proof. But the atom root commits to the WHOLE queue under a single
+            # stamp, so an atom with no .ots of its own can still be anchored by
+            # inclusion. Reporting only the per-atom figure understates the truth
+            # as badly as the old Path.exists() counter overstated it.
+            "atom_root": _atom_root_state(),
             "oversized_excluded": oversized,
             "dedup_factor": f"{(total / max(1, total + oversized)):.4f}",
         },
@@ -150,6 +156,32 @@ def stage():
     }
     STATE.write_text(json.dumps(state, indent=2, sort_keys=True))
     return state
+
+
+
+def _atom_root_state() -> dict:
+    """What the whole-queue commitment carries, measured — never assumed.
+
+    An atom is anchored either by its own proof or by inclusion in this root.
+    Only "bitcoin" here means the queue is anchored.
+    """
+    import glob as _g
+    roots = sorted(_g.glob("public/interop/atom-root-*.json"))
+    if not roots:
+        return {"state": "absent", "note": "no atom root built"}
+    latest = Path(roots[-1])
+    ots = Path(str(latest) + ".ots")
+    body = json.loads(latest.read_text())
+    st = attestation_state(ots.read_bytes() if ots.exists() else None)
+    return {
+        "root_file": latest.name,
+        "n_leaves": body.get("n_leaves"),
+        "merkle_root": body.get("merkle_root"),
+        "state": st["state"],
+        "block_height": st.get("block_height"),
+        "covers": ("anchored by inclusion" if st["state"] == "bitcoin"
+                   else "stamped, NOT yet anchored"),
+    }
 
 
 def main():
