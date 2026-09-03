@@ -1,0 +1,111 @@
+name: hf-token-scope-probe
+
+# Which of the three HF secrets can actually do the three things the estate needs?
+# A green workflow has repeatedly meant "the call failed and we exited 0" (#1102, the
+# flip's 403 fallback to a draft PR), so this asks each token directly and prints the
+# ANSWER, not the attempt. Values are never echoed — only identity, role, scope names
+# and pass/fail per capability.
+
+on:
+  workflow_dispatch:
+
+concurrency: { group: hf-token-scope-probe, cancel-in-progress: true }
+permissions: { contents: read }
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+    steps:
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: probe each secret for identity, dataset write, and Inference Providers
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.error, urllib.request
+
+          NAMES = ["HF_TOKEN", "HUGGINGFACE_TOKEN", "HF_INFERENCE_TOKEN"]
+          # The exact endpoint the flip's upload hits before it writes. A GET is
+          # non-mutating: 200 means this token could have written main, 403 means the
+          # census was always going to fall back to a draft PR.
+          WRITE = "https://huggingface.co/api/datasets/{}/xet-write-token/main"
+          REPOS = ["csoai/hub-queue", "csoai/gspc-hub-cards"]
+          ROUTER = "https://router.huggingface.co/v1/chat/completions"
+
+          def call(url, tok, data=None, timeout=25):
+              req = urllib.request.Request(url, data=data, method="POST" if data else "GET")
+              req.add_header("Authorization", f"Bearer {tok}")
+              if data:
+                  req.add_header("Content-Type", "application/json")
+              try:
+                  with urllib.request.urlopen(req, timeout=timeout) as r:
+                      return r.status, r.read()[:400]
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read()[:200]
+              except Exception as e:
+                  return 0, f"{type(e).__name__}: {e}".encode()[:200]
+
+          report = {}
+          for name in NAMES:
+              tok = (os.environ.get(name) or "").strip()
+              row = {"present": bool(tok)}
+              if not tok:
+                  report[name] = row
+                  print(f"\n== {name}: ABSENT")
+                  continue
+              code, body = call("https://huggingface.co/api/whoami-v2", tok)
+              row["whoami_http"] = code
+              if code == 200:
+                  who = json.loads(body.decode() or "{}") if body.strip().startswith(b"{") else {}
+                  # body is truncated for safety; refetch fully only for the JSON we print
+                  req = urllib.request.Request("https://huggingface.co/api/whoami-v2")
+                  req.add_header("Authorization", f"Bearer {tok}")
+                  who = json.load(urllib.request.urlopen(req, timeout=25))
+                  acc = (who.get("auth") or {}).get("accessToken") or {}
+                  row["user"] = who.get("name")
+                  row["token_role"] = acc.get("role")
+                  row["token_name"] = acc.get("displayName")
+                  fg = acc.get("fineGrained") or {}
+                  row["fine_grained_global"] = fg.get("global")
+                  row["fine_grained_scoped"] = [
+                      {"entity": (s.get("entity") or {}).get("name"), "permissions": s.get("permissions")}
+                      for s in (fg.get("scoped") or [])
+                  ]
+                  row["orgs"] = [o.get("name") for o in (who.get("orgs") or [])]
+              row["dataset_write"] = {}
+              for repo in REPOS:
+                  c, b = call(WRITE.format(repo), tok)
+                  row["dataset_write"][repo] = {"http": c, "can_write": c == 200}
+                  if c not in (200,):
+                      row["dataset_write"][repo]["why"] = b.decode(errors="replace")[:160]
+              c, b = call(
+                  ROUTER,
+                  tok,
+                  json.dumps({
+                      "model": "Qwen/Qwen2.5-7B-Instruct",
+                      "messages": [{"role": "user", "content": "Reply with EXACTLY one token: HELLO"}],
+                      "max_tokens": 4,
+                  }).encode(),
+              )
+              row["inference_providers"] = {"http": c, "ok": c == 200}
+              if c != 200:
+                  row["inference_providers"]["why"] = b.decode(errors="replace")[:160]
+              report[name] = row
+              print(f"\n== {name}")
+              print(json.dumps(row, indent=2))
+
+          print("\n== VERDICT")
+          for name, row in report.items():
+              if not row.get("present"):
+                  print(f"{name}: absent")
+                  continue
+              w = [r for r, v in (row.get("dataset_write") or {}).items() if v.get("can_write")]
+              print(
+                  f"{name}: user={row.get('user')} role={row.get('token_role')} "
+                  f"writes={w or 'NONE'} inference={'OK' if (row.get('inference_providers') or {}).get('ok') else 'FAIL'}"
+              )
+          PY
