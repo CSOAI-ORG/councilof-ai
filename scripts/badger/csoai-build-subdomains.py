@@ -39,7 +39,7 @@ SUBDOMAINS = [
     (
         "proofs",
         "Proof Portal — CSOAI",
-        "Every signed card, with inclusion proof. The bulk history of every measurement. The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible. Free, no API key.",
+        "Every signed card, with inclusion proof. The bulk history of every measurement. Three live anchors made visible — HuggingFace, Sigstore Rekor and the public corrections ledger; Bitcoin OpenTimestamps is planned. Free, no API key.",
         "WebSite",
         "Open the Proof Portal →",
         "/proofs.html",
