@@ -145,6 +145,35 @@ export default function Products() {
         sell the evidence — never the score, never a certificate, never to anyone we rank.
       </p>
 
+      {/* The five access surfaces — every way a user can reach the measurement rail today. */}
+      <section aria-label="Five access surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
+          <p className="font-mono text-sm text-emerald-100">MCP</p>
+          <p className="mt-1 text-xs text-emerald-200/80">board_totals · get_axis · verify_card · list_cards</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
+        </a>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
+          <p className="font-mono text-sm text-emerald-100">Browser extension</p>
+          <p className="mt-1 text-xs text-emerald-200/80">MV3 — overlays badge on Hugging Face, OpenRouter, Replicate</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">/extension/</p>
+        </a>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/tools">
+          <p className="font-mono text-sm text-emerald-100">Plugin</p>
+          <p className="mt-1 text-xs text-emerald-200/80">Council of AI Grok plugin — 4 skills, 4 commands</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">/tools</p>
+        </a>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/what-is-new.html">
+          <p className="font-mono text-sm text-emerald-100">Hermes skill</p>
+          <p className="mt-1 text-xs text-emerald-200/80">~/.hermes/skills/council-of-ai/ — 6/6 tests pass</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">skill_view</p>
+        </a>
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">
+          <p className="font-mono text-sm text-emerald-100">REST + curl</p>
+          <p className="mt-1 text-xs text-emerald-200/80">GET /api/gspc · /api/state · /api/corrections</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">application/json</p>
+        </a>
+      </section>
+
       <section aria-labelledby="sku-h" className="mt-12">
         <h2 id="sku-h" className="text-xl font-bold text-emerald-300">The four SKUs</h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">

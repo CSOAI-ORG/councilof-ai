@@ -67,6 +67,14 @@ export default function HomeVerify() {
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
             Empty means not measured. Not a certificate. Free, no account.
           </p>
+          {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
+          <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/extension/">Chrome extension</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/what-is-new.html">Hermes skill</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">REST + curl</a>
+          </div>
           <HomeUnderstand
             className="mt-6 max-w-2xl"
             title="What this desk does"
