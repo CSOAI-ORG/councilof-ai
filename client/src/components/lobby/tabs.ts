@@ -46,7 +46,7 @@ export type LobbyTabId =
   | "cards"
   | "state"
   | "archive"
-  | "attestations" (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+  | "attestations"
   | "evidence"
   | "embed"
   | "art50"
@@ -182,7 +182,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb: "The one signed root and its witnesses — Rekor, OpenTimestamps, EAS, XRPL — each state printed as the sidecar wrote it, plus the corrections ledger.",
     path: "",
     kind: "native",
-    cues: /\b(attestations?|witness(?:es|ed)?|rekor|open\s?timestamps|\.ots|merkle|public root|root\.json|inclusion proofs?|corrections? ledger|corrections)\b/i, (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+    cues: /\b(attestations?|witness(?:es|ed)?|rekor|open\s?timestamps|\.ots|merkle|public root|root\.json|inclusion proofs?|corrections? ledger|corrections)\b/i,
   },
   {
     id: "evidence",

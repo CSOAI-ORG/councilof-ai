@@ -18,20 +18,17 @@ const DashboardArchivePane = lazy(() => import("@/components/DashboardArchivePan
 const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const DashboardStatePane = lazy(() => import("@/components/DashboardStatePane"));
-const DashboardAttestationsPane = lazy(() => import("@/components/DashboardAttestationsPane")); (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+const DashboardAttestationsPane = lazy(() => import("@/components/DashboardAttestationsPane"));
 const Page_Benchmarks = lazy(() => import("@/pages/Benchmarks"));
 const Page_ModelRegistry = lazy(() => import("@/pages/ModelRegistry"));
 const Page_Tools = lazy(() => import("@/pages/ToolsPage"));
-const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const LobbyCardsPane = lazy(() => import("@/components/lobby/LobbyCardsPane"));
-const DashboardStatePane = lazy(() => import("@/components/DashboardStatePane"));
 const LobbyEvidencePane = lazy(() => import("@/components/lobby/LobbyEvidencePane"));
 const LobbyEmbedPane = lazy(() => import("@/components/lobby/LobbyEmbedPane"));
 const Page_Products = lazy(() => import("@/pages/Products"));
 const Page_Harness = lazy(() => import("@/pages/Harness"));
 const Page_CouncilSpace = lazy(() => import("@/pages/CouncilSpace"));
 const Page_Assess = lazy(() => import("@/pages/AssessTool"));
-const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const Page_IncidentReport = lazy(() => import("@/pages/IncidentReport"));
 const Page_Honesty = lazy(() => import("@/pages/Honesty"));
 const Page_Library = lazy(() => import("@/pages/Library"));
@@ -46,17 +43,13 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   terminal: LobbyBoardPane, // GSPC terminal
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
-  leaderboard: Page_Leaderboard, // the full model × axis table, in-shell
-  terminal: LobbyBoardPane,
   verify: LobbyVerifyPane,
   state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
-  attestations: DashboardAttestationsPane, // the one root, its witnesses (states verbatim), search, corrections ledger (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+  attestations: DashboardAttestationsPane, // the one root, its witnesses (states verbatim), search, corrections ledger
   results: Page_Benchmarks,
   models: Page_ModelRegistry,
   tools: Page_Tools,
-  verify: LobbyVerifyPane,
   cards: LobbyCardsPane, // signed-cards browser, native
-  state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
   evidence: LobbyEvidencePane, // GPAI evidence pack, native
   embed: LobbyEmbedPane, // white-label badge / self-verifying card, native
   products: Page_Products,
@@ -102,9 +95,8 @@ export function paneLabel(id: string): string | null {
   return EXTRA_LABELS[r] ?? null;
 }
 
-export const PANE_IDS: string[] = Object.keys(PANES);
 /** Every tab id this shell renders natively — the door `/dashboard?tab=<id>` works for each. */
-export const PANE_IDS: readonly string[] = Object.keys(PANES); (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+export const PANE_IDS: readonly string[] = Object.keys(PANES);
 
 export default function DashboardPane({ id }: { id: string }) {
   const r = resolvePaneId(id);
