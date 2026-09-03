@@ -68,7 +68,7 @@ fi
 step 'Build client'
 npm run build:client
 
-step 'Council OS shell smoke (non-gating until adapted to the master shell)'
+step 'Council OS shell smoke — gating; 12 of 12 must pass on desktop + mobile'
 step 'Prerender all routes'
 if [ "$(uname -s)" = "Linux" ]; then
   npx playwright install --with-deps chromium
