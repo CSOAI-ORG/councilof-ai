@@ -1,0 +1,151 @@
+{
+  "schema": "csoai.emilia-identity-independent/0.1",
+  "not_a_gspc_card": true,
+  "kind": "emilia",
+  "preimage_rule": "ep-scitt-statement-identity-v0.1",
+  "environment": {
+    "os": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+    "python": "3.14.6",
+    "implementation": "verify_statement_identity.py (cbor2 + cryptography ECDSA P-256)",
+    "cryptography": "49.0.0",
+    "cbor2": "present",
+    "vectors_path": "vectors.reference.json",
+    "vectors_sha256": "889e410cceec75f4c0955ca9a373d4a8375c00300cbe4d2be375a559958de697",
+    "commit": "e507acdf8efbe8951cb4294801d4c440f0b86a5a",
+    "not_bundled_runner": true
+  },
+  "vectors_sha256_ok": true,
+  "signature_a_valid": true,
+  "signature_b_valid": true,
+  "statement_entry_digest_a": "sha256:ba36963493c183eea6c8f71e492121d49d14c1f0338574a6171b1312c763b4e1",
+  "statement_entry_digest_b": "sha256:be2becd5536416c02adec625fff8aca3b75beb691543d458935bfce7ea857ef0",
+  "signing_input_digest": "sha256:c4b229193fd4f871f431daf6f6bc7c5cab5f13896c42b7fc3a7397a3ff67dd86",
+  "classification": "same_signing_input_different_envelope",
+  "cases": [
+    {
+      "id": "P256-SIGNATURE-A-VERIFIES",
+      "category": "positive",
+      "passed": true,
+      "observed": {
+        "verified": true,
+        "high_s": true,
+        "r": "0xf1b44ebbffab6abac0b1fcc5bb9a038be2f364961baf68274d4087fb2aa1500a",
+        "error": null
+      }
+    },
+    {
+      "id": "P256-SIGNATURE-B-VERIFIES",
+      "category": "positive",
+      "passed": true,
+      "observed": {
+        "verified": true,
+        "high_s": false,
+        "r": "0xf1b44ebbffab6abac0b1fcc5bb9a038be2f364961baf68274d4087fb2aa1500a",
+        "error": null
+      }
+    },
+    {
+      "id": "P256-RFC9943-CWT-CLAIMS-PRESENT",
+      "category": "positive",
+      "passed": true,
+      "observed": {
+        "cwt_header_label": 15,
+        "iss": "https://issuer.example/scitt",
+        "sub": "urn:example:scitt-identity-p256:1"
+      }
+    },
+    {
+      "id": "EXACT-ENTRY-IDENTITY-SEPARATES-ENVELOPES",
+      "category": "boundary",
+      "passed": true,
+      "observed": {
+        "entry_a": "sha256:ba36963493c183eea6c8f71e492121d49d14c1f0338574a6171b1312c763b4e1",
+        "entry_b": "sha256:be2becd5536416c02adec625fff8aca3b75beb691543d458935bfce7ea857ef0"
+      }
+    },
+    {
+      "id": "SIGNING-INPUT-IDENTITY-IS-STABLE",
+      "category": "boundary",
+      "passed": true,
+      "observed": {
+        "signing_input_digest": "sha256:c4b229193fd4f871f431daf6f6bc7c5cab5f13896c42b7fc3a7397a3ff67dd86",
+        "sig_structure_matches_fixture": true
+      }
+    },
+    {
+      "id": "PAYLOAD-SUBSTITUTION-CHANGES-SIGNING-INPUT",
+      "category": "hostile",
+      "passed": true,
+      "observed": {
+        "signing_input_changed": true,
+        "old_signature_verifies_new_input": false,
+        "refusal": "different_signing_input"
+      }
+    },
+    {
+      "id": "PROTECTED-HEADER-SUBSTITUTION-CHANGES-SIGNING-INPUT",
+      "category": "hostile",
+      "passed": true,
+      "observed": {
+        "signing_input_changed": true,
+        "old_signature_verifies_new_input": false,
+        "refusal": "different_signing_input"
+      }
+    },
+    {
+      "id": "FALSE-TAMPERING-REASON-REFUSED",
+      "category": "boundary",
+      "passed": true,
+      "observed": {
+        "classification": "same_signing_input_different_envelope"
+      }
+    },
+    {
+      "id": "MALFORMED-COSE-REFUSED",
+      "category": "hostile",
+      "passed": true,
+      "observed": {
+        "reason": "cose_structure_invalid"
+      }
+    },
+    {
+      "id": "P256-PAIR-IS-NOT-EP-PROFILE",
+      "category": "boundary",
+      "passed": true,
+      "observed": {
+        "ep_profile_valid": "UNCHECKABLE",
+        "note": "independent cell does not ship the EP verifier; generic ES256 is not treated as EP-SCITT-STATEMENT-v1"
+      }
+    },
+    {
+      "id": "EP-AUTHORIZATION-PAYLOAD-IDENTITY-VERIFIES",
+      "category": "positive",
+      "passed": false,
+      "observed": {
+        "state": "UNCHECKABLE",
+        "note": "vectors.reference.json has no EP receipt payload; not invented"
+      }
+    },
+    {
+      "id": "ENTRY-DIGEST-CANNOT-SUBSTITUTE-FOR-AUTHORIZATION",
+      "category": "boundary",
+      "passed": true,
+      "observed": {
+        "statement_entry_digest": "sha256:ba36963493c183eea6c8f71e492121d49d14c1f0338574a6171b1312c763b4e1",
+        "authorization_payload_digest": "UNCHECKABLE",
+        "note": "entry digest is not an authorization digest"
+      }
+    }
+  ],
+  "summary": {
+    "checkable_passed": 11,
+    "checkable_total": 11,
+    "ep_receipt_cases": "UNCHECKABLE"
+  },
+  "claim_boundary": [
+    "Generic RFC 9943 ES256 fixture, not EP-SCITT-STATEMENT-v1 authorization.",
+    "Exact COSE_Sign1 digest identifies one envelope.",
+    "Sig_structure digest identifies the signing input.",
+    "No Transparency Service registration claimed."
+  ]
+}
