@@ -96,6 +96,25 @@ export default function McpFleet() {
             293 catalogued in the public registry (which includes planned entries). Two counts, two meanings —
             the registry says which is which.
           </p>
+          {/* The four public-side tools are wired through /mcp on the same governance backbone */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl">
+            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/mcp">
+              <p className="font-mono text-sm text-emerald-100">/mcp</p>
+              <p className="text-xs text-emerald-200/80 mt-1">board_totals · get_axis · verify_card · list_cards — streamable HTTP</p>
+            </a>
+            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/extension/">
+              <p className="font-mono text-sm text-emerald-100">Chrome extension</p>
+              <p className="text-xs text-emerald-200/80 mt-1">MV3 overlay on HF / OpenRouter / Replicate / 10 model APIs</p>
+            </a>
+            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/what-is-new.html">
+              <p className="font-mono text-sm text-emerald-100">Hermes skill</p>
+              <p className="text-xs text-emerald-200/80 mt-1">~/.hermes/skills/council-of-ai/ — 6/6 tests pass</p>
+            </a>
+            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/products">
+              <p className="font-mono text-sm text-emerald-100">x402 + SWIFT + XRPL</p>
+              <p className="text-xs text-emerald-200/80 mt-1">$1.00 USDC on Base — signed evidence per request</p>
+            </a>
+          </div>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">
             <Stat v={String(TOTAL)} l="MCP servers" />
             <Stat v={String(HIVES.length)} l="Hives" />
