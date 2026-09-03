@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-03T14:20:08.159Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 90,
+      "issuer": "Republic of Palau",
+      "issuer_address": "rwekfW4MiS5yZjXASRBDzzPPWYKuHvKP7E",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 14588,
+      "symbol": "PSC",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "452f01522997ab70c2b1dab7b8a4110706446879644b697acf05f1b79aa85f78",
+    "sig_ed25519": "35fa176f097d8696d14e5770911868901ef60757ac367431b5b4f2c02ccfad1505bd3d337002f4906a03cc2d5555b13652abc60cf0cc9dbc82202968e556170b",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL PSC public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "32952124da543257f6b9b32bdcbf52e0c1dc75e89396140c31e3a195bb4a3d32",
+    "07a00a0c195ea3fd2b737ca0fd7f0a1901f27e0687c96c6942c653d542e305d9",
+    "b2bd3301b2d02bd9dd8a396ebdd9f0668d32522a4dd20c7a844a8f6212de5b7e",
+    "210dcf573e59620cce5c5691f472b71f375bb8cb2c416517593a421696176f80",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "aa08d649504121d42359fb9f4dcdcafb484e9090fd31b0b8d75a7d4e68564fee",
+    "4a340096b468bfa091ff1c32c843f8831026ad3ad295772c32e32697fbbed428",
+    "c9541b19ab51ae864559b70185902c4d48980cbdd2db686357f6a79400ba1b39"
+  ]
+}
