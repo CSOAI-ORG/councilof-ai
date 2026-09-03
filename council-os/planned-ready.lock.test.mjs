@@ -20,7 +20,7 @@ describe("SKU lock (shipped Products.tsx)", () => {
   const tags = [...block.matchAll(/tag: "([^"]+)"/g)].map((m) => m[1]);
 
   it("exposes exactly four public SKUs", () => {
-    assert.deepEqual(ids, ["verify", "os", "ledger", "data"]);
+    assert.deepEqual(ids, ["verify", "run", "ledger", "data"]);
   });
 
   it("never sells a grade or a certificate", () => {
@@ -31,9 +31,9 @@ describe("SKU lock (shipped Products.tsx)", () => {
     assert.match(block, /never a purchased public rank|never buy a score/);
   });
 
-  it("keeps Verify free and OS as the workspace", () => {
+  it("keeps Verify free and Run as the workspace", () => {
     assert.equal(hrefs[0], "/gspc-verify");
-    assert.equal(hrefs[1], "/os");
+    assert.equal(hrefs[1], "/assess");
     assert.match(tags[0].toLowerCase(), /free/);
   });
 });
