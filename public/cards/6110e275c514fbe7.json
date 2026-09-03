@@ -1,0 +1,116 @@
+{
+  "card": {
+    "as_of": "2026-09-03T06:30:06Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:avalanche",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "avalanche",
+      "chain_id": 43114,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 94344873,
+      "block_hash": "0xd7477a065c05e09779e63345d83f7401e2dd84e9736a607a69809db5bad2b06f",
+      "block_time": "2026-09-03T06:30:06Z",
+      "rpc": "api.avax.network",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "21000295821000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "dd7ae5ef664a6b35a902997a6d667f47b6d7353517cd76b411362253dcfd8c94",
+        "bytes": 11139,
+        "url": "/archive/proofs/eip1186/dd7ae5ef664a6b35.json",
+        "rpc": "avalanche-c-chain-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xd269697b4279ac0c88e8e9dca3ba6baaab8990de21a857ce85cd68efaac706f4",
+          "storageHash": "0x4a5123edb3e9be55fd8446bb653dd85fb51708b7f5156b5301fddbbbfab6d72c",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0xf2057bdff8439dbffce073e14a9854945d5e5644",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 94344873 on avalanche, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6110e275c514fbe77ef631f38ee5a09a935576f0d8cd7876913907a7760812eb",
+    "sig_ed25519": "07d80010afaa2e6958f779ee768f603cb1843d5f562c318bca91804516d78857ad41ff8a6dd6fb4799bede4e2360981294242eaf64256bfb5ae2f54be01ba707",
+    "source_urls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://snowscan.xyz/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "https://avalanche-c-chain-rpc.publicnode.com"
+    ],
+    "subject": "evm:bIB01:avalanche permission state at block 94344873",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:avalanche",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "d29d2d9d2f697dc8635d312dd60165df811ccd99428bc124f5acf7fcfba0afdd",
+    "77412b53889fbae32bc7302a26062ab3690fb6713f9d92410c41010ed97b1cc3",
+    "a61be66d49402680e08ab1252ece14812aa63f3a8e42050796484392d44ef084",
+    "7ca8aee3e94e0f3160e7aa9f786bb30aeccfc1e368473e490055d0eb920d9fd9",
+    "e78f3a6ff6c41ffd64c1a80f66501ec4dd29f3c005f244e290850adb39ad066e",
+    "0b6c40da336bdd9f1ddf4347140789f68a3aa093bdccd1272fe5d6dc8819c79c",
+    "5793e0dc4282e1b2f50b344419a127d6909daa5e06a17b1427b7d44f8990ecae",
+    "79c408aa83e8626e71d29519f86bf7ec94d7546dcd494a332a4ad36dc90f0bd6"
+  ]
+}
