@@ -43,6 +43,28 @@ def canonical(obj: dict) -> bytes:
     return json.dumps(rec(obj), separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
+
+def _ots_reads(path) -> bool:
+    """True only if the file is a detached timestamp `ots verify` could read.
+
+    An unreadable .ots is worse than an absent one: it sits beside an atom
+    looking like evidence. This is the guard that lets the writer heal its own
+    past output instead of skipping it on a size check.
+    """
+    import io
+
+    from opentimestamps.core.serialize import StreamDeserializationContext
+    from opentimestamps.core.timestamp import DetachedTimestampFile
+
+    try:
+        DetachedTimestampFile.deserialize(
+            StreamDeserializationContext(io.BytesIO(path.read_bytes()))
+        )
+        return True
+    except Exception:
+        return False
+
+
 def submit_ots(digest_hex: str, timeout: int = 15) -> bytes | None:
     """Stamp a digest and return REAL detached-timestamp bytes, or None.
 
@@ -129,7 +151,13 @@ def main():
                 digest = hashlib.sha256(blob).hexdigest()
 
                 ots_path = jsonl.parent / f"{digest[:16]}.ots"
-                if ots_path.exists() and ots_path.stat().st_size > 100:
+                # Skip only if the existing proof actually READS. Size is not a
+                # validity signal: the 112 files this script wrote before the
+                # 2026-09-03 fix were 150 bytes each and all failed
+                # DetachedTimestampFile.deserialize with BadMagicError. A
+                # size-only guard would skip every one of them forever, so the
+                # repair would never happen. Parse it or replace it.
+                if ots_path.exists() and _ots_reads(ots_path):
                     n_already += 1
                     continue
                 if n_anchored >= args.limit:
