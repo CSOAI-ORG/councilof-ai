@@ -157,6 +157,40 @@ body = urllib.request.urlopen(req, timeout=30).read()
 Verified 2026-09-03. This is our defect, not yours — it is tracked and will be
 removed. The bytes behind the 403 are unchanged and independently checkable.
 
+## Anchor 4 of 4: Bitcoin, via OpenTimestamps — CONFIRMED
+
+The public root is anchored four ways. The first three have an operator you must
+trust to some degree; the fourth does not.
+
+| # | anchor | what it proves | who you must trust |
+|---|---|---|---|
+| 1 | Ed25519 under `did:web:csoai.org` | we published these bytes | us |
+| 2 | Sigstore Rekor | an append-only log holds the entry | the log operator |
+| 3 | RFC-3161 TSA | a timestamp authority saw the digest | the TSA |
+| 4 | **Bitcoin via OpenTimestamps** | the digest existed before a given block | **nobody** |
+
+`/interop/root-728e8c5e.json.ots` now carries **Bitcoin block header attestations**,
+not just pending calendar commitments:
+
+```
+digest  728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3
+blocks  965138 · 965138 · 965152 · 965186   (four independent calendars)
+```
+
+Check it yourself, without us and without trusting this page:
+
+```bash
+curl -O https://councilof.ai/interop/root-728e8c5e.json.ots
+ots verify root-728e8c5e.json.ots -d 728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3
+```
+
+A note on how this was wrong until 2026-09-03. The stamp was created correctly but
+the `.ots` file published here was never **upgraded**, so it contained only pending
+calendar attestations. The Bitcoin commitment existed; our published bytes did not
+prove it. An unupgraded stamp is not a failed stamp — but it is not a proof either,
+and we should not have described it as anchored to Bitcoin while it read as pending.
+The upgrade is now part of the publish step.
+
 ## What this does and does not prove
 
 It proves these exact measurement bodies were signed by the holder of the published
