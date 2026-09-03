@@ -264,10 +264,12 @@ def test_apply_valid_flips_equals_valid_count() -> None:
     assert rows[0].get("status") == "UNMEASURED"
     assert (rows[0].get("measured_axes") or {}).get("governance") is None
     cell = (rows[1].get("measured_axes") or {}).get("governance") or {}
-    # Queue cell flips regardless of body status. But the INDEX ROW must mirror
-    # the signed body, not the queue state. See #1155.
-    assert cell.get("status") == "MEASURED"
+    # VALID earns the cell; the BODY says what the cell reads. This body says
+    # UNMEASURED, so the cell says UNMEASURED and carries the reason — the queue
+    # and the index now mirror the same bytes rather than disagreeing (#1155).
+    assert cell.get("status") == "UNMEASURED"
     assert cell.get("card_id") == valid["id"]
+    assert "signed-pending-verify" in (cell.get("unmeasured") or [])
     # valid._verdict must be "VALID" for the index row to potentially say MEASURED.
     # BUT: body says status=UNMEASURED (signed-pending-verify), so the index row
     # must also say UNMEASURED — body wins (Issue #1155).
@@ -774,3 +776,91 @@ if __name__ == "__main__":
     test_pick_honours_dead_slugs_and_servable_tags_only()
     test_dead_slugs_file_roundtrip_dedupes()
     test_probe_first_spends_grades_only_on_live_slugs()
+
+
+def test_queue_cell_mirrors_body_status_issue_1155() -> None:
+    """The hub-queue cell is the same claim as the hub-cards index row, so it must
+    read the same. A MEASURED body writes a MEASURED cell; an UNMEASURED body writes
+    an UNMEASURED cell that says why. Nothing on the Hub may say MEASURED over bytes
+    that do not."""
+    rows = [
+        {"id": "unit/measured", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+        {"id": "unit/pending", "status": "UNMEASURED", "card_id": "", "measured_axes": {}},
+    ]
+    ok = stage_unsigned("unit/measured", "governance", hits=28, n=30, reason="")
+    ok["body"]["status"] = "MEASURED"
+    ok["body"]["unmeasured"] = []
+    ok["_verdict"] = "VALID"
+    pend = stage_unsigned("unit/pending", "safety", hits=28, n=30, reason="signed-pending-verify")
+    pend["_verdict"] = "VALID"
+
+    assert apply_valid_flips(rows, [ok, pend]) == 2
+    measured = (rows[0]["measured_axes"] or {})["governance"]
+    pending = (rows[1]["measured_axes"] or {})["safety"]
+    assert measured["status"] == "MEASURED"
+    assert "unmeasured" not in measured
+    assert pending["status"] == "UNMEASURED"
+    assert pending["unmeasured"] == ["signed-pending-verify"]
+    # The index row over the same card must agree with the cell, both ways.
+    for wrap, cell in ((ok, measured), (pend, pending)):
+        row = mill_index_row(wrap, "https://councilof.ai/interop/mill-cards-signed/x.json")
+        assert row["status"] == cell["status"], "index row and queue cell must not disagree"
+
+
+def test_staged_body_says_unsigned_not_pending_verify() -> None:
+    """A staged card has not been signed, so its body says so. 'signed-pending-verify'
+    is a state that expires at signature; it must never be the default interned into
+    bytes that outlive it."""
+    wrap = stage_unsigned("unit/x", "governance", hits=8, n=30, reason="")
+    assert wrap["body"]["status"] == "UNMEASURED"
+    assert wrap["body"]["unmeasured"] == ["unsigned"]
+    assert wrap["signature"] is None
+
+
+def test_sign_mill_emits_measured_at_n30_and_refuses_in_place_supersede(tmp_path: Path | None = None) -> None:
+    """The signer writes the state that survives the signature: MEASURED at n>=30,
+    UNMEASURED with its reason below it. And a changed body never overwrites an
+    existing signed card — that card is superseded through a ledger, or not at all."""
+    sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+    import sign_mill_cards as sm  # noqa: E402
+
+    root = tmp_path or (HERE / "_mill_test_sign_measured")
+    if tmp_path is None:
+        import shutil
+
+        shutil.rmtree(root, ignore_errors=True)
+    src = root / "unsigned"
+    dst = root / "signed"
+    src.mkdir(parents=True, exist_ok=True)
+    dst.mkdir(parents=True, exist_ok=True)
+
+    big = stage_unsigned("unit/big", "governance", hits=28, n=30, reason="")
+    (src / "unsigned-governance-aaaaaaaaaaaa.json").write_text(json.dumps(big, indent=2) + "\n")
+    small = stage_unsigned("unit/small", "safety", hits=4, n=10, reason="")
+    (src / "unsigned-safety-bbbbbbbbbbbb.json").write_text(json.dumps(small, indent=2) + "\n")
+
+    sm.SRC = src
+    sm.DST = dst
+    sm.sign_via_oidc = lambda body: "cd" * 32
+    assert sm.main() == 0
+
+    out_big = json.loads((dst / "signed-governance-aaaaaaaaaaaa.json").read_text())
+    assert out_big["body"]["status"] == "MEASURED"
+    assert out_big["body"]["unmeasured"] == []
+    assert out_big["quotable"] is True
+    out_small = json.loads((dst / "signed-safety-bbbbbbbbbbbb.json").read_text())
+    assert out_small["body"]["status"] == "UNMEASURED"
+    assert out_small["body"]["unmeasured"] == ["n<30 unquotable"]
+
+    # Now change the run behind the big card. The digest changes, so this is a new
+    # card; the signed bytes already on disk must survive untouched.
+    frozen = (dst / "signed-governance-aaaaaaaaaaaa.json").read_bytes()
+    moved = stage_unsigned("unit/big", "governance", hits=29, n=30, reason="")
+    (src / "unsigned-governance-aaaaaaaaaaaa.json").write_text(json.dumps(moved, indent=2) + "\n")
+
+    def never(body):
+        raise AssertionError("must not re-sign over an existing signed card")
+
+    sm.sign_via_oidc = never
+    assert sm.main() == 0
+    assert (dst / "signed-governance-aaaaaaaaaaaa.json").read_bytes() == frozen

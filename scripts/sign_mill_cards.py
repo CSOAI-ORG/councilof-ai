@@ -32,6 +32,7 @@ def main() -> int:
     DST.mkdir(parents=True, exist_ok=True)
     failures = 0
     signed = 0
+    superseding = 0
     for fp in files:
         wrap = json.loads(fp.read_text(encoding="utf-8"))
         body = wrap.get("body")
@@ -40,12 +41,19 @@ def main() -> int:
             failures += 1
             continue
         n = int(body.get("n") or 0)
-        # Honest body before the signature: never intern "still unsigned".
+        # A signature freezes the body, so the body must be true AFTER it is signed,
+        # not only before. "signed-pending-verify" was a state that expired the moment
+        # the card verified, and it was interned into the bytes anyway — which is how
+        # the Hub ended up with cells saying MEASURED over bodies saying UNMEASURED
+        # (#1155). The state written here is the one that survives: a run of n>=30 that
+        # is about to be signed by the board key IS the measurement; n<30 is not
+        # quotable and says so.
         if n >= 30:
-            body["unmeasured"] = ["signed-pending-verify"]
+            body["status"] = "MEASURED"
+            body["unmeasured"] = []
         else:
+            body["status"] = "UNMEASURED"
             body["unmeasured"] = ["n<30 unquotable"]
-        body["status"] = "UNMEASURED"
         wrap["body"] = body
         raw = canonical_bytes(body)
         if len(raw) > MAX_PAYLOAD_BYTES:
@@ -62,6 +70,18 @@ def main() -> int:
             if prev.get("id") == digest and prev.get("signature"):
                 print("SKIP already-signed", dest.name, digest[:16])
                 signed += 1
+                continue
+            if prev.get("signature"):
+                # Signed bytes are never edited. A different digest over the same
+                # path is a DIFFERENT card, and replacing the file would silently
+                # break every card_id already pointing at the old one. It supersedes
+                # through a ledger or not at all — never in place.
+                print(
+                    f"SUPERSEDE-REQUIRED {dest.name} {str(prev.get('id') or '')[:16]} -> {digest[:16]}"
+                    " (signed bytes left untouched)",
+                    file=sys.stderr,
+                )
+                superseding += 1
                 continue
         try:
             sig = sign_via_oidc(body)
@@ -83,7 +103,7 @@ def main() -> int:
         dest.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
         print("SIGNED", dest.name, digest[:16], "n", n)
         signed += 1
-    print(f"mill-sign signed={signed} failures={failures}")
+    print(f"mill-sign signed={signed} failures={failures} supersede_required={superseding}")
     return 1 if failures else 0
 
 
