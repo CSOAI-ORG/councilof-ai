@@ -106,9 +106,21 @@ export async function verifyCard(card, profile) {
   }
 
   // ---- 4. Reproduce the signed bytes.
+  // The number policy and the ensure_ascii setting belong to the RULE, not to the profile
+  // as a whole. Two card generations are in the wild and they serialise differently: cards
+  // declaring the CPython json.dumps literal commit to `0.0` for a whole accuracy, while
+  // cards declaring "sha256(canonical body)" commit to `0`. A single global policy verifies
+  // one generation and calls the other a forgery, which is how 14 genuine cards read
+  // ID_MISMATCH. Dispatch on the rule the card itself declares; never guess across rules.
+  const perRule = (profile.ruleProfiles || {})[card.preimage_rule ?? ""] || {};
+  const effective = {
+    ...profile,
+    ...perRule,
+    numbers: { ...(profile.numbers || {}), ...(perRule.numbers || {}) },
+  };
   let preimage;
   try {
-    preimage = preimageBytes(card.body, profile);
+    preimage = preimageBytes(card.body, effective);
   } catch (e) {
     if (e instanceof OutOfProfileDomain) return uncheckable("OUT_OF_PROFILE_DOMAIN", e.message);
     if (e instanceof NotSerialisable) return uncheckable("MALFORMED_CARD", e.message);

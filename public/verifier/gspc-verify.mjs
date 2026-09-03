@@ -112,8 +112,17 @@ function canonicalNumber(value, key, path, profile) {
   );
 }
 
-/** JSON string escaping matching CPython json.dumps(ensure_ascii=True). */
-function canonicalString(s) {
+/**
+ * JSON string escaping matching CPython json.dumps.
+ *
+ * `asciiOnly` selects the ensure_ascii setting the SIGNER used, and the two disagree the
+ * moment a body carries one non-ASCII character. The mill signer uses ensure_ascii=False
+ * (scripts/sign_financial_runs.py: canonical_bytes), so a profile that only implements
+ * True would call a perfectly good card INVALID as soon as a model name or a framing
+ * string contains an accent or an em dash. Every card published so far is pure ASCII, so
+ * the two are byte-identical today — which is exactly why this was invisible.
+ */
+function canonicalString(s, asciiOnly = true) {
   let out = '"';
   for (const ch of s) {
     const c = ch.codePointAt(0);
@@ -125,6 +134,7 @@ function canonicalString(s) {
     else if (ch === "\r") out += "\\r";
     else if (ch === "\t") out += "\\t";
     else if (c >= 0x20 && c <= 0x7e) out += ch;
+    else if (!asciiOnly && c >= 0x20) out += ch;   // ensure_ascii=False: emit the character
     else if (c <= 0xffff) out += "\\u" + c.toString(16).padStart(4, "0");
     else {
       // Above the BMP CPython emits a surrogate pair, so we must too.
@@ -144,7 +154,7 @@ function canonicalise(value, profile, key = null, path = "$") {
   if (value === null) return "null";
   if (typeof value === "boolean") return value ? "true" : "false";
   if (typeof value === "number") return canonicalNumber(value, key, path, profile);
-  if (typeof value === "string") return canonicalString(value);
+  if (typeof value === "string") return canonicalString(value, profile?.ensureAscii !== false);
   if (Array.isArray(value))
     // CPython renders a list's items with no key context; the enclosing key is what the
     // profile classifies, so it is carried down deliberately.
@@ -154,7 +164,7 @@ function canonicalise(value, profile, key = null, path = "$") {
     return (
       "{" +
       keys
-        .map((k) => canonicalString(k) + ":" + canonicalise(value[k], profile, k, `${path}.${k}`))
+        .map((k) => canonicalString(k, profile?.ensureAscii !== false) + ":" + canonicalise(value[k], profile, k, `${path}.${k}`))
         .join(",") +
       "}"
     );
@@ -215,9 +225,17 @@ async function verifyCard(card, profile) {
   if (card.body === null || typeof card.body !== "object" || Array.isArray(card.body))
     return uncheckable("MALFORMED_CARD", "`body` is not a JSON object");
 
+  // A card identifies its key one of two ways: an inline `pubkey`, or a `did` reference
+  // resolved against the profile's pins. Requiring `pubkey` made every DID-keyed card —
+  // which is every card currently published — read MALFORMED_CARD.
+  const hasPubkey = typeof card.pubkey === "string";
+  const hasDid = typeof card.did === "string" && card.did.length > 0;
+  if (!hasPubkey && !hasDid)
+    return uncheckable("MALFORMED_CARD", "card names no key: neither `pubkey` nor `did`");
+
   for (const [field, re, what] of [
     ["id", HEX64, "64 lowercase hex characters"],
-    ["pubkey", HEX64, "64 lowercase hex characters"],
+    ...(hasPubkey ? [["pubkey", HEX64, "64 lowercase hex characters"]] : []),
     ["signature", HEX128, "128 lowercase hex characters"],
   ]) {
     if (typeof card[field] !== "string")
@@ -244,13 +262,43 @@ async function verifyCard(card, profile) {
   // A card carries its own pubkey. Verifying against THAT proves only self-consistency:
   // anyone can alter a body and sign it with a key generated a second ago. Mismatch here is
   // a completed judgement — the card is not from the pinned issuer — so it is INVALID.
-  if (card.pubkey !== profile.pinnedPubkeyHex)
+  // The pin still comes from the profile — fetched out of band, never from the card and
+  // never from the network at verification time. A DID-keyed card is pinned by matching its
+  // key REFERENCE against the profile's pins; the key itself never travels with the card,
+  // which is strictly stronger than trusting an inline pubkey we then have to ignore.
+  let pinnedHex = profile.pinnedPubkeyHex;
+  if (hasDid) {
+    const pins = profile.pinnedKeys && typeof profile.pinnedKeys === "object" ? profile.pinnedKeys : {};
+    const known = Object.prototype.hasOwnProperty.call(pins, card.did)
+      ? pins[card.did]
+      : card.did === profile.pinnedKeyId
+        ? profile.pinnedPubkeyHex
+        : null;
+    if (!known)
+      return uncheckable("KEY_NOT_PINNED", `card is signed under ${card.did}, which this profile does not pin; supply a profile that pins it, or --did with that key document`);
+    if (!HEX64.test(known))
+      return uncheckable("MALFORMED_PROFILE", `the profile pins ${card.did} to something that is not 64 lowercase hex characters`);
+    pinnedHex = known;
+  } else if (card.pubkey !== profile.pinnedPubkeyHex) {
     return invalid("PUBKEY_NOT_PINNED", `signed by ${card.pubkey.slice(0, 16)}…, not the pinned key ${profile.pinnedPubkeyHex.slice(0, 16)}…`);
+  }
 
   // ---- 4. Reproduce the signed bytes.
+  // The number policy and the ensure_ascii setting belong to the RULE, not to the profile
+  // as a whole. Two card generations are in the wild and they serialise differently: cards
+  // declaring the CPython json.dumps literal commit to `0.0` for a whole accuracy, while
+  // cards declaring "sha256(canonical body)" commit to `0`. A single global policy verifies
+  // one generation and calls the other a forgery, which is how 14 genuine cards read
+  // ID_MISMATCH. Dispatch on the rule the card itself declares; never guess across rules.
+  const perRule = (profile.ruleProfiles || {})[card.preimage_rule ?? ""] || {};
+  const effective = {
+    ...profile,
+    ...perRule,
+    numbers: { ...(profile.numbers || {}), ...(perRule.numbers || {}) },
+  };
   let preimage;
   try {
-    preimage = preimageBytes(card.body, profile);
+    preimage = preimageBytes(card.body, effective);
   } catch (e) {
     if (e instanceof OutOfProfileDomain) return uncheckable("OUT_OF_PROFILE_DOMAIN", e.message);
     if (e instanceof NotSerialisable) return uncheckable("MALFORMED_CARD", e.message);
@@ -265,7 +313,7 @@ async function verifyCard(card, profile) {
   // ---- 6. The signature must verify under the pinned key.
   let key;
   try {
-    key = await crypto.subtle.importKey("raw", unhex(card.pubkey), "Ed25519", false, ["verify"]);
+    key = await crypto.subtle.importKey("raw", unhex(pinnedHex), "Ed25519", false, ["verify"]);
   } catch {
     return uncheckable("NO_ED25519_RUNTIME", "this runtime has no WebCrypto Ed25519 (Node 19+ required); the card was NOT checked");
   }
@@ -502,22 +550,80 @@ function pubkeyFromDidDocument(doc, keyId) {
 const BUNDLED_PROFILE = {
   "$comment": "The verification profile: everything a verifier must be TOLD, in one file, so it can be swapped for your own without editing code. Pass a different one with --profile.",
   "id": "csoai-gspc-1",
-  "description": "Council of AI GSPC measurement cards, card-attestation key 1.",
+  "description": "Council of AI GSPC measurement cards. Pins every published did:web:csoai.org key; cards name theirs by `did`.",
   "alg": "Ed25519",
   "pinnedPubkeyHex": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
   "pinnedKeyId": "did:web:csoai.org#card-attestation-1",
-  "pinnedKeySource": "https://csoai.org/.well-known/did.json — fetch ONCE, out of band, and keep a copy. It is not fetched at verification time.",
+  "pinnedKeySource": "https://csoai.org/.well-known/did.json \u2014 fetch ONCE, out of band, and keep a copy. It is not fetched at verification time.",
   "preimageRules": [
-    "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')"
+    "json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True).encode('utf-8')",
+    "sha256(canonical body)"
   ],
-  "bodyKinds": ["gspc.measurement-card"],
-  "genesisMarkers": ["GSPC-CARD-FACTORY-GENESIS"],
+  "bodyKinds": [
+    "gspc.measurement-card"
+  ],
+  "genesisMarkers": [
+    "GSPC-CARD-FACTORY-GENESIS"
+  ],
   "numbers": {
     "$comment": "JavaScript cannot tell 0 from 0.0. These lists are how the schema tells it. An integral number in an unlisted field is OUT_OF_PROFILE_DOMAIN, not a guess.",
-    "floatFields": ["accuracy", "ci_low", "ci_high", "precision", "recall", "f1"],
-    "floatSuffixes": ["_ci_low", "_ci_high", "_accuracy"],
-    "intFields": ["n", "n_items", "n_cards", "n_cells", "count"],
-    "intSuffixes": ["_count", "_n"]
+    "floatFields": [
+      "accuracy",
+      "ci_high",
+      "ci_low",
+      "f1",
+      "precision",
+      "recall"
+    ],
+    "floatSuffixes": [
+      "_ci_low",
+      "_ci_high",
+      "_accuracy"
+    ],
+    "intFields": [
+      "n",
+      "n_items",
+      "n_cards",
+      "n_cells",
+      "count"
+    ],
+    "intSuffixes": [
+      "_count",
+      "_n"
+    ],
+    "$comment_accuracy": "`accuracy` is listed under intFields, which classifies INTEGRAL values only \u2014 a non-integral value like 0.8333 never reaches that branch. It means: when accuracy is whole, the signer wrote it WITHOUT a decimal point. Measured across the 102 published cards: 88 carry a decimal point, 9 carry bare `0`, 5 carry bare `1`, and the signer never emits 0.0 or 1.0. Listing it as a float made this verifier render 0.0 and call those 14 genuine cards ID_MISMATCH. The signed bytes are the authority."
+  },
+  "pinnedKeys": {
+    "did:web:csoai.org#site-release-1": "d3783d97e75534654401555642b254f5a2ed9184cddee011779d8fec312afbc8",
+    "did:web:csoai.org#estate-chain-1": "33472e026871db20cdbd99e76c47532ebfcf84b37abed5b260dae3589df5696d",
+    "did:web:csoai.org#board-attestation-1": "9367cf59be9cb72bbc9796adf056201ec1c58adfeaa13f83b2c5b754d6c20170",
+    "did:web:csoai.org#card-attestation-1": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    "did:web:csoai.org#gspc-board-22axis-2026": "d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c"
+  },
+  "ensureAscii": true,
+  "$comment_ensureAscii": "The mill signer canonicalises with ensure_ascii=False (scripts/sign_financial_runs.py). Declaring True was byte-identical for every ASCII card published so far and would have failed the first card carrying an accent.",
+  "ruleProfiles": {
+    "sha256(canonical body)": {
+      "$comment": "Mill cards (did-keyed, signed by scripts/sign_financial_runs.py canonical_bytes). Measured across the 102 published: 88 accuracies carry a decimal point, 9 are bare `0`, 5 are bare `1` \u2014 this generation never writes 0.0 or 1.0. It also canonicalises with ensure_ascii=False, unlike the legacy rule.",
+      "ensureAscii": false,
+      "numbers": {
+        "floatFields": [
+          "ci_high",
+          "ci_low",
+          "f1",
+          "precision",
+          "recall"
+        ],
+        "intFields": [
+          "accuracy",
+          "count",
+          "n",
+          "n_cards",
+          "n_cells",
+          "n_items"
+        ]
+      }
+    }
   }
 };
 function defaultProfile() { return JSON.parse(JSON.stringify(BUNDLED_PROFILE)); }

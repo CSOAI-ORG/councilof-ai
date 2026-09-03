@@ -149,7 +149,29 @@ test("string escaping matches CPython json.dumps(ensure_ascii=True)", () => {
     ["café ünïcode", '{"s":"caf\\u00e9 \\u00fcn\\u00efcode"}'],
     ["astral \u{1D11E} and emoji \u{1F30D}", '{"s":"astral \\ud834\\udd1e and emoji \\ud83c\\udf0d"}'],
   ];
-  for (const [input, expected] of cases) assert.equal(canonicalise({ s: input }, profile), expected);
+  // Pin the mode explicitly. This test asserted ensure_ascii=True output while inheriting
+  // whatever the default profile happened to declare — so changing the profile silently
+  // changed what the test was testing.
+  const asciiProfile = { ...profile, ensureAscii: true };
+  for (const [input, expected] of cases) assert.equal(canonicalise({ s: input }, asciiProfile), expected);
+});
+
+test("string escaping matches CPython json.dumps(ensure_ascii=False) — what the signer uses", () => {
+  // scripts/sign_financial_runs.py canonicalises with ensure_ascii=False, so this is the
+  // mode every published card was actually signed under. Right-hand sides produced by
+  // CPython and pasted verbatim. Note DEL (0x7f) is emitted RAW here and escaped above:
+  // that one byte is the difference between a valid card and a false INVALID verdict.
+  const utf8Profile = { ...profile, ensureAscii: false };
+  const cases = [
+    ["plain", '{"s":"plain"}'],
+    ['quote" and \\ back', '{"s":"quote\\" and \\\\ back"}'],
+    ["tab\there\nnl\rcr", '{"s":"tab\\there\\nnl\\rcr"}'],
+    ["bell\x07 bs\b ff\f del\x7f", '{"s":"bell\\u0007 bs\\b ff\\f del\x7f"}'],
+    ["caf\u00e9 \u00fcn\u00efcode", '{"s":"caf\u00e9 \u00fcn\u00efcode"}'],
+    ["em\u2014dash", '{"s":"em\u2014dash"}'],
+    ["astral \u{1D11E} and emoji \u{1F30D}", '{"s":"astral \u{1D11E} and emoji \u{1F30D}"}'],
+  ];
+  for (const [input, expected] of cases) assert.equal(canonicalise({ s: input }, utf8Profile), expected);
 });
 
 test("keys are sorted, not left in insertion order", () => {
@@ -246,4 +268,61 @@ test("CLI exit 3 when every card is valid but the set is incomplete", () => {
 test("CLI reports the pinned key it actually used", () => {
   const r = runCli([join(here, "fixtures", "01-genuine.json")]);
   assert.match(r.out, new RegExp(profile.pinnedPubkeyHex));
+});
+
+// ---------------------------------------------------------------------------
+// DID-keyed cards. Every card published on councilof.ai names its key by `did`
+// and carries no inline `pubkey`. Requiring one made the verifier report
+// UNCHECKABLE MALFORMED_CARD on 102 of 102 genuine cards — a verifier that
+// calls the entire published corpus unverifiable is worse than no verifier.
+// These fixtures are a real published card, fetched from the live site.
+// ---------------------------------------------------------------------------
+
+const didCard = JSON.parse(readFileSync(new URL("./fixtures/07-did-keyed.json", import.meta.url), "utf8"));
+const didProfile = JSON.parse(readFileSync(new URL("../profile/csoai-gspc-1.json", import.meta.url), "utf8"));
+
+test("a DID-keyed card verifies when the profile pins that key id", async () => {
+  const r = await verifyCard(didCard, didProfile);
+  assert.equal(r.state, "VALID", `${r.code}: ${r.reason ?? ""}`);
+});
+
+test("a DID-keyed card whose key id is NOT pinned is UNCHECKABLE, never VALID", async () => {
+  const r = await verifyCard({ ...didCard, did: "did:web:evil.example#k1" }, didProfile);
+  assert.equal(r.state, "UNCHECKABLE");
+  assert.equal(r.code, "KEY_NOT_PINNED");
+});
+
+test("a DID-keyed card with an edited body is INVALID, not UNCHECKABLE", async () => {
+  const r = await verifyCard({ ...didCard, body: { ...didCard.body, accuracy: 0.99 } }, didProfile);
+  assert.equal(r.state, "INVALID");
+  assert.equal(r.code, "ID_MISMATCH");
+});
+
+test("a card naming no key at all is MALFORMED_CARD", async () => {
+  const { did: _drop, ...noKey } = didCard;
+  const r = await verifyCard(noKey, didProfile);
+  assert.equal(r.state, "UNCHECKABLE");
+  assert.equal(r.code, "MALFORMED_CARD");
+});
+
+test("the number policy follows the card's declared rule, not the profile as a whole", async () => {
+  // Two card generations are in the wild. A whole accuracy is `0.0` under the legacy
+  // CPython-literal rule and `0` under the mill's rule. One global policy verifies one
+  // generation and calls the other a forgery — this is the regression that reported
+  // ID_MISMATCH on 14 genuine published cards.
+  const legacy = JSON.parse(readFileSync(new URL("./fixtures/01-genuine.json", import.meta.url), "utf8"));
+  // Must be a card whose accuracy is INTEGRAL: 0.8333 renders identically under both
+  // policies, so a fixture like that cannot tell the two apart and the test would pass
+  // whether or not the dispatch existed.
+  const mill = JSON.parse(readFileSync(new URL("./fixtures/08-mill-integral-accuracy.json", import.meta.url), "utf8"));
+  const prof = JSON.parse(readFileSync(new URL("../profile/csoai-gspc-1.json", import.meta.url), "utf8"));
+
+  assert.equal((await verifyCard(legacy, prof)).state, "VALID", "legacy generation must verify");
+  assert.equal((await verifyCard(mill, prof)).state, "VALID", "mill generation must verify");
+
+  // And the dispatch must be doing the work: strip the per-rule policy and the mill card
+  // must stop verifying rather than quietly passing under the legacy policy.
+  const { ruleProfiles: _drop, ...noDispatch } = prof;
+  assert.notEqual((await verifyCard(mill, noDispatch)).state, "VALID",
+    "without per-rule dispatch the mill card must NOT read VALID — the test would be vacuous");
 });

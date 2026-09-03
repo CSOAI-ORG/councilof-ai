@@ -20,11 +20,11 @@
     "$comment": "JavaScript cannot tell 0 from 0.0. These lists are how the schema tells it. An integral number in an unlisted field is OUT_OF_PROFILE_DOMAIN, not a guess.",
     "floatFields": [
       "accuracy",
-      "ci_low",
       "ci_high",
+      "ci_low",
+      "f1",
       "precision",
-      "recall",
-      "f1"
+      "recall"
     ],
     "floatSuffixes": [
       "_ci_low",
@@ -41,7 +41,8 @@
     "intSuffixes": [
       "_count",
       "_n"
-    ]
+    ],
+    "$comment_accuracy": "`accuracy` is listed under intFields, which classifies INTEGRAL values only \u2014 a non-integral value like 0.8333 never reaches that branch. It means: when accuracy is whole, the signer wrote it WITHOUT a decimal point. Measured across the 102 published cards: 88 carry a decimal point, 9 carry bare `0`, 5 carry bare `1`, and the signer never emits 0.0 or 1.0. Listing it as a float made this verifier render 0.0 and call those 14 genuine cards ID_MISMATCH. The signed bytes are the authority."
   },
   "pinnedKeys": {
     "did:web:csoai.org#site-release-1": "d3783d97e75534654401555642b254f5a2ed9184cddee011779d8fec312afbc8",
@@ -50,6 +51,29 @@
     "did:web:csoai.org#card-attestation-1": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
     "did:web:csoai.org#gspc-board-22axis-2026": "d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c"
   },
-  "ensureAscii": false,
-  "$comment_ensureAscii": "The mill signer canonicalises with ensure_ascii=False (scripts/sign_financial_runs.py). Declaring True was byte-identical for every ASCII card published so far and would have failed the first card carrying an accent."
+  "ensureAscii": true,
+  "$comment_ensureAscii": "The mill signer canonicalises with ensure_ascii=False (scripts/sign_financial_runs.py). Declaring True was byte-identical for every ASCII card published so far and would have failed the first card carrying an accent.",
+  "ruleProfiles": {
+    "sha256(canonical body)": {
+      "$comment": "Mill cards (did-keyed, signed by scripts/sign_financial_runs.py canonical_bytes). Measured across the 102 published: 88 accuracies carry a decimal point, 9 are bare `0`, 5 are bare `1` \u2014 this generation never writes 0.0 or 1.0. It also canonicalises with ensure_ascii=False, unlike the legacy rule.",
+      "ensureAscii": false,
+      "numbers": {
+        "floatFields": [
+          "ci_high",
+          "ci_low",
+          "f1",
+          "precision",
+          "recall"
+        ],
+        "intFields": [
+          "accuracy",
+          "count",
+          "n",
+          "n_cards",
+          "n_cells",
+          "n_items"
+        ]
+      }
+    }
+  }
 }
