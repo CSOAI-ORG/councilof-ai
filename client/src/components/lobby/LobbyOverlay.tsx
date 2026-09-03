@@ -11,7 +11,7 @@ import LobbyVerifyPane from "./LobbyVerifyPane";
 import LobbyCardsPane from "./LobbyCardsPane";
 import LobbyStatePane from "./LobbyStatePane";
 import DashboardArchivePane from "@/components/DashboardArchivePane";
-import DashboardAttestationsPane from "@/components/DashboardAttestationsPane"; (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+import DashboardAttestationsPane from "@/components/DashboardAttestationsPane";
 import LobbyEvidencePane from "./LobbyEvidencePane";
 import LobbyEmbedPane from "./LobbyEmbedPane";
 import LobbyArt50Pane from "./LobbyArt50Pane";
@@ -537,7 +537,7 @@ export default function LobbyOverlay({
                 ) : nativePane && tab.id === "archive" ? (
                   <DashboardArchivePane />
                 ) : nativePane && tab.id === "attestations" ? (
-                  <DashboardAttestationsPane /> (Attestations pane: the one root, witnesses verbatim, in-browser proofs, corrections ledger; docs/LEARN-FROM-EAS.md)
+                  <DashboardAttestationsPane />
                 ) : nativePane && tab.id === "evidence" ? (
                   <LobbyEvidencePane onOpenRoute={openRoute} />
                 ) : nativePane && tab.id === "embed" ? (
