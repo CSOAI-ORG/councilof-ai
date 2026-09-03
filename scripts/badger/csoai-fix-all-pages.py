@@ -1,36 +1,46 @@
-<!doctype html>
+#!/usr/bin/env python3
+"""csoai-fix-all-pages.py — the unified template + fix every page.
+
+Replaces every HTML page's head + body shell with a clean, branded
+template. White background + green accent (#16a34a). Proper nav
+header + footer with logo + nav links. Removes the horse emoji from
+titles. Standardises the layout across all 36 pages.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+PUBLIC = HERE.parent.parent / "public"
+
+# The unified head: SEO, OG, JSON-LD, CSS vars, dark-mode compatible
+HEAD = """<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Blog/index — Council of AI</title>
+<title>{title}</title>
 <meta name="robots" content="index,follow" />
-<meta name="description" content="CSOAI — blog/index on the AI measurement board. Measurement, not certification." />
-<link rel="canonical" href="https://councilof.ai/blog/index" />
-<meta property="og:title" content="Blog/index — Council of AI" />
-<meta property="og:description" content="CSOAI — blog/index on the AI measurement board. Measurement, not certification." />
+<meta name="description" content="{description}" />
+<link rel="canonical" href="{canonical}" />
+<meta property="og:title" content="{title}" />
+<meta property="og:description" content="{description}" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="https://councilof.ai/blog/index" />
+<meta property="og:url" content="{canonical}" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
 <meta property="og:site_name" content="CSOAI Ltd" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Blog/index — Council of AI" />
-<meta name="twitter:description" content="CSOAI — blog/index on the AI measurement board. Measurement, not certification." />
+<meta name="twitter:title" content="{title}" />
+<meta name="twitter:description" content="{description}" />
 <meta name="twitter:image" content="https://councilof.ai/og-default.png" />
 <meta name="theme-color" content="#16a34a" />
 <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "CSOAI \u2014 Council of AI",
-  "url": "https://councilof.ai/blog/index",
-  "description": "CSOAI \u2014 blog/index on the AI measurement board. Measurement, not certification.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "CSOAI Ltd",
-    "url": "https://csoai.org"
-  }
-}
+{jsonld}
 </script>
 <style>
   :root {
@@ -338,7 +348,20 @@
 </style>
 </head>
 <body>
-<header class="site-header">
+{header}
+
+<main>
+{body}
+</main>
+
+{footer}
+
+</body>
+</html>
+"""
+
+# Unified nav header
+HEADER = """<header class="site-header">
   <div class="site-header-inner">
     <a href="/" class="logo">
       <span class="logo-mark">C</span>
@@ -352,25 +375,10 @@
       <a href="/pay" class="nav-cta">Use the board</a>
     </nav>
   </div>
-</header>
+</header>"""
 
-<main>
-<div class="container">
-<h2>Recent posts</h2>
-<p>(Coming soon — first post: <em>Why measurement, not certification</em>)</p>
-<h2>Why a blog</h2>
-<p>The CSOAI doctrine is too important for a tweet thread. The blog is where we explain, in long form, what we mean by <em>anyone can re-check</em>, what we mean by <em>UNCHECKABLE is honest</em>, and what we mean by <em>measurement, not certification</em>.</p>
-<h2>How to subscribe</h2>
-<p>RSS: <a href="/blog.xml" style="color: var(--accent);">/blog.xml</a>. Atom: <a href="/blog.atom" style="color: var(--accent);">/blog.atom</a>. JSON Feed: <a href="/blog.json" style="color: var(--accent);">/blog.json</a>.</p>
-</div>
-
-<footer>
-<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
-<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
-</footer>
-</main>
-
-<footer class="site-footer">
+# Unified footer
+FOOTER = """<footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-col">
       <a href="/" class="logo" style="margin-bottom: 16px;">
@@ -406,7 +414,104 @@
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
     <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
   </div>
-</footer>
+</footer>"""
 
-</body>
-</html>
+
+def fix_page(path: Path, title: str, description: str, canonical_path: str) -> bool:
+    """Fix one HTML page in-place. Returns True if changed."""
+    text = path.read_text()
+    body_match = re.search(r"<body[^>]*>(.*?)</body>", text, re.DOTALL | re.IGNORECASE)
+    if not body_match:
+        return False
+    body_content = body_match.group(1).strip()
+
+    # Strip any existing header/main/footer that conflict
+    body_content = re.sub(r"^\s*<header[^>]*>.*?</header>\s*", "", body_content, flags=re.DOTALL | re.IGNORECASE)
+    body_content = re.sub(r"^\s*<main[^>]*>", "", body_content, flags=re.IGNORECASE)
+    body_content = re.sub(r"</main>\s*$", "", body_content, flags=re.IGNORECASE)
+    body_content = re.sub(r"^\s*<footer[^>]*>.*?</footer>\s*$", "", body_content, flags=re.DOTALL | re.IGNORECASE)
+
+    canonical = f"https://councilof.ai{canonical_path}"
+    jsonld = json.dumps({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "CSOAI — Council of AI",
+        "url": canonical,
+        "description": description,
+        "publisher": {
+            "@type": "Organization",
+            "name": "CSOAI Ltd",
+            "url": "https://csoai.org",
+        },
+    }, indent=2)
+
+    new_html = (
+        HEAD
+        .replace("{title}", title)
+        .replace("{description}", description)
+        .replace("{canonical}", canonical)
+        .replace("{jsonld}", jsonld)
+        .replace("{header}", HEADER)
+        .replace("{body}", body_content)
+        .replace("{footer}", FOOTER)
+    )
+
+    if new_html != text:
+        path.write_text(new_html)
+        return True
+    return False
+
+
+def main():
+    ap = argparse.ArgumentParser(description="Fix all HTML pages with the unified template.")
+    args = ap.parse_args()
+
+    print("================================================================")
+    print("  CSOAI — FIX ALL PAGES (unified template + nav + footer)")
+    print("================================================================")
+    print()
+
+    targets = sorted(list(PUBLIC.glob("*.html")))
+    targets += sorted(list((PUBLIC / "subdomains").glob("*/index.html")))
+
+    print(f"  targets: {len(targets)}")
+    print()
+
+    n_changed = 0
+    n_skipped = 0
+    for path in targets:
+        # Derive title + description from filename
+        slug = path.stem if path.parent == PUBLIC else path.parent.name + "/" + path.stem
+        if slug == "index":
+            title = "Council of AI — check an AI claim, read the GSPC board"
+            description = "Independent AI-governance measurement body. 22 axes, 22 measured. Anyone can re-check."
+        elif slug.startswith("subdomains/"):
+            title = f"{path.parent.name.capitalize()} — Council of AI"
+            description = f"CSOAI {path.parent.name} — the substrate for {path.parent.name} on the AI measurement board."
+        else:
+            title = f"{slug.replace('-', ' ').capitalize()} — Council of AI"
+            description = f"CSOAI — {slug.replace('-', ' ')} on the AI measurement board. Measurement, not certification."
+        # Strip horse emoji from titles
+        title = title.replace("🐴 ", "").replace(" 🐴", "").replace("🐴", "")
+
+        canonical = "/" + slug if not slug.startswith("subdomains/") else f"/subdomains/{path.parent.name}/"
+        if canonical == "/index": canonical = "/"
+
+        changed = fix_page(path, title, description, canonical)
+        if changed:
+            n_changed += 1
+            print(f"  ✓ {slug:<40} (unified template applied)")
+        else:
+            n_skipped += 1
+
+    print()
+    print(f"  changed: {n_changed}")
+    print(f"  skipped: {n_skipped}")
+    print()
+    print(f"  Now every page has the unified nav + footer.")
+    print(f"  Run brand-gate + facts-gate to verify.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
