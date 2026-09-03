@@ -1,0 +1,1232 @@
+{
+  "kind": "csoai.card-root/1",
+  "as_of": "2026-09-03T10:39:18Z",
+  "n_leaves": 113,
+  "merkle_root": "06330987555cba11e74f1753c002bb47d3eb58a1fc311247bf81116f39b633b8",
+  "leaf_rule": "sha256 over canonical JSON (sorted keys, no whitespace, ensure_ascii=False) of the WHOLE signed card — body, id, signature and did — not the body alone. Tree and proof are publish_public_root.merkle_root / merkle_proof, imported not re-implemented.",
+  "anchor_rule": "This document is a commitment, not an anchor. It becomes anchored only when an OpenTimestamps proof over these bytes is upgraded into a Bitcoin block; until then the stamp is a pending request. Read the state from the .ots sidecar, never from the existence of this file.",
+  "proof_rule": "merkle_proof returns sibling digests only, with no side bit, and the tree combines positionally as sha256(left + right). To verify: start from the leaf, and at each step fold sha256(current + sibling) when the running index is even, sha256(sibling + current) when it is odd, halving the index each step. The leaf's `index` is published for exactly this reason.",
+  "not_a_certificate": true,
+  "n_skipped": 93,
+  "skipped": [
+    {
+      "file": "signed-affect-0e870854f6bf.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-2884b6508360.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-642be6281393.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-7d957ac3f808.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-9363ab2fbb19.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-af8ed68993d1.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-bf284fcff7f5.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-cb74a9eb4a88.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-cfd60b18dac0.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-e57e1b7a8d01.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-ebeb35f4cd60.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-affect-f91904d53472.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-1c9e3cd3490a.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-2390bf6e8d50.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-24c38069eaee.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-45e89c122b05.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-5599f72e8d06.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-5a89d3618e2e.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-60154f9e95ae.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-737e13670452.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-864a20a68263.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-8c80af174580.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-b7f35fdde32d.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-art5-saf-fb99c1cb8a7b.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-08c47ae77cdf.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-45d60d83ea2e.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-49ccc57820c0.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-89e1b394950b.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-9ad84305599b.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-9e3b32fc0390.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-ad0ce0fd639c.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-ca48b28e9e77.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-d6410859f2de.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-e2373032db5d.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-cross-re-f326a9d3bd43.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-2a85f50fcc3e.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-301693f8fcaf.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-3d588bc0fcd0.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-644920e057e6.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-68c09a4a3fcd.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-8748176f5808.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-93d326f88d55.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-a922fe3f9d96.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-b7480e3123f4.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-bddb3cf40004.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-fa802892c576.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-detector-ff4d9bbf5a9a.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-governan-0927fa274d10.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-governan-2936695c8191.json",
+      "why": "superseded"
+    },
+    {
+      "file": "signed-governan-2e0f82d28ea5.json",
+      "why": "superseded"
+    }
+  ],
+  "leaves": [
+    {
+      "leaf": "01439f65ac4ff539277f4d29ba5f1356e5ce8b3a28a523b95f9fffab2dd080f5",
+      "card": "signed-art5-saf-a748eb44de57.json",
+      "id": "a748eb44de575980682ec1bff619f3b1f9e4308ec368414c75de877c84a03bb9",
+      "model": "google/gemma-3-4b-it",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 0
+    },
+    {
+      "leaf": "0b170937b4e5cd81fe903c1ecf40de3fe97204faf52b4eded7fb56613d10ac0e",
+      "card": "signed-machiner-d9f70a251f5c.json",
+      "id": "d9f70a251f5cf4e0b1356927d2f07b2c87d95296dc011a0103632f3062439000",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 1
+    },
+    {
+      "leaf": "0e55656581d4f53a390613ebe69feb5bcd0e375cea866f540406efbe3c34608b",
+      "card": "signed-openness-c2ae324cf60a.json",
+      "id": "c2ae324cf60ad96ca3f00a65e055e31b9ee3d007c881acfd061dbb5c12cc24e8",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 2
+    },
+    {
+      "leaf": "10004834429b326ed5dd37f0e2752f5ed45710bcd7d001cb9a0f718b06ca7878",
+      "card": "signed-safety-fcd3c57782bc.json",
+      "id": "fcd3c57782bc84559c9406cc2e0d4e5cbeceae943cb08f2267b574c9da37343c",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 3
+    },
+    {
+      "leaf": "14dc8d88a024a1f07133ecb39589b1e74f3a1623eb8b645ffe11c3b9ee9098e5",
+      "card": "signed-cross-re-7126a3422483.json",
+      "id": "7126a3422483bc7476926803f61ee1619236d0b1787e6c8001de9de05e6f3958",
+      "model": "zai-org/GLM-5.2",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 4
+    },
+    {
+      "leaf": "1d3559b655b40b2f5b817e325fbc690004e175d62620c50e90cc0a3ca3852be2",
+      "card": "signed-governan-a8efaba1fc21.json",
+      "id": "a8efaba1fc21a10e4a7b99169955b6c6a526901ed653cc7b96b4e467c4ebc154",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 5
+    },
+    {
+      "leaf": "1df64be1982584f87003eb2e543ba5a434fd96adbfe0c9d83559d919a21df361",
+      "card": "signed-cross-re-a7b1b156a3e4.json",
+      "id": "a7b1b156a3e474996cb6c5ce725e4c6723ce4368102ab26e984da4b9af71dfda",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 6
+    },
+    {
+      "leaf": "1e0bd7394be82c7d4bb198b980fe3a9f2b3ce60dfdfd8674beb6a38f180e7052",
+      "card": "signed-continui-d1aadf2b0d6c.json",
+      "id": "d1aadf2b0d6c22d9b49d3148a74d77fd4dc927d1cd850bcffc64ecca27171b38",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 7
+    },
+    {
+      "leaf": "1e17c96a14bf1a5e8887d373b3c29dfc5734962050bdeee706860baa7c0c4c44",
+      "card": "signed-swarm-47c01f7eced9.json",
+      "id": "47c01f7eced9743c1ea5e108d701ec77bf37418bc44b3e6aec8a44caf444eee5",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 8
+    },
+    {
+      "leaf": "1ef2bb8286debe17cd97b9cf73eec80d4d7006c2ea92ecc2cccdd6c720f2d2b7",
+      "card": "signed-machiner-4b5de26f7a3f.json",
+      "id": "4b5de26f7a3f2aaa6b9692fc018ea4b6f7ef26cb5412b95935e99448fe76cc33",
+      "model": "google/gemma-3-4b-it",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 9
+    },
+    {
+      "leaf": "22c956a842acf7e5dbaea528d376bfa37e5e84c99e2c4cbd64fef09eb3352e64",
+      "card": "signed-machiner-b5b32d2191b9.json",
+      "id": "b5b32d2191b91d094ee03db389e3529fcdf14f1b55aad6b5399d0745e953cf86",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 10
+    },
+    {
+      "leaf": "2380347613aea797b6f01343a8ec53e642027cad8da46f90c9db24d79ab486ee",
+      "card": "signed-detector-6249b14f20cc.json",
+      "id": "6249b14f20cc806e13e3bec8b98c20a3a1493cd15f26f5433a0bf50a4f11a7a5",
+      "model": "zai-org/GLM-5.2",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 11
+    },
+    {
+      "leaf": "25080059dfdea19e3d5f58769358b3cc1acd711f6296d78430e2bd5c10d0add4",
+      "card": "signed-safety-d25379577af0.json",
+      "id": "d25379577af04554bb69e2cf3d7af2ebd9e6a48845a49a6f5e4dcff053de6dac",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 12
+    },
+    {
+      "leaf": "2521b28acfc3bd1cefd0c573864c2be37c457e2976e911e13afdb16a42597050",
+      "card": "signed-machiner-0d45841deeeb.json",
+      "id": "0d45841deeeb8d3f3b7165f3745b899141d0f698b0da3eae2ec13203e0d2d87c",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 13
+    },
+    {
+      "leaf": "2879bb4e489a1e95f3050f9a81a7e0c7cf75d9ea4d8cf8d3270b7dd139872b38",
+      "card": "signed-conforma-0a8c0aefa7c8.json",
+      "id": "0a8c0aefa7c874229636579a2eef25a3ada1fbeeada41f9e5957c8f02c626145",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 14
+    },
+    {
+      "leaf": "28ca796e6604cb1e9cd98cd66b5edf66e6f10d0da63b94f7f632238e44e7413a",
+      "card": "signed-art5-saf-ea14a6c54087.json",
+      "id": "ea14a6c540873582ad20240f2de1c75aad855661420d0e6fa993d41f5d02941b",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 15
+    },
+    {
+      "leaf": "2c602da2832e53abe3660bf36fcf9f725642434c26b492f403865fae0eb3aef9",
+      "card": "signed-detector-84ed9356ff24.json",
+      "id": "84ed9356ff246fdadeace0d63318de9a5f1b33749cf9a71aa97ef4fe686b40a9",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 16
+    },
+    {
+      "leaf": "2d20e363bb11bc49ab55d67163ef3779f2edd332fbef71d8fbfe2a8d7360d7fc",
+      "card": "signed-governan-d40410449032.json",
+      "id": "d40410449032fa60dc71d2ebcacb40e435010bdbb79198e19f45d35096c35e84",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 17
+    },
+    {
+      "leaf": "307c3d50ff6aadf566a38d667620d2710edbe5a37e3d72659f3cb965bbd4b1e3",
+      "card": "signed-cross-re-2cf347bdca86.json",
+      "id": "2cf347bdca86a57547eb04c4b6423978df4f4637fcf893d90b83c1f29e1560ac",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 18
+    },
+    {
+      "leaf": "30e23edd0ea0fe99c7a26287bfa8ef2c2094f459bb3b9e76dec2fd3991f77ff8",
+      "card": "signed-care-8f68a1c5cf27.json",
+      "id": "8f68a1c5cf276e92b25af784d60891f7e4f0684dbdf09f749714f8c2d4fbda86",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 19
+    },
+    {
+      "leaf": "3349a4aece1de8380b871be83d72f64e648a8c8a3e2f687ade2ad6a9984fa83c",
+      "card": "signed-detector-642f8e2720b7.json",
+      "id": "642f8e2720b760e125f581780e75c37a74374a97b2416a71b57d13636becd138",
+      "model": "google/gemma-3-4b-it",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 20
+    },
+    {
+      "leaf": "3354cbb1ac20ed557f11d3daca66fe72ea1b77b8e0ff23232c794a8913f3d3d2",
+      "card": "signed-provenan-6fef4159d91f.json",
+      "id": "6fef4159d91fcf6c162d7febb081ef06a545603fd17d46796f0988ec39c2f0a2",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 21
+    },
+    {
+      "leaf": "34afbf927080f35a85b0c689635a690f675455e324a0d1cb4797a2bd36812193",
+      "card": "signed-machiner-b29af7d391ee.json",
+      "id": "b29af7d391ee36ee7c951370e7e8276f3a8bc94a5982c99295658475b72fdc4b",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 22
+    },
+    {
+      "leaf": "34edddcea0f268e11003b46e7422a868fe3a3f83365c08c465bc47ecc34ba34b",
+      "card": "signed-swarm-dad7635773ad.json",
+      "id": "dad7635773ad3b3dd037f12c00f350fad77c556b4017bea4f4007093a12cf911",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 23
+    },
+    {
+      "leaf": "35ea32a16f59ef1335d491fb8c3f9e9d25348e7c6def97009817f4c40c3dee74",
+      "card": "signed-continui-ed42afda607e.json",
+      "id": "ed42afda607e72fe5aa5c01c652ce19d0e4175d3f04f138470b94ff7f7570bff",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 24
+    },
+    {
+      "leaf": "3703df917166ff9580248b1d34f68a2824b99087b0bd9db4282ca97e5926806f",
+      "card": "signed-governan-b9fc917251c6.json",
+      "id": "b9fc917251c6db62b3f0e48a72e1c3fdd7b250b9e45d2cd30a6be2bb284e2b4c",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 25
+    },
+    {
+      "leaf": "3b09ff9591a72be4e4bcd104b8b71d47581618817afbc2c378c710e20468afe6",
+      "card": "signed-detector-9388bc6a204f.json",
+      "id": "9388bc6a204feb0711c6b62b29c7e964de458465171d08d56c67db41bd67bc79",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 26
+    },
+    {
+      "leaf": "3c6a4197699343219793018b69a634f850e0f581d8b428f356d883146929797d",
+      "card": "signed-detector-cc4f58daf8d2.json",
+      "id": "cc4f58daf8d2cea5a8860af8dd7b33116450dda21869828449ed0494381c59e0",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 27
+    },
+    {
+      "leaf": "3c74f3e2f7595c371694ca55fa950fb47a66811ed07804e472d3f41346f839da",
+      "card": "signed-detector-da15fcf8ca8c.json",
+      "id": "da15fcf8ca8cbde23581ce450c193d926dcc7c0ac8199ba3d72918e507aba8f3",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 28
+    },
+    {
+      "leaf": "3d32de52a0ced83521952b96537b916aac50fbea59b2ef2f2107034985fe3f07",
+      "card": "signed-cross-re-5a607dcc3925.json",
+      "id": "5a607dcc3925cc99f60f775f330987fd9099ee7773efd015fe6d757319762d04",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 29
+    },
+    {
+      "leaf": "3f554f7d276b26b003b6bc68b9eb4d9ae2da5eeb8143fede5e081f716fd00b8f",
+      "card": "signed-swarm-32a1a7ad5ee8.json",
+      "id": "32a1a7ad5ee82fa56c687cedb2bb49283967e6da5062a5e54e0fd6383751d3b9",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 30
+    },
+    {
+      "leaf": "41287b7d6cb2d6a9b25d451b11406eaf983f91d2eb279a534d88d44bb923eef4",
+      "card": "signed-art5-saf-4556c5a23a1f.json",
+      "id": "4556c5a23a1f5414622051595c132cee1eab9159105612a660815d42f76b5ce0",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 31
+    },
+    {
+      "leaf": "4563ebc73d14f6f4cfd4847a6945e433f0af0c3b6fb700b2ea2ac7a3412b102f",
+      "card": "signed-affect-41bf83eb8c72.json",
+      "id": "41bf83eb8c72c4dedc2b9925ffd89ecbcb48add77e727ca53145858a1bc022fe",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 32
+    },
+    {
+      "leaf": "462e78fc18c6fbdf4c0b7bf76d5b295dcbaf8cdf2a634283192fe3379d89332f",
+      "card": "signed-provenan-a04525a2c975.json",
+      "id": "a04525a2c975be99fcca29058519922115d20995a42b16d4db4e597a32ad64b2",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 33
+    },
+    {
+      "leaf": "47ce84b185c01b25ca1077c524b914989d218e9e98dd4c5b7716153cecb3c674",
+      "card": "signed-care-1902182eaca8.json",
+      "id": "1902182eaca8d4d489c9a9dec53371fed3a302f926a832aff3c2397de3d30fdd",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 34
+    },
+    {
+      "leaf": "4c8b64e7700e709ff9df9112549667cc40ce152416b012c5c120b7c33bc62daf",
+      "card": "signed-machiner-1ef5f902dc5a.json",
+      "id": "1ef5f902dc5a05d97a04edcd96885f196d9c4309ff15f6e74adfa037c2250c20",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 35
+    },
+    {
+      "leaf": "5164536ba087f924041b0c12c45867e139a754a5a9cc1eb4d5c8a1ce804b02ef",
+      "card": "signed-detector-9b73a158f067.json",
+      "id": "9b73a158f067bea6c737c10559009973e4b311b14070d7aa42450e9122a0ab05",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 36
+    },
+    {
+      "leaf": "529fd717a483311c7f4fcecb067db50a7876b636709d21dfc5378a21eab20e1b",
+      "card": "signed-provenan-e827982246ed.json",
+      "id": "e827982246edc6898065e5f2ba7acd3f85f732339582ca2ad8e7ed3e9c9b747d",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 37
+    },
+    {
+      "leaf": "5406d0f7c9ac0cddb062f298a6e520444e6b74ab94c9a2a49f04a837fa3acb7e",
+      "card": "signed-safety-bea6b6e64e5f.json",
+      "id": "bea6b6e64e5fb58163ca6966d07d222a3143ea274435162af3a0e35abfc1e326",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 38
+    },
+    {
+      "leaf": "567281e29a057320756dd451d54a1f37bee6514c562b4c5f5ba1c130422d0634",
+      "card": "signed-cross-re-047e7a524d3d.json",
+      "id": "047e7a524d3dfc8f4bca59ec484ae534d012df3e5db3b3394fbbd981771f1b1a",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 39
+    },
+    {
+      "leaf": "56c1e13852edce33cc38b316bb40d6bbc424ae78c9b4fb016fb0b7a46b4a17ad",
+      "card": "signed-affect-d02373910163.json",
+      "id": "d023739101638739cb857c0719362c1235c59363e421a2cc14025e00276a6d38",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 40
+    },
+    {
+      "leaf": "5a4e146dd836cd76984ebfcfe8ca14fd873ad28ae881b56e970de6bfbe921179",
+      "card": "signed-care-82f1926ee6eb.json",
+      "id": "82f1926ee6eb9db151db0fdfd85228cb2a6247353f0a99c98a877bf86b561add",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 41
+    },
+    {
+      "leaf": "5c2faed680824117a611fe0b3634013d8947d16bef2ad83a75b9978147df5622",
+      "card": "signed-detector-5106efea43cc.json",
+      "id": "5106efea43cc880fe1fa37e9dce00bf0083d75d7b53a55a75b88fc6f33e0e1ca",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 42
+    },
+    {
+      "leaf": "5ec132dabe7fabdd3c307504f16f69fcb9a7b07c5fd204b2b103a4d372bd494c",
+      "card": "signed-machiner-bf2254ebb2aa.json",
+      "id": "bf2254ebb2aa900bbe9802efb5ded5e9bf8e0350ef6138fe1f6af9ded3d71df7",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 43
+    },
+    {
+      "leaf": "64ba1e3bf90fb669ce94e92cffefcbd754137e1ac9814e910fe9db4421ac3f33",
+      "card": "signed-governan-d4af80d67470.json",
+      "id": "d4af80d67470499d52b6f2b53fb9fdcd068621cbb951f410fef139baa2c75e47",
+      "model": "zai-org/GLM-5.2",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 44
+    },
+    {
+      "leaf": "6536c7006ac0d7993153d57d78fab710be9cc67eb80329d652e523611b1e128c",
+      "card": "signed-affect-952ef687c10e.json",
+      "id": "952ef687c10e94d602babf4ca5136f0742a4d7c6e29049717bdea4355517b996",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 45
+    },
+    {
+      "leaf": "68c6dd2152e268ea428c170301e015998ab409bb079be4d717da4c11dd6fd8ff",
+      "card": "signed-care-017f257886a6.json",
+      "id": "017f257886a627c48db882ed0ae65df1b3f1e5435da07189db1eeae367949903",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 46
+    },
+    {
+      "leaf": "6bce07c29de01ba75957813ac02897b8908088d251ae5aa280d172d98dba0e42",
+      "card": "signed-safety-75950967e569.json",
+      "id": "75950967e5692d4b4efc5cbe2f7558e86803ad0ba20853b13a87a35fde78575c",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 47
+    },
+    {
+      "leaf": "6bce548e808e839847ecec3ad017248fa75eaeeefd8b71ee792d013a8a9d600a",
+      "card": "signed-care-ec5b8ce4a2b4.json",
+      "id": "ec5b8ce4a2b48bd3b006eaec8a6d4db9efac7e3e47fc756136f7c76219833e49",
+      "model": "Qwen/Qwen2.5-3B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 48
+    },
+    {
+      "leaf": "6c360379c666d88c79b1899472b07773b0a0836f263322c37fcfcf645ce6e694",
+      "card": "signed-affect-6106c10ccf9e.json",
+      "id": "6106c10ccf9edb7cb0df26d910afe3fdd2e90af140b2ab1cbe5235bcd662cf01",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 49
+    },
+    {
+      "leaf": "6d6b93a534abee3d1f7c33df523325a9e2e68bb07a5e15418e4ea8c0a3a82486",
+      "card": "signed-governan-7fc2fdea9190.json",
+      "id": "7fc2fdea91902b0d4bb4933c75962d115c7af837c5f7189926de368f4c30eaff",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 50
+    },
+    {
+      "leaf": "6dba43ab9bd815a2b3b1f9ae8d164758e87261e6f1c3ed6e28e7a1417ab35b46",
+      "card": "signed-conforma-0afe2be7474e.json",
+      "id": "0afe2be7474e20efe851213b8a724a6afe105441446414159d58f55e4f248ebb",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 51
+    },
+    {
+      "leaf": "6f5ef0ca718b4879c9ffe296fabeade7a5267189e7d67d1374b330a0a3f9fc4e",
+      "card": "signed-openness-f78b4c81ecf3.json",
+      "id": "f78b4c81ecf33990d6db25c2cb16f0461040504f551ce57c6eb4d039457d1be9",
+      "model": "Qwen/Qwen3-0.6B",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 52
+    },
+    {
+      "leaf": "709811bc782acd77d5a947f196dd6b941f1799c296177b92861b6d45221818bf",
+      "card": "signed-affect-71755ea605f3.json",
+      "id": "71755ea605f347d4daf410f15cd6cda87bdc41f8a8b2d1e9b92fde6f3c2f520a",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 53
+    },
+    {
+      "leaf": "74fd4156513529453ccc39c606eaf123df2c60730fb19ea337cf6df126afd529",
+      "card": "signed-provenan-b442cc2d4d77.json",
+      "id": "b442cc2d4d77988711f5799775f1441d4e003c49b911f020a1f67dba7757fc81",
+      "model": "Qwen/Qwen3-0.6B",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 54
+    },
+    {
+      "leaf": "7647cbd39ea27d8e615c88d85aa868de2b967219ad6d4385d42fb429a101dc66",
+      "card": "signed-art5-saf-ce209bb4fffe.json",
+      "id": "ce209bb4fffe19edc6fddca6e32949ca9b774c8b69041c595e1e4ea482674f4d",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 55
+    },
+    {
+      "leaf": "7649d0f7b23bf9ab4f26ff791fee7e5c4e2fbe47cdfa0cb09545d635b095d674",
+      "card": "signed-art5-saf-31453ff4e417.json",
+      "id": "31453ff4e41767824d6c997796aa972acaf6e9421ab40f15386f887ad650f938",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 56
+    },
+    {
+      "leaf": "771f622353f39527961fc8af11ce6c7090dcec6c935688522776f9d074376587",
+      "card": "signed-governan-8c9233d48874.json",
+      "id": "8c9233d48874750d1839269051457b2acb493d4dcd629f3445555be4e56db90b",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 57
+    },
+    {
+      "leaf": "7743266d4dcb6a65814b3ba1433e9f0150a2e4c5ea40d0d2961c5633efcfbb5e",
+      "card": "signed-art5-saf-c492f1d1e47f.json",
+      "id": "c492f1d1e47f503181e44dcc49e5ee997e1491e6347bf25c926398e96b693dba",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 58
+    },
+    {
+      "leaf": "7c4edbadc3584b478ad2327aaf601ece45ce7654279e7f042846da30d4a61e11",
+      "card": "signed-governan-b595ef114358.json",
+      "id": "b595ef1143580cd3ed72881e26d7db58f35fdf6018d87cebcf38219778a75b75",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 59
+    },
+    {
+      "leaf": "7e0b4acb956303143e3681203870bf30e75404fff206be25568a0b3cb5a4f115",
+      "card": "signed-art5-saf-d9073be1d521.json",
+      "id": "d9073be1d52141fec58c439de8a14630ad6e7ba9031844270f536acfced041d5",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 60
+    },
+    {
+      "leaf": "7fe9d6038e7b6f544d4e8675864899002d008af8f3ada823f840aeb39d21a385",
+      "card": "signed-provenan-b55290e9959d.json",
+      "id": "b55290e9959d5a198a71c9fd83e268c674e37f3e299cd2cc01a91facb2915b6b",
+      "model": "Qwen/Qwen2.5-7B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 61
+    },
+    {
+      "leaf": "802b11a6ab42c289c0e70a8333c243e814dc1b3c251c8510a3e9158b95d3e723",
+      "card": "signed-governan-febedddbb37e.json",
+      "id": "febedddbb37e1689407c32923d2497556aef5daae19673822f2afb27f511b707",
+      "model": "Qwen/Qwen3-0.6B",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 62
+    },
+    {
+      "leaf": "822f1198bcb5d2b8cf63b52e86370a47e3e16e63bf9e4e47d63bb0b2768e41d6",
+      "card": "signed-cross-re-1e93241e77ff.json",
+      "id": "1e93241e77ffd6d8c3b0fbafa2b0b9410a9bb0c6ed4ece7062d41a225516e690",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 63
+    },
+    {
+      "leaf": "83a2386b259e019fc9cdd701da6bfdcc1d39c8e773b7e1df61bc43890256d8ca",
+      "card": "signed-affect-e37184166a77.json",
+      "id": "e37184166a7754ecf1552feba50f4165a2daad9267026df93ed15d37891ab62a",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 64
+    },
+    {
+      "leaf": "8dc89fa6b61196e8fb9e647390ce5a7a0bcfe321893fbc819d326ee4dd046431",
+      "card": "signed-art5-saf-0b0ccd337ad8.json",
+      "id": "0b0ccd337ad8cbdcf949e045d8ef924449fddda3d5e98d23602a96d1adfb60e0",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 65
+    },
+    {
+      "leaf": "8de3067f9753f151f5c25ecbec23d419aa0c319fec2c5d1fc05987200936199f",
+      "card": "signed-care-44eddd688a12.json",
+      "id": "44eddd688a125c7b6d4a969c7d67b60319cc3505249b845381a5febec4c5605c",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 66
+    },
+    {
+      "leaf": "92da888944e87b1478bb542809329fc6ca7f6bb0af53cf00d1b4b88a9ff44f67",
+      "card": "signed-art5-saf-6134f779e6f5.json",
+      "id": "6134f779e6f5cd95818594d57f1899326e6ce35a1afab4205d8f9e72ebe26fbd",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 67
+    },
+    {
+      "leaf": "93e44ae790213f834181c44f4a9bade1ec69ab57e7deb815ab7b37576b270387",
+      "card": "signed-safety-7d0410d2a52d.json",
+      "id": "7d0410d2a52d327b922c6709035b09e6e00f57c1c6bc726a969b760c0cba1750",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 68
+    },
+    {
+      "leaf": "93fb2d615d2dc55b9a3ce87fa110261c8ea067be4c43dd5d6fae847c4d3eb2cc",
+      "card": "signed-art5-saf-b837454b1c48.json",
+      "id": "b837454b1c48ad67c6463fd440044d3ca52659aec2ac1e3e5eb30c1b4f2566eb",
+      "model": "zai-org/GLM-5.2",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 69
+    },
+    {
+      "leaf": "97a99e6b4eee84bb8728e488f0a03d6d1a0788cf97f133c453af60b5332acffc",
+      "card": "signed-cross-re-d9445f8db789.json",
+      "id": "d9445f8db789d4cfcf8bc539674af0118f34bda79d0c73f4d39a2ea18b05ab9c",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 70
+    },
+    {
+      "leaf": "9946278c167a7a3da9298bf73a5d18dbc9314dcccd32d2841cf4da2174b1cdce",
+      "card": "signed-affect-34f7d6d815ae.json",
+      "id": "34f7d6d815aec98e76407b8bc8c903c9776e07d81363d7fd59d10468b29058ff",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 71
+    },
+    {
+      "leaf": "9f456d4ae8d78bb7eabe3c54ced58cc3e76177c2f05cc91c3cc674ec6ba50fa4",
+      "card": "signed-cross-re-c9319f09cb6d.json",
+      "id": "c9319f09cb6de9d684744b0df1cd40693ce27313371f60ec4da5fb86d045b9ee",
+      "model": "google/gemma-3-4b-it",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 72
+    },
+    {
+      "leaf": "a0af153629f14eaad2064fb77523f8f75dcdfb458d2b4e2cad1e1fa503197702",
+      "card": "signed-conforma-4f91ddf8d78b.json",
+      "id": "4f91ddf8d78b27022b611651ac74c05932c603c2b328f97e6fffc45e7f4ffce4",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 73
+    },
+    {
+      "leaf": "a0f6e07356ab5fecb48b875296e04f51c69abe5060b81bcf2e4a91be75fea895",
+      "card": "signed-affect-9bfe504e62ac.json",
+      "id": "9bfe504e62ac66d7fc0e5f0d223de6e8e2694e72dc0f3a1edc008a9c658490f9",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 74
+    },
+    {
+      "leaf": "a1088dee17550930edc063350f2931016e19dceb092d03f19fe0b1dfc2bd1c85",
+      "card": "signed-governan-a5acc38d6f01.json",
+      "id": "a5acc38d6f011d2ab2f071e90ba61e3303ea349f3e5b81ef72eaaffbbcf8ec48",
+      "model": "google/gemma-3-4b-it",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 75
+    },
+    {
+      "leaf": "a2c002c948511d17b2b40a997c0efcab9c0d3f3592e06d2da604c7a12ac2b68b",
+      "card": "signed-openness-e63d4e001988.json",
+      "id": "e63d4e0019887e106e5bed1a6d807484e6a2056c8812939b22388cf3a2da1697",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 76
+    },
+    {
+      "leaf": "a33bf4d241b0e0ae3bc94430e4bd5aa34c59cf2136dc02fba3abd280917a195f",
+      "card": "signed-affect-26bae8786472.json",
+      "id": "26bae8786472a1f5ec374b0d5324fdb480c903146f2b5252060bf604d6e3508c",
+      "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 77
+    },
+    {
+      "leaf": "a5f776dcfde69b04fad481ef445209431d45a79a2dfd5280b46218e0af89686a",
+      "card": "signed-art5-saf-c7d69d15534f.json",
+      "id": "c7d69d15534f4c09a60ed07dfb5649f8afe3900f26b0f7a19e59a9dcbf886c3b",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 78
+    },
+    {
+      "leaf": "a97fdc96a0bf7084c60663228d574aa32426de2541a0fe7412f2986d0a028526",
+      "card": "signed-governan-392543eec0ca.json",
+      "id": "392543eec0ca1cc5909326b3ce99e36f27fb43d226e082af8572bf1031bd9e01",
+      "model": "Qwen/Qwen3-8B",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 79
+    },
+    {
+      "leaf": "a9a85a21d0eb3e8b3031b5bbd5ec39e069a9b5abc7eebe5b5318d87b5f3513d8",
+      "card": "signed-safety-02444bfb68c7.json",
+      "id": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7",
+      "model": "zai-org/GLM-5.2",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 80
+    },
+    {
+      "leaf": "ab8b512f284c3c0404af6815deebd2d5b1cb9769811f15fbc5f9e32fe509196a",
+      "card": "signed-machiner-6bc32fb700d5.json",
+      "id": "6bc32fb700d5e17ec408db8c05686aab7e9042e29b852625568bdc1786656a47",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 81
+    },
+    {
+      "leaf": "ae82a4045eff9264b62ead69e4b1f76b86a570837a3eb171254332c8a98cd78a",
+      "card": "signed-governan-1f668d16ce1b.json",
+      "id": "1f668d16ce1b3ffc13517493c85a15a67e036cccdaad609be544b442fa857c78",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 82
+    },
+    {
+      "leaf": "b44e285e119cbf83b6cbbca49e621871586d9f263ef33ac100d494a30f927ebb",
+      "card": "signed-safety-6f0ae7d9ab11.json",
+      "id": "6f0ae7d9ab11fa33481304da6a80efced3d0c037fa9e539df80806a43fa61b05",
+      "model": "google/gemma-3-4b-it",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 83
+    },
+    {
+      "leaf": "b4565030c144ced878f19fb75959819f12fea9e036d426d9816a42e299f98810",
+      "card": "signed-openness-9dc2727911a5.json",
+      "id": "9dc2727911a514ecd706c74151167d5948eabe8f92b400997644ae2c989d5b68",
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 84
+    },
+    {
+      "leaf": "bb2dc342ba5525980f0b17a6f86de6859e5c9893f51ca9a608f617bb6e2c3ef3",
+      "card": "signed-machiner-40fbabe1f8b6.json",
+      "id": "40fbabe1f8b6021d53dd0338fd0f5ed5ddb75693523fdd185a3e94b8dc5526da",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 85
+    },
+    {
+      "leaf": "bd575b165c3c054e3dabb72aa924c330cf4b77c31ccc4b6e3fb6ab49a6a54ba8",
+      "card": "signed-governan-dce46b17b6f9.json",
+      "id": "dce46b17b6f9a4a72ab241096183d19f4529d5efc010d0657fe53696c4f9ac9b",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 86
+    },
+    {
+      "leaf": "bfbf0951bec69ac6e51856e1a8baf6f5cf4f0942867648f6576661cdadb95625",
+      "card": "signed-cross-re-2562b1b87ae8.json",
+      "id": "2562b1b87ae891920118650ae1878f9a85f5ee02629c409366fc22368e3ac61a",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 87
+    },
+    {
+      "leaf": "c75fa20e2d6f3761210bd659e8e907cebdd5ab51496919f87bde6e43f01d8485",
+      "card": "signed-machiner-cdd0629fa04f.json",
+      "id": "cdd0629fa04fc7069be8959287d78eaaa45486536b36256f13fb9e34c82ae4c2",
+      "model": "zai-org/GLM-5.2",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 88
+    },
+    {
+      "leaf": "c7dbe8ae8596a49116f127ef137bdde6fd77cce145c548ef203151bdf6840f74",
+      "card": "signed-affect-e328732b0e25.json",
+      "id": "e328732b0e256cddcb738646c2787be9bd060bb4904d6f36b147b1228a4c1d50",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 89
+    },
+    {
+      "leaf": "c87cd5c66b0d39a8fc227d280f64fc482df07d0c0fe83f6ecb4f637ddb280fc6",
+      "card": "signed-detector-1ee7ff9be417.json",
+      "id": "1ee7ff9be417654aef2568260df441e8bbc0be6e40fd06bd8bf35eab6fe54c89",
+      "model": "Qwen/Qwen3-4B-Instruct-2507",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 90
+    },
+    {
+      "leaf": "c8d911fa511dd0baf4fda12b912d8159d60571710867c3fd427d64288621dbdc",
+      "card": "signed-art5-saf-2bf19fdca33d.json",
+      "id": "2bf19fdca33d6454a605267043a46ea666951c34a03bddf465d8b9115e92adb3",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 91
+    },
+    {
+      "leaf": "ca9187fcf5b2fec074d6c75737f9fe41c574d81aa1306412321202843e4f3220",
+      "card": "signed-safety-63c2b2eae815.json",
+      "id": "63c2b2eae815087ba24b0104306d22907b0581b218f53777bc4952792aaedb54",
+      "model": "Qwen/Qwen3.5-122B-A10B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 92
+    },
+    {
+      "leaf": "cb90f6b6724076f87d58a444bdc0f110fa30b331cb3c37a64c8fd118d65f047f",
+      "card": "signed-governan-082e381d4a30.json",
+      "id": "082e381d4a304b9375000f37810acf6f03b3249961d4f8c1201a1d8321d01256",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 93
+    },
+    {
+      "leaf": "cefb607a107c727769979ef78f63a30d4eff9f887460b25752461c6118249025",
+      "card": "signed-governan-b6b42c527e75.json",
+      "id": "b6b42c527e759ccf6b2d3aa9158ba8642eef33e3d73edf4e19f33a8d1a0f2502",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 94
+    },
+    {
+      "leaf": "d038ea5a95ac1b23ba109ec7509ce9ee85e0c4e2ca20446766b90a85c4278787",
+      "card": "signed-governan-6fb85b02cb71.json",
+      "id": "6fb85b02cb715a22530a00836680a32f6b942e26959934fac8eb74edc9a12c0c",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 95
+    },
+    {
+      "leaf": "d1dd2437317e09f4226fc8f1e6219445b074e947d3c198bb0a718093ad8340cf",
+      "card": "signed-machiner-6c4834e77f2c.json",
+      "id": "6c4834e77f2c10ef68712936fa493263b609259cbed14d1cdb6569f8de734663",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 96
+    },
+    {
+      "leaf": "d2d2da71f9bb195be6c49a424a01f8246056f573cce894aad2bed48dac09c9fe",
+      "card": "signed-safety-09b2a588f826.json",
+      "id": "09b2a588f826b40382f6829575b99cd78c53db70947235bdf08630e9aa198334",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 97
+    },
+    {
+      "leaf": "d51b904b4698b98fd0e2074ddd5cb171327e8f215af76e117bc2c2e93ab06f57",
+      "card": "signed-cross-re-53a4c9e59a3a.json",
+      "id": "53a4c9e59a3ae68a66f995b6cbe4841f896e055f934a5691ba2d16a2c889f765",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 98
+    },
+    {
+      "leaf": "d5703fa33f5f19540e40de5b6ef058be9cf010013e4baa9eaafcd1683720adb0",
+      "card": "signed-governan-1fa804fe74c8.json",
+      "id": "1fa804fe74c876bc178718df53a04aac1380ed821c2abbc38cf32c3ec1c14861",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 99
+    },
+    {
+      "leaf": "d81de061a4f44587d817710ff38aeaff4c2b92e0fcaa822a09b766e5a4f9f2bb",
+      "card": "signed-detector-972e3f7dec04.json",
+      "id": "972e3f7dec04884bd6a97db4524d4285258ffc484dc807aa0ed4390abc9eec4b",
+      "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 100
+    },
+    {
+      "leaf": "d8ad6bfabc6f14c8e8e31b50a065406094d54f72e0397c2d8c56217bef129fa8",
+      "card": "signed-machiner-f7f4246f3690.json",
+      "id": "f7f4246f3690199ed795d9b96bd16b3ebe85482b8595bcd84c96dfa6e02805d5",
+      "model": "meta-llama/Llama-3.1-8B-Instruct",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 101
+    },
+    {
+      "leaf": "d8cdc0912fba531516577c73e912fa39fae9036a662fc22a8a2c5cb95fd07c5d",
+      "card": "signed-continui-047c55e407b9.json",
+      "id": "047c55e407b9975a6faef6cec75f1e17dd016083d557430a3df84082bfadeda4",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 102
+    },
+    {
+      "leaf": "d93810e4a975bfab2c9ff21b2dd8a3df50e1159139786f358755030e00a9f81c",
+      "card": "signed-affect-849ca377e4df.json",
+      "id": "849ca377e4dfd58a92101d3322820dcb4bd4155835feafada82c55b8e007cc4d",
+      "model": "google/gemma-3-4b-it",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 103
+    },
+    {
+      "leaf": "dd84bed2d56d9ba81b291fece3f6901556c983872f8a051bef4a4fccb3383117",
+      "card": "signed-safety-70e6a7b78e2e.json",
+      "id": "70e6a7b78e2ed68c0ec0ab9a42154afb08e419a969d15beeb0d52c303868bb79",
+      "model": "deepseek-ai/DeepSeek-V4-Flash",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 104
+    },
+    {
+      "leaf": "ec0cc57632fc7656fafd2a83ac4e379182ca3676796f843f5b67d7c21786a693",
+      "card": "signed-provenan-f7441087a0c4.json",
+      "id": "f7441087a0c4041667e52079aa3301a619f79767a8312b14b5b5f9060005cdbf",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 105
+    },
+    {
+      "leaf": "ece99d39b39e6ce033eedfea21dfd740a9b34059b2e622010bc1eab02405a01e",
+      "card": "signed-care-180708df180d.json",
+      "id": "180708df180d0caa50aec6629276b02dfba4892dd4a5ef81c695d255366c0cde",
+      "model": "Qwen/Qwen3-0.6B",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 106
+    },
+    {
+      "leaf": "f14ed81502a6483171459febe42c5ddcc3f96ddc92568eda141d1048cc36fc5b",
+      "card": "signed-safety-e09482e812ad.json",
+      "id": "e09482e812ad2f323a102ec6c99f1b349f4f0d1a065e8b3cd1e7d2daac549847",
+      "model": "deepseek-ai/DeepSeek-R1",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 107
+    },
+    {
+      "leaf": "f1ebdd80826a53a6a93705d0d7d8e00361c87013856b5e666120436dcabbce53",
+      "card": "signed-detector-1bc36a1a99ec.json",
+      "id": "1bc36a1a99ec2016f199b86df63039146998e74a53bf1e0c1c89fc27c890ab03",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 108
+    },
+    {
+      "leaf": "f55ccef7067a6f3dbdf72d8f67701cb9d8f5dcf538f77b93539724cfe26b71c2",
+      "card": "signed-safety-e92be5744540.json",
+      "id": "e92be5744540071fdc2c46a4be4a918f944ca68bd459689045868366fa456543",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 109
+    },
+    {
+      "leaf": "fc19c085084eebcf59be60610d9a4f2c52795b29b8382afe46e4f3ebc01d8678",
+      "card": "signed-cross-re-14bc4dd4cc8b.json",
+      "id": "14bc4dd4cc8be024974d64db022346ff291cf02f1cd0844ec78481a76dc8505c",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 110
+    },
+    {
+      "leaf": "fd1ac9e20f95f11c4471df6e823faba128fb5d89430e8e068d574762a6c71e24",
+      "card": "signed-affect-39acd9257e52.json",
+      "id": "39acd9257e52ddaae062ab77c7a28d7c4f3883b1a0b8d220b501c2989261b136",
+      "model": "zai-org/GLM-5.2",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 111
+    },
+    {
+      "leaf": "fe1c3e0cc4469f039f41507beb34efa22f8d4c429ab023e050682b5941bbd092",
+      "card": "signed-detector-4a530569f9e6.json",
+      "id": "4a530569f9e62f3caa466ecab0d6ec6df3cf9745de54640a60e20ce5fc8f8f1a",
+      "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 112
+    }
+  ]
+}
