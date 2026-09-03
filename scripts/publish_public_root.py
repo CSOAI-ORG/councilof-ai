@@ -298,13 +298,34 @@ def sign_payload(payload: dict, key) -> str:
     raise RuntimeError("no PKCS8 and OIDC board-sign unavailable")
 
 
-def make_card(leaf: dict, sig: str | None) -> dict:
+def sign_card(card: dict, key) -> str:
+    """Sign the SAME bytes the leaf digest covers.
+
+    Signing leaf["payload"] (as this did before 2026-09-03) left `subject` and
+    `source_urls` outside the signature as well as outside the merkle tree — so
+    the claim text and the evidence link were attested by nothing. payload_of()
+    excludes sig_ed25519, so attaching the signature afterwards does not disturb
+    either the preimage or card["sha256"].
+    """
+    return sign_payload(payload_of(card), key)
+
+
+def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dict:
+    """Build a card. `will_sign` lets the caller state that a signature is coming.
+
+    The signature is produced OVER this card (see sign_card), so the card must be
+    finished before it can be signed. Passing will_sign=True keeps the
+    NO_LAPTOP_SIGN tag off a card we are about to sign, without ever claiming a
+    signature that does not arrive — the caller rebuilds with will_sign=False if
+    signing fails.
+    """
     surface = leaf["surface"]
     if surface not in SURFACES:
         raise ValueError(f"unknown surface {surface}")
     payload = leaf["payload"]
     missing = list(leaf.get("unmeasured") or [])
-    if sig is None:
+    signed = (sig is not None) if will_sign is None else will_sign
+    if not signed:
         tag = "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
         if not any("sig_ed25519" in x for x in missing):
             missing.append(tag)
@@ -312,6 +333,7 @@ def make_card(leaf: dict, sig: str | None) -> dict:
         "as_of": leaf["as_of"] or now_iso(),
         "did": DID,
         "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+        "sig_covers": "whole-card-except-sha256-and-sig_ed25519",
         "payload": payload,
         "schema": CARD_SCHEMA,
         "sha256": None,
@@ -364,9 +386,10 @@ def validate_committed(committed: dict) -> None:
         card = wrapped.get("card") or wrapped
         if card.get("sha256") != sha:
             raise SystemExit(f"sha mismatch in {path}")
-        got = payload_sha256(card["payload"])
-        if got != sha:
-            raise SystemExit(f"payload sha256\u2260id in {path}: {got}")
+        # v1 leaves cover the whole card; v0 leaves already in a published root
+        # cover the payload only. Both must stay checkable.
+        if sha not in (card_sha256(card), payload_sha256(card["payload"])):
+            raise SystemExit(f"leaf digest\u2260id in {path}: {sha}")
         if len(canonical_bytes(card["payload"])) > PAYLOAD_CAP:
             raise SystemExit(f"payload cap in {path}")
     got_m = merkle_root(shas)
@@ -503,25 +526,32 @@ def main() -> int:
 
     cards: list[dict] = []
     new_unsigned: list[str] = []
+    legacy_digests: list[str] = []
     for leaf in leaves:
-        digest = payload_sha256(leaf["payload"])
-        is_new = digest not in LAST_UNSIGNED_SET
+        # The 07:38Z unsigned snapshot is keyed by the v0 payload digest, so
+        # membership in it must still be tested with the v0 digest. It is an
+        # identity for that historical set only — never the leaf.
+        legacy_digest = payload_sha256(leaf["payload"])
+        legacy_digests.append(legacy_digest)
+        is_new = legacy_digest not in LAST_UNSIGNED_SET
+        will_sign = is_new and have_key
+
+        card = make_card(leaf, None, will_sign=will_sign)
         sig = None
-        if is_new:
-            if not have_key:
-                new_unsigned.append(digest)
-            else:
-                try:
-                    sig = sign_payload(leaf["payload"], key)
-                except Exception as e:
-                    print(f"sign failed: {type(e).__name__}", file=sys.stderr)
-                    new_unsigned.append(digest)
-        card = make_card(leaf, sig)
-        if card["sha256"] != digest:
+        if will_sign:
+            try:
+                sig = sign_card(card, key)
+            except Exception as e:
+                print(f"sign failed: {type(e).__name__}", file=sys.stderr)
+                # rebuild so the card declares NO_LAPTOP_SIGN rather than implying a sig
+                card = make_card(leaf, None, will_sign=False)
+        card["sig_ed25519"] = sig
+        # attaching the signature must not move the leaf: sig_ed25519 is excluded
+        if card["sha256"] != card_sha256(card):
             raise SystemExit("sha256=id invariant broken")
         if is_new and not card["sig_ed25519"]:
-            if digest not in new_unsigned:
-                new_unsigned.append(digest)
+            if card["sha256"] not in new_unsigned:
+                new_unsigned.append(card["sha256"])
         cards.append(card)
 
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
@@ -549,13 +579,15 @@ def main() -> int:
                 "n": 16,
                 "merkle": basket_hex,
                 "leaf_sha256": [c["sha256"] for c in asset_cards],
-                "note": "Merkle over the locked 16 xrpl.asset.state payload ids. Represented TVL is separate. Not a grade.",
+                "note": "Merkle over the locked 16 xrpl.asset.state card ids (whole-card digests). Represented TVL is separate. Not a grade.",
             },
             "unmeasured": [],
             "tags": ["framework:xrpl", "coverage:locked-16"],
         }
-        sig = sign_payload(basket_leaf["payload"], key)
-        basket_card = make_card(basket_leaf, sig)
+        basket_card = make_card(basket_leaf, None, will_sign=True)
+        basket_card["sig_ed25519"] = sign_card(basket_card, key)
+        if basket_card["sha256"] != card_sha256(basket_card):
+            raise SystemExit("basket sha256=id invariant broken")
         cards = asset_cards + [basket_card] + [c for c in cards if c["surface"] != "xrpl.asset.state"]
 
     if new_unsigned:
@@ -706,7 +738,9 @@ def main() -> int:
                 "card_count": len(shas),
                 "merkle_root": root_merkle,
                 "xrpl_basket_merkle": basket_hex,
-                "new_vs_unsigned_set": sum(1 for s in shas if s not in LAST_UNSIGNED_SET),
+                "new_vs_unsigned_set": sum(
+                    1 for d in legacy_digests if d not in LAST_UNSIGNED_SET
+                ),
                 "surfaces": {
                     s: sum(1 for c in cards if c["surface"] == s)
                     for s in sorted({c["surface"] for c in cards})
