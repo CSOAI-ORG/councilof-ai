@@ -5,7 +5,10 @@
  * x402 already names the charge: assembly. The missing piece is custody
  * (payTo), not a new token, not a mined coin, not a fused SOV grade.
  *
- * Live 2026-08-30: x402 card has no payTo. pack.councilof.ai/v1/pack/assemble
+ * Was true 2026-08-30, NOT NOW: the x402 card had no payTo and pointed at
+ * pack.councilof.ai/v1/pack/assemble. Live today: /.well-known/x402.json is
+ * csoai.x402/0.2, mode challenge-only, payTo configured, resources on councilof.ai.
+ * pack.councilof.ai still serves the old mock and is owner-gated to retire.
  * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
  * 0.1.0. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the

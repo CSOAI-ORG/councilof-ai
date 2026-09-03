@@ -1,24 +1,43 @@
 {
-  "schema": "csoai.x402-discovery-fact/0.1",
-  "kind": "FACT",
-  "as_of": "2026-09-01T09:55:00Z",
-  "method": "keyless HTTPS GET",
-  "reads": [
-    {
-      "url": "https://www.x402.org/x402/discovery",
-      "http": 404,
-      "note": "301 to x402.org/x402/discovery then 404. Not a listing."
-    },
-    {
-      "url": "https://councilof.ai/.well-known/x402.json",
-      "http": 200,
-      "schema": "csoai.x402/0.1",
-      "mode": "mock",
-      "resource": "https://pack.councilof.ai/v1/pack/assemble",
-      "note": "Our price card. mode=mock. Not a Bazaar catalog row. Not a certificate. Not pay-to-pass."
-    }
-  ],
-  "invented_listing": false,
-  "not": ["certificate", "SaaS checkout", "filled GSPC cell"],
-  "verify": "https://councilof.ai/gspc-verify"
+ "schema": "csoai.x402-discovery-fact/0.1",
+ "kind": "FACT",
+ "as_of": "2026-09-01T09:55:00Z",
+ "method": "keyless HTTPS GET",
+ "reads": [
+  {
+   "url": "https://www.x402.org/x402/discovery",
+   "http": 404,
+   "note": "301 to x402.org/x402/discovery then 404. Not a listing."
+  },
+  {
+   "url": "https://councilof.ai/.well-known/x402.json",
+   "http": 200,
+   "schema": "csoai.x402/0.1",
+   "mode": "mock",
+   "resource": "https://pack.councilof.ai/v1/pack/assemble",
+   "note": "Our price card. mode=mock. Not a Bazaar catalog row. Not a certificate. Not pay-to-pass."
+  }
+ ],
+ "invented_listing": false,
+ "not": [
+  "certificate",
+  "SaaS checkout",
+  "filled GSPC cell"
+ ],
+ "verify": "https://councilof.ai/gspc-verify",
+ "superseded_note": "SUPERSEDED 2026-09-03. The reads below were accurate at the as_of above and are left UNEDITED. They are no longer the live state: GET https://councilof.ai/.well-known/x402.json now returns schema csoai.x402/0.2 with mode challenge-only, and its resources are councilof.ai/api/* endpoints. It no longer references pack.councilof.ai at all. A dated FACT records what a keyless GET returned at a moment; it is superseded, never rewritten.",
+ "superseded_on": "2026-09-03",
+ "live_now": {
+  "url": "https://councilof.ai/.well-known/x402.json",
+  "schema": "csoai.x402/0.2",
+  "mode": "challenge-only",
+  "note": "challenge-only means a complete 402 is emitted but no facilitator is provisioned, so nothing can settle and nothing is charged."
+ },
+ "leftover": {
+  "host": "pack.councilof.ai",
+  "state": "STILL SERVING THE OLD MOCK",
+  "observed": "resource /v1/pack/assemble, network 'base' (pre-CAIP-2 v1 dialect), mode mock",
+  "risk": "an agent that discovers this host follows a door that cannot settle and is not advertised by the live manifest",
+  "owner_action": "retire the subdomain or 301 it to https://councilof.ai/api/x402 \u2014 it is a separate Cloudflare deployment, not served from this repo"
+ }
 }
