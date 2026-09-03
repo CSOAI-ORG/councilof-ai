@@ -73,7 +73,12 @@ const EXTRA_LABELS: Record<string, string> = {
 };
 
 export function resolvePaneId(id: string): string {
-  return ALIASES[id] ?? id;
+  // Master converged without a tab-id alias map (the 22 LOBBY_TABS ids are
+  // direct pane ids — see the PANES constant). The earlier ALIASES map was
+  // removed during the SOV3→Council / shell convergence; this function
+  // remains so that callers (DashboardLayout, the test) can still resolve an
+  // incoming id without a runtime ReferenceError on a stale build.
+  return id;
 }
 
 export function hasPane(id: string): boolean {
