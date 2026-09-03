@@ -67,9 +67,9 @@
 # had in fact been served. These files are cited in IETF Last Call mail so that reviewers can
 # read the minter and recompute the digests themselves; one that downloads instead of
 # rendering reads as an empty publication, which is worse than no citation at all.
-# Both patterns are listed because the splat form is what matches nested directories.
+# One rule only. Listing both a splat and the exact path made Cloudflare Pages apply BOTH,
+# and the header shipped as `text/plain; charset=utf-8, text/plain; charset=utf-8` — a
+# duplicated value that a strict parser is entitled to reject. The splat matches nested
+# directories on its own, so the exact-path line was redundant as well as harmful.
 /interop/*.py
-  Content-Type: text/plain; charset=utf-8
-
-/interop/scrapi-ccf/mint_data_hash_vector.py
   Content-Type: text/plain; charset=utf-8
