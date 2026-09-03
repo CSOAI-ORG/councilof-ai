@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pay with MetaMask — CSOAI x402 paid attestations</title>
+<meta name="description" content="Pay with USDC on Base via MetaMask. The board and verification stay free. Issuance, evidence bundles, and proof feeds are priced per artefact. No Stripe. No accounts. No API keys." />
+<meta property="og:title" content="Pay with MetaMask — CSOAI x402 paid attestations" />
+<meta property="og:description" content="Pay with USDC on Base via MetaMask. The board and verification stay free. Issuance, evidence bundles, and proof feeds are priced per artefact." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/pay" />
+<link rel="canonical" href="https://councilof.ai/pay" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "CSOAI x402 paid attestations",
+  "description": "Pay with USDC on Base via MetaMask. The board and verification stay free. Issuance, evidence bundles, and proof feeds are priced per artefact.",
+  "offers": [
+    { "@type": "Offer", "name": "Issuance (per-axis attestation)", "price": "0.50", "priceCurrency": "USDC" },
+    { "@type": "Offer", "name": "Evidence bundle", "price": "1.00", "priceCurrency": "USDC" },
+    { "@type": "Offer", "name": "Eunomia data feed", "price": "2.00", "priceCurrency": "USDC" },
+    { "@type": "Offer", "name": "Proof bundle", "price": "1.50", "priceCurrency": "USDC" },
+    { "@type": "Offer", "name": "Custom audit", "price": "10.00", "priceCurrency": "USDC" }
+  ]
+}
+</script>
+<style>
+  :root { --accent: #2563eb; --bg: #0a0a0a; --fg: #fafafa; --muted: #a3a3a3; --card: #171717; --border: #262626; }
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 48px 24px; max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 48px; line-height: 1.1; margin: 0 0 16px; font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: 24px; margin: 48px 0 16px; font-weight: 800; letter-spacing: -0.01em; }
+  p { font-size: 17px; line-height: 1.6; color: var(--muted); }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 96px; }
+  .lid { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 32px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+  .price { font-size: 32px; font-weight: 900; color: var(--fg); margin: 0; }
+  .price-currency { font-size: 14px; color: var(--muted); font-weight: 500; }
+  .card-name { font-size: 14px; font-weight: 600; color: var(--accent); margin: 0 0 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-desc { font-size: 14px; color: var(--muted); margin: 12px 0 0; line-height: 1.5; }
+  .code { background: #000; border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; font-family: ui-monospace, monospace; font-size: 13px; color: var(--fg); overflow-x: auto; margin: 16px 0; }
+  .cta { display: inline-block; background: var(--accent); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; margin-top: 16px; }
+  .cta:hover { background: #1d4ed8; }
+  .meta { display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin-top: 24px; font-size: 14px; }
+  .meta-key { color: var(--muted); font-weight: 500; }
+  .meta-val { color: var(--fg); font-family: ui-monospace, monospace; font-size: 13px; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 48px 0; }
+  footer { padding: 48px 24px; max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="lid">5 paid resources · USDC on Base · MetaMask</span>
+  <h1>Pay with MetaMask.</h1>
+  <p>The board and verification stay free. Issuance, evidence bundles, and proof feeds are priced per artefact. No Stripe. No accounts. No API keys.</p>
+</header>
+
+<div class="container">
+
+<h2>5 priced resources</h2>
+<p>Every receipt is signed under <code>did:web:csoai.org#card-attestation-1</code> and verifiable at <a href="https://councilof.ai/gspc-verify" style="color: var(--accent);">/gspc-verify</a>.</p>
+
+<div class="grid">
+  <div class="card">
+    <p class="card-name">Issuance</p>
+    <p class="price">$0.50 <span class="price-currency">USDC</span></p>
+    <p class="card-desc">Pay for your model, agent, or asset to be measured. Signed card back. Metered per run. Never sell a grade.</p>
+  </div>
+  <div class="card">
+    <p class="card-name">Evidence bundle</p>
+    <p class="price">$1.00 <span class="price-currency">USDC</span></p>
+    <p class="card-desc">A pack of cards assembled for a specific obligation (EU AI Act Article, NIST control, OWASP LLM Top 10 category).</p>
+  </div>
+  <div class="card">
+    <p class="card-name">Eunomia data feed</p>
+    <p class="price">$2.00 <span class="price-currency">USDC</span></p>
+    <p class="card-desc">Live deltas feed for compliance teams. Same data as the free corrections ledger, but assembled into a single signed bundle.</p>
+  </div>
+  <div class="card">
+    <p class="card-name">Proof bundle</p>
+    <p class="price">$1.50 <span class="price-currency">USDC</span></p>
+    <p class="card-desc">Inclusion proof + bulk history for a single card. Regulator-style query without an account.</p>
+  </div>
+  <div class="card">
+    <p class="card-name">Custom audit</p>
+    <p class="price">$10.00 <span class="price-currency">USDC</span></p>
+    <p class="card-desc">A scoped measurement run against a specific obligation. Returns a 3KB signed card and a PDF evidence pack.</p>
+  </div>
+</div>
+
+<h2>How it works</h2>
+<ol style="color: var(--muted); line-height: 1.8; font-size: 16px;">
+  <li>An agent (or you) hits a priced endpoint.</li>
+  <li>The server returns HTTP 402 with a USDC payment challenge (EIP-3009 transferWithAuthorization).</li>
+  <li>MetaMask signs the authorization on Base.</li>
+  <li>The <a href="https://councilof.ai/.well-known/x402.json" style="color: var(--accent);">open facilitator</a> submits the transaction, the server grants the priced artefact.</li>
+  <li>Every receipt is signed under did:web:csoai.org#card-attestation-1 and verifiable forever.</li>
+</ol>
+
+<h2>Try it now</h2>
+<div class="code"><span style="color: var(--muted);"># 1. Get the discovery doc</span>
+curl https://councilof.ai/.well-known/x402.json
+
+<span style="color: var(--muted);"># 2. Hit a priced endpoint (returns HTTP 402 with payment challenge)</span>
+curl -i https://councilof.ai/api/request-attestation?subject=gpt-4\&axis=jail
+
+<span style="color: var(--muted);"># 3. Sign the EIP-3009 authorization with MetaMask</span>
+<span style="color: var(--muted);"># 4. Submit via the open facilitator</span>
+python3 scripts/badger/csoai-open-facilitator.py --settle payment.json</div>
+
+<a href="https://metamask.io" class="cta">Open MetaMask →</a>
+
+<h2>The receipt</h2>
+<p>Every paid artefact returns a JSON receipt with the EIP-3009 payment hash, the resource, the network, the amount, and the CSOAI Ed25519 seal. The receipt is independent of the artefact — you can verify it 5 years from now without contacting us.</p>
+
+<div class="meta">
+  <span class="meta-key">Network</span><span class="meta-val">eip155:8453 (Base)</span>
+  <span class="meta-key">Asset</span><span class="meta-val">USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)</span>
+  <span class="meta-key">payTo</span><span class="meta-val">0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31</span>
+  <span class="meta-key">Standard</span><span class="meta-val">EIP-3009 transferWithAuthorization</span>
+  <span class="meta-key">Receipt seal</span><span class="meta-val">did:web:csoai.org#card-attestation-1</span>
+  <span class="meta-key">Verify</span><span class="meta-val">https://councilof.ai/gspc-verify</span>
+  <span class="meta-key">Discovery</span><span class="meta-val">https://councilof.ai/.well-known/x402.json</span>
+</div>
+
+<hr>
+
+<h2>What stays free</h2>
+<p>The board (<a href="/api/gspc" style="color: var(--accent);">/api/gspc</a>), the root (<a href="/root.json" style="color: var(--accent);">/root.json</a>), the corrections ledger (<a href="/api/corrections" style="color: var(--accent);">/api/corrections</a>), the MCP door (<a href="/mcp" style="color: var(--accent);">/mcp</a>), the A2A card (<a href="/.well-known/agent-card.json" style="color: var(--accent);">/.well-known/agent-card.json</a>), and the verifier (<a href="/gspc-verify" style="color: var(--accent);">/gspc-verify</a>) all stay free forever. We never sell a grade, a certificate, or a rank. The lid phrase: <em>"22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact."</em></p>
+
+<h2>What we eat</h2>
+<p>The mill produces 2,224+ unsigned atoms queued for sign+anchor, with 700+ already OTS-anchored to Bitcoin. The chain is live: HF Hub + Rekor witness + Corrections ledger + Bitcoin OTS.</p>
+
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+</footer>
+
+</body>
+</html>
