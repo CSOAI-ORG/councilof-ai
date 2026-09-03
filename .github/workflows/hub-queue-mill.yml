@@ -36,20 +36,57 @@ jobs:
         with: { ref: master }
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
-      - name: choose the axis (dispatch wins; the schedule rotates)
+      - name: choose the axis (dispatch wins; otherwise the emptiest axis)
         run: |
           set -euo pipefail
-          # The cron used to grade 'governance' every hour, so 12 of the 13 millable axes were
-          # never sprayed at all. Rotate by hour: hourly cron covers all 13 in ~13 hours, and the
-          # choice is derived from the clock, so any run's axis can be checked after the fact.
-          # jail is not in the rotation — its bank is not items.jsonl-shaped (see the map below).
+          # This used to grade 'governance' every run, so 12 of the 13 millable axes were
+          # never sprayed. The first fix keyed the choice to the UTC hour, which assumed the
+          # hourly cron actually fires hourly — it does not. Observed 2026-09-03: scheduled
+          # runs at 21:14, 23:31, 01:24 and then a 4.5-hour gap, because GitHub drops
+          # schedules on a busy repo (issue #1118). A clock-keyed rotation under a dropped
+          # cron gives whichever axes happen to line up, forever.
+          #
+          # So choose by the DATA instead: the axis with the fewest measured cells in the
+          # public hub-queue. That converges on full coverage no matter when runs fire, and
+          # it self-corrects — an axis that gets cells stops being chosen. The clock is kept
+          # only as the tie-break, so a cold start (every axis at zero) still rotates.
           ROTATION=(governance safety provenance continuity conformance openness \
                     machinery-conformity care cross-reality detector-interop \
                     art5-safeguard swarm affect)
           if [ -n "${AXIS_INPUT:-}" ]; then
             AXIS="$AXIS_INPUT"; WHY="workflow_dispatch input"
           else
-            H=$(date -u +%-H); AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="rotation slot $((H % ${#ROTATION[@]})) of ${#ROTATION[@]} (UTC hour $H)"
+            H=$(date -u +%-H)
+            AXIS=""
+            if curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o /tmp/queue-for-axis.jsonl; then
+              AXIS=$(H="$H" python3 - "${ROTATION[@]}" <<'PY'
+          import json, os, sys
+          axes = sys.argv[1:]
+          counts = {a: 0 for a in axes}
+          with open("/tmp/queue-for-axis.jsonl", encoding="utf-8") as fh:
+              for line in fh:
+                  line = line.strip()
+                  if not line:
+                      continue
+                  try:
+                      row = json.loads(line)
+                  except Exception:
+                      continue
+                  for ax, cell in (row.get("measured_axes") or {}).items():
+                      if ax in counts and isinstance(cell, dict) and cell.get("card_id"):
+                          counts[ax] += 1
+          # Fewest cells first; the UTC hour breaks ties so a cold start still rotates.
+          h = int(os.environ.get("H") or 0)
+          order = sorted(axes, key=lambda a: (counts[a], (axes.index(a) - h) % len(axes)))
+          print(order[0])
+          PY
+              ) || AXIS=""
+            fi
+            if [ -n "$AXIS" ]; then
+              WHY="emptiest axis in the public hub-queue"
+            else
+              AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="queue unreadable — clock fallback, slot $((H % ${#ROTATION[@]}))"
+            fi
           fi
           echo "AXIS=$AXIS" >> "$GITHUB_ENV"
           echo "axis=$AXIS ($WHY)"
