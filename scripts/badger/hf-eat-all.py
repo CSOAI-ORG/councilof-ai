@@ -38,7 +38,14 @@ MAX_PAYLOAD = 3072  # signed-card ceiling
 
 def http_get(url: str, *, headers: dict | None = None, timeout: int = 15):
     """GET with JSON parse + 3-attempt retry on 5xx. Returns (body, link_header)."""
-    req = urllib.request.Request(url, headers={"Accept": "application/json", **(headers or {})})
+    # A caller-supplied User-Agent still wins; this is only the default. urllib's
+    # own default identifies as "Python-urllib/3.x", which our /api/gspc bot rule
+    # 403s (measured: no-UA 200, browser-UA 200, Python-urllib 403).
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/json",
+        "User-Agent": "csoai-hf-eat-all (+https://councilof.ai)",
+        **(headers or {}),
+    })
     last = None
     for attempt in range(3):
         try:

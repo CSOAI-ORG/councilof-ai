@@ -1,20 +1,24 @@
 #!/usr/bin/env python3
 """csoai-1000x.py — the master orchestrator that runs EVERYTHING in parallel.
 
-Lane-doable: launches every harvester, every signer, every anchor, every
-collector in parallel, stages the output, runs the agentic-fix engine,
-and writes a single status file. Designed to run every 15 minutes.
+Launches the harvesters in parallel, builds the public surfaces, runs the
+agentic-fix engine, and writes a single status file. Runs every 15 minutes.
 
-The 1000x loop:
-  1. Mine — 12 harvesters in parallel
-  2. Sign — the queue (every leaf canonical-form, Ed25519-ready)
-  3. Anchor — OpenTimestamps to Bitcoin for every digest
-  4. Stage — push to the public-facing layers (openapi, llms-full, axes-deep)
-  5. Verify — every rail probed, every digest checked
-  6. Report — single status file the dashboard reads
+What main() ACTUALLY does — three stages, not six:
+  1. MINE     — 15 harvesters in parallel, into scripts/badger/_queue/
+  2. SURFACES — openapi-gen, axis-deep-builder
+  3. FIX      — csoai-agentic-fix --auto
+  then writes scripts/badger/_state-1000x.json
 
-Each step runs in parallel. Each step is idempotent. The whole thing
-is reproducible from a clean checkout.
+There is NO sign step, NO anchor step, NO publish step, and no verify step.
+This docstring used to claim all four. It mattered: com.csoai.anchor-daily was
+installed to run THIS script at 07:00 for "daily Bitcoin anchoring", and its own
+log contains zero anchor lines, because there is nothing here to anchor with.
+That agent is retired; the real anchorer is scripts/badger/ots-anchor.sh under
+com.csoai.ots-anchor, and signing happens off-machine through OIDC at
+/api/board-sign.
+
+Each stage runs in parallel and is idempotent.
 """
 from __future__ import annotations
 

@@ -44,7 +44,14 @@ def http_get(url: str, timeout: int = 15):
     if "/api/gspc" in url and os.path.exists("/tmp/board.json"):
         with open("/tmp/board.json") as f:
             return json.loads(f.read())
-    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    # Identify ourselves. Without a User-Agent, urllib sends "Python-urllib/3.x",
+    # and our OWN /api/gspc bot rule 403s it — measured: no-UA 200, browser-UA 200,
+    # Python-urllib 403. This harvester failed on every run for that reason, and
+    # nine other badger scripts already set a UA; this one and hf-eat-all.py did not.
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/json",
+        "User-Agent": "csoai-harvest-per-model (+https://councilof.ai)",
+    })
     with urllib.request.urlopen(req, timeout=timeout) as r:
         return json.loads(r.read().decode("utf-8"))
 
@@ -149,7 +156,19 @@ def main():
     print(f"  upload      : {args.upload}")
     print()
 
-    cards = harvest(args.axis)
+    # Report an unreachable board the way every other harvester in this estate
+    # does — as a named UNREACHABLE — instead of dying with a urllib traceback.
+    # This one raised HTTPError/URLError straight out of main(), so the 1000x
+    # orchestrator recorded "exit=1" with no reason and the actual cause (our own
+    # bot rule 403ing Python-urllib) stayed invisible across every run.
+    try:
+        cards = harvest(args.axis)
+    except Exception as exc:
+        print(f"  UNREACHABLE {BOARD_URL}: {type(exc).__name__}: {exc}")
+        print("  No cards written. A source that cannot be read says so; it never")
+        print("  contributes a silent zero.")
+        return 1
+
     print(f"Planned: {len(cards)} card(s)")
     if cards[:3]:
         print(f"  sample: {[c['model_id'] for c in cards[:3]]}")
