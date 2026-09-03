@@ -119,7 +119,11 @@ jobs:
             fi
             echo "push race on attempt $attempt — rebasing onto origin/master"
             git fetch origin master
-            git rebase origin/master || { git rebase --abort || true; exit 1; }
+            # --autostash: the run leaves other generated files dirty (adapter
+            # sidecars, health variants) and plain `git rebase` refuses with
+            # "cannot rebase: You have unstaged changes", which is exactly how
+            # attempt 1 died the first time this retry loop ran.
+            git rebase --autostash origin/master || { git rebase --abort || true; exit 1; }
             sleep $((attempt * 5))
           done
           echo "HALT: could not push the published tree after 5 attempts" >&2
