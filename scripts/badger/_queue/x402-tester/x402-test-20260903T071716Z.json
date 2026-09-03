@@ -1,0 +1,72 @@
+{
+  "as_of": "2026-09-03T07:17:17Z",
+  "honest_state": {
+    "facilitator_url": "UNSET \u2014 payTo serves challenges, no settlement",
+    "first_dollar_unlocked_by": "Cloudflare env X402_FACILITATOR_URL=https://facilitator.payai.network",
+    "rail_mode": "challenge-only (no live facilitator configured)"
+  },
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.x402-test-report",
+  "n_endpoints": 5,
+  "next_steps_for_operator": [
+    "1. Set X402_FACILITATOR_URL=https://facilitator.payai.network in CF Pages env",
+    "2. Redeploy (any push to master)",
+    "3. Create a burner MetaMask wallet, fund with $1 of USDC on Base",
+    "4. Run the @x402/fetch self-test (the recipe in docs/REVENUE-RESEARCH-2026-09-02.md)",
+    "5. Verify the receipt at https://councilof.ai/gspc-verify",
+    "6. Publish the verifier: cd packages/gspc-card-verifier && npm publish",
+    "7. Bind REVENUE_KV for /api/revenue counts"
+  ],
+  "results": [
+    {
+      "challenge": null,
+      "description": "Tier 1 \u2014 Issuance $0.50",
+      "no_payment_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:16 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 6705\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3V",
+      "no_payment_status": 402,
+      "rail_status": "challenge-only \u2014 facilitator unset, no settlement",
+      "retry_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:16 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 6846\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL3JlcXVlc3QtYXR0ZXN0YXRpb24iLCJkZXNjcmlwdGlvbiI6IlJ",
+      "retry_status": 402,
+      "url": "https://councilof.ai/api/request-attestation?subject=qwen2.5:7b"
+    },
+    {
+      "challenge": null,
+      "description": "Tier 2 \u2014 Evidence bundle $1.00",
+      "no_payment_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:16 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 5375\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3V",
+      "no_payment_status": 402,
+      "rail_status": "challenge-only \u2014 facilitator unset, no settlement",
+      "retry_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:16 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 5516\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2V2aWRlbmNlLWJ1bmRsZT9vYmxpZ2F0aW9uPWFydGljbGUtNTA",
+      "retry_status": 402,
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&subject=qwen2.5:7b&bundle=1"
+    },
+    {
+      "challenge": null,
+      "description": "Tier 3 \u2014 Eunomia feed $2.00",
+      "no_payment_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 4671\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3V",
+      "no_payment_status": 402,
+      "rail_status": "challenge-only \u2014 facilitator unset, no settlement",
+      "retry_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 4812\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL2V1bm9taWEtZGF0YT9mZWVkPTEiLCJkZXNjcmlwdGlvbiI6IlN",
+      "retry_status": 402,
+      "url": "https://councilof.ai/api/eunomia-data?feed=1"
+    },
+    {
+      "challenge": null,
+      "description": "Tier 1b \u2014 Proof bundle $1.50",
+      "no_payment_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 3772\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3V",
+      "no_payment_status": 402,
+      "rail_status": "challenge-only \u2014 facilitator unset, no settlement",
+      "retry_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 3913\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL3Byb29mP2J1bmRsZT0xIiwiZGVzY3JpcHRpb24iOiJCdW5kbGU",
+      "retry_status": 402,
+      "url": "https://councilof.ai/api/proof?bundle=1"
+    },
+    {
+      "challenge": null,
+      "description": "Tier 1b \u2014 XRPL RWA evidence $0.50",
+      "no_payment_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 4506\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3V",
+      "no_payment_status": 402,
+      "rail_status": "challenge-only \u2014 facilitator unset, no settlement",
+      "retry_body_snippet": "HTTP/2 402 \ndate: Thu, 03 Sep 2026 07:17:17 GMT\ncontent-type: application/json; charset=utf-8\ncontent-length: 4647\npayment-required: eyJ4NDAyVmVyc2lvbiI6MiwiZXJyb3IiOiJQYXltZW50IHJlcXVpcmVkIiwicmVzb3VyY2UiOnsidXJsIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXBpL3J3YS9ldmlkZW5jZT9hc3NldD1STFVTRCIsImRlc2NyaXB0aW9",
+      "retry_status": 402,
+      "url": "https://councilof.ai/api/rwa/evidence?asset=RLUSD"
+    }
+  ]
+}
