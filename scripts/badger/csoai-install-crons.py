@@ -41,9 +41,15 @@ def make_plist(label: str, args: list[str], interval: int, log_name: str) -> dic
     }
     if interval == 86400:
         plist["StartCalendarInterval"] = {"Hour": 7, "Minute": 0}
-    elif interval >= 60:
-        plist["RunInterval"] = interval
     else:
+        # ALWAYS StartInterval. There is no "RunInterval" key in launchd — it was
+        # written here for any interval >= 60, which is most of them. launchd
+        # silently ignores unknown keys, so the plists parsed, loaded, reported no
+        # error, and scheduled NOTHING. com.csoai.1000x-master, harvest-fast and
+        # surface-builder sat at runs=0 with no log file for as long as they
+        # existed; the branch that happened to be correct was the one for intervals
+        # under a minute, which nothing used. Checked by agent-health.sh's
+        # NEVER-SCHEDULED rule, which fails on a plist with no real cadence key.
         plist["StartInterval"] = interval
     return plist
 

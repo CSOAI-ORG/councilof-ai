@@ -32,6 +32,23 @@ for f in "$HOME"/Library/LaunchAgents/com.csoai.*.plist; do
   status=$(launchctl list 2>/dev/null | awk -v l="$label" '$3==l{print $2}')
   notes=""
 
+  # A plist can be syntactically perfect, load without error, and never once fire.
+  # launchd silently ignores unknown keys, so `RunInterval` — which is not a launchd
+  # key — parses fine and schedules nothing. Three agents sat at runs=0 with no log
+  # file for as long as they existed. Check for a REAL cadence key structurally;
+  # exit codes cannot see this because the agent never runs to produce one.
+  has_si=$(/usr/libexec/PlistBuddy -c "Print :StartInterval" "$f" 2>/dev/null)
+  has_ci=$(/usr/libexec/PlistBuddy -c "Print :StartCalendarInterval" "$f" 2>/dev/null)
+  has_ral=$(/usr/libexec/PlistBuddy -c "Print :RunAtLoad" "$f" 2>/dev/null)
+  has_wp=$(/usr/libexec/PlistBuddy -c "Print :WatchPaths" "$f" 2>/dev/null)
+  has_ka=$(/usr/libexec/PlistBuddy -c "Print :KeepAlive" "$f" 2>/dev/null)
+  if [ -z "$has_si" ] && [ -z "$has_ci" ] && [ -z "$has_wp" ] && [ -z "$has_ka" ] \
+     && [ "$has_ral" != "true" ]; then
+    notes="${notes}NEVER-SCHEDULED "
+    bogus=$(/usr/libexec/PlistBuddy -c "Print :RunInterval" "$f" 2>/dev/null)
+    [ -n "$bogus" ] && notes="${notes}(RunInterval=$bogus is not a launchd key) "
+  fi
+
   case "$target" in
     /*)
       [ -f "$target" ] || notes="${notes}TARGET-MISSING "
