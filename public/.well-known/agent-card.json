@@ -81,6 +81,19 @@
       "examples": [
         "GET /api/benchmark-quality"
       ]
+    },
+    {
+      "id": "article50-detect",
+      "name": "Article 50 provenance detection (free)",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50). Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
+      "endpoint": "https://councilof.ai/api/detect",
+      "tags": [
+        "article-50",
+        "provenance",
+        "detection",
+        "verification",
+        "c2pa"
+      ]
     }
   ],
   "provider": {
