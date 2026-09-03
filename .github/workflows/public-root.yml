@@ -106,7 +106,24 @@ jobs:
             exit 0
           fi
           git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
-          git push origin HEAD:master
+          # Rebase-and-retry. Building + signing the tree takes ~3 minutes, and other
+          # lanes push to master more often than that, so a bare push loses the race
+          # every time: on 2026-09-03 two consecutive runs signed a complete tree and
+          # then threw it away on "failed to push some refs". The publisher only ever
+          # adds its own generated paths, so replaying them onto whatever landed
+          # meanwhile is safe — and losing a signed tree to a race is not.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:master; then
+              echo "pushed on attempt $attempt"
+              exit 0
+            fi
+            echo "push race on attempt $attempt — rebasing onto origin/master"
+            git fetch origin master
+            git rebase origin/master || { git rebase --abort || true; exit 1; }
+            sleep $((attempt * 5))
+          done
+          echo "HALT: could not push the published tree after 5 attempts" >&2
+          exit 1
       # Halt is still fail-closed (publish step failed). Persist health only — never the unsigned tree.
       - name: commit halt health
         if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
