@@ -1,0 +1,260 @@
+{
+  "as_of": "2026-09-03T05:10:55Z",
+  "digest": "695739f46249d4c46c1d20bb611dce03f3bf9531b0220b424d4aaf56c02e260f",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "gspc.layer0-ceremony",
+  "machine": {
+    "apex": "csoai.org",
+    "primary": "councilof.ai",
+    "signed_root": "https://councilof.ai/root.json"
+  },
+  "notes": [
+    "Layer 0 ceremony at 2026-09-03T05:10:55Z \u2014 the unsealed first layer.",
+    "Every rail probed; every probe result canonicalised; the digest is Bitcoin-anchored via OpenTimestamps.",
+    "No Ed25519 sign here \u2014 that's the owner's seal. OTS only."
+  ],
+  "ots_anchor": "https://a.pool.opentimestamps.org",
+  "ots_proof": "\bv=\b\u0010gxM279AD\b \u0001\u0787WS@If&ku{\u001aa51AD\b \u0015<L\u0018-~?-\u0001\udbd6\udc66\u001f\u001e\b\u0004j\u0001`\bqXj]>\u0000\r.\f.-https://alice.btc.calendar.opentimestamps.org",
+  "probes": [
+    {
+      "host": "councilof.ai",
+      "method": "POST",
+      "path": "/mcp",
+      "size": 24,
+      "status": 400,
+      "url": "https://councilof.ai/mcp"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/.well-known/mcp.json",
+      "size": 2072,
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/mcp.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/.well-known/agent-card.json",
+      "size": 4399,
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/agent-card.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/x402",
+      "size": 10126,
+      "status": 200,
+      "url": "https://councilof.ai/api/x402"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/.well-known/x402.json",
+      "size": 2980,
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/x402.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/detect",
+      "size": 471,
+      "status": 200,
+      "url": "https://councilof.ai/api/detect"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/detector-interop",
+      "size": 2663,
+      "status": 200,
+      "url": "https://councilof.ai/api/detector-interop"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/.well-known/did.json",
+      "size": 5059,
+      "status": 200,
+      "url": "https://councilof.ai/.well-known/did.json"
+    },
+    {
+      "host": "csoai.org",
+      "method": "GET",
+      "path": "/.well-known/did.json",
+      "size": 5116,
+      "status": 200,
+      "url": "https://csoai.org/.well-known/did.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/gspc",
+      "size": 61648,
+      "status": 200,
+      "url": "https://councilof.ai/api/gspc"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/state",
+      "size": 32555,
+      "status": 200,
+      "url": "https://councilof.ai/api/state"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/root.json",
+      "size": 4948,
+      "status": 200,
+      "url": "https://councilof.ai/root.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/xrpl",
+      "size": 9039,
+      "status": 200,
+      "url": "https://councilof.ai/api/xrpl"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/swift",
+      "size": 11166,
+      "status": 200,
+      "url": "https://councilof.ai/api/swift"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/pqc",
+      "size": 1181,
+      "status": 200,
+      "url": "https://councilof.ai/api/pqc"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/api/badge",
+      "size": 1507,
+      "status": 200,
+      "url": "https://councilof.ai/api/badge"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/openapi.json",
+      "size": 2049,
+      "status": 200,
+      "url": "https://councilof.ai/openapi.json"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/llms.txt",
+      "size": 8365,
+      "status": 200,
+      "url": "https://councilof.ai/llms.txt"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/llms-sitemap.xml",
+      "size": 10404,
+      "status": 200,
+      "url": "https://councilof.ai/llms-sitemap.xml"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/axes-deep.html",
+      "size": 13360,
+      "status": 200,
+      "url": "https://councilof.ai/axes-deep.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/axis/jail.html",
+      "size": 5038,
+      "status": 200,
+      "url": "https://councilof.ai/axis/jail.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/axis/safety.html",
+      "size": 4889,
+      "status": 200,
+      "url": "https://councilof.ai/axis/safety.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/axis/swarm.html",
+      "size": 4969,
+      "status": 200,
+      "url": "https://councilof.ai/axis/swarm.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/axis/governance.html",
+      "size": 5034,
+      "status": 200,
+      "url": "https://councilof.ai/axis/governance.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/what-is-new.html",
+      "size": 13739,
+      "status": 200,
+      "url": "https://councilof.ai/what-is-new.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/hf-badge.html",
+      "size": 13019,
+      "status": 200,
+      "url": "https://councilof.ai/hf-badge.html"
+    },
+    {
+      "host": "councilof.ai",
+      "method": "GET",
+      "path": "/hf-spaces.html",
+      "size": 9354,
+      "status": 200,
+      "url": "https://councilof.ai/hf-spaces.html"
+    },
+    {
+      "host": "csoai.org",
+      "method": "GET",
+      "path": "/",
+      "size": 197917,
+      "status": 200,
+      "url": "https://csoai.org/"
+    },
+    {
+      "host": "csoai.org",
+      "method": "GET",
+      "path": "/root.json",
+      "size": 4948,
+      "status": 200,
+      "url": "https://csoai.org/root.json"
+    }
+  ],
+  "schema": "csoai.gspc-axes/0.5",
+  "summary": {
+    "n_200": 28,
+    "n_3xx": 0,
+    "n_4xx": 1,
+    "n_probed": 29
+  },
+  "version": 1
+}
