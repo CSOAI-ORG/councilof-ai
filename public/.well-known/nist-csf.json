@@ -3,11 +3,11 @@
     "canonical_form": "JCS (RFC 8785)-style canonical JSON \u2014 Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
     "endpoints": {
       "corrections": "https://councilof.ai/api/corrections",
-      "discover": "https://councilof.ai/.well-known/scitt.json",
+      "discover": "https://councilof.ai/.well-known/nist-csf.json",
       "root": "https://councilof.ai/root.json",
       "verify": "https://councilof.ai/gspc-verify"
     },
-    "evidence_pack": "https://councilof.ai/api/evidence-bundle?obligation=scitt",
+    "evidence_pack": "https://councilof.ai/api/evidence-bundle?obligation=nist-csf",
     "publisher": "Council of AI (CSOAI Ltd)"
   },
   "measurement": {
@@ -17,18 +17,18 @@
     "status": "live"
   },
   "notes": [
-    "Discovery doc for IETF SCITT",
-    "Description: RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
+    "Discovery doc for NIST CSF 2.0",
+    "Description: NIST Cybersecurity Framework 2.0",
     "Anyone can re-check the measurement at /gspc-verify.",
     "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
   ],
   "publisher": "CSOAI Ltd (UK 16939677)",
-  "schema": "csoai.door/scitt/0.1",
+  "schema": "csoai.door/nist-csf/0.1",
   "standard": {
-    "description": "RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
-    "kind": "supply-chain-transparency",
-    "name": "IETF SCITT",
-    "url": "https://www.rfc-editor.org/rfc/rfc9943.html"
+    "description": "NIST Cybersecurity Framework 2.0",
+    "kind": "cybersecurity-framework",
+    "name": "NIST CSF 2.0",
+    "url": "https://www.nist.gov/cyberframework"
   },
   "trust_anchor": {
     "did": "did:web:csoai.org",

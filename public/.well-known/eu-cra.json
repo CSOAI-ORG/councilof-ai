@@ -3,11 +3,11 @@
     "canonical_form": "JCS (RFC 8785)-style canonical JSON \u2014 Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
     "endpoints": {
       "corrections": "https://councilof.ai/api/corrections",
-      "discover": "https://councilof.ai/.well-known/scitt.json",
+      "discover": "https://councilof.ai/.well-known/eu-cra.json",
       "root": "https://councilof.ai/root.json",
       "verify": "https://councilof.ai/gspc-verify"
     },
-    "evidence_pack": "https://councilof.ai/api/evidence-bundle?obligation=scitt",
+    "evidence_pack": "https://councilof.ai/api/evidence-bundle?obligation=eu-cra",
     "publisher": "Council of AI (CSOAI Ltd)"
   },
   "measurement": {
@@ -17,18 +17,18 @@
     "status": "live"
   },
   "notes": [
-    "Discovery doc for IETF SCITT",
-    "Description: RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
+    "Discovery doc for EU CRA",
+    "Description: EU Regulation 2024/2847 Cyber Resilience Act",
     "Anyone can re-check the measurement at /gspc-verify.",
     "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
   ],
   "publisher": "CSOAI Ltd (UK 16939677)",
-  "schema": "csoai.door/scitt/0.1",
+  "schema": "csoai.door/eu-cra/0.1",
   "standard": {
-    "description": "RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
-    "kind": "supply-chain-transparency",
-    "name": "IETF SCITT",
-    "url": "https://www.rfc-editor.org/rfc/rfc9943.html"
+    "description": "EU Regulation 2024/2847 Cyber Resilience Act",
+    "kind": "cyber-resilience",
+    "name": "EU CRA",
+    "url": "https://eur-lex.europa.eu/eli/reg/2024/2847/oj"
   },
   "trust_anchor": {
     "did": "did:web:csoai.org",
