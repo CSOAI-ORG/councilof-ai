@@ -115,7 +115,7 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("mcpServers");
     expect(tools).toMatch(/Ask: board totals/);
     expect(tools).toContain("board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion");
-    expect(tools).toContain("HundredGate");
+    expect(tools).not.toContain("HundredGate"); // internal planning envelope — never on a public page
     expect(tools).toContain("WatchlistPane");
     expect(tools).not.toMatch(/lifestyle/i);
   });
