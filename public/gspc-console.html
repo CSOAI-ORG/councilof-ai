@@ -76,6 +76,28 @@
     </span>
   </div>
 
+  <noscript>
+    <!-- A crawler with no JS saw only a shell here before: the table is fetched.
+         This gives it the substance without typing a count into the page —
+         facts-gate rejects hardcoded totals, and rightly: a typed number goes
+         stale the moment the board moves. Counts stay pointers. -->
+    <div class="scroll"><div class="state" style="text-align:left;padding:1.4rem 1.6rem;line-height:1.6">
+      <p><strong>This page renders the GSPC model &times; axis matrix live.</strong>
+      It needs JavaScript because it fetches two endpoints at load, and neither is
+      baked into these bytes.</p>
+      <p>The same data, without JavaScript:</p>
+      <ul style="margin:.6rem 0 .6rem 1.1rem">
+        <li><a href="https://councilof.ai/api/findings">/api/findings</a> &mdash; one row per
+          (model, axis) cell: accuracy, status, the signed card id and its verify URL.</li>
+        <li><a href="https://councilof.ai/api/gspc">/api/gspc</a> &mdash; the axis roster and
+          the lid. Quote <code>totals.public_count</code>; never a number typed into a page.</li>
+      </ul>
+      <p>A cell is filled only where a signed card verifies. An empty cell means no run
+      exists for that pair &mdash; it is never a zero and never a failure. Verify any card
+      free at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>, no account.</p>
+      <p>Measurement, not certification.</p>
+    </div></div>
+  </noscript>
   <div class="scroll" id="scroll"><div class="state" id="state">Fetching the live board…</div></div>
 
   <p class="foot" id="foot">
