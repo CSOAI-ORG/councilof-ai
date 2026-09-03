@@ -71,7 +71,7 @@ def main():
     items.append(("✓", "DONE", "x402 priced attestation rail", "5 priced resources, EIP-3009 on Base"))
     items.append(("✓", "DONE", "DID", "5 verification methods at /.well-known/did.json"))
     items.append(("✓", "DONE", "Chrome extension", "MV3 in extensions/chrome-gspc-verify/"))
-    items.append(("✓", "DONE", "PyPI packages", "570+ published (crown jewels + brains + mindsets + products)"))
+    items.append(("✓", "DONE", "PyPI packages", "570+ published (core libraries + brains + mindsets + products)"))
     items.append(("✓", "DONE", "npm csoai-gspc-mcp", "0.1.1 published"))
     items.append(("✓", "DONE", "Grok plugin", "github.com/CSOAI-ORG/council-of-ai-grok"))
     items.append(("✓", "DONE", "Hermes skill", "~/.hermes/skills/council-of-ai/"))

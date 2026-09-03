@@ -53,7 +53,7 @@ NGI_ZERO_APPLICATION = {
         "- The 22-axis GSPC measurement board (Governance, Safety, Provenance, Continuity)\n"
         "- The signed card-v0 attestation format (canonical JSON, Ed25519, 3KB or less)\n"
         "- The 4-anchor machine (HuggingFace + Rekor + Corrections ledger + Bitcoin OTS)\n"
-        "- 570+ PyPI packages (crown jewels + brain configs + mindsets + OS products)\n"
+        "- 570+ PyPI packages (core libraries + brain configs + mindsets + OS products)\n"
         "- The MCP server csoai-gspc-mcp on PyPI + npm\n"
         "- A2A agent card + x402 priced attestation rail + C2PA Article 50 detector\n"
         "- Open contributions to the IETF SCITT WG (issue #13, conformance test vectors)\n"
