@@ -30,6 +30,15 @@ HF_PROVIDER_SUFFIX = ("", ":featherless-ai", ":hf-inference", ":together", ":fir
 GEN_TAGS = frozenset(
     {"text-generation", "image-text-to-text", "conversational", "text2text-generation"}
 )
+# Servable-by-chat tags for the pick. image-text-to-text is deliberately out: VL repos answer a
+# text-only bank as a different task, so they are not picked until a VL bank exists.
+SERVABLE_TAGS = frozenset({"text-generation", "text2text-generation", "conversational"})
+# A probe that says "no such endpoint" is about the model, not the token: persist it.
+# 401/403/429 are token/rate states and are never persisted as dead.
+# A single provider suffix answering 400 is that provider's miss, not a dead model: only "every suffix
+# said no", the probe-first mapping, or a 404 on the Hub itself count.
+DEAD_MARKERS = ("no live inference provider", "no-endpoint (all ", "HTTP 404 model not on the Hub")
+HF_MODEL_API = "https://huggingface.co/api/models/"
 GEMINI_MODELS = ("gemini-2.0-flash", "gemini-1.5-flash")
 MODEL_AXES = (
     "governance",
@@ -108,13 +117,107 @@ def load_only_ids(path: Path | None) -> set[str] | None:
     return {ln.strip() for ln in p.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")}
 
 
+def load_dead_slugs(path: Path | None) -> set[str]:
+    """Persistent dead-slug set (jsonl rows {id, reason, axis, as_of}). Missing file → empty."""
+    if path is None:
+        return set()
+    p = Path(path)
+    if not p.is_file():
+        return set()
+    out: set[str] = set()
+    for ln in p.read_text(encoding="utf-8").splitlines():
+        if not ln.strip():
+            continue
+        try:
+            o = json.loads(ln)
+        except Exception:
+            continue
+        if o.get("id"):
+            out.add(str(o["id"]))
+    return out
+
+
+def is_dead_reason(reason: str) -> bool:
+    """True only for model-side 'no endpoint' outcomes — never for token (401/403) or rate (429) states."""
+    r = reason or ""
+    if any(c in r for c in ("HTTP 401", "HTTP 403", "HTTP 429")):
+        return False
+    return any(m in r for m in DEAD_MARKERS)
+
+
+def dead_rows_from_skips(skips: list[dict], as_of: str) -> list[dict]:
+    seen: set[str] = set()
+    out: list[dict] = []
+    for sk in skips:
+        mid = str(sk.get("id") or "")
+        if not mid or mid in seen or not is_dead_reason(str(sk.get("reason") or "")):
+            continue
+        seen.add(mid)
+        out.append({"id": mid, "reason": str(sk.get("reason"))[:120], "axis": sk.get("axis"), "as_of": as_of})
+    return out
+
+
+def append_dead_slugs(path: Path, rows: list[dict]) -> int:
+    """Append new dead ids to the persistent file (dedupe by id). Returns rows written."""
+    known = load_dead_slugs(path)
+    fresh = [r for r in rows if r["id"] not in known]
+    if not fresh:
+        return 0
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as fh:
+        for r in fresh:
+            fh.write(json.dumps(r, ensure_ascii=True) + "\n")
+    return len(fresh)
+
+
+def provider_mapping_live(slug: str, fetch=None) -> tuple[bool, str]:
+    """Ask the public Hub API whether any Inference Provider serves this slug for chat. No grade spent.
+
+    fetch(url) → parsed JSON; default uses urllib with the HF token if present (rate limit only).
+    Returns (live, detail). Unreachable API → (True, "probe-unavailable") so a network blip never
+    marks a model dead.
+    """
+    url = f"{HF_MODEL_API}{slug}?expand[]=inferenceProviderMapping"
+    if fetch is None:
+        def fetch(u: str):
+            hdr = {"User-Agent": "csoai-hub-queue-mill"}
+            tok = _hf_token()
+            if tok:
+                hdr["Authorization"] = f"Bearer {tok}"
+            req = urllib.request.Request(u, headers=hdr)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return json.loads(r.read())
+    try:
+        d = fetch(url)
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return False, "HTTP 404 model not on the Hub"
+        return True, f"probe-unavailable HTTP {e.code}"
+    except Exception as e:
+        return True, f"probe-unavailable {type(e).__name__}"
+    m = d.get("inferenceProviderMapping") if isinstance(d, dict) else None
+    entries: list[dict] = []
+    if isinstance(m, list):
+        entries = [x for x in m if isinstance(x, dict)]
+    elif isinstance(m, dict):
+        entries = [dict(v, provider=k) for k, v in m.items() if isinstance(v, dict)]
+    live = [e for e in entries if str(e.get("status") or "live") == "live" and str(e.get("task") or "") in ("conversational", "text-generation")]
+    if live:
+        return True, ",".join(str(e.get("provider")) for e in live)
+    return False, "no live inference provider"
+
+
 def pick_emptiest(
     rows: list[dict],
     n: int,
     generative_only: bool = False,
     axis: str | None = None,
     only_ids: set[str] | None = None,
+    dead: set[str] | None = None,
 ) -> list[dict]:
+    """Emptiest (id, axis) cells by rank. generative_only keeps SERVABLE_TAGS only (no fallback to
+    non-generative repos); dead ids are never picked; only_ids is an allowlist."""
+
     def is_empty(r: dict) -> bool:
         if axis:
             cell = (r.get("measured_axes") or {}).get(axis) or {}
@@ -124,12 +227,12 @@ def pick_emptiest(
         return str(r.get("status") or "").upper() != "MEASURED" or not r.get("card_id")
 
     empty = [r for r in rows if is_empty(r)]
+    if dead:
+        empty = [r for r in empty if str(r.get("id") or "") not in dead]
     if only_ids:
         empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
-        gen = [r for r in empty if r.get("pipeline_tag") in GEN_TAGS]
-        if gen:
-            empty = gen
+        empty = [r for r in empty if r.get("pipeline_tag") in SERVABLE_TAGS]
     empty.sort(key=lambda r: int(r.get("rank") or 10**9))
     return empty[:n]
 
@@ -226,19 +329,28 @@ def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32) -> 
             "messages": [{"role": "user", "content": prompt}],
             "max_tokens": max_tokens,
             "temperature": 0,
+            # Qwen3-class "thinking" models otherwise spend max_tokens on reasoning and return content null.
+            # vLLM-style providers honour this; others ignore the key.
+            "chat_template_kwargs": {"enable_thinking": False},
         }
     ).encode()
     req = urllib.request.Request(
         url,
         data=payload,
         method="POST",
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": "csoai-hub-queue-mill"},
     )
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
             d = json.loads(r.read())
     except urllib.error.HTTPError as e:
-        return "UNCHECKABLE", f"HTTP {e.code}"
+        # Keep the provider's own words (bounded) so the skip histogram explains itself.
+        try:
+            body = e.read()[:160].decode("utf-8", "replace")
+        except Exception:
+            body = ""
+        body = " ".join(body.split())
+        return "UNCHECKABLE", f"HTTP {e.code} {body}".rstrip()
     except Exception as e:
         return "UNCHECKABLE", type(e).__name__
     txt = (((d.get("choices") or [{}])[0].get("message") or {}).get("content") or "").strip()
@@ -380,10 +492,12 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
         return "UNCHECKABLE", ("no-endpoint hf" if not tok else "dead-endpoints hf") + "; " + txt
     last = "no-endpoint hf"
     unsupported = 0
+    tried = 0
     for suf in HF_PROVIDER_SUFFIX:
         name = f"{slug}{suf}"
         if name in _DEAD:
             continue
+        tried += 1
         st, txt = _chat(HF_ROUTER, tok, name, prompt)
         if st == "OK":
             _ROUTE[slug] = "hf-router"
@@ -395,12 +509,15 @@ def infer_hub(slug: str, prompt: str) -> tuple[str, str]:
         if "403" in txt or "429" in txt:
             _DEAD.add(name)
             continue
-        if "400" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
+        if "400" in txt or "404" in txt or "not supported" in txt.lower() or "not a chat" in txt.lower():
             _DEAD.add(name)
             unsupported += 1
             continue
     if unsupported >= 2:
         _DEAD.add(slug)
+    if tried and unsupported == tried:
+        # Every provider door said "no such endpoint" — that is about the model, and may be persisted.
+        last = f"hf:{slug}:no-endpoint (all {tried} provider suffixes 400/404); last {last.split(':', 2)[-1][:100]}"
     st, txt = _infer_openrouter(slug, prompt)
     if st == "OK":
         return st, txt
@@ -559,17 +676,38 @@ def mill(
     items_cap: int = 30,
     generative_only: bool = True,
     only_ids: set[str] | None = None,
+    dead_path: Path | None = None,
+    probe_first: bool = False,
+    probe_fetch=None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids)
+    dead = load_dead_slugs(dead_path)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
-    to_grade = picked[:grade_n]
     banks_dir = banks_dir or (out_dir / "banks")
-    for r in picked[grade_n:]:
-        skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
+    if probe_first and not dry:
+        # Walk rank; ask the Hub which slugs any provider actually serves before spending a grade.
+        to_grade = []
+        rest = []
+        for r in picked:
+            if len(to_grade) >= grade_n:
+                rest.append(r)
+                continue
+            mid = str(r.get("id") or "")
+            live_ok, detail = provider_mapping_live(mid, fetch=probe_fetch)
+            if live_ok:
+                to_grade.append(r)
+            else:
+                skips.append({"id": mid, "axis": ax, "reason": f"UNCHECKABLE {detail} (probe-first)"})
+        for r in rest:
+            skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
+    else:
+        to_grade = picked[:grade_n]
+        for r in picked[grade_n:]:
+            skips.append({"id": r.get("id"), "axis": ax, "reason": "not-in-this-batch-pick"})
     live: dict[str, bool] = {}
     if not dry:
         for r in to_grade:
@@ -621,9 +759,13 @@ def mill(
             fp = out_dir / f"unsigned-{ax[:8]}-{wrap['id'][:12]}.json"
             fp.write_text(json.dumps(wrap, indent=2) + "\n")
             staged.append({"id": mid, "axis": ax, "card": fp.name, "bytes": len(blob), "n": len(items), "hits": hits, "route": _ROUTE.get(mid)})
+    as_of = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    dead_new = dead_rows_from_skips(skips, as_of)
+    (out_dir / "dead_slugs.jsonl").write_text("".join(json.dumps(r) + "\n" for r in dead_new))
+    dead_appended = append_dead_slugs(Path(dead_path), dead_new) if dead_path else 0
     report = {
         "kind": "csoai.hub-queue-mill/0.1",
-        "as_of": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "as_of": as_of,
         "queue_n": len(rows),
         "picked": len(picked),
         "graded": len(to_grade),
@@ -635,6 +777,10 @@ def mill(
         "eat_next_model": model,
         "axis": axis,
         "only_ids_n": len(only_ids) if only_ids is not None else 0,
+        "dead_known": len(dead),
+        "dead_new": len(dead_new),
+        "dead_appended": dead_appended,
+        "probe_first": bool(probe_first),
         "note": "MEASURED only after GHA OIDC + VALID. Hub-queue id is the model that answered. n<30 unquotable.",
     }
     (out_dir / "mill-report.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -653,6 +799,8 @@ def main() -> int:
     ap.add_argument("--banks", default="", help="dir of {axis}.jsonl published banks")
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
+    ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
+    ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     rep = mill(
@@ -665,8 +813,10 @@ def main() -> int:
         banks_dir=Path(args.banks) if args.banks else None,
         items_cap=args.items,
         only_ids=only,
+        dead_path=Path(args.dead) if args.dead else None,
+        probe_first=args.probe_first,
     )
-    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips") if k in rep}, default=str))
+    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
     return 0
 
