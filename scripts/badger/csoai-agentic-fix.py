@@ -313,6 +313,26 @@ def fix_broken_link(p: dict) -> dict:
     return {"ok": False, "reason": f"no known replacement for {link}"}
 
 
+# INTEROP_PROTECT — the guard that prevents the 2026-09-03 incident from recurring.
+# The empty-page fixer and the missing-page stubber must NEVER touch
+# public/interop/ evidence pages. These are cited, signed, and bound
+# into the corrections ledger + the witness receipts. Overwriting them
+# with a 1.2KB stub destroys the canonical evidence the corrections
+# ledger is supposed to witness.
+INTEROP_PROTECT = {"public/interop/", "public/signed/", "public/.well-known/did.json"}
+
+
+def under_protected_path(file_path: str) -> bool:
+    """True if the file is under any path that must never be auto-fixed."""
+    for prefix in INTEROP_PROTECT:
+        if file_path.startswith(prefix):
+            return True
+    # Top-level signed cards
+    if file_path.startswith("public/signed/cards/"):
+        return True
+    return False
+
+
 def fix_empty_page(p: dict) -> dict:
     """NEVER overwrites. A small page is not a broken page.
 
@@ -327,6 +347,16 @@ def fix_empty_page(p: dict) -> dict:
     content at all, and even then, overwriting a file the operator wrote is not
     a "fix" — it is data loss dressed as maintenance. This now reports only.
     """
+    """Lane-doable: stub the empty page with a minimal honest stub.
+
+    NEVER overwrites protected paths (public/interop/, public/signed/,
+    public/.well-known/did.json). The 2026-09-03 incident destroyed 7
+    evidence pages under public/interop/ in one pass.
+    """
+    if under_protected_path(p["file"]):
+        return {"ok": False,
+                "reason": f"REFUSED — {p['file']} is under a protected path (interop evidence, signed cards, or DID document). Owner review required.",
+                "protected": True} (fix(incident-2026-09-03): restore 9 destroyed evidence pages + add INTEROP_PROTECT guard)
     target = PUBLIC / p["file"]
     if target.exists() and target.stat().st_size > 0:
         return {"ok": False,
