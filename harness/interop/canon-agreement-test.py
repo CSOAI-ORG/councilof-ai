@@ -3,17 +3,14 @@ Cut-over gate for roadmap #1: canon:jcs-rfc8785 — must hit 100% agreement
 Python-JCS vs JS-JCS incl. the 0.0/-0.0 float cases, before verifiers dispatch."""
 import json, math, subprocess, sys, glob, os
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "arena"))
+from jcs import es6_number_to_string  # noqa: E402
+
 def jcs_num(n):
     if isinstance(n, bool): return "true" if n else "false"
     if isinstance(n, int): return str(n)
     f = float(n)
-    if math.isnan(f) or math.isinf(f): raise ValueError("JCS forbids NaN/Inf")
-    if f == 0.0: return "0"          # -0.0 -> 0 (ES6 Number semantics)
-    s = repr(f)
-    if "e" in s or "E" in s:         # normalize exponent forms to ES6 style
-        m, e = s.split("e"); e = int(e)
-        s = m + "e" + ("+" if e >= 0 else "") + str(e)
-    return s
+    return es6_number_to_string(f)
 
 def jcs(v):
     if v is None: return "null"

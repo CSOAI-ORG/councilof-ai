@@ -136,6 +136,51 @@ export function canonicalPy(value: unknown, key: string | null = null): string {
   throw new Error(`unserialisable value at ${key}`);
 }
 
+/**
+ * RFC 8785 JCS — Rule B. Numbers are ES6 Number.prototype.toString (0.0 → "0",
+ * 1e-6 → "0.000001"). Used only when the artefact declares jcs-rfc8785.
+ * Published /signed/cards/ do not; they stay on canonicalPy.
+ */
+function jcsString(s: string): string {
+  let out = '"';
+  for (const ch of s) {
+    const c = ch.codePointAt(0)!;
+    if (ch === '"') out += '\\"';
+    else if (ch === "\\") out += "\\\\";
+    else if (ch === "\b") out += "\\b";
+    else if (ch === "\f") out += "\\f";
+    else if (ch === "\n") out += "\\n";
+    else if (ch === "\r") out += "\\r";
+    else if (ch === "\t") out += "\\t";
+    else if (c < 0x20) out += "\\u" + c.toString(16).padStart(4, "0");
+    else out += ch;
+  }
+  return out + '"';
+}
+
+export function canonicalJcs(value: unknown, key: string | null = null): string {
+  if (value === null) return "null";
+  if (typeof value === "boolean") return value ? "true" : "false";
+  if (typeof value === "number") {
+    if (!Number.isFinite(value)) throw new Error(`non-finite number at ${key}`);
+    return Number.prototype.toString.call(value);
+  }
+  if (typeof value === "string") return jcsString(value);
+  if (Array.isArray(value)) return "[" + value.map((v) => canonicalJcs(v, key)).join(",") + "]";
+  if (typeof value === "object") {
+    const o = value as Record<string, unknown>;
+    return (
+      "{" +
+      Object.keys(o)
+        .sort()
+        .map((k) => jcsString(k) + ":" + canonicalJcs(o[k], k))
+        .join(",") +
+      "}"
+    );
+  }
+  throw new Error(`unserialisable value at ${key}`);
+}
+
 const hex = (buf: ArrayBuffer): string =>
   [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, "0")).join("");
 
@@ -187,7 +232,15 @@ export async function fetchPinnedCardKey(signal?: AbortSignal): Promise<Uint8Arr
 export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): Promise<CardVerdict> {
   if (!looksLikeCard(card))
     return { state: "UNCHECKABLE", reason: "This is not a measurement card: it has no id, signature and body." };
-  const c = card as { id: string; signature: string; pubkey?: string; alg?: string; body: unknown };
+  const c = card as {
+    id: string;
+    signature: string;
+    pubkey?: string;
+    alg?: string;
+    body: unknown;
+    preimage_rule?: string;
+    canon?: string;
+  };
   const axis = typeof (c.body as any)?.axis === "string" ? (c.body as any).axis : undefined;
 
   if (typeof c.pubkey !== "string" || !c.pubkey)
@@ -213,7 +266,9 @@ export async function verifyCard(card: unknown, pinnedKey: Uint8Array | null): P
 
   let preimage: Uint8Array;
   try {
-    preimage = new TextEncoder().encode(canonicalPy(c.body));
+    const rule = c.preimage_rule || c.canon || "cpython-v1";
+    const fn = rule === "jcs-rfc8785" ? canonicalJcs : canonicalPy;
+    preimage = new TextEncoder().encode(fn(c.body));
   } catch (e: any) {
     return { state: "UNCHECKABLE", reason: `The body could not be canonicalised: ${e?.message ?? e}.`, id: c.id, axis };
   }
