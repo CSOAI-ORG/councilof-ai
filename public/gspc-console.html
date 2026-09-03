@@ -105,7 +105,11 @@
       <p>Measurement, not certification.</p>
     </div></div>
   </noscript>
+  <h2 style="font-size:1rem;margin:.2rem 0 .4rem">The CSOAI fleet</h2>
+  <p class="sub" style="margin:0 0 .5rem">Our own models, measured against the frozen banks. Third-party models are a separate table below.</p>
   <div class="scroll" id="scroll"><div class="state" id="state">Fetching the live board…</div></div>
+
+  <div id="hub" style="margin-top:2rem"><p class="sub">Loading third-party cells…</p></div>
 
   <p class="foot" id="foot">
     A cell is filled only where a signed card verifies. An empty cell means no run exists —
@@ -182,7 +186,14 @@ function render(filter) {
 
 (async function () {
   try {
-    const [board, find] = await Promise.all([getJSON("/api/gspc"), getJSON("/api/findings")]);
+    const [board, find, hub] = await Promise.all([
+      getJSON("/api/gspc"),
+      getJSON("/api/findings"),
+      // Third-party models. They are a SEPARATE population and are shown as one:
+      // /api/findings carries the CSOAI fleet only, so a console that showed just
+      // that would be us grading ourselves and calling it a board.
+      getJSON("/api/hub-cards").catch(() => null),
+    ]);
 
     // The lid is quoted VERBATIM. Never a count typed into this page — a typed
     // integer goes stale the moment the board moves.
@@ -209,6 +220,43 @@ function render(filter) {
 
     render("");
     el("q").addEventListener("input", (e) => render(e.target.value));
+
+    // ---- third-party population, kept visibly separate ----
+    const hubWrap = el("hub");
+    if (!hub || !Array.isArray(hub.cells) || !hub.cells.length) {
+      hubWrap.innerHTML =
+        '<p class="sub">Third-party cells: <strong>UNCHECKABLE</strong> — /api/hub-cards did not answer. ' +
+        'Unreachable is not empty.</p>';
+    } else {
+      const c = hub.counts || {};
+      const byModel = new Map();
+      for (const cell of hub.cells) {
+        if (!byModel.has(cell.model)) byModel.set(cell.model, []);
+        byModel.get(cell.model).push(cell);
+      }
+      let h =
+        '<h2>Third-party models on the Hub</h2>' +
+        '<p class="sub">A <strong>different population</strong> from the table above, which is the ' +
+        'CSOAI fleet. Status is passed through exactly as published — this page never upgrades a cell. ' +
+        '<strong>' + (c.measured ?? 0) + ' MEASURED · ' + (c.unmeasured ?? 0) + ' UNMEASURED</strong> ' +
+        'of ' + (c.cells ?? 0) + ' cells.</p>' +
+        '<div class="scroll"><table><thead><tr><th>Model</th><th>Axis</th><th>Status</th>' +
+        '<th>Why empty</th><th>Card</th></tr></thead><tbody>';
+      for (const [model, cells] of byModel) {
+        for (const cell of cells) {
+          const st = String(cell.status || "UNCHECKABLE").toUpperCase();
+          const cls = st === "MEASURED" ? "m" : "e";
+          const why = (cell.unmeasured || []).join(", ") || "—";
+          const card = cell.card_url
+            ? '<a href="' + esc(cell.card_url) + '">' + esc(String(cell.card_sha256 || "").slice(0, 10)) + "…</a>"
+            : "—";
+          h += "<tr><th>" + esc(model) + "</th><td style='text-align:left'>" + esc(cell.axis) +
+               '</td><td class="' + cls + '" style="text-align:left">' + esc(st) +
+               "</td><td style='text-align:left'>" + esc(why) + "</td><td>" + card + "</td></tr>";
+        }
+      }
+      hubWrap.innerHTML = h + "</tbody></table></div>";
+    }
   } catch (e) {
     fail(e.message);
   }
