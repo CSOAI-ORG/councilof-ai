@@ -199,10 +199,16 @@ def main() -> int:
             "are publish_public_root.merkle_root / merkle_proof, imported not re-implemented."
         ),
         "anchor_rule": (
-            "This document is a commitment, not an anchor. It becomes anchored only when an "
-            "OpenTimestamps proof over these bytes is upgraded into a Bitcoin block; until then "
-            "the stamp is a pending request. Read the state from the .ots sidecar, never from "
-            "the existence of this file."
+            # Worded to satisfy facts-gate's capability-tense rule, which cannot parse a
+            # conditional ("becomes anchored only when...") and read my honest sentence as a
+            # present-tense claim that the planned OTS rail is live. It was right to stop me:
+            # the words carrying the honesty must be the ones a machine can check, so this
+            # states the rail as `planned` and speaks in future tense throughout.
+            "This document is a commitment, not an anchor. Bitcoin anchoring via "
+            "OpenTimestamps is a planned rail: these bytes will be anchored once a proof over "
+            "them is upgraded into a block, and not before. Until then any stamp is a pending "
+            "request, never a proof. Read the state from the .ots sidecar, never from the "
+            "existence of this file."
         ),
         "proof_rule": (
             "merkle_proof returns sibling digests only, with no side bit, and the tree combines "
