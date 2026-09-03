@@ -7,7 +7,11 @@ on:
     - cron: "41 * * * *"
   workflow_dispatch:
     inputs:
-      axis: { description: "axis to grade this run", type: string, default: "governance" }
+      # Empty means "let the selector choose the emptiest axis", the same thing the
+      # schedule does. A default of "governance" made every dispatch grade governance
+      # and silently shadowed the selector, which is the bug this input was meant to
+      # let you work around in the first place.
+      axis: { description: "axis to grade this run (blank = the emptiest axis)", type: string, default: "" }
       grade: { description: "how many of the emptiest models to grade", type: string, default: "8" }
 concurrency: { group: hub-queue-mill, cancel-in-progress: false }
 permissions: { contents: read }
