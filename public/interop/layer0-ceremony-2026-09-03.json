@@ -1,0 +1,503 @@
+{
+ "schema": "csoai.layer0-ceremony/0.2",
+ "kind": "layer0.surface-attestation",
+ "as_of": "2026-09-03T05:10:26Z",
+ "publisher": "Council of AI (CSOAI Ltd, UK 16939677)",
+ "supersedes": {
+  "file": "/interop/layer0-ceremony.json",
+  "as_of": "2026-09-03T05:10:55Z",
+  "reason": "v0.1 embedded the OpenTimestamps proof as a JSON STRING field (`ots_proof`). Binary through JSON string encoding is lossy: the re-encoded bytes fail DetachedTimestampFile.deserialize with BadMagicError, so `ots verify` cannot read it. The stamp was real; the published form was unusable. v0.2 publishes the proof as a detached sidecar file, which round-trips.",
+  "prior_bytes_kept": true
+ },
+ "what_this_is": "A dated attestation of the MACHINE SURFACE this estate actually serves: every protocol rail, probed live at as_of, with the HTTP status returned and what each rail exposes. It is a measurement of our own doors, made by the same rule we apply to anyone else.",
+ "digest_covers": "whole-artifact-except-sha256-and-seal",
+ "probes": [
+  {
+   "host": "councilof.ai",
+   "method": "POST",
+   "path": "/mcp",
+   "size": 24,
+   "status": 400,
+   "url": "https://councilof.ai/mcp"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/.well-known/mcp.json",
+   "size": 2072,
+   "status": 200,
+   "url": "https://councilof.ai/.well-known/mcp.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/.well-known/agent-card.json",
+   "size": 4399,
+   "status": 200,
+   "url": "https://councilof.ai/.well-known/agent-card.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/x402",
+   "size": 10126,
+   "status": 200,
+   "url": "https://councilof.ai/api/x402"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/.well-known/x402.json",
+   "size": 2980,
+   "status": 200,
+   "url": "https://councilof.ai/.well-known/x402.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/detect",
+   "size": 471,
+   "status": 200,
+   "url": "https://councilof.ai/api/detect"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/detector-interop",
+   "size": 2663,
+   "status": 200,
+   "url": "https://councilof.ai/api/detector-interop"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/.well-known/did.json",
+   "size": 5059,
+   "status": 200,
+   "url": "https://councilof.ai/.well-known/did.json"
+  },
+  {
+   "host": "csoai.org",
+   "method": "GET",
+   "path": "/.well-known/did.json",
+   "size": 5116,
+   "status": 200,
+   "url": "https://csoai.org/.well-known/did.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/gspc",
+   "size": 61648,
+   "status": 200,
+   "url": "https://councilof.ai/api/gspc"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/state",
+   "size": 32555,
+   "status": 200,
+   "url": "https://councilof.ai/api/state"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/root.json",
+   "size": 4948,
+   "status": 200,
+   "url": "https://councilof.ai/root.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/xrpl",
+   "size": 9039,
+   "status": 200,
+   "url": "https://councilof.ai/api/xrpl"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/swift",
+   "size": 11166,
+   "status": 200,
+   "url": "https://councilof.ai/api/swift"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/pqc",
+   "size": 1181,
+   "status": 200,
+   "url": "https://councilof.ai/api/pqc"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/api/badge",
+   "size": 1507,
+   "status": 200,
+   "url": "https://councilof.ai/api/badge"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/openapi.json",
+   "size": 2049,
+   "status": 200,
+   "url": "https://councilof.ai/openapi.json"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/llms.txt",
+   "size": 8365,
+   "status": 200,
+   "url": "https://councilof.ai/llms.txt"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/llms-sitemap.xml",
+   "size": 10404,
+   "status": 200,
+   "url": "https://councilof.ai/llms-sitemap.xml"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/axes-deep.html",
+   "size": 13360,
+   "status": 200,
+   "url": "https://councilof.ai/axes-deep.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/axis/jail.html",
+   "size": 5038,
+   "status": 200,
+   "url": "https://councilof.ai/axis/jail.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/axis/safety.html",
+   "size": 4889,
+   "status": 200,
+   "url": "https://councilof.ai/axis/safety.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/axis/swarm.html",
+   "size": 4969,
+   "status": 200,
+   "url": "https://councilof.ai/axis/swarm.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/axis/governance.html",
+   "size": 5034,
+   "status": 200,
+   "url": "https://councilof.ai/axis/governance.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/what-is-new.html",
+   "size": 13739,
+   "status": 200,
+   "url": "https://councilof.ai/what-is-new.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/hf-badge.html",
+   "size": 13019,
+   "status": 200,
+   "url": "https://councilof.ai/hf-badge.html"
+  },
+  {
+   "host": "councilof.ai",
+   "method": "GET",
+   "path": "/hf-spaces.html",
+   "size": 9354,
+   "status": 200,
+   "url": "https://councilof.ai/hf-spaces.html"
+  },
+  {
+   "host": "csoai.org",
+   "method": "GET",
+   "path": "/",
+   "size": 197917,
+   "status": 200,
+   "url": "https://csoai.org/"
+  },
+  {
+   "host": "csoai.org",
+   "method": "GET",
+   "path": "/root.json",
+   "size": 4948,
+   "status": 200,
+   "url": "https://csoai.org/root.json"
+  }
+ ],
+ "rails": [
+  {
+   "rail": "a2a",
+   "path": "/.well-known/agent-card.json",
+   "description": "A2A agent card",
+   "http": "200",
+   "content_type": "application/a2a+json",
+   "serving": true
+  },
+  {
+   "rail": "mcp",
+   "path": "/mcp",
+   "description": "MCP server",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "mcp_card",
+   "path": "/.well-known/mcp.json",
+   "description": "MCP well-known",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "x402",
+   "path": "/api/x402",
+   "description": "x402 catalogue",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "x402_wk",
+   "path": "/.well-known/x402.json",
+   "description": "x402 well-known",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "did",
+   "path": "/.well-known/did.json",
+   "description": "did:web verification methods",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "board",
+   "path": "/api/gspc",
+   "description": "the 22-axis board",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "findings",
+   "path": "/api/findings",
+   "description": "model x axis findings",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "corrections",
+   "path": "/api/corrections",
+   "description": "corrections ledger",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "root",
+   "path": "/root.json",
+   "description": "public root",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "cards",
+   "path": "/signed/card_index.json",
+   "description": "signed card index",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "c2pa",
+   "path": "/api/detect",
+   "description": "C2PA detection",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "interop",
+   "path": "/api/detector-interop",
+   "description": "detector interop",
+   "http": "200",
+   "content_type": "application/json",
+   "serving": true
+  },
+  {
+   "rail": "intoto",
+   "path": "/api/intoto",
+   "description": "in-toto attestation",
+   "http": "404",
+   "content_type": "application/json",
+   "serving": false
+  },
+  {
+   "rail": "witness",
+   "path": "/api/witness",
+   "description": "hash witness",
+   "http": "400",
+   "content_type": "application/json",
+   "serving": true
+  }
+ ],
+ "rails_serving": 14,
+ "rails_total": 15,
+ "surface": {
+  "a2a": {
+   "name": "Council of AI — Measurement Agent",
+   "version": "1.0.0",
+   "protocolVersion": null,
+   "skills": [
+    "gspc-board",
+    "east-west-crosswalk",
+    "measured-badge",
+    "benchmark-quality-register",
+    "article50-detect"
+   ],
+   "explicitly_not": [
+    "certification",
+    "accreditation",
+    "conformity-assessment",
+    "legal-determination",
+    "enforcement"
+   ]
+  },
+  "mcp": {
+   "tools": [
+    "board_totals",
+    "get_axis",
+    "verify_card",
+    "list_cards",
+    "get_root",
+    "get_card",
+    "verify_inclusion"
+   ],
+   "total": 7
+  },
+  "x402": {
+   "tiers": 7,
+   "free_forever": 8,
+   "rail": {
+    "mode": "challenge-only",
+    "pay_to_configured": true,
+    "facilitator_configured": false,
+    "note": "402 challenges are complete (asset, amount, payTo) but no facilitator is provisioned, so no receipt can settle and no paid artefact is granted. Nothing is charged. Verification stays free.",
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "asset": {
+     "symbol": "USDC",
+     "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+     "decimals": 6
+    },
+    "pay_to": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "amounts": "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
+    "well_known": "https://councilof.ai/.well-known/x402.json"
+   },
+   "revenue_truth": "https://councilof.ai/api/revenue"
+  },
+  "did": {
+   "verification_methods": [
+    "site-release-1",
+    "estate-chain-1",
+    "board-attestation-1",
+    "card-attestation-1",
+    "gspc-board-22axis-2026"
+   ]
+  },
+  "board": {
+   "public_count": "22 axis · 22 measured",
+   "axes": 22,
+   "measured": 22
+  },
+  "findings": {
+   "findings": 335,
+   "models": 64,
+   "axes": 16,
+   "regulators": 4,
+   "possible_cells": 1024,
+   "unmeasured_cells": 689
+  },
+  "corrections": {
+   "count": 40,
+   "policy": "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on."
+  },
+  "root": {
+   "merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+   "card_count": 50,
+   "as_of": "2026-09-02T07:13:27Z",
+   "did_intended": "did:web:csoai.org#board-attestation-1",
+   "signed": true
+  },
+  "cards": {
+   "n_cards": 335,
+   "n_cells": 335,
+   "packaged_at": "2026-08-28T15:39:25.229647+00:00"
+  }
+ },
+ "machine": {
+  "apex": "csoai.org",
+  "primary": "councilof.ai",
+  "signed_root": "https://councilof.ai/root.json"
+ },
+ "what_this_does_not_claim": [
+  "Not a certification, conformity mark, or trust label. We measure; we never certify.",
+  "A 200 means the door answered at as_of. It does not mean the content behind it is correct, current, or complete.",
+  "The A2A card carries version 1.0.0 (the AGENT's version). protocolVersion is ABSENT; a strict A2A client may reject the card on that basis. Recorded, not hidden.",
+  "/api/intoto returned 404 at as_of: the handler exists in master but is inside an undeployed window. UNMEASURED, not removed.",
+  "x402 is challenge-only: pay_to is configured, facilitator_configured is FALSE. Nothing can currently be paid for. Stated by the rail itself.",
+  "The signed card index was packaged 2026-08-28; it is STALE relative to as_of.",
+  "This artifact carries NO Ed25519 seal. The board signing key is on an isolated signing node and is deliberately unreachable from any tool that could produce this file. seal.state is UNMEASURED until an owner ceremony signs it.",
+  "The OpenTimestamps proof for THIS artifact is a detached sidecar at /interop/layer0-ceremony-2026-09-03.json.ots. At as_of it carries PENDING calendar attestations only. It becomes a Bitcoin proof after a calendar commits (~1-6h) AND scripts/ots-upgrade.py is run. An unupgraded stamp is not a proof."
+ ],
+ "witness": {
+  "ots": {
+   "state": "PENDING",
+   "sidecar": "/interop/layer0-ceremony-2026-09-03.json.ots",
+   "calendars": [
+    "alice.btc.calendar.opentimestamps.org",
+    "bob.btc.calendar.opentimestamps.org",
+    "btc.calendar.catallaxy.com",
+    "finney.calendar.eternitywall.com"
+   ],
+   "upgrade_with": "python3 scripts/ots-upgrade.py public/interop/*.ots",
+   "note": "OpenTimestamps needs no key. It proves these bytes existed before a Bitcoin block, independently of us."
+  },
+  "rekor": {
+   "state": "NOT_ATTEMPTED",
+   "reason": "the rekord path carries a signature; this artifact is unsigned, so there is nothing to witness there yet."
+  }
+ },
+ "seal": {
+  "state": "UNMEASURED",
+  "reason": "no board signing key is reachable from here",
+  "expected_kid": "did:web:csoai.org#board-attestation-1"
+ },
+ "sha256": "904ff1f81e3a94e3c835e29a25bf091acaee3f687c60df98456429e122e60497"
+}
