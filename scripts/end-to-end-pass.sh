@@ -4,6 +4,9 @@
 # Owner-gated items stay on the OWNER_CHECKLIST.
 
 set -uo pipefail
+
+# Raised by any phase that finds a real problem; read by the exit gate at the end.
+FAILED=0
 cd "$(dirname "$0")/.."
 
 # count_grep <needle> <file>
@@ -54,15 +57,23 @@ echo ""
 
 # --- Phase 3: per-axis coverage ---
 echo "=== Phase 3: per-axis coverage ==="
+# COUNT increments only on a 200. It used to increment unconditionally, one line
+# below the failure branch, so this phase reported "22/22 axis pages live" even if
+# every page 404'd — a counter that could not go down, in a script whose whole job
+# is to notice when something is down. FAILED is tracked so the run can exit non-zero.
 COUNT=0
+TOTAL=0
 for axis in governance safety provenance continuity conformance openness machinery-conformity care cross-reality detector-interop art5-safeguard swarm affect jail provenance-controls reserve-attestation regulatory-framework distribution-integrity custody-disclosure ai-adoption-components labour-components humanoid-labour-index; do
+  TOTAL=$((TOTAL+1))
   CODE=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 5 "https://councilof.ai/axis/${axis}.html")
   if [ "$CODE" != "200" ]; then
     printf "  %-32s %s ❌\n" "/axis/$axis.html" "HTTP $CODE"
+    FAILED=$((FAILED+1))
+  else
+    COUNT=$((COUNT+1))
   fi
-  COUNT=$((COUNT+1))
 done
-printf "  %d/22 axis pages live\n\n" "$COUNT"
+printf "  %d/%d axis pages live\n\n" "$COUNT" "$TOTAL"
 
 # --- Phase 4: stale content audit ---
 echo "=== Phase 4: stale content audit ==="
@@ -167,3 +178,22 @@ echo ""
 echo "==============================================================="
 echo "  END OF AUDIT — next: end-to-end-pass.sh to fix any gaps"
 echo "==============================================================="
+
+# --- Exit gate ---
+# This script used to fall off the end returning 0 no matter what it found, which
+# made it an audit wearing a gate's name: com.csoai.end-to-end-pass could never have
+# failed, and nothing downstream could branch on it. It now reports a verdict.
+# Only phases with a RELIABLE signal raise FAILED. Phase 3 (axis pages) is a plain
+# HTTP check and is trustworthy. The forbidden-word phase stays ADVISORY on purpose:
+# its negation detector has confirmed false positives — /methodology was flagged for
+# "accredit" while the live sentence reads "never certification, accreditation or
+# conformity assessment", a negation outside its context window. Failing a deploy on
+# that would train everyone to ignore the gate, which is worse than not gating.
+echo "=== verdict ==="
+if [ "$FAILED" -ne 0 ]; then
+  echo "  $FAILED check(s) failed. This is a gate — a non-zero exit means the live"
+  echo "  site does not match what we say about it."
+  exit 1
+fi
+echo "  all checks passed against the live site."
+exit 0
