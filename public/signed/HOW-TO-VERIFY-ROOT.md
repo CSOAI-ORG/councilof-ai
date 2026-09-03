@@ -43,3 +43,7 @@ Both are `NOT_YET` in the sidecar until a funded wallet exists. When they land, 
 
 ## Drift
 `https://councilof.ai/interop/root-witness-pointer.json` states whether the witnessed bytes are the live bytes (`drift.status: MATCH`). A witness for older bytes is still a true witness of those bytes; it is never presented as a witness of the current root.
+
+## What a verifying signature does not establish (revocation)
+
+Verifying a signature establishes that the key named under `alg` / the DID key reference produced the signed bytes and that the bytes have not changed since. It says nothing about the state of that key now. Offline verification is a computation over the verification parameters you hold (the published key, the card bytes); revocation is a property of the present, and this rule defines no revocation mechanism and places no freshness requirement on key material. **A consumer must not treat a signature that verifies as evidence that the signing key is still valid.** Where a decision depends on revocation state, the key-resolution path and the staleness you accept are operational parameters of your deployment and must be stated by it; the card does not carry them. (Stated after the IETF agentproto thread of 31 Aug–2 Sep 2026; recorded as correction C-2026-0902-09.)

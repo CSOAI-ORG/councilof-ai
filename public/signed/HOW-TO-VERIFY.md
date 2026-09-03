@@ -187,3 +187,7 @@ is ~3.3KB and **cannot live inside** the card. There is no PQC field on card-v0 
 - **PQCBench** on the GSPC board is the continuity arena (`csoai/gspc-asi`) — a
   model-comparison task about cryptographic *assumptions*, not a post-quantum
   signature on these cards. Do not conflate.
+
+## What a verifying signature does not establish (revocation)
+
+Verifying a signature establishes that the key named under `alg` / the DID key reference produced the signed bytes and that the bytes have not changed since. It says nothing about the state of that key now. Offline verification is a computation over the verification parameters you hold (the published key, the card bytes); revocation is a property of the present, and this rule defines no revocation mechanism and places no freshness requirement on key material. **A consumer must not treat a signature that verifies as evidence that the signing key is still valid.** Where a decision depends on revocation state, the key-resolution path and the staleness you accept are operational parameters of your deployment and must be stated by it; the card does not carry them. (Stated after the IETF agentproto thread of 31 Aug–2 Sep 2026; recorded as correction C-2026-0902-09.)
