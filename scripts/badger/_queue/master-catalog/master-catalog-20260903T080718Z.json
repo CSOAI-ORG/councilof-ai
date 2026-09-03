@@ -1,0 +1,418 @@
+{
+  "as_of": "2026-09-03T08:07:18Z",
+  "catalogs": {
+    "discovery": {
+      "docs": [
+        "agent-card.json",
+        "agent.json",
+        "asis-spc1.json",
+        "ccpa.json",
+        "cmmc.json",
+        "cn-genai.json",
+        "csa-ccm.json",
+        "cve.json",
+        "cwe.json",
+        "cyber-essentials.json",
+        "did.json",
+        "dpv.json",
+        "ens.json",
+        "etsi-303645.json",
+        "eu-ai-act.json",
+        "eu-cra.json",
+        "eu-data-act.json",
+        "fedramp.json",
+        "g7-hiroshima.json",
+        "gdpr.json",
+        "hipaa.json",
+        "hkma.json",
+        "ieee-7000.json",
+        "iso-23894.json",
+        "iso-27001.json",
+        "iso-27018.json",
+        "iso-42001.json",
+        "mas-trm.json",
+        "mcp.json",
+        "meti-ai.json",
+        "mitre-attack.json",
+        "nist-ai-600-1.json",
+        "nist-ai-rmf.json",
+        "nist-csf.json",
+        "nist-ssdf.json",
+        "owasp-agentic.json",
+        "owasp-llm.json",
+        "pci-dss.json",
+        "prov-o.json",
+        "pspf.json",
+        "scitt.json",
+        "soc2.json",
+        "tisax.json",
+        "uk-ai-bill.json",
+        "vc.json"
+      ],
+      "n_docs": 45,
+      "path": "public/.well-known/*.json"
+    },
+    "ecosystem": {
+      "n_regulators": 23,
+      "path": "public/ecosystem.json",
+      "regulators": [
+        "eu-ai-office",
+        "nist",
+        "ico-uk",
+        "enisa",
+        "bafin",
+        "mas-sg",
+        "cnil",
+        "korea-msit",
+        "uk-aisi",
+        "us-ftc",
+        "edpb",
+        "de-bsi",
+        "fr-anssi",
+        "it-garante",
+        "es-aesia",
+        "ca-opc",
+        "au-oaic",
+        "jp-ppc",
+        "cn-cac",
+        "sg-imda",
+        "br-anpd",
+        "sa-sdaia",
+        "in-meity"
+      ]
+    },
+    "llms_sitemap": {
+      "path": "public/llms-sitemap.xml",
+      "size_b": 10404
+    },
+    "llms_txt": {
+      "path": "public/llms.txt",
+      "size_b": 8365
+    },
+    "openapi": {
+      "n_paths": 66,
+      "path": "public/openapi.json",
+      "paths": [
+        "/api/_chatGrounded",
+        "/api/agentic-fix",
+        "/api/article50",
+        "/api/assess",
+        "/api/axis-register",
+        "/api/badge",
+        "/api/benchmark-quality",
+        "/api/board-sign",
+        "/api/cards",
+        "/api/challenge",
+        "/api/chat",
+        "/api/checkout",
+        "/api/clarity",
+        "/api/comparison",
+        "/api/compute",
+        "/api/contact",
+        "/api/corrections",
+        "/api/counters",
+        "/api/cross",
+        "/api/detect",
+        "/api/detector-interop",
+        "/api/east-west-bench",
+        "/api/embed",
+        "/api/eunomia-data",
+        "/api/evidence-bundle",
+        "/api/evidence-pack",
+        "/api/feed.xml",
+        "/api/findings",
+        "/api/fines",
+        "/api/fulfill",
+        "/api/gspc",
+        "/api/hf-spaces",
+        "/api/interop-bulk",
+        "/api/lead",
+        "/api/locale",
+        "/api/mcp",
+        "/api/metered-endpoints.test",
+        "/api/methodology",
+        "/api/og",
+        "/api/openapi.json",
+        "/api/openapi.test",
+        "/api/otel",
+        "/api/pqc",
+        "/api/proof",
+        "/api/registers",
+        "/api/regulation",
+        "/api/regulator-findings",
+        "/api/report",
+        "/api/reported",
+        "/api/request-attestation",
+        "/api/revenue",
+        "/api/root",
+        "/api/security",
+        "/api/specialists",
+        "/api/state",
+        "/api/subscribe",
+        "/api/swift",
+        "/api/tools",
+        "/api/trace",
+        "/api/verify-tally",
+        "/api/wave-dashboard",
+        "/api/webhooks",
+        "/api/witness",
+        "/api/witness.test",
+        "/api/x402",
+        "/api/xrpl"
+      ]
+    },
+    "root": {
+      "as_of": "2026-09-03T06:32:23Z",
+      "card_count": 140,
+      "merkle_root": "0989ab3dd5a68fc1\u2026",
+      "path": "public/root.json",
+      "signed": true
+    },
+    "storefront": {
+      "n_products": 11,
+      "path": "public/catalog.json",
+      "products": [
+        "claimguard",
+        "gspc-mcp",
+        "east-west",
+        "gspc-verify",
+        "gspc-arena",
+        "arena-scoreboard",
+        "article-50-pack",
+        "benchmarks",
+        "mcp-fleet",
+        "ras-booking",
+        "cobol-bridge"
+      ],
+      "schema": "csoai.storefront/0.1"
+    },
+    "subdomains": {
+      "n": 7,
+      "path": "public/subdomains/*/",
+      "slugs": [
+        "blog",
+        "dashboards",
+        "issuance",
+        "marketplace",
+        "press",
+        "proofs",
+        "verifier"
+      ]
+    }
+  },
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.master-catalog",
+  "queue": {
+    "a2a-findings": {
+      "n_atoms": 20,
+      "n_files": 10
+    },
+    "archive-deep": {
+      "n_atoms": 36,
+      "n_files": 9
+    },
+    "bank-classify": {
+      "n_atoms": 52,
+      "n_files": 2
+    },
+    "bank-complete": {
+      "n_atoms": 1560,
+      "n_files": 2
+    },
+    "bank-ledger": {
+      "n_atoms": 260,
+      "n_files": 2
+    },
+    "bank-pack": {
+      "n_atoms": 1040,
+      "n_files": 9
+    },
+    "bridges": {
+      "n_atoms": 90,
+      "n_files": 2
+    },
+    "compass": {
+      "n_atoms": 14,
+      "n_files": 2
+    },
+    "corrections-diff": {
+      "n_atoms": 439,
+      "n_files": 11
+    },
+    "cose-wrap": {
+      "n_atoms": 40,
+      "n_files": 3
+    },
+    "door-expand": {
+      "n_atoms": 120,
+      "n_files": 3
+    },
+    "eat-4": {
+      "n_atoms": 65,
+      "n_files": 12
+    },
+    "fixes": {
+      "n_atoms": 495,
+      "n_files": 7
+    },
+    "layer0": {
+      "n_atoms": 10,
+      "n_files": 10
+    },
+    "learn": {
+      "n_atoms": 32000,
+      "n_files": 3
+    },
+    "mineral-4": {
+      "n_atoms": 120,
+      "n_files": 6
+    },
+    "per-issuer": {
+      "n_atoms": 3650,
+      "n_files": 18
+    },
+    "per-item": {
+      "n_atoms": 1988,
+      "n_files": 14
+    },
+    "per-model": {
+      "n_atoms": 140,
+      "n_files": 10
+    },
+    "public-a2a-x402": {
+      "n_atoms": 52,
+      "n_files": 32
+    },
+    "public-cousins": {
+      "n_atoms": 16,
+      "n_files": 2
+    },
+    "public-data": {
+      "n_atoms": 190,
+      "n_files": 33
+    },
+    "regulatory": {
+      "n_atoms": 333,
+      "n_files": 9
+    },
+    "semantic-scholar": {
+      "n_atoms": 90,
+      "n_files": 3
+    },
+    "t2": {
+      "n_atoms": 1761,
+      "n_files": 172
+    },
+    "t3": {
+      "n_atoms": 120,
+      "n_files": 24
+    },
+    "tie-attestations": {
+      "n_atoms": 22,
+      "n_files": 11
+    },
+    "top-models": {
+      "n_atoms": 100,
+      "n_files": 21
+    },
+    "uk-open-data": {
+      "n_atoms": 53,
+      "n_files": 12
+    },
+    "witness-receipts": {
+      "n_atoms": 88,
+      "n_files": 11
+    }
+  },
+  "surfaces": {
+    "functions": {
+      "endpoints": [
+        "agentic-fix",
+        "article50",
+        "assess",
+        "axis-register",
+        "badge",
+        "benchmark-quality",
+        "board-sign",
+        "cards",
+        "challenge",
+        "chat",
+        "checkout",
+        "clarity",
+        "comparison",
+        "compute",
+        "contact",
+        "corrections",
+        "counters",
+        "cross",
+        "detect",
+        "detector-interop",
+        "dorado",
+        "east-west-bench",
+        "embed",
+        "eunomia-data",
+        "evidence-bundle",
+        "evidence-pack",
+        "feed.xml",
+        "findings",
+        "fines",
+        "fulfill",
+        "gspc",
+        "hf-spaces",
+        "hub-cards",
+        "interop-bulk",
+        "intoto",
+        "lead",
+        "ledger",
+        "locale",
+        "mcp",
+        "methodology",
+        "og",
+        "openapi.json",
+        "oracle-fleet",
+        "otel",
+        "pqc",
+        "proof",
+        "registers",
+        "regulation",
+        "regulator-findings",
+        "report",
+        "reported",
+        "request-attestation",
+        "revenue",
+        "root",
+        "security",
+        "specialists",
+        "state",
+        "subscribe",
+        "swift",
+        "tools",
+        "trace",
+        "verify-tally",
+        "wave-dashboard",
+        "webhooks",
+        "witness",
+        "x402",
+        "xrpl"
+      ],
+      "n": 67,
+      "path": "functions/api/*.ts"
+    },
+    "sitemap": {
+      "n_urls": 482,
+      "path": "public/sitemap.xml"
+    }
+  },
+  "totals": {
+    "n_catalogs": 8,
+    "n_discovery_docs": 45,
+    "n_functions": 67,
+    "n_openapi_paths": 66,
+    "n_products": 11,
+    "n_queue_atoms": 44964,
+    "n_queue_dirs": 30,
+    "n_regulators": 23,
+    "n_sitemap_urls": 482,
+    "n_subdomains": 7
+  }
+}

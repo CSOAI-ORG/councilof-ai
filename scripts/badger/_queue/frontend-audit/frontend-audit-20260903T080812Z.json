@@ -1,0 +1,948 @@
+{
+  "as_of": "2026-09-03T08:08:12Z",
+  "average_score": 8.83,
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.frontend-audit",
+  "n_fail": 0,
+  "n_ok": 6,
+  "n_pages": 30,
+  "n_perfect": 24,
+  "next_actions": [
+    "Improve the 0 pages scoring <6",
+    "Add lid phrase + JSON-LD + canonical to every page",
+    "Add a11y checks (alt text, aria-label)",
+    "Build the audit into the preflight gate"
+  ],
+  "results": [
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "404",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 3.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "404.html",
+      "score": 9,
+      "url": "https://councilof.ai/404.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "AGIBench",
+        "jsonld_types": [
+          "PropertyValue",
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 24.0,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "agibench.html",
+      "score": 9,
+      "url": "https://councilof.ai/agibench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "Council Space Arena",
+        "jsonld_types": [
+          "Dataset",
+          "CollectionPage"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 10.5,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "only 1 AEO markers (want \u22652)"
+      ],
+      "live": true,
+      "path": "arena.html",
+      "score": 9,
+      "url": "https://councilof.ai/arena.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "The 22 axes of GSPC",
+        "jsonld_types": [
+          "Organization",
+          "TechArticle"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 13.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "only 1 AEO markers (want \u22652)"
+      ],
+      "live": true,
+      "path": "axes-deep.html",
+      "score": 9,
+      "url": "https://councilof.ai/axes-deep.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "All 22 GSPC axes",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 10.4,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "axes.html",
+      "score": 9,
+      "url": "https://councilof.ai/axes.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "CareBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 21.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "carebench.html",
+      "score": 9,
+      "url": "https://councilof.ai/carebench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite",
+          "Person"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "What we publish against ourselves.",
+        "jsonld_types": [
+          "PropertyValue",
+          "Organization",
+          "Person",
+          "Article",
+          "BreadcrumbList",
+          "ListItem",
+          "WebSite"
+        ],
+        "lid_phrase": false,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 72.4,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "missing lid phrase"
+      ],
+      "live": true,
+      "path": "claimguard.html",
+      "score": 8.5,
+      "url": "https://councilof.ai/claimguard.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Article 5 Bench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 21.5,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "conductbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/conductbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "DefBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 17.4,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "defbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/defbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "DetBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "Legislation",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 24.9,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "detbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/detbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Three vendors now answer to millions of federal seats. Who measured their behavi",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 11.9,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "contains forbidden word: conformity mark"
+      ],
+      "live": true,
+      "path": "genai-mil.html",
+      "score": 7,
+      "url": "https://councilof.ai/genai-mil.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Globe3D",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 28.5,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "globe.html",
+      "score": 9,
+      "url": "https://councilof.ai/globe.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Globe3D",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 28.5,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "globe3d.html",
+      "score": 9,
+      "url": "https://councilof.ai/globe3d.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "GovBench",
+        "jsonld_types": [
+          "PropertyValue",
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 26.9,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "govbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/govbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "GSPC Console",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 15.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "gspc-console.html",
+      "score": 9,
+      "url": "https://councilof.ai/gspc-console.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": false,
+        "h1_text": null,
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 99.4,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing <h1>",
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "gspc-quests.html",
+      "score": 8,
+      "url": "https://councilof.ai/gspc-quests.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "SoftwareApplication"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Get the GSPC badge on your HuggingFace model",
+        "jsonld_types": [
+          "Organization",
+          "SoftwareApplication",
+          "Offer"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 12.7,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "hf-badge.html",
+      "score": 9,
+      "url": "https://councilof.ai/hf-badge.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Council of AI on HuggingFace",
+        "jsonld_types": [
+          "ItemList",
+          "ListItem"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 9.9,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "JSON-LD has no AEO types (Organization, WebSite, SoftwareApplication, Dataset, Person)",
+        "only 0 AEO markers (want \u22652)"
+      ],
+      "live": true,
+      "path": "hf-spaces.html",
+      "score": 8.5,
+      "url": "https://councilof.ai/hf-spaces.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "Livecam",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 7.6,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "livecam.html",
+      "score": 9,
+      "url": "https://councilof.ai/livecam.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "MachBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 20.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "machbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/machbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "MCPBench",
+        "jsonld_types": [
+          "PropertyValue",
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 22.8,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "mcpbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/mcpbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Send us a system. We measure it. We sign it. Anyone can check.",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 5.2,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "measure.html",
+      "score": 9,
+      "url": "https://councilof.ai/measure.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "OSSBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 20.2,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "ossbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/ossbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "Paper District \u2014 Council of AI research &amp; IP library",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 7.9,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "paper-district.html",
+      "score": 9,
+      "url": "https://councilof.ai/paper-district.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "Pay with MetaMask.",
+        "jsonld_types": [
+          "Product",
+          "Offer"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 9.6,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "JSON-LD has no AEO types (Organization, WebSite, SoftwareApplication, Dataset, Person)",
+        "only 0 AEO markers (want \u22652)"
+      ],
+      "live": true,
+      "path": "pay.html",
+      "score": 8.5,
+      "url": "https://councilof.ai/pay.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "PQCBench",
+        "jsonld_types": [
+          "PropertyValue",
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 21.7,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "pqcbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/pqcbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "ProvBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 28.1,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "provbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/provbench.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite",
+          "Person"
+        ],
+        "canonical": true,
+        "dark_mode": true,
+        "h1": true,
+        "h1_text": "Get measured",
+        "jsonld_types": [
+          "PropertyValue",
+          "Organization",
+          "Person",
+          "BreadcrumbList",
+          "ListItem",
+          "WebSite"
+        ],
+        "lid_phrase": false,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 57.6,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags",
+        "missing lid phrase"
+      ],
+      "live": true,
+      "path": "ras.html",
+      "score": 8.5,
+      "url": "https://councilof.ai/ras.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "WebSite"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "REGULATOR CONSOLE",
+        "jsonld_types": [
+          "Organization",
+          "WebSite"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 9.2,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "regulator-console.html",
+      "score": 9,
+      "url": "https://councilof.ai/regulator-console.html"
+    },
+    {
+      "checks": {
+        "aeo_markers": [
+          "Organization",
+          "Dataset"
+        ],
+        "canonical": true,
+        "dark_mode": false,
+        "h1": true,
+        "h1_text": "SwarmBench",
+        "jsonld_types": [
+          "Dataset",
+          "Organization",
+          "DataDownload"
+        ],
+        "lid_phrase": true,
+        "meta_description": true,
+        "og_tags": 0,
+        "size_kb": 16.6,
+        "title": true,
+        "view_transitions": false
+      },
+      "http_code": 200,
+      "issues": [
+        "missing OG tags"
+      ],
+      "live": true,
+      "path": "swarmbench.html",
+      "score": 9,
+      "url": "https://councilof.ai/swarmbench.html"
+    }
+  ]
+}
