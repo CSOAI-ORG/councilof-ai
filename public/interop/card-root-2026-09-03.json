@@ -1,8 +1,8 @@
 {
   "kind": "csoai.card-root/1",
-  "as_of": "2026-09-03T11:56:10Z",
-  "n_leaves": 420,
-  "merkle_root": "5eb0c5d1fbbd75ab23c3bb81f9ef597bd998e3ba674686e8e09e832d7d40b9ed",
+  "as_of": "2026-09-03T12:26:43Z",
+  "n_leaves": 491,
+  "merkle_root": "1cb7e1ca86615e3a2f94973aba87d95d0449c688ee447114fa2fe27967ad1883",
   "leaf_rule": "sha256 over canonical JSON (sorted keys, no whitespace, ensure_ascii=False) of the WHOLE signed card — body, id, signature and did — not the body alone. Tree and proof are publish_public_root.merkle_root / merkle_proof, imported not re-implemented.",
   "anchor_rule": "This document is a commitment, not an anchor. Bitcoin anchoring via OpenTimestamps is a planned rail: these bytes will be anchored once a proof over them is upgraded into a block, and not before. Until then any stamp is a pending request, never a proof. Read the state from the .ots sidecar, never from the existence of this file.",
   "proof_rule": "merkle_proof returns sibling digests only, with no side bit, and the tree combines positionally as sha256(left + right). To verify: start from the leaf, and at each step fold sha256(current + sibling) when the running index is even, sha256(sibling + current) when it is odd, halving the index each step. The leaf's `index` is published for exactly this reason.",
@@ -212,13 +212,22 @@
   ],
   "leaves": [
     {
+      "leaf": "002d980927ba769cc8c1a6874386b2037112a2c17acbf7eb150bb8745ac964fe",
+      "card": "signed-machiner-4a89215de8d7.json",
+      "id": "4a89215de8d71b4aa75587089b5de64d15ff9d7bd3aa33add5023341bc922420",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 0
+    },
+    {
       "leaf": "007224dce0e5d12e70f91d72e24d3af307aa33ac43490ee1079ebb9f467ee4c8",
       "card": "signed-swarm-cc835914278c.json",
       "id": "cc835914278cdb5ebd7b186485d5551d5fb69edd5df30ced0bba9238ab0fd120",
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 0
+      "index": 1
     },
     {
       "leaf": "01439f65ac4ff539277f4d29ba5f1356e5ce8b3a28a523b95f9fffab2dd080f5",
@@ -227,7 +236,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 1
+      "index": 2
     },
     {
       "leaf": "016797c3086d7d93783030f48378aa9b38b388bf1176544ec37859c67499448d",
@@ -236,7 +245,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 2
+      "index": 3
     },
     {
       "leaf": "018293f8168b56e2d71f3bc29fba7d508ad324cc9fe15551437791d1282577e8",
@@ -245,7 +254,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 3
+      "index": 4
     },
     {
       "leaf": "02d57b79b5e4f6cb149e7e40f5610cd306286b6a022c95fbe31d1eacf3719641",
@@ -254,7 +263,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 4
+      "index": 5
     },
     {
       "leaf": "02eac21e02b2158a7fb7acf2a49e57e6b5922089f08003b1d5dacaa256d54733",
@@ -263,7 +272,16 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 5
+      "index": 6
+    },
+    {
+      "leaf": "0380000a35026e2b3ca309e6204cac6ec2838caa5f548eb3aaf434623638c1c4",
+      "card": "signed-openness-886ca78f9262.json",
+      "id": "886ca78f92627300670e118d24401a441935b3fe9009bda320d11c0fde09bad2",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 7
     },
     {
       "leaf": "0391af65d1e9d45daa480cf3f2984f4c403630fbda6d70f1cfc1c9ee25260881",
@@ -272,7 +290,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 6
+      "index": 8
     },
     {
       "leaf": "03f71d381ada89d96b9a02e08fa4252800b3c38b15cc5c3d50b836110b370c45",
@@ -281,7 +299,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 7
+      "index": 9
     },
     {
       "leaf": "0515d633c97904c6b1c6884e5f2b2dcd4c99e9bacbe64137d1c75c90d6982cf4",
@@ -290,7 +308,16 @@
       "model": "google/gemma-2-9b-it",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 8
+      "index": 10
+    },
+    {
+      "leaf": "0641d3bee305d6e6bb925ae5c1ef8eedf04a4a2b14aa85e01bdd89f31836bef0",
+      "card": "signed-conforma-740223de4bec.json",
+      "id": "740223de4bec447f7d4db63902d5018860b73007bfd3fbe8f50f696bde504df1",
+      "model": "zai-org/GLM-5.2",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 11
     },
     {
       "leaf": "06c0c7b4e47f615dcf3b5db853e2b2e4797ccad550726217254492b64187a031",
@@ -299,7 +326,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 9
+      "index": 12
     },
     {
       "leaf": "06ee7d032f32aae5aa41d7f111102d568f1e11f55db2e8371ebc683162d83c53",
@@ -308,7 +335,16 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 10
+      "index": 13
+    },
+    {
+      "leaf": "076c006011fc74b2fb1902dd294ace5f698293b59ef6fe7433ecaf23dc43a225",
+      "card": "signed-affect-914f8eb4f1f2.json",
+      "id": "914f8eb4f1f2cfdc87b598c593c5e176226882e4f40dc4f7b11afc0285d70987",
+      "model": "zai-org/GLM-4.7-Flash",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 14
     },
     {
       "leaf": "077e22c40ecb50ac269d65a834437939601e8487de9983015e88b540e51c5bd4",
@@ -317,7 +353,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 11
+      "index": 15
     },
     {
       "leaf": "0795f770ae925a6aeb52001b06f2efef0152939de90f4c9f1b5320a9d2dc301e",
@@ -326,7 +362,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 12
+      "index": 16
     },
     {
       "leaf": "07e8466ffa414128d3b699390c4788da511a5cdc6db04dad1e157e7504ffdb04",
@@ -335,7 +371,16 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 13
+      "index": 17
+    },
+    {
+      "leaf": "082a278d5513c57f7faa2413579b42d2b64fbab460236c2e8ec772f468e4bb67",
+      "card": "signed-care-063507c3fa90.json",
+      "id": "063507c3fa90468e916ec790fc6fa0a97097fab5e1165c85eb187b678be33f00",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 18
     },
     {
       "leaf": "08e74a513dc4b5ba53330f260196748f3d0f14fb8ddfd51e7db5b072ec7876ce",
@@ -344,7 +389,7 @@
       "model": "microsoft/phi-4",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 14
+      "index": 19
     },
     {
       "leaf": "0968e1e04680bdb9f39ae97ba8ee063d4cb519313abf860405e6eca0bd74cdd3",
@@ -353,7 +398,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 15
+      "index": 20
     },
     {
       "leaf": "09fa71907779bd0b9a52892c2553f3e2ad328218c0a7fe609eb600e5265a3bbf",
@@ -362,7 +407,7 @@
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 16
+      "index": 21
     },
     {
       "leaf": "0a5ddb8a5f7c29a8ea21e338c12ea29ca0eb95fb6c4a29c54a9e19daa5f2d30a",
@@ -371,7 +416,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 17
+      "index": 22
     },
     {
       "leaf": "0b170937b4e5cd81fe903c1ecf40de3fe97204faf52b4eded7fb56613d10ac0e",
@@ -380,7 +425,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 18
+      "index": 23
     },
     {
       "leaf": "0b97d2977a372408a567944eb8d5dbf9baa4f5f21dfa2f0bbaeaef50e0d43b48",
@@ -389,7 +434,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 19
+      "index": 24
     },
     {
       "leaf": "0cbc80cab1f9032720d2dcaccf36d9e533b945f280c1fa418be2d4da80345ef6",
@@ -398,7 +443,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 20
+      "index": 25
     },
     {
       "leaf": "0d8432cf772d204ba48252f8bcaf4ea42e5385121f9e9feaabc312cd3c356c21",
@@ -407,7 +452,7 @@
       "model": "Qwen/Qwen2.5-32B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 21
+      "index": 26
     },
     {
       "leaf": "0e55656581d4f53a390613ebe69feb5bcd0e375cea866f540406efbe3c34608b",
@@ -416,7 +461,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 22
+      "index": 27
     },
     {
       "leaf": "0f98697e70804c368eda32df3955c56b2480044c8237d5a4f92a117d05c02bb1",
@@ -425,7 +470,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 23
+      "index": 28
     },
     {
       "leaf": "0ffbc54643b4eacb4463f27de1d67337a2fa83b45c36d81d725a48d97868d64a",
@@ -434,7 +479,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 24
+      "index": 29
     },
     {
       "leaf": "10004834429b326ed5dd37f0e2752f5ed45710bcd7d001cb9a0f718b06ca7878",
@@ -443,7 +488,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 25
+      "index": 30
     },
     {
       "leaf": "10072bb88aa54c786434fb3cf5424d874bf475efcc9ac56de2ce0e60c028eda5",
@@ -452,7 +497,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 26
+      "index": 31
     },
     {
       "leaf": "102e0962e91f23fb641904153ee743079102fb7e5a94bfeb456762b1d18ed217",
@@ -461,7 +506,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 27
+      "index": 32
     },
     {
       "leaf": "128eee17f1702f34ef2fce41ae07011a34a221b43e2ad1b2f667fcc98f9053f6",
@@ -470,7 +515,16 @@
       "model": "microsoft/phi-4",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 28
+      "index": 33
+    },
+    {
+      "leaf": "12d689b219c2d8123add42a298790763288aee99d5bd541a412cc098cc3a588c",
+      "card": "signed-machiner-71bc2ea543ea.json",
+      "id": "71bc2ea543ea8dd25508b64461df324cb762ae5253fd2bdc1601e2ec50425950",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 34
     },
     {
       "leaf": "130b8b23768c05fc189a667765ff3b00fd5fd7c9a6d49c13116fbb8b09baead9",
@@ -479,7 +533,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 29
+      "index": 35
     },
     {
       "leaf": "136ece3f6c0916700b2bc86de656ae5945edf679579fab3cefc00ab8db3a5207",
@@ -488,7 +542,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 30
+      "index": 36
     },
     {
       "leaf": "142e2a515cf884ea3e38be23b1b4906bc2928d5b5efbe49c6d987345606ae3d5",
@@ -497,7 +551,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 31
+      "index": 37
     },
     {
       "leaf": "1467c277dae9a11ef4f1c2719f6cdf8d0cb6093074f7586d1a233c29015ad975",
@@ -506,7 +560,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 32
+      "index": 38
     },
     {
       "leaf": "14dc8d88a024a1f07133ecb39589b1e74f3a1623eb8b645ffe11c3b9ee9098e5",
@@ -515,7 +569,16 @@
       "model": "zai-org/GLM-5.2",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 33
+      "index": 39
+    },
+    {
+      "leaf": "14fbbe7c490e58f281ed4988ff362fbe541cbae2778e0344d0589cae7a120b35",
+      "card": "signed-affect-987f1c9453ff.json",
+      "id": "987f1c9453ff623d7adfb3305fbe0094ded7caad0730accb8c775143eae4396b",
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 40
     },
     {
       "leaf": "15c59c37334128b92973503e54041d29b3da84c7bd94a351c13e2979450476b1",
@@ -524,7 +587,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 34
+      "index": 41
     },
     {
       "leaf": "16721db0b463b6ef5b73227dbd1d9b10a12df2eb2f477a7818b48f24c05aeb2b",
@@ -533,7 +596,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 35
+      "index": 42
     },
     {
       "leaf": "16a2f7db08e6248765e65b806279d790588c9a414a09f3d6e24b911801553572",
@@ -542,7 +605,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 36
+      "index": 43
     },
     {
       "leaf": "17c777ba7ab49a91f1eb70d79510732b486ef4cedb1c2b2052ae660231cefd4d",
@@ -551,7 +614,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 37
+      "index": 44
     },
     {
       "leaf": "17ea32b0b9363fdad6afefba6d7cbcd5491162704670fd730a7ed23ef4990345",
@@ -560,7 +623,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 38
+      "index": 45
     },
     {
       "leaf": "18450d49005aa754ea85737021eec32f9e089c8fb0f66c07a93ed4819a45174b",
@@ -569,7 +632,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 39
+      "index": 46
     },
     {
       "leaf": "18bf0e7298fd983c928a0faf93063f982fe23bbe89a2973f8ec263e82e25696b",
@@ -578,7 +641,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 40
+      "index": 47
     },
     {
       "leaf": "18c248d11f4479f6d2c29f9e5eb97d8270ebab8e66a879923604f9c653706ce0",
@@ -587,7 +650,16 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 41
+      "index": 48
+    },
+    {
+      "leaf": "19fb88d825514067ef245f3cef2c8d2f6c73b072963e256af1ad62de25c0504f",
+      "card": "signed-openness-be09e6dff3ea.json",
+      "id": "be09e6dff3ea5a5087b60825138e0c0a258be6768d30546a1d9cc6ba22a670f1",
+      "model": "prism-ml/Ternary-Bonsai-27B-gguf",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 49
     },
     {
       "leaf": "1be2f97eeb1cf6e02df2e163077b7573b05628383ec8803c5591f0b354f69455",
@@ -596,7 +668,16 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 42
+      "index": 50
+    },
+    {
+      "leaf": "1cd4823b80fca711d6f0e661845e2fe3e353133186d9bd648a0108b84514b274",
+      "card": "signed-provenan-0ccf6639e2ef.json",
+      "id": "0ccf6639e2ef5fa6e788a087092240c3d9fced9c6346ff20cd931edcf7be623f",
+      "model": "meta-llama/Llama-3.3-70B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 51
     },
     {
       "leaf": "1d16ae1a62d874d309d0285d2881f6ebc2e1ed1c5d485b7e0a2e9f1e62008122",
@@ -605,7 +686,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 43
+      "index": 52
     },
     {
       "leaf": "1d3559b655b40b2f5b817e325fbc690004e175d62620c50e90cc0a3ca3852be2",
@@ -614,7 +695,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 44
+      "index": 53
     },
     {
       "leaf": "1df64be1982584f87003eb2e543ba5a434fd96adbfe0c9d83559d919a21df361",
@@ -623,7 +704,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 45
+      "index": 54
     },
     {
       "leaf": "1e0bd7394be82c7d4bb198b980fe3a9f2b3ce60dfdfd8674beb6a38f180e7052",
@@ -632,7 +713,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 46
+      "index": 55
     },
     {
       "leaf": "1e17c96a14bf1a5e8887d373b3c29dfc5734962050bdeee706860baa7c0c4c44",
@@ -641,7 +722,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 47
+      "index": 56
     },
     {
       "leaf": "1ef2bb8286debe17cd97b9cf73eec80d4d7006c2ea92ecc2cccdd6c720f2d2b7",
@@ -650,7 +731,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 48
+      "index": 57
     },
     {
       "leaf": "204faea67d477e4d4f199033556511bfbc90dc2faf8c23e69b4057791cae6f3c",
@@ -659,7 +740,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 49
+      "index": 58
     },
     {
       "leaf": "20ff4a16cbda98fbb26d1ac3a118afa3cc004ea9c98a6f5e042f7bed2e6308db",
@@ -668,7 +749,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 50
+      "index": 59
     },
     {
       "leaf": "21c27e248b3e64a8be481b64f37ec00d3fac35332e5f3cf4917142385fca0e9a",
@@ -677,7 +758,7 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 51
+      "index": 60
     },
     {
       "leaf": "21fa304225665cce93b53c59f479c7f4de89e40cfbbdc2d2ebbbedbea69e4aaf",
@@ -686,7 +767,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 52
+      "index": 61
     },
     {
       "leaf": "221089523debcf7413b00f5f9672f654f1ecadc69cd6d6d2612c25bf04879411",
@@ -695,7 +776,16 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 53
+      "index": 62
+    },
+    {
+      "leaf": "2284628bd9bc45075abc75ccb690b90db8152356485072dfc3e0124c5f78d5a8",
+      "card": "signed-swarm-46cb2cb7d42d.json",
+      "id": "46cb2cb7d42d0443012d33311c1e25b0507ebc4d34f166df0e362d6080cde544",
+      "model": "Qwen/Qwen2-7B-Instruct",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 63
     },
     {
       "leaf": "22c956a842acf7e5dbaea528d376bfa37e5e84c99e2c4cbd64fef09eb3352e64",
@@ -704,7 +794,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 54
+      "index": 64
     },
     {
       "leaf": "2319dd51fd634612025c7ba993f815986ceed3e8c46da2ad88a2fbe5cb3a916e",
@@ -713,7 +803,16 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 55
+      "index": 65
+    },
+    {
+      "leaf": "23673a5f93804e04a175afa7a50b4c4853ab75e86fb790f90ff356ddbc59d803",
+      "card": "signed-cross-re-3d8552510ce6.json",
+      "id": "3d8552510ce626eb1a973e983b52d9caac1b88b26d097670014e0073ad08437f",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 66
     },
     {
       "leaf": "2380347613aea797b6f01343a8ec53e642027cad8da46f90c9db24d79ab486ee",
@@ -722,7 +821,16 @@
       "model": "zai-org/GLM-5.2",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 56
+      "index": 67
+    },
+    {
+      "leaf": "23aabd193637f2263f6e4729993dc0c240396b918089afa4338f317cb6dd592a",
+      "card": "signed-machiner-a2a4090078e0.json",
+      "id": "a2a4090078e039059b03655e3b11542c5edb13d7d32463aff685acce3aaf76aa",
+      "model": "zai-org/GLM-4.7-Flash",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 68
     },
     {
       "leaf": "24906960d6b4f1ba8b26ac9d0ed173bd07c655e5b020b3ada0dbf20b48ee35d7",
@@ -731,7 +839,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 57
+      "index": 69
     },
     {
       "leaf": "24d5447209c84e2f671ab4c73ef6b21c0dc79b00d6754f069b98eab07dd66765",
@@ -740,7 +848,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 58
+      "index": 70
     },
     {
       "leaf": "25080059dfdea19e3d5f58769358b3cc1acd711f6296d78430e2bd5c10d0add4",
@@ -749,7 +857,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 59
+      "index": 71
     },
     {
       "leaf": "2521b28acfc3bd1cefd0c573864c2be37c457e2976e911e13afdb16a42597050",
@@ -758,7 +866,16 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 60
+      "index": 72
+    },
+    {
+      "leaf": "2628b85cfe5b3964dcde307417b24b71ae77d6fccb5c86b5fb22ceac4572cda0",
+      "card": "signed-conforma-ef583aa4edee.json",
+      "id": "ef583aa4edee35fd75f94a4ee1805f376b7d6970e579c17f9d7023f44da9d9b8",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 73
     },
     {
       "leaf": "267066dcdbee7bf6903fb882f4163c2cddad735a6b337a0f17c8428b1be639a8",
@@ -767,7 +884,16 @@
       "model": "google/gemma-2-9b-it",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 61
+      "index": 74
+    },
+    {
+      "leaf": "26ce03b53ba2c5250968e3951e34d83891f553741a50613c7d184cc289e9fca2",
+      "card": "signed-safety-8fade57b2e23.json",
+      "id": "8fade57b2e235931b19611c08c434b2d7d1a56469294d4254a93a4cc4adb5db9",
+      "model": "Qwen/Qwen3-1.7B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 75
     },
     {
       "leaf": "26fed12b0299234e4dbc4b36d67f1956a411e7ceeb454d93dab4673a916e135d",
@@ -776,7 +902,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 62
+      "index": 76
     },
     {
       "leaf": "27fc0a477e292659b0df1c5905fbd0ea30e7d4d5c46573001aa81404a48ec95a",
@@ -785,7 +911,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 63
+      "index": 77
     },
     {
       "leaf": "2879bb4e489a1e95f3050f9a81a7e0c7cf75d9ea4d8cf8d3270b7dd139872b38",
@@ -794,7 +920,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 64
+      "index": 78
     },
     {
       "leaf": "28ca796e6604cb1e9cd98cd66b5edf66e6f10d0da63b94f7f632238e44e7413a",
@@ -803,7 +929,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 65
+      "index": 79
+    },
+    {
+      "leaf": "2a0edc1ec53b189cfe1cf2db6dbf03bcc756ea83251832105fa0c6c6f5cacff6",
+      "card": "signed-conforma-c3c5bb803547.json",
+      "id": "c3c5bb803547fb418cb43fa7b1e6637ac9f248a94231daf66b64b3cb3cc31857",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 80
     },
     {
       "leaf": "2a805d68f4990d6e9330d71eb70488515d17bbae2ee39365a271e1836ba4e1a8",
@@ -812,7 +947,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 66
+      "index": 81
     },
     {
       "leaf": "2abe33a3ccc4360e8274d39cf09347b8d22ab7d2049710671a288642d71e0da6",
@@ -821,7 +956,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 67
+      "index": 82
     },
     {
       "leaf": "2bde2ebd5abdf2ff2721357c18b9cc53a767c141e3568ade6e5798144432324a",
@@ -830,7 +965,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 68
+      "index": 83
     },
     {
       "leaf": "2c602da2832e53abe3660bf36fcf9f725642434c26b492f403865fae0eb3aef9",
@@ -839,7 +974,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 69
+      "index": 84
     },
     {
       "leaf": "2c7174182e11d187e306e1bb0171c5b09a4deeaf95af110026dd3dbd543ba812",
@@ -848,7 +983,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 70
+      "index": 85
     },
     {
       "leaf": "2d04b64cba491d8ab9e117ec3155b5f76d0325cb328e312c66819d635181a86c",
@@ -857,7 +992,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 71
+      "index": 86
     },
     {
       "leaf": "2d20e363bb11bc49ab55d67163ef3779f2edd332fbef71d8fbfe2a8d7360d7fc",
@@ -866,7 +1001,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 72
+      "index": 87
     },
     {
       "leaf": "2d2478a581aa9d879088440f29ea632ea1583f05f71e1c4eb4bcadb6486f6796",
@@ -875,7 +1010,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 73
+      "index": 88
     },
     {
       "leaf": "2d571dda0f3dc8cf76004ae3012f576caa4bbf6af703a6af695eaa2adfe86c2e",
@@ -884,7 +1019,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 74
+      "index": 89
     },
     {
       "leaf": "2daafbaf076ae4f1d298ca6cb07587ab5e8b453caaced60b33770796a9f687bb",
@@ -893,7 +1028,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 75
+      "index": 90
+    },
+    {
+      "leaf": "2dfdeeb35d67df8f6a7988d50f7c1864d2027407f95ff958ef622a2de94bf63a",
+      "card": "signed-openness-50902dd73b6e.json",
+      "id": "50902dd73b6e87d6130ad764921b1ceac6e5c75a8f57f3cb25c15e08e1ca780c",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 91
     },
     {
       "leaf": "2e7670c0932492300600c6867c4b89eccbe67d8e582bd99f6dfdc06611cfcdc3",
@@ -902,7 +1046,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 76
+      "index": 92
     },
     {
       "leaf": "2ea53c6b17835e0efe6041b910675ee0e52cc93828cb1bb73a5af0373224e48e",
@@ -911,7 +1055,25 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 77
+      "index": 93
+    },
+    {
+      "leaf": "2f08b89deec52e05f0695534aeca1d62958c27c6f5eea85580d4e3e82c07ad84",
+      "card": "signed-safety-98e36b74ce9e.json",
+      "id": "98e36b74ce9e80af06f39fea61495d10da9e83cce7d6a4969abf0035a2bf3a6d",
+      "model": "Qwen/Qwen2.5-0.5B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 94
+    },
+    {
+      "leaf": "2f75f65f3130c0ac962fcaa3b08fa18af0c34ffdd17a5bab8065f9266b78971e",
+      "card": "signed-continui-10db76c6daa9.json",
+      "id": "10db76c6daa934acd0a34e62ed5d28e246020d5a34485f1e905eca7d2e7197af",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 95
     },
     {
       "leaf": "2fc70765c6d309e5ee9f3b0878d2d5a69786b14f339f36d5924a302408f082d0",
@@ -920,7 +1082,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 78
+      "index": 96
     },
     {
       "leaf": "2ffe2b6d36d81e289fca68277135deb94a53e377f3f212837cf0f14c868f3fff",
@@ -929,7 +1091,16 @@
       "model": "Qwen/Qwen2.5-32B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 79
+      "index": 97
+    },
+    {
+      "leaf": "30091e4ac537608502ec04e2471acdcd6ae1e1f74640995586125c1ffaefc95b",
+      "card": "signed-affect-dd3193db4a02.json",
+      "id": "dd3193db4a0278329d3325bb1579b3d2bfcc153b57ab723d612c5a6f894f9f0f",
+      "model": "Qwen/Qwen2.5-14B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 98
     },
     {
       "leaf": "307c3d50ff6aadf566a38d667620d2710edbe5a37e3d72659f3cb965bbd4b1e3",
@@ -938,7 +1109,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 80
+      "index": 99
     },
     {
       "leaf": "30cce4cdf5c9231213e133e1485b4aed2e6873956a2330d0bece4666138dd462",
@@ -947,7 +1118,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 81
+      "index": 100
     },
     {
       "leaf": "30e23edd0ea0fe99c7a26287bfa8ef2c2094f459bb3b9e76dec2fd3991f77ff8",
@@ -956,7 +1127,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 82
+      "index": 101
     },
     {
       "leaf": "3131614b19aea9c36b107a268965b760e34d147c9ff38524828a4df95c425a19",
@@ -965,7 +1136,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 83
+      "index": 102
     },
     {
       "leaf": "317f3962c6371cdcce7475f65592763f827acaa9700e1665444d20f931817694",
@@ -974,7 +1145,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 84
+      "index": 103
     },
     {
       "leaf": "32c65f586cd1732e0f38a768a90b7193d3dafe24946ef4200c14c9bbed7fb492",
@@ -983,7 +1154,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 85
+      "index": 104
     },
     {
       "leaf": "3349a4aece1de8380b871be83d72f64e648a8c8a3e2f687ade2ad6a9984fa83c",
@@ -992,7 +1163,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 86
+      "index": 105
     },
     {
       "leaf": "3354cbb1ac20ed557f11d3daca66fe72ea1b77b8e0ff23232c794a8913f3d3d2",
@@ -1001,7 +1172,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 87
+      "index": 106
     },
     {
       "leaf": "34afbf927080f35a85b0c689635a690f675455e324a0d1cb4797a2bd36812193",
@@ -1010,7 +1181,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 88
+      "index": 107
     },
     {
       "leaf": "34edddcea0f268e11003b46e7422a868fe3a3f83365c08c465bc47ecc34ba34b",
@@ -1019,7 +1190,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 89
+      "index": 108
     },
     {
       "leaf": "3518c37edb37d0e477271b0fd42aa9382f85281a0c0e042b21efc4a7832cc23a",
@@ -1028,7 +1199,16 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 90
+      "index": 109
+    },
+    {
+      "leaf": "35afc4ee7f26f37a05f147c0b431e7e24a688e88eb3036f21ff806951da35f16",
+      "card": "signed-care-d0b4595b4935.json",
+      "id": "d0b4595b49354680e2fea38503ca1e7300371c0fd1477c2ef25589c0aeb04237",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 110
     },
     {
       "leaf": "35ea32a16f59ef1335d491fb8c3f9e9d25348e7c6def97009817f4c40c3dee74",
@@ -1037,7 +1217,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 91
+      "index": 111
     },
     {
       "leaf": "35f7d99e925e587d42f684a6acb2ca3dbe656c708addc4018fb5f0fa359743d1",
@@ -1046,7 +1226,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 92
+      "index": 112
     },
     {
       "leaf": "367bbdabd944de867ed78181a29934737d5c9df592ecb09d340908128e62ac8b",
@@ -1055,7 +1235,7 @@
       "model": "microsoft/phi-4",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 93
+      "index": 113
     },
     {
       "leaf": "36acf51b90b6adebd7e5e440687f5fabc7fb9ea96dbab1f48279fe1859ef609a",
@@ -1064,7 +1244,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 94
+      "index": 114
     },
     {
       "leaf": "36f183f486dec8a21fcdac98b15108700388f24e85db5e23246b787d7079d106",
@@ -1073,7 +1253,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 95
+      "index": 115
     },
     {
       "leaf": "3703df917166ff9580248b1d34f68a2824b99087b0bd9db4282ca97e5926806f",
@@ -1082,7 +1262,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 96
+      "index": 116
     },
     {
       "leaf": "3753a32f5603c20aaacd80198e7a4bc1754c12f65767310d371afa3173799d92",
@@ -1091,7 +1271,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 97
+      "index": 117
     },
     {
       "leaf": "383521e86e58e43d6f7f4bc97e157ae87a10a921850832949a7d77752b5cf601",
@@ -1100,7 +1280,7 @@
       "model": "google/gemma-2-9b-it",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 98
+      "index": 118
     },
     {
       "leaf": "38371e3639bc79cb69e724db24ca269c5a998b6660119143d986978d6c9e87cb",
@@ -1109,7 +1289,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 99
+      "index": 119
     },
     {
       "leaf": "394a10830640471d20ad0058a222feaba7ce8fe7c5021b0dc69704b45f716acd",
@@ -1118,7 +1298,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 100
+      "index": 120
     },
     {
       "leaf": "39f9490560e8f1acb2cd0a675d0899b618f33b7952af2cc9ec442854f8f83c6d",
@@ -1127,7 +1307,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 101
+      "index": 121
     },
     {
       "leaf": "3a18d3bab3d4047b112b2084ecbacf97dfb57ea3c48f51284dac7e1f2825cd00",
@@ -1136,7 +1316,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 102
+      "index": 122
     },
     {
       "leaf": "3b09ff9591a72be4e4bcd104b8b71d47581618817afbc2c378c710e20468afe6",
@@ -1145,7 +1325,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 103
+      "index": 123
     },
     {
       "leaf": "3b3858a6c5cbc1a3caeb02771cdc7ae4a37b1def77b1375be135915141813541",
@@ -1154,7 +1334,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 104
+      "index": 124
     },
     {
       "leaf": "3be717cd3976d448229bec1104b67b7c94c6b94ad95969404faeeedf29e6a379",
@@ -1163,7 +1343,16 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 105
+      "index": 125
+    },
+    {
+      "leaf": "3bf52edaca2f0176e4ffed266992dc40112b50b45c2e9be24346f9e6aa4220b4",
+      "card": "signed-affect-6bdf88d859be.json",
+      "id": "6bdf88d859be3309913a4292d1899c5ba823507c4d08dcadbb71e9c9af6b39f8",
+      "model": "Qwen/Qwen3-8B-Base",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 126
     },
     {
       "leaf": "3c6a4197699343219793018b69a634f850e0f581d8b428f356d883146929797d",
@@ -1172,7 +1361,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 106
+      "index": 127
     },
     {
       "leaf": "3c74f3e2f7595c371694ca55fa950fb47a66811ed07804e472d3f41346f839da",
@@ -1181,7 +1370,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 107
+      "index": 128
     },
     {
       "leaf": "3cdb9f4ab39a3bead1e9fea6366476da23ce4ffadb0f7fdf6b8bcce7b9ecef52",
@@ -1190,7 +1379,7 @@
       "model": "Qwen/Qwen3-14B-Base",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 108
+      "index": 129
     },
     {
       "leaf": "3d32de52a0ced83521952b96537b916aac50fbea59b2ef2f2107034985fe3f07",
@@ -1199,7 +1388,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 109
+      "index": 130
     },
     {
       "leaf": "3dfc4f320736f40148fa0f417437aa876d989631891e8d4b25c61142add6b2fb",
@@ -1208,7 +1397,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 110
+      "index": 131
     },
     {
       "leaf": "3f03470b7e7205a442d1cae8ab4df87ff7f96650f7f50bfc61c7f13c082a4354",
@@ -1217,7 +1406,7 @@
       "model": "farbodtavakkoli/OTel-LLM-27B-IT",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 111
+      "index": 132
     },
     {
       "leaf": "3f554f7d276b26b003b6bc68b9eb4d9ae2da5eeb8143fede5e081f716fd00b8f",
@@ -1226,7 +1415,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 112
+      "index": 133
     },
     {
       "leaf": "41287b7d6cb2d6a9b25d451b11406eaf983f91d2eb279a534d88d44bb923eef4",
@@ -1235,7 +1424,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 113
+      "index": 134
     },
     {
       "leaf": "413604f6131f471c5fd75ffe96ece9dc1d87dc00a32fad55041be5df8d00fb8e",
@@ -1244,7 +1433,16 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 114
+      "index": 135
+    },
+    {
+      "leaf": "415b98bee5a59a671d31817611cf204bc41284f1934d0e4c77eae79ebf7cfef7",
+      "card": "signed-provenan-bc287f192e92.json",
+      "id": "bc287f192e928762ff605e1578aa64893e24d134da1b0397f427eaf15a43a05e",
+      "model": "Qwen/Qwen3-4B-Thinking-2507",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 136
     },
     {
       "leaf": "41857e255b44366cbd96d2336408f0c1848f289233d61291dfb133e7a1f4cbc6",
@@ -1253,7 +1451,7 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 115
+      "index": 137
     },
     {
       "leaf": "41ffce4c2ae88730e1644ee6589726ffaaee0b571caaad607f26a469bc14298a",
@@ -1262,7 +1460,7 @@
       "model": "microsoft/phi-4",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 116
+      "index": 138
     },
     {
       "leaf": "4212f9c551d31f6f15c7eb2ed3162983fe5bfc6d15c6f39728648fdf410d3cb5",
@@ -1271,7 +1469,7 @@
       "model": "microsoft/phi-4",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 117
+      "index": 139
     },
     {
       "leaf": "43ccc43719587913959fdaf3de3baddb87ebfbdd632f5f6a3046bc4740cdd19a",
@@ -1280,7 +1478,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 118
+      "index": 140
     },
     {
       "leaf": "44633fb0fb2d7ec7e8cd1802ee59b5960c7a803751678fcef6db4511fab55596",
@@ -1289,7 +1487,16 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 119
+      "index": 141
+    },
+    {
+      "leaf": "452c00eaafce9f9f67acc305b602d8555dad0b5a145806efcd910701d0b05f72",
+      "card": "signed-governan-ce2387e49346.json",
+      "id": "ce2387e493469b120f8d1cd6548bb55f25b9398c8a430c0286d6c07dcd05bf7b",
+      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "axis": "governance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 142
     },
     {
       "leaf": "4563ebc73d14f6f4cfd4847a6945e433f0af0c3b6fb700b2ea2ac7a3412b102f",
@@ -1298,7 +1505,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 120
+      "index": 143
     },
     {
       "leaf": "4629e7c7e8b3bd8933a0a603662ab754ebf9ce65510ce38198f7af92b39110c4",
@@ -1307,7 +1514,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 121
+      "index": 144
     },
     {
       "leaf": "462e78fc18c6fbdf4c0b7bf76d5b295dcbaf8cdf2a634283192fe3379d89332f",
@@ -1316,7 +1523,16 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 122
+      "index": 145
+    },
+    {
+      "leaf": "476e74365bcc408b91161ebffbd97764dddf681dd4fcabefeace4d1bea2d1719",
+      "card": "signed-affect-8556e4077b38.json",
+      "id": "8556e4077b3820675006372a3e52abe62effc79a1bccea860aed94453fda5c7e",
+      "model": "meta-llama/Llama-3.1-70B-Instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 146
     },
     {
       "leaf": "47a39427e5fdca54b838cca2add68c7dba6e27ba1f560acb890e5ccfdb689506",
@@ -1325,7 +1541,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 123
+      "index": 147
     },
     {
       "leaf": "47ce84b185c01b25ca1077c524b914989d218e9e98dd4c5b7716153cecb3c674",
@@ -1334,7 +1550,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 124
+      "index": 148
     },
     {
       "leaf": "47d30fc4302228f9833ea1322605fba3d46e34507ee912fc30ccfeddb06b1f54",
@@ -1343,7 +1559,16 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 125
+      "index": 149
+    },
+    {
+      "leaf": "49e11c4e00ba82834d79d21139658dde1e0dfd1f5697180b0f7189d7f2d2e9e0",
+      "card": "signed-art5-saf-84826e8c4003.json",
+      "id": "84826e8c4003822095e5c28223be4d28a9ede4d4d6e2cb50b49dd083dabddd32",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 150
     },
     {
       "leaf": "4a113035065c63141369ecbef5946ced525a4d1bead534eb101a3372eb950d27",
@@ -1352,7 +1577,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 126
+      "index": 151
     },
     {
       "leaf": "4a7764ad8716d0c0f0f4f04d9fae02eb5ebedcafbb01cc7ea903ee121b29358c",
@@ -1361,7 +1586,7 @@
       "model": "Qwen/Qwen2.5-32B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 127
+      "index": 152
     },
     {
       "leaf": "4b075c8226251da4472df5c0dd412591996da512f431bb078bb9ddb93785c4cb",
@@ -1370,7 +1595,16 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 128
+      "index": 153
+    },
+    {
+      "leaf": "4b71fc3e7de7933e3604c4157fb2c1842c1d4f0417ac1a69c87fdf5f8f73ab89",
+      "card": "signed-provenan-bf811b579ad6.json",
+      "id": "bf811b579ad6f4d238debdd2dc605187b72ff3d4200cd05c548ebe805cf6c3b1",
+      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 154
     },
     {
       "leaf": "4be0bd27e410a4a639f63ced594cd3cbcd8a017a63fbd5b6aaa3b6b50edb074d",
@@ -1379,7 +1613,7 @@
       "model": "Qwen/Qwen3-14B-Base",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 129
+      "index": 155
     },
     {
       "leaf": "4c8b64e7700e709ff9df9112549667cc40ce152416b012c5c120b7c33bc62daf",
@@ -1388,7 +1622,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 130
+      "index": 156
     },
     {
       "leaf": "4d3e3cb1d4cdc2d18bd93187504970998c8b16acc28d6cf39db8469ea0206426",
@@ -1397,7 +1631,7 @@
       "model": "microsoft/Phi-3-mini-4k-instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 131
+      "index": 157
     },
     {
       "leaf": "4dba7b2e770a9bfe76f501bb967a2728330694419bcfcc8ff74af634fa415463",
@@ -1406,7 +1640,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 132
+      "index": 158
     },
     {
       "leaf": "4eb28d0db75054d27d4d4c13ea1a034b89304a0a1a64a2139ba9433c10909993",
@@ -1415,7 +1649,7 @@
       "model": "farbodtavakkoli/OTel-LLM-27B-IT",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 133
+      "index": 159
     },
     {
       "leaf": "4eb7b4d761d1274d124baf016f6935e0b50a83ec77f412446191a99fd2687855",
@@ -1424,7 +1658,7 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 134
+      "index": 160
     },
     {
       "leaf": "4f08bcd4dfe689f46aed0fe4216a9a285ce61b227e174af0b069c05acda74729",
@@ -1433,7 +1667,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 135
+      "index": 161
     },
     {
       "leaf": "4fe23d64d6662903b9caa13f3e0a4777f21ce9faefe2fbaac796477380420cd3",
@@ -1442,7 +1676,16 @@
       "model": "Qwen/Qwen3-1.7B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 136
+      "index": 162
+    },
+    {
+      "leaf": "4fe2a1c5a9615d312ed4235713d19cd595fe24489d0315dbad15e5d815494082",
+      "card": "signed-openness-3980c75a8cb5.json",
+      "id": "3980c75a8cb593c6e84d7a9c3d852f25a3a9836acd85bfd4528da668a634be48",
+      "model": "Qwen/Qwen3-14B-Base",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 163
     },
     {
       "leaf": "5137098b4268af53138f46e29178b6a21b9a8c0d6db1bd81616960f8dd3bcfc9",
@@ -1451,7 +1694,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 137
+      "index": 164
     },
     {
       "leaf": "5151a6f50ed0005bd3805498858d9ee625be05df9239cb372a85f9a3aed01618",
@@ -1460,7 +1703,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 138
+      "index": 165
     },
     {
       "leaf": "5164536ba087f924041b0c12c45867e139a754a5a9cc1eb4d5c8a1ce804b02ef",
@@ -1469,7 +1712,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 139
+      "index": 166
     },
     {
       "leaf": "51753c605e3a9bccb8c17e160e860b256ef33de2369af28657fc02f5d86ae881",
@@ -1478,7 +1721,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 140
+      "index": 167
     },
     {
       "leaf": "5257b7a29bc9e1298e0f65f5d7f50363288ed0f27e7880df820ff25e3ee339c7",
@@ -1487,7 +1730,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 141
+      "index": 168
     },
     {
       "leaf": "529fd717a483311c7f4fcecb067db50a7876b636709d21dfc5378a21eab20e1b",
@@ -1496,7 +1739,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 142
+      "index": 169
     },
     {
       "leaf": "5406d0f7c9ac0cddb062f298a6e520444e6b74ab94c9a2a49f04a837fa3acb7e",
@@ -1505,7 +1748,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 143
+      "index": 170
     },
     {
       "leaf": "54b5e3fae896930f57ad1fac277144dad5262f309ed3d45b1754dd3bc5abfde1",
@@ -1514,7 +1757,16 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 144
+      "index": 171
+    },
+    {
+      "leaf": "54ce078090549fed3d3ef2ceaaedbd4848343eed4b522342d266f21b43b6b0f2",
+      "card": "signed-continui-4be16c37c5e4.json",
+      "id": "4be16c37c5e483ebece9a6f5499f1b2a86d7bd94893caff219d7d5a57b78e801",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 172
     },
     {
       "leaf": "557c57b10377b0e263d8d9dd141cfa5a8db9e3ee66ab12448db1ee21e4f36224",
@@ -1523,7 +1775,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 145
+      "index": 173
     },
     {
       "leaf": "567281e29a057320756dd451d54a1f37bee6514c562b4c5f5ba1c130422d0634",
@@ -1532,7 +1784,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 146
+      "index": 174
     },
     {
       "leaf": "5672f7845c40279e2f5b0481e0e7441cf1450048feebb9ce3ca9627dff195e6c",
@@ -1541,7 +1793,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 147
+      "index": 175
     },
     {
       "leaf": "567c2c1c2f163d2bf9bd3ac8eb7ba8bf3fab52146055e6696ffb3d31473fca19",
@@ -1550,7 +1802,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 148
+      "index": 176
     },
     {
       "leaf": "56847d924937aa67565ca0f921a2edaac01f387035a0e5b71c9694b5e218df28",
@@ -1559,7 +1811,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 149
+      "index": 177
     },
     {
       "leaf": "56c1e13852edce33cc38b316bb40d6bbc424ae78c9b4fb016fb0b7a46b4a17ad",
@@ -1568,7 +1820,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 150
+      "index": 178
     },
     {
       "leaf": "577abb5a67c0bd15b3ffb9549f3b266363a0af1815d850e6f61acfc70150ebbb",
@@ -1577,7 +1829,7 @@
       "model": "google/gemma-2-9b-it",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 151
+      "index": 179
     },
     {
       "leaf": "57c12ac71be9764c282144c5bc34aacfd00646341084c3b25b286991551f176c",
@@ -1586,7 +1838,16 @@
       "model": "zai-org/GLM-5.2",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 152
+      "index": 180
+    },
+    {
+      "leaf": "57ff1096d0e4ff6d7725b346d7b70eca49de4cbac75c9b96795c8cf772efabbb",
+      "card": "signed-conforma-cc929bfb2371.json",
+      "id": "cc929bfb2371171771c1c16004858a9731261f780bf61c1a781bcc61d56864de",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 181
     },
     {
       "leaf": "58b9fde5c1af7d61229331fa12db1e71f49962f4236364b6270fcfddc8fae376",
@@ -1595,7 +1856,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 153
+      "index": 182
     },
     {
       "leaf": "5a1c7f034220f6f1ad53c6c791d20dfd82b9e551fc80b63858c2ce5d2d1a63a7",
@@ -1604,7 +1865,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 154
+      "index": 183
     },
     {
       "leaf": "5a4e146dd836cd76984ebfcfe8ca14fd873ad28ae881b56e970de6bfbe921179",
@@ -1613,7 +1874,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 155
+      "index": 184
     },
     {
       "leaf": "5b0edd3cc54a57c8ff623019de7cd2c62a622ae5e2962905c2fdf4111f447f6c",
@@ -1622,7 +1883,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 156
+      "index": 185
     },
     {
       "leaf": "5b8e08367889be23b3142e83a19d8a55d07ce2636f8e0ffb3f3eb71ddcd00a98",
@@ -1631,7 +1892,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 157
+      "index": 186
     },
     {
       "leaf": "5bd8eddb55f750799f5f0936cccf03f0165ecf7ca43726cc6b00192a8b6262fd",
@@ -1640,7 +1901,7 @@
       "model": "microsoft/phi-4",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 158
+      "index": 187
     },
     {
       "leaf": "5c2faed680824117a611fe0b3634013d8947d16bef2ad83a75b9978147df5622",
@@ -1649,7 +1910,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 159
+      "index": 188
     },
     {
       "leaf": "5d44e883e1e9e56f754d9cba66ae48270b0bb6df5cd38693fd0138b771518d1c",
@@ -1658,7 +1919,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 160
+      "index": 189
     },
     {
       "leaf": "5d5e0fd9a1ae44c4295d942669e62c29ac9cc3a5427aa48eef4340a399085edd",
@@ -1667,7 +1928,7 @@
       "model": "microsoft/phi-4",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 161
+      "index": 190
     },
     {
       "leaf": "5dba43b69adf2ac8d1f3f09f7d7a9d1e65c65958f82716cb45af3bd5be12d2a4",
@@ -1676,7 +1937,7 @@
       "model": "Qwen/Qwen2.5-14B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 162
+      "index": 191
     },
     {
       "leaf": "5e03981aeb4d17b792806b8888295e2e819d64ccb7699d3d9e128b666d24e0e5",
@@ -1685,7 +1946,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 163
+      "index": 192
     },
     {
       "leaf": "5ec132dabe7fabdd3c307504f16f69fcb9a7b07c5fd204b2b103a4d372bd494c",
@@ -1694,7 +1955,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 164
+      "index": 193
     },
     {
       "leaf": "5fb66b6cda3fbcd56f8b839a9180c3dd24ec37ad9658a783f31cc3fbe3a312d4",
@@ -1703,7 +1964,7 @@
       "model": "farbodtavakkoli/OTel-LLM-27B-IT",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 165
+      "index": 194
     },
     {
       "leaf": "5fb82f306bc482633b14a6c257710b20a870945fd224dbe86e3978a022dcd907",
@@ -1712,7 +1973,16 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 166
+      "index": 195
+    },
+    {
+      "leaf": "5fcc700e84a5ad0eec331dd47208f010702471c7da63a550c4490b00db9ee9a8",
+      "card": "signed-continui-aef0f57a5e7b.json",
+      "id": "aef0f57a5e7b20d24ce58e4e9755c284686105c6417530c9ded31f6a7d6a6244",
+      "model": "Qwen/Qwen3-14B-Base",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 196
     },
     {
       "leaf": "64783d5a094a1e5d1576ae450caa7f38948ac896450a48493903b691907d2771",
@@ -1721,7 +1991,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 167
+      "index": 197
     },
     {
       "leaf": "64b13e8204c080591c98a0f2c2cf2facb64c2b37241647a8e0d3451b104ceb93",
@@ -1730,7 +2000,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 168
+      "index": 198
     },
     {
       "leaf": "64ba1e3bf90fb669ce94e92cffefcbd754137e1ac9814e910fe9db4421ac3f33",
@@ -1739,7 +2009,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 169
+      "index": 199
     },
     {
       "leaf": "6536c7006ac0d7993153d57d78fab710be9cc67eb80329d652e523611b1e128c",
@@ -1748,7 +2018,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 170
+      "index": 200
     },
     {
       "leaf": "6562ab68af639362368e211f0b6a8c082a0329e670edea5f35568918bbb4022e",
@@ -1757,7 +2027,16 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 171
+      "index": 201
+    },
+    {
+      "leaf": "6562e531e7da4eeb74ca53c2c28bbb0759fb809215771c4d0390f1c16c6fccaa",
+      "card": "signed-continui-ff386e33ec7c.json",
+      "id": "ff386e33ec7ce8ae7ffa8c721bc7470b83857486d83376891e197152053833be",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 202
     },
     {
       "leaf": "6580e8c5c982ab855850ce24fa37634c56ea8a25bec0e23a5083d4b39ffeaf6c",
@@ -1766,7 +2045,7 @@
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 172
+      "index": 203
     },
     {
       "leaf": "6613d6980eb139e56a5c95071e95c75aa349b38eb3fd04899b65b72e5e4e8c15",
@@ -1775,7 +2054,7 @@
       "model": "microsoft/Phi-3-mini-4k-instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 173
+      "index": 204
     },
     {
       "leaf": "666e0d200061d2da75911cd6e65fe79300e81d94743bb1cccbb03908e8ec0782",
@@ -1784,7 +2063,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 174
+      "index": 205
     },
     {
       "leaf": "67736200a591b10eca3449600834821a3a420bebb5af747144957312e0fc748e",
@@ -1793,7 +2072,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 175
+      "index": 206
     },
     {
       "leaf": "688a236e4c152b2d2e31bcf43455b088b8fc7c5968e0f042a594e11b9e008c2f",
@@ -1802,7 +2081,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 176
+      "index": 207
     },
     {
       "leaf": "68c6dd2152e268ea428c170301e015998ab409bb079be4d717da4c11dd6fd8ff",
@@ -1811,7 +2090,16 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 177
+      "index": 208
+    },
+    {
+      "leaf": "69b3caafa92a6935e15d10ebd0e156059c85cd8d39ce950ea71fa8efa0199101",
+      "card": "signed-openness-53f43230bb55.json",
+      "id": "53f43230bb55cc6a34806ba58fd398c66ef5b77afee61f07ee362661a9e1d7b7",
+      "model": "zai-org/GLM-5.2",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 209
     },
     {
       "leaf": "69ba93ec3a909f15a33add0bc335e412ead3528720a58e6eba671acd34783fd2",
@@ -1820,7 +2108,7 @@
       "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 178
+      "index": 210
     },
     {
       "leaf": "6a140e8937df36e0793c3bb06410a4fe09a8d2095f54a862745638ad5714359d",
@@ -1829,7 +2117,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 179
+      "index": 211
     },
     {
       "leaf": "6ae8d0cca83f0513837395d72d4cd04b6c1650dd87a75b6d80a73c1ff590fa8a",
@@ -1838,7 +2126,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 180
+      "index": 212
     },
     {
       "leaf": "6b17045eba4ed1878537cc70cadd879a7231a5b568d299c006b08e2e9e0d5674",
@@ -1847,7 +2135,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 181
+      "index": 213
     },
     {
       "leaf": "6bce07c29de01ba75957813ac02897b8908088d251ae5aa280d172d98dba0e42",
@@ -1856,7 +2144,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 182
+      "index": 214
     },
     {
       "leaf": "6bce548e808e839847ecec3ad017248fa75eaeeefd8b71ee792d013a8a9d600a",
@@ -1865,7 +2153,7 @@
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 183
+      "index": 215
     },
     {
       "leaf": "6c360379c666d88c79b1899472b07773b0a0836f263322c37fcfcf645ce6e694",
@@ -1874,7 +2162,16 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 184
+      "index": 216
+    },
+    {
+      "leaf": "6cd10b288f51a208444d224a8ad29aefb20137c68c2a9f09217e48d189ec4a20",
+      "card": "signed-continui-a9c4e666eb75.json",
+      "id": "a9c4e666eb755f67232dc678fef3118db24fb8c3c179e02efa593f24280ce9b7",
+      "model": "Qwen/Qwen2.5-7B",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 217
     },
     {
       "leaf": "6d6b93a534abee3d1f7c33df523325a9e2e68bb07a5e15418e4ea8c0a3a82486",
@@ -1883,7 +2180,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 185
+      "index": 218
     },
     {
       "leaf": "6db5665b50fa8b6bb33169bab5b96adce364538c43800607f81b16826f66cc18",
@@ -1892,7 +2189,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 186
+      "index": 219
     },
     {
       "leaf": "6dba43ab9bd815a2b3b1f9ae8d164758e87261e6f1c3ed6e28e7a1417ab35b46",
@@ -1901,7 +2198,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 187
+      "index": 220
     },
     {
       "leaf": "6e2203cdae81ebb35edf987cc1e87cecafc57efad32cc8c52937ce09174cde77",
@@ -1910,7 +2207,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 188
+      "index": 221
     },
     {
       "leaf": "6f5ef0ca718b4879c9ffe296fabeade7a5267189e7d67d1374b330a0a3f9fc4e",
@@ -1919,7 +2216,16 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 189
+      "index": 222
+    },
+    {
+      "leaf": "6fef93d61444d919bbe07c9d2814335ac3ffb3c7d9ab14586b848bba62d83a5a",
+      "card": "signed-conforma-f1395abbcb22.json",
+      "id": "f1395abbcb229f34e25ecd0521330e21d226dcefdb7b54c13677d0255cb2a85b",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 223
     },
     {
       "leaf": "709811bc782acd77d5a947f196dd6b941f1799c296177b92861b6d45221818bf",
@@ -1928,7 +2234,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 190
+      "index": 224
     },
     {
       "leaf": "71e9553c4d9dd478a3078463488dbc06849a25753980fc92783b55be10c5fb44",
@@ -1937,7 +2243,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 191
+      "index": 225
     },
     {
       "leaf": "728e3a58668f90b5592f7678227914a9fcc45c433a2a26733aca2059895adf55",
@@ -1946,7 +2252,16 @@
       "model": "google/gemma-2-2b-it",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 192
+      "index": 226
+    },
+    {
+      "leaf": "734adc3fd5af167e95cd4c9fcfe34f5821cc1ff9b895a367a74f68189d738f07",
+      "card": "signed-cross-re-88fb50f2193f.json",
+      "id": "88fb50f2193f0ccb594b6d1ea3b8dd247fb45073ad5a1c105159d8f5ecdc2869",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 227
     },
     {
       "leaf": "737f0b51ebb58d18ea1c1b84fb80262a61915da70a2debbb7ed1bce6d25992ad",
@@ -1955,7 +2270,7 @@
       "model": "microsoft/phi-4",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 193
+      "index": 228
     },
     {
       "leaf": "73a99ed28587cae34fb241d3cf0d8b6a886fb8ba0da2856d50a8517a3d618681",
@@ -1964,7 +2279,16 @@
       "model": "google/gemma-2-2b-it",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 194
+      "index": 229
+    },
+    {
+      "leaf": "73eb6c3b949de4145576cbf96abdb7244c9a0fbcc58985bfc244c3be9b8f4e72",
+      "card": "signed-continui-d22f2228a21a.json",
+      "id": "d22f2228a21abb065cadaac7b3fca26381cb20d64973dbd429abea0ab63fbfd0",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 230
     },
     {
       "leaf": "741856efe0d900c47a74b29964e395d8037e1670e058aead6febd22d4af2ab5e",
@@ -1973,7 +2297,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 195
+      "index": 231
     },
     {
       "leaf": "74fd4156513529453ccc39c606eaf123df2c60730fb19ea337cf6df126afd529",
@@ -1982,7 +2306,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 196
+      "index": 232
     },
     {
       "leaf": "7647cbd39ea27d8e615c88d85aa868de2b967219ad6d4385d42fb429a101dc66",
@@ -1991,7 +2315,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 197
+      "index": 233
     },
     {
       "leaf": "7649d0f7b23bf9ab4f26ff791fee7e5c4e2fbe47cdfa0cb09545d635b095d674",
@@ -2000,7 +2324,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 198
+      "index": 234
     },
     {
       "leaf": "768230171d3e305cd944b059c5b226c945acebc66a62d060edd5465e951f0f02",
@@ -2009,7 +2333,7 @@
       "model": "google/gemma-2-9b-it",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 199
+      "index": 235
     },
     {
       "leaf": "76f26b994eba36ad1ab9c0199dd5ce174d504ecf46e9cf4654676dd7fac2db78",
@@ -2018,7 +2342,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 200
+      "index": 236
     },
     {
       "leaf": "771f622353f39527961fc8af11ce6c7090dcec6c935688522776f9d074376587",
@@ -2027,7 +2351,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 201
+      "index": 237
     },
     {
       "leaf": "7743266d4dcb6a65814b3ba1433e9f0150a2e4c5ea40d0d2961c5633efcfbb5e",
@@ -2036,7 +2360,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 202
+      "index": 238
     },
     {
       "leaf": "77783e36fb2c976a7ff1f7e287b09efff9d0c7a1a610be6aa1271971f79cf7dc",
@@ -2045,7 +2369,16 @@
       "model": "Qwen/Qwen2.5-7B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 203
+      "index": 239
+    },
+    {
+      "leaf": "77ce3622f64e108ce75d2a2617b74d73fb58a13144722c46b90b79b188f753cb",
+      "card": "signed-art5-saf-339f5698a9cb.json",
+      "id": "339f5698a9cbb67c21dce1fc8552a8092da6d90b6234159564620d4436475982",
+      "model": "Qwen/Qwen2-7B-Instruct",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 240
     },
     {
       "leaf": "7896f03d11ce24aa4cd4a3a8a8aca2fa59bef445d3214968228b8eca3a694856",
@@ -2054,7 +2387,16 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 204
+      "index": 241
+    },
+    {
+      "leaf": "791fa7a030f9c7e77b12bf6c3090bac53d218263ba2a435e773a399ff01d5567",
+      "card": "signed-machiner-df194a26e95a.json",
+      "id": "df194a26e95a33aade1f6c119af67b9986ca03470467581bf9b09cbdd67f45dd",
+      "model": "Qwen/Qwen3-1.7B",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 242
     },
     {
       "leaf": "7996550ac11c1908a26558b93af66ca73d96c4af75bac1bbdda63358d68f2202",
@@ -2063,7 +2405,25 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 205
+      "index": 243
+    },
+    {
+      "leaf": "79e62bb46472603ad07c0c9ffac05c34b09713f512ecc41686f92d77636db05b",
+      "card": "signed-care-a58dc0fcbd86.json",
+      "id": "a58dc0fcbd86e10b527383aab07714b1ad5b9d436fbd65ad202fa2bb15121f2b",
+      "model": "XiaomiMiMo/MiMo-V2.5",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 244
+    },
+    {
+      "leaf": "79f6dee8c863ee14f4b4eab387ddd1425c57512426da4d1699f8575f6629eee1",
+      "card": "signed-art5-saf-d0f070436ce2.json",
+      "id": "d0f070436ce233583cfe55d8ca865e085eaad454d81cc51ea290dd135ae67796",
+      "model": "Qwen/Qwen3-8B-Base",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 245
     },
     {
       "leaf": "7a7a256cac839d4ae03935bf871b2854f86cc5c9e61facf31e3f8157247f3449",
@@ -2072,7 +2432,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 206
+      "index": 246
     },
     {
       "leaf": "7a9f63bfdaa25e68d0baf4f44555b045f6a2a3d5efa034f6bfa2ecd7c4b1fa73",
@@ -2081,7 +2441,7 @@
       "model": "Qwen/Qwen2.5-14B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 207
+      "index": 247
     },
     {
       "leaf": "7b8eefd96b0ff379e94f0a4e2154fecf2aaab4e9007a29b1f6d9d4ce2ab058b8",
@@ -2090,7 +2450,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 208
+      "index": 248
     },
     {
       "leaf": "7c4edbadc3584b478ad2327aaf601ece45ce7654279e7f042846da30d4a61e11",
@@ -2099,7 +2459,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 209
+      "index": 249
     },
     {
       "leaf": "7c63a316e36bc20a413492ab4529b73ea77ec5e0a3f994c38ee867e4e351db96",
@@ -2108,7 +2468,7 @@
       "model": "microsoft/Phi-3-mini-4k-instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 210
+      "index": 250
     },
     {
       "leaf": "7ceb4e76b247e15c04c373a7aaf4680a7ebd064fb32c440b1a8b4bc70e62b978",
@@ -2117,7 +2477,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 211
+      "index": 251
     },
     {
       "leaf": "7cf592c5b9f36dd583f6827104ed0bf31d80b60fb8d5bb4fee5013ee40aa7367",
@@ -2126,7 +2486,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 212
+      "index": 252
     },
     {
       "leaf": "7d6de381dacd62355c91039fb5f20bb85a96feec929cd706605357c7a9bfced3",
@@ -2135,7 +2495,7 @@
       "model": "XiaomiMiMo/MiMo-V2.5",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 213
+      "index": 253
     },
     {
       "leaf": "7e0b4acb956303143e3681203870bf30e75404fff206be25568a0b3cb5a4f115",
@@ -2144,7 +2504,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 214
+      "index": 254
     },
     {
       "leaf": "7e5f4ea8f38264d06e9311f9271f7745480c291a21c57be335e4c06a46185a6a",
@@ -2153,7 +2513,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 215
+      "index": 255
     },
     {
       "leaf": "7fe91beb1d7441f02ba5a954f147b45d94bd5616c064a024fc185cc26c2449de",
@@ -2162,7 +2522,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 216
+      "index": 256
     },
     {
       "leaf": "7fe9d6038e7b6f544d4e8675864899002d008af8f3ada823f840aeb39d21a385",
@@ -2171,7 +2531,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 217
+      "index": 257
     },
     {
       "leaf": "802b11a6ab42c289c0e70a8333c243e814dc1b3c251c8510a3e9158b95d3e723",
@@ -2180,7 +2540,16 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 218
+      "index": 258
+    },
+    {
+      "leaf": "812fd45077d4f283afa4126b9ec89e106d6f1c79affc39c0e72fec378c6d63c8",
+      "card": "signed-conforma-ac096f3edef8.json",
+      "id": "ac096f3edef8b0bc15baff2f267e3dd25df946cdf229b314fee6cd36e6a5414b",
+      "model": "Qwen/Qwen3-8B-Base",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 259
     },
     {
       "leaf": "813526e4d684018ab39f62f2d6565768bb4bab8d01631a4b19d9461a4535decc",
@@ -2189,7 +2558,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 219
+      "index": 260
     },
     {
       "leaf": "81dd85c93c0cd26d130780a2de53ae732ec7c22349048f8904b6b8eb64c8ec85",
@@ -2198,7 +2567,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 220
+      "index": 261
     },
     {
       "leaf": "8226f6c7bca2a4fc3186bdb95b1926d094479ea485f2556ff1f028f548ad0a5f",
@@ -2207,7 +2576,7 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 221
+      "index": 262
     },
     {
       "leaf": "82273ed56b6948c6ec912ddede1e4f139bbfb0d38f09e75569d14447832087a9",
@@ -2216,7 +2585,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 222
+      "index": 263
     },
     {
       "leaf": "822f1198bcb5d2b8cf63b52e86370a47e3e16e63bf9e4e47d63bb0b2768e41d6",
@@ -2225,7 +2594,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 223
+      "index": 264
     },
     {
       "leaf": "82eaef8ae3fa01d8fa17b4a760c5fe0042feb0b6af56dacc7f1c8e8a01d221e7",
@@ -2234,7 +2603,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 224
+      "index": 265
     },
     {
       "leaf": "8328d2896d9078ef0a366fed28e7530c7b5bf06b762a3525ad31583fa8882d88",
@@ -2243,7 +2612,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 225
+      "index": 266
     },
     {
       "leaf": "83a2386b259e019fc9cdd701da6bfdcc1d39c8e773b7e1df61bc43890256d8ca",
@@ -2252,7 +2621,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 226
+      "index": 267
     },
     {
       "leaf": "846125c03a59fdad9fdc73ef350de8a9f7d6ac3326555ed6516fa2b10b94ea69",
@@ -2261,7 +2630,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 227
+      "index": 268
     },
     {
       "leaf": "84743c924776f4659fda9183105518d188dfe3929973b3bb90e3b1495c5b0eb7",
@@ -2270,7 +2639,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 228
+      "index": 269
     },
     {
       "leaf": "851896d95dd07de7cf8e9ce5f70eee58437af54474224091bfa589458440b17d",
@@ -2279,7 +2648,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 229
+      "index": 270
     },
     {
       "leaf": "8871f4118a0050a5af76c35fbd03ae676183f44e2ac62417e66d3280e37b67c0",
@@ -2288,7 +2657,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 230
+      "index": 271
     },
     {
       "leaf": "8ab3ade35d9abe3155d53415419a2c462813401113c4d2bfa36759d6811e7e69",
@@ -2297,7 +2666,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 231
+      "index": 272
     },
     {
       "leaf": "8abec447fac2174f957445d441a15da4ec2dad4e51a130b37cee3ca6657d0222",
@@ -2306,7 +2675,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 232
+      "index": 273
     },
     {
       "leaf": "8b871f1e7e67ab00f971d898ad5c1ada17977d31773f55f116c0fedc83fa3bf2",
@@ -2315,7 +2684,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 233
+      "index": 274
     },
     {
       "leaf": "8bd2a3d86e6cda965e65cd6c3d330f9adb24b4685eae1ac7acb3ce9823d7375f",
@@ -2324,7 +2693,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 234
+      "index": 275
     },
     {
       "leaf": "8c719b06fea03bb0fe8cbd1e41507b2160f58bdeb9b44fc9bf2e30fae56654cd",
@@ -2333,7 +2702,7 @@
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 235
+      "index": 276
     },
     {
       "leaf": "8dc89fa6b61196e8fb9e647390ce5a7a0bcfe321893fbc819d326ee4dd046431",
@@ -2342,7 +2711,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 236
+      "index": 277
     },
     {
       "leaf": "8de3067f9753f151f5c25ecbec23d419aa0c319fec2c5d1fc05987200936199f",
@@ -2351,7 +2720,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 237
+      "index": 278
     },
     {
       "leaf": "8e00f9ccd8ee0b0033eaf7dda160fa6cab2afbc8c7208747ea6d65c0e0d7e4df",
@@ -2360,7 +2729,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 238
+      "index": 279
     },
     {
       "leaf": "8ecaedfcaf0a76e3c0cc1dd365ffab5ebb48a5c8b3e9645113f197dde2529589",
@@ -2369,7 +2738,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 239
+      "index": 280
     },
     {
       "leaf": "8eefa4fc9ac3c990034a4b83e9d73eaaa84bd2e7b2713008480fddab849871e5",
@@ -2378,7 +2747,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 240
+      "index": 281
     },
     {
       "leaf": "912fbfb80229ae0416959ad74a9134c28c875367596c4106740e109026fa1aa1",
@@ -2387,7 +2756,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 241
+      "index": 282
     },
     {
       "leaf": "929665d1a4c1f8a4c3e653f641a86def32cba46d558eeb69f0378fadb547ec39",
@@ -2396,7 +2765,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 242
+      "index": 283
     },
     {
       "leaf": "92da888944e87b1478bb542809329fc6ca7f6bb0af53cf00d1b4b88a9ff44f67",
@@ -2405,7 +2774,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 243
+      "index": 284
     },
     {
       "leaf": "92ff0772a44ad0015a31acf66639a939792819e68924a4fe153534372f8fa229",
@@ -2414,7 +2783,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 244
+      "index": 285
     },
     {
       "leaf": "93c0c0fe41688b0e56ed6d3975c57a78985ad1f3f7371b020948e21809ee8670",
@@ -2423,7 +2792,7 @@
       "model": "microsoft/phi-4",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 245
+      "index": 286
     },
     {
       "leaf": "93e44ae790213f834181c44f4a9bade1ec69ab57e7deb815ab7b37576b270387",
@@ -2432,7 +2801,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 246
+      "index": 287
     },
     {
       "leaf": "93fb2d615d2dc55b9a3ce87fa110261c8ea067be4c43dd5d6fae847c4d3eb2cc",
@@ -2441,7 +2810,16 @@
       "model": "zai-org/GLM-5.2",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 247
+      "index": 288
+    },
+    {
+      "leaf": "9430364619572f67019b41cba6c3edcbe539b7feb47fb1f98465b9b0d2e8f9b1",
+      "card": "signed-machiner-a3e4b0fef3ce.json",
+      "id": "a3e4b0fef3cef39f664e5253f23cccd7a4332337dcc50a0a21479695f318c89d",
+      "model": "unsloth/Meta-Llama-3.1-8B-Instruct",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 289
     },
     {
       "leaf": "9456bc7256ad36d7ceada987d6fca6471dca6fd218e2acc1aa94b5fd0fe23355",
@@ -2450,7 +2828,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 248
+      "index": 290
     },
     {
       "leaf": "958bd6f7030f15d1149af11e2c60e166e2a22853c056710d901feaf48e356478",
@@ -2459,7 +2837,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 249
+      "index": 291
     },
     {
       "leaf": "95a698a4225e38370398ff37e458d1930c052a8585bbc6c42938a4c4c300e53c",
@@ -2468,7 +2846,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 250
+      "index": 292
     },
     {
       "leaf": "97a99e6b4eee84bb8728e488f0a03d6d1a0788cf97f133c453af60b5332acffc",
@@ -2477,7 +2855,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 251
+      "index": 293
     },
     {
       "leaf": "97b2561d3d469d523ec04973d5296983a8fe9694831788f03f39bb98f5cef823",
@@ -2486,7 +2864,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 252
+      "index": 294
     },
     {
       "leaf": "97d2a9d564375db170c8704caa12a6c237b6f65da2c68a4919256d5ce858abb5",
@@ -2495,7 +2873,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 253
+      "index": 295
     },
     {
       "leaf": "98d33dea4315e9c67ebe15f2aa1243c6fedd9a662863ebbecd6af4ebd7d0925d",
@@ -2504,7 +2882,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 254
+      "index": 296
     },
     {
       "leaf": "9946278c167a7a3da9298bf73a5d18dbc9314dcccd32d2841cf4da2174b1cdce",
@@ -2513,7 +2891,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 255
+      "index": 297
     },
     {
       "leaf": "99e334e9cfae033f5825a414bf9a21ae40f9f8158db454f7a7ca5674c35ef9d1",
@@ -2522,7 +2900,7 @@
       "model": "Qwen/Qwen3-1.7B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 256
+      "index": 298
     },
     {
       "leaf": "9a815178b9984d015a7288ff05965258bf97b0c93f037cb16bcfa03eacbe92dd",
@@ -2531,7 +2909,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 257
+      "index": 299
     },
     {
       "leaf": "9b42ece1879c5874c1cf4484bdd21f72f98b4d5ecf2e2fa415486a08f5640ff8",
@@ -2540,7 +2918,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 258
+      "index": 300
     },
     {
       "leaf": "9c1f1a310bd2fbdfdd8a73d5011f9a48463d2f3b375c17b1181e3717b3ca403d",
@@ -2549,7 +2927,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 259
+      "index": 301
     },
     {
       "leaf": "9cffcaf10c4fe2b60e5da875a3469884d97ce4a07ef86b761ba781bbb01a7a49",
@@ -2558,7 +2936,7 @@
       "model": "Qwen/Qwen3-14B-Base",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 260
+      "index": 302
     },
     {
       "leaf": "9e189fe2306499d1d429fa744c7c0ac135b41e16db5d2f625596277d411db3b6",
@@ -2567,7 +2945,16 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 261
+      "index": 303
+    },
+    {
+      "leaf": "9f269b6e9eee7b9c9dda97d05e1fa1f012debdad9a34dea62215c10840aee21c",
+      "card": "signed-conforma-3c45540445fd.json",
+      "id": "3c45540445fd5e48de3a85251fd773d87ac4a79c6b0fa413a2f540a1fcdac901",
+      "model": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 304
     },
     {
       "leaf": "9f456d4ae8d78bb7eabe3c54ced58cc3e76177c2f05cc91c3cc674ec6ba50fa4",
@@ -2576,7 +2963,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 262
+      "index": 305
     },
     {
       "leaf": "9ff1dcd17e68bf6c2ad73f1f7af4540adc16efcde60415b02bc9d73fcb393c7a",
@@ -2585,7 +2972,7 @@
       "model": "Qwen/Qwen2.5-14B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 263
+      "index": 306
     },
     {
       "leaf": "a082c9a2012a17651ccc6833b7fa9cc9b16c47bf7db5e781441898b37f85d7bb",
@@ -2594,7 +2981,7 @@
       "model": "Qwen/Qwen2.5-7B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 264
+      "index": 307
     },
     {
       "leaf": "a0af153629f14eaad2064fb77523f8f75dcdfb458d2b4e2cad1e1fa503197702",
@@ -2603,7 +2990,16 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 265
+      "index": 308
+    },
+    {
+      "leaf": "a0cece0ea71bb56fd695a5d463665e21c9ba26c84f6e8df42f54fa610b66a47f",
+      "card": "signed-openness-110f5c59dc13.json",
+      "id": "110f5c59dc1384085ace9248bd30b334f8a386ec30b621e061ff67f87c1882d1",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 309
     },
     {
       "leaf": "a0f6e07356ab5fecb48b875296e04f51c69abe5060b81bcf2e4a91be75fea895",
@@ -2612,7 +3008,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 266
+      "index": 310
     },
     {
       "leaf": "a1088dee17550930edc063350f2931016e19dceb092d03f19fe0b1dfc2bd1c85",
@@ -2621,7 +3017,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 267
+      "index": 311
     },
     {
       "leaf": "a143598021f09300cd1e43b2d0debf484f3cdef7f135f002df15924fee0ec5ae",
@@ -2630,7 +3026,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 268
+      "index": 312
     },
     {
       "leaf": "a1f86b69489ea512781749dcfc90c0913d41a3325499c2d25395422aedb2a2ac",
@@ -2639,7 +3035,7 @@
       "model": "google/gemma-2-9b-it",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 269
+      "index": 313
     },
     {
       "leaf": "a2c002c948511d17b2b40a997c0efcab9c0d3f3592e06d2da604c7a12ac2b68b",
@@ -2648,7 +3044,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 270
+      "index": 314
     },
     {
       "leaf": "a33bf4d241b0e0ae3bc94430e4bd5aa34c59cf2136dc02fba3abd280917a195f",
@@ -2657,7 +3053,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 271
+      "index": 315
     },
     {
       "leaf": "a400bd50f0f806a4e2f691b23c8f0975bb980871d2274c329a17ab90488aa5dd",
@@ -2666,7 +3062,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 272
+      "index": 316
     },
     {
       "leaf": "a46605a0ae89d62eb15a5f396f6c5c4778151506fd0e2b48a67ccae9b9c88f97",
@@ -2675,7 +3071,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 273
+      "index": 317
     },
     {
       "leaf": "a4b3976ddc83fb36bb93898fb1c72a3cae3c91c75040eb67f410b227371f8b0c",
@@ -2684,7 +3080,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 274
+      "index": 318
     },
     {
       "leaf": "a4fe26389f164f642f0c1bbbe41dd671fdcdb5c40fe839e953f6ce00a4e7e605",
@@ -2693,7 +3089,7 @@
       "model": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 275
+      "index": 319
     },
     {
       "leaf": "a57c4789a8ced8a8ea5cc9cee510f99d7efea7c46a4630c7b366acd79a7b8ff3",
@@ -2702,7 +3098,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 276
+      "index": 320
     },
     {
       "leaf": "a59b50b4482d42f5b66509aae366b84cbc4ce154e62d5461819198e0ec100c2d",
@@ -2711,7 +3107,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 277
+      "index": 321
     },
     {
       "leaf": "a5f776dcfde69b04fad481ef445209431d45a79a2dfd5280b46218e0af89686a",
@@ -2720,7 +3116,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 278
+      "index": 322
     },
     {
       "leaf": "a60ccb85cb316bbf53707368dfe6e829cb9fa7f1e97d37b69102360ce76afe22",
@@ -2729,7 +3125,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 279
+      "index": 323
     },
     {
       "leaf": "a724ecf20cbb3b5d6c41b8ae78157d6a9dade315334b307ac09b767f069d2032",
@@ -2738,7 +3134,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 280
+      "index": 324
+    },
+    {
+      "leaf": "a743f0dcb8db4c990db47ef486538ddc23bdb8078ce64e0fae3490936b0a1281",
+      "card": "signed-openness-f233ed75c992.json",
+      "id": "f233ed75c992cf2b4019dc897a8f0ab2574063ac8c2e86855a85fcab357c7fdb",
+      "model": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 325
     },
     {
       "leaf": "a7eeeded7dec42b081ba5c913609562c58628ebfe00912cf4aadd2810be4c600",
@@ -2747,7 +3152,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 281
+      "index": 326
     },
     {
       "leaf": "a8da4a2ffe53e7ee258bbbaf725b44e0bee8f93405442981354b9758b6c0a72b",
@@ -2756,7 +3161,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 282
+      "index": 327
     },
     {
       "leaf": "a97fdc96a0bf7084c60663228d574aa32426de2541a0fe7412f2986d0a028526",
@@ -2765,7 +3170,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 283
+      "index": 328
     },
     {
       "leaf": "a9a85a21d0eb3e8b3031b5bbd5ec39e069a9b5abc7eebe5b5318d87b5f3513d8",
@@ -2774,7 +3179,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 284
+      "index": 329
     },
     {
       "leaf": "aa1c6ae2dfd4dfcde5ac81b1b6b8006554ce68f85b3ee734c052b50bb9b65ea1",
@@ -2783,7 +3188,7 @@
       "model": "NousResearch/Hermes-3-Llama-3.1-8B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 285
+      "index": 330
     },
     {
       "leaf": "ab8b512f284c3c0404af6815deebd2d5b1cb9769811f15fbc5f9e32fe509196a",
@@ -2792,7 +3197,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 286
+      "index": 331
     },
     {
       "leaf": "ab8efcf5ca065be0ef0894aaa0f178a861d26e36c01a2c031414ba59bf330bd8",
@@ -2801,7 +3206,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 287
+      "index": 332
     },
     {
       "leaf": "adfa94a5dcea205aaf663f406ba66737dd8ccef6c16d7bb31d03861ab76e04dc",
@@ -2810,7 +3215,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 288
+      "index": 333
     },
     {
       "leaf": "ae82a4045eff9264b62ead69e4b1f76b86a570837a3eb171254332c8a98cd78a",
@@ -2819,7 +3224,16 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 289
+      "index": 334
+    },
+    {
+      "leaf": "ae8ccb4cff9485b178f05d53b68cf165c4714cd57560b2861d3c5d3f3c52a917",
+      "card": "signed-continui-f4b918ec6ec7.json",
+      "id": "f4b918ec6ec75843c35a8c97473dd7dc1bd166528c878ed3673ba59d32373284",
+      "model": "zai-org/GLM-5.2",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 335
     },
     {
       "leaf": "af000578ee0b4263483884c1183fbe8dc408814035209b60b988049f6e99542c",
@@ -2828,7 +3242,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 290
+      "index": 336
     },
     {
       "leaf": "af1199f36c862ca4d28e3ef22c3f43d357e4b73e79b424defdfb74276078b57a",
@@ -2837,7 +3251,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 291
+      "index": 337
     },
     {
       "leaf": "b04896ab2c02a11ffbcf907aa53e76ae37a06cc47bfe4f53833cf66eec23c4b9",
@@ -2846,7 +3260,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 292
+      "index": 338
     },
     {
       "leaf": "b141a5cfcd23414cd898d20148072b99a5475ab7778c8b501ec2db530065bcde",
@@ -2855,7 +3269,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 293
+      "index": 339
     },
     {
       "leaf": "b159bbf20dd81283d2140af7729ab46da867870236df2b80fafd985d110058f2",
@@ -2864,7 +3278,7 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 294
+      "index": 340
     },
     {
       "leaf": "b1ce00b4614b2cf63f185047680096e4781d6a32a94252c94dca7694321139da",
@@ -2873,7 +3287,16 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 295
+      "index": 341
+    },
+    {
+      "leaf": "b282d397e321211252ba98ea8f763838febbc6abb661afbb04d8bd4fa4933e8b",
+      "card": "signed-openness-152040133a62.json",
+      "id": "152040133a6254924f92c2fa1b7a81faee765b24b52b23c2ce29b44aa5793176",
+      "model": "XiaomiMiMo/MiMo-V2.5",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 342
     },
     {
       "leaf": "b29d3a9708fceccd7dfd134b2dfa2d31bf985e4a677974c4714bce7e3ac16fff",
@@ -2882,7 +3305,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 296
+      "index": 343
     },
     {
       "leaf": "b2c6812b8c338014a6cae35a7cc78d009f29dbf5469b40438e40b2fca7aad58d",
@@ -2891,7 +3314,16 @@
       "model": "google/gemma-2-9b-it",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 297
+      "index": 344
+    },
+    {
+      "leaf": "b2e7959dab56fc6a12c4519485b88cc215f8fa26807285048f7559904921b345",
+      "card": "signed-openness-30f5b9a4ff93.json",
+      "id": "30f5b9a4ff93f6d259e6fd8a1809583e8f69a3e8528b1027075bb3c4a8194816",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "openness",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 345
     },
     {
       "leaf": "b315d7c421d2d213b579d5286711dad6425521e5f893703a341423728242e46e",
@@ -2900,7 +3332,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 298
+      "index": 346
     },
     {
       "leaf": "b342272b2459221e78f566c997d3d373526123824106db32b1c59fcc73881ab9",
@@ -2909,7 +3341,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 299
+      "index": 347
     },
     {
       "leaf": "b41208630465a130dcd7577dcadb158a04d1aea9fc51f498b30bf7e844273a3a",
@@ -2918,7 +3350,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 300
+      "index": 348
     },
     {
       "leaf": "b44e285e119cbf83b6cbbca49e621871586d9f263ef33ac100d494a30f927ebb",
@@ -2927,7 +3359,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 301
+      "index": 349
     },
     {
       "leaf": "b4565030c144ced878f19fb75959819f12fea9e036d426d9816a42e299f98810",
@@ -2936,7 +3368,7 @@
       "model": "Qwen/Qwen2.5-1.5B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 302
+      "index": 350
     },
     {
       "leaf": "b54a32f5753cece5e486a5f54146f85904afbd499434c73b1d2e70f7a37afc9d",
@@ -2945,7 +3377,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 303
+      "index": 351
     },
     {
       "leaf": "b5b4b07ca5f4d5b566c1f9338ab42bb22fb6143d085d1412a95938de7f2187c7",
@@ -2954,7 +3386,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 304
+      "index": 352
+    },
+    {
+      "leaf": "b7c09b1dbfec2419960f0c2afaf18c58cf9b64e2fdc23cc9841605d90ea794b2",
+      "card": "signed-art5-saf-5df085a7e3e8.json",
+      "id": "5df085a7e3e8a2f53223821950a6f6eb60a920505d145d774d73fabf3bf3c6d5",
+      "model": "Qwen/Qwen2.5-7B",
+      "axis": "art5-safeguard",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 353
     },
     {
       "leaf": "b7ed214f43935f192915c08fe51f74a321c3fe6be9d28ac79d23b6292c888ef1",
@@ -2963,7 +3404,7 @@
       "model": "Qwen/Qwen2.5-1.5B",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 305
+      "index": 354
     },
     {
       "leaf": "b8b1d0ae6f6bff7853762b6d03eb1179a359ca2b4e2813789f9162db65e376dc",
@@ -2972,7 +3413,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 306
+      "index": 355
     },
     {
       "leaf": "b99b7ba54b3eb55b0b6f48631cde7bc7179a52b0d395e9eaba5ac834f04efe51",
@@ -2981,7 +3422,7 @@
       "model": "Qwen/Qwen2.5-7B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 307
+      "index": 356
     },
     {
       "leaf": "bb2dc342ba5525980f0b17a6f86de6859e5c9893f51ca9a608f617bb6e2c3ef3",
@@ -2990,7 +3431,16 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 308
+      "index": 357
+    },
+    {
+      "leaf": "bb6fbb0185755c197c83bd01e81c3fb405f3eff65df3427dca5591559241f3e8",
+      "card": "signed-care-87eba632c6ba.json",
+      "id": "87eba632c6baba757823e1e6395679a4aba0f1db3fc31e4045cddf442660c494",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 358
     },
     {
       "leaf": "bd0dbcb00d7567678000fa635fb4ee4f8bb42a1258464801c2df0104cf0a602c",
@@ -2999,7 +3449,7 @@
       "model": "Qwen/Qwen2.5-14B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 309
+      "index": 359
     },
     {
       "leaf": "bd575b165c3c054e3dabb72aa924c330cf4b77c31ccc4b6e3fb6ab49a6a54ba8",
@@ -3008,7 +3458,16 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 310
+      "index": 360
+    },
+    {
+      "leaf": "bdc6083094716e50d3696a211bbda857c2ca9d6baaaa61b7bad075242222a79d",
+      "card": "signed-continui-18957fff0c99.json",
+      "id": "18957fff0c9988feae58a27a9d6b768ebea6b4bbdf37fbf5445a009d48dd5ec2",
+      "model": "Qwen/Qwen3-4B",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 361
     },
     {
       "leaf": "be8b180d541c078f5c5a757a7853581b6cc7400de0088942ba1782d1105ed660",
@@ -3017,7 +3476,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 311
+      "index": 362
     },
     {
       "leaf": "bf0f8881546ea30a53c9bc6ddf69d8b3f9b5a82f99a288914c232cb0ab5a3b8d",
@@ -3026,7 +3485,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 312
+      "index": 363
     },
     {
       "leaf": "bfbf0951bec69ac6e51856e1a8baf6f5cf4f0942867648f6576661cdadb95625",
@@ -3035,7 +3494,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 313
+      "index": 364
     },
     {
       "leaf": "c0ef749a047e44da464f2a2ebc30f741e00b098e0b3e1779d362466b1786d832",
@@ -3044,7 +3503,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 314
+      "index": 365
     },
     {
       "leaf": "c33cca47a1bdd5a4ab5fd71bfab8d3e0e0374ae72c4f3a766c50e70b4e8a48f7",
@@ -3053,7 +3512,7 @@
       "model": "microsoft/phi-4",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 315
+      "index": 366
     },
     {
       "leaf": "c3ca1f6fead018e5982973286b1e9b20d7aa6beddd2b62c6f0bbb7786b224fd7",
@@ -3062,7 +3521,16 @@
       "model": "Qwen/Qwen2.5-14B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 316
+      "index": 367
+    },
+    {
+      "leaf": "c40690837b4f84e3f4e1e1e923c4da001449d069b0eb4e2f77f064906fd8fa35",
+      "card": "signed-machiner-e93bbb7169e0.json",
+      "id": "e93bbb7169e074a9410fbcbc7ece12d2c0f49042df75e550ff33c9799116da77",
+      "model": "mistralai/Mistral-7B-Instruct-v0.2",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 368
     },
     {
       "leaf": "c4471e2b979eb27d76b3ee4d77a57ebc1af3088f653d3e4c57fa34d69092c0bd",
@@ -3071,7 +3539,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 317
+      "index": 369
     },
     {
       "leaf": "c45cb1f669a0350df2ff73038e448a231fc1a0921ba2a713e15a736533cb3e83",
@@ -3080,7 +3548,7 @@
       "model": "Qwen/Qwen2.5-3B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 318
+      "index": 370
     },
     {
       "leaf": "c5451e6e88f38b5863dd8f5ff2f13b134d94566ebe4a3c3c7f9d167c05e46e66",
@@ -3089,7 +3557,7 @@
       "model": "farbodtavakkoli/OTel-LLM-27B-IT",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 319
+      "index": 371
     },
     {
       "leaf": "c75fa20e2d6f3761210bd659e8e907cebdd5ab51496919f87bde6e43f01d8485",
@@ -3098,7 +3566,7 @@
       "model": "zai-org/GLM-5.2",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 320
+      "index": 372
     },
     {
       "leaf": "c7dbe8ae8596a49116f127ef137bdde6fd77cce145c548ef203151bdf6840f74",
@@ -3107,7 +3575,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 321
+      "index": 373
     },
     {
       "leaf": "c87cd5c66b0d39a8fc227d280f64fc482df07d0c0fe83f6ecb4f637ddb280fc6",
@@ -3116,7 +3584,7 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 322
+      "index": 374
     },
     {
       "leaf": "c8d911fa511dd0baf4fda12b912d8159d60571710867c3fd427d64288621dbdc",
@@ -3125,7 +3593,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 323
+      "index": 375
     },
     {
       "leaf": "c93c069350b7731dfb0f7fbdde25e697b6a2c01926eb1fc08f4e450273e836bc",
@@ -3134,7 +3602,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 324
+      "index": 376
     },
     {
       "leaf": "c97b99e9d02b994abbc991fdbb0c2179a85a83eb778575ec91053d5fe4260fb1",
@@ -3143,7 +3611,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 325
+      "index": 377
     },
     {
       "leaf": "ca72bee98cd3d89474dbb177d6cd4aaafe0dd94dd3c20b8fdd82c7007fa191e8",
@@ -3152,7 +3620,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 326
+      "index": 378
     },
     {
       "leaf": "ca9187fcf5b2fec074d6c75737f9fe41c574d81aa1306412321202843e4f3220",
@@ -3161,7 +3629,7 @@
       "model": "Qwen/Qwen3.5-122B-A10B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 327
+      "index": 379
     },
     {
       "leaf": "cacd42efc80c5a13db4bfc9975ad3613a87fd1115e16155d98ba110ebf98b0fb",
@@ -3170,7 +3638,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 328
+      "index": 380
     },
     {
       "leaf": "cafb0bf3d1604ec67303b6f2e2e99e689d72e827bdbb4763da116937bc88f59f",
@@ -3179,7 +3647,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 329
+      "index": 381
     },
     {
       "leaf": "cb90f6b6724076f87d58a444bdc0f110fa30b331cb3c37a64c8fd118d65f047f",
@@ -3188,7 +3656,16 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 330
+      "index": 382
+    },
+    {
+      "leaf": "cbb8763779df4a93f44b92d23d88c355de405624cde3939b7be2c90c876669a9",
+      "card": "signed-swarm-7c62958128d0.json",
+      "id": "7c62958128d0869afdb3ef3643a9dd1a49de2dd36194782ac929b4206bf397d2",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 383
     },
     {
       "leaf": "cbdd4465e713a65a85f486f16f120d99a6f6bf05ed7e2220652f9c99b10f14e0",
@@ -3197,7 +3674,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 331
+      "index": 384
     },
     {
       "leaf": "cbf362b0424b9e98ceb900cb2fc99a06e779ea5731b079345b860ac3722a3dfc",
@@ -3206,7 +3683,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 332
+      "index": 385
     },
     {
       "leaf": "cd1f48318f1b46b2952c02855c57835e3a823eeba4c369d5a2bf54ec1622c38b",
@@ -3215,7 +3692,7 @@
       "model": "microsoft/phi-4",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 333
+      "index": 386
     },
     {
       "leaf": "cd8476bdb0e932f8c73e2d6efe2d8c115eb9d925b55034635ca392b1c9ab1ef0",
@@ -3224,7 +3701,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 334
+      "index": 387
     },
     {
       "leaf": "cd92dfdd45a58c296a4386167ea9a34ac5b731d22ddcfa2253471ad32e1aec00",
@@ -3233,7 +3710,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 335
+      "index": 388
     },
     {
       "leaf": "ce8c23230ddc421041650ea022981306b789c0b30c27f258f029440c7f864c62",
@@ -3242,7 +3719,7 @@
       "model": "meta-llama/Meta-Llama-3-8B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 336
+      "index": 389
     },
     {
       "leaf": "cefb607a107c727769979ef78f63a30d4eff9f887460b25752461c6118249025",
@@ -3251,7 +3728,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 337
+      "index": 390
     },
     {
       "leaf": "cf31914481e99e039b06e62feb362bece1225d5db76284e524e7258dcb146707",
@@ -3260,7 +3737,7 @@
       "model": "Qwen/Qwen3-32B",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 338
+      "index": 391
     },
     {
       "leaf": "d038ea5a95ac1b23ba109ec7509ce9ee85e0c4e2ca20446766b90a85c4278787",
@@ -3269,7 +3746,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 339
+      "index": 392
     },
     {
       "leaf": "d11d28268a0927acad49c017f49bb88e53641d2bd08af1fef64abbc906eb7404",
@@ -3278,7 +3755,16 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 340
+      "index": 393
+    },
+    {
+      "leaf": "d1343f524f578a9465448c81c6df628f8381f98c75479b7a15fcb663e8795cc0",
+      "card": "signed-cross-re-c5b670650226.json",
+      "id": "c5b6706502268bbff253ee668d6b5e6c94a63cff1148af5a51c3878af6fd63bb",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 394
     },
     {
       "leaf": "d1dd2437317e09f4226fc8f1e6219445b074e947d3c198bb0a718093ad8340cf",
@@ -3287,7 +3773,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 341
+      "index": 395
     },
     {
       "leaf": "d1f010c5eee802746fdf9c370e8155db2dc2b0031bd1103145f865d354560309",
@@ -3296,7 +3782,16 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 342
+      "index": 396
+    },
+    {
+      "leaf": "d1fa4133bd702284c3b01adc28af56408149d61b255bac61a791889d8cc4684f",
+      "card": "signed-machiner-1e47274806a7.json",
+      "id": "1e47274806a79652cb7f59895db002595150a7a2f46b13d5bdf0da9fe634edd4",
+      "model": "XiaomiMiMo/MiMo-V2.5",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 397
     },
     {
       "leaf": "d2d2da71f9bb195be6c49a424a01f8246056f573cce894aad2bed48dac09c9fe",
@@ -3305,7 +3800,16 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 343
+      "index": 398
+    },
+    {
+      "leaf": "d3a4c32dbb4226f1877eb5752230af547f774b0e2a6d256f83939b74e787e190",
+      "card": "signed-swarm-15ad9948fa55.json",
+      "id": "15ad9948fa559f9687762e1a1e5a28585ac4affed68c113861eedf409fd0f47c",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "swarm",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 399
     },
     {
       "leaf": "d470ad9bd4adce01e6d611cbe806313b5c1872a6365c464ae5ed2f730ae3f6a7",
@@ -3314,7 +3818,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 344
+      "index": 400
     },
     {
       "leaf": "d4b353d397626b34f1edd99a19476130ba80d8e9d0c20f6ea8fe91b0860c3353",
@@ -3323,7 +3827,7 @@
       "model": "Qwen/Qwen3-1.7B",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 345
+      "index": 401
     },
     {
       "leaf": "d51b904b4698b98fd0e2074ddd5cb171327e8f215af76e117bc2c2e93ab06f57",
@@ -3332,7 +3836,7 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 346
+      "index": 402
     },
     {
       "leaf": "d51c8a7b786db67b0d0866c67c00c6fde57a002ce6824c392fd26c3b605b092c",
@@ -3341,7 +3845,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 347
+      "index": 403
     },
     {
       "leaf": "d5703fa33f5f19540e40de5b6ef058be9cf010013e4baa9eaafcd1683720adb0",
@@ -3350,7 +3854,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 348
+      "index": 404
     },
     {
       "leaf": "d73bf4c4122e69402948e3b3f75fdcd61d3a77ad75ec10c14f27e49b459c5c22",
@@ -3359,7 +3863,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 349
+      "index": 405
     },
     {
       "leaf": "d7c83ba60c35d1a45850dcedb5b1603c055a7439af6da045969b923ff19bac55",
@@ -3368,7 +3872,16 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 350
+      "index": 406
+    },
+    {
+      "leaf": "d7e1fc76db697929090bdd7b7a6fcc6e3616692b255bf0e41f8bbda6a7c10267",
+      "card": "signed-machiner-4f240d70af7b.json",
+      "id": "4f240d70af7b697e118564ca6ffa2189da2602757294583da5315faee58e68b0",
+      "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 407
     },
     {
       "leaf": "d81de061a4f44587d817710ff38aeaff4c2b92e0fcaa822a09b766e5a4f9f2bb",
@@ -3377,7 +3890,7 @@
       "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 351
+      "index": 408
     },
     {
       "leaf": "d8ad6bfabc6f14c8e8e31b50a065406094d54f72e0397c2d8c56217bef129fa8",
@@ -3386,7 +3899,7 @@
       "model": "meta-llama/Llama-3.1-8B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 352
+      "index": 409
     },
     {
       "leaf": "d8c6c91659889024949c60ced978774117109e2bb2f6eaeb9b4aecdd64421659",
@@ -3395,7 +3908,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 353
+      "index": 410
     },
     {
       "leaf": "d8cdc0912fba531516577c73e912fa39fae9036a662fc22a8a2c5cb95fd07c5d",
@@ -3404,7 +3917,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 354
+      "index": 411
     },
     {
       "leaf": "d93810e4a975bfab2c9ff21b2dd8a3df50e1159139786f358755030e00a9f81c",
@@ -3413,7 +3926,7 @@
       "model": "google/gemma-3-4b-it",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 355
+      "index": 412
     },
     {
       "leaf": "d946859dda363209de24152e9841bff3fb53a33af07f796e420119e941d3f9d9",
@@ -3422,7 +3935,16 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 356
+      "index": 413
+    },
+    {
+      "leaf": "d9497dab495ae4362ca07376f14e3ddd5e6f092f7a083916309ed719804db808",
+      "card": "signed-cross-re-b30c2eb782e2.json",
+      "id": "b30c2eb782e215a41db4c5a0d1dfc4c0d7076072aefe1383e813fe16c02247c4",
+      "model": "Qwen/Qwen2-7B-Instruct",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 414
     },
     {
       "leaf": "d99c0863fab2e795380dc9a2247bcd6557abd8903f89495afafb8725cea96659",
@@ -3431,7 +3953,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 357
+      "index": 415
     },
     {
       "leaf": "da354f4860a70afaaf1f8d1368c014293ab4a8b1e5ea79b370174e40393b7226",
@@ -3440,7 +3962,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 358
+      "index": 416
     },
     {
       "leaf": "da48e9a59b688aabd4bd89f1d8f661e03af020d4bddf900b571fb9a946d78817",
@@ -3449,7 +3971,16 @@
       "model": "google/gemma-2-9b-it",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 359
+      "index": 417
+    },
+    {
+      "leaf": "da4a718031a7ec59088a59ca80e6a4608c0b5cc484e3898ac5954d01ee06958e",
+      "card": "signed-safety-f3f4325648e5.json",
+      "id": "f3f4325648e51a87bbf06ea5f3512bfccaa8014b78c1f4ecf7c7d6bd3262b660",
+      "model": "NousResearch/Hermes-3-Llama-3.1-8B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 418
     },
     {
       "leaf": "da6893459add104610c9f99a03eb6f97d7220640b2cf0b556dd9ba86581c95b9",
@@ -3458,7 +3989,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 360
+      "index": 419
     },
     {
       "leaf": "da9ff45cef24da8ca4af3e46a7af72f5d3848774502823d7ef46071b15d73a5b",
@@ -3467,7 +3998,16 @@
       "model": "microsoft/phi-4",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 361
+      "index": 420
+    },
+    {
+      "leaf": "daa10eb46b86ff3ec79b6358df60158ce0063340868780cbe6fc858a52c5138e",
+      "card": "signed-affect-8c0f0191b6f6.json",
+      "id": "8c0f0191b6f69cc584900e9e63ede4dcfe14b8ad583a258a39c6e216c912025d",
+      "model": "microsoft/Phi-3-mini-4k-instruct",
+      "axis": "affect",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 421
     },
     {
       "leaf": "db0eab966340866e2857661d76bcc4651098ea0449d7df9d81d64e5264d9e80b",
@@ -3476,7 +4016,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 362
+      "index": 422
     },
     {
       "leaf": "dc94d175a1b4905bf11b11cd8d5152c0754c0b5d94fa8c45e6156af74f1e0fe7",
@@ -3485,7 +4025,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 363
+      "index": 423
     },
     {
       "leaf": "dcd5fa938243c59f8a8e0ed33eb44892629a212aa6f7d4f58d820d4131f65a6e",
@@ -3494,7 +4034,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 364
+      "index": 424
     },
     {
       "leaf": "dd3f7f0c2b7144b6c5d2f53e8129af6d89ff1222f3ece97577ab24392a76cffe",
@@ -3503,7 +4043,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 365
+      "index": 425
     },
     {
       "leaf": "dd84bed2d56d9ba81b291fece3f6901556c983872f8a051bef4a4fccb3383117",
@@ -3512,7 +4052,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 366
+      "index": 426
     },
     {
       "leaf": "df6bc3372aeb20f1ed12f5f29aea06a3ac32a98ddc17dc0a4d31397ba4dc7a6e",
@@ -3521,7 +4061,7 @@
       "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 367
+      "index": 427
     },
     {
       "leaf": "e09775a433b8f98255c082af21145b589dfeddb6aa520d07fa7d629bd64b29eb",
@@ -3530,7 +4070,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 368
+      "index": 428
     },
     {
       "leaf": "e195b1015c77d78a09ee7a0616eb4256e281edb59c856228532da79eb201a29f",
@@ -3539,7 +4079,16 @@
       "model": "Qwen/Qwen2.5-7B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 369
+      "index": 429
+    },
+    {
+      "leaf": "e19983bcd7044a8538e838365544bf3f24fa99b6f3203e788cf709cce5e7feee",
+      "card": "signed-care-281205f3c93e.json",
+      "id": "281205f3c93e34704417b6533fde3ad846085a9cc44cd02e6dd8978acf1d61a6",
+      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "axis": "care",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 430
     },
     {
       "leaf": "e1f7b396a5f4e2d8d9e705c91804354654824e3566696921bda14cfb93ec9898",
@@ -3548,7 +4097,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 370
+      "index": 431
     },
     {
       "leaf": "e200aef8023598c8ea0cc8e394d77a8bebcab50021db5dc16c281e57b42c7851",
@@ -3557,7 +4106,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 371
+      "index": 432
     },
     {
       "leaf": "e21ff9e93389b1438a3adc07243f0b60590de684f017e029f900378037f40e65",
@@ -3566,7 +4115,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 372
+      "index": 433
     },
     {
       "leaf": "e29aec4cbcfa1fa884353a56d22fed6d37ac4caa3273a7837e01e4d30b9d35e3",
@@ -3575,7 +4124,7 @@
       "model": "deepseek-ai/DeepSeek-V3",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 373
+      "index": 434
     },
     {
       "leaf": "e38572dbd460e26c36b9e8cdf4497c12e62fdd71f25bd3986d504aaeefe0aebe",
@@ -3584,7 +4133,25 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 374
+      "index": 435
+    },
+    {
+      "leaf": "e3a87b53796787449e6524fe3066e0d38b2de85cad1beb36aa559f7dc39b9b3d",
+      "card": "signed-detector-a23920520987.json",
+      "id": "a239205209876816e4a2206f7bd1963ab9d8e75f75efcbfa9e06a826317522c1",
+      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "axis": "detector-interop",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 436
+    },
+    {
+      "leaf": "e4ac756a405ae2092b000d631d6d2df120ad9a679b45d485fdcc32f034638b95",
+      "card": "signed-provenan-dc51ff0d121a.json",
+      "id": "dc51ff0d121abc6f5d43d7d40475f71b6f2d6ed8f9076d8925427309a547d6dc",
+      "model": "Qwen/Qwen2.5-72B-Instruct",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 437
     },
     {
       "leaf": "e56175dc216a528f413d93d5e9181b485591c8bbfba249d5cbd1def150bafbb5",
@@ -3593,7 +4160,7 @@
       "model": "Qwen/Qwen3-8B",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 375
+      "index": 438
     },
     {
       "leaf": "e5f2a8dec9a4b47913f7b50f34baf965b00379f36a392add9b0ccff31ef7926a",
@@ -3602,7 +4169,7 @@
       "model": "ornith-ai/Ornith-1.0-9B",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 376
+      "index": 439
     },
     {
       "leaf": "e677be819b9206e8a599cbd390b3117f587ba1ddc626385bedc13f070d970b3a",
@@ -3611,7 +4178,7 @@
       "model": "farbodtavakkoli/OTel-2.0-LLM-31B-IT",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 377
+      "index": 440
     },
     {
       "leaf": "e6dab6435706f31672eb1a3c5172c27b42f3edad3765a9ee5aa0c7fe07f366e8",
@@ -3620,7 +4187,7 @@
       "model": "google/gemma-2-2b-it",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 378
+      "index": 441
     },
     {
       "leaf": "e7299b5ab74780d3639c96a7efa0193a3117239ed6a3998044953b7402a51208",
@@ -3629,7 +4196,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 379
+      "index": 442
     },
     {
       "leaf": "e779e4371528dce85cfaa6a18d7862dc1ebdc9110d41c5cdd6b13f55c2f06c6e",
@@ -3638,7 +4205,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 380
+      "index": 443
     },
     {
       "leaf": "e7d8677f9ffaec3bb5644725039885a4779a5a4c8d8fd9aba872cf66b6d44e68",
@@ -3647,7 +4214,7 @@
       "model": "Qwen/Qwen2.5-32B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 381
+      "index": 444
     },
     {
       "leaf": "e87eafebe0517613d0ee5ffd217ce572e9d2451ce251252e4afa82b1d1589d60",
@@ -3656,7 +4223,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 382
+      "index": 445
     },
     {
       "leaf": "e9a429709fcca18535f52641ac5604530ecda760c894b8b91834850e688a113c",
@@ -3665,7 +4232,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 383
+      "index": 446
     },
     {
       "leaf": "e9f33e1caaea511e4b6d8e2bca867503dcb5ddc46073f6f91a902dc0a72e7ca4",
@@ -3674,7 +4241,25 @@
       "model": "zai-org/GLM-5.2",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 384
+      "index": 447
+    },
+    {
+      "leaf": "ea2834187d656573e9522f64a0a1f323154ea98e47d6d3ba46819201ad38ef44",
+      "card": "signed-conforma-92e2af21d1d4.json",
+      "id": "92e2af21d1d42497d873beb25c06995f9071e5caadd05976099b36da4c1ff9ce",
+      "model": "Qwen/Qwen3-14B-Base",
+      "axis": "conformance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 448
+    },
+    {
+      "leaf": "eb7ce2be82a4f6f437dc525fa151c781722ab894555b99612c14225e58eb60f2",
+      "card": "signed-safety-b9d4622c1224.json",
+      "id": "b9d4622c12243f2b75328541643d76207544e5971dfef15879607cea839dd88f",
+      "model": "Qwen/Qwen3-235B-A22B",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 449
     },
     {
       "leaf": "eb9b401d41876b3b1e5964a252e2854a9e819afcb77f9a28c4e34702a1893722",
@@ -3683,7 +4268,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "swarm",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 385
+      "index": 450
     },
     {
       "leaf": "ec0cc57632fc7656fafd2a83ac4e379182ca3676796f843f5b67d7c21786a693",
@@ -3692,7 +4277,7 @@
       "model": "meta-llama/Llama-3.2-1B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 386
+      "index": 451
     },
     {
       "leaf": "ece99d39b39e6ce033eedfea21dfd740a9b34059b2e622010bc1eab02405a01e",
@@ -3701,7 +4286,7 @@
       "model": "Qwen/Qwen3-0.6B",
       "axis": "care",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 387
+      "index": 452
     },
     {
       "leaf": "ed1b111760a19ab8b1ece54225e61ae1db12347120b89275063455ff160e3e64",
@@ -3710,7 +4295,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 388
+      "index": 453
     },
     {
       "leaf": "eda75b3b89f068925afd20bb835b9dc47b37e98366199c1157a152edc2f5023b",
@@ -3719,7 +4304,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Pro",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 389
+      "index": 454
     },
     {
       "leaf": "ee099beb6a1897f01d7e4bb9f31ede3f8faec3cae0b2528fe02b7cf1b3451c36",
@@ -3728,7 +4313,7 @@
       "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 390
+      "index": 455
     },
     {
       "leaf": "ef426ee8f4fa91cbfe49cf337292551e3f8efbf414e891067d5fd8cc1d184617",
@@ -3737,7 +4322,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 391
+      "index": 456
     },
     {
       "leaf": "ef7eeca51c8454de3d3f9838495171b70e610e250c40ae83cb2acbcb7f915f39",
@@ -3746,7 +4331,7 @@
       "model": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 392
+      "index": 457
     },
     {
       "leaf": "f053dc0130491c2c9b7f4550765e09fe6050afe783557be1d175a0949ed66e41",
@@ -3755,7 +4340,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 393
+      "index": 458
     },
     {
       "leaf": "f07f3e7fa0704636adc335b8f29291145d5b1dba3d392f1bc908195ac05ff62f",
@@ -3764,7 +4349,16 @@
       "model": "microsoft/phi-4",
       "axis": "conformance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 394
+      "index": 459
+    },
+    {
+      "leaf": "f0d04f748157d48a6839857abd98bbc6692e3e5a40cce15c91e9c51d370dce40",
+      "card": "signed-provenan-1705f8136f17.json",
+      "id": "1705f8136f17770e8a8651b3f341929dfa539ece174893a6ca8afec9691a20e6",
+      "model": "Qwen/Qwen3-Coder-Next",
+      "axis": "provenance",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 460
     },
     {
       "leaf": "f101f5227a8f64b5e7d8e78e63445bd1bf3e7e480c28338d4835b7946d608377",
@@ -3773,7 +4367,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 395
+      "index": 461
     },
     {
       "leaf": "f14ed81502a6483171459febe42c5ddcc3f96ddc92568eda141d1048cc36fc5b",
@@ -3782,7 +4376,7 @@
       "model": "deepseek-ai/DeepSeek-R1",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 396
+      "index": 462
     },
     {
       "leaf": "f1988daab081592dfbd4249e64ee10352287c57fd1f4e93fa1f525db5d80ca42",
@@ -3791,7 +4385,7 @@
       "model": "deepseek-ai/DeepSeek-V3-0324",
       "axis": "art5-safeguard",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 397
+      "index": 463
     },
     {
       "leaf": "f1ca7d6e9260e8640cb6e01d12506f622140cbe51c2a79df4d0a20bdd66a6358",
@@ -3800,7 +4394,7 @@
       "model": "prism-ml/Ternary-Bonsai-27B-gguf",
       "axis": "continuity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 398
+      "index": 464
     },
     {
       "leaf": "f1ebdd80826a53a6a93705d0d7d8e00361c87013856b5e666120436dcabbce53",
@@ -3809,7 +4403,7 @@
       "model": "Qwen/Qwen3-30B-A3B",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 399
+      "index": 465
     },
     {
       "leaf": "f1ec876ba04dac35d74e0368ef16e705328929242d9ef1bb98d9c468a02b6ec9",
@@ -3818,7 +4412,7 @@
       "model": "deepseek-ai/DeepSeek-V4-Flash-0731",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 400
+      "index": 466
     },
     {
       "leaf": "f54f55718fb95629576f9706d67dadcc84f33a53e1172f7747a88049a1a8f73f",
@@ -3827,7 +4421,7 @@
       "model": "swiss-ai/Apertus-8B-Instruct-2509",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 401
+      "index": 467
     },
     {
       "leaf": "f55ccef7067a6f3dbdf72d8f67701cb9d8f5dcf538f77b93539724cfe26b71c2",
@@ -3836,7 +4430,16 @@
       "model": "deepseek-ai/DeepSeek-V3.2",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 402
+      "index": 468
+    },
+    {
+      "leaf": "f57cc4b9ba18a0077b81a226431879b1957a74ed3447e52000a377e35963d352",
+      "card": "signed-safety-b5a0f16a2e47.json",
+      "id": "b5a0f16a2e47d64565230fcb6db7bf9a3fc1e5ab41a608967a57b7d34c052a46",
+      "model": "XiaomiMiMo/MiMo-V2.5",
+      "axis": "safety",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 469
     },
     {
       "leaf": "f5cba2006419735faa4e0e6abe3d6cb5b22262d0dd6bafbd0ba506ab55337b4f",
@@ -3845,7 +4448,7 @@
       "model": "meta-llama/Llama-3.2-3B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 403
+      "index": 470
     },
     {
       "leaf": "f615d82713639559bfbf73589e08718098d9e1ed7dbcb40524ab768df03d97a8",
@@ -3854,7 +4457,7 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 404
+      "index": 471
     },
     {
       "leaf": "f63f1e66945596e335349b4937452c6b644f7909da2a19c41af8aabcefeef4b5",
@@ -3863,7 +4466,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 405
+      "index": 472
     },
     {
       "leaf": "f74642342bbadd612c5ca422ff11d9fc39954239786a1b352e17074406d11e09",
@@ -3872,7 +4475,7 @@
       "model": "Qwen/Qwen3-30B-A3B-Instruct-2507",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 406
+      "index": 473
     },
     {
       "leaf": "f74be43820c14d359fdffe4f251bc6a8f985de21a7287ecd19e13b18368e1f0e",
@@ -3881,7 +4484,7 @@
       "model": "farbodtavakkoli/OTel-LLM-27B-IT",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 407
+      "index": 474
     },
     {
       "leaf": "f7f61897a0fd1efb6836560ca3b6d6a017e69c6772626de7a9f71a5c52cadd1a",
@@ -3890,7 +4493,16 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 408
+      "index": 475
+    },
+    {
+      "leaf": "f8123b3c6e6cf111b8e85647cdd71c2790b2b81bd432e86de7e3b141a2822893",
+      "card": "signed-cross-re-bb91f74e667c.json",
+      "id": "bb91f74e667cf74a2d7b27a8822d2a659809adbe52252599b10d04ff18b31261",
+      "model": "Qwen/Qwen3-8B-Base",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 476
     },
     {
       "leaf": "f95228f2fabd4b5180e90355bc5a9f9346998b8e52831f531c603e69c26f62bb",
@@ -3899,7 +4511,7 @@
       "model": "Qwen/Qwen2.5-32B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 409
+      "index": 477
     },
     {
       "leaf": "f9d6a8af3df4eb2b5a5038a09df0051b36bec8b55eae58f16b856bed4557254e",
@@ -3908,7 +4520,7 @@
       "model": "Qwen/Qwen2-1.5B-Instruct",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 410
+      "index": 478
     },
     {
       "leaf": "fa5d7fd89717cf28372850a0be7afc1955276127e775f1b48bb3a44540a93ab7",
@@ -3917,7 +4529,16 @@
       "model": "Qwen/Qwen3-4B-Instruct-2507",
       "axis": "openness",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 411
+      "index": 479
+    },
+    {
+      "leaf": "fa9ae905c26804238d4cfb5889292e05dee2edc8d8e3c3e5832fc718ba08d835",
+      "card": "signed-continui-8e46f779665a.json",
+      "id": "8e46f779665a8121c852ca152698c04e750ce0a48e0cfd1a6881dffab4bb0bcd",
+      "model": "Qwen/Qwen3-8B-Base",
+      "axis": "continuity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 480
     },
     {
       "leaf": "fab5d5f5c378660e4a9ba38aaeae637fd27dcb658206ddf7d3de340834d70593",
@@ -3926,7 +4547,7 @@
       "model": "Qwen/Qwen3-Coder-30B-A3B-Instruct",
       "axis": "provenance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 412
+      "index": 481
     },
     {
       "leaf": "fb13a18d265ad7344e75639fd4725152646710bb20eb0e522e07dd5458b5e98b",
@@ -3935,7 +4556,7 @@
       "model": "Qwen/Qwen2.5-72B-Instruct",
       "axis": "machinery-conformity",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 413
+      "index": 482
     },
     {
       "leaf": "fb33d5c5d4f7858dae8223daecf2245e3fd98e3ecd79f86c6c23d53713f4d335",
@@ -3944,7 +4565,7 @@
       "model": "Qwen/Qwen3-14B",
       "axis": "safety",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 414
+      "index": 483
     },
     {
       "leaf": "fc19c085084eebcf59be60610d9a4f2c52795b29b8382afe46e4f3ebc01d8678",
@@ -3953,7 +4574,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "cross-reality",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 415
+      "index": 484
     },
     {
       "leaf": "fc875ae40c3eedfc0d1be5399dd3392d4e58dd6bba8afd160df9949ae1d73cd3",
@@ -3962,7 +4583,16 @@
       "model": "Qwen/Qwen3-Coder-Next",
       "axis": "governance",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 416
+      "index": 485
+    },
+    {
+      "leaf": "fcfab46298f530b09c01d39ca3558798cb85b432410cfcd732fed73c2a9b1b63",
+      "card": "signed-cross-re-6b8818c3a140.json",
+      "id": "6b8818c3a140b7f017d659aa6e9e2e5c21e4095cd466a210561be11ab1ccbfd6",
+      "model": "google/gemma-2-2b-it",
+      "axis": "cross-reality",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 486
     },
     {
       "leaf": "fd1ac9e20f95f11c4471df6e823faba128fb5d89430e8e068d574762a6c71e24",
@@ -3971,7 +4601,16 @@
       "model": "zai-org/GLM-5.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 417
+      "index": 487
+    },
+    {
+      "leaf": "fd9e53e12a35f6ea5b61af20aa8bf0f8731857cedd551e799d9d1545f82c15e7",
+      "card": "signed-machiner-e8d3af4e9d3c.json",
+      "id": "e8d3af4e9d3c33dbeb94e08358ac067efc95cb0c844223b68348adb51505ece3",
+      "model": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+      "axis": "machinery-conformity",
+      "did": "did:web:csoai.org#board-attestation-1",
+      "index": 488
     },
     {
       "leaf": "fe1c3e0cc4469f039f41507beb34efa22f8d4c429ab023e050682b5941bbd092",
@@ -3980,7 +4619,7 @@
       "model": "Qwen/Qwen2.5-Coder-32B-Instruct",
       "axis": "detector-interop",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 418
+      "index": 489
     },
     {
       "leaf": "fe8dd7cec917ad1e1bbaf854a688025e0f6d4a8e139c07740680b12b180ee7d5",
@@ -3989,7 +4628,7 @@
       "model": "mistralai/Mistral-7B-Instruct-v0.2",
       "axis": "affect",
       "did": "did:web:csoai.org#board-attestation-1",
-      "index": 419
+      "index": 490
     }
   ]
 }
