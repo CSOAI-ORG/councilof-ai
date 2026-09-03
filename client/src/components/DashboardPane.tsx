@@ -15,6 +15,7 @@ const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
 const LobbyMatrixPane = lazy(() => import("@/components/lobby/LobbyMatrixPane"));
 const DashboardArchivePane = lazy(() => import("@/components/DashboardArchivePane"));
+const DashboardConsolePane = lazy(() => import("@/components/DashboardConsolePane"));
 const Page_Leaderboard = lazy(() => import("@/pages/Leaderboard"));
 const LobbyVerifyPane = lazy(() => import("@/components/lobby/LobbyVerifyPane"));
 const DashboardStatePane = lazy(() => import("@/components/DashboardStatePane"));
@@ -41,6 +42,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   board: HomeGspcBoard, // the living HF Space board + 22-axis strip, inside the shell (owner ruling 2 Sep)
   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
   terminal: LobbyBoardPane, // GSPC terminal
+  console: DashboardConsolePane, // the ONE console — same file as /gspc-console.html and the HF Space
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
   verify: LobbyVerifyPane,
@@ -69,6 +71,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
 
 /** Extra in-shell panes that are not sidebar tabs (they have no page of their own). */
 const EXTRA_LABELS: Record<string, string> = {
+  console: "GSPC console",
   leaderboard: "Leaderboard",
   terminal: "GSPC terminal",
   state: "Estate state",
