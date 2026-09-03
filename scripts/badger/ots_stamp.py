@@ -178,9 +178,31 @@ def _selftest() -> int:
     check("a raw calendar fragment is not an anchor",
           attestation_state(bytes.fromhex("00" * 64))["state"], "unreadable")
 
+    # Fixtures are selected by INSPECTING THE PROOF DIRECTLY, never by calling the
+    # function under test. Selecting them with attestation_state made the suite
+    # self-defeating: a mutation that reported every pending stamp as "bitcoin"
+    # emptied the pending list, so those cases SKIPPED and the suite still said
+    # "0 failed". Mutation-tested by nicholas-48's suggestion; that is how it was
+    # found. A guard that selects its own evidence proves nothing.
+    from opentimestamps.core.notary import (
+        BitcoinBlockHeaderAttestation as _BTC,
+        PendingAttestation as _PEND,
+    )
+
+    def _raw_kinds(path):
+        try:
+            return {type(a) for a in _attestations(_parse(pathlib.Path(path).read_bytes()).timestamp)}
+        except Exception:
+            return set()
+
     real = [f for f in glob.glob("**/*.ots", recursive=True) if "node_modules" not in f]
-    anchored = [f for f in real if attestation_state(pathlib.Path(f).read_bytes())["state"] == "bitcoin"]
-    pending = [f for f in real if attestation_state(pathlib.Path(f).read_bytes())["state"] == "pending"]
+    anchored = [f for f in real if _BTC in _raw_kinds(f)]
+    pending = [f for f in real if _BTC not in _raw_kinds(f) and _PEND in _raw_kinds(f)]
+
+    # A missing fixture is a FAILURE, not a skip. Skipping is how a mutated suite
+    # stays green.
+    check("a bitcoin-attested fixture exists to test against", bool(anchored), True)
+    check("a pending fixture exists to test against", bool(pending), True)
 
     if anchored:
         data = pathlib.Path(anchored[0]).read_bytes()
@@ -202,7 +224,7 @@ def _selftest() -> int:
         check("a truncated proof stops it reporting bitcoin",
               attestation_state(data[: len(data) // 3])["state"] != "bitcoin", True)
     else:
-        cases.append((True, "SKIPPED: no anchored file present to corrupt", "-", "-"))
+        check("anchored-proof cases ran", False, True)
 
     if pending:
         st = attestation_state(pathlib.Path(pending[0]).read_bytes())
@@ -210,7 +232,7 @@ def _selftest() -> int:
         check("a pending stamp carries no block height", "block_height" in st, False)
         check("a pending stamp names its calendars", bool(st.get("calendars")), True)
     else:
-        cases.append((True, "SKIPPED: no pending file present", "-", "-"))
+        check("pending-stamp cases ran", False, True)
 
     for ok, name, got, want in cases:
         print(f"  {'ok  ' if ok else 'FAIL'}  {name}" + ("" if ok else f"  -> got {got!r}, want {want!r}"))
