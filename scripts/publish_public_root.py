@@ -298,16 +298,34 @@ def sign_payload(payload: dict, key) -> str:
     raise RuntimeError("no PKCS8 and OIDC board-sign unavailable")
 
 
+# Compact CARD envelope — same reason as ENVELOPE_PREIMAGE_KEYS above: board-sign
+# refuses anything over 3KB, and a whole card (payload + subject + source_urls +
+# tags + unmeasured) does not fit. Signing payload_of(card) directly returned
+# `400 payload exceeds 3KB cap` for 30 cards on 2026-09-03.
+#
+# card["sha256"] IS the whole-card digest, so signing this envelope transitively
+# binds subject, source_urls, tags, unmeasured and payload — the property the
+# payload-only signature lacked — while staying a couple of hundred bytes.
+CARD_ENVELOPE_KEYS = ("did", "schema", "surface", "as_of", "sha256")
+
+
+def card_envelope(card: dict) -> dict:
+    return {k: card[k] for k in CARD_ENVELOPE_KEYS}
+
+
 def sign_card(card: dict, key) -> str:
-    """Sign the SAME bytes the leaf digest covers.
+    """Sign a compact envelope whose sha256 covers the whole card.
 
     Signing leaf["payload"] (as this did before 2026-09-03) left `subject` and
     `source_urls` outside the signature as well as outside the merkle tree — so
-    the claim text and the evidence link were attested by nothing. payload_of()
-    excludes sig_ed25519, so attaching the signature afterwards does not disturb
-    either the preimage or card["sha256"].
+    the claim text and the evidence link were attested by nothing.
+
+    The envelope carries card["sha256"], the v1 whole-card digest, so the
+    signature reaches every field through it. sig_ed25519 is excluded from that
+    digest, so attaching the signature afterwards disturbs neither the preimage
+    nor card["sha256"].
     """
-    return sign_payload(payload_of(card), key)
+    return sign_payload(card_envelope(card), key)
 
 
 def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dict:
@@ -333,7 +351,11 @@ def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dic
         "as_of": leaf["as_of"] or now_iso(),
         "did": DID,
         "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
-        "sig_covers": "whole-card-except-sha256-and-sig_ed25519",
+        "sig_covers": (
+            "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the "
+            "whole-card digest, so the signature binds subject, source_urls, tags, "
+            "unmeasured and payload through it"
+        ),
         "payload": payload,
         "schema": CARD_SCHEMA,
         "sha256": None,
