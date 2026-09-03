@@ -325,6 +325,29 @@ const RAIL_TERMS = {
   ots_atom_anchor: /OpenTimestamps|\bOTS\b|\bBitcoin\b/i,
 };
 
+// ── rail SUBJECT scoping (2026-09-03) ────────────────────────────────────────
+// facts.json carries TWO Bitcoin/OTS rails with OPPOSITE statuses:
+//   ots_root_anchor   live      "Anchoring the published ROOT to Bitcoin via OpenTimestamps"
+//   ots_atom_anchor   planned   "Anchoring every queued ATOM, bridge card and press release"
+// RAIL_TERMS matches keywords only (Bitcoin|OTS|OpenTimestamps), and live rails are filtered
+// out of the tense rule entirely, so copy about the ROOT — the LIVE rail's subject — was being
+// attributed to the PLANNED atom rail and required to speak in future tense.
+//
+// That blocked every production deploy on 2026-09-03, and drove a lane to rewrite correct
+// indicative prose into "would be upgraded" / "would remain": the honesty gate manufacturing
+// evasive English about a file whose entire purpose is to say "this is a commitment, not an
+// anchor". A gate that forces a true statement to sound false has stopped measuring honesty.
+//
+// The exemption is deliberately narrow. It lifts ONLY inside the published-root artifacts, and
+// ONLY while the surrounding window is not talking about atoms — so "every queued atom is
+// anchored to Bitcoin" still fails INSIDE a root file, which is the claim the rail exists for.
+const RAIL_SUBJECT_EXEMPT = {
+  ots_atom_anchor: {
+    files: /^(root\.json|interop\/card-root-[^/]*\.json)$/,
+    unless: /\batoms?\b|\bqueued\b|\bpress release\b|\bbridge card\b/i,
+  },
+};
+
 // ── anchor-count: a CONCEPT rule, not a string match ──────────────────────────
 // Two passes of hand-grepping (mine and nicholas-48's) each missed what the other
 // caught, because the same claim appears in variant wordings: "the 4-anchor
@@ -396,6 +419,10 @@ function ruleCapabilityTense(facts, file, text, add) {
       const end = re.lastIndex;
       const window = ctx(text, start, end, 130);
       const lower = window.toLowerCase();
+
+      // Subject scoping: is this file the LIVE rail's subject rather than this rail's?
+      const scope = RAIL_SUBJECT_EXEMPT[rail.id];
+      if (scope && scope.files.test(file) && !scope.unless.test(window)) continue;
 
       // Exonerate: the copy already labels the honest status.
       if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
@@ -576,6 +603,36 @@ const SELFTEST_CASES = [
     '{"signed": false, "status": "UNSIGNED", "board_write": "NOT WRITTEN. These 4 axes remain UNMEASURED."}',
     false,
     "interop/test-unsigned-run.json",
+  ],
+  // ── rail SUBJECT scoping: root vs atom (2026-09-03) ──────────────────────────
+  // The published root IS anchored (ots_root_anchor, status live). Individual atoms are
+  // NOT (ots_atom_anchor, status planned). Both mention Bitcoin, so a keyword-only match
+  // attributed root copy to the planned atom rail and blocked every deploy for a day.
+  // These four cases pin the boundary in both directions — the exemption must lift the
+  // false positive WITHOUT letting a real atom over-claim through.
+  [
+    "root artifact may state its own anchoring in the indicative",
+    '{"anchor_rule":"This root is anchored to Bitcoin via OpenTimestamps at block 965268."}',
+    false,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "root artifact explaining it is NOT yet an anchor still passes",
+    '{"anchor_rule":"This document is a commitment, not an anchor. It becomes anchored only when an OpenTimestamps proof over these bytes is upgraded into a Bitcoin block."}',
+    false,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "VIOLATION: atom over-claim INSIDE a root artifact is still caught",
+    '{"note":"Every queued atom is anchored to Bitcoin via OpenTimestamps."}',
+    true,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "VIOLATION: the same root sentence outside a root artifact is not exempt",
+    '<p>Everything here is anchored to Bitcoin via OpenTimestamps.</p>',
+    true,
+    "subdomains/proofs/index.html",
   ],
 ];
 
