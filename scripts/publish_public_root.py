@@ -31,11 +31,13 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
 from adapters import (  # noqa: E402
-    _coverage,
+    # NOTE 2026-09-03: `_coverage` and `fin` were listed here but no such modules
+    # exist and never have (no delete in git history). Neither name was used —
+    # only fin7_coverage.collect() is called. The dead names raised
+    # ImportError at module load, so this publisher could not run AT ALL.
     benji,
     evm_permission_events,
     evm_permissions,
-    fin,
     fin7_coverage,
     genai_mil_notices,
     hub_cite,
@@ -46,7 +48,7 @@ from adapters import (  # noqa: E402
     xrpl,
 )
 
-CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
+CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
 ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
 DID = "did:web:csoai.org#board-attestation-1"
 SURFACES = {
@@ -119,10 +121,49 @@ def sha256_hex(data: bytes) -> str:
 
 
 def payload_sha256(payload: dict) -> str:
+    """card-v0 leaf digest: the PAYLOAD ONLY.
+
+    Retained so v0 cards already in a published root stay checkable. Do not use
+    it for new cards — see card_sha256() and the note there.
+    """
     raw = canonical_bytes(payload)
     if len(raw) > PAYLOAD_CAP:
         raise ValueError(f"payload {len(raw)} bytes exceeds {PAYLOAD_CAP} cap")
     return sha256_hex(raw)
+
+
+# Fields that cannot be inside their own digest.
+DIGEST_EXCLUDES = ("sha256", "sig_ed25519")
+
+
+def card_sha256(card: dict) -> str:
+    """card-v1 leaf digest: THE WHOLE CARD except its own digest and signature.
+
+    Why this exists (2026-09-03). v0 hashed `payload` alone, so `subject`,
+    `source_urls`, `as_of`, `did`, `surface`, `tags` and `unmeasured` all sat
+    OUTSIDE the merkle tree. Demonstrated on the real code:
+
+        subject honest   : "Qwen/Qwen3-30B governance run"
+        subject tampered : "TOTALLY DIFFERENT CLAIM"
+        source  tampered : "https://evil.example/fake"
+        leaf digest      : e52f814957f02a0aef7de67ca93250f9…  (IDENTICAL)
+
+    A card's claim text and its evidence URL could both be rewritten and the
+    leaf, the merkle root and the inclusion proof would all still verify. For a
+    measurement body whose product is "follow the link and check", that is the
+    worst possible hole: the link was not covered.
+
+    v1 binds every field a relying party reads. The payload cap still applies to
+    the payload, not to the card.
+    """
+    raw = canonical_bytes(payload_of(card))
+    if len(canonical_bytes(card.get("payload") or {})) > PAYLOAD_CAP:
+        raise ValueError("payload exceeds cap")
+    return sha256_hex(raw)
+
+
+def payload_of(card: dict) -> dict:
+    return {k: v for k, v in card.items() if k not in DIGEST_EXCLUDES}
 
 
 def merkle_root(leaf_hexes: list[str]) -> str:
@@ -262,7 +303,6 @@ def make_card(leaf: dict, sig: str | None) -> dict:
     if surface not in SURFACES:
         raise ValueError(f"unknown surface {surface}")
     payload = leaf["payload"]
-    digest = payload_sha256(payload)
     missing = list(leaf.get("unmeasured") or [])
     if sig is None:
         tag = "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
@@ -271,9 +311,10 @@ def make_card(leaf: dict, sig: str | None) -> dict:
     card = {
         "as_of": leaf["as_of"] or now_iso(),
         "did": DID,
+        "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
         "payload": payload,
         "schema": CARD_SCHEMA,
-        "sha256": digest,
+        "sha256": None,
         "sig_ed25519": sig,
         "source_urls": list(leaf["source_urls"]),
         "subject": leaf["subject"],
@@ -281,6 +322,8 @@ def make_card(leaf: dict, sig: str | None) -> dict:
         "tags": list(leaf.get("tags") or []),
         "unmeasured": missing,
     }
+    # digest LAST, over the finished card — so subject and source_urls are bound
+    card["sha256"] = card_sha256(card)
     return card
 
 
