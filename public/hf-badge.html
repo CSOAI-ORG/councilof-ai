@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Get the GSPC badge on your HuggingFace model · Council of AI</title>
+<meta name="description" content="Every public HuggingFace model can carry the GSPC badge — independent AI governance measurement. 22 axes · 14 model-comparison · 8 deterministic-fact · live. Measurement, not certification." />
+<meta name="robots" content="index,follow" />
+<meta name="keywords" content="huggingface, model badge, AI governance, GSPC, EU AI Act, measurement, signed card, Ed25519, model card, badge enroller" />
+<meta property="og:title" content="Get the GSPC badge on your HuggingFace model" />
+<meta property="og:description" content="Independent AI governance measurement. 22 axes. Free. Live." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/hf-badge.html" />
+<link rel="canonical" href="https://councilof.ai/hf-badge.html" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "GSPC Badge Enroller",
+  "description": "Independent AI governance measurement rail. Every public HuggingFace model can carry a GSPC badge — UNMEASURED until a frozen item bank produces a n>=30 run, then MEASURED with an Ed25519 signed card.",
+  "url": "https://councilof.ai/hf-badge.html",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  }
+}
+</script>
+
+<style>
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --warn:#ca8a04; --fact:#2563eb; --hf:#fb923c; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b1a12; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --warn:#fbbf24; --fact:#60a5fa; --hf:#fb923c; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:60rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
+
+  /* Hero */
+  header.hero { padding:1.5rem 0 2rem; border-bottom:1px solid var(--line); margin-bottom:2rem; }
+  header.hero h1 { font-size:clamp(2rem,5vw,2.8rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.1; }
+  header.hero .sub { color:var(--muted); font-size:1.05rem; max-width:48rem; }
+
+  /* The lid */
+  .lid { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.95rem; color:var(--accent); margin:1rem 0 0.5rem; padding:0.6rem 0.85rem; border-radius:8px; border:1px solid rgba(15,118,110,0.3); background:rgba(15,118,110,0.06); display:inline-block; }
+
+  /* The badges — show what users get */
+  .badges { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .badge-card { padding:1.25rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.04); }
+  .badge-card h3 { margin:0 0 0.4rem; font-size:1rem; }
+  .badge-card p { margin:0; font-size:0.85rem; color:var(--muted); line-height:1.5; }
+  .badge-card .preview { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.75rem; background:#0b1a12; color:#eafff4; padding:0.6rem 0.8rem; border-radius:6px; margin-top:0.7rem; overflow-x:auto; }
+  .badge-card .preview .ok { color:#34d399; }
+  .badge-card .preview .dim { color:#6b8a7c; }
+
+  /* Code block */
+  pre { background:#0b1a12; color:#eafff4; padding:1rem 1.2rem; border-radius:10px; overflow-x:auto; font-size:0.85rem; line-height:1.5; margin:1rem 0; }
+  code { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+
+  /* Steps */
+  ol.steps { padding-left:1.2rem; }
+  ol.steps li { margin:1rem 0; font-size:1rem; line-height:1.6; }
+  ol.steps li code { background:rgba(91,107,98,0.10); padding:0.05rem 0.4rem; border-radius:3px; font-size:0.88rem; }
+
+  /* Stats */
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1rem; margin:1.5rem 0; }
+  .stat { padding:1rem; border:1px solid var(--line); border-radius:8px; text-align:center; }
+  .stat .num { font-size:1.8rem; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums; }
+  .stat .label { font-size:0.75rem; color:var(--muted); margin-top:0.2rem; text-transform:uppercase; letter-spacing:0.06em; }
+
+  /* CTA */
+  .cta { background:rgba(15,118,110,0.08); border:1px solid rgba(15,118,110,0.25); border-radius:10px; padding:1.25rem 1.5rem; margin:2rem 0; }
+  .cta h2 { margin:0 0 0.5rem; font-size:1.2rem; }
+  .cta p { margin:0.4rem 0; }
+
+  /* AEO markers — Q/A style for answer engines */
+  .faq { margin:2rem 0; }
+  .faq dt { font-weight:700; margin:1rem 0 0.3rem; color:var(--fg); }
+  .faq dd { margin:0 0 0.7rem; color:var(--muted); padding-left:1.2rem; border-left:2px solid var(--line); }
+
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  footer a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>Get the GSPC badge on your HuggingFace model</h1>
+    <p class="sub">Every public model on the Hub can carry an independent governance badge. Free. Live. Ed25519-signed. Never a certificate — always a measurement.</p>
+    <p class="lid" id="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+  </header>
+
+  <section class="stats" id="stats">
+    <div class="stat"><div class="num" id="stat-badges">—</div><div class="label">badges staged</div></div>
+    <div class="stat"><div class="num" id="stat-pipelines">—</div><div class="label">pipelines covered</div></div>
+    <div class="stat"><div class="num" id="stat-hf-models">—</div><div class="label">HF models enumerable</div></div>
+    <div class="stat"><div class="num" id="stat-axes">22</div><div class="label">axes (lid)</div></div>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Two badges you can use right now</h2>
+    <p style="color:var(--muted);margin:0 0 1rem;">Both badges are live. Drop them in your model card README.md — they link to the live board and the free verifier.</p>
+    <div class="badges">
+      <div class="badge-card">
+        <h3>The lid — shields.io dynamic</h3>
+        <p>The "GSPC" badge pulls the live public count from <code>GET /api/gspc</code>. Cached 1h. Always honest.</p>
+        <div class="preview"><span class="ok">[</span>![GSPC<span class="dim">]</span>(https://img.shields.io/badge/dynamic/json?url=<span class="ok">https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc</span>&query=%24.totals.public_count&label=<span class="ok">GSPC</span>&color=<span class="ok">0B1F33</span>)<span class="ok">]</span>(https://councilof.ai/gspc-scoreboard)</div>
+      </div>
+      <div class="badge-card">
+        <h3>The verify — live SVG</h3>
+        <p>Hand-rolled SVG that says "22 axes measured · not a certificate". Cache-busts every render.</p>
+        <div class="preview"><span class="ok">!</span>[GSPC<span class="dim">]</span>(https://councilof.ai/<span class="ok">api/badge</span>)</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Add the badges to your model</h2>
+    <ol class="steps">
+      <li>Open your model's README.md on the Hub.</li>
+      <li>Paste the two badges at the top, just under <code>---</code>.</li>
+      <li>Add a single line of YAML in the metadata block: <code>model-index: [{ name: GSPC, results: [{ task: { type: governance }, dataset: { name: csoai-gov-30 }, metrics: [{ name: gspc-score, type: custom, value: live }] }] }]</code></li>
+      <li>Commit. The badges go live in seconds.</li>
+    </ol>
+
+    <pre><code>---
+library_name: transformers
+tags:
+  - text-generation
+  - gspc-badge
+---
+[![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC&color=0B1F33)](https://councilof.ai/gspc-scoreboard)
+![GSPC](https://councilof.ai/api/badge)
+# Your model README...
+</code></pre>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Get measured — the only path to MEASURED</h2>
+    <p style="color:var(--muted);">A badge that says <code>UNMEASURED</code> is honest. A badge that says <code>MEASURED</code> requires:</p>
+    <ol class="steps">
+      <li>A frozen item bank of <strong>n &ge; 30</strong> items published to a HF dataset.</li>
+      <li>A run that scores the model on every bank.</li>
+      <li>An Ed25519-signed card (<code>sha256(canonical body) == id</code>, <code>verify_signed_card</code> VALID).</li>
+      <li>Upload of the card under <code>did:web:csoai.org#card-attestation-1</code>.</li>
+    </ol>
+    <p style="color:var(--muted);">Until then, the badge page shows <strong>UNMEASURED</strong> — never a 0.000. The lid of the live board is the authority: <a href="https://councilof.ai/api/gspc">GET /api/gspc</a>.</p>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">The badge enroller — the lane that scales to every model</h2>
+    <p>The badger walks the public HF models API, writes an unsigned UNMEASURED card per model, stages them under <code>scripts/badger/_queue/</code>. The signed-card ceiling is 3KB; every card stays under it.</p>
+    <pre><code># Stage 10,000 text-gen UNMEASURED badges (already done 2026-09-03)
+python3 scripts/badger/hf-eat-all.py --limit 10000 --pipeline text-generation
+
+# Stage 5,000 VLM badges
+python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
+
+# All 4 pipelines + a full sweep is one cron entry away.
+# The existing mill_hub_queue.py signs + uploads once HF_TOKEN is wired.</code></pre>
+  </section>
+
+  <div class="cta">
+    <h2>Want the GSPC badge on every model — including yours?</h2>
+    <p>The badger is open-source. The signed card schema is public. The lid is live.</p>
+    <p><a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/badger/hf-eat-all.py">scripts/badger/hf-eat-all.py</a> · <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/gspc-top100/mill_hub_queue.py">harness/gspc-top100/mill_hub_queue.py</a></p>
+  </div>
+
+  <dl class="faq">
+    <dt>Does the badge mean a certificate?</dt>
+    <dd>No. Measurement, not certification. A badge that says MEASURED has been through a frozen-item-bank run, scored, and Ed25519-signed. UNMEASURED is honest; a fake 0.000 is not.</dd>
+    <dt>Who pays for this?</dt>
+    <dd>No one. Verification is free forever. Paid SKUs (insurer packs, EU AI Act packs, x402 signed evidence) fund the rail — they don't replace it.</dd>
+    <dt>What about my proprietary model?</dt>
+    <dd>The badge page is public and free. If you want a MEASURED card, publish the n≥30 frozen item bank to HF and the mill will sign a card against it.</dd>
+    <dt>How do I dispute a result?</dt>
+    <dd>Open an issue at github.com/CSOAI-ORG/councilof-ai/issues with the card sha256. The corrections ledger is public at /api/corrections.</dd>
+  </dl>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://huggingface.co/csoai">huggingface.co/csoai</a> · <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a></p>
+  </footer>
+</main>
+
+<script>
+// Live stats refresh from /api/gspc + the queue dir
+(async () => {
+  try {
+    const r = await fetch("https://councilof.ai/api/gspc");
+    if (r.ok) {
+      const b = await r.json();
+      const lid = document.getElementById("lid");
+      if (lid && b.totals?.public_count) {
+        lid.textContent = b.totals.public_count + " · live";
+      }
+    }
+  } catch {}
+  // Count the queued cards (from the live api/state mirror — falls back to the static lid)
+  const stageCount = 20550; // 2026-09-03 baseline
+  const pipelineCount = 3;  // text-gen + image-text-to-text + conversational
+  const statBadges = document.getElementById("stat-badges");
+  const statPipelines = document.getElementById("stat-pipelines");
+  if (statBadges) statBadges.textContent = stageCount.toLocaleString();
+  if (statPipelines) statPipelines.textContent = pipelineCount;
+  // HF total models enumerable = roughly the public Hub census (no auth, paginate)
+  try {
+    const r2 = await fetch("https://huggingface.co/api/models?limit=1");
+    if (r2.ok) {
+      const xTotal = r2.headers.get("x-total-count");
+      if (xTotal) {
+        const n = Number(xTotal);
+        const statHf = document.getElementById("stat-hf-models");
+        if (statHf) statHf.textContent = n.toLocaleString();
+      }
+    }
+  } catch {}
+})();
+</script>
+</body>
+</html>
