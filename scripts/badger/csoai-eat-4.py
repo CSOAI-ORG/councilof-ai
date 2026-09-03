@@ -179,37 +179,83 @@ def mine_gh_advisories() -> list[dict]:
 
 
 def mine_breach_check() -> list[dict]:
-    """Check CSOAI domain against HaveIBeenPwned — public, no auth for domain check."""
+    """Check CSOAI domain against HaveIBeenPwned — UNCHECKABLE without API key.
+
+    The HIBP /breacheddomain endpoint requires:
+      1. An API key in the hibp-api-key header
+      2. Domain verification (the domain owner has to register it)
+
+    Without both, the API returns 401 — which is UNCHECKABLE, NOT 'zero breaches'.
+    Reporting a 401 as 'the domain is breach-free' is a Category A error.
+    Per CSOAI doctrine, the only honest answer is UNCHECKABLE.
+
+    This miner emits UNCHECKABLE atoms by default. When a real API key is
+    provided via env var HIBP_API_KEY, the atoms flip to MEASURED.
+    """
+    import os
     out = []
+    api_key = os.environ.get("HIBP_API_KEY", "").strip()
+    has_auth = bool(api_key)
     for domain in ["csoai.org", "councilof.ai", "meco.ai"]:
-        url = f"https://haveibeenpwned.com/api/v3/breaches?domain={domain}"
-        code, body = curl(url, extra_headers=["User-Agent: csoai-badger"])
-        if code == 200:
+        url = f"https://haveibeenpwned.com/api/v3/breacheddomain/{domain}"
+        headers = ["User-Agent: csoai-badger"]
+        if has_auth:
+            headers.append(f"hibp-api-key: {api_key}")
+        code, body = curl(url, extra_headers=headers)
+        if has_auth and code == 200:
+            # Real authenticated check
             try:
                 data = json.loads(body)
             except Exception:
-                continue
-            if isinstance(data, list):
-                for b in data[:5]:
-                    out.append({
-                        "source": "haveibeenpwned", "kind": "breach-record",
-                        "evidence": {
-                            "domain": domain,
-                            "breach_name": b.get("Name", ""),
-                            "breach_date": b.get("BreachDate", ""),
-                            "pwn_count": b.get("PwnCount", 0),
-                            "data_classes": (b.get("DataClasses") or [])[:5],
-                            "is_verified": b.get("IsVerified", False),
-                        },
-                        "source_url": f"https://haveibeenpwned.com/Breach/{b.get('Name', '')}",
-                    })
-                if not data:
-                    out.append({
-                        "source": "haveibeenpwned", "kind": "no-breaches",
-                        "evidence": {"domain": domain, "n_breaches": 0,
-                                     "as_of": "2026-09-03"},
-                        "source_url": f"https://haveibeenpwned.com/",
-                    })
+                data = []
+            n_breaches = len(data) if isinstance(data, list) else 0
+            out.append({
+                "source": "haveibeenpwned", "kind": "breach-record",
+                "evidence": {
+                    "domain": domain, "n_breaches": n_breaches,
+                    "as_of": "2026-09-03",
+                    "method": "authenticated HIBP API key",
+                },
+                "source_url": f"https://haveibeenpwned.com/",
+            })
+        elif code == 401:
+            # UNCHECKABLE — not 'zero breaches'
+            out.append({
+                "source": "haveibeenpwned", "kind": "breach-check-UNCHECKABLE",
+                "evidence": {
+                    "domain": domain,
+                    "http_status": 401,
+                    "reason": "UNCHECKABLE — HIBP /breacheddomain requires an API key + domain verification. A 401 is not a clean bill of health. This atom is UNCHECKABLE per CSOAI doctrine.",
+                    "method": "unauthenticated HIBP API call",
+                    "as_of": "2026-09-03",
+                },
+                "source_url": f"https://haveibeenpwned.com/",
+            })
+        elif code == 404:
+            # 404 is also UNCHECKABLE without API key, but a different shape
+            out.append({
+                "source": "haveibeenpwned", "kind": "breach-check-UNCHECKABLE",
+                "evidence": {
+                    "domain": domain,
+                    "http_status": 404,
+                    "reason": "UNCHECKABLE — HIBP 404 without authentication could mean 'no breaches' OR 'no API key'. Cannot distinguish without API key.",
+                    "method": "unauthenticated HIBP API call",
+                    "as_of": "2026-09-03",
+                },
+                "source_url": f"https://haveibeenpwned.com/",
+            })
+        else:
+            out.append({
+                "source": "haveibeenpwned", "kind": "breach-check-UNCHECKABLE",
+                "evidence": {
+                    "domain": domain,
+                    "http_status": code,
+                    "reason": f"UNCHECKABLE — unexpected HIBP response code {code}",
+                    "method": "unauthenticated HIBP API call",
+                    "as_of": "2026-09-03",
+                },
+                "source_url": f"https://haveibeenpwned.com/",
+            })
     return out[:10]
 
 
