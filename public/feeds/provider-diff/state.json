@@ -2,7 +2,2286 @@
  "schema": "csoai.provider-diff.state/0.1",
  "normaliser": "csoai-norm-v1",
  "created_at": "2026-09-02T11:14:05Z",
- "updated_at": "2026-09-02T11:14:05Z",
- "targets": {},
- "runs": []
+ "updated_at": "2026-09-03T09:51:48Z",
+ "targets": {
+  "openai/terms": {
+   "provider": "openai",
+   "surface": "terms",
+   "url": "https://openai.com/policies/terms-of-use/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://openai.com/policies/terms-of-use/",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://openai.com/policies/terms-of-use/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 10002,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "openai/usage_policy": {
+   "provider": "openai",
+   "surface": "usage_policy",
+   "url": "https://openai.com/policies/usage-policies/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://openai.com/policies/usage-policies/",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://openai.com/policies/usage-policies/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 10008,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "openai/model_cards": {
+   "provider": "openai",
+   "surface": "model_cards",
+   "url": "https://openai.com/safety/evaluations-hub/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://openai.com/safety/evaluations-hub/",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://openai.com/safety/evaluations-hub/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 10005,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "openai/pricing": {
+   "provider": "openai",
+   "surface": "pricing",
+   "url": "https://openai.com/api/pricing/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://openai.com/api/pricing/",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://openai.com/api/pricing/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 9950,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "openai/safety_policy": {
+   "provider": "openai",
+   "surface": "safety_policy",
+   "url": "https://openai.com/safety/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://openai.com/safety/",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://openai.com/safety/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 9935,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "openai/art50_marking": {
+   "provider": "openai",
+   "surface": "art50_marking",
+   "url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+    "normaliser": "csoai-norm-v1",
+    "state": "UNCHECKABLE",
+    "reason": "anti-bot challenge (HTTP 403); not bypassed",
+    "robots": "allow",
+    "http_status": 403,
+    "final_url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 10329,
+    "bytes_sha256": null,
+    "norm_sha256": null,
+    "robots_http_status": 200
+   },
+   "last_ok": null,
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "UNCHECKABLE",
+     "state": "UNCHECKABLE",
+     "http_status": 403,
+     "robots": "allow",
+     "bytes_sha256": null,
+     "norm_sha256": null,
+     "reason": "anti-bot challenge (HTTP 403); not bypassed"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/terms": {
+   "provider": "anthropic",
+   "surface": "terms",
+   "url": "https://www.anthropic.com/legal/commercial-terms",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.anthropic.com/legal/commercial-terms",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.anthropic.com/legal/commercial-terms",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 207504,
+    "bytes_sha256": "120776517daf85c5d1fa59f8e2bdba39496a971c87c349f9d2e4f46c5109dd2c",
+    "norm_sha256": "5b68f1da78da34e491a4c0a51f18f9fadf2bb6d9890aea0ed002198f770ef932",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "120776517daf85c5d1fa59f8e2bdba39496a971c87c349f9d2e4f46c5109dd2c",
+    "norm_sha256": "5b68f1da78da34e491a4c0a51f18f9fadf2bb6d9890aea0ed002198f770ef932",
+    "byte_length": 207504,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "120776517daf85c5d1fa59f8e2bdba39496a971c87c349f9d2e4f46c5109dd2c",
+     "norm_sha256": "5b68f1da78da34e491a4c0a51f18f9fadf2bb6d9890aea0ed002198f770ef932"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/usage_policy": {
+   "provider": "anthropic",
+   "surface": "usage_policy",
+   "url": "https://www.anthropic.com/legal/aup",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.anthropic.com/legal/aup",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.anthropic.com/legal/aup",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 606420,
+    "bytes_sha256": "7556fea40babfc959ba3ed41b9eed519c51058b4cc4314988c303e836661be5b",
+    "norm_sha256": "c75c985fbea940f7c24faca7552b7c1784c282893123ce08c558763d503be418",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "7556fea40babfc959ba3ed41b9eed519c51058b4cc4314988c303e836661be5b",
+    "norm_sha256": "c75c985fbea940f7c24faca7552b7c1784c282893123ce08c558763d503be418",
+    "byte_length": 606420,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "7556fea40babfc959ba3ed41b9eed519c51058b4cc4314988c303e836661be5b",
+     "norm_sha256": "c75c985fbea940f7c24faca7552b7c1784c282893123ce08c558763d503be418"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/model_cards": {
+   "provider": "anthropic",
+   "surface": "model_cards",
+   "url": "https://www.anthropic.com/transparency",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.anthropic.com/transparency",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.anthropic.com/transparency",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 795147,
+    "bytes_sha256": "e3eefd2cc084011b0093667f745658947b91ce988e433a335666472fa4f700d0",
+    "norm_sha256": "1decb1d2f1ba989a5aef31567fbac6ee21d838aa0e5769d130f42dd02bb0a2ac",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "e3eefd2cc084011b0093667f745658947b91ce988e433a335666472fa4f700d0",
+    "norm_sha256": "1decb1d2f1ba989a5aef31567fbac6ee21d838aa0e5769d130f42dd02bb0a2ac",
+    "byte_length": 795147,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "e3eefd2cc084011b0093667f745658947b91ce988e433a335666472fa4f700d0",
+     "norm_sha256": "1decb1d2f1ba989a5aef31567fbac6ee21d838aa0e5769d130f42dd02bb0a2ac"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/pricing": {
+   "provider": "anthropic",
+   "surface": "pricing",
+   "url": "https://www.anthropic.com/pricing",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.anthropic.com/pricing",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://claude.com/pricing",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": "Wed, 02 Sep 2026 21:15:33 GMT",
+    "byte_length": 1491918,
+    "bytes_sha256": "406c3b1860c154ef8fd36fe67b1bce7540ff09b4f11beaa911542691c678ba0a",
+    "norm_sha256": "ea926e1ad47c19063a40f64be3ad8262d699a667dca29e2adf2771000a91fadf",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "406c3b1860c154ef8fd36fe67b1bce7540ff09b4f11beaa911542691c678ba0a",
+    "norm_sha256": "ea926e1ad47c19063a40f64be3ad8262d699a667dca29e2adf2771000a91fadf",
+    "byte_length": 1491918,
+    "etag": null,
+    "last_modified": "Wed, 02 Sep 2026 21:15:33 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "406c3b1860c154ef8fd36fe67b1bce7540ff09b4f11beaa911542691c678ba0a",
+     "norm_sha256": "ea926e1ad47c19063a40f64be3ad8262d699a667dca29e2adf2771000a91fadf"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/safety_policy": {
+   "provider": "anthropic",
+   "surface": "safety_policy",
+   "url": "https://www.anthropic.com/responsible-scaling-policy",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.anthropic.com/responsible-scaling-policy",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.anthropic.com/responsible-scaling-policy",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 220895,
+    "bytes_sha256": "94d408c2a3a236f8393f0983173aff273034ca47a420bc3fddc837df98676650",
+    "norm_sha256": "e36a3119878fae4a9ac4a282ce04ac92db4080ce7834201d16d5a3abc3c7be0a",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "94d408c2a3a236f8393f0983173aff273034ca47a420bc3fddc837df98676650",
+    "norm_sha256": "e36a3119878fae4a9ac4a282ce04ac92db4080ce7834201d16d5a3abc3c7be0a",
+    "byte_length": 220895,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "94d408c2a3a236f8393f0983173aff273034ca47a420bc3fddc837df98676650",
+     "norm_sha256": "e36a3119878fae4a9ac4a282ce04ac92db4080ce7834201d16d5a3abc3c7be0a"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "anthropic/art50_marking": {
+   "provider": "anthropic",
+   "surface": "art50_marking",
+   "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 353897,
+    "bytes_sha256": "354cb80344565179562275b604ff74cfd034500824867a6a0bd560a3a5506060",
+    "norm_sha256": "4c7c01051006afd54492c2cba2af1751ab20d2381e2f547864681616a4adf631",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "354cb80344565179562275b604ff74cfd034500824867a6a0bd560a3a5506060",
+    "norm_sha256": "4c7c01051006afd54492c2cba2af1751ab20d2381e2f547864681616a4adf631",
+    "byte_length": 353897,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "354cb80344565179562275b604ff74cfd034500824867a6a0bd560a3a5506060",
+     "norm_sha256": "4c7c01051006afd54492c2cba2af1751ab20d2381e2f547864681616a4adf631"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/terms": {
+   "provider": "google",
+   "surface": "terms",
+   "url": "https://ai.google.dev/gemini-api/terms",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://ai.google.dev/gemini-api/terms",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://ai.google.dev/gemini-api/terms",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": "Tue, 28 Apr 2026 03:23:11 GMT",
+    "byte_length": 113823,
+    "bytes_sha256": "a73660f7791b40dec4543e97cfea4ef103380ec49dabb58bb7df84c5c9f4b634",
+    "norm_sha256": "affc2319f01152720b2dd8d50a293001828a141fb24211946674968dd8c81eac",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "a73660f7791b40dec4543e97cfea4ef103380ec49dabb58bb7df84c5c9f4b634",
+    "norm_sha256": "affc2319f01152720b2dd8d50a293001828a141fb24211946674968dd8c81eac",
+    "byte_length": 113823,
+    "etag": null,
+    "last_modified": "Tue, 28 Apr 2026 03:23:11 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "a73660f7791b40dec4543e97cfea4ef103380ec49dabb58bb7df84c5c9f4b634",
+     "norm_sha256": "affc2319f01152720b2dd8d50a293001828a141fb24211946674968dd8c81eac"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/usage_policy": {
+   "provider": "google",
+   "surface": "usage_policy",
+   "url": "https://policies.google.com/terms/generative-ai/use-policy",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://policies.google.com/terms/generative-ai/use-policy",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://policies.google.com/terms/generative-ai/use-policy",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 563549,
+    "bytes_sha256": "78e046c9aaff484aff7e8d754986924d73379ae615c47bf8b18ad3e84ef999e9",
+    "norm_sha256": "da93561e4de6b2280008c65cbdf61e83e304666e65196606f65c77970fc9d84a",
+    "robots_http_status": 404
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "78e046c9aaff484aff7e8d754986924d73379ae615c47bf8b18ad3e84ef999e9",
+    "norm_sha256": "da93561e4de6b2280008c65cbdf61e83e304666e65196606f65c77970fc9d84a",
+    "byte_length": 563549,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "78e046c9aaff484aff7e8d754986924d73379ae615c47bf8b18ad3e84ef999e9",
+     "norm_sha256": "da93561e4de6b2280008c65cbdf61e83e304666e65196606f65c77970fc9d84a"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/model_cards": {
+   "provider": "google",
+   "surface": "model_cards",
+   "url": "https://modelcards.withgoogle.com/model-cards",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://modelcards.withgoogle.com/model-cards",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://deepmind.google/models/model-cards/",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 138663,
+    "bytes_sha256": "974cb987e2ba94c766754530bda958ab19b0d5cbef6021be8623961e024006e3",
+    "norm_sha256": "6ff3fdb297517ad379e9f66740d88acae69b1cb30f19de4bf410c11bbd48b473",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "974cb987e2ba94c766754530bda958ab19b0d5cbef6021be8623961e024006e3",
+    "norm_sha256": "6ff3fdb297517ad379e9f66740d88acae69b1cb30f19de4bf410c11bbd48b473",
+    "byte_length": 138663,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "974cb987e2ba94c766754530bda958ab19b0d5cbef6021be8623961e024006e3",
+     "norm_sha256": "6ff3fdb297517ad379e9f66740d88acae69b1cb30f19de4bf410c11bbd48b473"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/pricing": {
+   "provider": "google",
+   "surface": "pricing",
+   "url": "https://ai.google.dev/gemini-api/docs/pricing",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://ai.google.dev/gemini-api/docs/pricing",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://ai.google.dev/gemini-api/docs/pricing",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": "Wed, 02 Sep 2026 15:04:03 GMT",
+    "byte_length": 247264,
+    "bytes_sha256": "ef7e5a8f7b698211357635772358b8a27f548e87daeb44ea060e6f58ce7f5f84",
+    "norm_sha256": "f69c5186dba41f305f13cb9631dda47cd303cd2ee9d3565afc06e433c76bb40d",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "ef7e5a8f7b698211357635772358b8a27f548e87daeb44ea060e6f58ce7f5f84",
+    "norm_sha256": "f69c5186dba41f305f13cb9631dda47cd303cd2ee9d3565afc06e433c76bb40d",
+    "byte_length": 247264,
+    "etag": null,
+    "last_modified": "Wed, 02 Sep 2026 15:04:03 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "ef7e5a8f7b698211357635772358b8a27f548e87daeb44ea060e6f58ce7f5f84",
+     "norm_sha256": "f69c5186dba41f305f13cb9631dda47cd303cd2ee9d3565afc06e433c76bb40d"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/safety_policy": {
+   "provider": "google",
+   "surface": "safety_policy",
+   "url": "https://ai.google/responsibility/principles/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://ai.google/responsibility/principles/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://ai.google/principles/",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 169928,
+    "bytes_sha256": "ced349a580b9dfdc35c8ea9cb07dce8742fdcbc3dafad980e9351b4eec2504c7",
+    "norm_sha256": "0fe8db6a940a1ff5d4e372e2c6016f5917df5e9a4a69006da83af1c47a4e5220",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "ced349a580b9dfdc35c8ea9cb07dce8742fdcbc3dafad980e9351b4eec2504c7",
+    "norm_sha256": "0fe8db6a940a1ff5d4e372e2c6016f5917df5e9a4a69006da83af1c47a4e5220",
+    "byte_length": 169928,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "ced349a580b9dfdc35c8ea9cb07dce8742fdcbc3dafad980e9351b4eec2504c7",
+     "norm_sha256": "0fe8db6a940a1ff5d4e372e2c6016f5917df5e9a4a69006da83af1c47a4e5220"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "google/art50_marking": {
+   "provider": "google",
+   "surface": "art50_marking",
+   "url": "https://deepmind.google/technologies/synthid/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://deepmind.google/technologies/synthid/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://deepmind.google/models/synthid/",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 143547,
+    "bytes_sha256": "a37cc713770503c911c1ebfd07d12e59a05ff0de474cdfcc34a4792c891996da",
+    "norm_sha256": "9c4d81ad937037dcae54bb067aa9b8419ffdd40b26ad770e11c57f2674fec2b6",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "a37cc713770503c911c1ebfd07d12e59a05ff0de474cdfcc34a4792c891996da",
+    "norm_sha256": "9c4d81ad937037dcae54bb067aa9b8419ffdd40b26ad770e11c57f2674fec2b6",
+    "byte_length": 143547,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "a37cc713770503c911c1ebfd07d12e59a05ff0de474cdfcc34a4792c891996da",
+     "norm_sha256": "9c4d81ad937037dcae54bb067aa9b8419ffdd40b26ad770e11c57f2674fec2b6"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "meta/terms": {
+   "provider": "meta",
+   "surface": "terms",
+   "url": "https://www.llama.com/llama4/license/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.llama.com/llama4/license/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://developer.meta.com/ai/llama4/license/",
+    "redirected": true,
+    "content_type": "text/html; charset=\"utf-8\"",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 311951,
+    "bytes_sha256": "992478822bdc4a3ed0bda750fa726ce1cc24a2836608e5def394cc60e27b6528",
+    "norm_sha256": "0fc0dcc2e52d1631354bfe4d2208897df16c52c4e7a56353b9aed1b70fecd6da",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "992478822bdc4a3ed0bda750fa726ce1cc24a2836608e5def394cc60e27b6528",
+    "norm_sha256": "0fc0dcc2e52d1631354bfe4d2208897df16c52c4e7a56353b9aed1b70fecd6da",
+    "byte_length": 311951,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "992478822bdc4a3ed0bda750fa726ce1cc24a2836608e5def394cc60e27b6528",
+     "norm_sha256": "0fc0dcc2e52d1631354bfe4d2208897df16c52c4e7a56353b9aed1b70fecd6da"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "meta/usage_policy": {
+   "provider": "meta",
+   "surface": "usage_policy",
+   "url": "https://www.llama.com/llama4/use-policy/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.llama.com/llama4/use-policy/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://developer.meta.com/ai/llama4/use-policy/",
+    "redirected": true,
+    "content_type": "text/html; charset=\"utf-8\"",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 311933,
+    "bytes_sha256": "4aef93e21469dff8a11572dd1580c776f8566b0427c47fe93ed440a94dfa6bd6",
+    "norm_sha256": "cdf63b8a86647cbaf7b6af920db7a536aef1b794f0bb75f20aff3c003583f3ea",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "4aef93e21469dff8a11572dd1580c776f8566b0427c47fe93ed440a94dfa6bd6",
+    "norm_sha256": "cdf63b8a86647cbaf7b6af920db7a536aef1b794f0bb75f20aff3c003583f3ea",
+    "byte_length": 311933,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "4aef93e21469dff8a11572dd1580c776f8566b0427c47fe93ed440a94dfa6bd6",
+     "norm_sha256": "cdf63b8a86647cbaf7b6af920db7a536aef1b794f0bb75f20aff3c003583f3ea"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "meta/model_cards": {
+   "provider": "meta",
+   "surface": "model_cards",
+   "url": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://developer.meta.com/ai/docs/model-cards-and-prompt-formats/",
+    "redirected": true,
+    "content_type": "text/html; charset=\"utf-8\"",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 311968,
+    "bytes_sha256": "25a931ef7e9b178a5d9d263b50c7fbda8a3f50a566eb839856220a1541239a45",
+    "norm_sha256": "31c0e4485153d6fb42f711de0f7714085daaf0a5c23c64bd9f08704baf83c385",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "25a931ef7e9b178a5d9d263b50c7fbda8a3f50a566eb839856220a1541239a45",
+    "norm_sha256": "31c0e4485153d6fb42f711de0f7714085daaf0a5c23c64bd9f08704baf83c385",
+    "byte_length": 311968,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "25a931ef7e9b178a5d9d263b50c7fbda8a3f50a566eb839856220a1541239a45",
+     "norm_sha256": "31c0e4485153d6fb42f711de0f7714085daaf0a5c23c64bd9f08704baf83c385"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "meta/safety_policy": {
+   "provider": "meta",
+   "surface": "safety_policy",
+   "url": "https://ai.meta.com/responsible-ai/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://ai.meta.com/responsible-ai/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://ai.meta.com/blog/responsible-ai-connect-2024/",
+    "redirected": true,
+    "content_type": "text/html; charset=\"utf-8\"",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 180383,
+    "bytes_sha256": "35ff26ed85f464deded5decc0a52c42261ef3c7193af587cc319fd1725678b39",
+    "norm_sha256": "cfbb0aa552e3f15fb3c511c2205a0bf0baa45ca15f84f5a27656ca4351cce0ae",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "35ff26ed85f464deded5decc0a52c42261ef3c7193af587cc319fd1725678b39",
+    "norm_sha256": "cfbb0aa552e3f15fb3c511c2205a0bf0baa45ca15f84f5a27656ca4351cce0ae",
+    "byte_length": 180383,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "35ff26ed85f464deded5decc0a52c42261ef3c7193af587cc319fd1725678b39",
+     "norm_sha256": "cfbb0aa552e3f15fb3c511c2205a0bf0baa45ca15f84f5a27656ca4351cce0ae"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "meta/art50_marking": {
+   "provider": "meta",
+   "surface": "art50_marking",
+   "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+    "redirected": false,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 525667,
+    "bytes_sha256": "4d6efa0ca0ba51c4de8c20f5c3fca9ea52a00b2064b72e417e4a0c322e036596",
+    "norm_sha256": "a6e09a18f925e001bc1057c4a4903e65fe9a2548e40bfa2a3f15ae0471cfff67",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "4d6efa0ca0ba51c4de8c20f5c3fca9ea52a00b2064b72e417e4a0c322e036596",
+    "norm_sha256": "a6e09a18f925e001bc1057c4a4903e65fe9a2548e40bfa2a3f15ae0471cfff67",
+    "byte_length": 525667,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "4d6efa0ca0ba51c4de8c20f5c3fca9ea52a00b2064b72e417e4a0c322e036596",
+     "norm_sha256": "a6e09a18f925e001bc1057c4a4903e65fe9a2548e40bfa2a3f15ae0471cfff67"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "mistral/terms": {
+   "provider": "mistral",
+   "surface": "terms",
+   "url": "https://mistral.ai/terms",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://mistral.ai/terms",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://legal.mistral.ai/terms/get-started/",
+    "redirected": true,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": "\"ccf9441fcb2394c69792385df4b493ee-ssl\"",
+    "last_modified": null,
+    "byte_length": 59467,
+    "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+    "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+    "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628",
+    "byte_length": 59467,
+    "etag": "\"ccf9441fcb2394c69792385df4b493ee-ssl\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+     "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "mistral/usage_policy": {
+   "provider": "mistral",
+   "surface": "usage_policy",
+   "url": "https://mistral.ai/terms",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://mistral.ai/terms",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://legal.mistral.ai/terms/get-started/",
+    "redirected": true,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": "\"ccf9441fcb2394c69792385df4b493ee-ssl\"",
+    "last_modified": null,
+    "byte_length": 59467,
+    "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+    "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+    "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628",
+    "byte_length": 59467,
+    "etag": "\"ccf9441fcb2394c69792385df4b493ee-ssl\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "7ecb6c8b758f6d36537954082616a7081deb4fa5b959be3f82f49bbba37171dd",
+     "norm_sha256": "0f58424bdba8f4727aea9841309e404131c32f37a27c1ad93241964edfd28628"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "mistral/model_cards": {
+   "provider": "mistral",
+   "surface": "model_cards",
+   "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.mistral.ai/getting-started/models/models_overview/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.mistral.ai/models",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "\"37251d2a67204a78a38febc12e643a70\"",
+    "last_modified": null,
+    "byte_length": 1277825,
+    "bytes_sha256": "d3a3dfa779128241c663236e133d979b79268cc543fe00751ba8bdc228784603",
+    "norm_sha256": "18226a4d2a5f5c8d0baa717ba7d1179d6a20903be72c5680b4d7a959897029ad",
+    "robots_http_status": 404
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "d3a3dfa779128241c663236e133d979b79268cc543fe00751ba8bdc228784603",
+    "norm_sha256": "18226a4d2a5f5c8d0baa717ba7d1179d6a20903be72c5680b4d7a959897029ad",
+    "byte_length": 1277825,
+    "etag": "\"37251d2a67204a78a38febc12e643a70\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "d3a3dfa779128241c663236e133d979b79268cc543fe00751ba8bdc228784603",
+     "norm_sha256": "18226a4d2a5f5c8d0baa717ba7d1179d6a20903be72c5680b4d7a959897029ad"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "mistral/pricing": {
+   "provider": "mistral",
+   "surface": "pricing",
+   "url": "https://mistral.ai/pricing",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://mistral.ai/pricing",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://mistral.ai/pricing/",
+    "redirected": true,
+    "content_type": "text/html; charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 476507,
+    "bytes_sha256": "277a375302bfb27a861bbe2762550784bc79ff0ee4aeaab72c51b0e352cd78f0",
+    "norm_sha256": "cec7ed38db3021555e93855e326ccf8963689eea29e76414fb07f4422febea4b",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "277a375302bfb27a861bbe2762550784bc79ff0ee4aeaab72c51b0e352cd78f0",
+    "norm_sha256": "cec7ed38db3021555e93855e326ccf8963689eea29e76414fb07f4422febea4b",
+    "byte_length": 476507,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "277a375302bfb27a861bbe2762550784bc79ff0ee4aeaab72c51b0e352cd78f0",
+     "norm_sha256": "cec7ed38db3021555e93855e326ccf8963689eea29e76414fb07f4422febea4b"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "mistral/safety_policy": {
+   "provider": "mistral",
+   "surface": "safety_policy",
+   "url": "https://docs.mistral.ai/capabilities/guardrailing/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.mistral.ai/capabilities/guardrailing/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.mistral.ai/studio/conversations/moderation",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "\"fd13d7de9a4f56e3e51201d25bdf3edb\"",
+    "last_modified": null,
+    "byte_length": 1368970,
+    "bytes_sha256": "93eb17013d76c883b3c151abf58ffad05e642b7cc1d620c9d59ec3571fa6eb5b",
+    "norm_sha256": "16253cbf63d98125677bb4d0d25ae2c56d5bd43dbfb9eac6a86b4bdd756ae4e8",
+    "robots_http_status": 404
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "93eb17013d76c883b3c151abf58ffad05e642b7cc1d620c9d59ec3571fa6eb5b",
+    "norm_sha256": "16253cbf63d98125677bb4d0d25ae2c56d5bd43dbfb9eac6a86b4bdd756ae4e8",
+    "byte_length": 1368970,
+    "etag": "\"fd13d7de9a4f56e3e51201d25bdf3edb\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "93eb17013d76c883b3c151abf58ffad05e642b7cc1d620c9d59ec3571fa6eb5b",
+     "norm_sha256": "16253cbf63d98125677bb4d0d25ae2c56d5bd43dbfb9eac6a86b4bdd756ae4e8"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "xai/terms": {
+   "provider": "xai",
+   "surface": "terms",
+   "url": "https://x.ai/legal/terms-of-service",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://x.ai/legal/terms-of-service",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://x.ai/legal/terms-of-service",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 231710,
+    "bytes_sha256": "2241f1733a4751167c945c6004fb133a5d06b275c7f8cfacc735929dfcdeb285",
+    "norm_sha256": "969bd01913da4174d8ebf7e6af79535cbbc2b4804415bfb584daa56807fb5fdc",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "2241f1733a4751167c945c6004fb133a5d06b275c7f8cfacc735929dfcdeb285",
+    "norm_sha256": "969bd01913da4174d8ebf7e6af79535cbbc2b4804415bfb584daa56807fb5fdc",
+    "byte_length": 231710,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "2241f1733a4751167c945c6004fb133a5d06b275c7f8cfacc735929dfcdeb285",
+     "norm_sha256": "969bd01913da4174d8ebf7e6af79535cbbc2b4804415bfb584daa56807fb5fdc"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "xai/usage_policy": {
+   "provider": "xai",
+   "surface": "usage_policy",
+   "url": "https://x.ai/legal/acceptable-use-policy",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://x.ai/legal/acceptable-use-policy",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://x.ai/legal/acceptable-use-policy",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 127887,
+    "bytes_sha256": "e253465d95cf8f4a8832810ca16c5757b53d2d34a9746071d9cfade04661303f",
+    "norm_sha256": "676fbbf229a8764ff1bbe983f3934fe8b4a3dad9387cd5dacaaf2bad8e07978b",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "e253465d95cf8f4a8832810ca16c5757b53d2d34a9746071d9cfade04661303f",
+    "norm_sha256": "676fbbf229a8764ff1bbe983f3934fe8b4a3dad9387cd5dacaaf2bad8e07978b",
+    "byte_length": 127887,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "e253465d95cf8f4a8832810ca16c5757b53d2d34a9746071d9cfade04661303f",
+     "norm_sha256": "676fbbf229a8764ff1bbe983f3934fe8b4a3dad9387cd5dacaaf2bad8e07978b"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "xai/model_cards": {
+   "provider": "xai",
+   "surface": "model_cards",
+   "url": "https://docs.x.ai/docs/models",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.x.ai/docs/models",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.x.ai/developers/models",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 432038,
+    "bytes_sha256": "a77abc913a88b103449d368e0db736a2ce37aa88570d7a87043718bc355b786f",
+    "norm_sha256": "61858fcc82f656584431c8ea0cd798861710a27f3d7569afc8785f577b3284b0",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "a77abc913a88b103449d368e0db736a2ce37aa88570d7a87043718bc355b786f",
+    "norm_sha256": "61858fcc82f656584431c8ea0cd798861710a27f3d7569afc8785f577b3284b0",
+    "byte_length": 432038,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "a77abc913a88b103449d368e0db736a2ce37aa88570d7a87043718bc355b786f",
+     "norm_sha256": "61858fcc82f656584431c8ea0cd798861710a27f3d7569afc8785f577b3284b0"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "xai/pricing": {
+   "provider": "xai",
+   "surface": "pricing",
+   "url": "https://x.ai/api",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://x.ai/api",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://x.ai/api",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 350774,
+    "bytes_sha256": "0730db3d5172664765bf8eebe441c312724ea426e80d43d44fe6645c455cd075",
+    "norm_sha256": "0b581073d9fa8e998f01c52124e501d33d4821a0a58e3e7b157995aa6744acc3",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "0730db3d5172664765bf8eebe441c312724ea426e80d43d44fe6645c455cd075",
+    "norm_sha256": "0b581073d9fa8e998f01c52124e501d33d4821a0a58e3e7b157995aa6744acc3",
+    "byte_length": 350774,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "0730db3d5172664765bf8eebe441c312724ea426e80d43d44fe6645c455cd075",
+     "norm_sha256": "0b581073d9fa8e998f01c52124e501d33d4821a0a58e3e7b157995aa6744acc3"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "xai/safety_policy": {
+   "provider": "xai",
+   "surface": "safety_policy",
+   "url": "https://x.ai/safety",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://x.ai/safety",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://x.ai/safety",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 161328,
+    "bytes_sha256": "b5fcbc1955d624abcc74c97ef7f1ae15891048f5bbfc9be4e7bd9b05f1f3b957",
+    "norm_sha256": "5cdf8678108de2d8add1f850781be52ba7a75671f9c2ad7d199315a7e85261ff",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "b5fcbc1955d624abcc74c97ef7f1ae15891048f5bbfc9be4e7bd9b05f1f3b957",
+    "norm_sha256": "5cdf8678108de2d8add1f850781be52ba7a75671f9c2ad7d199315a7e85261ff",
+    "byte_length": 161328,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "b5fcbc1955d624abcc74c97ef7f1ae15891048f5bbfc9be4e7bd9b05f1f3b957",
+     "norm_sha256": "5cdf8678108de2d8add1f850781be52ba7a75671f9c2ad7d199315a7e85261ff"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "cohere/terms": {
+   "provider": "cohere",
+   "surface": "terms",
+   "url": "https://cohere.com/terms-of-use",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://cohere.com/terms-of-use",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://cohere.com/terms-of-use",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 568942,
+    "bytes_sha256": "5b896e86865ede1774070bcfd78b368509677db49beeb5c946a4997b0a7316a9",
+    "norm_sha256": "bbcb0212bc7fa557df73d496e77649bc07bc00b4a35aa10a894f8aba4cdce1da",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "5b896e86865ede1774070bcfd78b368509677db49beeb5c946a4997b0a7316a9",
+    "norm_sha256": "bbcb0212bc7fa557df73d496e77649bc07bc00b4a35aa10a894f8aba4cdce1da",
+    "byte_length": 568942,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "5b896e86865ede1774070bcfd78b368509677db49beeb5c946a4997b0a7316a9",
+     "norm_sha256": "bbcb0212bc7fa557df73d496e77649bc07bc00b4a35aa10a894f8aba4cdce1da"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "cohere/usage_policy": {
+   "provider": "cohere",
+   "surface": "usage_policy",
+   "url": "https://docs.cohere.com/docs/usage-policy",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.cohere.com/docs/usage-policy",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.cohere.com/docs/usage-policy",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "\"kv38o5nbd7doxj\"",
+    "last_modified": null,
+    "byte_length": 638917,
+    "bytes_sha256": "14e1295e0626071d8cd3e50f22a2f932683fd0ce6008c0cd1d36a89e427184e3",
+    "norm_sha256": "ee79b54d61c7df6f57decda5eea3e72940010ee89f6ffb6052b2525c5b66beb8",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "14e1295e0626071d8cd3e50f22a2f932683fd0ce6008c0cd1d36a89e427184e3",
+    "norm_sha256": "ee79b54d61c7df6f57decda5eea3e72940010ee89f6ffb6052b2525c5b66beb8",
+    "byte_length": 638917,
+    "etag": "\"kv38o5nbd7doxj\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "14e1295e0626071d8cd3e50f22a2f932683fd0ce6008c0cd1d36a89e427184e3",
+     "norm_sha256": "ee79b54d61c7df6f57decda5eea3e72940010ee89f6ffb6052b2525c5b66beb8"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "cohere/model_cards": {
+   "provider": "cohere",
+   "surface": "model_cards",
+   "url": "https://docs.cohere.com/docs/models",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.cohere.com/docs/models",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.cohere.com/docs/models",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "\"17auhy7h127hlyh\"",
+    "last_modified": null,
+    "byte_length": 821703,
+    "bytes_sha256": "eaaef423ba4f8dd6deb0b901debccbbaed8927832715c2ab2c6e6a37d0f698b2",
+    "norm_sha256": "1d36da3c549b732d8892aa6a2be74052eb7d27d1427d61f35343ed31ebcd765f",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "eaaef423ba4f8dd6deb0b901debccbbaed8927832715c2ab2c6e6a37d0f698b2",
+    "norm_sha256": "1d36da3c549b732d8892aa6a2be74052eb7d27d1427d61f35343ed31ebcd765f",
+    "byte_length": 821703,
+    "etag": "\"17auhy7h127hlyh\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "eaaef423ba4f8dd6deb0b901debccbbaed8927832715c2ab2c6e6a37d0f698b2",
+     "norm_sha256": "1d36da3c549b732d8892aa6a2be74052eb7d27d1427d61f35343ed31ebcd765f"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "cohere/pricing": {
+   "provider": "cohere",
+   "surface": "pricing",
+   "url": "https://cohere.com/pricing",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://cohere.com/pricing",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://cohere.com/pricing",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 545240,
+    "bytes_sha256": "c3f00d4c47e402fbe04f33d0e0a7f55da6f4c4b33b0c808517b4e28d21716077",
+    "norm_sha256": "6adf3baf3e3d80afdf5d2fdb7aa80cc9d1af14b45e3249ce7070714efe0482a5",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "c3f00d4c47e402fbe04f33d0e0a7f55da6f4c4b33b0c808517b4e28d21716077",
+    "norm_sha256": "6adf3baf3e3d80afdf5d2fdb7aa80cc9d1af14b45e3249ce7070714efe0482a5",
+    "byte_length": 545240,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "c3f00d4c47e402fbe04f33d0e0a7f55da6f4c4b33b0c808517b4e28d21716077",
+     "norm_sha256": "6adf3baf3e3d80afdf5d2fdb7aa80cc9d1af14b45e3249ce7070714efe0482a5"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "cohere/safety_policy": {
+   "provider": "cohere",
+   "surface": "safety_policy",
+   "url": "https://cohere.com/responsibility",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://cohere.com/responsibility",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.cohere.com/docs/responsible-use",
+    "redirected": true,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "\"brx9dj5lb7drcw\"",
+    "last_modified": null,
+    "byte_length": 642056,
+    "bytes_sha256": "c22766a999b6a63502bd58a6e42e606a0e49fbde254e82540067685003867773",
+    "norm_sha256": "0fb6c8dcc51eb8de87a227e234f00f2788a6fd035e8d38c7891f93186496cf9e",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "c22766a999b6a63502bd58a6e42e606a0e49fbde254e82540067685003867773",
+    "norm_sha256": "0fb6c8dcc51eb8de87a227e234f00f2788a6fd035e8d38c7891f93186496cf9e",
+    "byte_length": 642056,
+    "etag": "\"brx9dj5lb7drcw\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "c22766a999b6a63502bd58a6e42e606a0e49fbde254e82540067685003867773",
+     "norm_sha256": "0fb6c8dcc51eb8de87a227e234f00f2788a6fd035e8d38c7891f93186496cf9e"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "deepseek/terms": {
+   "provider": "deepseek",
+   "surface": "terms",
+   "url": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
+    "redirected": false,
+    "content_type": "text/html",
+    "etag": "\"db8f81fdc9d85673d13ba4edae657368\"",
+    "last_modified": "Wed, 15 Jul 2026 07:30:02 GMT",
+    "byte_length": 39095,
+    "bytes_sha256": "e5c52c238ff59a6d274cd66c449f939ba6bd3183fe7927397b595df02887a76d",
+    "norm_sha256": "d96a2d2c10e921b38348a3917a6b37fb99797c95bd3f4590e39d0ed642ad2b31",
+    "robots_http_status": 404
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "e5c52c238ff59a6d274cd66c449f939ba6bd3183fe7927397b595df02887a76d",
+    "norm_sha256": "d96a2d2c10e921b38348a3917a6b37fb99797c95bd3f4590e39d0ed642ad2b31",
+    "byte_length": 39095,
+    "etag": "\"db8f81fdc9d85673d13ba4edae657368\"",
+    "last_modified": "Wed, 15 Jul 2026 07:30:02 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "e5c52c238ff59a6d274cd66c449f939ba6bd3183fe7927397b595df02887a76d",
+     "norm_sha256": "d96a2d2c10e921b38348a3917a6b37fb99797c95bd3f4590e39d0ed642ad2b31"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "deepseek/usage_policy": {
+   "provider": "deepseek",
+   "surface": "usage_policy",
+   "url": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
+    "redirected": false,
+    "content_type": "text/html",
+    "etag": "\"a4e0bb69a28f8e3920d6e3698452aebe\"",
+    "last_modified": "Wed, 15 Jul 2026 07:30:02 GMT",
+    "byte_length": 33904,
+    "bytes_sha256": "2b433c53cbac75491959025eba5a27908f9f1886352dce0a05f3d5a936d87790",
+    "norm_sha256": "06ea28acc70954f24d48d9bee1c5822f8ca5329630c1288acdfae174ad75ea76",
+    "robots_http_status": 404
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "2b433c53cbac75491959025eba5a27908f9f1886352dce0a05f3d5a936d87790",
+    "norm_sha256": "06ea28acc70954f24d48d9bee1c5822f8ca5329630c1288acdfae174ad75ea76",
+    "byte_length": 33904,
+    "etag": "\"a4e0bb69a28f8e3920d6e3698452aebe\"",
+    "last_modified": "Wed, 15 Jul 2026 07:30:02 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "2b433c53cbac75491959025eba5a27908f9f1886352dce0a05f3d5a936d87790",
+     "norm_sha256": "06ea28acc70954f24d48d9bee1c5822f8ca5329630c1288acdfae174ad75ea76"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "deepseek/model_cards": {
+   "provider": "deepseek",
+   "surface": "model_cards",
+   "url": "https://huggingface.co/deepseek-ai",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://huggingface.co/deepseek-ai",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://huggingface.co/deepseek-ai",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "W/\"6695d-ACedJUYPzmTCQqNFQNb20uidNT0\"",
+    "last_modified": null,
+    "byte_length": 420189,
+    "bytes_sha256": "4bc9e7b45c5e13f144f47eea0df8abd131bd2487663b63ab4741a2fe41b21709",
+    "norm_sha256": "084c916bbda06107f382bc3bda76c1b2927737b74ab94a729c289946b9631de4",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "4bc9e7b45c5e13f144f47eea0df8abd131bd2487663b63ab4741a2fe41b21709",
+    "norm_sha256": "084c916bbda06107f382bc3bda76c1b2927737b74ab94a729c289946b9631de4",
+    "byte_length": 420189,
+    "etag": "W/\"6695d-ACedJUYPzmTCQqNFQNb20uidNT0\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "4bc9e7b45c5e13f144f47eea0df8abd131bd2487663b63ab4741a2fe41b21709",
+     "norm_sha256": "084c916bbda06107f382bc3bda76c1b2927737b74ab94a729c289946b9631de4"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "deepseek/pricing": {
+   "provider": "deepseek",
+   "surface": "pricing",
+   "url": "https://api-docs.deepseek.com/quick_start/pricing",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://api-docs.deepseek.com/quick_start/pricing",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "redirected": true,
+    "content_type": "text/html",
+    "etag": "\"9ab0c63f83efd925aaa77a4d8bcfa20a\"",
+    "last_modified": "Fri, 28 Aug 2026 05:44:12 GMT",
+    "byte_length": 23168,
+    "bytes_sha256": "cf2c6fb2dd8a32a538f12a8176175b8809a3516326a5cb30dfe52d63c490a968",
+    "norm_sha256": "c53b4c96867501bc5427a0240b38bd38328f52c4eb4e0ac605715a040d97e560",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "cf2c6fb2dd8a32a538f12a8176175b8809a3516326a5cb30dfe52d63c490a968",
+    "norm_sha256": "c53b4c96867501bc5427a0240b38bd38328f52c4eb4e0ac605715a040d97e560",
+    "byte_length": 23168,
+    "etag": "\"9ab0c63f83efd925aaa77a4d8bcfa20a\"",
+    "last_modified": "Fri, 28 Aug 2026 05:44:12 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "cf2c6fb2dd8a32a538f12a8176175b8809a3516326a5cb30dfe52d63c490a968",
+     "norm_sha256": "c53b4c96867501bc5427a0240b38bd38328f52c4eb4e0ac605715a040d97e560"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "alibaba-qwen/terms": {
+   "provider": "alibaba-qwen",
+   "surface": "terms",
+   "url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service-v-3-8-0",
+    "redirected": true,
+    "content_type": "text/html;charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 255882,
+    "bytes_sha256": "5e196954136a7766b46c0d596a87d3401aa4bdf6f09283d84cefc0a61028d43c",
+    "norm_sha256": "a53034d3f07c82ee4a047567524ca3601b49e4ce55699ca1fa6eae70baea6243",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "5e196954136a7766b46c0d596a87d3401aa4bdf6f09283d84cefc0a61028d43c",
+    "norm_sha256": "a53034d3f07c82ee4a047567524ca3601b49e4ce55699ca1fa6eae70baea6243",
+    "byte_length": 255882,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "5e196954136a7766b46c0d596a87d3401aa4bdf6f09283d84cefc0a61028d43c",
+     "norm_sha256": "a53034d3f07c82ee4a047567524ca3601b49e4ce55699ca1fa6eae70baea6243"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "alibaba-qwen/model_cards": {
+   "provider": "alibaba-qwen",
+   "surface": "model_cards",
+   "url": "https://huggingface.co/Qwen",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://huggingface.co/Qwen",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://huggingface.co/Qwen",
+    "redirected": false,
+    "content_type": "text/html; charset=utf-8",
+    "etag": "W/\"9a808-WYArsGO+akMqXSnJuJ3W1meLXd4\"",
+    "last_modified": null,
+    "byte_length": 632840,
+    "bytes_sha256": "47195dbe3b36bf03430511e08a3926d5bf95eec5099ef4004507c57b211fadb9",
+    "norm_sha256": "b677f9521bec8d9bbef6ac7b581b251b97cbdbea6d2584bb6d147e45a9b882aa",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "47195dbe3b36bf03430511e08a3926d5bf95eec5099ef4004507c57b211fadb9",
+    "norm_sha256": "b677f9521bec8d9bbef6ac7b581b251b97cbdbea6d2584bb6d147e45a9b882aa",
+    "byte_length": 632840,
+    "etag": "W/\"9a808-WYArsGO+akMqXSnJuJ3W1meLXd4\"",
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "47195dbe3b36bf03430511e08a3926d5bf95eec5099ef4004507c57b211fadb9",
+     "norm_sha256": "b677f9521bec8d9bbef6ac7b581b251b97cbdbea6d2584bb6d147e45a9b882aa"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "alibaba-qwen/pricing": {
+   "provider": "alibaba-qwen",
+   "surface": "pricing",
+   "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+    "redirected": true,
+    "content_type": "text/html;charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 431901,
+    "bytes_sha256": "37274c61865621a906d717e9032d906236d881702c4c066afbd12156a327ff17",
+    "norm_sha256": "bb4b637bd8883ae4af1570052299d077367cd50f2592443d1033b9926410b070",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "37274c61865621a906d717e9032d906236d881702c4c066afbd12156a327ff17",
+    "norm_sha256": "bb4b637bd8883ae4af1570052299d077367cd50f2592443d1033b9926410b070",
+    "byte_length": 431901,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "37274c61865621a906d717e9032d906236d881702c4c066afbd12156a327ff17",
+     "norm_sha256": "bb4b637bd8883ae4af1570052299d077367cd50f2592443d1033b9926410b070"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "alibaba-qwen/usage_policy": {
+   "provider": "alibaba-qwen",
+   "surface": "usage_policy",
+   "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://www.alibabacloud.com/help/en/model-studio/models",
+    "redirected": true,
+    "content_type": "text/html;charset=UTF-8",
+    "etag": null,
+    "last_modified": null,
+    "byte_length": 26827,
+    "bytes_sha256": "24fc03baa33a5ed4333e866f5eac1ac77b8e4a099ca5193ab0b06f6751d2b296",
+    "norm_sha256": "17c3646763e0368a80b792f199890801c928ddff6e864157eba6f321956830aa",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "24fc03baa33a5ed4333e866f5eac1ac77b8e4a099ca5193ab0b06f6751d2b296",
+    "norm_sha256": "17c3646763e0368a80b792f199890801c928ddff6e864157eba6f321956830aa",
+    "byte_length": 26827,
+    "etag": null,
+    "last_modified": null,
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "24fc03baa33a5ed4333e866f5eac1ac77b8e4a099ca5193ab0b06f6751d2b296",
+     "norm_sha256": "17c3646763e0368a80b792f199890801c928ddff6e864157eba6f321956830aa"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "amazon/terms": {
+   "provider": "amazon",
+   "surface": "terms",
+   "url": "https://aws.amazon.com/service-terms/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://aws.amazon.com/service-terms/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://aws.amazon.com/service-terms/",
+    "redirected": false,
+    "content_type": "text/html;charset=utf-8",
+    "etag": null,
+    "last_modified": "Tue, 01 Sep 2026 22:05:06 GMT",
+    "byte_length": 1059980,
+    "bytes_sha256": "441fb179c87027328ac28e9978fe96c42ae5cf9fda83c8afb27d7a9857c81782",
+    "norm_sha256": "bdaa3da6f5892dd32bd730014d22f8526692ea8ef292d3b535c6800865f700e1",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "441fb179c87027328ac28e9978fe96c42ae5cf9fda83c8afb27d7a9857c81782",
+    "norm_sha256": "bdaa3da6f5892dd32bd730014d22f8526692ea8ef292d3b535c6800865f700e1",
+    "byte_length": 1059980,
+    "etag": null,
+    "last_modified": "Tue, 01 Sep 2026 22:05:06 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "441fb179c87027328ac28e9978fe96c42ae5cf9fda83c8afb27d7a9857c81782",
+     "norm_sha256": "bdaa3da6f5892dd32bd730014d22f8526692ea8ef292d3b535c6800865f700e1"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "amazon/usage_policy": {
+   "provider": "amazon",
+   "surface": "usage_policy",
+   "url": "https://aws.amazon.com/ai/responsible-ai/policy/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://aws.amazon.com/ai/responsible-ai/policy/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://aws.amazon.com/ai/responsible-ai/policy/",
+    "redirected": false,
+    "content_type": "text/html;charset=utf-8",
+    "etag": null,
+    "last_modified": "Thu, 20 Aug 2026 20:43:11 GMT",
+    "byte_length": 324123,
+    "bytes_sha256": "5c6aeac9f4d95385a6c6914eef78e50efd90a922a9fb115946512bded19f2dc9",
+    "norm_sha256": "21f24738ff7b79eb7bb1e157e47a23acb3936c951b79608a4083743990105d68",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "5c6aeac9f4d95385a6c6914eef78e50efd90a922a9fb115946512bded19f2dc9",
+    "norm_sha256": "21f24738ff7b79eb7bb1e157e47a23acb3936c951b79608a4083743990105d68",
+    "byte_length": 324123,
+    "etag": null,
+    "last_modified": "Thu, 20 Aug 2026 20:43:11 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "5c6aeac9f4d95385a6c6914eef78e50efd90a922a9fb115946512bded19f2dc9",
+     "norm_sha256": "21f24738ff7b79eb7bb1e157e47a23acb3936c951b79608a4083743990105d68"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "amazon/model_cards": {
+   "provider": "amazon",
+   "surface": "model_cards",
+   "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
+    "redirected": false,
+    "content_type": "text/html",
+    "etag": "\"/aXMEar6tutxLUHjgU6F/cudC3Q=\"",
+    "last_modified": "Thu, 03 Sep 2026 09:16:28 GMT",
+    "byte_length": 11669,
+    "bytes_sha256": "d4f174ede465ab564ecaf923dd6a606a69543168e4eaa95b43bf339de638a5a2",
+    "norm_sha256": "4141c5552b6d34660835454e4ca305112891b00d76d36534d0a7459171da787c",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "d4f174ede465ab564ecaf923dd6a606a69543168e4eaa95b43bf339de638a5a2",
+    "norm_sha256": "4141c5552b6d34660835454e4ca305112891b00d76d36534d0a7459171da787c",
+    "byte_length": 11669,
+    "etag": "\"/aXMEar6tutxLUHjgU6F/cudC3Q=\"",
+    "last_modified": "Thu, 03 Sep 2026 09:16:28 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "d4f174ede465ab564ecaf923dd6a606a69543168e4eaa95b43bf339de638a5a2",
+     "norm_sha256": "4141c5552b6d34660835454e4ca305112891b00d76d36534d0a7459171da787c"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "amazon/pricing": {
+   "provider": "amazon",
+   "surface": "pricing",
+   "url": "https://aws.amazon.com/bedrock/pricing/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://aws.amazon.com/bedrock/pricing/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://aws.amazon.com/bedrock/pricing/",
+    "redirected": false,
+    "content_type": "text/html;charset=utf-8",
+    "etag": null,
+    "last_modified": "Tue, 01 Sep 2026 18:52:10 GMT",
+    "byte_length": 894867,
+    "bytes_sha256": "0c9ac6e51dca07a7443487a955085d8b4cb90c899fce676833584c0f7c15b443",
+    "norm_sha256": "926d724470f38f7d62a334d4c614e8b93bb8182442239a3411d11cffded3b9d7",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "0c9ac6e51dca07a7443487a955085d8b4cb90c899fce676833584c0f7c15b443",
+    "norm_sha256": "926d724470f38f7d62a334d4c614e8b93bb8182442239a3411d11cffded3b9d7",
+    "byte_length": 894867,
+    "etag": null,
+    "last_modified": "Tue, 01 Sep 2026 18:52:10 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "0c9ac6e51dca07a7443487a955085d8b4cb90c899fce676833584c0f7c15b443",
+     "norm_sha256": "926d724470f38f7d62a334d4c614e8b93bb8182442239a3411d11cffded3b9d7"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  },
+  "amazon/safety_policy": {
+   "provider": "amazon",
+   "surface": "safety_policy",
+   "url": "https://aws.amazon.com/ai/responsible-ai/",
+   "latest": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "url": "https://aws.amazon.com/ai/responsible-ai/",
+    "normaliser": "csoai-norm-v1",
+    "state": "OK",
+    "reason": null,
+    "robots": "allow",
+    "http_status": 200,
+    "final_url": "https://aws.amazon.com/ai/responsible-ai/",
+    "redirected": false,
+    "content_type": "text/html;charset=utf-8",
+    "etag": null,
+    "last_modified": "Thu, 20 Aug 2026 20:37:29 GMT",
+    "byte_length": 453140,
+    "bytes_sha256": "e3621a36be62d7b083fa5b898437c40dd0591c7b19e791994e7f567dfe9e0832",
+    "norm_sha256": "08db618161b89784e10db765fe2f1712ce13c8efbbea683ad5e7687505da79d4",
+    "robots_http_status": 200
+   },
+   "last_ok": {
+    "fetched_at": "2026-09-03T09:51:48Z",
+    "bytes_sha256": "e3621a36be62d7b083fa5b898437c40dd0591c7b19e791994e7f567dfe9e0832",
+    "norm_sha256": "08db618161b89784e10db765fe2f1712ce13c8efbbea683ad5e7687505da79d4",
+    "byte_length": 453140,
+    "etag": null,
+    "last_modified": "Thu, 20 Aug 2026 20:37:29 GMT",
+    "http_status": 200
+   },
+   "history": [
+    {
+     "at": "2026-09-03T09:51:48Z",
+     "kind": "FIRST_CAPTURE",
+     "state": "OK",
+     "http_status": 200,
+     "robots": "allow",
+     "bytes_sha256": "e3621a36be62d7b083fa5b898437c40dd0591c7b19e791994e7f567dfe9e0832",
+     "norm_sha256": "08db618161b89784e10db765fe2f1712ce13c8efbbea683ad5e7687505da79d4"
+    }
+   ],
+   "n_runs": 1,
+   "n_changed": 0
+  }
+ },
+ "runs": [
+  {
+   "run_at": "2026-09-03T09:51:48Z",
+   "n_targets": 51,
+   "ok": 45,
+   "unchanged": 0,
+   "changed": 0,
+   "bytes_only": 0,
+   "first": 45,
+   "uncheckable": 6,
+   "unknown": 0,
+   "changed_ids": [],
+   "uncheckable_ids": [
+    "openai/terms",
+    "openai/usage_policy",
+    "openai/model_cards",
+    "openai/pricing",
+    "openai/safety_policy",
+    "openai/art50_marking"
+   ],
+   "unknown_ids": [],
+   "leaves": [
+    "card-daily-20260903T095148Z-unsigned.json"
+   ]
+  }
+ ]
 }
