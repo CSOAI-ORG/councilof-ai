@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Issuance Portal — CSOAI x402 (MetaMask)</title>
+<meta name="description" content="Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts." />
+<link rel="canonical" href="https://issuance.councilof.ai" />
+<meta property="og:title" content="Issuance Portal — CSOAI x402 (MetaMask)" />
+<meta property="og:description" content="Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://issuance.councilof.ai" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Issuance Portal \u2014 CSOAI x402 (MetaMask)",
+  "description": "Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts.",
+  "url": "https://issuance.councilof.ai",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  },
+  "inLanguage": "en",
+  "dateModified": "2026-09-03T07:06:40Z"
+}</script>
+<style>
+  :root { --accent: #2563eb; --bg: #0a0a0a; --fg: #fafafa; --muted: #a3a3a3; --card: #171717; --border: #262626; }
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 64px 24px 32px; max-width: 960px; margin: 0 auto; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 96px; }
+  h1 { font-size: 48px; line-height: 1.1; margin: 0 0 16px; font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: 28px; margin: 48px 0 16px; font-weight: 800; letter-spacing: -0.01em; }
+  p { font-size: 17px; line-height: 1.6; color: var(--muted); }
+  .lid { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-name { font-size: 12px; font-weight: 600; color: var(--accent); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .price { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
+  .card-desc { font-size: 13px; color: var(--muted); margin: 8px 0 0; line-height: 1.4; }
+  .cta { display: inline-block; background: var(--accent); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 24px; }
+  .cta:hover { background: #1d4ed8; }
+  footer { padding: 48px 24px; max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
+  <h1>Issuance Portal x402 (MetaMask)</h1>
+  <p>Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts.</p>
+  <a href="https://councilof.ai/pay.html" class="cta">Open the Issuance Portal →</a>
+</header>
+
+<div class="container">
+<h2>5 priced resources</h2>
+<div class="grid">
+  <div class="card"><p class="card-name">Issuance</p><p class="price">$0.50 USDC</p><p class="card-desc">Pay for your model, agent, or asset to be measured.</p></div>
+  <div class="card"><p class="card-name">Evidence bundle</p><p class="price">$1.00 USDC</p><p class="card-desc">A pack of cards for a specific obligation.</p></div>
+  <div class="card"><p class="card-name">Data feed</p><p class="price">$2.00 USDC</p><p class="card-desc">Live deltas feed for compliance teams.</p></div>
+  <div class="card"><p class="card-name">Proof bundle</p><p class="price">$1.50 USDC</p><p class="card-desc">Inclusion proof + bulk history for a card.</p></div>
+  <div class="card"><p class="card-name">Custom audit</p><p class="price">$10.00 USDC</p><p class="card-desc">A scoped measurement run against a specific obligation.</p></div>
+</div>
+<h2>How it works</h2>
+<p>An agent hits a priced endpoint. The server returns HTTP 402 with a USDC payment challenge (EIP-3009 transferWithAuthorization). MetaMask signs the authorization on Base. The open facilitator submits the transaction. Every receipt is signed under did:web:csoai.org#card-attestation-1.</p>
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+</footer>
+
+</body>
+</html>

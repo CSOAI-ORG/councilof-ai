@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof Portal — CSOAI</title>
+<meta name="description" content="Every signed card, with inclusion proof. The bulk history of every measurement. The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible. Free, no API key." />
+<link rel="canonical" href="https://proofs.councilof.ai" />
+<meta property="og:title" content="Proof Portal — CSOAI" />
+<meta property="og:description" content="Every signed card, with inclusion proof. The bulk history of every measurement. The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible. Free, no API key." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://proofs.councilof.ai" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Proof Portal \u2014 CSOAI",
+  "description": "Every signed card, with inclusion proof. The bulk history of every measurement. The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible. Free, no API key.",
+  "url": "https://proofs.councilof.ai",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  },
+  "inLanguage": "en",
+  "dateModified": "2026-09-03T07:06:40Z"
+}</script>
+<style>
+  :root { --accent: #2563eb; --bg: #0a0a0a; --fg: #fafafa; --muted: #a3a3a3; --card: #171717; --border: #262626; }
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 64px 24px 32px; max-width: 960px; margin: 0 auto; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 96px; }
+  h1 { font-size: 48px; line-height: 1.1; margin: 0 0 16px; font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: 28px; margin: 48px 0 16px; font-weight: 800; letter-spacing: -0.01em; }
+  p { font-size: 17px; line-height: 1.6; color: var(--muted); }
+  .lid { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-name { font-size: 12px; font-weight: 600; color: var(--accent); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .price { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
+  .card-desc { font-size: 13px; color: var(--muted); margin: 8px 0 0; line-height: 1.4; }
+  .cta { display: inline-block; background: var(--accent); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 24px; }
+  .cta:hover { background: #1d4ed8; }
+  footer { padding: 48px 24px; max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
+  <h1>Proof Portal</h1>
+  <p>Every signed card, with inclusion proof. The bulk history of every measurement. The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible. Free, no API key.</p>
+  <a href="https://councilof.ai/proofs.html" class="cta">Open the Proof Portal →</a>
+</header>
+
+<div class="container">
+<h2>Three things you can do here</h2>
+<ol style="color: var(--muted); line-height: 1.8;">
+  <li><strong>Verify any card</strong> — paste a card-v0 attestation, get its signature, hash, and 4 anchors.</li>
+  <li><strong>Bulk history</strong> — the full 50-card root + the bulk-signed stem. Read it offline.</li>
+  <li><strong>Inclusion proof</strong> — for any card, get the merkle path from the leaf to the root, signed under did:web:csoai.org.</li>
+</ol>
+<h2>The 4 anchors</h2>
+<p>Every measurement is bound to 4 independent anchors. Re-publishing from another vendor requires rebuilding all 4.</p>
+<ol style="color: var(--muted); line-height: 1.8;">
+  <li><strong>HuggingFace Hub</strong> — <a href="https://huggingface.co/csoai" style="color: var(--accent);">huggingface.co/csoai</a> — 60+ datasets, 42 Spaces, 3 models.</li>
+  <li><strong>Sigstore Rekor</strong> — public witness receipt at <a href="/api/rekor" style="color: var(--accent);">/api/rekor</a>.</li>
+  <li><strong>Corrections ledger</strong> — public witness at <a href="/api/corrections" style="color: var(--accent);">/api/corrections</a> (39 rows live).</li>
+  <li><strong>Bitcoin OpenTimestamps</strong> — irrevocable timestamp at <a href="/api/state" style="color: var(--accent);">/api/state</a>.</li>
+</ol>
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Verifier Portal — CSOAI (Offline WebCrypto)</title>
+<meta name="description" content="Paste any CSOAI signed card. Verify it offline in your browser. No server call. No tracking. No JS dependencies. The same canonical form + Ed25519 + WebCrypto the mill uses." />
+<link rel="canonical" href="https://verifier.councilof.ai" />
+<meta property="og:title" content="Verifier Portal — CSOAI (Offline WebCrypto)" />
+<meta property="og:description" content="Paste any CSOAI signed card. Verify it offline in your browser. No server call. No tracking. No JS dependencies. The same canonical form + Ed25519 + WebCrypto the mill uses." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://verifier.councilof.ai" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Verifier Portal \u2014 CSOAI (Offline WebCrypto)",
+  "description": "Paste any CSOAI signed card. Verify it offline in your browser. No server call. No tracking. No JS dependencies. The same canonical form + Ed25519 + WebCrypto the mill uses.",
+  "url": "https://verifier.councilof.ai",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  },
+  "inLanguage": "en",
+  "dateModified": "2026-09-03T07:06:40Z"
+}</script>
+<style>
+  :root { --accent: #2563eb; --bg: #0a0a0a; --fg: #fafafa; --muted: #a3a3a3; --card: #171717; --border: #262626; }
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 64px 24px 32px; max-width: 960px; margin: 0 auto; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 96px; }
+  h1 { font-size: 48px; line-height: 1.1; margin: 0 0 16px; font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: 28px; margin: 48px 0 16px; font-weight: 800; letter-spacing: -0.01em; }
+  p { font-size: 17px; line-height: 1.6; color: var(--muted); }
+  .lid { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-name { font-size: 12px; font-weight: 600; color: var(--accent); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .price { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
+  .card-desc { font-size: 13px; color: var(--muted); margin: 8px 0 0; line-height: 1.4; }
+  .cta { display: inline-block; background: var(--accent); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 24px; }
+  .cta:hover { background: #1d4ed8; }
+  footer { padding: 48px 24px; max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
+  <h1>Verifier Portal (Offline WebCrypto)</h1>
+  <p>Paste any CSOAI signed card. Verify it offline in your browser. No server call. No tracking. No JS dependencies. The same canonical form + Ed25519 + WebCrypto the mill uses.</p>
+  <a href="https://councilof.ai/gspc-verify" class="cta">Open the Verifier Portal →</a>
+</header>
+
+<div class="container">
+<h2>What you can verify</h2>
+<ul style="color: var(--muted); line-height: 1.8;">
+  <li>The card body is in canonical form (sorted keys, no whitespace, ensure_ascii=False)</li>
+  <li>The SHA-256 of the body matches the recorded sha256</li>
+  <li>The Ed25519 signature verifies under did:web:csoai.org#card-attestation-1</li>
+  <li>The card's claims match the GSPC schema (csoai.gspc-axes/0.5)</li>
+  <li>If claimed, the OTS proof verifies against a Bitcoin block</li>
+</ul>
+<h2>The honest answer for any card</h2>
+<p>The verifier returns one of three verdicts:</p>
+<ul style="color: var(--muted); line-height: 1.8;">
+  <li><strong>VERIFIED</strong> — all checks pass. The card is real.</li>
+  <li><strong>TAMPERED</strong> — the body has been modified after signing.</li>
+  <li><strong>UNCHECKABLE</strong> — we can't verify (e.g. unknown kid, malformed body, OTS upgrade pending).</li>
+</ul>
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+</footer>
+
+</body>
+</html>
