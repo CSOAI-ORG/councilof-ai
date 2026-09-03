@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<llms-sitemap xmlns="http://councilof.ai/llms-sitemap/0.1">
+  <title>Council of AI — LLM-discovery sitemap</title>
+  <description>Every public, AI-agent-readable surface on councilof.ai. Each entry includes the URL, the human + machine content, and a one-line description. This file is the answer-engine cousin of /sitemap.xml.</description>
+  <as_of>2026-09-03</as_of>
+  <lid>22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · measurement, not certification</lid>
+  <entry>
+    <url>https://councilof.ai/</url>
+    <description>Council of AI homepage — the entry point for independent AI governance measurement.</description>
+    <category>front-door</category>
+    <priority>1.0</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/gspc</url>
+    <description>LIVE 22-axis GSPC board (GET returns JSON; cite `totals.public_count`, never a typed integer).</description>
+    <category>api · json</category>
+    <priority>1.0</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/gspc-verify</url>
+    <description>Free browser-side signed-card verifier — paste a card body or sha256, recompute the hash and Ed25519 signature, no server call.</description>
+    <category>verifier · free</category>
+    <priority>0.95</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/mcp</url>
+    <description>Model Context Protocol door — POST /mcp with tools/call for board_totals, get_axis, get_root, get_card, verify_card, verify_inclusion, list_cards.</description>
+    <category>mcp · jsonrpc</category>
+    <priority>0.95</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/llms.txt</url>
+    <description>The AEO surface for AI agents — the canonical machine-readable description of the estate.</description>
+    <category>aeo · text</category>
+    <priority>0.95</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/what-is-new.html</url>
+    <description>The upgrade changelog — every shipped surface, last 14 days. The single page to read to learn what we have and how to use it.</description>
+    <category>changelog</category>
+    <priority>0.9</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/hf-badge.html</url>
+    <description>Get the GSPC badge on your HuggingFace model — the badge enroller docs, with two copy-paste badges and a 4-step README snippet.</description>
+    <category>badge · distribution</category>
+    <priority>0.9</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/hf-spaces.html</url>
+    <description>The live catalog of every csoai/* HuggingFace Space (42 live), loaded from the HF API at page load.</description>
+    <category>catalog · distribution</category>
+    <priority>0.9</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/axes-deep.html</url>
+    <description>The canonical 22-axis reference — each axis: scope, what's MEASURED, the discipline (TIE is TIE), the lane (where to look).</description>
+    <category>reference</category>
+    <priority>0.9</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/products</url>
+    <description>Products and SKUs. Verify is free forever. Three things invoice. Measurement, not certification.</description>
+    <category>products</category>
+    <priority>0.85</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/mcp-fleet</url>
+    <description>The governance MCP fleet — 216 servers across 10 hives. The 4 public-side tools (MCP, Chrome ext, Grok plugin, Hermes skill) on the rail.</description>
+    <category>catalog</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/tools</url>
+    <description>5 access surfaces — MCP, Chrome MV3 extension, Grok plugin, Hermes skill, REST + curl. The pluggable measurement rail.</description>
+    <category>tools</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/harness</url>
+    <description>The bench pack — frozen item banks, the GSPC grader, the canonical-form signing rule. Source code for the measurement rail.</description>
+    <category>methodology</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/methodology</url>
+    <description>What this methodology does and does not claim. Not a safety certification. We report measured refusals and survivals.</description>
+    <category>methodology</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/system-card</url>
+    <description>The CSOAI system card — what we measure, what we don't, the lid, the discipline.</description>
+    <category>trust</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/trust-center</url>
+    <description>Trust center — signed public-root, corrections ledger, witness receipts, Bitcoin OTS anchor.</description>
+    <category>trust</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/corrections</url>
+    <description>Public corrections ledger (39 entries) — every change to the lid, the doctrine, the wheel. The mill measuring itself.</description>
+    <category>api · json · corrections</category>
+    <priority>0.85</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/xrpl</url>
+    <description>XRPL reader — 16 named issuers, n_measured=0. Never a grade. Reader facts only, writes_board=false.</description>
+    <category>api · json · xrpl</category>
+    <priority>0.75</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/swift</url>
+    <description>SWIFT census — 26 named banks (3 LIVE · 9 COMMITTED · 14 DISCOVERED). Not clients, not MEASURED, sourced to a real press URL.</description>
+    <category>api · json · swift</category>
+    <priority>0.75</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/pqc</url>
+    <description>Post-quantum continuity honesty — Ed25519 CLASSICAL is the live signer; ML-DSA-65 is UNCHECKABLE until a real TEE is wired.</description>
+    <category>api · json · pqc</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/detect</url>
+    <description>C2PA manifest verifier — Article 50 evidence pack. Verifies a C2PA manifest, returns the three-state verdict.</description>
+    <category>api · json · c2pa</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/detector-interop</url>
+    <description>Detector interop endpoint — crosswalk of GSPC axes to external detectors (jailbreak, prompt-injection, OWASP LLM Top 10, etc.).</description>
+    <category>api · json · interop</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/intoto</url>
+    <description>in-toto attestation verifier — Article 50 evidence pack. Returns a three-state verdict (VALID / INVALID+reason / UNCHECKABLE).</description>
+    <category>api · json · intoto</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/regulators</url>
+    <description>For regulators — what we measure, the corrections ledger pattern, the per-axis methodology.</description>
+    <category>audience · regulators</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/insurers</url>
+    <description>For insurers — signed evidence per RWA issuer (XRPL-16), SWIFT census, the corrections ledger as a public witness.</description>
+    <category>audience · insurers</category>
+    <priority>0.8</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/government</url>
+    <description>For government — the same free public rail. No login, no CAC, no money from anything ranked.</description>
+    <category>audience · government</category>
+    <priority>0.75</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/enterprise</url>
+    <description>For enterprise — the paid SKUs (issue, proofs, embedded rails). Verify is free forever.</description>
+    <category>audience · enterprise</category>
+    <priority>0.75</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/root.json</url>
+    <description>The signed public-root — 50 cards, merkle, Ed25519-signed under did:web:csoai.org#card-attestation-1. Witnessed on Rekor + Bitcoin OTS.</description>
+    <category>signed · merkle</category>
+    <priority>0.9</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/signed/HOW-TO-VERIFY.md</url>
+    <description>The canonical verification rule. Read this before signing anything that says CSOAI.</description>
+    <category>docs · verify</category>
+    <priority>0.95</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/axis/governance.html</url>
+    <description>The governance axis page — n=237, what the model is graded on, the canonical 30-item bank.</description>
+    <category>axis · governance</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/axis/jail.html</url>
+    <description>The jail axis page — n=71, the containment floor, TIE attestation, the static-scan detector bank.</description>
+    <category>axis · jail</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/.well-known/agent-card.json</url>
+    <description>The A2A agent card — 4 skills (gspc-verify, get_axis, board_totals, list_cards). Discoverable by any A2A-conformant agent.</description>
+    <category>a2a · agent</category>
+    <priority>0.85</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/api/hf-spaces</url>
+    <description>Server-side cached mirror of every csoai/* HuggingFace Space (42), Dataset (60+), and Model (3). 5 min cache.</description>
+    <category>api · json · hf-mirror</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/sitemap.xml</url>
+    <description>The XML sitemap (482 URLs) for classical search engines.</description>
+    <category>seo · xml</category>
+    <priority>0.7</priority>
+  </entry>
+  <entry>
+    <url>https://councilof.ai/robots.txt</url>
+    <description>robots.txt — every AI crawler handled exactly once. ai-input=yes (grounding allowed), ai-train=no (training reserved).</description>
+    <category>aeo · robots</category>
+    <priority>0.6</priority>
+  </entry>
+</llms-sitemap>

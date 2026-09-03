@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>22 axes deep · Council of AI · the canonical axis reference</title>
+<meta name="description" content="The 22-axis GSPC reference. Each axis: scope, methodology, what's MEASURED, what's UNMEASURED, what's UNCHECKABLE. Free, no account, Ed25519-signed." />
+<meta name="robots" content="index,follow" />
+<meta name="keywords" content="GSPC, 22 axes, AI governance, axis reference, measurement, Council of AI" />
+<link rel="canonical" href="https://councilof.ai/axes-deep.html" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "The 22 axes of GSPC — deep reference",
+  "description": "The 22-axis measurement lid: 14 model-comparison axes + 8 deterministic-fact axes. Each axis: scope, what MEASURED means, the discipline (TIE is TIE), and the lane (where to look).",
+  "url": "https://councilof.ai/axes-deep.html",
+  "author": {"@type": "Organization", "name": "CSOAI Ltd", "url": "https://councilof.ai"},
+  "publisher": {"@type": "Organization", "name": "CSOAI Ltd"},
+  "inLanguage": "en",
+  "license": "https://creativecommons.org/licenses/by/4.0/"
+}
+</script>
+
+<style>
+  :root { --bg:#fff; --fg:#0b1a12; --muted:#5b6b62; --line:#e2e8e4; --accent:#0f766e; --ok:#16a34a; --warn:#ca8a04; --fact:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0b1a12; --fg:#eafff4; --muted:#8fb3a3; --line:rgba(52,211,153,.18); --accent:#34d399; --ok:#34d399; --warn:#fbbf24; --fact:#60a5fa; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:0; background:var(--bg); color:var(--fg); font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width:64rem; margin:0 auto; padding:2rem 1.25rem 5rem; }
+  header.hero { padding:1.5rem 0 2rem; border-bottom:1px solid var(--line); margin-bottom:2rem; }
+  header.hero h1 { font-size:clamp(2rem,5vw,2.8rem); font-weight:800; letter-spacing:-0.02em; margin:0 0 0.5rem; line-height:1.1; }
+  header.hero .sub { color:var(--muted); font-size:1.05rem; max-width:48rem; }
+  .lid { font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:0.95rem; color:var(--accent); margin:1rem 0 0.5rem; padding:0.6rem 0.85rem; border-radius:8px; border:1px solid rgba(15,118,110,0.3); background:rgba(15,118,110,0.06); display:inline-block; }
+
+  /* Family section */
+  .family { margin:1.5rem 0 2.5rem; }
+  .family h2 { font-size:1.4rem; margin:0 0 0.4rem; display:flex; align-items:center; gap:0.5rem; }
+  .family .family-tag { font-size:0.7rem; padding:0.15rem 0.55rem; border-radius:999px; background:rgba(15,118,110,0.1); color:var(--accent); border:1px solid rgba(15,118,110,0.3); font-weight:600; letter-spacing:0.04em; }
+  .family p.family-desc { color:var(--muted); margin:0 0 1rem; max-width:50rem; }
+  .axis-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:0.75rem; }
+  .axis { padding:1rem 1.1rem; border:1px solid var(--line); border-radius:10px; background:rgba(91,107,98,0.04); display:block; text-decoration:none; color:inherit; transition:border-color 0.2s,transform 0.2s; }
+  .axis:hover { border-color:var(--accent); transform:translateY(-1px); }
+  .axis h3 { margin:0 0 0.3rem; font-size:1rem; color:var(--accent); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; }
+  .axis p { margin:0; font-size:0.85rem; color:var(--muted); }
+  .axis .meta { margin-top:0.4rem; font-size:0.7rem; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; color:var(--muted); }
+  .axis .meta .sep { margin:0 0.3rem; opacity:0.5; }
+
+  /* Discipline table */
+  .discipline { margin:2rem 0; padding:1.25rem; border:1px solid var(--line); border-radius:10px; }
+  .discipline h2 { font-size:1.2rem; margin:0 0 0.5rem; }
+  .discipline table { width:100%; border-collapse:collapse; margin-top:0.5rem; }
+  .discipline th, .discipline td { text-align:left; padding:0.5rem 0.6rem; border-bottom:1px solid var(--line); font-size:0.88rem; }
+  .discipline th { color:var(--muted); font-weight:600; }
+  .discipline code { background:rgba(91,107,98,0.10); padding:0.05rem 0.35rem; border-radius:3px; font-size:0.85rem; }
+
+  /* Notes */
+  .notes { margin:2rem 0; }
+  .notes h2 { font-size:1.2rem; margin:0 0 0.5rem; }
+  .notes ol { padding-left:1.4rem; }
+  .notes li { margin:0.5rem 0; }
+  .notes li code { background:rgba(91,107,98,0.10); padding:0.05rem 0.35rem; border-radius:3px; font-size:0.88rem; }
+
+  footer { margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:0.85rem; }
+  footer a { color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>The 22 axes of GSPC</h1>
+    <p class="sub">A canonical reference. Each axis: scope, what's MEASURED, the discipline, the lane. Live from the board, free, Ed25519-signed.</p>
+    <p class="lid" id="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+  </header>
+
+  <section class="family" id="family-model-comparison">
+    <h2><span class="family-tag">14 axes</span> Model-comparison · <code>family: gspc</code></h2>
+    <p class="family-desc">
+      A 19-model fleet answers a frozen item bank, graded deterministically. TIE is TIE.
+      Fleet means the fleet; not a single winner. Where the lead is statistically separated
+      (McNemar p&lt;0.05), it is reported as <code>SEPARATED</code>; otherwise <code>TIE</code>.
+    </p>
+    <div class="axis-grid" id="grid-model-comparison">
+      <!-- filled by JS from /api/gspc -->
+    </div>
+  </section>
+
+  <section class="family" id="family-deterministic-fact">
+    <h2><span class="family-tag">8 axes</span> Deterministic-fact · <code>family: financial</code></h2>
+    <p class="family-desc">
+      Read from public ledgers (XRPL issuer accounts, Companies House, public statistical series)
+      and graded by rule. No model, no fleet, no judgement. <em>Measured is not scored.</em>
+      These axes never have a leader, accuracy, or separation.
+    </p>
+    <div class="axis-grid" id="grid-deterministic-fact">
+      <!-- filled by JS -->
+    </div>
+  </section>
+
+  <section class="discipline">
+    <h2>The discipline — what every axis reports</h2>
+    <table>
+      <tr><th>What</th><th>How</th><th>Where to look</th></tr>
+      <tr>
+        <td>MEASURED</td>
+        <td>n&nbsp;≥&nbsp;30 frozen item bank, deterministic grade, rule-based. Card is Ed25519-signed under <code>did:web:csoai.org#card-attestation-1</code>.</td>
+        <td><code>GET /api/gspc</code> · <code>totals.public_count</code></td>
+      </tr>
+      <tr>
+        <td>UNMEASURED</td>
+        <td>Slot declared, no run behind it. Published so the gap is visible. First-class, not an error.</td>
+        <td><code>totals.unmeasured_axes</code></td>
+      </tr>
+      <tr>
+        <td>UNCHECKABLE</td>
+        <td>Source behind a login, a CAC, a fee, or that doesn't exist. <em>We do not pretend it is MEASURED.</em></td>
+        <td><code>notes[]</code> on the axis</td>
+      </tr>
+      <tr>
+        <td>TIE</td>
+        <td>Two or more models statistically tied (McNemar p&nbsp;≥&nbsp;0.05). Reported as TIE; never a fake equal.</td>
+        <td>Per-axis <code>separation</code> field</td>
+      </tr>
+      <tr>
+        <td>SEPARATED</td>
+        <td>One model statistically separated from the rest (p&nbsp;&lt;&nbsp;0.05). The leader is reported, with Wilson interval.</td>
+        <td>Per-axis <code>leader</code> + <code>wilson</code></td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="notes">
+    <h2>Notes for the end user</h2>
+    <ol>
+      <li>The lid (22 axes · 22 measured) is the <em>full set we measure</em>. Empty cells are not a missing feature — they are a discipline.</li>
+      <li>Jail (axis 14) is a <em>containment floor</em>, not a certification. It carries its per-model rows verbatim from the signed living board.</li>
+      <li>The 8 financial axes are fact runs, not leader scores. None has a fleet, an accuracy, or a separation determination. Measured, not scored.</li>
+      <li>The two former index slots (ai-adoption-components, labour-components) are measured as component facts, never restored to any retired sticker.</li>
+      <li>Every score on the board is <em>quoted from a live signed card</em>. A score copied from a frozen artifact is not a number; it is hearsay.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://councilof.ai/api/gspc">/api/gspc</a> · <a href="https://councilof.ai/gspc-verify">/gspc-verify</a></p>
+    <p style="margin-top:0.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check.</p>
+  </footer>
+</main>
+
+<script>
+// Live axis grid from /api/gspc
+(async () => {
+  try {
+    const r = await fetch("https://councilof.ai/api/gspc");
+    if (!r.ok) return;
+    const b = await r.json();
+    const axes = b.axes || [];
+    const mc = axes.filter(a => a.kind === "model-comparison");
+    const df = axes.filter(a => a.kind === "deterministic-facts");
+
+    const render = (a) => {
+      const slug = a.axis;
+      const n = a.n ?? 0;
+      const sep = a.separation || "";
+      const acc = a.accuracy != null ? `acc=${a.accuracy}` : "";
+      const lid = b.totals?.public_count || "22 axes · 22 measured";
+      const live = lid.match(/(\d+)\s+axis/i)?.[1] ?? "22";
+      return `<a class="axis" href="https://councilof.ai/axis/${slug}.html">
+        <h3>${slug}</h3>
+        <p>${familyDesc(slug, a.family, a.kind)}</p>
+        <p class="meta">n=${n}${acc ? ' <span class="sep">·</span> ' + acc : ''}${sep ? ' <span class="sep">·</span> ' + sep : ''}</p>
+      </a>`;
+    };
+
+    const familyDesc = (slug, family, kind) => {
+      // Brief, plain-English description per axis
+      const d = {
+        governance: "Decision governance: does the model follow or refuse Art 5 prohibited/high-risk actions?",
+        safety: "Safety floor: refused harm, survivals, OWASP coverage.",
+        provenance: "Provenance discipline: where the weights came from, signed lineage, what is rebuilt.",
+        continuity: "Continuity: how the model behaves under input drift, jailbreak attempt, prompt reformatting.",
+        conformance: "Conformance to the protocol spec: tool calls, JSON shapes, refusal grammar.",
+        openness: "Openness of weights, training data disclosure, license clarity.",
+        "machinery-conformity": "Hardware determinism: do the same inputs always give the same outputs at fixed temperature?",
+        care: "Care axis: refusal quality on vulnerable-user scenarios (CareBench).",
+        "cross-reality": "Cross-reality: behaviour transfer between text-only and multimodal inputs.",
+        "detector-interop": "Detector interop: do external detectors (jailbreak, prompt-injection) see the same threat the model sees?",
+        "art5-safeguard": "EU AI Act Art 5 prohibited-practice safeguard quality.",
+        swarm: "Multi-agent swarm safety: do cooperating models stay on-task and not escalate?",
+        affect: "Affect: emotional-manipulation refusal quality.",
+        jail: "Jail containment floor: n=71 static-scan detector bank.",
+        "provenance-controls": "Public-ledger read: RWA issuer-account controls read off-chain.",
+        "reserve-attestation": "Public-ledger read: reserve attestation from on-chain evidence.",
+        "regulatory-framework": "Public-ledger read: which regimes have signed the asset into regulation.",
+        "distribution-integrity": "Public-ledger read: distribution channel integrity.",
+        "custody-disclosure": "Public-ledger read: who custodies the reserves.",
+        "ai-adoption-components": "Public statistical series: AI-adoption component breakdown.",
+        "labour-components": "Public statistical series: labour-market component breakdown.",
+        "humanoid-labour-index": "Public statistical series: humanoid-labour component index.",
+      };
+      return d[slug] || a.notes || "See the live board for current n.";
+    };
+
+    document.getElementById("grid-model-comparison").innerHTML =
+      mc.map(render).join("") || "<p>LOADING…</p>";
+    document.getElementById("grid-deterministic-fact").innerHTML =
+      df.map(render).join("") || "<p>LOADING…</p>";
+
+    // Lid
+    const lid = document.getElementById("lid");
+    if (lid && b.totals?.public_count) lid.textContent = b.totals.public_count + " · live";
+  } catch (e) {
+    // graceful: leave the static lid in place
+  }
+})();
+</script>
+</body>
+</html>
