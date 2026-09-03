@@ -45,17 +45,17 @@ SUBDOMAINS = [
         "/proofs.html",
         """<h2>Three things you can do here</h2>
 <ol style="color: var(--muted); line-height: 1.8;">
-  <li><strong>Verify any card</strong> — paste a card-v0 attestation, get its signature, hash, and 4 anchors.</li>
+  <li><strong>Verify any card</strong> — paste a card-v0 attestation, get its signature, hash, and anchors.</li>
   <li><strong>Bulk history</strong> — the full 50-card root + the bulk-signed stem. Read it offline.</li>
   <li><strong>Inclusion proof</strong> — for any card, get the merkle path from the leaf to the root, signed under did:web:csoai.org.</li>
 </ol>
-<h2>The 4 anchors</h2>
-<p>Every measurement is bound to 4 independent anchors. Re-publishing from another vendor requires rebuilding all 4.</p>
+<h2>The anchors</h2>
+<p>Every measurement is bound to three independent live anchors. Re-publishing from another vendor requires rebuilding all three. A fourth, Bitcoin OpenTimestamps, is stamped but <strong>not yet anchored</strong>: a stamp is a request to a calendar, and it becomes a proof only once the calendar commits it to a block.</p>
 <ol style="color: var(--muted); line-height: 1.8;">
   <li><strong>HuggingFace Hub</strong> — <a href="https://huggingface.co/csoai" style="color: var(--accent);">huggingface.co/csoai</a> — 60+ datasets, 42 Spaces, 3 models.</li>
   <li><strong>Sigstore Rekor</strong> — public witness receipt at <a href="/api/rekor" style="color: var(--accent);">/api/rekor</a>.</li>
   <li><strong>Corrections ledger</strong> — public witness at <a href="/api/corrections" style="color: var(--accent);">/api/corrections</a> (39 rows live).</li>
-  <li><strong>Bitcoin OpenTimestamps</strong> — irrevocable timestamp at <a href="/api/state" style="color: var(--accent);">/api/state</a>.</li>
+  <li><strong>Bitcoin OpenTimestamps</strong> (planned) — digests are stamped; the published roots carry block attestations, queued atoms do not yet. State at <a href="/api/state" style="color: var(--accent);">/api/state</a>.</li>
 </ol>""",
     ),
     (

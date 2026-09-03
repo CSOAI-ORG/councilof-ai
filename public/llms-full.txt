@@ -524,13 +524,17 @@ Measurement, not certification. Anyone can re-check.
       "url_sha256
 ```
 
-## 6. THE 4 ANCHORS
+## 6. THE ANCHORS
 
-Every measurement is bound to 4 independent anchors:
+Every measurement is bound to three independent LIVE anchors:
 1. HuggingFace Hub — `huggingface.co/csoai` — 60+ datasets, 42 Spaces, 3 models
 2. Sigstore Rekor — witness receipt at `/signed/rekor-*.json`
 3. Corrections ledger — public witness at `/api/corrections`
-4. Bitcoin OpenTimestamps — irrevocable timestamp at `/api/state`
+
+A fourth, Bitcoin OpenTimestamps, is PLANNED and must not be quoted as live. Digests
+are stamped; a stamp is a request to a calendar, not a proof. The published roots
+carry Bitcoin block attestations (965121, 965138, 965268); queued atoms carry pending
+stamps and are NOT anchored. State at `/api/state`.
 
 ## 7. THE MCP DOOR
 

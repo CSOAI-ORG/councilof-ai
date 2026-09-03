@@ -257,7 +257,7 @@ PLAN = {
             "Write preprint 009: 'NIST AI RMF crosswalk to GSPC' (cs.CY)",
             "Write preprint 010: 'COSE_Sign1 wrapper for card-v0 attestations' (cs.CR)",
             "Blog 001: 'Why measurement, not certification'",
-            "Blog 002: 'The 4-anchor machine: how CSOAI binds every measurement'",
+            "Blog 002: 'Three live anchors, and the fourth we have not earned yet'",
             "Blog 003: 'UNCHECKABLE is honest: what we refuse to claim'",
             "Blog 004: 'The 26-bank honest answer: 5 XRPL, 3 EVM, 18 permissioned'",
         ],

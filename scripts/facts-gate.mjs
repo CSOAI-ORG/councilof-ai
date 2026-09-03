@@ -325,6 +325,50 @@ const RAIL_TERMS = {
   ots_atom_anchor: /OpenTimestamps|\bOTS\b|\bBitcoin\b/i,
 };
 
+// ── anchor-count: a CONCEPT rule, not a string match ──────────────────────────
+// Two passes of hand-grepping (mine and nicholas-48's) each missed what the other
+// caught, because the same claim appears in variant wordings: "the 4-anchor
+// machine", "signed, anchored measurement board", "4 anchors". The worst survivor
+// was in proofs.councilof.ai's schema.org JSON-LD — the copy crawlers and AI
+// assistants quote, so the version most likely to be repeated elsewhere as fact.
+//
+// A noun-form assertion carries no verb LIVE_TENSE can see, so capability-tense
+// could never catch it. This rule reads the number instead: facts.json declares
+// how many independent anchors actually exist, and any claim of MORE is flagged
+// however it is phrased. Understatement always passes.
+function ruleAnchorCount(facts, file, text, add) {
+  const declared = facts?.counts?.live_anchors?.value;
+  if (typeof declared !== "number") return;
+  const names = (facts.counts.live_anchors.names || []).join(", ");
+  const re = /\b(\d+|two|three|four|five|six)[-\s]anchor\b|\b(\d+|two|three|four|five|six)\s+(?:independent\s+)?anchors\b/gi;
+  const WORDS = { two: 2, three: 3, four: 4, five: 5, six: 6 };
+  let m;
+  while ((m = re.exec(text))) {
+    const raw = (m[1] || m[2] || "").toLowerCase();
+    const n = WORDS[raw] ?? parseInt(raw, 10);
+    if (!Number.isFinite(n) || n <= declared) continue;   // understatement is safe
+    const window = ctx(text, m.index, re.lastIndex, 130);
+    if (/\bplanned\b|\bwill\b|\bwould\b|\bonce\b|\bnot yet\b|\bfund(s|ing|ed)?\b|\boutcome\b/i.test(window)) {
+      continue;  // future/funded framing is honest — "OUTCOME: a 4-anchor machine"
+    }
+    // "anchor" has a second, unrelated sense in the 3D governance globe: map
+    // ANCHOR NODES, which are places, not cryptographic anchors. "6 Anchor nodes
+    // · 5 live" is a true statement about a map and must not be flagged. Match
+    // the noun that follows, not just the number.
+    if (/\banchor\s+nodes?\b/i.test(text.slice(m.index, re.lastIndex + 12))) continue;
+    add({
+      rule: "anchor-count",
+      file,
+      text: m[0],
+      why:
+        `claims ${n} anchors; facts.json counts.live_anchors declares ${declared} ` +
+        `(${names}). Bitcoin OpenTimestamps is stamped, not anchored — see rail ` +
+        `ots_atom_anchor. State it in future tense or name the live anchors.`,
+      ctx: window,
+    });
+  }
+}
+
 function ruleCapabilityTense(facts, file, text, add) {
   const rails = (facts.rails || []).filter(
     (r) => r.status === "planned" || r.status === "devnet"
@@ -447,6 +491,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     ruleAxisCount(facts, rel, text, add, liveCount, raw);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
+    ruleAnchorCount(facts, rel, text, add);
   }
   return violations;
 }
@@ -510,6 +555,16 @@ const SELFTEST_CASES = [
   ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
   ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
   ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
+  // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
+  // Each of these survived a hand-grep pass. The noun form carries no verb the
+  // tense rule can see; the JSON-LD one was live on proofs.councilof.ai.
+  ["VIOLATION: 4-anchor machine as a noun", "<p>The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible.</p>", true],
+  ["VIOLATION: four anchors spelled out", "<p>Our four anchors bind every measurement.</p>", true],
+  ["VIOLATION: anchor count in JSON-LD description", '{"@type":"WebSite","description":"A 4-anchor machine for AI measurement."}', true, "subdomains/proofs/index.html"],
+  ["honest: three live anchors named", "<p>Three independent live anchors — HuggingFace, Sigstore Rekor and a public corrections ledger.</p>", false],
+  ["honest: 4-anchor as a funded OUTCOME", "<p>OUTCOME: a 4-anchor machine that gives regulators a single verifiable surface.</p>", false],
+  ["honest: planned framing", "<p>A 4-anchor machine is planned once Bitcoin anchoring lands.</p>", false],
+  ["map anchor NODES are a different sense and must pass", "<p>6 Anchor nodes · 5 live on the governance globe.</p>", false],
   // ── unsigned interop scoping (#841 regression) ────────────────────────────────
   // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
   // It legitimately says "4 axes" when measuring 4 axes on its own population.
@@ -540,6 +595,7 @@ async function selftest(facts) {
     ruleAxisCount(facts, file, text, add, liveCount, html);
     ruleMeasuredOverclaim(facts, file, text, add, liveMeasured);
     ruleCapabilityTense(facts, file, text, add);
+    ruleAnchorCount(facts, file, text, add);
     const didFail = violations.length > 0;
     const ok = didFail === shouldFail;
     if (ok) pass++;
