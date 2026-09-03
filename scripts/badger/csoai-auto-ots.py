@@ -22,7 +22,15 @@ HERE = Path(__file__).resolve().parent
 QUEUE = HERE / "_queue"
 MAX_PAYLOAD = 3072
 
-OTS_POOL = "https://a.pool.opentimestamps.org/digest"
+# Calendars are asked directly. The /digest aggregator returns a fragment, not
+# a detached proof, and writing that fragment to a .ots file is what produced
+# 112 unreadable "proofs".
+CALENDARS = [
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://bob.btc.calendar.opentimestamps.org",
+    "https://btc.calendar.catallaxy.com",
+    "https://finney.calendar.eternitywall.com",
+]
 
 
 def canonical(obj: dict) -> bytes:
@@ -35,31 +43,55 @@ def canonical(obj: dict) -> bytes:
     return json.dumps(rec(obj), separators=(",", ":"), ensure_ascii=False).encode("utf-8")
 
 
-def submit_ots(digest_hex: str, timeout: int = 15) -> str | None:
-    """Submit a digest to OpenTimestamps aggregator. Returns the OTS proof hex."""
-    payload_hex = digest_hex + "0123456789abcdef"  # 36-byte calendar attestation
-    try:
-        body_bytes = bytes.fromhex(payload_hex)
-        r = subprocess.run(
-            ["curl", "-L", "-s", "-X", "POST",
-             "-H", "Content-Type: application/octet-stream",
-             "--data-binary", body_bytes,
-             "-w", "\n%{http_code}",
-             "--max-time", str(timeout),
-             OTS_POOL],
-            capture_output=True, timeout=timeout + 5,
-        )
-        out = r.stdout.decode("utf-8", errors="ignore")
-        if "\n" in out:
-            body, code = out.rsplit("\n", 1)
-            try:
-                if int(code) == 200 and body:
-                    return body
-            except ValueError:
-                pass
-    except Exception:
-        pass
-    return None
+def submit_ots(digest_hex: str, timeout: int = 15) -> bytes | None:
+    """Stamp a digest and return REAL detached-timestamp bytes, or None.
+
+    Replaces a version that produced 112 unverifiable files. Four faults, each
+    enough on its own:
+
+      1. It appended a hardcoded constant to the digest:
+             payload_hex = digest_hex + "0123456789abcdef"
+         so the calendar received sha256(atom)||0123456789abcdef, never the
+         atom's digest. The resulting proof could not attest the atom even if
+         everything else had been right.
+      2. It wrote the raw HTTP response body straight to a .ots file. A
+         calendar returns a timestamp FRAGMENT, not a detached proof file; the
+         OTS magic header and the digest binding were never written. Every
+         file failed DetachedTimestampFile.deserialize with BadMagicError -
+         100 of them, confirmed.
+      3. It passed a Python bytes object as a curl argument, which coerces it
+         to str.
+      4. It decoded the binary response as UTF-8 with errors="ignore", which
+         silently destroys any byte the codec dislikes.
+
+    This version uses the opentimestamps library: the real digest, merged
+    across calendars, serialised as a DetachedTimestampFile that `ots verify`
+    can read. Returns None rather than a broken file when no calendar answers -
+    an unverifiable proof is worse than an absent one, because it looks like
+    evidence.
+    """
+    import io
+
+    from opentimestamps.calendar import RemoteCalendar
+    from opentimestamps.core.op import OpSHA256
+    from opentimestamps.core.serialize import StreamSerializationContext
+    from opentimestamps.core.timestamp import DetachedTimestampFile, Timestamp
+
+    digest = bytes.fromhex(digest_hex)
+    ts = Timestamp(digest)
+    answered = 0
+    for url in CALENDARS:
+        try:
+            ts.merge(RemoteCalendar(url).submit(digest))
+            answered += 1
+        except Exception:
+            continue
+    if not answered:
+        return None
+    out = io.BytesIO()
+    DetachedTimestampFile(OpSHA256(), ts).serialize(StreamSerializationContext(out))
+    return out.getvalue()
+
 
 
 def main():
@@ -105,7 +137,7 @@ def main():
 
                 proof = submit_ots(digest)
                 if proof:
-                    ots_path.write_text(proof)
+                    ots_path.write_bytes(proof)  # binary: write_text corrupted it
                     n_anchored += 1
                     if not args.quiet and n_anchored % 25 == 0:
                         print(f"  ... {n_anchored} anchored ({time.time() - started:.0f}s)")
