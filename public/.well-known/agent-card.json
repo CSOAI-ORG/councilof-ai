@@ -1,25 +1,18 @@
 {
+  "protocolVersion": "0.3.0",
   "name": "Council of AI — Measurement Agent",
   "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
+  "url": "https://councilof.ai",
   "version": "1.0.0",
+  "provider": {
+    "organization": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
     "extendedAgentCard": false
   },
-  "supportedInterfaces": [
-    {
-      "url": "https://councilof.ai/api/assess",
-      "protocolBinding": "HTTP+JSON",
-      "protocolVersion": "1.0.0"
-    },
-    {
-      "url": "https://councilof.ai/mcp",
-      "protocolBinding": "JSONRPC",
-      "protocolVersion": "1.0.0",
-      "note": "Live streamable-HTTP door (GET 200). npm stdio: csoai-gspc-mcp@0.1.0. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker."
-    }
-  ],
   "defaultInputModes": [
     "application/json",
     "text/plain"
@@ -96,10 +89,21 @@
       ]
     }
   ],
-  "provider": {
-    "organization": "CSOAI Ltd",
-    "url": "https://councilof.ai"
-  },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/assess",
+      "protocolBinding": "HTTP+JSON",
+      "protocolVersion": "1.0.0"
+    },
+    {
+      "url": "https://councilof.ai/mcp",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0.0",
+      "note": "Live streamable-HTTP door (GET 200). npm stdio: csoai-gspc-mcp@0.1.0. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker."
+    }
+  ],
+  "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
+  "documentation": "https://councilof.ai/.well-known/agent-card.json",
   "documentationUrl": "https://councilof.ai/.well-known/agent-card.json",
   "doi": "10.5281/zenodo.21991104",
   "explicitly_not": [
