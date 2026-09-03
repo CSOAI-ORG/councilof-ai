@@ -219,16 +219,33 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex min-h-0 flex-1 flex-col overflow-hidden">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15 }}
-            className="h-full"
+            className="flex min-h-0 flex-1 flex-col"
           >
-            {pane ?? children}
-            {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold. */}
-            <p className="mt-6 px-6 pb-6 text-xs text-muted-foreground" data-testid="free-rail">
+            {/* Chat is the OS: children stay mounted and the chosen tab renders as a card
+                ABOVE the conversation. `pane ?? children` used to swap the centre wholesale,
+                so picking a tab unmounted the thread — the reason the workspace read as a
+                tab switcher rather than one conversation with cards in it. Pages that pass
+                their own children and never set ?tab= (Settings, Reports, MyCertificates)
+                have no pane, so they render exactly as before. */}
+            {pane ? (
+              <div className="flex min-h-0 flex-1 flex-col">
+                <div className="max-h-[55%] shrink-0 overflow-y-auto border-b border-border">
+                  {pane}
+                </div>
+                <div className="min-h-0 flex-1">{children}</div>
+              </div>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-y-auto">{children}</div>
+            )}
+            {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold.
+                shrink-0 so it is a footer of the shell and never steals height from the centre —
+                it used to sit inside the same scroll box and push the composer below the fold. */}
+            <p className="shrink-0 border-t border-border px-6 py-2 text-xs text-muted-foreground" data-testid="free-rail">
               Verify is free. A grade is never sold. No public prices — measurement, not certification.
             </p>
           </motion.div>

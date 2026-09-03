@@ -594,8 +594,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/dashboard",
-  "comp": "Dashboard",
-  "title": "Dashboard"
+  "comp": "CouncilOs",
+  "title": "Council Os"
  },
  {
   "path": "/dashboard/progress",

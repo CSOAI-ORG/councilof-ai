@@ -55,6 +55,7 @@ const AiActFaq = lazy(() => import("./pages/AiActFaq"));
 const ConformityAssessment = lazy(() => import("./pages/ConformityAssessment"));
 const JurisdictionAct = lazy(() => import("./pages/JurisdictionAct"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+const CouncilOs = lazy(() => import("./pages/CouncilOs"));
 const AISystems = lazy(() => import("./pages/AISystems"));
 const RiskAssessment = lazy(() => import("./pages/RiskAssessment"));
 const AssessTool = lazy(() => import("./pages/AssessTool"));
@@ -937,7 +938,7 @@ function App() {
                   <Route path="/government" component={GovernmentDashboard} />
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
                   <Route path="/landing" component={Landing} />
-                  <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/dashboard" component={CouncilOs} />
                   <Route path="/ai-systems" component={AISystems} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/assess">{() => <RequireAuth><AssessTool /></RequireAuth>}</Route>
