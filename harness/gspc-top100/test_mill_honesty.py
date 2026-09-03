@@ -362,17 +362,26 @@ def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) ->
     dst = root / "signed"
     src.mkdir(parents=True, exist_ok=True)
     dst.mkdir(parents=True, exist_ok=True)
-    wrap = stage_unsigned("deepseek-ai/DeepSeek-R1", "safety", hits=12, n=30, reason="signed-pending-verify")
-    wrap["body"]["unmeasured"] = ["signed-pending-verify"]
+    wrap = stage_unsigned("deepseek-ai/DeepSeek-R1", "safety", hits=12, n=30, reason="")
     (src / "unsigned-safety-deadbeef12.json").write_text(json.dumps(wrap, indent=2) + "\n")
+    # The already-signed card carries the body the signer WOULD produce (n>=30 →
+    # MEASURED) at the content-addressed path, so a re-run recognises it as the
+    # same card and must not spend an OIDC signature on it.
+    from hashlib import sha256
+
+    signed_body = dict(wrap["body"])
+    signed_body["status"] = "MEASURED"
+    signed_body["unmeasured"] = []
+    signed_id = sha256(canonical_body_bytes(signed_body)).hexdigest()
     already = {
         "alg": "Ed25519",
-        "body": wrap["body"],
-        "id": wrap["id"],
+        "body": signed_body,
+        "id": signed_id,
         "signature": "ab" * 32,
         "did": "did:web:csoai.org#board-attestation-1",
     }
-    (dst / "signed-safety-deadbeef12.json").write_text(json.dumps(already, indent=2) + "\n")
+    already_path = dst / f"signed-safety-{signed_id[:12]}.json"
+    already_path.write_text(json.dumps(already, indent=2) + "\n")
     called = []
 
     def boom(body):
@@ -385,8 +394,9 @@ def test_sign_mill_skips_already_signed_same_id(tmp_path: Path | None = None) ->
     rc = sm.main()
     assert rc == 0
     assert called == []
-    out = json.loads((dst / "signed-safety-deadbeef12.json").read_text())
+    out = json.loads(already_path.read_text())
     assert out["signature"] == "ab" * 32
+    assert len(list(dst.glob("signed-*.json"))) == 1, "no second card for the same body"
 
 
 def test_unknown_did_is_uncheckable_not_measured() -> None:
@@ -514,15 +524,21 @@ def test_flip_hub_queue_only_valid_n30_cells(tmp_path: Path | None = None) -> No
     q = root / "queue.jsonl"
     q.write_text("".join(json.dumps(r) + "\n" for r in rows))
     rep = fq.run(cards, q, did_doc, root / "out")
-    assert rep["cells_after"] == 1 and rep["flipped_this_run"] == 1
+    # VALID + n>=30 earns org/a a cell. Its body says UNMEASURED (the staged
+    # "signed-pending-verify"), so the cell says UNMEASURED too: nothing MEASURED
+    # anywhere, and the census still CHANGED because a cell was written.
+    assert rep["cells_after"] == 0 and rep["cells_written"] == 1
+    assert rep["changed"] is True, "a written cell is a census change even when nothing is MEASURED"
     assert rep["verdicts"] == {"VALID": 1, "UNQUOTABLE": 1, "INVALID": 1, "UNCHECKABLE": 1}
     out_rows = [json.loads(l) for l in (root / "out" / "queue.jsonl").read_text().splitlines()]
     a = next(r for r in out_rows if r["id"] == "org/a")
-    assert a["measured_axes"]["governance"]["status"] == "MEASURED"
+    assert a["measured_axes"]["governance"]["status"] == "UNMEASURED"
+    assert "signed-pending-verify" in a["measured_axes"]["governance"]["unmeasured"]
+    assert a["measured_axes"]["governance"]["card_id"]
     assert "safety" not in a["measured_axes"]
     assert all(r["status"] == "UNMEASURED" and r["card_id"] == "" for r in out_rows)
     summ = json.loads((root / "out" / "SUMMARY.json").read_text())
-    assert summ["n_measured"] == 0 and summ["n_measured_axes"] == 1 and summ["n"] == 3
+    assert summ["n_measured"] == 0 and summ["n_measured_axes"] == 0 and summ["n"] == 3
     assert "3 measured" not in summ["note"].replace("Not 3 measured", "")
     idx = (root / "out" / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
     # Index row for the VALID card: since body says UNMEASURED (signed-pending-verify
@@ -601,12 +617,19 @@ def test_index_row_mirrors_body_status_issue_1155() -> None:
         path = cards_dir / f"signed-{['govern','safe','open'][i]}.json"
         path.write_text(json.dumps(w, indent=2) + "\n")
     rep = fq.run(cards_dir, q, did_doc, out)
-    # unit/a (governance, n=30, body.status=MEASURED, valid sig) MUST flip.
-    # unit/b (safety, n=30, body.status=UNMEASURED, valid sig) flips the queue
-    # cell (the queue flip is unconditional on body status), but its INDEX ROW
-    # reports UNMEASURED because the body says so (Issue #1155).
-    # unit/c (openness, n=10, valid sig) is UNQUOTABLE — never flips, never indexed.
-    assert rep["cells_after"] == 2, f"expected 2 cells flipped (a+b), got {rep['cells_after']}"
+    # unit/a (governance, n=30, body.status=MEASURED, valid sig) MUST be MEASURED.
+    # unit/b (safety, n=30, body.status=UNMEASURED, valid sig) earns a cell, and
+    # both the cell and the INDEX ROW say UNMEASURED because the body does (#1155).
+    # unit/c (openness, n=10, valid sig) is UNQUOTABLE — never earns a cell, never indexed.
+    assert rep["cells_written"] == 2, f"expected 2 cells written (a+b), got {rep['cells_written']}"
+    assert rep["cells_after"] == 1, f"only unit/a is MEASURED, got {rep['cells_after']}"
+    out_rows = [json.loads(x) for x in (out / "queue.jsonl").read_text().splitlines()]
+    cell_status = {
+        r["id"]: next(iter((r.get("measured_axes") or {}).values()), {}).get("status")
+        for r in out_rows
+        if r.get("measured_axes")
+    }
+    assert cell_status == {"unit/a": "MEASURED", "unit/b": "UNMEASURED"}, cell_status
     idx = (out / "mill-cards" / "INDEX.jsonl").read_text().splitlines()
     assert len(idx) == 2, f"expected 2 VALID index rows, got {len(idx)}: {idx}"
     by_status = {json.loads(l)["model"]: json.loads(l)["status"] for l in idx}
@@ -817,10 +840,11 @@ def test_staged_body_says_unsigned_not_pending_verify() -> None:
     assert wrap["signature"] is None
 
 
-def test_sign_mill_emits_measured_at_n30_and_refuses_in_place_supersede(tmp_path: Path | None = None) -> None:
+def test_sign_mill_emits_measured_at_n30_and_supersedes_never_overwrites(tmp_path: Path | None = None) -> None:
     """The signer writes the state that survives the signature: MEASURED at n>=30,
-    UNMEASURED with its reason below it. And a changed body never overwrites an
-    existing signed card — that card is superseded through a ledger, or not at all."""
+    UNMEASURED with its reason below it. Cards are content-addressed, so a changed
+    run lands on a NEW path, the old signed bytes survive byte-for-byte, and the
+    ledger records which card replaced which."""
     sys.path.insert(0, str(HERE.parents[1] / "scripts"))
     import sign_mill_cards as sm  # noqa: E402
 
@@ -835,32 +859,88 @@ def test_sign_mill_emits_measured_at_n30_and_refuses_in_place_supersede(tmp_path
     dst.mkdir(parents=True, exist_ok=True)
 
     big = stage_unsigned("unit/big", "governance", hits=28, n=30, reason="")
-    (src / "unsigned-governance-aaaaaaaaaaaa.json").write_text(json.dumps(big, indent=2) + "\n")
+    (src / "unsigned-governan-aaaaaaaaaaaa.json").write_text(json.dumps(big, indent=2) + "\n")
     small = stage_unsigned("unit/small", "safety", hits=4, n=10, reason="")
     (src / "unsigned-safety-bbbbbbbbbbbb.json").write_text(json.dumps(small, indent=2) + "\n")
 
     sm.SRC = src
     sm.DST = dst
+    sm.LEDGER = dst / "SUPERSEDED.jsonl"
     sm.sign_via_oidc = lambda body: "cd" * 32
     assert sm.main() == 0
 
-    out_big = json.loads((dst / "signed-governance-aaaaaaaaaaaa.json").read_text())
+    # Content-addressed: the name is a function of the body, not of the source file.
+    live = {json.loads(f.read_text())["body"]["model"]: f for f in dst.glob("signed-*.json")}
+    out_big = json.loads(live["unit/big"].read_text())
+    assert live["unit/big"].name == f"signed-governan-{out_big['id'][:12]}.json"
     assert out_big["body"]["status"] == "MEASURED"
     assert out_big["body"]["unmeasured"] == []
     assert out_big["quotable"] is True
-    out_small = json.loads((dst / "signed-safety-bbbbbbbbbbbb.json").read_text())
+    out_small = json.loads(live["unit/small"].read_text())
     assert out_small["body"]["status"] == "UNMEASURED"
     assert out_small["body"]["unmeasured"] == ["n<30 unquotable"]
 
-    # Now change the run behind the big card. The digest changes, so this is a new
-    # card; the signed bytes already on disk must survive untouched.
-    frozen = (dst / "signed-governance-aaaaaaaaaaaa.json").read_bytes()
-    moved = stage_unsigned("unit/big", "governance", hits=29, n=30, reason="")
-    (src / "unsigned-governance-aaaaaaaaaaaa.json").write_text(json.dumps(moved, indent=2) + "\n")
+    # Re-running signs nothing new and touches nothing.
+    before = {f.name: f.read_bytes() for f in dst.glob("signed-*.json")}
 
     def never(body):
-        raise AssertionError("must not re-sign over an existing signed card")
+        raise AssertionError("must not re-sign an unchanged body")
 
     sm.sign_via_oidc = never
     assert sm.main() == 0
-    assert (dst / "signed-governance-aaaaaaaaaaaa.json").read_bytes() == frozen
+    assert {f.name: f.read_bytes() for f in dst.glob("signed-*.json")} == before
+
+    # Now the run behind the big card changes. That is a NEW card: the old file
+    # survives untouched, the new one lands beside it, and the ledger says so.
+    old_file = live["unit/big"].name
+    old_id = out_big["id"]
+    moved = stage_unsigned("unit/big", "governance", hits=29, n=30, reason="")
+    (src / "unsigned-governan-aaaaaaaaaaaa.json").write_text(json.dumps(moved, indent=2) + "\n")
+    sm.sign_via_oidc = lambda body: "ef" * 32
+    assert sm.main() == 0
+
+    assert (dst / old_file).read_bytes() == before[old_file], "superseded bytes must survive"
+    cards = [json.loads(f.read_text()) for f in dst.glob("signed-*.json")]
+    big_cards = [c for c in cards if c["body"]["model"] == "unit/big"]
+    assert len(big_cards) == 2, "supersession adds a card, it does not replace one"
+    new_id = next(c["id"] for c in big_cards if c["id"] != old_id)
+
+    ledger = [json.loads(x) for x in (dst / "SUPERSEDED.jsonl").read_text().splitlines() if x.strip()]
+    assert len(ledger) == 1
+    assert ledger[0]["superseded_id"] == old_id
+    assert ledger[0]["by_id"] == new_id
+    assert ledger[0]["axis"] == "governance"
+
+    # The census counts the live card only — never both.
+    assert fq.load_superseded(dst) == {old_id}
+    wraps, verdict_rows = fq.verify_cards(dst, {"verificationMethod": []})
+    assert old_id not in {w.get("id") for w in wraps}
+    assert new_id in {w.get("id") for w in wraps}
+
+
+def test_superseded_card_still_resolves_but_is_not_counted(tmp_path: Path | None = None) -> None:
+    """A published card_id must never 404, so supersession deletes nothing. The file
+    stays readable; only the census stops counting it."""
+    root = tmp_path or (HERE / "_mill_test_superseded")
+    if tmp_path is None:
+        import shutil
+
+        shutil.rmtree(root, ignore_errors=True)
+    dst = root / "signed"
+    dst.mkdir(parents=True, exist_ok=True)
+    old = stage_unsigned("unit/x", "safety", hits=20, n=30, reason="signed-pending-verify")
+    old["signature"] = "ab" * 32
+    (dst / f"signed-safety-{old['id'][:12]}.json").write_text(json.dumps(old, indent=2) + "\n")
+    new = stage_unsigned("unit/x", "safety", hits=21, n=30, reason="")
+    new["body"]["status"] = "MEASURED"
+    new["signature"] = "cd" * 32
+    (dst / f"signed-safety-{new['id'][:12]}.json").write_text(json.dumps(new, indent=2) + "\n")
+    (dst / "SUPERSEDED.jsonl").write_text(
+        json.dumps({"superseded_id": old["id"], "by_id": new["id"], "axis": "safety"}) + "\n"
+    )
+
+    assert (dst / f"signed-safety-{old['id'][:12]}.json").is_file(), "never delete a published card"
+    wraps, _ = fq.verify_cards(dst, {"verificationMethod": []})
+    ids = {w.get("id") for w in wraps}
+    assert old["id"] not in ids
+    assert new["id"] in ids

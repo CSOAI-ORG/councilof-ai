@@ -31,12 +31,41 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def load_superseded(cards_dir: Path) -> set[str]:
+    """Card ids the SUPERSEDED.jsonl ledger says are no longer the live card for their
+    (model, axis). The files stay on disk so a published card_id never 404s, but the
+    census counts the card that replaced them — never both."""
+    ledger = cards_dir / "SUPERSEDED.jsonl"
+    if not ledger.is_file():
+        return set()
+    out: set[str] = set()
+    for line in ledger.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except Exception:
+            continue
+        if row.get("superseded_id"):
+            out.add(str(row["superseded_id"]))
+    return out
+
+
 def verify_cards(cards_dir: Path, did_doc: dict) -> tuple[list[dict], list[dict]]:
-    """Every signed-*.json → wrap with _verdict/_reason/_file. Returns (wraps, verdict rows)."""
+    """Every live signed-*.json → wrap with _verdict/_reason/_file. Superseded cards are
+    skipped, so a re-signed (model, axis) contributes one cell, not two. Returns
+    (wraps, verdict rows)."""
     wraps: list[dict] = []
     rows: list[dict] = []
+    dead = load_superseded(cards_dir)
     for f in sorted(cards_dir.glob("signed-*.json")):
         blob = f.read_bytes()
+        try:
+            if str(json.loads(blob).get("id") or "") in dead:
+                continue
+        except Exception:
+            pass
         verdict, reason = verify_signed_card_with_did_doc(blob, did_doc)
         try:
             w = json.loads(blob)
@@ -95,14 +124,24 @@ def write_parquet(rows: list[dict], path: Path) -> bool:
         return False
 
 
+def serialize_queue(rows: list[dict]) -> str:
+    return "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
+
+
 def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path) -> dict:
     rows = load_queue(queue_path)
     before = measured_cells(rows)
+    # `changed` is about the census BYTES, not the MEASURED count. Now that a cell
+    # mirrors its card body, a run can write a new UNMEASURED cell — a real change
+    # the Hub must receive — while the MEASURED count stays flat. Deriving `changed`
+    # from that count would silently skip the upload for exactly those runs.
+    before_blob = serialize_queue(rows)
     wraps, verdicts = verify_cards(cards_dir, did_doc)
     flipped = apply_valid_flips(rows, wraps)
     after = measured_cells(rows)
+    after_blob = serialize_queue(rows)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "queue.jsonl").write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
+    (out / "queue.jsonl").write_text(after_blob, encoding="utf-8")
     parquet_ok = write_parquet(rows, out / "queue.parquet")
     summ = summary(rows, after - before)
     (out / "SUMMARY.json").write_text(json.dumps(summ, indent=2) + "\n", encoding="utf-8")
@@ -132,11 +171,15 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path) -> dict:
         "apply_valid_flips_touched": flipped,
         "index_rows": len(index_lines),
         "parquet_written": parquet_ok,
-        "changed": after != before,
+        "cells_written": flipped,
+        "changed": after_blob != before_blob,
         "writes_board": False,
         "signed_here": False,
         "rows": verdicts,
-        "note": "MEASURED cell iff VALID under the live DID and n>=30. Top-level status untouched. Empty stays empty.",
+        "note": (
+            "A VALID card with n>=30 earns a cell; the signed body decides what that cell says. "
+            "Top-level status untouched. Empty stays empty."
+        ),
     }
     (out / "flip-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     return report
