@@ -143,6 +143,20 @@ const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
 const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
 
+// "3 axes carry an external public leader" — a SUBSET PREDICATE. The sentence says
+// how many axes have a property; it does not assert the board's total. Blocked the
+// whole deploy pipeline on 2026-09-03, and the sentence lives in
+// public/signed/gspc-board.signed.json — signed bytes, which are superseded, never
+// edited to satisfy a regex. So the gate learns the shape instead.
+//
+// Deliberately NARROW. Only transitive verbs that take an object ("carry a leader",
+// "report a run") are listed. "have", "has" and "are" are excluded on purpose: they
+// would exempt "14 axes have been measured", which is exactly the overclaim the
+// measured rule exists to catch and which neither MEASURED_RE (needs "N measured
+// axes") nor ALL_MEASURED_RE (needs a leading "all") would catch on its own.
+const SUBSET_PREDICATE_AFTER =
+  /^\s+(?:carry|carries|hold|holds|report|reports|expose|exposes|include|includes|list|lists)\b/i;
+
 function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
   if (liveCount == null) return;
 
@@ -190,6 +204,10 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     const before = text.slice(Math.max(0, m.index - 40), m.index);
     if (BREAKDOWN_BEFORE.test(before)) continue;
     if (QUALIFIED_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+
+    // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
+    // carry X" against a 22-axis board is still a contradiction and still fails.
+    if (n < liveCount && SUBSET_PREDICATE_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
 
     // A published correction quotes the wrong number on purpose.
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
