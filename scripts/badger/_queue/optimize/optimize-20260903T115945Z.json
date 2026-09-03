@@ -1,0 +1,314 @@
+{
+  "as_of": "2026-09-03T11:59:45Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.optimizer-report",
+  "next_actions": [
+    "Re-run the top 5 harvesters on the next cron cycle (they have proven yield)",
+    "Investigate the zero-yield harvesters (might need rate-limit tuning)",
+    "Add more harvesters in the empty categories (e.g. arxiv, wikidata)",
+    "Build the auto-OTS for the top-yield harvesters first"
+  ],
+  "ranking": [
+    {
+      "atoms_per_file": 8871.4,
+      "avg_bytes_per_atom": 388.5,
+      "kind": "learn",
+      "n_atoms": 62100,
+      "n_bytes": 24127906,
+      "n_files": 7
+    },
+    {
+      "atoms_per_file": 204.1,
+      "avg_bytes_per_atom": 886.0,
+      "kind": "per-issuer",
+      "n_atoms": 4490,
+      "n_bytes": 3978348,
+      "n_files": 22
+    },
+    {
+      "atoms_per_file": 780.0,
+      "avg_bytes_per_atom": 1209.6,
+      "kind": "bank-complete",
+      "n_atoms": 3120,
+      "n_bytes": 3773928,
+      "n_files": 4
+    },
+    {
+      "atoms_per_file": 10.1,
+      "avg_bytes_per_atom": 755.2,
+      "kind": "t2",
+      "n_atoms": 2935,
+      "n_bytes": 2216585,
+      "n_files": 292
+    },
+    {
+      "atoms_per_file": 142.0,
+      "avg_bytes_per_atom": 717.3,
+      "kind": "per-item",
+      "n_atoms": 2556,
+      "n_bytes": 1833498,
+      "n_files": 18
+    },
+    {
+      "atoms_per_file": 108.3,
+      "avg_bytes_per_atom": 1230.7,
+      "kind": "bank-pack",
+      "n_atoms": 1300,
+      "n_bytes": 1599905,
+      "n_files": 12
+    },
+    {
+      "atoms_per_file": 79.5,
+      "avg_bytes_per_atom": 1040.8,
+      "kind": "fixes",
+      "n_atoms": 636,
+      "n_bytes": 661947,
+      "n_files": 8
+    },
+    {
+      "atoms_per_file": 40.1,
+      "avg_bytes_per_atom": 946.9,
+      "kind": "corrections-diff",
+      "n_atoms": 521,
+      "n_bytes": 493337,
+      "n_files": 13
+    },
+    {
+      "atoms_per_file": 37.0,
+      "avg_bytes_per_atom": 760.9,
+      "kind": "regulatory",
+      "n_atoms": 518,
+      "n_bytes": 394170,
+      "n_files": 14
+    },
+    {
+      "atoms_per_file": 4.8,
+      "avg_bytes_per_atom": 1032.4,
+      "kind": "top-models",
+      "n_atoms": 305,
+      "n_bytes": 314880,
+      "n_files": 63
+    },
+    {
+      "atoms_per_file": 3.9,
+      "avg_bytes_per_atom": 710.1,
+      "kind": "t3",
+      "n_atoms": 280,
+      "n_bytes": 198832,
+      "n_files": 72
+    },
+    {
+      "atoms_per_file": 5.8,
+      "avg_bytes_per_atom": 777.0,
+      "kind": "public-data",
+      "n_atoms": 277,
+      "n_bytes": 215236,
+      "n_files": 48
+    },
+    {
+      "atoms_per_file": 130.0,
+      "avg_bytes_per_atom": 1056.3,
+      "kind": "bank-ledger",
+      "n_atoms": 260,
+      "n_bytes": 274632,
+      "n_files": 2
+    },
+    {
+      "atoms_per_file": 45.0,
+      "avg_bytes_per_atom": 1113.6,
+      "kind": "bridges",
+      "n_atoms": 225,
+      "n_bytes": 250551,
+      "n_files": 5
+    },
+    {
+      "atoms_per_file": 40.0,
+      "avg_bytes_per_atom": 908.5,
+      "kind": "door-expand",
+      "n_atoms": 200,
+      "n_bytes": 181710,
+      "n_files": 5
+    },
+    {
+      "atoms_per_file": 30.0,
+      "avg_bytes_per_atom": 873.6,
+      "kind": "semantic-scholar",
+      "n_atoms": 180,
+      "n_bytes": 157244,
+      "n_files": 6
+    },
+    {
+      "atoms_per_file": 20.0,
+      "avg_bytes_per_atom": 797.9,
+      "kind": "mineral-4",
+      "n_atoms": 160,
+      "n_bytes": 127656,
+      "n_files": 8
+    },
+    {
+      "atoms_per_file": 14.0,
+      "avg_bytes_per_atom": 790.1,
+      "kind": "per-model",
+      "n_atoms": 154,
+      "n_bytes": 121682,
+      "n_files": 11
+    },
+    {
+      "atoms_per_file": 59.5,
+      "avg_bytes_per_atom": 7995.2,
+      "kind": "1000-moves",
+      "n_atoms": 119,
+      "n_bytes": 951429,
+      "n_files": 2
+    },
+    {
+      "atoms_per_file": 1.7,
+      "avg_bytes_per_atom": 1228.1,
+      "kind": "public-a2a-x402",
+      "n_atoms": 104,
+      "n_bytes": 127720,
+      "n_files": 60
+    },
+    {
+      "atoms_per_file": 8.0,
+      "avg_bytes_per_atom": 780.6,
+      "kind": "witness-receipts",
+      "n_atoms": 104,
+      "n_bytes": 81185,
+      "n_files": 13
+    },
+    {
+      "atoms_per_file": 4.7,
+      "avg_bytes_per_atom": 777.7,
+      "kind": "eat-4",
+      "n_atoms": 75,
+      "n_bytes": 58328,
+      "n_files": 16
+    },
+    {
+      "atoms_per_file": 3.6,
+      "avg_bytes_per_atom": 859.9,
+      "kind": "uk-open-data",
+      "n_atoms": 57,
+      "n_bytes": 49012,
+      "n_files": 16
+    },
+    {
+      "atoms_per_file": 4.0,
+      "avg_bytes_per_atom": 889.8,
+      "kind": "archive-deep",
+      "n_atoms": 52,
+      "n_bytes": 46267,
+      "n_files": 13
+    },
+    {
+      "atoms_per_file": 26.0,
+      "avg_bytes_per_atom": 1310.7,
+      "kind": "bank-classify",
+      "n_atoms": 52,
+      "n_bytes": 68154,
+      "n_files": 2
+    },
+    {
+      "atoms_per_file": 11.2,
+      "avg_bytes_per_atom": 94152.3,
+      "kind": "cose-wrap",
+      "n_atoms": 45,
+      "n_bytes": 4236855,
+      "n_files": 4
+    },
+    {
+      "atoms_per_file": 7.0,
+      "avg_bytes_per_atom": 1105.9,
+      "kind": "compass",
+      "n_atoms": 35,
+      "n_bytes": 38705,
+      "n_files": 5
+    },
+    {
+      "atoms_per_file": 8.0,
+      "avg_bytes_per_atom": 1540.4,
+      "kind": "public-cousins",
+      "n_atoms": 32,
+      "n_bytes": 49292,
+      "n_files": 4
+    },
+    {
+      "atoms_per_file": 10.0,
+      "avg_bytes_per_atom": 1499.3,
+      "kind": "donation-mining",
+      "n_atoms": 30,
+      "n_bytes": 44979,
+      "n_files": 3
+    },
+    {
+      "atoms_per_file": 2.0,
+      "avg_bytes_per_atom": 831.5,
+      "kind": "tie-attestations",
+      "n_atoms": 26,
+      "n_bytes": 21619,
+      "n_files": 13
+    },
+    {
+      "atoms_per_file": 2.0,
+      "avg_bytes_per_atom": 890.0,
+      "kind": "a2a-findings",
+      "n_atoms": 24,
+      "n_bytes": 21360,
+      "n_files": 12
+    },
+    {
+      "atoms_per_file": 1.0,
+      "avg_bytes_per_atom": 764.0,
+      "kind": "layer0",
+      "n_atoms": 13,
+      "n_bytes": 9932,
+      "n_files": 13
+    }
+  ],
+  "suggestions": {
+    "mid": [
+      "cose-wrap",
+      "compass",
+      "public-cousins",
+      "donation-mining",
+      "tie-attestations",
+      "a2a-findings",
+      "layer0"
+    ],
+    "top": [
+      "learn",
+      "per-issuer",
+      "bank-complete",
+      "t2",
+      "per-item",
+      "bank-pack",
+      "fixes",
+      "corrections-diff",
+      "regulatory",
+      "top-models",
+      "t3",
+      "public-data",
+      "bank-ledger",
+      "bridges",
+      "door-expand",
+      "semantic-scholar",
+      "mineral-4",
+      "per-model",
+      "1000-moves",
+      "public-a2a-x402",
+      "witness-receipts",
+      "eat-4",
+      "uk-open-data",
+      "archive-deep",
+      "bank-classify"
+    ],
+    "zero": []
+  },
+  "totals": {
+    "avg_bytes_per_atom": 577.0,
+    "n_atoms": 80985,
+    "n_bytes": 46726884,
+    "n_harvesters": 32
+  }
+}
