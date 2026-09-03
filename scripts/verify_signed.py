@@ -19,6 +19,7 @@ One tool, both estate signature styles, zero trust, zero network:
                             property (e.g. in CI, or to verify against a key as-of a date).
 
 Usage: python3 verify_signed.py <artifact.json> [--did-doc <did.json>]
+       python3 verify_signed.py --selftest   (proves each verdict, including the failures)
 Exit 0 = signature VALID (content matches bytes on disk); 1 = INVALID/unknown style.
 """
 import base64, hashlib, json, sys
@@ -124,8 +125,96 @@ def verify_style_c(d, did_doc_path=None):
             f"the whole body; key from {source}")
 
 
+def _selftest():
+    """Prove each verdict can actually be reached — especially the failures.
+
+    A verifier that has only ever printed VALID has not been tested. Every case
+    below asserts the verdict AND the exit code, using keys minted here, so the
+    suite needs no network and no real card.
+    """
+    import tempfile, subprocess, os
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+
+    tmp = tempfile.mkdtemp(prefix="verify-selftest-")
+    sk = Ed25519PrivateKey.generate()
+    pub = sk.public_key().public_bytes(
+        encoding=serialization.Encoding.Raw,
+        format=serialization.PublicFormat.Raw)
+    other = Ed25519PrivateKey.generate()
+    b64u = lambda b: base64.urlsafe_b64encode(b).decode().rstrip("=")
+
+    did_url = "did:web:example.test#k1"
+    did_doc = {"id": "did:web:example.test", "verificationMethod": [{
+        "id": did_url, "type": "JsonWebKey2020", "controller": "did:web:example.test",
+        "publicKeyJwk": {"kty": "OKP", "crv": "Ed25519", "x": b64u(pub), "kid": "k1"}}]}
+    did_path = os.path.join(tmp, "did.json")
+    Path(did_path).write_text(json.dumps(did_doc))
+
+    def card_c(body=None, signer=None, **over):
+        body = body or {"kind": "gspc.measurement-card", "axis": "affect",
+                        "model": "acme/model-1", "n": 30, "status": "MEASURED"}
+        cb = canonical(body, compact=True)
+        d = {"alg": "Ed25519", "body": body, "id": hashlib.sha256(cb).hexdigest(),
+             "preimage_rule": "sha256(canonical body)",
+             "signature": (signer or sk).sign(cb).hex(), "did": did_url}
+        d.update(over)
+        return d
+
+    def write(name, obj):
+        f = os.path.join(tmp, name)
+        Path(f).write_text(json.dumps(obj))
+        return f
+
+    # style B fixture: signature over the canonical content_id
+    b_body = {"kind": "signal", "value": 1}
+    b_cid = hashlib.sha256(canonical(b_body, compact=True)).hexdigest()
+    style_b = dict(b_body, content_id=b_cid, signature={
+        "sig": base64.b64encode(sk.sign(b_cid.encode())).decode(),
+        "pubkey": base64.b64encode(pub).decode(), "content_id": b_cid})
+
+    tampered = card_c()
+    tampered["body"] = dict(tampered["body"], n=99)          # id no longer commits
+    resigned_id = card_c()
+    resigned_id["id"] = hashlib.sha256(b"nonsense").hexdigest()
+
+    cases = [
+        ("valid style-C",                card_c(),                                   0, "VALID"),
+        ("body edited after signing",    tampered,                                   1, "INVALID"),
+        ("id does not commit to body",   resigned_id,                                1, "INVALID"),
+        ("signed by the wrong key",      card_c(signer=other),                       1, "INVALID"),
+        ("unknown preimage_rule",        card_c(preimage_rule="sha256(vibes)"),      1, "GATE"),
+        ("unknown alg",                  card_c(alg="RSA-9000"),                     1, "GATE"),
+        ("key absent from DID doc",      card_c(did="did:web:example.test#nope"),    1, "GATE"),
+        ("declared unverifiable",        dict(card_c(), verifiable=False),           2, "UNCHECKABLE"),
+        ("valid style-B",                style_b,                                    0, "VALID"),
+        ("style-B tampered",             dict(style_b, value=2),                     1, "INVALID"),
+        ("unknown signature style",      {"kind": "not-signed"},                     1, "UNKNOWN"),
+    ]
+
+    me = str(Path(__file__).resolve())
+    failed = 0
+    for name, obj, want_code, want_word in cases:
+        f = write(name.replace(" ", "_") + ".json", obj)
+        r = subprocess.run([sys.executable, me, f, "--did-doc", did_path],
+                           capture_output=True, text=True)
+        out = (r.stdout + r.stderr).strip().splitlines()
+        head = out[0] if out else "(no output)"
+        ok = r.returncode == want_code and want_word in head
+        failed += not ok
+        print(f"  {'ok  ' if ok else 'FAIL'}  {name}")
+        if not ok:
+            print(f"          want exit {want_code} containing {want_word!r}")
+            print(f"          got  exit {r.returncode}: {head}")
+    print(f"\n{len(cases) - failed}/{len(cases)} cases passed")
+    if failed:
+        print("A failing case means the verifier's verdict cannot be trusted.")
+    return 1 if failed else 0
+
+
 def main():
     args = sys.argv[1:]
+    if "--selftest" in args:
+        return _selftest()
     did_doc = None
     if "--did-doc" in args:
         i = args.index("--did-doc")
