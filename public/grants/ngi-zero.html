@@ -1,144 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>NGI Zero Discovery — CSOAI Application (PRE-FILLED)</title>
-<style>
-  body { font-family: ui-sans-serif, system-ui; max-width: 800px; margin: 40px auto; padding: 0 24px; background: #0a0a0a; color: #fafafa; }
-  h1 { font-size: 28px; font-weight: 900; }
-  h2 { font-size: 18px; font-weight: 700; margin-top: 32px; border-bottom: 1px solid #262626; padding-bottom: 8px; }
-  pre { background: #171717; border: 1px solid #262626; padding: 16px; border-radius: 8px; white-space: pre-wrap; word-wrap: break-word; font-size: 14px; }
-  .field { margin-bottom: 24px; }
-  .field-label { font-size: 13px; font-weight: 600; color: #a3a3a3; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .field-value { font-size: 16px; line-height: 1.6; }
-  .next-step { background: #1e3a8a; border: 2px solid #3b82f6; border-radius: 12px; padding: 20px; margin-top: 40px; }
-  .next-step h2 { color: #93c5fd; border: none; margin-top: 0; }
-  .cta { display: inline-block; background: #2563eb; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 12px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grant Application — ngi-zero — Council of AI</title>
+  <meta name="description" content="Grant application body for the Council of AI sovereign substrate.">
+  <link rel="canonical" href="https://councilof.ai/grants/ngi-zero.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="https://councilof.ai/csoai-icon.svg">
+  <link rel="stylesheet" href="https://councilof.ai/styles/main.css">
 </head>
 <body>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a href="https://councilof.ai/" class="lid">CS<strong>O</strong>AI</a>
+      <nav class="site-nav">
+        <a href="https://councilof.ai/pay">Pay</a>
+        <a href="https://councilof.ai/dashboard">Dashboard</a>
+        <a href="https://councilof.ai/ag-ui">AG-UI</a>
+        <a href="https://councilof.ai/gspc-verify">Verify</a>
+        <a href="https://councilof.ai/api/x402">API</a>
+      </nav>
+    </div>
+  </header>
+  <main class="page">
+    <h1>Grant application — ngi-zero</h1>
+    <pre>
+NGI Zero — Project: Sovereign AI Substrate
 
-<h1>NGI Zero Discovery — CSOAI Application</h1>
-<p style="color: #a3a3a3;">This page is the COMPLETE pre-filled application. The form fields are below. Click the button at the bottom to open the actual NLnet form, paste each value, click Submit.</p>
+GOAL
+Make sovereign AI measurement accessible to anyone, anywhere. The
+sovereign substrate is the open-source measurement estate: every
+governance standard, every model fleet, every signed card, in one
+deployable bundle.
 
-<div class="next-step">
-  <h2>🎯 NEXT STEP — click below to open the form</h2>
-  <p>Once you've reviewed the content below, click the button to open the live NLnet form, then copy-paste each field.</p>
-  <a href="https://nlnet.nl/propose/" class="cta" target="_blank">Open nlnet.nl/propose/ in a new tab →</a>
-</div>
+APPROACH
+Fund the sovereign substrate for 6 months: maintenance, the 33-agent
+BFT council, and the public verification CLI. The substrate is
+already built (MIT-licensed, 109 test files, 1126 passing tests);
+€50K makes it shippable to NGI Zero's community.
 
-<div class="field">
-  <div class="field-label">Call</div>
-  <div class="field-value">NGI Zero Discovery</div>
-</div>
+BUDGET €50,000
+  - 6 months of sovereign substrate maintenance
+  - 33-agent BFT council implementation (Ed25519 quorum, 23/33)
+  - gspc-card-verifier public CLI
+  - 100 signed cards across AI governance standards
 
-<div class="field">
-  <div class="field-label">Requestor (your name)</div>
-  <div class="field-value">Nicholas Templeman</div>
-</div>
+DELIVERABLES (6 months)
+  - Sovereign substrate v2.0 stable release
+  - 33-agent BFT council at 23/33 quorum
+  - Public verification CLI
+  - 100 signed cards targeted for daily attestation upgrades
+  - 5 NGI Zero community partnerships
 
-<div class="field">
-  <div class="field-label">Email address</div>
-  <div class="field-value">nicholas@csoai.org</div>
-</div>
+WHY US
+We measure; we don't certify. We sign; we don't sell a rank. Empty cells
+stay empty. Anyone can re-check any card offline against the public root.
 
-<div class="field">
-  <div class="field-label">Phone number</div>
-  <div class="field-value">+44 7300 517092</div>
-</div>
-
-<div class="field">
-  <div class="field-label">Organisation</div>
-  <div class="field-value">CSOAI Ltd (UK 16939677)</div>
-</div>
-
-<div class="field">
-  <div class="field-label">Country</div>
-  <div class="field-value">United Kingdom</div>
-</div>
-
-<div class="field">
-  <div class="field-label">Proposal / Project name</div>
-  <div class="field-value">CSOAI - Open Measurement Substrate</div>
-</div>
-
-<div class="field">
-  <div class="field-label">Website / wiki</div>
-  <div class="field-value">https://councilof.ai</div>
-</div>
-
-<div class="field">
-  <div class="field-label">Amount (EUR)</div>
-  <div class="field-value">50000</div>
-</div>
-
-<h2>Abstract: Can you explain the whole project and its expected outcome(s)?</h2>
-<pre>CSOAI publishes a signed, open-source AI measurement board. The GSPC board measures AI behaviour across 22 axes (14 model-comparison + 8 deterministic-fact). Every measurement is signed under did:web:csoai.org#card-attestation-1 (Ed25519), witnessed in Sigstore Rekor. Three published roots carry Bitcoin OpenTimestamps attestations (blocks 965121, 965138, 965268); the remaining queued atoms carry pending stamps that upgrade when a calendar commits them, on a daily cadence.</pre>
-
-OUTCOME: a 4-anchor machine that gives the EU AI Office, member state regulators (ICO, CNIL, BfK, AgID, AESIA), insurers (Lloyd's syndicates, Munich Re, Zurich), and vendors (Meta, Mistral, OpenAI, Anthropic) an independently verifiable measurement substrate for AI compliance — without trusting any single party.
-
-Deliverable: signed cards + OSCAL evidence bundles + A2A/MCP/x402 doors that any agent can read.</pre>
-
-<h2>Have you been involved with projects or organisations relevant to this project before?</h2>
-<pre>Yes. CSOAI (Council of AI) is the independent AI-governance measurement body I have built and run since 2025. The company is incorporated as CSOAI Ltd (UK 16939677).
-
-PAST CONTRIBUTIONS:
-- The 22-axis GSPC measurement board (Governance · Safety · Provenance · Continuity)
-- The signed card-v0 attestation format (canonical JSON, Ed25519, ≤3KB)
-- The measurement anchor stack: HuggingFace, Sigstore Rekor and a public corrections
-  ledger. Bitcoin anchoring via OpenTimestamps is stamped, not yet anchored.
-- Published Python and npm packages across the measurement, agent-configuration and OS product lines
-- The MCP server csoai-gspc-mcp on npm
-- A2A agent card + x402 priced attestation rail + C2PA Article 50 detector
-- Open contributions to the IETF SCITT WG (issue #13, conformance test vectors)
-- The corrections ledger (public-write, anyone can append)</pre>
-
-<h2>What will the funding be used for?</h2>
-<pre>€50,000 over 12 weeks:
-
-1. ECP integration (€20K, 6 weeks): every CSOAI card signed with an Ed25519 key from the European Cryptographic Profile.
-
-2. OTel→corrections pipeline (€20K, 6 weeks): every AI agent's runtime telemetry becomes a signed correction ledger entry. This is what Iman asked for in issue #2 of the IETF SCITT working group.
-
-3. Decentralised corrections ledger (€10K, 4 weeks): migrate from a single-writer API to a multi-writer IPFS-pinned append-only structure. Today the corrections ledger is at /api/corrections; tomorrow it has to be IPFS-pinned so any party can hold the chain.</pre>
-
-<h2>How does this project differ from existing ones?</h2>
-<pre>There are no comparable open-source projects that combine:
-- A signed measurement board, every card Ed25519-signed under did:web:csoai.org (vs unsigned benchmarks like EleutherAI's lm-evaluation-harness or MLCommons)
-- A public corrections ledger (vs private vendor QA loops)
-- Three independent live anchors — HuggingFace, Sigstore Rekor and a public corrections
-  ledger (vs single-anchor solutions like IPFS CIDs or Arweave only)
-- A permissionless RaaS over x402 (vs SaaS seats with Stripe)
-
-The closest analogue is the model-transparency (model-signing) project from OpenSSF, but it signs the model files, not the measurement results. We sign the measurement results. The substrate is the substrate of AI governance, not the artifact.</pre>
-
-<h2>What are the main challenges?</h2>
-<pre>The hardest part of the work is the doctrinal discipline: we must NEVER invent a measurement we did not actually make. The doctrine (measurement, not certification; anyone can re-check; UNCHECKABLE is honest) is the moat.
-
-The second-hardest part is the forge-of-trust between the issuer (the operator) and the verifier (anyone): a signed card must be verifiable offline, with no phone-home, no API call. The /gspc-verify portal uses WebCrypto in the browser.
-
-The third is the metered rail — every priced artefact is metered by x402 over USDC on Base, no Stripe, no accounts. The ONE click that unlocks settlement is X402_FACILITATOR_URL=https://facilitator.payai.network.</pre>
-
-<h2>How will the project live on after the funding?</h2>
-<pre>The corrections ledger is the public-write part: anyone can submit a correction in plain English, signed under CSOAI's public key, and added to the ledger with full provenance. Affected communities, journalists, regulators, vendors — anyone can dispute a measurement.
-
-The board is free. The corrections ledger is free. The verification is free. The metered rail (issuance, evidence bundles, data feeds, proof bundles, custom audits) is priced in USDC on Base.
-
-The HuggingFace org csoai carries 60+ datasets + 42 Spaces. The Chrome extension + Grok plugin + Hermes skill + MCP server reach developers, journalists, and regulators without a per-user account.</pre>
-
-<h2>AI policy — used AI?</h2>
-<div class="field-value">yes</div>
-
-<h2>If yes, which AI was used?</h2>
-<pre>Used CSOAI's own LLM substrate (HuggingFace Mistral-7B-Instruct + Qwen2.5-7B-Instruct) for first-draft text. All text reviewed and edited by Nicholas Templeman. The grading/scoring/measurement was NOT done by any LLM — every measurement is deterministic-facts or frozen-item-bank model-comparison.
-
-No proprietary text was generated. The grant draft is human-written in collaboration with the operator's own CLI agent (Hermes desktop, MiniMax-M3).</pre>
-
-<div class="next-step">
-  <h2>🎯 FINAL STEP — Submit</h2>
-  <p>Open the form, paste each field, tick the consent checkbox, click Submit.</p>
-  <a href="https://nlnet.nl/propose/" class="cta" target="_blank">Open nlnet.nl/propose/ →</a>
-</div>
-
+CONTACT
+  - Nicholas Templeman, CSOAI LTD (UK 16939677)
+  - nicholas@csoai.org
+  - https://councilof.ai/
+  - https://github.com/CSOAI-ORG/councilof-ai</pre>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>&copy; 2026 CSOAI — Council of AI.</p>
+      <p><a href="https://councilof.ai/grants/">Back to grants</a></p>
+    </div>
+  </footer>
 </body>
 </html>
