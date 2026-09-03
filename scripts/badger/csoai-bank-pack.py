@@ -176,6 +176,7 @@ def stamp_ots(digest: str) -> str | None:
 def main():
     ap = argparse.ArgumentParser(description="The 26-bank pack, signed under #card-attestation-1.")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--no-ots", action="store_true", help="Skip OTS stamping (faster)")
     args = ap.parse_args()
 
     print(f"================================================================")

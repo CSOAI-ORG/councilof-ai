@@ -356,7 +356,7 @@ def fix_empty_page(p: dict) -> dict:
     if under_protected_path(p["file"]):
         return {"ok": False,
                 "reason": f"REFUSED — {p['file']} is under a protected path (interop evidence, signed cards, or DID document). Owner review required.",
-                "protected": True} (fix(incident-2026-09-03): restore 9 destroyed evidence pages + add INTEROP_PROTECT guard)
+                "protected": True}
     target = PUBLIC / p["file"]
     if target.exists() and target.stat().st_size > 0:
         return {"ok": False,
