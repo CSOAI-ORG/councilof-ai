@@ -132,6 +132,31 @@ Three states, never two — the same contract as any card:
 A VALID manifest makes the published set non-repudiable — we cannot later disown it. It
 still does not prove the set was not chosen: see `body.what_this_does_not_prove`.
 
+## ⚠ Known blocker: the default Python user-agent is refused (403)
+
+Verification is free forever, but at time of writing our CDN's bot rules
+refuse the **stdlib default user-agent**. A no-dependency script is the most
+likely way anyone actually checks a card, so this matters:
+
+```
+UA=Python-urllib/3.13   -> 403   /api/gspc, /signed/*
+UA=python-requests/2.31 -> 200
+UA=curl/8.4.0           -> 200
+UA=<empty>              -> 200
+```
+
+A 403 is **not** an invalid card. If you get one, your verifier must report
+**UNCHECKABLE**, never INVALID and never a guessed number. Until the rule is
+lifted, set any explicit user-agent:
+
+```python
+req = urllib.request.Request(url, headers={"User-Agent": "my-verifier/1.0"})
+body = urllib.request.urlopen(req, timeout=30).read()
+```
+
+Verified 2026-09-03. This is our defect, not yours — it is tracked and will be
+removed. The bytes behind the 403 are unchanged and independently checkable.
+
 ## What this does and does not prove
 
 It proves these exact measurement bodies were signed by the holder of the published
