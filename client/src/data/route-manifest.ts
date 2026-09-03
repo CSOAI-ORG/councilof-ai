@@ -35,7 +35,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/academy",
   "comp": "CouncilAcademy",
-  "title": "Sovereign Academy"
+  "title": "Council Academy"
  },
  {
   "path": "/accessibility",
@@ -1145,7 +1145,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/hives",
   "comp": "CouncilHives",
-  "title": "Sovereign Hives"
+  "title": "Council Hives"
  },
  {
   "path": "/home-v2",
@@ -1275,7 +1275,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/join",
   "comp": "CouncilRegistry",
-  "title": "Sovereign Registry"
+  "title": "Council Registry"
  },
  {
   "path": "/knowledge-base",
@@ -1435,7 +1435,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/me",
   "comp": "CouncilHub",
-  "title": "Sovereign Hub"
+  "title": "Council Hub"
  },
  {
   "path": "/membership-agreement",
@@ -1460,7 +1460,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/minds",
   "comp": "CouncilMinds",
-  "title": "Sovereign Minds"
+  "title": "Council Minds"
  },
  {
   "path": "/models",
@@ -1790,7 +1790,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/register",
   "comp": "CouncilRegistry",
-  "title": "Sovereign Registry"
+  "title": "Council Registry"
  },
  {
   "path": "/registers",
@@ -2150,7 +2150,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/tour",
   "comp": "CouncilTour",
-  "title": "Sovereign Tour"
+  "title": "Council Tour"
  },
  {
   "path": "/towns",
@@ -2235,7 +2235,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/voice",
   "comp": "CouncilMinds",
-  "title": "Sovereign Minds"
+  "title": "Council Minds"
  },
  {
   "path": "/vs",

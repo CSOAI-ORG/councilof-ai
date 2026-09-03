@@ -1,8 +1,8 @@
 {
   "schema": "csoai.cards-bundle/0.1",
-  "as_of": "2026-09-01T09:34:08Z",
+  "as_of": "2026-09-02T07:13:27Z",
   "merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
-  "card_count": 109,
+  "card_count": 131,
   "root_card_count": 50,
   "generated_by": "scripts/generate-cards-bundle.mjs",
   "note": "Build-time aggregate of every public/cards/*.json wrapper (card + inclusion proof), keyed by full sha256. Exists so /api/xrpl and /api/proof read all card bodies in ONE subrequest instead of one fetch per card (Cloudflare Pages Functions cap: 50 subrequests/invocation). Copies bytes that already exist under /cards/ and /proofs/; signs nothing, measures nothing. Regenerated in build:client, so it is consistent with the root.json shipped in the same build.",
@@ -127,6 +127,46 @@
         "8a082ffa19592c0585ff50dbdbc3bd739cef5f0c2195158383807b97dae7e56f",
         "d35164b6eae68aeef5f94f10cfaddee51962145ba859ce4eee3ac98aae33bc87",
         "eab9773f820525914c1d93f926e3c3d33554ec2ea77768a4e6a84f042b3155e5"
+      ]
+    },
+    "05548a79dc4c4377f91b1a5bb212ebf986ce4a06fd2aea5e4d1011f2ee7b4556": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 69347,
+          "issuer": "Ripple",
+          "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 1045962444.541143,
+          "symbol": "RLUSD",
+          "verified_domain": "ripple.com",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "05548a79dc4c4377f91b1a5bb212ebf986ce4a06fd2aea5e4d1011f2ee7b4556",
+        "sig_ed25519": "3ebaf157c2ebe0520a5f937cc45ec4a0e7b7d6920769d21c11d1b25005b8de59afff613a358a428ab434431eff3c1fbe1f6cca3e74dfba9767918d83211a1303",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL RLUSD public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "552c4d94b12c2675b4f0395d7401907fe685ea7fb2a590aabca690fbf776f34c",
+        "0c321be0cd6b80875dfd182607caa5b7077734f09271a4f6fce08547793504b4",
+        "3c8e6274e5fc3ef9e0b30ef15ef8d77453bff2074b3b55122a0cd4213fc07474",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "073bf18564f382bb9a61f1acaae39bda2013a35775bad49222e6e643fa53149c": {
@@ -382,6 +422,46 @@
         "fa305dcf54950f61d6295cfdfa0a570f04992a7341d5e3d3562a861eadde3c84"
       ]
     },
+    "0f131a52ac5933cd75fb87c5f6042804a99d1cdcae0856ed31944d63644eecae": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 30,
+          "issuer": "Braza Bank",
+          "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 23555091.86000002,
+          "symbol": "USDB",
+          "verified_domain": "tokens.brazacripto.com.br",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "0f131a52ac5933cd75fb87c5f6042804a99d1cdcae0856ed31944d63644eecae",
+        "sig_ed25519": "7adb5c3650d9725f21421bea979750eaea8d0f74fe82bfba23f0ba884d03c003137bbb535c1848dc4aef7f0a1dfd11d6e3aa3854f33326d20a271e83430a2b0d",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USDB public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "1fa87f73d23861e2044f2eb86bfb8a98593c1b0671be40a722b9e28a15e0bf0f",
+        "059e4590b17bd07289b3e66f3ad26df5c4c5e0d54256681529aa4566a2c9d4b0",
+        "2349ee4ea3f682e917dbd41725a6b2b98d4d78671d384c97b65a51baa7471e72",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "1104301c7291fee009ccb2530475883672d9917c2591f7fc3fb700f6fbd18123": {
       "card": {
         "as_of": "2026-08-31T07:36:20.009Z",
@@ -422,6 +502,48 @@
         "7a55367ffab1e86ffa5ee35894aa720f442283e57820ba69cccd720cbb0594d7",
         "99f4dc0b51bd384f1884ab4006215a9a5d3c7d260bb9d6faf1272efb452c9e50",
         "fa305dcf54950f61d6295cfdfa0a570f04992a7341d5e3d3562a861eadde3c84"
+      ]
+    },
+    "11435069189f4e1e0bb2a7cb28bddb3b23ae8ef292593a7de2301614c8229dd7": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 10319,
+          "issuer": "Circle",
+          "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4433544.718900759,
+          "symbol": "USDC",
+          "verified_domain": null,
+          "verified_via": "XRPScan well-known directory"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "11435069189f4e1e0bb2a7cb28bddb3b23ae8ef292593a7de2301614c8229dd7",
+        "sig_ed25519": "4ce811a0442abcb953e00358e279bcafb899e2f9d408a0bf22c57d13ebc48a59a8c47f4bda7cd72452f1c9f98bb41a22d5a03b7821f7b71f2c45b0ca96aaea0c",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USDC public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "3265a5b1f84fc095012a844b9fd4d7bbcd14b96a73d68f81b9271dfc260af11d",
+        "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
+        "c3f7793fc150302d1aaee5d4f8055d195233f74e9b08a35b2dfdf36fe71bac38",
+        "8689848ad02687dc70f195550e78c497b789a87a2c56b948d6273d3e22c3284e",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "13b28b626a19f67b1a0011eeed467f4cdb5bf16d997633e9b0cf3e882c4925ed": {
@@ -546,6 +668,46 @@
         "e2cf8c279a39dd286c9325098a1f53251f654cb9beaa94ac73b1cd74ead14cd0",
         "5711f0642860f041b06fd4271d6ceebddc044c4cdbed793cfa161bb3ba9038f0",
         "9a8de593981b5cc354d5490e49a9349385ffcd9378e4547bd95221e281eaac75",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
+    "1fa87f73d23861e2044f2eb86bfb8a98593c1b0671be40a722b9e28a15e0bf0f": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 129,
+          "issuer": "Braza Bank",
+          "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 91703850.65639076,
+          "symbol": "BBRL",
+          "verified_domain": "tokens.brazacripto.com.br",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "1fa87f73d23861e2044f2eb86bfb8a98593c1b0671be40a722b9e28a15e0bf0f",
+        "sig_ed25519": "c7305f0e0677f80bdbd23ffda483880e9ab1a24df66069edbe0e44ddd3ab8c43819ac27ade3dd2a0f3f997201e7d04e919cd8a29b23fd22b237450a78e5a4109",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL BBRL public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "0f131a52ac5933cd75fb87c5f6042804a99d1cdcae0856ed31944d63644eecae",
+        "059e4590b17bd07289b3e66f3ad26df5c4c5e0d54256681529aa4566a2c9d4b0",
+        "2349ee4ea3f682e917dbd41725a6b2b98d4d78671d384c97b65a51baa7471e72",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -831,7 +993,7 @@
     },
     "2bb5594ffa94d321d6a04cfd42f913ff2059f52b4ee93d331609ee9dab153c55": {
       "card": {
-        "as_of": "2026-09-01T08:44:12.806Z",
+        "as_of": "2026-09-02T04:00:18.565Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Commodities",
@@ -863,10 +1025,10 @@
         ]
       },
       "proof": [
-        "df5663607aed877d810b4e75c456a8cbb937357add9d1c1cfa212ac01d497c10",
-        "a83c9b7fe8512fc77e21661d88528abcae1ce1a7ae84a9034876865cbcee9cf9",
-        "16b6fec220c237a071056f5a5e6d73fdf54052f3701b2309d7e266e18eebd9d5",
-        "9b190021525c8d9d47a3134fa5e63d501e96adde0589e08e0d8cc5afcb526dc4",
+        "7eba948888ed89660dc64993b55d324be72a731bd076e93efcf90e0cafa70f0f",
+        "9b8735b1c3ba28730f97303f70b53d848f7d0e4278a44a22e8575a409bafb959",
+        "828b720f1391adbc0dc57a15d1a556cbc1f0328cd49911453a4e9747f2aa3a43",
+        "f0c0eae157521022d90f269aba23e9d4a224b1a8b757363e894f37bda0608e9a",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -954,6 +1116,48 @@
         "2b8f5425ed1acd2bfe091cb7417cde4b83e11de0416676eef52d55e0a604dd6f"
       ]
     },
+    "3265a5b1f84fc095012a844b9fd4d7bbcd14b96a73d68f81b9271dfc260af11d": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 15094,
+          "issuer": "GateHub",
+          "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 1683746.741282052,
+          "symbol": "EUR.gh",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "3265a5b1f84fc095012a844b9fd4d7bbcd14b96a73d68f81b9271dfc260af11d",
+        "sig_ed25519": "2d9c67b8f0d1670fc197680eda188d146b3b454fe5bd65302ba16c18e2a5281159b1f1304e1037a00775e918a14f35ac48217d50e661724097d3f9a5b70d880f",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL EUR.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "11435069189f4e1e0bb2a7cb28bddb3b23ae8ef292593a7de2301614c8229dd7",
+        "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
+        "c3f7793fc150302d1aaee5d4f8055d195233f74e9b08a35b2dfdf36fe71bac38",
+        "8689848ad02687dc70f195550e78c497b789a87a2c56b948d6273d3e22c3284e",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "3295a9a825ae77c1252792a01f9b4e0c934806ab01947c8f40481df18b0742b5": {
       "card": {
         "as_of": "2026-08-31T07:36:20.009Z",
@@ -1035,6 +1239,46 @@
         "fb41562aaf57a5919c9160887d4cddd5f7fefeb869652482b9ad2de5f65a2357",
         "f4fb8ad5e9f685c43ad00c81abb3d4aaf07cbd21214ac4fe52e6ab95d1db9638",
         "f38276f72cfb73b420bfff8bcf1773ba7e3675ea2513b4dc9b6abf9b950a9bdb"
+      ]
+    },
+    "36842543db900036116f21f110e57756186c8bc235ffc57d513afc119f649c43": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 130,
+          "issuer": "Braza Bank",
+          "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 40147075.17639076,
+          "symbol": "BBRL",
+          "verified_domain": "tokens.brazacripto.com.br",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "36842543db900036116f21f110e57756186c8bc235ffc57d513afc119f649c43",
+        "sig_ed25519": "2bc482f2a0bf1bbf7eb059db5b4234e06bcf335a82afb5319066c6752e34267f73b5e5abf4a5516ae98a5e8255db52f5e19e89ebe2077d1f26cc80587695e006",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL BBRL public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "3c46117d2f0b6d7ce17bf4b75130658b28ae28319722808eaa9b19e159178afa",
+        "d5c67c40243d4be3df2e1693af69832cb0c6aa20d5855246d72483a33e90b9b6",
+        "3c8e6274e5fc3ef9e0b30ef15ef8d77453bff2074b3b55122a0cd4213fc07474",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "37847e004a5820cc6d3b1bd8f2542c895655002f180b2e27b7ebfdcb590b878c": {
@@ -1120,9 +1364,49 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "3b2781458047a5b37beebf97c5912f5e80f09d0f5c487846fefb3ae44696da13": {
+      "card": {
+        "as_of": "2026-09-02T04:00:18.565Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 69346,
+          "issuer": "Ripple",
+          "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 1045962444.541146,
+          "symbol": "RLUSD",
+          "verified_domain": "ripple.com",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "3b2781458047a5b37beebf97c5912f5e80f09d0f5c487846fefb3ae44696da13",
+        "sig_ed25519": "ac6625932aff197bae4d471d2ed424181dbea4c9ebe84a134fc1d8d3464a8273131283458a761af7192f324043b4b04f6463814e5c4d2be6f442f496045be903",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL RLUSD public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "552c4d94b12c2675b4f0395d7401907fe685ea7fb2a590aabca690fbf776f34c",
+        "0c321be0cd6b80875dfd182607caa5b7077734f09271a4f6fce08547793504b4",
+        "402db2a96ba18df3300e59bfb7fa5c33e58e26165372444e726bb50ab427cffd",
+        "a658488c34831003fa7d9e19d01979a5ea884798af02e6e72a463e898ce161e9",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "3c0a688b4fd8f8129025e102383194c5952df3a966584f23b6e6304c0bab5aa0": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "distribution-integrity",
@@ -1163,6 +1447,46 @@
         "cbf7ed69350c08ec5ecb57cf61c479952a9c48215a9da446e71ce6d6e989e8fd",
         "f4fb8ad5e9f685c43ad00c81abb3d4aaf07cbd21214ac4fe52e6ab95d1db9638",
         "f38276f72cfb73b420bfff8bcf1773ba7e3675ea2513b4dc9b6abf9b950a9bdb"
+      ]
+    },
+    "3c46117d2f0b6d7ce17bf4b75130658b28ae28319722808eaa9b19e159178afa": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 29,
+          "issuer": "Braza Bank",
+          "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 24140470.97000001,
+          "symbol": "USDB",
+          "verified_domain": "tokens.brazacripto.com.br",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "3c46117d2f0b6d7ce17bf4b75130658b28ae28319722808eaa9b19e159178afa",
+        "sig_ed25519": "6a3b400d4e18a14752dda707b442d09d19ef8eaceb3be75ebe31903e88b280e3eceb94275a8a46d1fc9cdd635e15524d89a8626662c1598c8fc1d26b20504f05",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USDB public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "36842543db900036116f21f110e57756186c8bc235ffc57d513afc119f649c43",
+        "d5c67c40243d4be3df2e1693af69832cb0c6aa20d5855246d72483a33e90b9b6",
+        "3c8e6274e5fc3ef9e0b30ef15ef8d77453bff2074b3b55122a0cd4213fc07474",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "3ea1788781ed6d74743fa367542bb5d51e1fd7551b41dbb48e2e3d10bb4ce35e": {
@@ -1223,7 +1547,7 @@
     },
     "422bcf74d1f1cc1de50038c2f79cea1619afe5cd14119d8de2bc972b75c94b72": {
       "card": {
-        "as_of": "2026-09-01T08:50:02.494Z",
+        "as_of": "2026-09-02T04:15:21.472Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Stablecoin",
@@ -1256,10 +1580,10 @@
         ]
       },
       "proof": [
-        "df756d9adbb80ed5c3e33db85243fe489efcc3087ff1c218e125ab7724392ab1",
-        "c6dd458c2f1ca51e19e0255f455f54c8ec6dff1de1eab690a134e5458f945d86",
-        "b4afc0f5e3113b8d2c5cd9f723c95018161eb9be7a0fb9e87e56cd2a23a6f314",
-        "fec7de0202385e5771e4ce585c280f9a6315e8771fa33bbb37984d33ba872e51",
+        "8893cdf4f529921753a3dc2bd4fe274b2d0133bb9e21b11edb123763d462b81a",
+        "35303043ec70df472c753bc2ac99d15e61830a4138a776f269335cdb54b8058e",
+        "357275213743fc1640ac6d1a59e351e475f2398dc119464c5525e1a085b23821",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -1352,6 +1676,48 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "4bae0a56df72cec3e3e41fa3d0a3c4f98e3a4b4194357be96fc9d1b3d2044a9d": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 281,
+          "issuer": "GateHub",
+          "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 199432.4100532295,
+          "symbol": "GBP.gh",
+          "verified_domain": null,
+          "verified_via": "XRPScan well-known directory"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "4bae0a56df72cec3e3e41fa3d0a3c4f98e3a4b4194357be96fc9d1b3d2044a9d",
+        "sig_ed25519": "a98542cce4d93c2782d8034a96906751050b74d91a3c39734cb6cb6a02b28da92367ab89072d0852029c6f6bff9822606b769c6704ff93a05fc761c50b82850c",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL GBP.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "dfd2c79af1c7f02aee9a10b7e2d51a015b293197b00dc58f2182dce96a71ff97",
+        "04cb78b503bddeae17d412cf5c123c663d755e753bd4317518c5a93cb65d604a",
+        "7bc28103b8649efb45c5ba32bf74ac58f9fedf415d926f7693a31a960b16ad79",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "5159356248d431ff5518a92632b17bae7cc978db89220f76e0b82664049652cb": {
       "card": {
         "as_of": "2026-08-31T10:37:30.653Z",
@@ -1441,7 +1807,7 @@
     },
     "5214412bb96ed066bcb79592ec79ee9262cfc3c7650142bcd09a53b657b97935": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "reserve-attestation",
@@ -1527,7 +1893,7 @@
     },
     "544834c32f4a4a75692b9bb725888b19f091d5f157f43af66802b0962560fe92": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "regulatory-framework",
@@ -1570,9 +1936,51 @@
         "f38276f72cfb73b420bfff8bcf1773ba7e3675ea2513b4dc9b6abf9b950a9bdb"
       ]
     },
+    "546f32b09f8866914cccea51d6d1d0dca8c94393538ad281dc4af9edcd5047a2": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 15096,
+          "issuer": "GateHub",
+          "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 1683719.956951522,
+          "symbol": "EUR.gh",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "546f32b09f8866914cccea51d6d1d0dca8c94393538ad281dc4af9edcd5047a2",
+        "sig_ed25519": "03157f893a232ff6a1a4aab528161875d9e8d9d658767194080b1d4069b35551d4cc2d9a51166e0ddba30df74200656bdd3899655d06f54479302ce4e3d8180f",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL EUR.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "a78faeed670c46e37ed640c59955db7ba20cfe625ddc4fd92d17871a18c838ef",
+        "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
+        "0024d17302e2a5b018656e508a5b563c06ea7739c5ce9613ea3d6f44a49a69a4",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "552c4d94b12c2675b4f0395d7401907fe685ea7fb2a590aabca690fbf776f34c": {
       "card": {
-        "as_of": "2026-09-01T08:50:02.494Z",
+        "as_of": "2026-09-02T04:15:21.472Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Treasuries",
@@ -1602,10 +2010,10 @@
         "unmeasured": []
       },
       "proof": [
-        "5b4a7ad11257dc185b0aecc786815ee12c041dff8afcc4aa108ac10a0718741f",
-        "8565aa9dcc51a90532592c8005df8c5e3840f4ca5eb71d47507fdc8f94eccd28",
-        "6e16b0005c1fcea5570684f3264c7415b35e5e8a43093d855b048e2e12fa021f",
-        "fec7de0202385e5771e4ce585c280f9a6315e8771fa33bbb37984d33ba872e51",
+        "05548a79dc4c4377f91b1a5bb212ebf986ce4a06fd2aea5e4d1011f2ee7b4556",
+        "0c321be0cd6b80875dfd182607caa5b7077734f09271a4f6fce08547793504b4",
+        "3c8e6274e5fc3ef9e0b30ef15ef8d77453bff2074b3b55122a0cd4213fc07474",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -1654,7 +2062,7 @@
     },
     "59518ba5100da8d4b57e103b3bc32c35a87551712bdc038dd46dcc853106a301": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "ai-economy-index",
@@ -1831,6 +2239,48 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "60037fcb11ce2305154185c2224dfe741069d66428339d805dd8aa267c42d5fd": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 7321,
+          "issuer": "Bitstamp",
+          "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 8069548.210264123,
+          "symbol": "USD.bs",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "60037fcb11ce2305154185c2224dfe741069d66428339d805dd8aa267c42d5fd",
+        "sig_ed25519": "00f03f2c9304165a2eab632833edef6526964362258b051b2afa83f6863693dda87d091819e5aaa78323c740bdf70cc172732a6b2972f273b4cb945b05020b07",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.bs public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "422bcf74d1f1cc1de50038c2f79cea1619afe5cd14119d8de2bc972b75c94b72",
+        "66461bc29716038b30a5cf8128078cca71167981ff7ce8f80d635f5e560c235d",
+        "8668563426f030cdca0f8a66c26ac5b70c689a0caa5c993f813e193f6f305aed",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "61d2e24b4dda9cd9ff4b4e5e7d8b3e66b5a3d83cbba98fa3199a557163597f49": {
       "card": {
         "as_of": "2026-08-31T07:36:20.009Z",
@@ -1957,6 +2407,48 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "645e66a72778b055eaaa8142534f9ba2f09024f4bfd07ab493e2927a3bf66303": {
+      "card": {
+        "as_of": "2026-09-02T04:00:18.565Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 427,
+          "issuer": "Bitstamp",
+          "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4960395.483820634,
+          "symbol": "EUR.bs",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "645e66a72778b055eaaa8142534f9ba2f09024f4bfd07ab493e2927a3bf66303",
+        "sig_ed25519": "b10e88c771544ae8ca5930e848d8147f79c458e4ca689291ad10447f7614065238e08373b43946bc7064876bc666a3201ec7764b6edef98c543d091245d34305",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL EUR.bs public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "e1b574a237c5f0158b945a75ca83157071d8f75772772ccd03f06f41beb45dd4",
+        "b5dae3c6986da32fc99ae03035195663245d088fc3b74dd95792e1be87181199",
+        "2576d1ac3540eeae4227731fc6345ee8d96148b204952e515365332d5ea66141",
+        "a658488c34831003fa7d9e19d01979a5ea884798af02e6e72a463e898ce161e9",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "6a533f42e681da38032fe5e6cf7b5ddf447dd0c507c98507b028cd829bc966ce": {
       "card": {
         "as_of": "2026-08-28T09:06:28.399Z",
@@ -2001,7 +2493,7 @@
     },
     "6a62c35ee6fc2921475deb671130910c50f3fec92381a185eba563bbd9d06144": {
       "card": {
-        "as_of": "2026-09-01T08:50:02.494Z",
+        "as_of": "2026-09-02T04:15:21.472Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Commodities",
@@ -2034,10 +2526,52 @@
         ]
       },
       "proof": [
-        "df5663607aed877d810b4e75c456a8cbb937357add9d1c1cfa212ac01d497c10",
-        "3ba41b71f56a00d06cfb23355f23798e8ca81f7ffa493e5c8e172e8e6ff339c0",
-        "be841e62e87b6afa31200f6798241775534c6fbe57706cfaea58bff63a9b50ce",
-        "9236296dd0d3b099f837abbc2f7477801ff204dbe8fb3387b1acc5fa3e5970c4",
+        "7eba948888ed89660dc64993b55d324be72a731bd076e93efcf90e0cafa70f0f",
+        "9b8735b1c3ba28730f97303f70b53d848f7d0e4278a44a22e8575a409bafb959",
+        "7bc28103b8649efb45c5ba32bf74ac58f9fedf415d926f7693a31a960b16ad79",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
+    "6d03c3eb7e46d14633db053dd64dce1811d53c91ce6fbb6c629c7399efa3982f": {
+      "card": {
+        "as_of": "2026-09-02T04:00:18.565Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 10324,
+          "issuer": "Circle",
+          "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4848725.538900754,
+          "symbol": "USDC",
+          "verified_domain": null,
+          "verified_via": "XRPScan well-known directory"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "6d03c3eb7e46d14633db053dd64dce1811d53c91ce6fbb6c629c7399efa3982f",
+        "sig_ed25519": "5ae03ee43013ba31e6f600cc13fd585da61b74e9212273e5c937dd7a63127d31e9039c304eb1d40b2b7c7a9eb7a4e399fb059915d3877311d8e1ab40a41df307",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USDC public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "546f32b09f8866914cccea51d6d1d0dca8c94393538ad281dc4af9edcd5047a2",
+        "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
+        "a1ab387d33b6dbb955913ff0f5eaa7600950b9d3442bb63127c1a3b8cd20035e",
+        "f0c0eae157521022d90f269aba23e9d4a224b1a8b757363e894f37bda0608e9a",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -2220,6 +2754,90 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "7cb5f1de3916bccb3f50f80203e1be86ccf33a5e87bdb281eb1d90339a3b83cc": {
+      "card": {
+        "as_of": "2026-09-02T04:00:18.565Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 7322,
+          "issuer": "Bitstamp",
+          "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 8069547.534619802,
+          "symbol": "USD.bs",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "7cb5f1de3916bccb3f50f80203e1be86ccf33a5e87bdb281eb1d90339a3b83cc",
+        "sig_ed25519": "a4b723634e7adcd1593737b4b58a0743bec598e989ee074032e97c902ecb28378a6dd71f6e7b320bb208cb3471dc61daa9d79d05f3b41caac6e60d4871dd460b",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.bs public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "422bcf74d1f1cc1de50038c2f79cea1619afe5cd14119d8de2bc972b75c94b72",
+        "7e8de1331903482ff75af4333e770af28008b51e6482e838dbccedfb7772f29c",
+        "2576d1ac3540eeae4227731fc6345ee8d96148b204952e515365332d5ea66141",
+        "a658488c34831003fa7d9e19d01979a5ea884798af02e6e72a463e898ce161e9",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
+    "7eba948888ed89660dc64993b55d324be72a731bd076e93efcf90e0cafa70f0f": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 273,
+          "issuer": "Schuman Financial",
+          "issuer_address": "rMkEuRii9w9uBMQDnWV5AA43gvYZR9JxVK",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 340282.0873202473,
+          "symbol": "EURØP",
+          "verified_domain": null,
+          "verified_via": "XRPScan well-known directory"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "7eba948888ed89660dc64993b55d324be72a731bd076e93efcf90e0cafa70f0f",
+        "sig_ed25519": "f938d8d1d66ee89ee7eed92cfc50969664682252529a30d6fb4157977d30e447cf58c04811e1b648efbc38d9177e1f5376619fb243dbc95470c14c2a69cd3e03",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL EURØP public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "6a62c35ee6fc2921475deb671130910c50f3fec92381a185eba563bbd9d06144",
+        "9b8735b1c3ba28730f97303f70b53d848f7d0e4278a44a22e8575a409bafb959",
+        "7bc28103b8649efb45c5ba32bf74ac58f9fedf415d926f7693a31a960b16ad79",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "812f76fcf1c93032edacab744de61b70e3044fa5e74fa125638d8d3f0f00c90b": {
       "card": {
         "as_of": "2026-09-01T08:44:12.806Z",
@@ -2263,6 +2881,48 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "869c25eba14b688e96dab92fa20c19a1e04e59f29e806faf61e5d81a601533b1": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 20396,
+          "issuer": "GateHub",
+          "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4937207.271582774,
+          "symbol": "USD.gh",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "869c25eba14b688e96dab92fa20c19a1e04e59f29e806faf61e5d81a601533b1",
+        "sig_ed25519": "ac8a9d4d2183c2fd1d5f14931d3c5515b209154b0baec2e354f9a79ef1a7b302bc1cb5b10704008b8811ff592cd4cd30b79fd761c9cbf08dd13d4618bfb7bd05",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "c51d4bddf6d83b751ae7e96a49ab0706566a30cc87d2063abf5e8c4842504600",
+        "1b984e6da9bcf3d9798321706e74a9698e638ae951af4f3d1fc0f64a6ce50f0d",
+        "8668563426f030cdca0f8a66c26ac5b70c689a0caa5c993f813e193f6f305aed",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "879d010619f9957f9d948c5519a2ccf5be030c00f1407fa5992175bba994cfcc": {
       "card": {
         "as_of": "2026-08-28T09:06:28.399Z",
@@ -2299,6 +2959,48 @@
         "f924055a0ccb6789b68198c4e0adf2b37d98b9b430b25ea587b231c17129b2ee",
         "3295ccd5fb8b400985124c38226b0e61f6b5d25295fb56a5b1629a219d2088ed",
         "ff59e1e01022115256305cdafd4eb3e7283f15174d561889e1cf511d85c6c153",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
+    "8893cdf4f529921753a3dc2bd4fe274b2d0133bb9e21b11edb123763d462b81a": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 7326,
+          "issuer": "Bitstamp",
+          "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 8069547.534619802,
+          "symbol": "USD.bs",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "8893cdf4f529921753a3dc2bd4fe274b2d0133bb9e21b11edb123763d462b81a",
+        "sig_ed25519": "969cd3eab9c7102a1bd556d3890a74f454859cb365843abd6a989ee0a86261ba26c740b358ff4169ac01ee2277b1676e81776ec2e31464d56c866125f7f17c09",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.bs public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "422bcf74d1f1cc1de50038c2f79cea1619afe5cd14119d8de2bc972b75c94b72",
+        "35303043ec70df472c753bc2ac99d15e61830a4138a776f269335cdb54b8058e",
+        "357275213743fc1640ac6d1a59e351e475f2398dc119464c5525e1a085b23821",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -2783,9 +3485,51 @@
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
+    "a78faeed670c46e37ed640c59955db7ba20cfe625ddc4fd92d17871a18c838ef": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 10324,
+          "issuer": "Circle",
+          "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4848725.538900756,
+          "symbol": "USDC",
+          "verified_domain": null,
+          "verified_via": "XRPScan well-known directory"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "a78faeed670c46e37ed640c59955db7ba20cfe625ddc4fd92d17871a18c838ef",
+        "sig_ed25519": "298286a27f0ca8904f72831a90c57d53d5e44306a8586e29bf2d0429033a8d7b4f1664c25b3f0128fc4f78c906b52aa7127e0192b9a53d975d531caa04794c0d",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USDC public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "546f32b09f8866914cccea51d6d1d0dca8c94393538ad281dc4af9edcd5047a2",
+        "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
+        "0024d17302e2a5b018656e508a5b563c06ea7739c5ce9613ea3d6f44a49a69a4",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "a91661409e7ef4996181540fb0a4fa352a4d650ea3863e421e6fe5e839036aeb": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "humanoid-labour-index",
@@ -2955,7 +3699,7 @@
     },
     "ad3aa07d16ac2de3496d79e2d49fdb47e729ce3bcdec43263beb41ab8409fe50": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "human-labour-index",
@@ -3123,7 +3867,7 @@
     },
     "b7b412586e04c930ef6e009d7fe9431d0ec453ae66644458cda040f7f4ca1bb0": {
       "card": {
-        "as_of": "2026-09-01T08:44:12.806Z",
+        "as_of": "2026-09-01T12:25:48.705Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Stablecoin",
@@ -3156,9 +3900,9 @@
       },
       "proof": [
         "dfd2c79af1c7f02aee9a10b7e2d51a015b293197b00dc58f2182dce96a71ff97",
-        "9866ec0185573766714edf4502ada8ee5ccaab9b652a66f9e858b9aff61f25c3",
-        "16b6fec220c237a071056f5a5e6d73fdf54052f3701b2309d7e266e18eebd9d5",
-        "9b190021525c8d9d47a3134fa5e63d501e96adde0589e08e0d8cc5afcb526dc4",
+        "04cb78b503bddeae17d412cf5c123c663d755e753bd4317518c5a93cb65d604a",
+        "fae8f2a9f2af28da3f823656d06df4f285b0cfe1f9e9cd06fa654e818ccc5d49",
+        "8689848ad02687dc70f195550e78c497b789a87a2c56b948d6273d3e22c3284e",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -3204,6 +3948,46 @@
         "7b75d11acf41a6f55433ff569d18ac6d0687a7307fef11e28f6c347814da8956",
         "db1b7ad7e31dbd4843fbd857444fcf71a281175cd4b61094c903512125ff5846",
         "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9"
+      ]
+    },
+    "bdc48255a5534621aaa984c2b445e3fb870f2d575f8b4004ea34e59ba2610d9a": {
+      "card": {
+        "as_of": "2026-09-01T12:25:48.705Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 72160,
+          "issuer": "Ripple",
+          "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 924864027.7515137,
+          "symbol": "RLUSD",
+          "verified_domain": "ripple.com",
+          "verified_via": "Bidirectional domain match"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "bdc48255a5534621aaa984c2b445e3fb870f2d575f8b4004ea34e59ba2610d9a",
+        "sig_ed25519": "d9e4c673f25b414f4239328bbef4468da5e5f38bd850b125aea396b2fea6f2493fe04d6a5ec3bb39a25f63769ab371fd26eb2ce0f1756137488077cef9dfb80f",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL RLUSD public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": []
+      },
+      "proof": [
+        "f54c96715daaa74be37911a17c5975ebffe79b784d68b57a936448e10f9a60fb",
+        "3854fc0dbbdb769dff1237844453ac3a220177691ae644691811217ff0482d4c",
+        "2349ee4ea3f682e917dbd41725a6b2b98d4d78671d384c97b65a51baa7471e72",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "bf75c03d2e22b397e075e20c137c017aef7aa11ece008e19e14ab1c4ffdcea9d": {
@@ -3296,7 +4080,7 @@
     },
     "c51d4bddf6d83b751ae7e96a49ab0706566a30cc87d2063abf5e8c4842504600": {
       "card": {
-        "as_of": "2026-09-01T08:50:02.494Z",
+        "as_of": "2026-09-01T12:25:48.705Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Stablecoin",
@@ -3328,10 +4112,10 @@
         ]
       },
       "proof": [
-        "ab42fe8e566ace52516cd3c2aa65a3366a8775fcefb57ac88ecefa8ff8d7017e",
-        "e3615ad848aeb94bbe496f05843a500f9074b3e5f426e8aec5da8ae56303d6ec",
-        "b4afc0f5e3113b8d2c5cd9f723c95018161eb9be7a0fb9e87e56cd2a23a6f314",
-        "fec7de0202385e5771e4ce585c280f9a6315e8771fa33bbb37984d33ba872e51",
+        "869c25eba14b688e96dab92fa20c19a1e04e59f29e806faf61e5d81a601533b1",
+        "1b984e6da9bcf3d9798321706e74a9698e638ae951af4f3d1fc0f64a6ce50f0d",
+        "8668563426f030cdca0f8a66c26ac5b70c689a0caa5c993f813e193f6f305aed",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -3761,7 +4545,7 @@
     },
     "dbc7eb7e46086cfc08cd327c1b9edd4ab1aa7b6ade66c5f1f905b2d8551946af": {
       "card": {
-        "as_of": "2026-09-01T09:33:58Z",
+        "as_of": "2026-09-02T07:13:04Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "axis": "custody-disclosure",
@@ -4014,7 +4798,7 @@
     },
     "dfd2c79af1c7f02aee9a10b7e2d51a015b293197b00dc58f2182dce96a71ff97": {
       "card": {
-        "as_of": "2026-09-01T08:50:02.494Z",
+        "as_of": "2026-09-02T04:15:21.472Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Stablecoin",
@@ -4047,10 +4831,10 @@
         ]
       },
       "proof": [
-        "211dd6f73b063e8fa7006d4ce417e82df6f37236de733941bf5f759881613690",
-        "65b9d50c1d2552e013f3326074e5e61e73e5f3a5566c1f4e844515a04d49a14f",
-        "be841e62e87b6afa31200f6798241775534c6fbe57706cfaea58bff63a9b50ce",
-        "9236296dd0d3b099f837abbc2f7477801ff204dbe8fb3387b1acc5fa3e5970c4",
+        "4bae0a56df72cec3e3e41fa3d0a3c4f98e3a4b4194357be96fc9d1b3d2044a9d",
+        "04cb78b503bddeae17d412cf5c123c663d755e753bd4317518c5a93cb65d604a",
+        "7bc28103b8649efb45c5ba32bf74ac58f9fedf415d926f7693a31a960b16ad79",
+        "6b5c03fb132ead4fd985bc6475af22350ae284dca0791e780f83fce4461ef98d",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -4092,6 +4876,48 @@
         "484136dd51fd8fa6fbdda00d5308256d47db59ef63260963639979e094abecc9",
         "5f34f8df94d0238de936a81c3277c76d443b93508dae156e5fee1d11192dcc31",
         "eab9773f820525914c1d93f926e3c3d33554ec2ea77768a4e6a84f042b3155e5"
+      ]
+    },
+    "e1b574a237c5f0158b945a75ca83157071d8f75772772ccd03f06f41beb45dd4": {
+      "card": {
+        "as_of": "2026-09-02T04:00:18.565Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 20399,
+          "issuer": "GateHub",
+          "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4937190.532605144,
+          "symbol": "USD.gh",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "e1b574a237c5f0158b945a75ca83157071d8f75772772ccd03f06f41beb45dd4",
+        "sig_ed25519": "5543e294b9c7316594d57175cd948484e5a8892b2d28b03be95f0badcc68fb11d72acefc16a5c6f860868b20c9713636928b3bb130a590e32762df647e067a00",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "645e66a72778b055eaaa8142534f9ba2f09024f4bfd07ab493e2927a3bf66303",
+        "b5dae3c6986da32fc99ae03035195663245d088fc3b74dd95792e1be87181199",
+        "2576d1ac3540eeae4227731fc6345ee8d96148b204952e515365332d5ea66141",
+        "a658488c34831003fa7d9e19d01979a5ea884798af02e6e72a463e898ce161e9",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
     },
     "e3afd39ac4a4f9417d1b7524b46e47859dd36f4c4bcee0a7c8aed7ae252cae5c": {
@@ -4330,6 +5156,48 @@
         "43465582fd478a5705344f642168b6915b105f8ed899ce7db42833eaa757f2f9"
       ]
     },
+    "f4fd9e9d771c12825942d012fa574dbccdf70ce1fa2f2bef6ce252ef9f22986d": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 20399,
+          "issuer": "GateHub",
+          "issuer_address": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4937190.532488184,
+          "symbol": "USD.gh",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "f4fd9e9d771c12825942d012fa574dbccdf70ce1fa2f2bef6ce252ef9f22986d",
+        "sig_ed25519": "ca76b90e3ff6203a82af09a3b0a76a34d4260e9e2c91430c97fd8023cc8507f26c12551e7a4cc7ca78e99b23f42e2beab438ebb912f917adcfee7e61428f9102",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL USD.gh public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "fd737d8007d2ae615d80491c66fd038f99aa8526eb9a0162c969bede94cc5434",
+        "d4d7ea21558230589cf5230601159bd469a3aa19012b489cae0ff8ee22da5686",
+        "357275213743fc1640ac6d1a59e351e475f2398dc119464c5525e1a085b23821",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
     "f5076aba9902504024e38abb6e2a7f5ed60312e87ffd05ee4695bee505e57b5c": {
       "card": {
         "as_of": "2026-08-31T07:36:20.009Z",
@@ -4373,7 +5241,7 @@
     },
     "f54c96715daaa74be37911a17c5975ebffe79b784d68b57a936448e10f9a60fb": {
       "card": {
-        "as_of": "2026-09-01T08:44:12.806Z",
+        "as_of": "2026-09-01T12:25:48.705Z",
         "did": "did:web:csoai.org#board-attestation-1",
         "payload": {
           "asset_class": "Treasuries",
@@ -4403,10 +5271,10 @@
         "unmeasured": []
       },
       "proof": [
-        "d71daa27048eec3e97c38405a8550a420b75b8ed1f34841fff377f7709f61836",
-        "8565aa9dcc51a90532592c8005df8c5e3840f4ca5eb71d47507fdc8f94eccd28",
-        "df2733173e429e8bac8052476efa8c13408b4ffb451f3d4016818a0dd77fa676",
-        "9c3d39056017daba319c62cbf07acee47973a76b3aa450e224d8c21d6a759e36",
+        "bdc48255a5534621aaa984c2b445e3fb870f2d575f8b4004ea34e59ba2610d9a",
+        "3854fc0dbbdb769dff1237844453ac3a220177691ae644691811217ff0482d4c",
+        "2349ee4ea3f682e917dbd41725a6b2b98d4d78671d384c97b65a51baa7471e72",
+        "9f0ebc79b08ed46f6838cd1f7dea81cdaf6714c38553eed8bbe4e982df665141",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
@@ -4648,6 +5516,48 @@
         "2425cecd3e893803ddecf9c17e7711bf9e81bc9e6261d8817527fd21dcaa0523",
         "51bf612f3f7efc3022bc6d5bca6523bd30380db07af92b421d2233af637bd5e9",
         "9236296dd0d3b099f837abbc2f7477801ff204dbe8fb3387b1acc5fa3e5970c4",
+        "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
+        "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
+      ]
+    },
+    "fd737d8007d2ae615d80491c66fd038f99aa8526eb9a0162c969bede94cc5434": {
+      "card": {
+        "as_of": "2026-09-02T04:15:21.472Z",
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": {
+          "asset_class": "Stablecoin",
+          "holders": 430,
+          "issuer": "Bitstamp",
+          "issuer_address": "rvYAfWj5gh67oV6fW32ZzP3Aw4Eubs59B",
+          "kind": "distributed",
+          "source": "xrpl.fi/api/metrics",
+          "supply": 4960395.483820634,
+          "symbol": "EUR.bs",
+          "verified_domain": null,
+          "verified_via": "XRPLMeta registry"
+        },
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": "fd737d8007d2ae615d80491c66fd038f99aa8526eb9a0162c969bede94cc5434",
+        "sig_ed25519": "6c5a349959ef724ddb4893640d6f55774ae34286d4e41450dae04ac79780be76da260ad1c94dae0b8b1006cddf5f52174459a7560dd333f57e197f547338720a",
+        "source_urls": [
+          "https://xrpl.fi/api/metrics"
+        ],
+        "subject": "XRPL EUR.bs public state",
+        "surface": "xrpl.asset.state",
+        "tags": [
+          "reg.tag:public-ledger",
+          "framework:xrpl",
+          "jurisdiction:permissionless"
+        ],
+        "unmeasured": [
+          "strict_two_way_toml"
+        ]
+      },
+      "proof": [
+        "f4fd9e9d771c12825942d012fa574dbccdf70ce1fa2f2bef6ce252ef9f22986d",
+        "d4d7ea21558230589cf5230601159bd469a3aa19012b489cae0ff8ee22da5686",
+        "357275213743fc1640ac6d1a59e351e475f2398dc119464c5525e1a085b23821",
+        "cff53e79dd11e615302c59cf52142cf2e2e37dc562edba108931d8523787827c",
         "628a3a777077e6232b12f18271cf58d6ef3ce9d4adb428d670275b49fdfbd446",
         "1ca3ecc1bc6a66230c9be01362592cf6801686930039ffca85e68a4c6d1ef40b"
       ]
