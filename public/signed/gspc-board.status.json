@@ -1,0 +1,38 @@
+{
+  "schema": "csoai.signed-artifact-status/1",
+  "artifact": "/signed/gspc-board.signed.json",
+  "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+  "current": false,
+  "identified_on": "2026-09-04",
+  "relying_party_action": "DO_NOT_USE_AS_CURRENT_BOARD; use GET /api/gspc",
+  "current_authority": "/api/gspc",
+  "integrity": {
+    "state": "VERIFIED",
+    "sha256_file_bytes": "9b892fbe46648787096b7d218bfa6aa91536a07f6de37650b98eace84eb2d34b",
+    "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+    "signer": "did:web:csoai.org#gspc-board-22axis-2026",
+    "note": "The original MPC-signed bytes remain unchanged and verify. Integrity of a signed historical statement does not make every statement inside it true."
+  },
+  "known_claim_defects": [
+    {
+      "code": "FINANCIAL_RUN_SIGNATURE_OVERCLAIM",
+      "location": "totals.sweep_note",
+      "signed_text": "each has a signed run",
+      "evidence_state": "1_ED25519_SIGNED_7_CONTENT_ADDRESSED_UNSIGNED",
+      "note": "Only /interop/financial-measure-run-v2.json carries an Ed25519 signature. The other seven run artifacts carry content identifiers but no run signature."
+    },
+    {
+      "code": "HISTORICAL_LEADER_NOTE_PRESENTED_AS_CURRENT",
+      "location": "axes[*].measurement_note",
+      "evidence_state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+      "note": "Some historical notes describe excluded or uncarded leaders as separated or tied while the current public fields correctly say separation=UNTESTED. GET /api/gspc now scopes those notes as historical records that do not assert current public fields."
+    }
+  ],
+  "replacement": {
+    "state": "OWNER_MPC_RESIGN_REQUIRED",
+    "snapshot_command": "node scripts/gspc-board-snapshot.mjs .gspc-work/gspc-board.snapshot.json",
+    "sign_command": "node scripts/gspc-board-sign.mjs .gspc-work/gspc-board.snapshot.json public/signed/gspc-board.signed.json",
+    "verification_command": "node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json",
+    "note": "Do not change this status to CURRENT until the replacement snapshot is produced by the live-board snapshot script, signed through the documented three-party MPC custody, and verified offline."
+  }
+}

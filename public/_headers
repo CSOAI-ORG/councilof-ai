@@ -50,6 +50,15 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache, must-revalidate
 
+# The original MPC bytes remain verifiable but are not current: their signed
+# summary overstates financial-run signatures and preserves unscoped historical
+# leader notes. Keep the bytes untouched and make the relying-party state visible
+# at the HTTP boundary as well as in the adjacent status document.
+/signed/gspc-board.signed.json
+  X-CSOAI-Artifact-State: SUPERSEDED_KNOWN_CLAIM_DEFECT
+  Link: </signed/gspc-board.status.json>; rel="status", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
 # The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).
 # Must revalidate: a stale index that lists artifacts the tree no longer serves is worse
 # than no index, because it reads as evidence.

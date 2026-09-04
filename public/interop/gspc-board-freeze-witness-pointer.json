@@ -1,8 +1,14 @@
 {
   "kind": "csoai.gspc-board-freeze-witness-pointer/v0",
   "as_of": "2026-09-02T15:34:13Z",
-  "note": "Honest pointer for the current GSPC board freeze witness. Existence/time of bytes — not certification. Do not hard-code a Rekor logIndex; this file is the live entry.",
-  "live_freeze": {
+  "note": "Pointer for the historical GSPC board freeze witness. Rekor proves existence/time of the preserved bytes, not that every signed statement is true. The freeze is superseded by a known claim defect; use GET /api/gspc for current board state.",
+  "relying_party_status": {
+    "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+    "status": "https://councilof.ai/signed/gspc-board.status.json",
+    "current_authority": "https://councilof.ai/api/gspc",
+    "action": "DO_NOT_USE_AS_CURRENT_BOARD"
+  },
+  "historical_freeze": {
     "url": "https://councilof.ai/signed/gspc-board.signed.json",
     "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
     "preimage_bytes": 50839,

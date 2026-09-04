@@ -34,6 +34,7 @@ export const AXES_FIN: AxisScore[] = [
     // No separation field: there is no fleet and no leader, so no separation test is
     // APPLICABLE. That is a different fact from a test not yet run (UNTESTED).
     evidence_url: "/interop/financial-measure-run-v2.json",
+    run_attestation: "ED25519_SIGNED",
     coverage: "6 of the 16 instruments named in the registry",
     coverage_note:
       "The registry NAMES 16 instruments and this axis COVERS 6. The other 10 have no locatable " +
@@ -64,6 +65,7 @@ export const AXES_FIN: AxisScore[] = [
     n_note: "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-reserve-attestation.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, " +
       "then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE " +
@@ -78,6 +80,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-regulatory-framework.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. " +
       "3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
@@ -90,6 +93,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-distribution-integrity.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on " +
       "distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no " +
@@ -103,6 +107,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-custody-disclosure.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: " +
       "custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor " +
@@ -116,6 +121,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 2, n_unit: "public series",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-ai-adoption-components.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
@@ -128,6 +134,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 2, n_unit: "public series",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-labour-components.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
@@ -139,6 +146,7 @@ export const AXES_FIN: AxisScore[] = [
     n: 8, n_unit: "frozen vendor URLs",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-humanoid-labour-index.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED " +
       "inside the card. Vendor blogs are not a bank. Not an index.",

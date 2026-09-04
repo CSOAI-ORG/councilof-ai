@@ -5,7 +5,7 @@
 # ORDER IS LOAD-BEARING: every splat-free rule first (2000-rule static budget),
 # then every splat rule (100-rule dynamic budget), catch-all last. One splat placed
 # early makes Cloudflare count EVERY later rule as dynamic and stop parsing at 100 —
-# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 11/100.
+# which is how the catch-all fell off the edge on 2026-08-26. Dynamic rules here: 12/100.
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
@@ -103,6 +103,10 @@
 /agui/                  /dashboard?tab=home          308
 /chat                   /dashboard?tab=home          308
 /chat/                  /dashboard?tab=home          308
+/public                 /dashboard?tab=home          308
+/public/                /dashboard?tab=home          308
+/widget                 /dashboard?tab=learn         308
+/widget/                /dashboard?tab=learn         308
 /rankings               /dashboard?tab=board         308
 /rankings/              /dashboard?tab=board         308
 /benchmarkers           /dashboard?tab=verify        308
@@ -215,8 +219,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (356) ---
-/404  /404/  308
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (351) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -364,7 +367,6 @@
 /glossary  /glossary/  308
 /gods-eye  /gods-eye/  308
 /gone-space  /gone-space/  308
-/govbench  /govbench/  308
 /governance-commons  /governance-commons/  308
 /governance-council  /governance-council/  308
 /governance-graph  /governance-graph/  308
@@ -473,9 +475,7 @@
 /prosperity  /prosperity/  308
 /prosperity-fund  /prosperity-fund/  308
 /protect  /protect/  308
-/provbench  /provbench/  308
 /provenance-finding  /provenance-finding/  308
-/public  /public/  308
 /public-dashboard  /public-dashboard/  308
 /pulse  /pulse/  308
 /radar  /radar/  308
@@ -566,7 +566,6 @@
 /white-label  /white-label/  308
 /why  /why/  308
 /why-csoai  /why-csoai/  308
-/widget  /widget/  308
 /workbench-paper  /workbench-paper/  308
 /world  /world/  308
 /world-3d  /world-3d/  308
@@ -593,6 +592,7 @@
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================
 # --- static asset trees: served directly, never routed to the app ---
 /sov-space/*    /gspc-arena             308
+/widget/*               /dashboard?tab=learn         308
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
 /.well-known/*  /.well-known/:splat  200

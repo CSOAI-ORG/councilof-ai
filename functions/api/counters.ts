@@ -47,6 +47,7 @@
  */
 
 import boardSigned from "../../public/signed/gspc-board.signed.json";
+import boardStatus from "../../public/signed/gspc-board.status.json";
 import type { AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
@@ -103,6 +104,7 @@ const SRC_AXES = "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc de
 // something that would look more precise than it is.
 const boardTotals = (boardSigned as any).totals ?? {};
 const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
+const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 
 // ── live derivation, so snapshot drift is published rather than inherited ────
 // /api/gspc computes its totals from these arrays at request time; the signed file is
@@ -112,8 +114,9 @@ const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ??
 const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
-const boardAgrees =
+const boardCountsAgree =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
 
 const COUNTERS: Counter[] = [
   counter(
@@ -231,12 +234,16 @@ export const onRequestGet: PagesFunction = async () => {
       live_measured_axes: liveMeasuredAxes,
       signed_axis_slots: boardTotals.axes ?? null,
       signed_measured_axes: boardTotals.measured_axes ?? null,
+      signed_snapshot_counts_agree: boardCountsAgree,
       signed_snapshot_agrees: boardAgrees,
+      signed_snapshot_claim_state: boardClaimState,
+      signed_snapshot_status_source: "public/signed/gspc-board.status.json",
       on_disagreement:
         "Quote the live counters above and GET /api/gspc — both derive from the committed axis " +
-        "arrays. Do not file the snapshot's counts while signed_snapshot_agrees is false. " +
-        "Re-signing that file is an owner MPC ceremony, not a laptop sign and not the Pages " +
-        "3KB card-sign path.",
+        "arrays. Do not file the preserved snapshot while signed_snapshot_agrees is false: its " +
+        "counts may drift or its status may record a known claim defect. Read " +
+        "/signed/gspc-board.status.json. Re-signing is an owner MPC ceremony, not a laptop sign " +
+        "and not the Pages 3KB card-sign path.",
     },
 
     note:

@@ -2,6 +2,7 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, extname, join, normalize } from "node:path";
 
@@ -98,6 +99,59 @@ function detectPublicSurfaceTruthViolations(source) {
     .map(([code]) => code);
 }
 
+function assertCurrentGspcClaims(board) {
+  const axes = board.axes ?? [];
+  for (const axis of axes) {
+    if (axis.public_leader_state === "EXCLUDED_OWN_MODEL") {
+      assert.equal(axis.separation, "UNTESTED");
+      assert.equal("measurement_note" in axis, false);
+      assert.deepEqual(
+        {
+          state: axis.historical_measurement_record?.state,
+          scope: axis.historical_measurement_record?.scope,
+          current: axis.historical_measurement_record?.does_not_assert_current_public_fields,
+        },
+        {
+          state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+          scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+          current: true,
+        },
+      );
+    }
+    if (axis.public_leader_state === "NO_SIGNED_CARD") {
+      assert.equal(axis.separation, "UNTESTED");
+      assert.equal("measurement_note" in axis, false);
+      assert.equal(
+        axis.historical_measurement_record?.scope,
+        "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+      );
+      assert.equal(
+        axis.historical_measurement_record?.does_not_assert_current_public_fields,
+        true,
+      );
+    }
+  }
+
+  const financial = axes.filter((axis) => axis.family === "financial");
+  const signed = financial.filter(
+    (axis) => axis.run_attestation === "ED25519_SIGNED",
+  );
+  const unsigned = financial.filter(
+    (axis) => axis.run_attestation === "CONTENT_ADDRESSED_UNSIGNED",
+  );
+  assert.equal(financial.length, 8);
+  assert.equal(signed.length, 1);
+  assert.equal(unsigned.length, 7);
+  assert.equal(board.totals.financial_run_attestations.ed25519_signed, signed.length);
+  assert.equal(
+    board.totals.financial_run_attestations.content_addressed_unsigned,
+    unsigned.length,
+  );
+  assert.match(board.totals.sweep_note, /1 run artifact carries an Ed25519 signature/);
+  assert.match(board.totals.sweep_note, /7 are content-addressed but unsigned/);
+  assert.doesNotMatch(board.totals.sweep_note, /each (?:of the )?8[^.]*signed run/i);
+}
+
 if (process.argv.includes("--selftest")) {
   const fixtureDir = "scripts/fixtures/council-runtime-truth";
   const safe = readFileSync(join(fixtureDir, "safe.txt"), "utf8");
@@ -160,6 +214,43 @@ if (process.argv.includes("--selftest")) {
       `${source} must trigger ${expected}`,
     );
   }
+
+  const goodBoard = {
+    axes: [
+      {
+        axis: "governance",
+        family: "gspc",
+        separation: "UNTESTED",
+        public_leader_state: "EXCLUDED_OWN_MODEL",
+        historical_measurement_record: {
+          state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+          scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+          does_not_assert_current_public_fields: true,
+        },
+      },
+      ...Array.from({ length: 8 }, (_, index) => ({
+        axis: `financial-${index}`,
+        family: "financial",
+        run_attestation:
+          index === 0 ? "ED25519_SIGNED" : "CONTENT_ADDRESSED_UNSIGNED",
+      })),
+    ],
+    totals: {
+      sweep_note:
+        "1 run artifact carries an Ed25519 signature; 7 are content-addressed but unsigned.",
+      financial_run_attestations: {
+        ed25519_signed: 1,
+        content_addressed_unsigned: 7,
+      },
+    },
+  };
+  assert.doesNotThrow(() => assertCurrentGspcClaims(goodBoard));
+  const contradictoryBoard = structuredClone(goodBoard);
+  contradictoryBoard.axes[0].measurement_note = "The excluded model leads.";
+  assert.throws(() => assertCurrentGspcClaims(contradictoryBoard));
+  const overclaimedBoard = structuredClone(goodBoard);
+  overclaimedBoard.totals.financial_run_attestations.ed25519_signed = 8;
+  assert.throws(() => assertCurrentGspcClaims(overclaimedBoard));
 
   console.log("council-runtime-truth-gate selftest: PASS");
   process.exit(0);
@@ -943,6 +1034,96 @@ assert.doesNotMatch(
   "benchmark table must not carry hardcoded sample counts or scores",
 );
 
+// P1 convergence gate: legacy second shells must resolve into Council OS rather
+// than awarding local-only "certifications" or presenting a second marketing
+// hierarchy. Check both client-side navigation and edge redirects so either
+// hosting path fails closed.
+assert.doesNotMatch(
+  appSource,
+  /WidgetRouter|components\/widget|pages\/PublicHome/,
+  "legacy /public and /widget shells must stay outside the routed client graph",
+);
+assert.match(
+  appSource,
+  /"\/public"[\s\S]{0,220}<DashboardDoor defaultTab="home"/,
+  "/public must converge on the canonical Council OS home pane",
+);
+assert.match(
+  appSource,
+  /path === "\/widget"[\s\S]{0,220}<DashboardDoor defaultTab="learn"/,
+  "/widget must converge on the practice-only Council OS learning pane",
+);
+const redirectGeneratorSource = readFileSync("scripts/generate-redirects.mjs", "utf8");
+const redirectsSource = readFileSync("public/_redirects", "utf8");
+for (const source of [redirectGeneratorSource, redirectsSource]) {
+  assert.match(source, /\/public\/?\s+\/dashboard\?tab=home\s+308/);
+  assert.match(source, /\/widget\/?\s+\/dashboard\?tab=learn\s+308/);
+  assert.match(source, /\/widget\/\*\s+\/dashboard\?tab=learn\s+308/);
+}
+
+// The generated, unsigned snapshot is the regression oracle for the current
+// API contract. Historical leader prose may be retained, but only in a
+// structure that says it does not assert today's public fields.
+const currentBoard = JSON.parse(
+  readFileSync("extensions/chrome-gspc-verify/fixtures/api-gspc.snapshot.json", "utf8"),
+);
+assertCurrentGspcClaims(currentBoard);
+for (const axis of currentBoard.axes.filter((entry) => entry.family === "financial")) {
+  const run = JSON.parse(readFileSync(`public${axis.evidence_url}`, "utf8"));
+  const actuallySigned =
+    run.signature?.alg === "Ed25519" && typeof run.signature?.sig === "string";
+  assert.equal(
+    axis.run_attestation,
+    actuallySigned ? "ED25519_SIGNED" : "CONTENT_ADDRESSED_UNSIGNED",
+    `${axis.axis} run-attestation state must be derived from its evidence artifact`,
+  );
+}
+
+// Never rewrite a valid historical signature to make its claims look current.
+// The immutable bytes remain independently verifiable, while a separate
+// unsigned status document withdraws reliance until the owner MPC re-signs.
+const signedBoardPath = "public/signed/gspc-board.signed.json";
+const signedBoardBytes = readFileSync(signedBoardPath);
+const signedBoard = JSON.parse(signedBoardBytes.toString("utf8"));
+const signedBoardStatus = JSON.parse(
+  readFileSync("public/signed/gspc-board.status.json", "utf8"),
+);
+assert.match(
+  execFileSync("node", ["scripts/gspc-board-verify.mjs", signedBoardPath], {
+    encoding: "utf8",
+  }),
+  /^VERIFIED/m,
+);
+assert.equal(signedBoardStatus.current, false);
+assert.equal(signedBoardStatus.state, "SUPERSEDED_KNOWN_CLAIM_DEFECT");
+assert.equal(signedBoardStatus.current_authority, "/api/gspc");
+assert.equal(
+  signedBoardStatus.integrity.sha256_file_bytes,
+  createHash("sha256").update(signedBoardBytes).digest("hex"),
+);
+assert.equal(
+  signedBoardStatus.integrity.content_id,
+  signedBoard.custody_attestation.content_id,
+);
+const defectCodes = new Set(
+  signedBoardStatus.known_claim_defects.map((defect) => defect.code),
+);
+assert.equal(defectCodes.has("FINANCIAL_RUN_SIGNATURE_OVERCLAIM"), true);
+assert.equal(defectCodes.has("HISTORICAL_LEADER_NOTE_PRESENTED_AS_CURRENT"), true);
+assert.match(signedBoard.totals.sweep_note, /each has a signed run/);
+const historicalAxisSnapshot = JSON.parse(
+  readFileSync("public/six-axes/gspc-axes.json", "utf8"),
+);
+assert.equal(historicalAxisSnapshot.superseded, true);
+assert.match(historicalAxisSnapshot.authority, /current unsigned live-board response/);
+assert.match(historicalAxisSnapshot.authority, /gspc-board\.status\.json/);
+assert.doesNotMatch(historicalAxisSnapshot.authority, /live signed board/);
+for (const stateEndpoint of ["functions/api/state.ts", "functions/api/counters.ts"]) {
+  const source = readFileSync(stateEndpoint, "utf8");
+  assert.match(source, /boardClaimState === "CURRENT"/);
+  assert.match(source, /gspc-board\.status\.json/);
+}
+
 console.log(
-  "council-runtime-truth-gate: PASS — routed UI says 33-seat design / 23-seat target / not live, PQC remains planned only, n_eff=1, and retired runtimes fail closed",
+  "council-runtime-truth-gate: PASS — one Council OS shell, current GSPC claims cohere with evidence, the known-defect MPC snapshot fails closed, BFT is not live, PQC is planned only, and n_eff=1",
 );
