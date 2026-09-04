@@ -140,7 +140,7 @@ const STATE_STYLE: Record<State, { label: string; cls: string }> = {
 const RETRACTED = [
   { claim: "Governance-tuning our models makes them safer", was: "shipped", now: "WORSE than the base — refusal 0.419 → 0.097; 83.9% compliance leak on prohibited requests" },
   { claim: "The deterministic gate is our strongest component", was: "+34.84", now: "−20.00 [−65.26, +25.26], n=6" },
-  { claim: "3-leg quorum is multi-leg", was: "3 votes", now: "n_eff 1.21 of 3, φ̄ +0.743" },
+  { claim: "3-leg quorum is multi-leg", was: "3 votes", now: "latest: rho=1, n_eff=1; earlier DR-0007: n_eff 1.21 of 3, φ̄ +0.743" },
   { claim: "Per-dimension expert routing beats one good model", was: "routing on", now: "+0.90 [−1.99, +3.79] — no effect" },
   { claim: "Statute retrieval helps (ungated)", was: "retrieval on", now: "−9.16 [−17.64, −0.69] — significant harm" },
   { claim: "…with a relevance gate", was: "—", now: "−5.26 [−12.66, +2.13] — no benefit" },

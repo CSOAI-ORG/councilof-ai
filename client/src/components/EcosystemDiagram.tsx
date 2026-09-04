@@ -123,7 +123,7 @@ const ecosystemNodes: EcosystemNode[] = [
     id: "council",
     label: "Measurement Council",
     shortLabel: "Council",
-    description: "Multi-provider cross-checking — designed 33-seat council (measured n_eff 1.21/3)",
+    description: "Multi-provider cross-checking — designed 33-seat council; latest point experiment measured rho=1 and n_eff=1",
     category: "core",
     icon: Shield,
     link: "/agent-council",

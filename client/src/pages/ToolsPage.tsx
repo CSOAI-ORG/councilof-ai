@@ -13,34 +13,36 @@ const MCP_SNIPPET = `{
   }
 }`;
 
-// The three badge states a model/agent card may carry (P0.5 / A5). There is no
+// The three measurement states a model/agent card may carry (P0.5 / A5). A
+// global-board badge is navigation, not a fourth subject state. There is no
 // "GSPC certified" and there is no gold badge — measurement, not certification.
 const BADGE_SPEC = [
   {
-    badge: "GSPC listed",
+    badge: "GSPC unmeasured",
     colour: "#9ca3af",
     swatch: "bg-gray-400",
     word: "grey",
-    when: "The id is in the hub-queue / catalog census. DISCOVERED — listed, not graded.",
+    when: "No admitted run exists for the exact subject and revision. A listing is DISCOVERED, not a score.",
   },
   {
-    badge: "GSPC unmeasured",
+    badge: "GSPC unsigned",
     colour: "#ca8a04",
     swatch: "bg-amber-600",
     word: "amber",
-    when: "Named on the board or queue with no VALID card behind it. The gap stays visible.",
+    when: "A run is claimed, but no VALID signed cell binds the subject, revision, axis, instrument, run and score.",
   },
   {
     badge: "GSPC measured",
     colour: "#0B1F33",
     swatch: "bg-[#0B1F33]",
     word: "navy",
-    when: "A VALID card sha + a verify URL exist. The only state a measurement claim may wear.",
+    when: "A VALID card binds the exact subject and revision to the axis, instrument, run and score. The only state that may display that score.",
   },
 ] as const;
 
-const MODEL_CARD_BLOCK = `[![GSPC](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
-This model is **DISCOVERED** in the CSOAI hub census unless a verify link is present.
+const MODEL_CARD_BLOCK = `[![GSPC board](https://councilof.ai/api/badge?label=GSPC%20board)](https://councilof.ai/gspc-scoreboard)
+The badge above links to the global board. It does not measure this model.
+This model is **UNMEASURED** unless a VALID signed card names its exact revision.
 Verify a card: https://councilof.ai/gspc-verify
 Live board: https://councilof.ai/api/gspc
 Measurement, not certification.`;
@@ -58,7 +60,7 @@ export default function ToolsPage() {
   useEffect(() => {
     document.title = "Add gspc in your tool | councilof.ai";
     setMetaDescription(
-      "Council OS for people already in Claude, Cursor, Kimi, or Grok. Seven tools at https://councilof.ai/mcp (four GSPC + three public-root three-state). Measurement, never certification.",
+      "Council OS for people already in Claude, Cursor, Kimi, or Grok. Eleven tools at https://councilof.ai/mcp: seven free readers and four x402-metered evidence tools. Measurement, never certification.",
     );
   }, []);
 
@@ -68,12 +70,12 @@ export default function ToolsPage() {
         Use this in Claude / Cursor / Kimi / Grok
       </h1>
       <p className="mt-3 text-slate-600">
-        Ask: board totals. Paste a card to verify. Seven tools:
-        board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion.
-        HTTP <code>https://councilof.ai/mcp</code> lists and runs seven. Stdio source
-        <code>mcp/gspc-server</code> wires the same seven. Published npm{" "}
-        <code>csoai-gspc-mcp@0.1.0</code> is still four until owner <code>npm publish</code> 0.1.1.
-        Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
+        Ask: board totals. Paste a card to verify. HTTP <code>https://councilof.ai/mcp</code> lists
+        eleven tools: seven free readers (board_totals · get_axis · verify_card · list_cards ·
+        get_root · get_card · verify_inclusion) and four x402-metered evidence tools. Published npm{" "}
+        <code>csoai-gspc-mcp@0.2.1</code> lists twelve: the same eleven plus <code>witness_hash</code>,
+        which is quarantined on the HTTP door. A package listing is not proof that a paid route will
+        settle or deliver. Teach the live list. No 23rd axis. <code>/plugin</code> 301s here.
       </p>
       <p className="mt-4 font-mono text-sm text-emerald-900">{MCP_URL}</p>
       <pre className="mt-6 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
@@ -111,13 +113,15 @@ export default function ToolsPage() {
       </ol>
       <section aria-labelledby="badge-spec-h" className="mt-12">
         <h2 id="badge-spec-h" className="text-xl font-black tracking-tight text-slate-900">
-          The three badges — and the two that do not exist
+          The three subject states — and the badge that is only a link
         </h2>
         <p className="mt-2 text-sm text-slate-600">
           A model or agent card may wear exactly one of these three states. There is no{" "}
           <em>“GSPC certified”</em> and there is no gold badge — we measure, we never certify. The
-          badge image is live from the board’s own arrays, so the count in it cannot drift from{" "}
+          default badge image is the global board count from{" "}
           <a className="font-medium text-emerald-800 hover:underline" href="/api/gspc">GET /api/gspc</a>.
+          It is navigation, not evidence about the model whose README contains it. Only a VALID,
+          subject-bound signed cell may render that model’s score.
         </p>
         <div className="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
           <table className="w-full min-w-[34rem] text-sm">
@@ -148,18 +152,18 @@ export default function ToolsPage() {
           </table>
         </div>
         <p className="mt-3 text-sm text-slate-600">
-          Badge endpoints: <code>https://councilof.ai/badge/gspc.svg</code> (SVG, live board count) ·{" "}
-          <code>/api/badge?format=shields</code> (shields.io endpoint JSON —{" "}
-          <code>schemaVersion/label/message/color</code> — same derivation as the board, so a README
-          badge can never freeze a count).
+          Board endpoint: <code>https://councilof.ai/api/badge?label=GSPC%20board</code> (global count,
+          not a model score). Subject endpoint: <code>/api/badge?card=&lt;SIGNED_CARD_SHA256&gt;&amp;subject=&lt;URL_ENCODED_OWNER%2FMODEL%40COMMIT_SHA&gt;</code>.
+          The card body must name the exact subject and revision, and the verifier must return VALID,
+          before its score appears beside a model.
         </p>
 
         <h3 className="mt-8 text-base font-bold text-slate-900">
           Model-card block — copy-paste for maintainers who opt in
         </h3>
         <p className="mt-1 text-sm text-slate-600">
-          DISCOVERED means listed, not graded. Add this to your own README if you want the live
-          badge; nobody is PR-bombed with it.
+          DISCOVERED means listed, not graded. Add this to your own README if you want a clearly
+          labelled link to the global board; nobody is PR-bombed with it and it never grades the model.
         </p>
         <pre className="mt-3 overflow-x-auto rounded-xl border border-slate-200 bg-slate-950 p-4 text-[13px] text-emerald-100">
           <code>{MODEL_CARD_BLOCK}</code>

@@ -104,10 +104,15 @@ if ok; then
   "$PYTHON" scripts/build_archive_index.py
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
+step 'recheck drift against the live root (self-corrects a stale pointer)'
+if [ "$DRY_RUN" != "1" ]; then
+  "$PYTHON" scripts/witness_public_root.py --recheck || true   # DRIFTED is expected before publish
+else skipped "dry_run=$DRY_RUN"; fi
+
 step 'release integrity — root, sidecar, Rekor and every public OTS file'
 if ok; then
   "$PYTHON" scripts/root-witness-release-gate.py --selftest
-  "$PYTHON" scripts/root-witness-release-gate.py
+  "$PYTHON" scripts/root-witness-release-gate.py --phase candidate
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
 step 'commit published tree'

@@ -1,6 +1,6 @@
 {
   "schema": "csoai.reach-signal-ledger/0.1",
-  "as_of": "2026-09-01T08:55:00Z",
+  "as_of": "2026-09-04T12:45:00Z",
   "cta": "https://councilof.ai/gspc-verify",
   "doctrine": "HAVE vs EARN. Never fake logos, revenue, design partners, press, or endorsements. Advertise exactly what runs.",
   "have": [
@@ -13,19 +13,19 @@
     {
       "id": "npm-stdio",
       "state": "LIVE",
-      "fact": "npm csoai-gspc-mcp@0.1.0 published (four tools). Source 0.1.1 wires seven; publish is owner 2FA.",
+      "fact": "npm csoai-gspc-mcp@0.2.1 is published and tools/list returns twelve tools: seven free plus five x402. The live HTTP /mcp door lists eleven because witness_hash is quarantined there; package presence does not establish paid settlement or delivery.",
       "href": "https://www.npmjs.com/package/csoai-gspc-mcp"
     },
     {
       "id": "http-mcp",
       "state": "LIVE",
-      "fact": "POST https://councilof.ai/mcp tools/list = seven: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion.",
+      "fact": "POST https://councilof.ai/mcp tools/list = eleven: seven free readers plus commission_card, art50_marking_evidence, rwa_evidence and receipts_batch. witness_hash is quarantined on HTTP.",
       "href": "https://councilof.ai/mcp"
     },
     {
       "id": "mcp-registry",
       "state": "LIVE",
-      "fact": "Official MCP id io.github.CSOAI-ORG/gspc (server.json v1.1.0, HTTP remote).",
+      "fact": "Official MCP id io.github.CSOAI-ORG/gspc (server.json v1.2.0, HTTP remote; npm package 0.2.1).",
       "href": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/mcp/gspc-server/server.json"
     },
     {
@@ -82,10 +82,6 @@
     }
   ],
   "owner_gated": [
-    {
-      "id": "npm-publish-011",
-      "need": "npm publish csoai-gspc-mcp@0.1.1 (2FA) so npx matches HTTP seven tools."
-    },
     {
       "id": "w3c-join",
       "need": "W3C CG join + post. Computed ≠ asserted until posted."

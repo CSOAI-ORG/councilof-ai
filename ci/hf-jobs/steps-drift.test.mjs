@@ -65,6 +65,43 @@ describe("HF Jobs runner mirrors the GitHub workflow step list", () => {
     expect([...gates(sh)].sort()).toEqual([...gates(yml)].sort());
   });
 
+  it("uses candidate gates before publication and a fresh live gate only after the final hold", () => {
+    const publicRootYml = read(".github/workflows/public-root.yml");
+    const publicRootSh = read("ci/hf-jobs/public-root.sh");
+    const deployYml = read(".github/workflows/deploy.yml");
+    const deploySh = read("ci/hf-jobs/deploy.sh");
+
+    for (const source of [publicRootYml, publicRootSh, deployYml, deploySh]) {
+      expect(source).toMatch(/root-witness-release-gate\.py --phase candidate/);
+    }
+    for (const source of [deployYml, deploySh]) {
+      const hold = source.indexOf("Confirm gated tree still holds");
+      const recheck = source.indexOf("Recheck deployed root against witnessed candidate (bounded, read-only)");
+      const live = source.indexOf("Live public root + witness integrity — fresh apex MATCH required");
+      expect(hold).toBeGreaterThan(-1);
+      expect(recheck).toBeGreaterThan(hold);
+      expect(live).toBeGreaterThan(recheck);
+      expect(source.slice(recheck, live)).toContain("--public-dir dist/client");
+      expect(source.slice(recheck, live)).toContain("--check-only");
+      expect(source.slice(live)).toContain("--phase live");
+      expect(source.slice(live)).toContain("--public-dir dist/client");
+    }
+  });
+
+  it("keeps the bounded live-root retry policy identical across GHA and HF", () => {
+    const yml = read(".github/workflows/deploy.yml");
+    const sh = read("ci/hf-jobs/deploy.sh");
+    for (const option of [
+      "--attempts 6",
+      "--retry-delay-seconds 10",
+      "--timeout-seconds 20",
+      "--live-timeout-seconds 30",
+    ]) {
+      expect(yml).toContain(option);
+      expect(sh).toContain(option);
+    }
+  });
+
   it("Dockerfile base tag matches the playwright version in package-lock.json", () => {
     const lock = JSON.parse(read("package-lock.json"));
     const pw = lock.packages["node_modules/playwright"].version;

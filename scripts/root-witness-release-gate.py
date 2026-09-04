@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed release gate for the one public root and every public OTS proof.
+"""Fail-closed candidate/live gate for the one public root and every public OTS proof.
 
 This gate is deliberately non-mutating. Historical roots and proof files are
 evidence, even when they expose an incident; they are reported, never deleted or
@@ -7,19 +7,25 @@ rewritten here. A production release is blocked until invalid public artifacts
 are moved to an explicit non-served quarantine and a fresh exact-byte witness
 set is produced by the authorised workflow.
 
-Checks:
+Both phases check:
   * root schema identity, required fields, leaf count and Merkle root;
   * Ed25519 signature under the pinned local did:web key;
-  * sidecar and pointer bind the exact root bytes, count, Merkle and as_of;
+  * sidecar and pointer bind the exact candidate bytes, count, Merkle and as_of;
   * the current root has a completed Rekor rail with a local snapshot whose logIndex, signature and
     preimage digest match the signed envelope;
   * the current root has a parseable exact-byte OTS stamp (a pending calendar
     stamp is accepted as stamped, never described as Bitcoin-anchored);
   * every public .ots is a parseable OpenTimestamps proof and its digest matches
     locally available target bytes named by an adjacent file or witness sidecar;
-  * archive OTS references resolve to files that passed the checks above.
+  * archive OTS references resolve to files that passed the checks above;
+  * pointer drift is an internally consistent, timestamped MATCH, DRIFTED or
+    UNCHECKABLE observation. Candidate publication does not require the old live
+    root to match the new candidate, but an UNCHECKABLE observation is recordable,
+    not promotable.
 
-No network. No private key. Measurement, not certification.
+The live phase additionally fetches the apex root and requires an exact MATCH.
+Candidate checks use no network. Neither phase uses a private key. Measurement,
+not certification.
 """
 from __future__ import annotations
 
@@ -29,20 +35,46 @@ import hashlib
 import json
 import re
 import sys
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
 REPO = Path(__file__).resolve().parents[1]
-PUBLIC = REPO / "public"
+DEFAULT_PUBLIC = REPO / "public"
+PUBLIC = DEFAULT_PUBLIC
 INTEROP = PUBLIC / "interop"
 ROOT_PATH = PUBLIC / "root.json"
 SIDECAR_PATH = INTEROP / "root-witness-latest.json"
 POINTER_PATH = INTEROP / "root-witness-pointer.json"
 DID_PATH = PUBLIC / ".well-known" / "did.json"
 BOARD_DID = "did:web:csoai.org#board-attestation-1"
+LIVE_ROOT_URL = "https://councilof.ai/root.json"
 PREIMAGE_FIELDS = ("kind", "schema", "as_of", "merkle_root", "card_count", "did_intended")
 HEX64 = re.compile(r"^[0-9a-f]{64}$")
 HEX128 = re.compile(r"^[0-9a-f]{128}$")
+UTC_RFC3339 = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+
+
+def configure_public_dir(path: Path) -> None:
+    """Point all release checks at source public/ or the built dist/client tree."""
+    global PUBLIC, INTEROP, ROOT_PATH, SIDECAR_PATH, POINTER_PATH, DID_PATH
+    PUBLIC = path.resolve()
+    INTEROP = PUBLIC / "interop"
+    ROOT_PATH = PUBLIC / "root.json"
+    SIDECAR_PATH = INTEROP / "root-witness-latest.json"
+    POINTER_PATH = INTEROP / "root-witness-pointer.json"
+    DID_PATH = PUBLIC / ".well-known" / "did.json"
+
+
+def path_label(path: Path) -> str:
+    try:
+        return path.relative_to(REPO).as_posix()
+    except ValueError:
+        return str(path)
+
+
+def canonical_public_path(path: Path) -> str:
+    return "public/" + path.relative_to(PUBLIC).as_posix()
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -109,7 +141,7 @@ def validate_root(errors: list[str]) -> tuple[dict[str, Any], bytes, str, bytes]
     declared_schema_path = schema_path(root)
     add(errors, declared_schema_path is not None, f"root schema URL is not a supported local public-root schema: {root.get('schema')!r}")
     if declared_schema_path is not None:
-        add(errors, declared_schema_path.is_file(), f"declared root schema is missing: {declared_schema_path.relative_to(REPO)}")
+        add(errors, declared_schema_path.is_file(), f"declared root schema is missing: {path_label(declared_schema_path)}")
         if declared_schema_path.is_file():
             try:
                 schema = load_json(declared_schema_path)
@@ -172,13 +204,105 @@ def local_entry_path(value: Any) -> Path | None:
     if not isinstance(value, str) or not value:
         return None
     if value.startswith("https://councilof.ai/"):
-        return PUBLIC / value.removeprefix("https://councilof.ai/")
-    candidate = REPO / value
-    return candidate if candidate.is_relative_to(REPO) else None
+        candidate = (PUBLIC / value.removeprefix("https://councilof.ai/")).resolve()
+    elif value.startswith("public/"):
+        candidate = (PUBLIC / value.removeprefix("public/")).resolve()
+    else:
+        candidate = (REPO / value).resolve()
+    return candidate if candidate.is_relative_to(PUBLIC) else None
+
+
+def valid_checked_at(value: Any) -> bool:
+    """Require a real UTC RFC 3339 instant, with limited clock-skew tolerance."""
+    if not isinstance(value, str) or not UTC_RFC3339.fullmatch(value):
+        return False
+    try:
+        observed = datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return False
+    return observed <= datetime.now(timezone.utc) + timedelta(minutes=5)
+
+
+def validate_drift_record(
+    errors: list[str],
+    drift: Any,
+    root: dict[str, Any],
+    raw: bytes,
+    root_sha: str,
+    *,
+    label: str,
+    checked_against: str = LIVE_ROOT_URL,
+    require_match: bool = False,
+    require_observation: bool = False,
+) -> None:
+    """Validate a real three-state comparison without turning absence into MATCH."""
+    if not isinstance(drift, dict):
+        errors.append(f"{label} is absent")
+        return
+
+    status = drift.get("status")
+    add(errors, status in {"MATCH", "DRIFTED", "UNCHECKABLE"}, f"{label} has invalid status {status!r}")
+    add(errors, valid_checked_at(drift.get("checked_at")), f"{label} checked_at is not a valid UTC RFC 3339 timestamp")
+    add(errors, drift.get("checked_against") == checked_against, f"{label} checked_against is not {checked_against}")
+    add(errors, drift.get("witness_artifact_sha256") == root_sha, f"{label} witness sha256 does not bind the candidate root")
+    add(
+        errors,
+        drift.get("witness_artifact_merkle_root") == root.get("merkle_root"),
+        f"{label} witness Merkle root does not bind the candidate root",
+    )
+    add(errors, isinstance(drift.get("reason"), str) and bool(drift.get("reason")), f"{label} has no reason")
+
+    if status == "UNCHECKABLE":
+        for field in (
+            "live_root_sha256",
+            "live_root_merkle_root",
+            "live_root_bytes",
+            "match_sha256",
+            "match_merkle_root",
+        ):
+            add(errors, field not in drift or drift.get(field) is None, f"{label} UNCHECKABLE record fabricates {field}")
+        if require_observation:
+            errors.append(f"{label} is UNCHECKABLE; release promotion requires a real live observation")
+        if require_match:
+            errors.append(f"{label} must be MATCH in live phase, got UNCHECKABLE")
+        return
+
+    live_sha = drift.get("live_root_sha256")
+    live_merkle = drift.get("live_root_merkle_root")
+    live_bytes = drift.get("live_root_bytes")
+    match_sha = drift.get("match_sha256")
+    match_merkle = drift.get("match_merkle_root")
+    add(errors, isinstance(live_sha, str) and bool(HEX64.fullmatch(live_sha)), f"{label} has no valid live_root_sha256")
+    add(
+        errors,
+        live_merkle is None or (isinstance(live_merkle, str) and bool(HEX64.fullmatch(live_merkle))),
+        f"{label} has an invalid live_root_merkle_root",
+    )
+    add(errors, isinstance(live_bytes, int) and not isinstance(live_bytes, bool) and live_bytes >= 0, f"{label} has no valid live_root_bytes")
+    add(errors, isinstance(match_sha, bool), f"{label} match_sha256 is not boolean")
+    add(errors, isinstance(match_merkle, bool), f"{label} match_merkle_root is not boolean")
+    if isinstance(live_sha, str) and HEX64.fullmatch(live_sha) and isinstance(match_sha, bool):
+        add(errors, match_sha == (live_sha == root_sha), f"{label} match_sha256 contradicts the recorded digests")
+    if (live_merkle is None or isinstance(live_merkle, str)) and isinstance(match_merkle, bool):
+        add(errors, match_merkle == (live_merkle == root.get("merkle_root")), f"{label} match_merkle_root contradicts the recorded roots")
+
+    exact_match = (
+        live_sha == root_sha
+        and live_merkle == root.get("merkle_root")
+        and live_bytes == len(raw)
+        and match_sha is True
+        and match_merkle is True
+    )
+    if status == "MATCH":
+        add(errors, exact_match, f"{label} declares MATCH without an exact byte and Merkle match")
+    elif status == "DRIFTED":
+        add(errors, not exact_match and (match_sha is False or match_merkle is False), f"{label} declares DRIFTED without a recorded mismatch")
+    if require_match and status != "MATCH":
+        errors.append(f"{label} must be MATCH in live phase, got {status}")
 
 
 def validate_current_witness(
-    errors: list[str], root: dict[str, Any], raw: bytes, root_sha: str, signed: bytes
+    errors: list[str], root: dict[str, Any], raw: bytes, root_sha: str, signed: bytes, *, require_observation: bool
 ) -> dict[str, Any] | None:
     try:
         sidecar = load_json(SIDECAR_PATH)
@@ -204,14 +328,15 @@ def validate_current_witness(
         pointer_issues = exact_artifact_issues(pointer.get("live_root"), root, raw, root_sha, "pointer live_root")
         errors.extend(pointer_issues)
         drift = pointer.get("drift") if isinstance(pointer.get("drift"), dict) else {}
-        if pointer_issues:
-            add(errors, drift.get("status") != "MATCH", "pointer incorrectly declares MATCH while its live_root fields are stale")
-        else:
-            add(errors, drift.get("status") == "MATCH", "pointer drift status is not MATCH for current root")
-            add(errors, drift.get("match_sha256") is True, "pointer does not match current root sha256")
-            add(errors, drift.get("match_merkle_root") is True, "pointer does not match current root Merkle root")
-            add(errors, drift.get("live_root_sha256") == root_sha, "pointer drift live_root_sha256 is stale")
-            add(errors, drift.get("live_root_merkle_root") == root.get("merkle_root"), "pointer drift live_root_merkle_root is stale")
+        validate_drift_record(
+            errors,
+            drift,
+            root,
+            raw,
+            root_sha,
+            label="pointer drift",
+            require_observation=require_observation,
+        )
     except Exception as exc:
         errors.append(f"current witness pointer unreadable: {type(exc).__name__}: {exc}")
 
@@ -310,7 +435,7 @@ def validate_ots(errors: list[str]) -> set[str]:
     declared_targets = witness_ots_targets()
     valid: set[str] = set()
     for proof in sorted(PUBLIC.rglob("*.ots")):
-        relative = proof.relative_to(REPO).as_posix()
+        relative = canonical_public_path(proof)
         try:
             with proof.open("rb") as handle:
                 detached = DetachedTimestampFile.deserialize(StreamDeserializationContext(handle))
@@ -324,7 +449,7 @@ def validate_ots(errors: list[str]) -> set[str]:
         target_label: str | None = None
         if adjacent.is_file():
             target_digest = sha256(adjacent.read_bytes())
-            target_label = adjacent.relative_to(REPO).as_posix()
+            target_label = canonical_public_path(adjacent)
         elif relative in declared_targets:
             target_digest = declared_targets[relative]
             target_label = "witness sidecar artifact.sha256"
@@ -361,7 +486,7 @@ def validate_archive_references(errors: list[str], valid_ots: set[str]) -> None:
         try:
             values = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()] if path.suffix == ".jsonl" else [load_json(path)]
         except Exception as exc:
-            errors.append(f"archive document unreadable: {path.relative_to(REPO)}: {type(exc).__name__}")
+            errors.append(f"archive document unreadable: {path_label(path)}: {type(exc).__name__}")
             continue
         for value in values:
             for obj in iter_objects(value):
@@ -372,7 +497,7 @@ def validate_archive_references(errors: list[str], valid_ots: set[str]) -> None:
                 if normalized.startswith("interop/"):
                     normalized = "public/" + normalized
                 if normalized not in valid_ots:
-                    broken_references.setdefault(reference, set()).add(path.relative_to(REPO).as_posix())
+                    broken_references.setdefault(reference, set()).add(path_label(path))
     for reference, documents in sorted(broken_references.items()):
         sample = ", ".join(sorted(documents)[:3])
         suffix = "" if len(documents) <= 3 else f", … ({len(documents)} documents total)"
@@ -414,17 +539,131 @@ def run_selftest() -> int:
     assert ots_errors == []
     validate_current_ots(ots_errors, {"witnesses": {"ots": {"status": "PENDING"}}}, set())
     assert len(ots_errors) == 2
+
+    fixture_root = {"merkle_root": "11" * 32}
+    fixture_raw = b"candidate"
+    fixture_sha = sha256(fixture_raw)
+    match = {
+        "status": "MATCH",
+        "checked_at": "2026-09-04T12:00:00Z",
+        "checked_against": LIVE_ROOT_URL,
+        "witness_artifact_sha256": fixture_sha,
+        "live_root_sha256": fixture_sha,
+        "witness_artifact_merkle_root": fixture_root["merkle_root"],
+        "live_root_merkle_root": fixture_root["merkle_root"],
+        "live_root_bytes": len(fixture_raw),
+        "match_sha256": True,
+        "match_merkle_root": True,
+        "reason": "exact fixture match",
+    }
+    drifted = match | {
+        "status": "DRIFTED",
+        "live_root_sha256": "22" * 32,
+        "live_root_merkle_root": "33" * 32,
+        "live_root_bytes": 9,
+        "match_sha256": False,
+        "match_merkle_root": False,
+        "reason": "fixture differs",
+    }
+    uncheckable = {
+        "status": "UNCHECKABLE",
+        "checked_at": "2026-09-04T12:00:00Z",
+        "checked_against": LIVE_ROOT_URL,
+        "witness_artifact_sha256": fixture_sha,
+        "witness_artifact_merkle_root": fixture_root["merkle_root"],
+        "reason": "fixture endpoint unavailable",
+    }
+    for candidate_state in (match, drifted, uncheckable):
+        drift_errors: list[str] = []
+        validate_drift_record(
+            drift_errors,
+            candidate_state,
+            fixture_root,
+            fixture_raw,
+            fixture_sha,
+            label="candidate fixture",
+        )
+        assert drift_errors == [], drift_errors
+    uncheckable_release_errors: list[str] = []
+    validate_drift_record(
+        uncheckable_release_errors,
+        uncheckable,
+        fixture_root,
+        fixture_raw,
+        fixture_sha,
+        label="candidate fixture",
+        require_observation=True,
+    )
+    assert any("requires a real live observation" in issue for issue in uncheckable_release_errors)
+
+    for nonmatch_state in (drifted, uncheckable):
+        live_errors: list[str] = []
+        validate_drift_record(
+            live_errors,
+            nonmatch_state,
+            fixture_root,
+            fixture_raw,
+            fixture_sha,
+            label="live fixture",
+            require_match=True,
+        )
+        assert any("must be MATCH" in issue for issue in live_errors)
+    lying_match = match | {"live_root_sha256": "44" * 32}
+    lying_errors: list[str] = []
+    validate_drift_record(
+        lying_errors,
+        lying_match,
+        fixture_root,
+        fixture_raw,
+        fixture_sha,
+        label="lying fixture",
+    )
+    assert any("contradicts" in issue or "without an exact" in issue for issue in lying_errors)
+    wrong_size_errors: list[str] = []
+    validate_drift_record(
+        wrong_size_errors,
+        match | {"live_root_bytes": len(fixture_raw) + 1},
+        fixture_root,
+        fixture_raw,
+        fixture_sha,
+        label="wrong-size fixture",
+    )
+    assert any("without an exact" in issue for issue in wrong_size_errors)
+
+    configure_public_dir(REPO / "dist" / "client")
+    assert local_entry_path("public/interop/rekor-root-deadbeef.json") == PUBLIC / "interop" / "rekor-root-deadbeef.json"
+    assert local_entry_path("public/../../scripts/secret.json") is None
+    assert local_entry_path("https://councilof.ai/../../scripts/secret.json") is None
+    assert canonical_public_path(PUBLIC / "interop" / "root-deadbeef.json.ots") == "public/interop/root-deadbeef.json.ots"
+    configure_public_dir(DEFAULT_PUBLIC)
+    assert valid_checked_at("2026-09-04T12:00:00Z")
+    assert not valid_checked_at("not-a-timestamp")
+    assert not valid_checked_at("2999-01-01T00:00:00Z")
     print("root-witness-release-gate selftest: PASS")
     return 0
 
 
-def run_gate() -> int:
+def run_gate(
+    *,
+    phase: str,
+    public_dir: Path,
+    live_url: str = LIVE_ROOT_URL,
+    live_timeout_seconds: int = 30,
+) -> int:
+    configure_public_dir(public_dir)
     errors: list[str] = []
     validated = validate_root(errors)
     sidecar: dict[str, Any] | None = None
     if validated is not None:
         root, raw, root_sha, signed = validated
-        sidecar = validate_current_witness(errors, root, raw, root_sha, signed)
+        sidecar = validate_current_witness(
+            errors,
+            root,
+            raw,
+            root_sha,
+            signed,
+            require_observation=True,
+        )
     valid_ots = validate_ots(errors)
     if validated is not None and sidecar is not None:
         root, raw, root_sha, _ = validated
@@ -432,10 +671,29 @@ def run_gate() -> int:
             validate_current_ots(errors, sidecar, valid_ots)
     validate_archive_references(errors, valid_ots)
 
+    if phase == "live" and validated is not None:
+        root, raw, root_sha, _ = validated
+        try:
+            from witness_public_root import compute_drift
+
+            live_drift = compute_drift(root_sha, root["merkle_root"], live_url, timeout_seconds=live_timeout_seconds)
+            validate_drift_record(
+                errors,
+                live_drift,
+                root,
+                raw,
+                root_sha,
+                label="fresh live drift",
+                checked_against=live_url,
+                require_match=True,
+            )
+        except Exception as exc:
+            errors.append(f"fresh live drift check failed: {type(exc).__name__}: {exc}")
+
     # Stable output: the gate is also an audit artifact in CI logs.
     unique = list(dict.fromkeys(errors))
     if unique:
-        print(f"root-witness-release-gate: BLOCKED ({len(unique)} issue{'s' if len(unique) != 1 else ''})", file=sys.stderr)
+        print(f"root-witness-release-gate ({phase}): BLOCKED ({len(unique)} issue{'s' if len(unique) != 1 else ''})", file=sys.stderr)
         for issue in unique:
             print(f"- {issue}", file=sys.stderr)
         print(
@@ -443,15 +701,28 @@ def run_gate() -> int:
             file=sys.stderr,
         )
         return 1
-    print("root-witness-release-gate: PASS")
+    print(f"root-witness-release-gate ({phase}): PASS")
     return 0
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--phase", choices=("candidate", "live"), default="live")
+    parser.add_argument("--public-dir", type=Path, default=DEFAULT_PUBLIC)
+    parser.add_argument("--live-url", default=LIVE_ROOT_URL)
+    parser.add_argument("--live-timeout-seconds", type=int, default=30)
     args = parser.parse_args()
-    return run_selftest() if args.selftest else run_gate()
+    if args.selftest:
+        return run_selftest()
+    if args.live_timeout_seconds < 1 or args.live_timeout_seconds > 120:
+        parser.error("--live-timeout-seconds must be between 1 and 120")
+    return run_gate(
+        phase=args.phase,
+        public_dir=args.public_dir,
+        live_url=args.live_url,
+        live_timeout_seconds=args.live_timeout_seconds,
+    )
 
 
 if __name__ == "__main__":

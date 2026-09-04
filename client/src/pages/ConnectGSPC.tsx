@@ -176,22 +176,20 @@ export default function ConnectGSPC() {
           </div>
           <div>
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              Seven read-only tools (HTTP server)
+              Seven free read-only tools
             </h2>
             <ul className="space-y-1.5">
-              {TOOLS.map(([name, desc], i) => (
+              {TOOLS.map(([name, desc]) => (
                 <li key={name} className="text-sm text-gray-700 flex gap-2">
                   <code className="font-mono text-emerald-700 shrink-0">{name}</code>
-                  <span className="text-gray-500">
-                    — {desc}
-                    {i < 4 ? "" : " · HTTP only"}
-                  </span>
+                  <span className="text-gray-500">— {desc}</span>
                 </li>
               ))}
             </ul>
             <p className="mt-2 text-[11px] text-gray-400">
-              The stdio npm fallback (<code className="font-mono">csoai-gspc-mcp</code>) currently exposes the four
-              board/card tools; the three public-root tools are on the HTTP endpoint.
+              HTTP also exposes four x402-metered evidence tools (11 total). Published npm{" "}
+              <code className="font-mono">csoai-gspc-mcp@0.2.1</code> lists 12: those 11 plus{" "}
+              <code className="font-mono">witness_hash</code>, which is quarantined on the HTTP door.
             </p>
           </div>
         </div>

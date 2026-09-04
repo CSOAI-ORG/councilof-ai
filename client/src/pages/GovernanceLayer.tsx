@@ -31,7 +31,7 @@ const LAWS = [
   "Per-cell evidence only — no composite scores on any public surface.",
   "Every figure carries its run's evidence tag + sha256.",
   "What we haven't measured, we label UNMEASURED — never estimated.",
-  "Refutations ship next to claims: our n_eff=1.21 quorum refutation is public, linked from this page.",
+  "Refutations ship next to claims: the latest point experiment measured rho=1 and n_eff=1, so no fault-tolerance claim stands.",
 ];
 
 export default function GovernanceLayer() {

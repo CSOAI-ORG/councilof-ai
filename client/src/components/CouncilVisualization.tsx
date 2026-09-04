@@ -1,5 +1,6 @@
 /**
- * Design simulation of the 33-seat council vote (not live; measured n_eff 1.21/3)
+ * Design simulation of the 33-seat council vote (not live; latest point experiment
+ * measured rho=1 and n_eff=1 across three nominal legs)
  * Displays actual voting data from the council API
  */
 

@@ -163,14 +163,18 @@ function InsurersEvidencePack() {
     // payload (an HTML error page parsed as JSON, a renamed key) reached
     // `board.axes.map(...)` and took the whole page down with a blank screen.
     fetchWithRetry("/api/gspc")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((r) =>
+        r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)),
+      )
       .then((d) => {
         if (!d || !Array.isArray(d.axes)) throw new Error("not a GSPC payload");
         setBoard(d);
       })
       .catch(() => setBoardUnavailable(true));
     fetchWithRetry("/api/reported")
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((r) =>
+        r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)),
+      )
       .then((d) => {
         if (!d || !Array.isArray(d.entries))
           throw new Error("not a REPORTED payload");

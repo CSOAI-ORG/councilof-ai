@@ -70,14 +70,15 @@ step 'Install deps'
 if [ "$DRY_RUN" = "1" ] && [ -n "${NODE_MODULES_LINK:-}" ] && [ -d "$NODE_MODULES_LINK" ]; then
   # Local dry-run only: borrow an installed tree instead of a 5-minute npm install.
   ln -s "$NODE_MODULES_LINK" node_modules
-  echo "    DRY_RUN: linked node_modules → $NODE_MODULES_LINK (the job runs npm install)"
+  echo "    DRY_RUN: linked node_modules → $NODE_MODULES_LINK (the job runs npm ci)"
 else
-  npm install --no-audit --no-fund
+  npm ci --no-audit --no-fund
 fi
 
 step 'Public root + witness integrity — exact bytes or fail closed'
 python3 -m pip install -q cryptography opentimestamps-client
-npm run guard:root-witness
+python3 scripts/root-witness-release-gate.py --selftest
+python3 scripts/root-witness-release-gate.py --phase candidate
 
 step 'TypeScript debt ratchet — selftest, then non-mutating check'
 npm run ts-ratchet:selftest
@@ -200,9 +201,23 @@ echo "waiting 90s to confirm the gated tree stuck..."
 sleep 90
 if assert_live hold; then
   echo "hold: production still fat"
-  exit 0
+else
+  echo "hold lost — rewriting master/main/production"
+  wrangler_deploy_all
+  sleep 25
+  assert_live hold-heal
 fi
-echo "hold lost — rewriting master/main/production"
-wrangler_deploy_all
-sleep 25
-assert_live hold-heal
+
+step 'Recheck deployed root against witnessed candidate (bounded, read-only)'
+with_timeout 240 python3 scripts/witness_public_root.py --recheck \
+  --public-dir dist/client \
+  --check-only \
+  --attempts 6 \
+  --retry-delay-seconds 10 \
+  --timeout-seconds 20
+
+step 'Live public root + witness integrity — fresh apex MATCH required'
+with_timeout 120 python3 scripts/root-witness-release-gate.py \
+  --phase live \
+  --public-dir dist/client \
+  --live-timeout-seconds 30

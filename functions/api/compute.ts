@@ -103,7 +103,7 @@ export const onRequestGet: PagesFunction<Env> = async (ctx) => {
     },
     os: {
       doors: ["board", "verify", "space", "assess", "harness"],
-      harness: "HTTP MCP seven tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion) + this compute probe. npm csoai-gspc-mcp@0.1.0 still four. Not a mill-tool.",
+      harness: "HTTP MCP has seven free readers plus four x402-metered evidence tools. npm csoai-gspc-mcp@0.2.1 lists those eleven plus witness_hash, which is quarantined on HTTP. This compute probe is separate. Not a mill-tool.",
       view_only: true,
     },
   };

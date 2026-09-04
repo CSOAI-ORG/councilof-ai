@@ -10,7 +10,8 @@
  * csoai.x402/0.2, mode challenge-only, payTo configured, resources on councilof.ai.
  * pack.councilof.ai still serves the old mock and is owner-gated to retire.
  * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
- * 0.1.0. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
+ * 0.2.1 lists twelve tools; HTTP /mcp lists eleven because witness_hash is
+ * quarantined there. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the
  * typed allowance. Machine-access pricing is pending a published ruling.
  */
@@ -35,11 +36,11 @@ export const EARN_WEDGE =
 
 export const OPEN_SDKS = [
   { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Seven read tools in Claude, Cursor, Kimi, Grok." },
-  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Published 0.1.0 is four tools; HTTP /mcp and source 0.1.1 are seven. Owner npm publish." },
+  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Published 0.2.1 lists 12 tools (7 free + 5 x402); HTTP /mcp lists 11 because witness_hash is quarantined there." },
   { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc v1.0.3." },
   { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },
-  { id: "badge", href: "https://councilof.ai/api/badge?style=hf&size=md", eats: "README flag. Measurement state, not a stamp." },
+  { id: "badge", href: "https://councilof.ai/hf-badge.html", eats: "README board link or subject-bound signed-cell status. The global board is never a model score." },
   { id: "a2a-card", href: "https://councilof.ai/.well-known/agent-card.json", eats: "Discovery. Four skills. Task service still planned." },
   { id: "x402-card", href: "https://councilof.ai/.well-known/x402.json", eats: "Agents already speak 402. Charge assembly. Board stays free." },
   { id: "ras-pack", href: "https://councilof.ai/api/evidence-pack", eats: "csoai.insurability-evidence-pack/0.1 — four-class mapping, live." },

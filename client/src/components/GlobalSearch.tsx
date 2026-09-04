@@ -99,7 +99,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'charter', title: 'Partnership Charter', description: '52 Articles defining AI safety governance framework', category: 'pages', href: '/charter', icon: FileText, keywords: ['articles', 'governance', 'constitution'], highlight: true },
   { id: 'maternal-covenant', title: 'The Maternal Covenant', description: 'Care-based AI safety paradigm - Article 1', category: 'pages', href: '/maternal-covenant', icon: Heart, keywords: ['hinton', 'care', 'mother', 'protection'] },
   { id: 'prosperity', title: 'Prosperity Fund', description: 'AI wealth redistribution & Universal Basic Income', category: 'pages', href: '/prosperity', icon: DollarSign, keywords: ['ubi', 'wealth', 'income', 'redistribution'] },
-  { id: 'byzantine', title: 'Measurement Council', description: 'Multi-provider AI-to-AI cross-checking — designed; measured n_eff 1.21 of 3', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
+  { id: 'byzantine', title: 'Measurement Council', description: 'Multi-provider AI-to-AI cross-checking — designed; latest point experiment measured rho=1 and n_eff=1', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
   { id: 'founding-members', title: 'Founding Members', description: 'Join the first 100 founding members', category: 'pages', href: '/founding-members', icon: Users, keywords: ['members', 'founders', 'join'] },
 
   // Training & Certification
@@ -115,7 +115,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // SOAI-PDCA Framework
   { id: 'soai-pdca', title: 'SOAI-PDCA Framework', description: 'Plan-Do-Check-Act methodology for AI safety', category: 'pages', href: '/soai-pdca', icon: Scale, keywords: ['methodology', 'pdca', 'framework'] },
   { id: 'pdca-simulator', title: 'PDCA Simulator', description: 'Interactive PDCA walkthrough and simulation', category: 'pages', href: '/pdca-simulator', icon: Play, keywords: ['interactive', 'demo', 'practice'] },
-  { id: 'agent-council', title: 'Measurement Council', description: 'Multi-provider scoring — architecture designed, cross-checking measured at n_eff 1.21 of 3', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
+  { id: 'agent-council', title: 'Measurement Council', description: 'Multi-provider scoring — architecture designed; latest point experiment measured rho=1 and n_eff=1', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
   { id: 'pdca-cycles', title: 'PDCA Cycles', description: 'Manage your PDCA improvement cycles', category: 'pages', href: '/pdca', icon: Scale, keywords: ['cycles', 'improvement', 'management'] },
 
   // Watchdog & Jobs

@@ -69,7 +69,7 @@ export const PLUGIN_HARVEST = {
 } as const;
 
 export const HF_BADGE_SNIPPET =
-  "[![CSOAI-GSPC — measurement, not certification](https://councilof.ai/api/badge?style=hf&size=md)](https://councilof.ai/gspc-verify)";
+  "[![GSPC signed cell](https://councilof.ai/api/badge?card=<SIGNED_CARD_SHA256>&subject=<URL_ENCODED_OWNER%2FMODEL%40COMMIT_SHA>)](https://councilof.ai/gspc-verify)";
 
 export const EMBED_SNIPPET = `<script src="https://councilof.ai/embed.js"
         data-org="Council of AI" data-brand="#059669"
@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "Published npm 0.1.0 is four. HTTP /mcp and stdio source 0.1.1 wire seven. Owner: npm publish 0.1.1.",
+    note: "Published npm 0.2.1 lists 12 tools (7 free + 5 x402). HTTP /mcp lists 11 because witness_hash is quarantined there.",
     snippet: NPM_SNIPPET,
   },
   {

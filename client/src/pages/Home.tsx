@@ -59,7 +59,7 @@ const suggestionPrompts = [
     subtitle: "33-seat voting status",
     icon: Users,
     action: "/agent-council",
-    prompt: "Explain how the designed 33-seat council voting works, and what n_eff 1.21/3 means."
+    prompt: "Explain how the designed 33-seat council voting works, and why the latest point experiment measured rho=1 and n_eff=1 rather than fault tolerance."
   },
   {
     title: "Check Watchdog reports",

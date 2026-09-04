@@ -4,6 +4,9 @@ import { describe, expect, it } from "vitest";
 
 const pack = readFileSync(resolve(__dirname, "../../../functions/api/evidence-pack.ts"), "utf8");
 const mcp = readFileSync(resolve(__dirname, "../../../public/.well-known/mcp.json"), "utf8");
+const mcpCard = readFileSync(resolve(__dirname, "../../../public/.well-known/mcp/server-card.json"), "utf8");
+const agentCard = readFileSync(resolve(__dirname, "../../../public/.well-known/agent-card.json"), "utf8");
+const hfBadge = readFileSync(resolve(__dirname, "../../../public/hf-badge.html"), "utf8");
 const tools = readFileSync(resolve(__dirname, "../pages/ToolsPage.tsx"), "utf8");
 const claim = readFileSync(resolve(__dirname, "../data/anchoringClaim.ts"), "utf8");
 const productsFill = readFileSync(resolve(__dirname, "./productFill.ts"), "utf8");
@@ -19,9 +22,9 @@ describe("stale copy honesty", () => {
     expect(pack).not.toMatch(/13 axes × 8 frameworks/);
   });
 
-  it("mcp.json names the planted seven-read door as the measured product", () => {
+  it("publishes the current HTTP and npm tool boundaries", () => {
     const j = JSON.parse(mcp);
-    const seven = [
+    const eleven = [
       "board_totals",
       "get_axis",
       "verify_card",
@@ -29,16 +32,39 @@ describe("stale copy honesty", () => {
       "get_root",
       "get_card",
       "verify_inclusion",
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch",
     ];
-    expect(j.planted.tools).toEqual(seven);
-    expect(j.measured.tools).toEqual(seven);
-    expect(j.measured.total_tools).toBe(7);
-    expect(j.planted.note).toMatch(/Seven read tools/);
-    expect(j.measured.note).toMatch(/not this product/);
-    expect(tools).toContain("WatchlistPane");
-    expect(tools).toContain(
-      "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
+    expect(j.planted.tools).toEqual(eleven);
+    expect(j.measured.tools).toEqual(eleven);
+    expect(j.measured.total_tools).toBe(11);
+    expect(j.measured.free_tools).toBe(7);
+    expect(j.measured.metered_tools).toBe(4);
+    expect(j.measured.note).toMatch(/npm(?: stdio)? csoai-gspc-mcp@0\.2\.1 lists twelve/i);
+    expect(j.measured.note).toMatch(/witness_hash is quarantined/i);
+    expect(JSON.parse(mcpCard).endpoints.mcp.stdio).toBe(
+      "npx -y csoai-gspc-mcp@0.2.1",
     );
+    const agentMcp = JSON.parse(agentCard).supportedInterfaces.find(
+      (entry: { protocolBinding?: string }) => entry.protocolBinding === "JSONRPC",
+    );
+    expect(agentMcp.note).toMatch(/csoai-gspc-mcp@0\.2\.1 lists twelve/i);
+    expect(tools).toContain("WatchlistPane");
+    expect(tools).toMatch(
+      /board_totals · get_axis · verify_card · list_cards ·\s*get_root · get_card · verify_inclusion/,
+    );
+  });
+
+  it("never derives a model score from the global board", () => {
+    expect(hfBadge).toMatch(/global board badge is a link/i);
+    expect(hfBadge).toContain("UNMEASURED");
+    expect(hfBadge).toContain("UNSIGNED");
+    expect(hfBadge).toContain("/api/badge?card=&lt;SIGNED_CARD_SHA256&gt;&amp;subject=");
+    expect(hfBadge).toMatch(/exact model and immutable revision/i);
+    expect(hfBadge).not.toContain("value: live");
+    expect(hfBadge).not.toMatch(/Every public model on the Hub can carry an independent governance badge/);
   });
 });
 

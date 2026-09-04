@@ -21,9 +21,9 @@
 // SEPARATED leads render green; a TIE (still a measured axis, but the point-estimate
 // lead is not a measured advantage) renders lime — a visible, honest distinction.
 //
-// ?card=<hash> reflects one signed card's real state from /signed/card_index.json:
-// "<axis> · signed" (green) when that card carries a signature, else grey. It never
-// asserts the card verifies — that is the embed verify widget's job (real crypto).
+// ?card=<hash>&subject=<owner/model@immutable-revision> verifies the indexed card
+// cryptographically and requires its signed body to bind that exact subject. An index
+// flag alone is never enough. Missing, mutable or mismatched subject bindings fail grey.
 //
 // Formats:
 //   (default)        → SVG (image/svg+xml), embeddable directly in a README or <img>
@@ -37,6 +37,7 @@
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { verifyCard } from "../_lib/cardVerify";
 
 // WHAT WAS WRONG (found by operating the endpoint, 2026-08-26)
 //
@@ -165,23 +166,85 @@ const svgBadge = (label: string, message: string, colour: string, alt?: string):
 </svg>`;
 };
 
-// One signed card's real state, read from the published card index. Never asserts
-// the card verifies (the embed verify widget does that with real crypto) — only
-// whether the index says a signature is attached.
-const cardBadge = async (origin: string, hash: string): Promise<AxisBadge> => {
-  const h = hash.toLowerCase().replace(/[^0-9a-f]/g, "").slice(0, 64);
+type CardIndexEntry = {
+  card?: unknown;
+  card_url?: unknown;
+  axis?: unknown;
+  signed?: unknown;
+};
+
+const boundSubject = (card: unknown): string | null => {
+  if (!card || typeof card !== "object") return null;
+  const body = (card as { body?: unknown }).body;
+  if (!body || typeof body !== "object") return null;
+  const record = body as Record<string, unknown>;
+  if (typeof record.subject === "string") return record.subject;
+  if (record.subject && typeof record.subject === "object") {
+    const subject = record.subject as Record<string, unknown>;
+    const slug = typeof subject.slug === "string" ? subject.slug : null;
+    const revision = typeof subject.revision === "string" ? subject.revision : null;
+    if (slug && revision) return `${slug}@${revision}`;
+  }
+  return typeof record.model === "string" ? record.model : null;
+};
+
+// Hugging Face commits are immutable 40- or 64-hex revisions. Branches and tags can
+// move, so `main`, `latest`, release tags and bare model names cannot wear a model badge.
+const isPinnedHfSubject = (subject: string): boolean =>
+  /^[^\s/@]+\/[^\s@]+@[0-9a-f]{40}(?:[0-9a-f]{24})?$/i.test(subject);
+
+// A model-specific badge is a cryptographic verdict, not an index decoration. It
+// fetches the exact indexed file, verifies it under the pinned CSOAI trust anchor,
+// and checks the immutable subject supplied by the model card against the signed body.
+const cardBadge = async (
+  origin: string,
+  hash: string,
+  expectedSubject: string | null,
+): Promise<AxisBadge> => {
+  const h = hash.toLowerCase();
   const label = "card";
-  if (h.length < 6) return { label, message: "invalid ref", colour: GREY, state: "invalid" };
+  if (!/^[0-9a-f]{64}$/.test(h)) {
+    return { label, message: "invalid ref", colour: GREY, state: "invalid" };
+  }
+  if (!expectedSubject || !isPinnedHfSubject(expectedSubject)) {
+    return { label, message: "pinned subject required", colour: GREY, state: "subject-required" };
+  }
   try {
     const res = await fetch(new URL("/signed/card_index.json", origin).toString());
     if (!res.ok) return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
-    const idx = (await res.json()) as { cards?: { card: string; axis?: string; signed?: boolean }[] };
-    const entry = (idx.cards || []).find((c) => typeof c.card === "string" && c.card.toLowerCase().startsWith(h));
+    const idx = (await res.json()) as { cards?: CardIndexEntry[] };
+    const entry = (idx.cards || []).find(
+      (candidate) => typeof candidate.card === "string" && candidate.card.toLowerCase() === h,
+    );
     if (!entry) return { label, message: "not in index", colour: GREY, state: "not-found" };
-    const axis = (entry.axis || "card").slice(0, 40);
-    return entry.signed
-      ? { label: axis, message: "signed", colour: GREEN, state: "signed" }
-      : { label: axis, message: "unsigned", colour: GREY, state: "unsigned" };
+    if (entry.signed !== true) {
+      return { label, message: "unsigned", colour: GREY, state: "unsigned" };
+    }
+
+    const expectedPath = `/signed/cards/${h}.json`;
+    if (entry.card_url !== expectedPath) {
+      return { label, message: "invalid card path", colour: GREY, state: "invalid" };
+    }
+    const cardRes = await fetch(new URL(expectedPath, origin).toString());
+    if (!cardRes.ok) {
+      return { label, message: "card unavailable", colour: GREY, state: "unavailable" };
+    }
+    const card = await cardRes.json();
+    const verdict = await verifyCard(card, []);
+    if (!verdict.valid || verdict.id !== h) {
+      return { label, message: "invalid signature", colour: GREY, state: "invalid" };
+    }
+    if (boundSubject(card) !== expectedSubject) {
+      return { label, message: "subject mismatch", colour: GREY, state: "subject-mismatch" };
+    }
+
+    const axis = typeof entry.axis === "string" ? entry.axis.slice(0, 40) : "card";
+    return {
+      label: axis,
+      message: "valid · subject-bound",
+      colour: GREEN,
+      state: "valid",
+    };
   } catch {
     return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
   }
@@ -199,7 +262,9 @@ export const onRequestGet: PagesFunction = async (context) => {
   const axisParam = url.searchParams.get("axis");
   const cardParam = url.searchParams.get("card");
   if (axisParam || cardParam) {
-    const b = axisParam ? axisBadge(axisParam) : await cardBadge(url.origin, cardParam as string);
+    const b = axisParam
+      ? axisBadge(axisParam)
+      : await cardBadge(url.origin, cardParam as string, url.searchParams.get("subject"));
     if (format === "shields") {
       return new Response(
         JSON.stringify({ schemaVersion: 1, label: b.label, message: b.message, color: b.colour }),
