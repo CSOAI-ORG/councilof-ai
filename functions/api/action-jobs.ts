@@ -92,6 +92,8 @@ export const ACTION_JOB_LEDGER_CONTRACT = Object.freeze({
     submit_schema: ACTION_JOB_SUBMIT_SCHEMA,
     transition_schema: ACTION_JOB_TRANSITION_SCHEMA,
     exact_same_origin_mutations: true,
+    authenticated_writer: true,
+    public_browser_mutations: false,
     explicit_purpose: true,
     explicit_consent: true,
   },
@@ -790,6 +792,19 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       "ORIGIN_REQUIRED",
       "action submissions require an exact same-origin Origin header",
     );
+  const authorization = writerAuthorized(request, env);
+  if (authorization === "MISSING")
+    return error(
+      503,
+      "WRITER_AUTH_UNAVAILABLE",
+      "no submission writer is configured; the public endpoint is read-only",
+    );
+  if (authorization === "DENIED")
+    return error(
+      401,
+      "WRITER_AUTH_REQUIRED",
+      "authorized writer token required",
+    );
   if (!env.LEADS)
     return error(
       503,
@@ -1198,6 +1213,29 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       "CROSS_ORIGIN",
       "cross-origin ledger reads are not allowed",
     );
+
+  const url = new URL(request.url);
+  const jobId = url.searchParams.get("job_id");
+  if (!jobId)
+    return json({
+      ...ACTION_JOB_LEDGER_CONTRACT,
+      durable: Boolean(env.LEADS),
+      ledger_reads: "AUTHENTICATED_WRITER_ONLY",
+    });
+
+  const authorization = writerAuthorized(request, env);
+  if (authorization === "MISSING")
+    return error(
+      503,
+      "WRITER_AUTH_UNAVAILABLE",
+      "no ledger reader is configured; job records remain private",
+    );
+  if (authorization === "DENIED")
+    return error(
+      401,
+      "WRITER_AUTH_REQUIRED",
+      "authorized writer token required",
+    );
   if (!env.LEADS)
     return json(
       {
@@ -1209,9 +1247,6 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       503,
     );
 
-  const url = new URL(request.url);
-  const jobId = url.searchParams.get("job_id");
-  if (!jobId) return json({ ...ACTION_JOB_LEDGER_CONTRACT, durable: true });
   if (!JOB_ID.test(jobId))
     return error(400, "INVALID_JOB_ID", "job_id has an unsupported shape");
   try {

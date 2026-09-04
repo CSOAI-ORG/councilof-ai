@@ -11,6 +11,7 @@
 interface Env {
   LEADS?: KVNamespace;
   ASSESS_SIGNING_KEY_PKCS8_B64?: string;
+  EVIDENCE_INTAKE_WRITER_SECRET?: string;
 }
 
 export const MAX_CANDIDATE_BYTES = 3072;
@@ -458,11 +459,89 @@ function sameOrigin(request: Request): boolean {
   return !origin || origin === new URL(request.url).origin;
 }
 
+function constantTimeEqual(left: string, right: string): boolean {
+  const a = utf8(left);
+  const b = utf8(right);
+  let mismatch = a.length ^ b.length;
+  const length = Math.max(a.length, b.length);
+  for (let index = 0; index < length; index += 1)
+    mismatch |= (a[index] ?? 0) ^ (b[index] ?? 0);
+  return mismatch === 0;
+}
+
+function writerAuthorized(
+  request: Request,
+  env: Env,
+): "OK" | "MISSING" | "DENIED" {
+  const secret = env.EVIDENCE_INTAKE_WRITER_SECRET?.trim();
+  if (!secret) return "MISSING";
+  const authorization = request.headers.get("authorization") ?? "";
+  return constantTimeEqual(authorization, `Bearer ${secret}`)
+    ? "OK"
+    : "DENIED";
+}
+
+function intakeError(status: number, code: string, message: string): Response {
+  return Response.json(
+    {
+      schema: "csoai.evidence-intake-error/0.1",
+      ok: false,
+      error: code,
+      message,
+      stored: false,
+      measurement_state: "UNMEASURED",
+      writes_board: false,
+      model_training: false,
+      public_release: false,
+    },
+    { status, headers: { "cache-control": "no-store" } },
+  );
+}
+
+function validStoredRecord(
+  value: unknown,
+  expected: {
+    intakeId: string;
+    idempotencyKey: string;
+    candidate: JsonRecord;
+  },
+): value is JsonRecord & { received_at: string } {
+  if (!isRecord(value)) return false;
+  return (
+    value.schema === "csoai.measurement-intake-record/0.1" &&
+    value.intake_id === expected.intakeId &&
+    value.idempotency_key === expected.idempotencyKey &&
+    value.state === "AWAITING_OPERATOR_REVIEW" &&
+    value.measurement_state === "UNMEASURED" &&
+    value.model_training === false &&
+    value.public_release === false &&
+    typeof value.received_at === "string" &&
+    Number.isFinite(Date.parse(value.received_at)) &&
+    isRecord(value.candidate) &&
+    canonicalIntakeJson(value.candidate) ===
+      canonicalIntakeJson(expected.candidate)
+  );
+}
+
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!sameOrigin(ctx.request))
     return Response.json(
       { error: "cross-origin intake is not allowed" },
       { status: 403 },
+    );
+
+  const authorization = writerAuthorized(ctx.request, ctx.env);
+  if (authorization === "MISSING")
+    return intakeError(
+      503,
+      "WRITER_AUTH_UNAVAILABLE",
+      "No evidence-intake writer is configured; public browser persistence is unavailable.",
+    );
+  if (authorization === "DENIED")
+    return intakeError(
+      401,
+      "WRITER_AUTH_REQUIRED",
+      "An authorized server-side writer token is required.",
     );
 
   const raw = await ctx.request.text();
@@ -492,26 +571,54 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (!verified.ok)
     return Response.json({ error: verified.reason }, { status: 400 });
 
-  const receivedAt = new Date().toISOString();
+  let receivedAt = new Date().toISOString();
   const intakeId = `CI-${verified.sha256.slice(0, 24)}`;
   const idempotencyKey = `sha256:${verified.sha256}`;
   let stored = false;
   if (ctx.env.LEADS) {
     try {
-      await ctx.env.LEADS.put(
-        `evidence-candidate:${verified.sha256}`,
-        JSON.stringify({
-          schema: "csoai.measurement-intake-record/0.1",
-          intake_id: intakeId,
-          received_at: receivedAt,
-          idempotency_key: idempotencyKey,
-          state: "AWAITING_OPERATOR_REVIEW",
-          measurement_state: "UNMEASURED",
-          model_training: false,
-          public_release: false,
-          candidate: request.candidate,
-        }),
-      );
+      const key = `evidence-candidate:${verified.sha256}`;
+      const existingRaw = await ctx.env.LEADS.get(key);
+      if (existingRaw !== null) {
+        let existing: unknown;
+        try {
+          existing = JSON.parse(existingRaw);
+        } catch {
+          return intakeError(
+            503,
+            "DURABLE_RECORD_INVALID",
+            "The existing intake record is malformed; it was not overwritten.",
+          );
+        }
+        if (
+          !validStoredRecord(existing, {
+            intakeId,
+            idempotencyKey,
+            candidate: request.candidate,
+          })
+        )
+          return intakeError(
+            503,
+            "DURABLE_RECORD_CONFLICT",
+            "The existing intake record conflicts with this request; it was not overwritten.",
+          );
+        receivedAt = existing.received_at;
+      } else {
+        await ctx.env.LEADS.put(
+          key,
+          JSON.stringify({
+            schema: "csoai.measurement-intake-record/0.1",
+            intake_id: intakeId,
+            received_at: receivedAt,
+            idempotency_key: idempotencyKey,
+            state: "AWAITING_OPERATOR_REVIEW",
+            measurement_state: "UNMEASURED",
+            model_training: false,
+            public_release: false,
+            candidate: request.candidate,
+          }),
+        );
+      }
       stored = true;
     } catch {
       stored = false;

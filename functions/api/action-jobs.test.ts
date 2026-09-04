@@ -52,12 +52,17 @@ function submission(overrides: Record<string, unknown> = {}) {
   };
 }
 
-function submitRequest(body: unknown, origin: string | null = ORIGIN): Request {
+function submitRequest(
+  body: unknown,
+  origin: string | null = ORIGIN,
+  authorization: string | null = `Bearer ${WRITER_SECRET}`,
+): Request {
   return new Request(`${ORIGIN}/api/action-jobs`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
       ...(origin === null ? {} : { origin }),
+      ...(authorization === null ? {} : { authorization }),
     },
     body: JSON.stringify(body),
   });
@@ -103,7 +108,7 @@ function transitionRequest(
 async function submit(kv: MemoryKv) {
   const response = await onRequestPost({
     request: submitRequest(submission()),
-    env: { LEADS: kv.binding },
+    env: { LEADS: kv.binding, ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
   } as never);
   return {
     response,
@@ -132,6 +137,8 @@ describe("/api/action-jobs durable intent ledger", () => {
       },
       requests: {
         exact_same_origin_mutations: true,
+        authenticated_writer: true,
+        public_browser_mutations: false,
         explicit_purpose: true,
         explicit_consent: true,
       },
@@ -234,7 +241,7 @@ describe("/api/action-jobs durable intent ledger", () => {
           purpose: "Use the same key for different mutable intent",
         }),
       ),
-      env: { LEADS: kv.binding },
+      env: { LEADS: kv.binding, ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
     } as never);
 
     expect(response.status).toBe(409);
@@ -353,13 +360,37 @@ describe("/api/action-jobs durable intent ledger", () => {
   it("fails closed when LEADS or transition writer authority is unavailable", async () => {
     const noBinding = await onRequestPost({
       request: submitRequest(submission()),
-      env: {},
+      env: { ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
     } as never);
     expect(noBinding.status).toBe(503);
     expect(await noBinding.json()).toMatchObject({
       error: "DURABLE_STORE_UNAVAILABLE",
       execution_started: false,
     });
+
+    const submissionKv = memoryKv();
+    const noSubmissionWriter = await onRequestPost({
+      request: submitRequest(submission(), ORIGIN, null),
+      env: { LEADS: submissionKv.binding },
+    } as never);
+    expect(noSubmissionWriter.status).toBe(503);
+    expect(await noSubmissionWriter.json()).toMatchObject({
+      error: "WRITER_AUTH_UNAVAILABLE",
+    });
+    expect(submissionKv.put).not.toHaveBeenCalled();
+
+    const deniedSubmission = await onRequestPost({
+      request: submitRequest(submission(), ORIGIN, "Bearer wrong-secret"),
+      env: {
+        LEADS: submissionKv.binding,
+        ACTION_JOBS_WRITER_SECRET: WRITER_SECRET,
+      },
+    } as never);
+    expect(deniedSubmission.status).toBe(401);
+    expect(await deniedSubmission.json()).toMatchObject({
+      error: "WRITER_AUTH_REQUIRED",
+    });
+    expect(submissionKv.put).not.toHaveBeenCalled();
 
     const kv = memoryKv();
     const created = await submit(kv);
@@ -392,7 +423,7 @@ describe("/api/action-jobs durable intent ledger", () => {
       const kv = memoryKv();
       const response = await onRequestPost({
         request: submitRequest(submission(), origin),
-        env: { LEADS: kv.binding },
+        env: { LEADS: kv.binding, ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
       } as never);
       expect(response.status).toBe(403);
       expect(await response.json()).toMatchObject({
@@ -410,7 +441,10 @@ describe("/api/action-jobs durable intent ledger", () => {
         ...submission(),
         padding: "x".repeat(MAX_ACTION_JOB_REQUEST_BYTES),
       }),
-      env: { LEADS: oversizedKv.binding },
+      env: {
+        LEADS: oversizedKv.binding,
+        ACTION_JOBS_WRITER_SECRET: WRITER_SECRET,
+      },
     } as never);
     expect(oversized.status).toBe(413);
     expect(await oversized.json()).toMatchObject({ error: "INVALID_REQUEST" });
@@ -419,7 +453,10 @@ describe("/api/action-jobs durable intent ledger", () => {
     const strictKv = memoryKv();
     const extraField = await onRequestPost({
       request: submitRequest({ ...submission(), unexpected: true }),
-      env: { LEADS: strictKv.binding },
+      env: {
+        LEADS: strictKv.binding,
+        ACTION_JOBS_WRITER_SECRET: WRITER_SECRET,
+      },
     } as never);
     expect(extraField.status).toBe(400);
     expect(await extraField.json()).toMatchObject({
@@ -433,8 +470,10 @@ describe("/api/action-jobs durable intent ledger", () => {
     const created = await submit(kv);
     const jobId = String(created.body.job.job_id);
     const response = await onRequestGet({
-      request: new Request(`${ORIGIN}/api/action-jobs?job_id=${jobId}`),
-      env: { LEADS: kv.binding },
+      request: new Request(`${ORIGIN}/api/action-jobs?job_id=${jobId}`, {
+        headers: { authorization: `Bearer ${WRITER_SECRET}` },
+      }),
+      env: { LEADS: kv.binding, ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
     } as never);
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({
@@ -445,11 +484,45 @@ describe("/api/action-jobs durable intent ledger", () => {
 
     const crossOrigin = await onRequestGet({
       request: new Request(`${ORIGIN}/api/action-jobs?job_id=${jobId}`, {
-        headers: { origin: "https://outside.example" },
+        headers: {
+          origin: "https://outside.example",
+          authorization: `Bearer ${WRITER_SECRET}`,
+        },
       }),
-      env: { LEADS: kv.binding },
+      env: { LEADS: kv.binding, ACTION_JOBS_WRITER_SECRET: WRITER_SECRET },
     } as never);
     expect(crossOrigin.status).toBe(403);
     expect(await crossOrigin.json()).toMatchObject({ error: "CROSS_ORIGIN" });
+
+    const publicContract = await onRequestGet({
+      request: new Request(`${ORIGIN}/api/action-jobs`),
+      env: { LEADS: kv.binding },
+    } as never);
+    expect(publicContract.status).toBe(200);
+    expect(await publicContract.json()).toMatchObject({
+      schema: "csoai.action-job-contract/0.1",
+      durable: true,
+      ledger_reads: "AUTHENTICATED_WRITER_ONLY",
+    });
+
+    const privateKv = memoryKv();
+    const unavailableReader = await onRequestGet({
+      request: new Request(`${ORIGIN}/api/action-jobs?job_id=${jobId}`),
+      env: { LEADS: privateKv.binding },
+    } as never);
+    expect(unavailableReader.status).toBe(503);
+    expect(privateKv.get).not.toHaveBeenCalled();
+
+    const deniedReader = await onRequestGet({
+      request: new Request(`${ORIGIN}/api/action-jobs?job_id=${jobId}`, {
+        headers: { authorization: "Bearer wrong-secret" },
+      }),
+      env: {
+        LEADS: privateKv.binding,
+        ACTION_JOBS_WRITER_SECRET: WRITER_SECRET,
+      },
+    } as never);
+    expect(deniedReader.status).toBe(401);
+    expect(privateKv.get).not.toHaveBeenCalled();
   });
 });

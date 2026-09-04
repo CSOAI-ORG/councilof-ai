@@ -7,6 +7,8 @@ import {
   verifyCandidateForIntake,
 } from "./evidence-intake";
 
+const WRITER_SECRET = "test-evidence-intake-writer-secret";
+
 async function candidate() {
   return signCandidateObservation(
     {
@@ -39,12 +41,14 @@ function request(
     public_release: false,
   },
   origin?: string,
+  authorization: string | null = `Bearer ${WRITER_SECRET}`,
 ): Request {
   return new Request("https://councilof.ai/api/evidence-intake", {
     method: "POST",
     headers: {
       "content-type": "application/json",
       ...(origin ? { origin } : {}),
+      ...(authorization ? { authorization } : {}),
     },
     body: JSON.stringify({
       schema: "csoai.evidence-intake-request/0.1",
@@ -67,12 +71,14 @@ async function testSigningKey(): Promise<string> {
 describe("POST /api/evidence-intake", () => {
   it("verifies and durably stores an explicitly submitted candidate without promotion", async () => {
     const receipt = await candidate();
+    const get = vi.fn(async () => null);
     const put = vi.fn(async () => undefined);
     const response = await onRequestPost({
       request: request(receipt),
       env: {
-        LEADS: { put } as unknown as KVNamespace,
+        LEADS: { get, put } as unknown as KVNamespace,
         ASSESS_SIGNING_KEY_PKCS8_B64: await testSigningKey(),
+        EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET,
       },
     } as never);
     const body = (await response.json()) as Record<string, any>;
@@ -97,6 +103,7 @@ describe("POST /api/evidence-intake", () => {
       new TextEncoder().encode(JSON.stringify(body)).byteLength,
     ).toBeLessThanOrEqual(MAX_INTAKE_RECEIPT_BYTES);
     expect(put).toHaveBeenCalledOnce();
+    expect(get).toHaveBeenCalledOnce();
     expect(String(put.mock.calls[0]?.[0])).toBe(
       `evidence-candidate:${receipt.proof.sha256}`,
     );
@@ -132,7 +139,7 @@ describe("POST /api/evidence-intake", () => {
   it("returns verified-not-stored when no durable binding exists", async () => {
     const response = await onRequestPost({
       request: request(await candidate()),
-      env: {},
+      env: { EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET },
     } as never);
     expect(response.status).toBe(503);
     expect(await response.json()).toMatchObject({
@@ -154,7 +161,10 @@ describe("POST /api/evidence-intake", () => {
     });
     const response = await onRequestPost({
       request: request(receipt),
-      env: { LEADS: { put } as unknown as KVNamespace },
+      env: {
+        LEADS: { get: vi.fn(async () => null), put } as unknown as KVNamespace,
+        EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET,
+      },
     } as never);
     expect(response.status).toBe(400);
     expect(put).not.toHaveBeenCalled();
@@ -184,7 +194,7 @@ describe("POST /api/evidence-intake", () => {
     ]) {
       const response = await onRequestPost({
         request: request(receipt, consent),
-        env: {},
+        env: { EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET },
       } as never);
       expect(response.status).toBe(400);
     }
@@ -196,5 +206,98 @@ describe("POST /api/evidence-intake", () => {
       env: {},
     } as never);
     expect(response.status).toBe(403);
+  });
+
+  it("rejects missing or invalid writer authentication before reading or writing KV", async () => {
+    const receipt = await candidate();
+    for (const testCase of [
+      {
+        env: {},
+        authorization: null,
+        status: 503,
+        error: "WRITER_AUTH_UNAVAILABLE",
+      },
+      {
+        env: { EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET },
+        authorization: "Bearer wrong",
+        status: 401,
+        error: "WRITER_AUTH_REQUIRED",
+      },
+    ]) {
+      const get = vi.fn(async () => null);
+      const put = vi.fn(async () => undefined);
+      const response = await onRequestPost({
+        request: request(receipt, undefined, undefined, testCase.authorization),
+        env: {
+          ...testCase.env,
+          LEADS: { get, put } as unknown as KVNamespace,
+        },
+      } as never);
+      expect(response.status).toBe(testCase.status);
+      expect(await response.json()).toMatchObject({
+        ok: false,
+        error: testCase.error,
+        stored: false,
+        measurement_state: "UNMEASURED",
+      });
+      expect(get).not.toHaveBeenCalled();
+      expect(put).not.toHaveBeenCalled();
+    }
+  });
+
+  it("replays an identical immutable record without changing its timestamp or writing KV", async () => {
+    const receipt = await candidate();
+    const receivedAt = "2026-09-04T08:15:00.000Z";
+    const get = vi.fn(async () =>
+      JSON.stringify({
+        schema: "csoai.measurement-intake-record/0.1",
+        intake_id: `CI-${receipt.proof.sha256.slice(0, 24)}`,
+        received_at: receivedAt,
+        idempotency_key: `sha256:${receipt.proof.sha256}`,
+        state: "AWAITING_OPERATOR_REVIEW",
+        measurement_state: "UNMEASURED",
+        model_training: false,
+        public_release: false,
+        candidate: receipt,
+      }),
+    );
+    const put = vi.fn(async () => undefined);
+    const response = await onRequestPost({
+      request: request(receipt),
+      env: {
+        LEADS: { get, put } as unknown as KVNamespace,
+        EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET,
+        ASSESS_SIGNING_KEY_PKCS8_B64: await testSigningKey(),
+      },
+    } as never);
+    expect(response.status).toBe(202);
+    expect(await response.json()).toMatchObject({
+      received_at: receivedAt,
+      stored: true,
+      state: "AWAITING_OPERATOR_REVIEW",
+    });
+    expect(get).toHaveBeenCalledOnce();
+    expect(put).not.toHaveBeenCalled();
+  });
+
+  it("fails closed instead of overwriting a malformed or conflicting durable record", async () => {
+    const receipt = await candidate();
+    for (const existing of ["not-json", JSON.stringify({ schema: "wrong" })]) {
+      const get = vi.fn(async () => existing);
+      const put = vi.fn(async () => undefined);
+      const response = await onRequestPost({
+        request: request(receipt),
+        env: {
+          LEADS: { get, put } as unknown as KVNamespace,
+          EVIDENCE_INTAKE_WRITER_SECRET: WRITER_SECRET,
+        },
+      } as never);
+      expect(response.status).toBe(503);
+      expect(await response.json()).toMatchObject({
+        ok: false,
+        stored: false,
+      });
+      expect(put).not.toHaveBeenCalled();
+    }
   });
 });
