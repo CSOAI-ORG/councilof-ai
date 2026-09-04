@@ -1,0 +1,109 @@
+{
+  "card": {
+    "as_of": "2026-09-04T08:59:56Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:arbitrum",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "head": {
+        "block": 501613683,
+        "block_hash": "0x9756596b15e5b8960ef08752c342df0df620c5115fbd4ad195db5fd0bea1c654",
+        "block_time": "2026-09-04T08:59:56Z"
+      },
+      "n_contracts": 6,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:arbitrum",
+          "from": 500899206,
+          "to": 500899355,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:USDY:arbitrum",
+          "from": 500896857,
+          "to": 500897006,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arbitrum.drpc.org"
+        },
+        {
+          "subject": "evm-events:BENJI:arbitrum",
+          "from": 500896881,
+          "to": 500897030,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:TBILL:arbitrum",
+          "from": 500900870,
+          "to": 500901019,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:USTBL:arbitrum",
+          "from": 500901070,
+          "to": 500901219,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:bIB01:arbitrum",
+          "from": 500951101,
+          "to": 500951286,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500939476,
+          "rpc": "arb1.arbitrum.io"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on arbitrum that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "dc8708d419b7496c1687c74a36ada412a695958218632b5cba9c3a49180ba373",
+    "sig_ed25519": "314be49037e0e5ac1b592b93a832b91c94ef15efad563348f4cfac587be77f063bca70f8c151cdd1bdfe39a8862fba97b07700484cb2d69f77f9f9804607ff0d",
+    "source_urls": [
+      "https://arb1.arbitrum.io",
+      "https://arbitrum.drpc.org"
+    ],
+    "subject": "evm-events:scan:arbitrum coverage at block 501613683",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "f3b1296dbcab0e5326909d2ba1c597d97decc98de53734c8c8acfb1f141f60c8",
+    "f99eb1a0b06fecc56f39ee5c1a6f8f73b617f2bb024dea60517814673025aa13",
+    "23d75ed244025da5e5dec22b02dbb0e4c29bb25af200d59c924044235d1fe6ff",
+    "4f7b4b1c4444fc884f2865e6a9d4e1b630047bea799fdf24516f2c56e577fd77",
+    "baf0a6c633c69dfd1a568faa2360d7dc78c8356afce39251466ca3ffa096a34f",
+    "ba797ca5f449da360ae562ddca0d090df0311e5f057154e9d432c9879d84ff93",
+    "24e5c20afa5ae2097ed5939b5b8a162f94ae0a2b23741ed055755f1584a1c8e4",
+    "48e78ba0f3aae7cbeb85b6373f02da42799b8a1f4f05e66ad7e36e3439168383"
+  ]
+}

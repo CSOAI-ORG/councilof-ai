@@ -1,0 +1,198 @@
+{
+  "card": {
+    "as_of": "2026-09-04T08:59:47Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:ethereum",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "head": {
+        "block": 25902915,
+        "block_hash": "0xe0f7c29e0e259877a5030806002c1cf6d81ff2ea2d5b56a22e9ea4a709157888",
+        "block_time": "2026-09-04T08:59:47Z"
+      },
+      "n_contracts": 16,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:BUIDL-I:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USYC:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USDY:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:WTGXX:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:JTRSY:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887787,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:BENJI:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USTB:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:OUSG:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887787,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:TBILL:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887787,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USTBL:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:MONY:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:mTBILL:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887787,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:VBILL:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USCC:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:bIB01:ethereum",
+          "from": 25901519,
+          "to": 25902903,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on ethereum that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "50a2dc231671649c2ce75fde1c3cc1bd0ee681f81fa31220873773b6ae585afd",
+    "sig_ed25519": "74f87ba8a58aaddf4e57ec163ea019d46f8cc87c5f274b8a7ba405012493d5ba681f897787f005868eaf53b481d7149c225660c8e9b6f244b0b28b79e5e93b07",
+    "source_urls": [
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm-events:scan:ethereum coverage at block 25902915",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "71751ace770c641231bf3edc95bc65c84d0b6dc6fbe36141457dea2a3550a9b0",
+    "0bccafe90d4f170811d6f7744db3596e6536425bc9b1a45a27a632e9b43e59db",
+    "ea22058961860379283d001f1ae7a6b9a16f20dd2ed4ee5c05e54d1aa0ad8de4",
+    "13c2321211b922c7fd59f940b875213cf3c904dc3960aa0a3c6d85f23ecec31b",
+    "baf0a6c633c69dfd1a568faa2360d7dc78c8356afce39251466ca3ffa096a34f",
+    "ba797ca5f449da360ae562ddca0d090df0311e5f057154e9d432c9879d84ff93",
+    "24e5c20afa5ae2097ed5939b5b8a162f94ae0a2b23741ed055755f1584a1c8e4",
+    "48e78ba0f3aae7cbeb85b6373f02da42799b8a1f4f05e66ad7e36e3439168383"
+  ]
+}
