@@ -1,0 +1,176 @@
+{
+  "schema": "csoai.x402-bazaar-census/0.1",
+  "kind": "census",
+  "as_of": "2026-09-04T15:48:58Z",
+  "issuer": "CSOAI Ltd (UK Companies House 16939677)",
+  "source": {
+    "url": "https://facilitator.payai.network/discovery/resources",
+    "method": "keyless paginated HTTPS GET, limit=1000, 0.4s between pages",
+    "auth": "none required",
+    "robots": "public discovery endpoint of a public facilitator"
+  },
+  "doctrine": "A DISCOVERED listing is not a grade. This census counts what the index publishes; it says nothing about service quality, honesty, solvency or fitness of any listed resource. Not a ranking. Not an endorsement. Never a certificate.",
+  "counts": {
+    "resources_fetched": 28136,
+    "resources_reported_by_index": 28136,
+    "coverage_pct": 100.0,
+    "distinct_pay_to_addresses": 1154,
+    "distinct_hosts": 1753,
+    "accepts_entries_priced_zero": 114,
+    "accepts_entries_priced_above_zero": 28022,
+    "carry_a_description": 3527,
+    "list_rows_carrying_an_extensions_object": 0
+  },
+  "price_usdc": {
+    "min": 1e-06,
+    "median": 0.005,
+    "mean": 35.931868,
+    "max": 1000000.0,
+    "note": "atomic units / 1e6 (USDC). Zero-priced entries excluded and counted separately; a zero is a free seed route, not a price. The MEAN is not a useful figure here: one entry (http://api-x402.roshambo.lol/game/play) is priced at 1,000,000 USDC and drags it two orders of magnitude. Read the median.",
+    "outliers_above_10k_usdc": 1
+  },
+  "networks": {
+    "eip155:8453": 20246,
+    "base": 3447,
+    "solana": 2806,
+    "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp": 1470,
+    "base-sepolia": 54,
+    "eip155:84532": 32,
+    "eip155:137": 25,
+    "solana-devnet": 22,
+    "polygon": 7,
+    "eip155:1187947933": 6,
+    "solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1": 4,
+    "eip155:42161": 4,
+    "eip155:80002": 3,
+    "eip155:196": 2,
+    "eip155:1952": 2,
+    "eip155:43114": 1,
+    "eip155:1329": 1,
+    "xlayer-testnet": 1,
+    "xlayer": 1,
+    "sei-testnet": 1,
+    "peaq": 1
+  },
+  "x402_versions": {
+    "2": 21796,
+    "1": 6340
+  },
+  "concentration": {
+    "top_3_merchants_pct_of_accepts": 63.7,
+    "note": "share of accepts entries whose payTo is one of the three most frequent addresses"
+  },
+  "top_merchants": [
+    {
+      "pay_to": "0x2bb72231eed303cc91a462a1fa738b42b6a9ac6d",
+      "accepts_entries": 14247
+    },
+    {
+      "pay_to": "asedd1vqp4at4jnycoum22z1cdkgkuwz3awevudbkmxe",
+      "accepts_entries": 2124
+    },
+    {
+      "pay_to": "0x101cd32b9beee93845ead7bc604a5f1873330acf",
+      "accepts_entries": 1556
+    },
+    {
+      "pay_to": "0xabf4fabd7c416fb67202e5f9002389fc75e2a9d0",
+      "accepts_entries": 1241
+    },
+    {
+      "pay_to": "0x9f8bd9875b3e0b632a24a3a7c73f7787175e73a2",
+      "accepts_entries": 1014
+    },
+    {
+      "pay_to": "0xc85f0cf16f5e677bbe5dfc94662cc86f2fba0604",
+      "accepts_entries": 743
+    },
+    {
+      "pay_to": "9urrvux69hqaopg1jgv9p9wr7jdkoztzdkunyj8eo1up",
+      "accepts_entries": 533
+    },
+    {
+      "pay_to": "aythnvc6bzx1alty7b5px7hcavosyszg9aekvdcz8r1u",
+      "accepts_entries": 359
+    },
+    {
+      "pay_to": "0xc66d1757b9cf97e51f22075927c36ff7add96a01",
+      "accepts_entries": 305
+    },
+    {
+      "pay_to": "0x348df429bd49a7506128c74ce1124a81b4b7dc9d",
+      "accepts_entries": 256
+    }
+  ],
+  "top_hosts": [
+    {
+      "host": "orbisapi.com",
+      "resources": 14247
+    },
+    {
+      "host": "pinionos.com",
+      "resources": 1555
+    },
+    {
+      "host": "agent402.tools",
+      "resources": 1241
+    },
+    {
+      "host": "api.delx.ai",
+      "resources": 1012
+    },
+    {
+      "host": "k2so.wrong.systems",
+      "resources": 515
+    },
+    {
+      "host": "api.x402node.dev",
+      "resources": 492
+    },
+    {
+      "host": "payai.agentstools.dev",
+      "resources": 359
+    },
+    {
+      "host": "x402.asrai.me",
+      "resources": 318
+    },
+    {
+      "host": "www.cloudworldmodel.ai",
+      "resources": 307
+    },
+    {
+      "host": "0x3EDE4dd8...",
+      "resources": 277
+    },
+    {
+      "host": "x402.aurelianflo.com",
+      "resources": 255
+    },
+    {
+      "host": "mpp.hyreagent.fun",
+      "resources": 181
+    },
+    {
+      "host": "k2so-8080.on.ascii.dev",
+      "resources": 160
+    },
+    {
+      "host": "gpt55.558686.xyz",
+      "resources": 141
+    },
+    {
+      "host": "AsEDd1vqP4...",
+      "resources": 112
+    }
+  ],
+  "unmeasured": [
+    "service_quality",
+    "uptime",
+    "honesty_of_any_listed_resource",
+    "whether_a_listed_resource_settles",
+    "duplicate_detection_across_hosts",
+    "whether_resources_declare_a_bazaar_schema (the LIST response carries no extensions object for any row; that is a property of this endpoint output, not proof the resources lack one)"
+  ],
+  "content_sha256": "efc93ac5e76d506ecd6778cf4d323138511c95e3036efb3f408bfd4d545887a6"
+}
