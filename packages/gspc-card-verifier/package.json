@@ -31,7 +31,9 @@
     "profile",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "spec",
+    "test/vectors"
   ],
   "engines": {
     "node": ">=19"
@@ -40,7 +42,8 @@
   "scripts": {
     "test": "node --test test/*.test.mjs",
     "fixtures": "node test/make-fixtures.mjs",
-    "bundle": "node scripts/bundle.mjs ../../public/verifier/gspc-verify.mjs"
+    "bundle": "node scripts/bundle.mjs ../../public/verifier/gspc-verify.mjs",
+    "vectors:eval": "node test/make-eval-vectors.mjs"
   },
   "keywords": [
     "ed25519",

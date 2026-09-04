@@ -1,0 +1,15 @@
+{
+  "id": "u004-payload-not-base64",
+  "expect": "UNCHECKABLE",
+  "why": "payload cannot be decoded, so it was never compared",
+  "envelope": {
+    "payloadType": "application/vnd.in-toto+json",
+    "payload": "!!!not-base64!!!",
+    "signatures": [
+      {
+        "keyid": "did:web:councilof.ai#eval-1",
+        "sig": "5LW66E2+axAPj3H/snPKvWsUiJBx7azfqeRCOiUdRI1zKfVFFRIlvpuDTcZsQzTia3ZJhJYE0KW3oRhcgvQ8Ag=="
+      }
+    ]
+  }
+}

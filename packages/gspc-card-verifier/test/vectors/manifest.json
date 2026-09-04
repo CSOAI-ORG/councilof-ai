@@ -1,0 +1,147 @@
+{
+  "corpus": "councilof.ai/evaluation-result/conformance/v1",
+  "predicateType": "https://councilof.ai/attestations/evaluation-result/v1",
+  "generated_by": "test/make-eval-vectors.mjs (deterministic: fixed seed, fixed timestamp)",
+  "publicKey_ed25519_hex": "ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c",
+  "counts": {
+    "VALID": 9,
+    "INVALID": 17,
+    "UNCHECKABLE": 7
+  },
+  "total": 33,
+  "vectors": [
+    {
+      "file": "c001-unicode-in-name.json",
+      "sha256": "46e51b073c6871e5664404b4d8d2583d66e01acf4ba967573c79520fb773342d"
+    },
+    {
+      "file": "c002-key-order-irrelevant.json",
+      "sha256": "a97c67fda774e220fb4b2dd532a3784b6363ed5388a6004bbf85adb8ae2ac4a8"
+    },
+    {
+      "file": "c003-reserialised-differently.json",
+      "sha256": "74f9c6f2e6e6361a7202f6309d09a618f418dca59dc4fd17f5ef43a28db2b960"
+    },
+    {
+      "file": "c004-value-precision.json",
+      "sha256": "3b1d2bcc7993c31abd67b085d84c265c4bef8fdd32faa9d5c4ecb5df730c0a23"
+    },
+    {
+      "file": "i001-tampered-value.json",
+      "sha256": "454cf201ab3d70e747df280820b598905890e8725f80791376e7c2f46ec27f70"
+    },
+    {
+      "file": "i002-tampered-n.json",
+      "sha256": "33d2c46d3fc77eff38576520c01b39c62362935b065afd1758b6c619193dcb41"
+    },
+    {
+      "file": "i003-tampered-commit.json",
+      "sha256": "adc2f34fd62ccb41d24cbbb0b5c3ae860592e026ab321916c83e8f4ba68b9466"
+    },
+    {
+      "file": "i004-tampered-heldout.json",
+      "sha256": "c2245e5cfc0674cb9cd7c3e67cec67be54f118088b9763a6345764454885b671"
+    },
+    {
+      "file": "i005-tampered-limits.json",
+      "sha256": "620ad315a62e69440a3ee341167e4dcd4d031428095e6a7342cda87b69aadf22"
+    },
+    {
+      "file": "i006-tampered-date.json",
+      "sha256": "7a90e2ffff11bb1c8bcfa525e54a91558dd427fc24288aa79a2491745476d661"
+    },
+    {
+      "file": "i007-foreign-key.json",
+      "sha256": "c4f8eabbdc01d2a631f3c0b74a8113aeeb294c372adc2d53b99ef98f77f13b8a"
+    },
+    {
+      "file": "i008-garbage-signature.json",
+      "sha256": "24d7ec4f7657cf4717a6de5b3233e1d4c739742b6fb1de56b36ef4e8847fbdfc"
+    },
+    {
+      "file": "i009-predicate-swapped.json",
+      "sha256": "dd68f157c4ae366ab1d19981da47bc06d5fed114684c411f29da3504e1028ed5"
+    },
+    {
+      "file": "r001-replay-identical.json",
+      "sha256": "5458518124439160b5963b40a8c0c982b75f1be10394d8942dbe8e7368ed0def"
+    },
+    {
+      "file": "r002-replay-redated.json",
+      "sha256": "497ffca151d68aecd9f297b76d7e401ea613918e4dd533bb1d3055dbdf458c7f"
+    },
+    {
+      "file": "s001-truncated-commit.json",
+      "sha256": "cc95d4de7d19da919a356523df8432722f94599192b5966a7753d0ec0c908ae3"
+    },
+    {
+      "file": "s002-wilson-on-median.json",
+      "sha256": "26970e0b69ad301cdc410f4effeb0afc857e828b48c04f3fcdaee86fcc72133b"
+    },
+    {
+      "file": "s003-no-establishes.json",
+      "sha256": "c89b36d8b90bec55c2ecaa59eb313f67031f1339c533501f9ce21411abad37cd"
+    },
+    {
+      "file": "s004-unknown-aggregation.json",
+      "sha256": "50820873c0520be5d10a0fb55458b641fddfea35715baab22b6b0a8873dac4c4"
+    },
+    {
+      "file": "s005-confidence-out-of-range.json",
+      "sha256": "fbff7369a802a414550809b227552c07d58ae6d8832e423de27d1772a0b486d6"
+    },
+    {
+      "file": "s006-zero-items.json",
+      "sha256": "0d11c4031bb8a8ff66160bedcb466a1199218c4efc8f031338fd9030915ac099"
+    },
+    {
+      "file": "u001-unresolvable-key.json",
+      "sha256": "f86009bed9c4d9d9199ec119cb0fd6be551f9f3ce2b78f7ec83ae7543627c412"
+    },
+    {
+      "file": "u002-unknown-payload-type.json",
+      "sha256": "7d3791ff661b880164b4d35ba95bb20161d9f0d278bc1a0ee2f2057f663af5bc"
+    },
+    {
+      "file": "u003-no-signatures.json",
+      "sha256": "5f78e2b728b9b3def856890beccd05d18332117272ecd75a0142338921fdf8d6"
+    },
+    {
+      "file": "u004-payload-not-base64.json",
+      "sha256": "bdb24e08a821071a6eb780a0e6c98f6aa4a452a162a97ff8d3e73de84d2b080b"
+    },
+    {
+      "file": "u005-future-predicate-version.json",
+      "sha256": "aa7ecafe8af7735c1c396045b621ce297653543237c4023dcadb1b7b5983d7dc"
+    },
+    {
+      "file": "u006-signature-absent.json",
+      "sha256": "63d22478b84c6b8aa7da896327de8ccdd3c19d4ad0e6f5ffaa1b8a1c0e3e0ddb"
+    },
+    {
+      "file": "u007-not-a-statement.json",
+      "sha256": "f3e88b3222ae7305d8a1264faa4cb892b2f279bee6a0b91d2e1fcceb2d871395"
+    },
+    {
+      "file": "v001-genuine.json",
+      "sha256": "6bed95c353ad48f60c31b6c1eb056d38cc8025281f18862fcdf20e3cd5a065b8"
+    },
+    {
+      "file": "v002-no-interval.json",
+      "sha256": "c616e7447aa95dcbe6af125528a593010ca1118ca0c82dacbf6e80afe4591f6b"
+    },
+    {
+      "file": "v003-held-out-absent.json",
+      "sha256": "5414d52284eaa16ea933c78e377bb5015366c1e0033b060ab0c61c151a296200"
+    },
+    {
+      "file": "v004-model-judge.json",
+      "sha256": "4c1fa527de47905aaee2a4d91c01d856af428227b28809669a4cf9de54de3a5b"
+    },
+    {
+      "file": "v005-contamination-found.json",
+      "sha256": "c8a841123169e00735c0edbad65899d8fc2c02425955010da18c198fea4d3651"
+    }
+  ],
+  "corpus_sha256": "047d269396f684b0e0a07e2e4769eb6897cd39205f2b9678389f693c539b37ce"
+}

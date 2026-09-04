@@ -1,0 +1,27 @@
+{
+  "as_of": "20260904T045058Z",
+  "schema": "csoai.synthesis/0.1",
+  "cross_refs": {
+    "standards_to_axes": "Every standard maps to 1+ GSPC axes",
+    "packages_to_doctrine": "Every package enforces the doctrine (measurement, not certification)",
+    "loops_to_counters": "Every loop updates a /api/state counter",
+    "doors_to_apis": "Every /.well-known/ door links to a /api/ endpoint"
+  },
+  "mappings": {
+    "EU AI Act \u2192 Article 50 axis": "axes-deep.html#art50",
+    "NIST AI RMF \u2192 Safety axis": "axes-deep.html#safety",
+    "ISO 42001 \u2192 Governance axis": "axes-deep.html#governance",
+    "OWASP LLM Top 10 \u2192 Safety axis": "axes-deep.html#safety",
+    "GDPR \u2192 Privacy axis": "axes-deep.html#privacy",
+    "HIPAA \u2192 Privacy axis": "axes-deep.html#privacy",
+    "FedRAMP \u2192 Compliance axis": "axes-deep.html#compliance",
+    "x402 \u2192 Receipt axis": "axes-deep.html#receipt",
+    "XRPL \u2192 Asset axis": "axes-deep.html#asset",
+    "EAS \u2192 On-chain axis": "axes-deep.html#onchain"
+  },
+  "discovery": {
+    "standards_total": 122,
+    "formats_total": 188,
+    "loops_total": 10
+  }
+}
