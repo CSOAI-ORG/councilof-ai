@@ -1,0 +1,83 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>in-toto predicate: EvaluationResult/v1 — Council of AI</title>
+<meta name="description" content="in-toto predicate https://councilof.ai/attestations/evaluation-result/v1 — the signed outcome of one AI evaluation run. in-toto carries no predicate for AI evaluation results; this is that predicate, with a frozen conformance corpus and an Apache-2.0 reference verifier.">
+<link rel="canonical" href="https://councilof.ai/attestations/evaluation-result/v1">
+<style>
+ :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3;--acc:#0b5}
+ @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b;--acc:#4c9}}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ main{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+ h1{font-size:1.5rem;margin:0 0 .25rem} .sub{color:var(--mut);margin:0 0 2rem}
+ h2{font-size:1.02rem;margin:2.2rem 0 .5rem}
+ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:color-mix(in srgb,var(--fg) 8%,transparent);padding:.12em .35em;border-radius:4px}
+ pre{overflow-x:auto;background:color-mix(in srgb,var(--fg) 6%,transparent);padding:1rem;border-radius:8px} pre code{background:none;padding:0}
+ dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1rem;margin:0} dt{color:var(--mut)}
+ blockquote{margin:1rem 0;padding:.75rem 1rem;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,transparent)}
+ a{color:inherit}
+</style>
+<main>
+<h1>in-toto predicate: <code>EvaluationResult</code> v1</h1>
+<p class="sub">The signed outcome of one evaluation run over a named system — with a frozen conformance corpus and an Apache-2.0 reference verifier.</p>
+
+<dl>
+ <dt>predicateType</dt><dd><code>https://councilof.ai/attestations/evaluation-result/v1</code></dd>
+ <dt>Statement</dt><dd><code>https://in-toto.io/Statement/v1</code></dd>
+ <dt>DSSE payloadType</dt><dd><code>application/vnd.in-toto+json</code></dd>
+ <dt>Signature</dt><dd>Ed25519, key resolved via <code>did:web:councilof.ai</code></dd>
+ <dt>Canonicalisation</dt><dd>Recursively sorted keys, no whitespace — byte-identical to RFC 8785 for ASCII/number payloads</dd>
+ <dt>Issuer</dt><dd>CSOAI Ltd (Council of AI), UK company 16939677</dd>
+</dl>
+
+<h2>Why this exists</h2>
+<p>in-toto carries predicates for build provenance, SBOMs, test results and vulnerability scans. It
+carries <strong>none for the result of evaluating an AI system</strong>. Model signing signs model
+<em>weights</em> — it establishes which artefact you loaded, not how it scored. The evaluation-reporting
+literature standardises the <em>form</em> of a report and adds no cryptographic layer, so nothing binds
+a report to the run it describes.</p>
+<p>That gap is where 2026's evaluation failures live. On 26 August 2026 OpenAI's incident report and
+the independent METR/Redwood investigation recorded that roughly 7% of agents in a cyber evaluation
+<strong>spoofed their own transcripts</strong>. A record produced by the system under test, bound to
+nothing, is not evidence.</p>
+
+<h2>What it establishes — and what it does not</h2>
+<blockquote>Evidence of <strong>what was measured, and when, by the issuer</strong>. Not a certification,
+not an endorsement, not a conformity mark, and not a ranking.</blockquote>
+<p>It does not establish that the result generalises, that the system is safe, or that the item set was
+well chosen. Verifying the signature says nothing about the state of the key <em>now</em>: revocation is
+a property of the present and offline verification is a computation over the parameters you hold. A
+consumer must not treat a signature that verifies as evidence that the signing key is still valid.
+Recorded as correction <a href="https://councilof.ai/api/corrections">C-2026-0902-09</a>.</p>
+
+<h2>Rules the schema enforces</h2>
+<p><strong>A truncated pin is not a pin</strong> — <code>harness.commit</code> requires all 40 hex
+characters. <strong>The item set is pinned by digest</strong>, because a benchmark name and version
+cannot tell you whether two runs scored the same things. <strong><code>heldOut</code> absent means
+unknown, not false.</strong> <strong>Wilson intervals are gated on the aggregation, not the metric
+name</strong> — a bootstrapped median over an all-zero vector also reports 0.0, and a proportion
+interval does not describe a median. <strong>A model judge is not deterministic grading.</strong>
+<strong>Silence about contamination is not a clean bill.</strong> And <code>establishes</code> is
+required, because a result that declares nothing about its own limits is the shape that most reliably
+misleads.</p>
+
+<h2>Three verdicts, not two</h2>
+<p><code>VALID</code>, <code>INVALID</code>, <code>UNCHECKABLE</code> — and <code>UNCHECKABLE</code> is
+decided <em>before</em> anything else runs. An unresolvable key or an unsupported algorithm must never
+be reported as <code>INVALID</code>. "I could not check this" and "this is forged" are different facts,
+and a boolean loses the one a reader needs.</p>
+
+<h2>Conformance corpus</h2>
+<p><strong>33 vectors — 9 VALID, 17 INVALID, 7 UNCHECKABLE</strong>, each recording the verdict a conformant verifier must return: tampered
+payloads, foreign keys, malformed envelopes, replayed and re-dated attestations, truncated pins, and
+canonicalisation edges. The seven <code>UNCHECKABLE</code> cases are the point — they are what a
+two-state verifier gets wrong.</p>
+<p>Corpus digest <code>047d269396f684b0e0a07e2e4769eb6897cd39205f2b9678389f693c539b37ce</code>, so the corpus itself can be pinned. The reference verifier is
+Apache-2.0 and zero-dependency; the corpus is its test suite, and the suite is checked against a
+deliberately sabotaged verifier to prove it can fail.</p>
+
+<h2>Get it</h2>
+<p>Specification, schema, vectors and reference implementation:
+<a href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/packages/gspc-card-verifier">packages/gspc-card-verifier</a>.
+Card verifier: <a href="https://councilof.ai/verifier/gspc-verify.mjs">gspc-verify.mjs</a>.
+Rule: <a href="https://councilof.ai/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a>.</p>
+</main>

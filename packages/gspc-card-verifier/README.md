@@ -314,3 +314,28 @@ without us. See `NOTICE`.
 ## Licence
 
 Apache-2.0. See `LICENSE` and `NOTICE`.
+
+## `EvaluationResult` — an in-toto predicate for AI evaluation results
+
+in-toto carries predicates for build provenance, SBOMs, test results and vulnerability scans. It
+carries **none for the result of evaluating an AI system**. Model signing signs model *weights*, not
+outcomes; the evaluation-reporting literature standardises the *form* of a report and adds no
+cryptographic layer, so nothing binds a report to the run it describes.
+
+- **predicateType** `https://councilof.ai/attestations/evaluation-result/v1`
+- **Specification** [`spec/EVALUATION-RESULT.md`](spec/EVALUATION-RESULT.md)
+- **Schema** [`schema/evaluation-result.schema.json`](schema/evaluation-result.schema.json)
+- **Conformance corpus** [`test/vectors/`](test/vectors/) — 33 vectors: 9 VALID, 17 INVALID, 7 UNCHECKABLE
+
+```js
+import { verifyEvaluationResult } from "gspc-card-verifier";
+const { state, why } = await verifyEvaluationResult(envelope, resolveKey);
+// state is VALID | INVALID | UNCHECKABLE — never a boolean
+```
+
+The seven `UNCHECKABLE` vectors are the point of the corpus: an unresolvable key or an unsupported
+algorithm must never be reported as `INVALID`. "I could not check this" and "this is forged" are
+different facts about the world.
+
+Regenerate the corpus with `npm run vectors:eval`. It is deterministic — a changed
+`corpus_sha256` in `test/vectors/manifest.json` means a case changed, and that is a signal.
