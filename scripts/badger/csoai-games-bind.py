@@ -353,11 +353,10 @@ def main() -> None:
                 "multiplayer": g["multiplayer"],
                 "agui": g["agui"],
                 "a2ui": g["a2ui"],
-                "x402_sku": g["x402_sku"],
             }
             for g in GAMES
         ],
-        "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned).",
+        "principle": "Discovery documents for the games. AG-UI + A2UI provide the chat; multiplayer rooms run over WebSocket. No game emits a card, none is anchored, and none writes to the GSPC board: a game result is not a measurement of a model on an axis, and the board is worth something precisely because a cell cannot be produced by playing. The honest route for game events is /api/witness, which attests that a digest existed at a time and asserts nothing about its content.",
     }
     index_path = INTEROP / "games-arcade.json"
     index_path.write_text(json.dumps(index, indent=2))
