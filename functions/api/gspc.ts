@@ -179,6 +179,24 @@ export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
 
+  // EDGE CACHE. This handler already declares `public, max-age=300`, but Pages Functions are
+  // not cached by that header alone — every response came back `cf-cache-status: DYNAMIC`, so
+  // every single request re-ran the whole build: importKey + exportKey, a recursive canonical
+  // serialisation of a 61 KB payload, an Ed25519 sign, and a pretty-printed stringify.
+  //
+  // That is what was exhausting the Worker's CPU budget. Measured 2026-09-04 over ten requests
+  // each: /api/gspc failed 2/10 and /api/evidence-bundle 8/10 with HTTP 503 "error code: 1102"
+  // (Worker exceeded resource limits), while the static /root.json failed 0/10. The board — the
+  // authority every published card points at — was refusing roughly one request in five.
+  //
+  // Serving from the edge for the 300 seconds the handler already asks for makes the expensive
+  // path run once per window instead of once per request. The freshness contract is unchanged:
+  // max-age=300 was always the declared intent; this makes it true.
+  const cache = (caches as unknown as { default: Cache }).default;
+  const cacheKey = new Request(url.toString(), { method: "GET" });
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
   const selectedRaw = axis ? AXES.filter((a) => a.axis === axis) : AXES;
   if (axis && selectedRaw.length === 0) {
     return new Response(
@@ -594,11 +612,14 @@ export const onRequestGet: PagesFunction = async (context) => {
     }
   }
 
-  return new Response(JSON.stringify(body, null, 2), {
+  const response = new Response(JSON.stringify(body, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=300",
       "access-control-allow-origin": "*",
     },
   });
+  // Populate the edge cache without making the caller wait for it.
+  context.waitUntil(cache.put(cacheKey, response.clone()));
+  return response;
 };
