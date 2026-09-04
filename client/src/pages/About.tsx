@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 import {
   Users, Target, Shield, Globe, Award, Building2, Heart, Zap, CheckCircle2, FileCheck,
   TrendingUp, Clock, MapPin, BarChart2
@@ -61,7 +62,7 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 function LiveBoardCount() {
   const [label, setLabel] = useState("…");
   useEffect(() => {
-    fetch("/api/gspc")
+    fetchWithRetry("/api/gspc")
       .then((r) => r.json())
       .then((d) => {
         const count = d?.totals?.public_count;
@@ -95,7 +96,7 @@ function HeroStatsBar() {
   const facts = useEstateFacts();
   const cardCount = `${facts.bodiesValid} of ${facts.bodiesPublished} verify`;
   useEffect(() => {
-    fetch("/api/gspc")
+    fetchWithRetry("/api/gspc")
       .then((r) => r.json())
       .then((d) => {
         const count = d?.totals?.public_count;

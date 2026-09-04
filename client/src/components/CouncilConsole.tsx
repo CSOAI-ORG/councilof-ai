@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { isEmbedded } from "@/lib/embed";
@@ -120,7 +121,7 @@ export default function CouncilConsole() {
     const go = lower.match(/^(?:go|open|take me to)\s+(\/?[a-z0-9-]+)/);
     try {
       if (lower.includes("board") || lower.includes("score") || lower.includes("gspc")) {
-        const d = await (await fetch("/api/gspc")).json();
+        const d = await (await fetchWithRetry("/api/gspc")).json();
         say({ role: "console", kind: "board", axes: d.axes.slice(0, 6), totals: d.totals });
       } else if (lower.includes("verify")) {
         say({ role: "console", kind: "verify" });
@@ -129,7 +130,7 @@ export default function CouncilConsole() {
         const rounds = t.trim().split("\n").slice(-4).map((l) => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
         say({ role: "console", kind: "arena", rounds });
       } else if (lower.includes("report")) {
-        const d = await (await fetch("/api/reported")).json();
+        const d = await (await fetchWithRetry("/api/reported")).json();
         say({ role: "console", kind: "reported", entries: (d.entries || d.reported || []).slice(0, 3) });
       } else if (go) {
         const path = go[1].startsWith("/") ? go[1] : "/" + go[1];

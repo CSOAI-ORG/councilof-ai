@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { ExternalLink, ShieldCheck, CircleSlash, HelpCircle, Minus } from "lucide-react";
@@ -371,7 +372,7 @@ export default function BenchmarkIndex() {
   }, []);
 
   useEffect(() => {
-    fetch("/api/gspc")
+    fetchWithRetry("/api/gspc")
       .then((r) => r.json())
       .then(setGspc)
       .catch((e) => setGspcErr(String(e)));
