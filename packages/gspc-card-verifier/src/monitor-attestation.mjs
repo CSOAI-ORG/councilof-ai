@@ -14,6 +14,13 @@
  * Absent coverage the hold MUST degrade to a gate (§3.2.4), and degradation is one-way: a
  * late-arriving attestation does not rescue a degraded hold. Release is never a default.
  *
+ * PRIOR AND ADJACENT WORK, checked after the fact and worth naming: b7n0de/proofbundle covers
+ * monitor, witness and revocation semantics in its SPEC.md and INTEROP.md, and its
+ * CROSS_IMPLEMENTATION_REPORT.md covers quorum and checkpoints. It is on PyPI with a DOI, a
+ * conformance suite, a threat model, formal methods and fuzzing. This module was written without
+ * knowledge of it; where the two overlap, that project is the earlier and the more mature, and
+ * anyone choosing between them should look there first.
+ *
  * The verdict is deliberately not a boolean. COVERED / NOT_COVERED / UNCHECKABLE, because "nobody
  * was watching" and "someone objected" are different facts, exactly as "unverifiable" and "forged"
  * are — and a reader who cannot tell them apart has lost the one that matters.

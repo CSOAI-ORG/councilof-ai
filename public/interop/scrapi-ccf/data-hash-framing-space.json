@@ -27,7 +27,7 @@
     "plain_english": "Sixty-four legal CBOR encodings of the same COSE_Sign1 produce sixty-four different data-hash values. A stock parser rejects none of them, and thirty-one are repaired into the canonical form by the act of reading them, so an issuer and a verifier can disagree with no error raised anywhere."
   },
   "why_it_settles_the_wording": "Two framing axes were found by accident in one week. Six freedoms give sixty-four encodings, and this does not test integer-width encoding or map key ordering, so the space is larger still. A rule that enumerates framings cannot close a combinatorial class; a rule that binds the octets AS REGISTERED closes all of them, including the ones not yet found.",
-  "supports": "Konrad Gruszka's proposed wording on the SCITT list, 2026-09-04: data-hash is HASH over the octets of the Signed Statement as registered, ... not over any re-serialisation of them.",
+  "supports": "Konrad Gruszka's proposed wording on the SCITT list, 2026-09-04, which is better than ours: ours named the tag, his binds the octets as registered and so closes the whole class this artifact measures.",
   "not_a_transparency_service": "Not a Transparency Service. Not a real Receipt. Not a claim about what any deployed implementation does. Vectors derived from A above; the seed, bytes and signature are from data-hash-vector.json.",
   "as_of": "2026-09-04T10:45:37Z",
   "named_variants": [
@@ -113,5 +113,12 @@
     "distinct_data_hash_values_across_all_64": 64,
     "consequence": "Two parties can agree that a signature is valid and still disagree on the data-hash of the statement they both just verified. Per RFC 9052 Section 4.4 the Sig_structure covers the protected header and the payload and not the container framing, which is exactly why one signature verifies over all 64 encodings. data-hash is taken over the wire octets, which the framing does change.",
     "why_it_matters_for_the_wording": "The fix is not to make data-hash framing-invariant \u2014 the wire octets are what a client fetches and byte-compares, so hashing them is the right choice. The fix is to say WHICH octets. That is Konrad Gruszka's sentence, and it carries a consequence worth stating: a Transparency Service must retain the octets it received rather than a re-serialisation of them, or it cannot reproduce the data-hash it published."
+  },
+  "credit": {
+    "outer_array_axis": "Konrad Gruszka (b7n0de), raised on the SCITT list 2026-09-04 with an independent recomputation on a third platform using his own reader and no COSE library. This artifact measures the class his axis and the tag axis both belong to; it does not discover either.",
+    "tag_axis": "Nicholas Templeman (CSOAI), raised on the SCITT list 2026-09-03.",
+    "independent_recomputation": "Emek Can Dogru (VERAX Teknoloji / Conarium) recomputed the original vector rather than reading it, which is what surfaced the tag gap in the first place.",
+    "prior_art_we_did_not_know": "draft-mih-sokolov-scitt-payload-binding registers `as-transmitted` \u2014 no canonicalization, the pre-image is the exact octet sequence \u2014 and withdrew two canonicalization profiles (jcs-n, cde-n) before it. That is Konrad's proposed wording as a registered algorithm, reached before either of us.",
+    "note": "Konrad's recomputation is published at b7n0de/proofbundle PR #178. His proofbundle project is an in-toto predicate for eval receipts with a conformance suite, threat model, formal methods and fuzzing, on PyPI with a DOI. Where his work and ours overlap, his is the more mature and the earlier."
   }
 }
