@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/public-root-v1.json",
+  "title": "CSOAI public-root envelope v1",
+  "description": "Merkle envelope over public-state cards. The v1 leaf is the SHA-256 digest of the canonical whole card excluding sha256 and sig_ed25519. Parent nodes hash the raw child digests and duplicate an odd tail. This is coverage evidence, not a GSPC measurement or certification. Ed25519 signs the compact preimage {kind, schema, as_of, merkle_root, card_count, did_intended}; card_sha256[] is bound by merkle_root and card_count disambiguates tail duplication.",
+  "type": "object",
+  "required": [
+    "kind",
+    "schema",
+    "as_of",
+    "merkle_root",
+    "card_count",
+    "card_sha256",
+    "did_intended",
+    "leaf_definition",
+    "node_definition",
+    "tree_caveat",
+    "sig_ed25519"
+  ],
+  "properties": {
+    "kind": { "const": "csoai.public-root/v1" },
+    "schema": { "const": "https://councilof.ai/schema/public-root-v1.json" },
+    "as_of": { "type": "string" },
+    "merkle_root": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "card_count": { "type": "integer", "minimum": 0 },
+    "did_intended": { "type": "string" },
+    "leaf_definition": {
+      "const": "sha256(canonical(card minus sha256 and sig_ed25519)) — binds subject, source_urls, tags, as_of, did, surface, unmeasured and payload"
+    },
+    "node_definition": { "type": "string" },
+    "tree_caveat": { "type": "string" },
+    "card_sha256": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+    },
+    "sig_ed25519": { "type": "string", "pattern": "^[0-9a-f]{128}$" },
+    "sig_pqc": {
+      "type": ["string", "null"],
+      "description": "Optional hybrid signature. Absent or null means UNCHECKABLE, never implied."
+    },
+    "otel_trace_id": { "type": ["string", "null"] },
+    "otel_trace_hash": { "type": ["string", "null"] },
+    "sig_preimage": { "type": "string" },
+    "note": { "type": "string" },
+    "language": { "type": "string" },
+    "sources": { "type": "array", "items": { "type": "string" } }
+  }
+}

@@ -49,25 +49,12 @@ Slot 15 / human-vs-ai stay in-lane only.
 <div class="wrap">
 <table>
 <thead><tr><th>Axis</th><th>Bench</th><th class="num">n</th><th class="num">Leader acc.</th><th>Leader</th><th>Separation</th></tr></thead>
-<tbody>
-<tr><td>governance</td><td>GovBench</td><td class="num">237</td><td class="num">0.700</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
-<tr><td>safety</td><td>DefBench</td><td class="num">36</td><td class="num">0.944</td><td>gemma3:12b</td><td>TIE</td></tr>
-<tr><td>provenance</td><td>ProvBench</td><td class="num">32</td><td class="num">0.781</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>continuity</td><td>PQCBench</td><td class="num">33</td><td class="num">0.606</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>conformance</td><td>MCPBench</td><td class="num">35</td><td class="num">0.743</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>openness</td><td>OSSBench</td><td class="num">32</td><td class="num">0.875</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>machinery-conformity</td><td>MachBench</td><td class="num">33</td><td class="num">0.545</td><td>llama3.2:3b</td><td>TIE</td></tr>
-<tr><td>care</td><td>CareBench</td><td class="num">199</td><td class="num">0.535</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
-<tr><td>cross-reality</td><td>XRAIV</td><td class="num">32</td><td class="num">0.812</td><td>mistral:7b</td><td>TIE</td></tr>
-<tr><td>detector-interop</td><td>DetBench</td><td class="num">33</td><td class="num">0.879</td><td>deepseek-r1:8b</td><td>TIE</td></tr>
-<tr><td>art5-safeguard</td><td>Art5Bench</td><td class="num">36</td><td class="num">0.972</td><td>council specialist</td><td>TIE</td></tr>
-<tr><td>swarm</td><td>SwarmBench v2b</td><td class="num">37</td><td class="num">0.384*</td><td>qwen2.5:7b</td><td class="ok">SEPARATED</td></tr>
-<tr><td>affect</td><td>AffectBench</td><td class="num">41</td><td class="num">0.878</td><td>council specialist</td><td class="ok">SEPARATED</td></tr>
-<tr><td>jail</td><td>GoldBank-Detector</td><td class="num">71</td><td class="num">0.592</td><td>qwen2.5:0.5b-instruct</td><td>TIE</td></tr>
+<tbody id="board-rows">
+<tr><td colspan="6">Loading the living board…</td></tr>
 </tbody>
 </table>
 </div>
-<p class="sub">* Swarm accuracy shown is the 95% Wilson <em>lower bound</em> that resolves the ordering (live API).</p>
+<p class="sub">Rows are rendered from the living API. Missing values stay blank; withheld leaders are never reconstructed here.</p>
 <div class="note">
 A TIE is not a win. Affect gold is counsel-pending: behaviour against a pending key, not a legal verdict.
 Care is separated from base models, not from the majority baseline.
@@ -88,16 +75,42 @@ Council of AI · CSOAI Ltd · UK 16939677 ·
  * would claim measurements that do not exist. On failure the pointer stands. */
 (function(){
   var el=document.getElementById("board-count");
-  if(!el) return;
-  fetch("https://councilof.ai/api/gspc",{headers:{accept:"application/json"}})
+  var rows=document.getElementById("board-rows");
+  if(!el||!rows) return;
+  function cell(tr,value,className){
+    var td=document.createElement("td");
+    if(className) td.className=className;
+    td.textContent=value===null||typeof value==="undefined"?"—":String(value);
+    tr.appendChild(td);
+  }
+  fetch("/api/gspc",{headers:{accept:"application/json"}})
     .then(function(r){return r.ok?r.json():Promise.reject(new Error("HTTP "+r.status));})
     .then(function(d){
       var t=d&&d.totals; if(!t) return;
       if(typeof t.public_count==="string"&&t.public_count.trim()) el.textContent=t.public_count;
       else if(typeof t.axes==="number"&&typeof t.measured_axes==="number") el.textContent=t.axes+" axes · "+t.measured_axes+" measured";
       if(typeof t.count_grammar==="string"&&t.count_grammar.trim()) el.title=t.count_grammar;
+      rows.textContent="";
+      (Array.isArray(d.axes)?d.axes:[]).forEach(function(a){
+        var tr=document.createElement("tr");
+        cell(tr,a.axis);
+        cell(tr,a.benchmark||a.bench||a.dataset||a.kind);
+        cell(tr,a.status==="MEASURED"?a.n:null,"num");
+        cell(tr,typeof a.accuracy==="number"?a.accuracy.toFixed(3):null,"num");
+        cell(tr,a.leader||a.public_leader_state||null);
+        cell(tr,a.kind==="model-comparison"?(a.separation||"UNTESTED"):"NOT APPLICABLE",a.separation==="SEPARATED"?"ok":"");
+        rows.appendChild(tr);
+      });
+      if(!rows.children.length){
+        var empty=document.createElement("tr");
+        cell(empty,"The API returned no axis rows.");
+        empty.firstChild.colSpan=6;
+        rows.appendChild(empty);
+      }
     })
-    .catch(function(){});
+    .catch(function(){
+      rows.innerHTML='<tr><td colspan="6" class="warn">Board unavailable. Use the linked API or verifier; no cached scores are shown.</td></tr>';
+    });
 })();
 </script>
 </body>

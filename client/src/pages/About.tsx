@@ -358,11 +358,12 @@ export default function About() {
                   <div className="w-1 h-20 bg-emerald-200 mt-2"></div>
                 </div>
                 <Card className="p-8 flex-1 bg-white">
-                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed, not yet measured</span></h3>
+                  <h3 className="text-2xl font-bold mb-4">Multi-provider oversight <span className="text-sm font-semibold text-amber-600">— designed; latest test fully correlated</span></h3>
                   <p className="text-gray-600 leading-relaxed mb-4">
-                    Oversight spread across providers so no single vendor decides alone. The council-seat figure is an architecture, not a measurement — cross-checking measured today is n_eff 1.21 of 3, published in our Refutation Ledger. Historically this page described a multi-agent council
-                    across multiple AI providers (OpenAI, Anthropic, Google, DeepSeek, and more). No single company
-                    controls the outcome.
+                    The intended architecture spreads review across providers so no single vendor decides alone.
+                    The council-seat figure is a design, not a live system. The{" "}
+                    <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>,
+                    so it does not establish independent or unbiased review.
                   </p>
                   <p className="text-sm text-gray-500">
                     <strong>Why it matters:</strong> When a company's own AI reviews their AI, there's a conflict of interest.
@@ -702,9 +703,10 @@ export default function About() {
               <h3 className="text-xl font-bold mb-3">Why should companies trust CSOAI?</h3>
               <p className="text-gray-600 leading-relaxed">
                 Not on our architecture, and we will say why. We once claimed that a multi-provider
-                council delivers decorrelated, unbiased review; we then measured how independent
-                those seats actually were and got an effective n of 1.21 against 3 nominal legs, so
-                we withdrew the guarantee (DR-0007) rather than rewording it. Trust us on the things
+                council delivers decorrelated, unbiased review. The earlier DR-0007 experiment caused
+                us to withdraw that guarantee; the{" "}
+                <a href="/interop/council-independence.json" className="text-emerald-700 underline">latest point experiment measured rho=1 and n_eff=1 across three nominal legs</a>.
+                Trust us on the things
                 you can check instead: no model judges a model — every verdict is deterministic code
                 against pre-written gold labels; every published card verifies offline against a key
                 in our DID document, with no account and no permission; nobody we measure pays for

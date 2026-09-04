@@ -78,22 +78,63 @@ ok() { [ "$PUBLISH_RC" -eq 0 ] && [ "$DRY_RUN" != "1" ]; }
 
 step 'witness the ONE root (Rekor rekord + OpenTimestamps; public bytes only, no key)'
 if ok; then
-  "$PYTHON" -m pip install -q opentimestamps-client 2>/dev/null || true
+  "$PYTHON" -m pip install -q opentimestamps-client
   "$PYTHON" scripts/witness_public_root.py
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
 step 'EAS on Base — attest the ONE root (fails closed without EAS_ATTESTER_PRIVATE_KEY)'
 if ok; then
-  npm i --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2 >/dev/null 2>&1 || echo "eas deps unavailable"
-  node scripts/eas_attest_root.mjs || echo "EAS step did not attest (recorded honestly in eas-root-attestations.json)"
+  if [ -z "${EAS_ATTESTER_PRIVATE_KEY:-}" ]; then
+    echo "EAS key absent: record NOT_YET without loading wallet dependencies"
+    node scripts/eas_attest_root.mjs
+  else
+    echo "EAS key present: dependency install and attestation are essential and fail closed"
+    npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
+    node scripts/eas_attest_root.mjs
+  fi
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
 step 'mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)'
+if ok; then
+  "$PYTHON" scripts/adapters/witness_queue.py --mark
+else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
+
 step 'provable archive index (append-only; bytes from this tree + witnesses; no key, no network)'
+if ok; then
+  "$PYTHON" scripts/build_archive_index.py
+else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
+
+step 'recheck drift against the live root (self-corrects a stale pointer)'
+if [ "$DRY_RUN" != "1" ]; then
+  "$PYTHON" scripts/witness_public_root.py --recheck || true   # DRIFTED is expected before publish
+else skipped "dry_run=$DRY_RUN"; fi
+
+step 'release integrity — root, sidecar, Rekor and every public OTS file'
+if ok; then
+  "$PYTHON" scripts/root-witness-release-gate.py --selftest
+  "$PYTHON" scripts/root-witness-release-gate.py --phase candidate
+else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
+
 step 'commit published tree'
 if ok; then
   git add public/root.json public/cards public/proofs public/publisher-health.json
-  git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
+  git add public/archive
+  mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
+    \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)
+  if [ "${#witness_files[@]}" -eq 0 ]; then
+    echo "HALT: witness step produced no stageable witness files" >&2
+    exit 1
+  fi
+  git add -- "${witness_files[@]}"
+  if [ -f public/interop/eas-root-attestations.json ]; then
+    git add -- public/interop/eas-root-attestations.json
+  fi
+  if [ -d public/interop/witness ]; then
+    mapfile -d '' digest_files < <(find public/interop/witness -maxdepth 1 -type f -name '*.json' -print0)
+    if [ "${#digest_files[@]}" -gt 0 ]; then
+      git add -- "${digest_files[@]}"
+    fi
+  fi
   if git_commit_push "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"; then
     echo "pushed $(git rev-parse --short HEAD) to master"
   else

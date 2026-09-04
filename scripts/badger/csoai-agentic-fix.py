@@ -347,6 +347,17 @@ def fix_empty_page(p: dict) -> dict:
     content at all, and even then, overwriting a file the operator wrote is not
     a "fix" — it is data loss dressed as maintenance. This now reports only.
     """
+    return {
+        "ok": False,
+        "reason": (
+            "REFUSED: page content requires an authored route or an explicit redirect; "
+            "the automated fixer must not manufacture public placeholder pages."
+        ),
+        "requires": "owner-reviewed content or redirect",
+    }
+
+    # Historical implementation retained below only to explain the 2026-09-03
+    # incident. The fail-closed return above makes it unreachable.
     """Lane-doable: stub the empty page with a minimal honest stub.
 
     NEVER overwrites protected paths (public/interop/, public/signed/,
@@ -515,6 +526,18 @@ def fix_brand_gate(p: dict) -> dict:
 
 def fix_missing_page(p: dict) -> dict:
     """Lane-doable: stub a placeholder for the missing page."""
+    return {
+        "ok": False,
+        "reason": (
+            "REFUSED: a missing URL is not enough evidence to invent a public page. "
+            "Create an owner-reviewed route or explicit redirect."
+        ),
+        "path": p.get("path"),
+        "requires": "owner-reviewed content or redirect",
+    }
+
+    # Historical stub writer retained below for incident reproducibility only.
+    # The fail-closed return above makes it unreachable.
     path = p["path"]
     if path in {"/", ""}:
         return {"ok": False, "reason": "root — not stubbed"}

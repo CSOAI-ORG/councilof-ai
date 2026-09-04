@@ -13,7 +13,7 @@ const ENTERPRISE_HOWTO_SCHEMA = {
     { "@type": "HowToStep", position: 3, name: "Integration Planning", text: "Design API integration and compliance framework customization." },
     { "@type": "HowToStep", position: 4, name: "Implementation", text: "Deploy CSOAI's tools, integrate APIs, and configure compliance rules." },
     { "@type": "HowToStep", position: 5, name: "Training", text: "Train your teams on CSOAI platform, compliance framework, and best practices." },
-    { "@type": "HowToStep", position: 6, name: "Go Live", text: "Launch monitoring, begin compliance tracking, and start Council reviews." },
+    { "@type": "HowToStep", position: 6, name: "Review", text: "Review published measurement evidence and record future monitoring requirements." },
   ],
 };
 
@@ -36,13 +36,13 @@ export default function EnterpriseHowItWorks() {
       title: "API Integration",
       description: "Integrate CSOAI's compliance assessment API directly into your AI development pipeline",
       icon: Code,
-      details: "Real-time compliance scoring, automated incident detection, continuous monitoring"
+      details: "Published measurement APIs and incident intake; continuous monitoring is a target, not a live service"
     },
     {
       title: "Council Review",
-      description: "Submit your AI systems for independent review by the designed 33-seat Council of AI",
+      description: "Explore the designed 33-seat Council workflow for future scoped review",
       icon: Shield,
-      details: "Impartial assessment, no vendor bias, detailed compliance report, public transparency"
+      details: "Design target only: multi-provider review with retained evidence and human accountability"
     },
     {
       title: "Custom Compliance Framework",
@@ -63,10 +63,10 @@ export default function EnterpriseHowItWorks() {
       details: "Incident triage, severity assessment, root cause analysis, remediation tracking"
     },
     {
-      title: "Continuous Monitoring",
-      description: "24/7 monitoring of your AI systems with automated alerts and reporting",
+      title: "Monitoring Design",
+      description: "Target architecture for scheduled re-measurement, alerts and reporting; not a live 24/7 service",
       icon: TrendingUp,
-      details: "Real-time dashboards, anomaly detection, compliance score tracking, trend analysis"
+      details: "Available today: published GSPC evidence and service status. Automated alerts and anomaly detection remain targets"
     }
   ];
 
@@ -97,8 +97,8 @@ export default function EnterpriseHowItWorks() {
       timeline: "1-2 weeks"
     },
     {
-      step: "6. Go Live",
-      description: "Launch monitoring, begin compliance tracking, and start Council reviews",
+      step: "6. Review",
+      description: "Review published measurement evidence and record future monitoring requirements",
       timeline: "Ongoing"
     }
   ];
@@ -111,7 +111,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Up to 5 AI systems",
         "API integration",
-        "Monthly Council review",
+        "Published GSPC evidence",
         "Unlimited team members",
         "Community support"
       ]
@@ -123,7 +123,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Up to 20 AI systems",
         "Full API integration",
-        "Weekly Council review",
+        "Council review design documentation",
         "Unlimited team members",
         "Priority support",
         "Custom compliance framework"
@@ -136,7 +136,7 @@ export default function EnterpriseHowItWorks() {
       features: [
         "Unlimited AI systems",
         "Full API integration",
-        "Daily Council review",
+        "Council review design documentation",
         "Unlimited team members",
         "24/7 dedicated support",
         "Custom compliance framework",
@@ -156,7 +156,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       question: "How does the Council review work?",
-      answer: "You submit your AI system details, training data samples, and decision logs. The Council's 33 agents independently analyze your system using 12 different AI providers. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
+      answer: "The Council is a proposed 33-seat, multi-provider review architecture, not a live service. The latest three-leg experiment was fully correlated, so independent analysis, vendor neutrality and resilience under independent failures are not claimed. Current users can inspect the published evidence and methods while the operating workflow remains a target."
     },
     {
       question: "What compliance frameworks can we customize?",
@@ -164,7 +164,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       question: "How often should we run Council reviews?",
-      answer: "Recommended frequency depends on your risk profile: Startup tier = monthly, Growth tier = weekly, Enterprise tier = daily. You can also request ad-hoc reviews for critical systems."
+      answer: "There is no live scheduled Council review service today. Re-measurement cadence should be set by system risk, applicable obligations and accountable human owners; current published records state their own scope and date."
     },
     {
       question: "What if we disagree with a Council decision?",
@@ -289,7 +289,7 @@ export default function EnterpriseHowItWorks() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🏛️ Council</h4>
-              <p className="text-gray-700">Independent review by 33 AI + human experts using 12 different AI providers. No vendor bias, no conflicts of interest. Decisions published publicly for full transparency.</p>
+              <p className="text-gray-700">The 33-seat, multi-provider Council is a design target, not a live review service. Current experiments do not establish independent providers, absence of vendor bias or resilience under independent failures.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🌍 Global Standards</h4>
@@ -297,7 +297,7 @@ export default function EnterpriseHowItWorks() {
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">📊 Continuous Improvement</h4>
-              <p className="text-gray-700">SOAI-PDCA methodology ensures your compliance keeps improving. Quarterly cycles, automated monitoring, and actionable insights drive continuous enhancement.</p>
+              <p className="text-gray-700">SOAI-PDCA is a proposed re-measurement loop. Automated monitoring is not live; accountable teams must decide cadence, review findings and approve any action.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🔒 Security & Privacy</h4>

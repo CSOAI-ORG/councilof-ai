@@ -55,7 +55,10 @@ def discover_endpoints() -> list[dict]:
         # Convert filename → URL path
         name = f.stem
         path = f"/api/{name}"
-        if name in ("[[path]]", "_*"):
+        # Private helpers and test modules are not HTTP doors. The old literal
+        # "_*" comparison never matched `_foo`, and leaked `witness.test` into
+        # generated catalogues as though it were a deployable endpoint.
+        if name == "[[path]]" or name.startswith("_") or name.endswith(".test"):
             continue
         # Read the file
         text = f.read_text(errors="ignore")
@@ -77,6 +80,9 @@ def discover_endpoints() -> list[dict]:
             "methods": methods,
             "description": description,
             "source": str(f.relative_to(REPO)),
+            # A route may remain deployed solely to return a fail-closed 503.
+            # Keep it discoverable, but never regenerate a fictional 200 contract.
+            "unavailable": "@openapi-unavailable" in text,
         })
     return endpoints
 
@@ -109,14 +115,24 @@ def build_openapi(endpoints: list[dict]) -> dict:
         path = ep["path"]
         item = {}
         for verb in ep["methods"]:
+            unavailable = bool(ep.get("unavailable"))
             op: dict = {
                 "summary": ep.get("description", "")[:200],
                 "operationId": f"{verb.lower()}_{path.replace('/', '_').replace('{', '').replace('}', '')}",
                 "responses": {
-                    "200": {"description": "OK", "content": {"application/json": {}}},
+                    ("503" if unavailable else "200"): {
+                        "description": (
+                            "Unavailable — quarantined pre-release; no evidence is manufactured"
+                            if unavailable
+                            else "OK"
+                        ),
+                        "content": {"application/json": {}},
+                    },
                 },
             }
-            if "live" in ep and ep["live"].get("ok"):
+            if unavailable:
+                op["x-csoai-lifecycle"] = "QUARANTINED_PRE_RELEASE"
+            if not unavailable and "live" in ep and ep["live"].get("ok"):
                 op["responses"]["200"]["content"]["application/json"]["example"] = {
                     "_top_keys": ep["live"].get("top_keys", []),
                 }
@@ -178,7 +194,11 @@ def main():
     out_path = REPO / args.out
     out_path.write_text(json.dumps(spec, indent=2, sort_keys=True))
     print()
-    print(f"  wrote: {out_path.relative_to(REPO)} ({out_path.stat().st_size}B)")
+    try:
+        shown_path = out_path.relative_to(REPO)
+    except ValueError:
+        shown_path = out_path
+    print(f"  wrote: {shown_path} ({out_path.stat().st_size}B)")
     print(f"  paths:  {len(spec['paths'])}")
     return 0
 

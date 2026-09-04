@@ -22,10 +22,10 @@ export default function CouncilDetail() {
               Multi-Agent Council
             </Badge>
             <h1 className="text-4xl font-bold text-gray-900 mb-6">
-              The 33-seat council — design, measured n_eff 1.21/3
+              The 33-seat council — a design, not a live system
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A revolutionary voting system combining 33 AI agents with human oversight to ensure fair, transparent, and tamper-proof AI safety decisions
+              A proposed multi-agent review architecture with human oversight. Its thresholds are design parameters; live independence and resilience under independent failures are not established.
             </p>
           </div>
 
@@ -33,11 +33,11 @@ export default function CouncilDetail() {
             <Card className="border-emerald-200">
               <CardHeader>
                 <Shield className="h-10 w-10 text-emerald-600 mb-2" />
-                <CardTitle>multi-leg</CardTitle>
+                <CardTitle>Designed supermajority</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Resistant to up to 10 compromised agents while maintaining consensus integrity
+                  The 23-of-33 threshold is a design parameter. It does not prove independent voters, capture resistance or resilience under independent failures.
                 </p>
               </CardContent>
             </Card>
@@ -49,7 +49,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Every vote is Ed25519-signed and SHA-256 hash-chained, so the record is checkable offline
+                  Design target: each vote would be Ed25519-signed and SHA-256 hash-chained so its record can be checked offline.
                 </p>
               </CardContent>
             </Card>
@@ -57,11 +57,11 @@ export default function CouncilDetail() {
             <Card className="border-emerald-200">
               <CardHeader>
                 <Zap className="h-10 w-10 text-emerald-600 mb-2" />
-                <CardTitle>Real-Time Decisions</CardTitle>
+                <CardTitle>Target: rapid review</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Consensus reached in seconds, enabling rapid AI safety assessments
+                  The architecture aims to make scoped reviews fast, but no live decision-time claim is made.
                 </p>
               </CardContent>
             </Card>
@@ -92,9 +92,10 @@ export default function CouncilDetail() {
                 <span className="text-2xl font-bold text-emerald-600">2</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold mb-4">33 Agents Evaluate Independently</h3>
+                <h3 className="text-2xl font-bold mb-4">Target: independently operated review legs</h3>
                 <p className="text-gray-600 text-lg">
-                  The report is simultaneously sent to 33 AI agents, each powered by Google Gemini. Each agent independently evaluates the report against regulatory frameworks (EU AI Act, NIST AI RMF, TC260) and votes: <strong>Agree</strong> (report is accurate), <strong>Disagree</strong> (report has errors), or <strong>Abstain</strong> (insufficient information).
+                  The proposed workflow sends a scoped claim and its evidence to independently operated model/provider legs and retains raw responses. That 33-seat workflow is not live today; the latest three-leg experiment measured <strong>rho=1 and n_eff=1</strong>. See the{" "}
+                  <a href="/interop/council-independence.json" className="text-emerald-700 underline">source record</a>.
                 </p>
               </div>
             </div>
@@ -106,7 +107,7 @@ export default function CouncilDetail() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Council Vote</h3>
                 <p className="text-gray-600 text-lg">
-                  The system uses a designed multi-agent vote. Consensus requires at least <strong>23 of 33 agents</strong> to agree (⅔ + 1 supermajority). Effective independence is measured, not assumed.
+                  The proposed vote would require at least <strong>23 of 33 seats</strong> to agree (⅔ + 1 supermajority). Effective independence must be measured, not assumed.
                 </p>
               </div>
             </div>
@@ -118,7 +119,7 @@ export default function CouncilDetail() {
               <div>
                 <h3 className="text-2xl font-bold mb-4">Decision & Escalation</h3>
                 <p className="text-gray-600 text-lg">
-                  If consensus is reached (≥23 agree), the report is approved and published. If consensus fails (&lt;23 agree), the case is escalated to senior human analysts for additional review. All votes are Ed25519-signed and SHA-256 hash-chained, so the record is verifiable offline against the published signer.
+                  Under the design, a report that reaches the threshold would be published; otherwise it would be escalated for human review. Proposed vote records would be Ed25519-signed and SHA-256 hash-chained for offline verification against the published signer.
                 </p>
               </div>
             </div>
@@ -129,7 +130,7 @@ export default function CouncilDetail() {
       {/* Why the Council */}
       <section className="py-20 px-4 bg-gray-50">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">Why the Council?</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">Why test this design?</h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             <Card>
@@ -139,7 +140,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Unlike a single-model decision, the council requires a supermajority (23 of 33) to agree, so no single agent decides the outcome.
+                  The design requires a 23-of-33 supermajority so no single seat decides an outcome. That threshold does not establish that the seats are independent.
                 </p>
               </CardContent>
             </Card>
@@ -151,7 +152,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  If an agent consistently votes differently from the consensus, it is flagged for investigation. This prevents bad actors from manipulating safety decisions while maintaining legitimate dissent for edge cases.
+                  The design would flag persistent outlier votes for human investigation while retaining legitimate dissent. It has not demonstrated resistance to malicious or correlated legs.
                 </p>
               </CardContent>
             </Card>
@@ -163,7 +164,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  AI agents provide rapid, consistent evaluation at scale. When agents disagree significantly, human experts step in to resolve complex ethical dilemmas that require judgment beyond algorithmic rules.
+                  The intended workflow uses automated review for repeatable checks and sends significant disagreement to accountable human reviewers.
                 </p>
               </CardContent>
             </Card>
@@ -175,7 +176,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Every vote is Ed25519-signed and SHA-256 hash-chained with its agent ID. Enterprises, regulators and the public can check that the record is unaltered since signing. Independent external time-anchoring is planned, not yet live — so the chain proves integrity, not the wall-clock time of signing.
+                  The target vote record is Ed25519-signed and SHA-256 hash-chained with its seat ID. Independent external time-anchoring is planned, not yet live; the proposed chain would prove record integrity, not the wall-clock time of signing.
                 </p>
               </CardContent>
             </Card>
@@ -190,7 +191,7 @@ export default function CouncilDetail() {
 
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-2xl font-bold mb-4">Consensus Parameters</h3>
+              <h3 className="text-2xl font-bold mb-4">Design Parameters</h3>
               <div className="space-y-4">
                 <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                   <span className="font-medium">Total Agents</span>
@@ -205,8 +206,8 @@ export default function CouncilDetail() {
                   <Badge variant="secondary">up to 10 dissent</Badge>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                  <span className="font-medium">Average Decision Time</span>
-                  <Badge variant="secondary">8-15 seconds</Badge>
+                  <span className="font-medium">Operational status</span>
+                  <Badge variant="secondary">Design only</Badge>
                 </div>
               </div>
             </div>
@@ -252,20 +253,20 @@ export default function CouncilDetail() {
       <section className="py-20 px-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white">
         <div className="container max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">
-            See the Council in Action
+            Explore the Council design
           </h2>
           <p className="text-xl mb-8 text-emerald-50">
-            Become a certified Watchdog Analyst and participate in real Council voting on AI safety cases
+            Review the proposed workflow, then inspect the measurements that currently constrain its claims.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/training">
               <Button size="lg" variant="secondary" className="bg-white text-emerald-600 hover:bg-gray-100">
-                Start Training
+                Explore Training
               </Button>
             </Link>
-            <Link href="/watchdog">
+            <Link href="/council">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-emerald-500">
-                View Live Cases
+                Read Current Status
               </Button>
             </Link>
           </div>

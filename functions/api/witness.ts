@@ -1,6 +1,12 @@
 /**
- * /api/witness — "attest what you're shown": existence of a SHA-256 digest at a time, sold to
- * machines over the existing x402 rail. Hash-only, never the content.
+ * /api/witness — quarantined paid witness surface.
+ *
+ * @openapi-unavailable
+ *
+ * The implementation below is retained and tested as a fixture, but the public
+ * handlers return 503 before parsing input or verifying/settling a payment. The
+ * SKU remains disabled until one publish transaction can atomically commit the
+ * leaf, signed root, exact-byte sidecar, Rekor snapshot and parseable OTS proof.
  *
  *   GET  ?sha256=<64hex>[&label=][&url=]   buyer names a digest — or a public URL we fetch ONCE
  *                                          (own UA, robots.txt honoured, never through a login,
@@ -57,6 +63,27 @@ import {
 } from "./_witness";
 
 type Env = X402Env & { WITNESS_KV?: KVNamespace; RFC3161_TSA_URL?: string };
+
+const WITNESS_SALES_LIFECYCLE = "QUARANTINED_PRE_RELEASE" as const;
+
+function unavailable(request: Request): Response {
+  const origin = new URL(request.url).origin;
+  return json(
+    {
+      schema: WITNESS_SCHEMA,
+      status: "UNAVAILABLE",
+      lifecycle: WITNESS_SALES_LIFECYCLE,
+      reason:
+        "Paid witness issuance is disabled until a release gate verifies an atomic leaf → signed root → exact-byte sidecar → Rekor snapshot → OpenTimestamps chain.",
+      nothing_charged: true,
+      free_status: `${origin}/api/witness/status?sha256=<64-hex>`,
+      free_root: `${origin}/root.json`,
+      reenable_only_after: "a fresh root and every returned witness identifier independently verify against the exact published bytes",
+    },
+    503,
+    { "retry-after": "86400" },
+  );
+}
 
 const NEVER = [
   "storage or republication of the bytes",
@@ -233,9 +260,11 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
   );
 }
 
-export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(request, env, null);
+/** Fixture-only entry point: exercises the retained implementation without exposing it as a route. */
+export const __testOnlyOnRequestGet: PagesFunction<Env> = async ({ request, env }) => handle(request, env, null);
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+/** Fixture-only entry point: exercises the retained implementation without exposing it as a route. */
+export const __testOnlyOnRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const declared = Number(request.headers.get("content-length") || 0);
   if (declared > MAX_POST_BYTES) return json({ schema: WITNESS_SCHEMA, error: "too_large", reason: `content-length ${declared} > ${MAX_POST_BYTES} B cap` }, 413);
   let bytes: Uint8Array;
@@ -246,3 +275,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
   return handle(request, env, bytes);
 };
+
+export const onRequestGet: PagesFunction<Env> = async ({ request }) => unavailable(request);
+export const onRequestPost: PagesFunction<Env> = async ({ request }) => unavailable(request);

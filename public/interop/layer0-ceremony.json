@@ -1,81 +1,16 @@
 {
-  "schema": "csoai.layer0-ceremony/0.1",
-  "as_of": "20260904T064917Z",
-  "merkle_root": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
-  "cards_anchored": 335,
-  "anchors": {
-    "opentimestamps": {
-      "name": "OpenTimestamps to Bitcoin",
-      "kind": "pending-stamp",
-      "endpoint": "https://a.pool.opentimestamps.org/digest (POST)",
-      "method": "POST /digest with merkle_root - get .ots pending stamp - upgrade when BTC fees drop",
-      "status": "LIVE",
-      "as_of": "20260904T064917Z",
-      "receipts": [
-        {
-          "pool": "https://a.pool.opentimestamps.org",
-          "file": "scripts/ots/05717c8e87f117aa-a.ots",
-          "size": 172,
-          "sha256": "7056fc0a62095790898467f3af1b25a3ca1d3bc8aff9de7f5b206d697a92924e",
-          "status": "PENDING"
-        },
-        {
-          "pool": "https://b.pool.opentimestamps.org",
-          "file": "scripts/ots/05717c8e87f117aa-b.ots",
-          "size": 205,
-          "sha256": "3dce2a57dace46e22736d15991fa43be88bd8c31388088307551e249cbcf649b",
-          "status": "PENDING"
-        },
-        {
-          "pool": "https://alice.btc.calendar.opentimestamps.org",
-          "file": "scripts/ots/05717c8e87f117aa-alice.ots",
-          "size": 172,
-          "sha256": "6002253789ad5944aab988438863a1e8ca9102d5cdb95b2e3ff4685645fbc3e5",
-          "status": "PENDING"
-        },
-        {
-          "pool": "https://bob.btc.calendar.opentimestamps.org",
-          "file": "scripts/ots/05717c8e87f117aa-bob.ots",
-          "size": 135,
-          "sha256": "c4156c235508616ceb2d3b6591a11b68f8f093a22283fe91e4fee73f87eb9548",
-          "status": "PENDING"
-        }
-      ],
-      "merkle_root_anchored": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8"
-    },
-    "sigstore_rekor": {
-      "name": "Sigstore Rekor",
-      "kind": "transparency-log",
-      "endpoint": "https://rekor.sigstore.dev",
-      "method": "POST /api/v1/log with merkle_root + Ed25519 signature",
-      "status": "READY (no key required for hashedrekord)",
-      "as_of": "20260904T064917Z"
-    },
-    "eas_base": {
-      "name": "EAS on Base",
-      "kind": "on-chain-attestation",
-      "endpoint": "https://base.easscan.org",
-      "method": "POST schema attestation with merkle_root",
-      "status": "READY (needs MetaMask to register schema)",
-      "as_of": "20260904T064917Z"
-    }
+  "schema": "csoai.layer0-witness-discovery/0.1",
+  "as_of": "2026-09-04",
+  "status": "DISCOVERY_POINTER",
+  "public_root": "https://councilof.ai/root.json",
+  "witness_pointer": "https://councilof.ai/interop/root-witness-pointer.json",
+  "verify": "https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md",
+  "claim_boundary": {
+    "is_a_receipt": false,
+    "is_an_ots_proof": false,
+    "is_a_bitcoin_anchor": false,
+    "is_a_measurement": false,
+    "is_a_certificate": false
   },
-  "compute": {
-    "oracle": {
-      "status": "LIVE",
-      "host": "oracle-micro-2 (council-os-owem-micro2)",
-      "uptime": "32 days",
-      "role": "anchor-relay (the merkle_root is anchored via cron on Oracle)"
-    },
-    "runpod": {
-      "status": "DARK (paused - no API key)",
-      "host": "n/a",
-      "role": "GPU compute (when claimed)"
-    }
-  },
-  "pqc": {
-    "status": "PLANNED",
-    "transition": "Ed25519 to Ed25519 + ML-DSA-65 (dual-sign for crypto-agility)",
-    "lib": "liboqs (operator-gated to install)"
-  }
+  "note": "Discovery only. Read the current root witness sidecar for exact-byte signature, Rekor and OpenTimestamps states. A pending OTS stamp is not a Bitcoin anchor. Missing or unverifiable rails remain unmeasured."
 }

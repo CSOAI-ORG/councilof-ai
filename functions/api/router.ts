@@ -1,21 +1,18 @@
 /**
- * /api/router — the unified discovery + interop + packages router.
- *
- * Every /.well-known/ door → ?slug=
- * Every /interop/ format → ?slug=
- * Every /packages/ manifest → ?name=
- * Growth loops + synthesis + prod-readiness → dedicated paths
+ * /api/router — the bounded discovery + interop + packages router.
  */
 
-import { json as jsonResp } from "../_lib/http";
-
 const ROUTES = {
-  "discover": "/.well-known/{slug}.json",
-  "interop": "/interop/{slug}.json",
-  "packages": "/packages/{name}/package.json",
-  "growth-loops": "/interop/growth-loops.json",
-  "synthesis": "/interop/synthesis-layer.json",
-  "prod-readiness": "/interop/prod-readiness.json",
+  discover: "/.well-known/{slug}.json",
+  interop: "/interop/{slug}.json",
+  packages: "/packages/{name}/package.json",
+};
+
+const RETIRED_PATHS: Record<string, string> = {
+  "/growth-loops": "/api/growth-loops",
+  "/loops": "/api/growth-loops",
+  "/synthesis": "/api/synthesis",
+  "/prod-readiness": "/api/prod-readiness",
 };
 
 const json = (body: unknown, status = 200) =>
@@ -34,15 +31,18 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const slug = url.searchParams.get("slug");
   const name = url.searchParams.get("name");
 
-  // Built-in endpoints
-  if (path === "/growth-loops" || path === "/loops") {
-    return json({ routes: ROUTES, note: "fetch /interop/growth-loops.json" });
-  }
-  if (path === "/synthesis") {
-    return json({ routes: ROUTES, note: "fetch /interop/synthesis-layer.json" });
-  }
-  if (path === "/prod-readiness") {
-    return json({ routes: ROUTES, note: "fetch /interop/prod-readiness.json" });
+  if (path in RETIRED_PATHS) {
+    return json(
+      {
+        schema: "csoai.retired-endpoint/0.1",
+        status: "UNAVAILABLE",
+        code: "RETIRED",
+        endpoint: RETIRED_PATHS[path],
+        message:
+          "This route is retired until its response can be derived from current evidence.",
+      },
+      503,
+    );
   }
 
   // Discovery
@@ -58,10 +58,5 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     schema: "csoai.router/0.1",
     routes: ROUTES,
     total_routes: Object.keys(ROUTES).length,
-    well_known_doors: 122,
-    interop_formats: 188,
-    packages: 7,
-    growth_loops: 10,
-    synthesis_mappings: 10,
   });
 };

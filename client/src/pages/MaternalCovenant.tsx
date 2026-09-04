@@ -67,7 +67,7 @@ const implementationArticles = [
   {
     num: 3,
     title: "Council of AI",
-    desc: "33-seat oversight ensuring no single AI can override protective instincts",
+    desc: "Proposed multi-provider oversight, gated on measured independence and human veto",
     icon: Users,
     color: "purple"
   },
@@ -99,7 +99,7 @@ What matters is behavior, not internal states. A mother's protective behavior em
     answer: `We don't need AI to "want" anything in the human sense. We need AI systems whose optimization targets are fundamentally aligned with human flourishing. This is achieved through:
 
 1. **Constitutional AI Training**: Core values embedded during training that prioritize human wellbeing
-2. **Council Oversight**: 33 independent AI agents monitoring each other, ensuring no drift from protective values
+2. **Council Oversight**: A proposed 33-seat, multi-provider review design with human veto. It is not a live monitoring system, and independence has not been demonstrated
 3. **Provable Safety Requirements**: Mathematical proofs that certain harmful actions are impossible
 4. **Continuous Reinforcement**: Ongoing training that rewards protective behaviors and penalizes harmful ones
 
@@ -113,7 +113,7 @@ The goal is creating AI that protects humans as reliably as gravity pulls object
 2. **Graduated Response**: Escalating interventions from warning to suspension to termination
 3. **Multi-Agent Council**: No single AI or human can unilaterally break the covenant
 4. **Human Override**: Ultimate authority always rests with human institutions
-5. **Regular Audits**: Continuous monitoring to detect drift before breakdown occurs
+5. **Regular Audits**: A target process for periodic re-measurement and human review when drift is detected
 
 The maternal metaphor itself suggests the answer: relationships between parents and children sometimes break down, but we don't abandon the concept of family. We create support systems, intervention mechanisms, and ultimately, legal protections. The Covenant does the same for AI-human relationships.`
   },
@@ -446,10 +446,10 @@ export default function MaternalCovenant() {
             <Badge className="mb-4 bg-emerald-100 text-emerald-600 border-emerald-200">
               In Practice
             </Badge>
-            <h2 className="text-4xl font-bold mb-4">How the Covenant Works</h2>
+            <h2 className="text-4xl font-bold mb-4">How the Covenant Is Intended to Work</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              The Maternal Covenant isn't just philosophy—it's implemented through
-              concrete mechanisms in CSOAI's governance structure.
+              The Maternal Covenant is expressed through proposed governance mechanisms.
+              The council architecture below is a design, not a live monitoring service.
             </p>
           </div>
 
@@ -470,9 +470,9 @@ export default function MaternalCovenant() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 mb-4">
-                    33 AI agents from 12 different providers monitor each other and all licensed AI systems.
-                    Like a community of caring adults watching over children, no single entity can override
-                    protective instincts.
+                    The target is a 33-seat review architecture spread across genuinely independent providers,
+                    with human veto and retained evidence. It is not live today; the latest independence experiment
+                    was fully correlated, so no multi-provider resilience claim is made.
                   </p>
                   <div className="p-4 bg-purple-50 rounded-lg">
                     <p className="text-sm text-purple-700">

@@ -45,10 +45,37 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
+async function authenticatedSession(
+  env: AuthEnv,
+  user: { email: string; name: string },
+): Promise<Response> {
+  const token = await issueToken(env, user);
+  return token
+    ? json({ token, user })
+    : json(
+        {
+          error: "authentication signing is unavailable; no session was issued",
+        },
+        503,
+      );
+}
+
 export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
   const parts = ctx.params.path;
   const action = Array.isArray(parts) ? parts.join("/") : String(parts || "");
   const method = ctx.request.method;
+
+  if (
+    method === "POST" &&
+    (action === "login" || action === "register") &&
+    !ctx.env.ASSESS_SIGNING_KEY_PKCS8_B64
+  )
+    return json(
+      {
+        error: "authentication signing is unavailable; no session was issued",
+      },
+      503,
+    );
 
   if (method === "POST" && action === "login") {
     let body: { email?: string; password?: string };
@@ -63,16 +90,16 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
 
     if (email === DEMO_USER.email && password === DEMO_USER.password) {
       const user = { email: DEMO_USER.email, name: DEMO_USER.name };
-      return json({ token: await issueToken(ctx.env, user), user });
+      return authenticatedSession(ctx.env, user);
     }
 
     const stored = await findUser(ctx.env, email);
     if (!stored || (await hashPassword(password, stored.salt)) !== stored.pw) {
       return json({ error: "invalid credentials" }, 401);
     }
-    return json({
-      token: await issueToken(ctx.env, { email: stored.email, name: stored.name }),
-      user: { email: stored.email, name: stored.name },
+    return authenticatedSession(ctx.env, {
+      email: stored.email,
+      name: stored.name,
     });
   }
 
@@ -104,9 +131,9 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     if (!(await saveUser(ctx.env, user))) {
       return json({ error: "store unavailable" }, 503);
     }
-    return json({
-      token: await issueToken(ctx.env, { email: user.email, name: user.name }),
-      user: { email: user.email, name: user.name },
+    return authenticatedSession(ctx.env, {
+      email: user.email,
+      name: user.name,
     });
   }
 

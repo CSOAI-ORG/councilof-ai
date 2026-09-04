@@ -70,13 +70,6 @@ export function buildPaidRequest(name: string, args: Record<string, unknown>, or
       if (flag("preview")) u.searchParams.set("preview", "1");
       break;
     }
-    case "witness_hash": {
-      if (!str("sha256") && !str("url")) return { error: "sha256 or url is required" };
-      if (str("sha256")) u.searchParams.set("sha256", str("sha256").toLowerCase());
-      if (str("url")) u.searchParams.set("url", str("url"));
-      if (str("label")) u.searchParams.set("label", str("label"));
-      break;
-    }
     case "receipts_batch": {
       if (!str("from")) return { error: "from is required (ISO-8601)" };
       u.searchParams.set("from", str("from"));

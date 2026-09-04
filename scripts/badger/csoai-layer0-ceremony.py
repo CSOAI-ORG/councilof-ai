@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""csoai-layer0-ceremony.py — the 3-anchor + layer 0 ceremony.
+"""csoai-layer0-ceremony.py — a fail-closed Layer 0 witness plan.
 
 The Layer 0 ceremony:
   1. Discover every signed card on the substrate
   2. Build the Merkle root over every card
-  3. Anchor the Merkle root to 3 chains:
-     a. OpenTimestamps → Bitcoin
-     b. Sigstore Rekor → transparency log
-     c. EAS on Base → on-chain attestation
-  4. Update the public root with the 3-anchor receipts
+  3. Describe three possible witness rails without claiming they ran
+  4. Publish only receipts returned by their real protocol clients
   5. Wire to Oracle micros + RunPod (when available)
 
-Lane-doable: just file generation + dry-run.
+This dry-run never creates a file with an `.ots` extension. Only a parseable
+DetachedTimestampFile returned by the OpenTimestamps client is an `.ots` file.
 """
 
 from __future__ import annotations
@@ -40,26 +38,35 @@ def get_json(url: str, timeout: int = 30) -> dict | None:
 
 
 def build_merkle_root(card_sha256s: list[str]) -> str:
-    """Build a Merkle root over a list of SHA-256 hashes."""
+    """Reproduce the public-root v1 node rule over raw digest bytes."""
     if not card_sha256s:
-        return ""
-    # Simple Merkle: pairwise hash until 1 remains
-    layer = list(card_sha256s)
+        return hashlib.sha256(b"").hexdigest()
+    layer = [bytes.fromhex(value) for value in card_sha256s]
     while len(layer) > 1:
         next_layer = []
         for i in range(0, len(layer), 2):
-            if i + 1 < len(layer):
-                h = hashlib.sha256((layer[i] + layer[i + 1]).encode()).hexdigest()
-            else:
-                # Odd one out — pair with itself
-                h = hashlib.sha256((layer[i] + layer[i]).encode()).hexdigest()
-            next_layer.append(h)
+            left = layer[i]
+            right = layer[i + 1] if i + 1 < len(layer) else left
+            next_layer.append(hashlib.sha256(left + right).digest())
         layer = next_layer
-    return layer[0]
+    return layer[0].hex()
+
+
+def ots_plan(merkle_root: str) -> dict:
+    """Describe an unstamped digest without manufacturing proof-shaped bytes."""
+    return {
+        "digest": merkle_root,
+        "status": "NOT_STAMPED",
+        "proof_path": None,
+        "reason": (
+            "This ceremony is a dry-run. Use the authorised root witness workflow "
+            "to create a parseable detached OpenTimestamps proof."
+        ),
+    }
 
 
 def main() -> None:
-    print("=== LAYER 0 CEREMONY — 3-anchor system ===")
+    print("=== LAYER 0 WITNESS PLAN — fail closed ===")
     print()
 
     # Step 1: Fetch the live card chain
@@ -92,52 +99,48 @@ def main() -> None:
     print(f"      merkle_root: {merkle_root[:32]}...")
     print()
 
-    # Step 4: 3-anchor ceremony
-    print("[3] 3-anchor ceremony...")
+    # Step 4: witness plan. No network write occurs in this script.
+    print("[3] Witness plan...")
     anchors = {
         "opentimestamps": {
             "name": "OpenTimestamps → Bitcoin",
-            "kind": "pending-stamp",
+            "kind": "witness-plan",
             "endpoint": "https://opentimestamps.org",
-            "method": "POST /digest with the merkle_root, get a .ots pending stamp, upgrade when BTC fees drop",
-            "status": "READY",
+            "method": "Create a detached timestamp with an OpenTimestamps client, then upgrade and verify it against Bitcoin",
+            "status": "NOT_STAMPED",
             "as_of": now(),
-            "receipt": {
-                "digest": merkle_root,
-                "expected_pending_file": f"public/interop/layer0-root-{now()}.ots",
-                "expected_upgrade_after_btc_block": "auto-upgrade when next block commits",
-            },
+            "receipt": ots_plan(merkle_root),
         },
         "sigstore_rekor": {
             "name": "Sigstore Rekor",
-            "kind": "transparency-log",
+            "kind": "witness-plan",
             "endpoint": "https://rekor.sigstore.dev",
             "method": "POST /api/v1/log with the merkle_root + Ed25519 signature",
-            "status": "READY",
+            "status": "NOT_SUBMITTED",
             "as_of": now(),
             "receipt": {
                 "digest": merkle_root,
-                "expected_rekor_entry": f"https://rekor.sigstore.dev/api/v1/log/entries/<uuid>",
-                "expected_index": "auto-indexed by Rekor",
+                "entry": None,
+                "reason": "This dry-run did not submit a signed entry to Rekor.",
             },
         },
         "eas_base": {
             "name": "EAS on Base",
-            "kind": "on-chain-attestation",
+            "kind": "witness-plan",
             "endpoint": "https://base.easscan.org",
             "method": "POST schema attestation with the merkle_root as the data field",
-            "status": "READY (needs MetaMask to register schema)",
+            "status": "NOT_SUBMITTED",
             "as_of": now(),
             "receipt": {
                 "digest": merkle_root,
-                "expected_eas_uid": "f" + merkle_root[:62],
-                "expected_attestation_url": f"https://base.easscan.org/attestation/view/0x...<uid>",
+                "uid": None,
+                "reason": "This dry-run did not submit an EAS attestation.",
             },
         },
     }
-    print("  ✓ OpenTimestamps → Bitcoin (pending stamp ready)")
-    print("  ✓ Sigstore Rekor (transparency log ready)")
-    print("  ✓ EAS on Base (on-chain attestation ready — needs MetaMask)")
+    print("  · OpenTimestamps → Bitcoin (not stamped by this dry-run)")
+    print("  · Sigstore Rekor (planned; no receipt created here)")
+    print("  · EAS on Base (planned; no receipt created here)")
     print()
 
     # Step 5: Wire to Oracle + RunPod
@@ -146,10 +149,10 @@ def main() -> None:
         "as_of": now(),
         "compute": {
             "oracle": {
-                "status": "LIVE",
-                "host": "oracle-micro-2",  # public label only: the internal hostname is not a public surface,
-                "uptime": "32 days",
-                "role": "anchor-relay (the merkle_root is anchored via cron on Oracle)",
+                "status": "UNCHECKED_IN_THIS_RUN",
+                "host": None,
+                "uptime": None,
+                "role": "candidate witness relay; no relay receipt was collected",
                 "capabilities": ["x86_64", "1 vCPU", "956 MB RAM"],
             },
             "runpod": {
@@ -160,8 +163,8 @@ def main() -> None:
             },
         },
     }
-    print("  ✓ Oracle micros (live, 32 days uptime) — anchor-relay")
-    print("  ✓ RunPod (paused — claim script ready for when API key + billing are on)")
+    print("  · Oracle relay (not checked by this run)")
+    print("  · RunPod compute (paused; no witness role asserted)")
     print()
 
     # Save the ceremony receipt
@@ -172,51 +175,20 @@ def main() -> None:
         "cards_anchored": len(sha256s),
         "anchors": anchors,
         "compute": compute,
-        "doctrine": "Every signed card is anchored to 3 chains. Anyone can verify the merkle root against the 3 anchor receipts.",
+        "doctrine": "A witness rail counts only after its real receipt verifies against these exact bytes. This dry-run creates no anchor.",
     }
     ceremony_path = QUEUE / f"ceremony-{now()}.json"
     ceremony_path.write_text(json.dumps(ceremony, indent=2))
-
-    # Save the pending OTS receipt
-    # NOT a .ots file. This writes an INTENT record, and it used to write the same text under
-    # public/interop/layer0-root-<ts>.ots — a plain-text placeholder carrying the extension of a
-    # cryptographic proof. The reference OpenTimestamps library rejects those bytes outright
-    # (BadMagicError); fifteen were published in 45 minutes on 2026-09-04, eleven of them with an
-    # EMPTY merkle_root, so they did not even record the digest they claimed to stamp. Anything
-    # counting .ots files as anchoring evidence counted them, which makes the repository's real
-    # number — 656 Bitcoin-attested of 1080 — unquotable.
-    #
-    # The real stamp is produced by scripts/witness_public_root.py, which actually calls the
-    # calendars. This file records that the ceremony ran and what it intends; it must never be
-    # mistaken for the proof. scripts/ots_guard.py enforces the distinction.
-    if not merkle_root:
-        raise SystemExit("layer0 ceremony: refusing to write an anchor intent with an empty merkle_root")
-    intent_path = Path(f"public/interop/layer0-anchor-intent-{now()}.json")
-    intent_path.parent.mkdir(parents=True, exist_ok=True)
-    intent_path.write_text(json.dumps({
-        "schema": "csoai.layer0-anchor-intent/0.1",
-        "kind": "intent",
-        "is_a_timestamp": False,
-        "merkle_root": merkle_root,
-        "status": "PENDING_NOT_STAMPED",
-        "as_of": now(),
-        "note": "Records that the ceremony ran. NOT an OpenTimestamps proof and never to be named .ots. "
-                "The real stamp comes from scripts/witness_public_root.py, which calls the calendars.",
-    }, indent=1) + "\n")
-
-    # Save the public-facing layer0 manifest
-    layer0_path = Path("public/interop/layer0-ceremony.json")
-    layer0_path.write_text(json.dumps(ceremony, indent=2))
 
     # Summary
     print("=== SUMMARY ===")
     print(f"  merkle_root:  {merkle_root[:32]}...")
     print(f"  cards:        {len(sha256s)}")
-    print(f"  anchors:      3 (OTS + Rekor + EAS)")
-    print(f"  compute:      Oracle (live) + RunPod (paused)")
+    print("  witnesses:    0 completed; 3 rails planned")
+    print("  compute:      Oracle (unchecked) + RunPod (paused)")
     print(f"  ceremony:     {ceremony_path}")
-    print(f"  layer0:       {layer0_path}")
-    print(f"  ots pending:  {ots_pending_path}")
+    print("  public:       unchanged; discovery pointer remains authoritative")
+    print("  ots proof:    none (dry-run; no proof-shaped placeholder written)")
 
 
 if __name__ == "__main__":

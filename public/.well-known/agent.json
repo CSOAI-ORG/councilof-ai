@@ -51,14 +51,14 @@
     {
       "id": "measured-badge",
       "name": "Measured Badge",
-      "description": "Shields-style README badge stating a subject's measured-axis count; unmeasured subjects render honestly as unmeasured, never a fabricated score.",
+      "description": "A global-board README link plus a card-bound status badge. The global board never becomes a model score. A model-specific score may render only from a VALID signed cell that names the exact subject and immutable revision; otherwise the subject is UNMEASURED or UNSIGNED.",
       "tags": [
         "measurement",
         "governance",
         "verification"
       ],
       "examples": [
-        "GET /api/badge?subject=example"
+        "GET /api/badge?card=<signed-card-sha256>&subject=<url-encoded-owner/model@commit-sha>"
       ]
     },
     {
@@ -99,7 +99,7 @@
       "url": "https://councilof.ai/mcp",
       "protocolBinding": "JSONRPC",
       "protocolVersion": "1.0.0",
-      "note": "Live streamable-HTTP door (GET 200). npm stdio: csoai-gspc-mcp@0.1.0. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker."
+      "note": "Live streamable-HTTP door (GET 200) lists seven free readers plus four x402-metered evidence tools. npm stdio csoai-gspc-mcp@0.2.1 lists twelve because it also carries witness_hash, which is quarantined on HTTP. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker."
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",

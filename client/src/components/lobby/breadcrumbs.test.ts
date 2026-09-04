@@ -13,8 +13,8 @@ describe("paneCrumbs — the OS pane trail", () => {
   });
 
   it("a tab at its own root: Home is the link, the tab is current", () => {
-    const crumbs = paneCrumbs(tab("results"), "/benchmarks");
-    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Benchmarkers"]);
+    const crumbs = paneCrumbs(tab("products"), "/products");
+    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Products"]);
     expect(crumbs[0].tab?.id).toBe("home");
     expect(crumbs[1].current).toBe(true);
   });
@@ -26,10 +26,10 @@ describe("paneCrumbs — the OS pane trail", () => {
   });
 
   it("in-pane navigation appends only the segments the tab crumb does not already cover", () => {
-    const crumbs = paneCrumbs(tab("results"), "/benchmarks/some-report");
-    // NOT "Benchmarkers › benchmarks › some-report" — the tab crumb IS /benchmarks.
-    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Benchmarkers", "some-report"]);
-    expect(crumbs[1].tab?.id).toBe("results");
+    const crumbs = paneCrumbs(tab("products"), "/products/some-report");
+    // NOT "Products › products › some-report" — the tab crumb IS /products.
+    expect(crumbs.map((c) => c.label)).toEqual(["Home", "Products", "some-report"]);
+    expect(crumbs[1].tab?.id).toBe("products");
     // Where you are is never a link.
     const last = crumbs[crumbs.length - 1];
     expect(last.current).toBe(true);
@@ -52,10 +52,10 @@ describe("paneCrumbs — the OS pane trail", () => {
   });
 
   it("normalises trailing slashes and query strings", () => {
-    const a = paneCrumbs(tab("results"), "/benchmarks/");
-    const b = paneCrumbs(tab("results"), "/benchmarks?embed=1");
-    expect(a[a.length - 1].label).toBe("Benchmarkers");
-    expect(b[b.length - 1].label).toBe("Benchmarkers");
+    const a = paneCrumbs(tab("products"), "/products/");
+    const b = paneCrumbs(tab("products"), "/products?embed=1");
+    expect(a[a.length - 1].label).toBe("Products");
+    expect(b[b.length - 1].label).toBe("Products");
     expect(a[a.length - 1].current).toBe(true);
   });
 });

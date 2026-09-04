@@ -155,6 +155,25 @@ describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
     expect(e.links[0].href).toContain("base.easscan.org/attestation/view/");
   });
 
+  it("fails every rail closed when the sidecar names older root bytes", () => {
+    const stale = witnessRails(witness, null, 404, {
+      state: "INVALID",
+      reason: "Current root sha256 does not match the witness artifact sha256.",
+    });
+    expect(stale).toHaveLength(4);
+    for (const rail of stale) {
+      expect(rail.state).toBe("STALE / UNCHECKABLE");
+      expect(rail.tone).toBe("absent");
+      expect(rail.detail).toContain("Current root sha256 does not match");
+    }
+  });
+
+  it("shows no green witness while the exact-byte binding check is pending", () => {
+    const pending = witnessRails(witness, null, 404, null);
+    expect(pending.every((rail) => rail.state === "UNCHECKABLE")).toBe(true);
+    expect(pending.every((rail) => rail.tone === "absent")).toBe(true);
+  });
+
   it("names the missing sidecar instead of inventing a state", () => {
     for (const r of witnessRails(null, null, null)) {
       expect(r.state).toBe("no witness sidecar read");

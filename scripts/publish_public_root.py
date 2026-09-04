@@ -49,7 +49,7 @@ from adapters import (  # noqa: E402
 )
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
-ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
+ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
 DID = "did:web:csoai.org#board-attestation-1"
 SURFACES = {
     "xrpl.asset.state",
@@ -708,8 +708,8 @@ def main() -> int:
         "tree_caveat": (
             "Odd-node duplication makes this tree shape collidable in the sense of "
             "CVE-2012-2459: appending duplicates of the tail can yield a DIFFERENT "
-            "leaf set with an IDENTICAL merkle_root. Demonstrated on this very root — "
-            "142 leaves and 144 leaves hash to 5ca3482f77d9…. The collision is closed "
+            "leaf set with an IDENTICAL merkle_root (the three-leaf set [A,B,C] and "
+            "four-leaf set [A,B,C,C] are the minimal deterministic example). The ambiguity is closed "
             "ONLY because card_count is inside the signed preimage. Therefore a "
             "verifier MUST reject any presentation where len(card_sha256) != "
             "card_count, and MUST reject any inclusion proof with index >= card_count. "
@@ -758,7 +758,7 @@ def main() -> int:
             "PKCS8 stays on Pages (OIDC). Not a certificate."
         )
         root_body["note"] = (
-            "Envelope schema is public-root-v0, not card-v0. This root.json envelope "
+            "Envelope schema is public-root-v1, not a measurement card. This root.json envelope "
             "is Ed25519-signed over the compact preimage under "
             "did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
             "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."

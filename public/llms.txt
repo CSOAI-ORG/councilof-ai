@@ -62,10 +62,10 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — seven tools live: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion. Same definitions file as stdio. No CSOAI account.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools after this release: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.1` (seven tools, same as /mcp). Registry https://registry.npmjs.org/csoai-gspc-mcp
-- MCP registry: io.github.CSOAI-ORG/gspc (1.1.1 → https://councilof.ai/mcp)
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp@0.2.1` lists 12 tools (7 free + 5 x402). The live HTTP door lists 11 because `witness_hash` is quarantined there. Registry https://registry.npmjs.org/csoai-gspc-mcp
+- MCP registry: io.github.CSOAI-ORG/gspc (server 1.2.0 → https://councilof.ai/mcp)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai
 
@@ -78,7 +78,7 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
 
 - Hugging Face org: https://huggingface.co/csoai
-- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc **1.1.1** (isLatest)
+- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc server **1.2.0**
 - npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
 - Glama (claimed): https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc
 - Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
@@ -114,4 +114,3 @@ Measurement only. Nothing here is a conformity mark. No SOV names. No invented s
   There is no "certified" badge and there never will be.
 - One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
 - Python reader and card verifier: pip install "csoai-gspc[verify]"
-

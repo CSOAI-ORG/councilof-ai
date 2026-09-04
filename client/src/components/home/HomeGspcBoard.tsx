@@ -62,6 +62,7 @@ export function separationLabel(a: GspcAxis): string {
   if (a.kind === "deterministic-facts") return "facts · no separation test";
   const s = String(a.separation ?? "UNTESTED");
   if (s === "TIE") return "TIE · not a measured advantage";
+  if (s === "UNTESTED") return "not separation-tested";
   return s;
 }
 
@@ -92,16 +93,16 @@ function LeaderText({ a }: { a: GspcAxis }) {
   if (st === "FACTS") return <span data-testid="leader-text">deterministic facts · no leader accuracy</span>;
   if (st === "EXCLUDED_OWN_MODEL")
     return (
-      <span data-testid="leader-text">
-        Public leader: <span className="font-mono font-semibold">EXCLUDED_OWN_MODEL — own council model excluded from the leader slot by the neutral-body rule</span>
-        <span className={muted}> · own model held the point lead; not ranked</span>
+      <span data-testid="leader-text" data-leader-state="EXCLUDED_OWN_MODEL">
+        <span className="font-semibold">No public leader.</span>
+        <span className={muted}> Our own model held the point lead, so the neutral-body rule excludes it from ranking.</span>
       </span>
     );
   if (st === "NO_SIGNED_CARD")
     return (
-      <span data-testid="leader-text">
-        Public leader: <span className="font-mono font-semibold">NO_SIGNED_CARD — no signed card verifies for this leader, so none is printed</span>
-        <span className={muted}> · no signed card behind the named leader; none asserted</span>
+      <span data-testid="leader-text" data-leader-state="NO_SIGNED_CARD">
+        <span className="font-semibold">No public leader.</span>
+        <span className={muted}> The named leader has no verifiable signed card, so no name is published.</span>
       </span>
     );
   if (st === "PUBLIC")
@@ -269,7 +270,9 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
             if (liveLid) return liveLid;
             return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
-          <span className="block">Root is signed and witnessed. Verify is free. Empty cells stay empty.</span>
+          <span className="block">
+            Root is signed. Witnesses bind exact root bytes and may still be pending. Verify is free.
+          </span>
         </p>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The living board below is the master. This page embeds it and does not redraw it.</p>
         </div>

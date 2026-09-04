@@ -147,7 +147,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "What is SOAI-PDCA?",
-      answer: "SOAI-PDCA combines Safety Oversight AI (the 33-seat Council of AI) with the Deming Cycle (Plan-Do-Check-Act). It's a continuous improvement methodology that ensures your compliance keeps improving over time."
+      answer: "SOAI-PDCA applies the Deming Cycle (Plan-Do-Check-Act) to measured evidence. It can organize remediation and retesting, but it does not guarantee legal compliance or operate a live 33-seat council."
     },
     {
       question: "How often should we run SOAI-PDCA cycles?",
@@ -275,7 +275,7 @@ export default function ComplianceHowItWorks() {
               <div>
                 <Shield className="w-12 h-12 text-emerald-600 mb-4" />
                 <h3 className="text-xl font-bold text-emerald-900 mb-3">Independent Review</h3>
-                <p className="text-gray-700">The 33-seat Council of AI independently reviews your AI systems and compliance practices. No vendor bias, no conflicts of interest.</p>
+                <p className="text-gray-700">Current tools organize evidence and human review. The 33-seat council is a design; independence and absence of conflicts have not been established.</p>
               </div>
               <div>
                 <Globe className="w-12 h-12 text-emerald-600 mb-4" />

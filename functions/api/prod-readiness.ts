@@ -1,5 +1,6 @@
 /**
- * /api/prod-readiness — the production readiness checklist.
+ * /api/prod-readiness — retired until readiness is derived from current evidence.
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>
@@ -13,25 +14,15 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const onRequestGet: PagesFunction = async () => {
-  return json({
-    schema: "csoai.prod-readiness/0.1",
-    checks: {
-      live_rails: { status: "PASS", details: "15/15 rails 200 / 402" },
-      tests: { status: "PASS", details: "1126/1126 vitest tests passing" },
-      build: { status: "PASS", details: "npm run build:client — clean" },
-      gates: { status: "PASS", details: "brand-gate + facts-gate + redirects-guard" },
-      well_known: { status: "PASS", details: "122 discovery doors" },
-      interop: { status: "PASS", details: "188 interop formats" },
-      packages: { status: "PASS", details: "7 packages (5 new)" },
-      x402_rail: { status: "READY", details: "rail live, waiting for facilitator URL" },
-      bft_council: { status: "BUILT", details: "33-agent BFT council manifest" },
-      ot_anchoring: { status: "ACTIVE", details: "659 anchored, 361 pending" },
-      burner_wallet: { status: "READY", details: "0xb3a6a8d92a3aec1aca31b4ef06c95be468562c47f054182f1a39d26a880827da" },
-      grant_applications: { status: "STAGED", details: "4 grants ($280K potential)" },
-      outreach_templates: { status: "STAGED", details: "230 templates" },
-      npm_publish: { status: "BLOCKED", details: "needs 2FA OTP" },
-      hf_badge: { status: "BLOCKED", details: "needs GH secret" },
-      arXiv_preprint: { status: "BLOCKED", details: "needs arXiv endorsement" },
+  return json(
+    {
+      schema: "csoai.retired-endpoint/0.1",
+      status: "UNAVAILABLE",
+      code: "RETIRED",
+      endpoint: "/api/prod-readiness",
+      message:
+        "Production readiness is not published without a current evidence-derived report.",
     },
-  });
+    503,
+  );
 };

@@ -302,7 +302,8 @@ EU AI Act Article 50 LIVE 2 Aug 2026. High-risk LIVE 2 Aug 2027.
 
 ## THE 5 UNLOCKS (the only things the agent cannot do)
 
-1. **Fund burner wallet** — `0xb3a6a8d92a3aec1aca31b4ef06c95be468562c47f054182f1a39d26a880827da`
+1. **Retire the compromised test wallet** — never fund or use it; provision a
+   replacement only through the reviewed secret-management path.
 2. **Set `X402_FACILITATOR_URL=@url:https://facilitator.pyai.network`** on CF Pages
 3. **Send 4 grant applications** (NLnet €50K deadline 3 Nov 2026, NGI Zero €50K, Sloan $75K, Ford $100K)
 4. **Set GH HF token** for badge draft → public

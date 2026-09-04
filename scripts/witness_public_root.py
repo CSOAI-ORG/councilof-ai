@@ -14,7 +14,7 @@ After publish_public_root.py commits public/root.json, this script:
 No private key is used or needed. Existence/time of bytes — not certification.
 """
 from __future__ import annotations
-import base64, hashlib, json, os, re, shutil, subprocess, sys, urllib.error, urllib.request
+import argparse, base64, hashlib, json, os, re, shutil, subprocess, sys, time, urllib.error, urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -131,7 +131,13 @@ LIVE_ROOT_URL = "https://councilof.ai/root.json"
 UA = "csoai-witness/1.0"
 
 
-def compute_drift(witness_sha: str, witness_merkle: str, live_url: str = LIVE_ROOT_URL) -> dict:
+def compute_drift(
+    witness_sha: str,
+    witness_merkle: str,
+    live_url: str = LIVE_ROOT_URL,
+    *,
+    timeout_seconds: int = 60,
+) -> dict:
     """Compare the WITNESSED bytes against what a reader actually fetches, right now.
 
     WHY THIS FUNCTION EXISTS. The block it replaces was a tautology:
@@ -155,8 +161,11 @@ def compute_drift(witness_sha: str, witness_merkle: str, live_url: str = LIVE_RO
     drift, and must never collapse into MATCH.
     """
     try:
-        req = urllib.request.Request(live_url, headers={"User-Agent": UA, "Accept": "application/json"})
-        with urllib.request.urlopen(req, timeout=60) as r:
+        req = urllib.request.Request(
+            live_url,
+            headers={"User-Agent": UA, "Accept": "application/json", "Cache-Control": "no-cache"},
+        )
+        with urllib.request.urlopen(req, timeout=timeout_seconds) as r:
             live = r.read()
     except Exception as e:  # network, DNS, HTTP error — anything
         return {"status": "UNCHECKABLE", "checked_at": now(), "checked_against": live_url,
@@ -181,19 +190,30 @@ def compute_drift(witness_sha: str, witness_merkle: str, live_url: str = LIVE_RO
         "reason": (
             "the live root a reader fetches is byte-identical to the witnessed bytes"
             if ok else
-            "the live root has changed since it was witnessed — the anchors below attest the OLD bytes, "
-            "and a fresh witness run is needed before this pointer means anything"
+            "the live root differs from the witnessed bytes; this observation does not establish "
+            "which is newer — publish the witnessed candidate or witness the live root before "
+            "treating either as current"
         ),
     }
 
 
-def recheck() -> int:
-    """Re-evaluate drift on the EXISTING pointer without re-witnessing. Safe to run on a schedule.
+def recheck(
+    *,
+    public_dir: Path = PUB,
+    check_only: bool = False,
+    output: Path | None = None,
+    attempts: int = 1,
+    retry_delay_seconds: float = 0,
+    timeout_seconds: int = 60,
+    live_url: str = LIVE_ROOT_URL,
+) -> int:
+    """Re-evaluate drift on the EXISTING pointer without re-witnessing.
 
     This is what stops the pointer going quietly stale: the witness only runs when the root is
-    republished, so between publishes nothing was re-examining whether the claim still held.
+    republished, so between publishes nothing was re-examining whether the observation still held.
+    With check_only=True the comparison is read-only and does not alter candidate or dist bytes.
     """
-    ptr_path = INTEROP / "root-witness-pointer.json"
+    ptr_path = public_dir.resolve() / "interop" / "root-witness-pointer.json"
     if not ptr_path.exists():
         print("no pointer to recheck"); return 1
     ptr = json.loads(ptr_path.read_text())
@@ -201,10 +221,25 @@ def recheck() -> int:
     merkle = (ptr.get("live_root") or {}).get("merkle_root") or (ptr.get("drift") or {}).get("witness_artifact_merkle_root")
     if not witnessed:
         print("pointer carries no witnessed sha256 — nothing to compare"); return 1
-    ptr["drift"] = compute_drift(witnessed, merkle)
-    ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
-    print(f"drift: {ptr['drift']['status']}  witnessed={witnessed[:16]}  live={ptr['drift'].get('live_root_sha256','')[:16]}")
-    return 0 if ptr["drift"]["status"] == "MATCH" else 1
+    drift: dict = {}
+    for attempt in range(1, attempts + 1):
+        drift = compute_drift(witnessed, merkle, live_url, timeout_seconds=timeout_seconds)
+        print(
+            f"drift attempt {attempt}/{attempts}: {drift['status']}  "
+            f"witnessed={witnessed[:16]}  live={drift.get('live_root_sha256', '')[:16]}"
+        )
+        if drift["status"] == "MATCH":
+            break
+        if attempt < attempts:
+            time.sleep(retry_delay_seconds)
+
+    if not check_only:
+        ptr["drift"] = drift
+        ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
+    if output is not None:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(json.dumps(drift, indent=1, ensure_ascii=False) + "\n")
+    return 0 if drift["status"] == "MATCH" else 1
 
 
 def selftest() -> int:
@@ -220,6 +255,22 @@ def selftest() -> int:
 
     same = compute_drift(live_sha, "aa" * 32, url)
     other = compute_drift("00" * 32, "bb" * 32, url)
+    interop = Path(d, "interop"); interop.mkdir()
+    pointer_path = interop / "root-witness-pointer.json"
+    pointer_path.write_text(json.dumps({
+        "live_root": {"sha256": live_sha, "merkle_root": "aa" * 32},
+        "drift": same,
+    }))
+    pointer_before = pointer_path.read_bytes()
+    output_path = Path(d, "live-drift.json")
+    read_only_rc = recheck(
+        public_dir=Path(d),
+        check_only=True,
+        output=output_path,
+        attempts=2,
+        timeout_seconds=2,
+        live_url=url,
+    )
     srv.shutdown()
     gone = compute_drift(live_sha, "aa" * 32, "http://127.0.0.1:1/root.json")
 
@@ -228,16 +279,48 @@ def selftest() -> int:
     if other["status"] != "DRIFTED": fails.append(f"different bytes should DRIFT, got {other['status']}")
     if gone["status"] != "UNCHECKABLE": fails.append(f"unreachable root should be UNCHECKABLE, got {gone['status']}")
     if gone.get("match_sha256") is not None: fails.append("UNCHECKABLE must not claim a comparison")
+    if read_only_rc != 0: fails.append(f"read-only exact recheck should pass, got rc={read_only_rc}")
+    if pointer_path.read_bytes() != pointer_before: fails.append("--check-only mutated the pointer")
+    if json.loads(output_path.read_text()).get("status") != "MATCH": fails.append("--output did not record MATCH")
     for f in fails: print("FAIL:", f)
     print("selftest:", "FAILED" if fails else "ok — MATCH, DRIFTED and UNCHECKABLE all reachable")
     return 1 if fails else 0
 
 
 def main() -> int:
-    if "--selftest" in sys.argv:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--selftest", action="store_true")
+    parser.add_argument("--recheck", action="store_true")
+    parser.add_argument("--public-dir", type=Path, default=PUB)
+    parser.add_argument("--check-only", action="store_true")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--attempts", type=int, default=1)
+    parser.add_argument("--retry-delay-seconds", type=float, default=0)
+    parser.add_argument("--timeout-seconds", type=int, default=60)
+    parser.add_argument("--live-url", default=LIVE_ROOT_URL)
+    args = parser.parse_args()
+    if args.selftest:
         return selftest()
-    if "--recheck" in sys.argv:
-        return recheck()
+    if args.attempts < 1 or args.attempts > 20:
+        parser.error("--attempts must be between 1 and 20")
+    if args.retry_delay_seconds < 0 or args.retry_delay_seconds > 300:
+        parser.error("--retry-delay-seconds must be between 0 and 300")
+    if args.timeout_seconds < 1 or args.timeout_seconds > 120:
+        parser.error("--timeout-seconds must be between 1 and 120")
+    if args.check_only and not args.recheck:
+        parser.error("--check-only requires --recheck")
+    if args.output is not None and not args.recheck:
+        parser.error("--output requires --recheck")
+    if args.recheck:
+        return recheck(
+            public_dir=args.public_dir,
+            check_only=args.check_only,
+            output=args.output,
+            attempts=args.attempts,
+            retry_delay_seconds=args.retry_delay_seconds,
+            timeout_seconds=args.timeout_seconds,
+            live_url=args.live_url,
+        )
     raw = ROOT_JSON.read_bytes(); root = json.loads(raw)
     sha = hashlib.sha256(raw).hexdigest(); short = sha[:8]
     preimage = canonical_bytes({k: root[k] for k in ENVELOPE_FIELDS})
@@ -274,14 +357,13 @@ def main() -> int:
     ptr_path = INTEROP / "root-witness-pointer.json"
     ptr = json.loads(ptr_path.read_text()) if ptr_path.exists() else {"kind": "csoai.root-witness-pointer/v0"}
     ptr.update({"as_of": now(),
-                "note": "Honest pointer for the current root witness. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
+                "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
                 "live_root": side["artifact"],
                 "witness_sidecar": {"url": "https://councilof.ai/interop/root-witness-latest.json", "path": str(latest.relative_to(ROOT)), "status": "PUBLISHED", "dated_copy": str(dated.relative_to(ROOT))},
                 # Computed against the LIVE root a reader fetches — never against the local bytes
-                # we just witnessed, which is a comparison of a value with itself. Immediately
-                # after a publish this legitimately reads DRIFTED until the deploy lands; the
-                # scheduled `--recheck` flips it to MATCH once it does. That is the honest
-                # sequence, and it is why DRIFTED here is not an alarm on its own.
+                # we just witnessed, which is a comparison of a value with itself. Before the
+                # candidate is deployed this may legitimately read DRIFTED. checked_at makes this
+                # a timestamped observation; it is never published as a standing live verdict.
                 "drift": compute_drift(sha, root["merkle_root"]),
                 "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": "NOT_YET", "xrpl_memo": "NOT_YET"}})
     ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")

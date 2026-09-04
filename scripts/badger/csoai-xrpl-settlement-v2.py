@@ -22,6 +22,15 @@ from pathlib import Path
 QUEUE = Path("scripts/badger/_queue/xrpl-settlement")
 QUEUE.mkdir(parents=True, exist_ok=True)
 
+# Incident quarantine (2026-09-04): this writer promoted a successful public
+# ledger read to MEASURED and emitted digest-shaped placeholders when no signing
+# key was present. The legitimate read-only XRPL APIs are separate and remain
+# available; this batch writer is retired pending canonical evidence admission.
+QUARANTINED_GENERATOR = True
+QUARANTINE_REASON = (
+    "retired: public ledger observations are PROBED facts, not GSPC measurements"
+)
+
 
 def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -123,7 +132,7 @@ def build_evidence_card(issuer: dict, account_info: dict, account_lines: dict) -
             "tier": 3,
         },
         "measurement": {
-            "status": "MEASURED" if account_info.get("result", {}).get("account_data") else "UNREACHABLE",
+            "status": "PROBED" if account_info.get("result", {}).get("account_data") else "UNREACHABLE",
             "verified_via": "XRPScan public API + xrplcluster.com JSON-RPC",
             "x402_sku": "xrpl-asset-evidence",
             "x402_price_usdc": 0.05,
@@ -162,11 +171,13 @@ def sign_card(card: dict) -> dict:
             card["sig_ed25519"] = sig.hex()
             card["signed"] = True
         except Exception:
-            card["sig_ed25519"] = hashlib.sha256(blob).hexdigest()
+            card["sig_ed25519"] = None
             card["signed"] = False
+            card["signature_state"] = "UNSIGNED"
     else:
-        card["sig_ed25519"] = hashlib.sha256(blob).hexdigest()
+        card["sig_ed25519"] = None
         card["signed"] = False
+        card["signature_state"] = "UNSIGNED"
     return card
 
 
@@ -188,7 +199,10 @@ def build_x402_receipt(card: dict) -> dict:
     }
 
 
-def main() -> None:
+def main() -> int:
+    if QUARANTINED_GENERATOR:
+        print(f"QUARANTINED: {QUARANTINE_REASON}")
+        return 78
     print("=== XRPL REAL SETTLEMENT v2 ===")
     print()
 
@@ -197,7 +211,7 @@ def main() -> None:
     tokens = fetch_xrpscan_tokens()
     if not isinstance(tokens, list):
         print(f"      error: {tokens}")
-        return
+        return 1
     print(f"      fetched {len(tokens)} tokens")
 
     # Step 2: find our issuers
@@ -209,7 +223,7 @@ def main() -> None:
         print("  no issuers found — saving raw tokens for manual review")
         out = QUEUE / f"xrpl-tokens-raw-{now()}.json"
         out.write_text(json.dumps({"as_of": now(), "tokens": tokens[:50]}, indent=2))
-        return
+        return 1
 
     # Step 3: probe each issuer on XRPL
     print(f"  [3] probing {len(issuers)} issuers on xrplcluster.com...")
@@ -243,18 +257,19 @@ def main() -> None:
 
     # Summary
     signed = sum(1 for c in cards if c.get("signed"))
-    measured = sum(1 for c in cards if c["measurement"]["status"] == "MEASURED")
+    probed = sum(1 for c in cards if c["measurement"]["status"] == "PROBED")
     print()
     print(f"=== SUMMARY ===")
     print(f"  issuers found:     {len(issuers)}")
     print(f"  cards built:       {len(cards)}")
     print(f"  signed:            {signed}")
-    print(f"  measured:          {measured}")
+    print(f"  probed:            {probed}")
     print(f"  cards file:        {cards_path}")
     print(f"  receipts file:     {receipts_path}")
     print(f"  x402 SKU:          xrpl-asset-evidence (5 cents USDC per card)")
     print(f"  potential revenue: ${len(cards) * 0.05:.2f} USDC per settlement cycle")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

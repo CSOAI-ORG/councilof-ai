@@ -2,7 +2,7 @@
 /**
  * build-findings-index.mjs — materialise the REGULATION-FINDINGS index.
  *
- * Joins, per (model × axis) SIGNED card cell, three things nobody else cross-references:
+ * Joins, per (model × axis) locally VERIFIED card cell, three things:
  *   1. the MEASUREMENT   — from public/signed/card-matrix.json (itself derived, byte-for-byte,
  *                          from the 335 signed cards; it already neutralises retired brand names
  *                          to withheld-name-N, so we inherit that display policy unchanged).
@@ -11,9 +11,10 @@
  *   3. the FINE TIER     — the STATUTORY MAXIMUM for the mapped tier, cited to EU AI Act Art 99,
  *                          matching the live edge-signed /api/regulation feed.
  *
- * HONESTY (absolute — enforced structurally here, not by good intentions):
- *   · Every finding is DISCOVERED and stands behind a signed card (card_url + signed:true). A cell
- *     with no card is not emitted. Nothing is MEASURED without a card.
+ * HONESTY (enforced structurally here):
+ *   · Every finding is DISCOVERED and stands behind card bytes whose content id and Ed25519
+ *     signature verify under the pinned public key. A cell with no valid card is not emitted.
+ *     Publication and verification are not independent admission or certification.
  *   · Regulatory mappings are POINTERS. relation is always "relevant-to" — never "violates",
  *     never "complies". This script refuses to emit any other relation.
  *   · No fine is asserted as owed. Each finding carries only statutory_maximum for the tier, cited;
@@ -30,6 +31,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { verifyCard } from "../public/signed/verify-card.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, "..");
@@ -39,7 +41,7 @@ const OUT = join(REPO, "public/signed/findings_index.json");
 
 const round = (x, p = 4) => (typeof x === "number" ? Math.round(x * 10 ** p) / 10 ** p : x);
 
-function main() {
+async function main() {
   const matrix = JSON.parse(readFileSync(MATRIX, "utf8"));
   const xwalk = JSON.parse(readFileSync(CROSSWALK, "utf8"));
   const tierTable = xwalk.fine_tiers.eu_ai_act;
@@ -94,6 +96,20 @@ function main() {
 
   // per-model published-name policy, inherited from the matrix
   const modelMeta = Object.fromEntries((matrix.models || []).map((m) => [m.id, m]));
+
+  // Verify the exact local bytes behind every matrix cell before calling the
+  // derived finding published evidence. Signature presence is not enough.
+  const verifiedCards = new Set();
+  for (const cell of matrix.cells || []) {
+    if (!/^[a-f0-9]{64}$/.test(String(cell.card || "")))
+      throw new Error(`matrix cell carries an invalid card id: ${cell.card}`);
+    const cardPath = join(REPO, "public/signed/cards", `${cell.card}.json`);
+    const card = JSON.parse(readFileSync(cardPath, "utf8"));
+    const verdict = await verifyCard(card);
+    if (verdict.state !== "VALID")
+      throw new Error(`card ${cell.card} is not VALID: ${verdict.reason || verdict.state}`);
+    verifiedCards.add(cell.card);
+  }
 
   // one finding per signed cell
   const findings = [];
@@ -203,10 +219,10 @@ function main() {
   }).sort((a, b) => a.axis.localeCompare(b.axis));
 
   const out = {
-    schema: "csoai.regulation-findings-index/0.1",
-    title: "Regulation-findings index — every signed (model × axis) card, joined to its regulator crosswalk and statutory fine tier",
+    schema: "csoai.regulation-findings-index/0.2",
+    title: "Regulation-findings index — every locally verified (model × axis) card, joined to its regulator crosswalk and statutory fine tier",
     honesty: {
-      findings_are: "DISCOVERED / measured, and every one stands behind an Ed25519-signed card (card_url, signed:true). Nothing here is MEASURED without a card.",
+      findings_are: "DISCOVERED measurements backed by card bytes whose digest and Ed25519 signature were verified during this build. Published and verified is not independent admission, certification, or a legal determination.",
       mappings_are: "CROSSWALK POINTERS. Every relation is 'relevant-to' — this index never says a model 'violates' or 'complies with' any provision. Whether a measured result clears an obligation is a legal question for counsel and the competent authority, not a measured one.",
       fines_are: "the STATUTORY MAXIMUM for the mapped tier, cited to EU AI Act Art 99. No fine is asserted as owed by anyone (no_fine_asserted_owed:true on every pointer). Voluntary frameworks (NIST AI RMF, ISO 42001) and security taxonomies (OWASP ASI) carry no fine — stated as null, never a fabricated figure.",
       measure_not_certify: "CSOAI measures; it does not certify, and is not a notified body or an enforcer.",
@@ -214,7 +230,7 @@ function main() {
       empty_is_first_class: "Only measured cells appear. The 689 unmeasured (model × axis) pairs (of 1024 possible) are honestly absent, not zeros.",
     },
     generated_from: {
-      measurement: "public/signed/card-matrix.json (derived byte-for-byte from public/signed/cards/*.json, 335 signed cards)",
+      measurement: `public/signed/card-matrix.json joined to ${verifiedCards.size} locally verified files in public/signed/cards/*.json`,
       crosswalk: "client/src/data/regulator-crosswalk.json",
       fine_tiers: "EU AI Act Art 99 — transcribed to match the live edge-signed /api/regulation feed",
       note: "Rebuild with: node scripts/build-findings-index.mjs. Deterministic — unchanged inputs write identical bytes.",
@@ -247,6 +263,9 @@ function main() {
       card: c.card,
       card_url: c.card_url,
       signed: c.signed === true,
+      signature_verified: verifiedCards.has(c.card),
+      admitted: false,
+      evidence_state: "PUBLISHED_VERIFIED",
       alg: c.alg,
       pubkey: c.pubkey,
       measured_on: c.created,
@@ -259,4 +278,4 @@ function fRef(f) {
 }
 function mean(a) { return a.length ? a.reduce((s, x) => s + x, 0) / a.length : null; }
 
-main();
+await main();

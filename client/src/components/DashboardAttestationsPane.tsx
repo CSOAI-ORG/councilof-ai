@@ -178,17 +178,17 @@ export default function DashboardAttestationsPane() {
     return () => ac.abort();
   }, []);
 
-  const rails: WitnessRail[] = useMemo(
-    () => witnessRails(witness?.doc ?? null, eas?.http === 200 ? eas.doc : null, eas ? eas.http : null),
-    [witness, eas],
-  );
-
   const bytesMatch: Check | null = useMemo(() => {
     if (!rootBytesSha || !witness?.doc?.artifact?.sha256) return null;
     return rootBytesSha === witness.doc.artifact.sha256
       ? { state: "VALID", reason: `sha256 of the root.json bytes read on this load equals the sidecar's artifact.sha256 — the witnesses below are witnesses of THESE bytes.` }
       : { state: "INVALID", reason: `root.json read on this load hashes to ${rootBytesSha.slice(0, 16)}…; the sidecar witnessed ${witness.doc.artifact.sha256.slice(0, 16)}…. The witnesses are true of older bytes, not of this root — drift.` };
   }, [rootBytesSha, witness]);
+
+  const rails: WitnessRail[] = useMemo(
+    () => witnessRails(witness?.doc ?? null, eas?.http === 200 ? eas.doc : null, eas ? eas.http : null, bytesMatch),
+    [witness, eas, bytesMatch],
+  );
 
   const cards = useMemo(() => latestSignedCards(index?.doc ?? null, 8), [index]);
   const corrections = useMemo(() => latestCorrections(ledger?.doc ?? null), [ledger]);

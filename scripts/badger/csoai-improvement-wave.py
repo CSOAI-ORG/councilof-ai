@@ -13,7 +13,7 @@ After the EAT wave:
 What's missing / what to improve next:
   1. /api/learn-loop is built but the dist openapi.json still has stale text
   2. We have 11+ LaunchAgent definitions but most are not installed
-  3. The XRPL settlement only catches 10 issuers; need to expand keywords
+  3. The retired XRPL settlement writer is quarantined; keep the read-only reader
   4. Need more well-known doors (target: 200, current: 122)
   5. Need more interop formats (target: 400, current: 220)
   6. Need more atom sources (target: 30, current: 10)
@@ -28,7 +28,7 @@ This script:
   - Adds 10+ more atom sources
   - Adds 5+ more engines
   - Adds 5+ more games
-  - Adds 5+ more LaunchAgents
+  - Adds 4+ more LaunchAgents (the retired XRPL writer is never scheduled)
   - Wires everything to the layer 0 ceremony
 
 Lane-doable: just file generation.
@@ -130,11 +130,11 @@ NEW_GAMES = [
 ]
 
 
-# 5 more LaunchAgents
+# 4 safe LaunchAgents. The former XRPL settlement writer is intentionally not
+# scheduled: public-ledger reachability is not a GSPC measurement.
 NEW_LAUNCH_AGENTS = [
     ("com.csoai.eat-all-chains-5min", "*/5 * * * *", "csoai-eat-all-chains.py"),
     ("com.csoai.uk-open-data-15min", "*/15 * * * *", "csoai-uk-open-data.py"),
-    ("com.csoai.xrpl-settlement-30min", "*/30 * * * *", "csoai-xrpl-settlement-v2.py"),
     ("com.csoai.bft-council-30min", "*/30 * * * *", "csoai-bft-council.py"),
     ("com.csoai.learn-loop-5min", "*/5 * * * *", "csoai-learn-loop.py"),
 ]
@@ -218,21 +218,10 @@ def main() -> None:
     }, indent=2))
     print(f"  total atom sources: {len(NEW_SOURCES)}")
 
-    # 3. Engines
+    # 3. Engines — retired. The old append-only generator produced duplicate
+    # declarations and URLs without matching runtime handlers.
     print()
-    print("[3] Adding 5 more engines...")
-    engines_path = INTEROP / "engine-bindings.json"
-    existing_engines = json.load(open(engines_path)) if engines_path.exists() else {"engines": []}
-    for slug, name, desc in NEW_ENGINES:
-        existing_engines["engines"].append({
-            "name": name,
-            "slug": slug,
-            "description": desc,
-            "x402_sku": f"engine-{slug}",
-        })
-        (WK / f"{slug}.json").write_text(json.dumps(build_discovery(slug, name, desc), indent=2))
-    engines_path.write_text(json.dumps(existing_engines, indent=2))
-    print(f"  total engines: {len(existing_engines['engines'])}")
+    print("[3] Engine binding generation RETIRED — capability registry is authoritative")
 
     # 4. Games
     print()
@@ -259,7 +248,7 @@ def main() -> None:
 
     # 5. LaunchAgents
     print()
-    print("[5] Building 5 more LaunchAgent plists...")
+    print("[5] Building safe LaunchAgent plists...")
     for name, schedule, script in NEW_LAUNCH_AGENTS:
         plist = build_launch_agent(name, schedule, script)
         plist_path = LAUNCH / f"{name}.plist"

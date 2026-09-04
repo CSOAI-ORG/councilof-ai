@@ -44,7 +44,10 @@ export default defineConfig({
         command: `node e2e/static-server.mjs dist/client ${PORT}`,
         cwd: ROOT,
         url: `${base}/dashboard`,
-        reuseExistingServer: true,
+        // Never attach to another concurrent gate. If two release checks share
+        // the port, fail at startup instead of losing the server halfway
+        // through a run and misreporting product regressions.
+        reuseExistingServer: false,
         stdout: "pipe",
         stderr: "pipe",
         timeout: 120_000,

@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
+  display: none !important;
+}
+
 /*
  * CSOAI Editorial Design System
  * Warm white, single green accent, serif display, flat institutional
@@ -46,6 +50,12 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-brand-institutional: var(--brand-institutional);
+  --color-brand-action: var(--brand-action);
+  --color-brand-bright: var(--brand-bright);
+  --color-brand-ink: var(--brand-ink);
+  --color-surface-canvas: var(--surface-canvas);
+  --color-surface-selection: var(--surface-selection);
 
   /* Open WebUI Gray Scale */
   --color-gray-50: oklch(0.98 0 0);
@@ -73,6 +83,14 @@
 :root {
   --radius: 0.75rem;
 
+  /* Council of AI identity: institution, action, and emphasis are distinct. */
+  --brand-institutional: #04624a;
+  --brand-action: #047857;
+  --brand-bright: #10b981;
+  --brand-ink: #04120c;
+  --surface-canvas: #fafaf7;
+  --surface-selection: #ecfdf5;
+
   /*
    * Council OS header ground. The lobby's glass surfaces are white by design
    * (see client/src/components/lobby/glass.ts and its measured-contrast note);
@@ -84,7 +102,7 @@
   --lobby-ground: 255 255 255;
 
   /* Light theme — CSOAI Editorial: warm white + single green accent */
-  --background: #fafaf7;
+  --background: var(--surface-canvas);
   --foreground: #0c1a12;
   
   --card: #ffffff;
@@ -93,8 +111,8 @@
   --popover: #ffffff;
   --popover-foreground: #0c1a12;
   
-  /* Single green accent (#10b981) — one-colour ownership per blueprint */
-  --primary: #10b981;
+  /* Accessible action green. Bright emerald is reserved for emphasis/data. */
+  --primary: var(--brand-action);
   --primary-foreground: #ffffff;
   
   --secondary: #ffffff;
@@ -103,38 +121,38 @@
   --muted: #f3f4f6;
   --muted-foreground: #5a6b5e;
   
-  --accent: #16a34a;
-  --accent-foreground: #0c1a12;
+  --accent: var(--surface-selection);
+  --accent-foreground: #064e3b;
   
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(1 0 0);
   
   --border: #e8e8e3;
   --input: #e8e8e3;
-  --ring: #10b981;
+  --ring: var(--brand-action);
   
   /* CSOAI Chart Colors — green family, single accent */
-  --chart-1: #10b981;
-  --chart-2: #059669;
-  --chart-3: #047857;
+  --chart-1: var(--brand-bright);
+  --chart-2: var(--brand-action);
+  --chart-3: var(--brand-institutional);
   --chart-4: #6ee7b7;
   --chart-5: oklch(0.55 0.2 25);
   
   --sidebar: #fafaf7;
   --sidebar-foreground: #0c1a12;
-  --sidebar-primary: #10b981;
+  --sidebar-primary: var(--brand-action);
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #f0f0ea;
   --sidebar-accent-foreground: #0c1a12;
   --sidebar-border: #e8e8e3;
-  --sidebar-ring: #10b981;
+  --sidebar-ring: var(--brand-action);
 
   /* ── INK: the one dark ground the brand owns ──────────────────────────
      Derived from what already shipped: EnterpriseTrust's #04120c and the
      DeckHero's #05130d. It is GREEN-black, never blue-black. Any band that
      goes dark uses these five tokens and nothing else — that is what stops
      a `slate-950` here and an `emerald-900` there reading as two brands. */
-  --ink: #04120c;
+  --ink: var(--brand-ink);
   --ink-raised: rgba(255, 255, 255, 0.045);
   --ink-raised-hover: rgba(255, 255, 255, 0.085);
   --ink-foreground: #ecf7f1;
@@ -154,7 +172,15 @@
      BLUE-black and breaks the brand rule the palette below sets: green-black, never blue. */
   --lobby-ground: 5 15 10;
 
-  --background: #050f0a;
+  /* Perceptual equivalents keep semantic brand utilities legible on ink. */
+  --brand-institutional: #6ee7b7;
+  --brand-action: #34d399;
+  --brand-bright: #6ee7b7;
+  --brand-ink: #04120c;
+  --surface-canvas: #050f0a;
+  --surface-selection: #0f2e21;
+
+  --background: var(--surface-canvas);
   --foreground: #e9f4ee;
 
   --card: #0a1a13;
@@ -164,7 +190,7 @@
   --popover-foreground: #e9f4ee;
 
   /* Lighter green for dark mode readability */
-  --primary: #34d399;
+  --primary: var(--brand-action);
   --primary-foreground: #04120c;
 
   --secondary: #0f241a;
@@ -173,15 +199,15 @@
   --muted: #0f241a;
   --muted-foreground: #9ab8a8;
 
-  --accent: #0f241a;
-  --accent-foreground: #e9f4ee;
+  --accent: var(--surface-selection);
+  --accent-foreground: #a7f3d0;
 
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(1 0 0);
 
   --border: #1c3627;
   --input: #1c3627;
-  --ring: #34d399;
+  --ring: var(--brand-action);
 
   --chart-1: #34d399;
   --chart-2: #10b981;
@@ -191,12 +217,12 @@
   
   --sidebar: #050f0a;
   --sidebar-foreground: #e9f4ee;
-  --sidebar-primary: #34d399;
+  --sidebar-primary: var(--brand-action);
   --sidebar-primary-foreground: #04120c;
   --sidebar-accent: #0a1a13;
   --sidebar-accent-foreground: #e9f4ee;
   --sidebar-border: #1c3627;
-  --sidebar-ring: #34d399;
+  --sidebar-ring: var(--brand-action);
 
   /* In dark the ink band must still read as a distinct band, so it sits one
      step BELOW the page ground rather than above it. Same hue, same family. */

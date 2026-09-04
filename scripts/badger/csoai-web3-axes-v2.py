@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""csoai-web3-axes-v2.py — rebuild the 22 axes as Web3-native primitives.
+"""csoai-web3-axes-v2.py — describe candidate evidence rails for 22 GSPC axes.
 
 This script:
   1. Strips SaaS / TaaS model from every axis
-  2. Rebuilds the 22 axes as Web3-native primitives
-  3. Adds on-chain attestation + ZK + MPC + TEE + self-custody
-  4. Clears the table for the new future
-  5. Stages 300 weekend moves
+  2. Keeps measured axis state separate from proposed rail state
+  3. Makes no deployment, signature, chain-inclusion, BFT, or coverage claim
 
 Lane-doable: file generation + axis definitions.
 """
@@ -20,6 +18,7 @@ from pathlib import Path
 ROOT = Path(".")
 INTEROP = ROOT / "public" / "interop"
 GSP = ROOT / "client" / "src" / "data"
+QUARANTINED_GENERATOR = True  # The former public "300 moves" generator is retired.
 
 
 def now() -> str:
@@ -500,11 +499,30 @@ def main() -> None:
     # 1. The new 22 axes
     print("[1] The 22 axes (Web3-native, no SaaS/TaaS)...")
     axes_path = INTEROP / "axes-v2-web3.json"
+    # WEB3_AXES contains the current GSPC board status alongside a proposed
+    # future rail mapping. Do not collapse those two states: a measured GSPC
+    # axis does not establish that EAS, Rekor, OTS, ZK, MPC or TEE issuance is
+    # live for that axis.
+    planned_axes = []
+    for axis in WEB3_AXES:
+        proposal = {key: value for key, value in axis.items() if key not in {"description", "status", "new_model"}}
+        proposal.update({
+            "gspc_axis_status": axis["status"],
+            "rail_status": "PLANNED",
+            "description": f"Candidate evidence rail: {axis['web3_primitive']}.",
+            "candidate_model": axis["new_model"],
+            "claim_boundary": (
+                "Design proposal only. No deployment, signature, chain inclusion, BFT independence, "
+                "universal coverage, legal compliance, or certification is established by this record."
+            ),
+        })
+        planned_axes.append(proposal)
     axes_path.write_text(json.dumps({
         "schema": "csoai.axes-v2/0.1",
         "as_of": now(),
-        "principle": "Strip SaaS / TaaS. Replace with on-chain attestation, ZK proofs, MPC, TEE, self-custody. Every axis is Web3-native.",
-        "axes": WEB3_AXES,
+        "status": "DESIGN_PROPOSAL",
+        "principle": "Map the 22 measured GSPC axes to candidate portable evidence rails without claiming those rails are deployed.",
+        "axes": planned_axes,
         "migration": {
             "from": "SaaS / TaaS model (cloud vendor controls the keys, vendor attests)",
             "to": "Web3-native model (self-custody, on-chain attestation, ZK proofs, MPC, TEE)",
@@ -524,112 +542,14 @@ def main() -> None:
     print(f"  axes file: {axes_path}")
     print(f"  total axes: {len(WEB3_AXES)}")
 
-    # 2. The 300 weekend moves
-    print()
-    print("[2] The 300 weekend moves...")
-    moves_path = INTEROP / "300-moves-web3.json"
-    moves_path.write_text(json.dumps({
-        "schema": "csoai.300-moves/0.1",
-        "as_of": now(),
-        "principle": "Clear the table for the new future. Web3-native. Every move has positive effectives.",
-        "timeline": {
-            "Friday": "30 moves (today)",
-            "Saturday": "100 moves (mining sprint)",
-            "Sunday": "100 moves (signing + anchoring sprint)",
-            "Monday": "70 moves (outreach + grant submission)",
-        },
-        "categories": {
-            "A. SWIFT": 30,
-            "B. XRPL RWA": 30,
-            "C. Treasuries + RWA": 30,
-            "D. Banks": 30,
-            "E. EU AI Act": 30,
-            "F. US regulatory": 30,
-            "G. UK regulatory": 30,
-            "H. x402 + A2A ecosystem": 30,
-            "I. Flywheels": 30,
-            "J. Outward signals": 30,
-            "K. Weekend impact": 30,
-            "L. Meta + operational": 10,
-        },
-        "total_moves": 300,
-        "positive_effectives": {
-            "direct_value": [
-                "$280K in grant funding (4 pre-staged)",
-                "$5K-$50K Y1 x402 revenue (15 priced SKUs)",
-                "100K-1M impressions (DOI cited everywhere)",
-                "100K npm downloads (gspc-card-verifier)",
-                "100K HF badge impressions",
-            ],
-            "network_effects": [
-                "Every regulator can verify every CSOAI attestation",
-                "Every AI lab can cite every measurement",
-                "Every VC can see the 100x leverage",
-                "Every bank can plug into the SWIFT rail",
-                "Every XRPL issuer can attest via x402",
-            ],
-            "standing": [
-                "First mover in public-interest AI measurement",
-                "Citable spine (Zenodo DOI)",
-                "Defensive IP (OIN 2.0 + LOT Network)",
-                "Open source (MIT)",
-                "Sovereign (operator owns the keys)",
-            ],
-        },
-        "the_5_unlocks": [
-            "Fund burner wallet ~$5 USDC",
-            "Set X402_FACILITATOR_URL=@url:https://facilitator.pyai.network on CF Pages",
-            "Send 4 grant applications (NLnet €50K deadline 3 Nov 2026)",
-            "Set GH HF token for badge draft → public",
-            "npm publish gspc-card-verifier (2FA)",
-        ],
-        "every_move_template": {
-            "1": "Build /.well-known/<slug>.json (discovery)",
-            "2": "Build /api/<slug> (read endpoint)",
-            "3": "Mine the public data daily",
-            "4": "Sign + OTS-pending every atom",
-            "5": "Wire to 33-agent BFT",
-            "6": "Add as A2A agent card",
-            "7": "Add as MCP server",
-            "8": "Add to x402 SKU (priced)",
-            "9": "Mine + commit + push",
-            "10": "Publish to public surface",
-        },
-    }, indent=2))
-    print(f"  moves file: {moves_path}")
-
-    # 3. Save the first 30 moves for today (Friday)
-    print()
-    print("[3] The first 30 moves (today)...")
-    today_moves = []
-    for cat in ["A", "B", "C"]:
-        cat_moves = [m for m in WEEKEND_MOVES if m.startswith(f"{cat}1:") or m.startswith(f"{cat}2:") or m.startswith(f"{cat}3:")][:10]
-        today_moves.extend(cat_moves)
-    today_path = INTEROP / "300-moves-today.json"
-    today_path.write_text(json.dumps({
-        "schema": "csoai.300-moves-today/0.1",
-        "as_of": now(),
-        "day": "Friday",
-        "total_moves_today": len(today_moves),
-        "moves": today_moves[:30],
-    }, indent=2))
-    print(f"  today file: {today_path}")
-    print(f"  total moves today: {len(today_moves[:30])}")
-
-    # Summary
+    # The former "300 moves" outputs mixed plans with deployment and revenue
+    # assertions and were accidentally served as evidence. They are preserved in
+    # evidence/incidents, never generated into public/ again.
     print()
     print("=== SUMMARY ===")
-    print(f"  axes (Web3-native): {len(WEB3_AXES)}")
-    print(f"  total weekend moves: {len(WEEKEND_MOVES)}")
-    print(f"  moves today: {len(today_moves[:30])}")
+    print(f"  candidate axis rails: {len(WEB3_AXES)}")
     print(f"  axes file: {axes_path}")
-    print(f"  moves file: {moves_path}")
-    print(f"  today file: {today_path}")
-    print()
-    print("=== PRINCIPLE ===")
-    print("Strip SaaS / TaaS. Build Web3-native primitives.")
-    print("On-chain attestation + ZK + MPC + TEE + self-custody.")
-    print("Clear the table for the new future.")
+    print("  public move-plan generator: RETIRED")
 
 
 if __name__ == "__main__":

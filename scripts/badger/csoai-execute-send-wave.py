@@ -16,7 +16,7 @@ We will:
   1. STAGE every file in the queue
   2. RENDER every submission as a final JSON + plaintext form
   3. PRE-FILL the form text so you only need to paste + click
-  4. PUBLISH the templates to the public grants/ + outreach/ pages
+  4. Keep outreach templates in the operator-only draft directory
   5. COMMIT + PUSH to master
 
 The agent does the data work; the operator does the OAuth-bound send.
@@ -32,13 +32,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PUBLIC_GRANTS = ROOT / "public" / "grants"
-PUBLIC_OUTREACH = ROOT / "public" / "outreach"
+OPERATOR_OUTREACH = ROOT / "docs" / "operator" / "outreach"
 QUEUE = ROOT / "scripts" / "badger" / "_queue"
 QUEUE_FUNDING = QUEUE / "funding"
 QUEUE_OUTREACH = QUEUE / "outreach"
 
 PUBLIC_GRANTS.mkdir(parents=True, exist_ok=True)
-PUBLIC_OUTREACH.mkdir(parents=True, exist_ok=True)
+OPERATOR_OUTREACH.mkdir(parents=True, exist_ok=True)
 
 
 def now() -> str:
@@ -680,12 +680,20 @@ def main() -> None:
     }, indent=2))
     print(f"  ✓ Mastodon:        {len(MASTODON_TOOTS):>4} posts -> {m_path.name}")
 
-    # Render outreach to public pages (so the templates live on the public site too)
+    # Outreach is an unverified operator draft. Never publish or send it from here.
     for em in EMAILS:
         safe_seg = em["to_segment"].split("(")[0].strip().lower().replace(" ", "-").replace(",", "")[:30]
-        path = PUBLIC_OUTREACH / f"{safe_seg}.md"
-        path.write_text(f"# {em['subject']}\n\n**To:** {em['to_segment']}\n\n---\n\n{em['body']}\n")
-    print(f"  ✓ Emails:          {len(EMAILS):>4} templates -> {len(EMAILS)} .md files in public/outreach/")
+        path = OPERATOR_OUTREACH / f"{safe_seg}.md"
+        path.write_text(
+            "# UNVERIFIED OPERATOR DRAFT — DO NOT SEND\n\n"
+            "Every factual, runtime, payment, test-count, and capability claim must be "
+            "revalidated against current evidence before owner review.\n\n"
+            f"# {em['subject']}\n\n**To:** {em['to_segment']}\n\n---\n\n{em['body']}\n"
+        )
+    print(
+        f"  ✓ Email drafts:    {len(EMAILS):>4} templates -> "
+        f"{len(EMAILS)} operator-only files in docs/operator/outreach/"
+    )
 
     # Build the operator-gated bundle — what YOU need to do in 5 minutes
     print()
@@ -737,8 +745,8 @@ This bundle has EVERYTHING pre-staged. You only need to click + paste.
    - Pick the top 3-5 + post from your LinkedIn
 3. **Mastodon**: 15 toots ready at `scripts/badger/_queue/outreach/mastodon-bundle-{now}.json`
    - Post all 15 from your @csoai@social.coop or similar
-4. **Email**: 8 templates ready in `public/outreach/`
-   - Send each to the relevant segment (vendors, regulators, standards bodies, press, OSS, academic, investors, HF team)
+4. **Email**: 8 unverified drafts in `docs/operator/outreach/`
+   - Revalidate every claim, obtain owner review, then send through an authorized mailbox workflow
 
 ## Total potential: $280K in grants + 8 outreach segments
 

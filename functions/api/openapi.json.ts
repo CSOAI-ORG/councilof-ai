@@ -63,7 +63,7 @@ export const OPENAPI_SPEC = {
     "/root.json": {
       get: {
         operationId: "getRoot",
-        summary: "The last published public root (csoai.public-root/v0)",
+        summary: "The last published public root (csoai.public-root/v1)",
         description: "Ed25519-signed envelope under did:web:csoai.org#board-attestation-1; card_sha256[] is bound by merkle_root. Recipe: /signed/HOW-TO-VERIFY-ROOT.md. Not a certificate.",
         responses: { "200": { description: "Root envelope." } },
       },

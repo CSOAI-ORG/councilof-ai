@@ -1,0 +1,88 @@
+{
+  "schema": "csoai.public-proof-incident/0.1",
+  "as_of": "2026-09-04",
+  "status": "QUARANTINED_NON_PUBLIC",
+  "note": "Historical incident artifacts preserved outside the served public tree. Exact bytes are pinned unless an artifact declares a narrowly scoped redaction with both stored and pre-redaction SHA-256 digests. These artifacts are not valid public proofs.",
+  "artifacts": [
+    {
+      "original_public_path": "public/interop/anchors/ots-anchor.json",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/anchors/ots-anchor.json",
+      "sha256": "568a96ca134e129d7f240bc4946350ec161f313a81b9da0e0fcb1bd8fd7f6f34",
+      "classification": "METADATA_FOR_UNBOUND_PROOF"
+    },
+    {
+      "original_public_path": "public/interop/anchors/public-root-1a5b2705.ots",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/anchors/public-root-1a5b2705.ots",
+      "sha256": "e3fb37aba2e2bdb0b4b130a75a5fe905e5d031535e86e60011bbae97e7aa2943",
+      "classification": "NO_RECOVERABLE_TARGET_BINDING"
+    },
+    {
+      "original_public_path": "public/interop/atom-root-2026-09-03.json",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/atom-root-2026-09-03.json",
+      "sha256": "6f9e25e7ca0e627531c763d603bdb8f3f3f739537500983aac8a2730645b2928",
+      "classification": "ROOT_COMMITS_QUARANTINED_LEAVES"
+    },
+    {
+      "original_public_path": "public/interop/atom-root-2026-09-03.json.ots",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/atom-root-2026-09-03.json.ots",
+      "sha256": "422b5f088e4d1e35c5286b706c79a56a47f61e560e04e9a921ee6c617143a7d8",
+      "classification": "DIGEST_MISMATCH"
+    },
+    {
+      "original_public_path": "public/interop/atom-root-2026-09-03-2.json",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/atom-root-2026-09-03-2.json",
+      "sha256": "103866d30767ccbeef4e5ca3da3733185002cace6d6880d5aaaa867d235a7895",
+      "classification": "ROOT_COMMITS_QUARANTINED_LEAVES"
+    },
+    {
+      "original_public_path": "public/interop/atom-root-2026-09-03-2.json.ots",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/atom-root-2026-09-03-2.json.ots",
+      "sha256": "80db54fc98331e17cd5d155e0ecabc9e83f6295155475ac609d8a504ed9680ba",
+      "classification": "DIGEST_MISMATCH"
+    },
+    {
+      "original_public_path": "public/interop/layer0-ceremony.json",
+      "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/layer0-ceremony.json",
+      "sha256": "79a3ce1867c49c615a8dc719da98526a24e394330449f2afd618da04438e8076",
+      "redacted_from_sha256": "59e339a5cce41297fb622f5e477e8764203b442dea7fd44615e10004f5f5a844",
+      "redaction": {
+        "profile": "INTERNAL_INFRASTRUCTURE_HOSTNAME",
+        "reason": "Remove an internal infrastructure hostname from the non-public incident copy without reproducing it elsewhere.",
+        "provenance": "redacted_from_sha256 is the SHA-256 of the exact file formerly served at original_public_path; sha256 pins the stored copy after the declared hostname replacement and two notice additions; projection_sha256 pins all remaining JSON content shared by both states.",
+        "fields": ["compute.oracle.host"],
+        "replacement": "[redacted-internal-hostname]",
+        "metadata_fields_added": ["quarantine_notice", "redaction_notice"],
+        "projection_sha256": "597d9a074bf09a7095f3d4f82376755b3c2d2053a274fbf7cfa7eca15c3d1bb2",
+        "original_bytes_preserved": false
+      },
+      "classification": "OVERSTATED_ANCHOR_STATUS"
+    }
+  ],
+  "plain_text_placeholders": [
+    ["layer0-root-20260904T051418Z.ots", "f1682c04e63d63d6d208c1d9ccce9e7fee3a01187fb99f737b4cb21adba34f71"],
+    ["layer0-root-20260904T051514Z.ots", "fa0f394a72052e37a10b2c574334c4a0620db9d9e5f19daec1619522ee88c7ef"],
+    ["layer0-root-20260904T051529Z.ots", "3d16ec4b3f87d020bb4191acde991edd20681b6276cf4f5cea088836659d33b7"],
+    ["layer0-root-20260904T051837Z.ots", "fe8814b68ee2d152b0ee1172789e58c8eb79ea77c8cc55ad324a631a14d2cfc4"],
+    ["layer0-root-20260904T052530Z.ots", "deefd97eabddf9fec3c817d152875b235899e4e9645b204bab791196dcc57d4a"],
+    ["layer0-root-20260904T052906Z.ots", "2484db0898c8a14034ffaed72d71ee502e5ebdaaa6b66659db3eddeba47c12a7"],
+    ["layer0-root-20260904T053032Z.ots", "8a8171b9302e5b2372614c7c4e3dd2170d8799af5a82704c00dc5df7c8483e35"],
+    ["layer0-root-20260904T053228Z.ots", "2dfa3e1ff86efd5948d5df2037bf440a67cc7b223212f1074d3a425ad4ff5e77"],
+    ["layer0-root-20260904T053925Z.ots", "2beb972d8caa671353c6787bd9e2ef088652fa6c983c2d98d80dff6277112cef"],
+    ["layer0-root-20260904T054436Z.ots", "2f35bcbf2da7fd1564b272e61acd4417e1bfe81178027833b3721755f90fb5c4"],
+    ["layer0-root-20260904T054625Z.ots", "3f215f151b79c05eaeec25ca2cb92a5e60dbb92b58c68590723adfea487151f6"],
+    ["layer0-root-20260904T055128Z.ots", "68005cc47bd539ca0951c09610916ecd27fa28224e4d12571540220ee06b7628"],
+    ["layer0-root-20260904T055135Z.ots", "4d2ca80f249c512d1d8ec91b55a7cfc1bb9fefd8a5fd84b1f4d8c24a75e51109"],
+    ["layer0-root-20260904T055739Z.ots", "68560b2e6986286058cace9e2edd58ac1fce5ff671dc36a0bacf45fbe7a08d75"],
+    ["layer0-root-20260904T055836Z.ots", "07bee5806edf36dad51c7f9ea86a3f2ae992ec4aee35c5c9776e37e99ba87066"],
+    ["layer0-root-20260904T060144Z.ots", "9a6fe6ee111d92d98013eb5fff43cc38d57fdf6ee86824882e4eb14c9f8df6eb"],
+    ["layer0-root-20260904T060344Z.ots", "5d1b0c333c89cbe5ba78dd54a211db3842c8320618d3cc8b6d06a4f4514e2174"],
+    ["layer0-root-20260904T060537Z.ots", "bf84508512f9863ff97b2162b2f5a082d0dc325949978d810deb53795184e28b"],
+    ["layer0-root-20260904T060638Z.ots", "4dc18f39f5adc4f8136ba8ba8666d3b0c16447f162008b428667205aadc9ce47"],
+    ["layer0-root-20260904T061238Z.ots", "769b99b81f552463a652df48540df98f3dd23df747cf8a9754b19a93ac6cdb75"],
+    ["layer0-root-20260904T061937Z.ots", "d47883b60f9f575bc5dde683f5a0ed6eed5fdb28dd10c1ec0f23e5798c142b06"],
+    ["layer0-root-20260904T062052Z.ots", "aea356e8b622345dcbb0afc44eab7cc1828996338748d089ac47091d9f31a4ec"],
+    ["layer0-root-20260904T062630Z.ots", "67e10ea75a142a168dd4b5598c051e5d0fe88257ebea548e32ade201f9450457"],
+    ["layer0-root-20260904T063321Z.ots", "d663a4dc133b505efb64327d5e361fa4ce0feae203818954a86a8662380296c1"],
+    ["layer0-root-20260904T063819Z.ots", "937b98418c39f6c7153000bdff10a5e7acf17e6adb96d1becee0933a7a28e9cc"]
+  ]
+}

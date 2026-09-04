@@ -357,52 +357,57 @@
 <main>
 
   <header class="hero">
-    <h1>Get the GSPC badge on your HuggingFace model</h1>
-    <p class="sub">Every public model on the Hub can carry an independent governance badge. Free. Live. Ed25519-signed. Never a certificate — always a measurement.</p>
-    <p class="lid" id="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
+    <h1>Publish an honest GSPC status for a Hugging Face model</h1>
+    <p class="sub">The global board badge is a link to the GSPC catalogue, not a measurement of the model whose README contains it. A model-specific score is allowed only when a VALID signed cell names that exact model and immutable revision. Otherwise the model stays UNMEASURED or UNSIGNED.</p>
+    <p class="lid" id="lid">Global board · 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact · live</p>
   </header>
 
   <section class="stats" id="stats">
-    <div class="stat"><div class="num" id="stat-badges">—</div><div class="label">badges staged</div></div>
+    <div class="stat"><div class="num" id="stat-badges">—</div><div class="label">unsigned model records staged</div></div>
     <div class="stat"><div class="num" id="stat-pipelines">—</div><div class="label">pipelines covered</div></div>
     <div class="stat"><div class="num" id="stat-hf-models">—</div><div class="label">HF models enumerable</div></div>
     <div class="stat"><div class="num" id="stat-axes">22</div><div class="label">axes (lid)</div></div>
   </section>
 
   <section>
-    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Two badges you can use right now</h2>
-    <p style="color:var(--muted);margin:0 0 1rem;">Both badges are live. Drop them in your model card README.md — they link to the live board and the free verifier.</p>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Two links with different scopes</h2>
+    <p style="color:var(--muted);margin:0 0 1rem;">The board link is safe to use now because it says what it is: the global board. The signed-cell badge is model-specific and must not be used until its card names the exact subject and revision.</p>
     <div class="badges">
       <div class="badge-card">
-        <h3>The lid — shields.io dynamic</h3>
-        <p>The "GSPC" badge pulls the live public count from <code>GET /api/gspc</code>. Cached 1h. Always honest.</p>
-        <div class="preview"><span class="ok">[</span>![GSPC<span class="dim">]</span>(https://img.shields.io/badge/dynamic/json?url=<span class="ok">https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc</span>&query=%24.totals.public_count&label=<span class="ok">GSPC</span>&color=<span class="ok">0B1F33</span>)<span class="ok">]</span>(https://councilof.ai/gspc-scoreboard)</div>
+        <h3>Global board — navigation only</h3>
+        <p>This dynamic badge pulls <code>totals.public_count</code> from <code>GET /api/gspc</code>. Its label says <strong>GSPC board</strong>; it does not grade or sign the model carrying the link.</p>
+        <div class="preview"><span class="ok">[</span>![GSPC board<span class="dim">]</span>(https://img.shields.io/badge/dynamic/json?url=<span class="ok">https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc</span>&query=%24.totals.public_count&label=<span class="ok">GSPC%20board</span>&color=<span class="ok">0B1F33</span>)<span class="ok">]</span>(https://councilof.ai/gspc-scoreboard)</div>
       </div>
       <div class="badge-card">
-        <h3>The verify — live SVG</h3>
-        <p>Hand-rolled SVG that says "22 axes measured · not a certificate". Cache-busts every render.</p>
-        <div class="preview"><span class="ok">!</span>[GSPC<span class="dim">]</span>(https://councilof.ai/<span class="ok">api/badge</span>)</div>
+        <h3>Subject-bound signed cell — conditional</h3>
+        <p>Use a card badge only after the signed card body names the same model and immutable revision as the README. The badge reports the indexed signature state; quote a score only from the verified card itself.</p>
+        <div class="preview"><span class="ok">!</span>[GSPC signed cell<span class="dim">]</span>(https://councilof.ai/<span class="ok">api/badge?card=&lt;SIGNED_CARD_SHA256&gt;&amp;subject=&lt;URL_ENCODED_OWNER%2FMODEL%40COMMIT_SHA&gt;</span>)</div>
       </div>
     </div>
   </section>
 
   <section>
-    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Add the badges to your model</h2>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">Add the honest status to your model</h2>
     <ol class="steps">
-      <li>Open your model's README.md on the Hub.</li>
-      <li>Paste the two badges at the top, just under <code>---</code>.</li>
-      <li>Add a single line of YAML in the metadata block: <code>model-index: [{ name: GSPC, results: [{ task: { type: governance }, dataset: { name: csoai-gov-30 }, metrics: [{ name: gspc-score, type: custom, value: live }] }] }]</code></li>
-      <li>Commit. The badges go live in seconds.</li>
+      <li>Pin the subject as <code>owner/model@revision</code>. A display name or mutable branch is not enough.</li>
+      <li>Look for a signed measurement card whose body names that exact subject, axis, instrument and run.</li>
+      <li>If no run exists, publish <strong>UNMEASURED</strong>. If a run exists without a VALID subject-bound signature, publish <strong>UNSIGNED</strong>. Do not borrow the global board count.</li>
+      <li>Only after the card verifies may you add its hash-bound badge and quote the score carried by that cell.</li>
     </ol>
 
     <pre><code>---
 library_name: transformers
 tags:
   - text-generation
-  - gspc-badge
 ---
-[![GSPC](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC&color=0B1F33)](https://councilof.ai/gspc-scoreboard)
-![GSPC](https://councilof.ai/api/badge)
+[![GSPC board](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcouncilof.ai%2Fapi%2Fgspc&query=%24.totals.public_count&label=GSPC%20board&color=0B1F33)](https://councilof.ai/gspc-scoreboard)
+This link describes the global board, not this model.
+
+Status: UNMEASURED
+
+&lt;!-- Only after a VALID card names this exact owner/model@revision:
+[![GSPC signed cell](https://councilof.ai/api/badge?card=&lt;SIGNED_CARD_SHA256&gt;&amp;subject=&lt;URL_ENCODED_OWNER%2FMODEL%40COMMIT_SHA&gt;)](https://councilof.ai/gspc-verify)
+--&gt;
 # Your model README...
 </code></pre>
   </section>
@@ -412,16 +417,16 @@ tags:
     <p style="color:var(--muted);">A badge that says <code>UNMEASURED</code> is honest. A badge that says <code>MEASURED</code> requires:</p>
     <ol class="steps">
       <li>A frozen item bank of <strong>n &ge; 30</strong> items published to a HF dataset.</li>
-      <li>A run that scores the model on every bank.</li>
-      <li>An Ed25519-signed card (<code>sha256(canonical body) == id</code>, <code>verify_signed_card</code> VALID).</li>
+      <li>A run that scores one pinned <code>owner/model@revision</code> subject on the named bank and instrument.</li>
+      <li>An Ed25519-signed card that binds that subject, axis, run and score (<code>sha256(canonical body) == id</code>, <code>verify_signed_card</code> VALID).</li>
       <li>Upload of the card under <code>did:web:csoai.org#card-attestation-1</code>.</li>
     </ol>
-    <p style="color:var(--muted);">Until then, the badge page shows <strong>UNMEASURED</strong> — never a 0.000. The lid of the live board is the authority: <a href="https://councilof.ai/api/gspc">GET /api/gspc</a>.</p>
+    <p style="color:var(--muted);">Until then, the subject is <strong>UNMEASURED</strong> (no admitted run) or <strong>UNSIGNED</strong> (a run exists but no VALID subject-bound card does) — never 0.000 and never the global board score. <a href="https://councilof.ai/api/gspc">GET /api/gspc</a> is the global board authority; the signed cell is the model authority.</p>
   </section>
 
   <section>
     <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">The badge enroller — the lane that scales to every model</h2>
-    <p>The badger walks the public HF models API, writes an unsigned UNMEASURED card per model, stages them under <code>scripts/badger/_queue/</code>. The signed-card ceiling is 3KB; every card stays under it.</p>
+    <p>The badger walks the public HF models API, writes an unsigned UNMEASURED discovery record per model, and stages it under <code>scripts/badger/_queue/</code>. Staging creates neither a score nor a badge entitlement. Promotion requires a subject-bound run and VALID signature; the signed-card ceiling is 3KB.</p>
     <pre><code># Stage 10,000 text-gen UNMEASURED badges (already done 2026-09-03)
 python3 scripts/badger/hf-eat-all.py --limit 10000 --pipeline text-generation
 
@@ -433,18 +438,18 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
   </section>
 
   <div class="cta">
-    <h2>Want the GSPC badge on every model — including yours?</h2>
-    <p>The badger is open-source. The signed card schema is public. The lid is live.</p>
+    <h2>Want a checkable GSPC status for your model?</h2>
+    <p>The badger is open-source. The signed card schema is public. Unknowns stay visible until a subject-bound measurement exists.</p>
     <p><a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/badger/hf-eat-all.py">scripts/badger/hf-eat-all.py</a> · <a href="https://github.com/CSOAI-ORG/councilof-ai/blob/master/harness/gspc-top100/mill_hub_queue.py">harness/gspc-top100/mill_hub_queue.py</a></p>
   </div>
 
   <dl class="faq">
     <dt>Does the badge mean a certificate?</dt>
-    <dd>No. Measurement, not certification. A badge that says MEASURED has been through a frozen-item-bank run, scored, and Ed25519-signed. UNMEASURED is honest; a fake 0.000 is not.</dd>
+    <dd>No. Measurement, not certification. A model may say MEASURED only when a VALID signed cell binds its exact subject and revision to the run and score. UNMEASURED and UNSIGNED are honest; borrowing the global board count is not.</dd>
     <dt>Who pays for this?</dt>
     <dd>No one. Verification is free forever. Paid SKUs (insurer packs, EU AI Act packs, x402 signed evidence) fund the rail — they don't replace it.</dd>
     <dt>What about my proprietary model?</dt>
-    <dd>The badge page is public and free. If you want a MEASURED card, publish the n≥30 frozen item bank to HF and the mill will sign a card against it.</dd>
+    <dd>The board link and verifier are public and free. A MEASURED claim still requires a pinned subject, a named instrument and bank, a captured run, and a VALID subject-bound card. Private evidence can remain private, but then the public result may be UNCHECKABLE rather than scored.</dd>
     <dt>How do I dispute a result?</dt>
     <dd>Open an issue at github.com/CSOAI-ORG/councilof-ai/issues with the card sha256. The corrections ledger is public at /api/corrections.</dd>
   </dl>
@@ -455,7 +460,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
 </main>
 
 <script>
-// Live stats refresh from /api/gspc + the queue dir
+// Live GLOBAL-board stats refresh. Nothing in this block derives a model score.
 (async () => {
   try {
     const r = await fetch("https://councilof.ai/api/gspc");
@@ -463,7 +468,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
       const b = await r.json();
       const lid = document.getElementById("lid");
       if (lid && b.totals?.public_count) {
-        lid.textContent = b.totals.public_count + " · live";
+        lid.textContent = "Global board · " + b.totals.public_count + " · live";
       }
     }
   } catch {}
@@ -502,7 +507,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
         Signed. Anchored. Anyone can re-check.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
+        Global board · 22 axes · 22 measured
       </p>
     </div>
     <div class="footer-col">
@@ -524,7 +529,7 @@ python3 scripts/badger/hf-eat-all.py --limit 5000 --pipeline image-text-to-text
   </div>
   <div class="footer-bottom">
     <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+    <span class="lid-phrase">Global board · 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
   </div>
 </footer>
 

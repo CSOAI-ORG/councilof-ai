@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "swarm",
+  "name": "Swarm",
+  "kind": "agent-swarm",
+  "as_of": "20260904T064716Z",
+  "url": "https://councilof.ai/.well-known/mcp/swarm.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_swarm",
+      "description": "Play Swarm"
+    },
+    {
+      "name": "chat_swarm",
+      "description": "Chat with AI in Swarm"
+    },
+    {
+      "name": "join_room_swarm",
+      "description": "Join a multiplayer room in Swarm"
+    },
+    {
+      "name": "attest_swarm",
+      "description": "Get a signed turn card from Swarm"
+    },
+    {
+      "name": "verify_swarm",
+      "description": "Verify an attestation from Swarm"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://swarm/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://swarm/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://swarm/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_swarm",
+      "description": "Play Swarm with AI"
+    },
+    {
+      "name": "chat_swarm",
+      "description": "Chat with AI in Swarm"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { fetchAxes, quotable, type AxesState } from "@/lib/gspcAxes";
+import { fetchAxes, type AxesState, type Axis } from "@/lib/gspcAxes";
 import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 
 /**
@@ -15,12 +15,24 @@ import { FOCUS, MEASURE, SP, SURFACE, TYPE } from "./glass";
 
 const RelevanceMap = lazy(() => import("@/pages/RelevanceMap"));
 
+/** Matrix state is the axis's published state, never an inference from whether it has a score. */
+export function matrixAxisState(axis: Pick<Axis, "status">): Axis["status"] {
+  return axis.status;
+}
+
+/** Derive the line from the returned axis array so stale prose cannot hide an empty slot. */
+export function matrixBoardSummary(axes: Pick<Axis, "status">[]): string {
+  const total = axes.length;
+  const measured = axes.filter((axis) => matrixAxisState(axis) === "MEASURED").length;
+  const unmeasured = total - measured;
+  return `${total} ${total === 1 ? "axis" : "axes"} · ${measured} measured · ${unmeasured} unmeasured`;
+}
+
 export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: string) => void }) {
-  const [state, setState] = useState<Pick<AxesState, "axes" | "source" | "loading" | "publicCount">>({
+  const [state, setState] = useState<Pick<AxesState, "axes" | "source" | "loading">>({
     axes: [],
     source: "snapshot",
     loading: true,
-    publicCount: undefined,
   });
 
   useEffect(() => {
@@ -28,10 +40,6 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
     fetchAxes(ac.signal).then((r) => setState({ ...r, loading: false }));
     return () => ac.abort();
   }, []);
-
-  const measured = state.axes.filter(quotable).length;
-  const total = state.axes.length;
-  const empty = total - measured;
 
   return (
     <section aria-labelledby="coai-matrix-h" className={`${SP.panel} h-full overflow-y-auto`}>
@@ -52,10 +60,8 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
         <p className="text-[12px] text-emerald-700 font-mono">
           {state.loading
             ? "Reading GET /api/gspc…"
-            : state.source === "wire" && state.publicCount
-              ? state.publicCount
-              : state.source === "wire"
-                ? `${total} axis · ${measured} measured · ${empty} empty`
+            : state.source === "wire"
+              ? matrixBoardSummary(state.axes)
                 : "Offline fallback — this build's snapshot"}
         </p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -63,12 +69,12 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
             <span
               key={a.axis}
               className={`rounded px-1.5 py-0.5 text-[9px] font-mono ${
-                quotable(a)
+                matrixAxisState(a) === "MEASURED"
                   ? "bg-emerald-100 text-emerald-800"
-                  : "bg-slate-100 text-slate-500"
+                  : "bg-amber-100 text-amber-800"
               }`}
             >
-              {a.axis}: {quotable(a) ? "MEASURED" : "UNMEASURED"}
+              {a.axis}: {matrixAxisState(a)}
             </span>
           ))}
           {!state.loading && state.axes.length > 8 && (

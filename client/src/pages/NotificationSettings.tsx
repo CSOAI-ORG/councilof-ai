@@ -298,7 +298,7 @@ export default function NotificationSettings() {
               </div>
               <div>
                 <p className="font-medium text-gray-900">Council Decisions</p>
-                <p className="text-sm text-gray-600">Council voting results (33-seat design; measured n_eff 1.21/3)</p>
+                <p className="text-sm text-gray-600">Council experiment updates (33-seat design; latest point result rho=1 and n_eff=1)</p>
               </div>
             </div>
             <Switch

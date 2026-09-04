@@ -34,7 +34,7 @@ secret_state GIT_PUSH_TOKEN
 secret_state HF_TOKEN
 require_secret CLOUDFLARE_API_TOKEN
 require_secret CLOUDFLARE_ACCOUNT_ID
-for t in node npm npx git; do need_cmd "$t"; done
+for t in node npm npx git python3; do need_cmd "$t"; done
 NODE_MAJOR="$(node -p 'process.versions.node.split(".")[0]')"
 [ "$NODE_MAJOR" -ge 20 ] || die "node >= 20 required (deploy.yml uses setup-node 20); found $(node -v)"
 
@@ -49,6 +49,16 @@ node scripts/one-door-guard.mjs
 step 'No committed conflict markers (blocks the 2026-08-24 build break)'
 node scripts/no-conflict-markers.mjs
 
+step 'Wallet secret gate — no private key material in tracked release inputs'
+node scripts/wallet-credential-gate.mjs --selftest
+node scripts/wallet-credential-gate.mjs
+
+step 'Evidence integrity gate — quarantine false XRPL and invalid COSE/SCITT claims'
+npm run guard:evidence-integrity
+
+step 'Council truth gate — no simulated BFT or phantom engine doors'
+npm run guard:council-truth
+
 step 'Redirects guard — selftest, then the real file'
 node scripts/redirects-guard.mjs --selftest
 node scripts/redirects-guard.mjs public/_redirects
@@ -60,15 +70,34 @@ step 'Install deps'
 if [ "$DRY_RUN" = "1" ] && [ -n "${NODE_MODULES_LINK:-}" ] && [ -d "$NODE_MODULES_LINK" ]; then
   # Local dry-run only: borrow an installed tree instead of a 5-minute npm install.
   ln -s "$NODE_MODULES_LINK" node_modules
-  echo "    DRY_RUN: linked node_modules → $NODE_MODULES_LINK (the job runs npm install)"
+  echo "    DRY_RUN: linked node_modules → $NODE_MODULES_LINK (the job runs npm ci)"
 else
-  npm install --no-audit --no-fund
+  npm ci --no-audit --no-fund
 fi
+
+step 'Public root + witness integrity — exact bytes or fail closed'
+python3 -m pip install -q cryptography opentimestamps-client
+python3 scripts/root-witness-release-gate.py --selftest
+python3 scripts/root-witness-release-gate.py --phase candidate
+
+step 'TypeScript debt ratchet — selftest, then non-mutating check'
+npm run ts-ratchet:selftest
+npm run ts-ratchet
 
 step 'Build client'
 npm run build:client
 
-step 'Council OS shell smoke — gating; 12 of 12 must pass on desktop + mobile'
+step 'Prerender canonical Council OS workspace'
+if [ "$(uname -s)" = "Linux" ]; then
+  npx playwright install --with-deps chromium
+else
+  npx playwright install chromium   # macOS dry-run: --with-deps would call brew
+fi
+npm run prerender:dashboard
+
+step 'Council OS shell smoke — gating; all desktop + mobile journeys must pass'
+npm run test:e2e:shell
+
 step 'Prerender all routes'
 if [ "$(uname -s)" = "Linux" ]; then
   npx playwright install --with-deps chromium
@@ -91,6 +120,11 @@ for b in carebench conductbench defbench detbench mcpbench machbench ossbench pq
     echo "placed $b (standalone wins over prerendered shell)"
   fi
 done
+
+step 'Council OS launcher — every built HTML page, exactly once'
+npm run workspace-launcher:selftest
+npm run workspace-launcher
+npm run workspace-launcher:check
 
 step 'Brand gate — block deploy on any forbidden display string (audit §6.2)'
 node scripts/brand-gate.mjs dist/client
@@ -167,9 +201,23 @@ echo "waiting 90s to confirm the gated tree stuck..."
 sleep 90
 if assert_live hold; then
   echo "hold: production still fat"
-  exit 0
+else
+  echo "hold lost — rewriting master/main/production"
+  wrangler_deploy_all
+  sleep 25
+  assert_live hold-heal
 fi
-echo "hold lost — rewriting master/main/production"
-wrangler_deploy_all
-sleep 25
-assert_live hold-heal
+
+step 'Recheck deployed root against witnessed candidate (bounded, read-only)'
+with_timeout 240 python3 scripts/witness_public_root.py --recheck \
+  --public-dir dist/client \
+  --check-only \
+  --attempts 6 \
+  --retry-delay-seconds 10 \
+  --timeout-seconds 20
+
+step 'Live public root + witness integrity — fresh apex MATCH required'
+with_timeout 120 python3 scripts/root-witness-release-gate.py \
+  --phase live \
+  --public-dir dist/client \
+  --live-timeout-seconds 30
