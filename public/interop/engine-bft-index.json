@@ -1,0 +1,59 @@
+{
+  "schema": "csoai.engine-bft-index/0.1",
+  "as_of": "20260904T050936Z",
+  "total_engines": 7,
+  "engines": [
+    {
+      "name": "OSWAO",
+      "slug": "oswao",
+      "kind": "agent-ontology",
+      "x402_sku": "engine-oswao",
+      "x402_price_usdc": 0.1
+    },
+    {
+      "name": "Microsoft Azure AI",
+      "slug": "microsoft",
+      "kind": "engine",
+      "x402_sku": "engine-microsoft",
+      "x402_price_usdc": 0.5
+    },
+    {
+      "name": "NVIDIA",
+      "slug": "nvidia",
+      "kind": "engine",
+      "x402_sku": "engine-nvidia",
+      "x402_price_usdc": 0.5
+    },
+    {
+      "name": "ASI:Evolve",
+      "slug": "asi-evolve",
+      "kind": "engine",
+      "x402_sku": "engine-asi-evolve",
+      "x402_price_usdc": 0.5
+    },
+    {
+      "name": "HuggingFace",
+      "slug": "huggingface",
+      "kind": "platform",
+      "x402_sku": "engine-huggingface",
+      "x402_price_usdc": 0.05
+    },
+    {
+      "name": "GSPC",
+      "slug": "gspc",
+      "kind": "measurement",
+      "x402_sku": "engine-gspc",
+      "x402_price_usdc": 0.5
+    },
+    {
+      "name": "Council OS",
+      "slug": "council-os",
+      "kind": "substrate",
+      "x402_sku": "engine-council-os",
+      "x402_price_usdc": 0.1
+    }
+  ],
+  "council_size": 33,
+  "quorum_required": 23,
+  "principle": "Every engine is wired to every other engine through the BFT council. A claim measured on one engine can be verified against any other engine."
+}

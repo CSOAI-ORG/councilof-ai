@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "microsoft",
+  "name": "Microsoft Azure AI",
+  "kind": "engine",
+  "as_of": "20260904T050936Z",
+  "url": "https://councilof.ai/.well-known/mcp/microsoft.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_microsoft",
+      "description": "Measure a claim against Microsoft Azure AI"
+    },
+    {
+      "name": "attest_microsoft",
+      "description": "Get a signed attestation from Microsoft Azure AI"
+    },
+    {
+      "name": "verify_microsoft",
+      "description": "Verify an attestation from Microsoft Azure AI"
+    },
+    {
+      "name": "discover_microsoft",
+      "description": "Discover what Microsoft Azure AI maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://microsoft/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://microsoft/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://microsoft/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_microsoft",
+      "description": "Measure a claim with Microsoft Azure AI"
+    }
+  ]
+}

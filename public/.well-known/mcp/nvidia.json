@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "nvidia",
+  "name": "NVIDIA",
+  "kind": "engine",
+  "as_of": "20260904T050936Z",
+  "url": "https://councilof.ai/.well-known/mcp/nvidia.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_nvidia",
+      "description": "Measure a claim against NVIDIA"
+    },
+    {
+      "name": "attest_nvidia",
+      "description": "Get a signed attestation from NVIDIA"
+    },
+    {
+      "name": "verify_nvidia",
+      "description": "Verify an attestation from NVIDIA"
+    },
+    {
+      "name": "discover_nvidia",
+      "description": "Discover what NVIDIA maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://nvidia/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://nvidia/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://nvidia/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_nvidia",
+      "description": "Measure a claim with NVIDIA"
+    }
+  ]
+}

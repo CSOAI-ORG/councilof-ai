@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.engine-interop/0.1",
+  "slug": "gspc",
+  "name": "GSPC",
+  "full_name": "Governance, Safety, Performance, Conduct",
+  "kind": "measurement",
+  "as_of": "20260904T050936Z",
+  "x402_sku": "engine-gspc",
+  "x402_price_usdc": 0.5,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui"
+  ],
+  "capabilities": [
+    "Run GSPC axes on this engine",
+    "Get a signed card for any measurement",
+    "Verify any signed card offline",
+    "Discover every standard this engine maps to",
+    "Cross-reference with other engines"
+  ],
+  "links": {
+    "discovery_url": "https://councilof.ai/.well-known/gspc.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/gspc-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/gspc.json",
+    "a2a": "https://councilof.ai/api/a2a/gspc"
+  }
+}

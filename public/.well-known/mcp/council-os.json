@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "council-os",
+  "name": "Council OS",
+  "kind": "substrate",
+  "as_of": "20260904T050936Z",
+  "url": "https://councilof.ai/.well-known/mcp/council-os.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_council-os",
+      "description": "Measure a claim against Council OS"
+    },
+    {
+      "name": "attest_council-os",
+      "description": "Get a signed attestation from Council OS"
+    },
+    {
+      "name": "verify_council-os",
+      "description": "Verify an attestation from Council OS"
+    },
+    {
+      "name": "discover_council-os",
+      "description": "Discover what Council OS maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://council-os/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://council-os/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://council-os/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_council-os",
+      "description": "Measure a claim with Council OS"
+    }
+  ]
+}

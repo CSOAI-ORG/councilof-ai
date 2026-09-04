@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "gspc",
+  "name": "GSPC",
+  "kind": "measurement",
+  "as_of": "20260904T050936Z",
+  "url": "https://councilof.ai/.well-known/mcp/gspc.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_gspc",
+      "description": "Measure a claim against GSPC"
+    },
+    {
+      "name": "attest_gspc",
+      "description": "Get a signed attestation from GSPC"
+    },
+    {
+      "name": "verify_gspc",
+      "description": "Verify an attestation from GSPC"
+    },
+    {
+      "name": "discover_gspc",
+      "description": "Discover what GSPC maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://gspc/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://gspc/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://gspc/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_gspc",
+      "description": "Measure a claim with GSPC"
+    }
+  ]
+}

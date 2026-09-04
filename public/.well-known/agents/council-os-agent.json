@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "council-os",
+  "name": "Council OS",
+  "kind": "substrate",
+  "as_of": "20260904T050936Z",
+  "url": "https://councilof.ai/api/a2a/council-os",
+  "version": "1.0",
+  "capabilities": {
+    "measurement": "Run GSPC axes on this engine",
+    "attestation": "Get a signed card for any measurement",
+    "verification": "Verify any signed card offline",
+    "discovery": "Find every standard this engine maps to"
+  },
+  "skills": [
+    {
+      "id": "council-os.measure",
+      "description": "Measure a claim against Council OS"
+    },
+    {
+      "id": "council-os.attest",
+      "description": "Attest a measurement on Council OS"
+    },
+    {
+      "id": "council-os.verify",
+      "description": "Verify an attestation from Council OS"
+    },
+    {
+      "id": "council-os.discover",
+      "description": "Discover what standards Council OS maps to"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  }
+}
