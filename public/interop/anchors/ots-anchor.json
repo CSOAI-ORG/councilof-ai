@@ -1,0 +1,21 @@
+{
+  "schema": "councilof.ai/ots-anchor/1",
+  "anchored_root": "1a5b27054bbc1caba20c3f234fd99fd2e78bedc7642cd34119eb0cde1ecb0437",
+  "root_source": "https://councilof.ai/root.json",
+  "receipt": "/interop/anchors/public-root-1a5b2705.ots",
+  "receipt_bytes": 651,
+  "state": "PENDING",
+  "attestations": 3,
+  "calendars": [
+    "https://alice.btc.calendar.opentimestamps.org",
+    "https://bob.btc.calendar.opentimestamps.org"
+  ],
+  "establishes": [
+    "These bytes were submitted to the named OpenTimestamps calendars at this time."
+  ],
+  "does_not_establish": [
+    "Bitcoin confirmation. The stamp is PENDING until a block commits it, at which point it upgrades to a BitcoinBlockHeaderAttestation.",
+    "Anything about whether the anchored root is correct."
+  ],
+  "upgrade": "ots upgrade public-root-1a5b2705.ots \u2014 re-run after the next block"
+}
