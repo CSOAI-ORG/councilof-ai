@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { x402Accepts, verifyX402Payment, buildPaymentRequiredV2, toLegacyNetwork, toV1Requirements } from "./_x402";
+import { x402Accepts, verifyX402Payment, readBazaarOutcome, buildPaymentRequiredV2, toLegacyNetwork, toV1Requirements } from "./_x402";
 import { ESTATE_PAY_TO, resolvePayTo, railMode, USDC_BASE_EIP712 } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 
@@ -112,7 +112,9 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
     const v1 = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
     expect(v1.ok).toBe(true);
-    expect(v1.settlement).toEqual({ transaction: "0xabc", network: "base", payer: "0xpayer" });
+    expect(v1.settlement).toMatchObject({ transaction: "0xabc", network: "base", payer: "0xpayer" });
+    // absence of the sidechannel is reported as unknown, never as indexed
+    expect(v1.settlement!.bazaar!.status).toBe("UNREPORTED");
     expect(JSON.parse(atob(v1.paymentResponse!))).toMatchObject({ success: true, transaction: "0xabc" });
     expect(seen[0].body.x402Version).toBe(1);
     expect(seen[0].body.paymentRequirements.network).toBe("base");
@@ -237,5 +239,56 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/insufficient_balance/);
     expect(verifyCalls).toBe(1); // one attempt only — the money answer is final
+  });
+});
+
+describe("bazaar sidechannel — read, never inferred", () => {
+  const req = (h?: string) => new Request(RESOURCE, { headers: h ? { "x-payment": h } : {} });
+  // Bazaar is the discovery layer agents search to find paid resources, and indexing needs a
+  // CONFIRMED settle, so the FIRST real payment is the only chance to observe whether it
+  // happened. specs/extensions/bazaar.md says a facilitator only MAY report the outcome, and
+  // x402#2112 records one that never emits the header at all — probed 2026-09-04, PayAI returns
+  // no such header on /verify. So absence must read as "unknown", never as "indexed".
+  it("absent header is UNREPORTED, not success", () => {
+    const r = readBazaarOutcome(null);
+    expect(r.status).toBe("UNREPORTED");
+    expect(r.detail).toBeNull();
+    expect(r.note).toMatch(/NOT that the resource was indexed/);
+  });
+
+  it("reports what the facilitator actually said", () => {
+    const hdr = btoa(JSON.stringify({ bazaar: { status: "success", resourceId: "abc" } }));
+    const r = readBazaarOutcome(hdr);
+    expect(r.status).toBe("REPORTED");
+    expect(r.detail).toEqual({ status: "success", resourceId: "abc" });
+  });
+
+  it("a sidechannel with no bazaar key is UNREPORTED", () => {
+    expect(readBazaarOutcome(btoa(JSON.stringify({ other: 1 }))).status).toBe("UNREPORTED");
+  });
+
+  it("undecodable header is UNREADABLE, and still not success", () => {
+    const r = readBazaarOutcome("!!!not base64!!!");
+    expect(r.status).toBe("UNREADABLE");
+    expect(r.detail).toBeNull();
+  });
+
+  // The buyer's X-PAYMENT-RESPONSE must not carry it: the spec calls the sidechannel "Server
+  // internal only — never forwarded to the buyer". Including it also broke the echo, because
+  // btoa() is Latin-1 and the note contains an em dash.
+  it("never leaks into the buyer-facing payment response", async () => {
+    vi.stubGlobal("fetch", async (u: string) => {
+      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(JSON.stringify({ success: true, transaction: "0xf00d", network: "base", payer: "0xp" }), {
+        status: 200,
+        headers: { "extension-responses": btoa(JSON.stringify({ bazaar: { status: "success" } })) },
+      });
+    });
+    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    expect(r.ok).toBe(true);
+    expect(r.settlement!.bazaar!.status).toBe("REPORTED");
+    expect(JSON.parse(atob(r.paymentResponse!))).not.toHaveProperty("bazaar");
   });
 });

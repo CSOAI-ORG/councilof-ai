@@ -62,6 +62,50 @@ export type X402Env = CdpEnv & {
   [k: string]: string | undefined;
 };
 
+/**
+ * readBazaarOutcome — decode the facilitator's EXTENSION-RESPONSES sidechannel and report what
+ * it said about Bazaar indexing, or that it said nothing.
+ *
+ * The header is base64 JSON keyed by extension name (specs/extensions/bazaar.md). Three honest
+ * outcomes and no fourth: what the facilitator reported, "the facilitator reported nothing", or
+ * "it reported something we could not read". Absence is never read as success — that is the
+ * whole reason this is a function and not an optimistic boolean.
+ */
+export function readBazaarOutcome(header: string | null): {
+  status: "REPORTED" | "UNREPORTED" | "UNREADABLE";
+  detail: unknown;
+  note: string;
+} {
+  if (!header) {
+    return {
+      status: "UNREPORTED",
+      detail: null,
+      note:
+        "the facilitator returned no EXTENSION-RESPONSES header. Reporting it is optional in the " +
+        "spec and x402#2112 records a facilitator that never emits it, so this means the outcome " +
+        "is unknown — NOT that the resource was indexed. Check the Bazaar list/search endpoint " +
+        "for our payTo before claiming discoverability.",
+    };
+  }
+  try {
+    const parsed = JSON.parse(atob(header)) as Record<string, unknown>;
+    const bazaar = parsed?.bazaar ?? null;
+    return {
+      status: bazaar ? "REPORTED" : "UNREPORTED",
+      detail: bazaar,
+      note: bazaar
+        ? "the facilitator reported a bazaar outcome; this is its claim, verified by nothing here"
+        : "the sidechannel decoded but carried no bazaar key — the extension was not processed",
+    };
+  } catch {
+    return {
+      status: "UNREADABLE",
+      detail: null,
+      note: "EXTENSION-RESPONSES was present but did not decode as base64 JSON",
+    };
+  }
+}
+
 export type X402Result = {
   ok: boolean;
   reason: string;
@@ -69,7 +113,13 @@ export type X402Result = {
   // X-PAYMENT-RESPONSE header per the x402 spec. Never fabricated; absent when fail-closed.
   paymentResponse?: string;
   // Settlement facts as the facilitator reported them (never invented). Absent when not paid.
-  settlement?: { transaction: string | null; network: string | null; payer: string | null };
+  settlement?: {
+    transaction: string | null;
+    network: string | null;
+    payer: string | null;
+    // What the facilitator said about Bazaar indexing, or that it said nothing. Never inferred.
+    bazaar?: { status: "REPORTED" | "UNREPORTED" | "UNREADABLE"; detail: unknown; note: string };
+  };
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -331,9 +381,31 @@ export async function verifyX402Payment(
       transaction: sout.transaction || sout.txHash || null,
       network: sout.network || toLegacyNetwork(entry.network),
       payer: sout.payer || null,
+      // WHETHER THE BAZAAR INDEXED US, read rather than assumed. Bazaar is the discovery layer
+      // agents search to find paid resources; a resource is indexed off the metadata a
+      // facilitator processes on the verify/settle path, and this endpoint already advertises a
+      // spec-shaped `bazaar` blob in its 402. But per specs/extensions/bazaar.md a facilitator
+      // only MAY report the outcome, on the EXTENSION-RESPONSES sidechannel — and x402#2112
+      // records a facilitator that never emits it, leaving services silently unindexed. Probed
+      // 2026-09-04: PayAI returns no such header on /verify, so settle is the only place the
+      // answer can appear.
+      //
+      // Indexing needs a CONFIRMED settle, so the first real payment is the only chance to
+      // observe it. Reporting UNREPORTED rather than inferring success is the point: a missing
+      // header means the facilitator said nothing, which is NOT the same as being indexed, and
+      // guessing here would manufacture exactly the kind of unverified claim this file exists to
+      // prevent.
+      bazaar: readBazaarOutcome(sr.headers.get("extension-responses")),
     };
-    // X-PAYMENT-RESPONSE echo per the x402 spec — only ever what the facilitator returned.
-    const paymentResponse = btoa(JSON.stringify({ success: true, ...settlement }));
+    // X-PAYMENT-RESPONSE echo per the x402 spec — only ever what the facilitator returned, and
+    // deliberately WITHOUT the bazaar sidechannel. specs/extensions/bazaar.md is explicit that
+    // EXTENSION-RESPONSES is "Server internal only — never forwarded to the buyer": it carries
+    // the facilitator's processing outcomes, not settlement facts the payer is owed. Including
+    // it also broke the echo outright, because btoa() is Latin-1 only and the note text contains
+    // an em dash — a silent "facilitator error: Invalid character" on every settled payment,
+    // which is the worst possible place to learn that lesson.
+    const { bazaar: _bazaarSidechannel, ...buyerFacing } = settlement;
+    const paymentResponse = btoa(JSON.stringify({ success: true, ...buyerFacing }));
     return { ok: true, reason: "facilitator verified and settled receipt", paymentResponse, settlement };
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
