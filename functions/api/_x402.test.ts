@@ -158,4 +158,84 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     // the recipient must survive the downgrade untouched
     expect(seen[0].body.paymentRequirements.payTo).toBe(ESTATE_PAY_TO);
   });
+  // THE REGRESSION THAT STOPPED A LIVE RAIL EARNING (probed on the apex, 2026-09-04). PayAI added
+  // a SECOND kind for Base — {"x402Version":2,...,"network":"eip155:8453"} — alongside its v1 one.
+  // The old rule "the highest version the facilitator advertises" therefore flipped the production
+  // rail to v2, and PayAI's v2 answers HTTP 400 invalid_payload ("accepted: expected object,
+  // received undefined"). Every real buyer got `facilitator /verify HTTP 400` AFTER signing, while
+  // /api/x402 still reported mode:"live". The identical authorization in v1 reaches the balance
+  // check. So: try the proven dialect first, and treat a 4xx as a rejected SHAPE worth retrying in
+  // the other dialect rather than a failed payment — /verify moves no money.
+  const BOTH_KINDS = {
+    kinds: [
+      { x402Version: 1, scheme: "exact", network: "base" },
+      { x402Version: 2, scheme: "exact", network: "eip155:8453" },
+    ],
+  };
+
+  it("retries the other dialect when the facilitator 400s the first, and settles in the one that worked", async () => {
+    const seen: { url: string; version: number }[] = [];
+    vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
+      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      const body = JSON.parse(String(init?.body));
+      seen.push({ url: String(u), version: body.x402Version });
+      // PayAI's live behaviour: v2 is advertised but unusable, v1 works.
+      if (body.x402Version === 2) {
+        return new Response(JSON.stringify({ isValid: false, invalidReason: "invalid_payload" }), { status: 400 });
+      }
+      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(
+        JSON.stringify({ success: true, transaction: "0xdead", network: "base", payer: "0xbuyer" }),
+        { status: 200 },
+      );
+    });
+    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(2)), { X402_FACILITATOR_URL: "https://payai-both.example" }, RESOURCE, a);
+    expect(r.ok).toBe(true);
+    expect(r.settlement).toMatchObject({ transaction: "0xdead", payer: "0xbuyer" });
+    // v1 is attempted FIRST (it is the proven one), so no 400 is incurred at all...
+    expect(seen.map((c) => c.version)).toEqual([1, 1]);
+    // ...and /settle must reuse the dialect /verify accepted, never rebuild a different envelope.
+    expect(seen[1].url).toMatch(/\/settle$/);
+  });
+
+  // The mirror-image guard: the fix must not hardcode v1. A facilitator that 400s v1 and serves v2
+  // must still settle — otherwise this fix becomes the next silent revenue stop.
+  it("falls forward to v2 when the facilitator rejects v1", async () => {
+    const attempted: number[] = [];
+    vi.stubGlobal("fetch", async (u: string, init?: RequestInit) => {
+      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      const body = JSON.parse(String(init?.body));
+      if (String(u).endsWith("/verify")) {
+        attempted.push(body.x402Version);
+        if (body.x402Version === 1) return new Response("{}", { status: 400 });
+        return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      }
+      expect(body.x402Version).toBe(2); // settle reuses the dialect that verified
+      return new Response(JSON.stringify({ success: true, transaction: "0xbeef", network: "base", payer: "0xb" }), { status: 200 });
+    });
+    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://v2only.example" }, RESOURCE, a);
+    expect(r.ok).toBe(true);
+    expect(attempted).toEqual([1, 2]); // tried the proven one, then fell forward
+  });
+
+  // A genuine money failure must NOT be retried into another dialect: HTTP 200 + isValid:false is
+  // an ANSWER about the buyer's funds, not a rejected shape.
+  it("does not retry a facilitator that answers 200 with isValid:false", async () => {
+    let verifyCalls = 0;
+    vi.stubGlobal("fetch", async (u: string) => {
+      if (String(u).endsWith("/supported")) return new Response(JSON.stringify(BOTH_KINDS), { status: 200 });
+      verifyCalls++;
+      return new Response(
+        JSON.stringify({ isValid: false, invalidReason: "invalid_exact_evm_insufficient_balance" }),
+        { status: 200 },
+      );
+    });
+    const [a] = x402Accepts({}, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const r = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://broke.example" }, RESOURCE, a);
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/insufficient_balance/);
+    expect(verifyCalls).toBe(1); // one attempt only — the money answer is final
+  });
 });

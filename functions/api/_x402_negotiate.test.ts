@@ -5,6 +5,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import {
   chooseDialect,
+  dialectCandidates,
   sameNetwork,
   facilitatorDialect,
   toDialectPayload,
@@ -55,12 +56,32 @@ describe("chooseDialect", () => {
     expect(chooseDialect(X402ORG, "eip155:84532")).toBe(2);
   });
 
-  it("prefers v2 when a facilitator offers both", () => {
-    const both: SupportedKind[] = [
-      { x402Version: 1, scheme: "exact", network: "base" },
-      { x402Version: 2, scheme: "exact", network: BASE_MAINNET },
-    ];
-    expect(chooseDialect(both, BASE_MAINNET)).toBe(2);
+  // This is PayAI's ACTUAL /supported as of 2026-09-04 — it added a v2 kind for Base alongside
+  // the v1 one. The rule used to be "highest version wins", which silently switched the live rail
+  // to v2; PayAI's v2 then rejected every real payment with HTTP 400 invalid_payload AFTER the
+  // buyer had signed. v1 is the only dialect probed to reach the balance check on Base mainnet.
+  const BOTH: SupportedKind[] = [
+    { x402Version: 1, scheme: "exact", network: "base" },
+    { x402Version: 2, scheme: "exact", network: BASE_MAINNET },
+  ];
+
+  it("tries the PROVEN dialect first when a facilitator offers both", () => {
+    expect(chooseDialect(BOTH, BASE_MAINNET)).toBe(1);
+    expect(dialectCandidates(BOTH, BASE_MAINNET)).toEqual([1, 2]);
+  });
+
+  it("still serves a v2-only facilitator — the fix must not become the mirror-image assumption", () => {
+    const v2only: SupportedKind[] = [{ x402Version: 2, scheme: "exact", network: BASE_MAINNET }];
+    expect(chooseDialect(v2only, BASE_MAINNET)).toBe(2);
+    expect(dialectCandidates(v2only, BASE_MAINNET)).toEqual([2]);
+  });
+
+  it("treats a kind with no x402Version as v1, as it meant before v2 existed", () => {
+    expect(dialectCandidates([{ scheme: "exact", network: "base" }], BASE_MAINNET)).toEqual([1]);
+  });
+
+  it("offers no candidate for a chain the facilitator cannot serve", () => {
+    expect(dialectCandidates(X402ORG, BASE_MAINNET)).toEqual([]);
   });
 
   it("ignores schemes we do not implement", () => {
