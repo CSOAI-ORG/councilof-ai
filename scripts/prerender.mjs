@@ -510,6 +510,13 @@ async function worker(id) {
     pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
     return pg;
   };
+  const readSnapshotInfo = (pg) => pg.evaluate(() => {
+    const root = document.getElementById("root");
+    return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
+             rootEmpty: !root || root.children.length === 0,
+             title: document.title,
+             desc: document.querySelector('meta[name="description"]')?.content || "" };
+  });
   let page = await openPage();
   while (queue.length) {
     const route = queue.shift();
@@ -529,13 +536,29 @@ async function worker(id) {
         await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "load", timeout: 90000 });
       }
       await page.waitForTimeout(rec.slow ? WAIT * 3 : WAIT);
-      const info = await page.evaluate(() => {
-        const root = document.getElementById("root");
-        return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
-                 rootEmpty: !root || root.children.length === 0,
-                 title: document.title,
-                 desc: document.querySelector('meta[name="description"]')?.content || "" };
-      });
+      let info = await readSnapshotInfo(page);
+
+      // Four workers share one browser during the 595-route sweep. Under load, React can
+      // occasionally paint just after the fixed 900 ms wait: /heatmap and
+      // /watchdog-heatmap each produced a zero-character, empty-root snapshot once, then
+      // passed unchanged on the next full run. Re-running the entire deployment hides the
+      // race and wastes ten minutes. If the first read is thin, wait for the actual release
+      // invariant (a non-empty root with enough visible text) and read once more. A route
+      // that never reaches the invariant still remains THIN and still blocks deployment.
+      if (info.rootEmpty || info.text.length < MIN) {
+        rec.paintRetry = true;
+        try {
+          await page.waitForFunction((min) => {
+            const root = document.getElementById("root");
+            const text = (document.body.innerText || "").replace(/\s+/g, " ").trim();
+            return !!root && root.children.length > 0 && text.length >= min;
+          }, MIN, { timeout: Math.max(5000, WAIT * 5), polling: 100 });
+        } catch {
+          // The report below owns the verdict. Re-read the page and preserve THIN if the
+          // condition did not settle; timeout is not converted into a pass.
+        }
+        info = await readSnapshotInfo(page);
+      }
       rec.chars = info.text.length;
       rec.title = info.title;
       rec.hasDesc = !!info.desc;
@@ -651,6 +674,10 @@ if (skipped404.length) {
 const slow = results.filter((r) => r.slow);
 if (slow.length) {
   console.log(`  ${slow.length} SLOW — needed a retry at the longer timeout: ${slow.map((r) => r.route).join(", ")}`);
+}
+const latePaint = results.filter((r) => r.paintRetry && r.ok);
+if (latePaint.length) {
+  console.log(`  ${latePaint.length} LATE-PAINT — first read was thin, then met the same release invariant: ${latePaint.map((r) => r.route).join(", ")}`);
 }
 if (thin.length) {
   console.log(`\nTHIN routes need a longer wait or real SSR — they are NOT fixed:`);
