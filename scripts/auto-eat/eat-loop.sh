@@ -45,8 +45,14 @@ AE="$REPO/scripts/auto-eat"
 log() { echo "$(date -u +%FT%TZ) $*" >> "$LOG"; echo "$(date -u +%FT%TZ) $*"; }
 
 one_pass() {
-  if [ -z "$REPO" ] || [ ! -d "$REPO/.git" ]; then
-    log "FAIL no repo clone at REPO='$REPO'"; return 1
+  # `-d "$REPO/.git"` accepts only a full clone. In a git WORKTREE, .git is a FILE
+  # containing "gitdir: …", so this rejected exactly the layout the lane protocol
+  # requires. That mattered: run against the shared checkout instead, the loop switches
+  # it to auto-eat-feed — and council-os/LANE-PROTOCOL.md is explicit that flipping the
+  # shared checkout's branch is what rewound 3e5116ac. So the one safe way to run this
+  # hourly was the one way it refused to start. Accept either.
+  if [ -z "$REPO" ] || { [ ! -d "$REPO/.git" ] && [ ! -f "$REPO/.git" ]; }; then
+    log "FAIL no repo clone or worktree at REPO='$REPO'"; return 1
   fi
   cd "$REPO" || { log "FAIL cannot cd $REPO"; return 1; }
   log "PASS-START branch=$BRANCH"
