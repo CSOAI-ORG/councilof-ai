@@ -294,22 +294,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "served_from",
-                    "measured_on",
-                    "measurement",
-                    "board",
-                    "living_board",
-                    "cross_border",
-                    "cards",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -484,6 +469,32 @@
         "summary": "* POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound;\n * honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded\n * to third parties."
       }
     },
+    "/api/corpus-watch": {
+      "get": {
+        "operationId": "get__api_corpus-watch",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/corpus-watch \u2014 Corpus watch \u2014 list every corpus CSOAI mines.\n *\n * Returns the live data from /api/state."
+      },
+      "post": {
+        "operationId": "post__api_corpus-watch",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/corpus-watch \u2014 Corpus watch \u2014 list every corpus CSOAI mines.\n *\n * Returns the live data from /api/state."
+      }
+    },
     "/api/corrections": {
       "get": {
         "operationId": "get__api_corrections",
@@ -563,6 +574,32 @@
           }
         },
         "summary": ""
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "operationId": "get__api_dashboard",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/dashboard \u2014 Dashboard stats \u2014 live substrate counters for the home dashboard.\n *\n * Returns the live data from /api/state."
+      },
+      "post": {
+        "operationId": "post__api_dashboard",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/dashboard \u2014 Dashboard stats \u2014 live substrate counters for the home dashboard.\n *\n * Returns the live data from /api/state."
       }
     },
     "/api/detect": {
@@ -678,7 +715,20 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "badge",
+                    "script",
+                    "verify",
+                    "human",
+                    "kit",
+                    "grammar",
+                    "note"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -812,24 +862,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "record_type",
-                    "title",
-                    "as_of",
-                    "freshness",
-                    "first_fine_watch",
-                    "fines_by_jurisdiction",
-                    "deadlines_calendar",
-                    "correction_59",
-                    "honest_register",
-                    "bright_lines",
-                    "signature"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1019,7 +1052,7 @@
             "description": "OK"
           }
         },
-        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Targeted for the 3-anchor rail (rails planned)"
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
       },
       "post": {
         "operationId": "post__api_learn-loop",
@@ -1031,7 +1064,7 @@
             "description": "OK"
           }
         },
-        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Targeted for the 3-anchor rail (rails planned)"
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
       }
     },
     "/api/locale": {
@@ -1152,7 +1185,16 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "openapi",
+                    "info",
+                    "servers",
+                    "paths"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -1311,7 +1353,37 @@
             "description": "OK"
           }
         },
-        "summary": ""
+        "summary": "* GET /api/regulation \u2014 Regulation watch \u2014 list every regulation CSOAI tracks.\n *\n * Returns the live data from computed."
+      },
+      "post": {
+        "operationId": "post__api_regulation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "verified_as_of",
+                    "reverification_cadence",
+                    "license",
+                    "publisher",
+                    "corrections_policy",
+                    "headline_correction",
+                    "deadlines",
+                    "disputed",
+                    "underwriting_note",
+                    "penalty_tiers_eu_ai_act",
+                    "demand_creating",
+                    "signature"
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/regulation \u2014 Regulation watch \u2014 list every regulation CSOAI tracks.\n *\n * Returns the live data from computed."
       }
     },
     "/api/regulator-findings": {
@@ -1342,6 +1414,18 @@
       }
     },
     "/api/report": {
+      "get": {
+        "operationId": "get__api_report",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/report \u2014 File a correction report for any signed card.\n *\n * Returns the live data from computed."
+      },
       "post": {
         "operationId": "post__api_report",
         "responses": {
@@ -1352,7 +1436,7 @@
             "description": "OK"
           }
         },
-        "summary": "* POST /api/report \u2014 the Watchdog incident intake. This endpoint exists because the\n * /report page was found (2026-08-27, operated end-to-end in a browser) submitting to\n * POST /api/sign \u2014 a path no"
+        "summary": "* POST /api/report \u2014 File a correction report for any signed card.\n *\n * Returns the live data from computed."
       }
     },
     "/api/reported": {
@@ -1377,7 +1461,30 @@
             "description": "OK"
           }
         },
-        "summary": ""
+        "summary": "* GET /api/reported \u2014 List all reported corrections.\n *\n * Returns the live data from /api/corrections."
+      },
+      "post": {
+        "operationId": "post__api_reported",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "issuer",
+                    "register",
+                    "states",
+                    "count",
+                    "entries"
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/reported \u2014 List all reported corrections.\n *\n * Returns the live data from /api/corrections."
       }
     },
     "/api/request-attestation": {
@@ -1560,6 +1667,18 @@
       }
     },
     "/api/subscribe": {
+      "get": {
+        "operationId": "get__api_subscribe",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/subscribe \u2014 Subscribe to the live attestation stream.\n *\n * Returns the live data from computed."
+      },
       "post": {
         "operationId": "post__api_subscribe",
         "responses": {
@@ -1570,7 +1689,7 @@
             "description": "OK"
           }
         },
-        "summary": "* POST /api/subscribe \u2014 the email-capture form on the homepage and blog.\n * Same honesty contract as /api/lead: stores when a KV namespace is bound (LEADS),\n * says `stored:false` with a fallback when"
+        "summary": "* POST /api/subscribe \u2014 Subscribe to the live attestation stream.\n *\n * Returns the live data from computed."
       }
     },
     "/api/swift": {
@@ -1579,28 +1698,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "supersedes",
-                    "n",
-                    "n_measured",
-                    "n_live",
-                    "n_committed",
-                    "n_discovered",
-                    "status_all",
-                    "as_of",
-                    "universe_note",
-                    "honesty",
-                    "sources",
-                    "cobolbridge_ai",
-                    "rows"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1676,7 +1774,30 @@
             "description": "OK"
           }
         },
-        "summary": "* GET /api/trace \u2014 TRACE Trust Record stub.\n * Hardware fields UNCHECKABLE. writes_board=false. Not a GSPC axis."
+        "summary": "* GET /api/trace \u2014 Trace a single signed card by SHA-256.\n *\n * Returns the live data from /signed/cards/<sha>.json."
+      },
+      "post": {
+        "operationId": "post__api_trace",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "kind",
+                    "writes_board",
+                    "claims",
+                    "honesty",
+                    "emitter"
+                  ]
+                }
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/trace \u2014 Trace a single signed card by SHA-256.\n *\n * Returns the live data from /signed/cards/<sha>.json."
       }
     },
     "/api/verify-tally": {
@@ -1845,6 +1966,32 @@
           }
         },
         "summary": "A minimal TimeStampResp the parser accepts: status INTEGER + a token carrying digest and nonce."
+      }
+    },
+    "/api/worker": {
+      "get": {
+        "operationId": "get__api_worker",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/worker \u2014 Worker queue stats \u2014 pending anchors, signed cards, queue size.\n *\n * Returns the live data from computed."
+      },
+      "post": {
+        "operationId": "post__api_worker",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/worker \u2014 Worker queue stats \u2014 pending anchors, signed cards, queue size.\n *\n * Returns the live data from computed."
       }
     },
     "/api/x402": {
