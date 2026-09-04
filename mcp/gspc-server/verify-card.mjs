@@ -95,21 +95,17 @@ const unhex = (s) => Uint8Array.from(s.match(/../g).map((b) => parseInt(b, 16)))
  *   2. ensure_ascii=False: non-ASCII stays literal (JS JSON.stringify does this), whereas
  *      v1 escapes to \\uXXXX (CPython ensure_ascii=True).
  *   3. Same key-sort + compact separators + escape of quote/backslash/control chars.
- * Matches harness/arena/jcs.py (Python) and the conformance corpus in
- * harness/arena/jcs_conformance.py (18/18 ordinary cases agree cross-language).
+ * Matches harness/arena/jcs.py (Python ES6 NumberToString, not repr).
+ * Conformance: jcs_conformance.py including 1e-6 / 1e-7 / 1e21 / -0.
  */
 function canonicalJcs(value, key = null) {
   if (value === null) return "null";
   if (typeof value === "boolean") return value ? "true" : "false";
   if (typeof value === "number") {
     if (!Number.isFinite(value)) throw new Error(`non-finite number at ${key}`);
-    // JCS/ECMAScript: integral floats in [10^-6, 10^21) emit as integers; -0 -> "0".
-    if (Number.isInteger(value) && value !== 0) {
-      const av = Math.abs(value);
-      if (av >= 1e-6 && av < 1e21) return String(value);
-    }
-    if (value === 0) return "0"; // covers -0.0
-    return String(value);
+    // RFC 8785: ES6 Number.prototype.toString. ToString(−0) is "0". Not JSON.stringify
+    // (that maps NaN/∞ to null — already rejected above). Not CPython json.dumps (0.0).
+    return Number.prototype.toString.call(value);
   }
   if (typeof value === "string") return jcsString(value);
   if (Array.isArray(value)) return "[" + value.map((v) => canonicalJcs(v, key)).join(",") + "]";

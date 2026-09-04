@@ -6,8 +6,9 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 
 ## The asset
 - Public repo: `https://github.com/CSOAI-ORG/councilof-ai` (server in `mcp/gspc-server/`)
-- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **7 tools**)
-- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — **source 0.1.1 wires 7**; published npm **0.1.0 is still 4** until owner `npm publish` (2FA)
+- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **12 tools** — 7 free, 5 x402-metered)
+- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — carries the same **12**. Do not write a version
+  number here; `npm view csoai-gspc-mcp version` is the authority and this file cannot keep up with it.
 - A2A agent card: `https://councilof.ai/.well-known/agent-card.json`
 - OpenAPI 3.1: `https://councilof.ai/openapi/gspc.json`
 
@@ -17,11 +18,15 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 agent should run before trusting a model.**
 
 ## Reconcile
-HTTP `POST https://councilof.ai/mcp` **7 tools** (live `tools/list`). Stdio source
-`mcp/gspc-server/index.mjs` **wires the same 7** (`get_root` / `get_card` /
-`verify_inclusion` included). Published npm `csoai-gspc-mcp@0.1.0` still ships **4** —
-owner door: `npm publish` 0.1.1 (2FA). Do not claim the published package is 7 until
-`npm view` says 0.1.1.
+HTTP `POST https://councilof.ai/mcp` and the published npm package both carry **12**
+(live `tools/list` on each is the check). The gap that used to sit here — HTTP ahead of
+stdio — is closed: payment travels as the `x_payment` ARGUMENT, so carrying a metered
+tool was always a packaging choice and never a limit of the transport.
+
+**Never write a tool count or a version in a listing you cannot re-check.** The MCP
+registry entry carried "7 tools" and `packages: null` for weeks after the door had 12 and
+an installable package existed, so it advertised the wrong capability AND gave clients
+nothing to install. Re-derive from `tools/list` and `npm view` before every submission.
 
 ---
 
@@ -36,7 +41,7 @@ owner door: `npm publish` 0.1.1 (2FA). Do not claim the published package is 7 u
 | 5 | **mcp.so** | submit repo at mcp.so/submit; saving auto-publishes | **STAGED** | featured/curated placement, stars, recency (not documented) |
 | 6 | **awesome-mcp-servers** (`punkpeye`) | PR one README line, alphabetical; `🤖🤖🤖` in PR title fast-tracks | **STAGED** | none algorithmic (SEO/backlink + downstream scraping) |
 | 7 | **PulseMCP** | ingests the official registry automatically; submit form at pulsemcp.com/submit | **STAGED / auto** | popularity signals; "official" tag; confirm form reopened post-Aug pause |
-| 8 | **Glama** | claim via GitHub OAuth or `glama.json` (maintainers) | **STAGED** | **Tool-Definition-Quality Score** — rich descriptions for all tools; 60% mean + 40% min TDQS; passing build |
+| 8 | **Glama** | claim via GitHub OAuth or `glama.json` (maintainers) | **LIVE** | **Tool-Definition-Quality Score** — rich descriptions for all tools; 60% mean + 40% min TDQS; passing build |
 
 ### Exact submission payloads
 
@@ -61,8 +66,15 @@ PR title: `Add CSOAI GSPC (AI-governance measurement) 🤖🤖🤖`
 **#5 — mcp.so:** open https://mcp.so/submit → repo URL
 `https://github.com/CSOAI-ORG/councilof-ai` → complete draft → Save.
 
-**#8 — Glama:** sign in with GitHub (org admin) at glama.ai and claim, OR add a root
-`glama.json` with a `maintainers` field naming the org admin's GitHub username, then claim.
+**#8 — Glama: LIVE, verified 2026-09-04.**
+Listing: <https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai> — note the slug is the REPO
+(`CSOAI-ORG/councilof-ai`), not the registry name `io.github.CSOAI-ORG/gspc`. Guessing the
+registry-name URL returns 404 and has twice been misread here as "not listed". Check the search
+page, never a guessed URL.
+The root `glama.json` already carries `maintainers: ["CSOAI-ORG"]`, so the claim route is in place.
+Description renders correctly. **Its tool scan is stale — it shows 4 tools, from the 0.1.0 era.**
+Glama re-scans from the repo and the official registry, both of which now say 12, so this should
+resolve without a submission; re-check before asserting a count anywhere.
 (Left for the owner so the maintainer username is not guessed.)
 
 ---
@@ -77,7 +89,7 @@ PR title: `Add CSOAI GSPC (AI-governance measurement) 🤖🤖🤖`
 ---
 
 ## Why completeness = ranking (honest levers only)
-- Full descriptions for **all 7 tools** (Glama TDQS, Smithery scan) beat stubs.
+- Full descriptions for **all 12 tools** (Glama TDQS, Smithery scan) beat stubs.
 - Real installs + GitHub stars — fed by the `/connect-gspc` funnel and the badge flywheel,
   never fabricated.
 - Keyword coverage (above) so registry search surfaces us.

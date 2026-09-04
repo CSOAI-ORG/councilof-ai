@@ -18,8 +18,9 @@
  *     numbers. This server never reconciles them.
  *
  * ONE SOURCE OF TRUTH:
- *   - Tool definitions come from gspc-tools.json — the same file the HTTP
- *     endpoint at councilof.ai/mcp imports (functions/mcp/gspc-tools.json).
+ *   - Tool definitions come from gspc-tools.json (free) and paid-tools.json
+ *     (x402-metered) — the same two files the HTTP endpoint at councilof.ai/mcp
+ *     imports (functions/mcp/*.json).
  *     In a repo checkout that file is read directly; the npm package ships a
  *     byte-identical copy made at pack time (npm run prepack).
  *   - verify_card runs the code in public/signed/verify-card.mjs — the same
@@ -31,7 +32,7 @@ import { createInterface } from "node:readline";
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const VERSION = "0.1.1";
+const VERSION = "0.2.0";
 const ORIGIN = process.env.GSPC_ORIGIN || "https://councilof.ai";
 const FETCH_TIMEOUT_MS = 15000;
 
@@ -56,7 +57,24 @@ if (!TOOLS_PATH) {
   process.stderr.write("csoai-gspc-mcp: gspc-tools.json not found — broken install\n");
   process.exit(1);
 }
-const TOOLS = JSON.parse(readFileSync(TOOLS_PATH, "utf8")).tools;
+const FREE_TOOLS = JSON.parse(readFileSync(TOOLS_PATH, "utf8")).tools;
+
+/**
+ * The x402-metered tools, from the same definitions file the HTTP door uses.
+ *
+ * Payment travels as the `x_payment` TOOL ARGUMENT, not as a transport header, so stdio carries
+ * these exactly as the HTTP door does: the argument is forwarded verbatim as the X-PAYMENT header
+ * on one same-origin request, and this server never inspects, signs or invents a receipt.
+ * Settlement is the route's job, fail-closed. Without `x_payment` the tool returns the route's own
+ * 402 challenge, which is an answer and not a failure — and `preview` is free where a tool offers it.
+ */
+const PAID_TOOLS_PATH = firstExisting([
+  "../../functions/mcp/paid-tools.json", // repo checkout: the canonical file
+  "./paid-tools.json", // npm package: the byte-identical pack-time copy
+]);
+const PAID_TOOLS = PAID_TOOLS_PATH ? JSON.parse(readFileSync(PAID_TOOLS_PATH, "utf8")).tools : [];
+const PAID_BY_NAME = new Map(PAID_TOOLS.map((t) => [t.name, t]));
+const TOOLS = [...FREE_TOOLS, ...PAID_TOOLS];
 
 const VERIFIER_PATH = firstExisting([
   "../../public/signed/verify-card.mjs", // repo checkout: the canonical file
@@ -350,6 +368,128 @@ async function verifyInclusion(args) {
   }
 }
 
+/* ---------------------------------------------------------------- paid tools */
+
+const PAID_DOCTRINE =
+  "measurement, not certification — no tool here carries or awards a trust label of any kind; " +
+  "verification stays free";
+
+/** Build the one request a paid tool makes. A caller cannot steer it to another URL. */
+function buildPaidRequest(name, args) {
+  const tool = PAID_BY_NAME.get(name);
+  if (!tool) return { error: `unknown paid tool: ${name}` };
+  const route = tool.csoai.route;
+  const str = (k) => (typeof args[k] === "string" ? args[k].trim() : "");
+  const flag = (k) => args[k] === true || args[k] === "1" || args[k] === "true";
+  const headers = { accept: "application/json" };
+  const xp = str("x_payment");
+  if (xp) headers["x-payment"] = xp;
+  const u = new URL(route, ORIGIN);
+  let method = "GET";
+  let body;
+
+  switch (name) {
+    case "commission_card":
+      if (!str("subject")) return { error: "subject is required" };
+      u.searchParams.set("subject", str("subject"));
+      if (str("axis")) u.searchParams.set("axis", str("axis"));
+      break;
+    case "art50_marking_evidence":
+      if (flag("preview")) u.searchParams.set("preview", "1");
+      if (str("bytes_b64") || str("manifest_b64")) {
+        method = "POST";
+        headers["content-type"] = "application/json";
+        body = JSON.stringify(
+          str("bytes_b64") ? { bytes_b64: str("bytes_b64") } : { manifest_b64: str("manifest_b64") },
+        );
+      } else if (str("url")) {
+        u.searchParams.set("url", str("url"));
+      } else {
+        return { error: "one of url, bytes_b64 or manifest_b64 is required" };
+      }
+      break;
+    case "rwa_evidence":
+      if (!str("asset")) return { error: "asset is required" };
+      u.searchParams.set("asset", str("asset"));
+      if (flag("preview")) u.searchParams.set("preview", "1");
+      break;
+    case "witness_hash":
+      if (!str("sha256") && !str("url")) return { error: "sha256 or url is required" };
+      if (str("sha256")) u.searchParams.set("sha256", str("sha256").toLowerCase());
+      if (str("url")) u.searchParams.set("url", str("url"));
+      if (str("label")) u.searchParams.set("label", str("label"));
+      break;
+    case "receipts_batch":
+      if (!str("from")) return { error: "from is required (ISO-8601)" };
+      u.searchParams.set("from", str("from"));
+      if (str("to")) u.searchParams.set("to", str("to"));
+      if (flag("preview")) u.searchParams.set("preview", "1");
+      break;
+    default:
+      return { error: `no request builder for ${name}` };
+  }
+  return { url: u.toString(), init: { method, headers, ...(body ? { body } : {}) }, route };
+}
+
+/**
+ * Forward one paid tool to its route and report what came back, in the route's own words.
+ * 402 is PAYMENT_REQUIRED and not an error; 404 is NOT_DEPLOYED and never a fabricated result.
+ */
+async function callPaidTool(name, args) {
+  const tool = PAID_BY_NAME.get(name);
+  const base = {
+    tool: name,
+    route: tool.csoai.route,
+    sku: tool.csoai.sku,
+    rail: tool.csoai.rail,
+    doctrine: PAID_DOCTRINE,
+    not_a_certification: true,
+  };
+  const built = buildPaidRequest(name, args);
+  if (built.error) return { ...base, status: "BAD_ARGUMENTS", reason: built.error };
+
+  let res;
+  try {
+    res = await fetch(built.url, { ...built.init, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+  } catch (e) {
+    return {
+      ...base,
+      status: "UNREACHABLE",
+      reason: e instanceof Error ? e.message : String(e),
+      note: "The route could not be fetched. Nothing was charged, and no result is invented.",
+    };
+  }
+
+  const text = await res.text();
+  let body = null;
+  try {
+    body = text ? JSON.parse(text) : null;
+  } catch {
+    body = { raw: text.slice(0, 2000) };
+  }
+
+  if (res.status === 402) {
+    return {
+      ...base,
+      status: "PAYMENT_REQUIRED",
+      http_status: 402,
+      payment_required: body,
+      payment_required_header: res.headers.get("payment-required"),
+      note:
+        "A challenge is an answer, not a failure. Pay from your own wallet against accepts[] and " +
+        "call again with x_payment. Nothing was charged by this call.",
+    };
+  }
+  if (res.status === 404) {
+    return { ...base, status: "NOT_DEPLOYED", http_status: 404, body, note: `${tool.csoai.route} is not on ${ORIGIN}.` };
+  }
+  if (res.ok) {
+    const settle = res.headers.get("x-payment-response");
+    return { ...base, status: "DELIVERED", http_status: res.status, body, ...(settle ? { x_payment_response: settle } : {}) };
+  }
+  return { ...base, status: String(res.status), http_status: res.status, body };
+}
+
 const HANDLERS = {
   board_totals: boardTotals,
   get_axis: getAxis,
@@ -399,6 +539,14 @@ function summaryLine(name, payload) {
       return `${payload.state ?? "?"} — card-v0 leaf ${String(payload.sha256 || "").slice(0, 16) || "?"}.`;
     case "verify_inclusion":
       return `${payload.state ?? "?"} — inclusion against live merkle.`;
+    case "commission_card":
+    case "art50_marking_evidence":
+    case "rwa_evidence":
+    case "witness_hash":
+    case "receipts_batch":
+      return `${payload.status ?? "?"} — ${payload.route ?? name}${
+        payload.status === "PAYMENT_REQUIRED" ? "; nothing charged" : ""
+      }${payload.reason ? " — " + payload.reason : ""}. ${PAID_DOCTRINE}.`;
     default:
       return name;
   }
@@ -422,7 +570,7 @@ async function handle(msg) {
 
   if (method === "tools/call") {
     const name = params?.name;
-    const fn = HANDLERS[name];
+    const fn = PAID_BY_NAME.has(name) ? (a) => callPaidTool(name, a) : HANDLERS[name];
     if (!fn) return replyError(id, -32602, `unknown tool: ${name}`);
     try {
       const payload = await fn(params?.arguments ?? {});
