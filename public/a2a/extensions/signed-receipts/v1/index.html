@@ -1,0 +1,73 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A2A extension: signed-receipts/v1 — Council of AI</title>
+<meta name="description" content="A2A extension signed-receipts/v1: a did:web key-trust convention for AgentCard signing (A2A v1.0 section 8.4) plus Ed25519-signed task-outcome receipts. Evidence of what was claimed, not a certification.">
+<link rel="canonical" href="https://councilof.ai/a2a/extensions/signed-receipts/v1">
+<style>
+  :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3;--acc:#0b5}
+  @media (prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b;--acc:#4c9}}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  main{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+  h1{font-size:1.6rem;line-height:1.25;margin:0 0 .25rem}
+  .sub{color:var(--mut);margin:0 0 2rem}
+  h2{font-size:1.05rem;margin:2.25rem 0 .5rem}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:color-mix(in srgb,var(--fg) 8%,transparent);padding:.12em .35em;border-radius:4px}
+  pre{overflow-x:auto;background:color-mix(in srgb,var(--fg) 6%,transparent);padding:1rem;border-radius:8px}
+  pre code{background:none;padding:0}
+  dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1rem;margin:0}
+  dt{color:var(--mut)}
+  blockquote{margin:1rem 0;padding:.75rem 1rem;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,transparent)}
+  a{color:inherit}
+</style>
+<main>
+  <h1>A2A extension: <code>signed-receipts/v1</code></h1>
+  <p class="sub">Draft 0.1 — a <code>did:web</code> key-trust convention for A2A §8.4, plus signed task-outcome receipts.</p>
+
+  <dl>
+    <dt>Extension URI</dt><dd><code>https://councilof.ai/a2a/extensions/signed-receipts/v1</code></dd>
+    <dt>Status</dt><dd>Draft, for the A2A two-tier extension path (experimental → official)</dd>
+    <dt>Specification</dt><dd><a href="https://github.com/CSOAI-ORG/a2a-signed-receipts/blob/main/SPEC.md">SPEC.md</a></dd>
+    <dt>Discussion</dt><dd><a href="https://github.com/a2aproject/A2A/issues/2150">a2aproject/A2A#2150</a></dd>
+    <dt>Licence</dt><dd>Apache-2.0</dd>
+    <dt>Maintainer</dt><dd>CSOAI Ltd (Council of AI), UK company 16939677</dd>
+  </dl>
+
+  <h2>The gap it closes</h2>
+  <p>A2A v1.0 §8.4 standardises the envelope for AgentCard signing but deliberately leaves the
+  trust root unspecified, and attestation of a task's <em>outcome</em> is unstandardised. Two
+  agents can interoperate and still be unable to hand a third party durable evidence of what
+  passed between them. Sigstore signs artifacts, not evaluations; SPIFFE binds workloads, not
+  measurements; §8.4 signs cards, not outcomes.</p>
+
+  <h2>AgentCard declaration</h2>
+<pre><code>{ "capabilities": { "extensions": [ {
+  "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1",
+  "required": false,
+  "params": { "issuer": "did:web:councilof.ai" }
+} ] } }</code></pre>
+
+  <h2>What a receipt is, and is not</h2>
+  <blockquote>A receipt is evidence of <strong>what was claimed, and when, by the issuer</strong>.
+  It is <strong>not</strong> a certification, an endorsement, or a conformity mark, and must not
+  be presented as one.</blockquote>
+  <p>That sentence is normative in the specification. It is why the extension adds an evidence
+  channel without creating an authority.</p>
+
+  <h2>What verifying a signature does not establish</h2>
+  <p>Verifying establishes that the named key produced these bytes and that the bytes have not
+  changed. It says nothing about the state of that key <em>now</em>. Offline verification is a
+  computation over the parameters you hold; revocation is a property of the present. A consumer
+  must not treat a signature that verifies as evidence that the signing key is still valid.
+  Where a decision depends on revocation state, the key-resolution path and the staleness you
+  accept are operational parameters of your deployment and must be stated by it; the receipt
+  does not carry them. Recorded against our own verification rule as correction
+  <a href="https://councilof.ai/api/corrections">C-2026-0902-09</a>.</p>
+
+  <h2>Running code</h2>
+  <p><a href="https://github.com/CSOAI-ORG/a2a-signed-receipts/blob/main/interceptor.py">interceptor.py</a>
+  — an ADK-style client/server interceptor. Offline card verifier:
+  <a href="https://councilof.ai/verifier/gspc-verify.mjs">gspc-verify.mjs</a>, Apache-2.0, zero
+  dependencies, three states rather than two. Our published verification rule:
+  <a href="https://councilof.ai/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a>.</p>
+</main>
