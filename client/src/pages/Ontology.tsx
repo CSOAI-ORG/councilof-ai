@@ -18,7 +18,7 @@ const LINKS = [
   { c: "#f43f5e", n: "defends", d: "a cyber control defends an asset against a threat" },
   { c: "#f59e0b", n: "monitors", d: "the Watchdog monitors objects for incidents" },
   { c: "#a78bfa", n: "crosswalks", d: "one control satisfies many frameworks at once" },
-  { c: "#6ee7b7", n: "signs", d: "every decision is sealed to Layer 0 — provable" },
+  { c: "#6ee7b7", n: "signs", d: "a specifically published record can carry a verifiable signature; coverage is record-specific" },
 ];
 const ACTIONS = [
   { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/dashboard?tab=home" },

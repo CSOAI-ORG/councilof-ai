@@ -116,8 +116,8 @@ export default function Council() {
               govern any safety decision.
             </p>
             <p className="text-sm text-amber-300/90 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Status: <b>DESIGN — not a live system.</b> The latest three-leg point experiment measured n_eff 1.00
-              at ρ=1; the earlier DR-0007 run measured 1.21. Both reject a fault-tolerance claim. See the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.
+              Status: <b>DESIGN — not a live system.</b> The <a href="/interop/council-independence.json" className="underline">latest published three-leg point experiment</a> measured n_eff=1
+              at rho=1. The historical DR-0007 number is unbound because its cited result artifact is absent. The fault-tolerance claim remains rejected; see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.
               Everything below is the design visualization, not measured production behaviour.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

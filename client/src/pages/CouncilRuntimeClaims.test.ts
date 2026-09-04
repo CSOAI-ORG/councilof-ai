@@ -54,11 +54,12 @@ describe("council runtime claim boundary", () => {
     }
   });
 
-  it("distinguishes the earlier retraction run from the latest point result", () => {
+  it("distinguishes the unbound historical result from the latest point result", () => {
     for (const source of overviewSources) {
-      expect(source).toContain("earlier");
-      expect(source).toContain("n_eff 1.21 of 3");
-      expect(source).toContain("latest point experiment");
+      expect(source).toContain("historical numeric result");
+      expect(source).toContain("unbound");
+      expect(source).toContain("artifact is absent");
+      expect(source).toMatch(/latest (?:published )?point experiment/);
       expect(source).toContain("rho=1 and n_eff=1");
       expect(source).toContain("independent review or fault tolerance");
       expect(source).toContain("/interop/council-independence.json");

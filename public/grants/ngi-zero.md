@@ -15,7 +15,7 @@ already built (MIT-licensed, 109 test files, 1126 passing tests);
 
 BUDGET €50,000
   - 6 months of sovereign substrate maintenance
-  - 33-seat Ed25519 signing council at a 23/33 design quorum (fault-tolerance claim withdrawn under DR-0007; seat independence measured at n_eff 1.21/3)
+  - 33-seat council design at a 23/33 target quorum (fault-tolerance claim withdrawn under DR-0007; its historical numeric result is unbound because the cited result artifact is absent; latest published point test: rho=1, n_eff=1)
   - gspc-card-verifier public CLI
   - 100 signed cards across AI governance standards
 

@@ -8,16 +8,21 @@ import { join } from "node:path";
 const UI_TRUTH_RULES = [
   ["wrong-threshold", /\b22\s*(?:\/|out of)\s*33\b/i],
   ["all-votes-public", /\ball council votes are public\b/i],
-  ["live-council-voting", /\bcouncil voting\b|\bconsensus rate\b/i],
+  ["live-council-voting", /\blive council voting\b|\bcouncil voting (?:session )?(?:is|are) (?:live|active)\b|\blive consensus rate\b/i],
   ["fabricated-independence", /\b33\s+(?:independent|measurement)\s+agents\b/i],
   ["fabricated-consensus", /\bdemocratic consensus from 33 AI agents\b/i],
   ["fabricated-resilience", /\bbias-resistant,\s*manipulation-proof\b|\bfault-aware council consensus\b/i],
   ["live-33-seat-council", /(?<!\bno\s)\blive\s+33[- ](?:agent|seat)\s+(?:BFT\s+)?council\b/i],
   ["live-five-agent-council", /\b(?:convene|run|start)\s+(?:the\s+)?live\s+(?:5|five)[- ]agent\s+council\b/i],
-  ["roleplay-as-consensus", /\bconsensus reached\b|\bthe council agrees\b|\bfive (?:ai )?agents (?:will )?(?:debate|deliberate)\b|\bmulti-agent (?:consensus|(?:review )?vote)\b|\bconsensus-based decision governance\b/i],
+  ["roleplay-as-consensus", /\bthe council agrees\b|\bfive (?:ai )?agents (?:will )?(?:debate|deliberate)\b|\bmulti-agent consensus (?:decides|produces|provides)\b|\bconsensus-based decision governance\b/i],
   ["signed-consensus-verdict", /\bed25519-signed verdicts\b|\bsigns every verdict\b|\bemails? (?:you )?a signed gap report\b/i],
   ["continuous-council-monitoring", /\bthe council continuously monitors\b|\bcouncil independently reviews your compliance\b|\bcsoai monitors global ai regulations and publishes updates monthly\b/i],
-  ["unreproducible-dr0007-number", /\bDR-0007 (?:result|run) measured n_eff\s*=?\s*1\.21\b/i],
+  ["unbound-dr0007-number", /\bn_eff\s*=?\s*1\.21\b|\b1\.21 effective votes\b/i],
+  ["independent-agent-debate", /\bwatch five independent agents debate\b/i],
+  ["council-engine-live", /\bcouncil engine\s*[·:—-]\s*live\b/i],
+  ["all-decisions-signed", /\bevery (?:decision|governed action) is (?:ed25519-)?(?:signed|sealed)\b/i],
+  ["government-live-operations", /\breal-time oversight capabilities for government regulators\b|\bjoin 47 regulatory bodies\b|\b24\/7 government support line\b/i],
+  ["daily-regulation-watcher", /\bcorpus watcher hashes every provision daily\b/i],
 ];
 
 function detectUiTruthViolations(source) {
@@ -51,7 +56,12 @@ if (process.argv.includes("--selftest")) {
     ["live-five-agent.txt", "live-five-agent-council"],
     ["signed-consensus-verdict.txt", "signed-consensus-verdict"],
     ["continuous-council-monitoring.txt", "continuous-council-monitoring"],
-    ["unreproducible-dr0007.txt", "unreproducible-dr0007-number"],
+    ["unreproducible-dr0007.txt", "unbound-dr0007-number"],
+    ["independent-agent-debate.txt", "independent-agent-debate"],
+    ["council-engine-live.txt", "council-engine-live"],
+    ["all-decisions-signed.txt", "all-decisions-signed"],
+    ["government-live-operations.txt", "government-live-operations"],
+    ["daily-regulation-watcher.txt", "daily-regulation-watcher"],
   ]) {
     const violations = detectUiTruthViolations(
       readFileSync(join(fixtureDir, fixture), "utf8"),
@@ -64,46 +74,55 @@ if (process.argv.includes("--selftest")) {
 }
 
 const appSource = readFileSync("client/src/App.tsx", "utf8");
-const routedSurfaces = [
-  ["client/src/pages/legal/Disclaimers.tsx", "./pages/legal/Disclaimers", "Disclaimers", ["/disclaimers", "/legal/disclaimers"]],
-  ["client/src/pages/PublicHome.tsx", "./pages/PublicHome", "PublicHome", ["/public"]],
-  ["client/src/pages/CharterArticle.tsx", "./pages/CharterArticle", "CharterArticle", ["/charter/article/:id"]],
-  ["client/src/pages/EUAIActCompliance.tsx", "./pages/EUAIActCompliance", "EUAIActCompliance", ["/compliance/eu-ai-act"]],
-  ["client/src/pages/Documentation.tsx", "./pages/Documentation", "Documentation", ["/docs"]],
-  ["client/src/pages/EUAIActUrgency.tsx", "./pages/EUAIActUrgency", "EUAIActUrgency", ["/eu-ai-act-urgency"]],
-  ["client/src/pages/CouncilHub.tsx", "./pages/CouncilHub", "CouncilHub", ["/me"]],
-  ["client/src/pages/NewHome-v2.tsx", "./pages/NewHome-v2", "NewHomeV2", ["/home-v2"]],
-  ["client/src/pages/legal/ServiceLevelAgreement.tsx", "./pages/legal/ServiceLevelAgreement", "ServiceLevelAgreement", ["/sla", "/service-level-agreement", "/legal/sla"]],
-  ["client/src/pages/FaqPage.tsx", "./pages/FaqPage", "FaqPage", ["/faq", "/frequently-asked-questions"]],
-  ["client/src/pages/PDCASimulator.tsx", "./pages/PDCASimulator", "PDCASimulator", ["/pdca-simulator"]],
-  ["client/src/pages/ComplianceHowItWorks.tsx", "./pages/ComplianceHowItWorks", "ComplianceHowItWorks", ["/how-it-works/compliance"]],
-  ["client/src/pages/TryCouncil.tsx", "./pages/TryCouncil", "TryCouncil", ["/try"]],
-  ["client/src/pages/AgentRegistry.tsx", "./pages/AgentRegistry", "AgentRegistry", ["/agent-registry"]],
-  ["client/src/pages/Council.tsx", "./pages/Council", "Council", ["/council"]],
-  ["client/src/pages/CouncilDetail.tsx", "./pages/CouncilDetail", "CouncilDetail", ["/council-detail"]],
-  ["client/src/pages/Methodology.tsx", "./pages/Methodology", "Methodology", ["/methodology"]],
-  ["client/src/pages/SOAIPDCAFramework.tsx", "./pages/SOAIPDCAFramework", "SOAIPDCAFramework", ["/soai-pdca"]],
-  ["client/src/pages/Recommendations.tsx", "./pages/Recommendations", "Recommendations", ["/recommendations"]],
-  ["client/src/pages/GSPCVerify.tsx", "./pages/GSPCVerify", "GSPCVerify", ["/gspc-verify"]],
-  ["client/src/pages/PublicDashboard.tsx", "./pages/PublicDashboard", "PublicDashboard", ["/transparency"]],
-];
-
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-for (const [sourcePath, importPath, component, routes] of routedSurfaces) {
-  assert.equal(existsSync(sourcePath), true, `${sourcePath} must exist`);
-  assert.match(
-    appSource,
-    new RegExp(`const\\s+${component}\\s*=\\s*lazy\\(\\(\\)\\s*=>\\s*import\\(["']${escapeRegExp(importPath)}["']\\)\\)`),
-    `${sourcePath} must remain imported by App.tsx`,
-  );
-  for (const route of routes) {
-    assert.match(
-      appSource,
-      new RegExp(`<Route\\s+path=["']${escapeRegExp(route)}["'][^>]*component=\\{${component}\\}`),
-      `${sourcePath} must remain reachable at ${route}`,
-    );
+
+function appPageSource(importPath) {
+  const relative = importPath.startsWith("@/")
+    ? importPath.slice(2)
+    : importPath.startsWith("./")
+      ? importPath.slice(2)
+      : importPath;
+  const base = join("client/src", relative);
+  for (const candidate of [`${base}.tsx`, `${base}.ts`, join(base, "index.tsx")]) {
+    if (existsSync(candidate)) return candidate;
   }
+  assert.fail(`App.tsx page import ${importPath} has no source file`);
 }
+
+// Derive the audit set from App.tsx itself. A manually maintained route list had
+// covered 21 pages while App.tsx exposed more than 300, allowing routed claims to
+// escape the truth gate. New page imports now enter this scan automatically.
+const appPageImports = new Map();
+for (const match of appSource.matchAll(
+  /const\s+(\w+)\s*=\s*lazy\(\(\)\s*=>\s*import\(["'](\.\/pages\/[^"']+)["']/g,
+)) {
+  appPageImports.set(match[1], match[2]);
+}
+for (const match of appSource.matchAll(
+  /import\s+(\w+)\s+from\s+["']((?:\.\/|@\/)pages\/[^"']+)["']/g,
+)) {
+  appPageImports.set(match[1], match[2]);
+}
+
+const routeBlock = appSource.slice(appSource.indexOf("<Switch>"));
+const routedPagePaths = new Set();
+const unusedPageImports = [];
+for (const [component, importPath] of appPageImports) {
+  const usedByRoute = new RegExp(
+    `(?:component=\\{${escapeRegExp(component)}\\}|<${escapeRegExp(component)}(?:\\s|\\/|>))`,
+  ).test(routeBlock);
+  if (usedByRoute) routedPagePaths.add(appPageSource(importPath));
+  else unusedPageImports.push(component);
+}
+assert.deepEqual(
+  unusedPageImports.sort(),
+  ["Certification", "FrameworkDetail", "Leaderboard"],
+  "App.tsx page imports changed: every new page import must be routed or explicitly removed",
+);
+assert.ok(
+  routedPagePaths.size >= 300,
+  `derived routed-page coverage unexpectedly fell to ${routedPagePaths.size}`,
+);
 
 assert.equal(existsSync("client/src/pages/FAQ.tsx"), true);
 assert.doesNotMatch(
@@ -134,11 +153,33 @@ const newHomeSource = readFileSync("client/src/pages/NewHome-v2.tsx", "utf8");
 assert.match(newHomeSource, /import ConsensusHero from "\.\.\/components\/ConsensusHero"/);
 assert.match(newHomeSource, /<ConsensusHero\b/);
 
-const activeUiSources = [
-  ...routedSurfaces.map(([sourcePath]) => sourcePath),
+// These non-page sources are either mounted in the shared shell or feed that
+// shell. Keep the list explicit so review does not confuse an on-disk demo with
+// a routed runtime; mount/import assertions below fail closed if the shell moves.
+const sharedTruthSources = [
+  "client/src/components/Header.tsx",
+  "client/src/components/Footer.tsx",
   "client/src/components/ConsensusHero.tsx",
   "client/src/components/GlobalSearch.tsx",
   "client/src/components/BuiltOnFooter.tsx",
+  "client/src/components/SovereignDock.tsx",
+  "client/src/components/CouncilVote.tsx",
+  "client/src/components/home/LivingStages.tsx",
+  "client/src/lib/demoTour.ts",
+];
+assert.match(appSource, /import \{ Header \} from "\.\/components\/Header"/);
+assert.match(appSource, /<Header \/>/);
+assert.match(appSource, /import \{ Footer \} from "\.\/components\/Footer"/);
+assert.match(appSource, /<Footer \/>/);
+const headerSource = readFileSync("client/src/components/Header.tsx", "utf8");
+assert.match(headerSource, /import \{ GlobalSearch \} from ['"]@\/components\/GlobalSearch['"]/);
+assert.match(headerSource, /<GlobalSearch\b/);
+assert.match(newHomeSource, /import ConsensusHero from "\.\.\/components\/ConsensusHero"/);
+assert.match(newHomeSource, /<ConsensusHero\b/);
+
+const activeUiSources = [
+  ...routedPagePaths,
+  ...sharedTruthSources,
   "client/src/pages/AltPage.tsx",
   "public/claims-register.json",
   "client/src/lib/verify.ts",
@@ -166,6 +207,7 @@ const overviewSources = [
   readFileSync("client/src/pages/Layer0.tsx", "utf8"),
   readFileSync("public/claims-register.json", "utf8"),
 ];
+const blogSource = readFileSync("client/src/data/blog-content.ts", "utf8");
 const voteSource = readFileSync(
   "client/src/components/CouncilVote.tsx",
   "utf8",
@@ -216,13 +258,26 @@ assert.match(
 );
 assert.doesNotMatch(pqcClaim?.notes ?? "", /Built, not shipped/);
 for (const source of overviewSources) {
-  assert.match(source, /earlier/);
-  assert.match(source, /n_eff 1\.21 of 3/);
-  assert.match(source, /latest point experiment/);
+  assert.match(source, /historical numeric result/);
+  assert.match(source, /unbound/);
+  assert.match(source, /cited result(?:s\/n_eff\.json)? artifact is absent/);
+  assert.match(source, /latest (?:published )?point experiment/);
   assert.match(source, /rho=1 and n_eff=1/);
   assert.match(source, /independent review or fault tolerance/);
   assert.match(source, /\/interop\/council-independence\.json/);
 }
+assert.equal(
+  existsSync("results/n_eff.json"),
+  false,
+  "DR-0007's historical numeric result must remain unbound while results/n_eff.json is absent",
+);
+assert.doesNotMatch(
+  blogSource,
+  /\bn_eff\s*=?\s*1\.21\b|\b1\.21 effective votes\b/i,
+  "routed blog content must not present DR-0007's unbound historical number as a result",
+);
+assert.match(blogSource, /historical numeric result is (?:now )?unbound/);
+assert.match(blogSource, /latest (?:published |bound )?point test records rho=1 and n_eff=1/);
 assert.match(voteSource, /Math\.floor\(\(2 \* N\) \/ 3\) \+ 1/);
 assert.match(voteSource, /Design simulation only/);
 assert.match(charterArticleSource, /\/interop\/council-independence\.json/);

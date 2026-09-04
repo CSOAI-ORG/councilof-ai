@@ -21,8 +21,8 @@ import type { Slide } from "@/components/scrollworld";
  *  4. Deck slide 9 "MMLU expert (~89.8%)" and the named third-party human panels — figures
  *     not evidenced here. The human-baseline argument is kept; the borrowed numbers are not.
  *  5. Deck slide 13's "33" shield — the 33-seat council is a DESIGNED structure and its
- *     fault-tolerance property was RETRACTED (DR-0007: measured n_eff 1.21 against 3
- *     nominal legs). Rather than drop it, this page uses it as the worked example: it is
+ *     fault-tolerance property was RETRACTED (DR-0007). Its historical numeric result is
+ *     unbound because the cited result artifact is absent. Rather than drop it, this page uses it as the worked example: it is
  *     the largest thing we have withdrawn about ourselves.
  *  6. "Immutable" throughout — replaced with append-only and tamper-evident, which is what
  *     a hash chain actually gives you.
@@ -160,7 +160,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
     kicker: "The largest thing we withdrew",
     title: "We retracted our own consensus guarantee",
     body:
-      "Our council is designed with 33 seats and a 23-of-33 threshold, and for a while we described that as a resilience property. Then we measured it. The effective number of independent legs came out at roughly 1.21 against three nominal ones — the legs were correlated, so the structure was not delivering the guarantee the design implied. We withdrew the claim in the ledger under DR-0007. The 33 seats and the 23-of-33 threshold remain what they always were: a design, not a measured property.",
+      "Our council is designed with 33 seats and a 23-of-33 threshold, and for a while we described that as a resilience property. We withdrew the claim under DR-0007. Its historical numeric result is unbound because the cited result artifact is absent; the latest published point test measured rho=1 and n_eff=1. The 33 seats and the 23-of-33 threshold remain what they always were: a design, not a measured property.",
     points: [
       { tag: "pain", text: "Architecture diagrams quietly promoted into safety guarantees" },
       { tag: "benefit", text: "A design figure labelled as design, everywhere it appears" },
@@ -178,7 +178,7 @@ export const VERIFIABLE_TRUST_SLIDES: Slide[] = [
 
 export const VERIFIABLE_TRUST_NOT_CLAIMED = [
   "We do not claim the fourteenth slot is gated or unmeasured. Jail is measured across 71 gold items on a seven-model fleet; its separation is TIE on the live board — a tie is not a separated leader — so it is never ranked.",
-  "We do not claim our 33-seat council delivers a resilience or consensus guarantee. That claim was retracted under DR-0007 after we measured an effective independence of about 1.21 against 3 nominal legs. The 33 seats and the 23-of-33 threshold are a design figure only.",
+  "We do not claim our 33-seat council delivers a resilience or consensus guarantee. That claim was retracted under DR-0007. Its historical numeric result is unbound because the cited artifact is absent; the latest published point test measured rho=1 and n_eff=1. The 33 seats and the 23-of-33 threshold are a design figure only.",
   "We do not claim any independent time-stamping or sealing authority. Records are Ed25519-signed over a SHA-256 hash chain, verifiable against did:web:csoai.org, and nothing more.",
   "We do not publish third-party human-baseline scores as if they were ours. Where we have not measured a human baseline ourselves, no number appears.",
   "We do not claim our provenance result was retracted and replaced. The 13.9% one-sided upper bound stands; what we corrected was the denominator it is computed against — n=20 assets, not n=180 cells.",

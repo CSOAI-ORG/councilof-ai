@@ -468,9 +468,8 @@ function OwnErrors() {
       <p className="measure mt-5 rounded-2xl border border-gray-200 border-l-4 border-l-gray-400 bg-gray-50 p-5 text-[15px] leading-[1.65] text-gray-700">
         <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
-        a designed 23-of-33 threshold — and when we actually measured how independent those seats
-        were, the earlier DR-0007 experiment measured n_eff 1.21 of 3 and caused us to retract the
-        guarantee. The{" "}
+        a designed 23-of-33 threshold. DR-0007 records the retraction; its historical numeric result
+        is unbound because the cited result artifact is absent from this repository. The{" "}
         <Link href="/interop/council-independence.json" className="underline underline-offset-2">
           latest point experiment
         </Link>{" "}

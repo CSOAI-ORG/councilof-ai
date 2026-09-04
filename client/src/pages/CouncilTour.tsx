@@ -39,7 +39,7 @@ const STEPS: StepConfig[] = [
     id: "drift",
     title: "Drift feed",
     narration:
-      "The corpus watcher hashes every provision daily and diffs the world. No drift detected in the current window — a measured statement, not a guarantee.",
+      "This published delta report records one bounded corpus comparison. It does not establish a live daily watcher or guarantee that no later drift occurred.",
     dataType: "real",
     verifyHref: "/corpus-watch/delta-report-2026-08-01.md",
     verifyLabel: "Read signed delta report",

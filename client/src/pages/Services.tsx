@@ -4,12 +4,12 @@ import { useEffect } from "react";
 // front door (/try) and the sector view (/playbooks).
 type Svc = { name: string; glyph: string; body: string; href: string; cta: string };
 const SERVICES: Svc[] = [
-  { name: "Live Council of AI", glyph: "Vote", body: "Ask any AI-governance question and watch five independent agents debate and reach designed multi-agent review - with the frameworks that apply and why.", href: "/try", cta: "Try it free" },
+  { name: "Council design demo", glyph: "Vote", body: "Classify a scenario locally and inspect the proposed 33-seat review design. No live Council vote, independent-agent debate, or signed verdict runs on this page.", href: "/try", cta: "Inspect the demo" },
   { name: "Industry Playbooks", glyph: "SEC", body: "Your sector's scenario, the frameworks that bind you, the bridges you need, and the exact next steps - across 47 industries.", href: "/playbooks", cta: "Find your sector" },
   { name: "MEOK Law", glyph: "LAW", body: "For any place - city, state, nation, bloc - the full stack of AI rules that apply and how each layer cross-references the others.", href: "/meok-law", cta: "What governs you" },
   { name: "Framework Temples", glyph: "GOV", body: "Published regulations and standards - EU AI Act, NIST AI RMF, ISO 42001 - each with its own temple, mapped to your systems.", href: "/temples", cta: "See the temples" },
-  { name: "Council Towns", glyph: "TWN", body: "Train and multiply governance knowledge into white papers, then into more data - a compounding learning engine.", href: "/towns", cta: "See the engine" },
-  { name: "Legacy Bridge", glyph: "BRG", body: "Bring COBOL and mainframe estates into the agentic economy without a rewrite - the Layer 0 control plane.", href: "/legacy", cta: "Bridge legacy" },
+  { name: "Council Towns", glyph: "TWN", body: "Explore the planned training and knowledge-workflow views. They are product concepts, not a live compounding learning engine.", href: "/towns", cta: "Explore the concept" },
+  { name: "Legacy Bridge", glyph: "BRG", body: "Inspect the proposed COBOL and mainframe adapter pattern. A production control-plane integration is not configured from this public page.", href: "/legacy", cta: "Inspect the design" },
 ];
 
 export default function Services() {
@@ -21,7 +21,7 @@ export default function Services() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - services</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Measure once. Check the signed card.</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Independent measurement, not a checklist product. We measure published behaviour against frozen rules, sign the result, and leave empty cells empty. Verify stays free.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Reproducible measurement, not a checklist product. Published cards identify their exact subject, method, signer and evidence state; empty cells stay empty. Verification stays free.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Start with the Council -&gt;</a>
             <a href="/dashboard?tab=home" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Open the full OS -&gt;</a>
@@ -41,7 +41,7 @@ export default function Services() {
       <section className="max-w-6xl mx-auto px-6 pb-16">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">
           <div className="text-xl font-black text-emerald-900">Governance, rediscovered - not invented</div>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-emerald-900/80">The same consensus architecture that secured Athens and Bitcoin, now governing AI. See where it comes from, then watch it work.</p>
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-emerald-900/80">The site documents historical governance patterns and a proposed Council architecture. The architecture is not a live consensus or fault-tolerance claim.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <a href="/lineage" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4,000-year lineage -&gt;</a>
             <a href="/dragonfly" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4-Wing architecture -&gt;</a>

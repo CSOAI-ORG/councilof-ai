@@ -108,8 +108,8 @@ export default function Layer0() {
               Ed25519 signing, the care-floor gate, and offline verification
             </strong>{" "}
             — plus a <strong className="text-emerald-50">designed</strong> 33-seat council, which is
-            a design figure only. The earlier DR-0007 experiment measured n_eff 1.21 of 3 and caused
-            us to retract the guarantee. The{" "}
+            a design figure only. DR-0007 records the retraction; its historical numeric result is
+            unbound because the cited result artifact is absent from this repository. The{" "}
             <Link href="/interop/council-independence.json" className="underline underline-offset-2">
               latest point experiment
             </Link>{" "}

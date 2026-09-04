@@ -279,10 +279,12 @@ export default function Honesty() {
           </li>
           <li>
             <strong>We retracted a guarantee rather than rewording it.</strong> We had published a
-            consensus guarantee for our council architecture, then measured how independent those
-            seats actually were: the effective number was n_eff 1.21 against 3 nominal legs. The
-            guarantee did not hold, so it was withdrawn (DR-0007). The 33-seat structure with its
+            consensus guarantee for our council architecture. The historical DR-0007 narrative
+            named a numeric result, but its cited result artifact is absent from this repository,
+            so that number is unbound and not independently reproducible. The guarantee was
+            withdrawn. The 33-seat structure with its
             23-of-33 threshold remains a <em>design</em> figure and is labelled as one everywhere.
+            The <a href="/interop/council-independence.json" className="underline">latest published point test</a> measured rho=1 and n_eff=1.
           </li>
           <li>
             <strong>Our own board contradicted our own ruling for two days.</strong> An owner ruling
