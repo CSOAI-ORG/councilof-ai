@@ -49,6 +49,19 @@ function isQuarantinedSource(source) {
   return QUARANTINED_SOURCE_PREFIXES.some((prefix) => normalized.startsWith(prefix));
 }
 
+export function incidentArtifacts(incident) {
+  const explicit = Array.isArray(incident?.artifacts) ? incident.artifacts : [];
+  const placeholders = Array.isArray(incident?.plain_text_placeholders)
+    ? incident.plain_text_placeholders.map(([name, digest]) => ({
+        original_public_path: `public/interop/${name}`,
+        path: `evidence/incidents/2026-09-04-public-proof-audit/interop/${name}`,
+        sha256: digest,
+        classification: "PLAIN_TEXT_PLACEHOLDER_NOT_OTS",
+      }))
+    : [];
+  return [...explicit, ...placeholders];
+}
+
 export function findQuarantinedLeaves(root) {
   if (!Array.isArray(root?.leaves)) return [];
   return root.leaves.filter((leaf) => isQuarantinedSource(leaf?.source));
@@ -119,6 +132,17 @@ function runSelftest() {
     1,
   );
   assert.equal(findQuarantinedLeaves({ leaves: [{ source: "safe/atom.jsonl" }] }).length, 0);
+  assert.deepEqual(
+    incidentArtifacts({ plain_text_placeholders: [["fake.ots", "ab"]] }),
+    [
+      {
+        original_public_path: "public/interop/fake.ots",
+        path: "evidence/incidents/2026-09-04-public-proof-audit/interop/fake.ots",
+        sha256: "ab",
+        classification: "PLAIN_TEXT_PLACEHOLDER_NOT_OTS",
+      },
+    ],
+  );
   assert.ok(
     legacyCoseIssues({
       _kind: "COSE_Sign1",
@@ -193,6 +217,78 @@ function checkQuarantineManifest(errors) {
       } else if (sha256(read(relativePath)) !== expectedHash) {
         errors.push(`anchored incident history changed: ${relativePath}`);
       }
+    }
+    for (const originalPath of [rootEntry.original_public_path, rootEntry.original_public_ots_path]) {
+      if (!String(originalPath ?? "").startsWith("public/")) {
+        errors.push(`contaminated root lacks its original public path: ${rootEntry.path}`);
+      } else if (fs.existsSync(path.join(REPO, originalPath))) {
+        errors.push(`contaminated root remains in the served tree: ${originalPath}`);
+      }
+    }
+    if (String(rootEntry.path ?? "").startsWith("public/") || String(rootEntry.ots_path ?? "").startsWith("public/")) {
+      errors.push(`contaminated root incident is still served: ${rootEntry.path}`);
+    }
+  }
+
+  const incidentManifestPath = manifest.public_proof_incident_manifest;
+  if (typeof incidentManifestPath !== "string" || incidentManifestPath.startsWith("public/")) {
+    errors.push("public proof incident manifest is absent or remains in the served tree");
+    return;
+  }
+  let incident;
+  try {
+    incident = readJson(incidentManifestPath);
+  } catch {
+    errors.push(`public proof incident manifest unreadable: ${incidentManifestPath}`);
+    return;
+  }
+  const artifacts = incidentArtifacts(incident);
+  if (artifacts.length !== 32) {
+    errors.push(`public proof incident inventory has ${artifacts.length} artifacts, expected 32`);
+  }
+  for (const artifact of artifacts) {
+    const stored = String(artifact.path ?? "");
+    const original = String(artifact.original_public_path ?? "");
+    const expectedHash = String(artifact.sha256 ?? "");
+    if (!stored.startsWith("evidence/incidents/") || original === "" || !original.startsWith("public/")) {
+      errors.push(`invalid public proof incident paths: ${stored || "<missing>"}`);
+      continue;
+    }
+    const replacementIsDiscoveryPointer =
+      artifact.classification === "OVERSTATED_ANCHOR_STATUS" &&
+      original === "public/interop/layer0-ceremony.json";
+    if (fs.existsSync(path.join(REPO, original)) && !replacementIsDiscoveryPointer) {
+      errors.push(`quarantined public proof remains served: ${original}`);
+    }
+    if (!fs.existsSync(path.join(REPO, stored))) {
+      errors.push(`quarantined public proof is missing: ${stored}`);
+    } else if (!/^[0-9a-f]{64}$/u.test(expectedHash) || sha256(read(stored)) !== expectedHash) {
+      errors.push(`quarantined public proof changed: ${stored}`);
+    }
+  }
+
+  const layer0Discovery = readJson("public/interop/layer0-ceremony.json");
+  if (
+    layer0Discovery.status !== "DISCOVERY_POINTER" ||
+    layer0Discovery.claim_boundary?.is_a_receipt !== false ||
+    layer0Discovery.claim_boundary?.is_a_bitcoin_anchor !== false
+  ) {
+    errors.push("Layer 0 discovery path presents itself as a receipt or Bitcoin anchor");
+  }
+
+  const interopIndex = readJson("public/interop/index.json");
+  const indexedUrls = new Set(
+    (Array.isArray(interopIndex.formats) ? interopIndex.formats : [])
+      .map((entry) => entry?.url)
+      .filter((url) => typeof url === "string"),
+  );
+  for (const artifact of artifacts) {
+    const original = String(artifact.original_public_path ?? "");
+    if (!original.startsWith("public/interop/")) continue;
+    if (artifact.classification === "OVERSTATED_ANCHOR_STATUS") continue;
+    const publicUrl = `https://councilof.ai/${original.replace(/^public\//u, "")}`;
+    if (indexedUrls.has(publicUrl)) {
+      errors.push(`interop index still advertises quarantined proof: ${original}`);
     }
   }
 }

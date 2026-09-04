@@ -11,8 +11,10 @@ Checks:
   * root schema identity, required fields, leaf count and Merkle root;
   * Ed25519 signature under the pinned local did:web key;
   * sidecar and pointer bind the exact root bytes, count, Merkle and as_of;
-  * a completed Rekor rail has a local snapshot whose logIndex, signature and
+  * the current root has a completed Rekor rail with a local snapshot whose logIndex, signature and
     preimage digest match the signed envelope;
+  * the current root has a parseable exact-byte OTS stamp (a pending calendar
+    stamp is accepted as stamped, never described as Bitcoin-anchored);
   * every public .ots is a parseable OpenTimestamps proof and its digest matches
     locally available target bytes named by an adjacent file or witness sidecar;
   * archive OTS references resolve to files that passed the checks above.
@@ -215,6 +217,12 @@ def validate_current_witness(
 
     witnesses = sidecar.get("witnesses") if isinstance(sidecar.get("witnesses"), dict) else {}
     rekor = witnesses.get("rekor") if isinstance(witnesses.get("rekor"), dict) else {}
+    if not sidecar_issues:
+        add(
+            errors,
+            str(rekor.get("status", "")).upper() in {"WITNESSED", "INCLUDED"},
+            "current root has no completed Rekor witness",
+        )
     if not sidecar_issues and str(rekor.get("status", "")).upper() in {"WITNESSED", "INCLUDED"}:
         entry_path = local_entry_path(rekor.get("entry_file"))
         add(errors, isinstance(rekor.get("logIndex"), int), "completed Rekor witness has no integer logIndex")
@@ -238,6 +246,34 @@ def validate_current_witness(
             except Exception as exc:
                 errors.append(f"Rekor snapshot cannot be verified: {type(exc).__name__}: {exc}")
     return sidecar
+
+
+def public_ots_reference(value: Any) -> str | None:
+    """Normalize a same-site proof reference to its repo-relative public path."""
+    if not isinstance(value, str) or not value:
+        return None
+    normalized = value.removeprefix("https://councilof.ai/")
+    if normalized.startswith("interop/"):
+        normalized = "public/" + normalized
+    if not normalized.startswith("public/interop/") or not normalized.endswith(".ots"):
+        return None
+    return normalized
+
+
+def validate_current_ots(errors: list[str], sidecar: dict[str, Any], valid_ots: set[str]) -> None:
+    witnesses = sidecar.get("witnesses") if isinstance(sidecar.get("witnesses"), dict) else {}
+    value = witnesses.get("ots", witnesses.get("opentimestamps"))
+    ots = value if isinstance(value, dict) else {}
+    status = str(ots.get("status", "")).upper()
+    add(
+        errors,
+        status in {"STAMPED_PENDING_BITCOIN", "BITCOIN_ATTESTATION_PRESENT"},
+        "current root has no parseable OpenTimestamps stamp",
+    )
+    reference = public_ots_reference(ots.get("path") or ots.get("proof_path"))
+    add(errors, reference is not None, "current root OTS witness has no public proof path")
+    if reference is not None:
+        add(errors, reference in valid_ots, f"current root OTS proof is missing, invalid, or digest-mismatched: {reference}")
 
 
 def witness_ots_targets() -> dict[str, str]:
@@ -359,6 +395,25 @@ def run_selftest() -> int:
         "fixture",
     )
     assert len(mismatches) == 2
+    assert public_ots_reference("public/interop/root-deadbeef.json.ots") == "public/interop/root-deadbeef.json.ots"
+    assert public_ots_reference("https://councilof.ai/interop/root-deadbeef.json.ots") == "public/interop/root-deadbeef.json.ots"
+    assert public_ots_reference("https://example.invalid/root.ots") is None
+    ots_errors: list[str] = []
+    validate_current_ots(
+        ots_errors,
+        {
+            "witnesses": {
+                "ots": {
+                    "status": "STAMPED_PENDING_BITCOIN",
+                    "path": "public/interop/root-deadbeef.json.ots",
+                }
+            }
+        },
+        {"public/interop/root-deadbeef.json.ots"},
+    )
+    assert ots_errors == []
+    validate_current_ots(ots_errors, {"witnesses": {"ots": {"status": "PENDING"}}}, set())
+    assert len(ots_errors) == 2
     print("root-witness-release-gate selftest: PASS")
     return 0
 
@@ -366,10 +421,15 @@ def run_selftest() -> int:
 def run_gate() -> int:
     errors: list[str] = []
     validated = validate_root(errors)
+    sidecar: dict[str, Any] | None = None
     if validated is not None:
         root, raw, root_sha, signed = validated
-        validate_current_witness(errors, root, raw, root_sha, signed)
+        sidecar = validate_current_witness(errors, root, raw, root_sha, signed)
     valid_ots = validate_ots(errors)
+    if validated is not None and sidecar is not None:
+        root, raw, root_sha, _ = validated
+        if not exact_artifact_issues(sidecar.get("artifact"), root, raw, root_sha, "sidecar"):
+            validate_current_ots(errors, sidecar, valid_ots)
     validate_archive_references(errors, valid_ots)
 
     # Stable output: the gate is also an audit artifact in CI logs.

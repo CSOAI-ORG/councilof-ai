@@ -49,7 +49,7 @@ from adapters import (  # noqa: E402
 )
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
-ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
+ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
 DID = "did:web:csoai.org#board-attestation-1"
 SURFACES = {
     "xrpl.asset.state",
@@ -758,7 +758,7 @@ def main() -> int:
             "PKCS8 stays on Pages (OIDC). Not a certificate."
         )
         root_body["note"] = (
-            "Envelope schema is public-root-v0, not card-v0. This root.json envelope "
+            "Envelope schema is public-root-v1, not a measurement card. This root.json envelope "
             "is Ed25519-signed over the compact preimage under "
             "did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
             "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."
