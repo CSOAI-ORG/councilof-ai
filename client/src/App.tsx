@@ -10,17 +10,30 @@ const Registers = lazy(() => import("./pages/Registers"));
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Header } from "./components/Header";
-import OsLauncher from "./pages/OsLauncher";
-import { isEmbedded } from "@/lib/embed";
 import { useSearch as useOsSearch } from "wouter";
+import { normalizeLobbyTabId } from "@/components/lobby/tabs";
 /** Council OS = the Dashboard. Legacy /os?lobby=X lands on /dashboard?tab=X so every old door
- *  stays inside one workspace. Embedded (?embed=1 / framed) keeps the AG-UI harness pane. */
+ *  stays inside one workspace. `embed=1` is preserved and DashboardLayout renders the same
+ *  workspace without outer chrome; there is no second embedded Council OS. */
 function OsRoute() {
   const search = useOsSearch();
   const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-  if (isEmbedded() || p.get("legacy") === "1") return <OsLauncher />;
-  const lobby = p.get("lobby") || "home";
-  p.delete("lobby"); p.set("tab", lobby);
+  const lobby = normalizeLobbyTabId(p.get("lobby") || "home");
+  p.delete("lobby");
+  p.delete("legacy");
+  p.set("tab", lobby);
+  return <Redirect to={"/dashboard?" + p.toString()} />;
+}
+
+/** Collapse every retired application door onto the same dashboard contract
+ * while preserving useful task/context/embed parameters. */
+function DashboardDoor({ defaultTab }: { defaultTab: string }) {
+  const search = useOsSearch();
+  const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  const requested = p.get("lobby") || p.get("tab") || defaultTab;
+  p.delete("lobby");
+  p.delete("legacy");
+  p.set("tab", normalizeLobbyTabId(requested));
   return <Redirect to={"/dashboard?" + p.toString()} />;
 }
 
@@ -405,7 +418,6 @@ const ROUTE_TITLES: Record<string, string> = {
   "/connect-gspc": "Connect GSPC to your AI — every platform | CSOAI",
   "/connect-ai": "Connect GSPC to your AI — every platform | CSOAI",
   "/embed": "Embed / white-label — Powered by Council of AI | CSOAI",
-  "/challenge": "Challenge a Measurement | CSOAI",
   "/regulator-findings": "Regulator Findings — signed EU AI Act | CSOAI",
   "/findings": "Regulation Findings — every signed finding, mapped to its regulator | CSOAI",
   "/gspc-gap-map": "GSPC Gap Map | CSOAI",
@@ -551,27 +563,96 @@ function App() {
   if (location.startsWith('/widget')) {
     return <WidgetRouter />;
   }
-  // /council-os is NOT handled here. public/_redirects sends it 308 -> /os (the
-  // crawlable launcher) while this branch sent it to /?lobby=home (the overlay),
-  // so the same URL resolved to two different destinations depending on whether
-  // Cloudflare Pages or the SPA answered it — 308 in production, client redirect
-  // on an in-app navigation. Production is the authority; the SPA now agrees by
-  // not claiming the path at all, and wouter falls through to the /os route.
-  // /console and /sov-os both 308 -> /?lobby=home, which is what this branch does.
-  if (location === '/demo' || location === '/os-demo') {
+  // One operating surface: old workspace, arena, assessment and fabric doors
+  // converge on a named pane rather than mounting parallel applications.
+  if (
+    [
+      "/ag-ui",
+      "/chat",
+      "/console",
+      "/council-os",
+      "/demo",
+      "/enter",
+      "/home-v3",
+      "/os-demo",
+      "/sov-os",
+      "/try",
+    ].includes(path)
+  ) {
+    return <DashboardDoor defaultTab="home" />;
+  }
+  if (
+    [
+      "/arena-scoreboard",
+      "/coliseum",
+      "/colosseum",
+      "/gspc-arena",
+      "/simulate",
+    ].includes(path)
+  ) {
+    return <DashboardDoor defaultTab="space" />;
+  }
+  if (
+    ["/ecosystem", "/governance-commons", "/integrations", "/safe-space"].includes(
+      path,
+    )
+  ) {
+    return <DashboardDoor defaultTab="fabric" />;
+  }
+  if (["/assess", "/assessment", "/readiness-assessment"].includes(path)) {
+    return <DashboardDoor defaultTab="measured" />;
+  }
+  if (path === "/os") return <OsRoute />;
+
+  // `embed=1` is an iframe hint, not a second top-level Council OS mode. A
+  // copied panel URL opened directly must converge on the canonical workspace
+  // with full navigation and account controls. Genuine iframes retain the hint.
+  if (path === "/dashboard" && typeof window !== "undefined") {
+    const params = new URLSearchParams(window.location.search);
+    let topLevel = true;
+    try {
+      topLevel = window.self === window.top;
+    } catch {
+      topLevel = false;
+    }
+    if (topLevel && params.has("embed")) {
+      params.delete("embed");
+      const query = params.toString();
+      return <Redirect to={`/dashboard/${query ? `?${query}` : ""}`} />;
+    }
+  }
+
+  // Council OS owns the viewport. Rendering it inside the marketing Header/Footer
+  // created the duplicate top bar and inconsistent padding the consolidation removes.
+  if (path === "/dashboard") {
     return (
       <ErrorBoundary>
-        <ThemeProvider defaultTheme="dark">
-          <TooltipProvider>
-            <DemoOS />
-            <Toaster position="top-right" />
-          </TooltipProvider>
+        <ThemeProvider defaultTheme="light">
+          <AuthProvider>
+            <AnalyticsProvider>
+              <TooltipProvider>
+                <RouteTitle />
+                <RouteAnnouncer />
+                <Suspense
+                  fallback={
+                    <div
+                      role="status"
+                      aria-label="Loading Council OS"
+                      className="flex min-h-svh items-center justify-center bg-background"
+                    >
+                      <SectionLoader />
+                    </div>
+                  }
+                >
+                  <Dashboard />
+                </Suspense>
+                <Toaster position="top-right" />
+              </TooltipProvider>
+            </AnalyticsProvider>
+          </AuthProvider>
         </ThemeProvider>
       </ErrorBoundary>
     );
-  }
-  if (path === "/ag-ui" || path === "/chat" || path === "/console" || path === "/sov-os") {
-    return <Redirect to="/os" />;
   }
   return (
     <ErrorBoundary>

@@ -43,20 +43,21 @@ export const PLAY_CARDS: PlayCard[] = [
   {
     id: "coliseum",
     title: "The Coliseum",
-    blurb: "Frontier systems measured against frozen statutory text by deterministic rules.",
+    blurb:
+      "Recorded frontier-system runs over frozen statutory text with deterministic grading.",
     image: "/images/coliseum_hero_arena.jpg",
     alt: "Clay figures and green verification seals gathered in a marble arena",
     status: "route",
-    route: "/coliseum",
-    reality: "Opens the real page in the centre pane. It is a story surface you read — not a match you play.",
+    route: "/dashboard?tab=space",
+    reality:
+      "Opens the recorded arena replay in this workspace. It compares legacy runs for inspection; it is not a live prompt battle or a currently admitted ranking.",
   },
   {
     id: "gspc-quests",
-    title: "GSPC Quests — play the board the models are measured on",
+    title: "GSPC Quests — play frozen challenge banks",
     blurb:
-      "Twelve behavioural axes, each a quest over its frozen GSPC bank. Your answers are read by the same " +
-      "deterministic rule and scored by the same macro-F1 aggregation used to measure every model, and your " +
-      "score sits beside the measured model leader read live from /api/gspc.",
+      "Twelve behavioural axes, each a quest over a frozen GSPC challenge bank. Your answers are read by a " +
+      "deterministic rule and scored with macro-F1; published legacy figures are labelled as historical context.",
     // Reuses the duel art deliberately: this is the graded-items half of that idea,
     // playable today — the live networked match half stays honestly in-build below.
     image: "/images/coliseum_logic_duel.jpg",
@@ -66,9 +67,10 @@ export const PLAY_CARDS: PlayCard[] = [
     chip: "playable now",
     reality:
       "Opens the real quest page in the centre pane. You actually play: pick an axis, answer its items, and the " +
-      "page grades you with the model's own grader beside the model's live figure. It also carries a Humans-vs-the-Board " +
-      "view, a daily quest with a local streak, and an on-device co-op round. Your score stays in this browser — " +
-      "nothing is recorded, signed, or sent anywhere; the model's card is signed, yours is local play.",
+      "page grades you in-browser and keeps historical board references separate from current admitted evidence. It also " +
+      "carries a board-history view, a daily quest with a local streak, and an on-device co-op round. Your score stays local " +
+      "unless you explicitly create and submit a candidate receipt. Candidate evidence is not training data or a GSPC measurement; " +
+      "independent reproduction and admission are still required.",
   },
   {
     id: "logic-duel",
@@ -86,7 +88,8 @@ export const PLAY_CARDS: PlayCard[] = [
   {
     id: "swarm-clash",
     title: "Swarm Clash",
-    blurb: "Many agents against one governed boundary, scored on what the boundary held.",
+    blurb:
+      "Many agents against one governed boundary, scored on what the boundary held.",
     image: "/images/coliseum_swarm_clash.jpg",
     alt: "A swarm of green shards clashing with clay scientists raising shields",
     status: "in-build",
@@ -95,28 +98,32 @@ export const PLAY_CARDS: PlayCard[] = [
   {
     id: "humans-vs-humanoids",
     title: "Humans vs Humanoids",
-    blurb: "Human oversight held against embodied agents, with the stop recorded.",
+    blurb:
+      "Human oversight held against embodied agents, with the stop recorded.",
     image: "/images/coliseum_humans_vs_humanoids.jpg",
     alt: "Humans directing AI figures with beams of light, keeping oversight",
     status: "in-build",
-    reality: "No playable route. A dramatised proof-of-concept page exists elsewhere on the site; it is a scripted demonstration, not a match, so it is not linked from here.",
+    reality:
+      "No playable route. A dramatised proof-of-concept page exists elsewhere on the site; it is a scripted demonstration, not a match, so it is not linked from here.",
   },
   {
     id: "literacy",
     title: "Literacy Training Arena",
-    blurb: "Learning how these systems behave, and what a measurement does and does not say.",
+    blurb:
+      "Learning how these systems behave, and what a measurement does and does not say.",
     image: "/images/literacy_training_arena.jpg",
     alt: "People learning how AI behaves inside a training arena",
     status: "route",
     route: "/academy",
-    reality: "Opens Council Academy in the centre pane. Course completion attests training, not conformity.",
+    reality:
+      "Opens Council Academy in the centre pane. Local progress records completion only; it is not a certificate or conformity result.",
   },
   {
     id: "compliance-training",
     title: "Compliance Training World",
     blurb:
       "Industry quests — Art 50(2), bank, insurance, equity, bond, cross-border — graded in-browser. " +
-      "Training attests completion, never certification.",
+      "They are practice exercises, not legal advice or certification.",
     image: "/images/literacy_training_arena.jpg",
     alt: "Compliance training quests across regulated industries",
     status: "route",
@@ -124,7 +131,7 @@ export const PLAY_CARDS: PlayCard[] = [
     chip: "playable now",
     reality:
       "Opens the live quest catalog in the centre pane. You pick a quest, answer cases, and the page " +
-      "grades you with a deterministic predicate. A pass is a training attestation — not a conformity mark.",
+      "grades you with a deterministic predicate. A pass is a local practice result only.",
   },
 ];
 
