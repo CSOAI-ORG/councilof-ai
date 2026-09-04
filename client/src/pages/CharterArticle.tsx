@@ -286,10 +286,12 @@ Architecture (DESIGN — see the measured position below):
 - 33 agents, intended to be trained on diverse datasets to reduce correlated failures
 - Agents are designed to run a practical designed multi-agent review algorithm
 
-CURRENT MEASURED POSITION (2026-09-04): the latest three-leg point experiment measured
-rho=1 and n_eff=1. Independence and fault tolerance are not demonstrated. The earlier
-DR-0007 result measured n_eff=1.21 of 3 and remains historical evidence of the same problem.
-This Article describes an intended architecture, not a live property.
+CURRENT PUBLISHED POINT RESULT (2026-09-04): /interop/council-independence.json records
+rho=1 and n_eff=1 across three nominal legs. It does not establish that any leg is correct,
+independent review, or fault tolerance. DR-0007 labels an earlier public retraction, but its
+underlying historical run is not present in the current evidence artifact and is not treated
+as independently reproducible here. This Article describes an intended architecture, not a
+live property.
 - Proposed seats would retain review records for replay and audit
 - Post-quantum transport and signing are planned/scaffold only; no PQC runtime is built
 - Geographic and operator diversity are design targets, not deployed facts
@@ -3038,7 +3040,11 @@ export default function CharterArticle() {
           <strong>Charter status:</strong> this is a governance proposal. References to Council votes,
           approvals, cryptography, or infrastructure describe intended policy unless linked evidence
           demonstrates otherwise. The 33-seat roster and 23/33 threshold are design targets; the
-          council is not live, and independence or fault tolerance have not been demonstrated.
+          council is not live, and independence or fault tolerance have not been demonstrated. The
+          latest published point result is the machine-readable{" "}
+          <a className="font-semibold underline" href="/interop/council-independence.json">
+            council-independence artifact
+          </a>.
         </div>
         {/* Article Content */}
         <motion.div

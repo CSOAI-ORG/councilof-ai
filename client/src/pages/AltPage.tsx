@@ -7,18 +7,19 @@ import SovereignSpot from "../components/SovereignSpot";
 
 type Row = { dim: string; csoai: string; them: string };
 type Comp = { key: string; name: string; their: string; rows: Row[]; faqs: { q: string; a: string }[] };
+const COUNCIL_DESIGN = "Designed 33-seat Council, target 23/33; not live and no demonstrated independence or fault tolerance. Signed measurement cards are a separate capability.";
 const COMPS: Record<string, Comp> = {
   vanta: {
     key: "vanta", name: "Vanta", their: "Security-compliance automation (SOC 2 / ISO 27001), with AI features added on top",
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "Security + SOC 2 compliance" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Covered as one framework among many" },
-      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Control monitoring + automation" },
+      { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Control monitoring + automation" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Broad security/privacy framework library" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to Vanta?", a: "For AI governance specifically, yes. Vanta excels at security-compliance automation (SOC 2, ISO 27001); CSOAI is purpose-built for AI governance - EU AI Act readiness, multi-framework crosswalks, and multi-agent decision governance." },
+      { q: "Is CSOAI an alternative to Vanta?", a: "For AI-governance evidence workflows, CSOAI offers measurements, crosswalks, and verifiable cards. Vanta focuses on broader security-compliance automation. The designed Council is not a live consensus service." },
       { q: "Can CSOAI and Vanta be used together?", a: "Yes. Many teams keep a security-compliance tool for SOC 2 and add CSOAI for AI-specific obligations like the EU AI Act, GPAI documentation, and model-decision governance." },
     ],
   },
@@ -27,12 +28,12 @@ const COMPS: Record<string, Comp> = {
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "Privacy + GRC + data governance" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Built around it: checklist, GPAI, penalties, sector pages", them: "Part of a broad GRC suite" },
-      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Policy + assessment workflows" },
+      { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Policy + assessment workflows" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "Extensive privacy + GRC framework coverage" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to OneTrust?", a: "For AI governance, yes. OneTrust is a broad privacy/GRC platform; CSOAI is focused on AI-specific governance - EU AI Act readiness, multi-framework crosswalks, and consensus-based decision governance." },
+      { q: "Is CSOAI an alternative to OneTrust?", a: "For AI-governance evidence workflows, CSOAI focuses on measurements, crosswalks, and verifiable cards. OneTrust is a broader privacy and GRC platform. The designed Council is not a live consensus service." },
       { q: "Does CSOAI replace a privacy program?", a: "No. CSOAI complements privacy/GRC tooling by adding AI-specific obligations and model-decision governance on top of your existing data-protection program." },
     ],
   },
@@ -41,13 +42,13 @@ const COMPS: Record<string, Comp> = {
     rows: [
       { dim: "Primary origin", csoai: "AI-governance-native", them: "AI-governance-native" },
       { dim: "EU AI Act (2 Aug 2026)", csoai: "Checklist, GPAI, penalties, sector pages, live countdown", them: "AI-Act policy + assessment coverage" },
-      { dim: "Decision governance", csoai: "Council of AI - multi-agent consensus, Ed25519-signed verdicts", them: "Policy packs + governance reporting" },
+      { dim: "Decision governance", csoai: COUNCIL_DESIGN, them: "Policy packs + governance reporting" },
       { dim: "Multi-framework evidence", csoai: "EU AI Act + NIST + ISO 42001 + FedRAMP, one crosswalked base", them: "AI-governance frameworks + policy" },
       { dim: "Openness", csoai: "Open-patent at openpatent.ai - forkable", them: "Proprietary SaaS" },
     ],
     faqs: [
-      { q: "Is CSOAI an alternative to Credo AI?", a: "Yes - both are AI-governance-native. CSOAI differentiates with a designed multi-agent Council (measured status on our public Refutation Ledger), Ed25519-signed verdicts, and an open-patent model." },
-      { q: "What makes CSOAI different from other AI-governance tools?", a: "The Council of AI: instead of a single model deciding, a configurable multi-agent council reaches consensus and signs every verdict - and the topology is published open-patent at openpatent.ai." },
+      { q: "Is CSOAI an alternative to Credo AI?", a: "Both address AI governance. CSOAI focuses on deterministic measurements, public evidence states, and Ed25519-signed measurement cards. Its 33-seat Council remains a design, not a live consensus capability." },
+      { q: "What makes CSOAI different from other AI-governance tools?", a: "CSOAI publishes deterministic measurement evidence and verifiable cards. Its Council design has 33 seats and a target threshold of 23/33, but no live independent or fault-tolerant council is claimed." },
     ],
   },
 };
@@ -69,7 +70,7 @@ export default function AltPage({ comp }: { comp: string }) {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the {c.name} alternative</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Looking for a {c.name} alternative for AI governance?</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{c.name} is known for {c.their}. CSOAI is purpose-built for AI governance - EU AI Act readiness, multi-framework crosswalks, and consensus-based decision governance. Here is the honest comparison.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">{c.name} is known for {c.their}. CSOAI focuses on deterministic AI-governance measurements, crosswalks, and verifiable evidence. Here is the honest comparison.</p>
         </div>
       </section>
       <section className="max-w-5xl mx-auto px-6 py-12">

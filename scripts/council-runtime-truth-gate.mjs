@@ -13,6 +13,11 @@ const UI_TRUTH_RULES = [
   ["fabricated-consensus", /\bdemocratic consensus from 33 AI agents\b/i],
   ["fabricated-resilience", /\bbias-resistant,\s*manipulation-proof\b|\bfault-aware council consensus\b/i],
   ["live-33-seat-council", /(?<!\bno\s)\blive\s+33[- ](?:agent|seat)\s+(?:BFT\s+)?council\b/i],
+  ["live-five-agent-council", /\b(?:convene|run|start)\s+(?:the\s+)?live\s+(?:5|five)[- ]agent\s+council\b/i],
+  ["roleplay-as-consensus", /\bconsensus reached\b|\bthe council agrees\b|\bfive (?:ai )?agents (?:will )?(?:debate|deliberate)\b|\bmulti-agent (?:consensus|(?:review )?vote)\b|\bconsensus-based decision governance\b/i],
+  ["signed-consensus-verdict", /\bed25519-signed verdicts\b|\bsigns every verdict\b|\bemails? (?:you )?a signed gap report\b/i],
+  ["continuous-council-monitoring", /\bthe council continuously monitors\b|\bcouncil independently reviews your compliance\b|\bcsoai monitors global ai regulations and publishes updates monthly\b/i],
+  ["unreproducible-dr0007-number", /\bDR-0007 (?:result|run) measured n_eff\s*=?\s*1\.21\b/i],
 ];
 
 function detectUiTruthViolations(source) {
@@ -43,6 +48,10 @@ if (process.argv.includes("--selftest")) {
     ["live-council.txt", "live-33-seat-council"],
     ["pqc-built.txt", "pqc-built"],
     ["fabricated-consensus.txt", "fabricated-consensus"],
+    ["live-five-agent.txt", "live-five-agent-council"],
+    ["signed-consensus-verdict.txt", "signed-consensus-verdict"],
+    ["continuous-council-monitoring.txt", "continuous-council-monitoring"],
+    ["unreproducible-dr0007.txt", "unreproducible-dr0007-number"],
   ]) {
     const violations = detectUiTruthViolations(
       readFileSync(join(fixtureDir, fixture), "utf8"),
@@ -67,6 +76,8 @@ const routedSurfaces = [
   ["client/src/pages/legal/ServiceLevelAgreement.tsx", "./pages/legal/ServiceLevelAgreement", "ServiceLevelAgreement", ["/sla", "/service-level-agreement", "/legal/sla"]],
   ["client/src/pages/FaqPage.tsx", "./pages/FaqPage", "FaqPage", ["/faq", "/frequently-asked-questions"]],
   ["client/src/pages/PDCASimulator.tsx", "./pages/PDCASimulator", "PDCASimulator", ["/pdca-simulator"]],
+  ["client/src/pages/ComplianceHowItWorks.tsx", "./pages/ComplianceHowItWorks", "ComplianceHowItWorks", ["/how-it-works/compliance"]],
+  ["client/src/pages/TryCouncil.tsx", "./pages/TryCouncil", "TryCouncil", ["/try"]],
   ["client/src/pages/AgentRegistry.tsx", "./pages/AgentRegistry", "AgentRegistry", ["/agent-registry"]],
   ["client/src/pages/Council.tsx", "./pages/Council", "Council", ["/council"]],
   ["client/src/pages/CouncilDetail.tsx", "./pages/CouncilDetail", "CouncilDetail", ["/council-detail"]],
@@ -101,6 +112,24 @@ assert.doesNotMatch(
   "legacy FAQ.tsx is not the routed FAQ; audit FaqPage.tsx instead",
 );
 
+const altPageSource = readFileSync("client/src/pages/AltPage.tsx", "utf8");
+assert.match(
+  appSource,
+  /const\s+AltPage\s*=\s*lazy\(\(\)\s*=>\s*import\(["']\.\/pages\/AltPage["']\)\)/,
+  "AltPage.tsx must remain imported by App.tsx",
+);
+for (const [route, comparison] of [
+  ["/vanta-alternative", "vanta"],
+  ["/onetrust-alternative", "onetrust"],
+  ["/credo-ai-alternative", "credo"],
+]) {
+  assert.match(
+    appSource,
+    new RegExp(`<Route\\s+path=["']${escapeRegExp(route)}["'][^>]*>\\{\\(\\)\\s*=>\\s*<AltPage\\s+comp=["']${comparison}["']\\s*\\/>\\}\\s*<\\/Route>`),
+    `AltPage.tsx must remain reachable at ${route}`,
+  );
+}
+
 const newHomeSource = readFileSync("client/src/pages/NewHome-v2.tsx", "utf8");
 assert.match(newHomeSource, /import ConsensusHero from "\.\.\/components\/ConsensusHero"/);
 assert.match(newHomeSource, /<ConsensusHero\b/);
@@ -110,6 +139,8 @@ const activeUiSources = [
   "client/src/components/ConsensusHero.tsx",
   "client/src/components/GlobalSearch.tsx",
   "client/src/components/BuiltOnFooter.tsx",
+  "client/src/pages/AltPage.tsx",
+  "public/claims-register.json",
   "client/src/lib/verify.ts",
   "client/src/data/chain.ts",
   "client/src/data/deckWorlds/evidenceRail.ts",
@@ -139,6 +170,18 @@ const voteSource = readFileSync(
   "client/src/components/CouncilVote.tsx",
   "utf8",
 );
+const charterArticleSource = readFileSync(
+  "client/src/pages/CharterArticle.tsx",
+  "utf8",
+);
+const tryCouncilSource = readFileSync(
+  "client/src/pages/TryCouncil.tsx",
+  "utf8",
+);
+const complianceHowItWorksSource = readFileSync(
+  "client/src/pages/ComplianceHowItWorks.tsx",
+  "utf8",
+);
 const retiredGenerator = readFileSync(
   "scripts/badger/csoai-engine-bft.py",
   "utf8",
@@ -164,6 +207,14 @@ assert.equal(
   claims.claims.find((claim) => claim.id === "CR-007")?.status,
   "retired",
 );
+const pqcClaim = claims.claims.find((claim) => claim.id === "CR-006");
+assert.equal(pqcClaim?.status, "planned");
+assert.match(pqcClaim?.notes ?? "", /Planned and scaffolded only/);
+assert.match(
+  pqcClaim?.notes ?? "",
+  /No ML-DSA signer or runtime is built or published/,
+);
+assert.doesNotMatch(pqcClaim?.notes ?? "", /Built, not shipped/);
 for (const source of overviewSources) {
   assert.match(source, /earlier/);
   assert.match(source, /n_eff 1\.21 of 3/);
@@ -174,6 +225,32 @@ for (const source of overviewSources) {
 }
 assert.match(voteSource, /Math\.floor\(\(2 \* N\) \/ 3\) \+ 1/);
 assert.match(voteSource, /Design simulation only/);
+assert.match(charterArticleSource, /\/interop\/council-independence\.json/);
+assert.match(charterArticleSource, /rho=1 and n_eff=1/);
+assert.match(charterArticleSource, /not treated\s+as independently reproducible here/);
+assert.doesNotMatch(
+  charterArticleSource,
+  /DR-0007 (?:result|run) measured n_eff\s*=?\s*1\.21/i,
+);
+assert.match(tryCouncilSource, /Local classification complete — no Council vote/);
+assert.match(tryCouncilSource, /33 seats and a target threshold of 23\/33/);
+assert.match(tryCouncilSource, /it is not live/);
+assert.match(tryCouncilSource, /independence and fault tolerance have not been demonstrated/);
+assert.doesNotMatch(tryCouncilSource, /Convene the live 5-agent council/);
+assert.doesNotMatch(tryCouncilSource, /Consensus reached|The council agrees/);
+assert.match(complianceHowItWorksSource, /No continuous Council monitoring/);
+assert.match(complianceHowItWorksSource, /target threshold of 23\/33/);
+assert.match(complianceHowItWorksSource, /it is not live/);
+assert.doesNotMatch(
+  complianceHowItWorksSource,
+  /The Council continuously monitors|Council independently reviews your compliance/,
+);
+assert.match(altPageSource, /Designed 33-seat Council, target 23\/33/);
+assert.match(altPageSource, /not live and no demonstrated independence or fault tolerance/);
+assert.doesNotMatch(
+  altPageSource,
+  /multi-agent consensus|Ed25519-signed verdicts|signs every verdict|consensus-based decision governance/i,
+);
 assert.match(retiredGenerator, /QUARANTINED_GENERATOR = True/);
 assert.match(failClosedCouncilGenerator, /"bft_status": "NOT_DEMONSTRATED"/);
 assert.match(failClosedCouncilGenerator, /NO_INDEPENDENT_VERIFIABLE_VOTES/);
