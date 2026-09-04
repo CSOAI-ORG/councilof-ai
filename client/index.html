@@ -14,6 +14,9 @@
     <meta name="author" content="CSOAI" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://councilof.ai" />
+    <!-- The feed is the estate's only return path. Without this tag it was reachable only at
+         /api/feed.xml, which no reader or crawler guesses. -->
+    <link rel="alternate" type="application/rss+xml" title="Council of AI — state changes" href="https://councilof.ai/feed.xml" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
