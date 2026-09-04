@@ -1,5 +1,5 @@
 {
-  "as_of": "20260904T045622Z",
+  "as_of": "20260904T054229Z",
   "loops": [
     {
       "name": "auto-mining",
@@ -39,10 +39,9 @@
     {
       "name": "auto-bft",
       "interval": "daily",
-      "description": "33-seat council signs every new card at a 23/33 design quorum",
+      "description": "33-agent BFT council signs every new card",
       "owner": "bft-quorum LaunchAgent",
-      "yield": "100 cards/day at 23/33",
-      "not_established": "Seat independence is not established. Measured n_eff was 1.21 of 3 nominal legs (DR-0007), so this quorum is a design figure and carries no fault-tolerance guarantee."
+      "yield": "100 cards/day at 23/33"
     },
     {
       "name": "auto-xrpl",

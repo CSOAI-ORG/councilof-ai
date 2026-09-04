@@ -82,7 +82,7 @@ GAMES = [
         "slug": "hive-model",
         "name": "Hive Model",
         "kind": "multi-agent-hive",
-        "engine": "PixiJS + SOV3 substrate",
+        "engine": "PixiJS + council-os substrate",
         "description": "A hive of agents collaborates to solve a problem. Emits signed cooperation cards.",
         "status": "LIVE",
         "axis_feeds": ["governance", "safety", "capability"],
@@ -172,7 +172,7 @@ GAMES = [
         "slug": "swarm",
         "name": "Swarm",
         "kind": "agent-swarm",
-        "engine": "PixiJS + SOV3 substrate",
+        "engine": "PixiJS + council-os substrate",
         "description": "An agent swarm solves a problem collectively. Emits signed cooperation cards.",
         "status": "STAGED",
         "axis_feeds": ["governance", "safety", "capability"],
@@ -234,7 +234,7 @@ def build_game_discovery(game: dict) -> dict:
             f"{game['name']} emits signed cards every turn",
             "AG-UI + A2UI chat enabled",
             "Multiplayer rooms via WebSocket",
-            "Anchored to OTS + Rekor + EAS",
+            "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)",
         ],
     }
 
@@ -316,7 +316,7 @@ def build_game_interop(game: dict) -> dict:
             "Chat with AI via AG-UI / A2UI",
             "Multiplayer rooms via WebSocket",
             "Every turn emits a signed card",
-            "Anchored to OTS + Rekor + EAS",
+            "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)",
         ],
         "links": {
             "discovery": f"https://councilof.ai/.well-known/{game['slug']}.json",

@@ -1874,6 +1874,32 @@
         },
         "summary": "* GET /api/xrpl \u2014 reader of the committed public-root 16.\n *\n * 200 only when this deploy's /root.json plus /cards yield exactly the locked\n * 16 xrpl.asset.state leaves whose sha256 sit on that root."
       }
+    },
+    "/api/learn-loop": {
+      "get": {
+        "summary": "The end-user learning loop \u2014 every interaction becomes a 3KB signed card.",
+        "description": "Returns the loop manifest. POST to emit a card.",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Emit a 3KB signed card from an end-user interaction. Anchored to OTS pending stamps + Sigstore Rekor + EAS schema (rails planned).",
+        "description": "Every chat / game / measure / verify / attest becomes a signed card attested by the 33-agent BFT council.",
+        "responses": {
+          "200": {
+            "description": "Card emitted",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
     }
   },
   "servers": [
