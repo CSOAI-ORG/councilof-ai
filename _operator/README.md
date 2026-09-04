@@ -15,6 +15,7 @@ alongside a social-posting schedule. Any programme officer at Sloan, Ford, NLnet
 searched for us would have found their own grant process described as a 55-minute paste exercise
 worth $280,000. That is not a pricing problem; it is a page that could end four applications.
 
-The grant application bodies themselves stay public. Publishing what we ask for, and on what
-basis, before we submit it, is the right posture — a reader can hold the application against what
-we later claim. The runbook for pasting them is not.
+The grant application bodies were subsequently withdrawn from `public/` as well. Several drafts
+mixed targets with claims about live signing, Bitcoin anchoring, x402 settlement, route coverage,
+and unattended relaying that the production evidence did not support. Preserved snapshots live in
+`_operator/grants/applications/`; they remain unapproved and must be re-verified before use.

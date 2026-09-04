@@ -141,11 +141,11 @@ def main() -> None:
             "lever": "permanent record",
         },
         {
-            "name": "4 grant applications pre-staged",
-            "url": "https://councilof.ai/grants/",
-            "value": "NLnet €50K + NGI Zero €50K + Sloan $75K + Ford $100K = $280K",
-            "status": "STAGED (paste + submit)",
-            "lever": "non-dilutive funding",
+            "name": "4 internal grant working drafts",
+            "url": "internal",
+            "value": "Draft bodies preserved outside the published surface",
+            "status": "UNVERIFIED — NOT SUBMITTED",
+            "lever": "review claims and obtain explicit owner approval before any submission",
         },
         {
             "name": "230 outreach templates",

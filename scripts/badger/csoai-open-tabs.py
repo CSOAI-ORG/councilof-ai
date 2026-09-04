@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """csoai-open-tabs.py — open every browser tab for the operator.
 
-Lane-doable: opens the browser with all the tabs the operator needs
-to click through. Each tab is a specific action with the URL + the
-fields to fill + the button to click.
+Lane-doable: opens a browser checklist for explicit operator review.
+Grant drafts remain local, unverified, and non-submission-ready.
 
 Tabs to open:
   1. GitHub Actions — check the latest deploy
   2. GitHub Sponsors activation (CSOAI-ORG) — owner must enable
-  3. NLnet propose form (NGI Zero Discovery) — pre-filled in the URL
+  3. NLnet information page (no submission is authorized here)
   4. MetaMask settings — for EAS schema registration
   5. Base EAS scan — verify schema after registration
   6. ENS app.ens.domains — for csoai.eth registration
@@ -19,7 +18,7 @@ Tabs to open:
  11. npm package page for csoai-gspc-mcp — npm publish
  12. HuggingFace csoai org — already shows activity from Claude
  13. csoai.org apex — the Layer 0 ceremony
- 14. The grants HTML pre-fill page
+ 14. The local unverified grant draft
  15. The operator runbook MD
 
 Each tab is opened by the operator-driven browser session via the
@@ -34,6 +33,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
 OUT = HERE / "_queue" / "browser-tabs"
 DID = "did:web:csoai.org#card-attestation-1"
 
@@ -69,8 +69,8 @@ OPERATOR_TABS = [
     {
         "url": "https://nlnet.nl/propose/",
         "title": "NGI Zero Discovery grant",
-        "action": "Open the pre-filled HTML + paste into the form + submit (€50K)",
-        "time_min": 30,
+        "action": "Read current eligibility and application requirements; no submission is authorized",
+        "time_min": 10,
     },
     {
         "url": "https://nlnet.nl/PET/",
@@ -81,14 +81,14 @@ OPERATOR_TABS = [
     {
         "url": "https://sloan.org/programs/digital-technology",
         "title": "Sloan Digital Technology",
-        "action": "Submit the Sloan draft ($75K)",
-        "time_min": 30,
+        "action": "Read current eligibility and application requirements; do not submit the draft",
+        "time_min": 10,
     },
     {
         "url": "https://www.fordfoundation.org/work/our-grants/building-public-interest-tech/",
         "title": "Ford Public Interest Tech",
-        "action": "Submit the Ford draft ($100K)",
-        "time_min": 30,
+        "action": "Read current eligibility and application requirements; do not submit the draft",
+        "time_min": 10,
     },
 
     # Crypto / Web3
@@ -211,12 +211,12 @@ OPERATOR_TABS = [
         "time_min": 1,
     },
 
-    # Grants HTML (pre-fill)
+    # Grant working draft (local review only)
     {
-        "url": "https://councilof.ai/grants/ngi-zero.html",
-        "title": "NGI Zero pre-fill HTML",
-        "action": "Open the pre-filled form, copy each field into the live NLnet form, submit",
-        "time_min": 5,
+        "url": (ROOT / "_operator" / "grants" / "applications" / "ngi-zero.md").as_uri(),
+        "title": "NGI Zero unverified working draft",
+        "action": "Review claims against current evidence; do not submit from this checklist",
+        "time_min": 20,
     },
 
     # Operator runbook

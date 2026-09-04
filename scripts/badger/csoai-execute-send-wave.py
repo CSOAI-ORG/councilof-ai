@@ -2,9 +2,9 @@
 """csoai-execute-send-wave.py — execute the full send + post wave.
 
 Lane-doable parts (built + staged + committed + pushed):
-  - 4 grant applications as 4 separate submission-ready files
+  - 4 grant applications as 4 separate unverified working drafts
   - 331 outreach posts as 4 ready-to-paste bundles (X / LinkedIn / Mastodon / Email)
-  - Operator-gated bundle (the 4 clicks you need to make)
+  - Operator-only review bundle
 
 Operator-gated parts (cannot send without your identity):
   - 4 grant submissions via nlnet.nl/propose form (needs your name + DOB + address)
@@ -15,7 +15,7 @@ Operator-gated parts (cannot send without your identity):
 We will:
   1. STAGE every file in the queue
   2. RENDER every submission as a final JSON + plaintext form
-  3. PRE-FILL the form text so you only need to paste + click
+  3. Preserve grant drafts outside the published site for factual review
   4. Keep outreach templates in the operator-only draft directory
   5. COMMIT + PUSH to master
 
@@ -31,13 +31,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-PUBLIC_GRANTS = ROOT / "public" / "grants"
+OPERATOR_GRANTS = ROOT / "_operator" / "grants" / "applications"
 OPERATOR_OUTREACH = ROOT / "docs" / "operator" / "outreach"
 QUEUE = ROOT / "scripts" / "badger" / "_queue"
 QUEUE_FUNDING = QUEUE / "funding"
 QUEUE_OUTREACH = QUEUE / "outreach"
 
-PUBLIC_GRANTS.mkdir(parents=True, exist_ok=True)
+OPERATOR_GRANTS.mkdir(parents=True, exist_ok=True)
 OPERATOR_OUTREACH.mkdir(parents=True, exist_ok=True)
 
 
@@ -646,8 +646,13 @@ def main() -> None:
         path = QUEUE_FUNDING / f"submit-{g['id']}-{now()}.json"
         path.write_text(json.dumps(g, indent=2))
         # Also write the body as plaintext for the form
-        body_path = PUBLIC_GRANTS / f"{g['id']}.md"
-        body_path.write_text(g["application_body"])
+        body_path = OPERATOR_GRANTS / f"{g['id']}.md"
+        body_path.write_text(
+            "# UNVERIFIED GRANT DRAFT — NOT PUBLIC, NOT APPROVED, NOT SUBMITTED\n\n"
+            "Re-check every quantitative and operational claim against current public "
+            "evidence before owner review.\n\n"
+            + g["application_body"]
+        )
         print(f"  ✓ {g['name']:<25} {g['amount_usd'] or g['amount_eur']} {('USD' if g['amount_usd'] else 'EUR'):<3} deadline={g['deadline_human']:<35} file={path.name}")
 
     # Write outreach bundles
@@ -695,64 +700,36 @@ def main() -> None:
         f"{len(EMAILS)} operator-only files in docs/operator/outreach/"
     )
 
-    # Build the operator-gated bundle — what YOU need to do in 5 minutes
+    # Build an internal review index. This script never publishes or submits a grant.
     print()
-    print("=== C. OPERATOR-GATED BUNDLE (the 5-minute click-through) ===")
-    operator_md = PUBLIC_GRANTS / "OPERATOR-SEND-BUNDLE.md"
-    operator_md.write_text(f"""# Operator Send Bundle — 5-minute click-through
+    print("=== C. OPERATOR-ONLY GRANT REVIEW INDEX ===")
+    operator_md = ROOT / "_operator" / "grants" / "OPERATOR-SEND-BUNDLE.md"
+    operator_md.write_text(f"""# Grant review index — not approved, not submitted
 
 Generated: {now()}
 
-This bundle has EVERYTHING pre-staged. You only need to click + paste.
+These are unverified working drafts. This script does not publish or submit them. Before any
+owner review, re-check every number and every statement about signing, anchoring, settlement,
+route coverage, tests, partnerships, or unattended operation against current public evidence.
 
-## 1. NLnet NGI0 Entrust (€50K) — DEADLINE 2026-11-03
+## Draft inventory
 
-1. Open https://nlnet.nl/NGI0/
-2. Click "Propose a project" → fill in the form
-3. Project name: **Sovereign Signed-Card Anchor**
-4. Paste the body from: `public/grants/nlnet-ngi0-entrust.md`
-5. Submit
+- `_operator/grants/applications/nlnet-ngi0-entrust.md`
+- `_operator/grants/applications/ngi-zero.md`
+- `_operator/grants/applications/sloan-foundation.md`
+- `_operator/grants/applications/ford-foundation.md`
 
-## 2. NGI Zero (€50K)
+## Required gate before use
 
-1. Open https://nlnet.nl/propose/
-2. Click "Propose a project" → fill in the form
-3. Project name: **Sovereign AI Substrate**
-4. Paste the body from: `public/grants/ngi-zero.md`
-5. Submit
+1. Produce a dated claim-to-evidence table for the selected draft.
+2. Remove unsupported claims and distinguish current state from proposed deliverables.
+3. Obtain owner review and explicit submission authority.
+4. Record the actual submission state; a draft is not an application or award.
 
-## 3. Sloan Foundation ($75K)
+## Separate outreach drafts
 
-1. Open https://sloan.org/grants/apply
-2. Click "Apply" → fill in the form
-3. Project name: **GSPC Measurement Methodology Peer-Review**
-4. Paste the body from: `public/grants/sloan-foundation.md`
-5. Submit
-
-## 4. Ford Foundation ($100K)
-
-1. Open https://fordfoundation.org/grants/
-2. Click "Apply" → fill in the form
-3. Project name: **Public-Interest AI Measurement**
-4. Paste the body from: `public/grants/ford-foundation.md`
-5. Submit
-
-## 5. Outreach posts (5-minute click-through)
-
-1. **X/Twitter**: 105 posts ready at `scripts/badger/_queue/outreach/x-twitter-bundle-{now}.json`
-   - Pick the top 5-10 + post from your @csoai handle
-2. **LinkedIn**: 105 posts ready at `scripts/badger/_queue/outreach/linkedin-bundle-{now}.json`
-   - Pick the top 3-5 + post from your LinkedIn
-3. **Mastodon**: 15 toots ready at `scripts/badger/_queue/outreach/mastodon-bundle-{now}.json`
-   - Post all 15 from your @csoai@social.coop or similar
-4. **Email**: 8 unverified drafts in `docs/operator/outreach/`
-   - Revalidate every claim, obtain owner review, then send through an authorized mailbox workflow
-
-## Total potential: $280K in grants + 8 outreach segments
-
-Every template is pre-staged. Every paste is ready. Every click is yours.
-
-🍽️ The agent does the data work; the operator does the OAuth-bound send.
+Outreach drafts, when generated, remain in operator-only locations and require their own factual
+review and authorization. Grant review does not authorize outreach.
 """)
     print(f"  ✓ Operator bundle: {operator_md}")
 
