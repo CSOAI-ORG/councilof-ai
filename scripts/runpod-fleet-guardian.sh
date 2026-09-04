@@ -13,10 +13,24 @@ SSH_KEY="$HOME/.runpod/ssh/runpodctl-ssh-key"
 
 # Pod registry: id|name|host|port (verified 2026-08-21 via runpodctl ssh info)
 PODS=(
-  "qdigrzjp5na1ek|sov-brain-a100-fresh-20260811|AUTO_RESOLVE|AUTO_RESOLVE"
   "fpowppss5ngtkw|sov-repull|194.26.196.156|23243"
-  "l7g747oivyq6ab|sovos-light-master-mine|AUTO_RESOLVE|AUTO_RESOLVE"
 )
+
+# REMOVED 2026-09-04 — this guardian has no idle check and no cost awareness: it resumes any
+# listed pod that fails an SSH probe, whatever the pod is doing and whatever the balance is.
+#
+#   "l7g747oivyq6ab|sovos-light-master-mine|AUTO_RESOLVE|AUTO_RESOLVE"
+# The A100 PCIe, $1.59/hr. Its start command is `sleep infinity`; measured at 0% GPU, 0% VRAM,
+# 0% CPU, 0% RAM with nothing written to /workspace in 24h. It was stopped at ~03:05Z and this
+# guardian resumed it at 03:45:05Z — so it could not be switched off by hand, and it burned
+# ~$38/day doing nothing. Re-add it only alongside a workload that uses the GPU.
+#
+#   "qdigrzjp5na1ek|sov-brain-a100-fresh-20260811|AUTO_RESOLVE|AUTO_RESOLVE"
+# No longer in the account's pod list; every tick spent an SSH probe on a pod that cannot
+# resolve.
+#
+# sov-repull stays: it is running measure_chain.py, arena_loop_keeper.py, grok_referee_keeper.py
+# and f2_gen_v2.py, and is writing to /workspace/overnight/out — real work, and only $0.22/hr.
 
 echo "$(TS) runpod-fleet-guardian tick" >> "$LOG"
 
