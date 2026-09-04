@@ -723,7 +723,7 @@ export async function buildFabricManifest(
         summary: isStale
           ? `Heartbeat is ${freshness}s old, beyond the 1800s freshness window; no current compute availability is claimed.`
           : isLive
-            ? `Live heartbeat served${text(oracle.json.host) ? ` for ${text(oracle.json.host)}` : ""}; no inference task was exercised.`
+            ? "Live fleet heartbeat served; no inference task was exercised."
             : "A status document answered without source=live, so current compute availability is not claimed.",
         freshness_seconds: freshness,
         last_error:

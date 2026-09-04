@@ -469,9 +469,13 @@ function OwnErrors() {
         <strong className="font-black text-gray-900">The hardest one:</strong> we withdrew our own
         consensus claim. Our council architecture is a <strong>designed</strong> 33-seat structure with
         a designed 23-of-33 threshold — and when we actually measured how independent those seats
-        were, the effective number came out at n_eff 1.21 of 3. The guarantee we had published did not
-        hold, so we retracted it (DR-0007) rather than quietly rewording it. The design figure stays
-        labelled as a design figure everywhere it appears.
+        were, the earlier DR-0007 experiment measured n_eff 1.21 of 3 and caused us to retract the
+        guarantee. The{" "}
+        <Link href="/interop/council-independence.json" className="underline underline-offset-2">
+          latest point experiment
+        </Link>{" "}
+        measured rho=1 and n_eff=1 across three nominal legs. Neither experiment demonstrates
+        independent review or fault tolerance; the 33-seat council remains a design, not a live property.
       </p>
       {latest.length > 0 && (
         <ul className="mt-6 space-y-2">

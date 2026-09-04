@@ -167,7 +167,7 @@ function fixtureFetcher(
       }
       if (url.pathname === "/api/oracle-fleet") {
         return json({
-          host: "oracle-micro",
+          host: "sov33-owem-micro",
           updated: "2026-09-04T05:55:00Z",
           source: "live",
         });
@@ -327,7 +327,11 @@ describe("GET /api/fabric", () => {
     expect(byId(manifest, "oracle-fleet")).toMatchObject({
       state: "RUNTIME_OBSERVED",
       freshness_seconds: 300,
+      summary: "Live fleet heartbeat served; no inference task was exercised.",
     });
+    expect(byId(manifest, "oracle-fleet").summary).not.toContain(
+      "sov33-owem-micro",
+    );
     expect(byId(manifest, "regulation-feed").state).toBe("RUNTIME_OBSERVED");
     expect(byId(manifest, "xrpl-reader")).toMatchObject({
       state: "RUNTIME_OBSERVED",

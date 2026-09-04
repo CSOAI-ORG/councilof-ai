@@ -108,10 +108,15 @@ export default function Layer0() {
               Ed25519 signing, the care-floor gate, and offline verification
             </strong>{" "}
             — plus a <strong className="text-emerald-50">designed</strong> 33-seat council, which is
-            a design figure only: when we measured how independent those seats actually were, the
-            effective number came out at n_eff 1.21 of 3, so we retracted the guarantee (DR-0007)
-            rather than reword it. Every claim made on this floor carries either a measurement or an
-            honest status. Nothing here asks to be believed; everything here asks to be checked.
+            a design figure only. The earlier DR-0007 experiment measured n_eff 1.21 of 3 and caused
+            us to retract the guarantee. The{" "}
+            <Link href="/interop/council-independence.json" className="underline underline-offset-2">
+              latest point experiment
+            </Link>{" "}
+            measured rho=1 and n_eff=1 across three nominal legs. Neither experiment demonstrates
+            independent review or fault tolerance; the 33-seat council remains a design, not a live
+            property. Every claim made on this floor carries either a measurement or an honest status.
+            Nothing here asks to be believed; everything here asks to be checked.
           </p>
           <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-emerald-100/60">
             {LAYER0_DISAMBIGUATION}
