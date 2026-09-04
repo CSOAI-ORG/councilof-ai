@@ -2,11 +2,11 @@
 //
 // This endpoint does not generate findings. It joins three already-published sources:
 //   * /api/gspc                         — board measurement context;
-//   * /signed/findings_index.json       — admitted evidence and candidate crosswalk findings;
+//   * /signed/findings_index.json       — locally verified published cards and crosswalk pointers;
 //   * /api/regulation                   — regulation/deadline context.
 //
-// The layers remain distinct. A board measurement is not silently called admitted evidence,
-// an admitted measurement is not silently called a regulatory determination, and regulation
+// The layers remain distinct. A board measurement is not silently called published evidence,
+// a published measurement is not silently called independent admission or a regulatory determination, and regulation
 // context is not a finding. No write, training, repair, or board-promotion path exists here.
 
 type JsonObject = Record<string, unknown>;
@@ -152,7 +152,7 @@ type CrosswalkAxis = JsonObject & {
   pointers: RegulationPointer[];
 };
 
-type AdmittedFinding = JsonObject & {
+type VerifiedPublishedFinding = JsonObject & {
   model: string;
   axis: string;
   measurement: JsonObject & {
@@ -162,8 +162,8 @@ type AdmittedFinding = JsonObject & {
     card_url: string;
     signed: true;
     signature_verified: true;
-    admitted: true;
-    evidence_state: "ADMITTED_VERIFIED";
+    admitted: false;
+    evidence_state: "PUBLISHED_VERIFIED";
   };
   crosswalk: JsonObject & { pointers: RegulationPointer[] };
 };
@@ -177,7 +177,9 @@ function cardUrlMatches(card: string, value: unknown): boolean {
   return mill?.[1] === card.slice(0, 12);
 }
 
-function admittedFinding(value: unknown): value is AdmittedFinding {
+function verifiedPublishedFinding(
+  value: unknown,
+): value is VerifiedPublishedFinding {
   if (
     !isObject(value) ||
     !nonEmpty(value.model) ||
@@ -202,15 +204,15 @@ function admittedFinding(value: unknown): value is AdmittedFinding {
     cardUrlMatches(card, measurement.card_url) &&
     measurement.signed === true &&
     measurement.signature_verified === true &&
-    measurement.admitted === true &&
-    measurement.evidence_state === "ADMITTED_VERIFIED" &&
+    measurement.admitted === false &&
+    measurement.evidence_state === "PUBLISHED_VERIFIED" &&
     value.crosswalk.pointers.every(validPointer)
   );
 }
 
 function findingsParts(
   index: JsonObject,
-): { axes: CrosswalkAxis[]; findings: AdmittedFinding[] } | null {
+): { axes: CrosswalkAxis[]; findings: VerifiedPublishedFinding[] } | null {
   if (
     index.schema !== FINDINGS_SCHEMA ||
     !Array.isArray(index.axes) ||
@@ -237,8 +239,11 @@ function findingsParts(
     ids.add(value.axis);
     axes.push(value as CrosswalkAxis);
   }
-  if (!index.findings.every(admittedFinding)) return null;
-  return { axes, findings: index.findings as AdmittedFinding[] };
+  if (!index.findings.every(verifiedPublishedFinding)) return null;
+  return {
+    axes,
+    findings: index.findings as VerifiedPublishedFinding[],
+  };
 }
 
 type Deadline = {
@@ -390,7 +395,7 @@ export async function onRequestGet({ request }: { request: Request }) {
       axis.axis,
       ...(sourceAxis ? [sourceAxis] : []),
     ]);
-    const admitted = findings.findings.filter((finding) =>
+    const published = findings.findings.filter((finding) =>
       evidenceAxisIds.has(finding.axis),
     );
     const crosswalk = sourceAxis
@@ -403,10 +408,10 @@ export async function onRequestGet({ request }: { request: Request }) {
           a.regulator.localeCompare(b.regulator) ||
           a.obligation.localeCompare(b.obligation),
       );
-    const admittedEvidence = admitted
+    const publishedEvidence = published
       .map((finding) => ({
-        classification: "ADMITTED_EVIDENCE" as const,
-        state: "ADMITTED_VERIFIED" as const,
+        classification: "VERIFIED_PUBLISHED_EVIDENCE" as const,
+        state: "PUBLISHED_VERIFIED" as const,
         source: "/signed/findings_index.json",
         subject: { kind: "model", id: finding.model, digest: null },
         source_axis: finding.axis,
@@ -418,16 +423,16 @@ export async function onRequestGet({ request }: { request: Request }) {
         card: finding.measurement.card,
         card_url: finding.measurement.card_url,
         signature_verified: true,
-        admitted: true,
+        independently_admitted: false,
       }))
       .sort((a, b) => a.card.localeCompare(b.card));
-    const candidateFindings = admitted
+    const candidateFindings = published
       .filter((finding) => finding.crosswalk.pointers.length > 0)
       .map((finding) => ({
         classification: "CANDIDATE_FINDING" as const,
         state: "CANDIDATE_FINDING" as const,
         source: "/signed/findings_index.json",
-        derived_from_admitted_card: finding.measurement.card,
+        derived_from_verified_card: finding.measurement.card,
         subject: { kind: "model", id: finding.model, digest: null },
         source_axis: finding.axis,
         regulation_pointers: finding.crosswalk.pointers
@@ -442,8 +447,8 @@ export async function onRequestGet({ request }: { request: Request }) {
         note: "Relevant-to pointers only; not a compliance, breach, safety, approval, or fine determination.",
       }))
       .sort((a, b) =>
-        a.derived_from_admitted_card.localeCompare(
-          b.derived_from_admitted_card,
+        a.derived_from_verified_card.localeCompare(
+          b.derived_from_verified_card,
         ),
       );
 
@@ -453,10 +458,11 @@ export async function onRequestGet({ request }: { request: Request }) {
       axis: axis.axis,
       board_measurement: boardContext(axis),
       evidence: {
-        admitted_state: admittedEvidence.length
-          ? "ADMITTED_VERIFIED"
-          : "NONE_ADMITTED",
-        admitted_measurements: admittedEvidence,
+        published_state: publishedEvidence.length
+          ? "PUBLISHED_VERIFIED"
+          : "NONE_PUBLISHED",
+        independently_admitted: false,
+        published_measurements: publishedEvidence,
         candidate_state: candidateFindings.length
           ? "CANDIDATE_FINDING"
           : "NO_CANDIDATE_FINDING",
@@ -517,8 +523,8 @@ export async function onRequestGet({ request }: { request: Request }) {
         a.instrument.localeCompare(b.instrument) ||
         a.what.localeCompare(b.what),
     );
-  const admittedCount = selected.reduce(
-    (sum, scenario) => sum + scenario.evidence.admitted_measurements.length,
+  const publishedCount = selected.reduce(
+    (sum, scenario) => sum + scenario.evidence.published_measurements.length,
     0,
   );
   const candidateCount = selected.reduce(
@@ -535,7 +541,7 @@ export async function onRequestGet({ request }: { request: Request }) {
           "Deterministic human-guided inspection and replay planning for the 22-axis GSPC UI.",
         classification_enum: [
           "BOARD_MEASUREMENT_CONTEXT",
-          "ADMITTED_EVIDENCE",
+          "VERIFIED_PUBLISHED_EVIDENCE",
           "CANDIDATE_FINDING",
           "REGULATION_CONTEXT",
         ],
@@ -550,7 +556,8 @@ export async function onRequestGet({ request }: { request: Request }) {
             url: "/signed/findings_index.json",
             schema: index.schema,
             as_of: index.as_of ?? null,
-            admitted_findings: findings.findings.length,
+            verified_published_findings: findings.findings.length,
+            independently_admitted_findings: 0,
             legacy_unadjudicated_records: isObject(index.counts)
               ? (index.counts.legacy_unadjudicated_records ?? null)
               : null,
@@ -570,12 +577,13 @@ export async function onRequestGet({ request }: { request: Request }) {
           automatic_promotion: false,
           candidate_submission_endpoint: "/api/evidence-intake",
           candidate_submission_requires_explicit_consent: true,
-          note: "This endpoint never submits a candidate. Evidence intake remains a separate explicit-consent POST and never auto-promotes to GSPC.",
+          note: "This endpoint never submits a candidate. Published-card verification is not independent admission. Evidence intake remains a separate authenticated, explicit-consent POST and never auto-promotes to GSPC.",
         },
         canonical_axis_count: axes.length,
         scenario_count: selected.length,
         counts: {
-          admitted_measurements: admittedCount,
+          verified_published_measurements: publishedCount,
+          independently_admitted_measurements: 0,
           candidate_findings: candidateCount,
           regulation_deadlines: regulationContext.length,
         },

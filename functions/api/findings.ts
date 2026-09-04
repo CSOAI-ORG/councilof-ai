@@ -1,10 +1,10 @@
 // functions/api/findings.ts — the REGULATION-FINDINGS query surface.
 //
 // Serves and filters the materialised findings index (public/signed/findings_index.json),
-// which joins every signed (model × axis) card to its regulator crosswalk POINTERS and the
+// which joins every locally verified (model × axis) card to its regulator crosswalk POINTERS and the
 // statutory fine tier for each. Read-only, deterministic, no model consulted, no clock.
 //
-// The index is a static signed-tree artifact — a stranger can also GET /signed/findings_index.json
+// The index is a static derived artifact — a stranger can also GET /signed/findings_index.json
 // directly and verify every finding's card. This endpoint adds query + a keyword RAG over the
 // same rows so agents and humans do not each re-implement the join.
 //
@@ -15,7 +15,7 @@
 //   GET /api/findings?q=<text>                → keyword search over findings (the shippable RAG)
 //   GET /api/findings?view=models|regulators|axes  → just the rollup lists
 //
-// HONESTY inherited from the index and never softened here: findings are DISCOVERED behind signed
+// HONESTY inherited from the index and never softened here: findings are DISCOVERED behind verified
 // cards; mappings are 'relevant-to' pointers, never determinations; fines are the tier's statutory
 // maximum, cited, never asserted as owed. This handler adds NO new claim.
 
@@ -99,7 +99,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request }) => {
     const m = index.models.find((x: any) => norm(x.model) === norm(model));
     const findings = index.findings.filter((f: any) => norm(f.model) === norm(model));
     if (!findings.length) {
-      return new Response(JSON.stringify({ schema: "csoai.regulation-findings/0.1", error: "no signed findings for that model", model, known_models: index.models.map((x: any) => x.model) }, null, 1), { status: 404, headers });
+      return new Response(JSON.stringify({ schema: "csoai.regulation-findings/0.1", error: "no verified published findings for that model", model, known_models: index.models.map((x: any) => x.model) }, null, 1), { status: 404, headers });
     }
     const regsTouched = [...new Set(findings.flatMap((f: any) => f.crosswalk.pointers.map((p: any) => p.regulator)))].sort();
     return wrap({

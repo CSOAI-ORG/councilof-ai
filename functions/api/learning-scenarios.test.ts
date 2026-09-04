@@ -82,8 +82,8 @@ function findings(
           card_url: `/signed/cards/${CARD}.json`,
           signed: true,
           signature_verified: true,
-          admitted: true,
-          evidence_state: "ADMITTED_VERIFIED",
+          admitted: false,
+          evidence_state: "PUBLISHED_VERIFIED",
           measured_on: "2026-08-19T09:24:39.000Z",
           ...measurementOverrides,
         },
@@ -176,12 +176,13 @@ describe("GET /api/learning-scenarios", () => {
       status: "MEASURED",
       fleet_mean: 0.49,
     });
-    expect(governance.evidence.admitted_measurements).toEqual([
+    expect(governance.evidence.published_measurements).toEqual([
       expect.objectContaining({
-        classification: "ADMITTED_EVIDENCE",
-        state: "ADMITTED_VERIFIED",
+        classification: "VERIFIED_PUBLISHED_EVIDENCE",
+        state: "PUBLISHED_VERIFIED",
         card: CARD,
         accuracy: 0.42,
+        independently_admitted: false,
       }),
     ]);
     expect(governance.evidence.candidate_findings).toEqual([
@@ -208,7 +209,7 @@ describe("GET /api/learning-scenarios", () => {
     const safety = body.scenarios.find(
       (scenario: any) => scenario.axis === "safety",
     );
-    expect(safety.evidence.admitted_state).toBe("NONE_ADMITTED");
+    expect(safety.evidence.published_state).toBe("NONE_PUBLISHED");
     expect(safety.evidence.candidate_state).toBe("NO_CANDIDATE_FINDING");
     expect(body.regulation_context[0]).toMatchObject({
       classification: "REGULATION_CONTEXT",
@@ -240,7 +241,7 @@ describe("GET /api/learning-scenarios", () => {
     expect(detector.regulation_context.pointers).toEqual([]);
   });
 
-  it("accepts an admitted mill card on the exact board axis without inventing a crosswalk", async () => {
+  it("accepts a verified published mill card on the exact board axis without inventing a crosswalk", async () => {
     const millCard = "b".repeat(64);
     stub({
       findings: findings(
@@ -256,10 +257,10 @@ describe("GET /api/learning-scenarios", () => {
     const openness = JSON.parse(text).scenarios.find(
       (scenario: any) => scenario.axis === "openness",
     );
-    expect(openness.evidence.admitted_measurements).toEqual([
+    expect(openness.evidence.published_measurements).toEqual([
       expect.objectContaining({
         card: millCard,
-        state: "ADMITTED_VERIFIED",
+        state: "PUBLISHED_VERIFIED",
         source_axis: "openness",
       }),
     ]);
@@ -267,11 +268,11 @@ describe("GET /api/learning-scenarios", () => {
     expect(openness.evidence.candidate_findings).toEqual([]);
   });
 
-  it("fails closed when a signature is present without independent admission", async () => {
+  it("fails closed when a signature has not been verified", async () => {
     stub({
       findings: findings({
-        admitted: false,
-        evidence_state: "LEGACY_UNADJUDICATED",
+        signature_verified: false,
+        evidence_state: "PUBLISHED_UNVERIFIED",
       }),
     });
     const { response, text } = await get();
