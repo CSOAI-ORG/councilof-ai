@@ -140,22 +140,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "endpoint",
-                    "method",
-                    "description",
-                    "input_fields",
-                    "input_note",
-                    "optional_claims",
-                    "output",
-                    "verify_key",
-                    "note",
-                    "related"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -167,22 +152,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "endpoint",
-                    "method",
-                    "description",
-                    "input_fields",
-                    "input_note",
-                    "optional_claims",
-                    "output",
-                    "verify_key",
-                    "note",
-                    "related"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -294,7 +264,22 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "issuer",
+                    "served_from",
+                    "measured_on",
+                    "measurement",
+                    "board",
+                    "living_board",
+                    "cross_border",
+                    "cards",
+                    "note"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -602,24 +587,27 @@
         "summary": "* GET /api/dashboard \u2014 Dashboard stats \u2014 live substrate counters for the home dashboard.\n *\n * Returns the live data from /api/state."
       }
     },
+    "/api/decide": {
+      "get": {
+        "operationId": "get__api_decide",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/decide \u2014 Make a decision attestation."
+      }
+    },
     "/api/detect": {
       "get": {
         "operationId": "get__api_detect",
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "service",
-                    "article",
-                    "post_to_verify",
-                    "verifies",
-                    "access",
-                    "complements"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -631,18 +619,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "service",
-                    "article",
-                    "post_to_verify",
-                    "verifies",
-                    "access",
-                    "complements"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -862,7 +839,24 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "record_type",
+                    "title",
+                    "as_of",
+                    "freshness",
+                    "first_fine_watch",
+                    "fines_by_jurisdiction",
+                    "deadlines_calendar",
+                    "correction_59",
+                    "honest_register",
+                    "bright_lines",
+                    "signature"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -989,6 +983,20 @@
         "summary": ""
       }
     },
+    "/api/include": {
+      "get": {
+        "operationId": "get__api_include",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/include \u2014 Merkle inclusion proof for a card."
+      }
+    },
     "/api/interop-bulk": {
       "get": {
         "operationId": "get__api_interop-bulk",
@@ -1052,7 +1060,7 @@
             "description": "OK"
           }
         },
-        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Targeted for the 3-anchor rail (rails planned)"
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
       },
       "post": {
         "operationId": "post__api_learn-loop",
@@ -1064,7 +1072,7 @@
             "description": "OK"
           }
         },
-        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Targeted for the 3-anchor rail (rails planned)"
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
       }
     },
     "/api/locale": {
@@ -1163,6 +1171,20 @@
           }
         },
         "summary": ""
+      }
+    },
+    "/api/mint": {
+      "get": {
+        "operationId": "get__api_mint",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/mint \u2014 Mint a new signed card from an atom."
       }
     },
     "/api/og": {
@@ -1698,7 +1720,28 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "kind",
+                    "writes_board",
+                    "supersedes",
+                    "n",
+                    "n_measured",
+                    "n_live",
+                    "n_committed",
+                    "n_discovered",
+                    "status_all",
+                    "as_of",
+                    "universe_note",
+                    "honesty",
+                    "sources",
+                    "cobolbridge_ai",
+                    "rows"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -1798,6 +1841,34 @@
           }
         },
         "summary": "* GET /api/trace \u2014 Trace a single signed card by SHA-256.\n *\n * Returns the live data from /signed/cards/<sha>.json."
+      }
+    },
+    "/api/verify-batch": {
+      "get": {
+        "operationId": "get__api_verify-batch",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/verify-batch \u2014 Verify a batch of signed cards."
+      }
+    },
+    "/api/verify-card": {
+      "get": {
+        "operationId": "get__api_verify-card",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/verify-card \u2014 Verify a single signed card by SHA-256."
       }
     },
     "/api/verify-tally": {
