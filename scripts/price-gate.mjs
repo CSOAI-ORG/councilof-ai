@@ -32,7 +32,8 @@ import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2).filter((a) => a !== "--report");
 const REPORT_ONLY = process.argv.includes("--report");
-const DIST = path.resolve(REPO, args[0] || "dist/client");
+const SELFTEST = process.argv.includes("--selftest");
+const DIST = path.resolve(REPO, (args[0] && !args[0].startsWith("--")) ? args[0] : "dist/client");
 
 // A currency amount and nothing else: "£5k", "$1,200", "€35", "£10k/yr", "£3.5K-£7.5K".
 // Anchored to the whole string, so it only matches a standalone display element.
@@ -69,6 +70,32 @@ const IS_FREE = /^\s*(?:from\s+)?[£$€]\s?0(?:\.00)?\s*$/;
 const FOREIGN_MONEY =
   /\bfine|penalt|sanction|turnover|up to|maximum|fund|grant|raise[sd]?\b|valuation|revenue|ARR|market size|competitor|other providers|elsewhere|typical(?:ly)?|charge[sd]?\b|average|estimate|savings?|cost of|budget|salary|calculator|your\b|annulled|GDPR|enforcement|free\s+(?:training|tier)/i;
 const CONTEXT_WINDOW = 240;
+
+// A guard that cannot fail enforces nothing. price-gate blocked a deploy today over an operator
+// runbook served on the open web, so it has to keep working. This proves each rule still does its
+// job without needing a built tree.
+//   node scripts/price-gate.mjs --selftest
+if (SELFTEST) {
+  const checks = [
+    ["IS_FREE allows the free-forever commitment", () => IS_FREE.test("$0")],
+    ["IS_FREE allows £0.00", () => IS_FREE.test("£0.00")],
+    ["IS_FREE does NOT swallow a real price", () => !IS_FREE.test("$49")],
+    ["SOCIAL_PROOF catches an unevidenced claim", () => SOCIAL_PROOF.test("most popular")],
+    ["SOCIAL_PROOF allows an ordinary word", () => !SOCIAL_PROOF.test("Recommended")],
+    ["FOREIGN_MONEY stands down on a penalty", () => FOREIGN_MONEY.test("a fine of up to EUR 15M turnover")],
+    ["FOREIGN_MONEY stands down on a grant", () => FOREIGN_MONEY.test("grant of EUR 50,000 from the fund")],
+    ["FOREIGN_MONEY does NOT stand down on a bare amount", () => !FOREIGN_MONEY.test("Total potential: 280,000")],
+  ];
+  let bad = 0;
+  for (const [what, fn] of checks) {
+    let ok = false;
+    try { ok = !!fn(); } catch { ok = false; }
+    if (!ok) { console.error(`\u2716 selftest: ${what}`); bad++; }
+  }
+  if (bad) { console.error(`\u2716 price-gate selftest FAILED (${bad} of ${checks.length})`); process.exit(1); }
+  console.log(`\u2713 price-gate selftest: ${checks.length}/${checks.length} rules behave as documented`);
+  process.exit(0);
+}
 
 // Named exemptions. Each is a DECISION with a reason, not a regex hole — the same shape
 // as brand-gate's allowOn. If a page is here, someone judged that its money is not a

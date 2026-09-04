@@ -106,7 +106,9 @@ jobs:
           done
 
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
-        run: node scripts/brand-gate.mjs dist/client
+        run: |
+          node scripts/brand-gate.mjs --selftest
+          node scripts/brand-gate.mjs dist/client
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
@@ -118,7 +120,9 @@ jobs:
       # Blocking from day one: it flags a standalone currency amount (how a price renders),
       # not money in prose, so EU AI Act penalties and competitor figures do not trip it.
       - name: Price gate — no published price, no unevidenced popularity claim
-        run: node scripts/price-gate.mjs dist/client
+        run: |
+          node scripts/price-gate.mjs --selftest
+          node scripts/price-gate.mjs dist/client
 
       # Facts gate — NOW BLOCKING (2026-08-26). It was advisory pending an owner ruling on
       # the canonical axis count, because a blocking gate on an unruled fact just breaks

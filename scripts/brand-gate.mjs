@@ -18,7 +18,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = path.resolve(REPO, process.argv[2] || "dist/client");
+const SELFTEST = process.argv.includes("--selftest");
+const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith("--")) ? process.argv[2] : "dist/client");
+
 
 // Each rule: a forbidden DISPLAY pattern + WHY. `allowOn` (optional) is a path regex for pages
 // that legitimately QUOTE the term to retract/document it (the "refutation-ledger historical
@@ -163,6 +165,34 @@ const RULES = [
     why: "Infra hostname / staging origin must not ship. Use the public API councilof.ai/api/gspc.",
   },
 ];
+
+// A guard that cannot fail enforces nothing. This proves every rule still matches the string it
+// exists to catch, and still permits the context it is meant to allow — without needing a built
+// tree, so it can run before the prerender and in any checkout.
+//   node scripts/brand-gate.mjs --selftest
+if (SELFTEST) {
+  const CASES = [
+    // [rule id, text that MUST be caught, text that MUST be allowed]
+    ["retracted_fault_tolerance", "the 33-agent BFT council", "the retraction of the BFT claim is in the refutation ledger"],
+    ["sovereign_brand", "Project: Sovereign Signed-Card Anchor", null],
+    ["internal_codenames", "PixiJS + SOV3 substrate", null],
+  ];
+  let bad = 0;
+  for (const [id, mustCatch, mustAllow] of CASES) {
+    const rule = RULES.find((r) => r.id === id);
+    if (!rule) { console.error(`\u2716 selftest: rule "${id}" no longer exists`); bad++; continue; }
+    if (!rule.pattern.test(mustCatch)) {
+      console.error(`\u2716 selftest: rule "${id}" no longer catches ${JSON.stringify(mustCatch)}`); bad++;
+    }
+    if (mustAllow && rule.allowOn && !rule.allowOn.test(mustAllow)) {
+      console.error(`\u2716 selftest: rule "${id}" no longer allows its documented exemption`); bad++;
+    }
+  }
+  if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
+  console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch`);
+  process.exit(0);
+}
+
 
 function visibleText(html) {
   return html
