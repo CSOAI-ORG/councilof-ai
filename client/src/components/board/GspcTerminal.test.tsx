@@ -157,7 +157,6 @@ describe("canonical GSPC terminal evidence truth", () => {
     expect(html).not.toContain("signed Elo reference");
     expect(html).not.toContain("Elo reference Ed25519-signed");
   });
-
   it("does not infer an Elo signature from a content ID", () => {
     expect(eloReferenceEvidence({ content_id: "abcdef1234567890" })).toBe(
       "Elo reference content-addressed unsigned · content_id abcdef1234…",

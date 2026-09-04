@@ -208,8 +208,8 @@ export function BoardStrip({
                   </td>
                   <td className={td}>
                     {a.kind === "model-comparison" ? (
-                      <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
-                        Axis detail
+                      <a href="/dashboard?tab=leaderboard" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+                        Signed model-card matrix
                       </a>
                     ) : (
                       <RunEvidence a={a} />
