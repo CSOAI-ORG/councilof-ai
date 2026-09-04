@@ -1,7 +1,7 @@
 {
   "schema": "csoai.axes-v2/0.1",
   "as_of": "20260904T063731Z",
-  "principle": "Strip SaaS / TaaS. Replace with on-chain attestation, ZK proofs, MPC, TEE, self-custody. Every axis is Web3-native.",
+  "principle": "TARGET (planned, not live): strip SaaS / TaaS; replace with on-chain attestation, ZK proofs, MPC, TEE, self-custody. Every axis to become Web3-native.",
   "axes": [
     {
       "axis": "governance",
@@ -9,13 +9,14 @@
       "kind": "model-comparison",
       "kind_v2": "on-chain-governance-attestation",
       "name": "Governance",
-      "description": "On-chain governance attestation. Every governance claim is signed + attested by 33-agent BFT.",
+      "description": "Planned on-chain governance attestation. Target: every governance claim to be signed + attested by (planned) council.",
       "web3_primitive": "EAS + did:web + W3C VC",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "model-comparison (TaaS)",
-      "new_model": "on-chain-attestation (self-custody)"
+      "new_model": "on-chain-attestation (self-custody)",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "safety",
@@ -23,13 +24,14 @@
       "kind": "model-comparison",
       "kind_v2": "signed-harm-taxonomy",
       "name": "Safety",
-      "description": "Signed harm taxonomy. Every harm is signed + attested on-chain.",
+      "description": "Planned signed harm taxonomy. Target: every harm to be signed + attested on-chain.",
       "web3_primitive": "EAS + Rekor + OTS",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "model-comparison (TaaS)",
-      "new_model": "signed-on-chain-attestation"
+      "new_model": "signed-on-chain-attestation",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "provenance",
@@ -37,13 +39,14 @@
       "kind": "model-comparison",
       "kind_v2": "cryptographic-provenance-chain",
       "name": "Provenance",
-      "description": "Cryptographic provenance chain. Every artifact has a signed lineage.",
+      "description": "Cryptographic provenance chain. Target: every artifact has a signed lineage. Planned — not yet live.",
       "web3_primitive": "C2PA + Sigstore + in-toto",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "vendor-managed provenance (SaaS)",
-      "new_model": "self-managed cryptographic provenance"
+      "new_model": "self-managed cryptographic provenance",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "continuity",
@@ -51,13 +54,14 @@
       "kind": "model-comparison",
       "kind_v2": "key-rotation-continuity",
       "name": "Continuity",
-      "description": "Key rotation continuity. Every signing key has a signed rotation chain.",
+      "description": "Key rotation continuity. Target: every signing key has a signed rotation chain. Planned — not yet live.",
       "web3_primitive": "did:key + W3C VC + Rekor",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "vendor-managed (TaaS)",
-      "new_model": "self-managed key rotation"
+      "new_model": "self-managed key rotation",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "conformance",
@@ -65,13 +69,14 @@
       "kind": "model-comparison",
       "kind_v2": "on-chain-conformance-attestation",
       "name": "Conformance",
-      "description": "On-chain conformance attestation. Every conformance claim is signed + attested.",
+      "description": "Planned on-chain conformance attestation. Target: every conformance claim to be signed + attested.",
       "web3_primitive": "EAS + W3C VC",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party conformance (TaaS)",
-      "new_model": "on-chain self-attestation"
+      "new_model": "on-chain self-attestation",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "openness",
@@ -79,13 +84,14 @@
       "kind": "model-comparison",
       "kind_v2": "open-source-attestation",
       "name": "Openness",
-      "description": "Open-source attestation. Every component is signed + attested.",
+      "description": "Open-source attestation. Target: every component to be signed + attested. Planned — not yet live.",
       "web3_primitive": "SLSA + in-toto + Sigstore",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "SaaS source-available",
-      "new_model": "open-source signed provenance"
+      "new_model": "open-source signed provenance",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "machinery-conformity",
@@ -93,13 +99,14 @@
       "kind": "model-comparison",
       "kind_v2": "tee-attestation",
       "name": "Machinery Conformity",
-      "description": "TEE attestation. Every hardware is TEE-attested (Intel SGX, AMD SEV, ARM TrustZone).",
+      "description": "TEE attestation. Target: every hardware is TEE-attested (Intel SGX, AMD SEV, ARM TrustZone). Planned — not yet live.",
       "web3_primitive": "Intel SGX + AMD SEV + ARM TrustZone + RATS",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "vendor-managed hardware attestation (TaaS)",
-      "new_model": "self-attested TEE with remote attestation"
+      "new_model": "self-attested TEE with remote attestation",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "care",
@@ -107,13 +114,14 @@
       "kind": "model-comparison",
       "kind_v2": "on-chain-care-attestation",
       "name": "Care",
-      "description": "On-chain care attestation. Every care claim is signed + attested.",
+      "description": "Planned on-chain care attestation. Target: every care claim to be signed + attested.",
       "web3_primitive": "EAS + W3C VC",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party care score (TaaS)",
-      "new_model": "self-attested on-chain"
+      "new_model": "self-attested on-chain",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "cross-reality",
@@ -121,13 +129,14 @@
       "kind": "model-comparison",
       "kind_v2": "zk-cross-reality-proof",
       "name": "Cross-Reality",
-      "description": "ZK cross-reality proof. ZK proof of model behaviour across deployment + lab.",
+      "description": "ZK cross-reality proof. ZK proof of model behaviour across deployment + lab. Planned — not yet live.",
       "web3_primitive": "Halo2 + Plonky2 + zkSNARK",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party cross-reality test (TaaS)",
-      "new_model": "self-attested ZK proof"
+      "new_model": "self-attested ZK proof",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "detector-interop",
@@ -135,13 +144,14 @@
       "kind": "model-comparison",
       "kind_v2": "inter-chain-detector-attestation",
       "name": "Detector Interop",
-      "description": "Inter-chain detector attestation. Detectors attested across XRPL + EAS + Rekor.",
+      "description": "Inter-chain detector attestation. Detectors attested across XRPL + EAS + Rekor. Planned — not yet live.",
       "web3_primitive": "XRPL + EAS + Rekor + did:web",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party detector vendor (SaaS)",
-      "new_model": "self-attested inter-chain"
+      "new_model": "self-attested inter-chain",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "art5-safeguard",
@@ -149,13 +159,14 @@
       "kind": "model-comparison",
       "kind_v2": "eu-ai-act-art50-on-chain",
       "name": "Art 5 Safeguard",
-      "description": "EU AI Act Article 50 on-chain. Every Art 50 claim is signed + attested.",
+      "description": "EU AI Act Article 50 on-chain. Target: every Art 50 claim to be signed + attested. Planned — not yet live.",
       "web3_primitive": "EAS + W3C VC + did:web",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party compliance (TaaS)",
-      "new_model": "self-attested on-chain"
+      "new_model": "self-attested on-chain",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "swarm",
@@ -163,13 +174,14 @@
       "kind": "model-comparison",
       "kind_v2": "mpc-swarm-attestation",
       "name": "Swarm",
-      "description": "MPC swarm attestation. Every swarm claim is signed by N-of-M.",
+      "description": "MPC swarm attestation. Target: every swarm claim is signed by N-of-M. Planned — not yet live.",
       "web3_primitive": "MPC + Threshold sig + W3C VC",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "vendor-managed swarm (SaaS)",
-      "new_model": "self-managed MPC swarm"
+      "new_model": "self-managed MPC swarm",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "affect",
@@ -177,13 +189,14 @@
       "kind": "model-comparison",
       "kind_v2": "signed-affect-attribution",
       "name": "Affect",
-      "description": "Signed affect attribution. Every affect claim is signed + attested.",
+      "description": "Signed affect attribution. Target: every affect claim to be signed + attested. Planned — not yet live.",
       "web3_primitive": "EAS + W3C VC + did:web",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party affect vendor (SaaS)",
-      "new_model": "self-attested signed"
+      "new_model": "self-attested signed",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "jail",
@@ -191,13 +204,14 @@
       "kind": "model-comparison",
       "kind_v2": "signed-jailbreak-counter",
       "name": "Jail",
-      "description": "Signed jailbreak counter. Every jailbreak is signed + attested.",
+      "description": "Signed jailbreak counter. Target: every jailbreak to be signed + attested. Planned — not yet live.",
       "web3_primitive": "EAS + Rekor + OTS",
       "n": 237,
       "status": "MEASURED",
       "tier": "behavioral",
       "old_model": "third-party jailbreak vendor (TaaS)",
-      "new_model": "self-attested signed"
+      "new_model": "self-attested signed",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "provenance-controls",
@@ -205,12 +219,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "xrpl-mainnet-issuer-facts",
       "name": "Provenance Controls",
-      "description": "XRPL mainnet issuer facts. Every issuer is read directly from mainnet.",
+      "description": "XRPL mainnet issuer facts. Target: every issuer is read directly from mainnet. Planned — not yet live.",
       "web3_primitive": "XRPL public servers (xrplcluster.com)",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party oracle (TaaS)",
-      "new_model": "self-fetched from public mainnet"
+      "new_model": "self-fetched from public mainnet",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "reserve-attestation",
@@ -218,12 +233,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "xrpl-on-chain-reserves",
       "name": "Reserve Attestation",
-      "description": "XRPL on-chain reserves. Every reserve is read from mainnet.",
+      "description": "XRPL on-chain reserves. Target: every reserve is read from mainnet. Planned — not yet live.",
       "web3_primitive": "XRPL public servers",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party reserve auditor (TaaS)",
-      "new_model": "self-fetched from XRPL mainnet"
+      "new_model": "self-fetched from XRPL mainnet",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "regulatory-framework",
@@ -231,12 +247,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "eas-attestation-for-standards",
       "name": "Regulatory Framework",
-      "description": "EAS attestation for standards. Every standard is on-chain attested.",
+      "description": "EAS attestation for standards. Target: every standard is on-chain attested. Planned — not yet live.",
       "web3_primitive": "EAS on Base + W3C VC",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party compliance vendor (TaaS)",
-      "new_model": "self-attested EAS on Base"
+      "new_model": "self-attested EAS on Base",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "distribution-integrity",
@@ -244,12 +261,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "xrpl-holder-distribution",
       "name": "Distribution Integrity",
-      "description": "XRPL holder distribution. Every holder is read from mainnet.",
+      "description": "XRPL holder distribution. Target: every holder is read from mainnet. Planned — not yet live.",
       "web3_primitive": "XRPL public servers",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party analytics (SaaS)",
-      "new_model": "self-fetched from XRPL mainnet"
+      "new_model": "self-fetched from XRPL mainnet",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "custody-disclosure",
@@ -257,12 +275,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "self-custody-verification",
       "name": "Custody Disclosure",
-      "description": "Self-custody verification. Every wallet has a signed proof of self-custody.",
+      "description": "Self-custody verification. Target: every wallet has a signed proof of self-custody. Planned — not yet live.",
       "web3_primitive": "did:key + W3C VC + BIP32",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party custody provider (SaaS)",
-      "new_model": "self-custody with signed proof"
+      "new_model": "self-custody with signed proof",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "ai-adoption-components",
@@ -270,12 +289,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "web3-ai-adoption-on-chain",
       "name": "AI Adoption Components",
-      "description": "Web3 AI adoption on-chain. Every adoption signal is on-chain attested.",
+      "description": "Web3 AI adoption on-chain. Target: every adoption signal is on-chain attested. Planned — not yet live.",
       "web3_primitive": "EAS on Base + XRPL + did:web",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party adoption tracker (SaaS)",
-      "new_model": "self-attested on-chain"
+      "new_model": "self-attested on-chain",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "labour-components",
@@ -283,12 +303,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "xrpl-dao-labour-attestation",
       "name": "Labour Components",
-      "description": "XRPL DAO labour attestation. Every labour claim is on-chain attested.",
+      "description": "XRPL DAO labour attestation. Target: every labour claim is on-chain attested. Planned — not yet live.",
       "web3_primitive": "XRPL + EAS + did:web",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party labour vendor (TaaS)",
-      "new_model": "self-attested XRPL DAO"
+      "new_model": "self-attested XRPL DAO",
+      "web3_primitive_status": "planned — not yet live"
     },
     {
       "axis": "humanoid-labour-index",
@@ -296,12 +317,13 @@
       "kind": "deterministic-facts",
       "kind_v2": "signed-humanoid-attestation",
       "name": "Humanoid Labour Index",
-      "description": "Signed humanoid attestation. Every humanoid is signed + attested.",
+      "description": "Signed humanoid attestation. Target: every humanoid to be signed + attested. Planned — not yet live.",
       "web3_primitive": "EAS + W3C VC + did:web",
       "status": "MEASURED",
       "tier": "financial",
       "old_model": "third-party humanoid vendor (TaaS)",
-      "new_model": "self-attested signed"
+      "new_model": "self-attested signed",
+      "web3_primitive_status": "planned — not yet live"
     }
   ],
   "migration": {
@@ -311,12 +333,14 @@
       "XRPL (real-world assets)",
       "EAS on Base (on-chain attestations)",
       "Sigstore Rekor (transparency log)",
-      "OpenTimestamps \u2192 Bitcoin",
+      "OpenTimestamps → Bitcoin",
       "did:web / did:key / did:eth (decentralized identifiers)",
       "W3C VC (verifiable credentials)",
       "Halo2 / Plonky2 (ZK proofs)",
       "Intel SGX / AMD SEV / ARM TrustZone (TEE)",
       "MPC + Threshold sig"
     ]
-  }
+  },
+  "status": "PROPOSED — design target, not a description of what is live",
+  "not_live": "Every web3_primitive named below is PLANNED unless facts.json says otherwise. EAS issuance code exists and refuses to mint; nothing is on-chain. OTS stamps carry a PendingAttestation and are not anchored until a Bitcoin block commits them. Rekor witnessing IS live. This file is a migration target, and no row here may be quoted as a live capability."
 }

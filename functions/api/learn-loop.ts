@@ -2,11 +2,23 @@
  * /api/learn-loop — the end-user learning loop.
  *
  * Every interaction (chat, game, measure, verify, attest) becomes:
- *   1. A 3KB signed card (Ed25519, max 3072 bytes)
- *   2. Anchored to OTS + Rekor + EAS
- *   3. Attested by the 33-agent BFT council (23/33 quorum)
- *   4. Added to the training corpus
- *   5. Fed into the next council iteration
+ *   1. A 3KB signed card (Ed25519, max 3072 bytes)         — live
+ *   2. Witnessed in Rekor                                   — live
+ *   3. Added to the training corpus                         — live
+ *
+ * PLANNED, not live — stated here in future tense on purpose, because this comment
+ * is the source the published OpenAPI description is generated from, so an
+ * overstatement here becomes an overstatement on the public surface:
+ *   - OTS: an atom is STAMPED immediately but only ANCHORED once a calendar commits
+ *     it to a Bitcoin block and the proof is upgraded, hours later. Stamping is not
+ *     anchoring, and "N atoms OTS-anchored" will be false until that upgrade lands.
+ *   - EAS: the issuance code exists in the gspc-os monorepo and refuses to mint.
+ *     Nothing is on-chain.
+ *   - Council quorum: this previously read "attested by the 33-agent BFT council
+ *     (23/33 quorum)". That claim did not survive measurement. Effective sample size
+ *     came out at n_eff = 1.00 of 3 — the voters were correlated to the point of
+ *     being one voter wearing three hats, so 23/33 never described independent
+ *     agreement. Do not restore the phrasing without a fresh n_eff that supports it.
  *
  * POST /api/learn-loop
  *   body: { kind: "chat"|"game"|"measure"|"verify"|"attest", payload: ... }
