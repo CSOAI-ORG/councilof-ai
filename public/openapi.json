@@ -449,20 +449,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "title",
-                    "contract",
-                    "census",
-                    "agui",
-                    "grokbot",
-                    "runpod",
-                    "os"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -517,7 +504,18 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "wave",
+                    "contract",
+                    "counters",
+                    "board_crosscheck",
+                    "note"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -814,7 +812,24 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "record_type",
+                    "title",
+                    "as_of",
+                    "freshness",
+                    "first_fine_watch",
+                    "fines_by_jurisdiction",
+                    "deadlines_calendar",
+                    "correction_59",
+                    "honest_register",
+                    "bright_lines",
+                    "signature"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -893,21 +908,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "as_of",
-                    "source",
-                    "ttl_seconds",
-                    "spaces",
-                    "datasets",
-                    "models",
-                    "counts",
-                    "live_board",
-                    "verify"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1071,7 +1072,19 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "doctrine",
+                    "instruments",
+                    "honesty_rules",
+                    "claims_refused",
+                    "generated_at",
+                    "site_attestation"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }

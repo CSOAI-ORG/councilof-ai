@@ -1,61 +1,39 @@
 {
-  "finished": "2026-09-04T04:55:43Z",
+  "finished": "2026-09-04T05:20:29Z",
   "issuer": "did:web:csoai.org#card-attestation-1",
   "kind": "csoai.1000x-orchestrator",
   "n_fail": 1,
-  "n_jobs": 18,
-  "n_ok": 17,
+  "n_jobs": 15,
+  "n_ok": 14,
   "results": {
     "a2a-findings": {
       "args": [
         "scripts/badger/harvest-a2a-findings.py"
       ],
-      "elapsed_s": 1.68,
+      "elapsed_s": 0.32,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 8,
-      "stdout_tail": "  oversized: 0\n  unreachable: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/a2a-findings/a2a-findings-20260904T045234Z.jsonl"
-    },
-    "agentic-fix": {
-      "args": [
-        "scripts/badger/csoai-agentic-fix.py",
-        "--auto"
-      ],
-      "elapsed_s": 43.55,
-      "exit_code": 0,
-      "stderr_lines": 0,
-      "stderr_tail": "",
-      "stdout_lines": 36
+      "stdout_tail": "  oversized: 0\n  unreachable: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/a2a-findings/a2a-findings-20260904T051836Z.jsonl"
     },
     "archive-deep": {
       "args": [
         "scripts/badger/csoai-archive-deep.py"
       ],
-      "elapsed_s": 3.62,
+      "elapsed_s": 0.42,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 9,
       "stdout_tail": "\n  total written: 35\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/archive-deep"
     },
-    "axes-deep": {
-      "args": [
-        "scripts/badger/csoai-axis-deep-builder.py"
-      ],
-      "elapsed_s": 0.22,
-      "exit_code": 0,
-      "stderr_lines": 0,
-      "stderr_tail": "",
-      "stdout_lines": 3,
-      "stdout_tail": "=== PER-AXIS DEEP REFERENCE BUILDER ===\n  board has 22 axes\n  wrote 22 pages to public/axis/"
-    },
     "bank-classify": {
       "args": [
         "scripts/badger/csoai-bank-classify.py",
         "--dry-run"
       ],
-      "elapsed_s": 2.64,
+      "elapsed_s": 0.37,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -67,7 +45,7 @@
         "scripts/badger/csoai-bank-pack.py",
         "--no-ots"
       ],
-      "elapsed_s": 136.85,
+      "elapsed_s": 112.51,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -78,53 +56,41 @@
       "args": [
         "scripts/badger/harvest-corrections-diff-cards.py"
       ],
-      "elapsed_s": 1.58,
+      "elapsed_s": 0.32,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 5,
-      "stdout_tail": "  written:   41\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/corrections-diff/corrections-20260904T045234Z.jsonl"
+      "stdout_tail": "  written:   41\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/corrections-diff/corrections-20260904T051837Z.jsonl"
     },
     "layer0": {
       "args": [
         "scripts/badger/csoai-layer0-ceremony.py",
         "--no-ots"
       ],
-      "elapsed_s": 6.3,
+      "elapsed_s": 0.49,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
-      "stdout_lines": 36,
-      "stdout_tail": "  digest: 1350c03dad89e5399a133e6c482df9f9\u2026\n  wrote:  public/interop/layer0-ceremony.json\n  atom:   scripts/badger/_queue/layer0/layer0-20260904T045239Z.jsonl (764B)"
+      "stdout_lines": 25,
+      "stdout_tail": "  ceremony:     scripts/badger/_queue/ceremony/ceremony-20260904T051837Z.json\n  layer0:       public/interop/layer0-ceremony.json\n  ots pending:  public/interop/layer0-root-20260904T051837Z.ots"
     },
     "mineral-4": {
       "args": [
         "scripts/badger/csoai-mineral-4.py"
       ],
-      "elapsed_s": 4.87,
+      "elapsed_s": 3.16,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 7,
       "stdout_tail": "  openalex-ai-safety       20 records  \u2192  20 written, 0 oversized\n\n  total written: 20"
     },
-    "openapi": {
-      "args": [
-        "scripts/badger/csoai-openapi-gen.py",
-        "--probe"
-      ],
-      "elapsed_s": 10.44,
-      "exit_code": 0,
-      "stderr_lines": 0,
-      "stderr_tail": "",
-      "stdout_lines": 80,
-      "stdout_tail": "\n  wrote: public/openapi.json (55890B)\n  paths:  71"
-    },
     "per-issuer": {
       "args": [
         "scripts/badger/harvest-per-issuer-cards.py"
       ],
-      "elapsed_s": 1.76,
+      "elapsed_s": 0.36,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -135,7 +101,7 @@
       "args": [
         "scripts/badger/harvest-per-item-cards.py"
       ],
-      "elapsed_s": 1.42,
+      "elapsed_s": 0.17,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -146,7 +112,7 @@
       "args": [
         "scripts/badger/harvest-per-model-cards.py"
       ],
-      "elapsed_s": 3.65,
+      "elapsed_s": 0.26,
       "exit_code": 1,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -156,7 +122,7 @@
       "args": [
         "scripts/badger/csoai-public-data-mine.py"
       ],
-      "elapsed_s": 7.91,
+      "elapsed_s": 7.06,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -167,7 +133,7 @@
       "args": [
         "scripts/badger/csoai-regulatory-mine.py"
       ],
-      "elapsed_s": 1.84,
+      "elapsed_s": 0.29,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -178,18 +144,18 @@
       "args": [
         "scripts/badger/harvest-tie-attestations.py"
       ],
-      "elapsed_s": 1.59,
+      "elapsed_s": 0.25,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 5,
-      "stdout_tail": "  written:   2\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/tie-attestations/ties-20260904T045234Z.jsonl"
+      "stdout_tail": "  written:   2\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/tie-attestations/ties-20260904T051836Z.jsonl"
     },
     "uk-open-data": {
       "args": [
         "scripts/badger/csoai-uk-open-data.py"
       ],
-      "elapsed_s": 3.01,
+      "elapsed_s": 0.69,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
@@ -200,13 +166,13 @@
       "args": [
         "scripts/badger/harvest-witness-receipts.py"
       ],
-      "elapsed_s": 2.64,
+      "elapsed_s": 0.84,
       "exit_code": 0,
       "stderr_lines": 0,
       "stderr_tail": "",
       "stdout_lines": 5,
-      "stdout_tail": "  written:   8\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/witness-receipts/witness-20260904T045235Z.jsonl"
+      "stdout_tail": "  written:   8\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/witness-receipts/witness-20260904T051837Z.jsonl"
     }
   },
-  "started": "2026-09-04T04:52:32Z"
+  "started": "2026-09-04T05:18:36Z"
 }
