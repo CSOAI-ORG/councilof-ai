@@ -1,11 +1,10 @@
 /**
  * HomeGspcBoard — the home-page GSPC board.
  *
- * THE SPACE IS THE BOARD. The living master board is the Hugging Face Space
- * csoai/gspc-board (static SDK). This component embeds it; it does not redraw it.
- * No bars, no bespoke ranking, no per-model chart lives here.
+ * GET /api/gspc is the board. This component renders that response directly;
+ * the Hugging Face Space is only a distribution mirror.
  *
- * Around the embed:
+ * Around the native board view:
  *  - a headline that quotes totals.public_count VERBATIM from GET /api/gspc. No count
  *    is typed into this file; "Load more (N)" is derived from the axis array length.
  *  - a compact strip of every board axis from the same payload: label, n, status,
@@ -17,19 +16,14 @@
  * The board read is the repo's shared hook (../board/useGspcBoard): one request per
  * page, no seeded fallback payload. If it fails, the strip says so in words.
  *
- * Embed origin verified 2026-09-02: https://csoai-gspc-board.static.hf.space
- * (302 → /index.html, 200, no frame-ancestors). https://csoai-gspc-board.hf.space
- * answers 404 and is not used. csoai/gspc-governance-leaderboard is PAUSED; not used.
+ * Hugging Face remains a public distribution surface, not a second authority.
  */
 import { useId, useState, type ReactNode } from "react";
 import { useGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
+import { axisRunEvidence } from "../board/runEvidence";
 import { axisMeta } from "../../lib/axisRegulation";
 
-/** Verified static-SDK embed origin of the living Space. */
-// 2026-09-02: the csoai-gspc-board.static.hf.space iframe was removed (Space
-// sunset). The page now renders the live /api/gspc data directly and links
-// out to the HF mirror page (where it still exists, if anywhere) — no third-
-// party origin to break.
+/** Public distribution mirror for the canonical GET /api/gspc board. */
 export const SPACE_PAGE_URL = "https://huggingface.co/spaces/csoai/gspc-board";
 /** Rows the strip shows before "Load more". A UI constant, not a board count. */
 export const STRIP_N = 9;
@@ -122,6 +116,37 @@ function nText(a: GspcAxis): string {
   return `n ${a.n}${unit}`;
 }
 
+function AxisName({ a }: { a: GspcAxis }) {
+  const label = boardAxisLabel(a.axis);
+  if (a.kind !== "model-comparison") {
+    return <span className="text-sm font-bold text-slate-900 dark:text-emerald-50">{label}</span>;
+  }
+  return (
+    <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
+      {label}
+    </a>
+  );
+}
+
+function RunEvidence({ a }: { a: GspcAxis }) {
+  const evidence = axisRunEvidence(a);
+  if (!evidence) {
+    return (
+      <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
+        No run artifact published.
+      </span>
+    );
+  }
+  return (
+    <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
+      <a href={evidence.href} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+        {evidence.label}
+      </a>
+      <span> · {evidence.detail}</span>
+    </span>
+  );
+}
+
 /** The compact axis strip. Exported so the table view and the expanded state are testable without a DOM. */
 export function BoardStrip({
   axes,
@@ -167,6 +192,7 @@ export function BoardStrip({
                 <th className={th}>Status</th>
                 <th className={th}>Separation</th>
                 <th className={th}>Public leader</th>
+                <th className={th}>Evidence</th>
               </tr>
             </thead>
             <tbody>
@@ -179,6 +205,15 @@ export function BoardStrip({
                   <td className={td}>{separationLabel(a)}</td>
                   <td className={td}>
                     <LeaderText a={a} />
+                  </td>
+                  <td className={td}>
+                    {a.kind === "model-comparison" ? (
+                      <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+                        Axis detail
+                      </a>
+                    ) : (
+                      <RunEvidence a={a} />
+                    )}
                   </td>
                 </tr>
               ))}
@@ -196,9 +231,7 @@ export function BoardStrip({
                 className="rounded-xl border border-slate-200/80 bg-white p-2.5 dark:border-emerald-900/40 dark:bg-[#0a1a13]"
               >
                 <p className="flex flex-wrap items-baseline gap-x-2">
-                  <a href={`/dashboard?tab=leaderboard#${encodeURIComponent(a.axis)}`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
-                    {boardAxisLabel(a.axis)}
-                  </a>
+                  <AxisName a={a} />
                   {nText(a) ? <span className="text-xs text-slate-500 dark:text-emerald-100/60">{nText(a)}</span> : null}
                 </p>
                 <p className="mt-1 flex flex-wrap gap-1">
@@ -208,6 +241,9 @@ export function BoardStrip({
                 <p className="mt-1 text-xs text-slate-700 dark:text-emerald-100/80">
                   <LeaderText a={a} />
                 </p>
+                {a.kind === "deterministic-facts" ? (
+                  <p className="mt-1"><RunEvidence a={a} /></p>
+                ) : null}
               </li>
             );
           })}
@@ -274,11 +310,11 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
             Root is signed. Witnesses bind exact root bytes and may still be pending. Verify is free.
           </span>
         </p>
-          <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The living board below is the master. This page embeds it and does not redraw it.</p>
+          <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The live API response below is the master view. It is rendered directly here; Hugging Face is a distribution mirror.</p>
         </div>
         <p className="flex flex-wrap items-center gap-3 text-sm">
           <a href="/dashboard?tab=leaderboard" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
-            Full leaderboard
+            Signed model-card matrix
           </a>
           <a href="/api/gspc" className="text-slate-600 hover:underline dark:text-emerald-100/70">
             /api/gspc
@@ -286,12 +322,8 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
         </p>
       </div>
 
-      {/* 2026-09-02: removed the dead iframe to csoai-gspc-board.static.hf.space
-          (the Space has been sunset; the URL 302s and the HF API returns 404).
-          The /api/gspc data is the source of truth, so we render it directly
-          below as a self-contained table — no iframe dependency, no third-
-          party origin to break. Anyone can still open the HF mirror from
-          the figcaption link. */}
+      {/* The /api/gspc data is the source of truth and renders directly below;
+          the Hugging Face surface remains a distribution mirror. */}
       <div className="mt-4">
         {error ? (
           <p className="text-sm text-slate-600 dark:text-emerald-100/70">The axis strip needs GET /api/gspc and it did not answer. Empty stays empty.</p>
@@ -306,9 +338,9 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
 
       <div className="mt-3 text-sm">
         <a href={SPACE_PAGE_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
-          Open the living board on Hugging Face
+          Open the GSPC board mirror on Hugging Face
         </a>
-        <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board (HF mirror; live data still served from this page)</span>
+        <span className="text-slate-500 dark:text-emerald-100/60"> · csoai/gspc-board (distribution mirror; canonical live data is GET /api/gspc)</span>
       </div>
 
       <p className="mt-4 text-sm text-slate-600 dark:text-emerald-100/70">Measurement, not certification. Empty stays empty.</p>

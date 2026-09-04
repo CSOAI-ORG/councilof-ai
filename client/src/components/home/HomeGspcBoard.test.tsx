@@ -8,7 +8,7 @@
  *
  * Pinned:
  *  - the headline quotes the mocked totals.public_count verbatim
- *  - the iframe src points at the verified Space embed origin
+ *  - no iframe; the live API is rendered natively and Hugging Face is a mirror link
  *  - the strip shows 9 axes, "Load more (N)" is derived from the array, expanded shows all
  *  - a TIE is never rendered as a win; EXCLUDED_OWN_MODEL / NO_SIGNED_CARD print as states
  *  - facts axes print "deterministic facts · no leader accuracy"
@@ -26,6 +26,7 @@ import HomeGspcBoard, {
   visibleAxes,
 } from "./HomeGspcBoard";
 import { loadGspcBoard, type GspcAxis, type GspcPayload } from "../board/useGspcBoard";
+import { AXES_FIN } from "../../../../functions/api/_gspc_axes_fin";
 
 const MOCK_COUNT = "22 axis · 22 measured (mock)";
 
@@ -47,7 +48,15 @@ const facts: GspcAxis[] = [
   "ai-adoption-components",
   "labour-components",
   "humanoid-labour-index",
-].map((axis, i): GspcAxis => ({ axis, kind: "deterministic-facts", n: 6 + i, n_unit: "issuer accounts (not bank items)", status: "MEASURED" }));
+].map((axis, i): GspcAxis => ({
+  axis,
+  kind: "deterministic-facts",
+  n: 6 + i,
+  n_unit: "issuer accounts (not bank items)",
+  status: "MEASURED",
+  evidence_url: `/interop/${axis}.json`,
+  run_attestation: i === 0 ? "ED25519_SIGNED" : i === 7 ? undefined : "CONTENT_ADDRESSED_UNSIGNED",
+}));
 
 const payload: GspcPayload = {
   schema: "mock",
@@ -76,15 +85,14 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain(MOCK_COUNT);
   });
 
-  it("does not iframe the dead HF Space; renders the BoardStrip from /api/gspc data and links to the HF page", () => {
+  it("does not iframe Hugging Face; renders /api/gspc natively and links to the mirror", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
-    // The 2026-09-02 fix: csoai-gspc-board.static.hf.space was sunset. The
-    // iframe is gone — the page renders the live /api/gspc data directly
-    // and links out to the HF Space page (where the mirror lives, if any).
     expect(html).not.toContain("<iframe");
     expect(html).not.toContain("csoai-gspc-board.static.hf.space");
     expect(html).toContain(`href="${SPACE_PAGE_URL}"`);
-    expect(html).toContain("Open the living board on Hugging Face");
+    expect(html).toContain("Open the GSPC board mirror on Hugging Face");
+    expect(html).toContain("rendered directly here; Hugging Face is a distribution mirror");
+    expect(html).not.toContain("This page embeds it and does not redraw it");
     expect(html).not.toContain("gspc-governance-leaderboard");
   });
 
@@ -132,10 +140,53 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
   });
 
   it("facts axes print the facts note and no separation verdict", () => {
-    const open = renderToStaticMarkup(<BoardStrip axes={facts} />);
+    const open = renderToStaticMarkup(<BoardStrip axes={facts} initiallyExpanded />);
     expect(open).toContain("deterministic facts · no leader accuracy");
     expect(open).toContain("facts · no separation test");
+    expect(open).toContain("Ed25519-signed run");
+    expect(open).toContain("Content-addressed unsigned run");
+    expect(open).toContain("Run artifact");
+    expect(open).toContain('/interop/reserve-attestation.json');
+    expect(open).not.toContain('href="/dashboard?tab=leaderboard#provenance-controls"');
     expect(open).not.toMatch(/SEPARATED|UNTESTED/);
+  });
+
+  it("links model axes to model evidence while fact axes link their own run", () => {
+    const html = renderToStaticMarkup(<BoardStrip axes={[comparison[1], facts[1]]} initiallyExpanded />);
+    expect(html).toContain('href="/gspc/safety/"');
+    expect(html).toContain('href="/interop/reserve-attestation.json"');
+    expect(html).not.toContain('tab=leaderboard');
+  });
+
+  it("fails closed when a facts row has no published run artifact", () => {
+    const html = renderToStaticMarkup(
+      <BoardStrip axes={[{ axis: "future-fact", kind: "deterministic-facts", status: "MEASURED" }]} />,
+    );
+    expect(html).toContain("No run artifact published.");
+    expect(html).not.toContain('href="/dashboard?tab=leaderboard"');
+  });
+
+  it("renders the actual eight financial runs as exactly one signed and seven unsigned links", () => {
+    const actualFacts = AXES_FIN as unknown as GspcAxis[];
+    const list = renderToStaticMarkup(<BoardStrip axes={actualFacts} initiallyExpanded />);
+    const table = renderToStaticMarkup(
+      <BoardStrip axes={actualFacts} initiallyExpanded initialView="table" />,
+    );
+
+    expect(actualFacts).toHaveLength(8);
+    expect(actualFacts.filter((axis) => axis.run_attestation === "ED25519_SIGNED")).toHaveLength(1);
+    expect(actualFacts.filter((axis) => axis.run_attestation === "CONTENT_ADDRESSED_UNSIGNED")).toHaveLength(7);
+    expect(list.match(/>Ed25519-signed run</g) ?? []).toHaveLength(1);
+    expect(list.match(/>Content-addressed unsigned run</g) ?? []).toHaveLength(7);
+    expect(table.match(/>Ed25519-signed run</g) ?? []).toHaveLength(1);
+    expect(table.match(/>Content-addressed unsigned run</g) ?? []).toHaveLength(7);
+    for (const axis of actualFacts) {
+      expect(axis.evidence_url).toMatch(/^\/interop\/.+\.json$/);
+      expect(list).toContain(`href="${axis.evidence_url}"`);
+      expect(table).toContain(`href="${axis.evidence_url}"`);
+    }
+    expect(list).not.toContain("tab=leaderboard");
+    expect(table).not.toContain("tab=leaderboard");
   });
 
   it("table view carries the same rows", () => {
@@ -149,6 +200,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
   it("links to the leaderboard and the endpoint, ends on the footer line, uses no forbidden strings", () => {
     const html = renderToStaticMarkup(<HomeGspcBoard data={payload} />);
     expect(html).toContain('href="/dashboard?tab=leaderboard"');
+    expect(html).toContain("Signed model-card matrix");
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
     expect(html).toContain("Witnesses bind exact root bytes and may still be pending.");
