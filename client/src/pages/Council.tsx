@@ -463,7 +463,7 @@ export default function Council() {
         </div>
       </section>
 
-      {/* Real-time Stats */}
+      {/* Council design status */}
       <section className="py-20 bg-slate-900 text-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <motion.div
@@ -475,10 +475,10 @@ export default function Council() {
           >
             <Badge className="mb-4 bg-amber-500/20 text-amber-400 border-amber-400/30">
               <Activity className="h-3.5 w-3.5 mr-1" />
-              Simulated Performance — design model
+              Design status — not a live council
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Council <span className="text-emerald-400">Performance</span>
+              Council <span className="text-emerald-400">Design Status</span>
             </h2>
           </motion.div>
 
@@ -490,10 +490,10 @@ export default function Council() {
             className="grid md:grid-cols-4 gap-6"
           >
             {[
-              { value: "99.9%", label: "Uptime", icon: Server },
-              { value: "<2s", label: "Avg Response", icon: Clock },
-              { value: "100%", label: "Consensus Rate", icon: CheckCircle },
-              { value: "0", label: "Security Breaches", icon: Shield },
+              { value: "33", label: "Designed Seats", icon: Server },
+              { value: "23", label: "Target Threshold", icon: CheckCircle },
+              { value: "1.00", label: "Latest n_eff", icon: Activity },
+              { value: "0", label: "Live Council Votes", icon: Shield },
             ].map((stat, index) => (
               <motion.div key={stat.label} variants={fadeInUp}>
                 <Card className="bg-white/5 border-white/10 text-center">

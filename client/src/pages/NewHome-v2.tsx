@@ -451,8 +451,9 @@ export default function NewHomeV2() {
             Many frameworks. One <span className="text-emerald-400">signed</span> proof.
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-gray-300">
-            Governance rules from every jurisdiction reach a fault-aware council consensus — and out comes one
-            Ed25519-signed record anyone can verify offline, without trusting a vendor dashboard.
+            Frozen instruments turn evidence into an Ed25519-signed measurement record anyone can
+            verify offline. The 33-seat council and 23/33 threshold remain a non-live design;
+            independence and fault tolerance are not demonstrated.
           </p>
           <ConsensusHero className="mt-8 w-full max-w-4xl mx-auto rounded-2xl" />
         </div>
@@ -721,7 +722,7 @@ export default function NewHomeV2() {
                     },
                     {
                       title: "24/7 AI Monitoring",
-                      desc: "33 measurement agents monitor systems continuously. Continuous measurement, not paper promises.",
+                      desc: "Dated measurements can be rerun when evidence changes. No live 33-seat monitoring council is claimed.",
                     },
                     {
                       title: "Signed evidence",

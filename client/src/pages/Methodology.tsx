@@ -41,7 +41,7 @@ const PREDICATES = [
     name: "signature_alg",
     checks: "Signature algorithm matches the declared readiness level",
     verdict: "pass / fail",
-    status: "Ed25519 only today. Post-quantum ML-DSA-65 (FIPS-204) is built but not shipped, and nothing published is ML-DSA-65 signed (CR-006).",
+    status: "Ed25519 only today. Post-quantum ML-DSA-65 (FIPS-204) is planned and scaffolded only; no PQC signer/runtime is built or published (CR-006).",
   },
 ];
 
@@ -284,7 +284,7 @@ export default function Methodology() {
             <li>
               Not &quot;verified authentic&quot;. The chain is sha256 hash-linked for
               tamper-evidence; authorship is carried by the signed card, which is under a kilobyte and carries nine fields — not the sample size or interval, which live on the board. {ANCHORING_CLAIM}{" "}
-              The post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.
+              Post-quantum ML-DSA-65 (FIPS-204) is planned and scaffolded only; no PQC signer/runtime is built or published.
             </li>
           </ul>
         </section>

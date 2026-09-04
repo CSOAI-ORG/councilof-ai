@@ -1,6 +1,5 @@
-// ConsensusHero — the one-glance story of CSOAI: many frameworks reach signed consensus,
-// producing one offline-verifiable proof. Pure animated SVG/CSS (no photos, no deps).
-// Animation: flow lines draw in, the 23/33 council arc fills, the signed receipt stamps in.
+// ConsensusHero — the one-glance story of CSOAI: published frameworks feed a frozen
+// measurement and an offline-verifiable record. The council ring is explicitly design-only.
 // Fully static under prefers-reduced-motion.
 
 const EM = "#10b981", TE = "#2dd4bf";
@@ -10,7 +9,7 @@ export default function ConsensusHero({ className = "" }: { className?: string }
   const cx = 470, cy = 190; // council hub
   return (
     <svg viewBox="0 0 820 380" className={className} role="img"
-      aria-label="Illustration: seven AI-governance frameworks converge on a designed 23-of-33 council consensus that yields one Ed25519-signed, offline-verifiable proof"
+      aria-label="Illustration: seven AI-governance frameworks feed a frozen measurement that yields an Ed25519-signed record; a separate 33-seat, 23-of-33 council design is not live"
       xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="ch-bg" x1="0" y1="0" x2="1" y2="1">
@@ -42,7 +41,7 @@ export default function ConsensusHero({ className = "" }: { className?: string }
         })}
       </g>
 
-      {/* council hub: 23/33 arc ring + shield + check */}
+      {/* Measurement hub. The 23/33 ring is a design label, not a live vote. */}
       <g>
         <circle cx={cx} cy={cy} r="52" fill="none" stroke="rgba(255,255,255,.10)" strokeWidth="7" />
         {/* arc = 23/33 of the circle */}
@@ -52,7 +51,9 @@ export default function ConsensusHero({ className = "" }: { className?: string }
         <path d={`M${cx - 15} ${cy} l10 11 20 -22`} fill="none" stroke="url(#ch-em)" strokeWidth="4"
           strokeLinecap="round" strokeLinejoin="round" className="ch-check" />
         <text x={cx} y={cy + 74} fontFamily="ui-monospace,monospace" fontSize="11" fontWeight="700"
-          textAnchor="middle" fill={TE}>23 / 33 · by design</text>
+          textAnchor="middle" fill={TE}>MEASURE · SIGN</text>
+        <text x={cx} y={cy + 91} fontFamily="ui-monospace,monospace" fontSize="9" fontWeight="700"
+          textAnchor="middle" fill="#fbbf24">COUNCIL: 23 / 33 TARGET · NOT LIVE</text>
       </g>
 
       {/* signed receipt card, stamped out on the right */}

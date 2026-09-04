@@ -8,7 +8,7 @@ import type { Slide } from "@/components/scrollworld";
  *     — DROPPED. We publish timestamp_authority: "none". No RFC-3161, no OpenTimestamps,
  *     no Bitcoin anchor. The real anchor is Ed25519 + SHA-256 hash-chain vs did:web:csoai.org.
  *  2. Deck slide 10 "Ed25519 Signature: Post-quantum ready" — FALSE. Ed25519 is not
- *     post-quantum. ML-DSA-65 (FIPS-204) is BUILT, NOT SHIPPED (client/src/data/chain.ts);
+ *     post-quantum. ML-DSA-65 (FIPS-204) is planned/scaffolded only; no PQC runtime is built;
  *     the label names it only in the commit it ships. Rewritten to that.
  *  3. Deck slide 10 "Confidence: 99.9%" — no such field exists on any card and no source
  *     evidences it. DROPPED rather than published.
@@ -200,7 +200,7 @@ export const COLISEUM_NOT_CLAIMED = [
   "We do not claim any mandate, appointment or interface agreement with the EU AI Office, UK DSIT, GPAI bodies or any US authority. We measure published systems against published law on nobody's instruction.",
   "We do not claim the signature proves a system is correct, safe or lawful. A surviving signature proves provenance only — these bytes, unaltered, from this key. Everything else is what the measurement itself says.",
   "We do not claim any independent time-stamping. No RFC-3161, no OpenTimestamps, no blockchain anchor: our cards declare no timestamping authority, and the anchor is Ed25519 over a SHA-256 hash chain verified against did:web:csoai.org.",
-  "We do not claim post-quantum signing. Cards are signed with Ed25519 today. The ML-DSA-65 (FIPS-204) signer is built but not shipped, and the label will name it in the same commit it ships — never before.",
+  "We do not claim post-quantum signing. Cards are signed with Ed25519 today. ML-DSA-65 (FIPS-204) is planned and scaffolded only, and no PQC runtime is built or published.",
   "We do not claim to certify, accredit or issue a legal ruling. Reports are mapped to provisions; the enforcement judgement belongs to the regulator.",
 ];
 

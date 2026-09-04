@@ -228,7 +228,7 @@ export default function PDCASimulator() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Interactive PDCA Cycle Simulator</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Walk through a complete SOAI-PDCA cycle with a fictional AI system and see how the
-            designed 33-Seat Council provides recommendations at each phase.
+            proposed 33-seat Council workflow could structure review at each phase.
           </p>
           <p className="mt-3 inline-block rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
             Everything on this page — the system, the figures, and every &ldquo;council
@@ -360,8 +360,8 @@ export default function PDCASimulator() {
                 Designed council recommendations (simulation)
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
-                Democratic consensus from 33 AI agents across multiple providers (OpenAI, Anthropic,
-                Google, Meta, and more)
+                Scripted examples of a proposed 33-seat workflow with a target threshold of 23/33.
+                No live voters operate here; independence and fault tolerance are not demonstrated.
               </p>
             </CardHeader>
             <CardContent>
