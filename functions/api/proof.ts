@@ -115,9 +115,29 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const root = (await rootRes.json()) as {
     merkle_root?: string;
     card_sha256?: string[];
+    card_count?: number;
     as_of?: string;
   };
   const hashes = Array.isArray(root.card_sha256) ? root.card_sha256 : [];
+
+  // The signed count must bind the leaves we are about to index into. If they disagree,
+  // the root admits a second leaf set (see tree_caveat in root.json) and no proof cut
+  // from it means anything. Fail closed rather than issue a proof we cannot bound.
+  if (typeof root.card_count === "number" && root.card_count !== hashes.length) {
+    return json(
+      {
+        schema: "csoai.public-root-proof/0.1",
+        error: "root_count_mismatch",
+        path: "/api/proof",
+        card_count: root.card_count,
+        leaves: hashes.length,
+        reason:
+          `The published root declares ${root.card_count} cards but ships ${hashes.length} leaves. ` +
+          "The signed count is what makes this tree unambiguous, so no inclusion proof is issued.",
+      },
+      503,
+    );
+  }
 
   if (bundle && paid) {
     // O(1) subrequests. This used to fetch /proofs/<h>.json AND fall back to /cards/<h>.json
@@ -153,6 +173,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
         index: i,
         proof: Array.isArray(w.proof) ? w.proof : [],
         merkle_root: root.merkle_root,
+        card_count: root.card_count ?? null,
       });
     }
     return json(
@@ -202,6 +223,14 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     );
   }
 
+// card_count travels with every proof from 2026-09-04.
+// The public root's tree pairs an odd node WITH ITSELF rather than promoting it
+// (Bitcoin-style). That makes it collidable in the CVE-2012-2459 sense: appending
+// duplicates of the tail yields a different leaf set with an identical merkle_root —
+// demonstrated on the live 140-leaf root, which collides at 144. Recomputing a path
+// therefore proves nothing on its own; the SIGNED card_count is what bounds the tree,
+// and a client cannot apply that bound unless we send it. A proof whose index is at or
+// past card_count points into the duplicated region and was never signed.
   const proofRes = await fetch(u(`/proofs/${sha.slice(0, 16)}.json`));
   if (proofRes.ok) {
     const body = await proofRes.json();
@@ -211,6 +240,13 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
       free: true,
       as_of: root.as_of || null,
       ...body,
+      // After the spread on purpose: card_count must come from the root we just read,
+      // never from a stored proof file that may predate the current publish. A stale
+      // bound is worse than none — it would authorise leaves the root never signed.
+      card_count: root.card_count ?? null,
+      tree_bound:
+        "Reject this proof if index >= card_count: the tree duplicates an odd node, so a " +
+        "path into the duplicated tail recomputes to the same root without having been signed.",
     });
   }
 
@@ -238,6 +274,10 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
     index,
     proof: wrapped.proof || [],
     merkle_root: root.merkle_root || null,
+    card_count: root.card_count ?? null,
+    tree_bound:
+      "Reject this proof if index >= card_count: the tree duplicates an odd node, so a " +
+      "path into the duplicated tail recomputes to the same root without having been signed.",
     note: "Inclusion from the card wrapper. public/proofs/ may trail up to the last publish.",
   });
 };

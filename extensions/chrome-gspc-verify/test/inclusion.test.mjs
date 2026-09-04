@@ -41,7 +41,9 @@ describe("merkle recompute against the committed root", () => {
 describe("checkInclusion — three states, injected fetch", () => {
   const leaf = root.card_sha256[2];
   const w = readJson(path.join(REPO, "public/cards", `${leaf.slice(0, 16)}.json`));
-  const inclusionBody = { schema: "csoai.public-root-proof/0.1", kind: "inclusion", free: true, as_of: root.as_of, sha256: leaf, index: 2, proof: w.proof, merkle_root: root.merkle_root };
+  // card_count is part of the proof from 2026-09-04: without it the tree size is
+  // unbounded and a duplicated-tail leaf cannot be ruled out (CVE-2012-2459 shape).
+  const inclusionBody = { schema: "csoai.public-root-proof/0.1", kind: "inclusion", free: true, as_of: root.as_of, sha256: leaf, index: 2, proof: w.proof, merkle_root: root.merkle_root, card_count: root.card_count };
 
   it("inclusion whose path recomputes -> VALID", async () => {
     const r = await checkInclusion(leaf, async () => ({ status: 200, body: inclusionBody }));
@@ -51,6 +53,24 @@ describe("checkInclusion — three states, injected fetch", () => {
   it("inclusion whose path does NOT recompute -> INVALID even though the server said inclusion", async () => {
     const r = await checkInclusion(leaf, async () => ({ status: 200, body: { ...inclusionBody, merkle_root: "ab".repeat(32) } }));
     expect(r.state).toBe(STATES.INVALID);
+  });
+  it("a proof past the signed card_count -> INVALID, even though the path recomputes", async () => {
+    // The forgery this guard exists for. The tree pairs an odd node with itself, so a
+    // leaf set with duplicated tail entries hashes to the SAME merkle_root — proven on
+    // the live root 2026-09-04 (140 leaves and 144 leaves, identical root). Recomputing
+    // the path is therefore not sufficient; only the signed count bounds the tree.
+    const r = await checkInclusion(leaf, async () => ({
+      status: 200,
+      body: { ...inclusionBody, index: root.card_count, card_count: root.card_count },
+    }));
+    expect(r.state).toBe(STATES.INVALID);
+    expect(r.reason).toMatch(/signed root commits to only/);
+  });
+  it("a proof with no card_count -> UNCHECKABLE, never VALID", async () => {
+    const { card_count, ...noBound } = inclusionBody;
+    const r = await checkInclusion(leaf, async () => ({ status: 200, body: noBound }));
+    expect(r.state).toBe(STATES.UNCHECKABLE);
+    expect(r.reason).toMatch(/tree size is unbounded/);
   });
   it("not_found -> INVALID 'not a leaf' (the MCP verify_inclusion convention)", async () => {
     const r = await checkInclusion("00".repeat(32), async () => ({ status: 404, body: { error: "not_found", reason: "sha is not a leaf of the last published root", as_of: root.as_of } }));

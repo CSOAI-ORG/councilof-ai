@@ -6,9 +6,15 @@
  *   2. An anchoring STATUS per rail — today every one of them is negative
  *      (NOT_STAMPED / NOT_SUBMITTED / NOT_YET) and no anchor identifier is invented.
  *      Anchoring rails are 'planned' in facts.json; this endpoint anchors nothing.
- *   3. Attested by the 33-agent BFT council (23/33 quorum)
- *   4. Added to the training corpus
- *   5. Fed into the next council iteration
+ *   3. Added to the training corpus
+ *   4. Fed into the next council iteration
+ *
+ * This previously read "3. Attested by the 33-agent BFT council (23/33 quorum)". That claim did
+ * not survive measurement: effective sample size came out at n_eff = 1.00 of 3 — the voters were
+ * correlated to the point of being one voter wearing three hats, so 23/33 never described
+ * independent agreement. Removed rather than reworded, and not to be restored without a fresh
+ * n_eff that supports it. This comment is the source the published OpenAPI summary is generated
+ * from, so an overstatement here becomes an overstatement on the public surface.
  *
  * POST /api/learn-loop
  *   body: { kind: "chat"|"game"|"measure"|"verify"|"attest", payload: ... }
@@ -139,7 +145,16 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
       quorum_reached: true,
       as_of: asOf,
     },
-    note: "Every end-user interaction is a 3KB signed card that anchors to OTS + Rekor + EAS. The 33-agent BFT council attests. The training pair feeds the council's next iteration.",
+    // PUBLISHED STRING — this is served to callers, so it is held to the same standard as any
+    // page. It used to assert that interactions "anchor to OTS + Rekor + EAS" and that "the
+    // 33-agent BFT council attests". Neither is true: those rails are 'planned' in facts.json
+    // and this endpoint anchors nothing (see the anchoring block above, which now returns a
+    // negative status and a null identifier for each), and the 23/33 quorum claim measured
+    // n_eff = 1.00 of 3 — one voter wearing three hats, not independent agreement.
+    note:
+      "Every end-user interaction becomes a 3KB Ed25519-signed card, and the training pair feeds " +
+      "the next iteration. Anchoring rails (OTS, Rekor, EAS) are PLANNED — this endpoint anchors " +
+      "nothing and invents no anchor identifier; see the anchoring block for each rail's status.",
   });
 };
 
@@ -154,8 +169,8 @@ export const onRequestGet: PagesFunction = async () => {
       "1. User interacts (chat / game / measure / verify / attest)",
       "2. AI council responds",
       "3. Emit 3KB signed card (Ed25519)",
-      "4. Anchor to OTS + Rekor + EAS",
-      "5. 33-agent BFT council votes (23/33 quorum)",
+      "4. Report an anchoring status per rail — OTS / Rekor / EAS are PLANNED, so each returns a negative status and a null identifier; nothing is anchored here",
+      "5. Council votes (quorum recorded; independence NOT established — measured n_eff 1.00 of 3)",
       "6. Add to training corpus",
       "7. Feed the next council iteration",
     ],

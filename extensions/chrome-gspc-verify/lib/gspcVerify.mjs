@@ -241,6 +241,21 @@ export async function checkInclusion(sha, fetchJson) {
     return { state: STATES.UNCHECKABLE, reason: `GET /api/proof returned HTTP ${res?.status ?? "?"} with no JSON body.`, url };
   }
   if (d.kind === "inclusion" && Array.isArray(d.proof) && typeof d.merkle_root === "string" && Number.isInteger(d.index)) {
+    // The root's tree duplicates an odd node rather than promoting it, so it is
+    // collidable in the CVE-2012-2459 sense: a leaf set with duplicated tail entries
+    // recomputes to the SAME merkle_root (demonstrated on the live 140-leaf root
+    // 2026-09-04 — 144 leaves, identical root). Recomputing the path is therefore not
+    // sufficient on its own; the signed card_count is what bounds the tree. A leaf
+    // sitting at or past that bound is in the duplicated region and was never signed.
+    if (Number.isInteger(d.card_count) && d.index >= d.card_count) {
+      return { state: STATES.INVALID, reason: `The proof places this card at leaf ${d.index}, but the signed root commits to only ${d.card_count} cards. A path into the duplicated tail recomputes to the same root without having been signed.`, url, merkle_root: d.merkle_root, as_of: d.as_of ?? null, index: d.index };
+    }
+    if (d.index < 0) {
+      return { state: STATES.INVALID, reason: `The proof names a negative leaf index (${d.index}).`, url, merkle_root: d.merkle_root, as_of: d.as_of ?? null };
+    }
+    if (!Number.isInteger(d.card_count)) {
+      return { state: STATES.UNCHECKABLE, reason: `The proof recomputes, but /api/proof did not return card_count, so the tree size is unbounded and a duplicated-tail leaf cannot be ruled out. Ask for card_count.`, url, merkle_root: d.merkle_root, as_of: d.as_of ?? null, index: d.index };
+    }
     const recomputed = await merkleRootFromProof(sha, d.index, d.proof);
     if (recomputed !== d.merkle_root) {
       return { state: STATES.INVALID, reason: `The server returned a proof, but recomputing it locally gives ${recomputed.slice(0, 16)}…, not the root it names (${d.merkle_root.slice(0, 16)}…).`, url, merkle_root: d.merkle_root, as_of: d.as_of ?? null };
