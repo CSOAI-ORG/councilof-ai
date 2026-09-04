@@ -1,3 +1,10 @@
+
+/**
+ * The version this server reports to a client. It read "0.1.0" while the published package was
+ * 0.2.1 and the registry entry said 1.2.0 — three numbers for one server, so a client could not
+ * tell which build it was talking to. Pinned to the npm package by mcp-discovery.test.ts.
+ */
+const MCP_SERVER_VERSION = "0.2.1";
 /**
  * /mcp — the public MCP endpoint.
  *
@@ -188,7 +195,7 @@ export const onRequest: PagesFunction = async (ctx) => {
       return rpc(call.id, {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "csoai-gspc-mcp", version: "0.1.0" },
+        serverInfo: { name: "csoai-gspc-mcp", version: MCP_SERVER_VERSION },
         instructions:
           "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet, call again with x_payment. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio.",
       });
