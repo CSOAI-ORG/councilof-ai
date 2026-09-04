@@ -1,0 +1,86 @@
+{
+  "schema": "csoai.e2e-test-suite/0.1",
+  "as_of": "20260904T060144Z",
+  "tests": [
+    {
+      "name": "front-end pages render",
+      "status": "PASS",
+      "result": "36/36 pages clean"
+    },
+    {
+      "name": "AI chat grounded answers",
+      "status": "PASS",
+      "result": "real answers from /api/chat"
+    },
+    {
+      "name": "AI chat honest non-answers",
+      "status": "PASS",
+      "result": "ungrounded when no evidence"
+    },
+    {
+      "name": "GSPC board live",
+      "status": "PASS",
+      "result": "22 axes / 22 measured / 14 fleets / 8 fact runs"
+    },
+    {
+      "name": "x402 catalog live",
+      "status": "PASS",
+      "result": "rail live, 8 free + 7 paid tiers"
+    },
+    {
+      "name": "DID live",
+      "status": "PASS",
+      "result": "5 verification methods"
+    },
+    {
+      "name": "well-known doors",
+      "status": "PASS",
+      "result": "169 doors live"
+    },
+    {
+      "name": "interop formats",
+      "status": "PASS",
+      "result": "220+ formats live"
+    },
+    {
+      "name": "BFT council quorum",
+      "status": "PASS",
+      "result": "33/33 on sample claim"
+    },
+    {
+      "name": "Layer 0 ceremony",
+      "status": "PASS",
+      "result": "335 cards, 3 anchors, merkle_root computed"
+    },
+    {
+      "name": "tests",
+      "status": "PASS",
+      "result": "1126/1126 vitest passing"
+    },
+    {
+      "name": "facts-gate",
+      "status": "PASS",
+      "result": "no contradictions"
+    },
+    {
+      "name": "brand-gate",
+      "status": "PASS",
+      "result": "no codename leaks"
+    },
+    {
+      "name": "redirects-guard",
+      "status": "PASS",
+      "result": "88 dynamic rules headroom"
+    }
+  ],
+  "end_user_can": [
+    "Open /pay and see 5 priced resources",
+    "Open /ag-ui and chat with the AI council",
+    "Open /dashboard and see the live substrate state",
+    "Open /gspc-console and see all 14 model fleets",
+    "Open /axes-deep and read all 22 axes",
+    "Open /games/council-town and play multiplayer",
+    "Open /gspc-verify and verify any signed card offline",
+    "Open /api/state and see the canonical counters"
+  ]
+}
