@@ -125,6 +125,48 @@ describe("inclusion proofs from GET /api/proof", () => {
       reason: "Signature mismatch.",
     })).state).toBe("INVALID");
   });
+
+  it("rejects a root-hash-as-leaf proof with an empty path", async () => {
+    const validSig = await verifyRootSignature(root);
+    const rootAsLeaf: ProofDoc = {
+      schema: "csoai.public-root-proof/0.1",
+      kind: "inclusion",
+      sha256: root.merkle_root,
+      index: 0,
+      proof: [],
+      merkle_root: root.merkle_root,
+    };
+
+    const result = await verifyPublishedInclusion(rootAsLeaf, root.merkle_root!, root, validSig);
+    expect(result.state).toBe("INVALID");
+    expect(result.reason).toContain("current root.card_sha256[0]");
+  });
+
+  it("requires a non-negative in-range index bound to the exact authoritative leaf", async () => {
+    const validSig = await verifyRootSignature(root);
+    const requested = proof0.sha256!;
+
+    const wrongIndex = await verifyPublishedInclusion({ ...proof0, index: 1 }, requested, root, validSig);
+    expect(wrongIndex.state).toBe("INVALID");
+    expect(wrongIndex.reason).toContain("current root.card_sha256[1]");
+
+    const negativeIndex = await verifyPublishedInclusion({ ...proof0, index: -1 }, requested, root, validSig);
+    expect(negativeIndex.state).toBe("UNCHECKABLE");
+    expect(negativeIndex.reason).toContain("non-negative integer");
+
+    const fractionalIndex = await verifyPublishedInclusion({ ...proof0, index: 0.5 }, requested, root, validSig);
+    expect(fractionalIndex.state).toBe("UNCHECKABLE");
+    expect(fractionalIndex.reason).toContain("non-negative integer");
+
+    const outOfRange = await verifyPublishedInclusion(
+      { ...proof0, index: root.card_sha256!.length },
+      requested,
+      root,
+      validSig,
+    );
+    expect(outOfRange.state).toBe("INVALID");
+    expect(outOfRange.reason).toContain("outside the current root's");
+  });
 });
 
 describe("witness rails — states verbatim, never a tick for NOT_YET", () => {

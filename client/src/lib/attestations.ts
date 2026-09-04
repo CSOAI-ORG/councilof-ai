@@ -374,8 +374,33 @@ export async function verifyPublishedInclusion(
       reason: `The current root signature is ${rootSignature?.state ?? "not checked"}; inclusion cannot be promoted to VALID. ${rootSignature?.reason ?? ""}`.trim(),
     };
   }
-  if (!Number.isInteger(root.card_count) || !Number.isInteger(p.index) || (p.index as number) >= (root.card_count as number)) {
-    return { state: "UNCHECKABLE", reason: "The proof index cannot be bounded by the current root card_count." };
+  if (
+    !Array.isArray(root.card_sha256) ||
+    !Number.isInteger(root.card_count) ||
+    (root.card_count as number) < 0 ||
+    root.card_sha256.length !== root.card_count ||
+    !root.card_sha256.every((sha) => typeof sha === "string" && HEX64.test(sha))
+  ) {
+    return {
+      state: "UNCHECKABLE",
+      reason: "The current root's card_sha256[] is missing, malformed, or does not agree with card_count, so the proof index cannot be bound to an authoritative leaf.",
+    };
+  }
+  if (!Number.isInteger(p.index) || (p.index as number) < 0) {
+    return { state: "UNCHECKABLE", reason: "The proof index must be a non-negative integer." };
+  }
+  const proofIndex = p.index as number;
+  if (proofIndex >= root.card_sha256.length) {
+    return {
+      state: "INVALID",
+      reason: `The proof index ${proofIndex} is outside the current root's ${root.card_sha256.length} authoritative leaves.`,
+    };
+  }
+  if (root.card_sha256[proofIndex] !== p.sha256) {
+    return {
+      state: "INVALID",
+      reason: `The proof names ${String(p.sha256)} at index ${proofIndex}, but current root.card_sha256[${proofIndex}] is ${root.card_sha256[proofIndex]}.`,
+    };
   }
   const path = await verifyInclusion(p);
   return path.state === "VALID"
