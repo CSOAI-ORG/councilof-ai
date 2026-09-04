@@ -8,7 +8,7 @@ import {
 import ToolRunner from "./ToolRunner";
 import { useSearch } from "wouter";
 
-const FREE_TOOLS = [
+export const FREE_TOOLS = [
   "board_totals",
   "get_axis",
   "verify_card",
@@ -18,13 +18,14 @@ const FREE_TOOLS = [
   "verify_inclusion",
 ] as const;
 
-const METERED_TOOLS = [
+export const METERED_TOOLS = [
   "commission_card",
   "art50_marking_evidence",
   "rwa_evidence",
-  "witness_hash",
   "receipts_batch",
 ] as const;
+
+export const PUBLISHED_TOOL_COUNT = FREE_TOOLS.length + METERED_TOOLS.length;
 
 export default function DashboardToolsPane() {
   const search = useSearch();
@@ -57,6 +58,9 @@ export default function DashboardToolsPane() {
             The runner reads the current catalogue from{" "}
             <code className="font-mono text-xs">POST /mcp</code>, builds inputs
             from each tool’s JSON Schema, and prints the endpoint’s reply.
+            The current runtime advertises {PUBLISHED_TOOL_COUNT} tools: {FREE_TOOLS.length} free
+            reads and {METERED_TOOLS.length} metered paths. The quarantined
+            witness path is not advertised.
             Discovery is <strong className="text-foreground">CATALOGUED</strong>
             ; only a completed call is{" "}
             <strong className="text-foreground">RUNTIME_OBSERVED</strong>. It is

@@ -75,7 +75,7 @@ const differentiators = [
     title: "Governance",
     csoai: "Open standards",
     competitors: "Proprietary/closed",
-    description: "Council consensus, transparent decision-making",
+    description: "Designed council workflow with public experiment records",
   },
 ];
 
@@ -173,21 +173,21 @@ const comparisonFeatures = [
     features: [
       {
         name: "Real-time Monitoring",
-        csoai: "✓",
+        csoai: "Not live",
         traditional: "✗",
         aiTools: "Partial",
         consulting: "✗",
       },
       {
-        name: "Council (33-seat consensus)",
-        csoai: "✓",
+        name: "Council (33-seat design)",
+        csoai: "Design only",
         traditional: "✗",
         aiTools: "✗",
         consulting: "✗",
       },
       {
         name: "AI Safety Watchdog",
-        csoai: "✓",
+        csoai: "Intake only",
         traditional: "✗",
         aiTools: "✗",
         consulting: "✗",
@@ -226,7 +226,7 @@ const comparisonFeatures = [
         consulting: "✗",
       },
       {
-        name: "Real-time Recommendations",
+        name: "Run-scoped Recommendations",
         csoai: "✓",
         traditional: "Partial",
         aiTools: "✓",
@@ -305,7 +305,7 @@ const comparisonFeatures = [
       },
       {
         name: "Vendor-Independent",
-        csoai: "✓",
+        csoai: "Not established",
         traditional: "✓",
         aiTools: "Partial",
         consulting: "✓",
@@ -340,7 +340,7 @@ const uniqueAdvantages = [
     icon: Users,
     title: "Council",
     description:
-      "33-seat consensus mechanism ensures transparent, unbiased decision-making. Distributed governance prevents any single entity from controlling AI safety outcomes.",
+      "A 33-seat review architecture is designed, not live. The latest independence experiment was fully correlated, so no unbiased-consensus or capture-resistance claim is made.",
   },
   {
     icon: DollarSign,
@@ -352,7 +352,7 @@ const uniqueAdvantages = [
     icon: Eye,
     title: "Crowdsourced Watchdog",
     description:
-      "Community-driven AI safety monitoring. Analysts worldwide contribute expertise to identify risks in real-time, creating a vigilant safety network.",
+      "Public incident intake is available. A staffed global analyst network and real-time safety monitoring are not yet offered.",
   },
   {
     icon: Globe,
@@ -381,10 +381,10 @@ const testimonials = [
   },
   {
     name: "127 provisions",
-    role: "Under continuous hash watch",
+    role: "Published regulation snapshot",
     company: "Source: corpus-watch signed delta reports",
     quote:
-      "EU AI Act, UK GDPR, DPA 2018, and NIS2 baselines polled continuously. When the law changes, a signed drift report lands. Unmeasured provisions are marked, never scored.",
+      "Signed baseline and delta artefacts record what a run observed. They do not constitute continuous legal monitoring. Unmeasured provisions are marked, never scored.",
     avatar: "127",
   },
   {
@@ -455,7 +455,7 @@ export default function ComparisonPage() {
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               More than just compliance software. A complete AI governance platform with training,
-              the measurement credential, monitoring, and economic benefits—all designed for the global economy.
+              the measurement credential, dated evidence records, and economic design—all built for a global audience.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/signup">
@@ -769,8 +769,8 @@ export default function ComparisonPage() {
               },
               {
                 number: "3",
-                title: "Activate Monitoring",
-                description: "Start real-time Council consensus immediately",
+                title: "Request a Measurement",
+                description: "Run a scoped review and retain its dated result",
               },
               {
                 number: "4",
@@ -861,11 +861,11 @@ export default function ComparisonPage() {
               },
               {
                 q: "How is CSOAI different from hiring consultants?",
-                a: "Consultants provide one-time advice. CSOAI provides continuous, real-time monitoring and compliance automation across 30+ jurisdictions—at a fraction of consulting costs.",
+                a: "CSOAI publishes dated measurements and evidence workflows across its published mappings. Continuous monitoring and legal-compliance automation are not currently offered.",
               },
               {
                 q: "Is the Council approach proven?",
-                a: "Yes, multi-agent council mechanisms are well-established in distributed systems. Our 33-seat council is designed to make decisions reviewable; live fault-tolerance is unproven (measured n_eff 1.21 of 3).",
+                a: "Multi-agent review mechanisms are established research patterns. Our 33-seat council is a design for reviewable decisions; it is not live, and the latest experiment was fully correlated, so fault tolerance remains unproven.",
               },
               {
                 q: "What happens to our data if we leave?",

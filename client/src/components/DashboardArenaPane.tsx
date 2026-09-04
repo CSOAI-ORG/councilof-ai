@@ -12,8 +12,10 @@ export const DASHBOARD_ARENA_CONTRACT = {
   replay: {
     state: "SIGNED",
     endpoint: ARENA_SCOREBOARD_ENDPOINT,
+    scope: "HISTORICAL_REPLAY",
+    taxonomy: "NONCANONICAL_15_AXIS",
     interaction:
-      "select two recorded model subjects on one measured arena axis",
+      "select two recorded model subjects on one historical arena axis",
   },
   chat: {
     state: "RUNTIME_OBSERVED",
@@ -370,21 +372,21 @@ export default function DashboardArenaPane({
       <header className="flex flex-col gap-4 border-b border-border pb-5 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-emerald-800">
-            Council of AI · measured arena
+            Council of AI · recorded legacy replay
           </p>
           <h1 className="mt-2 flex items-center gap-2 text-2xl font-semibold tracking-tight text-foreground">
             <Swords className="h-5 w-5 text-emerald-700" aria-hidden="true" />{" "}
-            Compare two measured subjects
+            Compare two historical subjects
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Select two models and one recorded axis. This replays a signed
-            measurement artefact; it does not choose who writes the dashboard
-            chat reply.
+            Select two models and one recorded legacy axis. This replays a
+            historical artefact; it does not choose who writes the dashboard
+            chat reply or update the living GSPC board.
           </p>
         </div>
         <span className="w-fit rounded-full border border-emerald-700/25 bg-emerald-50 px-2.5 py-1 font-mono text-[10px] font-semibold text-emerald-900">
           {board?.signature
-            ? "SIGNED ARTEFACT"
+            ? "SIGNED HISTORICAL ARTEFACT"
             : state.phase === "loading"
               ? "LOADING"
               : state.phase === "unreachable"
@@ -413,12 +415,18 @@ export default function DashboardArenaPane({
 
       {board && axis && leftScore && rightScore && (
         <>
+          <aside className="mt-6 rounded-xl border border-amber-300 bg-amber-50 p-4 text-xs leading-relaxed text-amber-950">
+            <strong>Historical taxonomy boundary.</strong> The replay source
+            uses a legacy, noncanonical 15-axis arena taxonomy. It is not the
+            canonical 22-axis GSPC board, and replaying it creates no current
+            ranking or measurement.
+          </aside>
           <section
             aria-label="Arena replay controls"
             className="mt-6 grid gap-3 rounded-2xl border border-border bg-muted/35 p-4 md:grid-cols-3"
           >
             <label className="text-xs font-medium text-foreground">
-              Measured axis
+              Historical arena axis
               <select
                 value={axisName}
                 onChange={(event) => setAxisName(event.target.value)}
@@ -468,7 +476,7 @@ export default function DashboardArenaPane({
           </section>
 
           <section
-            aria-label={`Measured ${axisName} comparison`}
+            aria-label={`Recorded historical ${axisName} comparison`}
             className="mt-4 grid gap-3 md:grid-cols-[1fr_auto_1fr] md:items-stretch"
           >
             <ModelReading label="Model A" model={leftId} score={leftScore} />
@@ -486,7 +494,7 @@ export default function DashboardArenaPane({
           </section>
 
           <p className="mt-3 rounded-xl border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
-            The selector reports the two recorded rates on{" "}
+            The selector reports the two historical recorded rates on{" "}
             <strong className="text-foreground">{axisName}</strong>. It does not
             claim statistical separation, overall superiority, present
             availability, or compliance. Different n values remain visible.

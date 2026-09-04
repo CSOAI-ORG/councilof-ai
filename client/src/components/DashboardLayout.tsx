@@ -13,11 +13,25 @@ import DashboardPane, { paneLabel } from "@/components/DashboardPane";
 import DashboardWorkspace from "@/components/DashboardWorkspace";
 import DashboardAccountMenu from "@/components/DashboardAccountMenu";
 import { CouncilBrand } from "@/components/brand/CouncilBrand";
-import { dashboardViewHref } from "@/lib/dashboardView";
+import {
+  dashboardViewFromSearch,
+  dashboardViewHref,
+  dashboardViewLabel,
+} from "@/lib/dashboardView";
 import { setOsOpen } from "@/lib/osChrome";
 import { NAV_ID, PANEL_ID } from "@/components/lobby/LobbyPaneTabs";
 
 const SMALL_QUERY = "(max-width: 767px)";
+
+export function dashboardActiveLabel(activeTab: string, search: string): string {
+  const embeddedViewLabel = dashboardViewFromSearch(search)
+    ? dashboardViewLabel(search)
+    : null;
+  return (
+    embeddedViewLabel ||
+    (activeTab === "home" ? "Conversation" : paneLabel(activeTab) || activeTab)
+  );
+}
 
 export default function DashboardLayout({
   children,
@@ -81,8 +95,7 @@ export default function DashboardLayout({
   );
   const rawTab = params.get("tab") || "home";
   const activeTab = normalizeLobbyTabId(rawTab);
-  const activeLabel =
-    activeTab === "home" ? "Conversation" : paneLabel(activeTab) || activeTab;
+  const activeLabel = dashboardActiveLabel(activeTab, search);
   const pane =
     activeTab === "home" || activeTab === "software" ? null : (
       <DashboardPane id={activeTab} />

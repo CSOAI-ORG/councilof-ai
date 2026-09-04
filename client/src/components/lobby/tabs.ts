@@ -154,8 +154,9 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "results",
     label: "Benchmark results",
     blurb:
-      "Measured benchmark results — every figure traces to a published artefact, losses included.",
-    path: "/benchmarks",
+      "The canonical living GSPC board — current measurements, fact runs and withheld leaders from the same native source as the main board.",
+    path: "",
+    kind: "native",
     cues: /\b(benchmarkers?|benchmarks?|results|artefacts?|artifacts?|meta[- ]?benchmark)\b/i,
   },
   {
@@ -763,7 +764,7 @@ const DASHBOARD_NAV_DEFINITION: {
     id: "work",
     label: "Work",
     tabs: [
-      { id: "board", label: "Measurements" },
+      { id: "board", label: "GSPC board" },
       { id: "evidence", label: "Evidence" },
       { id: "tools", label: "Improve" },
       { id: "learn", label: "Learning" },

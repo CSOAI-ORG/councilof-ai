@@ -116,8 +116,10 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
 
   it("prints leader states as text and never a made-up leader", () => {
     const open = renderToStaticMarkup(<BoardStrip axes={payload.axes as GspcAxis[]} initiallyExpanded />);
-    expect(open).toContain("EXCLUDED_OWN_MODEL");
-    expect(open).toContain("NO_SIGNED_CARD");
+    expect(open).toContain('data-leader-state="EXCLUDED_OWN_MODEL"');
+    expect(open).toContain('data-leader-state="NO_SIGNED_CARD"');
+    expect(open).toContain("Our own model held the point lead");
+    expect(open).toContain("has no verifiable signed card");
     expect(open).toContain("mock-base:7b");
     expect(open).toContain("mock-swarm:3b");
     expect(leaderStateOf(comparison[0])).toBe("EXCLUDED_OWN_MODEL");
@@ -140,7 +142,7 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     const table = renderToStaticMarkup(<BoardStrip axes={payload.axes as GspcAxis[]} initiallyExpanded initialView="table" />);
     expect(table).toContain('data-testid="board-table"');
     expect(rowCount(table)).toBe(payload.axes!.length);
-    expect(table).toContain("EXCLUDED_OWN_MODEL");
+    expect(table).toContain('data-leader-state="EXCLUDED_OWN_MODEL"');
     expect(table).toContain("deterministic facts · no leader accuracy");
   });
 

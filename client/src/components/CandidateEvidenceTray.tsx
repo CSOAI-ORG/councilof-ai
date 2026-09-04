@@ -13,9 +13,7 @@ import {
   removeCandidateReceipt,
   signCandidateObservation,
   storeCandidateReceipt,
-  submitCandidateForMeasurement,
   type CandidateObservation,
-  type MeasurementIntakeReceipt,
   type SignedCandidateReceipt,
 } from "@/lib/candidateEvidence";
 
@@ -43,8 +41,6 @@ export default function CandidateEvidenceTray({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [receipt, setReceipt] = useState<SignedCandidateReceipt | null>(null);
-  const [submissionConsented, setSubmissionConsented] = useState(false);
-  const [intake, setIntake] = useState<MeasurementIntakeReceipt | null>(null);
   const subject = useMemo(() => subjectFor(observation), [observation]);
 
   async function createReceipt() {
@@ -80,28 +76,8 @@ export default function CandidateEvidenceTray({
     removeCandidateReceipt(receipt.proof.sha256);
     setReceipt(null);
     setConsented(false);
-    setSubmissionConsented(false);
-    setIntake(null);
   }
 
-  async function submitForMeasurement() {
-    if (!receipt || !submissionConsented || busy) return;
-    setBusy(true);
-    setError("");
-    try {
-      setIntake(await submitCandidateForMeasurement(receipt));
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : String(caught));
-    } finally {
-      setBusy(false);
-    }
-  }
-
-  const witnessHref = receipt
-    ? `/dashboard?tab=tools&tool=witness_hash&sha256=${receipt.proof.sha256}&label=${encodeURIComponent(
-        `${observation.surface} candidate observation`,
-      )}`
-    : "";
   const request = new URLSearchParams({ tab: "measured", subject });
   if (observation.axis) request.set("axis", observation.axis.toLowerCase());
 
@@ -195,12 +171,6 @@ export default function CandidateEvidenceTray({
                   Download JSON
                 </button>
                 <Link
-                  href={witnessHref}
-                  className="inline-flex min-h-9 items-center rounded-lg border border-sky-900/20 bg-white px-3 text-[11px] font-semibold text-sky-950 hover:bg-sky-100"
-                >
-                  Open witness challenge
-                </Link>
-                <Link
                   href={`/dashboard?${request.toString()}`}
                   className="inline-flex min-h-9 items-center rounded-lg border border-sky-900/20 bg-white px-3 text-[11px] font-semibold text-sky-950 hover:bg-sky-100"
                 >
@@ -214,58 +184,13 @@ export default function CandidateEvidenceTray({
                   Delete local copy
                 </button>
               </div>
-              <p className="mt-2 text-[10px] leading-relaxed text-sky-950/65">
-                Witnessing is a separate, manual x402 request. It can anchor
-                this digest asynchronously; it does not promote the candidate to
-                MEASURED. Independent measurement is a new scoped workflow, not
-                an automatic upgrade of this receipt.
+              <p className="mt-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-[10px] font-medium leading-relaxed text-amber-950">
+                Network intake is unavailable in this release; keep or download
+                the local receipt.{" "}
+                Witness intake unavailable; no payment or anchor requested.
+                Independent measurement is a new scoped workflow, not an
+                automatic upgrade of this local receipt.
               </p>
-              {!intake ? (
-                <div className="mt-3 rounded-xl border border-emerald-900/15 bg-emerald-50/80 p-3">
-                  <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-emerald-950">
-                    <input
-                      type="checkbox"
-                      checked={submissionConsented}
-                      onChange={(event) =>
-                        setSubmissionConsented(event.target.checked)
-                      }
-                      className="mt-0.5"
-                    />
-                    <span>
-                      Upload this exact signed receipt for independent
-                      measurement intake. This is not consent for training or
-                      public release.
-                    </span>
-                  </label>
-                  <button
-                    type="button"
-                    disabled={!submissionConsented || busy}
-                    onClick={submitForMeasurement}
-                    className="mt-2 inline-flex min-h-9 items-center rounded-lg bg-emerald-800 px-3 text-[11px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-45"
-                  >
-                    {busy
-                      ? "Verifying intake…"
-                      : "Submit for independent review"}
-                  </button>
-                </div>
-              ) : (
-                <div
-                  role="status"
-                  className={`mt-3 rounded-xl border p-3 text-[11px] leading-relaxed ${
-                    intake.stored
-                      ? "border-emerald-800/20 bg-emerald-50 text-emerald-950"
-                      : "border-amber-800/20 bg-amber-50 text-amber-950"
-                  }`}
-                >
-                  <strong>
-                    {intake.stored
-                      ? "Stored for operator review."
-                      : "Signature verified; intake was not stored."}
-                  </strong>{" "}
-                  {intake.meaning} State remains UNMEASURED; no worker, board
-                  write, witness, public release or training use was triggered.
-                </div>
-              )}
               {error ? (
                 <p role="alert" className="mt-2 text-[11px] text-red-800">
                   {error}

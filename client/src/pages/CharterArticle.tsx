@@ -93,11 +93,11 @@ Safety verification shall be proportionate to risk level and reviewed by trained
     title: "Council",
     part: 1,
     partTitle: "Foundational Principles",
-    content: `Establishment of the designed 33-seat Council of AI (measured status on the public Refutation Ledger). This council consists of 33 independent AI agents, each trained to evaluate whether other AI systems are operating safely within their defined parameters.
+    content: `This article specifies a proposed 33-seat Council of AI. It is a design, not a live pipeline, and its seats are not presently demonstrated to be independent.
 
-The Council requires 22 out of 33 agents to agree (66.67% supermajority) before any governance decision is executed or any AI system receives approval for high-risk deployment. This architecture is resistant to up to 10 simultaneous agent failures, corruptions, or biases.
+The proposed threshold is 23 out of 33. No governance decision or high-risk deployment approval currently depends on this design. Threshold arithmetic alone does not establish fault tolerance, capture resistance, or valid consensus.
 
-No single agent can dominate decisions. No government, corporation, or AI system can manipulate outcomes. The Council operates continuously, monitoring deployed AI systems and flagging anomalies in real-time. The council's decisions are transparent and auditable.
+The latest point experiment used three model lineages across two providers and measured n_eff 1.00 at rho=1. Raw production-grade identities, responses, signatures, transport, replay protection, and human veto remain required before operation.
 
 The Council represents the distributed, resilient oversight that the Maternal Covenant requires—ensuring that protective instincts cannot be overridden by any single actor.`,
     frameworks: {

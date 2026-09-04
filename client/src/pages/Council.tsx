@@ -112,12 +112,12 @@ export default function Council() {
               The <span className="text-emerald-400">Council</span>
             </h1>
             <p className="text-xl text-gray-300 mb-4 leading-relaxed">
-              A designed 33-seat oversight architecture across 7 providers — so no single company
-              could manipulate a safety decision.
+              A 33-seat oversight design whose independence must be demonstrated before it can
+              govern any safety decision.
             </p>
             <p className="text-sm text-amber-300/90 mb-8 leading-relaxed max-w-2xl mx-auto">
-              Status: <b>DESIGN — not a live system.</b> The measured effective council size is n_eff 1.21 of 3,
-              published on our <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).
+              Status: <b>DESIGN — not a live system.</b> The latest three-leg point experiment measured n_eff 1.00
+              at ρ=1; the earlier DR-0007 run measured 1.21. Both reject a fault-tolerance claim. See the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.
               Everything below is the design visualization, not measured production behaviour.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -192,8 +192,8 @@ export default function Council() {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-2">Multi-Provider Diversity</h4>
                         <p className="text-gray-600">
-                          Agents span 7+ AI providers. No single company has more than 6 agents,
-                          preventing any vendor from controlling outcomes.
+                          The target roster spans multiple providers. The current experiment used
+                          three model lineages across two providers and behaved like one independent leg.
                         </p>
                       </div>
                     </div>
@@ -205,8 +205,8 @@ export default function Council() {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-2">Fail-Safe Operation (designed)</h4>
                         <p className="text-gray-600">
-                          By design, even if up to 10 agents fail or are compromised, the remaining
-                          23 could still reach valid consensus. Not yet a measured property.
+                          A 23-of-33 threshold is only arithmetic. It does not provide a fault-tolerance
+                          guarantee unless voter independence, identity, transport, and signatures are real.
                         </p>
                       </div>
                     </div>
@@ -244,11 +244,11 @@ export default function Council() {
               Designed distribution — not provisioned providers
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              33-seat design · measured n_eff 1.21 of 3 · <span className="text-emerald-400">7 Providers</span>
+              33-seat design · latest n_eff 1.00 of 3 · <span className="text-amber-300">2 providers tested</span>
             </h2>
             <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-              The designed agent distribution ensures no single AI company could dominate decisions.
-              This roster is the design — providers are not yet provisioned behind it.
+              The roster below is a target architecture, not provisioned infrastructure. The latest
+              measured sample was fully correlated, so no capture-resistance claim is made.
             </p>
           </motion.div>
 

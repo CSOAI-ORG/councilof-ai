@@ -35,8 +35,9 @@ type LearningScenario = {
     source?: string;
   };
   evidence?: {
-    admitted_state?: string;
-    admitted_measurements?: unknown[];
+    published_state?: string;
+    published_measurements?: unknown[];
+    independently_admitted?: boolean;
     candidate_state?: string;
     candidate_findings?: unknown[];
   };
@@ -79,7 +80,7 @@ function coachPrompt(axis: string, stage: LearningStageId | null): string {
 
 function badgeTone(value: string): string {
   if (
-    value === "NONE_ADMITTED" ||
+    value === "NONE_PUBLISHED" ||
     value === "UNMEASURED" ||
     value === "UNMAPPED" ||
     value === "UNCHECKABLE" ||
@@ -88,7 +89,7 @@ function badgeTone(value: string): string {
     return "border-amber-700/25 bg-amber-50 text-amber-950";
   }
   if (
-    value === "ADMITTED_VERIFIED" ||
+    value === "PUBLISHED_VERIFIED" ||
     value === "READY" ||
     value === "MEASURED"
   ) {
@@ -171,7 +172,7 @@ export default function DashboardLearningPane() {
         setScenario(row);
         setScenarioState(body.state || "READY");
         setScenarioNote(
-          "Live board, admitted-evidence index and regulation sources joined by exact identity.",
+          "Live board, locally verified published cards and regulation sources joined by exact identity. Publication is not independent admission.",
         );
       })
       .catch((error: unknown) => {
@@ -208,7 +209,8 @@ export default function DashboardLearningPane() {
   if (!selected || !progress) return null;
 
   const pointers = scenario?.regulation_context?.pointers ?? [];
-  const admittedState = scenario?.evidence?.admitted_state ?? "UNCHECKABLE";
+  const publishedState =
+    scenario?.evidence?.published_state ?? "UNCHECKABLE";
   const boardState = scenario?.board_measurement?.status ?? "UNCHECKABLE";
 
   return (
@@ -405,10 +407,10 @@ export default function DashboardLearningPane() {
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">
                   <p className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
-                    Independent admission
+                    Published card evidence
                   </p>
                   <p className="mt-1 text-xs font-semibold text-foreground">
-                    {admittedState}
+                    {publishedState}
                   </p>
                 </div>
                 <div className="rounded-lg border border-border bg-background p-2.5">

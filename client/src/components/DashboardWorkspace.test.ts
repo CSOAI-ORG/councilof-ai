@@ -33,7 +33,6 @@ describe("canonical dashboard workspace", () => {
       "commission_card",
       "art50_marking_evidence",
       "rwa_evidence",
-      "witness_hash",
       "receipts_batch",
     ])
       expect(paneForTool(tool)).toBe("tools");

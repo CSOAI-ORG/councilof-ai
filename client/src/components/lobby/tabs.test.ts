@@ -115,8 +115,9 @@ describe("Council OS tabs", () => {
     expect(matchTab("open the ecosystem")?.id).toBe("fabric");
   });
 
-  it("eats results, library, and workbench as rail tabs", () => {
-    expect(tabById("results").path).toBe("/benchmarks");
+  it("keeps results on the canonical native board and retains library/workbench routes", () => {
+    expect(tabById("results").kind).toBe("native");
+    expect(tabById("results").path).toBe("");
     expect(tabById("library").path).toBe("/library");
     expect(tabById("workbench").path).toBe("/workbench");
     expect(matchTab("open the benchmarks")?.id).toBe("results");
@@ -243,7 +244,7 @@ describe("Council OS tabs", () => {
       "Ask",
       "Requests",
       "Verify",
-      "Measurements",
+      "GSPC board",
       "Evidence",
       "Improve",
       "Learning",

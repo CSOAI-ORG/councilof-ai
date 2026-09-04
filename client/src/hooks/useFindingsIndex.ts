@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 /**
  * useFindingsIndex — loads the materialised regulation-findings index once and hands it to the
- * per-model / per-regulator / search views. It fetches the static signed artifact
- * (/signed/findings_index.json) directly: the same bytes a stranger or an agent can verify, and
+ * per-model / per-regulator / search views. It fetches the deterministic derived index
+ * (/signed/findings_index.json) directly; each row points to card bytes a stranger can verify, and
  * the reason model names never enter the prerendered HTML shell (they arrive at runtime).
  *
  * Honesty is carried IN the data (status DISCOVERED, relation 'relevant-to', statutory_maximum
@@ -33,6 +33,9 @@ export interface Finding {
     card: string;
     card_url: string;
     signed: boolean;
+    signature_verified: boolean;
+    admitted: false;
+    evidence_state: "PUBLISHED_VERIFIED";
     alg?: string;
     pubkey?: string;
     measured_on?: string;

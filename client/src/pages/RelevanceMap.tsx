@@ -66,7 +66,7 @@ export default function RelevanceMap() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · the relevance map</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">What governs what</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every CSOAI bridge maps to the frameworks it makes you compliant with. Pick your industry and the map renders the relevant components — and the gaps. The visual that makes the fleet legible and sellable.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Every CSOAI bridge maps evidence to frameworks relevant to its use. Pick your industry and the map renders the relevant components — and the unmapped gaps. Relevance is not a compliance verdict.</p>
           <div className="mt-6 flex flex-wrap gap-2">
             {INDUSTRIES.map((ind) => (
               <button key={ind} onClick={() => setIndustry(ind)} className={"rounded-full border px-4 py-2 text-sm font-semibold transition-colors " + (industry === ind ? "border-emerald-300 bg-emerald-400 text-[#03110b]" : "border-emerald-300/40 text-emerald-50 hover:bg-white/10")}>{ind}</button>
@@ -92,7 +92,7 @@ export default function RelevanceMap() {
             <div className="flex flex-wrap items-center gap-3">
               <h2 className="text-xl font-bold text-gray-900">{industry}</h2>
               <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">{bridges.length} relevant bridges</span>
-              <span className="rounded-lg bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">{frameworks.length} frameworks covered</span>
+              <span className="rounded-lg bg-sky-50 px-3 py-1 text-xs font-semibold text-sky-700">{frameworks.length} frameworks mapped</span>
               {gaps.length > 0 && <span className="rounded-lg bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-700">{gaps.length} baseline gaps</span>}
             </div>
 
@@ -135,7 +135,7 @@ export default function RelevanceMap() {
 
             {gaps.length > 0 && (
               <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5">
-                <div className="font-bold text-amber-900">Coverage gaps — baseline frameworks not yet bridged for {industry}</div>
+                <div className="font-bold text-amber-900">Mapping gaps — baseline frameworks not yet bridged for {industry}</div>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {gaps.map((g) => <span key={g} className="rounded-md bg-white px-2.5 py-1 text-xs font-semibold text-amber-800 border border-amber-200">{g}</span>)}
                 </div>

@@ -15,7 +15,7 @@ export default function DashboardEmbeddedView({
       aria-label={`${label} workspace view`}
     >
       <h1 className="sr-only">{label}</h1>
-      <div className="absolute right-3 top-3 z-10 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur">
+      <div className="absolute right-3 top-16 z-10 flex items-center gap-1 rounded-xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur xl:top-3">
         <a
           href={path}
           target="_blank"

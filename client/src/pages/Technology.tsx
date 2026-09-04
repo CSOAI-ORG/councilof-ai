@@ -38,9 +38,9 @@ export default function Technology() {
       id: 'data-ingestion',
       title: 'Data Ingestion Layer',
       icon: Database,
-      description: 'Connects to enterprise AI systems, APIs, and data pipelines',
+      description: 'Target architecture for enterprise AI systems, APIs, and data pipelines',
       details: [
-        'Real-time data streaming from production AI systems',
+        'Target: event streams from production AI systems',
         'Batch processing for historical compliance audits',
         'Multi-protocol support: REST, gRPC, Kafka, S3',
         'Automatic schema detection and validation',
@@ -51,13 +51,13 @@ export default function Technology() {
       id: 'analysis-engine',
       title: 'Analysis Engine',
       icon: Brain,
-      description: 'The designed 33-seat Council of AI reviews in parallel',
+      description: 'The designed 33-seat Council of AI is intended to review in parallel',
       details: [
-        'Distributed processing across multiple nodes',
+        'Target: distributed processing across multiple nodes',
         'designed multi-agent review algorithm',
         '23-of-33 supermajority threshold, by design',
-        'Sub-100ms response time for standard audits',
-        'Horizontal scaling for variable loads'
+        'No production response-time claim',
+        'Target: horizontal scaling for variable loads'
       ]
     },
     {
@@ -67,7 +67,7 @@ export default function Technology() {
       description: 'Maps findings against regulatory standards',
       details: [
         'Coverage: EU AI Act, NIST AI RMF, ISO 42001',
-        'Automatic regulation version tracking',
+        'Target: regulation version tracking',
         'Gap analysis — we measure, we do not remediate',
         'Multi-jurisdiction support',
         'Custom framework integration'
@@ -79,9 +79,9 @@ export default function Technology() {
       icon: Layers,
       description: 'Dashboards and alerts — measurement, not remediation',
       details: [
-        'Real-time compliance dashboards',
-        'Configurable alerting thresholds',
-        'Alerts when a measurement cell is empty or fails',
+        'Published measurement dashboards',
+        'Target: configurable alerting thresholds',
+        'Target: alerts when a measurement cell is empty or fails',
         'Audit trail with tamper-proof logging',
         'Export to SIEM and compliance tools'
       ]
@@ -102,7 +102,7 @@ export default function Technology() {
     { label: 'Architecture', value: 'Zero-trust, defense-in-depth' },
     { label: 'Deployment', value: 'Multi-region (AWS, Azure, GCP)' },
     { label: 'Availability', value: 'See /status for live availability of probed services' },
-    { label: 'Audit', value: 'Immutable audit logs, continuous monitoring' },
+    { label: 'Audit', value: 'Target: tamper-evident logs and scheduled re-measurement' },
   ];
 
   return (
@@ -114,7 +114,7 @@ export default function Technology() {
             The Technology Behind <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Trustworthy AI Governance</span>
           </h1>
           <p className="text-xl text-blue-100 mb-8 leading-relaxed">
-            Built on a designed multi-agent review architecture. The 33-seat council is a design (Charter Art. 11), not a measured live pipeline — its effective independence is measured, not assumed, and published on the Refutation Ledger.
+            Built around a proposed multi-agent review architecture. The 33-seat council is a design (Charter Art. 11), not a live pipeline; the latest experiment was fully correlated, so no independence or fault-tolerance claim is made.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/dashboard?task=pricing-overview&tab=measured">
@@ -135,7 +135,7 @@ export default function Technology() {
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="text-4xl font-bold text-white mb-4">How the designed 33-seat Council reviews decisions</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">How the designed 33-seat Council would review decisions</h2>
             <p className="text-blue-200 text-lg">Signed, checkable multi-perspective review — measurement, not certification</p>
           </div>
 
@@ -146,8 +146,8 @@ export default function Technology() {
                 <div className="w-16 h-16 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
                   <Brain className="text-blue-400" size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">33 Specialized Agents</h3>
-                <p className="text-blue-200">Each analyzes compliance from different angles: risk, bias, privacy, regulation, ethics, and more</p>
+                <h3 className="text-xl font-bold text-white mb-2">33 seats — design</h3>
+                <p className="text-blue-200">The proposed seats cover different review angles. Distinct roles do not by themselves establish independent agents.</p>
               </div>
 
               <div className="flex flex-col items-center text-center">
@@ -155,15 +155,15 @@ export default function Technology() {
                   <Shield className="text-blue-400" size={32} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Supermajority vote</h3>
-                <p className="text-blue-200">A supermajority of 23 of 33 agents is required for any decision</p>
+                <p className="text-blue-200">The design calls for 23 of 33 seats; this threshold is not a measured guarantee.</p>
               </div>
 
               <div className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4">
                   <CheckCircle className="text-blue-400" size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Consensus Mechanism</h3>
-                <p className="text-blue-200">23 of 33 agents must agree for a compliance decision</p>
+                <h3 className="text-xl font-bold text-white mb-2">Consensus target</h3>
+                <p className="text-blue-200">No live consensus or compliance-decision service is claimed.</p>
               </div>
             </div>
           </div>
@@ -428,7 +428,7 @@ export default function Technology() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="px-2 py-1 bg-blue-600/40 rounded text-sm font-mono text-blue-300 mt-0.5">Webhooks</span>
-                  <span>Real-time alerts and event streaming</span>
+                  <span>Target: event alerts and streaming</span>
                 </li>
               </ul>
             </div>

@@ -42,7 +42,12 @@ const PAYLOAD = {
 describe("dashboard measured arena", () => {
   it("states the current replay, chat, AG-UI, A2UI and live-battle boundaries", () => {
     expect(DASHBOARD_ARENA_CONTRACT).toMatchObject({
-      replay: { state: "SIGNED", endpoint: "/api/arena/scoreboard" },
+      replay: {
+        state: "SIGNED",
+        endpoint: "/api/arena/scoreboard",
+        scope: "HISTORICAL_REPLAY",
+        taxonomy: "NONCANONICAL_15_AXIS",
+      },
       chat: { state: "RUNTIME_OBSERVED", endpoint: "/api/chat" },
       livePromptBattle: { state: "UNCHECKABLE", endpoint: null },
       agui: { state: "RUNTIME_OBSERVED", endpoint: "/api/agui/gspc-state" },
@@ -86,8 +91,10 @@ describe("dashboard measured arena", () => {
     const html = renderToStaticMarkup(
       <DashboardArenaPane initialData={board} />,
     );
-    expect(html).toContain("Compare two measured subjects");
-    expect(html).toContain("SIGNED ARTEFACT");
+    expect(html).toContain("Compare two historical subjects");
+    expect(html).toContain("SIGNED HISTORICAL ARTEFACT");
+    expect(html).toContain("legacy, noncanonical 15-axis arena taxonomy");
+    expect(html).toContain("not the canonical 22-axis GSPC board");
     expect(html).toContain("model-a:7b");
     expect(html).toContain("model-b:7b");
     expect(html).toContain(

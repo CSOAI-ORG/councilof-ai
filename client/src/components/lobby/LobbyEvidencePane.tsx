@@ -173,7 +173,7 @@ export default function LobbyEvidencePane({
         eyebrow="Evidence pack"
         title="Compile the evidence index for one system"
       >
-        Name the system, tick the axis that bear on the claim, and this pane
+        Name the system, tick the axes that bear on the claim, and this pane
         compiles a real index from the live board — bank URL, item count,
         leader, and whether the lead is statistically separated or a tie. Every
         axis you leave out is named in the output, so an omission is never

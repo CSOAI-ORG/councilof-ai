@@ -628,8 +628,8 @@ export default function NewHome() {
               33-Seat Council: <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Human Oversight Meets AI Efficiency</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              We've created a transparent AI safety council with designed multi-agent review. 
-              Every decision is made by 33 AI agents across 5 providers, with human analysts providing oversight.
+              This is the transparent design for multi-agent review. It is not a live 33-agent decision system;
+              current evidence shows correlated model legs and requires human review.
             </p>
           </div>
 
@@ -651,8 +651,8 @@ export default function NewHome() {
                     2
                   </div>
                   <div>
-                    <h4 className="font-semibold text-lg mb-2">33 Agents Analyze</h4>
-                    <p className="text-gray-400">The council (11 GPT-4, 11 Claude, 11 Gemini agents) independently evaluates the incident using established frameworks.</p>
+                    <h4 className="font-semibold text-lg mb-2">Candidate Council Analysis</h4>
+                    <p className="text-gray-400">The target design compares multiple model and provider lineages. The current 33-seat implementation is not live or independent.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -661,7 +661,7 @@ export default function NewHome() {
                   </div>
                   <div>
                     <h4 className="font-semibold text-lg mb-2">Multi-Agent Council</h4>
-                    <p className="text-gray-400">Designed to require 23/33 agents to agree (70% supermajority). Not yet demonstrated live. Intended to prevent single-provider bias or manipulation.</p>
+                    <p className="text-gray-400">Designed to require 23/33 seats to agree. A threshold alone does not prevent correlated or single-provider failure.</p>
                   </div>
                 </div>
                 <div className="flex gap-4">
@@ -691,15 +691,15 @@ export default function NewHome() {
                 <ul className="space-y-3 text-gray-300">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Supermajority required:</strong> a decision passes only when at least 23 of 33 agents agree</span>
+                    <span><strong>Design threshold:</strong> 23 of 33; no production decision currently relies on it</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Provider Diversity:</strong> Prevents bias from any single AI company's models or training data</span>
+                    <span><strong>Provider diversity:</strong> measured per run; the latest sample did not demonstrate independence</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span><strong>Transparent Voting:</strong> Every agent's vote and reasoning is recorded and publicly auditable</span>
+                    <span><strong>Target transparency:</strong> future votes must retain raw responses, identities, and reproducible scoring</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
