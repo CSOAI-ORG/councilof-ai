@@ -5,6 +5,127 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
+const UI_TRUTH_RULES = [
+  ["wrong-threshold", /\b22\s*(?:\/|out of)\s*33\b/i],
+  ["all-votes-public", /\ball council votes are public\b/i],
+  ["live-council-voting", /\bcouncil voting\b|\bconsensus rate\b/i],
+  ["fabricated-independence", /\b33\s+(?:independent|measurement)\s+agents\b/i],
+  ["fabricated-consensus", /\bdemocratic consensus from 33 AI agents\b/i],
+  ["fabricated-resilience", /\bbias-resistant,\s*manipulation-proof\b|\bfault-aware council consensus\b/i],
+  ["live-33-seat-council", /(?<!\bno\s)\blive\s+33[- ](?:agent|seat)\s+(?:BFT\s+)?council\b/i],
+];
+
+function detectUiTruthViolations(source) {
+  const violations = UI_TRUTH_RULES
+    .filter(([, pattern]) => pattern.test(source))
+    .map(([code]) => code);
+
+  for (const line of source.split("\n")) {
+    const mentionsPqc = /\b(?:PQC|post[- ]quantum|ML-DSA(?:-65)?)\b/i.test(line);
+    const saysBuilt = /\b(?:is|are)\s+built\b|\bbuilt(?:\s+but|\s+and|,)\s+not shipped\b/i.test(line);
+    const saysNotBuilt = /\b(?:no|not)\b[^.\n]{0,120}\b(?:is|are)?\s*built\b/i.test(line);
+    if (mentionsPqc && saysBuilt && !saysNotBuilt) {
+      violations.push("pqc-built");
+      break;
+    }
+  }
+
+  return [...new Set(violations)];
+}
+
+if (process.argv.includes("--selftest")) {
+  const fixtureDir = "scripts/fixtures/council-runtime-truth";
+  const safe = readFileSync(join(fixtureDir, "safe.txt"), "utf8");
+  assert.deepEqual(detectUiTruthViolations(safe), []);
+
+  for (const [fixture, expected] of [
+    ["wrong-threshold.txt", "wrong-threshold"],
+    ["live-council.txt", "live-33-seat-council"],
+    ["pqc-built.txt", "pqc-built"],
+    ["fabricated-consensus.txt", "fabricated-consensus"],
+  ]) {
+    const violations = detectUiTruthViolations(
+      readFileSync(join(fixtureDir, fixture), "utf8"),
+    );
+    assert.ok(violations.includes(expected), `${fixture} must trigger ${expected}`);
+  }
+
+  console.log("council-runtime-truth-gate selftest: PASS");
+  process.exit(0);
+}
+
+const appSource = readFileSync("client/src/App.tsx", "utf8");
+const routedSurfaces = [
+  ["client/src/pages/legal/Disclaimers.tsx", "./pages/legal/Disclaimers", "Disclaimers", ["/disclaimers", "/legal/disclaimers"]],
+  ["client/src/pages/PublicHome.tsx", "./pages/PublicHome", "PublicHome", ["/public"]],
+  ["client/src/pages/CharterArticle.tsx", "./pages/CharterArticle", "CharterArticle", ["/charter/article/:id"]],
+  ["client/src/pages/EUAIActCompliance.tsx", "./pages/EUAIActCompliance", "EUAIActCompliance", ["/compliance/eu-ai-act"]],
+  ["client/src/pages/Documentation.tsx", "./pages/Documentation", "Documentation", ["/docs"]],
+  ["client/src/pages/EUAIActUrgency.tsx", "./pages/EUAIActUrgency", "EUAIActUrgency", ["/eu-ai-act-urgency"]],
+  ["client/src/pages/CouncilHub.tsx", "./pages/CouncilHub", "CouncilHub", ["/me"]],
+  ["client/src/pages/NewHome-v2.tsx", "./pages/NewHome-v2", "NewHomeV2", ["/home-v2"]],
+  ["client/src/pages/legal/ServiceLevelAgreement.tsx", "./pages/legal/ServiceLevelAgreement", "ServiceLevelAgreement", ["/sla", "/service-level-agreement", "/legal/sla"]],
+  ["client/src/pages/FaqPage.tsx", "./pages/FaqPage", "FaqPage", ["/faq", "/frequently-asked-questions"]],
+  ["client/src/pages/PDCASimulator.tsx", "./pages/PDCASimulator", "PDCASimulator", ["/pdca-simulator"]],
+  ["client/src/pages/AgentRegistry.tsx", "./pages/AgentRegistry", "AgentRegistry", ["/agent-registry"]],
+  ["client/src/pages/Council.tsx", "./pages/Council", "Council", ["/council"]],
+  ["client/src/pages/CouncilDetail.tsx", "./pages/CouncilDetail", "CouncilDetail", ["/council-detail"]],
+  ["client/src/pages/Methodology.tsx", "./pages/Methodology", "Methodology", ["/methodology"]],
+  ["client/src/pages/SOAIPDCAFramework.tsx", "./pages/SOAIPDCAFramework", "SOAIPDCAFramework", ["/soai-pdca"]],
+  ["client/src/pages/Recommendations.tsx", "./pages/Recommendations", "Recommendations", ["/recommendations"]],
+  ["client/src/pages/GSPCVerify.tsx", "./pages/GSPCVerify", "GSPCVerify", ["/gspc-verify"]],
+  ["client/src/pages/PublicDashboard.tsx", "./pages/PublicDashboard", "PublicDashboard", ["/transparency"]],
+];
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+for (const [sourcePath, importPath, component, routes] of routedSurfaces) {
+  assert.equal(existsSync(sourcePath), true, `${sourcePath} must exist`);
+  assert.match(
+    appSource,
+    new RegExp(`const\\s+${component}\\s*=\\s*lazy\\(\\(\\)\\s*=>\\s*import\\(["']${escapeRegExp(importPath)}["']\\)\\)`),
+    `${sourcePath} must remain imported by App.tsx`,
+  );
+  for (const route of routes) {
+    assert.match(
+      appSource,
+      new RegExp(`<Route\\s+path=["']${escapeRegExp(route)}["'][^>]*component=\\{${component}\\}`),
+      `${sourcePath} must remain reachable at ${route}`,
+    );
+  }
+}
+
+assert.equal(existsSync("client/src/pages/FAQ.tsx"), true);
+assert.doesNotMatch(
+  appSource,
+  /import\(["']\.\/pages\/FAQ["']\)/,
+  "legacy FAQ.tsx is not the routed FAQ; audit FaqPage.tsx instead",
+);
+
+const newHomeSource = readFileSync("client/src/pages/NewHome-v2.tsx", "utf8");
+assert.match(newHomeSource, /import ConsensusHero from "\.\.\/components\/ConsensusHero"/);
+assert.match(newHomeSource, /<ConsensusHero\b/);
+
+const activeUiSources = [
+  ...routedSurfaces.map(([sourcePath]) => sourcePath),
+  "client/src/components/ConsensusHero.tsx",
+  "client/src/components/GlobalSearch.tsx",
+  "client/src/components/BuiltOnFooter.tsx",
+  "client/src/lib/verify.ts",
+  "client/src/data/chain.ts",
+  "client/src/data/deckWorlds/evidenceRail.ts",
+  "client/src/data/deckWorlds/openSource.ts",
+  "client/src/data/deckWorlds/coliseum.ts",
+  "client/src/data/deckWorlds/predicateCompiler.ts",
+];
+for (const sourcePath of activeUiSources) {
+  const violations = detectUiTruthViolations(readFileSync(sourcePath, "utf8"));
+  assert.deepEqual(
+    violations,
+    [],
+    `${sourcePath} has routed council/PQC truth violations: ${violations.join(", ")}`,
+  );
+}
+
 const independence = JSON.parse(
   readFileSync("public/interop/council-independence.json", "utf8"),
 );
@@ -278,5 +399,5 @@ assert.doesNotMatch(
 );
 
 console.log(
-  "council-runtime-truth-gate: PASS — council is labelled design, n_eff=1, simulated BFT artifacts quarantined, generators and retired APIs fail closed",
+  "council-runtime-truth-gate: PASS — routed UI says 33-seat design / 23-seat target / not live, PQC remains planned only, n_eff=1, and retired runtimes fail closed",
 );

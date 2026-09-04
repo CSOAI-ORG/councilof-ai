@@ -9,7 +9,7 @@ type Agent = { name: string; domain: string; purpose: string; tools: string; sta
 const AGENTS: Agent[] = [
   { name: "ProofOf", domain: "proofof.ai", purpose: "Identity + provenance attestation for agents & content", tools: "sign · verify · agent-card", status: "signed" },
   { name: "SafetyOf", domain: "safetyof.ai", purpose: "Safety evaluation + red-team gating before action", tools: "evaluate · gate · escalate", status: "signed" },
-  { name: "Council", domain: "csoai.org", purpose: "33-seat review design for high-impact decisions; not a live council, and the latest independence experiment was fully correlated", tools: "council-vote · care-floor", status: "signed" },
+  { name: "Council", domain: "csoai.org", purpose: "Proposed 33-seat review design with a target threshold of 23/33; not live, with independence and fault tolerance not demonstrated", tools: "design-spec · care-floor", status: "review" },
   { name: "Crosswalk", domain: "councilof.ai", purpose: "Map any control across published frameworks", tools: "govern · crosswalk", status: "signed" },
   { name: "Watchdog", domain: "csoai.org/watchdog", purpose: "Incident intake + cryptographic logging", tools: "report · seal", status: "signed" },
   { name: "OSCAL Signer", domain: "councilof.ai", purpose: "Machine-readable OSCAL + Ed25519 (RFC-0024)", tools: "oscal · sign", status: "signed" },
@@ -27,7 +27,7 @@ export default function AgentRegistry() {
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Agent registry · signed agent cards · A2A</p>
         <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Every agent, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">identified and signed.</span></h1>
         <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">A registry isn't an inventory — it's control. Each agent carries a <b>signed agent card</b> (purpose, tools, guardrails), discoverable at <code className="text-emerald-300 text-sm">/.well-known/agent-card.json</code> and sealed to Layer 0. Shadow AI has nowhere to hide.</p>
-        <p className="mt-3 max-w-3xl text-sm text-emerald-100/60">Every card is a ~3KB record signed against <a href="/.well-known/did.json" className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"><code>did:web:csoai.org#card-attestation-1</code></a>, public key <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — the key is in that document, so you can pin it before you trust a card. {ANCHORING_CLAIM} OpenTimestamps anchoring is roadmap, not yet wired. The post-quantum ML-DSA-65 (FIPS-204) signer is built, not shipped.</p>
+        <p className="mt-3 max-w-3xl text-sm text-emerald-100/60">Every card is a ~3KB record signed against <a href="/.well-known/did.json" className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"><code>did:web:csoai.org#card-attestation-1</code></a>, public key <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — the key is in that document, so you can pin it before you trust a card. {ANCHORING_CLAIM} OpenTimestamps anchoring is roadmap, not yet wired. Post-quantum ML-DSA-65 is planned and scaffolded only; no PQC runtime is built or published.</p>
 
         <div className="mt-6 flex items-center gap-2">
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search agents, purpose, tools…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/25 focus:border-emerald-400 focus:outline-none" />
@@ -54,7 +54,7 @@ export default function AgentRegistry() {
           <div className="mt-4 flex flex-wrap gap-2">
             <a href="/agent-governance" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-black text-[#03110b] hover:bg-emerald-400">How agent governance works →</a>
             <a href="/tool-commons" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Run the governance MCP →</a>
-            <a href="/try" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Council review a decision →</a>
+            <a href="/council" className="rounded-xl border border-emerald-500/30 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Explore the Council design →</a>
           </div>
         </div>
         <p className="mt-6 text-[11px] text-emerald-300/70">Shown agents are part of the CSOAI agent network. Enterprise/government agent registration mints cards under your own namespace.</p>

@@ -22,7 +22,7 @@ import type { Slide } from "@/components/scrollworld";
  *     a property measurement has, and "compliance" is a determination a regulator
  *     makes, not one we make. Retitled to what the pipeline actually does.
  *  2. Deck slide 3 "A 3KB Ed25519/ML-DSA-65 signed JSON receipt" — CORRECTED. We sign
- *     Ed25519 today. ML-DSA-65 (FIPS 204) is built, not shipped — that exact discipline
+ *     Ed25519 today. ML-DSA-65 (FIPS 204) is planned/scaffolded only; no PQC runtime is built — that discipline
  *     is already recorded in our own corrections ledger. The page says Ed25519 only.
  *  3. Deck slide 3 "Seed-reproducible (TrueSkill/OpenSkill math)" — DROPPED. No
  *     TrueSkill or OpenSkill implementation exists in this codebase. The rating claim
@@ -144,7 +144,7 @@ export const PREDICATE_SLIDES: Slide[] = [
 export const PREDICATE_NOT_CLAIMED = [
   "We do not claim this produces absolute or mathematical proof of anything. A predicate is exactly as good as the reading of the provision behind it, and that reading is a human judgement we publish so it can be argued with.",
   "We do not determine compliance. We measure behaviour against frozen, published instruments and sign the result. Whether an organisation complies is a determination for a regulator, and we are not one.",
-  "We do not sign with ML-DSA-65 today. Signing is Ed25519. The post-quantum path is built and not shipped, and we say so rather than let the stronger word stand.",
+  "We do not sign with ML-DSA-65 today. Signing is Ed25519. The post-quantum path is planned and scaffolded only; no PQC runtime is built or published.",
   "We do not publish an execution-latency figure. Nothing here runs in a stated number of milliseconds, because we do not measure that for publication.",
   "We do not implement TrueSkill or OpenSkill rating in the shipped board, and no rating claim on this page depends on either.",
   "We do not claim environment parity, matched interfaces or action-rate caps as running features. They are design, and the arena's isolation apparatus is doctrine — see /metrology, where it is marked as such.",

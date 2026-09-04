@@ -212,9 +212,8 @@ export default function GSPCVerify() {
               {ANCHORING_CLAIM}{" "}
               <strong className="text-emerald-50">tsa.status: err</strong> — no OpenTimestamps
               proof is published on a <code>content_id</code>. The post-quantum ML-DSA-65
-              (FIPS-204) signer is likewise{" "}
-              <strong className="text-emerald-50">built, not shipped</strong>; the label will name
-              it in the same commit it ships — never ahead of it.
+              (FIPS-204) path is <strong className="text-emerald-50">planned and scaffolded only</strong>;
+              no PQC signer/runtime is built or published.
             </li>
             <li>
               The <strong className="text-emerald-50">3KB atom is binding</strong>. An ML-DSA-65

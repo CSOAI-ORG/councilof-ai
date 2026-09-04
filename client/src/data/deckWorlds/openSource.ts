@@ -24,7 +24,7 @@ import type { Slide } from "@/components/scrollworld";
  *  5. Deck slide 5's hardware specifics ("12-around-1", 12 LoRA adapters, Qwen3-4B) —
  *     kept only as DESIGN, explicitly labelled, with no throughput or capacity claim.
  *  6. "Ed25519 ... post-quantum" framing elsewhere in the estate — ML-DSA-65 (FIPS-204)
- *     is BUILT, NOT SHIPPED (client/src/data/chain.ts). Said plainly.
+ *     is planned/scaffolded only; no PQC runtime is built. Said plainly.
  */
 
 export const OPEN_SOURCE_HERO = {
@@ -113,7 +113,7 @@ export const OPEN_SOURCE_SLIDES: Slide[] = [
       { tag: "pain", text: "Central signing services concentrate every key into one target" },
       { tag: "benefit", text: "Signatures are produced where the data is, not where the vendor is" },
       { tag: "benefit", text: "Only verifiable envelopes cross the network" },
-      { tag: "usp", text: "Signing today is Ed25519; the ML-DSA-65 (FIPS-204) signer is built but not shipped, and we will say so until it is" },
+      { tag: "usp", text: "Signing today is Ed25519; ML-DSA-65 (FIPS-204) is planned and scaffolded only, and no PQC runtime is built or published" },
     ],
   },
   {
@@ -168,7 +168,7 @@ export const OPEN_SOURCE_NOT_CLAIMED = [
   "We do not claim generated content is \"natively compliant at the millisecond of creation\". Our own provenance bench measured 0 of 20 marked assets surviving ordinary transforms (0 of 180 measured cells), and our test certificate chains to a private root that is not on the C2PA trust list — so issuer resolution is 0% there by construction.",
   "We do not claim membership of, or a seat on, any standards working group. We publish tooling, test vectors and a resolvable did:web; anything beyond that would need a record we do not have.",
   "We do not publish adoption counters for the components we build on — star counts, org counts, adoption dates. Those numbers are not ours to evidence, so they are not on this page.",
-  "We do not claim post-quantum signing. Signing is Ed25519 today; the ML-DSA-65 (FIPS-204) signer is built but not shipped, and the label will change only in the commit that ships it.",
+  "We do not claim post-quantum signing. Signing is Ed25519 today; ML-DSA-65 (FIPS-204) is planned and scaffolded only, and no PQC runtime is built or published.",
   "We do not reproduce an example manifest with invented identifiers. If you want to see a real one, verify a real card.",
 ];
 

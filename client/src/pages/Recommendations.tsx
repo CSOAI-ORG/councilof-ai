@@ -2,7 +2,7 @@
  * RLMAI Recommendations Page
  * 
  * Displays AI-powered compliance recommendations based on:
- * - Council decision patterns
+ * - Scenario inputs (the 33-seat Council remains a non-live design)
  * - Incident analysis
  * - Compliance gaps
  * - Industry best practices
@@ -725,9 +725,9 @@ export default function Recommendations() {
                 <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-3">
                   <Building className="h-6 w-6 text-purple-400" />
                 </div>
-                <h4 className="font-semibold mb-2">Council Learning</h4>
+                <h4 className="font-semibold mb-2">Scenario Learning</h4>
                 <p className="text-sm text-muted-foreground">
-                  Learns from 33-Seat Council voting patterns.
+                  Uses scenario inputs; no live 33-seat voting record exists.
                 </p>
               </div>
               

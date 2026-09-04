@@ -72,7 +72,7 @@ export default function CouncilDetail() {
       {/* How It Works */}
       <section className="py-20 px-4">
         <div className="container max-w-6xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">How the Council Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">How the Council Is Intended to Work</h2>
 
           <div className="space-y-12">
             <div className="flex flex-col md:flex-row items-start gap-8">
@@ -136,7 +136,7 @@ export default function CouncilDetail() {
             <Card>
               <CardHeader>
                 <CheckCircle2 className="h-8 w-8 text-emerald-600 mb-2" />
-                <CardTitle>Prevents Single Points of Failure</CardTitle>
+                <CardTitle>Aims to Avoid Single-Seat Decisions</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">

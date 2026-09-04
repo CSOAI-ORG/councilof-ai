@@ -7,7 +7,7 @@
   "author": "CSOAI Team",
   "scripts": {
     "guard:evidence-integrity": "node scripts/evidence-integrity-gate.mjs --selftest && node scripts/evidence-integrity-gate.mjs",
-    "guard:council-truth": "node scripts/council-runtime-truth-gate.mjs",
+    "guard:council-truth": "node scripts/council-runtime-truth-gate.mjs --selftest && node scripts/council-runtime-truth-gate.mjs",
     "guard:root-witness": "python3 scripts/root-witness-release-gate.py --selftest && python3 scripts/root-witness-release-gate.py",
     "guard:wallet-secrets": "node scripts/wallet-credential-gate.mjs --selftest && node scripts/wallet-credential-gate.mjs",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",

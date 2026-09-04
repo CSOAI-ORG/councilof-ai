@@ -32,7 +32,6 @@ export default function PublicDashboard() {
   const [selectedFramework, setSelectedFramework] = useState<string>("all");
 
   // Fetch public statistics
-  const { data: councilStats } = trpc.council.getStats.useQuery();
   const { data: recentReports } = trpc.watchdog.list.useQuery();
 
   // Calculate watchdog stats from reports
@@ -44,11 +43,6 @@ export default function PublicDashboard() {
   // Calculate aggregate stats
   const totalIncidents = watchdogStats?.total || 0;
   const resolvedIncidents = watchdogStats?.verified || 0;
-  const councilSessions = councilStats?.totalSessions || 0;
-  const consensusRate = councilStats?.totalSessions
-    ? Math.round((councilStats.consensusReached / councilStats.totalSessions) * 100)
-    : 0;
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-zinc-950 via-zinc-900 to-zinc-950">
       {/* Header */}
@@ -94,8 +88,9 @@ export default function PublicDashboard() {
             Global AI Safety <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Transparency</span>
           </h1>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto mb-8">
-            Track AI safety incidents, compliance assessments, and council decisions in real-time.
-            CSOAI provides unprecedented transparency into AI governance worldwide.
+            Track submitted safety incidents and inspect dated measurement evidence. The proposed
+            Council has 33 designed seats and a 23/33 target, but is not live; independence and
+            fault tolerance are not demonstrated.
           </p>
         </div>
       </section>
@@ -139,8 +134,8 @@ export default function PublicDashboard() {
                     <Users className="h-6 w-6 text-blue-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-400">Council Sessions</p>
-                    <p className="text-3xl font-bold text-white">{councilSessions}</p>
+                    <p className="text-sm text-zinc-400">Designed Council Seats</p>
+                    <p className="text-3xl font-bold text-white">33</p>
                   </div>
                 </div>
               </CardContent>
@@ -153,8 +148,8 @@ export default function PublicDashboard() {
                     <Scale className="h-6 w-6 text-purple-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-zinc-400">Consensus Rate</p>
-                    <p className="text-3xl font-bold text-white">{consensusRate}%</p>
+                    <p className="text-sm text-zinc-400">Target Threshold</p>
+                    <p className="text-3xl font-bold text-white">23/33</p>
                   </div>
                 </div>
               </CardContent>
