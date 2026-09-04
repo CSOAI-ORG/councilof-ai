@@ -5,6 +5,8 @@ import {
   scoreboardDestination,
 } from "./gspc-scoreboard";
 import { onRequest as redirectPricing } from "./pricing";
+import { onRequest as redirectChat } from "./chat";
+import { onRequest as redirectChatSlash } from "./chat/index";
 
 describe("retired workspace doors", () => {
   it("preserves an old Council OS pane and unrelated context", () => {
@@ -46,5 +48,14 @@ describe("retired workspace doors", () => {
       "/dashboard/?tab=measured&task=pricing-overview",
     );
     expect(response.headers.get("location")).not.toContain("/os");
+  });
+
+  it("sends both chat doors directly to the canonical dashboard home", () => {
+    for (const redirect of [redirectChat, redirectChatSlash]) {
+      const response = redirect();
+      expect(response.status).toBe(308);
+      expect(response.headers.get("location")).toBe("/dashboard?tab=home");
+      expect(response.headers.get("location")).not.toContain("/os");
+    }
   });
 });
