@@ -405,9 +405,18 @@ curl https://councilof.ai/.well-known/x402.json
 <span style="color: var(--muted);"># 2. Hit a priced endpoint (returns HTTP 402 with payment challenge)</span>
 curl -i https://councilof.ai/api/request-attestation?subject=gpt-4\&axis=jail
 
-<span style="color: var(--muted);"># 3. Sign the EIP-3009 authorization with MetaMask</span>
-<span style="color: var(--muted);"># 4. Submit via the open facilitator</span>
-python3 scripts/badger/csoai-open-facilitator.py --settle payment.json</div>
+<span style="color: var(--muted);"># 3. Get the client (this step used to name a path you could not fetch)</span>
+curl -O https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/badger/csoai-open-facilitator.py
+pip install eth-account
+
+<span style="color: var(--muted);"># 4. Sign and verify. Moves NO money — it reads the amount from the 402 above.</span>
+<span style="color: var(--muted);">#    Use a throwaway key holding a few cents, never your main wallet.</span>
+export X402_PAYER_KEY=0x...
+python3 csoai-open-facilitator.py --resource "https://councilof.ai/api/request-attestation?subject=gpt-4o"
+
+<span style="color: var(--muted);"># 5. Pay. Only this step transfers USDC.</span>
+python3 csoai-open-facilitator.py --resource "..." --settle</div>
+<p style="color: var(--muted); font-size: 14px;">Step 4 stops at the facilitator&rsquo;s balance check and charges nothing, so you can confirm your signature, the token domain and the envelope are all correct before any money moves. <code>insufficient_balance</code> there means everything except the funding is right. If you would rather not run our client, any x402 client works &mdash; the challenge in step 2 is the standard <code>accepts[]</code> array.</p>
 
 <a href="https://metamask.io" class="cta">Open MetaMask →</a>
 
