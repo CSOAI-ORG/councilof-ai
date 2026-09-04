@@ -48,16 +48,47 @@ export function sameNetwork(a: string, b: string): boolean {
 }
 
 /**
- * chooseDialect — the highest x402 version the facilitator advertises for `exact` on OUR network.
- * Returns null when the facilitator answers but lists nothing usable for this chain: that is a
+ * dialectCandidates — every x402 version the facilitator advertises for `exact` on OUR network,
+ * in the order we should ATTEMPT them. `/verify` moves no money, so attempting is free and a
+ * rejected shape costs nothing but a round trip.
+ *
+ * ORDER IS EVIDENCE, NOT PREFERENCE FOR THE NEWER NUMBER (probed 2026-09-04). PayAI now
+ * advertises BOTH dialects for Base:
+ *   {"x402Version":1,"scheme":"exact","network":"base"}
+ *   {"x402Version":2,"scheme":"exact","network":"eip155:8453"}
+ * The previous rule here — "the highest version the facilitator advertises" — therefore started
+ * selecting v2 the moment PayAI added that second kind, and v2 against PayAI returns:
+ *   HTTP 400 {"invalidReason":"invalid_payload",
+ *             "invalidMessage":"accepted: Invalid input: expected object, received undefined"}
+ * i.e. its v2 wants the requirements under a field named `accepted`, and every shape probed for
+ * that field was also rejected (`invalid_payment_requirements`). The identical authorization sent
+ * in v1 reaches the real balance check (`invalid_exact_evm_insufficient_balance`, payer recovered)
+ * — so v1 is the only dialect PROVEN to settle on Base mainnet, and it goes first. v2 is still
+ * attempted after it, so a v2-only facilitator keeps working and this cannot become a new
+ * assumption of the same kind.
+ *
+ * Empty means the facilitator answered but serves nothing usable for this chain: a
  * misconfiguration worth reporting honestly rather than papering over with a guess.
  */
-export function chooseDialect(kinds: SupportedKind[], network: string): 1 | 2 | null {
+export function dialectCandidates(kinds: SupportedKind[], network: string): (1 | 2)[] {
   const usable = kinds.filter(
     (k) => (k.scheme || "exact") === "exact" && sameNetwork(k.network || "", network),
   );
-  if (usable.length === 0) return null;
-  return usable.some((k) => k.x402Version === 2) ? 2 : 1;
+  if (usable.length === 0) return [];
+  const out: (1 | 2)[] = [];
+  // A kind with no x402Version is v1 — that is what the field's absence meant before v2 existed.
+  if (usable.some((k) => (k.x402Version ?? 1) === 1)) out.push(1);
+  if (usable.some((k) => k.x402Version === 2)) out.push(2);
+  return out;
+}
+
+/**
+ * chooseDialect — the dialect to try FIRST for `exact` on OUR network (see dialectCandidates for
+ * why "first" is not "highest"). Null when the facilitator serves nothing usable for this chain.
+ */
+export function chooseDialect(kinds: SupportedKind[], network: string): 1 | 2 | null {
+  const c = dialectCandidates(kinds, network);
+  return c.length > 0 ? c[0] : null;
 }
 
 /**
@@ -69,27 +100,27 @@ export async function facilitatorDialect(
   network: string,
   headers: Record<string, string> = {},
   fetchImpl: typeof fetch = fetch,
-): Promise<{ version: 1 | 2 | null; reason: string }> {
+): Promise<{ version: 1 | 2 | null; candidates: (1 | 2)[]; reason: string }> {
+  const decide = (kinds: SupportedKind[], why: string) => {
+    const candidates = dialectCandidates(kinds, network);
+    return {
+      version: candidates.length > 0 ? candidates[0] : null,
+      candidates,
+      reason: candidates.length > 0 ? why : `${why}: no exact scheme for this network`,
+    };
+  };
   const cached = supportedCache.get(facilitator);
-  const fresh = cached && Date.now() - cached.at < SUPPORTED_TTL_MS;
-  if (fresh) {
-    const v = chooseDialect(cached.kinds, network);
-    return { version: v, reason: v ? "cached /supported" : "cached /supported lists no exact scheme for this network" };
-  }
+  if (cached && Date.now() - cached.at < SUPPORTED_TTL_MS) return decide(cached.kinds, "cached /supported");
   try {
     const r = await fetchImpl(`${facilitator}/supported`, { method: "GET", headers });
-    if (!r.ok) return { version: null, reason: `/supported HTTP ${r.status}` };
+    if (!r.ok) return { version: null, candidates: [], reason: `/supported HTTP ${r.status}` };
     const j = (await r.json()) as { kinds?: SupportedKind[] };
     const kinds = Array.isArray(j?.kinds) ? j.kinds : [];
-    if (kinds.length === 0) return { version: null, reason: "/supported returned no kinds" };
+    if (kinds.length === 0) return { version: null, candidates: [], reason: "/supported returned no kinds" };
     supportedCache.set(facilitator, { kinds, at: Date.now() });
-    const v = chooseDialect(kinds, network);
-    return {
-      version: v,
-      reason: v ? "negotiated from /supported" : "/supported lists no exact scheme for this network",
-    };
+    return decide(kinds, "negotiated from /supported");
   } catch (e) {
-    return { version: null, reason: `/supported unreachable: ${(e as Error).message}` };
+    return { version: null, candidates: [], reason: `/supported unreachable: ${(e as Error).message}` };
   }
 }
 

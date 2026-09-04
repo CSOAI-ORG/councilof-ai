@@ -251,21 +251,38 @@ export async function verifyX402Payment(
       reason: `facilitator does not serve ${entry.network} with the exact scheme (${neg.reason}) — refusing to attempt a settlement that cannot succeed`,
     };
   }
-  const v: 1 | 2 = neg.version ?? clientVersion;
-  const paymentRequirements = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
-  const body = JSON.stringify({
-    x402Version: v,
-    paymentPayload: toDialectPayload(payload as Record<string, unknown>, v),
-    paymentRequirements,
-  });
+  // Try every dialect the facilitator advertises, best-evidenced first, and keep the one whose
+  // /verify it actually accepts. `/verify` moves no money, so a rejected SHAPE costs a round trip
+  // and nothing else — whereas failing on the first attempt is how a live rail silently stopped
+  // earning: PayAI added a v2 kind for Base, the old "highest version wins" rule switched to it,
+  // and every real payment came back `facilitator /verify HTTP 400` after the buyer had signed.
+  const candidates: (1 | 2)[] = neg.candidates.length > 0 ? neg.candidates : [neg.version ?? clientVersion];
+  const bodyFor = (v: 1 | 2): string =>
+    JSON.stringify({
+      x402Version: v,
+      paymentPayload: toDialectPayload(payload as Record<string, unknown>, v),
+      paymentRequirements: v === 2 ? toV2Requirements(entry) : toV1Requirements(entry),
+    });
 
   try {
-    const vr = await fetch(`${facilitator}/verify`, {
-      method: "POST",
-      headers: await headersFor("/verify"),
-      body,
-    });
-    if (!vr.ok) return { ok: false, reason: `facilitator /verify HTTP ${vr.status}` };
+    let vr: Response | null = null;
+    let body = "";
+    let lastStatus = 0;
+    for (const cand of candidates) {
+      const attempt = bodyFor(cand);
+      const r = await fetch(`${facilitator}/verify`, {
+        method: "POST",
+        headers: await headersFor("/verify"),
+        body: attempt,
+      });
+      if (r.ok) {
+        vr = r;
+        body = attempt;
+        break;
+      }
+      lastStatus = r.status;
+    }
+    if (!vr) return { ok: false, reason: `facilitator /verify HTTP ${lastStatus}` };
     const vout = (await vr.json()) as { isValid?: boolean; invalidReason?: string };
     if (!vout || vout.isValid !== true) {
       return { ok: false, reason: `facilitator rejected receipt: ${vout?.invalidReason || "not valid"}` };
