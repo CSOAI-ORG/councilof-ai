@@ -70,3 +70,30 @@ describe("/badge.md — the snippets are in the body, which is the whole point",
     expect(res.headers.get("content-type") ?? "").toMatch(/text\/markdown/);
   });
 });
+
+describe("every axis on the board points at its published bank", () => {
+  it("all 22 axes carry a dataset slug — no dead ends", async () => {
+    const { AXES_FIN } = await import("./api/_gspc_axes_fin");
+    const a = await import("./api/_gspc_axes_a");
+    const b = await import("./api/_gspc_axes_b");
+    const all = [
+      ...Object.values(a).flat(),
+      ...Object.values(b).flat(),
+      ...AXES_FIN,
+    ].filter((x): x is { axis: string; dataset?: string } => !!x && typeof x === "object" && "axis" in x);
+
+    const missing = all.filter((x) => !x.dataset).map((x) => x.axis);
+    // Eight financial axes had no dataset link, so a reader on the board could not reach the
+    // bank behind them even though all eight repos were public. A dead end on a measured slot
+    // is the cheapest kind of lost reader.
+    expect(missing).toEqual([]);
+    expect(all.length).toBeGreaterThanOrEqual(22);
+  });
+
+  it("every dataset slug is a bare owner/name — a prose slug mints a URL that 404s", async () => {
+    const { AXES_FIN } = await import("./api/_gspc_axes_fin");
+    for (const ax of AXES_FIN) {
+      expect(ax.dataset, ax.axis).toMatch(/^[A-Za-z0-9][\w.-]*\/[A-Za-z0-9][\w.-]*$/);
+    }
+  });
+});
