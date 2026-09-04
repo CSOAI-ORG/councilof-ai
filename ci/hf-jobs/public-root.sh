@@ -94,6 +94,11 @@ if ok; then
   fi
 else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
 
+step 'Refresh exact-root EAS witness metadata after the chain write'
+if ok; then
+  "$PYTHON" scripts/witness_public_root.py --refresh-eas
+else skipped "publish rc=$PUBLISH_RC dry_run=$DRY_RUN"; fi
+
 step 'mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)'
 if ok; then
   "$PYTHON" scripts/adapters/witness_queue.py --mark
