@@ -84,6 +84,16 @@ export const onRequest: PagesFunction = async (ctx) => {
           server: "csoai-gspc-mcp",
           doctrine:
             "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
+          // The one-command path. It existed only in the npm README, where nobody discovering
+          // this door would look, so the shortest real install was invisible at the point of
+          // discovery. Stated first, before any prose about transports.
+          install: {
+            remote: "Add https://councilof.ai/mcp as a streamable-HTTP MCP server — no install at all.",
+            claude_code: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
+            any_client: "npx -y csoai-gspc-mcp",
+            no_install_at_all: "curl -s https://councilof.ai/api/gspc — the board, one GET, no key and no account.",
+            python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
+          },
           stdio_alternative:
             "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — the same tools from the same shared definitions files. Payment travels as the x_payment ARGUMENT and each door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Ask that package which tools its version lists; this door does not track its release schedule.",
           paid_tools: {

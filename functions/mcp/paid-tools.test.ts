@@ -176,3 +176,16 @@ describe("/mcp tools/call — paid tools", () => {
     expect(buildPaidRequest("nope", {}, ORIGIN)).toEqual({ error: "unknown paid tool: nope" });
   });
 });
+
+describe("GET /mcp — the one-command install is at the point of discovery", () => {
+  it("names a one-command install and a zero-install path", async () => {
+    const g = await (await onRequest({ request: new Request(`${ORIGIN}/mcp`), env: {}, params: {} } as never)).json();
+    // The shortest real install used to live only in the npm README, which nobody discovering
+    // this door would read. If it is not here, discovery leads to "clone the repo" again.
+    expect(g.install).toBeTruthy();
+    expect(g.install.claude_code).toMatch(/npx -y csoai-gspc-mcp/);
+    expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
+    // A checkout is a fallback, never the headline.
+    expect(JSON.stringify(g.install)).not.toMatch(/git clone|index\.mjs/);
+  });
+});
