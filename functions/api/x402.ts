@@ -144,7 +144,15 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         { name: "witness_hash", route: u("/api/witness"), sells: "independent-signature", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
         { name: "receipts_batch", route: u("/api/receipts/batch"), sells: "assembly" },
       ],
-      how: "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free; stdio (npm csoai-gspc-mcp) stays free-only.",
+      // The last clause used to read "stdio (npm csoai-gspc-mcp) stays free-only", echoing a
+      // REASON given in functions/mcp/paid-tools.json that is simply wrong: "stdio has no
+      // payment header". Payment does not travel as a transport header at all — x_payment is a
+      // TOOL ARGUMENT, and _paid.ts:39 reads it out of args and sets X-PAYMENT itself on the
+      // same-origin request. stdio can do that identically, so nothing about the transport made
+      // it free. Stating a package's tool list here also guarantees drift, because that list
+      // changes on someone else's release schedule and this catalog would keep asserting the
+      // old one. So the catalog now states the MECHANISM, which cannot go stale.
+      how: "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Payment travels as the x_payment ARGUMENT and this door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free.",
     },
     invariants: {
       measurement_not_certification: "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
