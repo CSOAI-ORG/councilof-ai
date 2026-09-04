@@ -98,7 +98,7 @@ def main() -> None:
         "opentimestamps": {
             "name": "OpenTimestamps → Bitcoin",
             "kind": "pending-stamp",
-            "endpoint": "https://openteimestamps.org",
+            "endpoint": "https://opentimestamps.org",
             "method": "POST /digest with the merkle_root, get a .ots pending stamp, upgrade when BTC fees drop",
             "status": "READY",
             "as_of": now(),
@@ -147,7 +147,7 @@ def main() -> None:
         "compute": {
             "oracle": {
                 "status": "LIVE",
-                "host": "oracle-micro-2 (sov33-owem-micro2)",
+                "host": "oracle-micro-2",  # public label only: the internal hostname is not a public surface,
                 "uptime": "32 days",
                 "role": "anchor-relay (the merkle_root is anchored via cron on Oracle)",
                 "capabilities": ["x86_64", "1 vCPU", "956 MB RAM"],
