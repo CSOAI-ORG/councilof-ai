@@ -28,6 +28,10 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
 fail=0
 echo "pre-push: content gates (the ones that fail deploys) …"
 
+node scripts/wallet-credential-gate.mjs --selftest >/dev/null 2>&1 \
+  && node scripts/wallet-credential-gate.mjs >/dev/null 2>&1 \
+  || { echo "  ✖ wallet-credential-gate: wallet credential material is tracked"; fail=1; }
+
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
 node scripts/facts-gate.mjs --selftest >/dev/null 2>&1 \
@@ -49,5 +53,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ facts-gate + brand-gate clean"
+echo "  ✓ wallet-credential-gate + facts-gate + brand-gate clean"
 exit 0

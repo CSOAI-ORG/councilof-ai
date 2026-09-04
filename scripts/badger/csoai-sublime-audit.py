@@ -155,11 +155,11 @@ def main() -> None:
             "lever": "scale-out reach",
         },
         {
-            "name": "Burner wallet (ready to fund)",
+            "name": "Burner wallet (compromised and retired)",
             "url": "internal",
-            "value": "0xb3a6a8d92a3aec1aca31b4ef06c95be468562c47f054182f1a39d26a880827da",
-            "status": "READY",
-            "lever": "first x402 settlement",
+            "value": None,
+            "status": "BLOCKED",
+            "lever": "replace through reviewed secret management; never fund the retired wallet",
         },
         {
             "name": "5 provisional patents queued",
@@ -189,9 +189,9 @@ def main() -> None:
             "multiplier": "10x — every citable mention = +1 standing",
         },
         {
-            "name": "Burner wallet is funded",
-            "action": "Send \$5 USDC from main wallet to burner",
-            "multiplier": "1000x — first settlement unlocks the rail for every buyer",
+            "name": "Compromised burner wallet is retired",
+            "action": "Never fund or use it; replace it through reviewed secret management",
+            "multiplier": "security gate — required before any settlement test",
         },
         {
             "name": "X402_FACILITATOR_URL set",
