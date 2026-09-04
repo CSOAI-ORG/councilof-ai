@@ -223,8 +223,11 @@ def build_interop(engine: dict) -> dict:
         "full_name": engine["full_name"],
         "kind": engine["kind"],
         "as_of": now(),
-        "x402_sku": engine["x402_sku"],
-        "x402_price_usdc": engine["x402_price"],
+        # NO PUBLISHED PRICE, NO INVENTED SKU. functions/api/_skus.ts defines zero
+        # engine SKUs, so every "engine-<slug>" here named a product that does not
+        # exist, at an amount the rail never charges. Doctrine: amounts appear only
+        # inside a 402 challenge. scripts/price-gate.mjs now reads JSON and enforces it.
+        "x402": "https://councilof.ai/api/x402",
         "protocols": ["a2a", "mcp", "x402", "ag-ui"],
         "capabilities": [
             "Run GSPC axes on this engine",
@@ -269,8 +272,7 @@ def main() -> None:
                 "name": e["name"],
                 "slug": e["slug"],
                 "kind": e["kind"],
-                "x402_sku": e["x402_sku"],
-                "x402_price_usdc": e["x402_price"],
+                "x402": "https://councilof.ai/api/x402",
             }
             for e in ENGINES
         ],

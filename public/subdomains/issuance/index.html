@@ -59,11 +59,11 @@
 <div class="container">
 <h2>5 priced resources</h2>
 <div class="grid">
-  <div class="card"><p class="card-name">Issuance</p><p class="price">$0.50 USDC</p><p class="card-desc">Pay for your model, agent, or asset to be measured.</p></div>
-  <div class="card"><p class="card-name">Evidence bundle</p><p class="price">$1.00 USDC</p><p class="card-desc">A pack of cards for a specific obligation.</p></div>
-  <div class="card"><p class="card-name">Data feed</p><p class="price">$2.00 USDC</p><p class="card-desc">Live deltas feed for compliance teams.</p></div>
-  <div class="card"><p class="card-name">Proof bundle</p><p class="price">$1.50 USDC</p><p class="card-desc">Inclusion proof + bulk history for a card.</p></div>
-  <div class="card"><p class="card-name">Custom audit</p><p class="price">$10.00 USDC</p><p class="card-desc">A scoped measurement run against a specific obligation.</p></div>
+  <div class="card"><p class="card-name">Issuance</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Pay for your model, agent, or asset to be measured.</p></div>
+  <div class="card"><p class="card-name">Evidence bundle</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">A pack of cards for a specific obligation.</p></div>
+  <div class="card"><p class="card-name">Data feed</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Live deltas feed for compliance teams.</p></div>
+  <div class="card"><p class="card-name">Proof bundle</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Inclusion proof + bulk history for a card.</p></div>
+  <div class="card"><p class="card-name">Custom audit</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">A scoped measurement run against a specific obligation.</p></div>
 </div>
 <h2>How it works</h2>
 <p>An agent hits a priced endpoint. The server returns HTTP 402 with a USDC payment challenge (EIP-3009 transferWithAuthorization). MetaMask signs the authorization on Base. The open facilitator submits the transaction. Every receipt is signed under did:web:csoai.org#card-attestation-1.</p>

@@ -4,10 +4,10 @@
   "name": "Council Town",
   "kind": "open-world-multi-agent",
   "engine": "PixiJS + AI Town fork",
-  "description": "Agent clans deliberating in an open world. Each turn emits a signed card.",
+  "description": "Agent clans deliberating in an open world.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064715Z",
+  "axes_related": [
     "governance",
     "safety"
   ],
@@ -21,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/council-town.json",
     "agui": "https://councilof.ai/council-town/ag-ui",
     "a2ui": "https://councilof.ai/council-town/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-council-town",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-council-town",
-    "price_usdc": 0.5
-  },
   "notes": [
-    "Council Town emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

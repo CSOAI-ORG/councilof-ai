@@ -432,7 +432,7 @@ const LEDGER = {
     signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
     sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
+    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append MUST re-issue the signature over the new bytes; a stale signature is a published defect, never a silent edit, and never a bare id bump.",
   },
 };
 
@@ -475,7 +475,20 @@ export const onRequestGet: PagesFunction = async () => {
   const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
   const out = signatureState === "VALID"
     ? LEDGER
-    : { ...LEDGER, signature_state: "STALE", note: "Signature is stale because the ledger was appended after signing. Re-issue the signature (gen-reg-feed.mjs) - a stale signature is a published defect, never a silent edit." };
+    : {
+        ...LEDGER,
+        signature_state: "STALE",
+        note:
+          "Signature is stale because the ledger was appended after signing. A stale signature is a " +
+          "published defect, never a silent edit. TO CLEAR IT: re-sign the ledger with the estate key " +
+          "(did:web:csoai.org, signer d4cb0eaa) over the canonical form named in signature.sig_input — " +
+          "Python json.dumps(body minus signature, sort_keys=True, separators=(',',':'), ensure_ascii=True) " +
+          "— then update BOTH signature.id and signature.signature together. Updating id alone would make " +
+          "this field read VALID while the Ed25519 bytes still cover the older content, which is a worse " +
+          "defect than the stale flag it hides. The key is not in this repository, so this is an " +
+          "owner-supervised re-sign.",
+        fix_requires: "estate signing key (not in repo)",
+      };
   return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",

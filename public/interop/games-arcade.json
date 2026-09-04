@@ -1,7 +1,7 @@
 {
   "schema": "csoai.games-arcade/0.1",
-  "as_of": "20260904T060144Z",
-  "total_games": 15,
+  "as_of": "20260904T064716Z",
+  "total_games": 10,
   "live_games": 8,
   "staged_games": 2,
   "multiplayer_games": 8,
@@ -15,9 +15,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-council-town",
-      "x402_price_usdc": 0.5
+      "a2ui": true
     },
     {
       "name": "Council Minds",
@@ -26,9 +24,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-council-minds",
-      "x402_price_usdc": 0.2
+      "a2ui": true
     },
     {
       "name": "Hive Model",
@@ -37,9 +33,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-hive-model",
-      "x402_price_usdc": 0.3
+      "a2ui": true
     },
     {
       "name": "Arena",
@@ -48,9 +42,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-arena",
-      "x402_price_usdc": 0.1
+      "a2ui": true
     },
     {
       "name": "GSPC Arena",
@@ -59,9 +51,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-gspc-arena",
-      "x402_price_usdc": 0.5
+      "a2ui": true
     },
     {
       "name": "Playbooks",
@@ -70,9 +60,7 @@
       "status": "LIVE",
       "multiplayer": false,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-playbooks",
-      "x402_price_usdc": 0.1
+      "a2ui": true
     },
     {
       "name": "Course Player",
@@ -81,9 +69,7 @@
       "status": "LIVE",
       "multiplayer": false,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-course-player",
-      "x402_price_usdc": 0.0
+      "a2ui": true
     },
     {
       "name": "PDCA Simulator",
@@ -92,9 +78,7 @@
       "status": "LIVE",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-pdca-simulator",
-      "x402_price_usdc": 0.2
+      "a2ui": true
     },
     {
       "name": "Swarm",
@@ -103,9 +87,7 @@
       "status": "STAGED",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-swarm",
-      "x402_price_usdc": 0.3
+      "a2ui": true
     },
     {
       "name": "Civic",
@@ -114,70 +96,8 @@
       "status": "STAGED",
       "multiplayer": true,
       "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-civic",
-      "x402_price_usdc": 0.2
-    },
-    {
-      "name": "Tournament",
-      "slug": "tournament",
-      "kind": "tournament",
-      "description": "Single-elimination model tournaments with signed brackets",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-tournament",
-      "x402_price_usdc": 0.1
-    },
-    {
-      "name": "Judge",
-      "slug": "judge",
-      "kind": "judging",
-      "description": "AI judges models against EU AI Act obligations",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-judge",
-      "x402_price_usdc": 0.1
-    },
-    {
-      "name": "Charter",
-      "slug": "charter",
-      "kind": "charter-building",
-      "description": "Build a charter for a fictional AI system, get signed",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-charter",
-      "x402_price_usdc": 0.1
-    },
-    {
-      "name": "Compliance",
-      "slug": "compliance",
-      "kind": "compliance-scenario",
-      "description": "Work through a SOC 2 / ISO 42001 / HIPAA scenario",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-compliance",
-      "x402_price_usdc": 0.1
-    },
-    {
-      "name": "Incident",
-      "slug": "incident",
-      "kind": "incident-response",
-      "description": "Respond to an AI safety incident, sign the response",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true,
-      "x402_sku": "game-incident",
-      "x402_price_usdc": 0.1
+      "a2ui": true
     }
   ],
-  "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)."
+  "principle": "Discovery documents for the games. AG-UI + A2UI provide the chat; multiplayer rooms run over WebSocket. No game emits a card, none is anchored, and none writes to the GSPC board: a game result is not a measurement of a model on an axis, and the board is worth something precisely because a cell cannot be produced by playing. The honest route for game events is /api/witness, which attests that a digest existed at a time and asserts nothing about its content."
 }

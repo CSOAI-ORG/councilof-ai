@@ -4,14 +4,12 @@
   "name": "Civic",
   "kind": "civic-deliberation",
   "engine": "React + deliberation engine",
-  "description": "Citizens deliberate policy questions. Emits signed policy cards.",
+  "description": "Citizens deliberate policy questions.",
   "status": "STAGED",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064716Z",
+  "axes_related": [
     "governance",
-    "safety",
-    "compliance",
-    "conduct"
+    "safety"
   ],
   "multiplayer": true,
   "players": "8-128 players",
@@ -23,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/civic.json",
     "agui": "https://councilof.ai/civic/ag-ui",
     "a2ui": "https://councilof.ai/civic/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-civic",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-civic",
-    "price_usdc": 0.2
-  },
   "notes": [
-    "Civic emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

@@ -91,7 +91,7 @@ payload declares — so every client above can pay once `payTo` and the facilita
 
 ### 1.4 The today-path: first USDC landing in `0x2126…ae31` (numbered, owner does every step)
 
-1. **Confirm the deploy shipped.** `curl -s https://councilof.ai/api/x402 | head` → expect `csoai.x402-catalog/0.1`
+1. **Confirm the deploy shipped.** `curl -s https://councilof.ai/api/x402 | head` → expect `csoai.x402-catalog/0.2`
    with `rail.mode: "challenge-only"` and `pay_to: "0x2126…ae31"`. If still 404 after ~08:50Z:
    `gh auth refresh -h github.com` then `gh workflow run deploy.yml --ref master` and watch it; the
    3-hourly cron (`20 */3 * * *`) is the fallback. Do not `wrangler pages deploy` from the laptop (CLAUDE.md).

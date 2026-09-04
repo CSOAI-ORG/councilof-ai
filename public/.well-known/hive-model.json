@@ -4,13 +4,12 @@
   "name": "Hive Model",
   "kind": "multi-agent-hive",
   "engine": "PixiJS + council-os substrate",
-  "description": "A hive of agents collaborates to solve a problem. Emits signed cooperation cards.",
+  "description": "A hive of agents collaborates to solve a problem.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064715Z",
+  "axes_related": [
     "governance",
-    "safety",
-    "capability"
+    "safety"
   ],
   "multiplayer": true,
   "players": "4-32 players",
@@ -22,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/hive-model.json",
     "agui": "https://councilof.ai/hive-model/ag-ui",
     "a2ui": "https://councilof.ai/hive-model/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-hive-model",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-hive-model",
-    "price_usdc": 0.3
-  },
   "notes": [
-    "Hive Model emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

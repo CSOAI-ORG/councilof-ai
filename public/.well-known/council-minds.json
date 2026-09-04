@@ -4,13 +4,12 @@
   "name": "Council Minds",
   "kind": "deliberation",
   "engine": "React + agent orchestration",
-  "description": "Multiple agents deliberate a question, emit signed verdicts.",
+  "description": "Multiple agents deliberate a question.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064715Z",
+  "axes_related": [
     "governance",
-    "safety",
-    "reasoning"
+    "safety"
   ],
   "multiplayer": true,
   "players": "2-8 players",
@@ -22,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/council-minds.json",
     "agui": "https://councilof.ai/council-minds/ag-ui",
     "a2ui": "https://councilof.ai/council-minds/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-council-minds",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-council-minds",
-    "price_usdc": 0.2
-  },
   "notes": [
-    "Council Minds emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

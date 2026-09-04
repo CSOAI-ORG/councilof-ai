@@ -125,7 +125,119 @@ def eas_status(sha: str) -> dict:
     return {"status": log.get("status", "NOT_YET"), "reason": log.get("reason", "this root not yet attested"), "log": "https://councilof.ai/interop/eas-root-attestations.json"}
 
 
+LIVE_ROOT_URL = "https://councilof.ai/root.json"
+# Cloudflare 403s the default Python-urllib UA on this zone (Error 1010), which would make every
+# drift check come back UNCHECKABLE for a reason that has nothing to do with drift.
+UA = "csoai-witness/1.0"
+
+
+def compute_drift(witness_sha: str, witness_merkle: str, live_url: str = LIVE_ROOT_URL) -> dict:
+    """Compare the WITNESSED bytes against what a reader actually fetches, right now.
+
+    WHY THIS FUNCTION EXISTS. The block it replaces was a tautology:
+
+        "drift": {"status": "MATCH", "witness_artifact_sha256": sha, "live_root_sha256": sha,
+                  "match_sha256": True, "match_merkle_root": True, ...}
+
+    Every field came from the SAME `sha` and the SAME root object — it compared a value to itself
+    and hardcoded the verdict, so `status` could never be anything but MATCH. A guard that cannot
+    fail is not a guard, and this one is named `drift` and read as the answer to "are the anchored
+    bytes still the live bytes?".
+
+    It published a false all-clear. Observed 2026-09-04: the pointer said MATCH with
+    live_root_sha256 728e8c5e… and bytes 4948, while https://councilof.ai/root.json was
+    f0d8f22f… at 11588 bytes and a day newer. It was asserting MATCH about bytes it had never
+    fetched. The old `reason` — "witness computed from the same root.json bytes this publish
+    committed" — was true at the instant of writing, which is exactly the trap: a statement true
+    only at write time, published as a standing fact and read days later.
+
+    UNCHECKABLE is a distinct third state on purpose. A fetch that fails says nothing about
+    drift, and must never collapse into MATCH.
+    """
+    try:
+        req = urllib.request.Request(live_url, headers={"User-Agent": UA, "Accept": "application/json"})
+        with urllib.request.urlopen(req, timeout=60) as r:
+            live = r.read()
+    except Exception as e:  # network, DNS, HTTP error — anything
+        return {"status": "UNCHECKABLE", "checked_at": now(), "checked_against": live_url,
+                "witness_artifact_sha256": witness_sha, "witness_artifact_merkle_root": witness_merkle,
+                "reason": f"could not fetch the live root ({type(e).__name__}: {e}) — this says nothing about drift"}
+    live_sha = hashlib.sha256(live).hexdigest()
+    try:
+        live_merkle = json.loads(live).get("merkle_root")
+    except Exception:
+        live_merkle = None
+    match_sha = live_sha == witness_sha
+    match_merkle = live_merkle == witness_merkle
+    ok = match_sha and match_merkle
+    return {
+        "status": "MATCH" if ok else "DRIFTED",
+        "checked_at": now(),
+        "checked_against": live_url,
+        "witness_artifact_sha256": witness_sha, "live_root_sha256": live_sha,
+        "witness_artifact_merkle_root": witness_merkle, "live_root_merkle_root": live_merkle,
+        "live_root_bytes": len(live),
+        "match_sha256": match_sha, "match_merkle_root": match_merkle,
+        "reason": (
+            "the live root a reader fetches is byte-identical to the witnessed bytes"
+            if ok else
+            "the live root has changed since it was witnessed — the anchors below attest the OLD bytes, "
+            "and a fresh witness run is needed before this pointer means anything"
+        ),
+    }
+
+
+def recheck() -> int:
+    """Re-evaluate drift on the EXISTING pointer without re-witnessing. Safe to run on a schedule.
+
+    This is what stops the pointer going quietly stale: the witness only runs when the root is
+    republished, so between publishes nothing was re-examining whether the claim still held.
+    """
+    ptr_path = INTEROP / "root-witness-pointer.json"
+    if not ptr_path.exists():
+        print("no pointer to recheck"); return 1
+    ptr = json.loads(ptr_path.read_text())
+    witnessed = (ptr.get("live_root") or {}).get("sha256") or (ptr.get("drift") or {}).get("witness_artifact_sha256")
+    merkle = (ptr.get("live_root") or {}).get("merkle_root") or (ptr.get("drift") or {}).get("witness_artifact_merkle_root")
+    if not witnessed:
+        print("pointer carries no witnessed sha256 — nothing to compare"); return 1
+    ptr["drift"] = compute_drift(witnessed, merkle)
+    ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
+    print(f"drift: {ptr['drift']['status']}  witnessed={witnessed[:16]}  live={ptr['drift'].get('live_root_sha256','')[:16]}")
+    return 0 if ptr["drift"]["status"] == "MATCH" else 1
+
+
+def selftest() -> int:
+    """Prove DRIFTED and UNCHECKABLE are reachable. The block this replaced could reach neither."""
+    import tempfile, http.server, threading, functools
+    body = json.dumps({"merkle_root": "aa" * 32}).encode()
+    d = tempfile.mkdtemp(); Path(d, "root.json").write_bytes(body)
+    h = functools.partial(http.server.SimpleHTTPRequestHandler, directory=d)
+    srv = http.server.HTTPServer(("127.0.0.1", 0), h)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{srv.server_port}/root.json"
+    live_sha = hashlib.sha256(body).hexdigest()
+
+    same = compute_drift(live_sha, "aa" * 32, url)
+    other = compute_drift("00" * 32, "bb" * 32, url)
+    srv.shutdown()
+    gone = compute_drift(live_sha, "aa" * 32, "http://127.0.0.1:1/root.json")
+
+    fails = []
+    if same["status"] != "MATCH": fails.append(f"identical bytes should MATCH, got {same['status']}")
+    if other["status"] != "DRIFTED": fails.append(f"different bytes should DRIFT, got {other['status']}")
+    if gone["status"] != "UNCHECKABLE": fails.append(f"unreachable root should be UNCHECKABLE, got {gone['status']}")
+    if gone.get("match_sha256") is not None: fails.append("UNCHECKABLE must not claim a comparison")
+    for f in fails: print("FAIL:", f)
+    print("selftest:", "FAILED" if fails else "ok — MATCH, DRIFTED and UNCHECKABLE all reachable")
+    return 1 if fails else 0
+
+
 def main() -> int:
+    if "--selftest" in sys.argv:
+        return selftest()
+    if "--recheck" in sys.argv:
+        return recheck()
     raw = ROOT_JSON.read_bytes(); root = json.loads(raw)
     sha = hashlib.sha256(raw).hexdigest(); short = sha[:8]
     preimage = canonical_bytes({k: root[k] for k in ENVELOPE_FIELDS})
@@ -165,8 +277,12 @@ def main() -> int:
                 "note": "Honest pointer for the current root witness. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
                 "live_root": side["artifact"],
                 "witness_sidecar": {"url": "https://councilof.ai/interop/root-witness-latest.json", "path": str(latest.relative_to(ROOT)), "status": "PUBLISHED", "dated_copy": str(dated.relative_to(ROOT))},
-                "drift": {"status": "MATCH", "witness_artifact_sha256": sha, "live_root_sha256": sha, "witness_artifact_merkle_root": root["merkle_root"], "live_root_merkle_root": root["merkle_root"], "match_sha256": True, "match_merkle_root": True,
-                           "reason": "witness computed from the same root.json bytes this publish committed"},
+                # Computed against the LIVE root a reader fetches — never against the local bytes
+                # we just witnessed, which is a comparison of a value with itself. Immediately
+                # after a publish this legitimately reads DRIFTED until the deploy lands; the
+                # scheduled `--recheck` flips it to MATCH once it does. That is the honest
+                # sequence, and it is why DRIFTED here is not an alarm on its own.
+                "drift": compute_drift(sha, root["merkle_root"]),
                 "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": "NOT_YET", "xrpl_memo": "NOT_YET"}})
     ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
     print("wrote", latest.name, dated.name, ptr_path.name)

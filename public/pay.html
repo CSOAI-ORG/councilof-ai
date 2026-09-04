@@ -359,31 +359,32 @@
 
 <h2>5 priced resources</h2>
 <p>Every receipt is signed under <code>did:web:csoai.org#card-attestation-1</code> and verifiable at <a href="https://councilof.ai/gspc-verify" style="color: var(--accent);">/gspc-verify</a>.</p>
+<p>Each amount is quoted in that resource&rsquo;s live <a href="https://councilof.ai/api/x402" style="color: var(--accent);">402 challenge</a>, in <code>accepts[].amount</code>. That is the only authoritative price and it is never printed on this page &mdash; a number typed here can drift away from the one the rail actually charges, and this page carried five that had. Verification stays free forever.</p>
 
 <div class="grid">
   <div class="card">
     <p class="card-name">Issuance</p>
-    <p class="price">$0.50 <span class="price-currency">USDC</span></p>
+    <p class="price">Metered <span class="price-currency">USDC</span></p>
     <p class="card-desc">Pay for your model, agent, or asset to be measured. Signed card back. Metered per run. Never sell a grade.</p>
   </div>
   <div class="card">
     <p class="card-name">Evidence bundle</p>
-    <p class="price">$1.00 <span class="price-currency">USDC</span></p>
+    <p class="price">Metered <span class="price-currency">USDC</span></p>
     <p class="card-desc">A pack of cards assembled for a specific obligation (EU AI Act Article, NIST control, OWASP LLM Top 10 category).</p>
   </div>
   <div class="card">
     <p class="card-name">Eunomia data feed</p>
-    <p class="price">$2.00 <span class="price-currency">USDC</span></p>
+    <p class="price">Metered <span class="price-currency">USDC</span></p>
     <p class="card-desc">Live deltas feed for compliance teams. Same data as the free corrections ledger, but assembled into a single signed bundle.</p>
   </div>
   <div class="card">
     <p class="card-name">Proof bundle</p>
-    <p class="price">$1.50 <span class="price-currency">USDC</span></p>
+    <p class="price">Metered <span class="price-currency">USDC</span></p>
     <p class="card-desc">Inclusion proof + bulk history for a single card. Regulator-style query without an account.</p>
   </div>
   <div class="card">
     <p class="card-name">Custom audit</p>
-    <p class="price">$10.00 <span class="price-currency">USDC</span></p>
+    <p class="price">Metered <span class="price-currency">USDC</span></p>
     <p class="card-desc">A scoped measurement run against a specific obligation. Returns a 3KB signed card and a PDF evidence pack.</p>
   </div>
 </div>
@@ -404,9 +405,18 @@ curl https://councilof.ai/.well-known/x402.json
 <span style="color: var(--muted);"># 2. Hit a priced endpoint (returns HTTP 402 with payment challenge)</span>
 curl -i https://councilof.ai/api/request-attestation?subject=gpt-4\&axis=jail
 
-<span style="color: var(--muted);"># 3. Sign the EIP-3009 authorization with MetaMask</span>
-<span style="color: var(--muted);"># 4. Submit via the open facilitator</span>
-python3 scripts/badger/csoai-open-facilitator.py --settle payment.json</div>
+<span style="color: var(--muted);"># 3. Get the client (this step used to name a path you could not fetch)</span>
+curl -O https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/badger/csoai-open-facilitator.py
+pip install eth-account
+
+<span style="color: var(--muted);"># 4. Sign and verify. Moves NO money — it reads the amount from the 402 above.</span>
+<span style="color: var(--muted);">#    Use a throwaway key holding a few cents, never your main wallet.</span>
+export X402_PAYER_KEY=0x...
+python3 csoai-open-facilitator.py --resource "https://councilof.ai/api/request-attestation?subject=gpt-4o"
+
+<span style="color: var(--muted);"># 5. Pay. Only this step transfers USDC.</span>
+python3 csoai-open-facilitator.py --resource "..." --settle</div>
+<p style="color: var(--muted); font-size: 14px;">Step 4 stops at the facilitator&rsquo;s balance check and charges nothing, so you can confirm your signature, the token domain and the envelope are all correct before any money moves. <code>insufficient_balance</code> there means everything except the funding is right. If you would rather not run our client, any x402 client works &mdash; the challenge in step 2 is the standard <code>accepts[]</code> array.</p>
 
 <a href="https://metamask.io" class="cta">Open MetaMask →</a>
 

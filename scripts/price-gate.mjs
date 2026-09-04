@@ -46,7 +46,12 @@ const DIST = path.resolve(REPO, (args[0] && !args[0].startsWith("--")) ? args[0]
 // a rate, which is exactly the shape most likely to appear beside a product name.
 // Prose is still safe because of the ^...$ anchor: "providers charge £500-2,000" and
 // "fines up to €35M" do not match.
-const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:[-–—]\s*(?:[£$€]\s?)?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*)?(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/;
+//
+// THE TRAILING-TICKER ARM IS NOT DECORATION EITHER. "$0.50 USDC" is a price by any reading,
+// but this pattern stopped at the number, so naming the currency after it was enough to pass.
+// Five invented amounts shipped live on /pay in exactly that shape — see the INLINE note in
+// leafTexts for the other half of why they were invisible here.
+const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:[-–—]\s*(?:[£$€]\s?)?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*)?(?:\s*(?:USDC|USDT|USD|GBP|EUR)\b)?\s*(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/i;
 
 // Popularity claims — assertions about what OTHER CUSTOMERS chose.
 // "Recommended" was in this list and was WRONG: on /regulatory-compliance it is a
@@ -121,6 +126,19 @@ const ALLOW = [
       "Calculator slider bounds and the reader's own inputs echoed back. The page charges " +
       "nothing; the money on it belongs to the visitor's business, not to us.",
   },
+  {
+    pages: /^grants\//,
+    why:
+      "Award sizes we would RECEIVE from funders, not a price anyone pays us — the same class " +
+      "as the prosperity-fund entry above. The page lists 'Sloan Foundation — $75,000', 'Ford " +
+      "Foundation — $100,000' and 'Total potential: $280,000'. FOREIGN_MONEY should have stood " +
+      "this down and does not: its \\bfund|grant arm needs one of those words within " +
+      "CONTEXT_WINDOW, and the surrounding copy says 'Foundation' and 'application body' " +
+      "instead — 'Foundation' does not contain 'fund'. Recorded as a decision rather than " +
+      "widened into the regex, because loosening FOREIGN_MONEY to match 'Foundation' would " +
+      "stand down real prices on any page that happens to name one. This carve-out cannot " +
+      "become a price list: nothing under grants/ is a thing we sell.",
+  },
   // EXEMPTION WITHDRAWN 2026-08-26. It read: "contractual fee schedules inside a published
   // legal agreement… the doctrine bans marketing a price, not disclosing the terms of an
   // agreement a party is being asked to sign." That reasoning was defensible and the outcome
@@ -135,12 +153,64 @@ const ALLOW = [
 ];
 const allowedFor = (rel) => ALLOW.find((a) => a.pages.test(rel));
 
-const walk = (dir, out = []) => {
+const walk = (dir, out = [], ext = ".html") => {
   if (!fs.existsSync(dir)) return out;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) walk(p, out);
-    else if (e.name.endsWith(".html")) out.push(p);
+    if (e.isDirectory()) walk(p, out, ext);
+    else if (e.name.endsWith(ext)) out.push(p);
+  }
+  return out;
+};
+
+/**
+ * THE JSON SURFACE, and why this gate was blind to it until 2026-09-04.
+ *
+ * The doctrine is "no public $ prices". On that day the claim was found in TEN separate homes,
+ * and this gate — which walks dist/client for HTML — could see none of them, because every one
+ * lived in JSON that machines read:
+ *
+ *   · 10 .well-known game documents with  "price_usdc": 0.50  and an invented "x402_sku"
+ *   · 8 public/interop/engine-*.json with "x402_price_usdc": 0.5, likewise invented
+ *   · a Python client whose banner printed five amounts matching no SKU at all
+ *
+ * A machine-readable price is worse than one in HTML, not better: an agent acts on it without a
+ * human ever reading the page. And these are the harder kind to catch by eye, because nobody
+ * opens a .well-known file to admire it.
+ *
+ * The check is deliberately narrow — a NUMERIC value under a key that names money. A number is
+ * unambiguous in a way prose is not: "price_usdc": 0.5 cannot be a penalty, a fund size or a
+ * reader's own input, which is the ambiguity FOREIGN_MONEY exists to handle on the HTML side.
+ * Zero is allowed, because "free" is a commitment doctrine requires us to state.
+ */
+// NAMED "price", not merely denominated in a currency. The first draft of this rule also matched
+// a bare currency suffix (usd|eur|gbp|usdc) and produced 21 false positives on the real tree, all
+// of them foreign money the estate reports rather than charges:
+//   exposure_cap_eur: 15000000        the EU AI Act Art 99(4) fine ceiling
+//   distributed_asset_value_usd: …    market TVL cited from rwa.xyz, whose own file says
+//                                     "figures are theirs. We hash the page."
+//   represented_tvl.usd: …            likewise, in publisher-health
+// A gate that flags a penalty ceiling as our price gets switched off, and then it protects
+// nothing — which is the failure this file already records for the HTML side. Every genuine
+// finding across the ten homes named the field "price" (price_usdc, x402_price_usdc, price_usd),
+// so the narrower rule loses no true positive and drops all 21 false ones.
+const MONEY_KEY = /price|(^|_)(fee|cost)(_|$)/i;
+// Money-shaped names that are never OUR published price, even when they contain one of the above.
+const NOT_A_PRICE_KEY = /^(gas_?fee|network_?fee|fee_tier|penalty|fine|turnover|threshold|budget|raised|valuation)$/i;
+
+const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
+  if (Array.isArray(obj)) {
+    obj.forEach((v, i) => jsonPriceFindings(v, rel, `${at}[${i}]`, out));
+    return out;
+  }
+  if (!obj || typeof obj !== "object") return out;
+  for (const [k, v] of Object.entries(obj)) {
+    const here = `${at}.${k}`;
+    if (typeof v === "number" && v > 0 && MONEY_KEY.test(k) && !NOT_A_PRICE_KEY.test(k)) {
+      out.push({ rel, text: `${k}: ${v}`, rule: "published_price", where: here });
+    } else if (typeof v === "object") {
+      jsonPriceFindings(v, rel, here, out);
+    }
   }
   return out;
 };
@@ -150,9 +220,33 @@ const walk = (dir, out = []) => {
 const leafTexts = (html) => {
   const out = [];
   // Strip script/style first — a JS bundle is full of string literals.
-  const cleaned = html
+  //
+  // THEN FLATTEN INLINE TAGS, BEFORE LOOKING FOR LEAVES. The leaf regex below requires an
+  // element's content to contain no `<` at all, so ONE inline child hides the whole element
+  // from this gate. That is not hypothetical: /pay shipped
+  //     <p class="price">$0.50 <span class="price-currency">USDC</span></p>
+  // five times and the gate reported the site clean — the <p> was never a "leaf", and the
+  // only leaf it did see was the harmless word "USDC". Four of those five amounts matched no
+  // SKU in functions/api/_skus.ts at any tier. A guard that any inline <span> switches off is
+  // not a guard. Inline elements carry no block meaning, so dropping their tags (never their
+  // text) makes a price split across one visible as the single amount it displays as.
+  // BOTH PASSES RUN, and that is the whole point. Flattening ALONE is a regression: where a
+  // price is the inline child — <p>Total: <strong>$280,000</strong></p> on /grants — the old
+  // scan matched the <strong> leaf exactly, and flattening merges it into "Total: $280,000",
+  // which the anchored patterns correctly refuse. Caught in review: the flatten-only version
+  // found the five /pay amounts and silently stopped reporting the /grants one it had always
+  // found. So scan the leaves as authored, THEN scan them flattened, and union the two. The
+  // caller already dedupes on text, so a price visible to both passes is reported once.
+  const INLINE = /<\/?(?:span|b|strong|em|i|small|sup|sub|a|code|abbr|mark|u|wbr)\b[^>]*>/gi;
+  const base = html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "");
+  for (const cleaned of [base, base.replace(INLINE, "")]) scanLeaves(cleaned, out);
+  return out;
+};
+
+/** One pass of the leaf scan over already-cleaned HTML, appending {text, ctx} to `out`. */
+const scanLeaves = (cleaned, out) => {
   const re = /<([a-z][a-z0-9]*)\b[^>]*>([^<]*)<\/\1>/gi;
   let m;
   while ((m = re.exec(cleaned)) !== null) {
@@ -171,7 +265,6 @@ const leafTexts = (html) => {
     const ctx = before.slice(-CONTEXT_WINDOW) + " " + text + " " + after.slice(0, CONTEXT_WINDOW);
     out.push({ text, ctx });
   }
-  return out;
 };
 
 const files = walk(DIST);
@@ -198,7 +291,27 @@ for (const f of files) {
   }
 }
 
-console.log(`price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)}`);
+// Machine-readable surfaces get the same rule. Scanned from the SOURCE tree (public/), because
+// these files are served as-is and a prerender is not required to reach them — the gate should
+// catch a published price before a build, not after.
+const jsonRoot = path.resolve(REPO, "public");
+const jsonFiles = walk(jsonRoot, [], ".json");
+for (const f of jsonFiles) {
+  const rel = path.relative(jsonRoot, f);
+  if (allowedFor(rel)) continue;
+  let doc;
+  try {
+    doc = JSON.parse(fs.readFileSync(f, "utf8"));
+  } catch {
+    continue; // not our problem here; a malformed JSON file is a different gate's finding
+  }
+  findings.push(...jsonPriceFindings(doc, rel));
+}
+
+console.log(
+  `price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)} ` +
+    `and ${jsonFiles.length} JSON file(s) under public/`,
+);
 if (!findings.length) {
   console.log("✓ price-gate: no published price and no unevidenced popularity claim.");
   process.exit(0);

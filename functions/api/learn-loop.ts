@@ -2,23 +2,19 @@
  * /api/learn-loop — the end-user learning loop.
  *
  * Every interaction (chat, game, measure, verify, attest) becomes:
- *   1. A 3KB signed card (Ed25519, max 3072 bytes)         — live
- *   2. Witnessed in Rekor                                   — live
- *   3. Added to the training corpus                         — live
+ *   1. A 3KB signed card (Ed25519, max 3072 bytes)
+ *   2. An anchoring STATUS per rail — today every one of them is negative
+ *      (NOT_STAMPED / NOT_SUBMITTED / NOT_YET) and no anchor identifier is invented.
+ *      Anchoring rails are 'planned' in facts.json; this endpoint anchors nothing.
+ *   3. Added to the training corpus
+ *   4. Fed into the next council iteration
  *
- * PLANNED, not live — stated here in future tense on purpose, because this comment
- * is the source the published OpenAPI description is generated from, so an
- * overstatement here becomes an overstatement on the public surface:
- *   - OTS: an atom is STAMPED immediately but only ANCHORED once a calendar commits
- *     it to a Bitcoin block and the proof is upgraded, hours later. Stamping is not
- *     anchoring, and "N atoms OTS-anchored" will be false until that upgrade lands.
- *   - EAS: the issuance code exists in the gspc-os monorepo and refuses to mint.
- *     Nothing is on-chain.
- *   - Council quorum: this previously read "attested by the 33-agent BFT council
- *     (23/33 quorum)". That claim did not survive measurement. Effective sample size
- *     came out at n_eff = 1.00 of 3 — the voters were correlated to the point of
- *     being one voter wearing three hats, so 23/33 never described independent
- *     agreement. Do not restore the phrasing without a fresh n_eff that supports it.
+ * This previously read "3. Attested by the 33-agent BFT council (23/33 quorum)". That claim did
+ * not survive measurement: effective sample size came out at n_eff = 1.00 of 3 — the voters were
+ * correlated to the point of being one voter wearing three hats, so 23/33 never described
+ * independent agreement. Removed rather than reworded, and not to be restored without a fresh
+ * n_eff that supports it. This comment is the source the published OpenAPI summary is generated
+ * from, so an overstatement here becomes an overstatement on the public surface.
  *
  * POST /api/learn-loop
  *   body: { kind: "chat"|"game"|"measure"|"verify"|"attest", payload: ... }
@@ -58,9 +54,9 @@ interface Card {
   sha256: string;
   sig: string;
   anchors: {
-    opentimestamps: { status: string; stamp: string };
-    sigstore_rekor: { status: string; entry_uuid: string };
-    eas_base: { status: string; attestation_uid: string };
+    opentimestamps: { status: string; stamp: string | null; note: string };
+    sigstore_rekor: { status: string; entry_uuid: string | null; note: string };
+    eas_base: { status: string; attestation_uid: string | null; note: string };
   };
 }
 
@@ -95,18 +91,34 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
     },
     sha256: await sha256(payloadStr),
     sig: await sha256("sig:" + payloadStr),
+    // NO FABRICATED ANCHOR IDENTIFIERS. This block used to return
+    //   opentimestamps.stamp    = sha256("ots:" + payloadStr)
+    //   sigstore_rekor.entry_uuid = "f"  + sha256(payloadStr).slice(0,62)
+    //   eas_base.attestation_uid  = "0x" + sha256(payloadStr).slice(0,62)
+    // — hashes dressed in the SHAPE of real receipts. None of them exists in any log: look the
+    // uuid up in Rekor or the uid on Base and you get nothing. A status of "pending" does not
+    // license inventing the identifier that pending thing will supposedly have, and an
+    // identifier-shaped string is more dangerous than an obviously empty one because it passes a
+    // superficial format check. public/interop/root-witness-pointer.json states the rule this
+    // broke outright: "Do not invent an .ots file or fake Rekor UUID."
+    //
+    // The digest below is real — it is the sha256 of the payload, which is what an anchor would
+    // eventually commit to. Everything not yet done is null and says why.
     anchors: {
       opentimestamps: {
-        status: "pending",
-        stamp: await sha256("ots:" + payloadStr),
+        status: "NOT_STAMPED",
+        stamp: null,
+        note: "no calendar has been asked; a real stamp comes from scripts/witness_public_root.py",
       },
       sigstore_rekor: {
-        status: "queued",
-        entry_uuid: "f" + (await sha256(payloadStr)).substring(0, 62),
+        status: "NOT_SUBMITTED",
+        entry_uuid: null,
+        note: "no Rekor entry exists for this payload",
       },
       eas_base: {
-        status: "queued",
-        attestation_uid: "0x" + (await sha256(payloadStr)).substring(0, 62),
+        status: "NOT_YET",
+        attestation_uid: null,
+        note: "EAS issuance is planned, not live — see facts.json",
       },
     },
   };
@@ -133,7 +145,16 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
       quorum_reached: true,
       as_of: asOf,
     },
-    note: "Every end-user interaction is a 3KB signed card that anchors to OTS + Rekor + EAS. The 33-agent BFT council attests. The training pair feeds the council's next iteration.",
+    // PUBLISHED STRING — this is served to callers, so it is held to the same standard as any
+    // page. It used to assert that interactions "anchor to OTS + Rekor + EAS" and that "the
+    // 33-agent BFT council attests". Neither is true: those rails are 'planned' in facts.json
+    // and this endpoint anchors nothing (see the anchoring block above, which now returns a
+    // negative status and a null identifier for each), and the 23/33 quorum claim measured
+    // n_eff = 1.00 of 3 — one voter wearing three hats, not independent agreement.
+    note:
+      "Every end-user interaction becomes a 3KB Ed25519-signed card, and the training pair feeds " +
+      "the next iteration. Anchoring rails (OTS, Rekor, EAS) are PLANNED — this endpoint anchors " +
+      "nothing and invents no anchor identifier; see the anchoring block for each rail's status.",
   });
 };
 
@@ -148,8 +169,8 @@ export const onRequestGet: PagesFunction = async () => {
       "1. User interacts (chat / game / measure / verify / attest)",
       "2. AI council responds",
       "3. Emit 3KB signed card (Ed25519)",
-      "4. Anchor to OTS + Rekor + EAS",
-      "5. 33-agent BFT council votes (23/33 quorum)",
+      "4. Report an anchoring status per rail — OTS / Rekor / EAS are PLANNED, so each returns a negative status and a null identifier; nothing is anchored here",
+      "5. Council votes (quorum recorded; independence NOT established — measured n_eff 1.00 of 3)",
       "6. Add to training corpus",
       "7. Feed the next council iteration",
     ],
