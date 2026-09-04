@@ -6,7 +6,9 @@
  * HTTP /mcp is seven FREE tools (board_totals get_axis verify_card list_cards get_root get_card verify_inclusion)
  * plus five PAID tools (commission_card art50_marking_evidence rwa_evidence witness_hash receipts_batch —
  * ./paid-tools.json, handled by ./_paid.ts: unpaid → the route's 402 challenge as structuredContent).
- * npm csoai-gspc-mcp@0.1.0 is four tools; 0.1.1 source matches the seven free ones. stdio stays free-only.
+ * Payment travels as the `x_payment` ARGUMENT and this door sets the X-PAYMENT header itself, so which
+ * tools a package carries is a packaging choice, never a property of the transport. npm csoai-gspc-mcp
+ * carried the seven free tools up to 0.1.1 and all twelve from 0.2.0.
  * POST /v1/measure is 404; this handler does not implement it.
  * Dead worker csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; Pages /mcp is the door.
  */
@@ -83,7 +85,7 @@ export const onRequest: PagesFunction = async (ctx) => {
           doctrine:
             "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
           stdio_alternative:
-            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — same seven free tools (four GSPC + three public-root three-state), one shared definitions file. stdio carries no payment header, so it stays free-only.",
+            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — the same tools from the same shared definitions files. Payment travels as the x_payment ARGUMENT and each door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Ask that package which tools its version lists; this door does not track its release schedule.",
           paid_tools: {
             names: [...PAID_TOOL_NAMES],
             how: "tools/call without x_payment returns the route's x402 402 challenge (accepts[], PAYMENT-REQUIRED) as structuredContent; pay from your wallet and call again with x_payment. Amounts live only inside a 402.",
@@ -164,7 +166,7 @@ export const onRequest: PagesFunction = async (ctx) => {
         capabilities: { tools: {} },
         serverInfo: { name: "csoai-gspc-mcp", version: "0.1.0" },
         instructions:
-          "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Five paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence witness_hash receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet, call again with x_payment. Measurement, not certification; verification free. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. npm stdio csoai-gspc-mcp is free-only (no payment header on stdio).",
+          "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Five paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence witness_hash receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet, call again with x_payment. Measurement, not certification; verification free. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio.",
       });
     }
 
