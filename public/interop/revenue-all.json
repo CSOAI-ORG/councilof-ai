@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.api-spec/0.1",
+  "route": "GET /api/revenue-all",
+  "description": "All-time revenue",
+  "as_of": "20260904T044700Z",
+  "spec": {
+    "method": "GET",
+    "path": "/api/revenue-all",
+    "responses": {
+      "200": {
+        "description": "OK"
+      },
+      "402": {
+        "description": "Payment Required"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "404": {
+        "description": "Not Found"
+      }
+    }
+  }
+}

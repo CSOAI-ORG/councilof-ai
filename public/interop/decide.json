@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.api-spec/0.1",
+  "route": "POST /api/decide",
+  "description": "Make a decision",
+  "as_of": "20260904T044700Z",
+  "spec": {
+    "method": "POST",
+    "path": "/api/decide",
+    "responses": {
+      "200": {
+        "description": "OK"
+      },
+      "402": {
+        "description": "Payment Required"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "404": {
+        "description": "Not Found"
+      }
+    }
+  }
+}
