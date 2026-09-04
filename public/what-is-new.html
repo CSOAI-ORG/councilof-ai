@@ -358,25 +358,25 @@
 
   <header class="hero">
     <h1>What is new</h1>
-    <p class="sub">Every upgrade on the Council of AI measurement rail. Live from the Git log, the corrections ledger, and the live board.</p>
-    <p class="lid" id="lid">22 axis · 22 measured (14 model-comparison · 8 deterministic-fact) · live</p>
+    <p class="sub">Selected repository changes and corrections. Source state can lead production; verify the referenced artefact and current endpoint response.</p>
+    <p class="lid" id="lid">22-axis board · current response not yet checked</p>
   </header>
 
   <section>
     <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">The five capability pillars</h2>
-    <p style="color:var(--muted);margin:0 0 1rem;">Council of AI is a measurement rail, not a certification authority. Every surface below lives because the doctrine said so.</p>
+    <p style="color:var(--muted);margin:0 0 1rem;">Council of AI publishes scoped measurements, not certification. Entries below describe repository work; they are not proof that every surface is deployed or operational.</p>
     <div class="pillars">
       <div class="pillar">
         <h3>GSPC board</h3>
-        <p>The living board — <strong>22 axes</strong>, every figure quoted from <code>GET /api/gspc</code>. 14 model-comparison, 8 deterministic-fact. TIE is TIE; UNMEASURED stays empty.</p>
+        <p>The board declares <strong>22 axes</strong>: 14 model-comparison and 8 deterministic-fact. Read the current <code>GET /api/gspc</code> response for its measured and unmeasured state. TIE is TIE; UNMEASURED stays empty.</p>
       </div>
       <div class="pillar">
         <h3>Ed25519 + Rekor witness</h3>
-        <p>Every measurement is a signed card under <code>did:web:csoai.org#card-attestation-1</code>. The root.json witness is published; Rekor/OTS are on the roadmap.</p>
+        <p>The current exact <code>root.json</code> is Ed25519-signed and Rekor-witnessed (SHA-256 <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code>, Rekor log index <code>2714574265</code>). Its OTS state is <strong>STAMPED_PENDING_BITCOIN</strong>, with no Bitcoin confirmation. It covers its 154 listed leaves only.</p>
       </div>
       <div class="pillar">
         <h3>MCP server</h3>
-        <p>Four tools live at <code>https://councilof.ai/mcp</code>: <code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, <code>list_cards</code>. Drop into Claude Code, Cursor, Kimi, Grok.</p>
+        <p>The public MCP route describes <code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, and <code>list_cards</code>. Confirm the current route response and each returned artefact before relying on a tool.</p>
       </div>
       <div class="pillar">
         <h3>Plugin + extension</h3>
@@ -384,7 +384,7 @@
       </div>
       <div class="pillar">
         <h3>x402 + SWIFT + XRPL</h3>
-        <p>Three revenue rails: per-request signed RWA evidence on XRPL, SWIFT census, and x402 paywalls. Every figure signed; nothing typed.</p>
+        <p>XRPL and SWIFT readers provide scoped public-data inputs. x402 pricing and end-to-end settlement are pending verification; no paid receipt or automatically signed output is claimed here.</p>
       </div>
     </div>
   </section>
@@ -396,7 +396,7 @@
       <div class="when">2026-09-02<br/>(today)</div>
       <div class="what">
         <h2>Hub-cards index honesty — #1155 fixed</h2>
-        <span class="pill fix">fix</span> <span class="pill up">live</span>
+        <span class="pill fix">fix</span> <span class="pill up">source</span>
         <p>The HF <code>gspc-hub-cards</code> index used to claim <code>status: MEASURED</code> even when the signed card body said <code>status: UNMEASURED, unmeasured: [signed-pending-verify]</code>. The index now mirrors the card body. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1181">PR #1181</a>.</p>
       </div>
     </article>
@@ -405,7 +405,7 @@
       <div class="when">2026-09-02</div>
       <div class="what">
         <h2>Dashboard shell panes — 9 wired, 1 duplicate pointer retired</h2>
-        <span class="pill fix">fix</span> <span class="pill live">live</span>
+        <span class="pill fix">fix</span> <span class="pill live">source</span>
         <p>9 Council OS rail tabs (matrix / tools / cards / state / evidence / embed / measured / claimguard / play) used to fall back to the board. Each pane is now real. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1182">PR #1182</a>.</p>
       </div>
     </article>
@@ -414,7 +414,7 @@
       <div class="when">2026-09-02</div>
       <div class="what">
         <h2>/dashboard production bug — ALIASES ReferenceError</h2>
-        <span class="pill fix">fix</span> <span class="pill live">live</span>
+        <span class="pill fix">fix</span> <span class="pill live">source</span>
         <p><code>DashboardLayout</code> threw <code>ReferenceError: ALIASES is not defined</code> on every /dashboard render. <code>resolvePaneId</code> referenced a deleted alias map. Now returns the id directly. The 12-test e2e shell smoke is re-gated. <a href="https://github.com/CSOAI-ORG/councilof-ai/issues/1189">#1189</a>.</p>
       </div>
     </article>
@@ -432,8 +432,8 @@
       <div class="when">2026-09-01</div>
       <div class="what">
         <h2>22/22 freeze — corrections ledger entry C-2026-0902-09</h2>
-        <span class="pill up">live</span>
-        <p>The 15/7 freeze has been retired. The signed 22-axis board is the live one. The 39-entry <a href="/api/corrections">corrections ledger</a> is the public witness of every change.</p>
+        <span class="pill up">source</span>
+        <p>The 15/7 freeze was superseded in repository state. Read the current board response and its own signature state. The <a href="/api/corrections">corrections ledger</a> records published corrections; it is not proof that it contains every change.</p>
       </div>
     </article>
 
@@ -441,7 +441,7 @@
       <div class="when">2026-09-01</div>
       <div class="what">
         <h2>Council of AI Grok plugin — 4 skills + 4 commands</h2>
-        <span class="pill up">live</span>
+        <span class="pill up">source</span>
         <p><code>/gspc</code>, <code>/verify</code>, <code>/sign</code>, <code>/council</code>. Doctrine-first: empty cells stay empty, TIE means TIE. Source in <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">council-of-ai-grok</a>.</p>
       </div>
     </article>
@@ -450,7 +450,7 @@
       <div class="when">2026-08-30</div>
       <div class="what">
         <h2>Chrome extension (MV3) — badge + verify overlay</h2>
-        <span class="pill up">live</span>
+        <span class="pill up">source</span>
         <p>Overlay the GSPC badge on Hugging Face, OpenRouter, Replicate, Anthropic, OpenAI, Google, DeepSeek, Mistral, Meta, Cohere. Click → open the card → verify in your browser. <a href="/extension/">install</a>.</p>
       </div>
     </article>
@@ -458,9 +458,9 @@
     <article class="event">
       <div class="when">2026-08-29</div>
       <div class="what">
-        <h2>x402 revenue rail — 402 paywalls for signed evidence</h2>
-        <span class="pill up">live</span>
-        <p>Per-request signed RWA evidence: $1.00 USDC on Base. The <a href="/api/xrpl">XRPL state reader</a> (16 assets) and <a href="/api/swift">SWIFT census</a> (26 members) back the pack. No MEASURED claim on financial axes (that's a measurement, not a score).</p>
+        <h2>x402 integration design — settlement not yet evidenced</h2>
+        <span class="pill up">pending</span>
+        <p>The <a href="/api/xrpl">XRPL state reader</a> and <a href="/api/swift">SWIFT census</a> expose scoped source data. A challenge is not a settlement: no current price, successful production payment, signed RWA pack, or receipt is claimed by this entry.</p>
       </div>
     </article>
 
@@ -468,7 +468,7 @@
       <div class="when">2026-08-29</div>
       <div class="what">
         <h2>Hermes skill — <code>council-of-ai</code> for Hermes Agent</h2>
-        <span class="pill up">live</span>
+        <span class="pill up">source</span>
         <p>6/6 tests pass. Scripts: <code>gspc-board.sh</code>, <code>verify-card.sh</code>, <code>sign-bytes.sh</code>. References for verify / sign / EU AI Act pack / x402. <a href="https://github.com/CSOAI-ORG/councilof-ai/tree/main/client/src/components/lobby/tabs.ts">Install</a>.</p>
       </div>
     </article>
@@ -487,12 +487,12 @@
     <h2 style="font-size:1.4rem;margin-bottom:0.5rem;">Try it</h2>
 
     <div class="try">
-      <strong>Pull the live board</strong>
+      <strong>Inspect the current board response</strong>
       <pre><code>curl -s https://councilof.ai/api/gspc | python3 -m json.tool | head -30</code></pre>
     </div>
 
     <div class="try">
-      <strong>Verify any signed card</strong>
+      <strong>Verify a supported published card</strong>
       <pre><code>curl -s https://councilof.ai/signed/cards/&lt;sha&gt;.json | bash &lt;(curl -s https://councilof.ai/visual-verify.html)</code></pre>
     </div>
 
@@ -516,14 +516,14 @@ npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
 </main>
 
 <script>
-// Live lid refresh from /api/gspc
+// Current-response lid refresh from /api/gspc
 (async () => {
   try {
     const r = await fetch("https://councilof.ai/api/gspc");
     if (!r.ok) return;
     const b = await r.json();
     const tot = b.totals || {};
-    const live = `${tot.axes ?? b.axes?.length ?? 22} axis · ${tot.measured_axes ?? "?"} measured (14 model-comparison · 8 deterministic-fact) · live`;
+    const live = `${tot.axes ?? b.axes?.length ?? "?"} axes declared · ${tot.measured_axes ?? "?"} measured in current response`;
     const el = document.getElementById("lid");
     if (el) el.textContent = live;
   } catch {}
@@ -541,7 +541,7 @@ npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
     "url": "https://councilof.ai"
   },
   "datePublished": "2026-09-03",
-  "description": "The upgrade changelog \u2014 every shipped surface on the Council of AI measurement rail."
+  "description": "Selected repository changes and corrections; verify current deployment and artefact state."
 }
 </script>
 </main>
@@ -555,7 +555,7 @@ npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
       </a>
       <p style="font-size: 14px; line-height: 1.6;">
         Independent AI-governance measurement body.<br>
-        Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
+        The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation. See /api/state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
         22 axes · 22 measured
@@ -563,9 +563,9 @@ npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
-      <a href="/api/gspc">Live board</a>
+      <a href="/api/gspc">Board API</a>
       <a href="/gspc-verify">Verifier</a>
-      <a href="/pay">Pay with MetaMask</a>
+      <a href="/pay">x402 status</a>
       <a href="/.well-known/">Discovery</a>
       <a href="/workbench-paper">Workbench paper</a>
     </div>

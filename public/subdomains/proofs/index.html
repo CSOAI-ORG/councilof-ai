@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Proof Portal — CSOAI</title>
-<meta name="description" content="Every signed card, with inclusion proof. The bulk history of every measurement. Three live anchors made visible — HuggingFace, Sigstore Rekor and the public corrections ledger; Bitcoin OpenTimestamps is planned. Free, no API key." />
+<meta name="description" content="Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation." />
 <link rel="canonical" href="https://proofs.councilof.ai" />
 <meta property="og:title" content="Proof Portal — CSOAI" />
-<meta property="og:description" content="Every signed card, with inclusion proof. The bulk history of every measurement. Three live anchors made visible — HuggingFace, Sigstore Rekor and the public corrections ledger; Bitcoin OpenTimestamps is planned. Free, no API key." />
+<meta property="og:description" content="Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://proofs.councilof.ai" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
@@ -16,7 +16,7 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "Proof Portal \u2014 CSOAI",
-  "description": "Every signed card, with inclusion proof. The bulk history of every measurement. Three live anchors made visible \u2014 HuggingFace, Sigstore Rekor and the public corrections ledger; Bitcoin OpenTimestamps is planned. Free, no API key.",
+  "description": "Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation.",
   "url": "https://proofs.councilof.ai",
   "publisher": {
     "@type": "Organization",
@@ -52,24 +52,24 @@
 <header>
   <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
   <h1>Proof Portal</h1>
-  <p>Every signed card, with inclusion proof. The bulk history of every measurement. Three live anchors made visible — HuggingFace, Sigstore Rekor and the public corrections ledger; Bitcoin OpenTimestamps is planned. Free, no API key.</p>
+  <p>Verification material for published artefacts. Coverage is scoped: a card is included only when its exact digest appears at the claimed index in the named root.</p>
   <a href="https://councilof.ai/proofs.html" class="cta">Open the Proof Portal →</a>
 </header>
 
 <div class="container">
 <h2>Three things you can do here</h2>
 <ol style="color: var(--muted); line-height: 1.8;">
-  <li><strong>Verify any card</strong> — paste a card-v0 attestation, get its signature, hash, and anchors.</li>
-  <li><strong>Bulk history</strong> — the full 50-card root + the bulk-signed stem. Read it offline.</li>
-  <li><strong>Inclusion proof</strong> — for any card, get the merkle path from the leaf to the root, signed under did:web:csoai.org.</li>
+  <li><strong>Verify a supported card</strong> — supply the exact card and inspect its signature result rather than assuming it is signed.</li>
+  <li><strong>Inspect the root</strong> — the current root lists 154 leaf digests. The separate 335-card index is a different corpus with zero identifier overlap.</li>
+  <li><strong>Check inclusion</strong> — require the claimed index to point to the card&rsquo;s exact digest before accepting its Merkle path.</li>
 </ol>
-<h2>The anchors</h2>
-<p>Every measurement is bound to three independent live anchors. Re-publishing from another vendor requires rebuilding all three. A fourth, Bitcoin OpenTimestamps, is stamped but <strong>not yet anchored</strong>: a stamp is a request to a calendar, and it becomes a proof only once the calendar commits it to a block.</p>
+<h2>Current exact-root state</h2>
+<p>The root shipped with this page has SHA-256 <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code>, 154 leaves, and Merkle root <code>2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745</code>. Its Ed25519 signature verifies under <code>did:web:csoai.org#board-attestation-1</code>. This does not bind every card or every measurement.</p>
 <ol style="color: var(--muted); line-height: 1.8;">
-  <li><strong>HuggingFace Hub</strong> — <a href="https://huggingface.co/csoai" style="color: var(--accent);">huggingface.co/csoai</a> — 60+ datasets, 42 Spaces, 3 models.</li>
-  <li><strong>Sigstore Rekor</strong> — public witness receipt at <a href="/api/rekor" style="color: var(--accent);">/api/rekor</a>.</li>
-  <li><strong>Corrections ledger</strong> — public witness at <a href="/api/corrections" style="color: var(--accent);">/api/corrections</a> (39 rows live).</li>
-  <li><strong>Bitcoin OpenTimestamps</strong> (planned) — digests are stamped; the published roots carry block attestations, queued atoms do not yet. State at <a href="/api/state" style="color: var(--accent);">/api/state</a>.</li>
+  <li><strong>Sigstore Rekor</strong> — exact preimage witnessed at log index <code>2714574265</code>; receipt: <a href="/interop/rekor-root-9b426735.json" style="color: var(--accent);">rekor-root-9b426735.json</a>.</li>
+  <li><strong>OpenTimestamps</strong> — <strong>STAMPED_PENDING_BITCOIN</strong>. Proof SHA-256: <code>91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99</code>. It contains no Bitcoin block confirmation.</li>
+  <li><strong>Scope</strong> — the OTS proof covers the exact <code>root.json</code> bytes only, not the separate signed-card index or an entire measurement history.</li>
+  <li><strong>Machine-readable state</strong> — <a href="/interop/root-witness-latest.json" style="color: var(--accent);">root-witness-latest.json</a>.</li>
 </ol>
 </div>
 

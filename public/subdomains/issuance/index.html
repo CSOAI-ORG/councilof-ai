@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Issuance Portal — CSOAI x402 (MetaMask)</title>
-<meta name="description" content="Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts." />
+<meta name="description" content="x402 integration status. Resource designs are published, but prices, successful production settlement, and signed outputs remain unverified." />
 <link rel="canonical" href="https://issuance.councilof.ai" />
 <meta property="og:title" content="Issuance Portal — CSOAI x402 (MetaMask)" />
-<meta property="og:description" content="Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts." />
+<meta property="og:description" content="x402 integration status. Resource designs are published, but prices, successful production settlement, and signed outputs remain unverified." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://issuance.councilof.ai" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
@@ -16,7 +16,7 @@
   "@context": "https://schema.org",
   "@type": "Product",
   "name": "Issuance Portal \u2014 CSOAI x402 (MetaMask)",
-  "description": "Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts.",
+  "description": "x402 integration status. Resource designs are published, but prices, successful production settlement, and signed outputs remain unverified.",
   "url": "https://issuance.councilof.ai",
   "publisher": {
     "@type": "Organization",
@@ -51,22 +51,22 @@
 
 <header>
   <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
-  <h1>Issuance Portal x402 (MetaMask)</h1>
-  <p>Pay with USDC on Base via MetaMask. Get a signed card back. 5 priced resources: $0.50 issuance, $1.00 evidence bundle, $2.00 data feed, $1.50 proof bundle, $10 custom audit. No Stripe. No accounts.</p>
-  <a href="https://councilof.ai/pay.html" class="cta">Open the Issuance Portal →</a>
+  <h1>x402 issuance integration status</h1>
+  <p>Resource designs are published, but no current price, successful production settlement, or signed output is claimed. Inspect a challenge and independently verified receipt before treating the rail as operational.</p>
+  <a href="https://councilof.ai/api/x402" class="cta">Inspect current x402 state →</a>
 </header>
 
 <div class="container">
-<h2>5 priced resources</h2>
+<h2>Proposed resource types</h2>
 <div class="grid">
-  <div class="card"><p class="card-name">Issuance</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Pay for your model, agent, or asset to be measured.</p></div>
-  <div class="card"><p class="card-name">Evidence bundle</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">A pack of cards for a specific obligation.</p></div>
-  <div class="card"><p class="card-name">Data feed</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Live deltas feed for compliance teams.</p></div>
-  <div class="card"><p class="card-name">Proof bundle</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">Inclusion proof + bulk history for a card.</p></div>
-  <div class="card"><p class="card-name">Custom audit</p><p class="price">Metered <span class="price-currency">USDC</span></p><p class="card-desc">A scoped measurement run against a specific obligation.</p></div>
+  <div class="card"><p class="card-name">Issuance</p><p class="price">Planned <span class="price-currency">settlement unverified</span></p><p class="card-desc">Proposed scoped measurement request; output and signature state must be checked.</p></div>
+  <div class="card"><p class="card-name">Evidence bundle</p><p class="price">Planned <span class="price-currency">settlement unverified</span></p><p class="card-desc">Proposed assembly of existing scoped cards; no universal pack.</p></div>
+  <div class="card"><p class="card-name">Data feed</p><p class="price">Planned <span class="price-currency">settlement unverified</span></p><p class="card-desc">Proposed dated-delta response; no continuous feed is claimed.</p></div>
+  <div class="card"><p class="card-name">Proof bundle</p><p class="price">Planned <span class="price-currency">settlement unverified</span></p><p class="card-desc">Proposed exact-root inclusion material for a card that is actually a listed leaf.</p></div>
+  <div class="card"><p class="card-name">Custom audit</p><p class="price">Planned <span class="price-currency">settlement unverified</span></p><p class="card-desc">Proposed scoped measurement workflow, not certification or legal advice.</p></div>
 </div>
-<h2>How it works</h2>
-<p>An agent hits a priced endpoint. The server returns HTTP 402 with a USDC payment challenge (EIP-3009 transferWithAuthorization). MetaMask signs the authorization on Base. The open facilitator submits the transaction. Every receipt is signed under did:web:csoai.org#card-attestation-1.</p>
+<h2>Required evidence before use</h2>
+<p>An HTTP 402 challenge is not a payment. A production claim requires a validated challenge, explicit wallet authorization, confirmed on-chain transaction, returned artefact digest, and independently verified receipt signature. Those end-to-end conditions are not yet evidenced here.</p>
 </div>
 
 <footer>
