@@ -39,9 +39,10 @@
     {
       "name": "auto-bft",
       "interval": "daily",
-      "description": "33-agent BFT council signs every new card",
+      "description": "33-seat council signs every new card at a 23/33 design quorum",
       "owner": "bft-quorum LaunchAgent",
-      "yield": "100 cards/day at 23/33"
+      "yield": "100 cards/day at 23/33",
+      "not_established": "Seat independence is not established. Measured n_eff was 1.21 of 3 nominal legs (DR-0007), so this quorum is a design figure and carries no fault-tolerance guarantee."
     },
     {
       "name": "auto-xrpl",

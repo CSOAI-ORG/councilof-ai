@@ -19,7 +19,10 @@ Story angles:
 For a feature:
   - We can demo the verification loop (download public key, paste SHA-256, verify offline) in 60 seconds
   - We can walk through the methodology at https://councilof.ai/axes-deep
-  - We can introduce you to the 33-agent BFT council (23/33 quorum, Ed25519 signatures)
+  - We can walk you through the 33-seat signing council (23/33 design quorum, Ed25519
+    signatures). Note for accuracy: we withdrew the fault-tolerance claim for this council
+    in July 2026 after measuring seat independence at n_eff 1.21 of 3 nominal legs (DR-0007).
+    The structure is a design figure; it is not a Byzantine-fault-tolerance guarantee.
   - We can show how the substrate is clone-deploy-sign in 3 minutes (MIT)
 
 Happy to schedule a call.

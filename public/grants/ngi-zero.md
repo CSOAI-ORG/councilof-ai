@@ -9,19 +9,19 @@ deployable bundle.
 
 APPROACH
 Fund the sovereign substrate for 6 months: maintenance, the 33-agent
-BFT council, and the public verification CLI. The substrate is
+signing council, and the public verification CLI. The substrate is
 already built (MIT-licensed, 109 test files, 1126 passing tests);
 €50K makes it shippable to NGI Zero's community.
 
 BUDGET €50,000
   - 6 months of sovereign substrate maintenance
-  - 33-agent BFT council implementation (Ed25519 quorum, 23/33)
+  - 33-seat Ed25519 signing council at a 23/33 design quorum (fault-tolerance claim withdrawn under DR-0007; seat independence measured at n_eff 1.21/3)
   - gspc-card-verifier public CLI
   - 100 signed cards across AI governance standards
 
 DELIVERABLES (6 months)
   - Sovereign substrate v2.0 stable release
-  - 33-agent BFT council at 23/33 quorum
+  - 33-seat Ed25519 signing council at a 23/33 design quorum (no fault-tolerance claim)
   - Public verification CLI
   - 100 signed cards targeted for daily attestation upgrades
   - 5 NGI Zero community partnerships

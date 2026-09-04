@@ -1,6 +1,7 @@
 export { verifyCard, analyseSet, analyseChain, STATES } from "./verify.mjs";
 export { canonicalise, canonicalString, preimageBytes, OutOfProfileDomain, NotSerialisable } from "./canonical.mjs";
 export { pubkeyFromDidDocument } from "./did.mjs";
+export { nEff, rhoFromNEff, observedRho, assessCouncil } from "./quorum-neff.mjs";
 export { verifyEvaluationResult, checkPredicate, PREDICATE_TYPE as EVALUATION_RESULT_PREDICATE } from "./evaluation-result.mjs";
 
 import { readFileSync } from "node:fs";
