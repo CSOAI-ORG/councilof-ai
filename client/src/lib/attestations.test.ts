@@ -23,6 +23,7 @@ import {
   rootPreimage,
   sha256Hex,
   verifyInclusion,
+  verifyPublishedInclusion,
   verifyRootSignature,
   witnessRails,
   type CardIndexDoc,
@@ -104,6 +105,26 @@ describe("inclusion proofs from GET /api/proof", () => {
     expect((await verifyInclusion({ schema: "csoai.public-root-proof/0.1", error: "not_found" })).state).toBe("UNCHECKABLE");
     expect((await verifyInclusion(null)).state).toBe("UNCHECKABLE");
   });
+
+  it("only promotes inclusion when query, current root, and current root signature all bind", async () => {
+    const validSig = await verifyRootSignature(root);
+    expect((await verifyPublishedInclusion(proof0, proof0.sha256!, root, validSig)).state).toBe("VALID");
+
+    const differentQuery = "f".repeat(64);
+    expect((await verifyPublishedInclusion(proof0, differentQuery, root, validSig)).state).toBe("INVALID");
+
+    const otherRoot = { ...root, merkle_root: "e".repeat(64) };
+    expect((await verifyPublishedInclusion(proof0, proof0.sha256!, otherRoot, validSig)).state).toBe("INVALID");
+
+    expect((await verifyPublishedInclusion(proof0, proof0.sha256!, root, {
+      state: "UNCHECKABLE",
+      reason: "No WebCrypto.",
+    })).state).toBe("UNCHECKABLE");
+    expect((await verifyPublishedInclusion(proof0, proof0.sha256!, root, {
+      state: "INVALID",
+      reason: "Signature mismatch.",
+    })).state).toBe("INVALID");
+  });
 });
 
 describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
@@ -157,6 +178,20 @@ describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
     expect(e.links[0].href).toContain("base.easscan.org/attestation/view/");
   });
 
+  it("does not let a historical/global EAS ATTESTED state promote the current root", () => {
+    const historicalUrl = "https://base.easscan.org/attestation/view/0x" + "cd".repeat(32);
+    const eas = {
+      status: "ATTESTED",
+      schema: "bytes32 sha256,string as_of,string did",
+      attestations: [{ sha256: "0".repeat(64), uid: "0x" + "cd".repeat(32), url: historicalUrl, at: "2026-09-01T08:00:00Z" }],
+    };
+    const e = witnessRails(witness, eas, 200)[2];
+    expect(e.state).toBe("NOT_YET");
+    expect(e.tone).toBe("absent");
+    expect(e.detail).toContain("no attestation for the current witness artifact sha256");
+    expect(e.links.some((link) => link.href === historicalUrl)).toBe(false);
+  });
+
   it("fails every rail closed when the sidecar names older root bytes", () => {
     const stale = witnessRails(witness, null, 404, {
       state: "INVALID",
@@ -185,16 +220,54 @@ describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
 });
 
 describe("root/card corpus boundary", () => {
-  it("keeps root leaves separate from the signed-card index and counts overlap", () => {
+  it("keeps valid, counted, non-overlapping root leaves separate from the signed-card index", () => {
     expect(corpusBoundary(
-      { card_sha256: ["a".repeat(64), "b".repeat(64)] },
-      { cards: [{ card: "b".repeat(64) }, { card: "c".repeat(64) }] },
+      { card_count: 2, card_sha256: ["a".repeat(64), "b".repeat(64)] },
+      { n_cards: 2, cards: [{ card: "c".repeat(64) }, { card: "d".repeat(64) }] },
     )).toEqual({
       relationship: "SEPARATE_CORPORA",
       publicRootLeaves: 2,
       separatelyIndexedSignedCards: 2,
-      identifierOverlap: 1,
+      identifierOverlap: 0,
+      duplicateRootIdentifiers: 0,
+      duplicateSignedCardIdentifiers: 0,
       otsCovers: "PUBLIC_ROOT_BYTES_ONLY",
+      reason: "Declared counts agree and both corpora contain distinct, well-formed identifiers with zero overlap.",
+    });
+  });
+
+  it("refuses to declare separate corpora when identifiers overlap or counts are absent", () => {
+    expect(corpusBoundary(
+      { card_count: 1, card_sha256: ["a".repeat(64)] },
+      { n_cards: 1, cards: [{ card: "a".repeat(64) }] },
+    )).toMatchObject({ relationship: "UNCHECKABLE", identifierOverlap: 1 });
+    expect(corpusBoundary(
+      { card_sha256: ["a".repeat(64)] },
+      { cards: [{ card: "b".repeat(64) }] },
+    ).relationship).toBe("UNCHECKABLE");
+  });
+
+  it("is UNCHECKABLE rather than inventing zero-sized separate corpora when a document is missing", () => {
+    expect(corpusBoundary(null, null)).toMatchObject({
+      relationship: "UNCHECKABLE",
+      publicRootLeaves: null,
+      separatelyIndexedSignedCards: null,
+      identifierOverlap: null,
+      otsCovers: "UNCHECKABLE",
+    });
+  });
+
+  it("keeps duplicate-tail ambiguity visible instead of masking it with Set sizes", () => {
+    expect(corpusBoundary(
+      { card_count: 3, card_sha256: ["a".repeat(64), "b".repeat(64), "b".repeat(64)] },
+      { n_cards: 2, cards: [{ card: "c".repeat(64) }, { card: "c".repeat(64) }] },
+    )).toMatchObject({
+      relationship: "UNCHECKABLE",
+      publicRootLeaves: 3,
+      separatelyIndexedSignedCards: 2,
+      duplicateRootIdentifiers: 1,
+      duplicateSignedCardIdentifiers: 1,
+      otsCovers: "UNCHECKABLE",
     });
   });
 });

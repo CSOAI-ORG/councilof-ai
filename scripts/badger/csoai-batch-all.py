@@ -11,7 +11,7 @@ Jobs in priority order:
   4. OPTIMIZE   — rank by yield (csoai-optimize.py)
   5. FRONT-AUDIT — audit every page (csoai-frontend-audit.py)
   6. FRONT-POLISH — auto-improve every page (csoai-frontend-improve.py)
-  7. ANCHOR     — OTS Bitcoin (csoai-auto-ots.py --limit 200)
+  7. ROOT-CANDIDATE — default-deny atom-root dry run (no stamp, no publication)
   8. SIGN-PREP  — prep canonical-form for the mill (csoai-auto-stage.py)
   9. DOORS      — regenerate 40 discovery docs (csoai-door-docs.py)
  10. DOOR-EXPAND — mine 40 standards as atoms (csoai-door-expand.py)
@@ -52,7 +52,7 @@ JOBS = [
     (4, "OPTIMIZE",        "csoai-optimize.py",                                             60),
     (5, "FRONT-AUDIT",     "csoai-frontend-audit.py --limit 30",                           120),
     (6, "FRONT-POLISH",    "csoai-frontend-improve.py",                                     60),
-    (7, "ANCHOR",          "csoai-auto-ots.py --limit 200",                                 600),
+    (7, "ROOT-CANDIDATE",  "atom-root.py --dry-run",                                      600),
     (8, "SIGN-PREP",       "csoai-auto-stage.py",                                           30),
     (9, "DOORS",           "csoai-door-docs.py",                                            30),
     (10, "DOOR-EXPAND",    "csoai-door-expand.py",                                          30),

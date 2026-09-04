@@ -117,7 +117,14 @@ def ots_stamp(path: Path, out: Path) -> dict:
     return {"status": "PENDING", "reason": "no .ots produced"}
 
 
-def ots_status_from_proof(subject: Path, proof: Path) -> dict:
+def ots_status_from_proof(
+    subject: Path,
+    proof: Path,
+    *,
+    root_dir: Path = ROOT,
+    public_dir: Path = PUB,
+    observed_at: str | None = None,
+) -> dict:
     """Derive OTS state from proof bytes and verify Bitcoin headers twice."""
     from opentimestamps.core.notary import BitcoinBlockHeaderAttestation, PendingAttestation
     from opentimestamps.core.serialize import StreamDeserializationContext
@@ -134,12 +141,14 @@ def ots_status_from_proof(subject: Path, proof: Path) -> dict:
             bitcoin.append((bytes(message), attestation.height))
         elif isinstance(attestation, PendingAttestation):
             pending += 1
+    proof_observed_at = observed_at or now()
     base = {
-        "path": str(proof.relative_to(ROOT)),
-        "url": "https://councilof.ai/" + str(proof.relative_to(PUB)),
+        "path": str(proof.relative_to(root_dir)),
+        "url": "https://councilof.ai/" + str(proof.relative_to(public_dir)),
         "proof_sha256": hashlib.sha256(proof.read_bytes()).hexdigest(),
         "subject_sha256": subject_sha,
         "bitcoin_blocks": sorted({height for _, height in bitcoin}),
+        "observed_at": proof_observed_at,
         "scope": "PUBLIC_ROOT_BYTES_ONLY",
     }
     if not bitcoin:
@@ -180,7 +189,7 @@ def ots_status_from_proof(subject: Path, proof: Path) -> dict:
             "header_sha256": hashlib.sha256(header_bytes).hexdigest(),
             "block_time_unix": block_time,
             "block_time": datetime.fromtimestamp(block_time, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "verified_at": now(),
+            "verified_at": proof_observed_at,
             "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
             "sources": header_urls,
         },
@@ -453,7 +462,10 @@ def main() -> int:
                 # a timestamped observation; it is never published as a standing live verdict.
                 "drift": compute_drift(sha, root["merkle_root"]),
                 "corpus_scope": corpus_scope,
-                "witness_status_observed_at": (ots.get("bitcoin_header") or {}).get("verified_at", side["as_of"]),
+                # Proof observation exists before Bitcoin confirmation.  A
+                # pending proof has no bitcoin_header by definition, so its own
+                # observed_at is the authoritative timestamp for this state.
+                "witness_status_observed_at": ots.get("observed_at") or (ots.get("bitcoin_header") or {}).get("verified_at") or side["as_of"],
                 "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": "NOT_YET", "xrpl_memo": "NOT_YET"}})
     ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
     print("wrote", latest.name, dated.name, ptr_path.name)

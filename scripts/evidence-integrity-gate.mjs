@@ -749,6 +749,29 @@ function checkGenerators(errors) {
   if (!otsJob.includes("atom-root.py --dry-run")) {
     errors.push("recurring OTS job does not keep atom-root generation in dry-run mode");
   }
+  if (!otsJob.includes("ots_proof_inventory.py --null")) {
+    errors.push("recurring OTS job does not use the quarantine-pruning proof inventory");
+  }
+  if (otsJob.includes("csoai-auto-ots.py")) {
+    errors.push("recurring OTS job still invokes the retired bulk per-atom stamper");
+  }
+  const batchJob = readText("scripts/badger/csoai-batch-all.py");
+  if (batchJob.includes('"csoai-auto-ots.py')) {
+    errors.push("batch orchestrator still invokes the retired bulk per-atom stamper");
+  }
+  if (/find\s+\.\s+[^\n]*\.ots/u.test(otsJob)) {
+    errors.push("recurring OTS job can traverse every .ots file with find");
+  }
+  const inventory = readText("scripts/badger/ots_proof_inventory.py");
+  for (const required of [
+    'Path("evidence/incidents")',
+    "os.walk(root, topdown=True)",
+    "dirnames[:] =",
+  ]) {
+    if (!inventory.includes(required)) {
+      errors.push(`OTS proof inventory lost quarantine-pruning invariant: ${required}`);
+    }
+  }
 }
 
 function checkAtomSourcePolicy(errors) {

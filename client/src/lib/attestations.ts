@@ -86,7 +86,14 @@ export interface WitnessDoc {
 export interface PointerDoc {
   kind?: string;
   as_of?: string;
-  drift?: { status?: string; match_sha256?: boolean; match_merkle_root?: boolean; reason?: string };
+  drift?: {
+    status?: string;
+    checked_at?: string;
+    checked_against?: string;
+    match_sha256?: boolean;
+    match_merkle_root?: boolean;
+    reason?: string;
+  };
   witnesses?: Record<string, string>;
   hard_stops?: string[];
 }
@@ -128,14 +135,49 @@ export interface CardIndexDoc {
 }
 
 export function corpusBoundary(root: PublicRoot | null, index: CardIndexDoc | null) {
-  const rootIds = new Set(Array.isArray(root?.card_sha256) ? root.card_sha256 : []);
-  const signedIds = new Set((index?.cards ?? []).map((card) => card.card));
+  if (!root || !index || !Array.isArray(root.card_sha256) || !Array.isArray(index.cards)) {
+    return {
+      relationship: "UNCHECKABLE" as const,
+      publicRootLeaves: null,
+      separatelyIndexedSignedCards: null,
+      identifierOverlap: null,
+      duplicateRootIdentifiers: null,
+      duplicateSignedCardIdentifiers: null,
+      otsCovers: "UNCHECKABLE" as const,
+      reason: "Both root.card_sha256[] and signed card_index.cards[] must be read before their corpus relationship can be checked.",
+    };
+  }
+
+  const rootIds = root.card_sha256;
+  const signedIds = index.cards.map((card) => card.card);
+  const rootSet = new Set(rootIds);
+  const signedSet = new Set(signedIds);
+  const duplicateRootIdentifiers = rootIds.length - rootSet.size;
+  const duplicateSignedCardIdentifiers = signedIds.length - signedSet.size;
+  const identifierOverlap = [...rootSet].filter((id) => signedSet.has(id)).length;
+  const malformed =
+    rootIds.some((id) => typeof id !== "string" || !HEX64.test(id)) ||
+    signedIds.some((id) => typeof id !== "string" || !HEX64.test(id)) ||
+    duplicateRootIdentifiers > 0 ||
+    duplicateSignedCardIdentifiers > 0 ||
+    identifierOverlap > 0 ||
+    !Number.isInteger(root.card_count) ||
+    root.card_count !== rootIds.length ||
+    !Number.isInteger(index.n_cards) ||
+    index.n_cards !== signedIds.length;
   return {
-    relationship: "SEPARATE_CORPORA" as const,
-    publicRootLeaves: rootIds.size,
-    separatelyIndexedSignedCards: signedIds.size,
-    identifierOverlap: [...rootIds].filter((id) => signedIds.has(id)).length,
-    otsCovers: "PUBLIC_ROOT_BYTES_ONLY" as const,
+    relationship: malformed ? "UNCHECKABLE" as const : "SEPARATE_CORPORA" as const,
+    // Counts are array lengths, never Set sizes: duplicate-tail ambiguity must
+    // remain visible rather than silently collapsing into a smaller corpus.
+    publicRootLeaves: rootIds.length,
+    separatelyIndexedSignedCards: signedIds.length,
+    identifierOverlap,
+    duplicateRootIdentifiers,
+    duplicateSignedCardIdentifiers,
+    otsCovers: malformed ? "UNCHECKABLE" as const : "PUBLIC_ROOT_BYTES_ONLY" as const,
+    reason: malformed
+      ? "Corpus metadata has missing or drifting counts, malformed or duplicate identifiers, or overlap; no separation claim is made."
+      : "Declared counts agree and both corpora contain distinct, well-formed identifiers with zero overlap.",
   };
 }
 
@@ -296,6 +338,51 @@ export async function verifyInclusion(p: ProofDoc | null): Promise<Check & { com
     : { state: "INVALID", reason: `The path re-hashes to ${computed.slice(0, 16)}…, not the published merkle_root ${p.merkle_root.slice(0, 16)}….`, computed };
 }
 
+/**
+ * Verify an inclusion response against the query and the signed root loaded in
+ * this browser. A self-consistent proof for a different leaf or an older root
+ * is not evidence of inclusion in the current published root.
+ */
+export async function verifyPublishedInclusion(
+  p: ProofDoc | null,
+  requestedSha256: string,
+  root: PublicRoot | null,
+  rootSignature: Check | null,
+): Promise<Check & { computed?: string }> {
+  if (!HEX64.test(requestedSha256)) {
+    return { state: "UNCHECKABLE", reason: "The requested identifier is not a 64-hex sha256." };
+  }
+  if (!p || typeof p !== "object") return { state: "UNCHECKABLE", reason: "No inclusion response was read." };
+  if (p.sha256 !== requestedSha256) {
+    return {
+      state: "INVALID",
+      reason: `The proof response names ${String(p.sha256)}, not the requested sha256 ${requestedSha256}.`,
+    };
+  }
+  if (!root || typeof root.merkle_root !== "string" || !HEX64.test(root.merkle_root)) {
+    return { state: "UNCHECKABLE", reason: "The current root and its 64-hex merkle_root were not loaded." };
+  }
+  if (p.merkle_root !== root.merkle_root) {
+    return {
+      state: "INVALID",
+      reason: `The proof names merkle_root ${String(p.merkle_root)}, not the currently loaded root ${root.merkle_root}.`,
+    };
+  }
+  if (!rootSignature || rootSignature.state !== "VALID") {
+    return {
+      state: rootSignature?.state === "INVALID" ? "INVALID" : "UNCHECKABLE",
+      reason: `The current root signature is ${rootSignature?.state ?? "not checked"}; inclusion cannot be promoted to VALID. ${rootSignature?.reason ?? ""}`.trim(),
+    };
+  }
+  if (!Number.isInteger(root.card_count) || !Number.isInteger(p.index) || (p.index as number) >= (root.card_count as number)) {
+    return { state: "UNCHECKABLE", reason: "The proof index cannot be bounded by the current root card_count." };
+  }
+  const path = await verifyInclusion(p);
+  return path.state === "VALID"
+    ? { ...path, reason: `${path.reason} The response sha256 matches the query, its merkle_root matches the currently loaded root, and that root's Ed25519 signature is VALID.` }
+    : path;
+}
+
 /* ---------------------------------------------------------------- witnesses */
 
 export type RailTone = "done" | "pending" | "absent" | "unknown";
@@ -382,17 +469,27 @@ export function witnessRails(
   if (typeof ots.url === "string") otsLinks.push({ href: ots.url, label: ".ots proof file" });
   otsLinks.push({ href: "https://opentimestamps.org/", label: "opentimestamps.org (drop the .ots to verify)" });
 
-  // EAS on Base — the log file wins when it is served and names a status; else the sidecar.
+  // EAS on Base — a served log can promote this root only when an attestation
+  // binds the exact witness artifact sha256. A global ATTESTED state or the
+  // first (possibly historical) log row is not evidence for the current root.
   let easState = String(easSide.status ?? (w ? "" : missing));
   let easDetail = typeof easSide.reason === "string" ? String(easSide.reason) : "";
   const easLinks: RailLink[] = [];
   if (eas && typeof eas.status === "string") {
-    easState = eas.status;
-    const latest = Array.isArray(eas.attestations) ? eas.attestations[0] : undefined;
-    if (latest && typeof latest.url === "string") easLinks.push({ href: latest.url, label: "base.easscan.org attestation" });
-    if (latest && typeof latest.uid === "string") easDetail = `uid ${latest.uid.slice(0, 18)}… · ${latest.at ?? ""}`.trim();
-    else if (typeof eas.reason === "string") easDetail = eas.reason;
-    if (typeof eas.schema === "string") easDetail = `${easDetail ? easDetail + " · " : ""}schema "${eas.schema}"`;
+    const witnessSha = w?.artifact?.sha256;
+    const matching = typeof witnessSha === "string" && Array.isArray(eas.attestations)
+      ? eas.attestations.find((row) => row.sha256 === witnessSha)
+      : undefined;
+    if (matching) {
+      easState = "ATTESTED";
+      if (typeof matching.url === "string") easLinks.push({ href: matching.url, label: "base.easscan.org attestation" });
+      if (typeof matching.uid === "string") easDetail = `uid ${matching.uid.slice(0, 18)}… · ${matching.at ?? ""}`.trim();
+      else if (typeof eas.reason === "string") easDetail = eas.reason;
+      if (typeof eas.schema === "string") easDetail = `${easDetail ? easDetail + " · " : ""}schema "${eas.schema}"`;
+    } else {
+      easState = "NOT_YET";
+      easDetail = `The served EAS log has no attestation for the current witness artifact sha256 ${witnessSha ?? "(unavailable)"}; historical/global ATTESTED state is not applied.`;
+    }
   } else if (easHttp != null && easHttp !== 200) {
     easDetail = `${easDetail ? easDetail + " · " : ""}interop/eas-root-attestations.json HTTP ${easHttp} — state read from the witness sidecar`;
   }

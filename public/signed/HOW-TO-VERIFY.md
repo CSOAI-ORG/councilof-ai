@@ -157,39 +157,45 @@ body = urllib.request.urlopen(req, timeout=30).read()
 Verified 2026-09-03. This is our defect, not yours — it is tracked and will be
 removed. The bytes behind the 403 are unchanged and independently checkable.
 
-## Anchor 4 of 4: Bitcoin, via OpenTimestamps — CONFIRMED
+## Public-root witnesses — read the current state, do not inherit an old one
 
-The public root is anchored four ways. The first three have an operator you must
-trust to some degree; the fourth does not.
+The signed-card corpus above and the public-root corpus are separate. The current
+`/root.json` envelope is Ed25519-signed under `#board-attestation-1`; its exact bytes
+may also have external witnesses. Read each witness state from
+`/interop/root-witness-latest.json`. Do not count a signature as a timestamp, do not
+invent an RFC-3161 TSA, and do not inherit `CONFIRMED_BITCOIN` from an older root.
 
-| # | anchor | what it proves | who you must trust |
-|---|---|---|---|
-| 1 | Ed25519 under `did:web:csoai.org` | we published these bytes | us |
-| 2 | Sigstore Rekor | an append-only log holds the entry | the log operator |
-| 3 | RFC-3161 TSA | a timestamp authority saw the digest | the TSA |
-| 4 | **Bitcoin via OpenTimestamps** | the digest existed before a given block | **nobody** |
+| rail | what a completed state establishes | boundary |
+|---|---|---|
+| Ed25519 root envelope | the six-field root preimage verifies under the pinned board key | integrity/authorship, not time or correctness |
+| Sigstore Rekor | the signed preimage has a transparency-log entry | log inclusion, not claim truth |
+| OpenTimestamps | `CONFIRMED_BITCOIN` proves the exact root bytes existed no later than the attested block | a pending calendar proof is **not** a Bitcoin anchor |
+| EAS / XRPL | only what a non-`NOT_YET` sidecar entry identifies and a verifier can resolve | never infer these rails from plans |
 
-`/interop/root-728e8c5e.json.ots` now carries **Bitcoin block header attestations**,
-not just pending calendar commitments:
-
-```
-digest  728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3
-blocks  965138 · 965138 · 965152 · 965186   (four independent calendars)
-```
-
-Check it yourself, without us and without trusting this page:
+Check the current OTS state and proof dynamically, so this command remains correct
+when a successor root is published:
 
 ```bash
-curl -O https://councilof.ai/interop/root-728e8c5e.json.ots
-ots verify root-728e8c5e.json.ots -d 728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3
+curl -s https://councilof.ai/root.json -o root.json
+curl -s https://councilof.ai/interop/root-witness-latest.json -o root-witness.json
+python3 - <<'PY'
+import json, pathlib, urllib.request
+w = json.load(open("root-witness.json")); ots = w["witnesses"]["ots"]
+print("OTS state:", ots["status"])
+url = ots.get("url")
+if not url:
+    raise SystemExit("No detached OTS proof is published for this root")
+pathlib.Path("root.json.ots").write_bytes(urllib.request.urlopen(url).read())
+PY
+ots verify root.json.ots -f root.json
 ```
 
-A note on how this was wrong until 2026-09-03. The stamp was created correctly but
-the `.ots` file published here was never **upgraded**, so it contained only pending
-calendar attestations. The Bitcoin commitment existed; our published bytes did not
-prove it. An unupgraded stamp is not a failed stamp — but it is not a proof either,
-and we should not have described it as anchored to Bitcoin while it read as pending.
-The upgrade is now part of the publish step.
+`STAMPED_PENDING_BITCOIN` is an honest normal state for a newly published root: a
+calendar has accepted the digest, but the detached proof does not yet contain a
+Bitcoin block-header attestation. Only proof-derived `CONFIRMED_BITCOIN` may be
+described as Bitcoin-anchored. Signing and witnessing prove bytes and time within
+their stated scopes; neither proves correctness, completeness, compliance or
+certification.
 
 ## What this does and does not prove
 
@@ -215,20 +221,20 @@ your parameter-fetch date beside any verdict you republish. *(Limit stated
 2026-09-01, prompted by review on the IETF agentproto list — it was true before
 it was stated.)*
 
-## Public-root unsigned catalogue (`/root.json`)
+## Signed public-root catalogue (`/root.json`)
 
 Estate steps 1–6 above are for **Ed25519-signed** cards against `#card-attestation-1`.
 The public-root catalogue is a **different object**.
 
 1. Fetch `https://councilof.ai/root.json`.
 2. Note `as_of`, `merkle_root`, `card_count`, and `did_intended` (`did:web:csoai.org#board-attestation-1`).
-3. Leaves in this catalogue are **unsigned**: `sig_ed25519` is null (`NO_LAPTOP_SIGN`).
-4. Inclusion is membership of a leaf SHA-256 in `card_sha256[]`. That is not a signature check.
-5. Do not claim a three-host checksum until Hugging Face and GitHub copies of this root exist.
-6. GET `/api/xrpl` is a **reader** of this root (`writes_board` false). Live locked 16 when HTTP 200 n=16, same merkle. Do not stamp MEASURED from the catalogue.
-7. Layer-0 may seal the root document with a different key. That seal is not a laptop/keystone card signature.
+3. Rebuild the six-field canonical preimage and verify the root's 64-byte `sig_ed25519` under the pinned board key, using `HOW-TO-VERIFY-ROOT.md`.
+4. Recompute `merkle_root` from every entry in `card_sha256[]` and require `len(card_sha256) == card_count`.
+5. Inclusion is membership of a leaf SHA-256 in `card_sha256[]`. Root-envelope validity does not turn a leaf into an individually signed measurement card.
+6. The public-root leaves and `signed/card_index.json` are separate corpora. Read their counts and identifier overlap from the current witness sidecar; the root OTS proof does not anchor the signed-card index.
+7. GET `/api/xrpl` is a **reader** of this root (`writes_board` false). Do not stamp MEASURED from the catalogue.
 
-Do not invent keys. Do not treat public-root inclusion as estate-card VALID.
+Do not invent keys or witnesses. Do not treat public-root inclusion as estate-card VALID.
 
 ## PQC / hybrid — not inside the 3KB card
 
@@ -241,14 +247,14 @@ is ~3.3KB and **cannot live inside** the card. There is no PQC field on card-v0 
 - Do not claim a card is PQC-signed. The verify UI has no PQC helper wired; fail-closed.
 - Hybrid, when it ships, is a **second receipt** on the ROOT / DID / inclusion bundle
   (or a Falcon/ML-DSA envelope *beside* the 3KB, not inside it). Ed25519 is not replaced.
-- OpenTimestamps: an `.ots` stamp IS now published, but on the ROOT, not on a card.
-  `/interop/root-witness-latest.json` derives `ots.status: CONFIRMED_BITCOIN` from the
-  exact proof at `/interop/root-a44af078.json.ots`, whose Bitcoin attestation names block
-  965487. It proves the exact 154-leaf `root.json` bytes existed no later than that block;
-  it does not prove their correctness or compliance. Those root leaves and the 335 cards
-  in `signed/card_index.json` are separate corpora with zero identifier overlap. The OTS
-  proof therefore does **not** anchor that signed-card index or any individual card in it.
-  The ROOT additionally carries a Rekor entry.
+- OpenTimestamps: when the current sidecar names an `.ots` proof, it is on the ROOT,
+  not on a card. Read `witnesses.ots.status`, the detached proof URL, any attested
+  Bitcoin block and the corpus counts from `/interop/root-witness-latest.json`; never
+  carry those values over from an older root. `STAMPED_PENDING_BITCOIN` is not anchored.
+  `CONFIRMED_BITCOIN` proves only that the exact named `root.json` bytes existed no later
+  than the proof-derived block. The public-root leaves and the cards in
+  `signed/card_index.json` are separate corpora; the OTS proof does **not** anchor that
+  signed-card index or any individual card in it. Rekor state is a separate sidecar rail.
 - **PQCBench** on the GSPC board is the continuity arena (`csoai/gspc-asi`) — a
   model-comparison task about cryptographic *assumptions*, not a post-quantum
   signature on these cards. Do not conflate.

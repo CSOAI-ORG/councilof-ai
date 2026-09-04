@@ -54,6 +54,9 @@ interface Probe {
   json: Record<string, unknown> | null;
   contentType: string | null;
   error: string | null;
+  /** SHA-256 and length of the exact response bytes, before JSON parsing. */
+  bodySha256?: string;
+  bodyBytes?: number;
 }
 
 const PROBE_TIMEOUT_MS = 3_500;
@@ -95,6 +98,16 @@ const ageSeconds = (value: unknown, observedAtMs: number): number | null => {
 };
 
 const httpError = (status: number): string => `HTTP ${status}`;
+
+async function sha256Hex(value: Uint8Array): Promise<string> {
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    value as unknown as BufferSource,
+  );
+  return Array.from(new Uint8Array(digest), (byte) =>
+    byte.toString(16).padStart(2, "0"),
+  ).join("");
+}
 
 function canonicalJson(value: unknown): string {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
@@ -192,7 +205,8 @@ async function boundedProbe(
     }
 
     try {
-      const body = record(await response.json());
+      const raw = new Uint8Array(await response.arrayBuffer());
+      const body = record(JSON.parse(new TextDecoder().decode(raw)));
       if (!body) {
         return {
           endpoint,
@@ -210,6 +224,8 @@ async function boundedProbe(
         json: body,
         contentType,
         error: null,
+        bodySha256: await sha256Hex(raw),
+        bodyBytes: raw.byteLength,
       };
     } catch {
       return {
@@ -324,6 +340,7 @@ export async function buildFabricManifest(
     root,
     did,
     witness,
+    witnessPointer,
   ] = await Promise.all([
     boundedProbe(origin, "/mcp", fetcher, mcpInit),
     boundedProbe(origin, "/api/gspc", fetcher),
@@ -346,6 +363,7 @@ export async function buildFabricManifest(
     boundedProbe(origin, "/root.json", fetcher),
     boundedProbe(origin, "/.well-known/did.json", fetcher),
     boundedProbe(origin, "/interop/root-witness-latest.json", fetcher),
+    boundedProbe(origin, "/interop/root-witness-pointer.json", fetcher),
   ]);
 
   const rails: FabricRail[] = [];
@@ -854,16 +872,53 @@ export async function buildFabricManifest(
 
   if (witness.ok && witness.json) {
     const currentRoot = text(root.json?.merkle_root);
+    const currentCount = number(root.json?.card_count);
+    const currentAsOf = text(root.json?.as_of);
+    const currentSha = root.bodySha256 ?? null;
+    const currentBytes = root.bodyBytes ?? null;
     const artifact = record(witness.json.artifact);
+    const pointerRoot = record(witnessPointer.json?.live_root);
     const witnessedRoot = text(artifact?.merkle_root);
-    const comparable = !!currentRoot && !!witnessedRoot;
-    const drift = comparable && currentRoot !== witnessedRoot;
+    const bindings: Array<[unknown, unknown]> = [
+      [text(artifact?.sha256), currentSha],
+      [number(artifact?.bytes), currentBytes],
+      [witnessedRoot, currentRoot],
+      [number(artifact?.card_count), currentCount],
+      [text(artifact?.as_of), currentAsOf],
+      [text(pointerRoot?.sha256), currentSha],
+      [number(pointerRoot?.bytes), currentBytes],
+      [text(pointerRoot?.merkle_root), currentRoot],
+      [number(pointerRoot?.card_count), currentCount],
+      [text(pointerRoot?.as_of), currentAsOf],
+    ];
+    const comparable =
+      root.ok &&
+      witnessPointer.ok &&
+      bindings.every(([left, right]) => left !== null && right !== null);
+    const exactMatch =
+      comparable && bindings.every(([left, right]) => left === right);
+    const drift = comparable && !exactMatch;
     const statuses = witnessSummary(witness.json);
     const corpusScope = record(witness.json.corpus_scope);
-    const scopeSummary =
-      text(corpusScope?.relationship) === "SEPARATE_CORPORA"
-        ? ` Scope: ${number(corpusScope?.public_root_count) ?? "unknown"} root leaves versus a separate index of ${number(corpusScope?.signed_card_count) ?? "unknown"} signed cards; ${number(corpusScope?.signed_card_id_overlap) ?? "unknown"} identifier overlap. OTS covers the root bytes only.`
-        : " Corpus scope was not established by the witness metadata.";
+    const scopeComparable =
+      text(corpusScope?.relationship) !== null &&
+      number(corpusScope?.public_root_count) !== null &&
+      text(corpusScope?.public_root_sha256) !== null &&
+      text(corpusScope?.ots_covers) !== null &&
+      currentCount !== null &&
+      currentSha !== null;
+    const scopeMatchesRoot =
+      scopeComparable &&
+      text(corpusScope?.relationship) === "SEPARATE_CORPORA" &&
+      number(corpusScope?.public_root_count) === currentCount &&
+      text(corpusScope?.public_root_sha256) === currentSha &&
+      text(corpusScope?.ots_covers) === "PUBLIC_ROOT_BYTES_ONLY";
+    const fullyChecked = exactMatch && scopeMatchesRoot;
+    const scopeSummary = scopeMatchesRoot
+      ? ` Validated public-root scope: ${currentCount} leaves and exact root sha256. The sidecar separately declares ${number(corpusScope?.signed_card_count) ?? "unknown"} signed-card index entries and ${number(corpusScope?.signed_card_id_overlap) ?? "unknown"} identifier overlap; this endpoint did not fetch that index, so those two values remain sidecar-declared. OTS covers the root bytes only.`
+      : scopeComparable
+        ? " The sidecar corpus_scope conflicts with the current root; no corpus relationship or count is asserted."
+        : " Corpus scope could not be checked against the current root; no corpus relationship or count is asserted.";
     rails.push(
       rail(observedAt, {
         id: "root-witness",
@@ -872,25 +927,29 @@ export async function buildFabricManifest(
         protocol: "Rekor / OpenTimestamps / declared ledger witnesses",
         state: drift
           ? "STALE"
-          : comparable
+          : fullyChecked
             ? "RUNTIME_OBSERVED"
             : "UNCHECKABLE",
         endpoint: "/interop/root-witness-latest.json",
         evidence_ref: "/interop/root-witness-latest.json",
         summary: drift
-          ? `Witness covers older root ${witnessedRoot.slice(0, 12)}…, not current ${currentRoot.slice(0, 12)}…. ${statuses}.${scopeSummary}`
-          : comparable
-            ? `Witness metadata matches the current root. ${statuses}. Individual witness states remain distinct.${scopeSummary}`
-            : `Witness metadata answered, but it could not be matched to the current root. ${statuses}.${scopeSummary}`,
+          ? `Witness and pointer do not bind the exact current root.json bytes; matching a Merkle value alone is insufficient. ${statuses}.${scopeSummary}`
+          : fullyChecked
+            ? `Witness metadata and pointer bind the exact current root.json bytes, length, Merkle root, count and as_of. ${statuses}. Individual witness states remain distinct.${scopeSummary}`
+            : exactMatch
+              ? `Witness metadata and pointer bind the exact current root.json bytes, but corpus scope is not validated. ${statuses}.${scopeSummary}`
+              : `Witness metadata answered, but exact-byte identity could not be checked against both the sidecar and pointer. ${statuses}.${scopeSummary}`,
         freshness_seconds: ageSeconds(
           witness.json.as_of ?? artifact?.as_of,
           observedAtMs,
         ),
         last_error: drift
-          ? "witness merkle_root does not match current root.json"
-          : comparable
+          ? "witness or pointer exact-root binding does not match current root.json"
+          : fullyChecked
             ? null
-            : (root.error ?? "missing comparable merkle_root"),
+            : exactMatch && !scopeMatchesRoot
+              ? "witness corpus_scope does not bind the current root"
+              : (root.error ?? witnessPointer.error ?? "missing exact-root binding fields"),
       }),
     );
   } else {

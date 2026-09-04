@@ -9,7 +9,7 @@ import {
   latestSignedCards,
   ledgerSignatureState,
   sha256Hex,
-  verifyInclusion,
+  verifyPublishedInclusion,
   verifyRootSignature,
   witnessRails,
   type CardIndexDoc,
@@ -217,7 +217,7 @@ export default function DashboardAttestationsPane() {
     const p = await getJson<ProofDoc>(`/api/proof?sha=${encodeURIComponent(hex)}`, ac.signal);
     let inclusion: SearchResult["inclusion"];
     if (p.http === 200 && p.doc) {
-      const v = await verifyInclusion(p.doc);
+      const v = await verifyPublishedInclusion(p.doc, hex, root?.doc ?? null, rootSig);
       inclusion = { ...v, http: 200, index: p.doc.index, siblings: Array.isArray(p.doc.proof) ? p.doc.proof.length : undefined };
     } else if (p.http === 404) {
       inclusion = { state: "UNCHECKABLE", reason: `Not a leaf of the last published root (GET /api/proof HTTP 404${p.doc?.reason ? `: ${p.doc.reason}` : ""}). There is no inclusion path to check.`, http: 404 };
@@ -252,6 +252,7 @@ export default function DashboardAttestationsPane() {
   const r = root?.doc ?? null;
   const w = witness?.doc ?? null;
   const drift = pointer?.doc?.drift?.status;
+  const driftCheckedAt = pointer?.doc?.drift?.checked_at;
   const corpus = corpusBoundary(r, index?.doc ?? null);
 
   return (
@@ -308,19 +309,31 @@ export default function DashboardAttestationsPane() {
             }
           />
           <Row
-            k="drift (pointer)"
+            k="drift observation (pointer)"
             v={
               <span className="flex flex-wrap items-center gap-2">
                 <StateChip state={drift ?? (pointer ? "—" : "reading…")} tone={drift === "MATCH" ? "done" : drift ? "unknown" : "absent"} />
-                <span className="text-xs text-muted-foreground">{pointer?.doc?.drift?.reason ?? "root-witness-pointer.json states whether the witnessed bytes are the live bytes."}</span>
+                <span className="text-xs text-muted-foreground">
+                  {driftCheckedAt ? <>Observed at <Mono>{driftCheckedAt}</Mono>. </> : "No checked_at was published. "}
+                  {pointer?.doc?.drift?.reason ?? "root-witness-pointer.json has no comparison reason."}
+                  {" "}This is a timestamped historical observation, not a standing statement about the bytes served now; the browser's exact-byte check is shown above.
+                </span>
               </span>
             }
           />
         </dl>
         <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-xs text-muted-foreground" data-testid="root-corpus-boundary">
-          <strong className="text-foreground">Two separate corpora:</strong>{" "}
-          {corpus.publicRootLeaves} public-root leaves; a separate index of {corpus.separatelyIndexedSignedCards} signed cards; {corpus.identifierOverlap} identifier overlap.
-          The OpenTimestamps proof witnesses the exact <Mono>root.json</Mono> bytes only — it does not anchor the signed-card index.
+          <strong className="text-foreground">
+            {corpus.relationship === "SEPARATE_CORPORA" ? "Two separate corpora:" : "Corpus relationship uncheckable:"}
+          </strong>{" "}
+          {corpus.relationship === "SEPARATE_CORPORA" ? (
+            <>
+              {corpus.publicRootLeaves} public-root leaves; a separate index of {corpus.separatelyIndexedSignedCards} signed cards; {corpus.identifierOverlap} identifier overlap.
+              The OpenTimestamps proof witnesses the exact <Mono>root.json</Mono> bytes only — it does not anchor the signed-card index.
+            </>
+          ) : (
+            <>{corpus.reason} No zero counts or separation claim are inferred while either document is missing or malformed.</>
+          )}
         </p>
 
         <h3 className="mt-5 text-sm font-semibold">Witnesses</h3>

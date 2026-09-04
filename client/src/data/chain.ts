@@ -43,7 +43,6 @@ export const CHAIN_STATUS: ChainStatus = {
   hash_algorithm: "sha256",
   signature_algorithm: "Ed25519 + SHA-256 hash-chain",
   note: "Records are sha256 hash-linked for tamper-evidence. " + ANCHORING_CLAIM +
-    " OpenTimestamps anchoring is roadmap, not yet wired. " +
     "Post-quantum ML-DSA-65 (FIPS-204) is planned and scaffolded only; " +
     "no PQC signer/runtime is built or published.",
   last_record: {
