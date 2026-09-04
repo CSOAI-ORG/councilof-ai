@@ -15,4 +15,8 @@ describe("anchor freshness is derived from the current clock", () => {
     expect(effectiveAnchorStatus(anchor, new Date("2026-09-04T02:45:00Z"))).toBe("live");
     expect(effectiveAnchorStatus(anchor, new Date("2026-09-06T02:45:00Z"))).toBe("degraded");
   });
+
+  it("routes the self-hosted crosswalk to a public product page", () => {
+    expect(ANCHORS.find((item) => item.id === "Crosswalk-registry")?.source_uri).toBe("/crosswalk");
+  });
 });

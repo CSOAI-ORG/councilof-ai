@@ -55,4 +55,12 @@ describe("reachable measurement copy keeps evidence boundaries explicit", () => 
     expect(statusClaim.status).toBe("retired");
     expect(statusClaim.notes).toMatch(/quarantined for content review/);
   });
+
+  it("presents anchor timestamps as recorded checks, not live reliability probes", () => {
+    const anchors = page("GSPCAnchors.tsx");
+    expect(anchors).toMatch(/Checked &lt;24h/);
+    expect(anchors).toMatch(/Stale \/ unchecked/);
+    expect(anchors).toMatch(/does not by\s+itself prove current reachability or reliability/);
+    expect(anchors).not.toMatch(/Data is fresh and reliable|>Unreachable<|label: "Live"/);
+  });
 });
