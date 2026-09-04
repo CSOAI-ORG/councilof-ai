@@ -111,6 +111,7 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       if (typeof body.bytes_b64 === "string" && body.bytes_b64) {
         try {
           const b = b64ToBytes(body.bytes_b64);
+          if (b.byteLength === 0) return { ...none, error: "bytes_b64 decodes to an empty body" };
           if (b.byteLength > MAX_BYTES) return { ...none, error: `bytes_b64 exceeds ${MAX_BYTES} byte cap` };
           return { ...none, bytes: b, source: "upload" };
         } catch {
@@ -119,7 +120,10 @@ async function readInput(request: Request, url: URL): Promise<Input> {
       }
       if (typeof body.manifest_b64 === "string" && body.manifest_b64) {
         try {
-          return { ...none, manifest: b64ToBytes(body.manifest_b64), source: "manifest-only" };
+          const manifest = b64ToBytes(body.manifest_b64);
+          if (manifest.byteLength === 0) return { ...none, error: "manifest_b64 decodes to an empty body" };
+          if (manifest.byteLength > MAX_BYTES) return { ...none, error: `manifest_b64 exceeds ${MAX_BYTES} byte cap` };
+          return { ...none, manifest, source: "manifest-only" };
         } catch {
           return { ...none, error: "manifest_b64 not decodable" };
         }
@@ -255,8 +259,18 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
 
   const input = await readInput(request, url);
   if (input.error) return json({ schema: KIND, error: "uncheckable", reason: input.error, url: input.url, http: input.http }, input.error.includes("cap") ? 413 : 400);
+  if (!input.source) {
+    return json(
+      {
+        schema: KIND,
+        error: "bad_request",
+        reason: "supply url=<https://…> or POST the bytes / a manifest to measure",
+      },
+      400,
+    );
+  }
   const fetched_at = new Date().toISOString();
-  const m = input.source ? await measure(input) : null;
+  const m = await measure(input);
   const law = await art50LawBlock();
   const description =
     "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. " +
@@ -283,7 +297,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
   let payment: Record<string, unknown> | null = null;
   let paymentResponseHeader: string | undefined;
   if (invoice) {
-    const reference = await invoiceReference(org, m?.subject.sha256 ?? null, fetched_at);
+    const reference = await invoiceReference(org, m.subject.sha256, fetched_at);
     payment = { mode: "invoice-gbp", reference, commissioned_by: org, currency: "GBP" };
   } else {
     const accepts = x402Accepts(env, resourceUrl, { skuId: SKU, tier: "pack", description });
@@ -332,8 +346,6 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     payment = { mode: "x402", network: paid.settlement?.network || null, transaction: paid.settlement?.transaction || null, payer: paid.settlement?.payer || null };
     paymentResponseHeader = paid.paymentResponse;
   }
-
-  if (!m) return json({ schema: KIND, error: "bad_request", reason: "supply url=<https://…> or POST the bytes / a manifest to measure" }, 400);
 
   const payload = await leafPayload(m, fetched_at, payment);
   let leaf;

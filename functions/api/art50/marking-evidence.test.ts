@@ -108,6 +108,70 @@ describe("free preview (?preview=1) — the full measurement, unsigned", () => {
 });
 
 describe("x402 rail — price only inside the 402", () => {
+  it("rejects missing input before preview or any facilitator call", async () => {
+    const fetchSpy = vi.fn(async () => new Response("unexpected network call", { status: 500 }));
+    vi.stubGlobal("fetch", fetchSpy);
+    const payment = btoa(
+      JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }),
+    );
+
+    const paid = await get(
+      ctx(`${EP}?vendor=openai`, { X402_FACILITATOR_URL: "https://f.example" }, { headers: { "x-payment": payment } }),
+    );
+    expect(paid.status).toBe(400);
+    expect(await paid.json()).toMatchObject({
+      error: "bad_request",
+      reason: expect.stringContaining("supply url="),
+    });
+
+    const preview = await get(ctx(`${EP}?vendor=openai&preview=1`));
+    expect(preview.status).toBe(400);
+    expect((await preview.json()).measurement).toBeUndefined();
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it("rejects empty or malformed base64 before x402 settlement or invoice issuance", async () => {
+    const fetchSpy = vi.fn(async () => new Response("unexpected network call", { status: 500 }));
+    vi.stubGlobal("fetch", fetchSpy);
+    const payment = btoa(
+      JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }),
+    );
+
+    const paid = await post(
+      ctx(`${EP}`, { X402_FACILITATOR_URL: "https://f.example" }, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-payment": payment },
+        body: JSON.stringify({ bytes_b64: "   " }),
+      }),
+    );
+    expect(paid.status).toBe(400);
+    expect((await paid.json()).reason).toMatch(/empty body/);
+
+    const invoice = await post(
+      ctx(`${EP}?commissioned_by=Acme&invoice=gbp`, {}, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ manifest_b64: "   " }),
+      }),
+    );
+    expect(invoice.status).toBe(400);
+    expect(await invoice.json()).toMatchObject({
+      error: "uncheckable",
+      reason: expect.stringMatching(/empty body/),
+    });
+
+    const malformed = await post(
+      ctx(`${EP}`, { X402_FACILITATOR_URL: "https://f.example" }, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-payment": payment },
+        body: JSON.stringify({ bytes_b64: "not!base64" }),
+      }),
+    );
+    expect(malformed.status).toBe(400);
+    expect((await malformed.json()).reason).toBe("bytes_b64 not decodable");
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   it("unpaid: 402 with a complete challenge and the free measurement as preview", async () => {
     stubFetch();
     const r = await get(ctx(`${EP}?url=https://cdn.example/plain.png`));
