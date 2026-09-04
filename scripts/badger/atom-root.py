@@ -71,6 +71,15 @@ def source_is_quarantined(source: str) -> bool:
     return normalized.startswith(QUARANTINED_SOURCE_PREFIXES)
 
 
+def ots_file_digest(blob: bytes) -> str:
+    """The digest a detached OTS proof actually commits to."""
+    from opentimestamps.core.serialize import BytesDeserializationContext
+    from opentimestamps.core.timestamp import DetachedTimestampFile
+
+    return DetachedTimestampFile.deserialize(
+        BytesDeserializationContext(blob)).file_digest.hex()
+
+
 def canonical(obj) -> bytes:
     def rec(v):
         if isinstance(v, list):
@@ -116,23 +125,41 @@ def main() -> int:
     root_path = OUT / f"atom-root-{stamp}.json"
     ots_path = OUT / f"atom-root-{stamp}.json.ots"
 
-    # NEVER overwrite an anchored proof. The queue grows all day, so re-rooting is
-    # normal — but the previous root's .ots may already carry a Bitcoin attestation,
-    # and those bytes are evidence. Writing a fresh pending stamp over them destroys
-    # a proof that cost hours of calendar time to earn. (It happened once: a root
-    # anchored at block 965299 covering 42,118 atoms was clobbered by a re-root
-    # minutes later.) An anchored root is superseded, never edited: it keeps its
-    # name and the new one takes the next suffix.
+    # NEVER overwrite a proof. The queue grows all day, so re-rooting is normal, but a
+    # root's .ots is evidence and writing over it destroys hours of calendar time. A root
+    # is superseded, never edited: it keeps its name and the new one takes the next suffix.
+    # (It happened twice — a root anchored at block 965299 covering 42,118 atoms was
+    # clobbered by a re-root minutes later, and again at block 965312.)
+    #
+    # SUPERSEDE ON *ANY* PRIOR STAMP, not only an anchored one. This used to read
+    # `if prior["state"] == "bitcoin"`, which asks the wrong question at the wrong time.
+    # A stamp is a CLAIM ON FUTURE EVIDENCE: pending now, Bitcoin-attested hours later
+    # when a calendar aggregates it. Overwriting a pending stamp therefore destroys a
+    # proof that had not become valuable YET, and the calendar goes on to anchor it
+    # anyway — leaving a genuine BitcoinBlockHeaderAttestation over bytes that no longer
+    # exist.
+    #
+    # That is not hypothetical. Audited 2026-09-04:
+    #   atom-root-2026-09-03.json.ots    anchored block 965312, covers cbfca3da…
+    #   atom-root-2026-09-03-2.json.ots  anchored block 965312, covers eebb7987…
+    #   the files beside them are        6f9e25e7… and 103866d3…
+    # Neither proof covers the file it sits next to, and the copy actually served was a
+    # third set of bytes again. An anchor over bytes nobody has is worse than no anchor,
+    # because it reads as proof.
+    #
+    # A pending stamp costs one filename to keep and hours of calendar time to re-earn.
+    # Always supersede; never overwrite.
     if not args.verify and ots_path.exists():
         prior = attestation_state(ots_path.read_bytes())
-        if prior["state"] == "bitcoin":
-            n = 2
-            while (OUT / f"atom-root-{stamp}-{n}.json.ots").exists():
-                n += 1
-            root_path = OUT / f"atom-root-{stamp}-{n}.json"
-            ots_path = OUT / f"atom-root-{stamp}-{n}.json.ots"
-            print(f"  prior root is ANCHORED at block {prior['block_height']} — superseding,")
-            print(f"  not overwriting. New root -> {root_path.name}")
+        n = 2
+        while (OUT / f"atom-root-{stamp}-{n}.json.ots").exists():
+            n += 1
+        root_path = OUT / f"atom-root-{stamp}-{n}.json"
+        ots_path = OUT / f"atom-root-{stamp}-{n}.json.ots"
+        where = (f"ANCHORED at block {prior['block_height']}" if prior["state"] == "bitcoin"
+                 else f"{prior['state'].upper()} — and a pending stamp still becomes an anchor later")
+        print(f"  prior root is {where} — superseding, not overwriting.")
+        print(f"  New root -> {root_path.name}")
 
     if args.verify:
         if not root_path.exists():
@@ -147,7 +174,34 @@ def main() -> int:
         print(f"recomputed  : {recomputed}  {'MATCH' if ok else 'MISMATCH'}")
         st = attestation_state(ots_path.read_bytes() if ots_path.exists() else None)
         print(f"ots         : {describe(st)}")
-        return 0 if ok else 1
+
+        # COVERAGE. Recomputing the Merkle root proves the leaves hash to the value the
+        # file states. It says nothing about whether the .ots beside it commits to THESE
+        # bytes — and that is the failure that actually happened: two roots carrying real
+        # Bitcoin attestations at block 965312 over digests matching no file on disk.
+        # A proof that names a file it does not cover is worse than a missing proof,
+        # because it reads as anchored. UNCHECKABLE is a distinct state from ORPHANED:
+        # no proof present is not the same as a proof that disagrees.
+        covered = None
+        if ots_path.exists():
+            actual = hashlib.sha256(root_path.read_bytes()).hexdigest()
+            try:
+                stamped = ots_file_digest(ots_path.read_bytes())
+            except Exception as e:
+                stamped = None
+                print(f"coverage    : UNCHECKABLE — proof did not parse ({type(e).__name__})")
+            if stamped is not None:
+                covered = actual == stamped
+                if covered:
+                    print(f"coverage    : COVERS — proof commits to these exact bytes ({actual[:16]}…)")
+                else:
+                    print(f"coverage    : ORPHANED — file is {actual[:16]}… but the proof covers "
+                          f"{stamped[:16]}…. This root was regenerated after it was stamped; the "
+                          f"anchor proves the existence of bytes that are not here.")
+        else:
+            print("coverage    : UNCHECKABLE — no .ots beside this root")
+
+        return 0 if (ok and covered is not False) else 1
 
     leaves = collect()
     if not leaves:
@@ -175,9 +229,23 @@ def main() -> int:
         "leaves": [{"leaf": d, "source": s} for d, s in leaves],
     }
     root_path.parent.mkdir(parents=True, exist_ok=True)
-    root_path.write_text(json.dumps(body, indent=2, ensure_ascii=False) + "\n")
+    # STAMP THE BYTES WE WRITE. This previously wrote the pretty-printed body INCLUDING
+    # leaves, then stamped sha256(canonical(body minus leaves)) — a compact, leaves-
+    # excluded serialisation that is not the file and never was. So `<root>.json.ots` has
+    # never been a detached proof of `<root>.json`, by construction, in every root this
+    # script has ever produced. Every OTS tool compares a detached proof against the file
+    # it is named after, so all of them reported a mismatch, and the two anchors at block
+    # 965312 covering digests present in no file are that bug reaching Bitcoin.
+    #
+    # The old digest was not meaningless — it commits to the root metadata, and is
+    # reconstructible from the published file by dropping `leaves` and canonicalising.
+    # But a file named `X.ots` asserts it covers X. Either stamp X, or do not use that
+    # name. Stamping X is the useful choice: a stranger runs `ots verify` against the
+    # published bytes with no instructions from us.
+    root_bytes = (json.dumps(body, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    root_path.write_bytes(root_bytes)
 
-    digest = sha256_hex(canonical({k: v for k, v in body.items() if k != "leaves"}))
+    digest = hashlib.sha256(root_bytes).hexdigest()
     print(f"atoms      : {len(hexes)}")
     print(f"merkle_root: {root}")
     print(f"root digest: {digest}")
