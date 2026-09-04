@@ -69,7 +69,7 @@ jobs:
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
           set -euo pipefail
-          pip install -q opentimestamps-client || true
+          pip install -q opentimestamps-client
           python scripts/witness_public_root.py
       - name: EAS on Base — attest the ONE root (fails closed without EAS_ATTESTER_PRIVATE_KEY)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
@@ -78,8 +78,14 @@ jobs:
           BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
         run: |
           set -euo pipefail
-          npm i --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2 >/dev/null 2>&1 || echo "eas deps unavailable"
-          node scripts/eas_attest_root.mjs || echo "EAS step did not attest (recorded honestly in eas-root-attestations.json)"
+          if [ -z "${EAS_ATTESTER_PRIVATE_KEY:-}" ]; then
+            echo "EAS key absent: record NOT_YET without loading wallet dependencies"
+            node scripts/eas_attest_root.mjs
+          else
+            echo "EAS key present: dependency install and attestation are essential and fail closed"
+            npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
+            node scripts/eas_attest_root.mjs
+          fi
       - name: mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         env:
@@ -92,6 +98,12 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/build_archive_index.py
+      - name: release integrity — root, sidecar, Rekor and every public OTS file
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/root-witness-release-gate.py --selftest
+          python scripts/root-witness-release-gate.py
       - name: commit published tree
         id: commit_tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
@@ -100,9 +112,23 @@ jobs:
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
-          git add public/archive 2>/dev/null || true
-          git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
-          git add public/interop/witness/*.json 2>/dev/null || true
+          git add public/archive
+          mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
+            \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)
+          if [ "${#witness_files[@]}" -eq 0 ]; then
+            echo "HALT: witness step produced no stageable witness files" >&2
+            exit 1
+          fi
+          git add -- "${witness_files[@]}"
+          if [ -f public/interop/eas-root-attestations.json ]; then
+            git add -- public/interop/eas-root-attestations.json
+          fi
+          if [ -d public/interop/witness ]; then
+            mapfile -d '' digest_files < <(find public/interop/witness -maxdepth 1 -type f -name '*.json' -print0)
+            if [ "${#digest_files[@]}" -gt 0 ]; then
+              git add -- "${digest_files[@]}"
+            fi
+          fi
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0
