@@ -1,0 +1,72 @@
+{
+  "card": {
+    "as_of": "2026-09-04T00:01:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:base",
+      "chain": "base",
+      "chain_id": 8453,
+      "head": {
+        "block": 50845373,
+        "block_hash": "0xde5874a8228120c36d2ac04d566282d1f46d4414ab906e1174cf1fbaf63f2142",
+        "block_time": "2026-09-04T00:01:33Z"
+      },
+      "n_contracts": 2,
+      "coverage": [
+        {
+          "subject": "evm-events:mTBILL:base",
+          "from": 50823291,
+          "to": 50835290,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 50775291,
+          "rpc": "mainnet.base.org"
+        },
+        {
+          "subject": "evm-events:bIB01:base",
+          "from": 50788307,
+          "to": 50796306,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 50776307,
+          "rpc": "mainnet.base.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on base that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "cacc9e6207f68a233daeea4359ffdbe214d2c9438c2bee3b9917488207c1808c",
+    "sig_ed25519": "670562e24b4df29d15b17260060851a9406e6e158263f81d2364b5359853fa48760eae6e5f0d165298fd23824152edc33eeb0850d501fac605bd1a608710c105",
+    "source_urls": [
+      "https://mainnet.base.org"
+    ],
+    "subject": "evm-events:scan:base coverage at block 50845373",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:base",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "8eaaeaf74691a39ea7cb5e10eae976757bdc844f166a5b6cbd13daac971c5a31",
+    "59e2d98ecbbef4595233ec18438d753177848f50002e4bb5bdc795d6eaebffae",
+    "985e271a19d8e835521cacde0a79dd51be16d60525579de05e70307fa6985e3e",
+    "14f86681fdb787738accbd2d12ad68923cceefe9fd3472c55faa09108b1d205c",
+    "dccf2d32846d2e0e202a9ed4aa50c01121491b00a3573f2cc980cfcec6bd16fb",
+    "dad81bb9ead77cd01284ede49a6cd84ceae2e1bbeb8d0510f68f79049d9dc629",
+    "9f1bbf5b39898fbd8dc5ca6b5acee8ac65ecbee4711736d885dba92a7179286c",
+    "f96f8da14266daa1504d81cdd92670c6b4e273a5a233605c77173e9e450fc724"
+  ]
+}
