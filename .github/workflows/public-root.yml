@@ -92,6 +92,23 @@ jobs:
         run: |
           set -euo pipefail
           python scripts/build_archive_index.py
+      # Re-evaluate drift against the LIVE root, and do it even when the steps above were
+      # skipped or failed. The witness step only rewrites the pointer when it succeeds, so
+      # between successful runs nothing was re-examining whether the pointer's claim still
+      # held — and it stopped holding: on 2026-09-04 the published pointer read MATCH while
+      # naming a sha256 and byte-count that had not been live for a day. This step is what
+      # makes the pointer self-correct rather than sit on a stale all-clear.
+      #
+      # continue-on-error deliberately: --recheck exits 1 on DRIFTED, and DRIFTED is the
+      # NORMAL state for the minutes between committing a new root and Pages serving it.
+      # Failing the workflow on that would be a gate that cries wolf, which gets switched off
+      # and then protects nothing. The honest status lands in the artefact either way, and the
+      # commit step below already stages the pointer.
+      - name: recheck drift against the live root (self-corrects a stale pointer)
+        if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        continue-on-error: true
+        run: python scripts/witness_public_root.py --recheck
+
       - name: commit published tree
         id: commit_tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')

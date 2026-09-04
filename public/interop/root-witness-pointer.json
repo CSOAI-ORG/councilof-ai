@@ -18,14 +18,17 @@
   "dated_copy": "public/interop/root-witness-2026-09-02-728e8c5e.json"
  },
  "drift": {
-  "status": "MATCH",
+  "status": "DRIFTED",
+  "checked_at": "2026-09-04T05:33:14Z",
+  "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3",
-  "live_root_sha256": "728e8c5e95b74c1ac78d0078ec4fc5b606d23d581448482e11cbfda990b792d3",
+  "live_root_sha256": "f0d8f22fc03f650946539c42a2f932f6c4708a6f3d8f161c61aad26ec2a5790b",
   "witness_artifact_merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
-  "live_root_merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
-  "match_sha256": true,
-  "match_merkle_root": true,
-  "reason": "witness computed from the same root.json bytes this publish committed"
+  "live_root_merkle_root": "1a5b27054bbc1caba20c3f234fd99fd2e78bedc7642cd34119eb0cde1ecb0437",
+  "live_root_bytes": 11588,
+  "match_sha256": false,
+  "match_merkle_root": false,
+  "reason": "the live root has changed since it was witnessed — the anchors below attest the OLD bytes, and a fresh witness run is needed before this pointer means anything"
  },
  "witnesses": {
   "rekor": "WITNESSED",
