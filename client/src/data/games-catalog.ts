@@ -6,13 +6,14 @@
  * catalog — the authoritative play gallery is play.ts/LobbyPlay.tsx.
  *
  * HONESTY RULES:
- *   - "play" means interactive gameplay with live board gating.
+ *   - "play" means interactive gameplay; it does not imply measurement.
  *   - "deck" means a slide/card presentation (not interactive play).
  *   - "printer" means a live data display (not a game).
  *   - "leftover" means frozen/broken surface catalogued for honesty.
  *   - Every path must be in PRIMARY_PATHS (enforced by test).
  *   - No typed board counts — live surfaces read from GET /api/gspc.
- *   - Counts: 22 axis · 22 measured (from GET /api/gspc).
+ *   - Historical board totals come from GET /api/gspc; current ranking eligibility
+ *     comes separately from the independently admitted card matrix.
  *
  * WHAT DOES NOT EXIST (verified, never catalog as working):
  *   - /town 404; /towns 308 → /gspc-arena?view=towns
@@ -65,7 +66,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/gspc-arena",
     kind: "play",
     description:
-      "The governed arena. Model versus model on frozen benchmarks. Room doors from GET /api/gspc: open only MEASURED model-comparison axes except jail. Empty stays empty. Jail is floor, never a scored door.",
+      "The governed arena shell. Historical board context loads from GET /api/gspc, while a room becomes a current scored comparison only when independently admitted evidence exists. Recorded runs stay inspection-only until then; empty stays empty.",
     usesLiveBoard: true,
     badge: "live",
   },
@@ -75,7 +76,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/gspc-quests.html",
     kind: "leftover",
     description:
-      "Twelve behavioural axis-scoped quests with in-browser grader, plus a Humans-vs-the-Board view, a daily quest, and an on-device co-op round. Governance quest is retired v1 (24-item), NOT the living n=237. Your answers are graded by the same deterministic regex used to measure models, and your score sits beside the model leader read live from /api/gspc. Playable but frozen banks — NOT the living 22-axis board.",
+      "Twelve behavioural axis-scoped quests with an in-browser grader, a board-history view, a daily quest, and an on-device co-op round. Governance uses the retired v1 24-item set: NOT the living board. Published API figures are historical, unadjudicated context; local play may be reviewed as candidate evidence but is not a measurement or training data.",
     usesLiveBoard: false,
     badge: "frozen",
     frozen: true,
@@ -107,7 +108,7 @@ export const GAMES_CATALOG: CatalogEntry[] = [
     path: "/dashboard?tab=home",
     kind: "printer",
     description:
-      "Living printer of the public board. Axis and model counts come from GET /api/gspc. Empty cells stay empty. Measurement credential, never certification. Not a game.",
+      "Workspace view over the published board and separate admission evidence. Historical axis totals come from GET /api/gspc; current quotable cells come from the independently admitted matrix. Empty cells stay empty. Not a game.",
     usesLiveBoard: true,
     badge: "printer",
   },
@@ -128,44 +129,66 @@ export const GAMES_CATALOG: CatalogEntry[] = [
 /**
  * All paths in the catalog (deduplicated). Used by tests to verify PRIMARY_PATHS coverage.
  */
-export const CATALOG_PATHS: string[] = [...new Set(GAMES_CATALOG.map((g) => g.path))];
+export const CATALOG_PATHS: string[] = [
+  ...new Set(GAMES_CATALOG.map((g) => g.path)),
+];
 
 /**
  * Surfaces that actually consume the live board (GET /api/gspc) for state.
  */
-export const LIVE_BOARD_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.usesLiveBoard);
+export const LIVE_BOARD_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
+  (g) => g.usesLiveBoard,
+);
 
 /**
  * Play surfaces only (excludes decks, printers, and leftovers).
  * NOTE: Only Council Space is live play. GSPC Quests is frozen leftover.
  */
-export const PLAY_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.kind === "play");
+export const PLAY_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
+  (g) => g.kind === "play",
+);
 
 /**
  * Working surfaces (excludes broken leftovers).
  */
-export const WORKING_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => !g.broken);
+export const WORKING_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
+  (g) => !g.broken,
+);
 
 /**
  * Broken/leftover surfaces catalogued for honesty.
  */
 export const LEFTOVER_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
-  (g) => g.kind === "leftover"
+  (g) => g.kind === "leftover",
 );
 
 /**
  * Frozen surfaces — playable but not the living board.
  */
-export const FROZEN_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter((g) => g.frozen);
+export const FROZEN_SURFACES: CatalogEntry[] = GAMES_CATALOG.filter(
+  (g) => g.frozen,
+);
 
 /**
  * IN-BUILD cards from play.ts (no routes, do not mint URLs).
  * Listed for reference only — the authoritative list is in play.ts.
  */
 export const IN_BUILD_CARDS = [
-  { id: "logic-duel", name: "Logic Duel", note: "In build — no live match route" },
-  { id: "swarm-clash", name: "Swarm Clash", note: "In build — arena wrapper is local preview only" },
-  { id: "humans-vs-humanoids", name: "Humans vs Humanoids", note: "No playable route" },
+  {
+    id: "logic-duel",
+    name: "Logic Duel",
+    note: "In build — no live match route",
+  },
+  {
+    id: "swarm-clash",
+    name: "Swarm Clash",
+    note: "In build — arena wrapper is local preview only",
+  },
+  {
+    id: "humans-vs-humanoids",
+    name: "Humans vs Humanoids",
+    note: "No playable route",
+  },
 ];
 
 /**
@@ -219,18 +242,13 @@ export const NOT_LIVE_SURFACES = [
  * FORBIDDEN names — these do NOT exist as public play surfaces on councilof.ai.
  * Tests assert they are absent from the catalog as "play" entries.
  */
-export const FORBIDDEN_GAME_NAMES = [
-  "Murder",
-  "Mundrr",
-  "Difflin",
-  "DiffLin",
-];
+export const FORBIDDEN_GAME_NAMES = ["Murder", "Mundrr", "Difflin", "DiffLin"];
 
 /**
  * Check if a game name is forbidden (does not exist as a playable game).
  */
 export function isForbiddenGame(name: string): boolean {
   return FORBIDDEN_GAME_NAMES.some(
-    (f) => f.toLowerCase() === name.toLowerCase()
+    (f) => f.toLowerCase() === name.toLowerCase(),
   );
 }

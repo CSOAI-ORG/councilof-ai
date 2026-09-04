@@ -19,10 +19,8 @@ describe("withEmbed", () => {
     expect(withEmbed("mailto:nicholas@csoai.org")).toBe("mailto:nicholas@csoai.org");
   });
 
-  it("never stamps embed=1 on marketing or host doors (no nested homepage, no /os in /os)", () => {
+  it("never stamps embed=1 on host doors (no nested homepage, no /os in /os)", () => {
     expect(withEmbed("/")).toBe("/");
-    expect(withEmbed("/products")).toBe("/products");
-    expect(withEmbed("/honesty")).toBe("/honesty");
     expect(withEmbed("/pricing")).toBe("/pricing");
     expect(withEmbed("/os")).toBe("/os");
     expect(withEmbed("/os?lobby=board")).toBe("/os?lobby=board");
@@ -35,6 +33,11 @@ describe("withEmbed", () => {
     expect(withEmbed("/council-os")).toBe("/council-os");
     expect(withEmbed("/demo")).toBe("/demo");
     expect(withEmbed("/os-demo")).toBe("/os-demo");
+  });
+
+  it("uses the shared embedded chrome for dashboard-owned product tools", () => {
+    expect(withEmbed("/products")).toBe("/products?embed=1");
+    expect(withEmbed("/honesty")).toBe("/honesty?embed=1");
   });
 
   it("preserves a hash after the query on a document pane", () => {

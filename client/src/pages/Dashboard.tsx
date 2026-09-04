@@ -71,7 +71,7 @@ const frameworkCompliance: { name: string }[] = [
 const quickActions = [
   { label: "My Progress", href: "/dashboard/progress", icon: Target },
   { label: "Register AI System", href: "/ai-systems", icon: Shield },
-  { label: "Run Assessment", href: "/compliance", icon: FileCheck },
+  { label: "Request Attestation", href: "/dashboard?tab=measured", icon: FileCheck },
   { label: "View Council", href: "/dashboard?tab=space", icon: Users },
   { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
 ];
@@ -94,7 +94,7 @@ export default function Dashboard() {
   // Calculate real metrics
   const metrics = [
     {
-      title: "Compliance Score",
+      title: "Measured Coverage",
       // Honesty: no fabricated fallback. No real stats → an honest empty state,
       // never an invented percentage with an invented trend.
       value: dashboardStats?.complianceScore != null ? `${dashboardStats.complianceScore}%` : "—",
@@ -103,7 +103,7 @@ export default function Dashboard() {
       icon: Shield,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
-      description: "Overall compliance across frameworks",
+      description: "Coverage reported across your measured systems",
     },
     {
       title: "Active AI Systems",
@@ -126,7 +126,7 @@ export default function Dashboard() {
       description: "Public AI safety incidents",
     },
     {
-      title: "Council Sessions",
+      title: "Council Activity",
       value: councilStats?.totalSessions?.toString() || "0",
       change: `${councilStats?.pendingReview || 0} pending votes`,
       changeType: "positive",
@@ -167,7 +167,7 @@ export default function Dashboard() {
                 locator on 2026-09-04, blocking every deploy. */}
             <h2 className="text-2xl font-semibold font-primary">Dashboard</h2>
             <p className="text-muted-foreground text-sm">
-              Your Council OS — governance across every framework, signed to Layer 0
+              Account activity and measured evidence. Empty values remain UNMEASURED.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

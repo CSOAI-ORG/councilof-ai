@@ -47,7 +47,7 @@ export default function DashboardStandardsPane() {
 
   return (
     <section className="mx-auto max-w-6xl px-5 py-7 sm:px-8" aria-labelledby="standards-lab-title">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-800">Council OS · Standards Lab</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-800">Council of AI · Standards Lab</p>
       <h1 id="standards-lab-title" className="mt-2 text-3xl font-semibold tracking-tight text-foreground">Mappings stay separate from measurements.</h1>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
         Standards Lab binds published frameworks and external receipt formats to Council workflows. Every item here is <strong className="text-foreground">CATALOGUED</strong> unless a more specific reproduced or measured state is shown elsewhere. Nothing on this page is a legal verdict, certification, or GSPC score.

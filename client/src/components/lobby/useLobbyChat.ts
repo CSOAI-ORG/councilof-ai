@@ -1,8 +1,29 @@
 import { useCallback, useMemo, useState } from "react";
-import { LOBBY_TABS, matchRoute, matchTab, type LobbyTab } from "./tabs";
+import {
+  isExplicitNavigationCommand,
+  LOBBY_TABS,
+  matchRoute,
+  matchTab,
+  type LobbyTab,
+} from "./tabs";
 import { AXES, quotable } from "@/lib/gspcAxes";
-import { looksLikeCardJson, matchRefusal, wantsBoardTotals } from "./lobbyRefuse";
+import {
+  looksLikeCardJson,
+  matchRefusal,
+  wantsBoardTotals,
+} from "./lobbyRefuse";
 import { fetchPinnedCardKey, verifyCard } from "@/lib/cardVerify";
+import { callTool, type ToolResult } from "@/lib/sovTools";
+
+const lobbyEnv = (
+  import.meta as ImportMeta & {
+    env?: Record<string, string | boolean | undefined>;
+  }
+).env;
+const CHAT_ENDPOINT =
+  (typeof lobbyEnv?.VITE_CHAT_ENDPOINT === "string" &&
+    lobbyEnv.VITE_CHAT_ENDPOINT) ||
+  (lobbyEnv?.DEV ? "https://councilof.ai/api/chat" : "/api/chat");
 
 /**
  * useLobbyChat — the lobby's chat state, lifted out of the bar.
@@ -49,6 +70,8 @@ export type Thread = {
 export const STATE_LABEL: Record<string, string> = {
   live: "council · live specialist",
   grounded: "grounded in published measurement",
+  runtime_observed: "runtime observed · MCP read",
+  unchecked: "unchecked · MCP reply",
   ungrounded: "refused — no grounding available",
   unreachable: "endpoint unreachable",
   deterministic: "deterministic · local, no model",
@@ -77,18 +100,19 @@ function offlineHelp(reason: string): string {
  * - isSpace: true if the user asked for Council Space/arena generally
  */
 function matchAxisOrSpace(text: string): {
-  axis: typeof AXES[number] | null;
+  axis: (typeof AXES)[number] | null;
   isPractice: boolean;
   isSpace: boolean;
 } {
   const t = text.toLowerCase();
-  const isNavCommand = /\b(show|open|go|take me|switch|jump|load|view|bring up|let me|enter)\b/i.test(text);
-  if (!isNavCommand) return { axis: null, isPractice: false, isSpace: false };
+  if (!isExplicitNavigationCommand(text)) {
+    return { axis: null, isPractice: false, isSpace: false };
+  }
 
-  const isPractice = /\b(practice|training|train|practice mode|unsigned|test run)\b/i.test(t);
+  const isPractice =
+    /\b(practice|training|train|practice mode|unsigned|test run)\b/i.test(t);
   const isSpace = /\b(arena|space|council space|coliseum)\b/i.test(t);
 
-  const axisNames = AXES.map((a) => a.axis.toLowerCase());
   const axisAliases: Record<string, string> = {
     gov: "governance",
     governing: "governance",
@@ -120,16 +144,16 @@ function matchAxisOrSpace(text: string): {
     coordination: "swarm",
   };
 
-  let foundAxis: typeof AXES[number] | null = null;
+  let foundAxis: (typeof AXES)[number] | null = null;
   for (const [alias, canonical] of Object.entries(axisAliases)) {
-    if (t.includes(alias)) {
+    if (mentionsAxisTerm(t, alias)) {
       foundAxis = AXES.find((a) => a.axis === canonical) ?? null;
       if (foundAxis) break;
     }
   }
   if (!foundAxis) {
-    for (const axisName of axisNames) {
-      if (t.includes(axisName)) {
+    for (const axisName of AXES.map((a) => a.axis.toLowerCase())) {
+      if (mentionsAxisTerm(t, axisName)) {
         foundAxis = AXES.find((a) => a.axis.toLowerCase() === axisName) ?? null;
         if (foundAxis) break;
       }
@@ -137,6 +161,159 @@ function matchAxisOrSpace(text: string): {
   }
 
   return { axis: foundAxis, isPractice, isSpace };
+}
+
+function mentionsAxisTerm(text: string, term: string): boolean {
+  const escaped = term
+    .split(/[-\s]+/)
+    .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    .join("[-\\s]+");
+  return new RegExp(`\\b${escaped}\\b`, "i").test(text);
+}
+
+/**
+ * A question about a named axis is an evidence request, not a pane command.
+ * Keep the user in the conversation and read the authoritative live row.
+ */
+export function matchAxisFactQuestion(
+  text: string,
+): (typeof AXES)[number] | null {
+  if (isExplicitNavigationCommand(text)) return null;
+  if (
+    !/\b(what|which|how|tell me|explain|measurement|measured|score|result|rate|status|evidence|show)\b/i.test(
+      text,
+    )
+  ) {
+    return null;
+  }
+
+  const t = text.toLowerCase();
+  return (
+    AXES.find((axis) => mentionsAxisTerm(t, axis.axis.toLowerCase())) ?? null
+  );
+}
+
+export type SafeMcpReadIntent =
+  | { name: "board_totals"; args: Record<string, never> }
+  | { name: "get_axis"; args: { axis: string } }
+  | { name: "list_cards"; args: { limit: number } }
+  | { name: "get_root"; args: Record<string, never> };
+
+/**
+ * Natural-language routing for the small, read-only part of the existing MCP
+ * registry. This is deliberately not a capability registry of its own: the
+ * definitions and execution contract remain functions/mcp/gspc-tools.json and
+ * POST /mcp. These four names are the only calls chat may start automatically.
+ */
+export function matchSafeMcpReadIntent(
+  text: string,
+): SafeMcpReadIntent | null {
+  const readCommand =
+    /^(?:please\s+)?(?:(?:(?:can|could|would|will)\s+you|i\s+(?:want|need)\s+you\s+to|i(?:'d|\s+would)\s+like\s+you\s+to)\s+(?:please\s+)?)?(?:call|invoke|run|read|fetch|get|show|list|inspect)\b/i.test(
+      text.trim(),
+    );
+
+  if (readCommand && /\bboard_totals\b/i.test(text)) {
+    return { name: "board_totals", args: {} };
+  }
+  if (readCommand && /\blist_cards\b/i.test(text)) {
+    return { name: "list_cards", args: { limit: 5 } };
+  }
+  if (readCommand && /\bget_root\b/i.test(text)) {
+    return { name: "get_root", args: {} };
+  }
+  if (readCommand && /\bget_axis\b/i.test(text)) {
+    const named = AXES.find((candidate) =>
+      mentionsAxisTerm(text.toLowerCase(), candidate.axis.toLowerCase()),
+    );
+    if (named) return { name: "get_axis", args: { axis: named.axis } };
+  }
+  // A verb that asks for mutation, payment, signing or external effects can
+  // mention a read tool by name without turning into a read. The review matcher
+  // gets the next turn in the hook.
+  if (matchGuardedActionIntent(text)) return null;
+
+  const axis = matchAxisFactQuestion(text);
+  if (axis) return { name: "get_axis", args: { axis: axis.axis } };
+  if (wantsBoardTotals(text)) return { name: "board_totals", args: {} };
+  if (
+    /\b(list|read|fetch|which|what|how many|latest|recent)\b[^?\n]{0,48}\b(?:signed |published |measurement )?cards?\b/i.test(
+      text,
+    ) || /\bcard index\b/i.test(text)
+  ) {
+    return { name: "list_cards", args: { limit: 5 } };
+  }
+  if (
+    /\b(?:what|read|fetch|get|current|latest|show|inspect)\b[^?\n]{0,56}\b(?:public[- ]root|root\.json|merkle root|root head)\b/i.test(
+      text,
+    ) || /^\s*(?:public[- ]root|root\.json|merkle root)\s*[?!.]*\s*$/i.test(text)
+  ) {
+    return { name: "get_root", args: {} };
+  }
+  return null;
+}
+
+type GuardedActionIntent = {
+  tab: LobbyTab;
+  reason: string;
+};
+
+/**
+ * Anything capable of changing state, spending, signing, or contacting another
+ * system stops at the review surface. This matcher never executes a tool.
+ */
+export function matchGuardedActionIntent(
+  text: string,
+): GuardedActionIntent | null {
+  const t = text.trim();
+  const action =
+    /^(?:please\s+)?(?:(?:(?:can|could|would|will)\s+you|i\s+(?:want|need)\s+you\s+to|i(?:'d|\s+would)\s+like\s+you\s+to)\s+(?:please\s+)?)?(?:go ahead and\s+)?(?:fix|apply|deploy|publish|release|send|email|message|contact|notify|post|submit|upload|pay|purchase|charge|sign|witness|commission|create|delete|remove|write|change|update|call|invoke|execute|run)\b/i;
+  if (!action.test(t)) return null;
+
+  const isMeasurementRequest =
+    /\b(?:commission(?:_card)?|request (?:an? )?(?:measurement|attestation)|measure (?:me|my|this))\b/i.test(
+      t,
+    );
+  const tabId = isMeasurementRequest ? "measured" : "tools";
+  return {
+    tab: LOBBY_TABS.find((candidate) => candidate.id === tabId)!,
+    reason: isMeasurementRequest
+      ? "measurement or attestation request"
+      : "state-changing, paid, signed, or external action",
+  };
+}
+
+export type SafeMcpReadReply = Pick<Turn, "text" | "state" | "signature">;
+
+/**
+ * Execute one already-parsed read through the same MCP runtime as ToolRunner.
+ * The wrapper labels the execution state; it never promotes the returned
+ * artefact to MEASURED or SIGNED.
+ */
+export async function runSafeMcpRead(
+  intent: SafeMcpReadIntent,
+  invoke: typeof callTool = callTool,
+): Promise<SafeMcpReadReply> {
+  const result: ToolResult = await invoke(intent.name, intent.args);
+  const executionState = result.state.toUpperCase();
+  const provenance = `POST /mcp · tools/call · ${intent.name}`;
+  if (!result.ok) {
+    return {
+      text:
+        `**${executionState}** — the ${intent.name} MCP read did not complete.\n\n` +
+        `${result.text}\n\nNo cached value was substituted and no write, payment, signature, or external message was attempted.`,
+      state: result.state,
+      signature: `${provenance} · ${executionState}`,
+    };
+  }
+  return {
+    text:
+      `**RUNTIME_OBSERVED** — ${intent.name} completed through the public MCP door. ` +
+      `That state describes this tool execution only; the returned record keeps its own evidence state.\n\n` +
+      `${result.text}\n\nSource: ${provenance}. This chat did not write to the board, spend, sign, or contact an external party.`,
+    state: "runtime_observed",
+    signature: `${provenance} · RUNTIME_OBSERVED`,
+  };
 }
 
 export interface LobbyChat {
@@ -174,7 +351,11 @@ export function useLobbyChat(): LobbyChat {
   const selectThread = useCallback((id: string) => setActiveId(id), []);
 
   const send = useCallback(
-    async (raw: string, onNavigate: (t: LobbyTab) => void, onOpenRoute?: (path: string, label: string) => void) => {
+    async (
+      raw: string,
+      onNavigate: (t: LobbyTab) => void,
+      onOpenRoute?: (path: string, label: string) => void,
+    ) => {
       const question = raw.trim();
       if (!question || busy) return;
 
@@ -183,11 +364,16 @@ export function useLobbyChat(): LobbyChat {
       const userTurn: Turn = { role: "user", text: question, at: now() };
       setThreads((prev) => {
         if (id && prev.some((t) => t.id === id)) {
-          return prev.map((t) => (t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t));
+          return prev.map((t) =>
+            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
+          );
         }
         const fresh: Thread = {
           id: `t${Date.now().toString(36)}${prev.length}`,
-          title: question.length > 64 ? question.slice(0, 63).trimEnd() + "…" : question,
+          title:
+            question.length > 64
+              ? question.slice(0, 63).trimEnd() + "…"
+              : question,
           startedAt: now(),
           turns: [userTurn],
         };
@@ -201,7 +387,11 @@ export function useLobbyChat(): LobbyChat {
 
       const push = (t: Omit<Turn, "at">) =>
         setThreads((prev) =>
-          prev.map((x) => (x.id === threadId ? { ...x, turns: [...x.turns, { ...t, at: now() }] } : x)),
+          prev.map((x) =>
+            x.id === threadId
+              ? { ...x, turns: [...x.turns, { ...t, at: now() }] }
+              : x,
+          ),
         );
 
       // Lane 1 — deterministic command. Answered locally, labelled locally.
@@ -291,35 +481,35 @@ export function useLobbyChat(): LobbyChat {
         return;
       }
 
-      if (wantsBoardTotals(question)) {
+      const mcpRead = matchSafeMcpReadIntent(question);
+      if (mcpRead) {
         setBusy(true);
         try {
-          const r = await fetch("/api/gspc", { headers: { accept: "application/json" } });
-          if (!r.ok) throw new Error("HTTP " + r.status);
-          const j: any = await r.json();
-          const t = j?.totals ?? {};
-          const grammar = t.public_count || t.count_grammar || "live GET /api/gspc";
-          push({
-            role: "council",
-            text:
-              `Live board from GET /api/gspc — ${grammar}.\n` +
-              `SEPARATED leads: ${t.separated_leads ?? "—"}. TIE: ${t.ties ?? "—"}. ` +
-              `Empty cells stay empty. This is measurement, not a ranking.\n\n` +
-              `Opened the native board pane. No fixture.`,
-            state: "grounded",
-            signature: "board_totals · GET /api/gspc",
-          });
-          onNavigate(LOBBY_TABS.find((x) => x.id === "board") ?? SPACE_TAB);
-        } catch (e: any) {
-          push({
-            role: "council",
-            text: offlineHelp(String(e?.message ?? e)),
-            state: "deterministic",
-            signature: "board_totals · failed",
-          });
+          const reply = await runSafeMcpRead(mcpRead);
+          push({ role: "council", ...reply });
+          if (mcpRead.name === "board_totals") {
+            onNavigate(
+              LOBBY_TABS.find((candidate) => candidate.id === "board") ??
+                SPACE_TAB,
+            );
+          }
         } finally {
           setBusy(false);
         }
+        return;
+      }
+
+      const guardedAction = matchGuardedActionIntent(question);
+      if (guardedAction) {
+        onNavigate(guardedAction.tab);
+        push({
+          role: "council",
+          text:
+            `I did not execute that ${guardedAction.reason}. Opened “${guardedAction.tab.label}” so you can inspect the exact inputs and review boundary first.\n\n` +
+            `Nothing ran: no tools/call, mutation, x402 payment, signature, deployment, or external communication.`,
+          state: "deterministic",
+          signature: "review boundary · no execution",
+        });
         return;
       }
 
@@ -354,10 +544,12 @@ export function useLobbyChat(): LobbyChat {
       // Lane 2 — the estate's honest endpoint.
       setBusy(true);
       try {
-        const r = await fetch("/api/chat", {
+        const r = await fetch(CHAT_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: [{ role: "user", content: question }] }),
+          body: JSON.stringify({
+            messages: [{ role: "user", content: question }],
+          }),
         });
         if (!r.ok) {
           push({
@@ -379,13 +571,22 @@ export function useLobbyChat(): LobbyChat {
           });
           return;
         }
-        push({ role: "council", text: answer, state: j.state, signature: j.signature });
+        push({
+          role: "council",
+          text: answer,
+          state: j.state,
+          signature: j.signature,
+        });
         // The /os quest is called "Ask the Council one grounded question". It used to be
         // awarded for CLICKING it. It is awarded here instead — only once an answer has
         // actually come back grounded in published measurement. A refusal is not a
         // grounded answer and does not count.
         if (j.state === "grounded" || j.state === "live") {
-          import("@/components/os/quests").then((q) => q.markQuest("ask")).catch(() => { /* local play only */ });
+          import("@/components/os/quests")
+            .then((q) => q.markQuest("ask"))
+            .catch(() => {
+              /* local play only */
+            });
         }
       } catch (e: any) {
         push({
@@ -401,5 +602,14 @@ export function useLobbyChat(): LobbyChat {
     [activeId, busy],
   );
 
-  return { threads, activeId, active, busy, send, startThread, selectThread, turnCount };
+  return {
+    threads,
+    activeId,
+    active,
+    busy,
+    send,
+    startThread,
+    selectThread,
+    turnCount,
+  };
 }
