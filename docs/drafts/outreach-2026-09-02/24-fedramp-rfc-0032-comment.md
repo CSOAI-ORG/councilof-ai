@@ -12,8 +12,20 @@ Comment from CSOAI LTD (UK 16939677), an independent measurement body that publi
 
 On the "minimum government-wide information requirements" in RFC-0032: we suggest the minimum set be expressed as machine-readable OSCAL 1.1.0 (system-security-plan, plan-of-action-and-milestones, assessment-results) rather than as document names, so that an agency-operated offering's package can be reused by a customer agency's tooling without re-keying — the same direction RFC-0024 sets for private offerings from 30 September 2026.
 
-Two specifics: (1) `assessment-results` should carry observations with an explicit `determination` field, so third-party observations (e.g. over an AI or LLM component the offering depends on) can be imported as evidence without being mistaken for findings; (2) each observation should carry a content hash and, where the source is external, a signature, so reuse across agencies preserves provenance. [Example of the shape, free to inspect: https://councilof.ai/api/evidence-bundle?obligation=article-50 — signed observations, `determination: NONE`; verifier at https://councilof.ai/gspc-verify.]
+Two specifics: (1) `assessment-results` should carry observations with an explicit `determination` field, so third-party observations (e.g. over an AI or LLM component the offering depends on) can be imported as evidence without being mistaken for findings; (2) each observation should carry a content hash and, where the source is external, a signature, so reuse across agencies preserves provenance. ~~[Example of the shape, free to inspect: https://councilof.ai/api/evidence-bundle?obligation=article-50 — signed observations, `determination: NONE`; verifier at https://councilof.ai/gspc-verify.]~~
 
-We make no claim about any offering's control status; the example is a format, not a finding.
+**STRUCK 2026-09-04, before posting — the sentence was false.** The owner gate tested HTTP 200
+and the endpoint passes it 12/12. But the gate never checked the CONTENT, and the content does
+not support the claim: `/api/evidence-bundle?obligation=article-50` returns `kind: "preview"`
+with `cards: []` — zero cards — and the string "determination" appears in it exactly once, as
+`"relation": "relevant-to — never a determination"`, which is the opposite of "determination:
+NONE". There is no OSCAL in the payload at all. A federal reviewer would have found an empty
+preview one click after reading a sentence promising signed observations.
+
+The rest of the comment stands without it: it is a suggestion about how FedRAMP should express
+its minimum information set, and it does not depend on our having an example to show. Post the
+example only once the bundle actually renders signed cards with a determination field.
+
+We make no claim about any offering's control status.
 
 — Nicholas Templeman, CSOAI LTD, nicholas@csoai.org
