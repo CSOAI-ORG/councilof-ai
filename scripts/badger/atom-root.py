@@ -22,12 +22,17 @@ The leaf digest and Merkle construction are IMPORTED from publish_public_root.py
 rather than re-implemented, so an atom's inclusion proof is checkable with the same
 code that checks a card's. Re-typing the tree is how two roots drift apart.
 
-    python3 scripts/badger/atom-root.py            # build + stamp
-    python3 scripts/badger/atom-root.py --verify   # re-check without network
+    python3 scripts/badger/atom-root.py --dry-run
+    python3 scripts/badger/atom-root.py --build-candidate evidence/candidates/atom-root.json
+
+The default command is fail-closed. This script no longer submits a timestamp.
+A candidate is non-public and unsigned; publishing and OTS submission require a
+separate reviewed ceremony.
 """
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import importlib.util
 import json
@@ -38,7 +43,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 sys.path.insert(0, str(HERE))
-from ots_stamp import attestation_state, describe, submit_ots  # noqa: E402
+from ots_stamp import attestation_state, describe  # noqa: E402
 
 # publish_public_root.py has a hyphen-free name but lives outside the package path.
 _spec = importlib.util.spec_from_file_location(
@@ -50,6 +55,7 @@ merkle_root, merkle_proof, sha256_hex = _ppr.merkle_root, _ppr.merkle_proof, _pp
 
 QUEUE = HERE / "_queue"
 OUT = REPO / "public" / "interop"
+SOURCE_POLICY_PATH = HERE / "atom-root-sources.json"
 
 # These directories are immutable incident evidence, not admissible atom inputs.
 #
@@ -62,13 +68,69 @@ OUT = REPO / "public" / "interop"
 # Keep the files for auditability, but never commit them into a new root. The
 # release gate independently checks this list so removing a prefix here cannot
 # silently make either incident admissible again.
-QUARANTINED_SOURCE_PREFIXES = ("cose-wrap/", "xrpl-settlement/")
+QUARANTINED_SOURCE_PREFIXES = (
+    "bft-council/vote-chain-",
+    "cose-wrap/",
+    "deep-mining/",
+    "learn-loop/",
+    "xrpl-settlement/",
+)
 
 
-def source_is_quarantined(source: str) -> bool:
+def source_policy() -> dict:
+    policy = json.loads(SOURCE_POLICY_PATH.read_text())
+    if policy.get("default") != "deny":
+        raise ValueError("atom-root source policy must be default-deny")
+    return policy
+
+
+def source_is_quarantined(source: str, policy: dict | None = None) -> bool:
     """Return True when an audit-only queue path must not enter a new root."""
     normalized = source.replace("\\", "/")
-    return normalized.startswith(QUARANTINED_SOURCE_PREFIXES)
+    configured = tuple((policy or {}).get("excluded_prefixes", QUARANTINED_SOURCE_PREFIXES))
+    excluded_globs = tuple((policy or {}).get("excluded_globs", ()))
+    return normalized.startswith(configured) or any(
+        fnmatch.fnmatchcase(normalized, pattern) for pattern in excluded_globs
+    )
+
+
+def source_is_allowed(source: str, policy: dict) -> bool:
+    normalized = source.replace("\\", "/")
+    return not source_is_quarantined(normalized, policy) and normalized in set(
+        policy.get("allowed_sources", [])
+    )
+
+
+def placeholder_evidence_issues(atom: dict) -> list[str]:
+    """Reject known placeholder shapes before they can enter a candidate root."""
+    issues: list[str] = []
+    council = atom.get("council_attestation")
+    if isinstance(council, dict) and (
+        council.get("council_size") == 33
+        and council.get("yes_count") == 33
+        and council.get("no_count") == 0
+        and council.get("quorum_reached") is True
+    ):
+        issues.append("hard-coded 33/33 council result")
+    if atom.get("yes") == 33 and atom.get("no") == 0 and atom.get("quorum_reached") is True:
+        issues.append("hard-coded 33/33 vote row")
+
+    sig = atom.get("sig") or atom.get("sig_ed25519")
+    if isinstance(sig, str) and len(sig) == 64 and all(c in "0123456789abcdefABCDEF" for c in sig):
+        issues.append("32-byte digest represented as an Ed25519 signature")
+
+    anchors = atom.get("anchors")
+    if isinstance(anchors, dict):
+        for receipt in anchors.values():
+            if not isinstance(receipt, dict) or str(receipt.get("status", "")).lower() not in {
+                "pending", "queued"
+            }:
+                continue
+            for key in ("stamp", "entry_uuid", "attestation_uid"):
+                value = receipt.get(key)
+                if isinstance(value, str) and len(value.removeprefix("0x")) in {62, 63, 64}:
+                    issues.append(f"hash-shaped {key} placeholder")
+    return issues
 
 
 def ots_file_digest(blob: bytes) -> str:
@@ -92,10 +154,11 @@ def canonical(obj) -> bytes:
 
 def collect() -> list[tuple[str, str]]:
     """(leaf_digest, source) for every atom, deduplicated, in stable order."""
+    policy = source_policy()
     seen, leaves = set(), []
     for jsonl in sorted(QUEUE.rglob("*.jsonl")):
         source = str(jsonl.relative_to(QUEUE)).replace("\\", "/")
-        if source_is_quarantined(source):
+        if not source_is_allowed(source, policy):
             continue
         for line in jsonl.read_text(errors="replace").splitlines():
             line = line.strip()
@@ -107,6 +170,9 @@ def collect() -> list[tuple[str, str]]:
                 continue
             if not isinstance(atom, dict):
                 continue
+            issues = placeholder_evidence_issues(atom)
+            if issues:
+                raise ValueError(f"inadmissible atom in {source}: {', '.join(issues)}")
             d = sha256_hex(canonical(atom))
             if d in seen:
                 continue
@@ -119,7 +185,19 @@ def collect() -> list[tuple[str, str]]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--verify", action="store_true", help="re-check the published root, no network")
+    ap.add_argument("--dry-run", action="store_true", help="compute the allowlisted root without writing")
+    ap.add_argument("--build-candidate", type=Path, help="write an unsigned candidate outside public/")
     args = ap.parse_args()
+
+    if not args.verify and not args.dry_run and args.build_candidate is None:
+        print("UNAVAILABLE_FAIL_CLOSED: choose --dry-run or --build-candidate; OTS submission requires a reviewed ceremony")
+        return 78
+    if args.build_candidate is not None:
+        destination = (REPO / args.build_candidate).resolve() if not args.build_candidate.is_absolute() else args.build_candidate.resolve()
+        public_root = (REPO / "public").resolve()
+        if public_root == destination or public_root in destination.parents or destination.suffix == ".ots":
+            print("refusing candidate destination: candidates must stay outside public/ and cannot be .ots files")
+            return 2
 
     stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
     root_path = OUT / f"atom-root-{stamp}.json"
@@ -228,6 +306,13 @@ def main() -> int:
         ),
         "leaves": [{"leaf": d, "source": s} for d, s in leaves],
     }
+    if args.dry_run:
+        print(f"allowlisted atoms: {len(hexes)}")
+        print(f"candidate merkle root: {root}")
+        print("writes: 0; signatures: 0; OTS submissions: 0")
+        return 0
+
+    root_path = destination
     root_path.parent.mkdir(parents=True, exist_ok=True)
     # STAMP THE BYTES WE WRITE. This previously wrote the pretty-printed body INCLUDING
     # leaves, then stamped sha256(canonical(body minus leaves)) — a compact, leaves-
@@ -246,20 +331,11 @@ def main() -> int:
     root_path.write_bytes(root_bytes)
 
     digest = hashlib.sha256(root_bytes).hexdigest()
-    print(f"atoms      : {len(hexes)}")
-    print(f"merkle_root: {root}")
-    print(f"root digest: {digest}")
-    print("stamping ONE proof for all of them...")
-    data = submit_ots(digest)
-    if not data:
-        print("  no calendar answered — no .ots written (an unverifiable proof is worse than none)")
-        return 1
-    ots_path.write_bytes(data)
-    st = attestation_state(data)
-    print(f"  wrote {ots_path.relative_to(REPO)}")
-    print(f"  {describe(st)}")
-    print(f"\n{len(hexes)} atoms are now covered by one commitment.")
-    print("They become ANCHORED when scripts/ots-upgrade.py turns that stamp into a block.")
+    print(f"candidate atoms: {len(hexes)}")
+    print(f"merkle_root   : {root}")
+    print(f"file digest   : {digest}")
+    print(f"wrote unsigned, unstamped candidate: {root_path}")
+    print("Publishing and OTS submission remain ceremony-gated.")
     return 0
 
 

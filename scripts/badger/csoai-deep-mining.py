@@ -11,7 +11,8 @@ Mines additional high-value sources:
   - XRPL new trust lines (where discoverable)
   - Bitcoin mempool (public)
 
-Each atom is signed + indexed.
+Each discovery is content-addressed and explicitly unsigned. Signing is a
+separate reviewed ceremony; a SHA-256 digest is never a signature.
 
 Lane-doable: just file generation.
 """
@@ -41,10 +42,11 @@ def get_json(url: str, timeout: int = 30) -> object:
         return {"error": str(e)}
 
 
-def sign_atom(atom: dict) -> dict:
+def identify_atom(atom: dict) -> dict:
     blob = json.dumps(atom, sort_keys=True, default=str).encode()
-    atom["sha256"] = hashlib.sha256(blob).hexdigest()
-    atom["sig"] = hashlib.sha256(b"sig:" + atom["sha256"].encode()).hexdigest()
+    atom["content_sha256"] = hashlib.sha256(blob).hexdigest()
+    atom["signed"] = False
+    atom["signature_status"] = "NOT_SIGNED"
     return atom
 
 
@@ -75,7 +77,7 @@ def main() -> None:
                     "measurement": {"status": "DISCOVERED"},
                     "links": {"live_board": "https://councilof.ai/api/gspc"},
                 }
-                atoms.append(sign_atom(atom))
+                atoms.append(identify_atom(atom))
     print(f"  github repos: {sum(1 for a in atoms if a['subject']['kind'] == 'github-repo')}")
 
     # 2. HuggingFace trending models
@@ -100,7 +102,7 @@ def main() -> None:
                     "measurement": {"status": "DISCOVERED"},
                     "links": {"live_board": "https://councilof.ai/api/gspc"},
                 }
-                atoms.append(sign_atom(atom))
+                atoms.append(identify_atom(atom))
     print(f"  hf models: {sum(1 for a in atoms if a['subject']['kind'] == 'hf-model')}")
 
     # 3. arXiv recent AI papers
@@ -128,7 +130,7 @@ def main() -> None:
                 "measurement": {"status": "DISCOVERED"},
                 "links": {"live_board": "https://councilof.ai/api/gspc"},
             }
-            atoms.append(sign_atom(atom))
+            atoms.append(identify_atom(atom))
     print(f"  arxiv papers: {sum(1 for a in atoms if a['subject']['kind'] == 'arxiv-paper')}")
 
     # 4. OpenAlex recent works
@@ -153,7 +155,7 @@ def main() -> None:
                     "measurement": {"status": "DISCOVERED"},
                     "links": {"live_board": "https://councilof.ai/api/gspc"},
                 }
-                atoms.append(sign_atom(atom))
+                atoms.append(identify_atom(atom))
     print(f"  openalex works: {sum(1 for a in atoms if a['subject']['kind'] == 'openalex-work')}")
 
     # 5. Companies House new incorporations
@@ -178,7 +180,7 @@ def main() -> None:
                 "measurement": {"status": "DISCOVERED"},
                 "links": {"live_board": "https://councilof.ai/api/gspc"},
             }
-            atoms.append(sign_atom(atom))
+            atoms.append(identify_atom(atom))
     print(f"  ch companies: {sum(1 for a in atoms if a['subject']['kind'] == 'company-house-company')}")
 
     # Save all atoms

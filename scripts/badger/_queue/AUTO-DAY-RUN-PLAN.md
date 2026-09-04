@@ -134,7 +134,7 @@ State: 97 LaunchAgents + 4 crontab lines active
 
 ### C7. Game agents (need to install)
 - `com.csoai.games-bind-6h.plist` — games audit every 6 hours
-- `com.csoai.learn-loop-5min.plist` — learn loop every 5 min
+- `com.csoai.learn-loop-5min.plist` — RETIRED and disabled; historical producer emitted placeholder evidence
 - `com.csoai.chat-attest-5min.plist` — chat attest every 5 min
 
 ## D. THE 1000-MOVE DAY PLAN
