@@ -37,6 +37,19 @@ let did = stripExports(read("src/did.mjs"));
 
 let cli = read("bin/gspc-verify.mjs");
 cli = must(cli, /^#!\/usr\/bin\/env node\n/, "", "shebang");
+// The bundle was CLI-only: zero exports, and a top-level process.exit() that killed the host
+// process on import. Anyone wanting to verify a card INSIDE their own code — a CI step, an
+// exporter, an integration — could not. Wrap the CLI body so it runs only when the file is
+// executed directly, and export the verification surface underneath it.
+// Top-level `import` cannot live inside a function, so hoist the CLI's own imports to module
+// scope and wrap only the executable body.
+{
+  const lines = cli.split("\n");
+  const imports = lines.filter((l) => /^import .* from "node:/.test(l));
+  const body = lines.filter((l) => !/^import .* from "node:/.test(l)).join("\n");
+  if (!imports.length) throw new Error("bundle.mjs: expected the CLI to import from node: — refusing to guess");
+  cli = imports.join("\n") + "\n\nasync function __cliMain() {\n" + body + "\n}\n";
+}
 cli = dropImportLine(cli, "\\.\\./src/verify\\.mjs");
 cli = dropImportLine(cli, "\\.\\./src/did\\.mjs");
 cli = dropImportLine(cli, "\\.\\./src/index\\.mjs");
@@ -61,7 +74,18 @@ ${did}
 /** The bundled verification profile. Override with --profile / --pubkey / --did-document. */
 const BUNDLED_PROFILE = ${profile.trim()};
 function defaultProfile() { return JSON.parse(JSON.stringify(BUNDLED_PROFILE)); }
-${cli}`;
+${cli}
+/* Dual-mode: a library when imported, a CLI when executed. Running this file directly behaves
+ * exactly as before; importing it now yields the verification surface and runs nothing. */
+export { verifyCard, analyseSet, analyseChain, STATES, canonicalise, canonicalString, preimageBytes,
+         OutOfProfileDomain, NotSerialisable, pubkeyFromDidDocument, defaultProfile };
+
+const __isDirect = (() => {
+  try { return process.argv[1] && import.meta.url === new URL("file://" + process.argv[1]).href; }
+  catch { return false; }
+})();
+if (__isDirect) __cliMain();
+`;
 
 const target = process.argv[2] || join(root, "dist-bundle", "gspc-verify.mjs");
 const { mkdirSync } = await import("node:fs");

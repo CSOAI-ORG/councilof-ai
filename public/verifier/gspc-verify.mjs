@@ -627,6 +627,10 @@ const BUNDLED_PROFILE = {
   }
 };
 function defaultProfile() { return JSON.parse(JSON.stringify(BUNDLED_PROFILE)); }
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join, extname } from "node:path";
+
+async function __cliMain() {
 /**
  * gspc-verify — offline verifier for GSPC measurement cards.
  *
@@ -643,8 +647,6 @@ function defaultProfile() { return JSON.parse(JSON.stringify(BUNDLED_PROFILE)); 
  *   3  every card VALID, but the SET is incomplete or disagrees with its index
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, extname } from "node:path";
 
 const USAGE = `gspc-verify — verify GSPC measurement cards offline
 
@@ -816,3 +818,16 @@ if (tally.INVALID) process.exit(1);
 if (tally.UNCHECKABLE) process.exit(2);
 if (blockingSetFindings.length) process.exit(3);
 process.exit(0);
+
+}
+
+/* Dual-mode: a library when imported, a CLI when executed. Running this file directly behaves
+ * exactly as before; importing it now yields the verification surface and runs nothing. */
+export { verifyCard, analyseSet, analyseChain, STATES, canonicalise, canonicalString, preimageBytes,
+         OutOfProfileDomain, NotSerialisable, pubkeyFromDidDocument, defaultProfile };
+
+const __isDirect = (() => {
+  try { return process.argv[1] && import.meta.url === new URL("file://" + process.argv[1]).href; }
+  catch { return false; }
+})();
+if (__isDirect) __cliMain();
