@@ -1,4 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { axisRunEvidence } from "./runEvidence";
+export { axisRunEvidence } from "./runEvidence";
 
 /**
  * GspcTerminal — the interactive GSPC board, the one dashboard centrepiece.
@@ -58,6 +60,8 @@ type Axis = {
   status?: string;
   note?: string;
   dataset_url?: string;
+  run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
+  evidence_url?: string;
 };
 
 type Totals = { public_count?: string; count_grammar?: string; axes?: number; measured_axes?: number };
@@ -78,6 +82,26 @@ type Elo = {
 type CardIndex = { cards?: { axis?: string; card?: string; card_url?: string; signed?: boolean }[]; n_cards?: number };
 
 type Load<T> = { state: "loading" | "ok" | "error"; data?: T; err?: string };
+
+/** A content ID identifies bytes; an Elo reference is signed only when its signature is explicit. */
+export function eloReferenceEvidence(elo: Elo | undefined): string {
+  const signature = elo?.signature;
+  const contentId = elo?.content_id || signature?.content_id;
+  const explicitlySigned =
+    signature?.alg?.toLowerCase() === "ed25519" &&
+    typeof signature.pubkey === "string" && signature.pubkey.trim().length > 0 &&
+    typeof signature.sig === "string" && signature.sig.trim().length > 0;
+
+  if (explicitlySigned) {
+    return contentId
+      ? `Elo reference Ed25519-signed · content_id ${contentId.slice(0, 10)}…`
+      : "Elo reference Ed25519-signed";
+  }
+  if (contentId) {
+    return `Elo reference content-addressed unsigned · content_id ${contentId.slice(0, 10)}…`;
+  }
+  return "Elo reference loaded · no attestation state declared";
+}
 
 function useJson<T>(url: string): Load<T> {
   const [v, setV] = useState<Load<T>>({ state: "loading" });
@@ -210,7 +234,7 @@ function ModelRankings({ axis, rows }: { axis: Axis; rows: EloRow[] }) {
   );
 }
 
-function AxisDrilldown({
+export function AxisDrilldown({
   a,
   elo,
   cardIndex,
@@ -227,6 +251,7 @@ function AxisDrilldown({
     cardIndex.state === "ok"
       ? (cardIndex.data?.cards || []).filter((c) => c.axis && groups.includes(c.axis)).length
       : 0;
+  const runEvidence = axisRunEvidence(a);
 
   return (
     <div className="border-t border-slate-200 bg-slate-50/70 px-4 py-4">
@@ -286,14 +311,25 @@ function AxisDrilldown({
         </p>
       )}
 
-      {/* Verify — every figure recomputable */}
+      {/* Evidence links preserve the distinction between signed cards, signed
+          runs and content-addressed-but-unsigned runs. */}
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px]">
-        <a href="/gspc-verify" className="font-mono font-semibold text-emerald-700 hover:underline">
-          Verify signed cards →
-        </a>
-        {cardCount > 0 && (
-          <span className="font-mono text-slate-400">
-            {cardCount} signed card{cardCount === 1 ? "" : "s"} for this axis
+        {runEvidence && (
+          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+            <a href={runEvidence.href} className="font-mono font-semibold text-emerald-700 hover:underline">
+              {runEvidence.label} →
+            </a>
+            <span className="font-mono text-slate-400">{runEvidence.detail}</span>
+          </span>
+        )}
+        {a.kind === "model-comparison" && cardCount > 0 && (
+          <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
+            <a href="/gspc-verify" className="font-mono font-semibold text-emerald-700 hover:underline">
+              Verify signed card{cardCount === 1 ? "" : "s"} →
+            </a>
+            <span className="font-mono text-slate-400">
+              {cardCount} signed card{cardCount === 1 ? "" : "s"} for this axis
+            </span>
           </span>
         )}
         {a.dataset_url && (
@@ -446,8 +482,8 @@ export default function GspcTerminal({ className }: { className?: string }) {
           Measurement, not certification · empty cells stay empty · nothing is written here.
         </span>
         <span className="font-mono">
-          {elo.state === "ok" && elo.data?.content_id
-            ? `Elo reference signed · content_id ${elo.data.content_id.slice(0, 10)}…`
+          {elo.state === "ok"
+            ? eloReferenceEvidence(elo.data)
             : elo.state === "error"
               ? "Elo reference UNREACHABLE"
               : "Elo reference LOADING…"}

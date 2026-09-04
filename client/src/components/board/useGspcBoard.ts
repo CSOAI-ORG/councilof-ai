@@ -34,8 +34,10 @@ export interface GspcAxis {
   /** How much of the axis's own declared universe was covered. The figure a facts axis HAS. */
   coverage?: string;
   coverage_note?: string;
-  /** Absolute on-site path to the signed run, for an axis with no HuggingFace bank. */
+  /** Absolute on-site path to the run artifact, for an axis with no HuggingFace bank. */
   evidence_url?: string;
+  /** Authentication state of that run. A content ID is never inferred to be a signature. */
+  run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
   /** The board LEADER's figure on this axis, 0–1. Absent on a slot with no measurement. */
   accuracy?: number;
   /** Set when `accuracy` is NOT a point estimate (e.g. a stated Wilson lower bound). */
