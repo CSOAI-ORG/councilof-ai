@@ -36,6 +36,13 @@ jobs:
           node scripts/wallet-credential-gate.mjs --selftest
           node scripts/wallet-credential-gate.mjs
 
+      # Two 2026-09-03 atom roots commit legacy hand-built COSE envelopes that do
+      # not verify. Preserve those roots and their OTS files as incident history,
+      # but never publish them as current evidence. This stays red until a clean
+      # superseding root is regenerated, independently verified and OTS-witnessed.
+      - name: Evidence integrity gate — quarantine false XRPL and invalid COSE/SCITT claims
+        run: npm run guard:evidence-integrity
+
       # _redirects guard. Cloudflare stops parsing the file after 100 DYNAMIC rules and
       # only warns; on 2026-08-26 that silently dropped the last 53 lines including the
       # SPA catch-all, and the deploy still went green. Selftest first so a guard that
@@ -60,8 +67,30 @@ jobs:
       - name: Install deps
         run: npm install --no-audit --no-fund
 
+      # No release may present a stale sidecar as current or serve plaintext / mismatched
+      # files under an .ots extension. This is intentionally red until the historical
+      # incidents are moved to non-served quarantine and a fresh v1 root is signed and
+      # witnessed atomically. The gate reads only public bytes; it uses no signing key.
+      - name: Public root + witness integrity — exact bytes or fail closed
+        run: |
+          python3 -m pip install -q cryptography opentimestamps-client
+          npm run guard:root-witness
+
+      - name: TypeScript debt ratchet — selftest, then non-mutating check
+        run: |
+          npm run ts-ratchet:selftest
+          npm run ts-ratchet
+
       - name: Build client
         run: npm run build:client
+
+      # The host deliberately keeps an honest 404 catch-all. Materialise the canonical
+      # workspace before the fast shell gate so a cold /dashboard request tests the same
+      # file that Pages will serve instead of relying on SPA-rewrite behaviour.
+      - name: Prerender canonical Council OS workspace
+        run: |
+          npx playwright install --with-deps chromium
+          npm run prerender:dashboard
 
       # Council OS shell smoke — every /dashboard?tab= door renders its own pane inside the
       # shell with no uncaught exception, at desktop and phone widths, against the build that
@@ -76,9 +105,8 @@ jobs:
       # fixed a real production bug — `resolvePaneId` referenced a deleted `ALIASES` map and
       # threw ReferenceError on every /dashboard render. With that fixed and the spec
       # adapted, the gate is re-enabled.
-      - name: Council OS shell smoke — gating; 12 of 12 must pass on desktop + mobile
+      - name: Council OS shell smoke — gating; all desktop + mobile journeys must pass
         run: |
-          npx playwright install --with-deps chromium
           npm run test:e2e:shell
 
       - name: Prerender all routes
@@ -109,6 +137,15 @@ jobs:
               echo "placed $b (standalone wins over prerendered shell)"
             fi
           done
+
+      # The launcher belongs on the deploy artifact, not in 100+ tracked source files.
+      # Re-run after prerender and standalone-page placement because both can replace
+      # HTML emitted by Vite. `--check` makes incomplete or duplicate injection blocking.
+      - name: Council OS launcher — every built HTML page, exactly once
+        run: |
+          npm run workspace-launcher:selftest
+          npm run workspace-launcher
+          npm run workspace-launcher:check
 
       - name: Brand gate — block deploy on any forbidden display string (audit §6.2)
         run: |

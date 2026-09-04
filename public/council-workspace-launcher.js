@@ -16,13 +16,15 @@
       document.head.appendChild(style);
       return;
     }
+    const workspaceRoute = /^\/(?:dashboard|os)(?:\/|$)/.test(window.location.pathname);
+    if (workspaceRoute) return;
     if (document.getElementById("council-workspace-launcher")) return;
 
     const host = document.createElement("div");
     host.id = "council-workspace-launcher";
     const root = host.attachShadow({ mode: "open" });
     const context = `${window.location.pathname}${window.location.search}`;
-    const href = `/dashboard?${new URLSearchParams({ tab: "home", ctx: context }).toString()}`;
+    const href = `/dashboard/?${new URLSearchParams({ tab: "home", ctx: context }).toString()}`;
     root.innerHTML = `
       <style>
         :host { all: initial; }
