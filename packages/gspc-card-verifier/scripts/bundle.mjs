@@ -67,6 +67,8 @@ const out = `#!/usr/bin/env node
  *   0 all VALID and complete · 1 any INVALID · 2 any UNCHECKABLE or usage error
  *   3 all cards valid but the set incomplete
  */
+import { realpathSync as __realpathSync } from "node:fs";
+import { fileURLToPath as __fileURLToPath } from "node:url";
 ${canonical}
 ${verify}
 ${did}
@@ -81,7 +83,10 @@ export { verifyCard, verifyChainEnvelope, analyseSet, analyseChain, STATES, cano
          OutOfProfileDomain, NotSerialisable, pubkeyFromDidDocument, defaultProfile };
 
 const __isDirect = (() => {
-  try { return process.argv[1] && import.meta.url === new URL("file://" + process.argv[1]).href; }
+  try {
+    return Boolean(process.argv[1]) &&
+      __realpathSync(process.argv[1]) === __realpathSync(__fileURLToPath(import.meta.url));
+  }
   catch { return false; }
 })();
 if (__isDirect) __cliMain();
