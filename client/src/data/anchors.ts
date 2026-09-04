@@ -93,7 +93,7 @@ export const ANCHORS: Anchor[] = [
     name: "Crosswalk registry",
     last_passed: "2026-07-30T06:00:00Z",
     recorded_status: "live",
-    source_uri: "local",
+    source_uri: "/crosswalk",
     licence: "self-hosted",
     description:
       "Local meta-watcher for cross-referencing provisions across jurisdictions.",

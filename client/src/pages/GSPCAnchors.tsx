@@ -4,16 +4,16 @@ import { PersonaToggle, usePersona } from "@/components/PersonaToggle";
 import { ANCHORS, effectiveAnchorStatus, hoursSinceLastPass } from "@/data/anchors";
 
 /**
- * /gspc-anchors — live anchor status.
+ * /gspc-anchors — recorded anchor-check freshness.
  *
  * Provision text is sourced from the registries below. The displayed timestamp
  * is the last successful fetch; a stale anchor is never silently re-stamped.
  * Anchor data is shared with the jurisdiction globe via data/anchors.ts, and
- * staleness is always computed against the live clock.
+ * staleness is always computed against the current clock.
  */
 
 const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: string; label: string }> = {
-  live: { color: "text-green-600", bg: "bg-green-100", icon: "●", label: "Live" },
+  live: { color: "text-green-600", bg: "bg-green-100", icon: "●", label: "Checked <24h" },
   degraded: { color: "text-yellow-600", bg: "bg-yellow-100", icon: "◐", label: "Degraded" },
   unreachable: { color: "text-red-600", bg: "bg-red-100", icon: "○", label: "Stale / unchecked" },
 };
@@ -62,7 +62,7 @@ export default function GSPCAnchors() {
           </div>
           <div className="p-10 border border-green-200 bg-green-50 rounded-xl text-center hover:shadow-lg transition-shadow">
             <div className="text-6xl font-bold text-green-600 mb-3">{liveCount}</div>
-            <div className="text-base text-green-700 font-medium">Live</div>
+            <div className="text-base text-green-700 font-medium">Checked &lt;24h</div>
           </div>
           <div className="p-10 border border-yellow-200 bg-yellow-50 rounded-xl text-center hover:shadow-lg transition-shadow">
             <div className="text-6xl font-bold text-yellow-600 mb-3">{degradedCount}</div>
@@ -70,7 +70,7 @@ export default function GSPCAnchors() {
           </div>
           <div className="p-10 border border-red-200 bg-red-50 rounded-xl text-center hover:shadow-lg transition-shadow">
             <div className="text-6xl font-bold text-red-600 mb-3">{unreachableCount}</div>
-            <div className="text-base text-red-700 font-medium">Unreachable</div>
+            <div className="text-base text-red-700 font-medium">Stale / unchecked</div>
           </div>
         </section>
 
@@ -168,9 +168,10 @@ export default function GSPCAnchors() {
           <h2 className="text-3xl font-semibold mb-6">Staleness policy</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="p-6 border border-green-200 bg-green-50 rounded-lg">
-              <div className="text-green-600 text-2xl font-bold mb-2">● Live</div>
+              <div className="text-green-600 text-2xl font-bold mb-2">● Checked &lt;24h</div>
               <p className="text-sm">
-                Anchor passed within <strong>24 hours</strong>. Data is fresh and reliable.
+                A successful check is recorded within <strong>24 hours</strong>. This does not by
+                itself prove current reachability or reliability.
               </p>
             </div>
             <div className="p-6 border border-yellow-200 bg-yellow-50 rounded-lg">
