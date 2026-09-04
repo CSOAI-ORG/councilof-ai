@@ -597,3 +597,9 @@
 # validated with the query string included). That flips every unknown path from
 # honest-404 to 200-plus-shell, which is an OWNER RULING, not a config tidy-up.
 /*  /index.html  200
+
+# --- well-known + interop indexes (4 Sep 2026) ---
+/.well-known/index.json    /.well-known/index.json    200
+/.well-known/index          /.well-known/index.json    308
+/interop/index.json         /interop/index.json        200
+/interop/index              /interop/index.json        308
