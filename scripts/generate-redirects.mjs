@@ -144,6 +144,13 @@ const EXISTING = [
   "/agui/                  /dashboard?tab=home          308",
   "/chat                   /dashboard?tab=home          308",
   "/chat/                  /dashboard?tab=home          308",
+  // Retired static GovBench/ProvBench files used to own the slashless clean URL
+  // and silently displaced these maintained React routes. Keep one canonical
+  // human surface; raw ProvBench evidence remains under /packs/eu-article-50/.
+  "/govbench              /govbench/                  308",
+  "/govbench.html         /govbench/                  308",
+  "/provbench             /provbench/                 308",
+  "/provbench.html        /provbench/                 308",
   // Retired second shells. /public duplicated navigation/footer and contradicted
   // the current measurement-not-certification boundary; /widget awarded a
   // localStorage-only "Certification Earned" badge. Human journeys converge on
@@ -314,6 +321,32 @@ const publicOwnsPath = (p) => {
     existsSync(join(ROOT, "public", rel + ".html"))
   );
 };
+
+// A physical public/<route>.html (or public/<route>/index.html) can win the
+// hosting platform's clean-URL resolution before the maintained React route is
+// reached. That is safe only for the small set reviewed below. Everything else
+// is a release-blocking collision: fail here rather than silently dropping the
+// route's bare -> slash redirect, which is how stale GovBench and ProvBench
+// became canonical again.
+const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
+  "/404",        // hosting fallback; intentionally exists outside the SPA
+  "/advisory",   // reviewed legacy hand-off page
+  "/benchmarks", // static-first benchmark registry
+  "/globe",      // exact /globe -> /globe3d.html redirect owns this door
+]);
+const publicHtmlRouteCollisions = routes
+  .map(normFrom)
+  .filter((p) => p !== "/" && publicOwnsPath(p));
+const unreviewedPublicHtmlRouteCollisions = publicHtmlRouteCollisions.filter(
+  (p) => !REVIEWED_PUBLIC_HTML_APP_ROUTES.has(p),
+);
+if (unreviewedPublicHtmlRouteCollisions.length) {
+  throw new Error(
+    "Public HTML shadows maintained App route(s): " +
+      unreviewedPublicHtmlRouteCollisions.join(", ") +
+      ". Remove/quarantine the static human page or explicitly review the ownership.",
+  );
+}
 const funcOwnsPath = (p) => {
   const rel = normFrom(p).replace(/^\//, "");
   return !!rel && existsSync(join(ROOT, "functions", rel + ".ts"));
