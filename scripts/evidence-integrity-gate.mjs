@@ -9,6 +9,19 @@ import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MANIFEST_PATH = "scripts/evidence-quarantine.json";
 const QUARANTINED_SOURCE_PREFIXES = ["cose-wrap/", "xrpl-settlement/"];
+const SHA256_PATTERN = /^[0-9a-f]{64}$/u;
+const REDACTION_PROFILES = {
+  INTERNAL_INFRASTRUCTURE_HOSTNAME: {
+    fields: ["compute.oracle.host"],
+    replacement: "[redacted-internal-hostname]",
+    metadata: {
+      quarantine_notice:
+        "Historical invalid public artifact retained for incident analysis only. Runtime and witness claims below were not verified and must not be republished.",
+      redaction_notice:
+        "An internal infrastructure hostname was removed from this quarantined copy.",
+    },
+  },
+};
 
 function read(relativePath) {
   return fs.readFileSync(path.join(REPO, relativePath));
@@ -24,6 +37,115 @@ function readJson(relativePath) {
 
 function sha256(buffer) {
   return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+function valueAtPath(document, fieldPath) {
+  return fieldPath.split(".").reduce((value, key) => value?.[key], document);
+}
+
+function deleteAtPath(document, fieldPath) {
+  const keys = fieldPath.split(".");
+  const finalKey = keys.pop();
+  const parent = keys.reduce((value, key) => value?.[key], document);
+  if (parent !== null && typeof parent === "object" && finalKey !== undefined) {
+    delete parent[finalKey];
+  }
+}
+
+function canonicalize(value) {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalize(value[key])]),
+    );
+  }
+  return value;
+}
+
+function redactionProjectionSha256(document, profile) {
+  const projected = JSON.parse(JSON.stringify(document));
+  for (const fieldPath of profile.fields) deleteAtPath(projected, fieldPath);
+  for (const fieldPath of Object.keys(profile.metadata)) deleteAtPath(projected, fieldPath);
+  return sha256(Buffer.from(JSON.stringify(canonicalize(projected))));
+}
+
+export function artifactIntegrityIssues(artifact, storedBytes) {
+  const issues = [];
+  const expectedHash = String(artifact?.sha256 ?? "");
+  if (!SHA256_PATTERN.test(expectedHash)) {
+    issues.push("has an invalid stored sha256");
+  } else if (sha256(storedBytes) !== expectedHash) {
+    issues.push("stored bytes do not match the manifest sha256");
+  }
+
+  const hasRedactionProvenance =
+    artifact?.redacted_from_sha256 !== undefined || artifact?.redaction !== undefined;
+  if (!hasRedactionProvenance) return issues;
+
+  const originalHash = String(artifact?.redacted_from_sha256 ?? "");
+  if (!SHA256_PATTERN.test(originalHash)) {
+    issues.push("has an invalid redacted_from_sha256");
+  } else if (originalHash === expectedHash) {
+    issues.push("uses the same digest for the original and redacted bytes");
+  }
+
+  const redaction = artifact?.redaction;
+  if (redaction === null || typeof redaction !== "object" || Array.isArray(redaction)) {
+    issues.push("lacks structured redaction provenance");
+    return issues;
+  }
+  const profile = REDACTION_PROFILES[redaction.profile];
+  if (!profile) {
+    issues.push(`uses unsupported redaction profile: ${String(redaction.profile ?? "<missing>")}`);
+    return issues;
+  }
+  if (JSON.stringify(redaction.fields) !== JSON.stringify(profile.fields)) {
+    issues.push("redaction fields do not match the approved profile");
+  }
+  if (redaction.replacement !== profile.replacement) {
+    issues.push("redaction replacement does not match the approved profile");
+  }
+  if (
+    JSON.stringify(redaction.metadata_fields_added) !== JSON.stringify(Object.keys(profile.metadata))
+  ) {
+    issues.push("redaction metadata additions do not match the approved profile");
+  }
+  if (typeof redaction.reason !== "string" || redaction.reason.trim() === "") {
+    issues.push("redaction reason is missing");
+  }
+  if (typeof redaction.provenance !== "string" || redaction.provenance.trim() === "") {
+    issues.push("redaction provenance is missing");
+  }
+  if (redaction.original_bytes_preserved !== false) {
+    issues.push("redaction must state that the original bytes are not preserved in the incident copy");
+  }
+
+  let document;
+  try {
+    document = JSON.parse(storedBytes.toString("utf8"));
+  } catch {
+    issues.push("redacted incident copy is not valid JSON");
+    return issues;
+  }
+  for (const fieldPath of profile.fields) {
+    if (valueAtPath(document, fieldPath) !== profile.replacement) {
+      issues.push(`approved redaction is absent at ${fieldPath}`);
+    }
+  }
+  for (const [fieldPath, expectedValue] of Object.entries(profile.metadata)) {
+    if (valueAtPath(document, fieldPath) !== expectedValue) {
+      issues.push(`approved redaction metadata is absent at ${fieldPath}`);
+    }
+  }
+  const projectionHash = String(redaction.projection_sha256 ?? "");
+  if (!SHA256_PATTERN.test(projectionHash)) {
+    issues.push("redaction projection_sha256 is invalid");
+  } else if (redactionProjectionSha256(document, profile) !== projectionHash) {
+    issues.push("redacted semantic projection does not match the pre-redaction projection");
+  }
+  return issues;
 }
 
 function jsonRecords(relativePath) {
@@ -143,6 +265,54 @@ function runSelftest() {
       },
     ],
   );
+  const redactedValue = {
+    quarantine_notice:
+      "Historical invalid public artifact retained for incident analysis only. Runtime and witness claims below were not verified and must not be republished.",
+    redaction_notice:
+      "An internal infrastructure hostname was removed from this quarantined copy.",
+    evidence: "preserved",
+    compute: { oracle: { host: "[redacted-internal-hostname]" } },
+  };
+  const redactedDocument = Buffer.from(JSON.stringify(redactedValue));
+  const redactedArtifact = {
+    sha256: sha256(redactedDocument),
+    redacted_from_sha256: "1".repeat(64),
+    redaction: {
+      profile: "INTERNAL_INFRASTRUCTURE_HOSTNAME",
+      reason: "Remove a confidential infrastructure identifier.",
+      provenance: "The pre-redaction digest was recorded before the field was replaced.",
+      fields: ["compute.oracle.host"],
+      replacement: "[redacted-internal-hostname]",
+      metadata_fields_added: ["quarantine_notice", "redaction_notice"],
+      projection_sha256: redactionProjectionSha256(
+        redactedValue,
+        REDACTION_PROFILES.INTERNAL_INFRASTRUCTURE_HOSTNAME,
+      ),
+      original_bytes_preserved: false,
+    },
+  };
+  assert.deepEqual(artifactIntegrityIssues(redactedArtifact, redactedDocument), []);
+  assert.ok(
+    artifactIntegrityIssues(
+      redactedArtifact,
+      Buffer.from(JSON.stringify({ compute: { oracle: { host: "unexpected" } } })),
+    ).includes("approved redaction is absent at compute.oracle.host"),
+  );
+  assert.ok(
+    artifactIntegrityIssues(
+      { ...redactedArtifact, redacted_from_sha256: redactedArtifact.sha256 },
+      redactedDocument,
+    ).includes("uses the same digest for the original and redacted bytes"),
+  );
+  const unrelatedMutation = Buffer.from(
+    JSON.stringify({ ...redactedValue, evidence: "changed" }),
+  );
+  assert.ok(
+    artifactIntegrityIssues(
+      { ...redactedArtifact, sha256: sha256(unrelatedMutation) },
+      unrelatedMutation,
+    ).includes("redacted semantic projection does not match the pre-redaction projection"),
+  );
   assert.ok(
     legacyCoseIssues({
       _kind: "COSE_Sign1",
@@ -249,7 +419,6 @@ function checkQuarantineManifest(errors) {
   for (const artifact of artifacts) {
     const stored = String(artifact.path ?? "");
     const original = String(artifact.original_public_path ?? "");
-    const expectedHash = String(artifact.sha256 ?? "");
     if (!stored.startsWith("evidence/incidents/") || original === "" || !original.startsWith("public/")) {
       errors.push(`invalid public proof incident paths: ${stored || "<missing>"}`);
       continue;
@@ -262,8 +431,10 @@ function checkQuarantineManifest(errors) {
     }
     if (!fs.existsSync(path.join(REPO, stored))) {
       errors.push(`quarantined public proof is missing: ${stored}`);
-    } else if (!/^[0-9a-f]{64}$/u.test(expectedHash) || sha256(read(stored)) !== expectedHash) {
-      errors.push(`quarantined public proof changed: ${stored}`);
+    } else {
+      for (const issue of artifactIntegrityIssues(artifact, read(stored))) {
+        errors.push(`quarantined public proof ${issue}: ${stored}`);
+      }
     }
   }
 

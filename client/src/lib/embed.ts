@@ -81,10 +81,17 @@ export function withEmbed(href: string, base = "https://councilof.ai"): string {
 export function tabForPath(path: string): LobbyTab | null {
   const clean = pathOnly(path);
   let best: LobbyTab | null = null;
+  let bestPathLength = -1;
   for (const tab of LOBBY_TABS) {
-    if (!tab.path) continue;
-    if (clean === tab.path || clean.startsWith(`${tab.path}/`)) {
-      if (!best || tab.path.length > best.path.length) best = tab;
+    const ownedPaths = [tab.path, ...(tab.pathAliases ?? [])].filter(Boolean);
+    for (const ownedPath of ownedPaths) {
+      if (
+        (clean === ownedPath || clean.startsWith(`${ownedPath}/`)) &&
+        ownedPath.length > bestPathLength
+      ) {
+        best = tab;
+        bestPathLength = ownedPath.length;
+      }
     }
   }
   return best;

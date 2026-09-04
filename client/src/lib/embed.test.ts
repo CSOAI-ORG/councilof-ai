@@ -126,6 +126,7 @@ describe("decideEmbedNav — parent listener branches", () => {
   it("drops the iframe when the path belongs to a native or local pane", () => {
     expect(decideEmbedNav("/gspc-scoreboard")).toEqual({ action: "drop-iframe", tabId: "board" });
     expect(decideEmbedNav("/gspc-verify")).toEqual({ action: "drop-iframe", tabId: "verify" });
+    expect(decideEmbedNav("/benchmarks")).toEqual({ action: "drop-iframe", tabId: "results" });
   });
 
   it("sets an override chip for a page no tab owns (Pricing inside Products)", () => {

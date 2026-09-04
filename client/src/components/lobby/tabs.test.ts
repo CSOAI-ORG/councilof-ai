@@ -118,6 +118,7 @@ describe("Council OS tabs", () => {
   it("keeps results on the canonical native board and retains library/workbench routes", () => {
     expect(tabById("results").kind).toBe("native");
     expect(tabById("results").path).toBe("");
+    expect(tabById("results").pathAliases).toEqual(["/benchmarks"]);
     expect(tabById("library").path).toBe("/library");
     expect(tabById("workbench").path).toBe("/workbench");
     expect(matchTab("open the benchmarks")?.id).toBe("results");
@@ -144,6 +145,7 @@ describe("Council OS tabs", () => {
   it("never serves the same path from two destinations", () => {
     const paths = [
       ...LOBBY_TABS.filter((t) => t.path).map((t) => t.path),
+      ...LOBBY_TABS.flatMap((t) => t.pathAliases ?? []),
       ...LOBBY_ROUTES.map((r) => r.path),
     ];
     const seen = new Map<string, number>();

@@ -72,6 +72,11 @@ export type LobbyTab = {
   blurb: string;
   /** Same-origin route framed in the centre pane. Empty for `kind: "local"` / `native`. */
   path: string;
+  /**
+   * Existing page routes that should hand navigation to this native pane.
+   * Aliases are navigation ownership only: they are never used as iframe src.
+   */
+  pathAliases?: string[];
   /** "route" frames a live page; "local" renders in-lobby content; "native" is in-process. */
   kind?: "route" | "local" | "native";
   /** Gold accent — reserved for the local-play surface, never for measurement. */
@@ -156,6 +161,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     blurb:
       "The canonical living GSPC board — current measurements, fact runs and withheld leaders from the same native source as the main board.",
     path: "",
+    pathAliases: ["/benchmarks"],
     kind: "native",
     cues: /\b(benchmarkers?|benchmarks?|results|artefacts?|artifacts?|meta[- ]?benchmark)\b/i,
   },

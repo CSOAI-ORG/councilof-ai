@@ -2,7 +2,7 @@
   "schema": "csoai.public-proof-incident/0.1",
   "as_of": "2026-09-04",
   "status": "QUARANTINED_NON_PUBLIC",
-  "note": "Exact historical bytes, preserved outside the served public tree. These artifacts are not valid public proofs.",
+  "note": "Historical incident artifacts preserved outside the served public tree. Exact bytes are pinned unless an artifact declares a narrowly scoped redaction with both stored and pre-redaction SHA-256 digests. These artifacts are not valid public proofs.",
   "artifacts": [
     {
       "original_public_path": "public/interop/anchors/ots-anchor.json",
@@ -43,7 +43,18 @@
     {
       "original_public_path": "public/interop/layer0-ceremony.json",
       "path": "evidence/incidents/2026-09-04-public-proof-audit/interop/layer0-ceremony.json",
-      "sha256": "59e339a5cce41297fb622f5e477e8764203b442dea7fd44615e10004f5f5a844",
+      "sha256": "79a3ce1867c49c615a8dc719da98526a24e394330449f2afd618da04438e8076",
+      "redacted_from_sha256": "59e339a5cce41297fb622f5e477e8764203b442dea7fd44615e10004f5f5a844",
+      "redaction": {
+        "profile": "INTERNAL_INFRASTRUCTURE_HOSTNAME",
+        "reason": "Remove an internal infrastructure hostname from the non-public incident copy without reproducing it elsewhere.",
+        "provenance": "redacted_from_sha256 is the SHA-256 of the exact file formerly served at original_public_path; sha256 pins the stored copy after the declared hostname replacement and two notice additions; projection_sha256 pins all remaining JSON content shared by both states.",
+        "fields": ["compute.oracle.host"],
+        "replacement": "[redacted-internal-hostname]",
+        "metadata_fields_added": ["quarantine_notice", "redaction_notice"],
+        "projection_sha256": "597d9a074bf09a7095f3d4f82376755b3c2d2053a274fbf7cfa7eca15c3d1bb2",
+        "original_bytes_preserved": false
+      },
       "classification": "OVERSTATED_ANCHOR_STATUS"
     }
   ],
