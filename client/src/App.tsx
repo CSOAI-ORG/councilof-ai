@@ -41,9 +41,6 @@ import HomeVerify from "./pages/HomeVerify";
 import ToolsPage from "./pages/ToolsPage";
 import JailFolder from "./pages/JailFolder";
 import { Footer } from "./components/Footer";
-import WidgetLayout from "./components/widget/WidgetLayout";
-import WidgetCourses from "./components/widget/WidgetCourses";
-import WidgetCoursePlayer from "./components/widget/WidgetCoursePlayer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
@@ -75,7 +72,6 @@ const Watchdog = lazy(() => import("./pages/Watchdog"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
-const PublicHome = lazy(() => import("./pages/PublicHome"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
 const ApiKeys = lazy(() => import("./pages/ApiKeys"));
@@ -457,29 +453,6 @@ function RouteAnnouncer() {
   return null;
 }
 
-function WidgetRouter() {
-  return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <WidgetLayout>
-            <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
-              <Route path="/widget" component={WidgetCourses} />
-              <Route path="/widget/course/:courseId" component={WidgetCoursePlayer} />
-              <Route>
-                <div className="text-center py-12">
-                  <h2 className="text-xl font-bold">Widget page not found</h2>
-                </div>
-              </Route>
-            </Switch></Suspense>
-          </WidgetLayout>
-          <Toaster position="top-right" />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
-  );
-}
-
 function normPath(p: string) {
   const s = p.replace(/\/$/, "");
   return s === "" ? "/" : s;
@@ -488,9 +461,6 @@ function normPath(p: string) {
 function App() {
   const [location] = useLocation();
   const path = normPath(location);
-  if (location.startsWith('/widget')) {
-    return <WidgetRouter />;
-  }
   // One operating surface: old workspace, arena, assessment and fabric doors
   // converge on a named pane rather than mounting parallel applications.
   if (
@@ -503,11 +473,19 @@ function App() {
       "/enter",
       "/home-v3",
       "/os-demo",
+      "/public",
       "/sov-os",
       "/try",
     ].includes(path)
   ) {
     return <DashboardDoor defaultTab="home" />;
+  }
+  // The old white-label course widget awarded a localStorage-only
+  // "Certification Earned" badge and mounted a second application shell. Keep
+  // its source for archaeology, but every human widget URL now enters the
+  // practice-only, human-reviewed GSPC learning pane in Council OS.
+  if (path === "/widget" || path.startsWith("/widget/")) {
+    return <DashboardDoor defaultTab="learn" />;
   }
   if (
     [
@@ -982,7 +960,6 @@ function App() {
                   <Route path="/workbench">{() => <RequireAuth><Workbench /></RequireAuth>}</Route>
                   <Route path="/jobs" component={Jobs} />
                   <Route path="/my-applications">{() => <RequireAuth><MyApplications /></RequireAuth>}</Route>
-                  <Route path="/public" component={PublicHome} />
                   <Route path="/admin">{() => <RequireAuth><Admin /></RequireAuth>}</Route>
                   <Route path="/api-docs" component={ApiDocs} />
                   <Route path="/api-keys">{() => <RequireAuth><ApiKeys /></RequireAuth>}</Route>

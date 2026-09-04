@@ -10,269 +10,30 @@
     "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
     "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
     "living_stamp": {
-      "schema": "csoai.gspc-living/0.2",
-      "gold_run": "2026-08-18T03:22:16Z",
-      "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
+      "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
+      "updated": "2026-08-18T03:22:16Z",
       "signed": true,
-      "signer": "did:web:csoai.org#board-attestation-1",
-      "signer_anchored": true,
-      "alg": "Ed25519",
-      "signature": "76e91fcc71019631376ff312924c88ebd028b254968708d83f6dd2f8b473e48b9085818764bed45bb168c75e7bc270a6c3618e9eea318ad87346f7849f6f250e",
-      "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
-      "preimage": {
-        "schema": "csoai.gspc-living/0.2",
-        "gold_run": "2026-08-18T03:22:16Z",
-        "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
-        "axes": [
-          {
-            "axis": "governance",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 237,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "safety",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 36,
-            "accuracy": 0.944,
-            "separation": "TIE"
-          },
-          {
-            "axis": "provenance",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 32,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "continuity",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 33,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "conformance",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 35,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "openness",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 32,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "machinery-conformity",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 33,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "care",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 199,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "cross-reality",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 32,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "detector-interop",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 33,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "art5-safeguard",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 36,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "swarm",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 37,
-            "accuracy": 0.384,
-            "separation": "SEPARATED"
-          },
-          {
-            "axis": "affect",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 41,
-            "accuracy": null,
-            "separation": "UNTESTED"
-          },
-          {
-            "axis": "jail",
-            "family": "gspc",
-            "kind": "model-comparison",
-            "status": "MEASURED",
-            "n": 71,
-            "accuracy": 0.5915,
-            "separation": "TIE"
-          },
-          {
-            "axis": "provenance-controls",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 6,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "reserve-attestation",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 16,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "regulatory-framework",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 16,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "distribution-integrity",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 16,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "custody-disclosure",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 16,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "ai-adoption-components",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 2,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "labour-components",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 2,
-            "accuracy": null,
-            "separation": null
-          },
-          {
-            "axis": "humanoid-labour-index",
-            "family": "financial",
-            "kind": "deterministic-facts",
-            "status": "MEASURED",
-            "n": 8,
-            "accuracy": null,
-            "separation": null
-          }
-        ]
-      },
-      "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
-      "sig_input_ensure_ascii": false,
-      "sig_input_is_digest": false,
-      "verification_state": "SIGNED",
-      "verifiable": true,
-      "verify": "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
-      "superseded": {
-        "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
-        "updated": "2026-08-18T03:22:16Z",
-        "signed": true,
-        "verification_state": "UNVERIFIABLE",
-        "verifiable": false,
-        "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
-        "signer_anchored": false,
-        "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-        "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
-        "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
-        "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
-        "reproduction_attempts": 58184,
-        "reproduction_verified": 0,
-        "tracked_as": "/api/corrections C-2026-0826-08"
-      },
+      "verification_state": "UNVERIFIABLE",
+      "verifiable": false,
+      "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
+      "signer_anchored": false,
+      "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
+      "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
+      "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
+      "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
+      "reproduction_attempts": 58184,
+      "reproduction_verified": 0,
       "tracked_as": "/api/corrections C-2026-0826-08"
     }
   },
   "note": "Measurement, not certification. Every score is a measured run on a published, frozen split; the harness is public and anyone can recompute and challenge it. unparsed_rate is the share of responses no label could be read from — reported as UNMEASURED, never scored as a wrong answer. A TIE means the leader's point-estimate lead is not statistically separated; we do not count ties as wins.",
   "state_enum": {
-    "status": [
-      "MEASURED",
-      "UNMEASURED",
-      "DRAFT",
-      "SPEC",
-      "PLANNED"
-    ],
-    "separation": [
-      "SEPARATED",
-      "TIE",
-      "UNTESTED"
-    ],
-    "public_leader_state": [
-      "EXCLUDED_OWN_MODEL",
-      "NO_SIGNED_CARD"
-    ],
+    "status": ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
+    "separation": ["SEPARATED", "TIE", "UNTESTED"],
+    "public_leader_state": ["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+    "run_attestation": ["ED25519_SIGNED", "CONTENT_ADDRESSED_UNSIGNED"],
     "public_leader_state_absent": "the leader is shown (a public score)",
-    "verification": [
-      "VALID",
-      "INVALID",
-      "UNCHECKABLE"
-    ],
+    "verification": ["VALID", "INVALID", "UNCHECKABLE"],
     "note": "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero."
   },
   "totals": {
@@ -296,11 +57,27 @@
         "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05)."
       }
     },
-    "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored — but each has a signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
+    "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 1 run artifact carries an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
+    "financial_run_attestations": {
+      "run_artifacts": 8,
+      "ed25519_signed": 1,
+      "content_addressed_unsigned": 7,
+      "signed_axes": ["provenance-controls"],
+      "unsigned_axes": [
+        "reserve-attestation",
+        "regulatory-framework",
+        "distribution-integrity",
+        "custody-disclosure",
+        "ai-adoption-components",
+        "labour-components",
+        "humanoid-labour-index"
+      ],
+      "note": "Derived from each deterministic-facts axis's run_attestation field. A content_id proves identity of bytes, not signer authorization."
+    },
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
     "items": 969,
-    "items_note": "items sums each axis's n. The n of the one measured financial axis counts ISSUER ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+    "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 1,
     "ties": 2,
@@ -336,10 +113,10 @@
     "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
   },
   "bank_host": "https://huggingface.co/datasets/",
-  "banked_axes": 14,
-  "banked_axes_resolvable": 14,
+  "banked_axes": 22,
+  "banked_axes_resolvable": 22,
   "banked_axes_unresolvable": [],
-  "bank_note": "14 of the 14 axis carrying a frozen bank resolve to a dataset_url built as bank_host + the axis's bare <owner>/<name> slug, so a stranger can retrieve the split without knowing where we host it. Any axis whose slug does not parse carries dataset_url: null with dataset_url_state UNRESOLVABLE and is named in banked_axes_unresolvable — never a concatenated string that looks like a link and is not one. Both counts are derived from the axes array in this payload. The financial axes have no HuggingFace bank: the measured one carries evidence_url to its signed run, and a declared slot with nothing behind it carries no link at all rather than one that resolves to nothing.",
+  "bank_note": "22 of the 22 axis carrying a frozen bank resolve to a dataset_url built as bank_host + the axis's bare <owner>/<name> slug, so a stranger can retrieve the split without knowing where we host it. Any axis whose slug does not parse carries dataset_url: null with dataset_url_state UNRESOLVABLE and is named in banked_axes_unresolvable — never a concatenated string that looks like a link and is not one. Both counts are derived from the axes array in this payload. The financial axes have no HuggingFace bank: the measured one carries evidence_url to its signed run, and a declared slot with nothing behind it carries no link at all rather than one that resolves to nothing.",
   "axes": [
     {
       "axis": "governance",
@@ -360,7 +137,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The tuned governance specialist leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of only 4 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "v2 bank: 237 public items (+102 held back privately), imported 2026-08-05 from the AI Act Evaluation Benchmark (NCSR \"Demokritos\", arXiv:2603.09435, CC-BY-4.0). The tuned governance specialist leads AND the lead is separated (McNemar p=0.0086 vs best base mistral:7b) — one of only 4 separated leads on the board. The fleet mean is 0.490: EU AI Act tiering is hard for everyone, and the worst 5% of items carry harm 0.873 (CVaR, n=237) — the tail is real.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-gov"
     },
     {
@@ -374,10 +156,7 @@
       "leader": "gemma3:12b (base model)",
       "separation": "TIE",
       "separation_p": 0.6875,
-      "interval": [
-        0.819,
-        0.985
-      ],
+      "interval": [0.819, 0.985],
       "fleet_mean": 0.732,
       "mean_harm": 0.268,
       "cvar05_harm": null,
@@ -409,7 +188,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "v3 bank (validity principle: a manifest present but whose binding no longer validates has NOT survived). The tuned specialist leads on points; TIE vs llama3.2:3b (p=0.77).",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "v3 bank (validity principle: a manifest present but whose binding no longer validates has NOT survived). The tuned specialist leads on points; TIE vs llama3.2:3b (p=0.77).",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-prv"
     },
     {
@@ -431,7 +215,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "The axis designed to discriminate across frontier models. The tuned specialist leads on points; flat TIE vs gemma3:12b (p=1.0).",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "The axis designed to discriminate across frontier models. The tuned specialist leads on points; flat TIE vs gemma3:12b (p=1.0).",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-asi"
     },
     {
@@ -453,7 +242,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "Canonical bank count 35 (supersedes the stale 11 in older matrices — registry v2). The tuned specialist leads on points; flat TIE vs mistral:7b (p=1.0).",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "Canonical bank count 35 (supersedes the stale 11 in older matrices — registry v2). The tuned specialist leads on points; flat TIE vs mistral:7b (p=1.0).",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-mcp"
     },
     {
@@ -475,7 +269,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "v2 bank (AGPL network trigger, directional compatibility, SSPL/ELv2/BSL service clauses). Canonical count 32 (supersedes stale 16). The tuned specialist leads on points; flat TIE vs gemma3:12b.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "v2 bank (AGPL network trigger, directional compatibility, SSPL/ELv2/BSL service clauses). Canonical count 32 (supersedes stale 16). The tuned specialist leads on points; flat TIE vs gemma3:12b.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-oss"
     },
     {
@@ -497,7 +296,12 @@
       "public_leader_state": "NO_SIGNED_CARD",
       "note": "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted rather than invented — see /api/cards. The axis stays MEASURED (external models answered the same frozen bank); only the unverifiable per-model leader claim is removed, because the board's promise is that every named leader links to the Ed25519 card behind it and here no such card exists.",
       "excluded_note": "This axis named an external base model as the point-leader but carries ZERO signed per-model cards in the public card index (/signed/card_index.json), so a skeptic could not recompute the ranking or link it to the signed card behind it. A named leader with no card breaks the board's core promise, so the leader is dropped here. The measurement is real and the fleet aggregate (fleet_mean) is kept; only the leader claim is removed.",
-      "measurement_note": "A base model leads on points; TIE. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027. Gold labels remain under legal review — measurement, not a conformity verdict.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+        "note": "A base model leads on points; TIE. Anchor: Machinery Reg (EU) 2023/1230 Annex I Part A items 5-6, applies 14 Jan 2027. Gold labels remain under legal review — measurement, not a conformity verdict.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-mach"
     },
     {
@@ -520,7 +324,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "SEPARATED vs the best base (p=0.036) but NOT clear of the majority-class baseline — quote it only as 'separated from base models'. The fleet mean is 0.293 and the worst 5% of items carry harm 0.990 (CVaR, n=199): calibrated care is the fleet's weakest measured axis, and the tail is nearly total.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "SEPARATED vs the best base (p=0.036) but NOT clear of the majority-class baseline — quote it only as 'separated from base models'. The fleet mean is 0.293 and the worst 5% of items carry harm 0.990 (CVaR, n=199): calibrated care is the fleet's weakest measured axis, and the tail is nearly total.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-care"
     },
     {
@@ -542,7 +351,12 @@
       "public_leader_state": "NO_SIGNED_CARD",
       "note": "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted rather than invented — see /api/cards. The axis stays MEASURED (external models answered the same frozen bank); only the unverifiable per-model leader claim is removed, because the board's promise is that every named leader links to the Ed25519 card behind it and here no such card exists.",
       "excluded_note": "This axis named an external base model as the point-leader but carries ZERO signed per-model cards in the public card index (/signed/card_index.json), so a skeptic could not recompute the ranking or link it to the signed card behind it. A named leader with no card breaks the board's core promise, so the leader is dropped here. The measurement is real and the fleet aggregate (fleet_mean) is kept; only the leader claim is removed.",
-      "measurement_note": "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+        "note": "A base model leads on points; TIE (p=0.065 — the closest near-miss on the board, still not separated at p<0.05). Bank: 32 scored (public + held-out split per the bank card).",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-xr"
     },
     {
@@ -564,7 +378,12 @@
       "public_leader_state": "NO_SIGNED_CARD",
       "note": "No public leader: this axis is measured as a fleet aggregate against the frozen bank (see fleet_mean), but no signed per-model card is carried in this payload, so no leader or accuracy is asserted rather than invented — see /api/cards. The axis stays MEASURED (external models answered the same frozen bank); only the unverifiable per-model leader claim is removed, because the board's promise is that every named leader links to the Ed25519 card behind it and here no such card exists.",
       "excluded_note": "This axis named an external base model as the point-leader but carries ZERO signed per-model cards in the public card index (/signed/card_index.json), so a skeptic could not recompute the ranking or link it to the signed card behind it. A named leader with no card breaks the board's core promise, so the leader is dropped here. The measurement is real and the fleet aggregate (fleet_mean) is kept; only the leader claim is removed.",
-      "measurement_note": "A base model leads on points; TIE, and NOT clear of the majority baseline. Methodology: POAI detector-interop. Code-of-Practice target 2 Feb 2027.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+        "note": "A base model leads on points; TIE, and NOT clear of the majority baseline. Methodology: POAI detector-interop. Code-of-Practice target 2 Feb 2027.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-det"
     },
     {
@@ -586,7 +405,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "The tuned specialist leads on points at 0.972; TIE vs gemma3:12b (p=1.0) — the whole fleet is strong here (fleet mean 0.830). The NCII/CSAM corpus is never handled by CSOAI.",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "The tuned specialist leads on points at 0.972; TIE vs gemma3:12b (p=1.0) — the whole fleet is strong here (fleet mean 0.830). The NCII/CSAM corpus is never handled by CSOAI.",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-art5"
     },
     {
@@ -628,7 +452,12 @@
       "public_leader_state": "EXCLUDED_OWN_MODEL",
       "note": "No public leader: our own council specialist held the point lead and a neutral measurement body does not rank its own models against the vendors it measures. The axis is measured — external models answered the same frozen bank (see fleet_mean) — but the external re-ranking is not carried here, so no external leader or accuracy is asserted rather than invented.",
       "excluded_note": "Our own council specialist held the point lead on this axis. A neutral measurement body does not rank its own models against the vendors it measures, so no leader is shown here. The measurement is real and the signed card still exists; the external re-ranking requires a per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-      "measurement_note": "COUNSEL-PENDING: the legal gold labels and 1-5 severity bases await counsel review; this is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. The cleanest separation on the board: tuned 0.878 [0.745,0.947] vs base models 0.29-0.34 and majority baseline 0.439 (McNemar p=0.0078). Anchors: Art 5(1)(a)/(b) (live 2 Feb 2025), Art 50(3) (live 2 Aug 2026), Annex III 1(c) (Dec 2027 clock). FINDING: all 19 models — tuned and base alike — classify a lawful Art 5(1)(a) self-audit request as PROHIBITED (17), DISCLOSE (1) or fail to parse (1): the fleet uniformly over-blocks lawful self-examination. Routed to adjudication under the Blind-Spot Rule; the item is preserved, not deleted (evidence/adjudication/affect-adjudication.json).",
+      "historical_measurement_record": {
+        "state": "SUPERSEDED_FOR_PUBLIC_RANKING",
+        "scope": "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+        "note": "COUNSEL-PENDING: the legal gold labels and 1-5 severity bases await counsel review; this is a measurement of model behaviour against a counsel-pending key, NOT a legal verdict. The cleanest separation on the board: tuned 0.878 [0.745,0.947] vs base models 0.29-0.34 and majority baseline 0.439 (McNemar p=0.0078). Anchors: Art 5(1)(a)/(b) (live 2 Feb 2025), Art 50(3) (live 2 Aug 2026), Annex III 1(c) (Dec 2027 clock). FINDING: all 19 models — tuned and base alike — classify a lawful Art 5(1)(a) self-audit request as PROHIBITED (17), DISCLOSE (1) or fail to parse (1): the fleet uniformly over-blocks lawful self-examination. Routed to adjudication under the Blind-Spot Rule; the item is preserved, not deleted (evidence/adjudication/affect-adjudication.json).",
+        "does_not_assert_current_public_fields": true
+      },
       "dataset_url": "https://huggingface.co/datasets/csoai/gspc-affect"
     },
     {
@@ -642,19 +471,13 @@
       "accuracy": 0.5915,
       "leader": "qwen2.5:0.5b-instruct (base model)",
       "separation": "TIE",
-      "interval": [
-        0.475,
-        0.698
-      ],
+      "interval": [0.475, 0.698],
       "fleet_mean": 0.5455,
       "separation_method": "Wilson 95% interval over n=71 items tested against the fleet mean (stat_suite.separated_leaders, McNemar-style Wilson-overlap check)",
       "separation_evidence": {
         "leader": "qwen2.5:0.5b-instruct",
         "leader_acc": 0.5915,
-        "wilson95": [
-          0.475,
-          0.698
-        ],
+        "wilson95": [0.475, 0.698],
         "fleet_mean": 0.5455,
         "determined": "2026-08-25",
         "determination": "leader interval contains fleet mean — point-estimate lead is not a measured advantage"
@@ -762,6 +585,7 @@
       "axis": "provenance-controls",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-provenance-controls",
       "bench": "ChainFacts",
       "task": "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
       "n": 6,
@@ -769,17 +593,20 @@
       "n_note": "6 tokenised instruments read directly from their mainnet issuer accounts. This is an instrument count, not a bank-item count, and must never be pooled with the GSPC banks' n.",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-v2.json",
+      "run_attestation": "ED25519_SIGNED",
       "coverage": "6 of the 16 instruments named in the registry",
       "coverage_note": "The registry NAMES 16 instruments and this axis COVERS 6. The other 10 have no locatable public issuer address and were never attested — the gap is scope, not decay. Nothing measured here is stale: all 6 were re-verified against live mainnet with zero flag drift, and every attestation transaction still validates.",
       "carrier": "attestation carrier is DEVNET; the facts are read from MAINNET. Mainnet attestation is PLANNED, not live.",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED for on-chain control facts only, and only those — one axis family over six instruments. Deterministic: the rubric reads account-root flags (RequireAuth, NoFreeze, GlobalFreeze) and the declared Domain off the public ledger and decodes them; there is no model, no judgement, no score and no ranking. Measured 2026-08-25 across 6 issuers (RLUSD, Ondo OUSG, OpenEden TBILL, Archax abrdn MMF, Braza USDB, Braza BBRL); a stranger re-runs the fetch and compares. Signed run v0.2, content_id 29369542cb537f38. Findings: 3 of 6 enforce allowlisting, 6 of 6 retain issuer freeze capability, 6 of 6 declare an identity domain. TWO BOUNDARIES THAT ARE PART OF THE MEASUREMENT, NOT CAVEATS ON IT. First, the facts are read from mainnet but the attestations are carried on DEVNET — mainnet attestation is PLANNED and not live, and nothing is attested on any Ethereum chain. Second, THE RISK VERDICT IS UNMEASURED: what these facts imply about an instrument's safety, solvency or creditworthiness needs counsel and is not measured here. This is not a rating, not advice, not a ranking, and not an endorsement of any named instrument. Supersedes the v0.1 run."
+      "note": "MEASURED for on-chain control facts only, and only those — one axis family over six instruments. Deterministic: the rubric reads account-root flags (RequireAuth, NoFreeze, GlobalFreeze) and the declared Domain off the public ledger and decodes them; there is no model, no judgement, no score and no ranking. Measured 2026-08-25 across 6 issuers (RLUSD, Ondo OUSG, OpenEden TBILL, Archax abrdn MMF, Braza USDB, Braza BBRL); a stranger re-runs the fetch and compares. Signed run v0.2, content_id 29369542cb537f38. Findings: 3 of 6 enforce allowlisting, 6 of 6 retain issuer freeze capability, 6 of 6 declare an identity domain. TWO BOUNDARIES THAT ARE PART OF THE MEASUREMENT, NOT CAVEATS ON IT. First, the facts are read from mainnet but the attestations are carried on DEVNET — mainnet attestation is PLANNED and not live, and nothing is attested on any Ethereum chain. Second, THE RISK VERDICT IS UNMEASURED: what these facts imply about an instrument's safety, solvency or creditworthiness needs counsel and is not measured here. This is not a rating, not advice, not a ranking, and not an endorsement of any named instrument. Supersedes the v0.1 run.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-provenance-controls"
     },
     {
       "axis": "reserve-attestation",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-reserve-attestation",
       "bench": "ReserveFacts",
       "task": "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
       "n": 16,
@@ -787,93 +614,115 @@
       "n_note": "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-reserve-attestation.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE (no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating."
+      "note": "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE (no on-chain declared Domain = no deterministic disclosure surface; UNREACHABLE is never FAIL). Self-declare without attestation language is FAIL. Archax x abrdn and OpenEden TBILL are off this reader — parked under rwa-attest-other. Risk verdict UNMEASURED. Not a rating.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-reserve-attestation"
     },
     {
       "axis": "regulatory-framework",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-regulatory-framework",
       "bench": "RegimeFacts",
       "task": "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
       "n": 16,
       "n_unit": "issuer accounts (not bank items)",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-regulatory-framework.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. 3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never compliance. Risk verdict UNMEASURED. Not a rating."
+      "note": "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. 3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never compliance. Risk verdict UNMEASURED. Not a rating.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
     },
     {
       "axis": "distribution-integrity",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-distribution-integrity",
       "bench": "DistributionFacts",
       "task": "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
       "n": 16,
       "n_unit": "issuer accounts (not bank items)",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-distribution-integrity.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no same-unit pair). EURQ/USDQ reader sig_ed25519=null stays flagged. Risk verdict UNMEASURED. Not a rating."
+      "note": "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no same-unit pair). EURQ/USDQ reader sig_ed25519=null stays flagged. Risk verdict UNMEASURED. Not a rating.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
     },
     {
       "axis": "custody-disclosure",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-custody-disclosure",
       "bench": "CustodyFacts",
       "task": "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
       "n": 16,
       "n_unit": "issuer accounts (not bank items)",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-custody-disclosure.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor quality. Risk verdict UNMEASURED. Not a rating."
+      "note": "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor quality. Risk verdict UNMEASURED. Not a rating.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
     },
     {
       "axis": "ai-adoption-components",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-ai-economy-index",
+      "dataset_note": "The Hub slug keeps the retired name gspc-ai-economy-index so old links resolve; the live axis is ai-adoption-components and this is not an index (C-2026-0826-05). The card says so on its face.",
       "bench": "Eurostat",
       "task": "cited EU AI-adoption series (not an index)",
       "n": 2,
       "n_unit": "public series",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-ai-adoption-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index."
+      "note": "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-ai-economy-index"
     },
     {
       "axis": "labour-components",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-human-labour-index",
+      "dataset_note": "The Hub slug keeps the retired name gspc-human-labour-index so old links resolve; the live axis is labour-components and this is not an index (C-2026-0826-05). The card says so on its face.",
       "bench": "Eurostat",
       "task": "cited EU labour series (not an index)",
       "n": 2,
       "n_unit": "public series",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-labour-components.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index."
+      "note": "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-human-labour-index"
     },
     {
       "axis": "humanoid-labour-index",
       "family": "financial",
       "kind": "deterministic-facts",
+      "dataset": "csoai/gspc-humanoid-labour-index",
       "bench": "Disclosure",
       "task": "named vendor publishes a dated deployment count on a stable URL? Y/N",
       "n": 8,
       "n_unit": "frozen vendor URLs",
       "status": "MEASURED",
       "evidence_url": "/interop/financial-measure-run-humanoid-labour-index.json",
+      "run_attestation": "CONTENT_ADDRESSED_UNSIGNED",
       "colour": "#fbbf24",
       "hue": 43,
-      "note": "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED inside the card. Vendor blogs are not a bank. Not an index."
+      "note": "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED inside the card. Vendor blogs are not a bank. Not an index.",
+      "dataset_url": "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index"
     }
   ],
   "measured_in_lane": [
@@ -998,7 +847,7 @@
     }
   ],
   "limitations": [
-    "1 of the 3 measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): swarm. 2 are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.",
+    "Of the 14 model-comparison axis, 3 have been tested for statistical separation: 1 SEPARATED (McNemar p<0.05 on discordant items: swarm) and 2 TIE. The remaining 11 are UNTESTED for separation. All 14 carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axis are not model comparisons and are not in this denominator.",
     "22 axis are on the board and 22 carry a measurement. See totals.count_grammar. The financial-fact axis are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.",
     "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
     "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
@@ -1011,16 +860,5 @@
     "affect's legal gold labels and severity bases are COUNSEL-PENDING: the numbers measure model behaviour against a counsel-pending key and are not legal verdicts.",
     "Scores describe measured runs on frozen splits on a date. They do not describe a system's compliance with anything.",
     "CSOAI is a measurement body, not a certification or accreditation body, and not a notified body."
-  ],
-  "site_attestation": {
-    "attests": "integrity of this board snapshot as published by the site (NOT a re-measurement)",
-    "signer": "did:web:csoai.org#board-attestation-1",
-    "alg": "Ed25519",
-    "sig": "a1342cd2056b26f6044582a90c3dc148e7f18063fbc5f9a40fdf060cedc42a15e0661822eafd24cf89f1e2e3e6bb9fca721b8e715a19b82afb2c3129f1006d0e",
-    "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
-    "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of this payload with the site_attestation field removed. Canonical JSON here means: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8, never as \\uXXXX escapes (Python ensure_ascii=FALSE — ensure_ascii=True is the wrong reading and will fail, this payload contains non-ASCII characters); numbers serialised by ECMAScript Number::toString, so an integral float renders 0, not 0.0. This is NOT the rule used by the signed measurement cards under /signed/cards/, which were minted with ensure_ascii=TRUE and whose ids are SHA-256 over those bytes — see /signed/HOW-TO-VERIFY.md. The two are deliberately different and are each signed over the bytes they were signed over.",
-    "sig_input_ensure_ascii": false,
-    "sig_input_is_digest": false,
-    "verify": "fetch /.well-known/did.json → #board-attestation-1 public key → verify sig over the raw UTF-8 bytes of canonical(payload minus site_attestation), with ensure_ascii=False as specified in sig_input"
-  }
+  ]
 }

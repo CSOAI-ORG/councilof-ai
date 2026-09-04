@@ -144,6 +144,15 @@ const EXISTING = [
   "/agui/                  /dashboard?tab=home          308",
   "/chat                   /dashboard?tab=home          308",
   "/chat/                  /dashboard?tab=home          308",
+  // Retired second shells. /public duplicated navigation/footer and contradicted
+  // the current measurement-not-certification boundary; /widget awarded a
+  // localStorage-only "Certification Earned" badge. Human journeys converge on
+  // the canonical Council OS panes. Source artifacts remain in git for audit.
+  "/public                 /dashboard?tab=home          308",
+  "/public/                /dashboard?tab=home          308",
+  "/widget                 /dashboard?tab=learn         308",
+  "/widget/                /dashboard?tab=learn         308",
+  "/widget/*               /dashboard?tab=learn         308",
   "/rankings               /dashboard?tab=board         308",
   "/rankings/              /dashboard?tab=board         308",
   "/benchmarkers           /dashboard?tab=verify        308",

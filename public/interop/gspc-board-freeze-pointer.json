@@ -1,7 +1,13 @@
 {
   "kind": "csoai.gspc-board-freeze-pointer/v0",
   "as_of": "2026-09-02T16:00:00Z",
-  "note": "Honest pointer for the SIGNED 22-axis board freeze. Existence and integrity of these exact bytes at this time - not certification, not endorsement, not a re-measurement. A signature attests INTEGRITY, not truth: an UNMEASURED axis stays unmeasured no matter who signed.",
+  "note": "Historical pointer for the SIGNED 22-axis board freeze. Existence and integrity of these exact bytes at this time - not certification, endorsement, re-measurement, or current board authority. The freeze is superseded by a known claim defect; use GET /api/gspc.",
+  "relying_party_status": {
+    "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+    "status": "https://councilof.ai/signed/gspc-board.status.json",
+    "current_authority": "https://councilof.ai/api/gspc",
+    "action": "DO_NOT_USE_AS_CURRENT_BOARD"
+  },
   "do_not_mix": {
     "this_pointer": "the BOARD FREEZE - did:web:csoai.org#gspc-board-22axis-2026, the large signed snapshot.",
     "root_pointer": "https://councilof.ai/interop/root-witness-pointer.json - the ONE public root, did:web:csoai.org#board-attestation-1, a small living stamp.",

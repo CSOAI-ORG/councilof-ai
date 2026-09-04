@@ -62,6 +62,7 @@
  */
 
 import boardSigned from "../../public/signed/gspc-board.signed.json";
+import boardStatus from "../../public/signed/gspc-board.status.json";
 import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
@@ -120,6 +121,7 @@ const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? nul
 const boardTotals = (boardSigned as any).totals ?? {};
 const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
 const boardCustody = (boardSigned as any).custody_attestation ?? {};
+const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 
 // ── live derivation, so snapshot drift is visible rather than silent ─────────
 // /api/gspc computes its totals from these arrays at request time. The signed
@@ -156,14 +158,18 @@ const liveByFamily = {
   },
 };
 const liveMeasuredOn: string = MEASURED_ON.date;
-const boardAgrees =
+const boardCountsAgree =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+// Matching counts are necessary but not sufficient. The preserved MPC freeze has
+// a known signed-run overclaim and ambiguous historical leader notes, so it fails
+// closed until an owner MPC ceremony replaces it and its status becomes CURRENT.
+const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
 const SNAPSHOT_DISAGREEMENT =
   "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
-  "committed axis arrays. The signed snapshot at public/signed/gspc-board.signed.json disagrees " +
-  "with that live derivation. Do not file the snapshot's counts while signed_snapshot_agrees is " +
-  "false. Re-signing that file is an owner MPC ceremony, not a laptop sign and not the Pages " +
-  "3KB card-sign path.";
+  "committed axis arrays. The preserved signed snapshot at public/signed/gspc-board.signed.json " +
+  "is not current while signed_snapshot_agrees is false: either its counts drift or its status " +
+  "records a known claim defect. Read /signed/gspc-board.status.json. Re-signing that file is an " +
+  "owner MPC ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
 const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
@@ -392,6 +398,7 @@ export const onRequestGet: PagesFunction = async () => {
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
         live_unmeasured_axes: liveUnmeasuredAxes,
+        signed_snapshot_counts_agree: boardCountsAgree,
         signed_snapshot_agrees: boardAgrees,
         signed_snapshot: {
           source: SRC_BOARD,
@@ -400,13 +407,16 @@ export const onRequestGet: PagesFunction = async () => {
           unmeasured_axes: boardTotals.unmeasured_axes ?? null,
           public_count: boardTotals.public_count ?? null,
           as_of: boardMeasuredOn,
+          claim_state: boardClaimState,
+          status_source: "public/signed/gspc-board.status.json",
           status: boardAgrees
-            ? "signed freeze agrees with live axis arrays"
-            : "historical freeze — do not file",
+            ? "current signed freeze agrees with live axis arrays"
+            : "superseded or drifted freeze — do not file",
         },
         on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
       signature: {
+        artifact_state: boardClaimState,
         signer: boardCustody.signer ?? null,
         alg: boardCustody.alg ?? null,
         keyid: boardCustody.keyid ?? null,

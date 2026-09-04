@@ -1,7 +1,13 @@
 {
  "kind": "csoai.gspc-board-freeze-witness/v1",
  "as_of": "2026-09-02T15:34:13Z",
- "note": "Existence/time witness for the 22/22 GSPC board freeze (MPC Ed25519). Not certification, not endorsement, not a rank. The signature is the custody attestation already on public/signed/gspc-board.signed.json; Rekor only logs that those bytes existed at integratedTime.",
+ "note": "Existence/time witness for a historical 22/22 GSPC board freeze (MPC Ed25519). Not certification, endorsement, rank, or current board authority. The freeze is superseded by a known claim defect; Rekor only logs that those bytes existed at integratedTime.",
+ "relying_party_status": {
+  "state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+  "status": "https://councilof.ai/signed/gspc-board.status.json",
+  "current_authority": "https://councilof.ai/api/gspc",
+  "action": "DO_NOT_USE_AS_CURRENT_BOARD"
+ },
  "artifact": {
   "url": "https://councilof.ai/signed/gspc-board.signed.json",
   "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",

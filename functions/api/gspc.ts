@@ -43,7 +43,12 @@ type PublicAxis = AxisScore & {
   excluded_leader?: string;
   public_leader_state?: string;
   excluded_note?: string;
-  measurement_note?: string;
+  historical_measurement_record?: {
+    state: "SUPERSEDED_FOR_PUBLIC_RANKING";
+    scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL" | "ORIGINAL_RUN_NAMED_UNCARDED_LEADER";
+    note?: string;
+    does_not_assert_current_public_fields: true;
+  };
 };
 const excludeOwnLeader = (a: AxisScore): PublicAxis => {
   if (a.kind !== "model-comparison" || !isOwnCouncilModel(a.leader)) return a;
@@ -80,10 +85,16 @@ const excludeOwnLeader = (a: AxisScore): PublicAxis => {
       "does not rank its own models against the vendors it measures, so no leader is shown here. " +
       "The measurement is real and the signed card still exists; the external re-ranking requires a " +
       "per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
-    // The original measurement note is preserved verbatim for the record — it DESCRIBES the run
-    // (which included our own models), it is NOT the public ranking. Kept so the provenance,
-    // fleet findings and bank details on these axes are not lost by the exclusion.
-    measurement_note: a.note,
+    // Preserve the original run narrative, but never under an unqualified
+    // `measurement_note`: that made historical "SEPARATED" language contradict
+    // the current public separation=UNTESTED field. The explicit superseded state
+    // keeps the evidence while failing closed for machine consumers.
+    historical_measurement_record: {
+      state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+      scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+      ...(a.note ? { note: a.note } : {}),
+      does_not_assert_current_public_fields: true,
+    },
   };
 };
 
@@ -169,9 +180,12 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
       "not recompute the ranking or link it to the signed card behind it. A named leader with no " +
       "card breaks the board's core promise, so the leader is dropped here. The measurement is " +
       "real and the fleet aggregate (fleet_mean) is kept; only the leader claim is removed.",
-    // The original measurement note is preserved verbatim for the record — it DESCRIBES the run
-    // (it narrated the uncarded leader), it is NOT the public ranking.
-    measurement_note: a.note,
+    historical_measurement_record: {
+      state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+      scope: "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+      ...(a.note ? { note: a.note } : {}),
+      does_not_assert_current_public_fields: true,
+    },
   };
 };
 
@@ -219,6 +233,9 @@ export const onRequestGet: PagesFunction = async (context) => {
   const externallyLedAxes = selected
     .filter((a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string")
     .map((a) => a.axis);
+  const factRuns = selected.filter((a) => a.kind === "deterministic-facts");
+  const signedFactRuns = factRuns.filter((a) => a.run_attestation === "ED25519_SIGNED");
+  const unsignedFactRuns = factRuns.filter((a) => a.run_attestation === "CONTENT_ADDRESSED_UNSIGNED");
 
   const items = selected.reduce((s, a) => s + a.n, 0);
   const measuredSlots = selected.filter((a) => a.status === "MEASURED");
@@ -299,6 +316,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
       separation: ["SEPARATED", "TIE", "UNTESTED"],
       public_leader_state: ["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+      run_attestation: ["ED25519_SIGNED", "CONTENT_ADDRESSED_UNSIGNED"],
       public_leader_state_absent: "the leader is shown (a public score)",
       verification: ["VALID", "INVALID", "UNCHECKABLE"],
       note: "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.",
@@ -337,7 +355,7 @@ export const onRequestGet: PagesFunction = async (context) => {
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
         model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
-        fact_runs: selected.filter((a: any) => a.kind === "deterministic-facts").length,
+        fact_runs: factRuns.length,
         count_grammar:
           unmeasured === 0
             ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
@@ -370,8 +388,20 @@ export const onRequestGet: PagesFunction = async (context) => {
           "state. All 8 now carry published deterministic-facts run artifacts, so every one of the " +
           "22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact " +
           "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
-          "Only financial-measure-run-v2 currently carries an Ed25519 signature; the other seven are " +
+          `${signedFactRuns.length} run artifact${signedFactRuns.length === 1 ? "" : "s"} ` +
+          `${signedFactRuns.length === 1 ? "carries" : "carry"} an Ed25519 signature; ` +
+          `${unsignedFactRuns.length} ${unsignedFactRuns.length === 1 ? "is" : "are"} ` +
           "content-addressed but unsigned. No signature is inferred from a content_id.",
+        financial_run_attestations: {
+          run_artifacts: factRuns.length,
+          ed25519_signed: signedFactRuns.length,
+          content_addressed_unsigned: unsignedFactRuns.length,
+          signed_axes: signedFactRuns.map((a) => a.axis),
+          unsigned_axes: unsignedFactRuns.map((a) => a.axis),
+          note:
+            "Derived from each deterministic-facts axis's run_attestation field. " +
+            "A content_id proves identity of bytes, not signer authorization.",
+        },
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
