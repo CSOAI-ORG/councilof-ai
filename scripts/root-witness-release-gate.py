@@ -428,6 +428,7 @@ def validate_current_witness(
         add(errors, signature.get("preimage_bytes") == len(signed), "sidecar preimage_bytes does not match the signed envelope")
         add(errors, signature.get("verified_against_did_json") is True, "sidecar does not record a successful DID signature verification")
 
+    pointer: dict[str, Any] = {}
     try:
         pointer = load_json(POINTER_PATH)
         pointer_issues = exact_artifact_issues(pointer.get("live_root"), root, raw, root_sha, "pointer live_root")
@@ -480,7 +481,39 @@ def validate_current_witness(
                     validate_rekor_set(errors, entry)
             except Exception as exc:
                 errors.append(f"Rekor snapshot cannot be verified: {type(exc).__name__}: {exc}")
+    validate_eas_witness(errors, witnesses, pointer, root_sha)
     return sidecar
+
+
+def validate_eas_witness(
+    errors: list[str], witnesses: dict[str, Any], pointer: dict[str, Any], root_sha: str
+) -> None:
+    """Bind the optional EAS status to an attestation for this exact root SHA."""
+    eas = witnesses.get("eas_base") if isinstance(witnesses.get("eas_base"), dict) else {}
+    status = str(eas.get("status", "")).upper()
+    add(errors, status in {"ATTESTED", "NOT_YET", "UNCHECKABLE"}, f"current EAS status is invalid: {status!r}")
+    pointer_witnesses = pointer.get("witnesses") if isinstance(pointer.get("witnesses"), dict) else {}
+    add(errors, pointer_witnesses.get("eas_base") == status, "pointer EAS status disagrees with the current sidecar")
+
+    log_path = INTEROP / "eas-root-attestations.json"
+    hits: list[dict[str, Any]] = []
+    if log_path.is_file():
+        try:
+            log = load_json(log_path)
+            rows = log.get("attestations") if isinstance(log.get("attestations"), list) else []
+            hits = [row for row in rows if isinstance(row, dict) and row.get("sha256") == root_sha]
+        except Exception as exc:
+            errors.append(f"EAS log cannot be checked: {type(exc).__name__}: {exc}")
+            return
+
+    if status == "ATTESTED":
+        add(errors, len(hits) == 1, f"current EAS ATTESTED state requires exactly one exact-root log entry, found {len(hits)}")
+        if len(hits) == 1:
+            hit = hits[0]
+            for field in ("uid", "url", "attester"):
+                add(errors, eas.get(field) == hit.get(field), f"current EAS {field} disagrees with the exact-root log entry")
+    else:
+        add(errors, not hits, f"current EAS {status or 'missing'} state contradicts an exact-root attestation in the log")
 
 
 def validate_rekor_set(errors: list[str], entry: dict[str, Any]) -> None:
@@ -917,6 +950,22 @@ def run_selftest() -> int:
     assert proof_derived_status(1, 4) == "CONFIRMED_BITCOIN"
     assert proof_derived_status(0, 4) == "STAMPED_PENDING_BITCOIN"
     assert proof_derived_status(0, 0) == "NO_ATTESTATION"
+    eas_errors: list[str] = []
+    validate_eas_witness(
+        eas_errors,
+        {"eas_base": {"status": "NOT_YET"}},
+        {"witnesses": {"eas_base": "NOT_YET"}},
+        "22" * 32,
+    )
+    assert eas_errors == [], eas_errors
+    eas_pointer_errors: list[str] = []
+    validate_eas_witness(
+        eas_pointer_errors,
+        {"eas_base": {"status": "ATTESTED", "uid": "fabricated"}},
+        {"witnesses": {"eas_base": "ATTESTED"}},
+        "22" * 32,
+    )
+    assert any("exact-root log entry" in issue for issue in eas_pointer_errors), eas_pointer_errors
     current_root = load_json(DEFAULT_PUBLIC / "root.json")
     current_sidecar = load_json(DEFAULT_PUBLIC / "interop" / "root-witness-latest.json")
     current_witnesses = current_sidecar.get("witnesses") if isinstance(current_sidecar.get("witnesses"), dict) else {}

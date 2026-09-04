@@ -197,15 +197,65 @@ def ots_status_from_proof(
     }
 
 
-def eas_status(sha: str) -> dict:
-    p = INTEROP / "eas-root-attestations.json"
+def eas_status(sha: str, interop_dir: Path = INTEROP) -> dict:
+    """Return EAS state for these exact root bytes, never the log's global state."""
+    p = interop_dir / "eas-root-attestations.json"
     if not p.exists():
         return {"status": "NOT_YET", "reason": "no attester key in GitHub secrets (EAS_ATTESTER_PRIVATE_KEY); schema bytes32 sha256,string as_of,string did"}
     log = json.loads(p.read_text())
     hit = next((a for a in log.get("attestations", []) if a.get("sha256") == sha), None)
     if hit:
         return {"status": "ATTESTED", "uid": hit.get("uid"), "url": hit.get("url"), "attester": hit.get("attester"), "chain": "base-mainnet"}
-    return {"status": log.get("status", "NOT_YET"), "reason": log.get("reason", "this root not yet attested"), "log": "https://councilof.ai/interop/eas-root-attestations.json"}
+    return {
+        "status": "NOT_YET",
+        "reason": "no EAS attestation in the append-only log matches this root.json sha256",
+        "log": "https://councilof.ai/interop/eas-root-attestations.json",
+    }
+
+
+def refresh_eas_metadata(public_dir: Path = PUB) -> int:
+    """Refresh only the EAS rail after its chain-writing workflow step.
+
+    Rekor upload and OTS submission are deliberately not repeated. The refresh
+    proceeds only when the existing sidecar and pointer bind the exact current
+    root bytes, so an older EAS record cannot promote a newer root.
+    """
+    root_path = public_dir / "root.json"
+    interop_dir = public_dir / "interop"
+    latest_path = interop_dir / "root-witness-latest.json"
+    pointer_path = interop_dir / "root-witness-pointer.json"
+    try:
+        raw = root_path.read_bytes()
+        root_sha = hashlib.sha256(raw).hexdigest()
+        side = json.loads(latest_path.read_text())
+        pointer = json.loads(pointer_path.read_text())
+    except Exception as exc:
+        print(f"EAS metadata refresh refused: witness files unreadable: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 2
+
+    artifact = side.get("artifact") if isinstance(side.get("artifact"), dict) else {}
+    live_root = pointer.get("live_root") if isinstance(pointer.get("live_root"), dict) else {}
+    if artifact.get("sha256") != root_sha or live_root.get("sha256") != root_sha:
+        print("EAS metadata refresh refused: sidecar/pointer do not bind the current root bytes", file=sys.stderr)
+        return 2
+
+    status = eas_status(root_sha, interop_dir)
+    observed_at = now()
+    side.setdefault("witnesses", {})["eas_base"] = status
+    side["as_of"] = observed_at
+    pointer.setdefault("witnesses", {})["eas_base"] = status.get("status", "UNCHECKABLE")
+    pointer["as_of"] = observed_at
+
+    dated_value = (pointer.get("witness_sidecar") or {}).get("dated_copy")
+    repo_root = public_dir.parent
+    dated_path = repo_root / dated_value if isinstance(dated_value, str) and dated_value.startswith("public/") else None
+    side_bytes = json.dumps(side, indent=1, ensure_ascii=False) + "\n"
+    latest_path.write_text(side_bytes)
+    if dated_path is not None and dated_path.is_file():
+        dated_path.write_text(side_bytes)
+    pointer_path.write_text(json.dumps(pointer, indent=1, ensure_ascii=False) + "\n")
+    print(f"refreshed EAS witness metadata for {root_sha[:16]}: {status.get('status')}")
+    return 0
 
 
 LIVE_ROOT_URL = "https://councilof.ai/root.json"
@@ -365,6 +415,53 @@ def selftest() -> int:
     if read_only_rc != 0: fails.append(f"read-only exact recheck should pass, got rc={read_only_rc}")
     if pointer_path.read_bytes() != pointer_before: fails.append("--check-only mutated the pointer")
     if json.loads(output_path.read_text()).get("status") != "MATCH": fails.append("--output did not record MATCH")
+    with tempfile.TemporaryDirectory() as eas_dir:
+        eas_path = Path(eas_dir)
+        (eas_path / "eas-root-attestations.json").write_text(json.dumps({
+            "status": "ATTESTED",
+            "attestations": [{"sha256": "11" * 32, "uid": "old-root"}],
+        }))
+        if eas_status("22" * 32, eas_path).get("status") != "NOT_YET":
+            fails.append("an older root's global EAS status promoted the current unattested root")
+        if eas_status("11" * 32, eas_path).get("status") != "ATTESTED":
+            fails.append("an exact-root EAS attestation was not discovered")
+    with tempfile.TemporaryDirectory() as refresh_dir:
+        refresh_public = Path(refresh_dir) / "public"
+        refresh_interop = refresh_public / "interop"
+        refresh_interop.mkdir(parents=True)
+        refresh_raw = b'{"fixture":"root"}\n'
+        refresh_sha = hashlib.sha256(refresh_raw).hexdigest()
+        (refresh_public / "root.json").write_bytes(refresh_raw)
+        side_fixture = {
+            "as_of": "2026-09-04T12:00:00Z",
+            "artifact": {"sha256": refresh_sha},
+            "witnesses": {"eas_base": {"status": "NOT_YET"}},
+        }
+        pointer_fixture = {
+            "as_of": "2026-09-04T12:00:00Z",
+            "live_root": {"sha256": refresh_sha},
+            "witness_sidecar": {"dated_copy": "public/interop/root-witness-fixture.json"},
+            "witnesses": {"eas_base": "NOT_YET"},
+        }
+        (refresh_interop / "root-witness-latest.json").write_text(json.dumps(side_fixture))
+        (refresh_interop / "root-witness-fixture.json").write_text(json.dumps(side_fixture))
+        (refresh_interop / "root-witness-pointer.json").write_text(json.dumps(pointer_fixture))
+        (refresh_interop / "eas-root-attestations.json").write_text(json.dumps({
+            "status": "ATTESTED",
+            "attestations": [{"sha256": refresh_sha, "uid": "exact-root"}],
+        }))
+        if refresh_eas_metadata(refresh_public) != 0:
+            fails.append("exact-root EAS metadata refresh failed")
+        else:
+            refreshed_side = json.loads((refresh_interop / "root-witness-latest.json").read_text())
+            refreshed_dated = json.loads((refresh_interop / "root-witness-fixture.json").read_text())
+            refreshed_pointer = json.loads((refresh_interop / "root-witness-pointer.json").read_text())
+            if refreshed_side.get("witnesses", {}).get("eas_base", {}).get("status") != "ATTESTED":
+                fails.append("refresh did not promote the exact-root EAS witness")
+            if refreshed_dated != refreshed_side:
+                fails.append("refresh left the dated sidecar stale")
+            if refreshed_pointer.get("witnesses", {}).get("eas_base") != "ATTESTED":
+                fails.append("refresh left the pointer EAS state stale")
     for f in fails: print("FAIL:", f)
     print("selftest:", "FAILED" if fails else "ok — MATCH, DRIFTED and UNCHECKABLE all reachable")
     return 1 if fails else 0
@@ -374,6 +471,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--selftest", action="store_true")
     parser.add_argument("--recheck", action="store_true")
+    parser.add_argument("--refresh-eas", action="store_true")
     parser.add_argument("--public-dir", type=Path, default=PUB)
     parser.add_argument("--check-only", action="store_true")
     parser.add_argument("--output", type=Path)
@@ -384,6 +482,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.selftest:
         return selftest()
+    if args.refresh_eas:
+        return refresh_eas_metadata(args.public_dir)
     if args.attempts < 1 or args.attempts > 20:
         parser.error("--attempts must be between 1 and 20")
     if args.retry_delay_seconds < 0 or args.retry_delay_seconds > 300:
@@ -466,7 +566,7 @@ def main() -> int:
                 # pending proof has no bitcoin_header by definition, so its own
                 # observed_at is the authoritative timestamp for this state.
                 "witness_status_observed_at": ots.get("observed_at") or (ots.get("bitcoin_header") or {}).get("verified_at") or side["as_of"],
-                "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": "NOT_YET", "xrpl_memo": "NOT_YET"}})
+                "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": side["witnesses"]["eas_base"].get("status", "UNCHECKABLE"), "xrpl_memo": "NOT_YET"}})
     ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
     print("wrote", latest.name, dated.name, ptr_path.name)
     return 0
