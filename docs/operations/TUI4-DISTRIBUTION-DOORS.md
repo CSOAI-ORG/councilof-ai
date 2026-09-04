@@ -9,7 +9,7 @@
 | Official MCP Registry is empty for GSPC | **False.** `io.github.CSOAI-ORG/gspc` **1.0.3** is `isLatest` on [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io/). |
 | That entry is the right door | **False.** Remotes are `https://councilof.ai/api/assess` (classifier, not the four tools) and `csoai-gspc-mcp.nicholastempleman.workers.dev/mcp`. Copy still says **14 of 14**. Repo is `csoai-static-deploy2`, not `councilof-ai`. Live four-tool server is **`https://councilof.ai/mcp`**. |
 | `npx csoai-gspc-mcp` is a lie | **False.** npm `csoai-gspc-mcp@0.1.0` exists. Pin 0.1.1 still needs Owner OTP. Do not republish as if unpublished. |
-| Glama lists lifestyle, not GSPC | **Partial.** Glama has `CSOAI-ORG/councilof-ai` (stale 13-axis / schema 0.3). `csoai-gspc-mcp` 404. Fishkeeper-class servers are also listed. Own-goal is **wrong remote + stale count**, not “no listing”. |
+| Glama lists lifestyle, not GSPC | **Unstable.** The old connector URL 404s. Fresh probes of the repo-slug page conflict, and the public `?query=csoai` search lists other CSOAI servers but not `council-of-ai`. Keep the flagship staged; do not claim no CSOAI presence. |
 | marketplace.json GitHub source | **True miss.** `.claude-plugin/marketplace.json` and `.cursor-plugin/marketplace.json` have `"source": "./"`. Claude catalog add wants `{ "source": "github", "repo": "CSOAI-ORG/council-of-ai-grok" }`. TUI 3. |
 | Codex dir missing | **Partial.** `.codex-plugin/` exists. `.codex` does not. |
 | Homepage hides inspect/claimguard/corpus-watch | **Partial.** Footer already links PyPI `inspect-signed-receipt`. `claimguard` / `corpus-watch` not on the home tools strip. TUI 2. |

@@ -45,13 +45,6 @@ export const REACH_SURFACES: ReachSurface[] = [
     note: "Local stdio MCP. Same board tools; no invented download count.",
   },
   {
-    id: "glama",
-    label: "Glama · gspc",
-    href: "https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc",
-    kind: "MCP directory",
-    note: "Claimed connector listing. Directory reach, not a score.",
-  },
-  {
     id: "kaggle",
     label: "Kaggle · twins",
     href: "https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board",

@@ -47,7 +47,8 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("HfLivingRecord");
     expect(src).toContain("ReachStrip");
     expect(src).toContain("Printers of the live board");
-    expect(src).toContain("glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc");
+    expect(src).not.toContain("glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc");
+    expect(src).not.toContain("glama.ai/mcp/servers/CSOAI-ORG/councilof-ai");
     expect(src).toContain("10.5281/zenodo.21991104");
     expect(src).toMatch(/not a certificate/i);
     expect(src).toContain("huggingface.co/datasets/csoai/gspc-board");

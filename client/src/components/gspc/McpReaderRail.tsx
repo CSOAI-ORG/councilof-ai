@@ -83,8 +83,8 @@ export default function McpReaderRail({
         {" — "}writes_board: <code>{String(doc.writes_board ?? false)}</code>
       </p>
       <p className="mt-2 text-[11px] text-slate-500">
-        Glama + Smithery + PulseMCP + official registry. tools/list only, never tools/call.
-        Mirror: <code>csoai/mcp-census</code>.
+        Official-registry + directory census. Discovery does not prove a live flagship listing.
+        tools/list only, never tools/call. Mirror: <code>csoai/mcp-census</code>.
       </p>
     </section>
   );
