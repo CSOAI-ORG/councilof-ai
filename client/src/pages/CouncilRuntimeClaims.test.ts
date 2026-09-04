@@ -22,6 +22,17 @@ const sources = Object.fromEntries(
 ) as Record<(typeof pageNames)[number], string>;
 
 const allPages = Object.values(sources).join("\n");
+const overviewSources = [
+  readFileSync(
+    resolve(__dirname, "../components/home/LivingStages.tsx"),
+    "utf8",
+  ),
+  readFileSync(resolve(__dirname, "Layer0.tsx"), "utf8"),
+  readFileSync(
+    resolve(__dirname, "../../../public/claims-register.json"),
+    "utf8",
+  ),
+];
 
 describe("council runtime claim boundary", () => {
   it("removes the superseded independence result", () => {
@@ -36,6 +47,17 @@ describe("council runtime claim boundary", () => {
       expect(sources[name]).toContain(
         'href="/interop/council-independence.json"',
       );
+    }
+  });
+
+  it("distinguishes the earlier retraction run from the latest point result", () => {
+    for (const source of overviewSources) {
+      expect(source).toContain("earlier");
+      expect(source).toContain("n_eff 1.21 of 3");
+      expect(source).toContain("latest point experiment");
+      expect(source).toContain("rho=1 and n_eff=1");
+      expect(source).toContain("independent review or fault tolerance");
+      expect(source).toContain("/interop/council-independence.json");
     }
   });
 

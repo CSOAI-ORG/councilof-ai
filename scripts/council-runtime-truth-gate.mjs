@@ -8,6 +8,11 @@ const independence = JSON.parse(
   readFileSync("public/interop/council-independence.json", "utf8"),
 );
 const claims = JSON.parse(readFileSync("public/claims-register.json", "utf8"));
+const overviewSources = [
+  readFileSync("client/src/components/home/LivingStages.tsx", "utf8"),
+  readFileSync("client/src/pages/Layer0.tsx", "utf8"),
+  readFileSync("public/claims-register.json", "utf8"),
+];
 const voteSource = readFileSync(
   "client/src/components/CouncilVote.tsx",
   "utf8",
@@ -29,6 +34,14 @@ assert.equal(
   claims.claims.find((claim) => claim.id === "CR-007")?.status,
   "retired",
 );
+for (const source of overviewSources) {
+  assert.match(source, /earlier/);
+  assert.match(source, /n_eff 1\.21 of 3/);
+  assert.match(source, /latest point experiment/);
+  assert.match(source, /rho=1 and n_eff=1/);
+  assert.match(source, /independent review or fault tolerance/);
+  assert.match(source, /\/interop\/council-independence\.json/);
+}
 assert.match(voteSource, /Math\.floor\(\(2 \* N\) \/ 3\) \+ 1/);
 assert.match(voteSource, /Design simulation only/);
 assert.match(retiredGenerator, /QUARANTINED_GENERATOR = True/);
