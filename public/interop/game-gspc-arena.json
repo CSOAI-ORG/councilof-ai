@@ -4,9 +4,7 @@
   "name": "GSPC Arena",
   "kind": "measurement-arena",
   "engine": "React + GSPC substrate",
-  "as_of": "20260904T060144Z",
-  "x402_sku": "game-gspc-arena",
-  "x402_price_usdc": 0.5,
+  "as_of": "20260904T064658Z",
   "protocols": [
     "a2a",
     "mcp",
@@ -15,16 +13,14 @@
     "a2-ui",
     "websocket"
   ],
-  "anchor_chain": [
-    "opentimestamps",
-    "sigstore_rekor",
-    "eas_base"
-  ],
+  "anchors": {
+    "status": "NONE",
+    "note": "no game event is anchored today; the ONE root anchors root.json only, and eas_base is NOT_YET"
+  },
   "capabilities": [
     "Play GSPC Arena with AI opponents",
     "Chat with AI via AG-UI / A2UI",
     "Multiplayer rooms via WebSocket",
-    "Every turn emits a signed card",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"
   ],
   "links": {

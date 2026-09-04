@@ -4,14 +4,10 @@
   "name": "Arena",
   "kind": "model-arena",
   "engine": "React + model APIs",
-  "description": "Two AI models compete on a benchmark. Emits a signed winner card.",
+  "description": "Two AI models compete on a benchmark.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
-    "capability",
-    "performance",
-    "conduct"
-  ],
+  "as_of": "20260904T064658Z",
+  "axes_related": [],
   "multiplayer": true,
   "players": "spectator + challenger",
   "agui": true,
@@ -22,16 +18,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/arena.json",
     "agui": "https://councilof.ai/arena/ag-ui",
     "a2ui": "https://councilof.ai/arena/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-arena",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-arena",
-    "price_usdc": 0.1
-  },
   "notes": [
-    "Arena emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

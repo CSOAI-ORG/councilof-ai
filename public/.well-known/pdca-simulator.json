@@ -4,12 +4,11 @@
   "name": "PDCA Simulator",
   "kind": "simulation",
   "engine": "React + PDCA engine",
-  "description": "Plan-Do-Check-Act governance cycles. Emits signed cycle cards.",
+  "description": "Plan-Do-Check-Act governance cycles.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
-    "governance",
-    "compliance"
+  "as_of": "20260904T064658Z",
+  "axes_related": [
+    "governance"
   ],
   "multiplayer": true,
   "players": "2-4 players",
@@ -21,16 +20,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/pdca-simulator.json",
     "agui": "https://councilof.ai/pdca-simulator/ag-ui",
     "a2ui": "https://councilof.ai/pdca-simulator/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-pdca-simulator",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-pdca-simulator",
-    "price_usdc": 0.2
-  },
   "notes": [
-    "PDCA Simulator emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

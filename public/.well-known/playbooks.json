@@ -4,13 +4,12 @@
   "name": "Playbooks",
   "kind": "scenario",
   "engine": "React + scenario engine",
-  "description": "Multi-step governance scenarios. Each step emits a signed card.",
+  "description": "Multi-step governance scenarios.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064658Z",
+  "axes_related": [
     "governance",
-    "safety",
-    "compliance"
+    "safety"
   ],
   "multiplayer": false,
   "players": "single player",
@@ -22,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/playbooks.json",
     "agui": "https://councilof.ai/playbooks/ag-ui",
     "a2ui": "https://councilof.ai/playbooks/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-playbooks",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-playbooks",
-    "price_usdc": 0.1
-  },
   "notes": [
-    "Playbooks emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"

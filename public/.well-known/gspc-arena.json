@@ -4,15 +4,12 @@
   "name": "GSPC Arena",
   "kind": "measurement-arena",
   "engine": "React + GSPC substrate",
-  "description": "Two AI models are scored on GSPC axes. Winner takes the signed leader card.",
+  "description": "Two AI models play a scored round. A game result is not a board measurement.",
   "status": "LIVE",
-  "as_of": "20260904T060144Z",
-  "axis_feeds": [
+  "as_of": "20260904T064658Z",
+  "axes_related": [
     "governance",
-    "safety",
-    "performance",
-    "conduct",
-    "capability"
+    "safety"
   ],
   "multiplayer": true,
   "players": "spectator + challenger",
@@ -24,16 +21,10 @@
     "mcp": "https://councilof.ai/.well-known/mcp/gspc-arena.json",
     "agui": "https://councilof.ai/gspc-arena/ag-ui",
     "a2ui": "https://councilof.ai/gspc-arena/a2-ui",
-    "x402": "https://councilof.ai/api/x402?sku=game-gspc-arena",
     "live_board": "https://councilof.ai/api/gspc",
     "verify": "https://councilof.ai/gspc-verify"
   },
-  "x402": {
-    "sku": "game-gspc-arena",
-    "price_usdc": 0.5
-  },
   "notes": [
-    "GSPC Arena emits signed cards every turn",
     "AG-UI + A2UI chat enabled",
     "Multiplayer rooms via WebSocket",
     "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"
