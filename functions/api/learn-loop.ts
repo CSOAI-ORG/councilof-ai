@@ -3,7 +3,9 @@
  *
  * Every interaction (chat, game, measure, verify, attest) becomes:
  *   1. A 3KB signed card (Ed25519, max 3072 bytes)
- *   2. Anchored to OTS + Rekor + EAS
+ *   2. An anchoring STATUS per rail — today every one of them is negative
+ *      (NOT_STAMPED / NOT_SUBMITTED / NOT_YET) and no anchor identifier is invented.
+ *      Anchoring rails are 'planned' in facts.json; this endpoint anchors nothing.
  *   3. Attested by the 33-agent BFT council (23/33 quorum)
  *   4. Added to the training corpus
  *   5. Fed into the next council iteration
@@ -46,9 +48,9 @@ interface Card {
   sha256: string;
   sig: string;
   anchors: {
-    opentimestamps: { status: string; stamp: string };
-    sigstore_rekor: { status: string; entry_uuid: string };
-    eas_base: { status: string; attestation_uid: string };
+    opentimestamps: { status: string; stamp: string | null; note: string };
+    sigstore_rekor: { status: string; entry_uuid: string | null; note: string };
+    eas_base: { status: string; attestation_uid: string | null; note: string };
   };
 }
 
@@ -83,18 +85,34 @@ export const onRequestPost: PagesFunction = async ({ request }) => {
     },
     sha256: await sha256(payloadStr),
     sig: await sha256("sig:" + payloadStr),
+    // NO FABRICATED ANCHOR IDENTIFIERS. This block used to return
+    //   opentimestamps.stamp    = sha256("ots:" + payloadStr)
+    //   sigstore_rekor.entry_uuid = "f"  + sha256(payloadStr).slice(0,62)
+    //   eas_base.attestation_uid  = "0x" + sha256(payloadStr).slice(0,62)
+    // — hashes dressed in the SHAPE of real receipts. None of them exists in any log: look the
+    // uuid up in Rekor or the uid on Base and you get nothing. A status of "pending" does not
+    // license inventing the identifier that pending thing will supposedly have, and an
+    // identifier-shaped string is more dangerous than an obviously empty one because it passes a
+    // superficial format check. public/interop/root-witness-pointer.json states the rule this
+    // broke outright: "Do not invent an .ots file or fake Rekor UUID."
+    //
+    // The digest below is real — it is the sha256 of the payload, which is what an anchor would
+    // eventually commit to. Everything not yet done is null and says why.
     anchors: {
       opentimestamps: {
-        status: "pending",
-        stamp: await sha256("ots:" + payloadStr),
+        status: "NOT_STAMPED",
+        stamp: null,
+        note: "no calendar has been asked; a real stamp comes from scripts/witness_public_root.py",
       },
       sigstore_rekor: {
-        status: "queued",
-        entry_uuid: "f" + (await sha256(payloadStr)).substring(0, 62),
+        status: "NOT_SUBMITTED",
+        entry_uuid: null,
+        note: "no Rekor entry exists for this payload",
       },
       eas_base: {
-        status: "queued",
-        attestation_uid: "0x" + (await sha256(payloadStr)).substring(0, 62),
+        status: "NOT_YET",
+        attestation_uid: null,
+        note: "EAS issuance is planned, not live — see facts.json",
       },
     },
   };
