@@ -62,7 +62,7 @@ const DashboardLearningPane = lazy(
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
-  board: HomeGspcBoard, // the living HF Space board + 22-axis strip, inside the shell (owner ruling 2 Sep)
+  board: HomeGspcBoard, // canonical GET /api/gspc board + 22-axis strip, inside the shell (owner ruling 2 Sep)
   results: HomeGspcBoard, // Stale iframe retired: one canonical native result surface.
   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
   terminal: LobbyBoardPane, // GSPC terminal

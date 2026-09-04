@@ -370,7 +370,7 @@ export default function GspcScoreboard() {
           )}
         </p>
 
-        {/* Interactive terminal — the one board, drill into signed per-model rankings */}
+        {/* Interactive terminal — inspect each row's actual model-card or run evidence. */}
         <div className="mt-8">
           <GspcTerminal />
         </div>

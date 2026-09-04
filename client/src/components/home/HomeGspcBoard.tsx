@@ -4,7 +4,7 @@
  * GET /api/gspc is the board. This component renders that response directly;
  * the Hugging Face Space is only a distribution mirror.
  *
- * Around the embed:
+ * Around the native board view:
  *  - a headline that quotes totals.public_count VERBATIM from GET /api/gspc. No count
  *    is typed into this file; "Load more (N)" is derived from the axis array length.
  *  - a compact strip of every board axis from the same payload: label, n, status,
