@@ -247,8 +247,8 @@ def main() -> None:
                 "details": "659 anchored, 361 pending",
             },
             "burner_wallet": {
-                "status": "READY",
-                "details": "0xb3a6a8d92a3aec1aca31b4ef06c95be468562c47f054182f1a39d26a880827da",
+                "status": "BLOCKED",
+                "details": "Previous test wallet retired after secret exposure. Never fund or use it.",
             },
             "grant_applications": {
                 "status": "STAGED",
