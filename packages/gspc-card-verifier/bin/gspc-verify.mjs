@@ -17,7 +17,7 @@
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
-import { verifyCard, analyseSet, analyseChain } from "../src/verify.mjs";
+import { verifyCard, verifyChainEnvelope, analyseSet, analyseChain, indexShapeIssue } from "../src/verify.mjs";
 import { pubkeyFromDidDocument } from "../src/did.mjs";
 import { defaultProfile } from "../src/index.mjs";
 
@@ -27,9 +27,8 @@ const USAGE = `gspc-verify — verify GSPC measurement cards offline
 
 Options
   --index <file>          also check the card index against the cards you hold
-  --chain <file>          walk a published chain manifest and report exactly what it
-                          attests: which positions are signed for, and which are only
-                          asserted in an unsigned file
+  --chain <file>          verify a signed chain envelope, then walk its manifest body;
+                          a legacy unsigned manifest is UNCHECKABLE, never trusted
   --profile <file>        verification profile to use (default: the bundled CSOAI profile)
   --pubkey <hex>          pin this raw Ed25519 public key instead of the profile's
   --did-document <file>   pin the key found in a LOCAL DID document
@@ -92,17 +91,29 @@ let profile;
 try {
   profile = opts.profile ? JSON.parse(readFileSync(opts.profile, "utf8")) : defaultProfile();
 } catch (e) { die(`cannot load profile: ${e.message}`); }
+if (!profile || typeof profile !== "object" || Array.isArray(profile))
+  die("profile must be a JSON object");
 
 if (opts.did) {
   try {
-    profile.pinnedPubkeyHex = pubkeyFromDidDocument(JSON.parse(readFileSync(opts.did, "utf8")), opts.keyId);
-    profile.pinnedKeyId = opts.keyId;
+    const didDocument = JSON.parse(readFileSync(opts.did, "utf8"));
+    const pinnedPubkeyHex = pubkeyFromDidDocument(didDocument, opts.keyId);
+    const selected = didDocument.verificationMethod.find(
+      (method) => method && typeof method.id === "string" &&
+        (method.id === opts.keyId || method.id.endsWith(opts.keyId)),
+    );
+    profile.pinnedPubkeyHex = pinnedPubkeyHex;
+    profile.pinnedKeyId = selected.id;
+    profile.pinnedKeys = { [selected.id]: pinnedPubkeyHex };
+    delete profile.explicitPubkeyOverride;
   } catch (e) { die(`cannot take a key from ${opts.did}: ${e.message}`); }
 }
 if (opts.pubkey) {
   if (!/^[0-9a-f]{64}$/.test(opts.pubkey)) die("--pubkey must be 64 lowercase hex characters");
   profile.pinnedPubkeyHex = opts.pubkey;
   profile.pinnedKeyId = "(supplied on the command line)";
+  profile.pinnedKeys = {};
+  profile.explicitPubkeyOverride = true;
 }
 
 const files = collect(opts.paths);
@@ -124,35 +135,48 @@ for (const f of files) {
   results.push({ file: f, ...r });
 }
 
+let chainDocument = null;
+let chainEnvelope = null;
 let chain = null;
 if (opts.chain) {
-  try { chain = JSON.parse(readFileSync(opts.chain, "utf8")); } catch (e) { die(`cannot read chain manifest: ${e.message}`); }
+  try { chainDocument = JSON.parse(readFileSync(opts.chain, "utf8")); } catch (e) { die(`cannot read chain manifest: ${e.message}`); }
+  chainEnvelope = await verifyChainEnvelope(chainDocument, profile);
+  // A legacy raw manifest may still be inspected after it has been explicitly classified as
+  // unsigned. A malformed or invalid signed envelope is not walked: doing so would turn
+  // unauthenticated bytes into structural findings that look authoritative.
+  if (chainEnvelope.state === "VALID" || chainEnvelope.code === "CHAIN_ENVELOPE_UNSIGNED")
+    chain = chainEnvelope.manifest;
 }
 
 let set = null;
 if (opts.index) {
   let index;
   try { index = JSON.parse(readFileSync(opts.index, "utf8")); } catch (e) { die(`cannot read index: ${e.message}`); }
+  const indexIssue = indexShapeIssue(index);
+  if (indexIssue) die(indexIssue);
   set = analyseSet(cards, index, profile, chain);
 } else if (files.length > 1 || chain) {
   set = analyseSet(cards, null, profile, chain);
 }
 
-const chainReport = chain ? analyseChain(cards, chain, profile) : null;
+const chainReport = chain
+  ? analyseChain(cards, chain, profile, { manifestSigned: chainEnvelope?.state === "VALID" })
+  : null;
 
 const tally = { VALID: 0, INVALID: 0, UNCHECKABLE: 0 };
 for (const r of results) tally[r.state]++;
 
-// Some findings describe the evidence; others describe only the copy you happen to hold.
-// Holding a subset is not a defect in what was published, so it does not change the exit code.
-const INFORMATIONAL = new Set(["INDEX_UNSIGNED", "CHAIN_UNSIGNED", "BODY_NOT_HELD"]);
+// These findings describe provenance limits without making the local set incomplete. A
+// BODY_NOT_HELD finding is deliberately NOT informational: exit 3 means the caller's set is
+// incomplete, not that the publisher's evidence is invalid.
+const INFORMATIONAL = new Set(["INDEX_UNSIGNED", "CHAIN_UNSIGNED", "CHAIN_SIGNED", "WITHHELD_ENVELOPE_ONLY"]);
 const allFindings = [...(set ? set.findings : []), ...(chainReport ? chainReport.findings : [])];
 const blockingSetFindings = allFindings.filter((f) => !INFORMATIONAL.has(f.code));
 
 if (opts.json) {
   process.stdout.write(JSON.stringify({
     profile: { id: profile.id, pinnedPubkeyHex: profile.pinnedPubkeyHex, pinnedKeyId: profile.pinnedKeyId },
-    tally, results, set, chain: chainReport,
+    tally, results, set, chainEnvelope, chain: chainReport,
   }, null, 2) + "\n");
 } else {
   if (!opts.quiet) {
@@ -162,13 +186,20 @@ if (opts.json) {
         process.stdout.write(`  ${r.state.padEnd(11)} ${r.code.padEnd(22)} ${r.file}\n                          ${r.reason}\n`);
   }
   process.stdout.write(`VALID ${tally.VALID} · INVALID ${tally.INVALID} · UNCHECKABLE ${tally.UNCHECKABLE}\n`);
+  if (chainEnvelope) {
+    process.stdout.write(
+      `chain envelope: ${chainEnvelope.state} ${chainEnvelope.code}` +
+        (chainEnvelope.reason ? ` — ${chainEnvelope.reason}` : "") + "\n",
+    );
+  }
   if (chainReport) {
     const c = chainReport;
     process.stdout.write(
       `manifest: ${c.positions} positions, walk ${c.walkLength}${c.reachesGenesis ? " to genesis" : " DID NOT REACH GENESIS"}; ` +
-        `${c.bodiesHeld}/${c.bodiesDeclaredPublished} published bodies held; ` +
-        `${c.withheld.total} withheld (${c.withheld.attestedBySignedPrev} attested by a signed prev, ` +
-        `${c.withheld.assertedOnly} asserted only)\n`,
+        `${c.bodiesHeld}/${c.positions} bodies held; ` +
+        `${c.bodiesDeclaredWithheld} declared withheld at signing, ${c.bodiesDeclaredWithheldNowHeld} now held; ` +
+        `${c.withheld.total} still unavailable (${c.withheld.attestedBySignedPrev} attested by a signed prev, ` +
+        `${c.withheld.envelopeOnly} envelope-only, ${c.withheld.assertedOnly} unsigned assertion only)\n`,
     );
   }
   if (set)
@@ -187,7 +218,7 @@ if (opts.json) {
   }
 }
 
-if (tally.INVALID) process.exit(1);
-if (tally.UNCHECKABLE) process.exit(2);
+if (tally.INVALID || chainEnvelope?.state === "INVALID") process.exit(1);
+if (tally.UNCHECKABLE || chainEnvelope?.state === "UNCHECKABLE") process.exit(2);
 if (blockingSetFindings.length) process.exit(3);
 process.exit(0);

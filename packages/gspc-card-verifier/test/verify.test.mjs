@@ -208,7 +208,7 @@ test("a chain that reaches its declared genesis is complete", () => {
 });
 
 test("an index that lists a card nobody has is reported", () => {
-  const set = analyseSet([], { cards: [{ card: "d".repeat(64) }], n_cards: 1, head: "d".repeat(64) }, profile);
+  const set = analyseSet([], { kind: "card_index", cards: [{ card: "d".repeat(64) }], n_cards: 1, head: "d".repeat(64) }, profile);
   assert.ok(set.findings.some((f) => f.code === "INDEX_ENTRY_MISSING"));
   assert.ok(set.findings.some((f) => f.code === "INDEX_HEAD_MISSING"));
   assert.ok(set.findings.some((f) => f.code === "INDEX_UNSIGNED"));
