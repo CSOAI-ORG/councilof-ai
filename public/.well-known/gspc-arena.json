@@ -1,0 +1,41 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "gspc-arena",
+  "name": "GSPC Arena",
+  "kind": "measurement-arena",
+  "engine": "React + GSPC substrate",
+  "description": "Two AI models are scored on GSPC axes. Winner takes the signed leader card.",
+  "status": "LIVE",
+  "as_of": "20260904T052122Z",
+  "axis_feeds": [
+    "governance",
+    "safety",
+    "performance",
+    "conduct",
+    "capability"
+  ],
+  "multiplayer": true,
+  "players": "spectator + challenger",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/gspc-arena.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/gspc-arena-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/gspc-arena.json",
+    "agui": "https://councilof.ai/gspc-arena/ag-ui",
+    "a2ui": "https://councilof.ai/gspc-arena/a2-ui",
+    "x402": "https://councilof.ai/api/x402?sku=game-gspc-arena",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "x402": {
+    "sku": "game-gspc-arena",
+    "price_usdc": 0.5
+  },
+  "notes": [
+    "GSPC Arena emits signed cards every turn",
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Anchored to OTS + Rekor + EAS"
+  ]
+}

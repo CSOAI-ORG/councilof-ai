@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "swarm",
+  "name": "Swarm",
+  "kind": "agent-swarm",
+  "engine": "PixiJS + SOV3 substrate",
+  "description": "An agent swarm solves a problem collectively. Emits signed cooperation cards.",
+  "status": "STAGED",
+  "as_of": "20260904T052122Z",
+  "axis_feeds": [
+    "governance",
+    "safety",
+    "capability"
+  ],
+  "multiplayer": true,
+  "players": "8-64 players",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/swarm.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/swarm-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/swarm.json",
+    "agui": "https://councilof.ai/swarm/ag-ui",
+    "a2ui": "https://councilof.ai/swarm/a2-ui",
+    "x402": "https://councilof.ai/api/x402?sku=game-swarm",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "x402": {
+    "sku": "game-swarm",
+    "price_usdc": 0.3
+  },
+  "notes": [
+    "Swarm emits signed cards every turn",
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Anchored to OTS + Rekor + EAS"
+  ]
+}

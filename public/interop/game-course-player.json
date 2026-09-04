@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "course-player",
+  "name": "Course Player",
+  "kind": "education",
+  "engine": "React + course engine",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-course-player",
+  "x402_price_usdc": 0.0,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play Course Player with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/course-player.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/course-player-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/course-player.json",
+    "agui": "https://councilof.ai/course-player/ag-ui",
+    "a2ui": "https://councilof.ai/course-player/a2-ui"
+  }
+}

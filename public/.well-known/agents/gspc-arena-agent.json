@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "gspc-arena",
+  "name": "GSPC Arena",
+  "kind": "measurement-arena",
+  "as_of": "20260904T052122Z",
+  "url": "https://councilof.ai/api/a2a/gspc-arena",
+  "version": "1.0",
+  "capabilities": {
+    "play": "Play GSPC Arena with AI opponents",
+    "chat": "Chat with AI via AG-UI / A2UI",
+    "multiplayer": "Join a multiplayer room",
+    "attestation": "Every turn emits a signed card",
+    "verification": "Verify any signed card offline"
+  },
+  "skills": [
+    {
+      "id": "gspc-arena.play",
+      "description": "Play GSPC Arena"
+    },
+    {
+      "id": "gspc-arena.chat",
+      "description": "Chat with AI in GSPC Arena"
+    },
+    {
+      "id": "gspc-arena.attest",
+      "description": "Get a signed turn card from GSPC Arena"
+    },
+    {
+      "id": "gspc-arena.verify",
+      "description": "Verify an attestation from GSPC Arena"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "agui": "https://councilof.ai/gspc-arena/ag-ui",
+    "a2ui": "https://councilof.ai/gspc-arena/a2-ui"
+  }
+}

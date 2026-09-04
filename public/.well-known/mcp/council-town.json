@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "council-town",
+  "name": "Council Town",
+  "kind": "open-world-multi-agent",
+  "as_of": "20260904T052122Z",
+  "url": "https://councilof.ai/.well-known/mcp/council-town.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_council-town",
+      "description": "Play Council Town"
+    },
+    {
+      "name": "chat_council-town",
+      "description": "Chat with AI in Council Town"
+    },
+    {
+      "name": "join_room_council-town",
+      "description": "Join a multiplayer room in Council Town"
+    },
+    {
+      "name": "attest_council-town",
+      "description": "Get a signed turn card from Council Town"
+    },
+    {
+      "name": "verify_council-town",
+      "description": "Verify an attestation from Council Town"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://council-town/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://council-town/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://council-town/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_council-town",
+      "description": "Play Council Town with AI"
+    },
+    {
+      "name": "chat_council-town",
+      "description": "Chat with AI in Council Town"
+    }
+  ]
+}

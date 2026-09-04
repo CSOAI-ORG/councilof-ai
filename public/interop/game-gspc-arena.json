@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "gspc-arena",
+  "name": "GSPC Arena",
+  "kind": "measurement-arena",
+  "engine": "React + GSPC substrate",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-gspc-arena",
+  "x402_price_usdc": 0.5,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play GSPC Arena with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/gspc-arena.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/gspc-arena-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/gspc-arena.json",
+    "agui": "https://councilof.ai/gspc-arena/ag-ui",
+    "a2ui": "https://councilof.ai/gspc-arena/a2-ui"
+  }
+}

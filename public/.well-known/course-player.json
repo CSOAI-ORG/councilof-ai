@@ -1,0 +1,38 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "course-player",
+  "name": "Course Player",
+  "kind": "education",
+  "engine": "React + course engine",
+  "description": "Guided lessons on AI governance. Each lesson emits a completion card.",
+  "status": "LIVE",
+  "as_of": "20260904T052122Z",
+  "axis_feeds": [
+    "governance",
+    "safety"
+  ],
+  "multiplayer": false,
+  "players": "single player",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/course-player.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/course-player-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/course-player.json",
+    "agui": "https://councilof.ai/course-player/ag-ui",
+    "a2ui": "https://councilof.ai/course-player/a2-ui",
+    "x402": "https://councilof.ai/api/x402?sku=game-course-player",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "x402": {
+    "sku": "game-course-player",
+    "price_usdc": 0.0
+  },
+  "notes": [
+    "Course Player emits signed cards every turn",
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Anchored to OTS + Rekor + EAS"
+  ]
+}

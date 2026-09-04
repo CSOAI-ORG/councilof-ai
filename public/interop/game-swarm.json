@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "swarm",
+  "name": "Swarm",
+  "kind": "agent-swarm",
+  "engine": "PixiJS + SOV3 substrate",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-swarm",
+  "x402_price_usdc": 0.3,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play Swarm with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/swarm.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/swarm-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/swarm.json",
+    "agui": "https://councilof.ai/swarm/ag-ui",
+    "a2ui": "https://councilof.ai/swarm/a2-ui"
+  }
+}

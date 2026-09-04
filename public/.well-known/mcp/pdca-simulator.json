@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "pdca-simulator",
+  "name": "PDCA Simulator",
+  "kind": "simulation",
+  "as_of": "20260904T052122Z",
+  "url": "https://councilof.ai/.well-known/mcp/pdca-simulator.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_pdca-simulator",
+      "description": "Play PDCA Simulator"
+    },
+    {
+      "name": "chat_pdca-simulator",
+      "description": "Chat with AI in PDCA Simulator"
+    },
+    {
+      "name": "join_room_pdca-simulator",
+      "description": "Join a multiplayer room in PDCA Simulator"
+    },
+    {
+      "name": "attest_pdca-simulator",
+      "description": "Get a signed turn card from PDCA Simulator"
+    },
+    {
+      "name": "verify_pdca-simulator",
+      "description": "Verify an attestation from PDCA Simulator"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://pdca-simulator/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://pdca-simulator/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://pdca-simulator/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_pdca-simulator",
+      "description": "Play PDCA Simulator with AI"
+    },
+    {
+      "name": "chat_pdca-simulator",
+      "description": "Chat with AI in PDCA Simulator"
+    }
+  ]
+}

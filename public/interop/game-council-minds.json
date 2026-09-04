@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "council-minds",
+  "name": "Council Minds",
+  "kind": "deliberation",
+  "engine": "React + agent orchestration",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-council-minds",
+  "x402_price_usdc": 0.2,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play Council Minds with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/council-minds.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/council-minds-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/council-minds.json",
+    "agui": "https://councilof.ai/council-minds/ag-ui",
+    "a2ui": "https://councilof.ai/council-minds/a2-ui"
+  }
+}

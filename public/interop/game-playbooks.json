@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "playbooks",
+  "name": "Playbooks",
+  "kind": "scenario",
+  "engine": "React + scenario engine",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-playbooks",
+  "x402_price_usdc": 0.1,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play Playbooks with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/playbooks.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/playbooks-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/playbooks.json",
+    "agui": "https://councilof.ai/playbooks/ag-ui",
+    "a2ui": "https://councilof.ai/playbooks/a2-ui"
+  }
+}

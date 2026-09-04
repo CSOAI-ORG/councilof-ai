@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "civic",
+  "name": "Civic",
+  "kind": "civic-deliberation",
+  "engine": "React + deliberation engine",
+  "description": "Citizens deliberate policy questions. Emits signed policy cards.",
+  "status": "STAGED",
+  "as_of": "20260904T052122Z",
+  "axis_feeds": [
+    "governance",
+    "safety",
+    "compliance",
+    "conduct"
+  ],
+  "multiplayer": true,
+  "players": "8-128 players",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/civic.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/civic-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/civic.json",
+    "agui": "https://councilof.ai/civic/ag-ui",
+    "a2ui": "https://councilof.ai/civic/a2-ui",
+    "x402": "https://councilof.ai/api/x402?sku=game-civic",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "x402": {
+    "sku": "game-civic",
+    "price_usdc": 0.2
+  },
+  "notes": [
+    "Civic emits signed cards every turn",
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Anchored to OTS + Rekor + EAS"
+  ]
+}

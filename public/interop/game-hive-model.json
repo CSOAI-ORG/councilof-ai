@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "hive-model",
+  "name": "Hive Model",
+  "kind": "multi-agent-hive",
+  "engine": "PixiJS + SOV3 substrate",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-hive-model",
+  "x402_price_usdc": 0.3,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play Hive Model with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/hive-model.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/hive-model-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/hive-model.json",
+    "agui": "https://councilof.ai/hive-model/ag-ui",
+    "a2ui": "https://councilof.ai/hive-model/a2-ui"
+  }
+}

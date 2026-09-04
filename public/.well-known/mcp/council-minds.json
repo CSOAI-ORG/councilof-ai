@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "council-minds",
+  "name": "Council Minds",
+  "kind": "deliberation",
+  "as_of": "20260904T052122Z",
+  "url": "https://councilof.ai/.well-known/mcp/council-minds.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_council-minds",
+      "description": "Play Council Minds"
+    },
+    {
+      "name": "chat_council-minds",
+      "description": "Chat with AI in Council Minds"
+    },
+    {
+      "name": "join_room_council-minds",
+      "description": "Join a multiplayer room in Council Minds"
+    },
+    {
+      "name": "attest_council-minds",
+      "description": "Get a signed turn card from Council Minds"
+    },
+    {
+      "name": "verify_council-minds",
+      "description": "Verify an attestation from Council Minds"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://council-minds/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://council-minds/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://council-minds/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_council-minds",
+      "description": "Play Council Minds with AI"
+    },
+    {
+      "name": "chat_council-minds",
+      "description": "Chat with AI in Council Minds"
+    }
+  ]
+}

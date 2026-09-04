@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.game-interop/0.1",
+  "slug": "pdca-simulator",
+  "name": "PDCA Simulator",
+  "kind": "simulation",
+  "engine": "React + PDCA engine",
+  "as_of": "20260904T052122Z",
+  "x402_sku": "game-pdca-simulator",
+  "x402_price_usdc": 0.2,
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui",
+    "websocket"
+  ],
+  "anchor_chain": [
+    "opentimestamps",
+    "sigstore_rekor",
+    "eas_base"
+  ],
+  "capabilities": [
+    "Play PDCA Simulator with AI opponents",
+    "Chat with AI via AG-UI / A2UI",
+    "Multiplayer rooms via WebSocket",
+    "Every turn emits a signed card",
+    "Anchored to OTS + Rekor + EAS"
+  ],
+  "links": {
+    "discovery": "https://councilof.ai/.well-known/pdca-simulator.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/pdca-simulator-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/pdca-simulator.json",
+    "agui": "https://councilof.ai/pdca-simulator/ag-ui",
+    "a2ui": "https://councilof.ai/pdca-simulator/a2-ui"
+  }
+}
