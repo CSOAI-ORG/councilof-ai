@@ -21,6 +21,14 @@ const PAID_FIVE = ["commission_card", "art50_marking_evidence", "rwa_evidence", 
  */
 const WRONG_REASON = /free-only|no payment header|carries no payment header|cannot carry a payment header/i;
 
+/**
+ * The mechanism, asserted BESIDE the negative on every surface. The negative alone is passed by a
+ * document that simply deletes the explanation, which would leave a guard that looks like it is
+ * watching and is not. Both directions are proven: restoring the old sentence turns these red, and
+ * so does removing the mechanism sentence without restoring anything.
+ */
+const MECHANISM = /x_payment\s+ARGUMENT/i;
+
 /** A fake origin: routes answer 402 (with a v2 body + header), 200 when x-payment is present, 404 when absent. */
 function stubOrigin(opts: { deployed: string[]; paidOk?: boolean }) {
   const seen: Request[] = [];
@@ -60,7 +68,7 @@ describe("/mcp tools/list — seven free + five paid, catalogue free, nothing la
     }
     // The note must give the MECHANISM, which cannot go stale, and must never again give the
     // reason that was false: payment is the x_payment ARGUMENT, so a transport never carries it.
-    expect((PAID as { note: string }).note).toMatch(/x_payment ARGUMENT/);
+    expect((PAID as { note: string }).note).toMatch(MECHANISM);
     expect((PAID as { note: string }).note).not.toMatch(WRONG_REASON);
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
@@ -78,11 +86,12 @@ describe("/mcp tools/list — seven free + five paid, catalogue free, nothing la
     expect(g.paid_tools.doctrine).toMatch(/measurement, not certification/);
     // stdio_alternative must not assert what another package's current version ships — that drifts on
     // its release schedule. It states the mechanism instead.
-    expect(g.stdio_alternative).toMatch(/x_payment ARGUMENT/);
+    expect(g.stdio_alternative).toMatch(MECHANISM);
     expect(g.stdio_alternative).not.toMatch(WRONG_REASON);
     const i = await (await call(rpc("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "0" } }))).json();
     expect(i.result.instructions).toMatch(/Five paid tools/);
     expect(i.result.instructions).toMatch(/Measurement, not certification/);
+    expect(i.result.instructions).toMatch(MECHANISM);
     expect(i.result.instructions).not.toMatch(WRONG_REASON);
   });
 });
