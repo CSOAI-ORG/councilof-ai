@@ -130,7 +130,17 @@ def test_live_root_envelope() -> None:
     assert st == 200
     assert root.get("did_intended")
     assert root.get("merkle_root")
-    assert root.get("card_count")
+    # `assert root.get("card_count")` was a truthiness check — it passed for ANY
+    # non-zero count, including one that disagreed with the leaves it shipped with.
+    # That mattered: with odd-node duplication (CVE-2012-2459) a 142-leaf and a
+    # 144-leaf set hash to the same merkle_root, and card_count is the only signed
+    # field that tells them apart. Demonstrated against the live root 2026-09-04.
+    leaves = root.get("card_sha256")
+    assert isinstance(leaves, list), "root must ship the leaf list it commits to"
+    assert root["card_count"] == len(leaves), (
+        f'card_count={root["card_count"]} but {len(leaves)} leaves — the signed count '
+        "no longer binds the tree, so the root admits a second leaf set"
+    )
     sig = root.get("sig_ed25519")
     if sig:
         assert isinstance(sig, str) and len(sig) >= 64
@@ -147,3 +157,49 @@ if __name__ == "__main__":
     test_envelope_preimage_under_3kb()
     test_live_root_envelope()
     print("PASS public-root XRPL16 + SWIFT17 + GenAI.mil7 UNMEASURED notices + envelope preimage")
+
+
+def test_count_check_can_actually_fail() -> None:
+    """Prove the guard above is not vacuous.
+
+    A check that has never been seen to fail is not evidence. This builds the exact
+    forgery — the live leaf list plus two duplicated tail leaves, which recomputes to
+    an identical merkle_root — and asserts the count check rejects it.
+    """
+    import hashlib
+
+    def mroot(leaf_hexes: list[str]) -> str:
+        lvl = [bytes.fromhex(h) for h in leaf_hexes]
+        while len(lvl) > 1:
+            lvl = [
+                hashlib.sha256(lvl[i] + (lvl[i + 1] if i + 1 < len(lvl) else lvl[i])).digest()
+                for i in range(0, len(lvl), 2)
+            ]
+        return lvl[0].hex()
+
+    # Deterministic leg: the smallest tree that exhibits the collision. This does not
+    # depend on today's card count, so the proof never silently stops proving.
+    A, B, C = (hashlib.sha256(x).hexdigest() for x in (b"A", b"B", b"C"))
+    assert mroot([A, B, C]) == mroot([A, B, C, C]), (
+        "this tree shape is supposed to be duplication-collidable; if this stops "
+        "holding, the node rule changed and node_definition/tree_caveat are now wrong"
+    )
+    assert len([A, B, C]) != len([A, B, C, C])  # only the count separates them
+
+    # Live leg: the same collision on the published root. How many duplicated tail
+    # leaves it takes depends on the binary structure of the count (2 at 142 leaves,
+    # 4 at 140), so search rather than hardcode.
+    st, root = _get("https://councilof.ai/root.json")
+    assert st == 200
+    leaves = root["card_sha256"]
+    base = mroot(leaves)
+    assert base == root["merkle_root"], "node_definition no longer reproduces the root"
+
+    colliding = [k for k in range(1, 33) if mroot(leaves + leaves[-k:]) == base]
+    assert colliding, (
+        f"no tail-duplication collision found at {len(leaves)} leaves for k<=32. "
+        "That is luck, not safety — the shape is still collidable. Keep the count check."
+    )
+    forged = leaves + leaves[-colliding[0] :]
+    assert mroot(forged) == base                    # the forgery is real
+    assert root["card_count"] != len(forged)        # and the count is what catches it

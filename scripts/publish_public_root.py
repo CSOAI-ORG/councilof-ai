@@ -166,6 +166,24 @@ def payload_of(card: dict) -> dict:
     return {k: v for k, v in card.items() if k not in DIGEST_EXCLUDES}
 
 
+def assert_count_binds(card_count: int, leaf_hexes: list[str]) -> None:
+    """card_count is the ONLY thing separating this tree from a CVE-2012-2459 twin.
+
+    With odd-node duplication a 142-leaf and a 144-leaf set share a root, so the
+    signed count is load-bearing, not decorative.
+
+    Do NOT call this at emit time with len(shas) on both sides — that compares a value
+    to itself and can never fail. It belongs where the two fields arrive independently:
+    reading a root.json back off disk or off the wire. See test_public_root.py.
+    """
+    if card_count != len(leaf_hexes):
+        raise SystemExit(
+            f"REFUSING TO PUBLISH: card_count={card_count} but {len(leaf_hexes)} leaves. "
+            "The signed count is what makes this root unambiguous; if it can drift, "
+            "the root admits a second leaf set."
+        )
+
+
 def merkle_root(leaf_hexes: list[str]) -> str:
     level = [bytes.fromhex(h) for h in leaf_hexes]
     if not level:
@@ -678,6 +696,27 @@ def main() -> int:
         "leaf_definition": (
             "sha256(canonical(card minus sha256 and sig_ed25519)) — binds subject, "
             "source_urls, tags, as_of, did, surface, unmeasured and payload"
+        ),
+        # Added 2026-09-04. The leaf rule was published from the start; the NODE rule
+        # never was, so no stranger could reproduce merkle_root from these bytes — it
+        # had to be guessed. Publishing the leaf rule alone is not a reproducible root.
+        "node_definition": (
+            "parent = sha256(left || right) over RAW 32-byte digests, pairwise, "
+            "bottom-up. An odd node at any level is paired WITH ITSELF "
+            "(Bitcoin-style duplication), not promoted. No domain-separation prefix."
+        ),
+        "tree_caveat": (
+            "Odd-node duplication makes this tree shape collidable in the sense of "
+            "CVE-2012-2459: appending duplicates of the tail can yield a DIFFERENT "
+            "leaf set with an IDENTICAL merkle_root. Demonstrated on this very root — "
+            "142 leaves and 144 leaves hash to 5ca3482f77d9…. The collision is closed "
+            "ONLY because card_count is inside the signed preimage. Therefore a "
+            "verifier MUST reject any presentation where len(card_sha256) != "
+            "card_count, and MUST reject any inclusion proof with index >= card_count. "
+            "Checking the merkle_root alone is NOT sufficient. A future v2 should move "
+            "to RFC 6962 domain separation (0x00 leaf / 0x01 node), which removes the "
+            "collision by construction; that changes every root, so it is not a silent "
+            "upgrade."
         ),
         "language": (
             "coverage of public XRPL instruments + public notices. "

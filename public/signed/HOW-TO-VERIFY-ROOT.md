@@ -19,6 +19,41 @@ PY
 ```
 The preimage is the canonical JSON (sorted keys, compact separators, UTF-8, `ensure_ascii=false`) of exactly six fields. `card_sha256[]` is bound by `merkle_root`.
 
+## 2b. Recompute `merkle_root` from the leaves
+
+Until 2026-09-04 this document published the **leaf** rule and not the **node** rule, so
+the sentence above was not actually checkable by a stranger — the tree shape had to be
+guessed. It is:
+
+> `parent = sha256(left || right)` over **raw 32-byte digests**, pairwise, bottom-up.
+> An odd node at any level is paired **with itself**, not promoted. No domain-separation prefix.
+
+```python
+import hashlib, json
+r = json.load(open("root.json"))
+def merkle(leaf_hexes):
+    lvl = [bytes.fromhex(h) for h in leaf_hexes]
+    while len(lvl) > 1:
+        lvl = [hashlib.sha256(lvl[i] + (lvl[i+1] if i+1 < len(lvl) else lvl[i])).digest()
+               for i in range(0, len(lvl), 2)]
+    return lvl[0].hex()
+assert merkle(r["card_sha256"]) == r["merkle_root"]
+```
+
+**You must also check `len(r["card_sha256"]) == r["card_count"]`, and reject any inclusion
+proof whose `index >= card_count`.** Pairing an odd node with itself makes this tree shape
+collidable in the sense of CVE-2012-2459: appending duplicates of the tail produces a
+*different* leaf set with an *identical* `merkle_root`. That is not hypothetical here — the
+live 140-leaf root and a 144-leaf forgery of it hash to the same value, and the board's real
+signature verifies over both, because the signature covers `merkle_root` and not the leaf
+array. `card_count` is inside the signed preimage and is the only field that tells them
+apart. A verifier that recomputes the root and stops has not finished.
+
+A future `csoai.public-root/v2` should adopt RFC 6962 domain separation (`0x00` before a
+leaf, `0x01` before a node), which removes the collision by construction. That changes every
+root, so it will be a declared version bump and never a silent one; roots already published
+under v0/v1 stay checkable under the rule above.
+
 ## 2. Rekor (Sigstore transparency log)
 The sidecar `https://councilof.ai/interop/root-witness-latest.json` names the `logIndex`. The entry is type `rekord` (pki format x509): it carries the preimage bytes, the raw Ed25519 signature and the board's PEM public key. Pure Ed25519 is rejected by `hashedrekord`, which is why `rekord` is used.
 ```bash
