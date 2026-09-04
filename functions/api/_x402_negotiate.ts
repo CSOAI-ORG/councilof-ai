@@ -132,11 +132,37 @@ export async function facilitatorDialect(
 export function toDialectPayload(
   payload: Record<string, unknown>,
   version: 1 | 2,
+  v2ctx?: { accepted?: Record<string, unknown>; resource?: { url: string; description?: string; mimeType?: string } },
 ): Record<string, unknown> {
   const net = typeof payload.network === "string" ? payload.network : "";
-  return {
-    ...payload,
-    x402Version: version,
-    ...(net ? { network: version === 2 ? toCaip2Network(net) : toLegacyNetwork(net) } : {}),
+  if (version === 1) {
+    return { ...payload, x402Version: 1, ...(net ? { network: toLegacyNetwork(net) } : {}) };
+  }
+  // V2 IS A DIFFERENT ENVELOPE, NOT A RELABELLED V1 — and getting that wrong is what made v2
+  // look broken. Per specs/x402-specification-v2.md §7.1, the v2 paymentPayload carries
+  // `resource` and `accepted` ALONGSIDE `payload`; the top-level `paymentRequirements` is a
+  // separate field. Restating a v1 envelope with x402Version:2 omits both, and PayAI answers
+  // exactly that:
+  //     HTTP 400 {"invalidReason":"invalid_payload",
+  //               "invalidMessage":"accepted: Invalid input: expected object, received undefined"}
+  // which reads as "the facilitator's v2 is unusable" and is really "we sent it a v1 body".
+  // Probed 2026-09-04 with the shape below: HTTP 200,
+  // invalid_exact_evm_insufficient_balance with the payer recovered — the same terminal state
+  // v1 reaches, i.e. correct in every respect but funding.
+  //
+  // Why this matters beyond correctness: facilitator extensions ride on v2. PayAI advertises
+  // extensions ["bazaar", ...], and Bazaar is the discovery layer agents search to find paid
+  // resources at all. A rail stuck on v1 settles fine and stays invisible.
+  //
+  // `payload` — the buyer's signature and authorization — is passed through untouched. Only the
+  // envelope around it is restated, and the recipient is inside the signed tuple regardless.
+  const out: Record<string, unknown> = {
+    x402Version: 2,
+    ...(v2ctx?.resource ? { resource: v2ctx.resource } : {}),
+    ...(v2ctx?.accepted ? { accepted: v2ctx.accepted } : {}),
+    payload: payload.payload,
   };
+  if (net) out.network = toCaip2Network(net);
+  if (typeof payload.scheme === "string") out.scheme = payload.scheme;
+  return out;
 }

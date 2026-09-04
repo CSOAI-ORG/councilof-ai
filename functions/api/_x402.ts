@@ -263,12 +263,27 @@ export async function verifyX402Payment(
   // earning: PayAI added a v2 kind for Base, the old "highest version wins" rule switched to it,
   // and every real payment came back `facilitator /verify HTTP 400` after the buyer had signed.
   const candidates: (1 | 2)[] = neg.candidates.length > 0 ? neg.candidates : [neg.version ?? clientVersion];
-  const bodyFor = (v: 1 | 2): string =>
-    JSON.stringify({
+  const bodyFor = (v: 1 | 2): string => {
+    const reqs = v === 2 ? toV2Requirements(entry) : toV1Requirements(entry);
+    // v2 repeats the accepted terms INSIDE paymentPayload and adds `resource`; see the envelope
+    // note in toDialectPayload. v1 ignores both.
+    const v2ctx =
+      v === 2
+        ? {
+            accepted: reqs,
+            resource: {
+              url: resourceUrl.split("?")[0],
+              description: entry.description || "",
+              mimeType: entry.mimeType || "application/json",
+            },
+          }
+        : undefined;
+    return JSON.stringify({
       x402Version: v,
-      paymentPayload: toDialectPayload(payload as Record<string, unknown>, v),
-      paymentRequirements: v === 2 ? toV2Requirements(entry) : toV1Requirements(entry),
+      paymentPayload: toDialectPayload(payload as Record<string, unknown>, v, v2ctx),
+      paymentRequirements: reqs,
     });
+  };
 
   try {
     let vr: Response | null = null;
