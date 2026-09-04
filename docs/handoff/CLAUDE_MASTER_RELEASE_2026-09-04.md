@@ -1,109 +1,175 @@
-# Claude master — integration and release lane
+# Claude master — post-release integration and verification lane
 
 **Date:** 2026-09-04
-**Candidate branch:** `codex/council-release-live`
-**Checkpoint:** reconciled from `origin/master` at `24291d5d0`; refresh before merge
-**Owner:** Claude master release operator
+
+**Base:** fetch, resolve and record the latest `origin/master` commit at the start of every pass; never reuse a branch or SHA from an older handoff
+
+**Owner:** Claude master integration/release operator
 
 ## Outcome
 
-Integrate the reviewed frontend and backend lanes into one reproducible release,
-show the production-shaped preview, obtain owner approval and make the single
-controlled production write through the repository workflow.
+Verify the released surface, integrate only reviewed follow-up manifests, show a
+production-shaped preview and prepare the next change set without writing to
+production. Claude Master is the sole integration owner, but this post-release
+job order does not authorise a merge, workflow dispatch, deployment, external
+publication, email or spend.
 
-**Current state:** the unified dashboard integration is present and the full
-unit suite passed **1,442/1,442 across 132 files** before the final truth and
-witness remediations. The latest client build also passed. Council independence
-is now labelled honestly (`rho=1`, `n_eff=1` across three lineages/two
-providers), simulated engine protocol doors are removed from the served tree,
-and 22 speculative Web3 rails fail closed as `PLANNED`. Historical invalid
-proof-shaped artefacts are being preserved outside the public tree. A fresh
-current root cannot be manufactured locally: the authorised GitHub workflow
-must sign and witness the exact post-merge bytes. Nothing here establishes
-production until the full final gate chain, preview, merge, root workflow and
-served-commit verification succeed.
+## Truth checkpoint to preserve
 
-## Business and GSPC purpose
+- The exact current public-root candidate has **154 coverage leaves**,
+  `root.json` SHA-256
+  `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`
+  and Merkle root
+  `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`.
+- Ed25519 and Rekor verify. OTS is `STAMPED_PENDING_BITCOIN`; it is not a
+  confirmed Bitcoin timestamp. PQC remains planned.
+- The **335-card signed-card catalogue is a separate corpus**. The historical
+  union is **25 roots / 937 entries**, with **904** individually signed and
+  **33** unsigned wrappers.
+- The Council is a 33-member design with a 23-member quorum target, not a live
+  BFT runtime. The latest independence experiment is `rho=1`, `n_eff=1`.
+- Games, quests, training and Coliseum runs are `PRACTICE_ONLY`. General
+  agentic repair and live two-model battle remain fail-closed.
 
-- **Revenue:** make the request/measure/fix/retest/receipt journey reachable
-  without shipping unsupported claims.
-- **Growth:** release one canonical Council OS front door and portable protocol
-  surfaces instead of duplicate products.
-- **IP:** preserve the canonical state machine, card size and provenance
-  boundaries while excluding secrets and internal-only material.
-- **GSPC:** publish only reducer output derived from reviewed admitted evidence.
+These values identify this checkpoint only. Read the artifacts and gates again
+before reporting a later release.
+
+## Bounded post-release deliverables
+
+1. **Revenue evidence artifact:** verify that request, scope, measure,
+   fix-proposal, retest and receipt states are reachable or explicitly
+   unavailable in the same shell. Produce a local evidence report only; do not
+   claim customers, settlement or revenue.
+2. **Growth evidence artifact:** verify one canonical dashboard front door and
+   the generated protocol/discovery surfaces with zero duplicate applications
+   or dead advertised routes. Reachability is not adoption.
+3. **IP artifact:** produce an exact-path provenance/licence/secret review for
+   the proposed integration, preserving the evidence-state vocabulary and
+   canonicalization boundaries.
+4. **GSPC artifact:** prove the UI, API, signed-card catalogue, public root and
+   witness pointer state their separate scopes consistently. Do not regenerate
+   signed truth outside its authorised workflow.
 
 ## Exclusive path boundary
 
 Own integration and release control in:
 
-- `client/src/App.tsx` and `client/src/pages/Dashboard.tsx`
+- `client/src/App.tsx`, `client/src/pages/Dashboard.tsx` and
+  `client/src/pages/ContentReviewNotice.tsx`
 - `package.json`, `.github/workflows/deploy.yml`, `DEPLOY-LOCK.md` and
   `canon.json`
 - release-only guards, route generators and prerender orchestration under
   `scripts/**` that are not assigned to TUI 2
 - generated `public/**` and `dist/**` output only through their canonical
   generators
-- this release handoff and the exact-path release manifest
+- the hand-authored `public/AGENT-ONBOARDING.md` coordination contract
+- this release handoff, the master execution order and exact-path release
+  manifest
 
-Do not redesign TUI 1 components or TUI 2 evidence contracts. Return defects
-to their owner with a failing test or reproducible trace.
+Do not redesign TUI 1 components or routed truth pages, or TUI 2 evidence
+contracts. Return defects to their owner with a failing test or reproducible
+trace.
 
 ## Required work
 
-1. Freeze lane writes and record the reviewed current-master checkpoint.
-2. Classify candidate paths as `INCLUDE`, `EXCLUDE`, `QUARANTINE` or
-   `UNRELATED`; stage only explicit reviewed paths.
-3. Preserve `/mcp` compatibility, the single dashboard shell and the
-   current-master heading/accessibility correction.
-4. Review every deletion and generated change independently; regenerate route,
-   redirect, sitemap and signed indexes on the final base.
-5. Run the full gate chain and preserve logs with exact counts and warnings.
-6. Show the owner the production-shaped desktop/mobile preview.
-7. Deploy only after explicit approval and only through GitHub Actions from
-   reviewed `master`; verify the served commit and recheck after the
-   anti-clobber interval.
+1. Fetch current `origin/master`, record its resolved commit in the run log and
+   verify the current served commit before opening a new change set.
+2. Accept only frozen, exact-path manifests from TUI 1, TUI 2 and Hermes.
+   Classify each path `INCLUDE`, `EXCLUDE`, `QUARANTINE` or `UNRELATED`.
+3. Review every deletion and generated change independently. Regenerate route,
+   redirect, sitemap and signed indexes only through canonical scripts.
+4. Run the current `.github/workflows/deploy.yml` gate sequence locally. The
+   workflow is authoritative; if it changes, update this brief before relying
+   on the command list below.
+5. Show the owner the production-shaped desktop/mobile preview and gate logs.
+6. Prepare a PR only if a bounded follow-up is necessary. Stop before commit,
+   push, PR creation, merge, workflow dispatch or deploy under this job order.
+7. Record existing production state by read-only served-commit and endpoint
+   checks. Never describe a local build or merged commit as deployed.
 
-## Acceptance evidence
+## Release gate chain
 
 ```bash
 node scripts/one-door-guard.mjs
 node scripts/no-conflict-markers.mjs
-npm run guard:redirects
+node scripts/wallet-credential-gate.mjs --selftest
+node scripts/wallet-credential-gate.mjs
+npm run guard:evidence-integrity
+npm run guard:council-truth
+node scripts/redirects-guard.mjs --selftest
+node scripts/redirects-guard.mjs public/_redirects
+node scripts/pages-size-guard.mjs public
+npm ci --no-audit --no-fund
+python3 -m pip install -q cryptography opentimestamps-client
+python3 scripts/root-witness-release-gate.py --selftest
+python3 scripts/root-witness-release-gate.py --phase candidate
 npm run ts-ratchet:selftest
 npm run ts-ratchet
-npm test
 npm run build:client
+npx playwright install --with-deps chromium
+npm run prerender:dashboard
 npm run test:e2e:shell
+npx playwright install --with-deps chromium
+bash scripts/prerender-run.sh --dist dist/client --wait 900 --min 350
 node scripts/check-prerender.mjs dist/client
+rm -f dist/client/gspc-scoreboard.html
+node scripts/place-end-user-aliases.mjs dist/client
+for b in carebench conductbench defbench detbench mcpbench machbench ossbench pqcbench provbench swarmbench xrbench arena govbench agibench paper-district claimguard; do
+  if [ -f "client/public/$b.html" ]; then
+    cp "client/public/$b.html" "dist/client/$b.html"
+    mkdir -p "dist/client/$b"
+    cp "client/public/$b.html" "dist/client/$b/index.html"
+  fi
+done
+npm run workspace-launcher:selftest
+npm run workspace-launcher
+npm run workspace-launcher:check
+node scripts/brand-gate.mjs --selftest
 node scripts/brand-gate.mjs dist/client
 node scripts/signed-json-guard.mjs dist/client
+node scripts/price-gate.mjs --selftest
 node scripts/price-gate.mjs dist/client
 node scripts/facts-gate.mjs dist/client
+set -euo pipefail
+for p in sov-os/index.html api-docs/index.html os/index.html gspc-verify/index.html; do
+  if [ ! -f "dist/client/$p" ]; then
+    echo "MISSING dist/client/$p — prerender did not snapshot this route"
+    exit 1
+  fi
+  echo "ok dist/client/$p ($(wc -c < dist/client/$p) bytes)"
+done
+for fn in functions/api/receipts/latest.ts functions/api/east-west-bench.ts functions/api/evidence-pack.ts functions/api/cards.ts functions/api/axis-register.ts functions/api/auth/[[path]].ts functions/api/dashboard/stats.ts functions/api/_authCrypto.ts functions/api/challenge.ts functions/api/wave-dashboard.ts functions/api/counters.ts functions/api/state.ts functions/api/eunomia-data.ts functions/api/_chatLobby.ts functions/enterprise.ts functions/enterprises.ts functions/chat.ts functions/pricing.ts; do
+  test -f "$fn" || (echo "missing $fn" && exit 1)
+done
+node scripts/pages-size-guard.mjs dist/client
 git diff --check
 ```
 
-Record the candidate commit, explicit staged-path manifest, gate logs, preview
-evidence, approval, workflow run and apex/Pages commit match. A successful
-local build or merge is not deployment proof.
+The generated-artifact removal and copy loop above mirrors the workflow's
+post-prerender placement step; run it only against disposable `dist/client`.
+The following loops reproduce the workflow's exact required dist-file/function
+inventory. A later, separately authorised deployment must additionally pass the immediate,
+anti-clobber and hold checks, the bounded witness recheck and
+`root-witness-release-gate.py --phase live` against the actual deployed bytes.
 
-Last complete pre-remediation checkpoint: client build succeeded over 8,337
-modules, the unit suite passed **1,442/1,442 across 132 files**, and shell E2E
-reported **27 passed, 1 skipped**. The current TypeScript ratchet passes at its
-explicit **210-error / 116-file legacy baseline** (not zero type debt). Those
-are time-stamped component results, not release proof. Re-run every gate on the
-final rebased commit and record remaining root/witness issues by identity rather
-than copying a stale count. Do not weaken either evidence gate to release.
+## Acceptance evidence and metrics
 
-## Non-goals
+Supply the resolved base commit, exact changed-path classification, complete
+gate logs, desktop/mobile preview evidence and current read-only production
+probe. Required metrics are:
 
-No direct Wrangler deployment, broad staging, silent test-baseline update,
-provider inference from configuration, manual edits to generated truth,
-financial transaction, external outreach or certification claim.
+- every workflow gate above passes on one unchanged tree;
+- zero secrets, unreviewed generated files or unexpected deletions;
+- zero duplicate shell routes and zero advertised quarantined routes;
+- local root/card/witness statements match their artifact scopes exactly;
+- no production or external write, email, publication or spend.
 
-## Handoff gates
+## Non-goals and handoff gates
 
-Require TUI 1 visual/E2E evidence, TUI 2 contract/negative-test evidence and
-Hermes claim/secret review. Stop for exposed credentials, private transcripts,
-unreviewed generated files, fabricated witness material, ambiguous ownership,
-missing owner approval or a failed production-pipeline health check.
+No direct Wrangler deployment, broad staging, silent baseline update, provider
+inference from configuration, manual signed-output edit, financial transaction,
+email, outreach or certification claim. Stop for exposed credentials, private
+transcripts, fabricated witness material, ambiguous ownership or any gate that
+does not pass on the exact reviewed tree. A future production write requires a
+separate explicit owner approval and must run only through GitHub Actions from
+reviewed `master`.
