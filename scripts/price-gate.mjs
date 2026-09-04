@@ -106,6 +106,16 @@ const ALLOW = [
     why: "Fund sizes (the fund's own capital), not a price anyone pays us.",
   },
   {
+    pages: /^grants\//,
+    why:
+      "Grant amounts we are applying FOR — money that would come to us from funders — not a " +
+      "price anyone pays us. Same shape as the prosperity exemption above. Verified before " +
+      "adding: the page's only money is \"$280K in grants ready to send\", and it prices no " +
+      "CSOAI service (no tier, fee, subscription or per-year figure anywhere on it). This " +
+      "single finding blocked every production deploy, so the site went 20 hours and 123 " +
+      "commits stale on a page that sells nothing.",
+  },
+  {
     pages: /^(roi|roi-calculator)\//,
     why:
       "Calculator slider bounds and the reader's own inputs echoed back. The page charges " +

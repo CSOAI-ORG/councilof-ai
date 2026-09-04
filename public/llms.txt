@@ -101,3 +101,17 @@ Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at 
 Measurement only. Nothing here is a conformity mark. No SOV names. No invented scores in this file.
 
 - Machine-readability & clarity record (signed): https://councilof.ai/api/clarity
+
+## Come back / carry the mark
+
+- What changed, as RSS: https://councilof.ai/feed.xml (aliases https://councilof.ai/rss.xml;
+  canonical https://councilof.ai/api/feed.xml) — MEASURED board changes, REPORTED context,
+  regulation-change events and corrections. Historical items keep their sitting-day wording and
+  say so; counts typed there are superseded by the live board. No account, no email, no key.
+- Badges you can paste: https://councilof.ai/badge.md — plain markdown, every snippet in the
+  response body. Badges render live from GET /api/gspc, so a pasted badge cannot drift into a
+  false claim; an unmeasured axis renders grey as "unmeasured", never as a flattering zero.
+  There is no "certified" badge and there never will be.
+- One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
+- Python reader and card verifier: pip install "csoai-gspc[verify]"
+

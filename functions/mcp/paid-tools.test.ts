@@ -12,6 +12,23 @@ const rpc = (method: string, params?: unknown, id = 1) => ({ jsonrpc: "2.0", id,
 const FREE_SEVEN = ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"];
 const PAID_FIVE = ["commission_card", "art50_marking_evidence", "rwa_evidence", "witness_hash", "receipts_batch"];
 
+/**
+ * The reason that was false, in the shapes it was written in across seven places on 4 Sep 2026:
+ * "stdio has no payment header", "stdio stays free-only", "paid tools are NOT mirrored here by design".
+ * Payment travels as the `x_payment` ARGUMENT and each door sets the X-PAYMENT header itself, so which
+ * tools a package carries is a packaging choice and never a property of the transport. These assertions
+ * exist so the wrong reason cannot come back, and so no document here pins another package's tool list.
+ */
+const WRONG_REASON = /free-only|no payment header|carries no payment header|cannot carry a payment header/i;
+
+/**
+ * The mechanism, asserted BESIDE the negative on every surface. The negative alone is passed by a
+ * document that simply deletes the explanation, which would leave a guard that looks like it is
+ * watching and is not. Both directions are proven: restoring the old sentence turns these red, and
+ * so does removing the mechanism sentence without restoring anything.
+ */
+const MECHANISM = /x_payment\s+ARGUMENT/i;
+
 /** A fake origin: routes answer 402 (with a v2 body + header), 200 when x-payment is present, 404 when absent. */
 function stubOrigin(opts: { deployed: string[]; paidOk?: boolean }) {
   const seen: Request[] = [];
@@ -49,7 +66,10 @@ describe("/mcp tools/list — seven free + five paid, catalogue free, nothing la
       expect(t.csoai.paid).toBe(true);
       expect(t.csoai.route).toMatch(/^\/api\//);
     }
-    expect((PAID as { note: string }).note).toMatch(/stdio stays free-only/);
+    // The note must give the MECHANISM, which cannot go stale, and must never again give the
+    // reason that was false: payment is the x_payment ARGUMENT, so a transport never carries it.
+    expect((PAID as { note: string }).note).toMatch(MECHANISM);
+    expect((PAID as { note: string }).note).not.toMatch(WRONG_REASON);
     expect(JSON.stringify(PAID)).not.toMatch(/[£$€]\s?\d/);
   });
 
@@ -60,14 +80,19 @@ describe("/mcp tools/list — seven free + five paid, catalogue free, nothing la
     expect(canonical.tools.some((t: { name: string }) => PAID_FIVE.includes(t.name))).toBe(false);
   });
 
-  it("GET /mcp discovery and initialize name the paid tools and the stdio free-only rule", async () => {
+  it("GET /mcp discovery and initialize name the paid tools and give the mechanism, not a stale tool list", async () => {
     const g = await (await onRequest({ request: new Request(`${ORIGIN}/mcp`), env: {}, params: {} } as never)).json();
     expect(g.paid_tools.names).toEqual(PAID_FIVE);
     expect(g.paid_tools.doctrine).toMatch(/measurement, not certification/);
-    expect(g.stdio_alternative).toMatch(/free-only/);
+    // stdio_alternative must not assert what another package's current version ships — that drifts on
+    // its release schedule. It states the mechanism instead.
+    expect(g.stdio_alternative).toMatch(MECHANISM);
+    expect(g.stdio_alternative).not.toMatch(WRONG_REASON);
     const i = await (await call(rpc("initialize", { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "t", version: "0" } }))).json();
     expect(i.result.instructions).toMatch(/Five paid tools/);
     expect(i.result.instructions).toMatch(/Measurement, not certification/);
+    expect(i.result.instructions).toMatch(MECHANISM);
+    expect(i.result.instructions).not.toMatch(WRONG_REASON);
   });
 });
 
@@ -149,5 +174,18 @@ describe("/mcp tools/call — paid tools", () => {
     const w = buildPaidRequest("witness_hash", { sha256: "A".repeat(64), label: "hello" }, ORIGIN);
     if ("req" in w) expect(new URL(w.req.url).searchParams.get("sha256")).toBe("a".repeat(64));
     expect(buildPaidRequest("nope", {}, ORIGIN)).toEqual({ error: "unknown paid tool: nope" });
+  });
+});
+
+describe("GET /mcp — the one-command install is at the point of discovery", () => {
+  it("names a one-command install and a zero-install path", async () => {
+    const g = await (await onRequest({ request: new Request(`${ORIGIN}/mcp`), env: {}, params: {} } as never)).json();
+    // The shortest real install used to live only in the npm README, which nobody discovering
+    // this door would read. If it is not here, discovery leads to "clone the repo" again.
+    expect(g.install).toBeTruthy();
+    expect(g.install.claude_code).toMatch(/npx -y csoai-gspc-mcp/);
+    expect(g.install.no_install_at_all).toMatch(/api\/gspc/);
+    // A checkout is a fallback, never the headline.
+    expect(JSON.stringify(g.install)).not.toMatch(/git clone|index\.mjs/);
   });
 });

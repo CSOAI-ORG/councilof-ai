@@ -1,8 +1,10 @@
 /**
  * Paid MCP tools on Pages /mcp — thin, honest wrappers over the x402-metered routes.
  *
- * Definitions: ./paid-tools.json (HTTP-only; the stdio server cannot carry a payment header and
- * stays free-only — see that file's note). The seven free tools in ./gspc-tools.json are untouched.
+ * Definitions: ./paid-tools.json. Payment is the `x_payment` ARGUMENT and this module sets the
+ * X-PAYMENT header itself, so nothing here is HTTP-only in principle — the stdio server reads the
+ * same file and carries the same five from npm csoai-gspc-mcp 0.2.0. The seven free tools in
+ * ./gspc-tools.json are untouched.
  *
  * MECHANISM: a paid tool forwards to its route on the SAME origin with the caller's `x_payment`
  * argument as the X-PAYMENT header (verbatim; this module never inspects, signs or invents a
