@@ -69,7 +69,7 @@ const PAGES = [
 
 // Functions-first leftover hops (not necessarily in public/_redirects).
 const LIVE_HOPS = [
-  ["/pricing", "/os?lobby=assess&task=pricing-overview"],
+  ["/pricing", "/dashboard/?tab=measured&task=pricing-overview"],
   ["/plans", "/os?lobby=assess&task=pricing-overview"],
   ["/enterprise-plans", "/os?lobby=assess&task=pricing-overview"],
   ["/enterprise", "/os?lobby=assess&task=enterprise-start"],

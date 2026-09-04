@@ -45,6 +45,7 @@ export default function DashboardRequestPane() {
   const params = new URLSearchParams(
     search.startsWith("?") ? search.slice(1) : search,
   );
+  const isPricingOverview = params.get("task") === "pricing-overview";
   const initialArguments = {
     ...(params.get("subject") ? { subject: params.get("subject")! } : {}),
     ...(params.get("axis") ? { axis: params.get("axis")! } : {}),
@@ -64,14 +65,29 @@ export default function DashboardRequestPane() {
               id="request-attestation-title"
               className="mt-2 text-3xl font-semibold tracking-tight"
             >
-              Request a receipt. Never mistake it for a fresh measurement.
+              {isPricingOverview
+                ? "How the free rail works"
+                : "Request a receipt. Never mistake it for a fresh measurement."}
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-emerald-50/80">
-              RAS commissions one card-v0 receipt for a named subject on the
-              frozen bank. It can re-serve signed measurement cards already on
-              file; payment never creates a MEASURED cell. A fresh run remains
-              <strong className="mx-1 text-white">UNMEASURED</strong>
-              until a published run actually exists.
+              {isPricingOverview ? (
+                <>
+                  Verify is free forever. A grade is never sold. There are no
+                  public prices and no SaaS tiers. Metered RAS work can re-serve
+                  signed measurement cards already on file; payment never
+                  creates a MEASURED cell. A fresh run remains{" "}
+                  <strong className="text-white">UNMEASURED</strong> until a
+                  published run actually exists.
+                </>
+              ) : (
+                <>
+                  RAS commissions one card-v0 receipt for a named subject on the
+                  frozen bank. It can re-serve signed measurement cards already
+                  on file; payment never creates a MEASURED cell. A fresh run
+                  remains <strong className="text-white">UNMEASURED</strong>{" "}
+                  until a published run actually exists.
+                </>
+              )}
             </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-right">

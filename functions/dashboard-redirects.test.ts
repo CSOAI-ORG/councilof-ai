@@ -4,6 +4,7 @@ import {
   onRequest as redirectScoreboard,
   scoreboardDestination,
 } from "./gspc-scoreboard";
+import { onRequest as redirectPricing } from "./pricing";
 
 describe("retired workspace doors", () => {
   it("preserves an old Council OS pane and unrelated context", () => {
@@ -36,5 +37,14 @@ describe("retired workspace doors", () => {
     expect(destination.searchParams.get("tab")).toBe("board");
     expect(destination.searchParams.get("embed")).toBe("1");
     expect(redirectScoreboard({ request }).status).toBe(308);
+  });
+
+  it("sends pricing directly to its canonical dashboard pane", () => {
+    const response = redirectPricing();
+    expect(response.status).toBe(308);
+    expect(response.headers.get("location")).toBe(
+      "/dashboard/?tab=measured&task=pricing-overview",
+    );
+    expect(response.headers.get("location")).not.toContain("/os");
   });
 });
