@@ -220,6 +220,13 @@ function fixtureFetcher(
             merkle_root: witnessedRoot,
             as_of: "2026-09-02T07:13:27Z",
           },
+          corpus_scope: {
+            relationship: "SEPARATE_CORPORA",
+            public_root_count: 154,
+            signed_card_count: 335,
+            signed_card_id_overlap: 0,
+            ots_covers: "PUBLIC_ROOT_BYTES_ONLY",
+          },
           witnesses: {
             rekor: { status: "WITNESSED" },
             ots: { status: "STAMPED_PENDING_BITCOIN" },
@@ -355,6 +362,9 @@ describe("GET /api/fabric", () => {
     expect(witness.summary).toContain("older root");
     expect(witness.summary).toContain("OTS STAMPED_PENDING_BITCOIN");
     expect(witness.summary).toContain("XRPL memo NOT_YET");
+    expect(witness.summary).toContain("154 root leaves versus a separate index of 335 signed cards");
+    expect(witness.summary).toContain("0 identifier overlap");
+    expect(witness.summary).toContain("OTS covers the root bytes only");
     expect(witness.summary.toLowerCase()).not.toContain("fully anchored");
   });
 

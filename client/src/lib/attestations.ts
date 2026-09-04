@@ -63,6 +63,15 @@ export interface WitnessDoc {
     card_count?: number;
     as_of?: string;
   };
+  corpus_scope?: {
+    relationship?: string;
+    public_root_count?: number;
+    public_root_sha256?: string;
+    signed_card_count?: number;
+    signed_card_id_overlap?: number;
+    ots_covers?: string;
+    note?: string;
+  };
   signature?: {
     did?: string;
     preimage_fields?: string[];
@@ -116,6 +125,18 @@ export interface CardIndexDoc {
   head?: string;
   packaged_at?: string;
   cards?: CardIndexRow[];
+}
+
+export function corpusBoundary(root: PublicRoot | null, index: CardIndexDoc | null) {
+  const rootIds = new Set(Array.isArray(root?.card_sha256) ? root.card_sha256 : []);
+  const signedIds = new Set((index?.cards ?? []).map((card) => card.card));
+  return {
+    relationship: "SEPARATE_CORPORA" as const,
+    publicRootLeaves: rootIds.size,
+    separatelyIndexedSignedCards: signedIds.size,
+    identifierOverlap: [...rootIds].filter((id) => signedIds.has(id)).length,
+    otsCovers: "PUBLIC_ROOT_BYTES_ONLY" as const,
+  };
 }
 
 export interface Correction {
@@ -287,7 +308,7 @@ export type RailTone = "done" | "pending" | "absent" | "unknown";
 export function railTone(state: string | undefined | null): RailTone {
   const s = String(state ?? "").toUpperCase();
   if (!s) return "absent";
-  if (s === "WITNESSED" || s === "ATTESTED" || s === "STAMPED_BITCOIN" || s === "CONFIRMED") return "done";
+  if (s === "WITNESSED" || s === "ATTESTED" || s === "STAMPED_BITCOIN" || s === "CONFIRMED" || s === "CONFIRMED_BITCOIN") return "done";
   if (s === "STAMPED_PENDING_BITCOIN" || s === "PENDING" || s === "PUBLISHED") return "pending";
   if (s === "NOT_YET" || s === "UNCHECKABLE" || s === "ABSENT") return "absent";
   return "unknown";

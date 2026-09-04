@@ -11,6 +11,15 @@
   "card_count": 154,
   "as_of": "2026-09-04T18:21:17Z"
  },
+ "corpus_scope": {
+  "relationship": "SEPARATE_CORPORA",
+  "public_root_count": 154,
+  "public_root_sha256": "9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd",
+  "signed_card_count": 335,
+  "signed_card_id_overlap": 0,
+  "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+  "note": "The 154 public-root leaves and 335 separately indexed signed cards are separate corpora with zero identifier overlap. This root and its OTS proof do not anchor the signed-card index."
+ },
  "signature": {
   "did": "did:web:csoai.org#board-attestation-1",
   "field": "sig_ed25519",
@@ -43,7 +52,12 @@
    "status": "STAMPED_PENDING_BITCOIN",
    "path": "public/interop/root-9b426735.json.ots",
    "url": "https://councilof.ai/interop/root-9b426735.json.ots",
-   "note": "run `ots upgrade` after a Bitcoin block; `ots verify` then names the block"
+   "proof_sha256": "91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99",
+   "subject_sha256": "9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd",
+   "bitcoin_blocks": [],
+   "observed_at": "2026-09-04T18:21:23Z",
+   "scope": "PUBLIC_ROOT_BYTES_ONLY",
+   "note": "Status is derived from the proof bytes. This is a submitted calendar receipt, not yet a Bitcoin timestamp; it proves no block confirmation and covers only the exact public root bytes."
   },
   "eas_base": {
    "status": "NOT_YET",

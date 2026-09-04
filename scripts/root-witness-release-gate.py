@@ -34,6 +34,7 @@ import base64
 import hashlib
 import json
 import re
+import struct
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -223,6 +224,15 @@ def valid_checked_at(value: Any) -> bool:
     return observed <= datetime.now(timezone.utc) + timedelta(minutes=5)
 
 
+def parse_utc(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not UTC_RFC3339.fullmatch(value):
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+    except ValueError:
+        return None
+
+
 def validate_drift_record(
     errors: list[str],
     drift: Any,
@@ -385,20 +395,135 @@ def public_ots_reference(value: Any) -> str | None:
     return normalized
 
 
-def validate_current_ots(errors: list[str], sidecar: dict[str, Any], valid_ots: set[str]) -> None:
+def ots_proof_facts(path: Path) -> tuple[str, list[tuple[bytes, Any]], int]:
+    """Return the detached digest, Bitcoin attestations, and pending count.
+
+    This is deliberately derived from proof bytes.  A sidecar status is never an
+    input to this function, so stale prose cannot promote or demote the proof.
+    """
+    from opentimestamps.core.notary import BitcoinBlockHeaderAttestation, PendingAttestation
+    from opentimestamps.core.serialize import StreamDeserializationContext
+    from opentimestamps.core.timestamp import DetachedTimestampFile
+
+    with path.open("rb") as handle:
+        detached = DetachedTimestampFile.deserialize(StreamDeserializationContext(handle))
+    bitcoin: list[tuple[bytes, Any]] = []
+    pending = 0
+    for message, attestation in detached.timestamp.all_attestations():
+        if isinstance(attestation, BitcoinBlockHeaderAttestation):
+            bitcoin.append((bytes(message), attestation))
+        elif isinstance(attestation, PendingAttestation):
+            pending += 1
+    return bytes(detached.timestamp.msg).hex(), bitcoin, pending
+
+
+def proof_derived_status(bitcoin_count: int, pending_count: int) -> str:
+    if bitcoin_count:
+        return "CONFIRMED_BITCOIN"
+    if pending_count:
+        return "STAMPED_PENDING_BITCOIN"
+    return "NO_ATTESTATION"
+
+
+def validate_corpus_scope(errors: list[str], sidecar: dict[str, Any], root: dict[str, Any], root_sha: str) -> None:
+    """Keep the permissionless root and separately indexed signed cards distinct."""
+    scope = sidecar.get("corpus_scope") if isinstance(sidecar.get("corpus_scope"), dict) else {}
+    try:
+        index = load_json(PUBLIC / "signed" / "card_index.json")
+        cards = index.get("cards") if isinstance(index.get("cards"), list) else []
+        card_ids = {
+            row.get("card")
+            for row in cards
+            if isinstance(row, dict) and isinstance(row.get("card"), str) and HEX64.fullmatch(row["card"])
+        }
+    except Exception as exc:
+        errors.append(f"signed-card index unreadable: {type(exc).__name__}: {exc}")
+        return
+    root_ids = set(root.get("card_sha256") or [])
+    overlap = root_ids & card_ids
+    expected = {
+        "relationship": "SEPARATE_CORPORA",
+        "public_root_count": len(root_ids),
+        "public_root_sha256": root_sha,
+        "signed_card_count": len(cards),
+        "signed_card_id_overlap": len(overlap),
+        "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+    }
+    for field, value in expected.items():
+        add(errors, scope.get(field) == value, f"corpus_scope {field} disagrees with artifacts ({scope.get(field)!r} != {value!r})")
+    add(errors, not overlap, f"root/card corpus distinction changed: {len(overlap)} signed-card id(s) now overlap root leaves")
+
+
+def validate_current_ots(
+    errors: list[str],
+    sidecar: dict[str, Any],
+    valid_ots: set[str],
+    root: dict[str, Any],
+    root_sha: str,
+) -> None:
     witnesses = sidecar.get("witnesses") if isinstance(sidecar.get("witnesses"), dict) else {}
     value = witnesses.get("ots", witnesses.get("opentimestamps"))
     ots = value if isinstance(value, dict) else {}
     status = str(ots.get("status", "")).upper()
-    add(
-        errors,
-        status in {"STAMPED_PENDING_BITCOIN", "BITCOIN_ATTESTATION_PRESENT"},
-        "current root has no parseable OpenTimestamps stamp",
-    )
     reference = public_ots_reference(ots.get("path") or ots.get("proof_path"))
     add(errors, reference is not None, "current root OTS witness has no public proof path")
     if reference is not None:
         add(errors, reference in valid_ots, f"current root OTS proof is missing, invalid, or digest-mismatched: {reference}")
+        proof = PUBLIC / reference.removeprefix("public/")
+        if proof.is_file():
+            try:
+                digest, bitcoin, pending = ots_proof_facts(proof)
+                derived = proof_derived_status(len(bitcoin), pending)
+                add(errors, digest == root_sha, f"current OTS detached digest {digest} != root bytes {root_sha}")
+                add(errors, status == derived, f"current OTS metadata status {status!r} != proof-derived {derived!r}")
+                add(errors, ots.get("proof_sha256") == sha256(proof.read_bytes()), "current OTS metadata proof_sha256 disagrees with proof bytes")
+                add(errors, ots.get("subject_sha256") == root_sha, "current OTS metadata subject_sha256 disagrees with root bytes")
+
+                derived_heights = sorted({attestation.height for _, attestation in bitcoin})
+                add(errors, ots.get("bitcoin_blocks") == derived_heights, f"current OTS bitcoin_blocks disagrees with proof bytes ({ots.get('bitcoin_blocks')!r} != {derived_heights!r})")
+                if bitcoin:
+                    header = ots.get("bitcoin_header") if isinstance(ots.get("bitcoin_header"), dict) else {}
+                    header_hex = header.get("hex")
+                    add(errors, isinstance(header_hex, str) and bool(re.fullmatch(r"[0-9a-f]{160}", header_hex)), "confirmed OTS metadata has no 80-byte Bitcoin header")
+                    if isinstance(header_hex, str) and re.fullmatch(r"[0-9a-f]{160}", header_hex):
+                        header_bytes = bytes.fromhex(header_hex)
+                        block_hash = hashlib.sha256(hashlib.sha256(header_bytes).digest()).digest()[::-1].hex()
+                        block_time = struct.unpack("<I", header_bytes[68:72])[0]
+                        block_time_text = datetime.fromtimestamp(block_time, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+                        add(errors, header.get("height") in derived_heights, "Bitcoin header height is not attested by the OTS proof")
+                        add(errors, header.get("block_hash") == block_hash, "Bitcoin header block_hash does not match its bytes")
+                        add(errors, header.get("header_sha256") == sha256(header_bytes), "Bitcoin header sha256 does not match its bytes")
+                        add(errors, header.get("block_time_unix") == block_time, "Bitcoin header time does not match its bytes")
+                        add(errors, header.get("block_time") == block_time_text, "Bitcoin header UTC time does not match its bytes")
+                        matches = [message == header_bytes[36:68] for message, attestation in bitcoin if attestation.height == header.get("height")]
+                        add(errors, bool(matches) and all(matches), "Bitcoin header Merkle root does not satisfy the OTS attestation")
+                        sources = header.get("sources") if isinstance(header.get("sources"), list) else []
+                        expected_hash = header.get("block_hash")
+                        add(errors, header.get("source_agreement") == "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL", "Bitcoin confirmation does not record two-source byte agreement")
+                        add(errors, sources == [
+                            f"https://blockstream.info/api/block/{expected_hash}/header",
+                            f"https://mempool.space/api/block/{expected_hash}/header",
+                        ], "Bitcoin header source URLs do not name the recorded block on Blockstream and mempool.space")
+                        block_at = parse_utc(block_time_text)
+                        observed_at = parse_utc(header.get("verified_at"))
+                        sidecar_at = parse_utc(sidecar.get("as_of"))
+                        add(errors, observed_at is not None, "Bitcoin confirmation verified_at is not a UTC RFC 3339 timestamp")
+                        add(errors, sidecar_at is not None, "confirmed witness sidecar as_of is not a UTC RFC 3339 timestamp")
+                        if block_at and observed_at and sidecar_at:
+                            add(errors, observed_at >= block_at, "Bitcoin confirmation was reportedly observed before the attested block time")
+                            add(errors, sidecar_at >= observed_at, "witness sidecar as_of predates its confirmed OTS observation")
+                    add(errors, ots.get("scope") == "PUBLIC_ROOT_BYTES_ONLY", "confirmed OTS metadata does not limit its scope to the public-root bytes")
+            except Exception as exc:
+                errors.append(f"current root OTS proof facts cannot be derived: {type(exc).__name__}: {exc}")
+
+    validate_corpus_scope(errors, sidecar, root, root_sha)
+    try:
+        pointer = load_json(POINTER_PATH)
+        pointer_witnesses = pointer.get("witnesses") if isinstance(pointer.get("witnesses"), dict) else {}
+        add(errors, pointer_witnesses.get("ots") == status, "pointer OTS status disagrees with proof-derived current status")
+        add(errors, pointer.get("witness_status_observed_at") == (ots.get("bitcoin_header") or {}).get("verified_at"), "pointer OTS observation time disagrees with current witness metadata")
+    except Exception as exc:
+        errors.append(f"current witness pointer status cannot be checked: {type(exc).__name__}: {exc}")
 
 
 def witness_ots_targets() -> dict[str, str]:
@@ -523,22 +648,32 @@ def run_selftest() -> int:
     assert public_ots_reference("public/interop/root-deadbeef.json.ots") == "public/interop/root-deadbeef.json.ots"
     assert public_ots_reference("https://councilof.ai/interop/root-deadbeef.json.ots") == "public/interop/root-deadbeef.json.ots"
     assert public_ots_reference("https://example.invalid/root.ots") is None
-    ots_errors: list[str] = []
-    validate_current_ots(
-        ots_errors,
-        {
-            "witnesses": {
-                "ots": {
-                    "status": "STAMPED_PENDING_BITCOIN",
-                    "path": "public/interop/root-deadbeef.json.ots",
-                }
-            }
-        },
-        {"public/interop/root-deadbeef.json.ots"},
-    )
-    assert ots_errors == []
-    validate_current_ots(ots_errors, {"witnesses": {"ots": {"status": "PENDING"}}}, set())
-    assert len(ots_errors) == 2
+    assert proof_derived_status(1, 4) == "CONFIRMED_BITCOIN"
+    assert proof_derived_status(0, 4) == "STAMPED_PENDING_BITCOIN"
+    assert proof_derived_status(0, 0) == "NO_ATTESTATION"
+    current_proof = DEFAULT_PUBLIC / "interop" / "root-a44af078.json.ots"
+    if current_proof.is_file():
+        digest, bitcoin, pending = ots_proof_facts(current_proof)
+        assert digest == "a44af078ce371ae955f42916f1beb24be0822b474f33ffc45effabf902de02a1"
+        assert proof_derived_status(len(bitcoin), pending) == "CONFIRMED_BITCOIN"
+        assert sorted({attestation.height for _, attestation in bitcoin}) == [965487]
+        current_root = load_json(DEFAULT_PUBLIC / "root.json")
+        current_sidecar = load_json(DEFAULT_PUBLIC / "interop" / "root-witness-latest.json")
+        current_sha = sha256((DEFAULT_PUBLIC / "root.json").read_bytes())
+        current_ref = "public/interop/root-a44af078.json.ots"
+        truth_errors: list[str] = []
+        validate_current_ots(truth_errors, current_sidecar, {current_ref}, current_root, current_sha)
+        assert truth_errors == [], truth_errors
+        lying_sidecar = json.loads(json.dumps(current_sidecar))
+        lying_sidecar["witnesses"]["ots"]["status"] = "STAMPED_PENDING_BITCOIN"
+        lie_errors: list[str] = []
+        validate_current_ots(lie_errors, lying_sidecar, {current_ref}, current_root, current_sha)
+        assert any("proof-derived 'CONFIRMED_BITCOIN'" in issue for issue in lie_errors), lie_errors
+        lying_sidecar = json.loads(json.dumps(current_sidecar))
+        lying_sidecar["corpus_scope"]["signed_card_count"] += 1
+        scope_errors: list[str] = []
+        validate_current_ots(scope_errors, lying_sidecar, {current_ref}, current_root, current_sha)
+        assert any("signed_card_count disagrees" in issue for issue in scope_errors), scope_errors
 
     fixture_root = {"merkle_root": "11" * 32}
     fixture_raw = b"candidate"
@@ -668,7 +803,7 @@ def run_gate(
     if validated is not None and sidecar is not None:
         root, raw, root_sha, _ = validated
         if not exact_artifact_issues(sidecar.get("artifact"), root, raw, root_sha, "sidecar"):
-            validate_current_ots(errors, sidecar, valid_ots)
+            validate_current_ots(errors, sidecar, valid_ots, root, root_sha)
     validate_archive_references(errors, valid_ots)
 
     if phase == "live" and validated is not None:

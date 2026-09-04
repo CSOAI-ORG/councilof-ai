@@ -818,14 +818,14 @@ export async function buildFabricManifest(
       rail(observedAt, {
         id: "public-root",
         label: "Signed public root",
-        role: "integrity envelope for published cards",
+        role: "integrity envelope for the public-root corpus (not the signed-card index)",
         protocol: "Merkle / Ed25519",
         state: merkleRoot && signatureValid ? "SIGNED" : "UNCHECKABLE",
         endpoint: "/root.json",
         evidence_ref: signature ? "/root.json#sig_ed25519" : "/root.json",
         summary:
           merkleRoot && signatureValid
-            ? `${number(root.json.card_count) ?? "Unknown"} leaves under root ${merkleRoot.slice(0, 12)}…; Ed25519 verified against ${text(root.json.did_intended)}.`
+            ? `${number(root.json.card_count) ?? "Unknown"} public-root leaves under ${merkleRoot.slice(0, 12)}…; Ed25519 verified against ${text(root.json.did_intended)}. This is not the separate signed-card index.`
             : merkleRoot && signature
               ? "A root signature is present but did not verify against the published DID key; integrity is not claimed."
               : "The root document answered without both a Merkle root and signature; integrity is not claimed.",
@@ -843,7 +843,7 @@ export async function buildFabricManifest(
       unavailable(observedAt, {
         id: "public-root",
         label: "Signed public root",
-        role: "integrity envelope for published cards",
+        role: "integrity envelope for the public-root corpus (not the signed-card index)",
         protocol: "Merkle / Ed25519",
         endpoint: "/root.json",
         probe: root,
@@ -859,6 +859,11 @@ export async function buildFabricManifest(
     const comparable = !!currentRoot && !!witnessedRoot;
     const drift = comparable && currentRoot !== witnessedRoot;
     const statuses = witnessSummary(witness.json);
+    const corpusScope = record(witness.json.corpus_scope);
+    const scopeSummary =
+      text(corpusScope?.relationship) === "SEPARATE_CORPORA"
+        ? ` Scope: ${number(corpusScope?.public_root_count) ?? "unknown"} root leaves versus a separate index of ${number(corpusScope?.signed_card_count) ?? "unknown"} signed cards; ${number(corpusScope?.signed_card_id_overlap) ?? "unknown"} identifier overlap. OTS covers the root bytes only.`
+        : " Corpus scope was not established by the witness metadata.";
     rails.push(
       rail(observedAt, {
         id: "root-witness",
@@ -873,10 +878,10 @@ export async function buildFabricManifest(
         endpoint: "/interop/root-witness-latest.json",
         evidence_ref: "/interop/root-witness-latest.json",
         summary: drift
-          ? `Witness covers older root ${witnessedRoot.slice(0, 12)}…, not current ${currentRoot.slice(0, 12)}…. ${statuses}.`
+          ? `Witness covers older root ${witnessedRoot.slice(0, 12)}…, not current ${currentRoot.slice(0, 12)}…. ${statuses}.${scopeSummary}`
           : comparable
-            ? `Witness metadata matches the current root. ${statuses}. Individual witness states remain distinct.`
-            : `Witness metadata answered, but it could not be matched to the current root. ${statuses}.`,
+            ? `Witness metadata matches the current root. ${statuses}. Individual witness states remain distinct.${scopeSummary}`
+            : `Witness metadata answered, but it could not be matched to the current root. ${statuses}.${scopeSummary}`,
         freshness_seconds: ageSeconds(
           witness.json.as_of ?? artifact?.as_of,
           observedAtMs,

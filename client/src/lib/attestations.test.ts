@@ -14,6 +14,7 @@ import {
   BOARD_KEY_HEX,
   BOARD_KEY_ID,
   classifyQuery,
+  corpusBoundary,
   latestCorrections,
   latestSignedCards,
   ledgerSignatureState,
@@ -124,6 +125,7 @@ describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
     expect(railTone("")).toBe("absent");
     expect(railTone(undefined)).toBe("absent");
     expect(railTone("ATTESTED")).toBe("done");
+    expect(railTone("CONFIRMED_BITCOIN")).toBe("done");
     expect(railTone("SOMETHING_ELSE")).toBe("unknown");
   });
 
@@ -179,6 +181,21 @@ describe("witness rails — states verbatim, never a tick for NOT_YET", () => {
       expect(r.state).toBe("no witness sidecar read");
       expect(r.tone).toBe("unknown");
     }
+  });
+});
+
+describe("root/card corpus boundary", () => {
+  it("keeps root leaves separate from the signed-card index and counts overlap", () => {
+    expect(corpusBoundary(
+      { card_sha256: ["a".repeat(64), "b".repeat(64)] },
+      { cards: [{ card: "b".repeat(64) }, { card: "c".repeat(64) }] },
+    )).toEqual({
+      relationship: "SEPARATE_CORPORA",
+      publicRootLeaves: 2,
+      separatelyIndexedSignedCards: 2,
+      identifierOverlap: 1,
+      otsCovers: "PUBLIC_ROOT_BYTES_ONLY",
+    });
   });
 });
 

@@ -11,6 +11,15 @@
   "card_count": 154,
   "as_of": "2026-09-04T18:21:17Z"
  },
+ "corpus_scope": {
+  "relationship": "SEPARATE_CORPORA",
+  "public_root_count": 154,
+  "public_root_sha256": "9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd",
+  "signed_card_count": 335,
+  "signed_card_id_overlap": 0,
+  "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+  "note": "The OTS receipt covers the exact 154-leaf root.json bytes only. It does not anchor the separate index of 335 signed cards."
+ },
  "witness_sidecar": {
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
@@ -30,6 +39,7 @@
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
  },
+ "witness_status_observed_at": "2026-09-04T18:21:23Z",
  "witnesses": {
   "rekor": "WITNESSED",
   "ots": "STAMPED_PENDING_BITCOIN",
