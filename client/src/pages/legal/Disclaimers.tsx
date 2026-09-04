@@ -162,13 +162,14 @@ export default function Disclaimers() {
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
-                      <strong>AI systems can make mistakes.</strong> Despite our multi-agent consensus approach,
+                      <strong>AI systems can make mistakes.</strong> AI-assisted assessments,
                       AI-generated assessments, recommendations, and content may contain errors, omissions, or
                       inaccuracies.
                     </li>
                     <li>
-                      <strong>designed multi-agent review has limits.</strong> Our 22/33 consensus threshold
-                      reduces but does not eliminate the possibility of incorrect conclusions.
+                      <strong>the council is a design, not a live safeguard.</strong> The target is a
+                      23/33 threshold (strictly greater than two thirds), but no independent live voters,
+                      consensus property, or resilience under failed voters have been demonstrated.
                     </li>
                     <li>
                       <strong>AI cannot replace human judgment.</strong> All AI-generated outputs should be

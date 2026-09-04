@@ -107,7 +107,7 @@ export default function MCPDetail() {
               <div>
                 <h3 className="font-bold mb-1">Framework-mapped evidence</h3>
                 <p className="text-sm text-gray-600">
-                  Every call emits signed, auditable evidence mapped to {server.frameworks.join(", ")}. See how this maps to
+                  This registry entry maps the server to {server.frameworks.join(", ")}. That mapping is not a compliance determination, and a signed result must be verified from the specific response. See the
                   the CSOAI Charter on the <Link href="/crosswalks"><span className="text-emerald-700 underline cursor-pointer">Crosswalks</span></Link> page.
                 </p>
               </div>

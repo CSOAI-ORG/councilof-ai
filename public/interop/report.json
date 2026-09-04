@@ -1,24 +1,36 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "POST /api/report",
-  "description": "File a correction report",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "POST",
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Correction report intake (unavailable)",
+  "state": "NOT_IMPLEMENTED",
+  "description": "The route returns a fail-closed capability-state document; no report is accepted or persisted.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/report.ts",
+    "methods": [
+      "GET",
+      "POST"
+    ],
     "path": "/api/report",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+    "outcomes": [
+      {
+        "http_status": 501,
+        "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false"
       }
-    }
+    ]
+  },
+  "output": {
+    "state": "NOT_IMPLEMENTED",
+    "accepted": false,
+    "persisted": false,
+    "signed": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

@@ -54,7 +54,6 @@ const Penalties = lazy(() => import("./pages/Penalties"));
 const NistVsEuAct = lazy(() => import("./pages/NistVsEuAct"));
 const Iso42001VsEuAct = lazy(() => import("./pages/Iso42001VsEuAct"));
 const SectorAct = lazy(() => import("./pages/SectorAct"));
-const SECDisclosure = lazy(() => import("./pages/SECDisclosure"));
 const PersonaRouter = lazy(() => import("./pages/PersonaRouter"));
 const Workbench = lazy(() => import("./pages/Workbench"));
 const AltPage = lazy(() => import("./pages/AltPage"));
@@ -68,7 +67,6 @@ const AiActFaq = lazy(() => import("./pages/AiActFaq"));
 const ConformityAssessment = lazy(() => import("./pages/ConformityAssessment"));
 const JurisdictionAct = lazy(() => import("./pages/JurisdictionAct"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
-const AISystems = lazy(() => import("./pages/AISystems"));
 const RiskAssessment = lazy(() => import("./pages/RiskAssessment"));
 const AssessTool = lazy(() => import("./pages/AssessTool"));
 const Compliance = lazy(() => import("./pages/Compliance"));
@@ -77,18 +75,6 @@ const Watchdog = lazy(() => import("./pages/Watchdog"));
 const Reports = lazy(() => import("./pages/Reports"));
 const Settings = lazy(() => import("./pages/Settings"));
 const WatchdogSignup = lazy(() => import("./pages/WatchdogSignup"));
-const TrainingV2 = lazy(() => import("./pages/Training-v2"));
-const TrainingHub = lazy(() => import("./pages/TrainingHub"));
-const Courses = lazy(() => import("./pages/Courses"));
-const MyCourses = lazy(() => import("./pages/MyCourses"));
-const CoursePlayer = lazy(() => import("./pages/CoursePlayer"));
-const FreeCoursePlayer = lazy(() => import("./pages/FreeCoursePlayer"));
-const Certification = lazy(() => import("./pages/Certification"));
-const CertificationV2 = lazy(() => import("./pages/Certification-v2"));
-const CertificationExam = lazy(() => import("./pages/CertificationExam"));
-const CertificationResults = lazy(() => import("./pages/CertificationResults"));
-const MyCertificates = lazy(() => import("./pages/MyCertificates"));
-const ExamReview = lazy(() => import("./pages/ExamReview"));
 const PublicHome = lazy(() => import("./pages/PublicHome"));
 const Admin = lazy(() => import("./pages/Admin"));
 const ApiDocs = lazy(() => import("./pages/ApiDocs"));
@@ -101,12 +87,11 @@ const KnowledgeBase = lazy(() => import("./pages/KnowledgeBase"));
 const EnterpriseOnboarding = lazy(() => import("./pages/EnterpriseOnboarding"));
 const Pricing = lazy(() => import("./pages/Pricing"));
 const Products = lazy(() => import("./pages/Products"));
-const PricingFree = lazy(() => import("./pages/PricingFree"));
 const Payg = lazy(() => import("./pages/Payg"));
 const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
-const Blog = lazy(() => import("./pages/Blog"));
+const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
@@ -121,15 +106,11 @@ const EunomiaCatalog = lazy(() => import("./pages/EunomiaCatalog"));
 const EunomiaCrosswalk = lazy(() => import("./pages/EunomiaCrosswalk"));
 const EunomiaIndices = lazy(() => import("./pages/EunomiaIndices"));
 const Careers = lazy(() => import("./pages/Careers"));
-const NewHomeV2 = lazy(() => import("./pages/NewHome-v2"));
 const NewHomeV3 = lazy(() => import("./pages/NewHome-v3"));
 const MotionLab = lazy(() => import("./pages/MotionLab"));
 const RemediationPartners = lazy(() => import("./pages/RemediationPartners"));
 const Login = lazy(() => import("./pages/Login"));
-const Signup = lazy(() => import("./pages/Signup"));
-const Welcome = lazy(() => import("./pages/Welcome"));
 const FrameworkHive = lazy(() => import("./pages/FrameworkHive"));
-const SystemCard = lazy(() => import("./pages/SystemCard"));
 const CouncilModelCard = lazy(() => import("./pages/CouncilModelCard"));
 const CouncilSystemCard = lazy(() => import("./pages/CouncilSystemCard"));
 const CouncilWhitepaper = lazy(() => import("./pages/CouncilWhitepaper"));
@@ -142,12 +123,8 @@ const AiTransparency = lazy(() => import("./pages/AiTransparency"));
 const ABTesting = lazy(() => import("./pages/ABTesting"));
 const AboutCEASAI = lazy(() => import("./pages/AboutCEASAI"));
 const Accessibility = lazy(() => import("./pages/Accessibility"));
-const AnalyticsDashboard = lazy(() => import("./pages/AnalyticsDashboard"));
-const CEASAITraining = lazy(() => import("./pages/CEASAITraining"));
 const AustraliaAIGovernanceCompliance = lazy(() => import("./pages/AustraliaAIGovernanceCompliance"));
 const CanadaAIActCompliance = lazy(() => import("./pages/CanadaAIActCompliance"));
-const EUAIActCompliance = lazy(() => import("./pages/EUAIActCompliance"));
-const NISTAIRMFCompliance = lazy(() => import("./pages/NISTAIRMFCompliance"));
 const TC260Compliance = lazy(() => import("./pages/TC260Compliance"));
 const UKAIBillCompliance = lazy(() => import("./pages/UKAIBillCompliance"));
 const ConformityRoute = lazy(() => import("./pages/ConformityRoute"));
@@ -155,12 +132,9 @@ const Contact = lazy(() => import("./pages/Contact"));
 const CouncilDetail = lazy(() => import("./pages/CouncilDetail"));
 const CouncilLicensingLanding = lazy(() => import("./pages/CouncilLicensingLanding"));
 const CourseDetail = lazy(() => import("./pages/CourseDetail"));
-const Documentation = lazy(() => import("./pages/Documentation"));
 const EarlyAccessLanding = lazy(() => import("./pages/EarlyAccessLanding"));
 const EI3 = lazy(() => import("./pages/EI3"));
 const EUAIActClassifier = lazy(() => import("./pages/EUAIActClassifier"));
-const EUAIActUrgency = lazy(() => import("./pages/EUAIActUrgency"));
-const RegulationFeed = lazy(() => import("./pages/RegulationFeed"));
 const FrameworkDetail = lazy(() => import("./pages/FrameworkDetail"));
 const AustraliaAIGovernance = lazy(() => import("./pages/AustraliaAIGovernance"));
 const CanadaAIAct = lazy(() => import("./pages/CanadaAIAct"));
@@ -168,28 +142,20 @@ const UKAIBill = lazy(() => import("./pages/UKAIBill"));
 const GlobalAISafetyInitiative = lazy(() => import("./pages/GlobalAISafetyInitiative"));
 const GovBench = lazy(() => import("./pages/GovBench"));
 const DriftProduct = lazy(() => import("./pages/DriftProduct"));
-const GovernmentLinks = lazy(() => import("./pages/GovernmentLinks"));
-const GovernmentPortal = lazy(() => import("./pages/GovernmentPortal"));
 const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const HorusIntel = lazy(() => import("./pages/HorusIntel"));
-const CertificationHowItWorks = lazy(() => import("./pages/CertificationHowItWorks"));
 const ComplianceHowItWorks = lazy(() => import("./pages/ComplianceHowItWorks"));
 const DashboardHowItWorks = lazy(() => import("./pages/DashboardHowItWorks"));
 const EnterpriseHowItWorks = lazy(() => import("./pages/EnterpriseHowItWorks"));
-const TrainingHowItWorks = lazy(() => import("./pages/TrainingHowItWorks"));
 const Landscape = lazy(() => import("./pages/Landscape"));
 const MCPRegistry = lazy(() => import("./pages/MCPRegistry"));
 const MCPDetail = lazy(() => import("./pages/MCPDetail"));
-const Home = lazy(() => import("./pages/Home"));
 const OpenGridWorks = lazy(() => import("./pages/OpenGridWorks"));
 const Outreach = lazy(() => import("./pages/Outreach"));
 const RegulationRadar = lazy(() => import("./pages/RegulationRadar"));
 const RegionSettings = lazy(() => import("./pages/RegionSettings"));
 const RegionalAnalytics = lazy(() => import("./pages/RegionalAnalytics"));
 const RegulatoryAuthority = lazy(() => import("./pages/RegulatoryAuthority"));
-const RegulatoryCompliance = lazy(() => import("./pages/RegulatoryCompliance"));
-const Support = lazy(() => import("./pages/Support"));
-const Status = lazy(() => import("./pages/Status"));
 const PublicWatchdogHub = lazy(() => import("./pages/PublicWatchdogHub"));
 const WatchdogHelpProtectHumanity = lazy(() => import("./pages/WatchdogHelpProtectHumanity"));
 const WatchdogIncidentReport = lazy(() => import("./pages/WatchdogIncidentReport"));
@@ -199,7 +165,6 @@ const BenchmarkQuality = lazy(() => import("./pages/BenchmarkQuality"));
 const Instrument = lazy(() => import("./pages/Instrument"));
 const Harness = lazy(() => import("./pages/Harness"));
 const RefutationLedger = lazy(() => import("./pages/RefutationLedger"));
-const LiveLedger = lazy(() => import("./pages/LiveLedger"));
 const XrplAttest = lazy(() => import("./pages/XrplAttest"));
 const RatingTheRaters = lazy(() => import("./pages/RatingTheRaters"));
 const ClaimsRegister = lazy(() => import("./pages/ClaimsRegister"));
@@ -232,26 +197,20 @@ const Layer0 = lazy(() => import("./pages/Layer0"));
 const Ecosystem = lazy(() => import("./pages/Ecosystem"));
 const Protect = lazy(() => import("./pages/Protect"));
 const Ontology = lazy(() => import("./pages/Ontology"));
-const ComplianceMonitoring = lazy(() => import("./pages/ComplianceMonitoring"));
 const BulkAISystemImport = lazy(() => import("./pages/BulkAISystemImport"));
 const Jobs = lazy(() => import("./pages/Jobs"));
 const NotificationSettings = lazy(() => import("./pages/NotificationSettings"));
 const MyApplications = lazy(() => import("./pages/MyApplications"));
-const VerifyCertificate = lazy(() => import("./pages/VerifyCertificate"));
 const AgentCouncilFeature = lazy(() => import("./pages/features/AgentCouncilFeature"));
 const PDCAFrameworkFeature = lazy(() => import("./pages/features/PDCAFrameworkFeature"));
-const TrainingCertificationFeature = lazy(() => import("./pages/features/TrainingCertificationFeature"));
 const WatchdogJobsFeature = lazy(() => import("./pages/features/WatchdogJobsFeature"));
-const StudentProgress = lazy(() => import("./pages/StudentProgress"));
 const Accreditation = lazy(() => import("./pages/Accreditation"));
 const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
-const CertificateVerification = lazy(() => import("./pages/CertificateVerification"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
 const Enterprise = lazy(() => import("./pages/Enterprise"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
 const Charter = lazy(() => import("./pages/Charter"));
-const FoundingMembers = lazy(() => import("./pages/FoundingMembers"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
 const GovernmentDashboard = lazy(() => import("./pages/GovernmentDashboard"));
 const MaternalCovenant = lazy(() => import("./pages/MaternalCovenant"));
@@ -264,45 +223,29 @@ const MembershipAgreement = lazy(() => import("./pages/legal/MembershipAgreement
 const FoundingCouncilAgreement = lazy(() => import("./pages/legal/FoundingCouncilAgreement"));
 const LicensingAgreement = lazy(() => import("./pages/legal/LicensingAgreement"));
 const LicenceManifest = lazy(() => import("./pages/LicenceManifest"));
-const PrivacyPolicy = lazy(() => import("./pages/legal/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/legal/TermsOfService"));
 const Disclaimers = lazy(() => import("./pages/legal/Disclaimers"));
-const DataProcessingAgreement = lazy(() => import("./pages/legal/DataProcessingAgreement"));
 const CookiePolicy = lazy(() => import("./pages/legal/CookiePolicy"));
-const ServiceLevelAgreement = lazy(() => import("./pages/legal/ServiceLevelAgreement"));
 const Council = lazy(() => import("./pages/Council"));
 const GlobalRegulationTracker = lazy(() => import("./pages/GlobalRegulationTracker"));
 const FaqPage = lazy(() => import("./pages/FaqPage"));
 const Glossary = lazy(() => import("./pages/Glossary"));
 const ReadinessAssessment = lazy(() => import("./pages/ReadinessAssessment"));
 const IndustrySolutions = lazy(() => import("./pages/IndustrySolutions"));
-const IndustryTemplate = lazy(() => import("./pages/IndustryTemplate"));
-const PartnersAdvisory = lazy(() => import("./pages/PartnersAdvisory"));
-const CaseStudies = lazy(() => import("./pages/CaseStudies"));
-const TrustCenter = lazy(() => import("./pages/TrustCenter"));
 const Traction = lazy(() => import("./pages/Traction"));
 const ComparisonPage = lazy(() => import("./pages/ComparisonPage"));
 const ROICalculator = lazy(() => import("./pages/ROICalculator"));
-const Technology = lazy(() => import("./pages/Technology"));
 const Integrations = lazy(() => import("./pages/Integrations"));
 const Crosswalks = lazy(() => import("./pages/Crosswalks"));
-const CharterArticle = lazy(() => import("./pages/CharterArticle"));
-const ContentPage = lazy(() => import("./pages/ContentPage"));
-const OscalStudio = lazy(() => import("./pages/OscalStudio"));
-const EvidenceHub = lazy(() => import("./pages/EvidenceHub"));
 const ModelRegistry = lazy(() => import("./pages/ModelRegistry"));
 const FrameworkCatalog = lazy(() => import("./pages/FrameworkCatalog"));
-const Webhooks = lazy(() => import("./pages/Webhooks"));
-const ComplianceCommandCenter = lazy(() => import("./pages/ComplianceCommandCenter"));
 const PolicyGenerator = lazy(() => import("./pages/PolicyGenerator"));
 const RiskHeatmap = lazy(() => import("./pages/RiskHeatmap"));
 const OsEnter = lazy(() => import("./pages/OsEnter"));
 const CouncilTour = lazy(() => import("./pages/CouncilTour"));
 const CouncilAcademy = lazy(() => import("./pages/CouncilAcademy"));
 const CouncilRegistry = lazy(() => import("./pages/CouncilRegistry"));
-const CouncilHives = lazy(() => import("./pages/CouncilHives"));
 const GovernancePulse = lazy(() => import("./pages/GovernancePulse"));
-const LegacyBridge = lazy(() => import("./pages/LegacyBridge"));
 const CobolBridge = lazy(() => import("./pages/CobolBridge"));
 const SocialOS = lazy(() => import("./pages/SocialOS"));
 const CouncilMinds = lazy(() => import("./pages/CouncilMinds"));
@@ -319,11 +262,8 @@ const HowItWorks = lazy(() => import("./pages/HowItWorks"));
 const SectorsAtlas = lazy(() => import("./pages/SectorsAtlas"));
 const Signals = lazy(() => import("./pages/Signals"));
 const RegionsMap = lazy(() => import("./pages/RegionsMap"));
-const RegistryAll = lazy(() => import("./pages/RegistryAll"));
-const SocialConnect = lazy(() => import("./pages/SocialConnect"));
 const ConnectGSPC = lazy(() => import("./pages/ConnectGSPC"));
 const CouncilHub = lazy(() => import("./pages/CouncilHub"));
-const Pressroom = lazy(() => import("./pages/Pressroom"));
 const Compare = lazy(() => import("./pages/Compare"));
 const Fedramp = lazy(() => import("./pages/Fedramp"));
 const Readiness = lazy(() => import("./pages/Readiness"));
@@ -333,14 +273,11 @@ import ArchivedBanner from "./components/ArchivedBanner";
 import PageSchema from "./components/PageSchema";
 import DemoTour from "./components/DemoTour";
 const WatchdogMap = lazy(() => import("./pages/WatchdogMap"));
-const IncidentReport = lazy(() => import("./pages/IncidentReport"));
 const EuActClassifier = lazy(() => import("./pages/EuActClassifier"));
 const Crosswalk = lazy(() => import("./pages/Crosswalk"));
 const EastWest = lazy(() => import("./pages/EastWest"));
 const Challenge = lazy(() => import("./pages/Challenge"));
 const AgentGovernance = lazy(() => import("./pages/AgentGovernance"));
-const AgentRegistry = lazy(() => import("./pages/AgentRegistry"));
-const GlobalAIRegulation = lazy(() => import("./pages/GlobalAIRegulation"));
 const Cra = lazy(() => import("./pages/Cra"));
 const Nis2 = lazy(() => import("./pages/Nis2"));
 const VulnerabilityDisclosure = lazy(() => import("./pages/VulnerabilityDisclosure"));
@@ -363,24 +300,15 @@ const OnboardOS = lazy(() => import("./pages/OnboardOS"));
 const GovGraph = lazy(() => import("./pages/GovGraph"));
 const NetworkPage = lazy(() => import("./pages/NetworkPage"));
 const RegulatorAtlas = lazy(() => import("./pages/RegulatorAtlas"));
-const CyberScan = lazy(() => import("./pages/CyberScan"));
 const Competitors = lazy(() => import("./pages/Competitors"));
 const ToolCommons = lazy(() => import("./pages/ToolCommons"));
 const OpenMedia = lazy(() => import("./pages/OpenMedia"));
-const StatusPage = lazy(() => import("./pages/StatusPage"));
-const Distribution = lazy(() => import("./pages/Distribution"));
 const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
-const McpFleet = lazy(() => import("./pages/McpFleet"));
 const Gone = lazy(() => import("./pages/Gone"));
-const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));import { frameworksdata } from "./data/frameworks-content";
+const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));
 const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
-const RegulatorFindings = lazy(() => import("./pages/RegulatorFindings"));
 const FindingsExplorer = lazy(() => import("./pages/FindingsExplorer"));
 const ModelFindings = lazy(() => import("./pages/ModelFindings"));
-const RegulatorFindingsDetail = lazy(() => import("./pages/RegulatorFindingsDetail"));
-import { sectorsdata } from "./data/sectors-content";
-import { industriesdata } from "./data/industries-content";
-import { blogdata } from "./data/blog-content";
 import { AnalyticsProvider } from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
 
@@ -671,18 +599,18 @@ function App() {
                 <main id="main-content" className="flex-1" role="main" aria-label="Main content" tabIndex={-1}>
                   <Suspense fallback={<div role="status" aria-label="Loading the page" className="flex min-h-[60vh] items-center justify-center bg-background"><SectionLoader /></div>}><Switch>
                   <Route path="/" component={HomeVerify} />
-                  <Route path="/home-v2" component={NewHomeV2} />
+                  <Route path="/home-v2" component={ContentReviewNotice} />
                   <Route path="/home-v3" component={NewHomeV3} />
                   <Route path="/motion-lab" component={MotionLab} />
                   <Route path="/remediation-partners" component={RemediationPartners} />
                   <Route path="/login" component={Login} />
-                  <Route path="/signup" component={Signup} />
-                  <Route path="/welcome" component={Welcome} />
+                  <Route path="/signup" component={ContentReviewNotice} />
+                  <Route path="/welcome" component={ContentReviewNotice} />
                   <Route path="/hive/:slug" component={FrameworkHive} />
                   <Route path="/hive" component={FrameworkHive} />
-                  <Route path="/system-card" component={SystemCard} />
-                  <Route path="/assurance" component={SystemCard} />
-                  <Route path="/systemcard" component={SystemCard} />
+                  <Route path="/system-card" component={ContentReviewNotice} />
+                  <Route path="/assurance" component={ContentReviewNotice} />
+                  <Route path="/systemcard" component={ContentReviewNotice} />
                   <Route path="/council-model-card" component={CouncilModelCard} />
                   <Route path="/council-system-card" component={CouncilSystemCard} />
                   <Route path="/workbench-paper" component={CouncilWhitepaper} />
@@ -696,15 +624,15 @@ function App() {
                   <Route path="/about-credential" component={AboutCEASAI} />
                   <Route path="/about-ceasai">{() => <Redirect to="/about-credential" />}</Route>
                   <Route path="/accessibility" component={Accessibility} />
-                  <Route path="/analytics" component={AnalyticsDashboard} />
+                  <Route path="/analytics" component={ContentReviewNotice} />
                   <Route path="/byzantine-consensus">{() => <Redirect to="/council" />}</Route>
-                  <Route path="/credential-training" component={CEASAITraining} />
+                  <Route path="/credential-training" component={ContentReviewNotice} />
                   <Route path="/ceasai-training">{() => <Redirect to="/credential-training" />}</Route>
-                  <Route path="/certificate-verification" component={CertificateVerification} />
+                  <Route path="/certificate-verification" component={ContentReviewNotice} />
                   <Route path="/compliance/australia-ai-governance" component={AustraliaAIGovernanceCompliance} />
                   <Route path="/compliance/canada-ai-act" component={CanadaAIActCompliance} />
-                  <Route path="/compliance/eu-ai-act" component={EUAIActCompliance} />
-                  <Route path="/compliance/nist-ai-rmf" component={NISTAIRMFCompliance} />
+                  <Route path="/compliance/eu-ai-act" component={ContentReviewNotice} />
+                  <Route path="/compliance/nist-ai-rmf" component={ContentReviewNotice} />
                   <Route path="/compliance/tc260" component={TC260Compliance} />
                   <Route path="/compliance/uk-ai-bill" component={UKAIBillCompliance} />
                   <Route path="/conformity-route" component={ConformityRoute} />
@@ -712,13 +640,13 @@ function App() {
                   <Route path="/council-detail" component={CouncilDetail} />
                   <Route path="/council-licensing" component={CouncilLicensingLanding} />
                   <Route path="/courses/:id" component={CourseDetail} />
-                  <Route path="/docs" component={Documentation} />
+                  <Route path="/docs" component={ContentReviewNotice} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
                   <Route path="/enterprise-plans">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
-                  <Route path="/eu-ai-act-urgency" component={EUAIActUrgency} />
-                  <Route path="/feed" component={RegulationFeed} />
+                  <Route path="/eu-ai-act-urgency" component={ContentReviewNotice} />
+                  <Route path="/feed" component={ContentReviewNotice} />
                   <Route path="/frameworks/australia-ai" component={AustraliaAIGovernance} />
                   <Route path="/frameworks/canada-ai-act" component={CanadaAIAct} />
                   <Route path="/frameworks/uk-ai-bill" component={UKAIBill} />
@@ -726,32 +654,32 @@ function App() {
                   <Route path="/govbench" component={GovBench} />
                   <Route path="/drift-audit" component={DriftProduct} />
                   <Route path="/sov-town-lab">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
-                  <Route path="/government-links" component={GovernmentLinks} />
-                  <Route path="/government-portal" component={GovernmentPortal} />
+                  <Route path="/government-links" component={ContentReviewNotice} />
+                  <Route path="/government-portal" component={ContentReviewNotice} />
                   <Route path="/help" component={HelpCenter} />
                   <Route path="/help-center" component={HelpCenter} />
                   <Route path="/horus" component={HorusIntel} />
-                  <Route path="/how-it-works/certification" component={CertificationHowItWorks} />
+                  <Route path="/how-it-works/certification" component={ContentReviewNotice} />
                   <Route path="/how-it-works/compliance" component={ComplianceHowItWorks} />
                   <Route path="/how-it-works/dashboard" component={DashboardHowItWorks} />
                   <Route path="/how-it-works/enterprise" component={EnterpriseHowItWorks} />
-                  <Route path="/how-it-works/training" component={TrainingHowItWorks} />
+                  <Route path="/how-it-works/training" component={ContentReviewNotice} />
                   <Route path="/landscape" component={Landscape} />
                   <Route path="/mcp" component={MCPRegistry} />
                   <Route path="/mcp/:slug" component={MCPDetail} />
                   <Route path="/mcps" component={MCPRegistry} />
-                  <Route path="/old-home" component={Home} />
+                  <Route path="/old-home" component={ContentReviewNotice} />
                   <Route path="/opengridworks" component={OpenGridWorks} />
                   <Route path="/outreach" component={Outreach} />
                   <Route path="/radar" component={RegulationRadar} />
                   <Route path="/region-settings" component={RegionSettings} />
                   <Route path="/regional-analytics" component={RegionalAnalytics} />
                   <Route path="/regulatory-authority" component={RegulatoryAuthority} />
-                  <Route path="/regulatory-compliance" component={RegulatoryCompliance} />
-                  <Route path="/soai-pdca/government" component={GovernmentPortal} />
-                  <Route path="/support" component={Support} />
-                  <Route path="/system-status" component={Status} />
-                  <Route path="/verify/:certificateNumber" component={VerifyCertificate} />
+                  <Route path="/regulatory-compliance" component={ContentReviewNotice} />
+                  <Route path="/soai-pdca/government" component={ContentReviewNotice} />
+                  <Route path="/support" component={ContentReviewNotice} />
+                  <Route path="/system-status" component={ContentReviewNotice} />
+                  <Route path="/verify/:certificateNumber" component={ContentReviewNotice} />
                   <Route path="/watchdog-hub" component={PublicWatchdogHub} />
                   <Route path="/watchdog-leaderboard" component={WatchdogLeaderboard} />
                   <Route path="/watchdog/help-protect-humanity" component={WatchdogHelpProtectHumanity} />
@@ -779,7 +707,7 @@ function App() {
                   <Route path="/instrument" component={Instrument} />
                   <Route path="/harness" component={Harness} />
                   <Route path="/refutation-ledger" component={RefutationLedger} />
-                  <Route path="/live-ledger" component={LiveLedger} />
+                  <Route path="/live-ledger" component={ContentReviewNotice} />
                   <Route path="/coliseum" component={Coliseum} />
                   <Route path="/open-source" component={OpenSourceFramework} />
                   <Route path="/verifiable-trust" component={VerifiableTrust} />
@@ -803,10 +731,10 @@ function App() {
                   <Route path="/badges">{() => <Redirect to="/badge" />}</Route>
                   <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
                   <Route path="/challenge" component={ChallengeDoor} />
-                  <Route path="/regulator-findings" component={RegulatorFindings} />
+                  <Route path="/regulator-findings" component={ContentReviewNotice} />
                   <Route path="/findings" component={FindingsExplorer} />
                   <Route path="/model/:id" component={ModelFindings} />
-                  <Route path="/regulator/:id" component={RegulatorFindingsDetail} />
+                  <Route path="/regulator/:id" component={ContentReviewNotice} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
@@ -829,9 +757,9 @@ function App() {
                   <Route path="/agents-network" component={NetworkPage} />
                   <Route path="/regulators" component={RegulatorAtlas} />
                   <Route path="/regulator-atlas" component={RegulatorAtlas} />
-                  <Route path="/scan" component={CyberScan} />
-                  <Route path="/gods-eye" component={CyberScan} />
-                  <Route path="/cyber-scan" component={CyberScan} />
+                  <Route path="/scan" component={ContentReviewNotice} />
+                  <Route path="/gods-eye" component={ContentReviewNotice} />
+                  <Route path="/cyber-scan" component={ContentReviewNotice} />
                   <Route path="/usp" component={WhyCSOAI} />
                   <Route path="/competitors" component={Competitors} />
                   <Route path="/battlecards" component={Competitors} />
@@ -865,15 +793,15 @@ function App() {
                   <Route path="/guides/nist-ai-rmf" component={NISTAIRMFGuide} />
                   <Route path="/guides/iso-42001" component={ISO42001Guide} />
                   <Route path="/guides/tc260" component={TC260Guide} />
-                  <Route path="/frameworks/:slug">{(p: any) => <ContentPage dataset={frameworksdata} slug={p.slug} />}</Route>
-                  <Route path="/sectors/:slug">{(p: any) => <ContentPage dataset={sectorsdata} slug={p.slug} />}</Route>
-                  <Route path="/industries/:slug">{(p: any) => <IndustryTemplate slug={p.slug} />}</Route>
-                  <Route path="/blog/:slug">{(p: any) => <ContentPage dataset={blogdata} slug={p.slug} />}</Route>
+                  <Route path="/frameworks/:slug" component={ContentReviewNotice} />
+                  <Route path="/sectors/:slug" component={ContentReviewNotice} />
+                  <Route path="/industries/:slug" component={ContentReviewNotice} />
+                  <Route path="/blog/:slug" component={ContentReviewNotice} />
                   <Route path="/models" component={ModelRegistry} />
                   <Route path="/framework-catalog" component={FrameworkCatalog} />
-                  <Route path="/command-center" component={ComplianceCommandCenter} />
+                  <Route path="/command-center" component={ContentReviewNotice} />
                   <Route path="/policy-generator" component={PolicyGenerator} />
-                  <Route path="/mcp-fleet" component={McpFleet} />
+                  <Route path="/mcp-fleet" component={ContentReviewNotice} />
                   <Route path="/os" component={OsRoute} />
                   {/* Same destination as the 308 in public/_redirects, so an in-app
                       navigation and a cold load of /council-os land in the same place. */}
@@ -885,11 +813,11 @@ function App() {
                   <Route path="/tour" component={CouncilTour} />
                   <Route path="/academy" component={CouncilAcademy} />
                   <Route path="/register" component={CouncilRegistry} />
-                  <Route path="/hives" component={CouncilHives} />
+                  <Route path="/hives" component={ContentReviewNotice} />
                   <Route path="/pulse" component={GovernancePulse} />
                   <Route path="/join" component={CouncilRegistry} />
-                  <Route path="/distribution" component={Distribution} />
-                  <Route path="/legacy" component={LegacyBridge} />
+                  <Route path="/distribution" component={ContentReviewNotice} />
+                  <Route path="/legacy" component={ContentReviewNotice} />
                   <Route path="/social" component={SocialOS} />
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/jewels">{() => <Redirect to="/" />}</Route>
@@ -915,7 +843,7 @@ function App() {
                   <Route path="/regions" component={RegionsMap} />
                   {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
                   <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
-                  <Route path="/registry" component={RegistryAll} />
+                  <Route path="/registry" component={ContentReviewNotice} />
                   <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
                   <Route path="/checklist" component={EUActChecklist} />
                   <Route path="/gpai" component={GpaiObligations} />
@@ -927,8 +855,8 @@ function App() {
                   <Route path="/singapore-ai-governance">{() => <JurisdictionAct jx="singapore" />}</Route>
                   <Route path="/south-korea-ai-act">{() => <JurisdictionAct jx="korea" />}</Route>
                   <Route path="/us-ai-regulation">{() => <JurisdictionAct jx="usfederal" />}</Route>
-                  <Route path="/sec-disclosure">{() => <SECDisclosure />}</Route>
-                  <Route path="/sec-ai-disclosure">{() => <SECDisclosure />}</Route>
+                  <Route path="/sec-disclosure" component={ContentReviewNotice} />
+                  <Route path="/sec-ai-disclosure" component={ContentReviewNotice} />
                   <Route path="/for/:persona">{(params: any) => <PersonaRouter persona={params.persona} />}</Route>
                   <Route path="/ai-act-faq" component={AiActFaq} />
                   <Route path="/eu-ai-act-faq" component={AiActFaq} />
@@ -937,14 +865,14 @@ function App() {
                   <Route path="/ai-governance-guide" component={AiGovernanceHub} />
                   <Route path="/high-risk-ai-systems" component={HighRiskSystems} />
                   <Route path="/classifier" component={EuActClassifier} />
-                  <Route path="/report" component={IncidentReport} />
+                  <Route path="/report" component={ContentReviewNotice} />
                   <Route path="/high-risk-ai" component={HighRiskSystems} />
                   <Route path="/ai-act-summary" component={ActSummary} />
                   <Route path="/eu-ai-act-explained" component={ActSummary} />
                   <Route path="/colorado-ai-act">{() => <UsStateAct state="colorado" />}</Route>
                   <Route path="/texas-ai-act">{() => <UsStateAct state="texas" />}</Route>
                   <Route path="/california-ai-law">{() => <UsStateAct state="california" />}</Route>
-                  <Route path="/connect" component={SocialConnect} />
+                  <Route path="/connect" component={ContentReviewNotice} />
                   <Route path="/connect-gspc" component={ConnectGSPC} />
                   <Route path="/connect-ai" component={ConnectGSPC} />
                   <Route path="/sovereign">{() => <Redirect to="/me" />}</Route>
@@ -967,7 +895,7 @@ function App() {
                   <Route path="/ai-act-timeline" component={ActTimeline} />
                   <Route path="/iso-eu" component={Iso42001VsEuAct} />
                   <Route path="/fines" component={Penalties} />
-                  <Route path="/all" component={RegistryAll} />
+                  <Route path="/all" component={ContentReviewNotice} />
                   {/* REDIRECTED (audit §0.2 #14): "BFT setup" pages assert the retracted fault-tolerance claim. */}
                   <Route path="/bft">{() => <Redirect to="/council" />}</Route>
                   <Route path="/consensus">{() => <Redirect to="/council" />}</Route>
@@ -985,8 +913,8 @@ function App() {
                   <Route path="/oscal-readiness" component={Fedramp} />
                   <Route path="/readiness" component={Readiness} />
                   <Route path="/agents" component={Agents} />
-                  <Route path="/press" component={Pressroom} />
-                  <Route path="/pressroom" component={Pressroom} />
+                  <Route path="/press" component={ContentReviewNotice} />
+                  <Route path="/pressroom" component={ContentReviewNotice} />
                   <Route path="/sector-atlas" component={SectorsAtlas} />
                   <Route path="/learn" component={Academy} />
                   <Route path="/tracks" component={Academy} />
@@ -999,16 +927,16 @@ function App() {
                   <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
-                  <Route path="/cobol" component={LegacyBridge} />
+                  <Route path="/cobol" component={ContentReviewNotice} />
                   <Route path="/cobolbridge" component={CobolBridge} />
                   <Route path="/risk-heatmap" component={RiskHeatmap} />
-                  <Route path="/webhooks" component={Webhooks} />
-                  <Route path="/evidence" component={EvidenceHub} />
-                  <Route path="/oscal" component={OscalStudio} />
+                  <Route path="/webhooks" component={ContentReviewNotice} />
+                  <Route path="/evidence" component={ContentReviewNotice} />
+                  <Route path="/oscal" component={ContentReviewNotice} />
                   {/* JA-D2: towns alias is edge-only via public/_redirects — do not embed banned slug in client bundle */}
                   <Route path="/prosperity" component={ProsperityFund} />
                   <Route path="/prosperity-fund" component={ProsperityFund} />
-                  <Route path="/founding-members" component={FoundingMembers} />
+                  <Route path="/founding-members" component={ContentReviewNotice} />
                   <Route path="/byzantine">{() => <Redirect to="/council" />}</Route>
                   <Route path="/council" component={Council} />
                   <Route path="/public-watchdog" component={PublicWatchdog} />
@@ -1016,7 +944,7 @@ function App() {
                   <Route path="/government-dashboard" component={GovernmentDashboard} />
                   <Route path="/landing" component={Landing} />
                   <Route path="/dashboard" component={Dashboard} />
-                  <Route path="/ai-systems" component={AISystems} />
+                  <Route path="/ai-systems" component={ContentReviewNotice} />
                   <Route path="/risk-assessment" component={RiskAssessment} />
                   <Route path="/assess">{() => <RequireAuth><AssessTool /></RequireAuth>}</Route>
                   <Route path="/compliance" component={Compliance} />
@@ -1033,24 +961,24 @@ function App() {
                   <Route path="/settings/billing">{() => <RequireAuth><Billing /></RequireAuth>}</Route>
                   <Route path="/settings/notifications">{() => <RequireAuth><NotificationSettings /></RequireAuth>}</Route>
                   <Route path="/watchdog-signup" component={WatchdogSignup} />
-                  <Route path="/training-hub" component={TrainingHub} />
+                  <Route path="/training-hub" component={ContentReviewNotice} />
                   <Route path="/drift-product" component={DriftProduct} />
-                  <Route path="/training" component={TrainingV2} />
-                  <Route path="/courses" component={Courses} />
-                  <Route path="/my-courses">{() => <RequireAuth><MyCourses /></RequireAuth>}</Route>
-                  <Route path="/dashboard/progress" component={StudentProgress} />
-                  <Route path="/courses/:id/learn" component={CoursePlayer} />
-                  <Route path="/free-course/:courseId" component={FreeCoursePlayer} />
-                  <Route path="/verify-certificate/:id" component={VerifyCertificate} />
+                  <Route path="/training" component={ContentReviewNotice} />
+                  <Route path="/courses" component={ContentReviewNotice} />
+                  <Route path="/my-courses" component={ContentReviewNotice} />
+                  <Route path="/dashboard/progress" component={ContentReviewNotice} />
+                  <Route path="/courses/:id/learn" component={ContentReviewNotice} />
+                  <Route path="/free-course/:courseId" component={ContentReviewNotice} />
+                  <Route path="/verify-certificate/:id" component={ContentReviewNotice} />
                   <Route path="/features/33-agent-council" component={AgentCouncilFeature} />
                   <Route path="/features/pdca-framework" component={PDCAFrameworkFeature} />
-                  <Route path="/features/training-certification" component={TrainingCertificationFeature} />
+                  <Route path="/features/training-certification" component={ContentReviewNotice} />
                   <Route path="/features/watchdog-jobs" component={WatchdogJobsFeature} />
-                  <Route path="/certification" component={CertificationV2} />
-                  <Route path="/certification/exam" component={CertificationExam} />
-                  <Route path="/certification/results" component={CertificationResults} />
-                  <Route path="/certificates" component={MyCertificates} />
-                  <Route path="/certification/review" component={ExamReview} />
+                  <Route path="/certification" component={ContentReviewNotice} />
+                  <Route path="/certification/exam" component={ContentReviewNotice} />
+                  <Route path="/certification/results" component={ContentReviewNotice} />
+                  <Route path="/certificates" component={ContentReviewNotice} />
+                  <Route path="/certification/review" component={ContentReviewNotice} />
                   <Route path="/workbench">{() => <RequireAuth><Workbench /></RequireAuth>}</Route>
                   <Route path="/jobs" component={Jobs} />
                   <Route path="/my-applications">{() => <RequireAuth><MyApplications /></RequireAuth>}</Route>
@@ -1066,20 +994,19 @@ function App() {
                   <Route path="/enterprise-onboarding" component={EnterpriseOnboarding} />
                   <Route path="/pricing" component={PlansPage} />
                   <Route path="/products" component={Products} />
-                  <Route path="/pricing-free" component={PricingFree} />
+                  <Route path="/pricing-free" component={ContentReviewNotice} />
                   <Route path="/catalog">{() => <Redirect to="/products" />}</Route>
                   <Route path="/pricing-legacy" component={Pricing} />
                   <Route path="/leaderboard">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
                   <Route path="/regulator" component={RegulatorDashboard} />
-                  <Route path="/blog" component={Blog} />
+                  <Route path="/blog" component={ContentReviewNotice} />
                   <Route path="/recommendations" component={Recommendations} />
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
-                  <Route path="/verify-certificate" component={CertificateVerification} />
                   <Route path="/enterprise" component={Enterprise} />
                   <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
-                  <Route path="/compliance-monitoring" component={ComplianceMonitoring} />
+                  <Route path="/compliance-monitoring" component={ContentReviewNotice} />
                   <Route path="/bulk-import" component={BulkAISystemImport} />
                   <Route path="/membership-agreement" component={MembershipAgreement} />
                   <Route path="/legal/membership" component={MembershipAgreement} />
@@ -1088,23 +1015,23 @@ function App() {
                   <Route path="/licensing-agreement" component={LicensingAgreement} />
                   <Route path="/legal/licensing" component={LicensingAgreement} />
                   <Route path="/licence-manifest" component={LicenceManifest} />
-                  <Route path="/privacy-policy" component={PrivacyPolicy} />
-                  <Route path="/privacy" component={PrivacyPolicy} />
-                  <Route path="/legal/privacy" component={PrivacyPolicy} />
+                  <Route path="/privacy-policy" component={ContentReviewNotice} />
+                  <Route path="/privacy" component={ContentReviewNotice} />
+                  <Route path="/legal/privacy" component={ContentReviewNotice} />
                   <Route path="/terms-of-service" component={TermsOfService} />
                   <Route path="/terms" component={TermsOfService} />
                   <Route path="/legal/terms" component={TermsOfService} />
                   <Route path="/disclaimers" component={Disclaimers} />
                   <Route path="/legal/disclaimers" component={Disclaimers} />
-                  <Route path="/dpa" component={DataProcessingAgreement} />
-                  <Route path="/data-processing-agreement" component={DataProcessingAgreement} />
-                  <Route path="/legal/dpa" component={DataProcessingAgreement} />
+                  <Route path="/dpa" component={ContentReviewNotice} />
+                  <Route path="/data-processing-agreement" component={ContentReviewNotice} />
+                  <Route path="/legal/dpa" component={ContentReviewNotice} />
                   <Route path="/cookies" component={CookiePolicy} />
                   <Route path="/cookie-policy" component={CookiePolicy} />
                   <Route path="/legal/cookies" component={CookiePolicy} />
-                  <Route path="/sla" component={ServiceLevelAgreement} />
-                  <Route path="/service-level-agreement" component={ServiceLevelAgreement} />
-                  <Route path="/legal/sla" component={ServiceLevelAgreement} />
+                  <Route path="/sla" component={ContentReviewNotice} />
+                  <Route path="/service-level-agreement" component={ContentReviewNotice} />
+                  <Route path="/legal/sla" component={ContentReviewNotice} />
                   <Route path="/global-regulations" component={GlobalRegulationTracker} />
                   <Route path="/regulation-tracker" component={GlobalRegulationTracker} />
                   <Route path="/faq" component={FaqPage} />
@@ -1116,24 +1043,24 @@ function App() {
                   <Route path="/assessment" component={ReadinessAssessment} />
                   <Route path="/industry-solutions" component={IndustrySolutions} />
                   <Route path="/industries" component={IndustrySolutions} />
-                  <Route path="/partners" component={PartnersAdvisory} />
-                  <Route path="/advisory" component={PartnersAdvisory} />
-                  <Route path="/case-studies" component={CaseStudies} />
-                  <Route path="/trust-center" component={TrustCenter} />
-                  <Route path="/security" component={TrustCenter} />
+                  <Route path="/partners" component={ContentReviewNotice} />
+                  <Route path="/advisory" component={ContentReviewNotice} />
+                  <Route path="/case-studies" component={ContentReviewNotice} />
+                  <Route path="/trust-center" component={ContentReviewNotice} />
+                  <Route path="/security" component={ContentReviewNotice} />
                   <Route path="/traction" component={Traction} />
                   <Route path="/comparison" component={ComparisonPage} />
                   <Route path="/roi-calculator" component={ROICalculator} />
                   <Route path="/roi" component={ROICalculator} />
-                  <Route path="/technology" component={Technology} />
-                  <Route path="/architecture" component={Technology} />
+                  <Route path="/technology" component={ContentReviewNotice} />
+                  <Route path="/architecture" component={ContentReviewNotice} />
                   <Route path="/integrations" component={Integrations} />
                   <Route path="/ecosystem" component={Integrations} />
                   <Route path="/crosswalks" component={Crosswalks} />
                   <Route path="/crosswalk" component={Crosswalk} />
                   <Route path="/agent-governance" component={AgentGovernance} />
-                  <Route path="/agent-registry" component={AgentRegistry} />
-                  <Route path="/global-ai-regulation" component={GlobalAIRegulation} />
+                  <Route path="/agent-registry" component={ContentReviewNotice} />
+                  <Route path="/global-ai-regulation" component={ContentReviewNotice} />
                   <Route path="/cra" component={Cra} />
                   <Route path="/nis2" component={Nis2} />
                   <Route path="/vulnerability-disclosure" component={VulnerabilityDisclosure} />
@@ -1147,7 +1074,7 @@ function App() {
                   <Route path="/governance-layer" component={GovernanceLayer} />
                   <Route path="/dora" component={Dora} />
                   <Route path="/framework-crosswalks" component={Crosswalks} />
-                  <Route path="/charter/article/:id" component={CharterArticle} />
+                  <Route path="/charter/article/:id" component={ContentReviewNotice} />
                   <Route path="/404" component={NotFound} />
                   <Route path="/gone-space" component={Gone} />
                   <Route path="/sov-space">{() => <Redirect to="/gone-space" />}</Route>
@@ -1164,8 +1091,8 @@ function App() {
                   <Route path="/onboard" component={OnboardOS} />
                   <Route path="/open-media" component={OpenMedia} />
                   <Route path="/commons" component={OpenMedia} />
-                  <Route path="/status" component={StatusPage} />
-                  <Route path="/system" component={StatusPage} />
+                  <Route path="/status" component={ContentReviewNotice} />
+                  <Route path="/system" component={ContentReviewNotice} />
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />

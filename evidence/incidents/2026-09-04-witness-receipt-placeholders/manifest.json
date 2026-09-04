@@ -1,0 +1,25 @@
+{
+  "schema": "csoai.incident.witness-receipt-placeholders/0.1",
+  "as_of": "2026-09-04",
+  "status": "QUARANTINED_INCIDENT_EVIDENCE",
+  "original_queue_prefix": "scripts/badger/_queue/witness-receipts/",
+  "quarantine_prefix": "evidence/incidents/2026-09-04-witness-receipt-placeholders/queue/",
+  "file_count": 48,
+  "total_bytes": 300144,
+  "jsonl_records": 384,
+  "question_mark_digest_records": 384,
+  "inventory_rule": "sha256(JSON.stringify([{name,sha256,bytes,rows}, ...] sorted by name))",
+  "inventory_sha256": "1ac0f13618d57c3caaf7c6891918adafc101be68a805dba04b7504def28d07d5",
+  "retired_producer": {
+    "path": "scripts/badger/harvest-witness-receipts.py",
+    "exit_code": 78,
+    "writes": 0
+  },
+  "faults": [
+    "fixed remote URLs were treated as verified witnesses without cryptographic verification",
+    "missing digest fields were replaced with the literal question-mark value",
+    "all records claimed VERIFIED despite having no exact artifact-to-proof binding"
+  ],
+  "admissible": false,
+  "republish": false
+}

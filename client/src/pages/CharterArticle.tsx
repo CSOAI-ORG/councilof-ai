@@ -99,7 +99,7 @@ The proposed threshold is 23 out of 33. No governance decision or high-risk depl
 
 The latest point experiment used three model lineages across two providers and measured n_eff 1.00 at rho=1. Raw production-grade identities, responses, signatures, transport, replay protection, and human veto remain required before operation.
 
-The Council represents the distributed, resilient oversight that the Maternal Covenant requires—ensuring that protective instincts cannot be overridden by any single actor.`,
+The design aims to test distributed oversight without allowing a single seat to decide an outcome. That aim is not a measured resilience property.`,
     frameworks: {
       euAIAct: "Article 63 (Competent authorities)",
       nist: "GV (Governance), RM (Risk Management)",
@@ -280,29 +280,30 @@ All licenses require periodic renewal and continuing education. Schedule E provi
     title: "Council Specifications",
     part: 2,
     partTitle: "Governance Structure",
-    content: `Technical specifications for the designed 33-node multi-agent review system that implements distributed AI governance.
+    content: `Technical specification for a proposed 33-seat multi-agent review design.
 
 Architecture (DESIGN — see the measured position below):
 - 33 agents, intended to be trained on diverse datasets to reduce correlated failures
 - Agents are designed to run a practical designed multi-agent review algorithm
 
-MEASURED POSITION (2026-07-29): independence has not been demonstrated. Effective
-independence across the nominal legs measured n_eff = 1.21 of 3, meaning the legs fail
-together far more than the design assumes. Until that is raised, this Article describes an
-intended architecture, not a live property, and no fault-tolerance guarantee should be
-inferred from it.
-- Each agent maintains complete copy of governance ledger
-- Communication encrypted with quantum-resistant cryptography
-- Agents are geographically distributed across 15+ countries
+CURRENT PUBLISHED POINT RESULT (2026-09-04): /interop/council-independence.json records
+rho=1 and n_eff=1 across three nominal legs. It does not establish that any leg is correct,
+independent review, or fault tolerance. DR-0007 labels an earlier public retraction, but its
+underlying historical run is not present in the current evidence artifact and is not treated
+as independently reproducible here. This Article describes an intended architecture, not a
+live property.
+- Proposed seats would retain review records for replay and audit
+- Post-quantum transport and signing are planned/scaffold only; no PQC runtime is built
+- Geographic and operator diversity are design targets, not deployed facts
 
 Consensus Rules:
-- 22/33 supermajority required (66.67%) for approval of any governance decision
+- Target threshold: 23/33, strictly greater than two thirds
 - Asynchronous communication to prevent timing attacks
 - Cryptographic signatures prevent spoofing
 - All decisions logged and auditable in perpetuity (via Schedule I archive)
 
 Agent Training:
-- Each agent trained independently to prevent correlated failures
+- Seat independence would have to be measured; training labels do not prove it
 - Training incorporates human feedback and constitutional AI principles
 - Agents cannot be modified or updated without supermajority approval
 - Regular adversarial testing to detect manipulation attempts
@@ -2475,7 +2476,7 @@ Amendment Process:
 4. Expert review by external advisors
 5. Human Council debate and deliberation
 6. Supermajority vote (12/15) required
-7. Council approval (22/33) required
+7. Proposed Council approval (23/33 target) required if the design becomes operational
 8. Ratification by international signatories (if treaty provision)
 
 Expedited Amendment:
@@ -3035,6 +3036,16 @@ export default function CharterArticle() {
 
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <strong>Charter status:</strong> this is a governance proposal. References to Council votes,
+          approvals, cryptography, or infrastructure describe intended policy unless linked evidence
+          demonstrates otherwise. The 33-seat roster and 23/33 threshold are design targets; the
+          council is not live, and independence or fault tolerance have not been demonstrated. The
+          latest published point result is the machine-readable{" "}
+          <a className="font-semibold underline" href="/interop/council-independence.json">
+            council-independence artifact
+          </a>.
+        </div>
         {/* Article Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -86,6 +86,11 @@ jobs:
             npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
             node scripts/eas_attest_root.mjs
           fi
+      - name: Refresh exact-root EAS witness metadata after the chain write
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/witness_public_root.py --refresh-eas
       - name: mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         env:
@@ -139,6 +144,7 @@ jobs:
             exit 1
           fi
           git add -- "${witness_files[@]}"
+          git add -- public/interop/root-witness-pointer.json
           if [ -f public/interop/eas-root-attestations.json ]; then
             git add -- public/interop/eas-root-attestations.json
           fi

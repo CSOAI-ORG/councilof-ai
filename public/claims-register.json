@@ -77,7 +77,7 @@
       "evidence": [
         "/methodology"
       ],
-      "notes": "Built, not shipped. Nothing published today is ML-DSA-65 signed."
+      "notes": "Planned and scaffolded only. No ML-DSA signer or runtime is built or published, and nothing published today is ML-DSA-65 signed."
     },
     {
       "id": "CR-007",
@@ -87,7 +87,7 @@
         "/refutation-ledger",
         "/interop/council-independence.json"
       ],
-      "notes": "Retracted under DR-0007 after the earlier experiment measured n_eff 1.21 of 3. The latest point experiment measured rho=1 and n_eff=1 across three nominal legs; it also does not demonstrate independent review or fault tolerance. The 33/23 structure is a DESIGN figure, not a live property, and the guarantee remains withdrawn."
+      "notes": "Retracted under DR-0007. The historical numeric result is unbound because its cited results/n_eff.json artifact is absent from this repository, so it is not treated as independently reproducible. The latest published point experiment at /interop/council-independence.json measured rho=1 and n_eff=1 across three nominal legs; it also does not demonstrate independent review or fault tolerance. The 33/23 structure is a DESIGN figure, not a live property, and the guarantee remains withdrawn."
     },
     {
       "id": "CR-008",
@@ -115,16 +115,16 @@
         "/api/gspc",
         "/gspc-verify"
       ],
-      "notes": "Empty cells stay empty. Nothing is quoted below n>=30."
+      "notes": "Empty cells stay empty. Model-comparison point estimates are not quoted below usable n>=30. Deterministic fact rows are not model-comparison estimates; each publishes its own denominator and unit."
     },
     {
       "id": "CR-011",
-      "claim": "Our own status page probes components live and marks the ones it cannot honestly check.",
-      "status": "live",
+      "claim": "Live component probing on our status page (withdrawn while the route is quarantined for content review).",
+      "status": "retired",
       "evidence": [
         "/status"
       ],
-      "notes": "Rows with no public health endpoint are labelled \"not probed from this page\" rather than painted green, and the incident log is not backfilled. CORRECTION 2026-08-26: this claim was briefly FALSE in a way the page itself could not see. The tool-fleet row probed /api/tools, received a real 200, and reported \"operational\" — but the number inside was a 291-row registry snapshot rendered as \"governed MCP tools (deployed)\" under a caption reading \"live from the Council engine\". The probe was real; the figure it surfaced was a catalogue. The endpoint had always labelled it total_kind=catalogue-snapshot and the UI discarded that field. Each figure now carries its own provenance and only a genuine probe result may be called reachable."
+      "notes": "Withdrawn 2026-09-04: /status is quarantined for content review and is not a live public status surface, so this capability cannot currently carry live status. The prior implementation labelled rows with no public health endpoint \"not probed from this page\" and corrected a tool-fleet row that had presented a catalogue snapshot as deployed inventory. Those historical corrections do not make the quarantined route live. Restore this claim only after the route is reviewed, publicly reachable, and rechecked against its probes."
     },
     {
       "id": "CR-012",

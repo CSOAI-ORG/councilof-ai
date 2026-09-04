@@ -45,9 +45,9 @@ const LEDGER = [
   {
     n: 5,
     claim: "The 3-leg council uses council cross-checking",
-    measured: "n_eff 1.21 of 3 nominal · φ̄ +0.743",
-    artefact: "results/n_eff.json",
-    why: "Three prompts over one blob are wrong in the same places. 1.21 effective votes. The phrase was removed from every document and the component renamed — a name asserts the property too.",
+    measured: "Historical numeric result unbound · latest published point test: rho=1, n_eff=1",
+    artefact: "/interop/council-independence.json",
+    why: "The historical entry cited results/n_eff.json, but that artifact is absent from this repository, so the old number is not treated as independently reproducible. The latest bound point test still shows one effective opinion. The fault-tolerance claim remains withdrawn.",
   },
   {
     n: 6,

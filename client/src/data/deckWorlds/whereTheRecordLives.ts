@@ -21,8 +21,8 @@ import type { Slide } from "@/components/scrollworld";
  *  2. Deck subtitle "Censorship-Resistant Distribution & Verification Architecture"
  *     and slide 4 "three architectural pillars ensuring COMPLETE censorship
  *     resistance" — DROPPED. This is the same claim family as the
- *     durability claim already retracted in DR-0007, where the measured effective independence
- *     was 1.21 against three nominal legs. We do not get to re-make it with different
+ *     durability claim already retracted in DR-0007. Its historical numeric result is unbound
+ *     because the cited result artifact is absent. We do not get to re-make it with different
  *     nouns. Redundancy is described; resistance is not asserted.
  *  3. Deck slide 4 "SWHID & DOI: The Immutable Anchor" — SWHID DROPPED ENTIRELY. There
  *     is no Software Heritage identifier anywhere in this codebase; searching for it
@@ -82,7 +82,7 @@ export const RECORD_SLIDES: Slide[] = [
     kicker: "The honest limit",
     title: "This is redundancy. It is not indestructibility.",
     body:
-      "Copies on several hosts are harder to remove than one copy. That is the whole claim, and it is worth having. It is not the same as being censorship-proof: every host here has terms, a jurisdiction and an off switch, and a determined actor with legal reach could pressure several of them. We have made that mistake in public before — we published a claim that three nominally independent legs would survive each other's failure, measured the effective independence at 1.21 against those three legs, and withdrew it in DR-0007. We are not going to re-make it with different nouns.",
+      "Copies on several hosts are harder to remove than one copy. That is the whole claim, and it is worth having. It is not the same as being censorship-proof: every host here has terms, a jurisdiction and an off switch, and a determined actor with legal reach could pressure several of them. We made that mistake in public before and withdrew the claim under DR-0007. Its historical numeric result is unbound because the cited artifact is absent; the latest published point test measured rho=1 and n_eff=1. We are not going to re-make the claim with different nouns.",
     points: [
       { tag: "pain", text: "Every mirror has terms, a jurisdiction, and an off switch" },
       { tag: "pain", text: "Independent hosts are not independent failure modes — we measured that once and were wrong" },
@@ -97,7 +97,7 @@ export const RECORD_SLIDES: Slide[] = [
 export const RECORD_NOT_CLAIMED = [
   "We do not claim the record is indestructible. It is mirrored. Those are different words and the difference matters.",
   "We do not claim censorship resistance. Every host we publish to has terms of service, a jurisdiction and the ability to remove content, and an actor with enough legal reach could pressure more than one of them.",
-  "We do not claim independent hosts give independent failure modes. We published a claim of exactly that shape once, measured the effective independence at 1.21 against three nominal legs, and withdrew it in DR-0007. That retraction stands and this page is bound by it.",
+  "We do not claim independent hosts give independent failure modes. We published a claim of exactly that shape once and withdrew it under DR-0007. Its historical numeric result is unbound because the cited artifact is absent; the latest published point test measured rho=1 and n_eff=1. That retraction stands and this page is bound by it.",
   "We do not have a Software Heritage identifier. The source deck listed SWHID as one of three pillars; there is no SWHID anywhere in this codebase, so it is not on this page.",
   "We do not describe the DOI as immutable. It is an archival identifier administered by someone else, which is the useful property — not permanence we can promise on their behalf.",
   "We do not claim the mirrors are complete or continuously monitored. Each link on this page returned HTTP 200 when the page was written; that is a check, not a guarantee, and there is no uptime claim attached to it.",

@@ -50,19 +50,19 @@ export default function EUAIActCompliance() {
     {
       requirement: "Risk Classification",
       euaiActRequirement: "Classify AI systems by risk level",
-      csoaiApproach: "Council assesses risk level using 33 independent agents. Results published publicly for transparency.",
+      csoaiApproach: "Tools can produce scoped risk-classification evidence for human review. The designed 33-seat council is not live and its seats are not demonstrated independent.",
       soaiPdcaRole: "PLAN: Define risk categories. DO: Implement controls. CHECK: Monitor incidents. ACT: Adjust controls."
     },
     {
       requirement: "Transparency",
       euaiActRequirement: "Disclose AI usage and limitations",
-      csoaiApproach: "All CSOAI assessments and decisions are published publicly. Users can see exactly how AI systems are evaluated.",
+      csoaiApproach: "Published measurement records state the subject, instrument, result, and limitations. They are evidence, not Council decisions.",
       soaiPdcaRole: "PLAN: Define transparency standards. DO: Publish decisions. CHECK: Gather feedback. ACT: Improve clarity."
     },
     {
       requirement: "Human Oversight",
       euaiActRequirement: "Maintain meaningful human control",
-      csoaiApproach: "Council is 50% human experts + 50% AI agents. Humans have final say on all critical decisions.",
+      csoaiApproach: "Accountable human reviewers retain authority for consequential decisions. No live mixed human/AI Council is claimed.",
       soaiPdcaRole: "PLAN: Define oversight procedures. DO: Train analysts. CHECK: Audit decisions. ACT: Improve processes."
     },
     {
@@ -74,13 +74,13 @@ export default function EUAIActCompliance() {
     {
       requirement: "Conformity Assessment",
       euaiActRequirement: "Document compliance through assessment",
-      csoaiApproach: "Council provides independent conformity assessment. Reports detail compliance with each requirement.",
+      csoaiApproach: "Evidence packs can support an assessment; regulators and accredited conformity-assessment bodies make any conformity determination.",
       soaiPdcaRole: "PLAN: Define assessment criteria. DO: Conduct assessment. CHECK: Verify compliance. ACT: Document findings."
     },
     {
       requirement: "Post-Market Monitoring",
       euaiActRequirement: "Monitor systems after deployment",
-      csoaiApproach: "CSOAI provides continuous monitoring. Incidents are reported to Council within 24 hours.",
+      csoaiApproach: "Monitoring inputs can reopen a dated measurement for human review. There is no live 24-hour Council runtime.",
       soaiPdcaRole: "PLAN: Define monitoring strategy. DO: Monitor systems. CHECK: Analyze incidents. ACT: Implement fixes."
     }
   ];
@@ -104,7 +104,7 @@ export default function EUAIActCompliance() {
     },
     {
       question: "How does CSOAI help with compliance?",
-      answer: "CSOAI provides: compliance assessment tools, Council review, measurement credential training for your team, incident reporting system, and continuous monitoring. We handle the technical complexity."
+      answer: "CSOAI provides measurement tools, signed evidence, training records, and incident intake. Human reviewers, regulators, and accredited bodies retain their respective decisions; the 33-seat Council remains a design."
     },
     {
       question: "Can we obtain an EU AI Act conformity certificate from Council of AI?",
@@ -124,7 +124,7 @@ export default function EUAIActCompliance() {
     },
     {
       question: "Can we appeal a Council decision?",
-      answer: "Yes! You can submit additional evidence and request a re-review. The Council will reconsider with new information. All appeals and dissenting opinions are documented and published."
+      answer: "You can challenge a measurement by submitting additional evidence for human review. There is no live Council decision or automated Council appeals service."
     }
   ];
 
@@ -232,8 +232,8 @@ export default function EUAIActCompliance() {
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">4</div>
                 <div>
-                  <h4 className="font-bold text-emerald-900 mb-1">Council Review (Month 4)</h4>
-                  <p className="text-gray-700">Submit to independent Council review. Receive compliance assessment and recommendations.</p>
+                  <h4 className="font-bold text-emerald-900 mb-1">Human Evidence Review (Month 4)</h4>
+                  <p className="text-gray-700">Review the measured evidence, limitations, and remediation plan with accountable people.</p>
                 </div>
               </div>
             </Card>
@@ -280,7 +280,7 @@ export default function EUAIActCompliance() {
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Achieve EU AI Act Compliance?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start your compliance journey with CSOAI's Council oversight and SOAI-PDCA methodology
+            Start a measured readiness journey with signed evidence and the SOAI-PDCA methodology
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

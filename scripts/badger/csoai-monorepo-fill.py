@@ -32,6 +32,259 @@ def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 
+AUDITED_API_CONTRACTS = {
+    "anchor.json": {
+        "name": "OTS anchor API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "No public anchor handler exists. No card is accepted and no OpenTimestamps proof is created.",
+        "handler": None,
+        "methods": [],
+        "path": None,
+        "intended_path": "/api/anchor",
+        "outcomes": [],
+        "output": None,
+    },
+    "feed.json": {
+        "name": "State-change RSS feed",
+        "state": "LIVE",
+        "description": "Unsigned RSS 2.0 feed of committed estate state-change notices; it does not mint attestations.",
+        "handler": "functions/api/feed.xml.ts",
+        "methods": ["GET"],
+        "path": "/api/feed.xml",
+        "outcomes": [
+            {
+                "http_status": 200,
+                "media_type": "application/rss+xml; charset=utf-8",
+                "output": "RSS 2.0 channel with the notices committed in the handler",
+            }
+        ],
+        "output": {
+            "format": "RSS 2.0",
+            "mutability": "Changes only when reviewed feed items are deployed",
+        },
+    },
+    "revenue-all.json": {
+        "name": "All-time revenue API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "No public all-time revenue handler or public revenue result exists at this path.",
+        "handler": None,
+        "methods": [],
+        "path": None,
+        "intended_path": "/api/revenue-all",
+        "outcomes": [],
+        "output": None,
+    },
+    "revenue-month.json": {
+        "name": "Monthly revenue API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "No public monthly revenue handler or public revenue result exists at this path.",
+        "handler": None,
+        "methods": [],
+        "path": None,
+        "intended_path": "/api/revenue-month",
+        "outcomes": [],
+        "output": None,
+    },
+    "revenue-today.json": {
+        "name": "Daily revenue API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "No public daily revenue handler or public revenue result exists at this path.",
+        "handler": None,
+        "methods": [],
+        "path": None,
+        "intended_path": "/api/revenue-today",
+        "outcomes": [],
+        "output": None,
+    },
+    "revenue-week.json": {
+        "name": "Weekly revenue API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "No public weekly revenue handler or public revenue result exists at this path.",
+        "handler": None,
+        "methods": [],
+        "path": None,
+        "intended_path": "/api/revenue-week",
+        "outcomes": [],
+        "output": None,
+    },
+    "checkout.json": {
+        "name": "Public checkout (closed)",
+        "state": "NOT_CONFIGURED",
+        "description": "The public checkout door is deliberately closed. It exposes no public prices and initiates no payment.",
+        "handler": "functions/api/checkout.ts",
+        "methods": ["POST"],
+        "path": "/api/checkout",
+        "outcomes": [
+            {
+                "http_status": 404,
+                "output": "JSON with configured:false and public_prices:false",
+            }
+        ],
+        "output": {
+            "configured": False,
+            "public_prices": False,
+            "payment_initiated": False,
+        },
+    },
+    "report.json": {
+        "name": "Correction report intake (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "The route returns a fail-closed capability-state document; no report is accepted or persisted.",
+        "handler": "functions/api/report.ts",
+        "methods": ["GET", "POST"],
+        "path": "/api/report",
+        "outcomes": [
+            {
+                "http_status": 501,
+                "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false",
+            }
+        ],
+        "output": {"state": "NOT_IMPLEMENTED", "accepted": False, "persisted": False, "signed": False},
+    },
+    "verify-batch.json": {
+        "name": "Batch card verification (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "The GET route returns a fail-closed capability-state document; it verifies no cards.",
+        "handler": "functions/api/verify-batch.ts",
+        "methods": ["GET"],
+        "path": "/api/verify-batch",
+        "outcomes": [
+            {
+                "http_status": 501,
+                "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false",
+            }
+        ],
+        "output": {"state": "NOT_IMPLEMENTED", "verified": False},
+    },
+    "verify-card.json": {
+        "name": "Single-card verification (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "The GET route returns a fail-closed capability-state document; it verifies no card.",
+        "handler": "functions/api/verify-card.ts",
+        "methods": ["GET"],
+        "path": "/api/verify-card",
+        "outcomes": [
+            {
+                "http_status": 501,
+                "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false",
+            }
+        ],
+        "output": {"state": "NOT_IMPLEMENTED", "verified": False},
+    },
+    "decide.json": {
+        "name": "Decision attestation API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "The GET route returns a fail-closed capability-state document; no decision attestation is created.",
+        "handler": "functions/api/decide.ts",
+        "methods": ["GET"],
+        "path": "/api/decide",
+        "outcomes": [
+            {
+                "http_status": 501,
+                "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false",
+            }
+        ],
+        "output": {"state": "NOT_IMPLEMENTED", "attestation_created": False},
+    },
+    "include.json": {
+        "name": "Merkle inclusion proof API (unavailable)",
+        "state": "NOT_IMPLEMENTED",
+        "description": "The GET route returns a fail-closed capability-state document; no inclusion proof is produced.",
+        "handler": "functions/api/include.ts",
+        "methods": ["GET"],
+        "path": "/api/include",
+        "outcomes": [
+            {
+                "http_status": 501,
+                "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false",
+            }
+        ],
+        "output": {"state": "NOT_IMPLEMENTED", "proof_created": False},
+    },
+    "otel.json": {
+        "name": "OpenTelemetry collector status",
+        "state": "UNCHECKABLE",
+        "description": "A status document is available, but this estate exports no OTLP and emits no GenAI spans or trace identifier.",
+        "handler": "functions/api/otel.ts",
+        "methods": ["GET"],
+        "path": "/api/otel",
+        "outcomes": [],
+        "output": {
+            "schema": "csoai.otel-status/0.1",
+            "collector": "UNCHECKABLE",
+            "otlp": "not exported",
+            "gen_ai_spans": "not emitted",
+            "otel_trace_id": None,
+            "writes_board": False,
+        },
+    },
+    "compute.json": {
+        "name": "Compute bridge status probe",
+        "state": "UNCHECKABLE",
+        "description": "Read-only status probe quoting a committed census and, only when configured, probing an AG-UI health URL. It is not a compute attestation or grade.",
+        "handler": "functions/api/compute.ts",
+        "methods": ["GET"],
+        "path": "/api/compute",
+        "outcomes": [],
+        "output": {
+            "schema": "csoai.compute-bridge/1",
+            "census": "catalogued committed baseline",
+            "agui_states": ["unconfigured", "live", "down", "unreachable"],
+            "measurement_state": "UNMEASURED",
+            "writes_board": False,
+        },
+    },
+    "challenge.json": {
+        "name": "Challenge intake (ephemeral only)",
+        "state": "NOT_CONFIGURED",
+        "description": "The redress door validates challenge input and can issue an ephemeral receipt, but no registry or durable store is bound.",
+        "handler": "functions/api/challenge.ts",
+        "methods": ["GET", "POST"],
+        "path": "/api/challenge",
+        "outcomes": [
+            {"method": "POST", "http_status": 202, "output": "Ephemeral csoai.challenge-receipt/0.1"},
+            {"method": "POST", "http_status": 400, "output": "JSON validation error"},
+            {"method": "GET", "output": "Door metadata with stored:false and optional id echo"},
+        ],
+        "output": {
+            "stored": False,
+            "content_id": "24-hex-character HMAC-derived opaque identifier",
+            "publicly_verifiable_signature": False,
+            "resolution_written": False,
+        },
+    },
+}
+
+
+def build_audited_api_spec(slug: str, as_of: str | None = None) -> dict:
+    """Build one reviewed API capability record from the current handler contract."""
+    contract = AUDITED_API_CONTRACTS[slug]
+    return {
+        "schema": "csoai.api-capability-state/0.2",
+        "kind": "api-contract" if contract["state"] == "LIVE" else "quarantined-api-capability",
+        "name": contract["name"],
+        "state": contract["state"],
+        "description": contract["description"],
+        "as_of": as_of or now(),
+        "transport": {
+            "handler": contract["handler"],
+            "methods": contract["methods"],
+            "path": contract["path"],
+            **({"intended_path": contract["intended_path"]} if "intended_path" in contract else {}),
+            "outcomes": contract["outcomes"],
+        },
+        "output": contract["output"],
+        "capabilities": {
+            "accepts_writes": slug == "challenge.json",
+            "persists_requests": False,
+            "signed_output": False,
+            "anchors_output": False,
+            "payment_required": False,
+            "writes_measurement_board": False,
+        },
+    }
+
+
 # 50+ more standards to add to /.well-known/
 NEW_STANDARDS = [
     ("sox.json", "Sarbanes-Oxley Act", "US SOX § 404 — internal controls over financial reporting"),
@@ -216,33 +469,25 @@ def main() -> None:
     print(f"  created: {created_interop}/{len(interop_files)} interop files")
     print(f"  total now: {sum(1 for _ in INTEROP.iterdir())}")
 
-    # 3. Build API route stubs (just headers — they'll be implemented later)
+    # 3. Refresh reviewed API capability records and fill untouched legacy stubs.
     print()
     print("[3] API routes...")
-    api_routes = [
-        ("feed.json", "GET /api/feed", "Live feed of new attestations"),
+    legacy_api_routes = [
         ("witness.json", "POST /api/witness", "Witness a digest"),
-        ("anchor.json", "POST /api/anchor", "Anchor a signed card to OTS"),
-        ("verify-card.json", "GET /api/verify-card", "Verify a single card"),
-        ("verify-batch.json", "POST /api/verify-batch", "Verify a batch of cards"),
-        ("include.json", "GET /api/include", "Merkle inclusion proof"),
-        ("report.json", "POST /api/report", "File a correction report"),
         ("fines.json", "GET /api/fines", "Fine-grained attestation"),
-        ("otel.json", "GET /api/otel", "OTel metrics"),
         ("trace.json", "GET /api/trace", "Trace a request"),
-        ("revenue-today.json", "GET /api/revenue-today", "Today's revenue"),
-        ("revenue-week.json", "GET /api/revenue-week", "This week's revenue"),
-        ("revenue-month.json", "GET /api/revenue-month", "This month's revenue"),
-        ("revenue-all.json", "GET /api/revenue-all", "All-time revenue"),
         ("counters.json", "GET /api/counters", "All counters"),
-        ("challenge.json", "POST /api/challenge", "x402 challenge"),
-        ("checkout.json", "POST /api/checkout", "x402 checkout"),
-        ("compute.json", "GET /api/compute", "Compute attestation"),
-        ("decide.json", "POST /api/decide", "Make a decision"),
         ("assess.json", "POST /api/assess", "Run an assessment"),
     ]
     created_api = 0
-    for slug, route, desc in api_routes:
+    for slug in AUDITED_API_CONTRACTS:
+        path = INTEROP / slug
+        existed = path.exists()
+        path.write_text(json.dumps(build_audited_api_spec(slug), indent=2) + "\n")
+        if not existed:
+            created_api += 1
+
+    for slug, route, desc in legacy_api_routes:
         path = INTEROP / slug
         if not path.exists():
             path.write_text(json.dumps({
@@ -262,7 +507,7 @@ def main() -> None:
                 },
             }, indent=2))
             created_api += 1
-    print(f"  created: {created_api}/{len(api_routes)} API specs")
+    print(f"  created: {created_api}/{len(AUDITED_API_CONTRACTS) + len(legacy_api_routes)} API specs")
     print(f"  total now: {sum(1 for _ in INTEROP.glob('*.json'))}")
 
     # 4. Build package manifests (the 5 new packages)

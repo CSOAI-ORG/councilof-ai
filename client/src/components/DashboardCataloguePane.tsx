@@ -78,10 +78,12 @@ const CANONICAL_ALIAS_PATHS = new Set([
 export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   const entries: DashboardCatalogueEntry[] = [];
   const seen = new Set<string>();
+  const seenHrefs = new Set<string>();
   const add = (entry: DashboardCatalogueEntry) => {
     const key = entry.path || entry.id;
-    if (seen.has(key)) return;
+    if (seen.has(key) || seenHrefs.has(entry.href)) return;
     seen.add(key);
+    seenHrefs.add(entry.href);
     entries.push(entry);
   };
 
@@ -102,13 +104,16 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
   }
 
   for (const route of LOBBY_ROUTES) {
+    const href = route.path.startsWith("/dashboard?")
+      ? route.path
+      : dashboardViewHref(route.path, route.label);
     add({
       id: `route:${route.path}`,
       label: route.label,
       description: route.blurb,
       group: ROUTE_GROUP_LABELS[route.group],
       kind: "surface",
-      href: dashboardViewHref(route.path, route.label),
+      href,
       path: route.path,
     });
   }

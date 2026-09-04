@@ -87,7 +87,6 @@ describe("lobby chat MCP read routing", () => {
         calls.push([name, args]);
         return {
           ok: true,
-          state: "runtime_observed",
           text: "VALID — public-root merkle abc123. Not GSPC.",
         };
       },
@@ -105,7 +104,6 @@ describe("lobby chat MCP read routing", () => {
       { name: "list_cards", args: { limit: 5 } },
       async () => ({
         ok: false,
-        state: "unreachable",
         text: "POST /mcp answered HTTP 503",
       }),
     );

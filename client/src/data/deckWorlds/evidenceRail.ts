@@ -7,7 +7,7 @@ import type { Slide } from "@/components/scrollworld";
  *  1. Deck slide 4 "Ed25519 + ML-DSA-65 post-quantum cryptography, anchored to a
  *     hash-chained ledger and OpenTimestamps" — two overclaims in one line. There is NO
  *     OpenTimestamps / RFC-3161 / Bitcoin anchoring (timestamp_authority: "none"), and
- *     ML-DSA-65 is BUILT, NOT SHIPPED. Rewritten to Ed25519 over a SHA-256 hash chain.
+ *     ML-DSA-65 is planned/scaffolded only; no PQC runtime is built. Rewritten to Ed25519 over a SHA-256 hash chain.
  *  2. Deck slide 4 "Expire: ... automatically transition a pass to
  *     EXPIRED-REGULATION-CHANGED", echoed on slide 12 — DROPPED ENTIRELY. Nothing expires.
  *     When the law moves we re-measure and issue a DELTA CARD; the old card stays.
@@ -173,7 +173,7 @@ export const EVIDENCE_RAIL_SLIDES: Slide[] = [
 export const EVIDENCE_RAIL_NOT_CLAIMED = [
   "We do not claim anything we issue expires or auto-downgrades. There is no expiry state and no revocation. When the law moves we re-measure and publish a delta card; the original stays on the record.",
   "We do not claim any independent time-stamping. No RFC-3161, no OpenTimestamps, no blockchain anchor — the anchor is Ed25519 over a SHA-256 hash chain against did:web:csoai.org.",
-  "We do not claim post-quantum signing. Ed25519 today; the ML-DSA-65 (FIPS-204) signer is built but not shipped, and the label changes only when it ships.",
+  "We do not claim post-quantum signing. Ed25519 is used today; ML-DSA-65 (FIPS-204) is planned and scaffolded only, and no PQC runtime is built or published.",
   "We do not publish market sizes, premium projections or growth rates for AI assurance or AI insurance. Those numbers are not ours to evidence.",
   "We do not characterise named competitors' conflicts of interest. The structural argument on this page is about market shapes, not about any particular firm.",
   "We do not certify, accredit or approve anything, in any sector named here.",

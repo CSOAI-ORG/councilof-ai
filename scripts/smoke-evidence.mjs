@@ -53,8 +53,8 @@ for (const p of ["/api/assess/key", "/api/article50", "/api/mcp"]) {
   check(`${p} is JSON`, r.ct.includes("json"), `content-type=${r.ct}`);
 }
 
-// 2. A known Annex III high-risk case must classify as high-risk, through EVERY accepted input
-//    field. The alias gap is what let a hospital triage description read as empty.
+// 2. A known Annex III phrase must produce a possible-match screening state through EVERY
+//    accepted input field. This does not establish a legal tier.
 for (const field of ["description", "scenario", "text", "use_case", "system"]) {
   const r = await j("/api/assess", {
     method: "POST",
@@ -63,7 +63,7 @@ for (const field of ["description", "scenario", "text", "use_case", "system"]) {
       [field]: "A hospital deploys an AI triage model in the EU that ranks emergency patients by urgency.",
     }),
   });
-  check(`/assess via "${field}" -> HIGH_RISK`, r.body?.tier === "HIGH_RISK", `got ${r.body?.tier}`);
+  check(`/assess via "${field}" -> POSSIBLE_ANNEX_III_TEXT_MATCH`, r.body?.screening_state === "POSSIBLE_ANNEX_III_TEXT_MATCH", `got ${r.body?.screening_state}`);
 }
 
 // 3. No description must be UNMEASURED, never a low-risk finding. An empty input is not
@@ -74,7 +74,7 @@ for (const field of ["description", "scenario", "text", "use_case", "system"]) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify({}),
   });
-  check("/assess empty -> UNMEASURED", r.body?.tier === "UNMEASURED", `got ${r.body?.tier}`);
+  check("/assess empty -> UNMEASURED", r.body?.screening_state === "UNMEASURED", `got ${r.body?.screening_state}`);
 }
 
 // 4. The signature must verify against the PUBLISHED key, and a tampered payload must fail.
@@ -98,7 +98,7 @@ for (const field of ["description", "scenario", "text", "use_case", "system"]) {
     const ok = await wc.subtle.verify("Ed25519", pub, sig, Buffer.from(a.signed_payload));
     check("signature verifies against published key", ok);
 
-    const tampered = Buffer.from(a.signed_payload.replace("HIGH_RISK", "MINIMAL_RISK") + " ");
+    const tampered = Buffer.from(a.signed_payload.replace("POSSIBLE_ANNEX_III_TEXT_MATCH", "NO_MATCH_IN_LIMITED_KEYWORD_SET") + " ");
     const bad = await wc.subtle.verify("Ed25519", pub, sig, tampered);
     check("tampered payload is rejected", !bad);
   }

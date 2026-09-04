@@ -12,6 +12,10 @@ const pageNames = [
   "PocShowcase.tsx",
   "ComparisonPage.tsx",
   "AgentRegistry.tsx",
+  "CharterArticle.tsx",
+  "TryCouncil.tsx",
+  "ComplianceHowItWorks.tsx",
+  "AltPage.tsx",
 ] as const;
 
 const sources = Object.fromEntries(
@@ -50,11 +54,12 @@ describe("council runtime claim boundary", () => {
     }
   });
 
-  it("distinguishes the earlier retraction run from the latest point result", () => {
+  it("distinguishes the unbound historical result from the latest point result", () => {
     for (const source of overviewSources) {
-      expect(source).toContain("earlier");
-      expect(source).toContain("n_eff 1.21 of 3");
-      expect(source).toContain("latest point experiment");
+      expect(source).toContain("historical numeric result");
+      expect(source).toContain("unbound");
+      expect(source).toContain("artifact is absent");
+      expect(source).toMatch(/latest (?:published )?point experiment/);
       expect(source).toContain("rho=1 and n_eff=1");
       expect(source).toContain("independent review or fault tolerance");
       expect(source).toContain("/interop/council-independence.json");
@@ -80,5 +85,60 @@ describe("council runtime claim boundary", () => {
     expect(sources["Charter.tsx"]).toContain(
       "not a current 24/7 monitoring or enforcement service",
     );
+  });
+
+  it("keeps the routed demo, guide, charter article and comparisons inside the same truth boundary", () => {
+    expect(sources["CharterArticle.tsx"]).toContain(
+      "/interop/council-independence.json",
+    );
+    expect(sources["CharterArticle.tsx"]).toContain("rho=1 and n_eff=1");
+    expect(sources["CharterArticle.tsx"]).toContain(
+      "not treated\nas independently reproducible here",
+    );
+
+    expect(sources["TryCouncil.tsx"]).toContain(
+      "Local classification complete — no Council vote",
+    );
+    expect(sources["TryCouncil.tsx"]).toContain(
+      "33 seats and a target threshold of 23/33",
+    );
+    expect(sources["TryCouncil.tsx"]).not.toContain(
+      "Convene the live 5-agent council",
+    );
+    expect(sources["TryCouncil.tsx"]).not.toContain("Consensus reached");
+
+    expect(sources["ComplianceHowItWorks.tsx"]).toContain(
+      "No continuous Council monitoring",
+    );
+    expect(sources["ComplianceHowItWorks.tsx"]).not.toContain(
+      "The Council continuously monitors",
+    );
+    expect(sources["ComplianceHowItWorks.tsx"]).not.toContain(
+      "Council independently reviews your compliance",
+    );
+
+    expect(sources["AltPage.tsx"]).toContain(
+      "Designed 33-seat Council, target 23/33",
+    );
+    expect(sources["AltPage.tsx"]).not.toContain("multi-agent consensus");
+    expect(sources["AltPage.tsx"]).not.toContain("Ed25519-signed verdicts");
+    expect(sources["AltPage.tsx"]).not.toContain("signs every verdict");
+  });
+
+  it("keeps the public PQC claim planned rather than built", () => {
+    const register = JSON.parse(
+      readFileSync(
+        resolve(__dirname, "../../../public/claims-register.json"),
+        "utf8",
+      ),
+    ) as { claims: Array<{ id: string; status: string; notes: string }> };
+    const pqc = register.claims.find((claim) => claim.id === "CR-006");
+
+    expect(pqc?.status).toBe("planned");
+    expect(pqc?.notes).toContain("Planned and scaffolded only");
+    expect(pqc?.notes).toContain(
+      "No ML-DSA signer or runtime is built or published",
+    );
+    expect(pqc?.notes).not.toContain("Built, not shipped");
   });
 });

@@ -4,7 +4,7 @@ import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 import { AnswerText } from "./answerText";
 
 const STATE_TONE: Record<string, string> = {
-  live: TONE.ok,
+  model_response: TONE.running,
   grounded: TONE.ok,
   runtime_observed: TONE.ok,
   unchecked: TONE.running,
@@ -43,12 +43,12 @@ export default function LobbyThread({
           className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto max-w-[min(42rem,92%)]" : "max-w-[min(44rem,96%)]"}`}
         >
           <p className="sr-only">
-            {t.role === "user" ? "You asked:" : "The Council replied:"}
+            {t.role === "user" ? "You asked:" : t.state === "model_response" ? "An upstream model replied:" : "The Council replied:"}
           </p>
           <p
             className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}
           >
-            {t.role === "user" ? "You" : "Council"}
+            {t.role === "user" ? "You" : t.state === "model_response" ? "Upstream model" : "Council"}
           </p>
           <div
             className={

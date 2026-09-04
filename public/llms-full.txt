@@ -5,7 +5,7 @@
 The 22-axis GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
-## 2. THE LIVE BOARD
+## 2. CURRENT BOARD SNAPSHOT
 
 ```json
 {
@@ -19,7 +19,7 @@ Measurement, not certification. Anyone can re-check.
     "public_count": "22 axis \u00b7 22 measured",
     "model_fleets": 14,
     "fact_runs": 8,
-    "count_grammar": "22 axis are on the board and every one carries a measurement \u2014 no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
+    "count_grammar": "This snapshot declares 22 axes. Read each axis entry for its scoped measurement state; do not infer universal evidence coverage. Slot and measured counts are derived from the axis array rather than typed independently.",
     "by_family": {
       "gspc": {
         "axes": 14,
@@ -29,10 +29,10 @@ Measurement, not certification. Anyone can re-check.
       "financial": {
         "axes": 8,
         "measured": 8,
-        "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs \u2014 issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below \u2014 measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05)."
+        "note": "The 8 financial/domain axis entries (ADR-001) describe deterministic-fact runs: issuer-account flags from the referenced XRPL reader (financial n=16; provenance-controls n=6) and public statistical series, graded by rule with no model, fleet or judgement. None is a model comparison or contributes to the mean below. Measured is not the same as scored; inspect each cited run and current endpoint response."
       }
     },
-    "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 \u2014 the un-swept state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader \u2014 measured is not the same as scored \u2014 but each has a signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
+    "sweep_note": "Swept 2026-08-26 under ADR-001. The snapshot contains 14 model-comparison axis entries and 8 deterministic-fact axis entries. Fact axes carry no accuracy or leader; measured is not the same as scored. Inspect each referenced run and its own signature state rather than treating the board count as universal evidence.",
     "license": "CC-BY-4.0",
     "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field \u2014 fixed same day.",
     "items": 969,
@@ -56,14 +56,14 @@ Measurement, not certification. Anyone can re-check.
       "art5-safeguard",
       "affect"
     ],
-    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 3 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched \u2014 measurement happened; it is simply not published as a public ranking of our own model.",
+    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes; 3 axes carry an external public leader. This changes leader attribution and externally-led tallies, not the snapshot's measured_axes field. Excluded model records retain their own published states and must be checked individually.",
     "uncarded_leaders_dropped": 3,
     "uncarded_leaders_dropped_axes": [
       "machinery-conformity",
       "cross-reality",
       "detector-interop"
     ],
-    "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED \u2014 the fleet aggregate (fleet_mean) is a real measurement \u2014 so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
+    "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes because no signed per-model card was found in /signed/card_index.json. A named leader requires an independently verifiable supporting card; absent that, no leader or accuracy is asserted. The affected axis entries retain their scoped fleet-aggregate state, and public_leader_state=NO_SIGNED_CARD.",
     "mean_macro_f1": 0.944,
     "mean_accuracy": 0.6398,
     "mean_fleet_mean": 0.5447,
@@ -471,7 +471,7 @@ Measurement, not certification. Anyone can re-check.
       "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
       "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
       "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
-      "status": "CORRECTED \u2014 signed freeze is 22/22 and agrees with the live axis arrays"
+      "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
     },
     {
       "id": "C-2026-0902-08",
@@ -524,36 +524,39 @@ Measurement, not certification. Anyone can re-check.
       "url_sha256
 ```
 
-## 6. THE ANCHORS
+## 6. CURRENT EXACT-ROOT WITNESS STATE
 
-Every measurement is bound to three independent LIVE anchors:
-1. HuggingFace Hub — `huggingface.co/csoai` — 60+ datasets, 42 Spaces, 3 models
-2. Sigstore Rekor — witness receipt at `/signed/rekor-*.json`
-3. Corrections ledger — public witness at `/api/corrections`
+The root shipped with this file is scoped to its own exact bytes and 154 listed leaves:
+- root SHA-256: `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`
+- Merkle root: `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`
+- Ed25519: VERIFIED under `did:web:csoai.org#board-attestation-1`
+- Rekor: WITNESSED at log index `2714574265`
+- OTS proof SHA-256: `91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99`
+- OTS state: `STAMPED_PENDING_BITCOIN` — no Bitcoin block confirmation
 
-A fourth, Bitcoin OpenTimestamps, is PLANNED and must not be quoted as live. Digests
-are stamped; a stamp is a request to a calendar, not a proof. The published roots
-carry Bitcoin block attestations (965121, 965138, 965268); queued atoms carry pending
-stamps and are NOT anchored. State at `/api/state`.
+This exact-root witness does not bind the separate 335-card index, an entire
+measurement history, Hugging Face, or the corrections ledger. The two card corpora
+have zero identifier overlap. Machine-readable state: `/interop/root-witness-latest.json`.
 
 ## 7. THE MCP DOOR
 
 `POST https://councilof.ai/mcp` with the 4 free tools:
 - `board_totals` — the 22 axis summary
 - `get_axis` — one axis row
-- `verify_card` — verify any signed card
+- `verify_card` — verify a supported card and inspect the returned result
 - `list_cards` — the signed card index
-Plus 5 paid tools (x402): `request-attestation`, `evidence-bundle`, `data-feed`
+Additional x402 tool names may be advertised by discovery. Pricing and successful
+production settlement are pending verification; a 402 challenge is not a payment receipt.
 
 ## 8. THE 5 ACCESS SURFACES
 
 1. MCP — `POST https://councilof.ai/mcp`
-2. Chrome MV3 extension — `/extension/`
+2. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
 3. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
-4. Hermes skill — `~/.hermes/skills/council-of-ai/`
+4. Hermes integration — no public install package is currently advertised
 5. REST + curl — `curl https://councilof.ai/api/gspc`
 
 ---
-# Generated 2026-09-03 by the relentless JEEVES lane
-# Live at https://councilof.ai/llms-full.txt
-# Mill: functions/_lib/cardSign.ts signs under did:web:csoai.org#card-attestation-1
+# Repository snapshot generated 2026-09-03; verify freshness against current endpoints.
+# Published route: https://councilof.ai/llms-full.txt
+# A signature claim applies only when the returned artefact contains verifiable signature material.

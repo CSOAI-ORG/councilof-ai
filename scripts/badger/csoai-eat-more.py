@@ -139,10 +139,11 @@ def get_json(url: str, timeout: int = 30) -> object:
         return {"error": str(e)}
 
 
-def sign_atom(atom: dict) -> dict:
+def identify_atom(atom: dict) -> dict:
     blob = json.dumps(atom, sort_keys=True, default=str).encode()
-    atom["sha256"] = hashlib.sha256(blob).hexdigest()
-    atom["sig"] = hashlib.sha256(b"sig:" + atom["sha256"].encode()).hexdigest()
+    atom["content_sha256"] = hashlib.sha256(blob).hexdigest()
+    atom["signed"] = False
+    atom["signature_status"] = "NOT_SIGNED"
     return atom
 
 
@@ -211,7 +212,7 @@ def main() -> None:
                     "measurement": {"status": "DISCOVERED"},
                     "links": {"live_board": "https://councilof.ai/api/gspc"},
                 }
-                atoms.append(sign_atom(atom))
+                atoms.append(identify_atom(atom))
     atoms_path = QUEUE / f"eat-more-atoms-{now()}.jsonl"
     with atoms_path.open("w") as f:
         for a in atoms:

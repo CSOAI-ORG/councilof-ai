@@ -43,7 +43,6 @@ HARVESTERS = [
     ("per-item",         "harvest-per-item-cards.py"),
     ("per-model",        "harvest-per-model-cards.py"),
     ("tie-attestations", "harvest-tie-attestations.py"),
-    ("witness-receipts", "harvest-witness-receipts.py"),
     ("corrections-diff", "harvest-corrections-diff-cards.py"),
     ("a2a-findings",     "harvest-a2a-findings.py"),
     ("uk-open-data",     "csoai-uk-open-data.py"),

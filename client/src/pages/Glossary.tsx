@@ -157,7 +157,7 @@ const glossaryTerms: GlossaryTerm[] = [
   {
     term: "designed multi-agent review",
     definition:
-      "A distributed-computing property: a system keeps working correctly even when some nodes give wrong or malicious answers. The Council of AI was DESIGNED around this idea, but the claim was retracted on 2026-07-29 — measurement put effective independence at n_eff about 1.21 of 3, so the property is not demonstrated. See the Refutation Ledger.",
+      "A distributed-computing property: a system keeps working correctly even when some nodes give wrong or malicious answers. The Council of AI was DESIGNED around this idea, but the claim was retracted on 2026-07-29. The historical DR-0007 number is unbound because its cited artifact is absent; the latest published point test measured rho=1 and n_eff=1, so the property is not demonstrated.",
     category: "Technical",
     relatedTerms: ["Consensus", "Distributed Systems", "Robustness"],
   },

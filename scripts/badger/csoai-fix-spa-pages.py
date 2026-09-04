@@ -76,7 +76,7 @@ def fix_spa_page(path: Path, title: str) -> tuple[bool, str]:
     <div class="footer-col">
       <a href="/" class="logo"><span class="logo-mark">C</span><span class="logo-text">CS<strong>O</strong>AI</span></a>
       <p style="font-size: 14px; line-height: 1.6; margin-top: 16px;">
-        Independent AI-governance measurement body.<br>Signed. Anchored. Anyone can re-check.
+        Independent AI-governance measurement body.<br>Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">22 axes · 22 measured</p>
     </div>

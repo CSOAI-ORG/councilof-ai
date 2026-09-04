@@ -364,8 +364,7 @@
   <div class="brand"><span class="dot"></span>CSOAI · Council <small>3D Governance Earth</small> <span class="beta">BETA</span></div>
   <div class="stats">
     <div class="stat"><b>417</b><span>Frozen provisions</span></div>
-    <!-- Canon counters (client/src/data/canonCounters.ts, 2026-08-01): 291 MCP servers, 6 anchors (5 live) — s-nodes is overwritten by the live D1 feed when reachable -->
-    <div class="stat"><b id="s-nodes">6</b><span>Anchor nodes · 5 live</span></div>
+    <div class="stat"><b id="s-nodes">—</b><span id="s-anchor-label">Anchor status · UNCHECKABLE</span></div>
     <div class="stat"><b>291</b><span>MCP servers catalogued</span></div>
     <div class="stat sov"><b id="s-ung">—</b><span>Watchers · status probe</span></div>
     <div class="stat sov"><b>0/20</b><span>Marks survived (CP 13.9%)</span></div>
@@ -518,17 +517,24 @@ if(viewer){
     var STATUS_COL={'LIVE':'#34d399','STALE':'#f59e0b','UNKNOWN':'#f59e0b','UNREACHABLE':'#ef4444','CITED':'#64748b','AUTHORED':'#64748b'};
     fetch(API+'/anchors',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
       if(!d||!d.watchers)return;
+      var checks=d.watchers.map(function(w){return Date.parse(w.last_checked||'');}).filter(Number.isFinite);
+      var lastChecked=checks.length?Math.max.apply(Math,checks):NaN;
+      var fresh=Number.isFinite(lastChecked)&&(Date.now()-lastChecked)<=24*60*60*1000;
       var nodes=d.watchers.map(function(w){
         var c=COORDS[w.source]||{lng:0,lat:0};
-        return{id:w.source,name:w.source,lng:c.lng,lat:c.lat,status:w.status,col:STATUS_COL[w.status]||'#64748b'};
+        var status=fresh?w.status:'STALE';
+        return{id:w.source,name:w.source,lng:c.lng,lat:c.lat,status:status,col:STATUS_COL[status]||'#64748b'};
       });
       // Send to globe via postMessage (self-hosted, same window)
       window.postMessage({cmd:'layer0',nodes:nodes},'*');
       // Update HUD stats
       var live=d.watchers.filter(function(w){return w.status==='LIVE';}).length;
       var unknown=d.watchers.filter(function(w){return w.status!=='LIVE'&&w.status!=='STALE';}).length;
-      var el=document.getElementById('s-ung');if(el)el.textContent=unknown;
-    }).catch(function(){});
+      var nodesEl=document.getElementById('s-nodes'),labelEl=document.getElementById('s-anchor-label'),el=document.getElementById('s-ung');
+      var checked=Number.isFinite(lastChecked)?new Date(lastChecked).toISOString():'unknown';
+      if(fresh){if(nodesEl)nodesEl.textContent=String(d.watchers.length);if(labelEl)labelEl.textContent='Anchor nodes · '+live+' observed live · '+checked;if(el)el.textContent=String(unknown);}
+      else{if(nodesEl)nodesEl.textContent='—';if(labelEl)labelEl.textContent='Anchor status · STALE · last checked '+checked;if(el)el.textContent='STALE';}
+    }).catch(function(){var labelEl=document.getElementById('s-anchor-label');if(labelEl)labelEl.textContent='Anchor status · UNCHECKABLE';});
   })();
 
   viewer.scene.globe.tileLoadProgressEvent.addEventListener(function(){ var l=document.getElementById('load'); if(l)l.style.display='none'; });
@@ -839,7 +845,7 @@ if(viewer){
       </a>
       <p style="font-size: 14px; line-height: 1.6;">
         Independent AI-governance measurement body.<br>
-        Signed. Anchored. Anyone can re-check.
+        Published measurement cards are Ed25519-signed. See /api/state for the current exact-root witness state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
         22 axes · 22 measured

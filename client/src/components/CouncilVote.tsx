@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from "react";
 // CouncilVote — a DESIGN SIMULATION of the 33-seat council's supermajority quorum.
 // This is an illustration of the architecture, not a live vote: the measured
 // latest cross-checking value is n_eff 1.00 of 3 nominal legs (see
-// /interop/council-independence.json). The older DR-0007 run measured 1.21.
+// /interop/council-independence.json). DR-0007's historical numeric result is
+// unbound because its cited result artifact is absent from this repository.
 // 33 nodes in a ring vote toward a supermajority quorum; a care-floor gauge holds at
 // Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
 const N = 33;
@@ -76,7 +77,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
           )}
         </div>
       </div>
-      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation only. It does not establish independent voters, capture resistance, fault tolerance, or a live council. Latest point experiment: n_eff 1.00 of 3 nominal legs (ρ=1); the earlier DR-0007 run measured 1.21. See the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.</p>
+      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation only. It does not establish independent voters, capture resistance, fault tolerance, or a live council. <a href="/interop/council-independence.json" className="underline">Latest published point experiment: n_eff=1 across 3 nominal legs (rho=1)</a>. DR-0007's historical number is unbound because its cited artifact is absent.</p>
     </div>
   );
 }

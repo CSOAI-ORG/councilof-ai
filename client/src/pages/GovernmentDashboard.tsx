@@ -1,8 +1,9 @@
 /**
  * CSOAI Government & Regulator Dashboard
  *
- * Real-time AI compliance monitoring for government bodies and regulators
- * Aligned with EU AI Act, NIST AI RMF, ISO 42001, and TC260 frameworks
+ * A non-operational government-dashboard prototype. All case, enforcement,
+ * partnership and aggregate data on this route is illustrative unless linked
+ * to a separately published measurement artifact.
  */
 
 import { useState } from "react";
@@ -288,26 +289,26 @@ const activeIncidents = {
 
 const councilDesignFeatures = [
   {
-    title: "Automated Compliance Monitoring",
-    description: "The design calls for 33 agents to monitor registered systems for compliance drift across the mapped frameworks. Independence between agents is measured, not assumed.",
+    title: "Monitoring design",
+    description: "The design calls for registered systems to be re-measured against versioned predicates. No registry or continuous Council monitor is connected here.",
     icon: Eye,
     stats: "Continuous monitoring once a registry is connected",
   },
   {
-    title: "Consensus-Based Decisions",
-    description: "The designed multi-agent review requires a 23-of-33 supermajority. It is intended to remove a single point of failure; that property is measured, not claimed.",
+    title: "Council design",
+    description: "The proposed review architecture uses a 23-of-33 target threshold. It is not live, and the latest point test measured rho=1 and n_eff=1, so independence and fault tolerance are not demonstrated.",
     icon: Users,
     stats: "Supermajority (23 of 33) required by design",
   },
   {
-    title: "Real-Time Alert System",
-    description: "Instant notifications to relevant regulatory bodies when violations are detected, with full audit trail and evidence package.",
+    title: "Alerting target",
+    description: "A future workflow could notify an explicitly connected authority after evidence and human review. No regulator alert channel is configured here.",
     icon: Bell,
     stats: "Real-time alert design target",
   },
   {
     title: "Cross-Border Coordination",
-    description: "Automatic routing of cases to appropriate jurisdictions with built-in mutual recognition of assessments.",
+    description: "A proposed routing layer could suggest jurisdictions. No automatic authority routing or mutual-recognition agreement is in force.",
     icon: Network,
     stats: "Cross-border routing, designed for mutual recognition",
   },
@@ -316,29 +317,29 @@ const councilDesignFeatures = [
 const internationalCooperation = [
   {
     name: "G7 AI Process",
-    description: "Alignment with Hiroshima AI Process principles and International Code of Conduct for Organizations",
-    status: "Active Partner",
+    description: "Public principles referenced by the research catalogue; no partnership is claimed",
+    status: "Reference only",
     participants: "7 nations + EU",
     icon: Handshake,
   },
   {
     name: "UN Global Dialogue",
-    description: "Contributing to the UN Secretary-General's AI Advisory Body and Global Digital Compact",
-    status: "Observer Status",
+    description: "Public UN materials referenced by the research catalogue; no observer status is claimed",
+    status: "Reference only",
     participants: "193 member states",
     icon: Globe2,
   },
   {
     name: "Council of Europe Framework",
-    description: "Supporting the Framework Convention on AI, Human Rights, Democracy and Rule of Law",
-    status: "Technical Advisor",
+    description: "Public Convention materials referenced by the research catalogue; no advisory role is claimed",
+    status: "Reference only",
     participants: "46 member states",
     icon: Scale,
   },
   {
     name: "Network of AI Safety Institutes",
-    description: "Data sharing and best practice exchange with national AI safety institutes worldwide",
-    status: "Founding Member",
+    description: "Public institute materials are potential inputs; no membership or data-sharing relationship is claimed",
+    status: "Reference only",
     participants: "12 institutes",
     icon: Shield,
   },
@@ -347,11 +348,11 @@ const internationalCooperation = [
 const faqItems = [
   {
     question: "How do regulators access CSOAI?",
-    answer: "Government regulators receive dedicated secure access through our Government Partnership Program. Access is granted after verification of regulatory authority and completion of our security onboarding process. Regulators receive API keys, dedicated support channels, and training on our compliance monitoring tools. Contact our Government Relations team to initiate the onboarding process.",
+    answer: "There is no live Government Partnership Program, regulator-only portal, dedicated API-key workflow, or support channel on this route. Regulators can inspect the same public evidence and verification surfaces as any reader.",
   },
   {
     question: "What data do we share with regulators?",
-    answer: "We provide regulators with real-time compliance status, risk assessments, incident reports, and audit trails for AI systems within their jurisdiction. All data sharing follows strict protocols aligned with GDPR and other data protection frameworks. Regulators can access aggregated compliance metrics, individual system assessments (with appropriate authority), enforcement action histories, and Council decision records.",
+    answer: "This prototype shares no private regulator dataset and has no live national registry feed. Public measurement artifacts state their own subject, method, date and limitations; sample cases below are invented layout data.",
   },
   {
     question: "How does cross-border cooperation work?",
@@ -359,23 +360,23 @@ const faqItems = [
   },
   {
     question: "Can regulators initiate investigations?",
-    answer: "Yes. Authorized regulators can flag systems for investigation, request detailed compliance audits, and trigger Council reviews. Investigation requests are processed within 24 hours, with critical cases escalated immediately. Regulators can also request emergency halt orders for systems posing immediate harm, subject to Council supermajority approval.",
+    answer: "No. Investigation initiation, 24-hour processing, emergency halt orders and Council approval are not wired services. The public incident form is intake only and cannot exercise regulator authority.",
   },
   {
     question: "How are compliance disputes resolved?",
-    answer: "Disputes follow a three-tier resolution process: (1) Internal review by our compliance team within 14 days, (2) Council arbitration with independent assessment within 30 days, (3) External appeals to designated regulatory tribunals. All parties receive full documentation and evidence packages, and decisions are published in our transparency reports.",
+    answer: "No operational arbitration or tribunal route is offered here. A production service would need a published correction, human review, appeal, revocation and authority-handoff contract before accepting cases.",
   },
   {
     question: "What reporting formats are available?",
-    answer: "We support multiple reporting formats including standardized XML/JSON for automated ingestion, PDF reports for formal proceedings, Excel exports for analysis, and real-time API feeds. Reports can be customized to match specific regulatory requirements and are available in all EU official languages plus Mandarin, Japanese, and Korean.",
+    answer: "The public estate exposes specific JSON and web views. Formal PDF or spreadsheet proceedings, custom regulator schemas, real-time feeds and multilingual report coverage are not promised by this prototype.",
   },
   {
     question: "How do we integrate with existing regulatory systems?",
-    answer: "CSOAI offers REST and GraphQL APIs for seamless integration with existing regulatory technology stacks. We provide pre-built connectors for major regulatory platforms including EU AI Office systems, SEC EDGAR, and national registration databases. Our technical team offers custom integration support at no additional cost to government partners.",
+    answer: "No GraphQL service or supported connector to the EU AI Office, SEC EDGAR or a national registry is claimed here. Published REST endpoints can be inspected for a separately scoped adapter.",
   },
   {
     question: "What training is available for government staff?",
-    answer: "We provide comprehensive training programs including: (1) Online self-paced courses on AI compliance fundamentals, (2) Live workshops on using the CSOAI platform, (3) Advanced certification programs for compliance officers, (4) Annual conferences and symposiums. All training is provided free of charge to verified government personnel.",
+    answer: "Public practice material can be explored, but no live workshop, accredited certification, annual conference, or free government training programme is committed here.",
   },
 ];
 
@@ -499,13 +500,12 @@ export default function GovernmentDashboard() {
                 Government & Regulator Portal
               </Badge>
               <h1 className="text-4xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                Global AI Compliance
-                <span className="text-emerald-300"> Monitoring</span>
+                Government evidence
+                <span className="text-emerald-300"> workspace preview</span>
               </h1>
               <p className="text-xl text-emerald-100 mb-8 leading-relaxed max-w-xl">
-                Real-time oversight capabilities for government regulators. Monitor AI systems
-                across jurisdictions, enforce compliance, and protect citizens with unprecedented
-                transparency and coordination.
+                A layout prototype for scoped evidence, jurisdiction views and accountable review.
+                It does not monitor national AI registries, enforce compliance, or exercise public authority.
               </p>
               <div className="flex flex-wrap gap-4">
                 <a href="/government-portal" className="bg-white text-emerald-900 hover:bg-emerald-50">
@@ -527,8 +527,8 @@ export default function GovernmentDashboard() {
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20"
               >
                 <Radio className="h-8 w-8 text-emerald-300 mb-3" />
-                <div className="text-3xl font-bold mb-1">24/7</div>
-                <div className="text-emerald-200 text-sm">Real-Time Monitoring</div>
+                <div className="text-3xl font-bold mb-1">Not live</div>
+                <div className="text-emerald-200 text-sm">Monitoring design only</div>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -665,11 +665,11 @@ export default function GovernmentDashboard() {
               Multi-Framework Compliance
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Comprehensive Regulatory Monitoring
+              Illustrative framework layout
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Real-time compliance tracking across the world's major AI governance frameworks.
-              Unified oversight for fragmented regulatory landscapes.
+              Four sample framework cards demonstrate a possible layout. Their counts and rates are
+              invented placeholders, not live compliance measurements.
             </p>
           </div>
 
@@ -749,10 +749,10 @@ export default function GovernmentDashboard() {
               Regional Oversight
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Compliance by Region
+              Regional workspace design
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Jurisdictional breakdown of AI system compliance, incidents, and enforcement activities.
+              No regional registry is connected; unavailable figures remain empty.
             </p>
           </div>
 
@@ -824,7 +824,7 @@ export default function GovernmentDashboard() {
                         <p className="text-sm text-gray-500 mt-2">
                           {region.pendingInvestigations != null
                             ? `${region.pendingInvestigations} pending investigations in this region`
-                            : "No live registry feed — figures withheld, not invented"}
+                            : "No live registry feed — no regional figure available"}
                         </p>
                       </div>
                     </div>
@@ -845,10 +845,10 @@ export default function GovernmentDashboard() {
               Active Cases
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Incidents & Enforcement
+              Illustrative cases & enforcement layout
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Current investigations, enforcement actions, and appeals under review.
+              Invented sample records demonstrate the layout. They are not real cases or authority actions.
             </p>
           </div>
 
@@ -858,9 +858,9 @@ export default function GovernmentDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <FileSearch className="h-5 w-5 text-amber-600" />
-                  Pending Investigations
+                  Sample investigations
                 </CardTitle>
-                <CardDescription>{activeIncidents.pendingInvestigations.length} active cases</CardDescription>
+                <CardDescription>{activeIncidents.pendingInvestigations.length} invented examples</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {activeIncidents.pendingInvestigations.map((inv) => (
@@ -897,9 +897,9 @@ export default function GovernmentDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Gavel className="h-5 w-5 text-red-600" />
-                  Enforcement Actions
+                  Sample enforcement actions
                 </CardTitle>
-                <CardDescription>{activeIncidents.enforcementActions.length} active enforcement actions</CardDescription>
+                <CardDescription>{activeIncidents.enforcementActions.length} invented examples</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {activeIncidents.enforcementActions.map((action) => (
@@ -934,9 +934,9 @@ export default function GovernmentDashboard() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Scale className="h-5 w-5 text-blue-600" />
-                  Appeals in Progress
+                  Sample appeals
                 </CardTitle>
-                <CardDescription>{activeIncidents.appealsInProgress.length} pending appeals</CardDescription>
+                <CardDescription>{activeIncidents.appealsInProgress.length} invented examples</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {activeIncidents.appealsInProgress.map((appeal) => (
@@ -1016,10 +1016,10 @@ export default function GovernmentDashboard() {
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Activity className="h-5 w-5" />
-                Recent Council Actions
+                Illustrative Council actions
               </CardTitle>
               <CardDescription className="text-emerald-200">
-                Decisions routed through the designed 33-seat Council of AI
+                Invented examples for the proposed workflow; no Council action occurred
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -1054,14 +1054,14 @@ export default function GovernmentDashboard() {
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200">
               <Globe2 className="h-3 w-3 mr-1" />
-              Global Partnerships
+              Referenced initiatives
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              International Cooperation
+              International source catalogue
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              CSOAI actively participates in global AI governance initiatives, ensuring
-              alignment with international standards and cross-border regulatory cooperation.
+              These initiatives are research references. This page does not claim membership,
+              partnership, observer status, advisory status, or data-sharing agreements.
             </p>
           </div>
 
@@ -1117,7 +1117,7 @@ export default function GovernmentDashboard() {
               Government & Regulator FAQ
             </h2>
             <p className="text-lg text-gray-600">
-              Common questions about CSOAI's government partnership program and regulatory tools.
+              Current boundaries of this non-operational government workspace prototype.
             </p>
           </div>
 
@@ -1157,11 +1157,11 @@ export default function GovernmentDashboard() {
               <Handshake className="h-10 w-10 text-emerald-300" />
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Partner With CSOAI
+              Review public evidence with CSOAI
             </h2>
             <p className="text-xl text-emerald-100 mb-8 max-w-2xl mx-auto">
-              Join 47 regulatory bodies worldwide in building a safer AI ecosystem.
-              Request access to our government partnership program today.
+              No regulator network or government partnership programme is claimed. Use the public
+              verification surfaces, or contact CSOAI to scope a bounded evidence pilot.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -1178,15 +1178,15 @@ export default function GovernmentDashboard() {
             <div className="grid sm:grid-cols-3 gap-6 pt-8 border-t border-white/20">
               <div className="flex items-center justify-center gap-2 text-emerald-200">
                 <Lock className="h-5 w-5" />
-                <span>Secure Government Portal</span>
+                <span>Public evidence views</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-emerald-200">
                 <RefreshCw className="h-5 w-5" />
-                <span>Real-Time Data Access</span>
+                <span>No live registry feed</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-emerald-200">
                 <BookOpen className="h-5 w-5" />
-                <span>Free Training Programs</span>
+                <span>Public practice material</span>
               </div>
             </div>
           </motion.div>
@@ -1203,15 +1203,15 @@ export default function GovernmentDashboard() {
             </div>
             <div className="flex items-center gap-2">
               <Phone className="h-4 w-4" />
-              +1 (800) CSOAI-GOV
+              No dedicated government phone line
             </div>
             <div className="flex items-center gap-2">
               <Globe2 className="h-4 w-4" />
-              Available in 24 Languages
+              English interface; no 24-language service claim
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              24/7 Government Support Line
+              No 24/7 government support SLA
             </div>
           </div>
         </div>

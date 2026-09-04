@@ -43,7 +43,7 @@ const INITIAL: Report[] = [
   {
     id: "corrections",
     label: "Corrections ledger",
-    what: "What the estate got wrong, how it was caught, and the fix. Appended, never edited.",
+    what: "Public, source-maintained and version-controlled corrections. No append-only storage proof is claimed.",
     endpoint: "/api/corrections",
     state: "idle",
   },

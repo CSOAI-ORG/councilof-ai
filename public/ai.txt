@@ -1,19 +1,21 @@
 # CSOAI — Council of AI
-CSOAI Ltd (UK). The AI governance measurement body. We measure whether
-AI systems follow the rules and sign every result so it can be verified offline.
-We issue measurements and living attestations — never certificates of conformity.
-A grade is never sold. Verify is free and loginless.
+CSOAI Ltd (UK). An AI-governance measurement publisher. We publish scoped
+measurements of named systems, behaviours, sources and dates. A published card may
+carry an Ed25519 signature that can be checked offline; no universal coverage is claimed.
+These are measurements and attestations, never certificates of conformity.
+No grade or legal determination is sold. The public verifier currently requires no login.
 
 ## What CSOAI does
-- Measures AI governance compliance across statute (EU AI Act, UK JSP 936, NIST
-  AI RMF, ISO/IEC 42001, DORA, NIS2, GDPR and more — 417+ statutory provisions).
-- Signs every result with Ed25519 (Layer 0) so it verifies offline.
+- Maps explicitly scoped evidence to selected statutory and framework provisions.
+  A mapping is not a legal-compliance determination or complete framework coverage.
+- Publishes Ed25519-signed cards where a signature is present and verifiable; an
+  unsigned result does not become signed by appearing on this site.
 - Publishes measured outcomes and UNMEASURED gaps honestly on the Refutation Ledger.
 - Publishes open measurement tooling at github.com/CSOAI-ORG.
 
 ## Key pages
 - Home: https://csoai.org
-- Signed AI System Card (issue + verify offline + tamper detection): https://csoai.org/system-card
+- AI System Card documentation and verification: https://csoai.org/system-card
 - Framework Hive (per-framework obligations, penalties, crosswalks): https://csoai.org/hive
 - Governance town simulation (DESIGN-labelled): https://councilof.ai/gspc-arena?view=towns
 - Governance Graph (jurisdiction + framework stack): https://csoai.org/graph
@@ -26,18 +28,27 @@ A grade is never sold. Verify is free and loginless.
 - OpenAPI/plugin: /.well-known/ai-plugin.json
 
 ## For agents
-- Live board + verify: https://councilof.ai/api/gspc and https://councilof.ai/gspc-verify
-- Benchmark-quality register (third-party benchmarks, deterministic predicates, signed):
+- Board/API response + verifier: https://councilof.ai/api/gspc and https://councilof.ai/gspc-verify
+- Benchmark-quality register (third-party benchmarks and deterministic predicates):
   https://councilof.ai/api/benchmark-quality — unsolicited, not a certification, no model judgment.
 - Machine surfaces: https://councilof.ai/llms.txt · https://councilof.ai/.well-known/security.txt
 - Open measurement tooling: https://github.com/CSOAI-ORG
 - Full technical rundown: AGENTS.md in the repo.
 
 ## Org
-CSOAI Ltd (UK), company 16939677. MIT-licensed core. EU AI Act Article 50 transparent.
+CSOAI Ltd (UK), company 16939677. MIT-licensed core. Article 50 mappings are
+published as scoped evidence mappings, not legal determinations.
 
-## Verification surfaces (signed, reproducible)
+## Verification surfaces
 - Verify this leaderboard (free, in-browser): https://councilof.ai/verify-leaderboard
-- Signed per-axis Elo (verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
+- Per-axis Elo response (use ?verify=1 and inspect the returned signature state): https://councilof.ai/api/arena/scoreboard
 - ClaimGuard (claim-vs-signed-artifact): https://councilof.ai/claimguard
-- Free access for researchers/journalists/fact-checkers: permanent + unconditional
+- The public verification route currently requires no login; check the current response and published terms.
+
+## Current exact-root state
+- root.json SHA-256: 9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd
+- Scope: 154 listed leaves; it does not cover the separate 335-card index.
+- Ed25519: verified under did:web:csoai.org#board-attestation-1.
+- Rekor: witnessed at log index 2714574265.
+- OpenTimestamps: STAMPED_PENDING_BITCOIN; no Bitcoin block confirmation.
+- Machine state: https://councilof.ai/interop/root-witness-latest.json

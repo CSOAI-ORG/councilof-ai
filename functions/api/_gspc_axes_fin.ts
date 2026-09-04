@@ -8,12 +8,14 @@
 // must be backed by the signed artifact it summarises.
 //
 // THE HONESTY POINT — READ BEFORE EDITING
-// Five financial slots carry deterministic-facts runs on the same six issuers
+// Five financial slots carry deterministic-facts runs on the issuer set
 // (provenance-controls + reserve-attestation + regulatory-framework +
 // distribution-integrity + custody-disclosure). Risk verdicts stay UNMEASURED.
 // The two index slots stay UNMEASURED under C-2026-0826-05 (do not restore
 // MEASURED-INDEX-v0.1). humanoid-labour-index has no bank. Public grammar is
-// derived in gspc.ts from this array (22 · 19 after the four-axis mill).
+// derived in gspc.ts from this array. Only financial-measure-run-v2 currently
+// has an Ed25519 signature; the other seven artifacts are content-addressed but
+// unsigned. A content_id must never be described as a signature.
 //
 // A declared-slot axis has NO accuracy, NO leader and NO separation field. Those are
 // absent, not zero. A zero would be a measurement.

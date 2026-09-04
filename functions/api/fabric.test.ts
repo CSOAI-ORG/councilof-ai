@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateKeyPairSync, sign } from "node:crypto";
+import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import {
   buildFabricManifest,
   onRequestGet,
@@ -38,14 +38,34 @@ const json = (body: unknown, status = 200) =>
 function fixtureFetcher(
   options: {
     matchingWitness?: boolean;
+    sameMerkleDifferentBytes?: boolean;
+    inconsistentScope?: boolean;
     a2aReachable?: boolean;
     invalidRootSignature?: boolean;
   } = {},
 ) {
   const currentRoot = ROOT_MERKLE;
-  const witnessedRoot = options.matchingWitness
+  const rootDocument = {
+    kind: ROOT_KIND,
+    schema: ROOT_SCHEMA,
+    merkle_root: currentRoot,
+    card_count: 141,
+    as_of: "2026-09-04T04:24:30Z",
+    did_intended: ROOT_DID,
+    sig_ed25519: options.invalidRootSignature
+      ? "0".repeat(128)
+      : ROOT_SIGNATURE,
+  };
+  const rootRaw = JSON.stringify(rootDocument);
+  const rootSha = createHash("sha256").update(rootRaw).digest("hex");
+  const exactWitness = options.matchingWitness === true;
+  const witnessedRoot = exactWitness || options.sameMerkleDifferentBytes
     ? currentRoot
     : "older-root-9876543210";
+  const witnessedSha = exactWitness ? rootSha : "d".repeat(64);
+  const witnessedBytes = exactWitness
+    ? Buffer.byteLength(rootRaw)
+    : Buffer.byteLength(rootRaw) + 1;
 
   return vi.fn(
     async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
@@ -189,16 +209,8 @@ function fixtureFetcher(
         });
       }
       if (url.pathname === "/root.json") {
-        return json({
-          kind: ROOT_KIND,
-          schema: ROOT_SCHEMA,
-          merkle_root: currentRoot,
-          card_count: 141,
-          as_of: "2026-09-04T04:24:30Z",
-          did_intended: ROOT_DID,
-          sig_ed25519: options.invalidRootSignature
-            ? "0".repeat(128)
-            : ROOT_SIGNATURE,
+        return new Response(rootRaw, {
+          headers: { "content-type": "application/json" },
         });
       }
       if (url.pathname === "/.well-known/did.json") {
@@ -217,14 +229,36 @@ function fixtureFetcher(
         return json({
           as_of: "2026-09-02T07:13:32Z",
           artifact: {
+            sha256: witnessedSha,
+            bytes: witnessedBytes,
             merkle_root: witnessedRoot,
-            as_of: "2026-09-02T07:13:27Z",
+            card_count: 141,
+            as_of: "2026-09-04T04:24:30Z",
+          },
+          corpus_scope: {
+            relationship: "SEPARATE_CORPORA",
+            public_root_count: options.inconsistentScope ? 154 : 141,
+            public_root_sha256: rootSha,
+            signed_card_count: 335,
+            signed_card_id_overlap: 0,
+            ots_covers: "PUBLIC_ROOT_BYTES_ONLY",
           },
           witnesses: {
             rekor: { status: "WITNESSED" },
             ots: { status: "STAMPED_PENDING_BITCOIN" },
             eas_base: { status: "NOT_YET" },
             xrpl_memo: { status: "NOT_YET" },
+          },
+        });
+      }
+      if (url.pathname === "/interop/root-witness-pointer.json") {
+        return json({
+          live_root: {
+            sha256: witnessedSha,
+            bytes: witnessedBytes,
+            merkle_root: witnessedRoot,
+            card_count: 141,
+            as_of: "2026-09-04T04:24:30Z",
           },
         });
       }
@@ -249,7 +283,7 @@ describe("GET /api/fabric", () => {
     );
 
     expect(manifest.schema).toBe("csoai.capability-fabric/0.1");
-    expect(fetcher).toHaveBeenCalledTimes(15);
+    expect(fetcher).toHaveBeenCalledTimes(16);
     expect(manifest.rails.length).toBe(16);
     expect(manifest.action_contract).toMatchObject({
       schema: "csoai.capability-action-contract/0.1",
@@ -352,9 +386,10 @@ describe("GET /api/fabric", () => {
 
     expect(witness.state).toBe("STALE");
     expect(witness.last_error).toContain("does not match");
-    expect(witness.summary).toContain("older root");
+    expect(witness.summary).toContain("exact current root.json bytes");
     expect(witness.summary).toContain("OTS STAMPED_PENDING_BITCOIN");
     expect(witness.summary).toContain("XRPL memo NOT_YET");
+    expect(witness.summary).toContain("OTS covers the root bytes only");
     expect(witness.summary.toLowerCase()).not.toContain("fully anchored");
   });
 
@@ -384,6 +419,39 @@ describe("GET /api/fabric", () => {
     expect(byId(manifest, "root-witness")).toMatchObject({
       state: "RUNTIME_OBSERVED",
       summary: expect.stringContaining("OTS STAMPED_PENDING_BITCOIN"),
+    });
+    expect(byId(manifest, "root-witness").summary).toContain(
+      "sidecar separately declares 335 signed-card index entries",
+    );
+  });
+
+  it("does not repeat inconsistent sidecar corpus counts as runtime fact", async () => {
+    const manifest = await buildFabricManifest(
+      "https://example.test/api/fabric",
+      fixtureFetcher({ matchingWitness: true, inconsistentScope: true }),
+      OBSERVED_AT,
+    );
+    const witness = byId(manifest, "root-witness");
+
+    expect(witness).toMatchObject({
+      state: "UNCHECKABLE",
+      last_error: "witness corpus_scope does not bind the current root",
+    });
+    expect(witness.summary).toContain("no corpus relationship or count is asserted");
+    expect(witness.summary).not.toContain("154 root leaves");
+  });
+
+  it("rejects a witness with the same Merkle value but different exact bytes", async () => {
+    const manifest = await buildFabricManifest(
+      "https://example.test/api/fabric",
+      fixtureFetcher({ sameMerkleDifferentBytes: true }),
+      OBSERVED_AT,
+    );
+
+    expect(byId(manifest, "root-witness")).toMatchObject({
+      state: "STALE",
+      last_error: expect.stringContaining("exact-root binding"),
+      summary: expect.stringContaining("Merkle value alone is insufficient"),
     });
   });
 
@@ -436,7 +504,7 @@ describe("GET /api/fabric", () => {
       await vi.advanceTimersByTimeAsync(3_500);
       const manifest = await pending;
 
-      expect(fetcher).toHaveBeenCalledTimes(15);
+      expect(fetcher).toHaveBeenCalledTimes(16);
       expect(byId(manifest, "mcp-tools")).toMatchObject({
         state: "UNREACHABLE",
         last_error: "probe timed out after 3500ms",

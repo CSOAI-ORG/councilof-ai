@@ -442,7 +442,7 @@ export default function BoardAttestation({
             href="/gspc-verify"
             className={dark ? "text-emerald-300 hover:underline" : "text-emerald-700 hover:underline"}
           >
-            Verify the chain →
+            Verify a signed card or root membership →
           </Link>
           <a
             href="/.well-known/did.json"

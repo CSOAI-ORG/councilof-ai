@@ -41,7 +41,7 @@ const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Assess", href: "/assess", what: "Paid measurement. Coming — Paddle. Booking is not live." },
   { name: "Evidence", href: "/methodology", what: "How we grade. No model in the verdict." },
   { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
-  { name: "Report", href: "/report", what: "Public incident intake. Signed acknowledgement." },
+  { name: "Watchdog", href: "/watchdog-hub", what: "Public evidence surface. Incident submission is not live." },
   { name: "Plugin", href: "/tools", what: "Paste-ready MCP for Claude, Cursor, Kimi, Grok." },
   { name: "Public root", href: "/xrpl-attest", what: "Catalogue + /api/xrpl reader. Not a GSPC mill." },
   { name: "Jail folder", href: "/gspc/jail", what: "MEASURED n=71 TIE. Folder, not a second jail score." },

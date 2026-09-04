@@ -41,7 +41,7 @@ echo ""
 
 # --- Phase 1: live state health ---
 echo "=== Phase 1: live state health ==="
-for ep in /api/gspc /api/state /api/corrections /api/xrpl /api/swift /api/pqc /mcp /api/detect /api/detector-interop /api/intoto /.well-known/agent-card.json; do
+for ep in /api/gspc /api/state /api/corrections /api/xrpl /api/swift /api/pqc /mcp /api/detect /api/detector-interop /.well-known/agent-card.json; do
   CODE=$(curl -L -s -o /dev/null -w "%{http_code}" --max-time 8 "https://councilof.ai${ep}")
   printf "  %-32s %s\n" "$ep" "HTTP $CODE"
 done

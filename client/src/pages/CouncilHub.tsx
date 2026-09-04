@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 
 // CouncilHub - one end-user identity, 100% integrated into the OS: voice + cognition,
-// social character + avatar, compliance passport, and chosen BFT setup. Reachable
+// social character + avatar, compliance passport, and council design view. Reachable
 // everywhere, shared across CSOAI and MEOK OS. This is the thing that helps the user.
 type Layer = { name: string; what: string; status: string; href: string; glyph: string };
 const LAYERS: Layer[] = [
   { name: "Voice + Cognition", what: "Your Council assistant companion - it understands, navigates, and acts with you across the OS.", status: "Live demo", href: "/minds", glyph: "VOX" },
   { name: "Social Character + Avatar", what: "Your AI character with your avatar, governing and posting across 12 platforms.", status: "Configurable", href: "/connect", glyph: "AVA" },
   { name: "Compliance Passport", what: "Your Ed25519-signed governance identity - provable, portable, never deniable.", status: "Live", href: "/readiness", glyph: "PASS" },
-  { name: "Your Council Setup", what: "Choose how much designed multi-agent review your decisions run on - 5, 12, or 33.", status: "Live", href: "/council", glyph: "33" },
+  { name: "Council Design", what: "Explore the proposed 33-seat roster and 23/33 target. No live vote or failure-resilience property is claimed.", status: "Design only", href: "/council", glyph: "33" },
 ];
 export default function CouncilHub() {
   useEffect(() => { document.title = "Your Council assistant - one identity across the OS | CSOAI"; }, []);
@@ -19,7 +19,7 @@ export default function CouncilHub() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - your Council assistant</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">One Council assistant. Everywhere in the OS.</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Your voice, your AI character, your avatar, your passport, your consensus - one integrated identity that helps you across every surface of CSOAI. Not four tools. One Council assistant.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Your voice, your AI character, your avatar, your passport, and your review settings - one integrated identity that helps you across every surface of CSOAI. Not four tools. One Council assistant.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <a href="/connect" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Build your Council assistant -&gt;</a>
             <a href="/try" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Put it to work -&gt;</a>

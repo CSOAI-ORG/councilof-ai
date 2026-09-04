@@ -7,7 +7,8 @@
  *   (a) "nothing is anchored to a blockchain … OpenTimestamps anchoring is on the
  *       roadmap, not yet wired"  — true of the CARD TRUST PATH, and
  *   (b) /xrpl-attest — once a DEVNET capability proof; living feed is now a
- *       reader of GET /root.json (unsigned leaves, NO_LAPTOP_SIGN). GET /api/xrpl
+ *       reader of GET /root.json (signed envelope; leaves are not individually
+ *       signed merely by inclusion). GET /api/xrpl
  *       is a reader of that root (writes_board false). Historical DEVNET hashes
  *       are not this feed.
  * An Ed25519 signature is not a blockchain timestamp anchor. Both statements stand,
@@ -18,19 +19,33 @@
  * different words, that surface is making a different claim and needs its own evidence.
  */
 
+import rootWitness from "../../../public/interop/root-witness-latest.json";
+
+type OtsWitness = { status?: string; bitcoin_blocks?: number[] };
+const ots = (rootWitness as { witnesses?: { ots?: OtsWitness } }).witnesses?.ots ?? {};
+const otsState = String(ots.status ?? "UNCHECKABLE").toUpperCase();
+const otsBlock = Array.isArray(ots.bitcoin_blocks) && ots.bitcoin_blocks.length > 0
+  ? ots.bitcoin_blocks[0]
+  : null;
+export const CURRENT_ROOT_OTS_CLAIM = otsState === "CONFIRMED_BITCOIN"
+  ? `The current canonical public root has a proof-derived CONFIRMED_BITCOIN OpenTimestamps witness${otsBlock != null ? ` at block ${otsBlock}` : ""}`
+  : otsState === "STAMPED_PENDING_BITCOIN"
+    ? "The current canonical public root has a proof-derived STAMPED_PENDING_BITCOIN calendar proof; it does not yet prove inclusion in a Bitcoin block"
+    : `The current canonical public root's OpenTimestamps state is ${otsState}; no confirmed inclusion in a Bitcoin block is claimed`;
+
 /** The canonical, load-bearing sentence. Do not paraphrase at call sites. */
 export const ANCHORING_CLAIM =
   "A card's trust path is an Ed25519 signature over a SHA-256 hash chain, verifiable " +
   "offline against did:web:csoai.org — no blockchain and no timestamp authority sits in " +
-  "that path. The /xrpl-attest page is a reader of GET /root.json (unsigned leaves, " +
-  "NO_LAPTOP_SIGN). GET /api/xrpl is a reader of that root (writes_board false, live " +
+  "that path. The /xrpl-attest page is a reader of GET /root.json (signed root " +
+  "envelope; inclusion does not individually sign a leaf). GET /api/xrpl is a reader of that root (writes_board false, live " +
   "locked 16, same merkle). Historical DEVNET Payment-memo / CredentialCreate hashes " +
   "are not this feed. XLS-70 Credentials are live on XRPL mainnet as an allowlist " +
   "primitive; we are not issuing GSPC grades on-ledger. Separately from the card " +
-  "trust path, the published roots carry OpenTimestamps proofs attested at Bitcoin " +
-  "blocks 965121, 965138 and 965268; queued atoms are committed to a Merkle root " +
-  "that is stamped and not yet anchored \u2014 a stamp is a request to a calendar, " +
-  "not a proof.";
+  `trust path, ${CURRENT_ROOT_OTS_CLAIM}. That witness covers the exact public root.json ` +
+  "bytes only, not the separate signed-card index. Queued and candidate atoms are " +
+  "not automatically admitted, published, or anchored; a pending calendar stamp, " +
+  "where one exists, does not by itself prove inclusion in a Bitcoin block.";
 
 /** Short badge form for nav entries and link descriptions that mention the ledger. */
 export const XRPL_STATUS_LABEL = "public-root reader — not a grade";

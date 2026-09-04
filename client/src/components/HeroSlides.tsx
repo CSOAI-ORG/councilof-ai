@@ -29,7 +29,7 @@ const SLIDES: Slide[] = [
   {
     kicker: "THE INSTRUMENTS",
     headline: ["Measured,", "not modelled."],
-    sub: "Living GET /api/gspc. Every verdict is a predicate an auditor can recompute. Empty cells stay empty.",
+    sub: "Living GET /api/gspc. Published carded predicates can be re-checked; uncarded aggregates are labelled. Empty cells stay empty.",
     cta: { label: "See the board", href: "/dashboard?tab=board" },
     scene: "cells",
   },
@@ -45,8 +45,8 @@ const SLIDES: Slide[] = [
   },
   {
     kicker: "THE COUNCIL OS",
-    headline: ["Every seat signed.", "Every vote an artefact."],
-    sub: "A council architecture where every seat is signed and every vote is an artefact — shown, not claimed.",
+    headline: ["Designed seats.", "Evidence when published."],
+    sub: "A proposed Council architecture. A vote counts only when a published artefact verifies it; no live Council vote is claimed.",
     cta: { label: "Open Council OS", href: "/dashboard" },
     scene: "council",
   },

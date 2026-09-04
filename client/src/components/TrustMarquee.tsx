@@ -51,7 +51,7 @@ function LiveStats({ dark }: { dark?: boolean }) {
     : "MCP tools reachable (probed)";
 
   const chips = [
-    { v: `${councilDisplay}`, l: `seat council (design — ${councilDisplay === canonCouncil ? "canon" : "live"})` },
+    { v: `${councilDisplay}`, l: `seat council design (${councilDisplay === canonCouncil ? "canon" : "health count, not verified seats"})` },
     { v: `${toolsDisplay}`, l: toolsLabel },
     { v: s.episodes ? fmt(s.episodes) + "+" : "Ed25519", l: s.episodes ? "memory episodes" : "Layer 0 signing" },
     { v: "0.95", l: "care-floor" },

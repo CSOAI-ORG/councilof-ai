@@ -3,12 +3,10 @@ import { chargeSovereign } from "../lib/sovCharge";
 import CouncilVote from "../components/CouncilVote";
 import AISystemNotice from "../components/AISystemNotice";
 
-// TryCouncil — the 30-second WOW. The governed AI-council design, as an interactive demo.
-// Type a compliance question; five specialised agents (Oracle, Skeptic, Architect,
-// Ethicist, Strategist) deliberate with designed multi-agent review and return a
-// risk classification mapped to global frameworks. Runs entirely client-side as a
-// deterministic governance engine — the production council + emailed signed
-// gap report switch on with the Layer 0 backend.
+// TryCouncil is an interactive design demo, not a live council. A deterministic
+// browser classifier renders five named review lenses. The optional gateway call
+// requests five role prompts; it does not establish independent seats, a vote, or
+// consensus. Nothing on this route is a signed measurement card.
 
 type Agent = { id: string; name: string; role: string; color: string };
 const AGENTS: Agent[] = [
@@ -122,7 +120,7 @@ export default function TryCouncil() {
         <div className="relative max-w-5xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI · governed AI council — design demo</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">AI Governance That Thinks</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Five AI agents debate your compliance question across global frameworks — and return a risk verdict in seconds. Ask anything.</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">A local rules demo classifies your question, then shows five role-specific explanations. These are review lenses, not independent Council seats or a consensus result.</p>
 
           <div className="mt-7 rounded-2xl bg-white p-3 shadow-xl">
             {/* Article 50(1) AI-interaction disclosure — registry-driven wording. */}
@@ -145,15 +143,15 @@ export default function TryCouncil() {
       <section className="max-w-5xl mx-auto px-6 py-12">
         {!result && (
           <div className="rounded-2xl border border-dashed border-gray-300 p-10 text-center text-gray-400">
-            Ask a question above, or tap an example — the five agents will deliberate here.
+            Ask a question above, or tap an example — five review lenses will explain the same local classification here.
           </div>
         )}
         {result && (
           <>
-            <div className="mb-5"><CouncilVote trigger={round} verdict={"Verdict: " + result.tier} /></div>
+            <div className="mb-5"><CouncilVote trigger={round} verdict={"Triage: " + result.tier} /></div>
             <div className={"rounded-2xl border p-5 " + TIER_TONE[result.tier]}>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-lg bg-white/60 px-3 py-1 text-xs font-bold uppercase tracking-wide">Verdict</span>
+                <span className="rounded-lg bg-white/60 px-3 py-1 text-xs font-bold uppercase tracking-wide">Triage result</span>
                 <span className="text-2xl font-black">{result.tier}</span>
                 <span className="font-semibold">· {result.label}</span>
               </div>
@@ -163,7 +161,7 @@ export default function TryCouncil() {
               </div>
             </div>
 
-            <h2 className="mt-8 text-sm font-bold uppercase tracking-wide text-gray-500">The council deliberates</h2>
+            <h2 className="mt-8 text-sm font-bold uppercase tracking-wide text-gray-500">Five review lenses</h2>
             <div className="mt-3 space-y-3">
               {AGENTS.map((a, i) => (
                 <div key={a.id} className={"rounded-2xl border border-gray-200 p-4 transition-all duration-500 " + (i < shown ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2")}>
@@ -172,34 +170,34 @@ export default function TryCouncil() {
                     <span className="font-bold text-gray-900">{a.name}</span>
                     <span className="text-xs text-gray-400">{a.role}</span>
                   </div>
-                  <p className="mt-2 text-sm text-gray-700 leading-snug">{liveState !== "idle" ? (liveLines[a.id] || (liveState === "running" ? "deliberating live…" : agentLine(a, result))) : (i < shown ? agentLine(a, result) : "")}{liveLines[a.id] ? <span className="ml-1 align-middle font-mono text-[9px] uppercase tracking-wide text-emerald-600">live</span> : null}</p>
+                  <p className="mt-2 text-sm text-gray-700 leading-snug">{liveState !== "idle" ? (liveLines[a.id] || (liveState === "running" ? "requesting a gateway response…" : agentLine(a, result))) : (i < shown ? agentLine(a, result) : "")}{liveLines[a.id] ? <span className="ml-1 align-middle font-mono text-[9px] uppercase tracking-wide text-emerald-600">gateway response</span> : null}</p>
                 </div>
               ))}
             </div>
 
             {shown >= AGENTS.length && (
               <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
-                <div className="font-bold text-emerald-900">Consensus reached — designed multi-agent review vote</div>
-                <p className="mt-1 text-sm text-emerald-800">The council agrees: <strong>{result.tier}</strong>. {result.tier === "High-risk" ? "Begin a conformity programme against the six EU AI Act duties (Art. 9-15) before the 2 December 2027 deadline (Annex III; product-embedded Annex I: 2 August 2028, as amended by the Digital Omnibus, Reg (EU) 2026/1744)." : result.tier === "Prohibited" ? "Do not deploy — redesign the use case." : "Apply the transparency duties now and re-assess at every material change."}</p>
-                {liveState === "idle" && <button onClick={convene} className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">Convene the live 5-agent council →</button>}
-                {liveState === "running" && <div className="mt-3 text-sm text-emerald-700">The five agents are deliberating live over the gateway…</div>}
-                {sig && <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-[11px] text-amber-900">Client-side digest (above) is a local trail hash for traceability only — the verdict is not yet signed into the J-space chain. The signed historical record lives at <a href="/live-ledger" className="font-semibold underline">/live-ledger</a>.</div>}
+                <div className="font-bold text-emerald-900">Local classification complete — no Council vote</div>
+                <p className="mt-1 text-sm text-emerald-800">The browser rules returned: <strong>{result.tier}</strong>. {result.tier === "High-risk" ? "Begin a scoped evidence review against the applicable duties before deployment." : result.tier === "Prohibited" ? "Do not deploy on this triage alone; obtain qualified legal review and redesign the use case where required." : "Review the applicable transparency duties and reassess at every material change."}</p>
+                {liveState === "idle" && <button onClick={convene} className="mt-3 rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white hover:bg-slate-800">Request five role perspectives →</button>}
+                {liveState === "running" && <div className="mt-3 text-sm text-emerald-700">Requesting five role prompts from the gateway. They are not independent votes…</div>}
+                {sig && <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-2 text-[11px] text-amber-900">The client-side digest is a local trail hash only. It is not a signature, measurement, timestamp proof, or Council decision. Separately issued measurement cards can be checked at <a href="/gspc-verify" className="font-semibold underline">/gspc-verify</a>.</div>}
                 {!sent ? (
                   <div className="mt-4 flex flex-wrap items-center gap-2">
                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="you@company.com"
                       className="flex-1 min-w-[220px] rounded-xl border border-emerald-300 px-4 py-2.5 text-sm text-gray-900 outline-none" />
                     <button onClick={() => { if (/.+@.+\..+/.test(email)) { try { localStorage.setItem("csoai_report_request", JSON.stringify({ q, tier: result.tier, email, at: Date.now() })); } catch (e) {} setSent(true); } }}
-                      className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Email me the signed gap report →</button>
+                      className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Save this report request on this device →</button>
                   </div>
                 ) : (
-                  <div className="mt-4 rounded-xl bg-white p-3 text-sm text-emerald-800">Saved. Your signed gap report is queued — it's generated and delivered once the Council backend is live. You'll be first in line.</div>
+                  <div className="mt-4 rounded-xl bg-white p-3 text-sm text-emerald-800">Saved in this browser only. Nothing has been sent, queued, signed, or delivered.</div>
                 )}
                 <div className="mt-5 border-t border-emerald-200 pt-4">
-                  <div className="text-xs font-bold uppercase tracking-wide text-emerald-700">Carry this verdict across the OS</div>
+                  <div className="text-xs font-bold uppercase tracking-wide text-emerald-700">Carry this triage into the OS</div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     <a href={"/hive?q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open the Framework Hive →</a>
-                    <a href="/system-card" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-800 hover:bg-amber-100">Get a signed System Card →</a>
-                    <a href={"/dashboard?q=&tab=home" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open it in Council OS →</a>
+                    <a href="/system-card" className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-800 hover:bg-amber-100">Open the System Card workflow →</a>
+                    <a href={"/dashboard?tab=home&q=" + encodeURIComponent(q)} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 text-sm font-semibold text-emerald-800 hover:bg-emerald-50">Open it in Council OS →</a>
                   </div>
                 </div>
               </div>
@@ -208,13 +206,13 @@ export default function TryCouncil() {
         )}
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3 text-center text-sm">
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Live</div><div className="text-gray-500">frameworks from the catalog</div></div>
-          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">agents · multi-agent vote</div></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Catalogued</div><div className="text-gray-500">framework references</div></div>
+          <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">5</div><div className="text-gray-500">review roles · no independent vote</div></div>
           <div className="rounded-2xl border border-gray-200 p-5"><div className="text-2xl font-black text-emerald-700">Aug 2 2026</div><div className="text-gray-500">EU AI Act deadline</div></div>
         </div>
 
         <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-xs text-gray-500 leading-relaxed">
-          This demo runs a deterministic governance engine in your browser for instant, private triage — it is decision-support, not legal advice. The production Council deliberates with live LLM agents and emails a signed gap report; it switches on with the Layer 0 backend. Explore Council OS at <a href="/dashboard?tab=home" className="text-emerald-700 font-semibold">/os</a>.
+          This demo runs a deterministic browser classifier for private triage. Optional role prompts use the configured gateway. It is decision-support, not legal advice, a measurement, or a Council decision. The designed Council has 33 seats and a target threshold of 23/33, but it is not live; independence and fault tolerance have not been demonstrated. Explore Council OS at <a href="/dashboard?tab=home" className="text-emerald-700 font-semibold">/os</a>.
         </div>
       </section>
     </div>

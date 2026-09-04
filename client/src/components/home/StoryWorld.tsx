@@ -116,27 +116,27 @@ export const STORY: Slide[] = [
   {
     // 08 Council City — HONEST: City is a view over signed records, not a walkable world
     kicker: "Council City",
-    title: "A view over the measurements",
-    body: "Council City is a window on the same signed records the board is built from — a different view of the measurements, not a second source of them. Every tile links to a signed card.",
+    title: "A simulation view under evidence review",
+    body: "Council City is a retained visualization concept, not a live signed world. Its former counters and ledger claims are withdrawn until every rendered figure resolves to published evidence.",
     points: [
       { tag: "pain", text: "Governance sites are walls of text nobody reads" },
-      { tag: "benefit", text: "See the measurements as a map, not a table" },
-      { tag: "usp", text: "Every tile links to a signed card — nothing is decorative" },
+      { tag: "benefit", text: "The concept can later render verified measurements as a map" },
+      { tag: "usp", text: "Today it is marked review-only instead of presenting fallback data" },
     ],
     href: "/gspc-arena?view=towns",
-    cta: "Open City view",
+    cta: "Read the review notice",
     bg: { src: "/images/literacy_training_arena.jpg", alt: "People learning how AI behaves inside a training arena" },
   },
   {
     // 09 Always current — light split, liveness image + living-law video
-    kicker: "Always current",
-    title: "The day it’s stamped, a static certificate starts going stale",
-    body: "So we watch the law itself. Our corpus-watch tracks EUR-Lex and legislation.gov.uk by hash, day after day. When a provision actually changes, we re-measure and issue a fresh delta card — the old one stays, history is append-only, never quietly edited.",
+    kicker: "Change-aware design",
+    title: "A dated measurement can go stale",
+    body: "A dated corpus-watch baseline exists, but the public watcher, automatic dependency flagging, re-measurement, and delta-card issuance are not implemented. The intended path is detect, review, re-measure, and publish a new scoped card while preserving the prior artefact.",
     points: [
       { tag: "pain", text: "A one-time stamp goes stale the moment the law moves" },
-      { tag: "benefit", text: "We watch the law daily and re-measure when it changes" },
-      { tag: "benefit", text: "A fresh delta card each time — old cards preserved" },
-      { tag: "usp", text: "Append-only history, corrections published — never a silent edit" },
+      { tag: "benefit", text: "A dated watcher baseline makes the missing automation visible" },
+      { tag: "benefit", text: "Planned flow: detect, approve, re-measure, publish a scoped delta" },
+      { tag: "usp", text: "Current corrections are source-maintained; no append-only proof is claimed" },
     ],
     href: "/assess",
     cta: "Get measured",
@@ -188,18 +188,16 @@ export const STORY: Slide[] = [
   },
   {
     // 13 Public watchdog — heavy, report what looks wrong
-    kicker: "Open to everyone",
-    title: "See something wrong? Report it.",
-    body: "When an AI behaves badly in the real world, anyone can flag it. Reports feed the public watchdog, and what we act on is measured and signed like everything else — no closed inbox, no quiet dismissal.",
+    kicker: "Public evidence",
+    title: "See what the watchdog can prove.",
+    body: "Inspect the evidence and current service boundaries in public. Incident submission is not live, so this surface does not pretend a report has been filed or acknowledged.",
     points: [
-      { tag: "pain", text: "Harms get buried in a vendor’s private support queue" },
-      { tag: "benefit", text: "A public place to report AI behaviour that looks wrong" },
-      { tag: "usp", text: "What we act on is measured and signed — in the open" },
+      { tag: "pain", text: "Safety claims are often difficult to inspect independently" },
+      { tag: "benefit", text: "A public place to examine the evidence that exists" },
+      { tag: "usp", text: "Unknown and unavailable states remain visible" },
     ],
-    // Was /watchdog (the map). The real intake is the incident-report form at
-    // /report — the CTA said "report it" and landed on something you cannot report on.
-    href: "/report",
-    cta: "Report an incident",
+    href: "/watchdog-hub",
+    cta: "Inspect watchdog evidence",
     image: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
   },
 ];

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-"""csoai-auto-ots.py — daily OTS anchorer.
+"""Retired legacy per-atom OTS stamper.
 
 Lane-doable: walks the queue, computes the digest of every atom body,
 submits each one to a.pool.opentimestamps.org, saves the .ots proof
 file next to the digest. The verifier at /gspc-verify reads these
 .ots files to prove the timestamp.
 
-This runs daily via com.csoai.anchor-daily LaunchAgent.
+It is no longer called by any recurring job. Publication uses one reviewed,
+default-deny root ceremony; queued atoms are not independently stamped merely
+because a harvester wrote them. A calendar stamp is pending, not anchored.
 """
 from __future__ import annotations
 
@@ -64,13 +66,25 @@ def _ots_reads(path) -> bool:
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Daily OTS anchorer.")
+    ap = argparse.ArgumentParser(description="Retired legacy per-atom OTS stamper.")
     ap.add_argument("--limit", type=int, default=500)
     ap.add_argument("--quiet", action="store_true")
+    ap.add_argument(
+        "--legacy-manual-per-atom",
+        action="store_true",
+        help="explicit operator-only escape hatch; never permitted in recurring jobs",
+    )
     args = ap.parse_args()
 
+    if not args.legacy_manual_per_atom:
+        print(
+            "RETIRED: bulk queue stamping is default-deny. Build, review, and witness one admitted root instead.",
+            file=sys.stderr,
+        )
+        return 2
+
     print("================================================================")
-    print("  CSOAI — AUTO OTS ANCHOR")
+    print("  CSOAI — LEGACY MANUAL OTS STAMP")
     print(f"  limit: {args.limit}")
     print("================================================================")
     print()
@@ -115,14 +129,14 @@ def main():
                     ots_path.write_bytes(proof)  # binary: write_text corrupted it
                     n_anchored += 1
                     if not args.quiet and n_anchored % 25 == 0:
-                        print(f"  ... {n_anchored} anchored ({time.time() - started:.0f}s)")
+                        print(f"  ... {n_anchored} calendar-stamped, pending Bitcoin ({time.time() - started:.0f}s)")
                 else:
                     n_failed += 1
                 time.sleep(0.5)  # rate-limit
             if n_anchored >= args.limit:
                 break
 
-    print(f"\n  anchored:  {n_anchored}")
+    print(f"\n  stamped pending Bitcoin: {n_anchored}")
     print(f"  already:   {n_already}")
     print(f"  failed:    {n_failed}")
     print(f"  total:     {n_anchored + n_already}")

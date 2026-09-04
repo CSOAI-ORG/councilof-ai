@@ -1,6 +1,6 @@
 # How to verify the public root — yourself, offline, without trusting us
 
-The board publishes ONE root: `https://councilof.ai/root.json` (`kind: csoai.public-root/v0`). Every signed card hashes into `merkle_root`; the envelope is Ed25519-signed by `did:web:csoai.org#board-attestation-1`. Witnesses attest the *existence and time* of those bytes. None of this is certification, endorsement, or a rank. Verification is free, forever.
+The board publishes ONE root: `https://councilof.ai/root.json` (`kind: csoai.public-root/v1`). Its `card_sha256[]` leaves hash into `merkle_root`; the envelope is Ed25519-signed by `did:web:csoai.org#board-attestation-1`. The root leaves and `signed/card_index.json` are separate corpora, but a verifier must derive both counts and their identifier overlap from the files currently served—never copy a number from this guide. The root's witnesses cover the exact `root.json` response bytes only; they do not anchor the signed-card index. Witnesses attest the *existence and time* of those bytes. None of this is certification, endorsement, or a rank. Verification is free, forever.
 
 ## 1. Recompute the signature (no network needed beyond two GETs)
 ```bash
@@ -65,19 +65,33 @@ print("kind", b["kind"], "integratedTime", e["integratedTime"]); print(base64.b6
 Compare the printed preimage with the one you rebuilt in step 1. With `rekor-cli`: `rekor-cli get --log-index $LOGINDEX`.
 
 ## 3. OpenTimestamps (Bitcoin)
-When the sidecar's `witnesses.ots.status` is `STAMPED_PENDING_BITCOIN` or better, fetch the named `.ots` file and run:
+
+Read the current state and proof path from the sidecar. `STAMPED_PENDING_BITCOIN` means a calendar accepted the digest but there is **not yet a Bitcoin anchor**. `CONFIRMED_BITCOIN` is used only when the proof bytes contain a Bitcoin block-header attestation that the release gate independently checks. Never infer either state from a filename or from this guide.
+
+Fetch the exact current files and run:
 ```bash
 pip install opentimestamps-client
-ots upgrade root-<sha8>.json.ots   # once a Bitcoin block includes the calendar commitment
-ots verify root-<sha8>.json.ots    # prints the block that attests the bytes existed
+curl -s https://councilof.ai/root.json -o root.json
+curl -s https://councilof.ai/interop/root-witness-latest.json -o root-witness-latest.json
+python3 - <<'PY'
+import json
+w = json.load(open("root-witness-latest.json"))
+o = w["witnesses"]["ots"]
+print("status:", o["status"])
+print("proof URL:", o["url"])
+print("expected root sha256:", w["artifact"]["sha256"])
+PY
+PROOF_URL=$(python3 -c 'import json; print(json.load(open("root-witness-latest.json"))["witnesses"]["ots"]["url"])')
+curl -s "$PROOF_URL" -o root.json.ots
+ots verify root.json.ots -f root.json
 ```
-`PENDING` means the calendars had not answered when the sidecar was written — it is not a witness yet, and the sidecar says so.
+For a confirmed proof, the sidecar records the 80-byte header checked byte-for-byte against its named independent sources. The gate recomputes its block hash, timestamp and Merkle binding to the OTS attestation. A confirmed Bitcoin timestamp proves these exact bytes existed no later than that block; a pending stamp does not yet prove that. Neither state proves correctness, completeness, compliance or certification.
 
 ## 4. EAS on Base and XRPL memo
 Both are `NOT_YET` in the sidecar until a funded wallet exists. When they land, the sidecar will carry the attestation UID (resolvable on base.easscan.org) and the XRPL transaction hash whose memo decodes to `sha256(root.json)`.
 
 ## Drift
-`https://councilof.ai/interop/root-witness-pointer.json` states whether the witnessed bytes are the live bytes (`drift.status: MATCH`). A witness for older bytes is still a true witness of those bytes; it is never presented as a witness of the current root.
+`https://councilof.ai/interop/root-witness-pointer.json` records a timestamped comparison in `drift.checked_at`. It is a historical observation, not a standing all-clear. Re-fetch `root.json`, hash its exact response bytes, check its byte length, `merkle_root`, `card_count` and `as_of`, then compare all of those fields with both the sidecar `artifact` and pointer `live_root`. A witness for older bytes is still a true witness of those bytes; it is never presented as a witness of the current root. A matching Merkle value alone is insufficient because this v1 tree duplicates an odd tail.
 
 ## What a verifying signature does not establish (revocation)
 
@@ -114,4 +128,3 @@ root, never edited** — editing signed bytes breaks the signature and the histo
 **So: check `schema` before you rely on an inclusion proof.** A v0 proof tells you
 the payload was in the tree. It does **not** tell you the subject or the source URL
 was in the tree.
-

@@ -166,10 +166,83 @@ const SNAPSHOT_DISAGREEMENT =
   "3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
-const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
+const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
 const cardsCounted = cards.length;
 const cardsSigned = cards.filter((c) => c.signed === true).length;
 const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
+export interface CorpusRelation {
+  relationship: "SEPARATE_CORPORA" | "UNCHECKABLE";
+  public_root_leaves: number | null;
+  separately_indexed_signed_cards: number | null;
+  identifier_overlap: number | null;
+  duplicate_public_root_ids: number | null;
+  duplicate_signed_card_ids: number | null;
+  ots_scope: "PUBLIC_ROOT_BYTES_ONLY" | "UNCHECKABLE";
+  reason: string;
+}
+
+export function deriveCorpusRelation(rootDoc: unknown, indexDoc: unknown): CorpusRelation {
+  const rootRecord = rootDoc && typeof rootDoc === "object" && !Array.isArray(rootDoc)
+    ? rootDoc as Record<string, unknown>
+    : null;
+  const indexRecord = indexDoc && typeof indexDoc === "object" && !Array.isArray(indexDoc)
+    ? indexDoc as Record<string, unknown>
+    : null;
+  const leaves = Array.isArray(rootRecord?.card_sha256) ? rootRecord.card_sha256 : null;
+  const rows = Array.isArray(indexRecord?.cards) ? indexRecord.cards : null;
+  if (!rootRecord || !indexRecord || !leaves || !rows) {
+    return {
+      relationship: "UNCHECKABLE",
+      public_root_leaves: null,
+      separately_indexed_signed_cards: null,
+      identifier_overlap: null,
+      duplicate_public_root_ids: null,
+      duplicate_signed_card_ids: null,
+      ots_scope: "UNCHECKABLE",
+      reason: "Both root.card_sha256[] and card_index.cards[] are required.",
+    };
+  }
+  const leafIds = leaves.filter((value): value is string => typeof value === "string");
+  const signedIds = rows
+    .map((row) => row && typeof row === "object" && !Array.isArray(row) ? (row as Record<string, unknown>).card : null)
+    .filter((value): value is string => typeof value === "string");
+  const leafSet = new Set(leafIds);
+  const signedSet = new Set(signedIds);
+  const overlap = [...leafSet].filter((id) => signedSet.has(id)).length;
+  const duplicateRoot = leafIds.length - leafSet.size;
+  const duplicateSigned = signedIds.length - signedSet.size;
+  const validIds =
+    leafIds.length === leaves.length &&
+    signedIds.length === rows.length &&
+    leafIds.every((id) => /^[0-9a-f]{64}$/u.test(id)) &&
+    signedIds.every((id) => /^[0-9a-f]{64}$/u.test(id));
+  const countsAgree =
+    Number.isInteger(rootRecord.card_count) && rootRecord.card_count === leaves.length &&
+    Number.isInteger(indexRecord.n_cards) && indexRecord.n_cards === rows.length;
+  const valid = validIds && countsAgree && duplicateRoot === 0 && duplicateSigned === 0 && overlap === 0;
+  return {
+    relationship: valid ? "SEPARATE_CORPORA" : "UNCHECKABLE",
+    public_root_leaves: leaves.length,
+    separately_indexed_signed_cards: rows.length,
+    identifier_overlap: overlap,
+    duplicate_public_root_ids: duplicateRoot,
+    duplicate_signed_card_ids: duplicateSigned,
+    ots_scope: valid ? "PUBLIC_ROOT_BYTES_ONLY" : "UNCHECKABLE",
+    reason: valid
+      ? "Declared counts agree, identifiers are well formed and unique, and the two sets have no overlap."
+      : "Malformed identifiers, duplicate identifiers, declared-count drift, or corpus overlap prevents a separation claim.",
+  };
+}
+
+const publicRootSignature =
+  typeof (publicRoot as any).sig_ed25519 === "string" &&
+  /^[0-9a-f]{128}$/u.test((publicRoot as any).sig_ed25519)
+    ? (publicRoot as any).sig_ed25519 as string
+    : null;
+const publicRootSignatureState = publicRootSignature
+  ? "SIGNED_ENVELOPE_PRESENT"
+  : "UNSIGNED_OR_MALFORMED";
+const corpusRelation = deriveCorpusRelation(publicRoot, cardIndex);
 
 // ── claims register: rows tallied by status ──────────────────────────────────
 const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
@@ -516,6 +589,10 @@ export const onRequestGet: PagesFunction = async () => {
     signed_cards: {
       authority: SRC_CARDS,
       live_endpoint: "/api/cards",
+      corpus_relation: {
+        ...corpusRelation,
+        ots_scope_note: "A valid current public-root OTS proof covers root.json bytes only; it does not anchor this signed-card index.",
+      },
       count: fact(
         cardsCounted,
         "catalogued",
@@ -747,8 +824,11 @@ export const onRequestGet: PagesFunction = async () => {
         SRC_PUBLIC_ROOT + " → card_count",
         (publicRoot as any).as_of ?? null,
         "as_of",
-        "Leaves on the permissionless public-root. Separate from signed_cards.count and from GSPC.",
+        corpusRelation.relationship === "SEPARATE_CORPORA"
+          ? `Leaves on the permissionless public-root. The validated corpus relation records ${corpusRelation.public_root_leaves} root leaves, ${corpusRelation.separately_indexed_signed_cards} separately indexed signed cards and zero overlap. The root OTS proof covers root.json bytes only, not the signed-card index or GSPC.`
+          : "Leaves on the permissionless public-root. Corpus separation is UNCHECKABLE because identifiers, declared counts, uniqueness, or overlap did not satisfy the validator.",
       ),
+      corpus_relation: corpusRelation,
       xrpl_asset_count_attempted: fact(
         (publicRoot as any).xrpl_asset_count_attempted ?? null,
         "catalogued",
@@ -773,8 +853,18 @@ export const onRequestGet: PagesFunction = async () => {
         "as_of",
         "Frozen card-v0 schema URL.",
       ),
+      signature_state: fact(
+        publicRootSignatureState,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → sig_ed25519",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        publicRootSignature
+          ? "A 64-byte Ed25519 envelope signature is present. The release gate verifies it against did_intended; this endpoint derives presence and shape from the committed artifact and does not turn that into a per-leaf signature claim."
+          : "No well-formed 64-byte Ed25519 envelope signature is present on this root.",
+      ),
       caveat:
-        "Card sig_ed25519 is null (NO_LAPTOP_SIGN). This is not GSPC. Hugging Face " +
+        "The root envelope signature authenticates the six-field public-root statement; it does not individually sign each leaf, admit queued candidates, or make this GSPC. Hugging Face " +
         "csoai/gspc-boards public-root/root.json is a mirror of these bytes, not a second board.",
     },
 

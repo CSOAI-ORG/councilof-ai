@@ -146,13 +146,13 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   },
   {
     id: "iso-42001",
-    claim: "ISO 42001 is a live Council conformity product.",
+    claim: "Incorrect assertion recorded for refutation: ISO 42001 conformity was a production Council product.",
     verdict: "false",
     live: "We measure. We are not a notified body and we do not sell ISO 42001.",
   },
   {
     id: "bft-product",
-    claim: "A designed 33-seat council is a live public product.",
+    claim: "Incorrect assertion recorded for refutation: the 33-seat Council design had production status.",
     verdict: "false",
     live: "Retracted. Do not rebuild it as a door or a grade.",
   },

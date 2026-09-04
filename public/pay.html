@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pay — Council of AI</title>
+<title>x402 integration status — Council of AI</title>
 <meta name="robots" content="index,follow" />
-<meta name="description" content="CSOAI — pay on the AI measurement board. Measurement, not certification." />
+<meta name="description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
 <link rel="canonical" href="https://councilof.ai/pay" />
-<meta property="og:title" content="Pay — Council of AI" />
-<meta property="og:description" content="CSOAI — pay on the AI measurement board. Measurement, not certification." />
+<meta property="og:title" content="x402 integration status — Council of AI" />
+<meta property="og:description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://councilof.ai/pay" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
 <meta property="og:site_name" content="CSOAI Ltd" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Pay — Council of AI" />
-<meta name="twitter:description" content="CSOAI — pay on the AI measurement board. Measurement, not certification." />
+<meta name="twitter:title" content="x402 integration status — Council of AI" />
+<meta name="twitter:description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
 <meta name="twitter:image" content="https://councilof.ai/og-default.png" />
 <meta name="theme-color" content="#16a34a" />
 <script type="application/ld+json">
@@ -24,7 +24,7 @@
   "@type": "WebSite",
   "name": "CSOAI \u2014 Council of AI",
   "url": "https://councilof.ai/pay",
-  "description": "CSOAI \u2014 pay on the AI measurement board. Measurement, not certification.",
+  "description": "CSOAI x402 integration status. Pricing and successful production settlement remain pending verification.",
   "publisher": {
     "@type": "Organization",
     "name": "CSOAI Ltd",
@@ -348,7 +348,7 @@
       <a href="/api/gspc">Board</a>
       <a href="/.well-known/">Discover</a>
       <a href="/gspc-verify">Verify</a>
-      <a href="/pay">Pay</a>
+      <a href="/pay">x402 status</a>
       <a href="/pay" class="nav-cta">Use the board</a>
     </nav>
   </div>
@@ -357,71 +357,56 @@
 <main>
 <div class="container">
 
-<h2>5 priced resources</h2>
-<p>Every receipt is signed under <code>did:web:csoai.org#card-attestation-1</code> and verifiable at <a href="https://councilof.ai/gspc-verify" style="color: var(--accent);">/gspc-verify</a>.</p>
-<p>Each amount is quoted in that resource&rsquo;s live <a href="https://councilof.ai/api/x402" style="color: var(--accent);">402 challenge</a>, in <code>accepts[].amount</code>. That is the only authoritative price and it is never printed on this page &mdash; a number typed here can drift away from the one the rail actually charges, and this page carried five that had. Verification stays free forever.</p>
+<h1>x402 resource designs — pricing and settlement pending verification</h1>
+<p>No successful production settlement receipt is claimed here. A future receipt is trustworthy only if its own Ed25519 signature verifies at <a href="https://councilof.ai/gspc-verify" style="color: var(--accent);">/gspc-verify</a>.</p>
+<p>The <a href="https://councilof.ai/api/x402" style="color: var(--accent);">x402 status endpoint</a> may describe challenges and resource names; that does not prove a price is current or that settlement succeeds. Inspect the endpoint response before relying on either. No price is asserted by this page.</p>
 
 <div class="grid">
   <div class="card">
     <p class="card-name">Issuance</p>
-    <p class="price">Metered <span class="price-currency">USDC</span></p>
-    <p class="card-desc">Pay for your model, agent, or asset to be measured. Signed card back. Metered per run. Never sell a grade.</p>
+    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
+    <p class="card-desc">Proposed scoped measurement request for a named model, agent, or asset. Output and signature state must be checked in the response.</p>
   </div>
   <div class="card">
     <p class="card-name">Evidence bundle</p>
-    <p class="price">Metered <span class="price-currency">USDC</span></p>
-    <p class="card-desc">A pack of cards assembled for a specific obligation (EU AI Act Article, NIST control, OWASP LLM Top 10 category).</p>
+    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
+    <p class="card-desc">Proposed assembly of existing scoped cards for a named obligation. No universal evidence pack is available.</p>
   </div>
   <div class="card">
     <p class="card-name">Eunomia data feed</p>
-    <p class="price">Metered <span class="price-currency">USDC</span></p>
-    <p class="card-desc">Live deltas feed for compliance teams. Same data as the free corrections ledger, but assembled into a single signed bundle.</p>
+    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
+    <p class="card-desc">Proposed dated-delta feed. No continuous feed or automatically signed bundle is claimed.</p>
   </div>
   <div class="card">
     <p class="card-name">Proof bundle</p>
-    <p class="price">Metered <span class="price-currency">USDC</span></p>
-    <p class="card-desc">Inclusion proof + bulk history for a single card. Regulator-style query without an account.</p>
+    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
+    <p class="card-desc">Proposed request for a card&rsquo;s exact-root inclusion material, when that card is actually a leaf of that root.</p>
   </div>
   <div class="card">
     <p class="card-name">Custom audit</p>
-    <p class="price">Metered <span class="price-currency">USDC</span></p>
-    <p class="card-desc">A scoped measurement run against a specific obligation. Returns a 3KB signed card and a PDF evidence pack.</p>
+    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
+    <p class="card-desc">Proposed scoped measurement workflow. No signed card, PDF, or legal determination is promised by this page.</p>
   </div>
 </div>
 
-<h2>How it works</h2>
+<h2>Proposed flow</h2>
 <ol style="color: var(--muted); line-height: 1.8; font-size: 16px;">
-  <li>An agent (or you) hits a priced endpoint.</li>
-  <li>The server returns HTTP 402 with a USDC payment challenge (EIP-3009 transferWithAuthorization).</li>
-  <li>MetaMask signs the authorization on Base.</li>
-  <li>The <a href="https://councilof.ai/.well-known/x402.json" style="color: var(--accent);">open facilitator</a> submits the transaction, the server grants the priced artefact.</li>
-  <li>Every receipt is signed under did:web:csoai.org#card-attestation-1 and verifiable forever.</li>
+  <li>A client inspects the resource and current x402 status.</li>
+  <li>If a valid HTTP 402 challenge is returned, the client validates its network, asset, recipient and amount.</li>
+  <li>A wallet authorization and facilitator submission must remain explicit user actions.</li>
+  <li>Only a confirmed on-chain result and a separately verified artefact receipt establish settlement and output.</li>
 </ol>
 
-<h2>Try it now</h2>
-<div class="code"><span style="color: var(--muted);"># 1. Get the discovery doc</span>
+<h2>Read-only status check</h2>
+<div class="code"><span style="color: var(--muted);"># These requests do not authorize or settle a payment.</span>
 curl https://councilof.ai/.well-known/x402.json
+curl https://councilof.ai/api/x402</div>
+<p style="color: var(--muted); font-size: 14px;">Do not fund or sign from this page. Pricing and end-to-end settlement remain pending until a published successful receipt and transaction can be independently checked.</p>
 
-<span style="color: var(--muted);"># 2. Hit a priced endpoint (returns HTTP 402 with payment challenge)</span>
-curl -i https://councilof.ai/api/request-attestation?subject=gpt-4\&axis=jail
+<a href="https://councilof.ai/api/x402" class="cta">Inspect current x402 state →</a>
 
-<span style="color: var(--muted);"># 3. Get the client (this step used to name a path you could not fetch)</span>
-curl -O https://raw.githubusercontent.com/CSOAI-ORG/councilof-ai/master/scripts/badger/csoai-open-facilitator.py
-pip install eth-account
-
-<span style="color: var(--muted);"># 4. Sign and verify. Moves NO money — it reads the amount from the 402 above.</span>
-<span style="color: var(--muted);">#    Use a throwaway key holding a few cents, never your main wallet.</span>
-export X402_PAYER_KEY=0x...
-python3 csoai-open-facilitator.py --resource "https://councilof.ai/api/request-attestation?subject=gpt-4o"
-
-<span style="color: var(--muted);"># 5. Pay. Only this step transfers USDC.</span>
-python3 csoai-open-facilitator.py --resource "..." --settle</div>
-<p style="color: var(--muted); font-size: 14px;">Step 4 stops at the facilitator&rsquo;s balance check and charges nothing, so you can confirm your signature, the token domain and the envelope are all correct before any money moves. <code>insufficient_balance</code> there means everything except the funding is right. If you would rather not run our client, any x402 client works &mdash; the challenge in step 2 is the standard <code>accepts[]</code> array.</p>
-
-<a href="https://metamask.io" class="cta">Open MetaMask →</a>
-
-<h2>The receipt</h2>
-<p>Every paid artefact returns a JSON receipt with the EIP-3009 payment hash, the resource, the network, the amount, and the CSOAI Ed25519 seal. The receipt is independent of the artefact — you can verify it 5 years from now without contacting us.</p>
+<h2>Receipt requirements</h2>
+<p>A successful future flow must expose the transaction hash, resource, network, asset, amount, artefact digest and signature material. None is implied merely by an HTTP 402 challenge.</p>
 
 <div class="meta">
   <span class="meta-key">Network</span><span class="meta-val">eip155:8453 (Base)</span>
@@ -436,10 +421,10 @@ python3 csoai-open-facilitator.py --resource "..." --settle</div>
 <hr>
 
 <h2>What stays free</h2>
-<p>The board (<a href="/api/gspc" style="color: var(--accent);">/api/gspc</a>), the root (<a href="/root.json" style="color: var(--accent);">/root.json</a>), the corrections ledger (<a href="/api/corrections" style="color: var(--accent);">/api/corrections</a>), the MCP door (<a href="/mcp" style="color: var(--accent);">/mcp</a>), the A2A card (<a href="/.well-known/agent-card.json" style="color: var(--accent);">/.well-known/agent-card.json</a>), and the verifier (<a href="/gspc-verify" style="color: var(--accent);">/gspc-verify</a>) all stay free forever. We never sell a grade, a certificate, or a rank. The lid phrase: <em>"22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact."</em></p>
+<p>The board (<a href="/api/gspc" style="color: var(--accent);">/api/gspc</a>), root (<a href="/root.json" style="color: var(--accent);">/root.json</a>), corrections ledger (<a href="/api/corrections" style="color: var(--accent);">/api/corrections</a>), MCP door (<a href="/mcp" style="color: var(--accent);">/mcp</a>), A2A card (<a href="/.well-known/agent-card.json" style="color: var(--accent);">/.well-known/agent-card.json</a>) and verifier (<a href="/gspc-verify" style="color: var(--accent);">/gspc-verify</a>) are public routes. Check their current responses and terms; this page makes no perpetual availability promise. We do not sell a legal-compliance determination, certificate, or rank.</p>
 
 <h2>What we eat</h2>
-<p>OpenTimestamps stamps are <strong>not</strong> proofs of anchoring. A stamp is only a request to a calendar to commit a digest to Bitcoin; the proof exists after the calendar commits and the stamp is upgraded. Three published artifacts are anchored: the two roots and the Layer-0 ceremony, at Bitcoin blocks 965121, 965138 and 965268. Every other queued atom carries a pending stamp and is <strong>not</strong> anchored. The daily job upgrades each one as soon as a calendar has committed it — when that happens is outside our control and takes hours to days. Chain: HF Hub + Rekor witness + Corrections ledger + Bitcoin OTS.</p>
+<p>The current repository root is <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code> (154 leaves; Merkle root <code>2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745</code>). Its Ed25519 signature verifies and its exact preimage is witnessed in Rekor at log index <code>2714574265</code>. Its OpenTimestamps proof has SHA-256 <code>91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99</code> and state <strong>STAMPED_PENDING_BITCOIN</strong>: there is no Bitcoin block confirmation. This root covers only its 154 listed leaves, not every card or measurement. See <a href="/interop/root-witness-latest.json" style="color: var(--accent);">the exact-root witness</a>.</p>
 
 </div>
 
@@ -458,7 +443,7 @@ python3 csoai-open-facilitator.py --resource "..." --settle</div>
       </a>
       <p style="font-size: 14px; line-height: 1.6;">
         Independent AI-governance measurement body.<br>
-        Signed. Anchored. Anyone can re-check.
+        The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation. See /api/state.
       </p>
       <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
         22 axes · 22 measured
@@ -466,9 +451,9 @@ python3 csoai-open-facilitator.py --resource "..." --settle</div>
     </div>
     <div class="footer-col">
       <h4>Product</h4>
-      <a href="/api/gspc">Live board</a>
+      <a href="/api/gspc">Board API</a>
       <a href="/gspc-verify">Verifier</a>
-      <a href="/pay">Pay with MetaMask</a>
+      <a href="/pay">x402 status</a>
       <a href="/.well-known/">Discovery</a>
       <a href="/workbench-paper">Workbench paper</a>
     </div>

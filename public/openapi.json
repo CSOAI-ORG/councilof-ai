@@ -66,26 +66,28 @@
       "get": {
         "operationId": "get__api_agentic-fix",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": ""
+        "summary": "",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
         "operationId": "post__api_agentic-fix",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": ""
+        "summary": "",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/article50": {
@@ -125,7 +127,7 @@
             "description": "OK"
           }
         },
-        "summary": "* POST /api/assess \u2014 the deterministic risk check, finally attached to its button.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https:/"
+        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
       },
       "post": {
         "operationId": "post__api_assess",
@@ -137,7 +139,7 @@
             "description": "OK"
           }
         },
-        "summary": "* POST /api/assess \u2014 the deterministic risk check, finally attached to its button.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https:/"
+        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
       }
     },
     "/api/axis-register": {
@@ -324,26 +326,46 @@
       "get": {
         "operationId": "get__api_corpus-watch",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/corpus-watch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/corpus-watch \u2014 Corpus watch \u2014 list every corpus CSOAI mines.\n *\n * Returns the live data from /api/state."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
         "operationId": "post__api_corpus-watch",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/corpus-watch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/corpus-watch \u2014 Corpus watch \u2014 list every corpus CSOAI mines.\n *\n * Returns the live data from /api/state."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/corrections": {
@@ -392,40 +414,70 @@
       "get": {
         "operationId": "get__api_dashboard",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/dashboard",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/dashboard \u2014 Dashboard stats \u2014 live substrate counters for the home dashboard.\n *\n * Returns the live data from /api/state."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
         "operationId": "post__api_dashboard",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/dashboard",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/dashboard \u2014 Dashboard stats \u2014 live substrate counters for the home dashboard.\n *\n * Returns the live data from /api/state."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/decide": {
       "get": {
         "operationId": "get__api_decide",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/decide",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/decide \u2014 Make a decision attestation."
+        "summary": "* GET /api/decide \u2014 not implemented; no decision attestation is created.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/detect": {
@@ -683,14 +735,24 @@
       "get": {
         "operationId": "get__api_include",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/include",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/include \u2014 Merkle inclusion proof for a card."
+        "summary": "* GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/interop-bulk": {
@@ -821,14 +883,24 @@
       "get": {
         "operationId": "get__api_mint",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/mint",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/mint \u2014 Mint a new signed card from an atom."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/og": {
@@ -948,12 +1020,19 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "measurement_not_certification": true,
+                  "signed": false,
+                  "state": "UNSIGNED_STATIC_SUMMARY"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Unsigned static benchmark summary \u2014 no signature or proof material supplied"
           }
         },
-        "summary": ""
+        "summary": "* GET /api/registers \u2014 unsigned static benchmark summaries.\n *\n * This handler publishes hard-coded summary values. It does not load or verify\n * source records, signatures, receipts, or cryptographic",
+        "x-csoai-evidence-state": "UNSIGNED_STATIC_SUMMARY"
       }
     },
     "/api/regulation": {
@@ -988,26 +1067,46 @@
       "get": {
         "operationId": "get__api_report",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/report",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* POST /api/report \u2014 File a correction report for any signed card.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
         "operationId": "post__api_report",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/report",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* POST /api/report \u2014 File a correction report for any signed card.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/reported": {
@@ -1021,19 +1120,29 @@
             "description": "OK"
           }
         },
-        "summary": "* GET /api/reported \u2014 List all reported corrections.\n *\n * Returns the live data from /api/corrections."
+        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the"
       },
       "post": {
         "operationId": "post__api_reported",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/reported",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/reported \u2014 List all reported corrections.\n *\n * Returns the live data from /api/corrections."
+        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/request-attestation": {
@@ -1138,26 +1247,46 @@
       "get": {
         "operationId": "get__api_subscribe",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/subscribe",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* POST /api/subscribe \u2014 Subscribe to the live attestation stream.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
         "operationId": "post__api_subscribe",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/subscribe",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* POST /api/subscribe \u2014 Subscribe to the live attestation stream.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/swift": {
@@ -1214,47 +1343,68 @@
             "description": "OK"
           }
         },
-        "summary": "* GET /api/trace \u2014 Trace a single signed card by SHA-256.\n *\n * Returns the live data from /signed/cards/<sha>.json."
+        "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints."
       },
       "post": {
         "operationId": "post__api_trace",
         "responses": {
-          "200": {
+          "405": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Method not allowed \u2014 use the documented read method"
           }
         },
-        "summary": "* GET /api/trace \u2014 Trace a single signed card by SHA-256.\n *\n * Returns the live data from /signed/cards/<sha>.json."
+        "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
       }
     },
     "/api/verify-batch": {
       "get": {
         "operationId": "get__api_verify-batch",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/verify-batch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/verify-batch \u2014 Verify a batch of signed cards."
+        "summary": "* GET /api/verify-batch \u2014 not implemented; no cards are verified.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/verify-card": {
       "get": {
         "operationId": "get__api_verify-card",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/verify-card",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/verify-card \u2014 Verify a single signed card by SHA-256."
+        "summary": "* GET /api/verify-card \u2014 not implemented; no card is verified.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/verify-tally": {
@@ -1367,26 +1517,46 @@
       "get": {
         "operationId": "get__api_worker",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/worker",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/worker \u2014 Worker queue stats \u2014 pending anchors, signed cards, queue size.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       },
       "post": {
         "operationId": "post__api_worker",
         "responses": {
-          "200": {
+          "501": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/worker",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
           }
         },
-        "summary": "* GET /api/worker \u2014 Worker queue stats \u2014 pending anchors, signed cards, queue size.\n *\n * Returns the live data from computed."
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
       }
     },
     "/api/x402": {

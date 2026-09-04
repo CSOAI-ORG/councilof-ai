@@ -75,6 +75,11 @@ def slug(s: str) -> str:
 
 
 def discovery_doc(standard: str, kind: str, description: str, url: str, sl: str) -> dict:
+    # The evidence-bundle API currently resolves only DORA and CRA among this
+    # generated door set. A discovery document must never manufacture a live
+    # obligation route or borrow the global 22-axis board as standard-specific
+    # coverage.
+    evidence_pack_supported = sl in {"dora", "eu-cra"}
     return {
         "schema": f"csoai.door/{sl}/0.1",
         "publisher": ISSUER,
@@ -100,19 +105,28 @@ def discovery_doc(standard: str, kind: str, description: str, url: str, sl: str)
                 "corrections": "https://councilof.ai/api/corrections",
                 "root": "https://councilof.ai/root.json",
             },
-            "evidence_pack": f"https://councilof.ai/api/evidence-bundle?obligation={sl}",
-            "canonical_form": "JCS (RFC 8785)-style canonical JSON — Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
+            "evidence_pack": (
+                f"https://councilof.ai/api/evidence-bundle?obligation={sl}"
+                if evidence_pack_supported
+                else None
+            ),
+            "evidence_pack_status": (
+                "SUPPORTED_REQUEST — subject evidence still required; mapping is not a determination"
+                if evidence_pack_supported
+                else "UNMAPPED — no evidence-bundle resolver for this standard"
+            ),
+            "canonical_form": "CPython json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True) profile — explicitly not RFC 8785/JCS",
         },
         "measurement": {
             "schema": "csoai.gspc-axes/0.5",
-            "status": "live",
-            "axes_covered": 22,
-            "lid": "22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact",
+            "status": "UNMAPPED",
+            "axes_covered": 0,
+            "lid": "Discovery document only; no standard-specific GSPC coverage is claimed.",
         },
         "notes": [
             f"Discovery doc for {standard}",
             f"Description: {description[:200]}",
-            "Anyone can re-check the measurement at /gspc-verify.",
+            "No measurement is asserted by this discovery document. Verify only a specifically published card at /gspc-verify.",
             "This doc is the first layer (Layer 0) — the unsealed first layer.",
         ],
     }

@@ -102,6 +102,15 @@ describe("HF Jobs runner mirrors the GitHub workflow step list", () => {
     }
   });
 
+  it("stages the mutable exact-root witness pointer in both public-root runners", () => {
+    for (const source of [
+      read(".github/workflows/public-root.yml"),
+      read("ci/hf-jobs/public-root.sh"),
+    ]) {
+      expect(source).toContain("git add -- public/interop/root-witness-pointer.json");
+    }
+  });
+
   it("Dockerfile base tag matches the playwright version in package-lock.json", () => {
     const lock = JSON.parse(read("package-lock.json"));
     const pw = lock.packages["node_modules/playwright"].version;

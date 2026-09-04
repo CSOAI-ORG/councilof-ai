@@ -17,7 +17,7 @@ describe("Council master catalogue", () => {
     }
     for (const route of LOBBY_ROUTES) {
       expect(
-        entries.some((entry) => entry.path === route.path),
+        entries.some((entry) => entry.path === route.path || entry.href === route.path),
         route.path,
       ).toBe(true);
     }

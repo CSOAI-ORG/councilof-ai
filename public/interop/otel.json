@@ -1,24 +1,32 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "GET /api/otel",
-  "description": "OTel metrics",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "GET",
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "OpenTelemetry collector status",
+  "state": "UNCHECKABLE",
+  "description": "A status document is available, but this estate exports no OTLP and emits no GenAI spans or trace identifier.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/otel.ts",
+    "methods": [
+      "GET"
+    ],
     "path": "/api/otel",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
-      }
-    }
+    "outcomes": []
+  },
+  "output": {
+    "schema": "csoai.otel-status/0.1",
+    "collector": "UNCHECKABLE",
+    "otlp": "not exported",
+    "gen_ai_spans": "not emitted",
+    "otel_trace_id": null,
+    "writes_board": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

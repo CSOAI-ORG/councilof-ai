@@ -1,16 +1,16 @@
 // /api/corrections — the public corrections ledger.
 //
-// The estate's doctrine is "corrections appended, never edited". This is that
-// doctrine made a machine-readable surface: every entry is something the estate
+// This is a source-maintained machine-readable record: every entry is something the estate
 // got wrong, how it was caught (usually by the estate's own instrument), and
-// the fix — dated, never deleted. Publishing your own corrections is the
+// the fix — dated. The source is version-controlled, but this endpoint does not
+// provide append-only storage proof. Publishing your own corrections is the
 // credibility engine: it is what lets a relying party trust the /api/regulation
 // feed and the signed board, because the same body that publishes the number
 // also publishes when the number was wrong.
 //
 // GRAMMAR: an entry here is a FACT about our own history, not a MEASURED figure
-// and not a claim about anyone else. New entries are appended in place; the
-// array is never reordered or trimmed.
+// and not a claim about anyone else. Signed artifacts should be superseded rather
+// than silently edited; this record itself remains ordinary version-controlled source.
 //
 // REDACTION RULE: this ledger is itself a machine surface, so it obeys the
 // no-banned-vocabulary invariant the machine-contract guard enforces on every
@@ -26,7 +26,7 @@
 
 const LEDGER = {
   schema: "csoai.corrections/0.1",
-  policy: "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on.",
+  policy: "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
@@ -195,7 +195,7 @@ const LEDGER = {
       status: "FIXED ON THE LIVE BOARD; FROZEN SIGNED SNAPSHOT AWAITS RE-SIGN (owner)",
     },
     {
-      id: "C-2026-0826-08",
+      id: "C-2026-0826-08b",
       date: "2026-08-26",
       what_was_wrong:
         "The living_stamp was presented as a valid attestation and cannot be checked by anyone. It shipped signed: true and a sig_input recipe, rendering exactly like the two attestations on this site that do verify. It does not verify. Three faults compound: TWO different signatures are published for one stamp, with the same signer and the same `updated` — one in /signed/board_living.json, a different one in /api/gspc measured_on.living_stamp, and at most one can be over the bytes the other is over; the signer is in NONE of the four verification methods in our own did.json, so even a reproducing preimage would prove only self-consistency, the unfalsifiable shape our own HOW-TO-VERIFY tells strangers to refuse; and board_living.json states in its own note that its axes were re-snapshotted from the live board at package time, six days after the signature date, so the signed bytes are not the published bytes.",
@@ -206,7 +206,7 @@ const LEDGER = {
       status: "MARKED UNVERIFIABLE; REPRODUCIBLE SIGNATURE PENDING (owner)",
     },
     {
-      id: "C-2026-0826-07",
+      id: "C-2026-0826-07b",
       date: "2026-08-26",
       what_was_wrong:
         "The claims register described bytes that do not exist. CR-002 gave as its evidence \"Cards declare timestamp_authority: 'none'\". Zero of the 150 published cards contain that field; the string \"timestamp\" appears in no card, not in card_index.json and not in the cross-border card. The substance was honest — there genuinely is no timestamp authority behind any card — but the register asserted a positive declaration as its evidence for an absence, and the claims register is the one page whose entire purpose is claim-to-evidence fidelity. A correction that misdescribes the thing it corrects is worse than the original gap.",

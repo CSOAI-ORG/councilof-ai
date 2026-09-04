@@ -28,15 +28,19 @@ All secrets live in the macOS keychain (service `meok-keystone`) or on designate
 - DOI spine: HF board `10.57967/hf/10114` · bench `10.57967/hf/10116` (never remint).
 - Issuer: Council of AI (CSOAI LTD, UK #16939677). Register: **measurement, not certification**.
 - Kill-list in display copy: sovereign/SOV*/SOVOS/CEASAI/DEFONEOS/byzantine/BFT/33-agent · certification-as-product · SaaS pricing · "neutral referee".
-- Ties are ties. UNMEASURED stays UNMEASURED. Corrections are append-only, signed, in the same record as results.
+- Ties are ties. UNMEASURED stays UNMEASURED. Corrections are recorded and may be transparently STALE while an owner re-sign is pending; do not claim every correction is signed.
 
-## The signature chain (verify anything in 3 lines)
+## Signature verification is family-specific
 
-```
-canonical  = json.dumps(payload, sort_keys=True, separators=(",",":"), ensure_ascii=False)
-content_id = sha256(canonical utf-8) as hex
-signature  = Ed25519 over content_id.encode()   # pubkeys in did:web:csoai.org
-```
+There is no universal three-line recipe for every historic estate record. Current card
+families use declared but different canonical forms and signature preimages. Some use
+CPython `json.dumps(..., sort_keys=True, separators=(",",":"), ensure_ascii=True)` and a
+raw canonical preimage; other supported families sign the ASCII content id. Neither rule
+may be silently substituted for the other, and this is not RFC 8785/JCS.
+
+Use the family-aware verifier and require an explicit supported family, pinned key id,
+canonical preimage rule, matching hash, and valid Ed25519 signature. Unsupported or legacy
+families are UNCHECKABLE, never guessed.
 
 Verify free: https://councilof.ai/gspc-verify · MCP registry `io.github.CSOAI-ORG/gspc` 1.0.3 · ClaimGuard `products/claimguard`.
 

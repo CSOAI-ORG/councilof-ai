@@ -99,7 +99,7 @@ def main():
     items.append(("✓", "DONE", "4 LaunchAgents live", "1000x-master, harvest-fast, surface-builder, anchor-daily"))
     items.append(("✓", "DONE", "Front-end audit + improve", "Average 8.8/10, 0 fail"))
     items.append(("✓", "DONE", "Optimizer + improve loop", "MINE → LEARN → IMPROVE → OPTIMIZE"))
-    items.append(("✓", "DONE", "Auto-OTS daily anchor", "csoai-auto-ots.py"))
+    items.append(("✓", "DONE", "Reviewed OTS proof upgrader", "one admitted root; pending stamps are not anchors"))
     items.append(("✓", "DONE", "Auto-stage queue", "csoai-auto-stage.py"))
     items.append(("✓", "DONE", "Master batch-all", "21 lane-doable jobs in priority order"))
 

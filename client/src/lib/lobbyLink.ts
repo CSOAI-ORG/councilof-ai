@@ -219,16 +219,14 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What do the four lenses actually run, and what stays out of the verdict path?",
   },
   "browse-system-card": {
-    pane: "home",
-    route: "/system-card",
-    label: "Open the system card",
+    pane: "cards",
+    label: "Open signed cards",
     prompt: () =>
       "What does the system card attest, and how do I verify it offline?",
   },
   "browse-fleet": {
-    pane: "home",
-    route: "/mcp-fleet",
-    label: "Open the MCP fleet",
+    pane: "tools",
+    label: "Open Tools",
     prompt: () =>
       "What does the published fleet manifest list, and how is that not a marketplace?",
   },
@@ -247,9 +245,8 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What does this crosswalk map, and why is it not a signed score?",
   },
   "regulation-feed": {
-    pane: "home",
-    route: "/feed",
-    label: "Open the regulation feed",
+    pane: "standards",
+    label: "Open regulation data",
     prompt: () =>
       "What does the published regulation feed say moved, and what is its source?",
   },

@@ -22,12 +22,17 @@ The leaf digest and Merkle construction are IMPORTED from publish_public_root.py
 rather than re-implemented, so an atom's inclusion proof is checkable with the same
 code that checks a card's. Re-typing the tree is how two roots drift apart.
 
-    python3 scripts/badger/atom-root.py            # build + stamp
-    python3 scripts/badger/atom-root.py --verify   # re-check without network
+    python3 scripts/badger/atom-root.py --dry-run
+    python3 scripts/badger/atom-root.py --build-candidate evidence/candidates/atom-roots/atom-root.json
+
+The default command is fail-closed. This script no longer submits a timestamp.
+A candidate is non-public and unsigned; publishing and OTS submission require a
+separate reviewed ceremony.
 """
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import hashlib
 import importlib.util
 import json
@@ -38,7 +43,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent.parent
 sys.path.insert(0, str(HERE))
-from ots_stamp import attestation_state, describe, submit_ots  # noqa: E402
+from ots_stamp import attestation_state, describe  # noqa: E402
 
 # publish_public_root.py has a hyphen-free name but lives outside the package path.
 _spec = importlib.util.spec_from_file_location(
@@ -50,6 +55,8 @@ merkle_root, merkle_proof, sha256_hex = _ppr.merkle_root, _ppr.merkle_proof, _pp
 
 QUEUE = HERE / "_queue"
 OUT = REPO / "public" / "interop"
+CANDIDATE_DIR = REPO / "evidence" / "candidates" / "atom-roots"
+SOURCE_POLICY_PATH = HERE / "atom-root-sources.json"
 
 # These directories are immutable incident evidence, not admissible atom inputs.
 #
@@ -62,13 +69,70 @@ OUT = REPO / "public" / "interop"
 # Keep the files for auditability, but never commit them into a new root. The
 # release gate independently checks this list so removing a prefix here cannot
 # silently make either incident admissible again.
-QUARANTINED_SOURCE_PREFIXES = ("cose-wrap/", "xrpl-settlement/")
+QUARANTINED_SOURCE_PREFIXES = (
+    "bft-council/vote-chain-",
+    "cose-wrap/",
+    "deep-mining/",
+    "learn-loop/",
+    "witness-receipts/",
+    "xrpl-settlement/",
+)
 
 
-def source_is_quarantined(source: str) -> bool:
+def source_policy() -> dict:
+    policy = json.loads(SOURCE_POLICY_PATH.read_text())
+    if policy.get("default") != "deny":
+        raise ValueError("atom-root source policy must be default-deny")
+    return policy
+
+
+def source_is_quarantined(source: str, policy: dict | None = None) -> bool:
     """Return True when an audit-only queue path must not enter a new root."""
     normalized = source.replace("\\", "/")
-    return normalized.startswith(QUARANTINED_SOURCE_PREFIXES)
+    configured = tuple((policy or {}).get("excluded_prefixes", QUARANTINED_SOURCE_PREFIXES))
+    excluded_globs = tuple((policy or {}).get("excluded_globs", ()))
+    return normalized.startswith(configured) or any(
+        fnmatch.fnmatchcase(normalized, pattern) for pattern in excluded_globs
+    )
+
+
+def source_is_allowed(source: str, policy: dict) -> bool:
+    normalized = source.replace("\\", "/")
+    return not source_is_quarantined(normalized, policy) and normalized in set(
+        policy.get("allowed_sources", [])
+    )
+
+
+def placeholder_evidence_issues(atom: dict) -> list[str]:
+    """Reject known placeholder shapes before they can enter a candidate root."""
+    issues: list[str] = []
+    council = atom.get("council_attestation")
+    if isinstance(council, dict) and (
+        council.get("council_size") == 33
+        and council.get("yes_count") == 33
+        and council.get("no_count") == 0
+        and council.get("quorum_reached") is True
+    ):
+        issues.append("hard-coded 33/33 council result")
+    if atom.get("yes") == 33 and atom.get("no") == 0 and atom.get("quorum_reached") is True:
+        issues.append("hard-coded 33/33 vote row")
+
+    sig = atom.get("sig") or atom.get("sig_ed25519")
+    if isinstance(sig, str) and len(sig) == 64 and all(c in "0123456789abcdefABCDEF" for c in sig):
+        issues.append("32-byte digest represented as an Ed25519 signature")
+
+    anchors = atom.get("anchors")
+    if isinstance(anchors, dict):
+        for receipt in anchors.values():
+            if not isinstance(receipt, dict) or str(receipt.get("status", "")).lower() not in {
+                "pending", "queued"
+            }:
+                continue
+            for key in ("stamp", "entry_uuid", "attestation_uid"):
+                value = receipt.get(key)
+                if isinstance(value, str) and len(value.removeprefix("0x")) in {62, 63, 64}:
+                    issues.append(f"hash-shaped {key} placeholder")
+    return issues
 
 
 def ots_file_digest(blob: bytes) -> str:
@@ -92,21 +156,34 @@ def canonical(obj) -> bytes:
 
 def collect() -> list[tuple[str, str]]:
     """(leaf_digest, source) for every atom, deduplicated, in stable order."""
+    policy = source_policy()
     seen, leaves = set(), []
     for jsonl in sorted(QUEUE.rglob("*.jsonl")):
         source = str(jsonl.relative_to(QUEUE)).replace("\\", "/")
-        if source_is_quarantined(source):
+        if not source_is_allowed(source, policy):
             continue
-        for line in jsonl.read_text(errors="replace").splitlines():
+        try:
+            lines = jsonl.read_text(encoding="utf-8").splitlines()
+        except UnicodeDecodeError as exc:
+            raise ValueError(f"non-UTF-8 atom source {source}: {exc}") from exc
+        for line_number, line in enumerate(lines, start=1):
             line = line.strip()
             if not line:
                 continue
             try:
                 atom = json.loads(line)
-            except Exception:
-                continue
+            except json.JSONDecodeError as exc:
+                raise ValueError(
+                    f"malformed JSONL in {source}:{line_number}: {exc.msg}"
+                ) from exc
             if not isinstance(atom, dict):
-                continue
+                raise ValueError(
+                    f"non-object JSONL record in {source}:{line_number}: "
+                    f"got {type(atom).__name__}"
+                )
+            issues = placeholder_evidence_issues(atom)
+            if issues:
+                raise ValueError(f"inadmissible atom in {source}: {', '.join(issues)}")
             d = sha256_hex(canonical(atom))
             if d in seen:
                 continue
@@ -116,94 +193,107 @@ def collect() -> list[tuple[str, str]]:
     return leaves
 
 
+def resolve_candidate_destination(requested: Path) -> Path:
+    """Allow candidate writes only as direct JSON children of the evidence lane."""
+    destination = (
+        (REPO / requested).resolve()
+        if not requested.is_absolute()
+        else requested.resolve()
+    )
+    allowed_parent = CANDIDATE_DIR.resolve()
+    if destination.parent != allowed_parent or destination.suffix.lower() != ".json":
+        raise ValueError(
+            "candidate destination must be a .json file directly under "
+            "evidence/candidates/atom-roots/"
+        )
+    return destination
+
+
+def verify_root(root_path: Path, ots_path: Path) -> int:
+    """Verify root construction and require a parseable proof over exact bytes."""
+    if not root_path.is_file():
+        print(f"no root at {root_path}")
+        return 1
+
+    root_bytes = root_path.read_bytes()
+    try:
+        body = json.loads(root_bytes)
+        if not isinstance(body, dict) or not isinstance(body.get("leaves"), list):
+            raise ValueError("root must be an object with a leaves array")
+        leaves = [leaf["leaf"] for leaf in body["leaves"]]
+        expected = body["merkle_root"]
+        recomputed = merkle_root(leaves)
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        print(f"root        : INVALID — {exc}")
+        return 1
+
+    root_matches = recomputed == expected
+    print(f"leaves      : {len(leaves)}")
+    print(f"merkle_root : {expected}")
+    print(f"recomputed  : {recomputed}  {'MATCH' if root_matches else 'MISMATCH'}")
+
+    if not ots_path.is_file():
+        print("ots         : UNCHECKABLE — no .ots beside this root")
+        print("coverage    : UNCHECKABLE — exact-byte binding is required")
+        return 1
+
+    proof_bytes = ots_path.read_bytes()
+    try:
+        stamped = ots_file_digest(proof_bytes)
+    except Exception as exc:
+        print(f"ots         : UNCHECKABLE — proof did not parse ({type(exc).__name__})")
+        print("coverage    : UNCHECKABLE — exact-byte binding is required")
+        return 1
+
+    state = attestation_state(proof_bytes)
+    print(f"ots         : {describe(state)}")
+    actual = hashlib.sha256(root_bytes).hexdigest()
+    covered = actual == stamped
+    if covered:
+        print(f"coverage    : COVERS — proof commits to these exact bytes ({actual[:16]}…)")
+    else:
+        print(
+            f"coverage    : ORPHANED — file is {actual[:16]}… but the proof covers "
+            f"{stamped[:16]}…"
+        )
+    return 0 if root_matches and covered else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--verify", action="store_true", help="re-check the published root, no network")
+    modes = ap.add_mutually_exclusive_group()
+    modes.add_argument("--verify", action="store_true", help="re-check the published root, no network")
+    modes.add_argument("--dry-run", action="store_true", help="compute the allowlisted root without writing")
+    modes.add_argument(
+        "--build-candidate",
+        type=Path,
+        help="write an unsigned candidate under evidence/candidates/atom-roots/",
+    )
     args = ap.parse_args()
 
-    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    root_path = OUT / f"atom-root-{stamp}.json"
-    ots_path = OUT / f"atom-root-{stamp}.json.ots"
-
-    # NEVER overwrite a proof. The queue grows all day, so re-rooting is normal, but a
-    # root's .ots is evidence and writing over it destroys hours of calendar time. A root
-    # is superseded, never edited: it keeps its name and the new one takes the next suffix.
-    # (It happened twice — a root anchored at block 965299 covering 42,118 atoms was
-    # clobbered by a re-root minutes later, and again at block 965312.)
-    #
-    # SUPERSEDE ON *ANY* PRIOR STAMP, not only an anchored one. This used to read
-    # `if prior["state"] == "bitcoin"`, which asks the wrong question at the wrong time.
-    # A stamp is a CLAIM ON FUTURE EVIDENCE: pending now, Bitcoin-attested hours later
-    # when a calendar aggregates it. Overwriting a pending stamp therefore destroys a
-    # proof that had not become valuable YET, and the calendar goes on to anchor it
-    # anyway — leaving a genuine BitcoinBlockHeaderAttestation over bytes that no longer
-    # exist.
-    #
-    # That is not hypothetical. Audited 2026-09-04:
-    #   atom-root-2026-09-03.json.ots    anchored block 965312, covers cbfca3da…
-    #   atom-root-2026-09-03-2.json.ots  anchored block 965312, covers eebb7987…
-    #   the files beside them are        6f9e25e7… and 103866d3…
-    # Neither proof covers the file it sits next to, and the copy actually served was a
-    # third set of bytes again. An anchor over bytes nobody has is worse than no anchor,
-    # because it reads as proof.
-    #
-    # A pending stamp costs one filename to keep and hours of calendar time to re-earn.
-    # Always supersede; never overwrite.
-    if not args.verify and ots_path.exists():
-        prior = attestation_state(ots_path.read_bytes())
-        n = 2
-        while (OUT / f"atom-root-{stamp}-{n}.json.ots").exists():
-            n += 1
-        root_path = OUT / f"atom-root-{stamp}-{n}.json"
-        ots_path = OUT / f"atom-root-{stamp}-{n}.json.ots"
-        where = (f"ANCHORED at block {prior['block_height']}" if prior["state"] == "bitcoin"
-                 else f"{prior['state'].upper()} — and a pending stamp still becomes an anchor later")
-        print(f"  prior root is {where} — superseding, not overwriting.")
-        print(f"  New root -> {root_path.name}")
+    if not args.verify and not args.dry_run and args.build_candidate is None:
+        print("UNAVAILABLE_FAIL_CLOSED: choose --dry-run or --build-candidate; OTS submission requires a reviewed ceremony")
+        return 78
 
     if args.verify:
-        if not root_path.exists():
-            print(f"no root at {root_path}")
-            return 1
-        body = json.loads(root_path.read_text())
-        leaves = [l["leaf"] for l in body["leaves"]]
-        recomputed = merkle_root(leaves)
-        ok = recomputed == body["merkle_root"]
-        print(f"leaves      : {len(leaves)}")
-        print(f"merkle_root : {body['merkle_root']}")
-        print(f"recomputed  : {recomputed}  {'MATCH' if ok else 'MISMATCH'}")
-        st = attestation_state(ots_path.read_bytes() if ots_path.exists() else None)
-        print(f"ots         : {describe(st)}")
+        stamp = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        root_path = OUT / f"atom-root-{stamp}.json"
+        ots_path = OUT / f"atom-root-{stamp}.json.ots"
+        return verify_root(root_path, ots_path)
 
-        # COVERAGE. Recomputing the Merkle root proves the leaves hash to the value the
-        # file states. It says nothing about whether the .ots beside it commits to THESE
-        # bytes — and that is the failure that actually happened: two roots carrying real
-        # Bitcoin attestations at block 965312 over digests matching no file on disk.
-        # A proof that names a file it does not cover is worse than a missing proof,
-        # because it reads as anchored. UNCHECKABLE is a distinct state from ORPHANED:
-        # no proof present is not the same as a proof that disagrees.
-        covered = None
-        if ots_path.exists():
-            actual = hashlib.sha256(root_path.read_bytes()).hexdigest()
-            try:
-                stamped = ots_file_digest(ots_path.read_bytes())
-            except Exception as e:
-                stamped = None
-                print(f"coverage    : UNCHECKABLE — proof did not parse ({type(e).__name__})")
-            if stamped is not None:
-                covered = actual == stamped
-                if covered:
-                    print(f"coverage    : COVERS — proof commits to these exact bytes ({actual[:16]}…)")
-                else:
-                    print(f"coverage    : ORPHANED — file is {actual[:16]}… but the proof covers "
-                          f"{stamped[:16]}…. This root was regenerated after it was stamped; the "
-                          f"anchor proves the existence of bytes that are not here.")
-        else:
-            print("coverage    : UNCHECKABLE — no .ots beside this root")
+    destination = None
+    if args.build_candidate is not None:
+        try:
+            destination = resolve_candidate_destination(args.build_candidate)
+        except ValueError as exc:
+            print(f"refusing candidate destination: {exc}")
+            return 2
 
-        return 0 if (ok and covered is not False) else 1
-
-    leaves = collect()
+    try:
+        leaves = collect()
+    except ValueError as exc:
+        print(f"inadmissible atom source: {exc}")
+        return 2
     if not leaves:
         print("no atoms found")
         return 1
@@ -228,7 +318,15 @@ def main() -> int:
         ),
         "leaves": [{"leaf": d, "source": s} for d, s in leaves],
     }
-    root_path.parent.mkdir(parents=True, exist_ok=True)
+    if args.dry_run:
+        print(f"allowlisted atoms: {len(hexes)}")
+        print(f"candidate merkle root: {root}")
+        print("writes: 0; signatures: 0; OTS submissions: 0")
+        return 0
+
+    assert destination is not None
+    root_path = destination
+    CANDIDATE_DIR.mkdir(parents=True, exist_ok=True)
     # STAMP THE BYTES WE WRITE. This previously wrote the pretty-printed body INCLUDING
     # leaves, then stamped sha256(canonical(body minus leaves)) — a compact, leaves-
     # excluded serialisation that is not the file and never was. So `<root>.json.ots` has
@@ -243,23 +341,19 @@ def main() -> int:
     # name. Stamping X is the useful choice: a stranger runs `ots verify` against the
     # published bytes with no instructions from us.
     root_bytes = (json.dumps(body, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
-    root_path.write_bytes(root_bytes)
+    try:
+        with root_path.open("xb") as candidate:
+            candidate.write(root_bytes)
+    except FileExistsError:
+        print(f"refusing to overwrite existing candidate: {root_path}")
+        return 2
 
     digest = hashlib.sha256(root_bytes).hexdigest()
-    print(f"atoms      : {len(hexes)}")
-    print(f"merkle_root: {root}")
-    print(f"root digest: {digest}")
-    print("stamping ONE proof for all of them...")
-    data = submit_ots(digest)
-    if not data:
-        print("  no calendar answered — no .ots written (an unverifiable proof is worse than none)")
-        return 1
-    ots_path.write_bytes(data)
-    st = attestation_state(data)
-    print(f"  wrote {ots_path.relative_to(REPO)}")
-    print(f"  {describe(st)}")
-    print(f"\n{len(hexes)} atoms are now covered by one commitment.")
-    print("They become ANCHORED when scripts/ots-upgrade.py turns that stamp into a block.")
+    print(f"candidate atoms: {len(hexes)}")
+    print(f"merkle_root   : {root}")
+    print(f"file digest   : {digest}")
+    print(f"wrote unsigned, unstamped candidate: {root_path}")
+    print("Publishing and OTS submission remain ceremony-gated.")
     return 0
 
 

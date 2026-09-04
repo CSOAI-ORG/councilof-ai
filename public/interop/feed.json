@@ -1,24 +1,34 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "GET /api/feed",
-  "description": "Live feed of new attestations",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "GET",
-    "path": "/api/feed",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "api-contract",
+  "name": "State-change RSS feed",
+  "state": "LIVE",
+  "description": "Unsigned RSS 2.0 feed of committed estate state-change notices; it does not mint attestations.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/feed.xml.ts",
+    "methods": [
+      "GET"
+    ],
+    "path": "/api/feed.xml",
+    "outcomes": [
+      {
+        "http_status": 200,
+        "media_type": "application/rss+xml; charset=utf-8",
+        "output": "RSS 2.0 channel with the notices committed in the handler"
       }
-    }
+    ]
+  },
+  "output": {
+    "format": "RSS 2.0",
+    "mutability": "Changes only when reviewed feed items are deployed"
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

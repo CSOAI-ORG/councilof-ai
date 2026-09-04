@@ -259,17 +259,17 @@ export default function LobbyWorkspaceMenu({
               type="button"
               onClick={() => openHit({ tab: tabOf("tools"), label: "Tools" })}
               className={ROW_BTN}
-              title="Published tooling and MCP servers — install and connect from the Tools pane."
+              title="Published tool descriptions and observed runtime state are shown separately in the Tools pane."
             >
-              <span>MCP servers — install &amp; connect</span>
+              <span>Tools — inspect &amp; connect</span>
             </button>
             <button
               type="button"
-              onClick={() => openHit({ route: "/mcp-fleet", label: "MCP fleet" })}
+              onClick={() => openHit({ tab: tabOf("tools"), label: "Tools" })}
               className={ROW_BTN}
-              title="The published fleet manifest — what is reachable, what is only catalogued."
+              title="Open the same Tools pane; catalogue entries and observed reachability remain separate."
             >
-              <span>Fleet manifest</span>
+              <span>Runtime availability</span>
             </button>
             <p className={`px-1.5 pt-1 ${HEAD.fine}`}>
               There are no API keys here — verification is free and needs no account.

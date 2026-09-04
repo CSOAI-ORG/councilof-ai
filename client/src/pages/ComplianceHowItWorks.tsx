@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 const COMPLIANCE_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to achieve AI compliance with CSOAI",
-  description: "The CSOAI compliance process: assess your AI systems, analyze gaps, implement controls, monitor continuously, and improve with SOAI-PDCA.",
+  name: "How to organise AI governance evidence with CSOAI",
+  description: "A five-step evidence workflow: scope the system, compare evidence with selected requirements, implement controls, repeat named checks, and record improvements.",
   step: [
     { "@type": "HowToStep", position: 1, name: "Assessment", text: "Evaluate your AI systems against relevant frameworks." },
-    { "@type": "HowToStep", position: 2, name: "Gap Analysis", text: "Identify areas where you're not yet compliant." },
+    { "@type": "HowToStep", position: 2, name: "Gap Analysis", text: "Identify evidence gaps against the selected requirements." },
     { "@type": "HowToStep", position: 3, name: "Implementation", text: "Deploy controls and safeguards to close gaps." },
-    { "@type": "HowToStep", position: 4, name: "Monitoring", text: "Continuously monitor compliance and incident reports." },
-    { "@type": "HowToStep", position: 5, name: "Improvement", text: "Use SOAI-PDCA to continuously improve compliance." },
+    { "@type": "HowToStep", position: 4, name: "Repeat checks", text: "Re-run named measurements and review new incident reports." },
+    { "@type": "HowToStep", position: 5, name: "Improvement", text: "Use SOAI-PDCA to improve controls and evidence over time." },
   ],
 };
 
@@ -130,12 +130,12 @@ export default function ComplianceHowItWorks() {
     },
     {
       step: "4. Monitoring",
-      description: "Continuously monitor compliance and incident reports",
+      description: "Re-run named checks and review incident reports",
       icon: TrendingUp
     },
     {
       step: "5. Improvement",
-      description: "Use SOAI-PDCA to continuously improve compliance",
+      description: "Use SOAI-PDCA to improve controls and evidence",
       icon: Users
     }
   ];
@@ -147,7 +147,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "What is SOAI-PDCA?",
-      answer: "SOAI-PDCA applies the Deming Cycle (Plan-Do-Check-Act) to measured evidence. It can organize remediation and retesting, but it does not guarantee legal compliance or operate a live 33-seat council."
+      answer: "SOAI-PDCA applies the Deming Cycle (Plan-Do-Check-Act) to measured evidence. It can organize remediation and retesting, but it does not guarantee legal compliance. The 33-seat council remains a non-operational design."
     },
     {
       question: "How often should we run SOAI-PDCA cycles?",
@@ -155,7 +155,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "Can I use CSOAI's compliance tools for my enterprise?",
-      answer: "Yes! CSOAI provides compliance assessment tools, documentation templates, and integration with our Council for independent review. Contact our enterprise team for custom solutions."
+      answer: "CSOAI provides measurement tools, documentation templates, and workflows for evidence and human review. The designed 33-seat Council is not a live independent-review service."
     },
     {
       question: "What if we fail a compliance audit?",
@@ -163,7 +163,7 @@ export default function ComplianceHowItWorks() {
     },
     {
       question: "How do we stay updated on regulatory changes?",
-      answer: "CSOAI monitors global AI regulations and publishes updates monthly. You'll receive notifications when frameworks change, and we update our assessment tools accordingly."
+      answer: "Check the dated sources and version shown by each measurement. Managed regulatory-change notifications and continuous monitoring are not demonstrated as live services on this page."
     },
     {
       question: "Can we obtain a conformity certificate from Council of AI?",
@@ -191,7 +191,7 @@ export default function ComplianceHowItWorks() {
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Compliance Guide</h1>
           <p className="text-xl text-emerald-100">
-            Master multi-framework AI compliance using CSOAI's methodology and the SOAI-PDCA continuous improvement cycle
+            Organise multi-framework evidence with named checks and the SOAI-PDCA improvement cycle
           </p>
         </div>
       </div>
@@ -227,7 +227,7 @@ export default function ComplianceHowItWorks() {
         <div className="mb-20">
           <h2 className="text-4xl font-bold mb-12 text-center">SOAI-PDCA Continuous Improvement</h2>
           <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto">
-            SOAI-PDCA combines Safety Oversight AI (the 33-seat Council of AI) with the Deming Cycle to ensure your compliance keeps improving over time.
+            SOAI-PDCA applies the Deming Cycle to scoped evidence, remediation, and retesting. It does not guarantee legal compliance. The Council has a designed 33-seat roster and target threshold of 23/33, but it is not live; independent operation and failure resilience have not been demonstrated.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {soaiPdcaSteps.map((step, idx) => (
@@ -274,18 +274,18 @@ export default function ComplianceHowItWorks() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
                 <Shield className="w-12 h-12 text-emerald-600 mb-4" />
-                <h3 className="text-xl font-bold text-emerald-900 mb-3">Independent Review</h3>
-                <p className="text-gray-700">Current tools organize evidence and human review. The 33-seat council is a design; independence and absence of conflicts have not been established.</p>
+                <h3 className="text-xl font-bold text-emerald-900 mb-3">Review Workflow</h3>
+                <p className="text-gray-700">Current tools organize evidence for review by people you identify. The 33-seat Council is a design, not a live reviewer; independence and absence of conflicts have not been established.</p>
               </div>
               <div>
                 <Globe className="w-12 h-12 text-emerald-600 mb-4" />
-                <h3 className="text-xl font-bold text-emerald-900 mb-3">Global Expertise</h3>
-                <p className="text-gray-700">Council members include AI researchers, ethicists, regulators, and domain experts from around the world. Diverse perspectives ensure thorough assessment.</p>
+                <h3 className="text-xl font-bold text-emerald-900 mb-3">Framework Mapping</h3>
+                <p className="text-gray-700">Public mappings help locate relevant requirements. A mapping does not establish regulator involvement, expert review, legal conformity, or a GSPC measurement.</p>
               </div>
               <div>
                 <Zap className="w-12 h-12 text-emerald-600 mb-4" />
-                <h3 className="text-xl font-bold text-emerald-900 mb-3">Continuous Monitoring</h3>
-                <p className="text-gray-700">The Council continuously monitors your systems and compliance. Incidents are reviewed within 5 business days and decisions published publicly.</p>
+                <h3 className="text-xl font-bold text-emerald-900 mb-3">Repeatable Checks</h3>
+                <p className="text-gray-700">You can re-run named checks when evidence or requirements change. No continuous Council monitoring, five-day incident SLA, or automatic public decision is claimed here.</p>
               </div>
             </div>
           </Card>
@@ -326,8 +326,8 @@ export default function ComplianceHowItWorks() {
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold flex-shrink-0">Month 4</div>
                 <div>
-                  <h4 className="font-bold text-emerald-900 mb-1">Council Review</h4>
-                  <p className="text-gray-700">Council independently reviews your compliance</p>
+                  <h4 className="font-bold text-emerald-900 mb-1">Human Review</h4>
+                  <p className="text-gray-700">Route the evidence to an accountable human or qualified reviewer; no live Council review is implied</p>
                 </div>
               </div>
             </Card>
@@ -372,9 +372,9 @@ export default function ComplianceHowItWorks() {
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Achieve Compliance?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Organise the Evidence?</h2>
           <p className="text-lg mb-8 text-emerald-100">
-            Start your compliance journey with CSOAI's comprehensive framework and Council oversight
+            Start a scoped measurement workflow. CSOAI records evidence; it does not certify, guarantee compliance, or provide live Council oversight.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button

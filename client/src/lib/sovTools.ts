@@ -21,7 +21,13 @@ export type SovTool = {
   inputSchema?: { type?: string; properties?: Record<string, any>; required?: string[] };
 };
 
-export type ToolResult = { ok: boolean; text: string; raw?: any };
+export type ToolResult = {
+  ok: boolean;
+  text: string;
+  raw?: any;
+  /** Runtime execution state only; never promotes returned evidence. */
+  state?: "runtime_observed" | "unreachable";
+};
 
 /** The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact, GET-only. */
 const RPC = "/mcp";
@@ -56,12 +62,12 @@ export async function listTools(): Promise<ToolListing> {
 export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
   try {
     const d = await rpc("tools/call", { name, arguments: args });
-    if (d && d.error) return { ok: false, text: "The brain declined: " + (d.error.message || "unknown"), raw: d };
+    if (d && d.error) return { ok: false, state: "unreachable", text: "The MCP runtime declined: " + (d.error.message || "unknown"), raw: d };
     const content = (d && d.result && d.result.content) || [];
     const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
-    return { ok: true, text, raw: d };
+    return { ok: true, state: "runtime_observed", text, raw: d };
   } catch (e) {
-    return { ok: false, text: "Couldn't reach the Council engine — check your connection and try again." };
+    return { ok: false, state: "unreachable", text: "Couldn't reach the MCP runtime — check your connection and try again." };
   }
 }
 

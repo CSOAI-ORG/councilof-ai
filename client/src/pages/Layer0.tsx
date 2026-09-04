@@ -73,9 +73,9 @@ const STATUS_NOTE: Record<NodeStatus, string> = {
 };
 
 const L0_LEVELS = [
-  { id: "L0-1", name: "Identity", body: "Every tool call carries a checked identity — no anonymous calls through the gate." },
-  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Council Gate policy check before it reaches the tool." },
-  { id: "L0-3", name: "Signed", body: "Every call is Ed25519-attestable — a record another governed agent can verify offline." },
+  { id: "L0-1", name: "Identity", body: "Design requirement: a governed tool call carries a checked identity before admission." },
+  { id: "L0-2", name: "Policy-gated", body: "Design requirement: policy is evaluated before a governed call reaches the tool." },
+  { id: "L0-3", name: "Signed", body: "Published Ed25519-signed cards can be verified offline. Ordinary tool calls are not automatically signed." },
 ];
 
 export default function Layer0() {
@@ -108,8 +108,8 @@ export default function Layer0() {
               Ed25519 signing, the care-floor gate, and offline verification
             </strong>{" "}
             — plus a <strong className="text-emerald-50">designed</strong> 33-seat council, which is
-            a design figure only. The earlier DR-0007 experiment measured n_eff 1.21 of 3 and caused
-            us to retract the guarantee. The{" "}
+            a design figure only. DR-0007 records the retraction; its historical numeric result is
+            unbound because the cited result artifact is absent from this repository. The{" "}
             <Link href="/interop/council-independence.json" className="underline underline-offset-2">
               latest point experiment
             </Link>{" "}

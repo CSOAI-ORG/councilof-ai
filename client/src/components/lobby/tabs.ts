@@ -308,10 +308,10 @@ export const LOBBY_TABS: LobbyTab[] = [
   },
   {
     id: "watchdog",
-    label: "Report an incident",
+    label: "Watchdog evidence",
     blurb:
-      "Report an AI incident — a real form, filed to the record. No heat-map is claimed until one is measured.",
-    path: "/report",
+      "Read the current public Watchdog material. Durable report filing and signed acknowledgements are not live yet.",
+    path: "/watchdog-hub",
     cues: /\b(watchdog|incident|report(?:ed)?|complaint|heat.?map)\b/i,
   },
   {
@@ -442,13 +442,6 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(layer[- ]?0|layer zero)\b/i,
   },
   {
-    label: "Trust center",
-    blurb: "Keys, receipts, and what we will not claim.",
-    path: "/trust-center",
-    group: "record",
-    cues: /\b(trust center|trust centre)\b/i,
-  },
-  {
     label: "Network",
     blurb: "N sites and where the record lives.",
     path: "/network",
@@ -470,10 +463,10 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(intel|landscape notes)\b/i,
   },
   {
-    label: "System card",
+    label: "Signed cards",
     blurb:
-      "The live signed system card — issue it, verify it offline. Not a certificate.",
-    path: "/system-card",
+      "Browse published card records and open the family-aware verifier.",
+    path: "/dashboard?tab=cards",
     group: "record",
     cues: /\b(system card)\b/i,
   },
@@ -546,9 +539,9 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(benchmark[- ]?quality|quality register)\b/i,
   },
   {
-    label: "MCP fleet",
-    blurb: "The published fleet manifest — not a marketplace.",
-    path: "/mcp-fleet",
+    label: "Tools",
+    blurb: "Inspect published tool descriptions and runtime availability separately.",
+    path: "/dashboard?tab=tools",
     group: "analyst",
     cues: /\b(mcp fleet|fleet manifest)\b/i,
   },
@@ -569,9 +562,9 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
     cues: /\b(crosswalk)\b/i,
   },
   {
-    label: "Regulation feed",
-    blurb: "Published regulation deltas — what moved, as recorded.",
-    path: "/feed",
+    label: "Regulation data",
+    blurb: "Open the standards pane; current machine data comes from GET /api/regulation.",
+    path: "/dashboard?tab=standards",
     group: "analyst",
     cues: /\b(regulation feed|reg feed)\b/i,
   },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 import { PersonaToggle, usePersona } from "@/components/PersonaToggle";
-import { ANCHORS, hoursSinceLastPass } from "@/data/anchors";
+import { ANCHORS, effectiveAnchorStatus, hoursSinceLastPass } from "@/data/anchors";
 
 /**
  * /gspc-anchors — live anchor status.
@@ -15,7 +15,7 @@ import { ANCHORS, hoursSinceLastPass } from "@/data/anchors";
 const STATUS_CONFIG: Record<string, { color: string; bg: string; icon: string; label: string }> = {
   live: { color: "text-green-600", bg: "bg-green-100", icon: "●", label: "Live" },
   degraded: { color: "text-yellow-600", bg: "bg-yellow-100", icon: "◐", label: "Degraded" },
-  unreachable: { color: "text-red-600", bg: "bg-red-100", icon: "○", label: "Unreachable" },
+  unreachable: { color: "text-red-600", bg: "bg-red-100", icon: "○", label: "Stale / unchecked" },
 };
 
 export default function GSPCAnchors() {
@@ -26,9 +26,13 @@ export default function GSPCAnchors() {
     document.title = "Anchored To — GSPC Source Registries | CSOAI";
   }, []);
 
-  const liveCount = ANCHORS.filter((a) => a.status === "live").length;
-  const degradedCount = ANCHORS.filter((a) => a.status === "degraded").length;
-  const unreachableCount = ANCHORS.filter((a) => a.status === "unreachable").length;
+  const evaluatedAnchors = ANCHORS.map((anchor) => ({
+    ...anchor,
+    effective_status: effectiveAnchorStatus(anchor),
+  }));
+  const liveCount = evaluatedAnchors.filter((a) => a.effective_status === "live").length;
+  const degradedCount = evaluatedAnchors.filter((a) => a.effective_status === "degraded").length;
+  const unreachableCount = evaluatedAnchors.filter((a) => a.effective_status === "unreachable").length;
 
   return (
     <div className="min-h-screen bg-background">
@@ -74,11 +78,11 @@ export default function GSPCAnchors() {
         <section className="mb-12">
           <h2 className="text-3xl font-semibold mb-8">Anchor registry</h2>
           <div className="space-y-4">
-            {ANCHORS.map((anchor) => {
-              const config = STATUS_CONFIG[anchor.status];
+            {evaluatedAnchors.map((anchor) => {
+              const config = STATUS_CONFIG[anchor.effective_status];
               const hours = hoursSinceLastPass(anchor.last_passed);
               const isSelected = selectedAnchor === anchor.id;
-              const isStale = hours > 72;
+              const isStale = anchor.effective_status === "unreachable";
 
               return (
                 <div
@@ -176,9 +180,10 @@ export default function GSPCAnchors() {
               </p>
             </div>
             <div className="p-6 border border-red-200 bg-red-50 rounded-lg">
-              <div className="text-red-600 text-2xl font-bold mb-2">○ Unreachable</div>
+              <div className="text-red-600 text-2xl font-bold mb-2">○ Stale / unchecked</div>
               <p className="text-sm">
-                Anchor has not passed in <strong>72+ hours</strong>. Data should not be trusted.
+                No successful check is recorded in <strong>72+ hours</strong>. This does not prove
+                the source is unreachable; current freshness is unknown.
               </p>
             </div>
           </div>
@@ -200,14 +205,14 @@ export default function GSPCAnchors() {
                 <h3 className="text-xl font-bold">For Investors</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Anchors are the trust perimeter. Every measurement is reproducible because the
-                source is timestamped. A 6-anchor estate with stale timestamps would be a due
-                diligence finding — this one is clean.
+                Anchors are part of the evidence perimeter. The table exposes the last successful
+                check and current clock-derived freshness. A stale timestamp is a due-diligence
+                finding, not a clean bill of health.
               </p>
               <ul className="text-sm space-y-2">
-                <li className="flex gap-2"><span className="text-primary">→</span> 6 live anchors</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> All public-licence (OGL, CC BY, EU reuse)</li>
-                <li className="flex gap-2"><span className="text-primary">→</span> No proprietary data dependencies</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> {liveCount} currently fresh within 24 hours</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> {degradedCount} degraded · {unreachableCount} stale / unchecked</li>
+                <li className="flex gap-2"><span className="text-primary">→</span> Source-specific terms shown below</li>
               </ul>
             </div>
             <div id="persona-regulator" className="p-8 border border-primary/30 bg-gradient-to-br from-primary/5 to-transparent rounded-xl transition-all">
@@ -216,9 +221,10 @@ export default function GSPCAnchors() {
                 <h3 className="text-xl font-bold">For Regulators</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Every anchor is a primary source. UK legislation is fetched from legislation.gov.uk
-                under OGL v3.0. EU AI Act text is fetched from EUR-Lex under the EU reuse notice.
-                No hand-curated, no paraphrased, no interpolated.
+                The statute entries point to official UK and EU sources. Standards point to their
+                publishing bodies or repositories. The Crosswalk registry is a local operator
+                source, not an external primary source. Each row must be judged on its own URI,
+                timestamp, and stated reuse terms.
               </p>
               <ul className="text-sm space-y-2">
                 <li className="flex gap-2"><span className="text-primary">→</span> UK: legislation.gov.uk (OGL v3.0)</li>
@@ -249,9 +255,9 @@ export default function GSPCAnchors() {
         <section className="py-12 bg-muted/30 rounded-xl px-8 my-8">
           <h3 className="text-2xl font-semibold mb-4">Licence register (for legal review)</h3>
           <p className="text-sm text-muted-foreground mb-6">
-            Every anchor is fetched under a public, redistributable licence. None of the data
-            ingested by this instrument is proprietary, copyrighted, or derived from a private
-            database. This is the licence-asset table.
+            This table records the stated reuse terms for each listed source. Open licences and
+            reuse notices do not mean the material is uncopyrighted, and the self-hosted Crosswalk
+            registry has no external-source licence. Verify the applicable terms before reuse.
           </p>
           <div className="overflow-x-auto">
             <table className="w-full">

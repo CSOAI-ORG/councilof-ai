@@ -283,7 +283,7 @@ Authentication: None` },
   "type": "function",
   "function": {
     "name": "gspc_get_board",
-    "description": "Fetch the live Council of AI GSPC board (totals + axes).",
+    "description": "Fetch the live GSPC measurement board (totals + axes).",
     "parameters": { "type": "object", "properties": {}, "required": [] }
   }
 }` },

@@ -84,8 +84,8 @@ export default function Login() {
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            Sign in to your AI governance operating system — your Council assistant, the live governance
-            graph, and the signing council are right where you left them.
+            Sign in to your AI governance workspace — your Council assistant, published governance
+            maps and verifiable evidence tools are in one place. The multi-seat Council is a design, not a live service.
           </p>
 
           <div className="space-y-4">
@@ -104,7 +104,7 @@ export default function Login() {
               <div>
                 <h3 className="font-semibold text-gray-900">Govern any AI system</h3>
                 <p className="text-sm text-gray-600">
-                  Map jurisdictions, run assessments and seal signed verdicts with the Council of AI
+                  Map jurisdictions, prepare assessment drafts and verify any separately published measurement card
                 </p>
               </div>
             </div>
@@ -114,7 +114,7 @@ export default function Login() {
               <div>
                 <h3 className="font-semibold text-gray-900">Provable, not promised</h3>
                 <p className="text-sm text-gray-600">
-                  Every action Ed25519-signed to Layer 0 — verifiable offline, anytime
+                  Published measurement cards are Ed25519-verifiable offline; ordinary workspace actions are not automatically signed
                 </p>
               </div>
             </div>

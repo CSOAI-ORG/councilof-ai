@@ -16,7 +16,7 @@ export default function DashboardConsolePane() {
     <div className="flex h-full min-h-[70vh] flex-col">
       <iframe
         src="/gspc-console.html"
-        title="GSPC console — every model, every axis, live"
+        title="GSPC console — every published measured model-axis cell in the current index"
         className="h-full min-h-[70vh] w-full flex-1 rounded-lg border border-emerald-900/20"
         loading="lazy"
       />

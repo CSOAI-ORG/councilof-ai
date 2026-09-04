@@ -359,7 +359,7 @@
   <header>
     <h1>GSPC Console</h1>
     <span class="lid" id="lid">loading…</span>
-    <p class="sub">Every model, every axis. Live from <code>/api/gspc</code> + <code>/api/findings</code>.</p>
+    <p class="sub">Every published measured model-axis cell in this findings index, fetched from <code>/api/gspc</code> + <code>/api/findings</code>. Missing cells remain UNMEASURED.</p>
   </header>
 
   <div class="bar">
@@ -467,7 +467,7 @@ function render(filter) {
   h += "</tr></thead><tbody>";
   for (const m of rows) {
     h += "<tr><th title=" + JSON.stringify(m) + ">" + esc(m) + "</th>";
-    for (const a of AXES) h += cell(BY.get(m + " " + a));
+    for (const a of AXES) h += cell(BY.get(m + "\u0000" + a));
     h += "</tr>";
   }
   el("scroll").innerHTML = h + "</tbody></table>";
@@ -492,7 +492,7 @@ function render(filter) {
     for (const a of (board.axes || [])) SEP.set(a.axis, String(a.separation || "").toUpperCase());
 
     const findings = find.findings || [];
-    for (const f of findings) BY.set(f.model + " " + f.axis, f);
+    for (const f of findings) BY.set(f.model + "\u0000" + f.axis, f);
 
     AXES = [...new Set(findings.map((f) => f.axis))].sort();
     // Densest rows first: a model with more measured cells is more useful at the top.
@@ -574,8 +574,8 @@ function render(filter) {
       "@type": "WebSite",
       "@id": "https://councilof.ai/#website",
       "url": "https://councilof.ai/",
-      "name": "GSPC Console \u2014 every model, every axis, live",
-      "description": "The GSPC console: every measured model against every axis, live from GET /api/gspc and /api/findings. Empty is empty. Measurement, not certification.",
+      "name": "GSPC Console \u2014 published cells in the current index",
+      "description": "The GSPC console renders published measured model-axis cells returned by GET /api/findings and keeps missing cells empty. It does not claim every model or axis.",
       "publisher": {
         "@id": "https://csoai.org/#organization"
       }

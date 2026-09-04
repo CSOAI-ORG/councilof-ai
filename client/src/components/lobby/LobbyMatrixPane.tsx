@@ -126,8 +126,8 @@ export default function LobbyMatrixPane({ onOpenSpace }: { onOpenSpace?: (axis: 
             </span>
           </li>
           <li>
-            <strong>When law changes</strong> — the living-law path is re-measure + delta card. The old card stays.
-            The simulation is not that path.
+            <strong>When law changes</strong> — the planned path is detect, approve, re-measure,
+            then publish a scoped delta. That automation is not implemented; the simulation is not that path.
           </li>
         </ul>
         <p className={`mt-3 ${TYPE.fine}`}>

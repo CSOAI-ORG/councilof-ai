@@ -1,24 +1,24 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "POST /api/anchor",
-  "description": "Anchor a signed card to OTS",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "POST",
-    "path": "/api/anchor",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
-      }
-    }
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "OTS anchor API (unavailable)",
+  "state": "NOT_IMPLEMENTED",
+  "description": "No public anchor handler exists. No card is accepted and no OpenTimestamps proof is created.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": null,
+    "methods": [],
+    "path": null,
+    "intended_path": "/api/anchor",
+    "outcomes": []
+  },
+  "output": null,
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

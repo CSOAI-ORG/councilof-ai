@@ -367,15 +367,17 @@ export const onRequestGet: PagesFunction = async (context) => {
         sweep_note:
           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
-          "state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board " +
-          "has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes " +
-          "carry no accuracy and no leader — measured is not the same as scored — but each has a " +
-          "signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
+          "state. All 8 now carry published deterministic-facts run artifacts, so every one of the " +
+          "22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact " +
+          "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
+          "Only financial-measure-run-v2 currently carries an Ed25519 signature; the other seven are " +
+          "content-addressed but unsigned. No signature is inferred from a content_id.",
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
-        items_note: "items sums each axis's n. The n of the one measured financial axis counts ISSUER " +
-          "ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. " +
+        items_note: "items sums each axis's n. Financial-axis n values count issuer accounts, public " +
+          "series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots " +
+          "contribute 0 because nothing was measured. " +
           "Read items as 'rows behind the board', not as a single comparable sample.",
         // Separation stats are over model-comparison axis ONLY — see comparison_axes.
         comparison_axes: cmp.length,
