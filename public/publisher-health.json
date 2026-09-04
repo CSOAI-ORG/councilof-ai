@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-04T14:17:29Z",
+  "as_of": "2026-09-04T14:20:00Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -10,9 +10,9 @@
     "unsigned_new_leaves": 0,
     "missing_key": false
   },
-  "xrpl_basket_merkle": "b29fcf108bdcc5d172a295bc3d9019ff8a5e5c62d7c2733dbb45eaf50bcd9803",
+  "xrpl_basket_merkle": "03d24c2e72c35c7cb6f76854e42a875c33528aa368e21119a39b8fbcaa5d8aad",
   "represented_tvl": {
-    "usd": 1298533963.57294,
+    "usd": 1297992963.572889,
     "source": "https://xrpl.fi/api/metrics",
     "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
   },
@@ -361,51 +361,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 501689229,
-        "block_hash": "0x6f32ff36ca2014f950bbdce91268bdedbe33984c0ae760625939b74e8e62789b",
-        "block_time": "2026-09-04T14:14:55Z"
+        "block": 501689985,
+        "block_hash": "0xefa797843a523f497882a6981de99e8fd4b2431e675c2649b72b2224728d4416",
+        "block_time": "2026-09-04T14:18:03Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 94453554,
-        "block_hash": "0x968b72a5bb888da61e48ac548a406014ba4c6afdcbdc9dd879941dbb13dce75a",
-        "block_time": "2026-09-04T14:14:54Z"
+        "block": 94453731,
+        "block_hash": "0xba97b4cd8f45b7990d54bb03a3ce01c7a5324b1bbb1c4009a4832d81bd511f20",
+        "block_time": "2026-09-04T14:18:02Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 50870974,
-        "block_hash": "0x87d3facc1303f75ecc5dc8b490d45e659336420ab6e8b247634321f4041bcfa6",
-        "block_time": "2026-09-04T14:14:55Z"
+        "block": 50871068,
+        "block_hash": "0x95d864b49a1228e3fca6fc98f3fee4dc7788ee98f53606945057ec66ce596b92",
+        "block_time": "2026-09-04T14:18:03Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 119932850,
-        "block_hash": "0xb004da1b85879a6fe4aa79f2d376acc5bc314b3bf341ea6e8e17909f4e94d48d",
-        "block_time": "2026-09-04T14:14:55Z"
+        "block": 119933267,
+        "block_hash": "0xc652c47603b330ca141e0982944d6e9aee89906755cd9e6e65833816be6bb6fc",
+        "block_time": "2026-09-04T14:18:03Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25904486,
-        "block_hash": "0x5e437a9da11ef515f921a68ecd9acb1c267937c82fa154bf383c0da4b1d820a8",
-        "block_time": "2026-09-04T14:14:47Z"
+        "block": 25904501,
+        "block_hash": "0x628768107d7953cedda710ecd94135b7e6ef6a186e8adf68374c552a2ea7b0d5",
+        "block_time": "2026-09-04T14:17:59Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100200492,
-        "block_hash": "0x97ba371bfa92a4652135696b90663ff8c64e2af40526a07f8e516bceca803696",
-        "block_time": "2026-09-04T14:14:56Z"
+        "block": 100200586,
+        "block_hash": "0xbec3e722ad661e04ae90a40c643585123c5c873ee0e96839bf1b2774cd5ce233",
+        "block_time": "2026-09-04T14:18:04Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 156466260,
-        "block_hash": "0x1f6d993263f99dbe918b6848df20dd5810aeaccc52bd57057386d80d42168c5a",
-        "block_time": "2026-09-04T14:14:57Z"
+        "block": 156466354,
+        "block_hash": "0x06e317063ecf3d7bc146272811970cc252bdb239b6ea92429d0c6bda80a644ed",
+        "block_time": "2026-09-04T14:18:05Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93217510,
-        "block_hash": "0xf54b8bce362720da1348c08a834be6f9d5eaa10fc11324b347f40c9edbd07ffe",
-        "block_time": "2026-09-04T14:14:58Z"
+        "block": 93217635,
+        "block_hash": "0x1492daa0f4298bfe6b927c886e4719bd7ddcc1500f47db58396c6936886dc1bb",
+        "block_time": "2026-09-04T14:18:06Z"
       }
     },
     "failures": [
@@ -427,55 +427,51 @@
   "evm_permission_events": {
     "schema": "csoai.evm.permission-event/0.1",
     "n_leaves": 7,
-    "n_contracts_scanned": 27,
+    "n_contracts_scanned": 28,
     "n_roster": 32,
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 501689356,
+        "block": 501690082,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 94453584,
+        "block": 94453750,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 50870989,
+        "block": 50871080,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 119932918,
+        "block": 119933322,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 25904488,
+        "block": 25904503,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100200508,
+        "block": 100200598,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 156466275,
+        "block": 156466366,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 93217530,
+        "block": 93217651,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
     "failures": [
       {
-        "subject": "evm-events:TBILL:bsc",
+        "subject": "evm-events:USYC:bsc",
         "reason": "dark"
       },
       {
         "subject": "evm-events:VBILL:bsc",
         "reason": "dark"
-      },
-      {
-        "subject": "evm-events:bIB01:base",
-        "reason": "budget"
       },
       {
         "subject": "evm-events:bIB01:avalanche",
