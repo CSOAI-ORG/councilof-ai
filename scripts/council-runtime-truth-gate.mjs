@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
@@ -19,6 +20,14 @@ const voteSource = readFileSync(
 );
 const retiredGenerator = readFileSync(
   "scripts/badger/csoai-engine-bft.py",
+  "utf8",
+);
+const failClosedCouncilGenerator = readFileSync(
+  "scripts/badger/csoai-bft-council.py",
+  "utf8",
+);
+const retiredWiringGenerator = readFileSync(
+  "scripts/badger/csoai-wiring-wave.py",
   "utf8",
 );
 
@@ -45,6 +54,38 @@ for (const source of overviewSources) {
 assert.match(voteSource, /Math\.floor\(\(2 \* N\) \/ 3\) \+ 1/);
 assert.match(voteSource, /Design simulation only/);
 assert.match(retiredGenerator, /QUARANTINED_GENERATOR = True/);
+assert.match(failClosedCouncilGenerator, /"bft_status": "NOT_DEMONSTRATED"/);
+assert.match(failClosedCouncilGenerator, /NO_INDEPENDENT_VERIFIABLE_VOTES/);
+assert.doesNotMatch(
+  failClosedCouncilGenerator,
+  /"vote":\s*"YES"|agent_keypair|priv\s*\+/,
+);
+assert.match(retiredWiringGenerator, /RETIRED_GENERATOR = True/);
+assert.match(retiredWiringGenerator, /raise SystemExit\(2\)/);
+assert.doesNotMatch(retiredWiringGenerator, /def build_substrate_manifest/);
+
+const bftRegression = execFileSync(
+  "python3",
+  ["scripts/badger/test_bft_council.py"],
+  { encoding: "utf8" },
+);
+assert.match(bftRegression, /fail-closed tests: PASS/);
+
+assert.equal(
+  existsSync("scripts/badger/_queue/bft-council"),
+  false,
+  "simulated BFT output must not remain in the active queue",
+);
+const bftQuarantine = "_quarantine/simulated-bft-2026-09-04";
+assert.equal(existsSync(`${bftQuarantine}/README.md`), true);
+const quarantinedBftArtifacts = readdirSync(bftQuarantine).filter((name) =>
+  /^(?:council-manifest|quorum-vote|vote-chain)-/.test(name),
+);
+assert.equal(
+  quarantinedBftArtifacts.length,
+  21,
+  "all 21 simulated BFT artifacts must remain preserved in quarantine",
+);
 
 for (const slug of [
   "oswao",
@@ -237,5 +278,5 @@ assert.doesNotMatch(
 );
 
 console.log(
-  "council-runtime-truth-gate: PASS — council is labelled design, n_eff=1, simulated/runtime manifests absent, retired APIs fail closed",
+  "council-runtime-truth-gate: PASS — council is labelled design, n_eff=1, simulated BFT artifacts quarantined, generators and retired APIs fail closed",
 );
