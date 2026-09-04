@@ -26,6 +26,11 @@ import {
 import { toolSpan, withTraceHeader } from "./_otel";
 import { PAID_TOOL_NAMES, PAID_TOOL_DEFS, handlePaidTool } from "./_paid";
 
+// MCP Registry `server.version` is the remote implementation identity, so this
+// must match the corresponding registry descriptor. The npm stdio package is a
+// separate implementation and may be published on a different schedule.
+const MCP_HTTP_SERVER_VERSION = "1.3.0";
+
 async function proxy(ctx: Parameters<PagesFunction>[0], bodyText: string | null): Promise<Response> {
   const url = new URL(ctx.request.url);
   const subpath = url.pathname.replace(/^\/mcp\/?/, "");
@@ -82,6 +87,11 @@ export const onRequest: PagesFunction = async (ctx) => {
           protocol: "MCP (JSON-RPC 2.0). POST this URL: initialize -> tools/list -> tools/call.",
           transport: "streamable-http",
           server: "csoai-gspc-mcp",
+          server_info: {
+            name: "csoai-gspc-mcp",
+            version: MCP_HTTP_SERVER_VERSION,
+            release_train: "pages-http",
+          },
           doctrine:
             "We measure, never certify. Verdicts are three-state (VALID / INVALID / UNCHECKABLE). An unmeasured axis is a first-class answer. This GET is a discovery document, not the protocol.",
           // The one-command path. It existed only in the npm README, where nobody discovering
@@ -95,10 +105,10 @@ export const onRequest: PagesFunction = async (ctx) => {
             python: 'pip install "csoai-gspc[verify]" && csoai-gspc check',
           },
           stdio_alternative:
-            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — the same tools from the same shared definitions files. Payment travels as the x_payment ARGUMENT and each door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Ask that package which tools its version lists; this door does not track its release schedule.",
+            "node mcp/gspc-server/index.mjs from https://github.com/CSOAI-ORG/councilof-ai (package csoai-gspc-mcp) — built from corresponding shared definitions but released independently. Payment travels as the x_payment ARGUMENT and each door sets the X-PAYMENT header itself, so carrying a paid tool is a packaging choice, never a property of the transport. Ask that package which tools its version lists; this door does not track its release schedule.",
           paid_tools: {
             names: [...PAID_TOOL_NAMES],
-            how: "tools/call without x_payment returns the route's x402 402 challenge (accepts[], PAYMENT-REQUIRED) as structuredContent; pay from your wallet and call again with x_payment. Amounts live only inside a 402.",
+            how: "tools/call without x_payment returns the route's x402 402 challenge (accepts[], PAYMENT-REQUIRED) as structuredContent. That challenge is not settlement, delivery or revenue. Amounts live only inside a 402.",
             doctrine: "measurement, not certification — no tool carries or awards a trust label of any kind; the catalogue and every free tool stay free",
             catalog: `${origin}/api/x402`,
           },
@@ -188,9 +198,9 @@ export const onRequest: PagesFunction = async (ctx) => {
       return rpc(call.id, {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "csoai-gspc-mcp", version: "0.1.0" },
+        serverInfo: { name: "csoai-gspc-mcp", version: MCP_HTTP_SERVER_VERSION },
         instructions:
-          "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet, call again with x_payment. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio.",
+          "GSPC MCP. Seven free read-only tools: board_totals get_axis verify_card list_cards get_root get_card verify_inclusion. Four paid tools over the x402 rail: commission_card art50_marking_evidence rwa_evidence receipts_batch — call without x_payment to receive the 402 challenge as structuredContent, pay from your wallet and call again with x_payment. A 402 challenge is not settlement, delivery or revenue. Measurement, not certification; verification free. The witness_hash SKU is quarantined pre-release and is not advertised. mill-tool measure dropped. Dead worker is 404; this Pages /mcp is the door. Remote URL https://councilof.ai/mcp. The npm stdio package csoai-gspc-mcp reads the same two definitions files; payment is the x_payment argument, so which tools it carries is a packaging choice of its version, not a limit of stdio. MCP Registry server.version identifies this Pages HTTP implementation; npm is a separately versioned implementation.",
       });
     }
 
