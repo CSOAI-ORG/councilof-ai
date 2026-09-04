@@ -1,0 +1,20 @@
+{
+  "schema": "csoai.atom-root-source-policy/0.1",
+  "default": "deny",
+  "as_of": "2026-09-04",
+  "policy": "A queue file enters a new atom root only after its exact path is admitted. Prefix exclusions are incident boundaries and override the allowlist.",
+  "allowed_sources": [
+    "uk-open-data/uk-open-data-20260904T063818Z.jsonl"
+  ],
+  "excluded_prefixes": [
+    "bft-council/vote-chain-",
+    "cose-wrap/",
+    "deep-mining/",
+    "learn-loop/",
+    "xrpl-settlement/"
+  ],
+  "excluded_globs": [
+    "eat-more-atoms-*.jsonl"
+  ],
+  "admission_note": "The initial allowlist is deliberately narrow. Add sources only after semantic review and the evidence-integrity gate; never bulk-admit the queue."
+}

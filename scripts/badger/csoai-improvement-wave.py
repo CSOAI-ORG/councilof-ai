@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """csoai-improvement-wave.py — the next round of improvements.
 
-After the EAT wave:
+Historical planning generator. Truth boundaries added 2026-09-04:
   - 22 harvesters OK
   - All gates pass
   - 335 signed cards
-  - 33-agent BFT working
+  - 33-agent BFT was claimed but is not demonstrated
   - 7 engines wired
   - 10 games bound
   - Layer 0 ceremony live
@@ -28,7 +28,7 @@ This script:
   - Adds 10+ more atom sources
   - Adds 5+ more engines
   - Adds 5+ more games
-  - Adds 4+ more LaunchAgents (the retired XRPL writer is never scheduled)
+  - Adds safe LaunchAgents (retired evidence writers are never scheduled)
   - Wires everything to the layer 0 ceremony
 
 Lane-doable: just file generation.
@@ -130,13 +130,13 @@ NEW_GAMES = [
 ]
 
 
-# 4 safe LaunchAgents. The former XRPL settlement writer is intentionally not
-# scheduled: public-ledger reachability is not a GSPC measurement.
+# Safe LaunchAgents. The former XRPL settlement writer and learn-loop producer
+# are intentionally not scheduled. The latter fabricated signatures, external
+# receipts, and unanimous votes from local hashes and demonstration inputs.
 NEW_LAUNCH_AGENTS = [
     ("com.csoai.eat-all-chains-5min", "*/5 * * * *", "csoai-eat-all-chains.py"),
     ("com.csoai.uk-open-data-15min", "*/15 * * * *", "csoai-uk-open-data.py"),
     ("com.csoai.bft-council-30min", "*/30 * * * *", "csoai-bft-council.py"),
-    ("com.csoai.learn-loop-5min", "*/5 * * * *", "csoai-learn-loop.py"),
 ]
 
 

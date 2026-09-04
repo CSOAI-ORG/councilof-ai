@@ -23,12 +23,12 @@ if [ -f scripts/badger/csoai-auto-ots.py ]; then
   python3 scripts/badger/csoai-auto-ots.py || echo "  stamp step returned $?"
 fi
 
-# 1b. Re-root the whole atom queue and stamp it ONCE. This is what actually gets
-#     the queue anchored: 37k+ atoms under a single commitment, each provable by
-#     inclusion. Stamping them individually would mean ~112,000 submissions to
-#     volunteer-run calendars, and would still anchor nothing.
+# 1b. Compute the default-deny atom-root candidate only. Automatic root stamping
+#     is retired: source admission, publication, and OTS submission are a reviewed
+#     ceremony. A recurring job must never turn a newly harvested queue into a
+#     public evidence claim without that review.
 if [ -f scripts/badger/atom-root.py ]; then
-  python3 scripts/badger/atom-root.py || echo "  atom-root step returned $?"
+  python3 scripts/badger/atom-root.py --dry-run || echo "  atom-root dry-run returned $?"
 fi
 
 # 2. Upgrade every proof we hold. This is the step that turns pending into proof.

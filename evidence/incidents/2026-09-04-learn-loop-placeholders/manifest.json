@@ -1,0 +1,27 @@
+{
+  "schema": "csoai.incident.learn-loop-placeholders/0.1",
+  "as_of": "2026-09-04",
+  "status": "QUARANTINED_INCIDENT_EVIDENCE",
+  "original_queue_prefix": "scripts/badger/_queue/learn-loop/",
+  "quarantine_prefix": "evidence/incidents/2026-09-04-learn-loop-placeholders/queue/",
+  "file_count": 20,
+  "total_bytes": 121992,
+  "jsonl_records": 240,
+  "inventory_rule": "sha256(JSON.stringify([{name,sha256,bytes}, ...] sorted by name))",
+  "inventory_sha256": "ab8c68687e15bc1a77a6643242171c68c55a7536d886e1574c73b39f14164e4d",
+  "contaminated_root": {
+    "path": "evidence/incidents/2026-09-04-learn-loop-placeholders/interop/atom-root-2026-09-04.json",
+    "invalid_or_derived_leaf_count": 471,
+    "learn_loop_leaf_count": 240,
+    "fabricated_bft_vote_chain_leaf_count": 231,
+    "fabricated_bft_vote_chain_batches": 7
+  },
+  "faults": [
+    "hard-coded 33/33 council outcomes without independent evaluation",
+    "32-byte SHA-256-derived values labelled as Ed25519 signatures",
+    "hash-shaped placeholders labelled as OTS, Rekor, and EAS receipts",
+    "demonstration inputs labelled as end-user interactions and training data"
+  ],
+  "admissible": false,
+  "republish": false
+}
