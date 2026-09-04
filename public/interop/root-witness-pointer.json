@@ -1,31 +1,31 @@
 {
  "kind": "csoai.root-witness-pointer/v0",
- "as_of": "2026-09-04T14:20:07Z",
+ "as_of": "2026-09-04T18:21:23Z",
  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
  "live_root": {
   "url": "https://councilof.ai/root.json",
   "also": "https://councilof.ai/api/root",
-  "sha256": "a44af078ce371ae955f42916f1beb24be0822b474f33ffc45effabf902de02a1",
+  "sha256": "9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd",
   "bytes": 13582,
-  "merkle_root": "3391f82fe2ee11e5f5c1ada5d747ecdb9fa3d60344bf988a86f36d68b55f8827",
+  "merkle_root": "2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745",
   "card_count": 154,
-  "as_of": "2026-09-04T14:20:00Z"
+  "as_of": "2026-09-04T18:21:17Z"
  },
  "witness_sidecar": {
   "url": "https://councilof.ai/interop/root-witness-latest.json",
   "path": "public/interop/root-witness-latest.json",
   "status": "PUBLISHED",
-  "dated_copy": "public/interop/root-witness-2026-09-04-a44af078.json"
+  "dated_copy": "public/interop/root-witness-2026-09-04-9b426735.json"
  },
  "drift": {
   "status": "DRIFTED",
-  "checked_at": "2026-09-04T14:20:07Z",
+  "checked_at": "2026-09-04T18:21:24Z",
   "checked_against": "https://councilof.ai/root.json",
-  "witness_artifact_sha256": "a44af078ce371ae955f42916f1beb24be0822b474f33ffc45effabf902de02a1",
-  "live_root_sha256": "b971e92e1f4634319e7ee43cbea53ef9174bdaad16f0a6e94c95248448f0f38a",
-  "witness_artifact_merkle_root": "3391f82fe2ee11e5f5c1ada5d747ecdb9fa3d60344bf988a86f36d68b55f8827",
-  "live_root_merkle_root": "5ca3482f77d93a23cd3f3a736aecd9ca0a5abb8dd1e1bc92fcca418614203cb6",
-  "live_root_bytes": 11732,
+  "witness_artifact_sha256": "9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd",
+  "live_root_sha256": "a44af078ce371ae955f42916f1beb24be0822b474f33ffc45effabf902de02a1",
+  "witness_artifact_merkle_root": "2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745",
+  "live_root_merkle_root": "3391f82fe2ee11e5f5c1ada5d747ecdb9fa3d60344bf988a86f36d68b55f8827",
+  "live_root_bytes": 13582,
   "match_sha256": false,
   "match_merkle_root": false,
   "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
