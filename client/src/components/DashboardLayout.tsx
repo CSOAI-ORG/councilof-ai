@@ -20,8 +20,11 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
 import { DASHBOARD_TABS } from "@/components/lobby/tabs";
 import DashboardPane, { paneLabel, resolvePaneId } from "@/components/DashboardPane";
+import DashboardWorkspace from "@/components/DashboardWorkspace";
+import DashboardAccountMenu from "@/components/DashboardAccountMenu";
 import { useSearch as useTabSearch } from "wouter";
 import { dashboardCrumbs } from "@/components/lobby/breadcrumbs";
+import { setOsOpen } from "@/lib/osChrome";
 
 /** Route crumbs, plus the open pane as the current crumb when a tab is selected. */
 function crumbsFor(location: string, paneCrumbLabel: string | null) {
@@ -36,6 +39,16 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
+  useEffect(() => {
+    document.documentElement.setAttribute("data-coai-dashboard-shell", "1");
+    window.dispatchEvent(new Event("coai:dashboard-shell"));
+    setOsOpen(true);
+    return () => {
+      document.documentElement.removeAttribute("data-coai-dashboard-shell");
+      window.dispatchEvent(new Event("coai:dashboard-shell"));
+      setOsOpen(false);
+    };
+  }, []);
   // P2 (mobile): phones start with the rail closed and open it as a drawer over the pane —
   // a 260px rail beside a 375px viewport squeezed the board to one word per line.
   const smallQuery = "(max-width: 767px)";
@@ -71,9 +84,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const activeTab = resolvePaneId(rawTab);
   // Council OS = this shell. A tab renders its pane HERE; it never navigates out to the site.
   const pane = activeTab !== "home" && activeTab !== "software" ? <DashboardPane id={rawTab} /> : null;
-  // The header trail names the pane that is open: "Council OS › Live board". A pane id nothing
+  // The header trail names the pane that is open: "Council OS › GSPC". A pane id nothing
   // owns is printed as typed, so the crumb never pretends an unknown door exists.
   const paneCrumbLabel = pane ? (paneLabel(rawTab) ?? rawTab) : null;
+  const isDashboardHome = location === "/dashboard";
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
@@ -216,6 +230,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Settings className="h-4 w-4" />
               </Button>
             </Link>
+            <DashboardAccountMenu />
           </div>
         </header>
 
@@ -226,14 +241,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             transition={{ duration: 0.15 }}
             className="h-full"
           >
-            {pane ?? children}
+            {isDashboardHome ? (
+              <DashboardWorkspace activePane={pane} activeTab={activeTab} activeLabel={paneCrumbLabel}>
+                {children}
+              </DashboardWorkspace>
+            ) : (
+              pane ?? children
+            )}
             {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold. */}
-            <p className="mt-6 px-6 pb-6 text-xs text-muted-foreground" data-testid="free-rail">
-              Verify is free. A grade is never sold. No public prices — measurement, not certification.
-            </p>
+            {!isDashboardHome && (
+              <p className="mt-6 px-6 pb-6 text-xs text-muted-foreground" data-testid="free-rail">
+                Verify is free. A grade is never sold. No public prices — measurement, not certification.
+              </p>
+            )}
           </motion.div>
         </main>
       </div>
+      <DashboardAccountMenu placement="dock" />
     </div>
   );
 }

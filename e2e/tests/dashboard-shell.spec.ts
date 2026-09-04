@@ -97,8 +97,10 @@ test("every sidebar tab renders its own pane inside the shell, error-free", asyn
     await expectShell(page, id);
     const pane = page.locator(`[data-testid="dashboard-pane-${id}"]`);
     if (id === "home") {
-      // home tab renders Dashboard.tsx content (overview), not a DashboardPane — the shell is still mounted.
-      await expect(page.locator("h1"), "home: the overview").toContainText(/Dashboard/);
+      // Home is the conversational operating surface. The former metrics dashboard
+      // remains available below it in the Account overview disclosure.
+      await expect(page.locator('[data-testid="dashboard-workspace"] h1'), "home: conversation first").toContainText("What are you working on?");
+      await expect(page.getByText("Account overview and recent measurements", { exact: true })).toHaveCount(1);
     } else {
       await expect(pane, `${id}: its own pane is mounted`).toHaveCount(1);
     }
@@ -156,4 +158,14 @@ test("legacy /os and /gspc-scoreboard doors land inside the Dashboard", async ({
   await page.waitForURL(/\/dashboard\?tab=board/, { timeout: 15_000 });
   await page.locator('aside nav[aria-label="Council software destinations"]').waitFor({ state: "visible", timeout: 60_000 });
   await expect(page.locator('[data-testid="dashboard-pane-board"]')).toHaveCount(1);
+});
+
+test("one workspace keeps the composer and right rail while a tool pane is open", async ({ page }) => {
+  await openTab(page, "board");
+  await expect(page.locator('[data-testid="dashboard-workspace"]')).toHaveCount(1);
+  await expect(page.locator('[data-testid="dashboard-pane-board"]')).toHaveCount(1);
+  await expect(page.getByLabel("Ask the Council, or name a pane to open")).toHaveCount(1);
+  await expect(page.locator('aside[aria-label="Workspace, tasks and chat history"]')).toHaveCount(1);
+  await expect(page.getByLabel("Open Council OS"), "no legacy overlay launcher over the shell").toHaveCount(0);
+  await expect(page.getByLabel("Open Council account and workspace menu")).toHaveCount(1);
 });

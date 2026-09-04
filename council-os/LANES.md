@@ -15,6 +15,7 @@
 | harness-measurement | grok (cursor bc-54c88537) | harness/arena, /api/arena/scoreboard HEAD, living-door aliases (rwa/xrpl/evm/arc-agi/overlay/ins) | RUNNING |
 | dsh-sessions | DSH | its own session work; consume gspc-mcp when published | — |
 | reach-funnel | claude (agent) | /get-listed page + PRIMARY_PATHS entry + docs/OUTREACH-PACK + docs/ANCHORS-TRUTH-TABLE; committed, NOT pushed (another lane mid-flight) | COMMITTED |
+| dashboard-desktop-consolidation | codex | DashboardLayout, DashboardPane integration, dashboard workspace/account chrome, LobbyComposer tool picker, CouncilLobby dashboard suppression, dashboard consolidation register/tests | DONE |
 
 RULES (all agents): master only, no worktrees, no dev servers left running, stage-by-name,
 six gates before any dist build claim, browser-verify (green build ≠ working page),

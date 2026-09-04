@@ -25,15 +25,20 @@ import {
 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { toast } from 'sonner';
+import DashboardLayout from '@/components/DashboardLayout';
 
 export default function NotificationSettings() {
   const [slackWebhookUrl, setSlackWebhookUrl] = useState('');
+  // The monorepo's root tRPC client currently cannot infer any router while the
+  // server type package is absent from this checkout. Keep this existing runtime
+  // call intact and localise that legacy type boundary to this page.
+  const notificationsApi = (trpc as any).notifications;
 
   // Fetch current preferences
-  const { data: preferences, refetch } = trpc.notifications.getPreferences.useQuery();
+  const { data: preferences, refetch } = notificationsApi.getPreferences.useQuery();
 
   // Update preferences mutation
-  const updateMutation = trpc.notifications.updatePreferences.useMutation({
+  const updateMutation = notificationsApi.updatePreferences.useMutation({
     onSuccess: () => {
       toast.success('Notification preferences updated');
       refetch();
@@ -44,7 +49,7 @@ export default function NotificationSettings() {
   });
 
   // Test notification mutation
-  const testMutation = trpc.notifications.testNotification.useMutation({
+  const testMutation = notificationsApi.testNotification.useMutation({
     onSuccess: (data) => {
       toast.success(data.message);
     },
@@ -80,18 +85,21 @@ export default function NotificationSettings() {
 
   if (!preferences) {
     return (
-      <div className="container mx-auto py-8">
-        <Card>
-          <CardContent className="py-12 text-center text-gray-600">
-            Loading preferences...
-          </CardContent>
-        </Card>
-      </div>
+      <DashboardLayout>
+        <div className="container mx-auto px-6 py-8">
+          <Card>
+            <CardContent className="py-12 text-center text-gray-600">
+              Loading preferences...
+            </CardContent>
+          </Card>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
+    <DashboardLayout>
+    <div className="container mx-auto space-y-8 px-6 py-8">
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Notification Settings</h1>
@@ -388,5 +396,6 @@ export default function NotificationSettings() {
         </CardContent>
       </Card>
     </div>
+    </DashboardLayout>
   );
 }

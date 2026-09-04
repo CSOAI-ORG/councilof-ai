@@ -3,6 +3,7 @@ import { isEmbedded, useEmbedNavigation } from "@/lib/embed";
 import { useLobbyDeepLink } from "@/lib/lobbyLink";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import LobbyOverlay from "./LobbyOverlay";
+import { useLocation } from "wouter";
 
 /**
  * CouncilLobby — the badge, and only the badge, until someone opens it.
@@ -36,13 +37,21 @@ import LobbyOverlay from "./LobbyOverlay";
 
 export default function CouncilLobby() {
   useEmbedNavigation();
+  const [location] = useLocation();
   const [open, setOpen] = useState(false);
   const [embedded, setEmbedded] = useState(false);
+  const [dashboardShell, setDashboardShell] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
   const intent = useLobbyDeepLink();
 
   useEffect(() => { setEmbedded(isEmbedded()); }, []);
+  useEffect(() => {
+    const sync = () => setDashboardShell(document.documentElement.hasAttribute("data-coai-dashboard-shell"));
+    sync();
+    window.addEventListener("coai:dashboard-shell", sync);
+    return () => window.removeEventListener("coai:dashboard-shell", sync);
+  }, []);
 
   // A deep link opens the lobby. It does not ask the question — the user does.
   useEffect(() => { if (intent) setOpen(true); }, [intent]);
@@ -55,7 +64,11 @@ export default function CouncilLobby() {
 
   const close = useCallback(() => setOpen(false), []);
 
-  if (embedded) return null;
+  // The dashboard already IS Council OS. Mounting the global launcher there
+  // opened the legacy overlay on top of the canonical shell: two applications,
+  // two composers, and two navigation systems in one viewport. DashboardLayout
+  // owns the bottom-right Council/account control on these routes.
+  if (embedded || dashboardShell || location === "/dashboard" || location.startsWith("/dashboard/")) return null;
 
   return (
     <>

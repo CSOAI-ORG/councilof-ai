@@ -4,6 +4,11 @@ import { FOCUS, MEASURE, PRIMARY, TYPE } from "./glass";
 import type { LobbyTab } from "./tabs";
 import type { LobbyChat } from "./useLobbyChat";
 
+export type ComposerTool = {
+  name: string;
+  description: string;
+};
+
 /**
  * LobbyComposer — one slim dock at the foot of the centre column.
  *
@@ -21,6 +26,8 @@ export default function LobbyComposer({
   seedNonce,
   onFirstReply,
   onClose,
+  tools = [],
+  onTool,
 }: {
   chat: LobbyChat;
   onNavigate: (tab: LobbyTab) => void;
@@ -34,6 +41,10 @@ export default function LobbyComposer({
   /** Folds the composer dock away. The overlay passed this for months while the
    *  composer silently dropped it — once opened, the dock could never be closed. */
   onClose?: () => void;
+  /** Runtime tools returned by MCP tools/list. An empty array claims nothing. */
+  tools?: ComposerTool[];
+  /** Opens the usable dashboard pane behind a selected runtime tool. */
+  onTool?: (tool: ComposerTool) => void;
 }) {
   const [q, setQ] = useState("");
   const [audience, setAudience] = useState<string>(() => {
@@ -45,9 +56,11 @@ export default function LobbyComposer({
   });
   const [seeded, setSeeded] = useState(false);
   const [asksOpen, setAsksOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const asksRef = useRef<HTMLDivElement>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
   const replied = useRef(false);
 
   const turns = chat.active?.turns ?? [];
@@ -65,13 +78,14 @@ export default function LobbyComposer({
   }, [audience]);
 
   useEffect(() => {
-    if (!asksOpen) return;
+    if (!asksOpen && !toolsOpen) return;
     const close = (e: MouseEvent) => {
       if (asksRef.current && !asksRef.current.contains(e.target as Node)) setAsksOpen(false);
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) setToolsOpen(false);
     };
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
-  }, [asksOpen]);
+  }, [asksOpen, toolsOpen]);
 
   function prefill(text: string, fromLink: boolean) {
     setQ(text);
@@ -147,10 +161,55 @@ export default function LobbyComposer({
         >
           {chat.busy ? "…" : "Ask"}
         </button>
+        {onTool && (
+          <div ref={toolsRef} className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => { setToolsOpen((open) => !open); setAsksOpen(false); }}
+              aria-expanded={toolsOpen}
+              aria-haspopup="dialog"
+              aria-label="Open available MCP tools"
+              title="Available MCP tools"
+              className={`inline-flex h-11 items-center gap-1.5 rounded-xl border border-slate-900/12 bg-white/90 px-3 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
+            >
+              <span aria-hidden="true" className="text-lg leading-none">+</span>
+              <span className="hidden sm:inline">Tools</span>
+            </button>
+            {toolsOpen && (
+              <div
+                role="dialog"
+                aria-label="Available MCP tools"
+                className="absolute bottom-full right-0 z-30 mb-2 max-h-80 w-[min(24rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl border border-slate-900/12 bg-white p-3 shadow-xl"
+              >
+                <p className={TYPE.section}>Returned by MCP tools/list</p>
+                {tools.length ? (
+                  <ul className="mt-2 space-y-1">
+                    {tools.map((tool) => (
+                      <li key={tool.name}>
+                        <button
+                          type="button"
+                          onClick={() => { setToolsOpen(false); onTool(tool); }}
+                          className={`w-full rounded-lg border border-slate-900/10 px-3 py-2 text-left transition hover:border-emerald-700/35 hover:bg-emerald-50/50 motion-reduce:transition-none ${FOCUS}`}
+                        >
+                          <code className="text-[11.5px] font-semibold text-emerald-800">{tool.name}</code>
+                          <span className="mt-0.5 block text-[11px] leading-snug text-slate-600">{tool.description}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-2 rounded-lg border border-dashed border-slate-900/15 p-3 text-[11.5px] text-slate-600">
+                    The MCP catalogue has not answered. No unavailable tool is shown in its place.
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         <div ref={asksRef} className="relative shrink-0">
           <button
             type="button"
-            onClick={() => setAsksOpen((o) => !o)}
+            onClick={() => { setAsksOpen((o) => !o); setToolsOpen(false); }}
             aria-expanded={asksOpen}
             aria-haspopup="dialog"
             className={`rounded-xl border border-slate-900/12 bg-white/90 px-3 py-2.5 text-[12px] font-semibold text-slate-700 transition hover:bg-white motion-reduce:transition-none ${FOCUS}`}
