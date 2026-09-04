@@ -377,7 +377,7 @@ export const REGISTRIES: RegistryRow[] = [
   { name: "Smithery", status: "staged", permissionless: true, where: "smithery.ai/new", note: "Submit the HTTPS URL; auto-scans tools. Rich tool descriptions raise placement." },
   { name: "mcp.so", status: "staged", permissionless: true, where: "mcp.so/submit", note: "Submit the public repo; saving auto-publishes." },
   { name: "awesome-mcp-servers", status: "staged", permissionless: true, where: "punkpeye/awesome-mcp-servers", note: "One README line, alphabetical; 🤖🤖🤖 in the PR title fast-tracks the merge." },
-  { name: "Glama", status: "listed", permissionless: true, where: "glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc", note: "Claimed connector. Directory reach, not a grade." },
+  { name: "Glama", status: "staged", permissionless: true, where: "https://glama.ai/mcp/servers?query=csoai", note: "Flagship discovery is unstable: direct-page probes conflict and the public CSOAI search did not surface it on 2026-09-04. Other CSOAI servers are listed." },
   { name: "PulseMCP", status: "staged", permissionless: true, where: "pulsemcp.com", note: "Ingests the official registry automatically; a submit form also exists." },
   { name: "cursor.directory", status: "staged", permissionless: false, where: "cursor.directory/plugins/new", note: "Reviewed listing; auto-detects via a repo .mcp.json." },
   { name: "Docker MCP Catalog", status: "staged", permissionless: false, where: "docker/mcp-registry", note: "PR (server.yaml + tools.json + readme.md) with Docker-team review." },

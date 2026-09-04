@@ -257,5 +257,5 @@ Same paste. Owner sends. Never spam. Verify: https://councilof.ai/gspc-verify
 - SCITT: we implement RFC 9942/9943
 - x402 Bazaar `/discovery` GET is 404 — FACT card only, no invented listing
 - Smithery listing live: https://smithery.ai/servers/nicholastempleman/gspc (origin https://councilof.ai/mcp)
-- Glama auto-index: https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai (registry description still says four tools until re-ingest)
+- Glama re-check: https://glama.ai/mcp/servers?query=csoai — other CSOAI servers are present, but flagship discovery was UNSTABLE on 4 Sep 2026 (direct-page probes conflicted and public search omitted `council-of-ai`). Keep staged until repeatable.
 - PulseMCP submit still paused; they ingest official registry when unpaused

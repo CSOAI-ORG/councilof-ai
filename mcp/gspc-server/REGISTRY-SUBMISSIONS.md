@@ -42,7 +42,7 @@ nothing to install. Re-derive from `tools/list` and `npm view` before every subm
 | 5 | **mcp.so** | submit repo at mcp.so/submit; saving auto-publishes | **STAGED** | featured/curated placement, stars, recency (not documented) |
 | 6 | **awesome-mcp-servers** (`punkpeye`) | PR one README line, alphabetical; `🤖🤖🤖` in PR title fast-tracks | **STAGED** | none algorithmic (SEO/backlink + downstream scraping) |
 | 7 | **PulseMCP** | ingests the official registry automatically; submit form at pulsemcp.com/submit | **STAGED / auto** | popularity signals; "official" tag; confirm form reopened post-Aug pause |
-| 8 | **Glama** | claim via GitHub OAuth or `glama.json` (maintainers) | **LIVE** | **Tool-Definition-Quality Score** — rich descriptions for all tools; 60% mean + 40% min TDQS; passing build |
+| 8 | **Glama** | claim via GitHub OAuth or `glama.json` (maintainers) | **UNSTABLE / STAGED** | **Tool-Definition-Quality Score** — rich descriptions for all tools; 60% mean + 40% min TDQS; passing build |
 
 ### Exact submission payloads
 
@@ -67,17 +67,14 @@ PR title: `Add CSOAI GSPC (AI-governance measurement) 🤖🤖🤖`
 **#5 — mcp.so:** open https://mcp.so/submit → repo URL
 `https://github.com/CSOAI-ORG/councilof-ai` → complete draft → Save.
 
-**#8 — Glama: LIVE, verified 2026-09-04.**
-Listing: <https://glama.ai/mcp/servers/CSOAI-ORG/councilof-ai> — note the slug is the REPO
-(`CSOAI-ORG/councilof-ai`), not the registry name `io.github.CSOAI-ORG/gspc`. Guessing the
-registry-name URL returns 404 and has twice been misread here as "not listed". Check the search
-page, never a guessed URL.
-The root `glama.json` already carries `maintainers: ["CSOAI-ORG"]`, so the claim route is in place.
-Description renders correctly. **Its tool scan is stale — it shows 4 tools, from the 0.1.0 era.**
-Glama re-scans from the repo and official registry. The official v1.2.0 descriptor still says 12;
-the corrected v1.3.0 descriptor is not live until separately published. Re-check before asserting a
-count anywhere.
-(Left for the owner so the maintainer username is not guessed.)
+**#8 — Glama: UNSTABLE / STAGED, re-checked 2026-09-04.**
+Search: <https://glama.ai/mcp/servers?query=csoai>. The old connector URL returns 404.
+Fresh probes of the repo-slug page produced conflicting 200/404 results, while the public CSOAI
+search surfaced other CSOAI servers but not the flagship `council-of-ai`. That is not a claim of no
+CSOAI presence; it is insufficient evidence for a reliably discoverable flagship listing.
+The root `glama.json` already carries `maintainers: ["CSOAI-ORG"]`, so keep the entry staged for
+re-indexing. Do not call it LIVE or quote a Glama tool count until the directory search and direct
+page resolve consistently. (Claim remains owner-gated so the maintainer username is not guessed.)
 
 ---
 

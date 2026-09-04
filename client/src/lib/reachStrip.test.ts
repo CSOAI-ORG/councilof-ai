@@ -9,13 +9,11 @@ import {
 describe("reach strip — distribution, not authority", () => {
   it("lists the verified printers with honest hrefs", () => {
     const ids = REACH_SURFACES.map((s) => s.id);
-    expect(ids).toEqual(["hf", "mcp", "npm", "glama", "kaggle", "zenodo"]);
+    expect(ids).toEqual(["hf", "mcp", "npm", "kaggle", "zenodo"]);
     expect(REACH_SURFACES.find((s) => s.id === "hf")?.href).toBe("https://huggingface.co/csoai");
     expect(REACH_SURFACES.find((s) => s.id === "mcp")?.href).toBe("https://councilof.ai/mcp");
     expect(REACH_SURFACES.find((s) => s.id === "npm")?.href).toContain("csoai-gspc-mcp");
-    expect(REACH_SURFACES.find((s) => s.id === "glama")?.href).toContain(
-      "io.github.CSOAI-ORG/gspc",
-    );
+    expect(REACH_SURFACES.find((s) => s.id === "glama")).toBeUndefined();
     expect(REACH_SURFACES.find((s) => s.id === "kaggle")?.href).toContain(
       "csoai-gspc-living-board",
     );

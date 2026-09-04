@@ -106,9 +106,21 @@ def test_honesty_floors() -> None:
     print("honesty floors OK: 4/16, no 16/16 two-way, SWIFT not clients, not cert, RaaS not SaaS")
 
 
+def test_glama_flagship_is_not_claimed_live() -> None:
+    d = json.loads(LOG.read_text(encoding="utf-8"))
+    glama = next(r for r in d["surfaces"] if r["name"] == "Glama")
+    assert glama["status"] == "QUEUED", glama
+    assert glama["evidence"] == "https://glama.ai/mcp/servers?query=csoai", glama
+    note = glama["note"].lower()
+    assert "unstable" in note and "other csoai servers" in note, glama
+    assert "no csoai presence" not in note, glama
+    print("Glama truth OK: flagship not claimed live; directory search preserves other CSOAI presence")
+
+
 def main() -> int:
     test_coverage()
     test_honesty_floors()
+    test_glama_flagship_is_not_claimed_live()
     test_gated_click_paths()
     test_free_money_click_paths()
     return 0
