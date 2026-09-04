@@ -1,26 +1,24 @@
 /**
- * The LOG, alongside the head. Both, not either.
+ * The union of every leaf any published public-root has committed to.
  *
- * public/root.json is a rolling HEAD: it commits to the cards current at its as_of, and a
- * superseded measurement correctly leaves it. That is right for a board and wrong for evidence,
- * and today the estate has only that one artifact — carrying a signature and a Bitcoin anchor,
- * so every reader takes it for a log.
+ * WHAT public/root.json ACTUALLY IS — established 2026-09-04 by reading its own fields:
+ *   sources: ["https://xrpl.fi/api/metrics"], kind: csoai.public-root/v1,
+ *   note: "Envelope schema is public-root-v0, not card-v0 ... coverage harvest, not grade".
+ * It is a COVERAGE SNAPSHOT of live external XRPL data. Its leaf set changes because the data
+ * changes, which is correct. Its 140 leaves do not intersect the 335 gspc.measurement-card ids
+ * under public/signed/cards/ at all — different populations, different schemas.
  *
- * This builds the other half from data already published: the union of every card any root ever
- * committed to, in first-seen order, with the root that introduced each one. Nothing is invented;
- * every entry is traceable to a published root in /receipts/root-history.json.
+ * A CORRECTION THIS FILE EXISTS TO CARRY: an earlier reading treated root.json's card_sha256 as
+ * card identifiers, fetched them as URLs, got 404s, and reported that 281 signed cards had been
+ * silently deleted. That was wrong on every count — they are leaf digests under the root's own
+ * published leaf_definition and were never fetchable. The union below is still a true statement
+ * about what past roots committed to. The alarm attached to it was not.
  *
- * It emits a C2SP tlog-checkpoint-shaped commitment so the artifact is one existing verifiers,
- * monitors and witnesses already understand, rather than another bespoke shape:
+ * What this artifact adds, honestly: the rolling head shows only the current snapshot, so a reader
+ * cannot see what an earlier root committed to. This retains the union so they can. It is NOT an
+ * argument that the root should be append-only.
  *
- *     councilof.ai/cards
- *     <size>
- *     <base64 root hash>
- *
- * The one rule that makes it a log rather than a snapshot: a later checkpoint must never be
- * inconsistent with an earlier one. This script refuses to emit if the union would shrink.
- *
- *   node scripts/build-append-only-log.mjs [--url <root-history.json>]
+ *   node scripts/build-root-leaf-union.mjs [--url <root-history.json>]
  */
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -29,7 +27,7 @@ import path from "node:path";
 const args = process.argv.slice(2);
 const URL = args.includes("--url") ? args[args.indexOf("--url") + 1]
                                    : "https://councilof.ai/receipts/root-history.json";
-const OUT = "public/signed/append-only-log.json";
+const OUT = "public/signed/public-root-leaf-union.json";
 
 const sha = (b) => createHash("sha256").update(b).digest();
 /** RFC 6962 leaf/node hashing, the shape every tlog verifier already implements. */
@@ -59,7 +57,7 @@ for (const r of roots)
 
 const entries = [...seen.entries()].map(([card, first], i) => ({ index: i, card, first_rooted: first.as_of, first_root: first.merkle_root }));
 const root = merkleRoot(entries.map((e) => e.card));
-const checkpoint = `councilof.ai/cards\n${entries.length}\n${root.toString("base64")}\n`;
+const checkpoint = `councilof.ai/public-root-leaves\n${entries.length}\n${root.toString("base64")}\n`;
 
 // Refuse to shrink. A log that can lose an entry is not a log.
 if (existsSync(OUT)) {
