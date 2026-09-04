@@ -10,10 +10,16 @@
 //
 // WHAT "verified" MEANS: the X-PAYMENT header must decode to a structured x402 payment payload
 // AND a configured x402 facilitator must return isValid over that payload against the payment
-// requirements for the resource. If no facilitator is provisioned (the estate's x402 rail is
-// still `mode: "mock"` per /.well-known/x402.json — there is no live settle path yet), the
-// receipt cannot be confirmed settled, so verification FAILS CLOSED: the caller returns 402 and
-// never grants on header presence.
+// requirements for the resource. If no facilitator is provisioned, the receipt cannot be
+// confirmed settled, so verification FAILS CLOSED: the caller returns 402 and never grants on
+// header presence.
+//
+// This paragraph used to read "the estate's x402 rail is still `mode: \"mock\"` per
+// /.well-known/x402.json — there is no live settle path yet". Checked on the apex 2026-09-04:
+// that door reports `mode: "live"` and has done since the facilitator was provisioned. A stale
+// comment about a money rail is worse than none — a reader trusting it would conclude no
+// settlement path exists and stop looking for the reason payments were failing, which is close
+// to what happened. Mode is DERIVED from env by railMode(); read that, never a comment.
 //
 // SETTLEMENT (2026-09-02): `/verify` only proves the client's EIP-3009 authorization is well
 // formed and funded — it moves NO money. The facilitator's `/settle` is what submits the
