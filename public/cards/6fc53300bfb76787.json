@@ -1,0 +1,63 @@
+{
+  "card": {
+    "as_of": "2026-09-04T21:24:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:bsc",
+      "chain": "bsc",
+      "chain_id": 56,
+      "head": {
+        "block": 119990067,
+        "block_hash": "0x6c409dcc9defdb1fd46457a64628910fb33af3241f0cb6a2a801341ed1897890",
+        "block_time": "2026-09-04T21:24:11Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:USYC:bsc",
+          "from": 119647582,
+          "to": 119649581,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 119627582,
+          "rpc": "bsc.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on bsc that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "6fc53300bfb7678721170674379eecaf5d80e290c92fedba91e3ef8248b3aecf",
+    "sig_ed25519": "2848bef41e12a30b15964794658a82bb006d61fb6834d5344107651cad48af397a77d5c64c5afabd5e6f7de81ae6b806f3f0c45353ce6e840c977e5c8638de08",
+    "source_urls": [
+      "https://bsc.drpc.org"
+    ],
+    "subject": "evm-events:scan:bsc coverage at block 119990067",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "a3fd7f9b3ae3d0b45590ceeeb596660d435ee70723d9e06603567afed44794cb",
+    "9f234985399cdb8e9fc48db28e00f5ae607d8e006a4e8a5a9039a25cd10edea2",
+    "4d705499dcb38b4131de415412ca9e71bc0faa4f33c2cb592c4fe9e91d2730ce",
+    "f0c7bf29fc1f793902858911ef2fe1aca7364bd8c463e85a7bf0d6101a60a159",
+    "926c444732a14c2a99629c6103d8b2df4089ffb9e72dbef9dc67b2f9088be8e0",
+    "800bc31741e4d3a8e0ccfb0241dfaab69e7e20a1a1e4300776bcbbe0d5597b66",
+    "d98e144102e08a494507d84f6acefc8d2f35d7d53a237b92ac0de5a2274e07c3",
+    "1a4b7c9b604ee1f3274b67a203eadabac654210c76926255325ffd5d9430958e"
+  ]
+}
