@@ -6,8 +6,9 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 
 ## The asset
 - Public repo: `https://github.com/CSOAI-ORG/councilof-ai` (server in `mcp/gspc-server/`)
-- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **7 tools**)
-- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — **source 0.1.1 wires 7**; published npm **0.1.0 is still 4** until owner `npm publish` (2FA)
+- Remote HTTP MCP: `https://councilof.ai/mcp` (streamable-http, no auth, **12 tools** — 7 free, 5 x402-metered)
+- stdio npm: `csoai-gspc-mcp` (`npx -y csoai-gspc-mcp`) — carries the same **12**. Do not write a version
+  number here; `npm view csoai-gspc-mcp version` is the authority and this file cannot keep up with it.
 - A2A agent card: `https://councilof.ai/.well-known/agent-card.json`
 - OpenAPI 3.1: `https://councilof.ai/openapi/gspc.json`
 
@@ -17,11 +18,15 @@ gaming.** We measure, never certify; every listing links to a recomputable verif
 agent should run before trusting a model.**
 
 ## Reconcile
-HTTP `POST https://councilof.ai/mcp` **7 tools** (live `tools/list`). Stdio source
-`mcp/gspc-server/index.mjs` **wires the same 7** (`get_root` / `get_card` /
-`verify_inclusion` included). Published npm `csoai-gspc-mcp@0.1.0` still ships **4** —
-owner door: `npm publish` 0.1.1 (2FA). Do not claim the published package is 7 until
-`npm view` says 0.1.1.
+HTTP `POST https://councilof.ai/mcp` and the published npm package both carry **12**
+(live `tools/list` on each is the check). The gap that used to sit here — HTTP ahead of
+stdio — is closed: payment travels as the `x_payment` ARGUMENT, so carrying a metered
+tool was always a packaging choice and never a limit of the transport.
+
+**Never write a tool count or a version in a listing you cannot re-check.** The MCP
+registry entry carried "7 tools" and `packages: null` for weeks after the door had 12 and
+an installable package existed, so it advertised the wrong capability AND gave clients
+nothing to install. Re-derive from `tools/list` and `npm view` before every submission.
 
 ---
 
@@ -77,7 +82,7 @@ PR title: `Add CSOAI GSPC (AI-governance measurement) 🤖🤖🤖`
 ---
 
 ## Why completeness = ranking (honest levers only)
-- Full descriptions for **all 7 tools** (Glama TDQS, Smithery scan) beat stubs.
+- Full descriptions for **all 12 tools** (Glama TDQS, Smithery scan) beat stubs.
 - Real installs + GitHub stars — fed by the `/connect-gspc` funnel and the badge flywheel,
   never fabricated.
 - Keyword coverage (above) so registry search surfaces us.

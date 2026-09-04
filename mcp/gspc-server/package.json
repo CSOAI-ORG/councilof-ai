@@ -1,6 +1,6 @@
 {
   "name": "csoai-gspc-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Stdio MCP server for the live GSPC board, signed measurement cards, and public-root merkle at councilof.ai. Twelve tools: seven free readers (board_totals, get_axis, verify_card with a pinned key and a three-state verdict, list_cards, get_root, get_card, verify_inclusion) and five x402-metered ones (commission_card, art50_marking_evidence, rwa_evidence, witness_hash, receipts_batch) that return the route's own 402 challenge until you pay. We measure, never certify; unmeasured is first-class; verdicts are VALID / INVALID / UNCHECKABLE, never two-state. A 404 leaf is INVALID. Zero dependencies.",
   "type": "module",
   "bin": {
@@ -50,5 +50,6 @@
   },
   "engines": {
     "node": ">=20"
-  }
+  },
+  "mcpName": "io.github.CSOAI-ORG/gspc"
 }
