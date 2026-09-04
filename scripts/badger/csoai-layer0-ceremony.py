@@ -178,9 +178,31 @@ def main() -> None:
     ceremony_path.write_text(json.dumps(ceremony, indent=2))
 
     # Save the pending OTS receipt
-    ots_pending_path = Path(f"public/interop/layer0-root-{now()}.ots")
-    ots_pending_path.parent.mkdir(parents=True, exist_ok=True)
-    ots_pending_path.write_text(f"=== OTS PENDING ===\nmerkle_root: {merkle_root}\nstatus: pending\nanchor_time: {now()}\n===\n")
+    # NOT a .ots file. This writes an INTENT record, and it used to write the same text under
+    # public/interop/layer0-root-<ts>.ots — a plain-text placeholder carrying the extension of a
+    # cryptographic proof. The reference OpenTimestamps library rejects those bytes outright
+    # (BadMagicError); fifteen were published in 45 minutes on 2026-09-04, eleven of them with an
+    # EMPTY merkle_root, so they did not even record the digest they claimed to stamp. Anything
+    # counting .ots files as anchoring evidence counted them, which makes the repository's real
+    # number — 656 Bitcoin-attested of 1080 — unquotable.
+    #
+    # The real stamp is produced by scripts/witness_public_root.py, which actually calls the
+    # calendars. This file records that the ceremony ran and what it intends; it must never be
+    # mistaken for the proof. scripts/ots_guard.py enforces the distinction.
+    if not merkle_root:
+        raise SystemExit("layer0 ceremony: refusing to write an anchor intent with an empty merkle_root")
+    intent_path = Path(f"public/interop/layer0-anchor-intent-{now()}.json")
+    intent_path.parent.mkdir(parents=True, exist_ok=True)
+    intent_path.write_text(json.dumps({
+        "schema": "csoai.layer0-anchor-intent/0.1",
+        "kind": "intent",
+        "is_a_timestamp": False,
+        "merkle_root": merkle_root,
+        "status": "PENDING_NOT_STAMPED",
+        "as_of": now(),
+        "note": "Records that the ceremony ran. NOT an OpenTimestamps proof and never to be named .ots. "
+                "The real stamp comes from scripts/witness_public_root.py, which calls the calendars.",
+    }, indent=1) + "\n")
 
     # Save the public-facing layer0 manifest
     layer0_path = Path("public/interop/layer0-ceremony.json")
