@@ -23,6 +23,7 @@ import type { AxisScore } from "./_gspc_types";
 export const AXES_FIN: AxisScore[] = [
   {
     axis: "provenance-controls", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-provenance-controls",
     bench: "ChainFacts", task: "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
     n: 6, n_unit: "issuer accounts (not bank items)",
     n_note: "6 tokenised instruments read directly from their mainnet issuer accounts. This is an " +
@@ -55,6 +56,7 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "reserve-attestation", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-reserve-attestation",
     bench: "ReserveFacts", task: "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     n_note: "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
@@ -69,6 +71,7 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "regulatory-framework", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-regulatory-framework",
     bench: "RegimeFacts", task: "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
@@ -80,6 +83,7 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "distribution-integrity", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-distribution-integrity",
     bench: "DistributionFacts", task: "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
@@ -92,6 +96,7 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "custody-disclosure", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-custody-disclosure",
     bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
@@ -103,6 +108,8 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-ai-economy-index",
+    dataset_note: "The Hub slug keeps the retired name gspc-ai-economy-index so old links resolve; the live axis is ai-adoption-components and this is not an index (C-2026-0826-05). The card says so on its face.",
     bench: "Eurostat", task: "cited EU AI-adoption series (not an index)",
     n: 2, n_unit: "public series",
     status: "MEASURED",
@@ -113,6 +120,8 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "labour-components", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-human-labour-index",
+    dataset_note: "The Hub slug keeps the retired name gspc-human-labour-index so old links resolve; the live axis is labour-components and this is not an index (C-2026-0826-05). The card says so on its face.",
     bench: "Eurostat", task: "cited EU labour series (not an index)",
     n: 2, n_unit: "public series",
     status: "MEASURED",
@@ -123,6 +132,7 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "humanoid-labour-index", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-humanoid-labour-index",
     bench: "Disclosure", task: "named vendor publishes a dated deployment count on a stable URL? Y/N",
     n: 8, n_unit: "frozen vendor URLs",
     status: "MEASURED",
