@@ -34,14 +34,18 @@ export default defineConfig({
   },
   webServer: local
     ? {
-        // --no-clipboard: `serve` otherwise tries the system clipboard and can stall under a
-        // piped stdout. 127.0.0.1 rather than localhost so the readiness probe and the tests
-        // agree on the interface `serve` binds.
-        command: `npx --yes serve@14 -s dist/client -l ${PORT} --no-clipboard`,
+        // e2e/static-server.mjs is committed and has no dependencies, so this step no longer
+        // fetches a package from the npm registry. `npx --yes serve@14` did, and on
+        // 2026-09-03/04 it hung eight deploys in a row on "Timed out waiting 120000ms from
+        // config.webServer" — silently, because stdout was discarded. Both halves are fixed
+        // here: no network on the gating path, and the server's output is piped so the next
+        // failure names itself. 127.0.0.1 explicitly, so the readiness probe and the tests
+        // agree on the interface it binds.
+        command: `node e2e/static-server.mjs dist/client ${PORT}`,
         cwd: ROOT,
         url: `${base}/dashboard`,
         reuseExistingServer: true,
-        stdout: "ignore",
+        stdout: "pipe",
         stderr: "pipe",
         timeout: 120_000,
       }
