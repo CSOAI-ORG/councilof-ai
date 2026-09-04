@@ -77,7 +77,7 @@ function defaultProfile() { return JSON.parse(JSON.stringify(BUNDLED_PROFILE)); 
 ${cli}
 /* Dual-mode: a library when imported, a CLI when executed. Running this file directly behaves
  * exactly as before; importing it now yields the verification surface and runs nothing. */
-export { verifyCard, analyseSet, analyseChain, STATES, canonicalise, canonicalString, preimageBytes,
+export { verifyCard, verifyChainEnvelope, analyseSet, analyseChain, STATES, canonicalise, canonicalString, preimageBytes,
          OutOfProfileDomain, NotSerialisable, pubkeyFromDidDocument, defaultProfile };
 
 const __isDirect = (() => {
