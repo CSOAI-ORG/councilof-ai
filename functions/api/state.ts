@@ -166,10 +166,15 @@ const SNAPSHOT_DISAGREEMENT =
   "3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
-const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
+const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
 const cardsCounted = cards.length;
 const cardsSigned = cards.filter((c) => c.signed === true).length;
 const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
+const publicRootLeaves: string[] = Array.isArray((publicRoot as any).card_sha256)
+  ? (publicRoot as any).card_sha256.filter((value: unknown): value is string => typeof value === "string")
+  : [];
+const signedCardIds = new Set(cards.map((card) => card.card).filter((value): value is string => typeof value === "string"));
+const publicRootSignedCardOverlap = publicRootLeaves.filter((leaf) => signedCardIds.has(leaf));
 
 // ── claims register: rows tallied by status ──────────────────────────────────
 const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
@@ -516,6 +521,13 @@ export const onRequestGet: PagesFunction = async () => {
     signed_cards: {
       authority: SRC_CARDS,
       live_endpoint: "/api/cards",
+      corpus_relation: {
+        relationship: "SEPARATE_CORPORA",
+        public_root_leaves: publicRootLeaves.length,
+        separately_indexed_signed_cards: cardsCounted,
+        identifier_overlap: publicRootSignedCardOverlap.length,
+        ots_scope: "The current public-root OTS proof covers root.json bytes only; it does not anchor this signed-card index.",
+      },
       count: fact(
         cardsCounted,
         "catalogued",
@@ -747,8 +759,17 @@ export const onRequestGet: PagesFunction = async () => {
         SRC_PUBLIC_ROOT + " → card_count",
         (publicRoot as any).as_of ?? null,
         "as_of",
-        "Leaves on the permissionless public-root. Separate from signed_cards.count and from GSPC.",
+        `Leaves on the permissionless public-root. These ${publicRootLeaves.length} leaves are a separate corpus from ` +
+          `the separately indexed ${cardsCounted} signed cards; identifier overlap is ${publicRootSignedCardOverlap.length}. ` +
+          "The root OTS proof covers root.json bytes only, not the signed-card index or GSPC.",
       ),
+      corpus_relation: {
+        relationship: "SEPARATE_CORPORA",
+        public_root_leaves: publicRootLeaves.length,
+        separately_indexed_signed_cards: cardsCounted,
+        identifier_overlap: publicRootSignedCardOverlap.length,
+        ots_covers: "PUBLIC_ROOT_BYTES_ONLY",
+      },
       xrpl_asset_count_attempted: fact(
         (publicRoot as any).xrpl_asset_count_attempted ?? null,
         "catalogued",

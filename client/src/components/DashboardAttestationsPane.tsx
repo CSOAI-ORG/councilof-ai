@@ -3,6 +3,7 @@ import { anchorsFromDid, verifyCard as verifySignedCard, type Anchor } from "../
 import {
   BOARD_KEY_ID,
   classifyQuery,
+  corpusBoundary,
   HOW_TO_VERIFY,
   latestCorrections,
   latestSignedCards,
@@ -251,6 +252,7 @@ export default function DashboardAttestationsPane() {
   const r = root?.doc ?? null;
   const w = witness?.doc ?? null;
   const drift = pointer?.doc?.drift?.status;
+  const corpus = corpusBoundary(r, index?.doc ?? null);
 
   return (
     <div className="mx-auto max-w-5xl space-y-10 p-4 md:p-6" data-testid="dashboard-pane-attestations-body">
@@ -315,6 +317,11 @@ export default function DashboardAttestationsPane() {
             }
           />
         </dl>
+        <p className="mt-3 rounded border border-border bg-muted/40 p-3 text-xs text-muted-foreground" data-testid="root-corpus-boundary">
+          <strong className="text-foreground">Two separate corpora:</strong>{" "}
+          {corpus.publicRootLeaves} public-root leaves; a separate index of {corpus.separatelyIndexedSignedCards} signed cards; {corpus.identifierOverlap} identifier overlap.
+          The OpenTimestamps proof witnesses the exact <Mono>root.json</Mono> bytes only — it does not anchor the signed-card index.
+        </p>
 
         <h3 className="mt-5 text-sm font-semibold">Witnesses</h3>
         <p className="mt-1 text-xs text-muted-foreground">

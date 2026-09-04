@@ -98,6 +98,10 @@ def rekor_upload(preimage: bytes, sig: bytes, pem: bytes) -> dict:
 
 
 def ots_stamp(path: Path, out: Path) -> dict:
+    # Proof history is evidence. Never replace an existing proof with a fresh
+    # calendar submission (which could silently downgrade confirmed -> pending).
+    if out.exists():
+        return ots_status_from_proof(path, out)
     exe = shutil.which("ots")
     if not exe:
         return {"status": "PENDING", "reason": "ots client not installed on this runner"}
@@ -107,11 +111,81 @@ def ots_stamp(path: Path, out: Path) -> dict:
         subprocess.run([exe, "--no-cache", "stamp", "--timeout", "90", str(path)], check=True, capture_output=True, text=True, timeout=240)
         if tmp.exists():
             out.parent.mkdir(parents=True, exist_ok=True); shutil.move(str(tmp), str(out))
-            return {"status": "STAMPED_PENDING_BITCOIN", "path": str(out.relative_to(ROOT)), "url": "https://councilof.ai/" + str(out.relative_to(PUB)),
-                    "note": "run `ots upgrade` after a Bitcoin block; `ots verify` then names the block"}
+            return ots_status_from_proof(path, out)
     except Exception as ex:
         return {"status": "PENDING", "reason": f"calendars did not answer: {str(ex)[:120]}"}
     return {"status": "PENDING", "reason": "no .ots produced"}
+
+
+def ots_status_from_proof(subject: Path, proof: Path) -> dict:
+    """Derive OTS state from proof bytes and verify Bitcoin headers twice."""
+    from opentimestamps.core.notary import BitcoinBlockHeaderAttestation, PendingAttestation
+    from opentimestamps.core.serialize import StreamDeserializationContext
+    from opentimestamps.core.timestamp import DetachedTimestampFile
+
+    with proof.open("rb") as handle:
+        detached = DetachedTimestampFile.deserialize(StreamDeserializationContext(handle))
+    subject_sha = hashlib.sha256(subject.read_bytes()).hexdigest()
+    if bytes(detached.timestamp.msg).hex() != subject_sha:
+        raise RuntimeError("existing OTS proof does not bind the current subject bytes")
+    bitcoin, pending = [], 0
+    for message, attestation in detached.timestamp.all_attestations():
+        if isinstance(attestation, BitcoinBlockHeaderAttestation):
+            bitcoin.append((bytes(message), attestation.height))
+        elif isinstance(attestation, PendingAttestation):
+            pending += 1
+    base = {
+        "path": str(proof.relative_to(ROOT)),
+        "url": "https://councilof.ai/" + str(proof.relative_to(PUB)),
+        "proof_sha256": hashlib.sha256(proof.read_bytes()).hexdigest(),
+        "subject_sha256": subject_sha,
+        "bitcoin_blocks": sorted({height for _, height in bitcoin}),
+        "scope": "PUBLIC_ROOT_BYTES_ONLY",
+    }
+    if not bitcoin:
+        return base | {
+            "status": "STAMPED_PENDING_BITCOIN" if pending else "NO_ATTESTATION",
+            "note": "Status is derived from the proof bytes. Pending is not a Bitcoin timestamp.",
+        }
+
+    height = sorted({height for _, height in bitcoin})[0]
+    hash_urls = [
+        f"https://blockstream.info/api/block-height/{height}",
+        f"https://mempool.space/api/block-height/{height}",
+    ]
+    hashes = [urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=30).read().decode().strip() for url in hash_urls]
+    if len(set(hashes)) != 1 or not re.fullmatch(r"[0-9a-f]{64}", hashes[0]):
+        raise RuntimeError("Bitcoin block sources do not agree on the attested height")
+    block_hash = hashes[0]
+    header_urls = [
+        f"https://blockstream.info/api/block/{block_hash}/header",
+        f"https://mempool.space/api/block/{block_hash}/header",
+    ]
+    headers = [urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=30).read().decode().strip() for url in header_urls]
+    if len(set(headers)) != 1 or not re.fullmatch(r"[0-9a-f]{160}", headers[0]):
+        raise RuntimeError("Bitcoin block sources do not return one identical 80-byte header")
+    header_bytes = bytes.fromhex(headers[0])
+    calculated_hash = hashlib.sha256(hashlib.sha256(header_bytes).digest()).digest()[::-1].hex()
+    if calculated_hash != block_hash:
+        raise RuntimeError("Bitcoin header bytes do not hash to the source block id")
+    if not all(message == header_bytes[36:68] for message, attested_height in bitcoin if attested_height == height):
+        raise RuntimeError("Bitcoin header Merkle root does not satisfy the OTS attestation")
+    block_time = int.from_bytes(header_bytes[68:72], "little")
+    return base | {
+        "status": "CONFIRMED_BITCOIN",
+        "bitcoin_header": {
+            "height": height,
+            "block_hash": block_hash,
+            "hex": headers[0],
+            "header_sha256": hashlib.sha256(header_bytes).hexdigest(),
+            "block_time_unix": block_time,
+            "block_time": datetime.fromtimestamp(block_time, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "verified_at": now(),
+            "source_agreement": "BLOCKSTREAM_MEMPOOL_BYTE_IDENTICAL",
+            "sources": header_urls,
+        },
+        "note": "Status is derived from the proof bytes. The Bitcoin timestamp proves these exact root.json bytes existed no later than the named block; it does not prove correctness, completeness, compliance, certification, or coverage of the separate signed-card corpus.",
+    }
 
 
 def eas_status(sha: str) -> dict:
@@ -336,11 +410,24 @@ def main() -> int:
         (INTEROP / f"rekor-root-{short}.json").write_text(json.dumps(rek["entry"], indent=1) + "\n")
     ots = ots_stamp(ROOT_JSON, INTEROP / f"root-{short}.json.ots")
     print("ots:", ots)
+    card_index = json.loads((PUB / "signed" / "card_index.json").read_text())
+    signed_card_ids = {row.get("card") for row in card_index.get("cards", []) if isinstance(row, dict) and isinstance(row.get("card"), str)}
+    root_leaf_ids = set(root.get("card_sha256", []))
+    corpus_scope = {
+        "relationship": "SEPARATE_CORPORA",
+        "public_root_count": len(root_leaf_ids),
+        "public_root_sha256": sha,
+        "signed_card_count": len(card_index.get("cards", [])),
+        "signed_card_id_overlap": len(root_leaf_ids & signed_card_ids),
+        "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+        "note": f"The {len(root_leaf_ids)} public-root leaves and {len(card_index.get('cards', []))} separately indexed signed cards are separate corpora with {len(root_leaf_ids & signed_card_ids)} identifier overlap. This root and its OTS proof do not anchor the signed-card index.",
+    }
     side = {
         "kind": "csoai.root-witness/v1", "as_of": now(),
         "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
         "artifact": {"url": "https://councilof.ai/root.json", "also": "https://councilof.ai/api/root", "sha256": sha, "bytes": len(raw),
                       "merkle_root": root["merkle_root"], "card_count": root.get("card_count"), "as_of": root.get("as_of")},
+        "corpus_scope": corpus_scope,
         "signature": {"did": DID_ID, "field": "sig_ed25519", "preimage_fields": ENVELOPE_FIELDS,
                        "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
                        "preimage_sha256": hashlib.sha256(preimage).hexdigest(), "preimage_bytes": len(preimage), "verified_against_did_json": ok},
@@ -365,6 +452,8 @@ def main() -> int:
                 # candidate is deployed this may legitimately read DRIFTED. checked_at makes this
                 # a timestamped observation; it is never published as a standing live verdict.
                 "drift": compute_drift(sha, root["merkle_root"]),
+                "corpus_scope": corpus_scope,
+                "witness_status_observed_at": (ots.get("bitcoin_header") or {}).get("verified_at", side["as_of"]),
                 "witnesses": {"rekor": side["witnesses"]["rekor"].get("status"), "ots": ots.get("status"), "eas_base": "NOT_YET", "xrpl_memo": "NOT_YET"}})
     ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
     print("wrote", latest.name, dated.name, ptr_path.name)

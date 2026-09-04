@@ -1,6 +1,6 @@
 # How to verify the public root — yourself, offline, without trusting us
 
-The board publishes ONE root: `https://councilof.ai/root.json` (`kind: csoai.public-root/v0`). Every signed card hashes into `merkle_root`; the envelope is Ed25519-signed by `did:web:csoai.org#board-attestation-1`. Witnesses attest the *existence and time* of those bytes. None of this is certification, endorsement, or a rank. Verification is free, forever.
+The board publishes ONE root: `https://councilof.ai/root.json` (`kind: csoai.public-root/v1`). Its 154 `card_sha256[]` leaves hash into `merkle_root`; the envelope is Ed25519-signed by `did:web:csoai.org#board-attestation-1`. These leaves are a separate corpus from the 335 cards in `signed/card_index.json`: their identifiers have zero overlap. The root's witnesses cover the exact `root.json` bytes only; they do not anchor the signed-card index. Witnesses attest the *existence and time* of those bytes. None of this is certification, endorsement, or a rank. Verification is free, forever.
 
 ## 1. Recompute the signature (no network needed beyond two GETs)
 ```bash
@@ -65,13 +65,14 @@ print("kind", b["kind"], "integratedTime", e["integratedTime"]); print(base64.b6
 Compare the printed preimage with the one you rebuilt in step 1. With `rekor-cli`: `rekor-cli get --log-index $LOGINDEX`.
 
 ## 3. OpenTimestamps (Bitcoin)
-When the sidecar's `witnesses.ots.status` is `STAMPED_PENDING_BITCOIN` or better, fetch the named `.ots` file and run:
+The current sidecar derives `CONFIRMED_BITCOIN` from the proof bytes: the detached digest is the SHA-256 of `root.json`, and its Bitcoin attestation names block **965487**. Fetch both exact files and run:
 ```bash
 pip install opentimestamps-client
-ots upgrade root-<sha8>.json.ots   # once a Bitcoin block includes the calendar commitment
-ots verify root-<sha8>.json.ots    # prints the block that attests the bytes existed
+curl -s https://councilof.ai/root.json -o root.json
+curl -s https://councilof.ai/interop/root-a44af078.json.ots -o root-a44af078.json.ots
+ots verify root-a44af078.json.ots -f root.json
 ```
-`PENDING` means the calendars had not answered when the sidecar was written — it is not a witness yet, and the sidecar says so.
+The published sidecar also records the 80-byte header checked byte-for-byte against Blockstream and mempool.space. The gate recomputes its block hash, timestamp and Merkle binding to the OTS attestation. The Bitcoin timestamp proves these exact bytes existed no later than that block; it does not prove their correctness, completeness, compliance or certification.
 
 ## 4. EAS on Base and XRPL memo
 Both are `NOT_YET` in the sidecar until a funded wallet exists. When they land, the sidecar will carry the attestation UID (resolvable on base.easscan.org) and the XRPL transaction hash whose memo decodes to `sha256(root.json)`.
@@ -114,4 +115,3 @@ root, never edited** — editing signed bytes breaks the signature and the histo
 **So: check `schema` before you rely on an inclusion proof.** A v0 proof tells you
 the payload was in the tree. It does **not** tell you the subject or the source URL
 was in the tree.
-
