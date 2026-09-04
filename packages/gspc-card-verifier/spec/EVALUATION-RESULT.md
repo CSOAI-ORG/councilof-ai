@@ -72,7 +72,8 @@ that most reliably misleads.
 ```json
 {
   "_type": "https://in-toto.io/Statement/v1",
-  "subject": [{ "name": "<system under test>", "digest": { "sha256": "<hex>" } }],
+  "subject": [{ "name": "<system under test>",
+                "digest": { "councilofEvaluatedSystemV1": "<hex>" } }],
   "predicateType": "https://councilof.ai/attestations/evaluation-result/v1",
   "predicate": {
     "schemaVersion": "councilof.ai/evaluation-result/1",
@@ -91,6 +92,26 @@ that most reliably misleads.
   }
 }
 ```
+
+## 4a. The subject digest is not an artifact hash
+
+`subject.digest` identifies the system that was evaluated. For a hosted model there is no artifact
+to hash, so whatever goes here is a commitment to an identifier, not the content digest of a
+fetchable file.
+
+Publishing that under the standard `sha256` key would be a lie a machine acts on: in-toto verifiers
+treat `sha256` as the content hash of the named artifact, so a generic verifier would try to fetch
+and match something that does not exist, and a reader would conclude the evaluated system had been
+byte-pinned when it had not. in-toto permits arbitrary digest keys precisely for this case, so this
+predicate uses `councilofEvaluatedSystemV1` and never `sha256` for the subject.
+
+`sha256` appears in this predicate in exactly one place where it means what it says:
+`items.digest`, over the item set actually scored — a real file with real bytes.
+
+This correction is owed to Konrad Gruszka, whose `proofbundle` predicate
+(`https://b7n0de.com/proofbundle/eval-receipt/v0.1`) states the rule plainly: "Placing it under the
+standard `sha256` key would suggest an artifact hash and mislead generic in-toto verifiers." He
+reached it before we did, and our first draft had the defect he had already avoided.
 
 ## 5. Verdicts are three, not two
 
