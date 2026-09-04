@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "mistral",
+      "surface": "pricing",
+      "url": "https://mistral.ai/pricing",
+      "prev_sha256": "cec7ed38db3021555e93855e326ccf8963689eea29e76414fb07f4422febea4b",
+      "new_sha256": "6eeebef09d502a6a86c74b18a20d4e3f4a8c43920e064ac61923ad23f1d10ea7",
+      "prev_bytes_sha256": "277a375302bfb27a861bbe2762550784bc79ff0ee4aeaab72c51b0e352cd78f0",
+      "new_bytes_sha256": "0df8a68e7ad05c1d0eb0f8b01db79d9b5e8a05be8a89d4801e3cae345a47923a",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 476507,
+        "new": 478073
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ae0f639d497ccfa552b34022fb67247f3f2a724815cf5965c7382f6ddd8a9a53",
+    "sig_ed25519": "559ad2d28ffde40f23d4343257ab0b4a5f15a543a2150a4eae67c7753deb0f852955cf8f2de4c7101598bfa5ea1f45bce0061f8df36374b29c5a6fe0c779c304",
+    "source_urls": [
+      "https://mistral.ai/pricing"
+    ],
+    "subject": "Mistral AI — pricing: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:mistral",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "349cfaebc34270b85f572d719806f8d144a69f46a73b03beb85f946b6cba2dc0",
+    "7ea37f0b21187e0381a9f48c03df1cdb5fe2d4fcd843b121484c32a33c156860",
+    "ddb43ca4110ba1a945c0e4fd548aa7cc68b7f3a4bc2d845163ad1cfa5acb0698",
+    "945e1b3bed44f6d3f0c0e43a0abdeb8b0982e3e9e6808714b9a1b6832f1c7737",
+    "97e08849f4c4a1160d6502c04fecd3a67c08c96d881e376174f5ca90c6a6f5ca",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "ca51730097b26f2cee678ab4abb5a0c0768b06ca61760ed157a8360565a80f5e",
+    "a0d372fa0b7eac2404c1f28dabf11fb002e12ee42d0f18e6582c96e672c28195"
+  ]
+}

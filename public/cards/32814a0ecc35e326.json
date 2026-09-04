@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "amazon",
+      "surface": "pricing",
+      "url": "https://aws.amazon.com/bedrock/pricing/",
+      "prev_sha256": "926d724470f38f7d62a334d4c614e8b93bb8182442239a3411d11cffded3b9d7",
+      "new_sha256": "f7e0036847030ae1bdd2fc4a88eeefe41f695e3c9586c3229fead501a120c657",
+      "prev_bytes_sha256": "0c9ac6e51dca07a7443487a955085d8b4cb90c899fce676833584c0f7c15b443",
+      "new_bytes_sha256": "ff8a31df06a943028d9e026ca21eda0709438dca125f3f2cae11cfbccdf265c3",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 894867,
+        "new": 894884
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Tue, 01 Sep 2026 18:52:10 GMT",
+        "new": "Thu, 03 Sep 2026 12:18:55 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "32814a0ecc35e326c289688fbc727a036bf0fb857af2161072d2e3179da3f4f9",
+    "sig_ed25519": "bb496b58e4bd413faf8e71cc42640331e6c3dad82d7477898d58332e9ea0d6bbee1cd43bf049309e00202e971dd3b9de5eb800d18190a9668c393cf2f8356505",
+    "source_urls": [
+      "https://aws.amazon.com/bedrock/pricing/"
+    ],
+    "subject": "Amazon (AWS Bedrock / Nova) — pricing: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:amazon",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "019274d32066c2b134fe4bc0b0f9425a7762380b6204d5367908e544926b7ec6",
+    "61a743af6c5c81dafcf08b0403105794f8e3c3edb37ba883458d2a7aa81f805e",
+    "f52f55c77e79a1a92452e95bb38eeca6bc5af1f64d65faa6ec3c58cf04051650",
+    "2614328d5c2408c64f5aedc6b1b4f593579ea6bce9db3b097de9cc6745c4c074",
+    "7696c900c754d392c450417a3d9e144eb5f1e392729288a5a39fcfd749b2fb01",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "ca51730097b26f2cee678ab4abb5a0c0768b06ca61760ed157a8360565a80f5e",
+    "a0d372fa0b7eac2404c1f28dabf11fb002e12ee42d0f18e6582c96e672c28195"
+  ]
+}
