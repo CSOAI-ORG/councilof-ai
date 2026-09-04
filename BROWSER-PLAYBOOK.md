@@ -25,7 +25,7 @@ We implement SCITT RFC 9942/9943; that is not a "report".
 - Open: https://smithery.ai/new
 - Server URL: `https://councilof.ai/mcp`
 - Name: Council of AI GSPC
-- Body: Read-only MCP. Seven tools. Measurement, never certification. Verify: https://councilof.ai/gspc-verify
+- Body: Eleven MCP tools: seven free read-only tools and four metered request tools. Payment never creates a measured result. Measurement, never certification. Verify: https://councilof.ai/gspc-verify
 
 ### PulseMCP
 - Open: https://www.pulsemcp.com/submit
