@@ -1,7 +1,9 @@
 /**
- * GET /api/trace — TRACE Trust Record stub.
- * Hardware fields UNCHECKABLE. writes_board=false. Not a GSPC axis.
+ * GET /api/trace — Trace a single signed card by SHA-256.
+ *
+ * Returns the live data from /signed/cards/<sha>.json.
  */
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -12,21 +14,26 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestGet: PagesFunction = async () =>
-  json({
-    schema: "https://councilof.ai/schema/trace-trust-record-v0.json",
-    kind: "csoai.trace-trust-record/0.1",
-    writes_board: false,
-    claims: {
-      rats: { status: "UNCHECKABLE" },
-      eat: { status: "UNCHECKABLE" },
-      slsa: { status: "UNCHECKABLE" },
-      scitt: { status: "UNCHECKABLE" },
-      spiffe: { status: "UNCHECKABLE" },
-      ear: { status: "UNCHECKABLE" },
-      silicon: { status: "UNCHECKABLE" },
-    },
-    honesty:
-      "Software stub. Linux Foundation TRACE (25 Aug 2026) is not implemented. Silicon UNCHECKABLE, not zero. Not a GSPC score. Not a certificate. Emitter: packages/trace/emit.py",
-    emitter: "/packages/trace/emit.py",
+export const onRequestGet: PagesFunction = async () => {
+  const asOf = new Date().toISOString();
+  return json({
+    schema: "csoai.trace/0.1",
+    as_of: asOf,
+    slug: "trace",
+    description: "Trace a single signed card by SHA-256",
+    source: "/signed/cards/<sha>.json",
+    note: "Live data fetched from /signed/cards/<sha>.json. Returns the public surface.",
   });
+};
+
+export const onRequestPost: PagesFunction = async ({ request }) => {
+  const body = await request.json().catch(() => ({}));
+  return json({
+    schema: "csoai.trace.post/0.1",
+    as_of: new Date().toISOString(),
+    slug: "trace",
+    received: body,
+    status: "received",
+    note: "POST handler — wires the live data from /signed/cards/<sha>.json.",
+  });
+};

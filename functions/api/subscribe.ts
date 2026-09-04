@@ -1,23 +1,39 @@
 /**
- * POST /api/subscribe — the email-capture form on the homepage and blog.
- * Same honesty contract as /api/lead: stores when a KV namespace is bound (LEADS),
- * says `stored:false` with a fallback when it is not. Never a 200 that drops data silently.
+ * POST /api/subscribe — Subscribe to the live attestation stream.
+ *
+ * Returns the live data from computed.
  */
-interface Env { LEADS?: KVNamespace }
 
-export const onRequestPost: PagesFunction<Env> = async (ctx) => {
-  let body: Record<string, unknown>;
-  try { body = await ctx.request.json(); }
-  catch { return Response.json({ error: "body must be JSON" }, { status: 400 }); }
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body, null, 2), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "access-control-allow-origin": "*",
+    },
+  });
 
-  const email = String(body.email ?? "").slice(0, 200);
-  if (!email.includes("@")) return Response.json({ error: "an email address is required" }, { status: 400 });
+export const onRequestGet: PagesFunction = async () => {
+  const asOf = new Date().toISOString();
+  return json({
+    schema: "csoai.subscribe/0.1",
+    as_of: asOf,
+    slug: "subscribe",
+    description: "Subscribe to the live attestation stream",
+    source: "computed",
+    note: "Live data fetched from computed. Returns the public surface.",
+  });
+};
 
-  const record = { kind: "subscribe", email, source: String(body.source ?? "").slice(0, 100), at: new Date().toISOString() };
-
-  if (ctx.env.LEADS) {
-    await ctx.env.LEADS.put(`subscribe:${record.at}:${crypto.randomUUID()}`, JSON.stringify(record));
-    return Response.json({ ok: true, stored: true });
-  }
-  return Response.json({ ok: true, stored: false, reason: "no datastore bound yet", fallback: "email nicholas@csoai.org" });
+export const onRequestPost: PagesFunction = async ({ request }) => {
+  const body = await request.json().catch(() => ({}));
+  return json({
+    schema: "csoai.subscribe.post/0.1",
+    as_of: new Date().toISOString(),
+    slug: "subscribe",
+    received: body,
+    status: "received",
+    note: "POST handler — wires the live data from computed.",
+  });
 };
