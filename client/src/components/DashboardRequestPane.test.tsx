@@ -30,4 +30,21 @@ describe("request-attestation dashboard pane", () => {
     expect(html).toContain("does not fetch the system");
     expect(html).not.toContain("Coming — Paddle");
   });
+
+  it("honours the pricing-overview deep link without selling a grade or measurement", () => {
+    const html = renderToStaticMarkup(
+      <Router
+        ssrPath="/dashboard"
+        ssrSearch="tab=measured&task=pricing-overview"
+      >
+        <DashboardRequestPane />
+      </Router>,
+    );
+    expect(html).toContain("How the free rail works");
+    expect(html).toContain("Verify is free forever");
+    expect(html).toContain("A grade is never sold");
+    expect(html).toContain("no SaaS tiers");
+    expect(html).toContain("payment never creates a MEASURED cell");
+    expect(html).toContain("UNMEASURED");
+  });
 });

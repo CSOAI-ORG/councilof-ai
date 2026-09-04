@@ -14,7 +14,16 @@ const KILL = [/\bsovereign\b/i, /\bceasai\b/i, /\bbyzantine\b/i, /\bBFT\b/, /Wat
 
 const PERSONAS = [
   { who: "visitor",    path: "/",                              must: ["Council of AI", "We measure"] },
-  { who: "buyer",      path: "/pricing",                       must: ["free"] },
+  {
+    who: "buyer",
+    path: "/pricing",
+    must: [],
+    routeOnly: true,
+    final: {
+      pathname: "/dashboard/",
+      params: { tab: "measured", task: "pricing-overview" },
+    },
+  },
   { who: "auditor",    path: "/honesty",                       must: ["council-oowm"] },
   { who: "researcher", path: "/library",                       must: ["reference pages across"] },
   { who: "api-agent",  path: "/api/gspc",                      must: ['"measured_axes"', '"quotable_axes"', '"public_count"'] , json: true },
@@ -33,6 +42,21 @@ for (const p of PERSONAS) {
     const r = await fetch(HOST + p.path, { headers: { "user-agent": "persona-gauntlet" }, redirect: "follow" });
     const body = await r.text();
     if (r.status !== 200) { fail(`${p.who} ${p.path}: HTTP ${r.status}`); continue; }
+    if (p.final) {
+      const final = new URL(r.url);
+      const wrongPath = final.pathname !== p.final.pathname;
+      const wrongParams = Object.entries(p.final.params).filter(
+        ([key, value]) => final.searchParams.get(key) !== value,
+      );
+      if (wrongPath || wrongParams.length) {
+        fail(`${p.who} ${p.path}: ended at ${final.pathname}${final.search}, expected ${p.final.pathname} with ${JSON.stringify(p.final.params)}`);
+        continue;
+      }
+    }
+    // A query-selected dashboard pane is hydrated in the browser. Its raw HTML
+    // is the query-agnostic home snapshot, so scanning that body would test the
+    // wrong pane. Component and Playwright gates own the rendered copy.
+    if (p.routeOnly) { pass(`${p.who} ${p.path}`); continue; }
     if (p.json) { try { JSON.parse(body); } catch { fail(`${p.who} ${p.path}: not valid JSON`); continue; } }
     const missing = p.must.filter((m) => !body.includes(m));
     if (missing.length) { fail(`${p.who} ${p.path}: missing ${JSON.stringify(missing)}`); continue; }

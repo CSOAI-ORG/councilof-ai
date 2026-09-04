@@ -1,12 +1,12 @@
 /**
- * GET /pricing — 308 to Council OS Assess door.
- * Do not 308 onto /pricing/. Do not type public prices.
+ * GET /pricing — 308 directly to the canonical Council OS pricing overview.
+ * Do not route through the retired /os compatibility door. Do not type public prices.
  */
 export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=assess&task=pricing-overview",
+      location: "/dashboard/?tab=measured&task=pricing-overview",
       "cache-control": "public, max-age=300",
     },
   });
