@@ -74,7 +74,7 @@ const faqData: FAQItem[] = [
     category: "GENERAL",
     question: "What is the designed 33-seat Council?",
     answer:
-      "A designed 33-seat council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed: guaranteed fault tolerance is unproven, and we do not claim it.",
+      "A designed 33-seat council: 33 specialized agents representing different governance perspectives vote on decisions (risk classification, compliance status), with a 23-of-33 threshold. The design intent is that no single agent decides an outcome — but effective independence is measured, not assumed: resilience under independent failures is unproven, and we do not claim it.",
     tags: ["technology", "council"],
   },
   {
@@ -408,7 +408,7 @@ const faqData: FAQItem[] = [
     category: "TECHNICAL",
     question: "How does the designed 33-seat council work?",
     answer:
-      "The 33-Seat Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — guaranteed fault tolerance is unproven, and we do not claim it.",
+      "The 33-Seat Council is a designed multi-agent vote where 33 specialized AI agents vote on decisions (risk classification, compliance status, etc.). Decisions require approval from at least 23 agents (67%). The design intent is that no single agent decides an outcome; effective independence is measured, not assumed — resilience under independent failures is unproven, and we do not claim it.",
     tags: ["technical", "council"],
   },
   {

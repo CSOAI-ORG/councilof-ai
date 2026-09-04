@@ -95,7 +95,7 @@ Safety verification shall be proportionate to risk level and reviewed by trained
     partTitle: "Foundational Principles",
     content: `This article specifies a proposed 33-seat Council of AI. It is a design, not a live pipeline, and its seats are not presently demonstrated to be independent.
 
-The proposed threshold is 23 out of 33. No governance decision or high-risk deployment approval currently depends on this design. Threshold arithmetic alone does not establish fault tolerance, capture resistance, or valid consensus.
+The proposed threshold is 23 out of 33. No governance decision or high-risk deployment approval currently depends on this design. Threshold arithmetic alone does not establish resilience under independent failures, capture resistance, or valid consensus.
 
 The latest point experiment used three model lineages across two providers and measured n_eff 1.00 at rho=1. Raw production-grade identities, responses, signatures, transport, replay protection, and human veto remain required before operation.
 

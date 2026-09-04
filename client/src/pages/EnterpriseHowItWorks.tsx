@@ -156,7 +156,7 @@ export default function EnterpriseHowItWorks() {
     },
     {
       question: "How does the Council review work?",
-      answer: "The Council is a proposed 33-seat, multi-provider review architecture, not a live service. The latest three-leg experiment was fully correlated, so independent analysis, vendor neutrality and fault tolerance are not claimed. Current users can inspect the published evidence and methods while the operating workflow remains a target."
+      answer: "The Council is a proposed 33-seat, multi-provider review architecture, not a live service. The latest three-leg experiment was fully correlated, so independent analysis, vendor neutrality and resilience under independent failures are not claimed. Current users can inspect the published evidence and methods while the operating workflow remains a target."
     },
     {
       question: "What compliance frameworks can we customize?",
@@ -289,7 +289,7 @@ export default function EnterpriseHowItWorks() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🏛️ Council</h4>
-              <p className="text-gray-700">The 33-seat, multi-provider Council is a design target, not a live review service. Current experiments do not establish independent providers, absence of vendor bias or fault tolerance.</p>
+              <p className="text-gray-700">The 33-seat, multi-provider Council is a design target, not a live review service. Current experiments do not establish independent providers, absence of vendor bias or resilience under independent failures.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🌍 Global Standards</h4>

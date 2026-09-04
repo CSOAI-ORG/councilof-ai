@@ -25,7 +25,7 @@ export default function CouncilDetail() {
               The 33-seat council — a design, not a live system
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              A proposed multi-agent review architecture with human oversight. Its thresholds are design parameters; live independence and fault tolerance are not established.
+              A proposed multi-agent review architecture with human oversight. Its thresholds are design parameters; live independence and resilience under independent failures are not established.
             </p>
           </div>
 
@@ -37,7 +37,7 @@ export default function CouncilDetail() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  The 23-of-33 threshold is a design parameter. It does not prove independent voters, capture resistance or fault tolerance.
+                  The 23-of-33 threshold is a design parameter. It does not prove independent voters, capture resistance or resilience under independent failures.
                 </p>
               </CardContent>
             </Card>

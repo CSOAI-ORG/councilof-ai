@@ -21,7 +21,7 @@
     "mcp:check": "node scripts/mcp-probe.mjs --check",
     "mcp:selftest": "node scripts/mcp-probe.mjs --selftest && python3 scripts/mcp-stdio-probe.py --selftest",
     "mcp:probe:stdio": "python3 scripts/mcp-stdio-probe.py",
-    "build:server": "esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist/server",
+    "build:server": "esbuild ./api-server/server.js --platform=node --packages=external --bundle --format=esm --outfile=dist/server/index.js",
     "start": "NODE_ENV=production node dist/server/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
