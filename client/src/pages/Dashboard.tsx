@@ -161,7 +161,11 @@ export default function Dashboard() {
         {/* Page Header */}
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
+            {/* h2, not h1: this page renders inside DashboardWorkspace, which owns the page's
+                single <h1> ("What are you working on?" on the home surface). Two <h1>s in one
+                document is an accessibility fault, and it broke the shell smoke's strict-mode
+                locator on 2026-09-04, blocking every deploy. */}
+            <h2 className="text-2xl font-semibold font-primary">Dashboard</h2>
             <p className="text-muted-foreground text-sm">
               Your Council OS — governance across every framework, signed to Layer 0
             </p>
