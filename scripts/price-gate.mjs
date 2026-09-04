@@ -46,7 +46,12 @@ const DIST = path.resolve(REPO, (args[0] && !args[0].startsWith("--")) ? args[0]
 // a rate, which is exactly the shape most likely to appear beside a product name.
 // Prose is still safe because of the ^...$ anchor: "providers charge £500-2,000" and
 // "fines up to €35M" do not match.
-const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:[-–—]\s*(?:[£$€]\s?)?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*)?(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/;
+//
+// THE TRAILING-TICKER ARM IS NOT DECORATION EITHER. "$0.50 USDC" is a price by any reading,
+// but this pattern stopped at the number, so naming the currency after it was enough to pass.
+// Five invented amounts shipped live on /pay in exactly that shape — see the INLINE note in
+// leafTexts for the other half of why they were invisible here.
+const BARE_PRICE = /^\s*(?:from\s+)?[£$€]\s?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*(?:[-–—]\s*(?:[£$€]\s?)?\d[\d,.]*\s*(?:[kKmM]|bn)?\s*)?(?:\s*(?:USDC|USDT|USD|GBP|EUR)\b)?\s*(?:\/\s*(?:mo|yr|month|year|seat|user))?\s*(?:\+\s*VAT)?\s*$/i;
 
 // Popularity claims — assertions about what OTHER CUSTOMERS chose.
 // "Recommended" was in this list and was WRONG: on /regulatory-compliance it is a
@@ -111,6 +116,19 @@ const ALLOW = [
       "Calculator slider bounds and the reader's own inputs echoed back. The page charges " +
       "nothing; the money on it belongs to the visitor's business, not to us.",
   },
+  {
+    pages: /^grants\//,
+    why:
+      "Award sizes we would RECEIVE from funders, not a price anyone pays us — the same class " +
+      "as the prosperity-fund entry above. The page lists 'Sloan Foundation — $75,000', 'Ford " +
+      "Foundation — $100,000' and 'Total potential: $280,000'. FOREIGN_MONEY should have stood " +
+      "this down and does not: its \\bfund|grant arm needs one of those words within " +
+      "CONTEXT_WINDOW, and the surrounding copy says 'Foundation' and 'application body' " +
+      "instead — 'Foundation' does not contain 'fund'. Recorded as a decision rather than " +
+      "widened into the regex, because loosening FOREIGN_MONEY to match 'Foundation' would " +
+      "stand down real prices on any page that happens to name one. This carve-out cannot " +
+      "become a price list: nothing under grants/ is a thing we sell.",
+  },
   // EXEMPTION WITHDRAWN 2026-08-26. It read: "contractual fee schedules inside a published
   // legal agreement… the doctrine bans marketing a price, not disclosing the terms of an
   // agreement a party is being asked to sign." That reasoning was defensible and the outcome
@@ -140,9 +158,33 @@ const walk = (dir, out = []) => {
 const leafTexts = (html) => {
   const out = [];
   // Strip script/style first — a JS bundle is full of string literals.
-  const cleaned = html
+  //
+  // THEN FLATTEN INLINE TAGS, BEFORE LOOKING FOR LEAVES. The leaf regex below requires an
+  // element's content to contain no `<` at all, so ONE inline child hides the whole element
+  // from this gate. That is not hypothetical: /pay shipped
+  //     <p class="price">$0.50 <span class="price-currency">USDC</span></p>
+  // five times and the gate reported the site clean — the <p> was never a "leaf", and the
+  // only leaf it did see was the harmless word "USDC". Four of those five amounts matched no
+  // SKU in functions/api/_skus.ts at any tier. A guard that any inline <span> switches off is
+  // not a guard. Inline elements carry no block meaning, so dropping their tags (never their
+  // text) makes a price split across one visible as the single amount it displays as.
+  // BOTH PASSES RUN, and that is the whole point. Flattening ALONE is a regression: where a
+  // price is the inline child — <p>Total: <strong>$280,000</strong></p> on /grants — the old
+  // scan matched the <strong> leaf exactly, and flattening merges it into "Total: $280,000",
+  // which the anchored patterns correctly refuse. Caught in review: the flatten-only version
+  // found the five /pay amounts and silently stopped reporting the /grants one it had always
+  // found. So scan the leaves as authored, THEN scan them flattened, and union the two. The
+  // caller already dedupes on text, so a price visible to both passes is reported once.
+  const INLINE = /<\/?(?:span|b|strong|em|i|small|sup|sub|a|code|abbr|mark|u|wbr)\b[^>]*>/gi;
+  const base = html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "");
+  for (const cleaned of [base, base.replace(INLINE, "")]) scanLeaves(cleaned, out);
+  return out;
+};
+
+/** One pass of the leaf scan over already-cleaned HTML, appending {text, ctx} to `out`. */
+const scanLeaves = (cleaned, out) => {
   const re = /<([a-z][a-z0-9]*)\b[^>]*>([^<]*)<\/\1>/gi;
   let m;
   while ((m = re.exec(cleaned)) !== null) {
@@ -161,7 +203,6 @@ const leafTexts = (html) => {
     const ctx = before.slice(-CONTEXT_WINDOW) + " " + text + " " + after.slice(0, CONTEXT_WINDOW);
     out.push({ text, ctx });
   }
-  return out;
 };
 
 const files = walk(DIST);
