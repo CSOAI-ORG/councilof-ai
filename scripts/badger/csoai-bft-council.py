@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""csoai-bft-council.py — build the 33-agent BFT council + run a real quorum vote.
+"""csoai-bft-council.py — publish the declared council-role registry fail closed.
 
-The 33-agent BFT council can attest any claim. Quorum 23/33.
-Each agent signs Ed25519. The signed-card chain is publicly visible.
+The 33 entries below are role definitions, not 33 independently operated voters.
+This script does not evaluate claims, hold Ed25519 credentials, or demonstrate
+Byzantine fault tolerance. Until independently produced, verifiable votes are
+provided, every quorum observation emitted here is UNCHECKABLE.
 
 12 Generals named (per the substrate design):
   1. Oracle — Intelligence
@@ -21,21 +23,19 @@ Each agent signs Ed25519. The signed-card chain is publicly visible.
 21 expanded roles:
   13-33 — see AGENTS list below.
 
-Lane-doable: generates the agent manifest, signs each with Ed25519,
-runs a real quorum vote against a sample claim, stages the
-signed-card chain under scripts/badger/_queue/bft-council/.
+Lane-doable: publishes the declared role registry and an explicit fail-closed
+observation under scripts/badger/_queue/bft-council/.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
-import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 QUEUE = Path("scripts/badger/_queue/bft-council")
-QUEUE.mkdir(parents=True, exist_ok=True)
+DESIGN_QUORUM = 23
 
 
 def now() -> str:
@@ -82,119 +82,101 @@ AGENTS = [
 ]
 
 
-def agent_keypair(agent_id: int) -> tuple[bytes, bytes]:
-    """Deterministic keypair per agent (placeholder until real Ed25519 wired)."""
-    seed = hashlib.sha256(b"agent-" + str(agent_id).encode()).digest()
-    priv = hashlib.sha256(b"priv-" + seed).digest()
-    pub = hashlib.sha256(b"pub-" + seed).digest()
-    return priv, pub
+def declare_agent(agent: dict) -> dict:
+    """Return role metadata with a content digest, never a fake credential.
 
-
-def sign_agent(agent: dict) -> dict:
-    """Sign each agent's manifest with their placeholder Ed25519 key."""
-    blob = json.dumps(agent, sort_keys=True, default=str).encode()
-    agent["sha256"] = hashlib.sha256(blob).hexdigest()
-    priv, pub = agent_keypair(agent["id"])
-    agent["pubkey"] = pub.hex()
-    agent["sig"] = hashlib.sha256(priv + agent["sha256"].encode()).hexdigest()
-    return agent
+    A SHA-256 digest can identify bytes; it cannot authenticate a member or a
+    vote. Credential and evaluation states therefore remain explicit.
+    """
+    role = dict(agent)
+    blob = json.dumps(role, sort_keys=True, separators=(",", ":")).encode()
+    role["manifest_sha256"] = hashlib.sha256(blob).hexdigest()
+    role["credential_state"] = "NOT_CONFIGURED"
+    role["vote_state"] = "NOT_EVALUATED"
+    return role
 
 
 def run_quorum_vote(agents: list[dict], claim: str) -> dict:
-    """Run a real quorum vote against a sample claim.
+    """Describe the claim without manufacturing votes or signatures.
 
-    Each agent signs the claim with their key.
-    Quorum: 23/33 must agree to attest.
+    This is deliberately fail closed. A future runner must accept independently
+    produced vote envelopes, verify their real signatures and member identities,
+    and measure independence before it may report a quorum or BFT property.
     """
-    claim_blob = claim.encode()
-    claim_sha = hashlib.sha256(claim_blob).hexdigest()
-
-    votes = []
-    for agent in agents:
-        priv, pub = agent_keypair(agent["id"])
-        sig = hashlib.sha256(priv + claim_sha.encode()).hexdigest()
-        # Each agent votes YES (deterministic — placeholder)
-        votes.append({
-            "agent_id": agent["id"],
-            "agent_name": agent["name"],
-            "vote": "YES",
-            "sig": sig,
-            "ts": now(),
-        })
-
-    yes_count = sum(1 for v in votes if v["vote"] == "YES")
-    quorum_reached = yes_count >= 23
+    claim_sha = hashlib.sha256(claim.encode()).hexdigest()
 
     return {
-        "schema": "csoai.bft-quorum/0.1",
+        "schema": "csoai.council-quorum-observation/0.2",
+        "status": "UNCHECKABLE",
         "claim": claim,
         "claim_sha256": claim_sha,
         "as_of": now(),
-        "council_size": len(agents),
-        "quorum_required": 23,
-        "yes_count": yes_count,
-        "no_count": len(votes) - yes_count,
-        "quorum_reached": quorum_reached,
-        "votes": votes,
+        "declared_role_count": len(agents),
+        "design_quorum": DESIGN_QUORUM,
+        "evaluated_vote_count": 0,
+        "yes_count": 0,
+        "no_count": 0,
+        "abstain_or_unobserved_count": len(agents),
+        "quorum_reached": False,
+        "votes": [],
+        "signature_status": "NOT_AVAILABLE",
+        "independence_status": "NOT_MEASURED",
+        "bft_status": "NOT_DEMONSTRATED",
+        "reason_code": "NO_INDEPENDENT_VERIFIABLE_VOTES",
+        "reason": (
+            "This script has role definitions only. It did not obtain or verify "
+            "independently produced votes, member credentials, or signatures."
+        ),
     }
 
 
-def main() -> None:
-    print("=== 33-AGENT BFT COUNCIL ===")
+def main(queue: Path = QUEUE) -> None:
+    queue.mkdir(parents=True, exist_ok=True)
+    print("=== COUNCIL ROLE REGISTRY — BFT NOT DEMONSTRATED ===")
     print()
 
-    # Sign each agent
-    signed_agents = []
-    for a in AGENTS:
-        signed = sign_agent(a)
-        signed_agents.append(signed)
+    declared_agents = [declare_agent(agent) for agent in AGENTS]
 
-    # Save the manifest
-    manifest_path = QUEUE / f"council-manifest-{now()}.json"
+    # Publish role metadata without claiming credentials or signatures.
+    manifest_path = queue / f"council-role-registry-{now()}.json"
     manifest_path.write_text(json.dumps({
-        "schema": "csoai.bft-council/0.1",
+        "schema": "csoai.council-role-registry/0.2",
+        "status": "DESIGN_ONLY",
         "as_of": now(),
-        "council_size": len(signed_agents),
-        "quorum": 23,
-        "generals": [a for a in signed_agents if a["tier"] == "general"],
-        "expanded": [a for a in signed_agents if a["tier"] == "expanded"],
+        "declared_role_count": len(declared_agents),
+        "design_quorum": DESIGN_QUORUM,
+        "credentials": "NOT_CONFIGURED",
+        "independence": "NOT_MEASURED",
+        "bft": "NOT_DEMONSTRATED",
+        "generals": [a for a in declared_agents if a["tier"] == "general"],
+        "expanded": [a for a in declared_agents if a["tier"] == "expanded"],
     }, indent=2))
 
-    print(f"  council built: {len(signed_agents)} agents")
-    print(f"  manifest:      {manifest_path}")
+    print(f"  declared roles: {len(declared_agents)}")
+    print(f"  credentials:    NOT_CONFIGURED")
+    print(f"  registry:       {manifest_path}")
     print()
 
-    # Run a real quorum vote against a sample claim
-    print("=== QUORUM VOTE — attest a sample claim ===")
+    print("=== QUORUM OBSERVATION — FAIL CLOSED ===")
     claim = "Council of AI: measurement, not certification. Anyone can re-check. Empty cells stay empty."
     print(f"  claim: {claim[:80]}...")
 
-    quorum_result = run_quorum_vote(signed_agents, claim)
-    quorum_path = QUEUE / f"quorum-vote-{now()}.json"
+    quorum_result = run_quorum_vote(declared_agents, claim)
+    quorum_path = queue / f"quorum-observation-{now()}.json"
     quorum_path.write_text(json.dumps(quorum_result, indent=2))
 
-    print(f"  council size:      {quorum_result['council_size']}")
-    print(f"  quorum required:   {quorum_result['quorum_required']}/33")
-    print(f"  YES votes:         {quorum_result['yes_count']}/33")
-    print(f"  quorum reached:    {quorum_result['quorum_reached']}")
-    print(f"  vote log:          {quorum_path}")
-
-    # Save the quorum vote chain (one per agent)
-    vote_chain_path = QUEUE / f"vote-chain-{now()}.jsonl"
-    with vote_chain_path.open("w") as f:
-        for v in quorum_result["votes"]:
-            f.write(json.dumps(v) + "\n")
-    print(f"  vote chain:        {vote_chain_path}")
+    print(f"  evaluated votes:   {quorum_result['evaluated_vote_count']}")
+    print(f"  design threshold:  {quorum_result['design_quorum']} of {quorum_result['declared_role_count']}")
+    print(f"  status:            {quorum_result['status']}")
+    print(f"  BFT:               {quorum_result['bft_status']}")
+    print(f"  observation:       {quorum_path}")
     print()
 
-    # Summary
     print("=== SUMMARY ===")
-    print(f"  council size:  {len(signed_agents)}")
-    print(f"  quorum:        23/33")
-    print(f"  manifest:      {manifest_path}")
-    print(f"  vote log:      {quorum_path}")
-    print(f"  vote chain:    {vote_chain_path}")
-    print(f"  status:        quorum REACHED" if quorum_result["quorum_reached"] else "status: quorum NOT reached")
+    print(f"  declared roles: {len(declared_agents)}")
+    print(f"  registry:       {manifest_path}")
+    print(f"  observation:    {quorum_path}")
+    print("  status:         UNCHECKABLE — no independent verifiable votes")
 
 
 if __name__ == "__main__":
