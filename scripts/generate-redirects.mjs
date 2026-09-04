@@ -30,7 +30,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
 
-const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
+const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
                      "/datasets",
                      // /signed is the evidence tree IETF implementers are pointed at.
@@ -48,6 +48,20 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
+  // The hand-authored /arena tree was a second, stale product surface. Keep
+  // historical machine evidence in public/arena/*.json{,l}, but route every
+  // former human page into the one Council OS play surface. Exact rules are
+  // deliberate: a broad /arena/* redirect would also hide signed evidence.
+  "/arena                 /dashboard?tab=play  308",
+  "/arena/                /dashboard?tab=play  308",
+  "/arena.html            /dashboard?tab=play  308",
+  "/arena/index.html      /dashboard?tab=play  308",
+  ...["governance", "safety", "conformance", "continuity", "openness", "provenance"]
+    .flatMap((axis) => [
+      `/arena/${axis}       /dashboard?tab=play  308`,
+      `/arena/${axis}/      /dashboard?tab=play  308`,
+      `/arena/${axis}.html  /dashboard?tab=play  308`,
+    ]),
   "/sov-space      /gspc-arena             308",
   "/sov-space/     /gspc-arena             308",
   "/sov-space/*    /gspc-arena             308",
