@@ -139,12 +139,13 @@ export function parseCapabilityFabric(raw: unknown): CapabilityFabric {
     if (!rawRail || typeof rawRail !== "object" || Array.isArray(rawRail))
       throw new Error("fabric rail is not an object");
     const rail = rawRail as Record<string, unknown>;
+    const id = requiredText(rail.id, "id");
     const state = requiredText(rail.state, "state") as FabricState;
     if (!STATES.has(state))
       throw new Error(`unsupported fabric state ${state}`);
     return {
-      id: requiredText(rail.id, "id"),
-      label: optionalText(rail.label) || requiredText(rail.id, "id"),
+      id,
+      label: optionalText(rail.label) || id,
       role: optionalText(rail.role) || "capability",
       protocol: optionalText(rail.protocol) || "HTTP",
       state,
@@ -152,7 +153,10 @@ export function parseCapabilityFabric(raw: unknown): CapabilityFabric {
       endpoint: optionalText(rail.endpoint),
       writes_board: false as const,
       evidence_ref: optionalText(rail.evidence_ref),
-      summary: optionalText(rail.summary) || "No runtime detail was returned.",
+      summary:
+        id === "oracle-fleet" && state === "RUNTIME_OBSERVED"
+          ? "Live fleet heartbeat served; no inference task was exercised."
+          : optionalText(rail.summary) || "No runtime detail was returned.",
       freshness_seconds:
         typeof rail.freshness_seconds === "number" &&
         Number.isFinite(rail.freshness_seconds) &&

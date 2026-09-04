@@ -85,6 +85,28 @@ describe("capability fabric", () => {
     ).toThrow(/unsupported/i);
   });
 
+  it("does not reflect an infrastructure hostname into public runtime copy", () => {
+    const parsed = parseCapabilityFabric({
+      ...fixture,
+      rails: [
+        {
+          ...fixture.rails[0],
+          id: "oracle-fleet",
+          label: "Oracle fleet",
+          summary:
+            "Live heartbeat served for sov33-owem-micro; no inference task was exercised.",
+        },
+      ],
+    });
+
+    expect(parsed.rails[0].summary).toBe(
+      "Live fleet heartbeat served; no inference task was exercised.",
+    );
+    expect(parsed.rails[0].summary).not.toContain("sov33-owem-micro");
+    expect(parsed.rails[0].summary.toLowerCase()).not.toContain("sov33");
+    expect(parsed.rails[0].summary.toLowerCase()).not.toContain("owem");
+  });
+
   it("forces missing or execution-enabled action contracts closed", () => {
     expect(parseActionContractStatus(undefined)).toMatchObject({
       state: "UNCHECKABLE",
