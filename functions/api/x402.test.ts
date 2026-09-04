@@ -120,6 +120,24 @@ describe("/api/x402 — URL fields are URLs, not sentences", () => {
     expect(dupes.map((w) => `${w.text} (line ${w.location?.line})`)).toEqual([]);
   });
 
+  // THE CLAIM THAT WAS WRONG IN SEVEN PLACES. functions/mcp/paid-tools.json justified having no
+  // paid tools on stdio with "stdio has no payment header, so stdio stays free-only". Payment is
+  // not a transport header at all: x_payment is a TOOL ARGUMENT that functions/mcp/_paid.ts:39
+  // reads from args and turns into X-PAYMENT on the same-origin request, so stdio could always
+  // have carried a paid tool. This catalog echoed the conclusion. A peer lane holds an equivalent
+  // guard over the three MCP surfaces; this one covers the catalog, so neither PR has to merge
+  // first for the document to be protected.
+  //
+  // The negative alone would pass on a catalog that simply deleted the explanation, so the
+  // positive is asserted beside it: the mechanism must actually be stated.
+  const WRONG_REASON = /no payment header|stdio\s+(?:has|carries)\s+no\b|stdio[^.]{0,80}free-only|free-only[^.]{0,80}stdio/i;
+
+  it("never explains payment as a property of the transport", async () => {
+    const doc = JSON.stringify(await catalog());
+    expect(doc.match(WRONG_REASON)?.[0] ?? null).toBeNull();
+    expect((await catalog()).mcp.how).toMatch(/x_payment ARGUMENT/);
+  });
+
   it("reports the rail mode from env rather than asserting one", async () => {
     expect((await catalog()).rail.mode).toBe("challenge-only");
     expect((await catalog({ X402_FACILITATOR_URL: "https://f.example" })).rail.mode).toBe("live");
