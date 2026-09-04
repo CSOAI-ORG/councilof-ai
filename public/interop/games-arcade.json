@@ -1,9 +1,9 @@
 {
   "schema": "csoai.games-arcade/0.1",
-  "as_of": "20260904T054359Z",
-  "total_games": 10,
+  "as_of": "20260904T055128Z",
+  "total_games": 15,
   "live_games": 8,
-  "staged_games": 2,
+  "staged_games": 7,
   "multiplayer_games": 8,
   "agui_games": 10,
   "a2ui_games": 10,
@@ -117,7 +117,67 @@
       "a2ui": true,
       "x402_sku": "game-civic",
       "x402_price_usdc": 0.2
+    },
+    {
+      "name": "Tournament",
+      "slug": "tournament",
+      "kind": "tournament",
+      "description": "Single-elimination model tournaments with signed brackets",
+      "status": "STAGED",
+      "multiplayer": true,
+      "agui": true,
+      "a2ui": true,
+      "x402_sku": "game-tournament",
+      "x402_price_usdc": 0.1
+    },
+    {
+      "name": "Judge",
+      "slug": "judge",
+      "kind": "judging",
+      "description": "AI judges models against EU AI Act obligations",
+      "status": "STAGED",
+      "multiplayer": true,
+      "agui": true,
+      "a2ui": true,
+      "x402_sku": "game-judge",
+      "x402_price_usdc": 0.1
+    },
+    {
+      "name": "Charter",
+      "slug": "charter",
+      "kind": "charter-building",
+      "description": "Build a charter for a fictional AI system, get signed",
+      "status": "STAGED",
+      "multiplayer": true,
+      "agui": true,
+      "a2ui": true,
+      "x402_sku": "game-charter",
+      "x402_price_usdc": 0.1
+    },
+    {
+      "name": "Compliance",
+      "slug": "compliance",
+      "kind": "compliance-scenario",
+      "description": "Work through a SOC 2 / ISO 42001 / HIPAA scenario",
+      "status": "STAGED",
+      "multiplayer": true,
+      "agui": true,
+      "a2ui": true,
+      "x402_sku": "game-compliance",
+      "x402_price_usdc": 0.1
+    },
+    {
+      "name": "Incident",
+      "slug": "incident",
+      "kind": "incident-response",
+      "description": "Respond to an AI safety incident, sign the response",
+      "status": "STAGED",
+      "multiplayer": true,
+      "agui": true,
+      "a2ui": true,
+      "x402_sku": "game-incident",
+      "x402_price_usdc": 0.1
     }
   ],
-  "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)."
+  "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Anchored to OTS + Rekor + EAS."
 }

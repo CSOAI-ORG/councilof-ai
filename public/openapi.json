@@ -449,7 +449,20 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "title",
+                    "contract",
+                    "census",
+                    "agui",
+                    "grokbot",
+                    "runpod",
+                    "os"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -665,20 +678,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "badge",
-                    "script",
-                    "verify",
-                    "human",
-                    "kit",
-                    "grammar",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -908,7 +908,21 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "as_of",
+                    "source",
+                    "ttl_seconds",
+                    "spaces",
+                    "datasets",
+                    "models",
+                    "counts",
+                    "live_board",
+                    "verify"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -992,6 +1006,32 @@
           }
         },
         "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
+      }
+    },
+    "/api/learn-loop": {
+      "get": {
+        "operationId": "get__api_learn-loop",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
+      },
+      "post": {
+        "operationId": "post__api_learn-loop",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)\n *   2. Anchored to OTS + Rek"
       }
     },
     "/api/locale": {
@@ -1112,16 +1152,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "openapi",
-                    "info",
-                    "servers",
-                    "paths"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1873,32 +1904,6 @@
           }
         },
         "summary": "* GET /api/xrpl \u2014 reader of the committed public-root 16.\n *\n * 200 only when this deploy's /root.json plus /cards yield exactly the locked\n * 16 xrpl.asset.state leaves whose sha256 sit on that root."
-      }
-    },
-    "/api/learn-loop": {
-      "get": {
-        "summary": "The end-user learning loop \u2014 every interaction becomes a 3KB signed card.",
-        "description": "Returns the loop manifest. POST to emit a card.",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Emit a 3KB signed card from an end-user interaction. Anchored to OTS pending stamps + Sigstore Rekor + EAS schema (rails planned).",
-        "description": "Every chat / game / measure / verify / attest becomes a signed card attested by the 33-agent BFT council.",
-        "responses": {
-          "200": {
-            "description": "Card emitted",
-            "content": {
-              "application/json": {}
-            }
-          }
-        }
       }
     }
   },

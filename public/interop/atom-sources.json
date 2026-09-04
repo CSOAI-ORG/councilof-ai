@@ -1,0 +1,82 @@
+{
+  "schema": "csoai.atom-sources/0.1",
+  "as_of": "20260904T055307Z",
+  "total_sources": 15,
+  "sources": [
+    {
+      "name": "arxiv.json",
+      "description": "arXiv recent AI submissions",
+      "endpoint": "http://export.arxiv.org/api/query"
+    },
+    {
+      "name": "github-ai.json",
+      "description": "GitHub AI repos",
+      "endpoint": "https://api.github.com/search/repositories?q=topic:ai"
+    },
+    {
+      "name": "huggingface-datasets.json",
+      "description": "HF datasets",
+      "endpoint": "https://huggingface.co/api/datasets"
+    },
+    {
+      "name": "companies-house-psc.json",
+      "description": "Companies House PSC",
+      "endpoint": "https://find-and-update.company-information.service.gov.uk/"
+    },
+    {
+      "name": "land-registry.json",
+      "description": "Land Registry",
+      "endpoint": "https://www.gov.uk/government/organisations/land-registry"
+    },
+    {
+      "name": "openalex.json",
+      "description": "OpenAlex works",
+      "endpoint": "https://api.openalex.org/works"
+    },
+    {
+      "name": "crossref.json",
+      "description": "Crossref DOIs",
+      "endpoint": "https://api.crossref.org/works"
+    },
+    {
+      "name": "opencorporates.json",
+      "description": "OpenCorporates",
+      "endpoint": "https://api.opencorporates.com/"
+    },
+    {
+      "name": "ico-register.json",
+      "description": "ICO UK register",
+      "endpoint": "https://ico.org.uk/"
+    },
+    {
+      "name": "fca-register.json",
+      "description": "FCA register",
+      "endpoint": "https://register.fca.org.uk/"
+    },
+    {
+      "name": "nasa-techtransfer.json",
+      "description": "NASA Tech Transfer",
+      "endpoint": "https://technology.nasa.gov/patent"
+    },
+    {
+      "name": "uspto.json",
+      "description": "USPTO patents",
+      "endpoint": "https://api.patentsview.org/"
+    },
+    {
+      "name": "epo.json",
+      "description": "EPO patents",
+      "endpoint": "https://worldwide.espacenet.com/"
+    },
+    {
+      "name": "wipo.json",
+      "description": "WIPO patents",
+      "endpoint": "https://www.wipo.int/"
+    },
+    {
+      "name": "metoffice.json",
+      "description": "Met Office UK",
+      "endpoint": "https://www.metoffice.gov.uk/"
+    }
+  ]
+}
