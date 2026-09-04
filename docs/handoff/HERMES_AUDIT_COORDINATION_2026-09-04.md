@@ -1,8 +1,8 @@
 # Hermes — audit and coordination lane
 
 **Date:** 2026-09-04
-**Branch under review:** `codex/council-release-candidate`
-**Checkpoint:** reviewed current-master checkpoint; evidence is time-stamped
+**Branch under review:** `codex/council-release-live`
+**Checkpoint:** reconciled from `origin/master` at `24291d5d0`; evidence is time-stamped
 **Owner:** Hermes audit/coordination operator
 
 ## Outcome
@@ -11,15 +11,17 @@ Maintain one current claim-to-evidence view across product, runtime, GSPC,
 commercial and release work. Give each gap one owner and prevent transcript
 claims, duplicate tasks or stale counts from becoming release truth.
 
-**Current state:** the candidate still has no refreshed Hermes claim ledger.
-The current audit has, however, identified 22 immutable XRPL/COSE incident files,
-two published atom roots with 20 quarantined leaves each, and a current-root
-witness mismatch. The release guard reports the current 141-leaf root is not
-bound by the existing 50-leaf sidecar/pointer and the wider OTS/archive inventory
-remains invalid. Legacy learn-loop placeholder issuance and the paid witness SKU
-now fail closed; neither is evidence of a working witness product. Build the
-ledger from this branch and fresh runtime evidence; do not import totals or
-status assertions from older handoffs.
+**Current state:** build the claim ledger from this branch and fresh runtime
+evidence; do not import totals or status assertions from older handoffs. The
+audit established that the public “33-agent BFT council” was a local
+single-process simulation with placeholder keys and hard-coded affirmative
+votes, while the latest real independence experiment measured `rho=1` and
+`n_eff=1` across three lineages on two providers. It also found simulated
+engine protocol doors, speculative Web3 rails and invalid or mismatched public
+proof-shaped artefacts. The candidate now labels or quarantines those surfaces,
+while the witness lane preserves incident history outside the served tree.
+Legacy learn-loop placeholder issuance and the paid witness SKU fail closed;
+neither is evidence of a working witness product.
 
 ## Business and GSPC purpose
 
@@ -85,15 +87,12 @@ Counts must be read from current canonical artifacts at audit time, not copied
 from older handoffs. Every positive runtime or commercial claim needs a
 reproducible reference; every unknown remains explicit.
 
-At the 2026-09-04 candidate checkpoint, the local GSPC API reported **22 axes /
-22 measured** with **14 model-comparison axes and 8 deterministic-fact axes**.
-The evidence-integrity guard blocked **2 roots** and the root/witness release
-guard blocked **49 issues**, comprising the schema mismatch, stale current
-sidecar/pointer, invalid or mismatched public OTS files, and distinct invalid
-archive proof references. The earlier 1,018 figure counted repeated references
-rather than the guard's deduplicated release-blocker output. These are
-time-stamped audit counts, not durable
-estate totals; refresh them on the frozen release candidate.
+At the last complete pre-remediation checkpoint, the local GSPC API reported
+**22 axes / 22 measured** with **14 model-comparison axes and 8
+deterministic-fact axes**, and the full unit suite passed **1,442/1,442 across
+132 files**. These are time-stamped audit counts, not durable estate totals.
+Refresh them on the final frozen commit and distinguish current-root workflow
+requirements from quarantined historical incidents.
 
 ## Non-goals
 

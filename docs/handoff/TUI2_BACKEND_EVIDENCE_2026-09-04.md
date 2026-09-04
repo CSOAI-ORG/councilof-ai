@@ -1,7 +1,7 @@
 # TUI 2 — backend evidence lane
 
 **Date:** 2026-09-04
-**Branch:** `codex/council-release-candidate`
+**Branch:** `codex/council-release-live`
 **Checkpoint:** reviewed current-master checkpoint; refresh evidence at handoff
 **Owner:** TUI 2 backend/evidence operator
 
@@ -20,6 +20,13 @@ fixture only. The complete durable execution, independent-admission and current
 witness chain is not implemented and remains release-blocking. Legacy
 learn-loop placeholder issuance and paid witness issuance now fail closed
 pre-payment rather than presenting unverified proof-shaped values.
+
+The public-root source contract is now versioned as
+`/schema/public-root-v1.json`, while signing and current external witnessing
+remain exclusively owned by the authorised GitHub workflow. Historical invalid
+OTS, atom-root and anchor artefacts must stay preserved in the incident archive,
+never rewritten into valid-looking evidence. Simulated 33-agent BFT and phantom
+engine endpoints are explicitly outside the runtime contract.
 
 ## Business and GSPC purpose
 

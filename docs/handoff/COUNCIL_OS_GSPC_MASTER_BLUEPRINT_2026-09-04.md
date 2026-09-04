@@ -1,7 +1,7 @@
 # Council OS + GSPC master blueprint
 
 **Date:** 2026-09-04
-**Candidate branch:** `codex/council-release-candidate`
+**Candidate branch:** `codex/council-release-live`
 **Status:** buildable release-candidate plan; not a production declaration
 **Product rule:** one operating surface, one evidence contract, many adapters
 **Public boundary:** measurement and attestation, never certification or legal approval
@@ -348,6 +348,22 @@ drift tests should the contract be reused for Kaggle, GitHub/model registries,
 public benchmark hubs or other sites. Each site remains a named adapter with
 its own terms and evidence state. “Open” never means unrestricted harvesting.
 
+### Verified Hugging Face distribution snapshot
+
+At dataset commit `500e71ce02fa8f92d1a63dd6e3e50f31d5e14b61`,
+`csoai/registry-harvest-xrpl-mica-lei` is public and ungated with **six**
+configs and **733** raw rows. It supports narrow, point-in-time XRPL, LEI, CASP
+and EURCV observations; it does not establish legal non-compliance or official
+issuer identity where the standard two-way domain mechanism is absent.
+
+Do not call this package fully reproducible yet. Its manifest and headline
+timestamp are stale, the producer scripts and raw CASP input are not included,
+the warning-list total has no downloadable config, and LEI validation only
+reaches the published 10-invalid count after trimming three whitespace-bearing
+strings. Publish `lei_raw` and `lei_normalized`, regenerate the manifest, include
+licensed raw inputs or exact retrieval digests, and ship the recompute producer
+before using it as the template for the next N-site.
+
 ## 13. Legacy, finance and standards adapters
 
 These are adapters into the same lifecycle, not separate operating systems.
@@ -382,6 +398,20 @@ SCITT statement requires a standards-conformant COSE envelope and a verifiable
 receipt from a named transparency service. The current repository discovery
 profile correctly remains `PLANNED`; no SCITT receipt is established. Rekor and
 OTS state must bind the exact current root, not a prior root or placeholder.
+
+The measured COSE framing experiment found 64 parser-accepted byte variants,
+but only 32 retain the tag-18 form required by RFC 9943's `Signed_Statement`.
+Those 32 still produced 32 distinct data hashes and 31 non-baseline forms were
+silently re-serialised by a stock parser. The defensible conclusion is narrow:
+bind the exact registered octets. It does not establish that all 64 variants
+are SCITT-valid. The adjacent payload-binding draft is an individual Internet-
+Draft with a provisional registry, not an adopted IETF algorithm registry.
+
+The current monitor-attestation helper is only an executable coverage/state
+predicate over an already decoded object. It does not verify signatures,
+deterministic encoding, replay state, authenticated stream positions, action
+digests or Permit validity, so it is not yet the wire protocol requested by the
+SCITT discussion.
 
 ## 14. Stakeholders, products and revenue
 
@@ -428,29 +458,29 @@ Observed locally on 2026-09-04; this table is not production proof.
 | GSPC API | local response schema `csoai.gspc-axes/0.5`; 22 measured axes: 14 model-comparison plus 8 deterministic-fact runs |
 | Learning | one path per canonical axis; practice-only progression and explicit human review; no automatic board or training effect |
 | Arena | recorded measured comparison is present; live prompt battle remains `UNCHECKABLE`/not implemented |
+| Council independence | latest point experiment: three model lineages across two providers, 12 claims/10 comparable, `rho=1`, `n_eff=1`; this does not establish fault tolerance |
 | Capability fabric | read-only normalized rails; action contract is fail-closed and execution-disabled |
 | Action job API | single-writer KV staging ledger; records intent/state only, with no provider, worker, board, training or egress effect |
 | Phase-1 executor | deterministic in-memory test fixture only; public, staging and production execution disabled |
 | RAS | request pane and `commission_card` contract exist; payment never creates a measured cell |
 | Public MCP | manifest declares seven read tools; no general mutating executor |
 | Learn loop and paid witness | legacy placeholder issuance and witness sales are quarantined pre-release and return fail-closed unavailable responses; no payment is accepted |
-| Current root | `public/root.json` has 141 leaves, Merkle root `2cd9db20…`; signature and Merkle recomputation were reported valid |
+| Current root | checked-in root is historical release state; source now targets schema v1, but a fresh post-merge root/signature/witness must be produced by the authorised GitHub workflow |
 | Production | not established by this branch, local build or preview; no deployment is authorized by this blueprint |
 
 ## 16. Release blockers and missing product capability
 
 ### Evidence integrity blockers
 
-- The current root declares kind `csoai.public-root/v1` against a schema whose
-  const still expects v0.
-- The current witness sidecar and pointer bind an older 50-leaf root, not the
-  current 141-leaf root.
-- The current root has no verified current Rekor snapshot or matching OTS proof.
-- Public OTS inventory includes invalid plaintext/`BadMagic` files, orphaned
-  references and two adjacent proofs whose digests do not match their JSON.
-- Two published atom roots each include 20 quarantined XRPL/COSE leaves.
-- The immutable quarantine inventory covers 22 incident files; those files must
-  remain audit history but move outside the deployable truth path.
+- Historical public OTS inventory included invalid plaintext/`BadMagic` files,
+  orphaned references and adjacent proofs whose digests did not match their
+  JSON targets; preserve these outside the deployable truth path.
+- Two published atom roots included quarantined XRPL/COSE leaves; preserve the
+  roots and proofs as incidents, not current evidence.
+- The final branch still needs a fresh schema-v1 root, sidecar, pointer and
+  independently verified Rekor/OTS state over the exact post-merge bytes.
+- GitHub Actions is the only authorised signing/witness writer; never patch a
+  stale signed root by hand or weaken the release guard.
 - SCITT remains planned; legacy hand-built COSE/SCITT placeholder output cannot
   be promoted to conformance evidence.
 

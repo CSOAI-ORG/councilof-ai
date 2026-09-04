@@ -1,7 +1,7 @@
 # TUI 1 — frontend and learning lane
 
 **Date:** 2026-09-04
-**Branch:** `codex/council-release-candidate`
+**Branch:** `codex/council-release-live`
 **Checkpoint:** reviewed current-master checkpoint; refresh evidence at handoff
 **Owner:** TUI 1 frontend/learning operator
 
@@ -18,6 +18,12 @@ the consolidated embed/breadcrumb/harness navigation selection passes 33/33.
 The frozen candidate shell E2E passes 27 tests with one intentional conditional
 skip across desktop and mobile. A production-shaped local preview exists; this
 is release-candidate evidence, not production proof.
+
+The public council language has since been corrected: the 33-member surface is
+an illustrative governance design, not a live BFT runtime; the latest measured
+independence result is `n_eff=1`, not 33 independent agents. Preserve that
+boundary in every card, tooltip, game and mobile view. Do not reintroduce any
+removed simulated engine door or speculative “live” rail.
 
 ## Business and GSPC purpose
 
