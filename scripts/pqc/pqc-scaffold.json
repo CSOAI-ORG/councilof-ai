@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.pqc-scaffold/0.1",
+  "as_of": "20260904T064514Z",
+  "note": "PQC scaffold \u2014 operator needs to install liboqs for real Kyber/Dilithium",
+  "algorithms": {
+    "kem": {
+      "name": "ML-KEM-768",
+      "alias": "Kyber768",
+      "status": "planned",
+      "lib": "liboqs or pqcrypto",
+      "use": "post-quantum key exchange for future signing keys"
+    },
+    "sig": {
+      "name": "ML-DSA-65",
+      "alias": "Dilithium3",
+      "status": "planned",
+      "lib": "liboqs or pqcrypto",
+      "use": "post-quantum signatures (Ed25519 \u2192 ML-DSA-65 transition)"
+    },
+    "stateful_hash": {
+      "name": "SLH-DSA-SHAKE-256s",
+      "alias": "SPHINCS+-SHAKE-256s",
+      "status": "planned",
+      "lib": "liboqs",
+      "use": "long-term archival signatures (no quantum vulnerability)"
+    }
+  },
+  "hybrid": {
+    "name": "Ed25519 + ML-DSA-65",
+    "status": "planned",
+    "use": "dual-sign every card (Ed25519 + Dilithium) for crypto-agility"
+  },
+  "transition_plan": [
+    "1. Generate dual keypairs (Ed25519 + ML-DSA-65)",
+    "2. Dual-sign every card going forward",
+    "3. Migrate historical cards to dual-signed (re-signed in bulk)",
+    "4. Update the public root to advertise both signatures",
+    "5. Maintain Ed25519 as fallback for 5+ years"
+  ]
+}
