@@ -397,19 +397,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "note",
-                    "register",
-                    "predicates",
-                    "not_a_certification",
-                    "generated_at",
-                    "site_attestation"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1036,28 +1024,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "probe_method",
-                    "probe_host",
-                    "probe_started",
-                    "probe_finished",
-                    "generated_by",
-                    "honesty_contract",
-                    "reachable",
-                    "reachable_endpoints",
-                    "unreachable",
-                    "catalogued_not_probed",
-                    "tools_probed",
-                    "tools_catalogued_not_probed",
-                    "external_catalogues_not_probed",
-                    "servers",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1600,7 +1567,18 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "schema",
+                    "kind",
+                    "writes_board",
+                    "claims",
+                    "honesty",
+                    "emitter"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -1811,23 +1789,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "root",
-                    "merkle_root",
-                    "as_of",
-                    "n",
-                    "xrpl_asset_count_attempted",
-                    "xrpl_fi_assetCount",
-                    "note",
-                    "assets"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
