@@ -367,7 +367,7 @@ def main() -> None:
             }
             for g in GAMES
         ],
-        "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Anchored to OTS + Rekor + EAS.",
+        "principle": "The game IS the data collection. Every turn emits a signed card. AG-UI + A2UI provide the chat. Multiplayer rooms via WebSocket. Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned).",
     }
     index_path = INTEROP / "games-arcade.json"
     index_path.write_text(json.dumps(index, indent=2))
