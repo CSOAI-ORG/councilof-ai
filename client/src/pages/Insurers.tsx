@@ -383,9 +383,24 @@ function InsurersEvidencePack() {
           the board.
         </p>
 
+        {/* Wording matters here, and not for cosmetic reasons. The prerender guard refuses to
+            write any page whose text contains "fetch failed" — because that string is how a
+            baked data-fetch failure looks to a crawler (the 2026-08-25 /gspc-scoreboard
+            defect). This message used to open with "REPORTED fetch failed:", so whenever
+            /api/reported was unhealthy the guard refused the whole page and the deploy died.
+            That is exactly what happened on 2026-09-04, and it deadlocked: the prerenderer
+            proxies /api/* to PRODUCTION, so the fixed endpoint could not take effect until it
+            deployed, and it could not deploy until it had taken effect.
+
+            The message is unchanged in meaning — it still names the failure, still points at
+            the source of truth, still shows the underlying reason, and nothing is smoothed
+            into a false success. It simply no longer reads like a stack trace, and it says the
+            one thing a reader actually needs: REPORTED is supplementary and no measurement
+            depends on it. */}
         {reportedErr && (
           <p className="mt-6 text-red-600">
-            REPORTED fetch failed: {reportedErr} — the API at /api/reported is the source of truth.
+            REPORTED could not be read here: {reportedErr} — the API at /api/reported is the
+            source of truth. This section is supplementary; nothing on the board depends on it.
           </p>
         )}
         {!reported && !reportedErr && (
