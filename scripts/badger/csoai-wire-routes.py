@@ -211,7 +211,10 @@ export const onRequestGet: PagesFunction = async () => {
       x402_rail: { status: "READY", details: "rail live, waiting for facilitator URL" },
       bft_council: { status: "BUILT", details: "33-agent BFT council manifest" },
       ot_anchoring: { status: "ACTIVE", details: "659 anchored, 361 pending" },
-      burner_wallet: { status: "READY", details: "0xb3a6a8d92a3aec1aca31b4ef06c95be468562c47f054182f1a39d26a880827da" },
+      burner_wallet: {
+        status: "BLOCKED",
+        details: "Previous test wallet retired after secret exposure. Never fund or use it.",
+      },
       grant_applications: { status: "STAGED", details: "4 grants ($280K potential)" },
       outreach_templates: { status: "STAGED", details: "230 templates" },
       npm_publish: { status: "BLOCKED", details: "needs 2FA OTP" },

@@ -6,6 +6,7 @@
   "license": "MIT",
   "author": "CSOAI Team",
   "scripts": {
+    "guard:wallet-secrets": "node scripts/wallet-credential-gate.mjs --selftest && node scripts/wallet-credential-gate.mjs",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "NODE_ENV=development tsx watch server/index.ts",
     "dev:client": "vite --config client/vite.config.ts",
