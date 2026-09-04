@@ -9,7 +9,7 @@
  */
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const CANONICAL_ARENA_ROUTE = "/dashboard?tab=play";
@@ -76,6 +76,65 @@ export function auditArenaRouteTruth({ redirects, retiredHtml = [] }) {
   return issues;
 }
 
+export function auditJsonlEvidence(raw, label = "arena/rounds.jsonl") {
+  const bytes = Buffer.isBuffer(raw) ? raw : Buffer.from(raw);
+  const issues = [];
+  const controlOffsets = [];
+
+  for (let offset = 0; offset < bytes.length; offset += 1) {
+    const byte = bytes[offset];
+    const allowedWhitespace = byte === 0x09 || byte === 0x0a || byte === 0x0d;
+    if ((!allowedWhitespace && byte < 0x20) || byte === 0x7f) {
+      controlOffsets.push(offset);
+    }
+  }
+  if (controlOffsets.length) {
+    issues.push(
+      `${label}: ${controlOffsets.length} forbidden control byte(s); ` +
+      `first at byte offset ${controlOffsets[0]}`,
+    );
+  }
+
+  let text;
+  try {
+    text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  } catch (error) {
+    issues.push(`${label}: not valid UTF-8 (${error.message})`);
+    return { issues, records: 0 };
+  }
+
+  const lines = text.split("\n");
+  if (lines.at(-1) === "") lines.pop();
+  if (!lines.length) issues.push(`${label}: no JSONL records`);
+
+  let records = 0;
+  let lineIssues = 0;
+  for (let index = 0; index < lines.length; index += 1) {
+    const lineNumber = index + 1;
+    const line = lines[index].endsWith("\r") ? lines[index].slice(0, -1) : lines[index];
+    if (!line.trim()) {
+      if (lineIssues < 5) issues.push(`${label}:${lineNumber}: blank JSONL record`);
+      lineIssues += 1;
+      continue;
+    }
+    try {
+      const value = JSON.parse(line);
+      if (value === null || typeof value !== "object" || Array.isArray(value)) {
+        if (lineIssues < 5) issues.push(`${label}:${lineNumber}: record is not a JSON object`);
+        lineIssues += 1;
+        continue;
+      }
+      records += 1;
+    } catch (error) {
+      if (lineIssues < 5) issues.push(`${label}:${lineNumber}: invalid JSON (${error.message})`);
+      lineIssues += 1;
+    }
+  }
+  if (lineIssues > 5) issues.push(`${label}: ${lineIssues - 5} more invalid line(s)`);
+
+  return { issues, records };
+}
+
 function expectedRedirectFixture() {
   return RETIRED_ARENA_ROUTES
     .map((route) => `${route}  ${CANONICAL_ARENA_ROUTE}  308`)
@@ -119,21 +178,46 @@ function selftest() {
     }).some((issue) => issue.includes("retired standalone arena HTML")),
   );
 
+  assert.deepEqual(
+    auditJsonlEvidence(Buffer.from('{"round":1}\n{"round":2}\n')).issues,
+    [],
+  );
+  assert.ok(
+    auditJsonlEvidence(Buffer.from('{"round":1}\n\0{"round":2}\n')).issues.some((issue) =>
+      issue.includes("forbidden control byte"),
+    ),
+  );
+  assert.ok(
+    auditJsonlEvidence(Buffer.from('{"round":1}\nnot-json\n')).issues.some((issue) =>
+      issue.includes(":2: invalid JSON"),
+    ),
+  );
+  assert.ok(
+    auditJsonlEvidence(Buffer.from('{"round":1}\n[]\n')).issues.some((issue) =>
+      issue.includes(":2: record is not a JSON object"),
+    ),
+  );
+
   console.log("arena-route-truth-guard selftest: PASS");
 }
 
-function retiredHtmlFiles(root) {
+function retiredHtmlFiles(publicDir) {
   const files = [];
-  const standalone = join(root, "public/arena.html");
-  if (existsSync(standalone)) files.push("public/arena.html");
+  const standalone = join(publicDir, "arena.html");
+  if (existsSync(standalone)) files.push("arena.html");
 
-  const arenaDir = join(root, "public/arena");
+  const arenaDir = join(publicDir, "arena");
   if (existsSync(arenaDir)) {
     for (const name of readdirSync(arenaDir)) {
-      if (name.endsWith(".html")) files.push(`public/arena/${name}`);
+      if (name.endsWith(".html")) files.push(`arena/${name}`);
     }
   }
   return files.sort();
+}
+
+function argumentValue(flag, fallback) {
+  const index = process.argv.indexOf(flag);
+  return index >= 0 ? process.argv[index + 1] : fallback;
 }
 
 function main() {
@@ -143,20 +227,30 @@ function main() {
   }
 
   const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const redirectsPath = join(root, "public/_redirects");
+  const publicDir = resolve(root, argumentValue("--public-dir", "public"));
+  const displayDir = relative(root, publicDir) || ".";
+  const redirectsPath = join(publicDir, "_redirects");
   const artifacts = [
-    "public/arena/east-west-market.json",
-    "public/arena/elo_reference.json",
-    "public/arena/rounds.jsonl",
+    "arena/east-west-market.json",
+    "arena/elo_reference.json",
+    "arena/rounds.jsonl",
   ];
   const issues = auditArenaRouteTruth({
     redirects: readFileSync(redirectsPath, "utf8"),
-    retiredHtml: retiredHtmlFiles(root),
+    retiredHtml: retiredHtmlFiles(publicDir),
   });
   for (const artifact of artifacts) {
-    if (!existsSync(join(root, artifact))) {
-      issues.push(`${artifact}: retained machine evidence asset is missing`);
+    if (!existsSync(join(publicDir, artifact))) {
+      issues.push(`${displayDir}/${artifact}: retained machine evidence asset is missing`);
     }
+  }
+
+  const roundsPath = join(publicDir, "arena/rounds.jsonl");
+  let records = 0;
+  if (existsSync(roundsPath)) {
+    const audit = auditJsonlEvidence(readFileSync(roundsPath), `${displayDir}/arena/rounds.jsonl`);
+    issues.push(...audit.issues);
+    records = audit.records;
   }
 
   if (issues.length) {
@@ -166,7 +260,8 @@ function main() {
   }
 
   console.log(
-    `arena-route-truth-guard: PASS (${RETIRED_ARENA_ROUTES.length} human routes converge; machine evidence retained)`,
+    `arena-route-truth-guard: PASS (${RETIRED_ARENA_ROUTES.length} human routes converge; ` +
+    `${records} JSONL evidence records valid in ${displayDir})`,
   );
 }
 
