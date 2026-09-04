@@ -43,6 +43,9 @@ jobs:
       - name: Evidence integrity gate — quarantine false XRPL and invalid COSE/SCITT claims
         run: npm run guard:evidence-integrity
 
+      - name: Council truth gate — no simulated BFT or phantom engine doors
+        run: npm run guard:council-truth
+
       # _redirects guard. Cloudflare stops parsing the file after 100 DYNAMIC rules and
       # only warns; on 2026-08-26 that silently dropped the last 53 lines including the
       # SPA catch-all, and the deploy still went green. Selftest first so a guard that

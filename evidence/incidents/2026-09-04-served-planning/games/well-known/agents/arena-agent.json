@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "arena",
+  "name": "Arena",
+  "kind": "model-arena",
+  "as_of": "20260904T064715Z",
+  "url": "https://councilof.ai/api/a2a/arena",
+  "version": "1.0",
+  "capabilities": {
+    "play": "Play Arena with AI opponents",
+    "chat": "Chat with AI via AG-UI / A2UI",
+    "multiplayer": "Join a multiplayer room",
+    "attestation": "none \u2014 this game emits no card and lands nothing in the signed root",
+    "verification": "Verify any signed card offline"
+  },
+  "skills": [
+    {
+      "id": "arena.play",
+      "description": "Play Arena"
+    },
+    {
+      "id": "arena.chat",
+      "description": "Chat with AI in Arena"
+    },
+    {
+      "id": "arena.attest",
+      "description": "Get a signed turn card from Arena"
+    },
+    {
+      "id": "arena.verify",
+      "description": "Verify an attestation from Arena"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "agui": "https://councilof.ai/arena/ag-ui",
+    "a2ui": "https://councilof.ai/arena/a2-ui"
+  }
+}

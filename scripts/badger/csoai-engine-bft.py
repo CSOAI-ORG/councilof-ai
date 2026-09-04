@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""csoai-engine-bft.py — wire every engine to the 33-agent BFT council.
+"""Retired engine-wiring generator.
 
 Engines to integrate:
   1. OSWAO (Open Sovereign Web Agent Ontology)
@@ -17,7 +17,9 @@ Each engine:
   - Has its own MCP server registration
   - Has its own x402 SKU
 
-Lane-doable: just generates the wiring.
+The former implementation generated discovery, A2A, MCP and BFT declarations
+without runtime handlers. Its historical output is preserved under
+evidence/incidents/2026-09-04-simulated-engine-wiring and must not be served.
 """
 
 from __future__ import annotations
@@ -30,6 +32,7 @@ WK = Path("public/.well-known")
 INTEROP = Path("public/interop")
 AGENTS = Path("public/.well-known/agents")
 MCP = Path("public/.well-known/mcp")
+QUARANTINED_GENERATOR = True
 
 for d in [WK, INTEROP, AGENTS, MCP]:
     d.mkdir(parents=True, exist_ok=True)
@@ -246,6 +249,10 @@ def build_interop(engine: dict) -> dict:
 
 
 def main() -> None:
+    print("RETIRED: simulated engine wiring is quarantined; no public files written")
+    return
+
+    # Historical implementation retained below for incident archaeology only.
     print("=== ENGINE BFT — wire every engine to the 33-agent BFT council ===")
     print()
 

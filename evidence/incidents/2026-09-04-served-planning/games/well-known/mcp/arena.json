@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "arena",
+  "name": "Arena",
+  "kind": "model-arena",
+  "as_of": "20260904T064715Z",
+  "url": "https://councilof.ai/.well-known/mcp/arena.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_arena",
+      "description": "Play Arena"
+    },
+    {
+      "name": "chat_arena",
+      "description": "Chat with AI in Arena"
+    },
+    {
+      "name": "join_room_arena",
+      "description": "Join a multiplayer room in Arena"
+    },
+    {
+      "name": "attest_arena",
+      "description": "Get a signed turn card from Arena"
+    },
+    {
+      "name": "verify_arena",
+      "description": "Verify an attestation from Arena"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://arena/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://arena/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://arena/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_arena",
+      "description": "Play Arena with AI"
+    },
+    {
+      "name": "chat_arena",
+      "description": "Chat with AI in Arena"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "playbooks",
+  "name": "Playbooks",
+  "kind": "scenario",
+  "as_of": "20260904T064716Z",
+  "url": "https://councilof.ai/.well-known/mcp/playbooks.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_playbooks",
+      "description": "Play Playbooks"
+    },
+    {
+      "name": "chat_playbooks",
+      "description": "Chat with AI in Playbooks"
+    },
+    {
+      "name": "join_room_playbooks",
+      "description": "Join a multiplayer room in Playbooks"
+    },
+    {
+      "name": "attest_playbooks",
+      "description": "Get a signed turn card from Playbooks"
+    },
+    {
+      "name": "verify_playbooks",
+      "description": "Verify an attestation from Playbooks"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://playbooks/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://playbooks/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://playbooks/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_playbooks",
+      "description": "Play Playbooks with AI"
+    },
+    {
+      "name": "chat_playbooks",
+      "description": "Chat with AI in Playbooks"
+    }
+  ]
+}

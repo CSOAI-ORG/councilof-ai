@@ -1,0 +1,32 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "council-minds",
+  "name": "Council Minds",
+  "kind": "deliberation",
+  "engine": "React + agent orchestration",
+  "description": "Multiple agents deliberate a question.",
+  "status": "LIVE",
+  "as_of": "20260904T064715Z",
+  "axes_related": [
+    "governance",
+    "safety"
+  ],
+  "multiplayer": true,
+  "players": "2-8 players",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/council-minds.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/council-minds-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/council-minds.json",
+    "agui": "https://councilof.ai/council-minds/ag-ui",
+    "a2ui": "https://councilof.ai/council-minds/a2-ui",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "notes": [
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"
+  ]
+}

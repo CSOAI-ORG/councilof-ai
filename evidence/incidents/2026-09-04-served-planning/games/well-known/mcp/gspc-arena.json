@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "gspc-arena",
+  "name": "GSPC Arena",
+  "kind": "measurement-arena",
+  "as_of": "20260904T064715Z",
+  "url": "https://councilof.ai/.well-known/mcp/gspc-arena.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_gspc-arena",
+      "description": "Play GSPC Arena"
+    },
+    {
+      "name": "chat_gspc-arena",
+      "description": "Chat with AI in GSPC Arena"
+    },
+    {
+      "name": "join_room_gspc-arena",
+      "description": "Join a multiplayer room in GSPC Arena"
+    },
+    {
+      "name": "attest_gspc-arena",
+      "description": "Get a signed turn card from GSPC Arena"
+    },
+    {
+      "name": "verify_gspc-arena",
+      "description": "Verify an attestation from GSPC Arena"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://gspc-arena/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://gspc-arena/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://gspc-arena/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_gspc-arena",
+      "description": "Play GSPC Arena with AI"
+    },
+    {
+      "name": "chat_gspc-arena",
+      "description": "Chat with AI in GSPC Arena"
+    }
+  ]
+}

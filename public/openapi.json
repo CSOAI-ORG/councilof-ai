@@ -24,26 +24,51 @@
   },
   "openapi": "3.0.3",
   "paths": {
+    "/api/action-jobs": {
+      "get": {
+        "operationId": "get__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      },
+      "patch": {
+        "operationId": "patch__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      },
+      "post": {
+        "operationId": "post__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      }
+    },
     "/api/agentic-fix": {
       "get": {
         "operationId": "get__api_agentic-fix",
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "endpoint",
-                    "methods",
-                    "description",
-                    "detectors",
-                    "fixers",
-                    "status",
-                    "lane",
-                    "examples"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -55,20 +80,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "endpoint",
-                    "methods",
-                    "description",
-                    "detectors",
-                    "fixers",
-                    "status",
-                    "lane",
-                    "examples"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -82,16 +94,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "ok",
-                    "service",
-                    "post_to_issue",
-                    "verify_with"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -103,16 +106,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "ok",
-                    "service",
-                    "post_to_issue",
-                    "verify_with"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -152,20 +146,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "served_from",
-                    "registry_axis_count",
-                    "public_count",
-                    "counting_rule",
-                    "axes",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -179,11 +160,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": []
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -197,32 +174,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "register",
-                    "assessed_on",
-                    "authored_by",
-                    "method",
-                    "no_model_judgment",
-                    "record_type",
-                    "not_a_certification",
-                    "endorsement",
-                    "solicited",
-                    "subject_participation",
-                    "access",
-                    "result_semantics",
-                    "impartiality_policy",
-                    "impartiality",
-                    "notice_policy",
-                    "predicate_catalogue",
-                    "totals",
-                    "records"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -250,22 +202,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "served_from",
-                    "measured_on",
-                    "measurement",
-                    "board",
-                    "living_board",
-                    "cross_border",
-                    "cards",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -279,17 +216,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "note",
-                    "example",
-                    "id_echo",
-                    "stored"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -301,17 +228,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "note",
-                    "example",
-                    "id_echo",
-                    "stored"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -353,19 +270,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "note",
-                    "register",
-                    "predicates",
-                    "not_a_certification",
-                    "generated_at",
-                    "site_attestation"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -379,19 +284,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "name",
-                    "ts",
-                    "register",
-                    "rails",
-                    "the_pairing",
-                    "honest_gate"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -405,20 +298,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "title",
-                    "contract",
-                    "census",
-                    "agui",
-                    "grokbot",
-                    "runpod",
-                    "os"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -472,20 +352,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "policy",
-                    "license",
-                    "publisher",
-                    "corrections",
-                    "signature",
-                    "signature_state",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -499,18 +366,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "wave",
-                    "contract",
-                    "counters",
-                    "board_crosscheck",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -524,22 +380,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "what",
-                    "legs",
-                    "east_west",
-                    "human_baselines_sample",
-                    "rows",
-                    "honest_gate",
-                    "license",
-                    "publisher",
-                    "signature"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -619,22 +460,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "marks",
-                    "detectors",
-                    "cells",
-                    "stats",
-                    "deadline",
-                    "contribute",
-                    "issued_at",
-                    "issuer",
-                    "receipt"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -648,23 +474,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "name",
-                    "ts",
-                    "register",
-                    "east_vs_west",
-                    "regulation",
-                    "insurer_defensibility",
-                    "market",
-                    "human",
-                    "the_pairing",
-                    "signature_envelope"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -678,20 +488,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "badge",
-                    "script",
-                    "verify",
-                    "human",
-                    "kit",
-                    "grammar",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -705,22 +502,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "lane",
-                    "data_only",
-                    "streams",
-                    "free_for",
-                    "sold",
-                    "never",
-                    "buy",
-                    "rail"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -742,33 +524,46 @@
         "summary": "* GET /api/evidence-bundle \u2014 Tier 2: an evidence bundle mapped to ONE regulatory obligation.\n *\n *   free   ?obligation=<id>[&subject=<s>]      \u2192 the obligation record, the counsel gate, how many\n *  "
       }
     },
+    "/api/evidence-intake": {
+      "post": {
+        "operationId": "post__api_evidence-intake",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/evidence-intake \u2014 explicit candidate measurement intake.\n *\n * This is deliberately not a measurement endpoint. It verifies the ephemeral\n * browser signature on one <=3KB candidate receip"
+      }
+    },
     "/api/evidence-pack": {
       "get": {
         "operationId": "get__api_evidence-pack",
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "ts",
-                    "purpose",
-                    "system_transparency",
-                    "data_lineage",
-                    "active_controls",
-                    "named_owners",
-                    "bundle",
-                    "limitations",
-                    "signature_envelope"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
         },
         "summary": ""
+      }
+    },
+    "/api/fabric": {
+      "get": {
+        "operationId": "get__api_fabric",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/fabric -- normalized, read-only capability evidence.\n *\n * This is not an action registry. Every positive state is derived from a bounded\n * same-origin probe made for this request. Catalog"
       }
     },
     "/api/feed.xml": {
@@ -777,11 +572,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": []
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -795,23 +586,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "honesty",
-                    "as_of",
-                    "source",
-                    "mode",
-                    "counts",
-                    "fine_tiers",
-                    "regulators",
-                    "axes",
-                    "models",
-                    "findings"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -825,24 +600,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "record_type",
-                    "title",
-                    "as_of",
-                    "freshness",
-                    "first_fine_watch",
-                    "fines_by_jurisdiction",
-                    "deadlines_calendar",
-                    "correction_59",
-                    "honest_register",
-                    "bright_lines",
-                    "signature"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -868,14 +626,15 @@
       "get": {
         "operationId": "get__api_growth-loops",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/growth-loops \u2014 run every growth loop on demand.\n *\n * Returns the manifest + which loops ran successfully."
+        "summary": "* /api/growth-loops \u2014 retired until loop status is derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/gspc": {
@@ -884,30 +643,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "doi",
-                    "doi_note",
-                    "measured_on",
-                    "note",
-                    "state_enum",
-                    "totals",
-                    "bank_host",
-                    "banked_axes",
-                    "banked_axes_resolvable",
-                    "banked_axes_unresolvable",
-                    "bank_note",
-                    "axes",
-                    "measured_in_lane",
-                    "domains",
-                    "limitations",
-                    "site_attestation"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -921,21 +657,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "as_of",
-                    "source",
-                    "ttl_seconds",
-                    "spaces",
-                    "datasets",
-                    "models",
-                    "counts",
-                    "live_board",
-                    "verify"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -949,19 +671,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "as_of",
-                    "source",
-                    "population",
-                    "honesty",
-                    "counts",
-                    "cells"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1003,13 +713,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "bound"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1021,13 +725,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "bound"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1043,10 +741,10 @@
             "content": {
               "application/json": {}
             },
-            "description": "Unavailable — quarantined pre-release; no evidence is manufactured"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface. Candidate learning never becomes evidence without admission, signing and independently verifiable witnesses.",
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
@@ -1056,11 +754,25 @@
             "content": {
               "application/json": {}
             },
-            "description": "Unavailable — quarantined pre-release; no evidence is manufactured"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface. Candidate learning never becomes evidence without admission, signing and independently verifiable witnesses.",
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/learning-scenarios": {
+      "get": {
+        "operationId": "get__api_learning-scenarios",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
       }
     },
     "/api/locale": {
@@ -1069,16 +781,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "detected",
-                    "disclaimer",
-                    "override_hint"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1092,28 +795,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "probe_method",
-                    "probe_host",
-                    "probe_started",
-                    "probe_finished",
-                    "generated_by",
-                    "honesty_contract",
-                    "reachable",
-                    "reachable_endpoints",
-                    "unreachable",
-                    "catalogued_not_probed",
-                    "tools_probed",
-                    "tools_catalogued_not_probed",
-                    "external_catalogues_not_probed",
-                    "servers",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1127,19 +809,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "doctrine",
-                    "instruments",
-                    "honesty_rules",
-                    "claims_refused",
-                    "generated_at",
-                    "site_attestation"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1181,16 +851,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "openapi",
-                    "info",
-                    "servers",
-                    "paths"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1204,20 +865,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "writes_board",
-                    "collector",
-                    "otlp",
-                    "gen_ai_spans",
-                    "otel_trace_id",
-                    "otel_trace_hash",
-                    "honesty"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1231,21 +879,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "writes_board",
-                    "kind",
-                    "not_an_axis",
-                    "as_of",
-                    "continuity_axis",
-                    "estate_signatures",
-                    "honesty",
-                    "live"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1257,14 +891,15 @@
       "get": {
         "operationId": "get__api_prod-readiness",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/prod-readiness \u2014 the production readiness checklist."
+        "summary": "* /api/prod-readiness \u2014 retired until readiness is derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/proof": {
@@ -1281,24 +916,39 @@
         "summary": "* GET /api/proof \u2014 inclusion proofs for public-root leaves.\n *\n * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.\n * 402 without payment is OK. May trail the last published root (\u2264"
       }
     },
+    "/api/provider-canary": {
+      "get": {
+        "operationId": "get__api_provider-canary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+      },
+      "post": {
+        "operationId": "post__api_provider-canary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+      }
+    },
     "/api/registers": {
       "get": {
         "operationId": "get__api_registers",
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "note",
-                    "signer",
-                    "measured_on",
-                    "n_axes",
-                    "axes"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1312,60 +962,12 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "verified_as_of",
-                    "reverification_cadence",
-                    "license",
-                    "publisher",
-                    "corrections_policy",
-                    "headline_correction",
-                    "deadlines",
-                    "disputed",
-                    "underwriting_note",
-                    "penalty_tiers_eu_ai_act",
-                    "demand_creating",
-                    "signature"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
         },
-        "summary": "* GET /api/regulation \u2014 Regulation watch \u2014 list every regulation CSOAI tracks.\n *\n * Returns the live data from computed."
-      },
-      "post": {
-        "operationId": "post__api_regulation",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "verified_as_of",
-                    "reverification_cadence",
-                    "license",
-                    "publisher",
-                    "corrections_policy",
-                    "headline_correction",
-                    "deadlines",
-                    "disputed",
-                    "underwriting_note",
-                    "penalty_tiers_eu_ai_act",
-                    "demand_creating",
-                    "signature"
-                  ]
-                }
-              }
-            },
-            "description": "OK"
-          }
-        },
-        "summary": "* GET /api/regulation \u2014 Regulation watch \u2014 list every regulation CSOAI tracks.\n *\n * Returns the live data from computed."
+        "summary": "* GET /api/regulation \u2014 source-cited regulation deadline feed.\n *\n * This endpoint deliberately serves a bounded, versioned register rather than\n * accepting generic writes. Dates are statements from "
       }
     },
     "/api/regulator-findings": {
@@ -1374,20 +976,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "ts",
-                    "deployment",
-                    "sector",
-                    "note",
-                    "findings",
-                    "penalty_tiers",
-                    "verify_path"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1427,18 +1016,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "register",
-                    "states",
-                    "count",
-                    "entries"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1450,18 +1028,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "register",
-                    "states",
-                    "count",
-                    "entries"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1489,18 +1056,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "contract",
-                    "skus",
-                    "settled_usdc",
-                    "provisioning",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1514,29 +1070,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "as_of",
-                    "card_count",
-                    "card_sha256",
-                    "did_intended",
-                    "kind",
-                    "leaf_definition",
-                    "language",
-                    "merkle_root",
-                    "note",
-                    "schema",
-                    "sources",
-                    "xrpl_asset_count_attempted",
-                    "xrpl_basket_merkle",
-                    "xrpl_fi_assetCount",
-                    "xrpl_fi_updatedAt",
-                    "sig_ed25519",
-                    "sig_preimage"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1555,7 +1089,7 @@
             "description": "OK"
           }
         },
-        "summary": "* /api/router \u2014 the unified discovery + interop + packages router.\n *\n * Every /.well-known/ door \u2192 ?slug=\n * Every /interop/ format \u2192 ?slug=\n * Every /packages/ manifest \u2192 ?name=\n * Growth loops + sy"
+        "summary": "* /api/router \u2014 the bounded discovery + interop + packages router."
       }
     },
     "/api/security": {
@@ -1564,19 +1098,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "issuer",
-                    "hive",
-                    "note",
-                    "totals",
-                    "surfaces",
-                    "limitations"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1590,23 +1112,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "record_type",
-                    "as_of",
-                    "count",
-                    "not_a_certification",
-                    "endorsement",
-                    "note",
-                    "specialists",
-                    "body_sha256",
-                    "sig_algo",
-                    "sig_b64"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1620,27 +1126,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "title",
-                    "public_count",
-                    "contract",
-                    "board",
-                    "council_http_mcp",
-                    "mcp_fleet",
-                    "hub_census",
-                    "signed_cards",
-                    "card_chain",
-                    "claims_register",
-                    "rwa_instruments",
-                    "public_root",
-                    "not_covered",
-                    "doctrine"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1680,28 +1166,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "supersedes",
-                    "n",
-                    "n_measured",
-                    "n_live",
-                    "n_committed",
-                    "n_discovered",
-                    "status_all",
-                    "as_of",
-                    "universe_note",
-                    "honesty",
-                    "sources",
-                    "cobolbridge_ai",
-                    "rows"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1713,14 +1178,15 @@
       "get": {
         "operationId": "get__api_synthesis",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/synthesis \u2014 the cross-reference layer.\n *\n * Maps standards to axes, packages to doctrine, loops to counters, doors to APIs."
+        "summary": "* /api/synthesis \u2014 retired until mappings are generated from verified records.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/tools": {
@@ -1729,25 +1195,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "total",
-                    "total_kind",
-                    "catalogue_total",
-                    "server_count",
-                    "query",
-                    "probe_method",
-                    "probe_host",
-                    "probe_finished",
-                    "catalogued_not_probed_servers",
-                    "tools_catalogued_not_probed",
-                    "external_catalogues_not_probed",
-                    "tools",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1761,18 +1209,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "claims",
-                    "honesty",
-                    "emitter"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1784,18 +1221,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "claims",
-                    "honesty",
-                    "emitter"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1837,14 +1263,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "ok",
-                    "fail"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1856,14 +1275,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "ok",
-                    "fail"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1877,19 +1289,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "doctrine",
-                    "waves",
-                    "gspc",
-                    "receipts",
-                    "not_a_certification",
-                    "generated"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1903,11 +1303,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": []
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1919,11 +1315,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": []
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1935,11 +1327,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": []
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1955,10 +1343,10 @@
             "content": {
               "application/json": {}
             },
-            "description": "Unavailable — paid witness issuance is quarantined pre-release"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/witness \u2014 quarantined paid surface. No payment is accepted until the evidence chain publishes atomically and verifies against exact bytes.",
+        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
@@ -1968,10 +1356,10 @@
             "content": {
               "application/json": {}
             },
-            "description": "Unavailable — paid witness issuance is quarantined pre-release"
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/witness \u2014 quarantined paid surface. No payment is accepted until the evidence chain publishes atomically and verifies against exact bytes.",
+        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
@@ -2007,22 +1395,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "one_line",
-                    "rail",
-                    "tiers",
-                    "free_forever",
-                    "mcp",
-                    "invariants",
-                    "lid",
-                    "explainer",
-                    "revenue_truth"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -2036,23 +1409,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "kind",
-                    "writes_board",
-                    "root",
-                    "merkle_root",
-                    "as_of",
-                    "n",
-                    "xrpl_asset_count_attempted",
-                    "xrpl_fi_assetCount",
-                    "note",
-                    "assets"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }

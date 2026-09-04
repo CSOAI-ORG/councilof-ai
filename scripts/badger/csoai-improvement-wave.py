@@ -218,21 +218,10 @@ def main() -> None:
     }, indent=2))
     print(f"  total atom sources: {len(NEW_SOURCES)}")
 
-    # 3. Engines
+    # 3. Engines — retired. The old append-only generator produced duplicate
+    # declarations and URLs without matching runtime handlers.
     print()
-    print("[3] Adding 5 more engines...")
-    engines_path = INTEROP / "engine-bindings.json"
-    existing_engines = json.load(open(engines_path)) if engines_path.exists() else {"engines": []}
-    for slug, name, desc in NEW_ENGINES:
-        existing_engines["engines"].append({
-            "name": name,
-            "slug": slug,
-            "description": desc,
-            "x402_sku": f"engine-{slug}",
-        })
-        (WK / f"{slug}.json").write_text(json.dumps(build_discovery(slug, name, desc), indent=2))
-    engines_path.write_text(json.dumps(existing_engines, indent=2))
-    print(f"  total engines: {len(existing_engines['engines'])}")
+    print("[3] Engine binding generation RETIRED — capability registry is authoritative")
 
     # 4. Games
     print()

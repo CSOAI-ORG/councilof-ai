@@ -1,0 +1,75 @@
+{
+  "as_of": "20260904T064716Z",
+  "loops": [
+    {
+      "name": "auto-mining",
+      "interval": "5 min",
+      "description": "Mine 10+ public sources every 5 minutes",
+      "owner": "harvest-fast LaunchAgent",
+      "yield": "10K atoms/day"
+    },
+    {
+      "name": "auto-signing",
+      "interval": "15 min",
+      "description": "Sign every new atom with Ed25519",
+      "owner": "mill-measure LaunchAgent",
+      "yield": "100K signed/day"
+    },
+    {
+      "name": "auto-anchoring",
+      "interval": "daily",
+      "description": "Anchor every signed card to OTS pending",
+      "owner": "anchor-daily LaunchAgent",
+      "yield": "10K anchored/day"
+    },
+    {
+      "name": "auto-outreach",
+      "interval": "weekly",
+      "description": "Send outreach via staged templates",
+      "owner": "outreach-bot LaunchAgent",
+      "yield": "100 contacts/week"
+    },
+    {
+      "name": "auto-discovery",
+      "interval": "daily",
+      "description": "Mine new AI models on HuggingFace",
+      "owner": "hub-queue-mill LaunchAgent",
+      "yield": "100 models/day"
+    },
+    {
+      "name": "auto-bft",
+      "interval": "daily",
+      "description": "33-agent BFT council signs every new card",
+      "owner": "bft-quorum LaunchAgent",
+      "yield": "100 cards/day at 23/33"
+    },
+    {
+      "name": "auto-xrpl",
+      "interval": "weekly",
+      "description": "Probe XRPL issuers on mainnet",
+      "owner": "xrpl-settlement LaunchAgent",
+      "yield": "10 issuers/week"
+    },
+    {
+      "name": "auto-x402",
+      "interval": "5 min",
+      "description": "Probe x402 endpoints, stage receipts",
+      "owner": "revenue-loop LaunchAgent",
+      "yield": "60 probes/cycle"
+    },
+    {
+      "name": "auto-evm",
+      "interval": "hourly",
+      "description": "Probe EVM chains for USDC transfers",
+      "owner": "evm-bridge LaunchAgent",
+      "yield": "100 transfers/day"
+    },
+    {
+      "name": "auto-btc",
+      "interval": "real-time",
+      "description": "Watch Bitcoin mempool for OP_RETURN",
+      "owner": "btc-mempool LaunchAgent",
+      "yield": "100 memos/day"
+    }
+  ]
+}

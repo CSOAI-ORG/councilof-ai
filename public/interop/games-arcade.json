@@ -1,103 +1,105 @@
 {
-  "schema": "csoai.games-arcade/0.1",
-  "as_of": "20260904T064716Z",
-  "total_games": 10,
-  "live_games": 8,
-  "staged_games": 2,
-  "multiplayer_games": 8,
-  "agui_games": 10,
-  "a2ui_games": 10,
-  "games": [
-    {
-      "name": "Council Town",
-      "slug": "council-town",
-      "kind": "open-world-multi-agent",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Council Minds",
-      "slug": "council-minds",
-      "kind": "deliberation",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Hive Model",
-      "slug": "hive-model",
-      "kind": "multi-agent-hive",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Arena",
-      "slug": "arena",
-      "kind": "model-arena",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "GSPC Arena",
-      "slug": "gspc-arena",
-      "kind": "measurement-arena",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Playbooks",
-      "slug": "playbooks",
-      "kind": "scenario",
-      "status": "LIVE",
-      "multiplayer": false,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Course Player",
-      "slug": "course-player",
-      "kind": "education",
-      "status": "LIVE",
-      "multiplayer": false,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "PDCA Simulator",
-      "slug": "pdca-simulator",
-      "kind": "simulation",
-      "status": "LIVE",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Swarm",
-      "slug": "swarm",
-      "kind": "agent-swarm",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    },
-    {
-      "name": "Civic",
-      "slug": "civic",
-      "kind": "civic-deliberation",
-      "status": "STAGED",
-      "multiplayer": true,
-      "agui": true,
-      "a2ui": true
-    }
+  "schema": "csoai.game-planning-catalogue/0.2",
+  "kind": "planning-catalogue",
+  "status": "PRACTICE_ONLY",
+  "as_of": "20260904T123722Z",
+  "purpose": "Non-callable concept inventory for design review.",
+  "limitations": [
+    "No runtime, availability, connectivity, signing, payment, or deployment evidence is attached.",
+    "Entries are concepts, not public service or protocol declarations.",
+    "Nothing in this catalogue writes to the public measurement board."
   ],
-  "principle": "Discovery documents for the games. AG-UI + A2UI provide the chat; multiplayer rooms run over WebSocket. No game emits a card, none is anchored, and none writes to the GSPC board: a game result is not a measurement of a model on an axis, and the board is worth something precisely because a cell cannot be produced by playing. The honest route for game events is /api/witness, which attests that a digest existed at a time and asserts nothing about its content."
+  "total_concepts": 10,
+  "concepts": [
+    {
+      "slug": "council-town",
+      "name": "Council Town",
+      "kind": "open-world-deliberation-concept",
+      "concept": "Explore how agent groups could deliberate in a shared world.",
+      "topics": ["governance", "safety"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "council-minds",
+      "name": "Council Minds",
+      "kind": "deliberation-concept",
+      "concept": "Explore structured multi-perspective deliberation.",
+      "topics": ["governance", "safety", "reasoning"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "hive-model",
+      "name": "Hive Model",
+      "kind": "collaboration-concept",
+      "concept": "Explore cooperation patterns among simulated agents.",
+      "topics": ["governance", "safety", "capability"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "arena",
+      "name": "Arena",
+      "kind": "comparison-concept",
+      "concept": "Explore controlled side-by-side benchmark presentation.",
+      "topics": ["capability", "performance", "conduct"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "gspc-arena",
+      "name": "GSPC Arena",
+      "kind": "measurement-concept",
+      "concept": "Explore comparative presentation across GSPC topics.",
+      "topics": ["governance", "safety", "performance", "conduct", "capability"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "playbooks",
+      "name": "Playbooks",
+      "kind": "scenario-concept",
+      "concept": "Explore multi-step governance scenarios.",
+      "topics": ["governance", "safety", "compliance"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "course-player",
+      "name": "Course Player",
+      "kind": "education-concept",
+      "concept": "Explore guided lessons on AI governance.",
+      "topics": ["governance", "safety"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "pdca-simulator",
+      "name": "PDCA Simulator",
+      "kind": "process-simulation-concept",
+      "concept": "Explore Plan-Do-Check-Act governance exercises.",
+      "topics": ["governance", "compliance"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "swarm",
+      "name": "Swarm",
+      "kind": "coordination-concept",
+      "concept": "Explore collective problem-solving patterns.",
+      "topics": ["governance", "safety", "capability"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    },
+    {
+      "slug": "civic",
+      "name": "Civic",
+      "kind": "civic-deliberation-concept",
+      "concept": "Explore simulated policy deliberation.",
+      "topics": ["governance", "safety", "compliance", "conduct"],
+      "status": "PRACTICE_ONLY",
+      "writes_board": false
+    }
+  ]
 }

@@ -56,6 +56,9 @@ node scripts/wallet-credential-gate.mjs
 step 'Evidence integrity gate — quarantine false XRPL and invalid COSE/SCITT claims'
 npm run guard:evidence-integrity
 
+step 'Council truth gate — no simulated BFT or phantom engine doors'
+npm run guard:council-truth
+
 step 'Redirects guard — selftest, then the real file'
 node scripts/redirects-guard.mjs --selftest
 node scripts/redirects-guard.mjs public/_redirects
