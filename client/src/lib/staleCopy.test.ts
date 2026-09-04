@@ -17,7 +17,9 @@ describe("stale copy honesty", () => {
   it("RAS pack cites the living board, not a 13-axis product", () => {
     expect(pack).toMatch(/Not a 13-axis product/);
     expect(pack).toMatch(/GET \/api\/gspc/);
-    expect(pack).toMatch(/cite the live length/);
+    expect(pack).toMatch(/public, source-maintained corrections record/);
+    expect(pack).toMatch(/not backed by append-only storage proof/);
+    expect(pack).not.toMatch(/cite the live length|append-only ledger/i);
     expect(pack).not.toMatch(/13 real self-caught/);
     expect(pack).not.toMatch(/13 axes × 8 frameworks/);
   });

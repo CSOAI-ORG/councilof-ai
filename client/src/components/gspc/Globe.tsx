@@ -20,7 +20,7 @@
 
 import { useEffect, useRef } from "react";
 import worldGeo from "@/data/world-geo.json";
-import { ANCHORS, hoursSinceLastPass, type Jurisdiction } from "@/data/anchors";
+import { ANCHORS, effectiveAnchorStatus, hoursSinceLastPass, type Jurisdiction } from "@/data/anchors";
 import { CONNECTED_NODES } from "@/data/nodes";
 
 type Ring = number[][];
@@ -201,13 +201,13 @@ export function Globe({ highlight, onSelect, showStats = true, showNodes = true 
         const anchor = ANCHOR_BY_ID.get(n.id);
         const el = mk<SVGPathElement>("path", {
           d: "M 0 -4 L 4 0 L 0 4 L -4 0 Z",
-          fill: anchor ? (NODE_STATUS_COLORS[anchor.status] ?? "none") : "none",
-          stroke: anchor ? (NODE_STATUS_COLORS[anchor.status] ?? NODE_UNKNOWN) : NODE_UNKNOWN,
+          fill: anchor ? (NODE_STATUS_COLORS[effectiveAnchorStatus(anchor)] ?? "none") : "none",
+          stroke: anchor ? (NODE_STATUS_COLORS[effectiveAnchorStatus(anchor)] ?? NODE_UNKNOWN) : NODE_UNKNOWN,
           "stroke-width": "1",
         });
         const title = mk<SVGTitleElement>("title", {});
         title.textContent = anchor
-          ? `${n.name} — ${anchor.status} (${hoursSinceLastPass(anchor.last_passed).toFixed(1)}h since last pass)`
+          ? `${n.name} — ${effectiveAnchorStatus(anchor)} (${hoursSinceLastPass(anchor.last_passed).toFixed(1)}h since last pass)`
           : `${n.name} — status unknown (not in anchor registry)`;
         el.appendChild(title);
         svg.appendChild(el);
@@ -427,7 +427,7 @@ export function Globe({ highlight, onSelect, showStats = true, showNodes = true 
     /* Nodes: amber ring when their jurisdiction is lit, dimmed when another is. */
     for (const { id, jurisdiction, el } of st.nodeEls) {
       const anchor = ANCHOR_BY_ID.get(id);
-      const base = anchor ? (NODE_STATUS_COLORS[anchor.status] ?? NODE_UNKNOWN) : NODE_UNKNOWN;
+      const base = anchor ? (NODE_STATUS_COLORS[effectiveAnchorStatus(anchor)] ?? NODE_UNKNOWN) : NODE_UNKNOWN;
       const isHl = highlight === jurisdiction;
       el.setAttribute("stroke", isHl ? COLORS.highlight : base);
       el.setAttribute("stroke-width", isHl ? "1.8" : "1");
@@ -451,7 +451,10 @@ export function Globe({ highlight, onSelect, showStats = true, showNodes = true 
           {(Object.entries(JURISDICTIONS) as [Jurisdiction, JurisdictionMeta][]).map(([id, j]) => {
             const isHighlighted = highlight === id;
             const nodesHere = showNodes ? CONNECTED_NODES.filter((n) => n.jurisdiction === id) : [];
-            const liveHere = nodesHere.filter((n) => ANCHOR_BY_ID.get(n.id)?.status === "live").length;
+            const liveHere = nodesHere.filter((n) => {
+              const anchor = ANCHOR_BY_ID.get(n.id);
+              return anchor ? effectiveAnchorStatus(anchor) === "live" : false;
+            }).length;
             return (
               <div
                 key={id}

@@ -108,8 +108,10 @@ export default function FinancialAxes() {
           Eight financial/domain rows on the board. Each chip is the live{" "}
           <code className="text-xs">axes[].status</code> for <code className="text-xs">family=financial</code>
           ; <code className="text-xs">n</code> is the live sample size.{" "}
-          <strong>MEASURED</strong> means a deterministic rubric and a signed run exist — measured is not the
-          same as scored (no fleet, no leader, no accuracy on these rows). Read live from{" "}
+          <strong>MEASURED</strong> means a deterministic rubric and published run artifact exist — measured
+          is not the same as scored (no fleet, no leader, no accuracy on these rows). Only one of the
+          eight current financial run artifacts is Ed25519-signed; seven are content-addressed but
+          unsigned. Read live from{" "}
           <a className="font-semibold text-emerald-700 underline" href="/api/gspc">
             GET /api/gspc
           </a>

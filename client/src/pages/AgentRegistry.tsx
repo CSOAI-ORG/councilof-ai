@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { ANCHORING_CLAIM } from "../data/anchoringClaim";
 // /agent-registry — CSOAI's answer to Credo's Agent Registry, but agentic-native:
 // every agent carries a SIGNED agent card (purpose, tools, guardrails) discoverable
-// via A2A and sealed to Layer 0, plus a shadow-AI framing. Not a passive inventory —
+// via A2A with explicit evidence-state fields, plus a shadow-AI framing. Not a passive inventory —
 // each entry is a cryptographically identified, purpose-bound governed agent.
 type Agent = { name: string; domain: string; purpose: string; tools: string; status: "signed" | "review" };
 const AGENTS: Agent[] = [
@@ -26,8 +26,8 @@ export default function AgentRegistry() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Agent registry · signed agent cards · A2A</p>
         <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Every agent, <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">identified and signed.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">A registry isn't an inventory — it's control. Each agent carries a <b>signed agent card</b> (purpose, tools, guardrails), discoverable at <code className="text-emerald-300 text-sm">/.well-known/agent-card.json</code> and sealed to Layer 0. Shadow AI has nowhere to hide.</p>
-        <p className="mt-3 max-w-3xl text-sm text-emerald-100/60">Every card is a ~3KB record signed against <a href="/.well-known/did.json" className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"><code>did:web:csoai.org#card-attestation-1</code></a>, public key <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — the key is in that document, so you can pin it before you trust a card. {ANCHORING_CLAIM} Post-quantum ML-DSA-65 is planned and scaffolded only; no PQC runtime is built or published.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">A registry can support control only when each entry is verified. Published agent cards may declare purpose, tools and guardrails at <code className="text-emerald-300 text-sm">/.well-known/agent-card.json</code>; a catalogue row does not prove an agent is live, signed, or policy-enforced.</p>
+        <p className="mt-3 max-w-3xl text-sm text-emerald-100/60">Current v0.1 signed cards are under 1KB within a 3KB envelope ceiling and are checked against <a href="/.well-known/did.json" className="text-emerald-300 underline decoration-emerald-500/40 hover:decoration-emerald-300"><code>did:web:csoai.org#card-attestation-1</code></a>, public key <code className="text-emerald-300">d4cb0eaa16d5f50b…</code> — the key is in that document, so you can pin it before you trust a card. {ANCHORING_CLAIM} Post-quantum ML-DSA-65 is planned and scaffolded only; no PQC runtime is built or published.</p>
 
         <div className="mt-6 flex items-center gap-2">
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search agents, purpose, tools…" className="flex-1 rounded-xl border border-emerald-500/30 bg-black/40 px-4 py-3 text-sm text-emerald-50 placeholder-emerald-300/25 focus:border-emerald-400 focus:outline-none" />

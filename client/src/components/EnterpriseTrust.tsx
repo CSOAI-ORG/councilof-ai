@@ -3,7 +3,7 @@
 // signing, framework ALIGNMENT (not certification), open source, coordinated vuln
 // disclosure, the BFT care-floor, and the real UK company registration.
 const SIGNALS: { icon: string; label: string; sub: string; href?: string }[] = [
-  { icon: "✶", label: "Ed25519 · Layer 0", sub: "Every decision cryptographically signed", href: "/workbench" },
+  { icon: "✶", label: "Ed25519 · Layer 0", sub: "Published cards can be verified offline", href: "/workbench" },
   { icon: "⚖", label: "Multi-provider measurement", sub: "No single vendor grades itself. Fleet size is live on GET /api/gspc.", href: "/benchmarks" },
   { icon: "◫", label: "Aligned to published frameworks", sub: "EU AI Act · NIST · ISO 42001 · DORA · NIS2", href: "/crosswalk" },
   { icon: "◍", label: "Open source · MIT", sub: "Open measurement tooling, inspectable", href: "/tool-commons" },

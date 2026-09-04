@@ -23,6 +23,7 @@
  * which the page already renders as "An empty REPORTED set is the honest answer, not a
  * missing section." An empty array is a kept promise; a missing key is a broken one.
  */
+// @openapi-post-not-implemented
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -54,17 +55,15 @@ export const onRequestGet: PagesFunction = async () => {
   });
 };
 
-export const onRequestPost: PagesFunction = async ({ request }) => {
-  const body = await request.json().catch(() => ({}));
+export const onRequestPost: PagesFunction = async () => {
   return json({
-    schema: "csoai.reported.post/0.1",
+    schema: "csoai.reported.post/0.2",
     as_of: new Date().toISOString(),
     slug: "reported",
-    received: body,
-    status: "received",
-    note:
-      "Accepted for triage; nothing is published from this endpoint. It does not write to " +
-      "/api/corrections and does not create a REPORTED entry — the previous note claiming it " +
-      "wired live data from /api/corrections was false.",
-  });
+    state: "NOT_IMPLEMENTED",
+    accepted: false,
+    persisted: false,
+    signed: false,
+    note: "No submission store or triage queue exists. Nothing was accepted or published.",
+  }, 501);
 };

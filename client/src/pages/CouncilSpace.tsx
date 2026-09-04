@@ -17,7 +17,7 @@ import ArenaDoorPanel from "../components/gspc/ArenaDoorPanel";
 // INSIDE it as layers, not as separate products (Nick's unification law,
 // 2026-08-01). The old routes redirect here with ?view=.
 const ArenaView = lazy(() => import("./GSPCArena"));
-const TownsView = lazy(() => import("./CouncilTown"));
+const TownsView = lazy(() => import("./ContentReviewNotice"));
 const BenchmarkView = lazy(() => import("./BenchmarkView"));
 const TrainingView = lazy(() => import("./TrainingView"));
 
@@ -47,7 +47,7 @@ function GlobeView() {
 
 import { SOV_ARENA_V2 } from "../data/arena.generated";
 import { useGeolibre } from "../lib/geolibre";
-import { emitCard, promoteCard, subscribeCards, getCards, type AiCard } from "../lib/aiCardBus";
+import { subscribeCards, getCards, type AiCard } from "../lib/aiCardBus";
 
 function cardToTimeline(c: AiCard): TimelineEvent {
   return {
@@ -93,7 +93,7 @@ const SS_VIEWS = [
   { id: "console", label: "🎛 Console", href: "/gspc-arena" },
   { id: "arena", label: "🏟 Arena", href: "/gspc-arena?view=arena" },
   { id: "globe", label: "🌍 Globe", href: "/gspc-arena?view=globe" },
-  { id: "towns", label: "🇦 Towns", href: "/gspc-arena?view=towns" },
+  { id: "towns", label: "Towns · review", href: "/gspc-arena?view=towns" },
   { id: "benchmarks", label: "📊 Benchmarks", href: "/gspc-arena?view=benchmarks" },
   { id: "training", label: "🎮 Live Training", href: "/gspc-arena?view=training" },
 ] as const;
@@ -162,7 +162,8 @@ async function ssGovern(ind: string): Promise<any | null> {
   return null;
 }
 /**
- * Ask the honest /api/chat lane about the scenario. Three outcomes, and the UI
+ * Ask the grounded /api/chat assistant for framework and evidence suggestions.
+ * This is one assistant response, not a Council vote. Three outcomes, and the UI
  * must keep them apart:
  *   string — the lane answered with usable grounded text (labelled, never "signed")
  *   ""     — the lane answered but refused / could not ground. That is its DESIGNED
@@ -173,11 +174,11 @@ async function ssGovern(ind: string): Promise<any | null> {
  * a field /api/chat has never returned — so the verdict was ALWAYS empty, and the
  * caller papered over it with a hardcoded "Permitted with conditions…" shown to
  * every visitor as "Council verdict". The fabricated fallback is deleted; an empty
- * verdict now renders as the honest "no live verdict" state.
+ * response now renders as the honest "no grounded response" state.
  */
-async function ssVerdict(scenario: string): Promise<string | null> {
+async function ssAssistantResponse(scenario: string): Promise<string | null> {
   try {
-    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "You are the CSOAI multi-agent governance council. In 3 sentences, deliver a verdict on this AI system: is it permitted, and under what key conditions (risk tier, human oversight, transparency, data duties)? System: " + scenario }) });
+    const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "Using only published measurement evidence available to you, suggest up to three frameworks and evidence questions for a human review of this scenario. Do not issue a verdict, claim a Council vote, or mark any requirement satisfied. Scenario: " + scenario }) });
     if (!r.ok) return null;
     const d = await r.json();
     const text = String((d && (d.answer ?? d.response)) ?? "").trim();
@@ -241,12 +242,12 @@ function buildRun(scenario: string): Step[] {
   const s = (scenario || "").trim() || SAMPLE;
   const head = s.slice(0, 88) + (s.length > 88 ? "..." : "");
   return [
-    { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
-    { t: "Classifying the system - risk tier and applicable regimes detected (EU AI Act, NIST AI RMF, ISO 42001).", phase: 1 },
-    { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
-    { t: "Agents deliberating - mapping controls, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
-    { t: "Crosswalking once -> EU AI Act, NIST, ISO 42001 and TC260 satisfied from one evidence set.", phase: 3 },
-    { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
+    { t: "Simulation input: \"" + head + "\". No evidence has been fetched.", phase: 1 },
+    { t: "Demo step: identify possible EU AI Act, NIST AI RMF and ISO 42001 mapping questions for human review.", phase: 1 },
+    { t: "Demo step: illustrate where independently operated review legs could be requested. No quorum is running.", phase: 2 },
+    { t: "Demo step: outline control, fairness, human-oversight and transparency evidence that a real run would need.", phase: 2 },
+    { t: "Demo step: show how one admitted evidence set could be crosswalked; no framework requirement is marked satisfied.", phase: 3 },
+    { t: "Narrated simulation complete. No consensus, measurement, signature, remediation or compliance determination was produced.", phase: 4 },
   ];
 }
 
@@ -281,7 +282,7 @@ export default function CouncilSpace() {
   const [log, setLog] = useState<string[]>([]);
   const [running, setRunning] = useState(false);
   const [done, setDone] = useState(false);
-  const [verdictText, setVerdictText] = useState("");
+  const [assistantResponseText, setAssistantResponseText] = useState("");
   const [voiceOn, setVoiceOn] = useState(true);
   const [loc] = useState(() => detectLocale());
   const [cSpaceEvents, setCSpaceEvents] = useState<TimelineEvent[]>([]);
@@ -289,6 +290,7 @@ export default function CouncilSpace() {
   useEffect(() => subscribeCards((cs) => setBusEvents(cs.map(cardToTimeline))), []);
   const [kbMatches, setKbMatches] = useState<KbMatch[]>([]);
   const [flywheels, setFlywheels] = useState<FlywheelPlanet[]>(FLYWHEELS);
+  const [flywheelGeneratedAt, setFlywheelGeneratedAt] = useState<string | null>(null);
   const [citizens, setCitizens] = useState<CitizenNode[]>([]);
   const [kbStats, setKbStats] = useState<KbStats | null>(null);
   const [kbOnline, setKbOnline] = useState<boolean | null>(null);
@@ -449,7 +451,7 @@ export default function CouncilSpace() {
 
   useEffect(() => {
     document.title = "Council Space | CSOAI";
-    setMetaDescription("Council Space — the Council of AI's live simulation arena: model versus model on frozen benchmarks, every round emitted as signed evidence. Live board counts: GET /api/gspc.");
+    setMetaDescription("Council Space is an interactive scenario demo. Published GSPC measurements remain separately verifiable; this page does not claim a live Council or signed scenario rounds.");
     try { const q = new URLSearchParams(window.location.search).get("q"); if (q) { setScenario(q); setGlobeRegion(ssGlobeCode(q)); } } catch (e) {}
   }, []);
   useEffect(() => { const d = new URLSearchParams(window.location.search).get("demo"); if (d) { setScenario(d); const t = setTimeout(() => run(d), 700); return () => clearTimeout(t); } }, []);
@@ -462,10 +464,11 @@ export default function CouncilSpace() {
     let cancelled = false;
     fetch("/flywheel-snapshot.json")
       .then((r) => (r.ok ? r.json() : null))
-      .then((snap: { planets?: FlywheelPlanet[]; citizens?: CitizenNode[] } | null) => {
+      .then((snap: { generated_at?: string; planets?: FlywheelPlanet[]; citizens?: CitizenNode[] } | null) => {
         if (cancelled || !snap) return;
         if (Array.isArray(snap.planets) && snap.planets.length > 0) setFlywheels(snap.planets);
         if (Array.isArray(snap.citizens)) setCitizens(snap.citizens);
+        setFlywheelGeneratedAt(typeof snap.generated_at === "string" ? snap.generated_at : null);
       })
       .catch(() => {});
     return () => { cancelled = true; };
@@ -507,46 +510,41 @@ export default function CouncilSpace() {
 
   function speak(t: string) { if (!voiceOn) return; personaSpeak(t); }
 
-  function playSteps(steps: Step[], verdict?: string) {
+  function playSteps(steps: Step[], assistantResponse?: string) {
     let i = 0;
     const runStart = Date.now();
     const play = () => {
       if (i >= steps.length) {
         phaseRef.current = 4;
-        if (verdict) { setVerdictText(verdict); setLog((l) => l.concat("Verdict: " + verdict)); }
+        if (assistantResponse) { setAssistantResponseText(assistantResponse); setLog((l) => l.concat("Grounded assistant response: " + assistantResponse)); }
         setRunning(false); setDone(true);
         const cEvent: TimelineEvent = {
           id: "c-v-" + runStart.toString(36),
           ts: Date.now(),
           tag: "ACTION",
           verdict: "COMPLETE",
-          claim: verdict ? verdict.slice(0, 140) : "Narrated simulation completed — no live verdict was issued",
-          evidence: "C-space: council verdict reached.",
-          weight: 0.95,
+          claim: assistantResponse ? assistantResponse.slice(0, 140) : "Narrated framework-suggestion flow completed — no quorum or consensus was run",
+          evidence: "C-space: single grounded assistant response or local narration; no quorum, consensus, measurement, or requirement satisfaction.",
+          weight: 0.6,
           space: "C",
         };
         setCSpaceEvents((prev) => [cEvent, ...prev].slice(0, 50));
-        const vCard = emitCard({ kind: "council-verdict", summary: cEvent.claim, detail: "multi-agent council deliberation on: " + scenario.slice(0, 140), axis: "governance", source: verdict ? "live" : "local-sim" });
         fetch(LOCAL_GW + "/sov-time", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            kind: "cspace-verdict",
+            kind: "cspace-assistant-response",
             space: "C",
             claim: cEvent.claim,
             tag: cEvent.tag,
             verdict: cEvent.verdict,
             weight: cEvent.weight,
           }),
-        })
-          .then((r) => {
-            if (r.ok) promoteCard(vCard.id, "sov-time ledger · cspace-verdict");
-          })
-          .catch(() => { });
+        }).catch(() => { });
         return;
       }
       const st = steps[i++]; phaseRef.current = st.phase; setLog((l) => l.concat(st.t)); speak(st.t);
-      const phaseTag = st.phase === 1 ? "OPEN" : st.phase === 2 ? "ACTION" : st.phase === 3 ? "CONFIRMED" : "ACTION";
+      const phaseTag = st.phase === 1 ? "OPEN" : "ACTION";
       const phaseWeight = st.phase === 1 ? 0.4 : st.phase === 2 ? 0.55 : st.phase === 3 ? 0.7 : 0.9;
       const stepEvent: TimelineEvent = {
         id: "c-s-" + runStart.toString(36) + "-" + i,
@@ -582,15 +580,15 @@ export default function CouncilSpace() {
     const fromLive = fwNames.length > 0;
     const fwList = fromLive ? fwNames.join(", ") : "EU AI Act, NIST AI RMF, ISO 42001";
     return [
-      { t: "Ingesting your scenario into Council Space: \"" + head + "\"", phase: 1 },
-      { t: "Classifying the system - jurisdiction: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
+      { t: "Sending your scenario to the grounded assistant: \"" + head + "\"", phase: 1 },
+      { t: "Jurisdictional context suggestion: " + region + (ind ? "; sector: " + ind : "") + ".", phase: 1 },
       // "Detected" only when the live /govern lookup actually returned; otherwise say
       // plainly that these are the site's standing defaults, not a per-scenario match.
-      { t: (fromLive ? "Applicable regimes detected: " : "Framework context (standing defaults — no live per-scenario lookup): ") + fwList + ".", phase: 1 },
-      { t: "Convening the council - council agents, designed multi-agent review. Quorum forming...", phase: 2 },
-      { t: "Agents deliberating - risk tier, fairness checks, human-oversight duties, transparency obligations.", phase: 2 },
-      { t: "Crosswalking once -> " + fwList + " satisfied from one evidence set." + (bridges.length ? " Legacy bridge: " + bridges.join(", ") + "." : ""), phase: 3 },
-      { t: "Consensus reached. Read the J-space panel below for the signed historical record; this run is a narrated simulation, not a signed probe.", phase: 4 },
+      { t: (fromLive ? "Framework suggestions from the lookup: " : "Framework context (standing defaults — no live per-scenario lookup): ") + fwList + ".", phase: 1 },
+      { t: "Suggested review structure: request independent reviewers if a real Council process is required. No quorum is running.", phase: 2 },
+      { t: "Suggested evidence questions: risk tier, fairness, human oversight, transparency, and data duties.", phase: 2 },
+      { t: "Crosswalk candidates: " + fwList + ". No framework requirement is marked satisfied." + (bridges.length ? " Possible legacy bridge references: " + bridges.join(", ") + "." : ""), phase: 3 },
+      { t: "Assistant response complete. No quorum, consensus, measurement, signature, or compliance determination was produced.", phase: 4 },
     ];
   }
 
@@ -599,24 +597,24 @@ export default function CouncilSpace() {
     if (override) setScenario(override);
     setGlobeRegion(ssGlobeCode(override ?? scenario));
     flyToScenario(override ?? scenario);
-    setLog(["Convening the council over your scenario..."]); setVerdictText(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
+    setLog(["Requesting grounded framework suggestions..."]); setAssistantResponseText(""); setDone(false); setRunning(true); phaseRef.current = 2; chargeSovereign(10);
     const scen = ((override ?? scenario) || "").trim() || SAMPLE;
     const ind = ssIndustry(scen);
     const region = ssRegion(scen);
     const kbP = ssLookupKB(scen).then((m) => setKbMatches(m)).catch(() => {});
     stampPresence("scenario-run", { scenario: scen.slice(0, 140), region, ind });
     try {
-      const [gov, verdict] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssVerdict(scen), kbP]);
-      // Honest state: the badge says LIVE only when the chat lane actually answered.
+      const [gov, assistantResponse] = await Promise.all([ind ? ssGovern(ind) : Promise.resolve(null), ssAssistantResponse(scen), kbP]);
+      // Honest state: the badge says available only when the assistant lane answered.
       // A refusal ("") is still an answer; a network failure (null) is not.
-      setGwOnline(verdict !== null);
+      setGwOnline(assistantResponse !== null);
       const fwNames: string[] = gov && Array.isArray(gov.frameworks) ? gov.frameworks.map((f: any) => f.name) : [];
       const bridges: string[] = gov && Array.isArray(gov.bridges) ? gov.bridges : [];
       setLog([]);
       // No fabricated fallback verdict. The old hardcoded "Permitted with
       // conditions…" shipped to every visitor because the live verdict was
       // always empty — the exact defect this estate exists to eliminate.
-      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), verdict || undefined);
+      playSteps(buildLiveRun(scen, region, fwNames, bridges, ind), assistantResponse || undefined);
       return;
     } catch (e) {
       setGwOnline(false);
@@ -624,7 +622,7 @@ export default function CouncilSpace() {
     }
     playSteps(buildRun(scen));
   }
-  function reset() { timers.current.forEach(clearTimeout); stopVoice(); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setVerdictText(""); }
+  function reset() { timers.current.forEach(clearTimeout); stopVoice(); phaseRef.current = 0; setLog([]); setRunning(false); setDone(false); setAssistantResponseText(""); }
 
   if (view !== "console") {
     return (
@@ -654,7 +652,7 @@ export default function CouncilSpace() {
         <div className="relative"><CouncilNav /><ViewSwitcher view={view} /></div>
         <p className="relative font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS - Council Space</p>
         <h1 className="relative mt-2 text-4xl sm:text-5xl font-black tracking-tight">Measure. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Record.</span></h1>
-        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a real-world scenario - data or text - into the AI-OS. Watch the multi-agent council deliberate live while your Council assistant narrates and speaks every step. This is the web preview of the immersive Unreal Engine 5 world; the full OS pixel-streams the same flow from UE5.</p>
+        <p className="mt-3 max-w-2xl text-emerald-100/80">Feed a scenario — data or text — into this narrated design demo. It illustrates a proposed multi-agent review flow; it is not a live Council, a signed measurement run, or a deployed Unreal Engine stream.</p>
         <div className="relative mt-4 max-w-2xl"><AISystemNotice route="/simulate" /></div>
         <div className="relative mt-4 inline-flex max-w-2xl flex-wrap items-center gap-x-2 gap-y-1 rounded-xl border border-emerald-500/20 bg-black/25 px-3 py-2 text-sm">
           <span className="font-semibold text-emerald-200">{loc.greeting}</span>
@@ -673,9 +671,9 @@ export default function CouncilSpace() {
       <section className="mx-auto grid max-w-6xl gap-5 px-6 pb-12 lg:grid-cols-[1.1fr_1fr]">
         <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20">
           <canvas ref={canvasRef} className="h-[420px] w-full block" />
-          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "council deliberating" : done ? "council complete - verdict below" : "council space - idle"}</div>
-          <div className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (gwOnline === null ? "bg-slate-500/20 text-slate-200" : gwOnline ? "bg-emerald-500/20 text-emerald-200" : "bg-rose-500/20 text-rose-200")} title="Honest state of the Council gateway — set by your last run, never hardcoded">
-            {gwOnline === null ? "gateway · untested" : gwOnline ? "LIVE - Council gateway" : "gateway offline - local sim"}
+          <div className="absolute left-3 top-3 rounded-md bg-black/40 px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/80">{running ? "assistant preparing suggestions" : done ? "assistant response ready" : "scenario assistant - idle"}</div>
+          <div className={"absolute right-3 top-3 rounded-md px-2 py-1 font-mono text-[10px] uppercase tracking-[2px] " + (gwOnline === null ? "bg-slate-500/20 text-slate-200" : gwOnline ? "bg-emerald-500/20 text-emerald-200" : "bg-rose-500/20 text-rose-200")} title="Grounded assistant endpoint status — set by your last run, never hardcoded">
+            {gwOnline === null ? "assistant · untested" : gwOnline ? "grounded assistant · available" : "assistant unavailable · local demo"}
           </div>
         </div>
         <div className="flex flex-col rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
@@ -694,7 +692,7 @@ export default function CouncilSpace() {
           <div className="mt-3 flex-1 space-y-2 overflow-y-auto rounded-xl border border-emerald-500/10 bg-black/20 p-3 text-sm" style={{ minHeight: 180 }}>
             {log.length === 0 && <div className="text-emerald-300/40">The Council assistant will narrate here as your experiment runs.</div>}
             {log.map((m, i) => (<div key={i} className="flex gap-2"><span className="text-emerald-400">{String.fromCharCode(9673)}</span><span className="text-emerald-50/90">{m}</span></div>))}
-            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{verdictText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Council answer (grounded lane):</b> {verdictText}</div> : <div className="mb-2 leading-relaxed"><b className="text-emerald-200">No live verdict.</b> The Council&rsquo;s grounded lane answers only from published measurement — it does not adjudicate a hypothetical scenario, and this page will not invent a ruling. The run above is a narrated simulation of how a review proceeds.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/system-card" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Get a signed System Card →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect on the live Council →</a></div></div>}
+            {done && <div className="mt-2 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 py-2 text-emerald-100">{assistantResponseText ? <div className="mb-2 leading-relaxed"><b className="text-emerald-200">Grounded assistant response:</b> {assistantResponseText}</div> : <div className="mb-2 leading-relaxed"><b className="text-emerald-200">No grounded assistant response.</b> The grounded lane answers only from published measurement — it does not adjudicate a hypothetical scenario, and this page will not invent a ruling. The run above is a narrated framework-suggestion demo; no quorum or consensus was run and no requirement was marked satisfied.</div>}<div className="mt-3 flex flex-wrap gap-2"><a href="/dashboard?tab=cards" className="rounded-lg border border-amber-400/40 bg-amber-400/10 px-3 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">Open attestation records →</a><a href={"/hive?q=" + encodeURIComponent(scenario)} className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Collect the frameworks →</a><a href="/try" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-semibold text-emerald-100 hover:bg-white/5">Open the Council demo →</a></div></div>}
             <div ref={endRef} />
           </div>
         </div>
@@ -710,9 +708,9 @@ export default function CouncilSpace() {
           <div className="flex items-center justify-between border-b border-sky-500/15 px-4 py-2">
             <div>
               <div className="font-mono text-[10px] uppercase tracking-[2px] text-sky-300/70">Council Space · 5D layered view</div>
-              <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → flywheels → live data — the estate as a galaxy</div>
+              <div className="text-sm font-bold text-sky-100">Hive → C-space → J-space → dated flywheel snapshot — the estate as a galaxy</div>
             </div>
-            <div className="text-right font-mono text-[10px] text-sky-300/60">zoom: ∞ · flywheels: {flywheels.length}</div>
+            <div className="text-right font-mono text-[10px] text-sky-300/60">flywheels: {flywheels.length}{flywheelGeneratedAt ? ` · snapshot ${flywheelGeneratedAt.slice(0, 10)}` : " · bundled demo data"}</div>
           </div>
           <div className="p-2">
             <CouncilGalaxy hive={HIVE} cspace={cSpaceEvents.length} jspace={jrecords.length} flywheels={flywheels} citizens={citizens} height={520} />
@@ -724,8 +722,8 @@ export default function CouncilSpace() {
         <div className="rounded-2xl border border-emerald-500/25 bg-[#05140d] p-5">
           <div className="flex items-center justify-between border-b border-emerald-500/15 pb-3">
             <div>
-              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">J-space · C-space · infinite timeline</div>
-              <div className="text-sm font-bold text-emerald-100">The Moat, Visible — every event recorded in time</div>
+              <div className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/70">J-space · C-space · published timeline sample</div>
+              <div className="text-sm font-bold text-emerald-100">Dated events, with their source state visible</div>
             </div>
             <div className="text-right">
               <div className="font-mono text-[10px] text-emerald-300/60">{jfetchedAt ? "current as of " + new Date(jfetchedAt).toUTCString().replace("GMT", "UTC") : "loading…"}</div>
@@ -767,7 +765,7 @@ export default function CouncilSpace() {
       </section>
       <section className="mx-auto max-w-6xl px-6 pb-16">
         <div className="grid gap-4 sm:grid-cols-3">
-          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Ask the live Council</div><p className="mt-1 text-sm text-emerald-100/70">Take a real question to the the council and get a verdict.</p></a>
+          <a href="/try" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Try the Council design</div><p className="mt-1 text-sm text-emerald-100/70">Explore how a future evidence-backed Council review could work. No live verdict is issued.</p></a>
           <a href="/academy" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">Training, not certification</div><p className="mt-1 text-sm text-emerald-100/70">Learn the living board. Completion attests training, not conformity.</p></a>
           <a href="/charter" className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5 hover:border-emerald-400/40"><div className="text-lg font-bold">The Council Charter</div><p className="mt-1 text-sm text-emerald-100/70">The constitution the OS is governed by - read and align.</p></a>
         </div>

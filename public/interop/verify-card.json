@@ -1,24 +1,33 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "GET /api/verify-card",
-  "description": "Verify a single card",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "GET",
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Single-card verification (unavailable)",
+  "state": "NOT_IMPLEMENTED",
+  "description": "The GET route returns a fail-closed capability-state document; it verifies no card.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/verify-card.ts",
+    "methods": [
+      "GET"
+    ],
     "path": "/api/verify-card",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+    "outcomes": [
+      {
+        "http_status": 501,
+        "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false"
       }
-    }
+    ]
+  },
+  "output": {
+    "state": "NOT_IMPLEMENTED",
+    "verified": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

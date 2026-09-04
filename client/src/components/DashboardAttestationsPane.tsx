@@ -525,7 +525,7 @@ export default function DashboardAttestationsPane() {
           </span>
         </div>
         <p className="mt-1 max-w-[72ch] text-xs text-muted-foreground">
-          {ledger?.doc?.policy ?? "Appended, never edited or deleted."} An attestation explorer shows what was claimed; this shows where the claimant was wrong,
+          {ledger?.doc?.policy ?? "Public, source-maintained and version-controlled corrections record. No append-only storage proof is provided."} An attestation explorer shows what was claimed; this shows where the claimant was wrong,
           how it was caught, and what changed. {ledger?.doc?.note ? <>The ledger says of itself: “{ledger.doc.note}”</> : null}
         </p>
         <ol className="mt-3 space-y-3">

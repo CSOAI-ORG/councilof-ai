@@ -7,9 +7,9 @@ const LINKS = [
   { href: "/gspc-arena?view=globe", label: "🌍 Globe", view: "globe" },
   { href: "/gspc-arena", label: "◈ Council Space", alt: "/simulate", view: "" },
   { href: "/gspc-arena?view=arena", label: "🏟 Arena", view: "arena" },
-  { href: "/gspc-arena?view=towns", label: "🏘 Towns", view: "towns" },
+  { href: "/gspc-arena?view=towns", label: "Towns · review", view: "towns" },
   { href: "/intel", label: "⬡ Distribution Hive", view: null },
-  { href: "/try", label: "▶ Live Council", view: null },
+  { href: "/try", label: "▶ Council demo", view: null },
 ];
 
 export default function CouncilNav() {

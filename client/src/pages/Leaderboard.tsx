@@ -68,7 +68,7 @@ export default function Leaderboard() {
   useEffect(() => {
     document.title = "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI";
     setMetaDescription(
-      "Not a single 'best AI'. Sort 64 signed models across every governance axis — safety, provenance, refusal, jailbreak-resistance — every cell verifiable against its Ed25519 card. Measurement, not certification.",
+      "Not a single 'best AI'. Browse 64 indexed models across 16 benchmark axes: 335 measured cells derived from signed cards out of 1,024 possible pairs. This matrix is not the governance board.",
     );
   }, []);
 
@@ -584,7 +584,7 @@ function Methodology({ matrix }: { matrix: FleetMatrix }) {
       <div className="mt-3 grid gap-4 md:grid-cols-2">
         <ul className="space-y-2 text-[13px] text-emerald-100/80">
           <li><strong className="text-emerald-300">Deterministic grading.</strong> Gold labels on frozen banks. A cell is a proportion correct, graded by exact rule — no model judges another model.</li>
-          <li><strong className="text-emerald-300">Every number recomputable.</strong> Each cell is one signed card whose sha256 <em>is</em> its id; the whole matrix is derived by reading those cards, never typed.</li>
+          <li><strong className="text-emerald-300">Matrix derivation is reproducible.</strong> Each populated cell comes from one signed card whose sha256 <em>is</em> its id; this index is derived by reading those cards. That does not by itself make every underlying benchmark run reproducible.</li>
           <li><strong className="text-emerald-300">Absence is shown.</strong> An unmeasured pair is empty, not zero. {matrix.counts.possible_cells ? `${matrix.cells.length} of ${matrix.counts.possible_cells} possible pairs are measured.` : ""}</li>
         </ul>
         <ul className="space-y-2 text-[13px] text-emerald-100/80">
@@ -594,9 +594,9 @@ function Methodology({ matrix }: { matrix: FleetMatrix }) {
         </ul>
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-[12px]">
-        <Link href="/gspc-verify" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">Verify the chain yourself →</Link>
+        <Link href="/gspc-verify" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">Verify a card yourself →</Link>
         <a href="/signed/HOW-TO-VERIFY.md" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">HOW-TO-VERIFY →</a>
-        <a href="/signed/card-matrix.json" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">The signed matrix (JSON) →</a>
+        <a href="/signed/card-matrix.json" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">Matrix derived from signed cards (JSON) →</a>
         <Link href="/methodology" className="rounded-md border border-emerald-500/30 px-3 py-1.5 text-emerald-200 hover:bg-emerald-500/10">Full methodology →</Link>
       </div>
     </section>

@@ -20,7 +20,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/dashboard?tab=home", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/gspc-arena", label: "Council Space" },
-  { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns layer of Council Space" },
+  { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns concept (under evidence review)" },
   { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/gspc-arena?view=arena", label: "the Arena layer of Council Space" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },

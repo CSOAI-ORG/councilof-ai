@@ -94,7 +94,7 @@ export default function LiveLeaderboard({
     <section className={`w-full ${className}`}>
       <div className="section-shell">
         <p className="t-kicker text-primary">
-          Live from GET /api/gspc — recompute anything, free
+          Live from GET /api/gspc — re-check published cards, free
         </p>
         <h2 className="t-section mt-4 text-foreground">
           {heading}
@@ -104,8 +104,9 @@ export default function LiveLeaderboard({
           deterministic grading on frozen, published splits. A <strong>TIE</strong> means the
           leader&apos;s edge is statistically indistinguishable — ties are never counted as wins. A
           MEASURED axis with a withheld public leader is labelled as such — never as UNMEASURED.
-          A slot with no measurement says so in words; it is never shown as a zero. This board is a
-          switchboard of recomputable signed records over time, not a certificate.
+          A slot with no measurement says so in words; it is never shown as a zero. Carded records
+          carry a published verification path; uncarded fleet aggregates remain explicitly labelled.
+          This board is a switchboard over time, not a certificate.
         </p>
 
         {/* ── unreachable: say it plainly, render no figures at all ────── */}

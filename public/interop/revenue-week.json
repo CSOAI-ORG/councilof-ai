@@ -1,24 +1,24 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "GET /api/revenue-week",
-  "description": "This week's revenue",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "GET",
-    "path": "/api/revenue-week",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
-      }
-    }
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Weekly revenue API (unavailable)",
+  "state": "NOT_IMPLEMENTED",
+  "description": "No public weekly revenue handler or public revenue result exists at this path.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": null,
+    "methods": [],
+    "path": null,
+    "intended_path": "/api/revenue-week",
+    "outcomes": []
+  },
+  "output": null,
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

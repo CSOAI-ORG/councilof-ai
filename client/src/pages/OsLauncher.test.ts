@@ -51,7 +51,8 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("/assess");
     expect(launcher).not.toContain("Free. The card is yours.");
     expect(launcher).toContain("Coming — Paddle");
-    expect(launcher).toContain("/report");
+    expect(launcher).toContain("/watchdog-hub");
+    expect(launcher).toContain("Incident submission is not live");
     expect(launcher).toContain("HfLivingRecord");
     expect(launcher).toContain("/xrpl-attest");
     expect(launcher).toContain("huggingface.co/datasets/csoai/gspc-boards");

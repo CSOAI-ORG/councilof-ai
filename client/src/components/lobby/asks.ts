@@ -258,16 +258,16 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
     ],
   },
   {
-    test: /^\/system-card/,
+    test: /^\/dashboard\?tab=cards/,
     asks: [
-      "What does the system card attest, and what does it refuse to certify?",
-      "How do I verify this card offline against the published key?",
+      "Which published card families can the verifier check, and what remains UNCHECKABLE?",
+      "How do I verify a supported card against its pinned family key?",
     ],
   },
   {
-    test: /^\/feed/,
+    test: /^\/dashboard\?tab=standards/,
     asks: [
-      "What does the published regulation feed say moved, and what is its source?",
+      "What does GET /api/regulation say moved, and what is its source?",
       "Which recorded deltas are in force versus deferred?",
     ],
   },
@@ -279,10 +279,10 @@ const BY_ROUTE: { test: RegExp; asks: string[] | ((path: string) => string[]) }[
     ],
   },
   {
-    test: /^\/(mcp-fleet|mcp$)/,
+    test: /^\/(dashboard\?tab=tools|mcp$)/,
     asks: [
       "What MCP servers are published here, and how do I connect one without treating it as a certificate?",
-      "Where does the live count come from, and what is not a marketplace listing?",
+      "Which entries are only catalogued and which runtimes have actually been observed?",
     ],
   },
   {

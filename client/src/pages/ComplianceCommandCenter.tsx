@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 // CSOAI Compliance Command Center — the whole governance program on one screen.
-// HUNT_24 #47 (board-ready executive dashboard). Aggregates the live Council Town
+// HUNT_24 #47 (board-ready executive dashboard). Aggregates the published Council Town
 // feed with framework coverage, model risk, evidence freshness and an activity feed,
 // and exports a board report. Client-side; live counters from the signed ledger.
 

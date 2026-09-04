@@ -5,8 +5,8 @@ import { Check, Zap, Coins } from "lucide-react";
 
 // PAYG (pay-per-call / x402) — the agent rail from /pricing, in detail.
 // Machine-access pricing is pending a published ruling — not yet set. 100 free
-// calls/day per key remain free. Every call returns a 3KB Ed25519-signed,
-// hash-chained measurement card. CTAs point at real destinations (get a key,
+// calls/day per key are described by the current endpoint contract. A successful
+// measurement may link a signed card; callers must verify that artifact. CTAs point at real destinations (get a key,
 // top up), never a bounce back to /pricing.
 
 const PRICING_STATUS = "Machine-access pricing is pending a published ruling — not yet set";
@@ -29,8 +29,8 @@ export default function Payg() {
         </h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
           100 free calls a day, then metered machine-access. {PRICING_STATUS}.
-          Every call returns a 3KB Ed25519-signed, hash-chained card your auditor verifies
-          independently. Metered, balance never expires, no monthly seat.
+          A successful published measurement may return or link a compact Ed25519-signed card.
+          Verify the exact response and current payment state before relying on either.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
           {INSTRUMENTS.map((m) => (
@@ -61,7 +61,7 @@ export default function Payg() {
 {`export COAI_PAYG_KEY="key_xxxxxxxxxxxxxxxx"
 # 100 free calls/day per key. After that:
 #   machine-access pricing is pending a published ruling — not yet set.
-# Every call returns a 3KB Ed25519-signed measurement card.
+# Verify any card linked by the response; not every response is automatically signed.
 # When the balance hits zero, the call returns a top-up URL.`}
         </pre>
       </Card>
@@ -81,8 +81,8 @@ export default function Payg() {
           <h3 className="font-bold mb-3 flex items-center gap-2"><Coins className="h-5 w-5 text-primary" /> Two ways to pay</h3>
           <p className="text-sm text-muted-foreground">
             Top up with <strong>card</strong> or <strong>USDC on Base</strong> via x402 for
-            agent-to-agent payments. Every call is metered and the result is Ed25519-signed —
-            so your auditor verifies the card independently of us.
+            agent-to-agent payments when the endpoint reports settlement available. A returned signed card can be
+            verified independently; neither payment nor signing is implied by this catalogue page.
           </p>
         </Card>
       </div>

@@ -55,6 +55,7 @@ export type Turn = {
   text: string;
   state?: string;
   signature?: string;
+  provenance?: string;
   at: string;
 };
 
@@ -68,7 +69,7 @@ export type Thread = {
 
 /** Estate-wide state labels for council replies. */
 export const STATE_LABEL: Record<string, string> = {
-  live: "council · live specialist",
+  model_response: "upstream model response · unsigned",
   grounded: "grounded in published measurement",
   runtime_observed: "runtime observed · MCP read",
   unchecked: "unchecked · MCP reply",
@@ -295,14 +296,15 @@ export async function runSafeMcpRead(
   invoke: typeof callTool = callTool,
 ): Promise<SafeMcpReadReply> {
   const result: ToolResult = await invoke(intent.name, intent.args);
-  const executionState = result.state.toUpperCase();
+  const state = result.state ?? (result.ok ? "runtime_observed" : "unreachable");
+  const executionState = state.toUpperCase();
   const provenance = `POST /mcp · tools/call · ${intent.name}`;
   if (!result.ok) {
     return {
       text:
         `**${executionState}** — the ${intent.name} MCP read did not complete.\n\n` +
         `${result.text}\n\nNo cached value was substituted and no write, payment, signature, or external message was attempted.`,
-      state: result.state,
+      state,
       signature: `${provenance} · ${executionState}`,
     };
   }
@@ -435,8 +437,8 @@ export function useLobbyChat(): LobbyChat {
             `**Unsigned training. Never quoted. Not a measurement. Not legal advice. Not a conformity mark.**\n\n` +
             `Practice runs are for learning and testing only. They do not produce signed cards, ` +
             `are not recorded on the board, and must never be cited as evidence. ` +
-            `When law actually changes, the living-law path is re-measure + delta card — the old card stays. ` +
-            `The simulation is not that path.`,
+            `The planned living-law path is detect, approve, re-measure, then publish a scoped delta; ` +
+            `that automation is not implemented, and the simulation is not that path.`,
           state: "deterministic",
           signature: "practice mode · unsigned",
         });
@@ -575,13 +577,13 @@ export function useLobbyChat(): LobbyChat {
           role: "council",
           text: answer,
           state: j.state,
-          signature: j.signature,
+          signature: j.signature ?? j.provenance,
         });
         // The /os quest is called "Ask the Council one grounded question". It used to be
         // awarded for CLICKING it. It is awarded here instead — only once an answer has
         // actually come back grounded in published measurement. A refusal is not a
         // grounded answer and does not count.
-        if (j.state === "grounded" || j.state === "live") {
+        if (j.state === "grounded") {
           import("@/components/os/quests")
             .then((q) => q.markQuest("ask"))
             .catch(() => {

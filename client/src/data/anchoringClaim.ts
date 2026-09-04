@@ -27,11 +27,11 @@ const otsState = String(ots.status ?? "UNCHECKABLE").toUpperCase();
 const otsBlock = Array.isArray(ots.bitcoin_blocks) && ots.bitcoin_blocks.length > 0
   ? ots.bitcoin_blocks[0]
   : null;
-const currentRootOtsClaim = otsState === "CONFIRMED_BITCOIN"
+export const CURRENT_ROOT_OTS_CLAIM = otsState === "CONFIRMED_BITCOIN"
   ? `The current canonical public root has a proof-derived CONFIRMED_BITCOIN OpenTimestamps witness${otsBlock != null ? ` at block ${otsBlock}` : ""}`
   : otsState === "STAMPED_PENDING_BITCOIN"
-    ? "The current canonical public root has a proof-derived STAMPED_PENDING_BITCOIN calendar proof; it is not yet Bitcoin-anchored"
-    : `The current canonical public root's OpenTimestamps state is ${otsState}; no Bitcoin anchor is claimed`;
+    ? "The current canonical public root has a proof-derived STAMPED_PENDING_BITCOIN calendar proof; it does not yet prove inclusion in a Bitcoin block"
+    : `The current canonical public root's OpenTimestamps state is ${otsState}; no confirmed inclusion in a Bitcoin block is claimed`;
 
 /** The canonical, load-bearing sentence. Do not paraphrase at call sites. */
 export const ANCHORING_CLAIM =
@@ -42,10 +42,10 @@ export const ANCHORING_CLAIM =
   "locked 16, same merkle). Historical DEVNET Payment-memo / CredentialCreate hashes " +
   "are not this feed. XLS-70 Credentials are live on XRPL mainnet as an allowlist " +
   "primitive; we are not issuing GSPC grades on-ledger. Separately from the card " +
-  `trust path, ${currentRootOtsClaim}. That witness covers the exact public root.json ` +
+  `trust path, ${CURRENT_ROOT_OTS_CLAIM}. That witness covers the exact public root.json ` +
   "bytes only, not the separate signed-card index. Queued and candidate atoms are " +
   "not automatically admitted, published, or anchored; a pending calendar stamp, " +
-  "where one exists, is not a Bitcoin anchor.";
+  "where one exists, does not by itself prove inclusion in a Bitcoin block.";
 
 /** Short badge form for nav entries and link descriptions that mention the ledger. */
 export const XRPL_STATUS_LABEL = "public-root reader — not a grade";

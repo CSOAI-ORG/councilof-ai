@@ -87,7 +87,7 @@ export default function CouncilTwin() {
         {/* Digital sovereign twin + signed ID passport (real Ed25519 signing) */}
         <div className="mt-6 rounded-2xl border border-emerald-400/30 bg-gradient-to-br from-emerald-500/10 to-transparent p-5 text-left">
           <div className="text-sm font-bold text-emerald-200">Mint a digital ID passport</div>
-          <p className="mt-1 text-[13px] text-emerald-100/75">Your signed twin — and every agent you deploy — carries a signed <b className="text-emerald-200">digital passport</b>: an Ed25519 identity anyone can verify (proofof.ai). Mint one for yourself, or issue <b className="text-emerald-200">passported agents</b> for your enterprise or government — each identified, accountable, and sealed to Layer 0.</p>
+          <p className="mt-1 text-[13px] text-emerald-100/75">This is a digital-twin and agent-passport design. A published Ed25519 identity can be verified only from its specific artifact. This page does not claim that every deployed agent already has a passport or that ordinary actions are signed.</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <input value={pName} onChange={(e) => setPName(e.target.value)} placeholder="Holder — you, an agent, or an org" className="flex-1 min-w-[200px] rounded-lg border border-emerald-500/25 bg-black/30 px-3 py-2 text-sm text-emerald-50 placeholder-emerald-300/30 focus:border-emerald-400 focus:outline-none" />
             <select value={pKind} onChange={(e) => setPKind(e.target.value)} className="rounded-lg border border-emerald-500/25 bg-black/30 px-2 py-2 text-sm text-emerald-50">

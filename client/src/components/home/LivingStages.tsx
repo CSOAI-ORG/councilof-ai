@@ -376,8 +376,10 @@ function VerifyYourself() {
           <Kicker>Do not trust us — check</Kicker>
           <Heading>Three steps. Then you know.</Heading>
           <Body>
-            Every measurement we publish is a small signed record — under a kilobyte, carrying the
-            axis, the model, the accuracy, the issuer, the date and the hash of the card before it.
+            Published signed cards are small records — current v0.1 cards are under a kilobyte,
+            carrying the axis, the model, the accuracy, the issuer, the date and the hash of the
+            card before it. Some board aggregates are explicitly uncarded and cannot be verified
+            through this card path.
             You do not need an account, our servers, or our permission to confirm it is genuine and
             unaltered. Pin our key from /.well-known/did.json first: a card checked against the key
             it ships with proves only that the file is self-consistent, not that we issued it.
@@ -447,10 +449,10 @@ function OwnErrors() {
       </Heading>
       <Body>
         Anyone can be right on a good day. What you should judge a measurement body on is what it does
-        on a bad one. We keep a public corrections ledger at{" "}
-        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/corrections</code>, appended
-        and never edited or deleted. Each entry says what was wrong, how it was caught, and what
-        changed.
+        on a bad one. We keep a public, source-maintained corrections record at{" "}
+        <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/corrections</code>. It is
+        not backed by append-only storage proof. Each entry says what was wrong, how it was caught,
+        and what changed.
         {entries.length > 0 && (
           <>
             {" "}It currently holds{" "}
@@ -461,7 +463,7 @@ function OwnErrors() {
       <Points
         points={[
           { tag: "pain", text: "Most measurement bodies quietly reword a claim that did not hold" },
-          { tag: "benefit", text: "The ledger is append-only — entries are never edited or deleted" },
+          { tag: "benefit", text: "Signed artifacts are superseded rather than silently edited where that can be verified" },
           { tag: "usp", text: "We retracted our own consensus claim (DR-0007) rather than dress it up" },
         ]}
       />
@@ -491,7 +493,7 @@ function OwnErrors() {
       <Cta
         href="/refutation-ledger"
         label="Read the ledger"
-        secondary={{ href: "/report", label: "Report something to us" }}
+        secondary={{ href: "/watchdog-hub", label: "Inspect watchdog evidence" }}
       />
     </SplitBand>
   );
@@ -520,8 +522,9 @@ function LivingLaw() {
         it does not hold still. We track the primary sources — EUR-Lex, legislation.gov.uk and the
         national registers — and publish a dated deadline feed at{" "}
         <code className="rounded bg-gray-100 px-1.5 py-0.5 text-[15px]">/api/regulation</code>. When a
-        provision actually changes, we re-measure and issue a delta card. Nothing expires and nothing
-        is overwritten: the old card stays exactly where it was, because history here is append-only.
+        source changes, the current automation raises a detection signal. Re-measurement and delta-card
+        issuance still require a separate run and are not yet automated. Previously published signed
+        artifacts remain addressable; this page does not claim append-only storage.
       </Body>
       {next.length > 0 && (
         <>

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 // The Sovereign Ontology — the semantic layer for AI governance. What Palantir's Ontology did
 // for enterprise data (Objects · Properties · Links · Actions), the Council assistant Ontology does for
-// AI governance: every governed object, how they relate, and the actions you can take on them.
+// AI governance: catalogued object types, relationships, and available design actions.
 
 const OBJECTS = [
   { g: "◈", n: "AI systems & agents", d: "every model, agent and humanoid under governance" },
@@ -21,11 +21,11 @@ const LINKS = [
   { c: "#6ee7b7", n: "signs", d: "a specifically published record can carry a verifiable signature; coverage is record-specific" },
 ];
 const ACTIONS = [
-  { n: "Govern", d: "classify, assess and place any object under Layer 0.", href: "/dashboard?tab=home" },
+  { n: "Govern", d: "open a classification or assessment workflow and inspect its evidence state.", href: "/dashboard?tab=home" },
   { n: "Simulate", d: "run the outcome across thousands of branches before acting.", href: "/gspc-arena" },
-  { n: "Stop", d: "halt a rogue agent or humanoid before harm — signed.", href: "/poc" },
-  { n: "Prove", d: "issue a signed, offline-verifiable record of governance.", href: "/system-card" },
-  { n: "Crosswalk", d: "comply once, cover every framework it maps to.", href: "/hive" },
+  { n: "Stop", d: "explore a containment design; no live intervention is claimed.", href: "/poc" },
+  { n: "Prove", d: "open the System Card workflow and verify any artifact it publishes.", href: "/system-card" },
+  { n: "Crosswalk", d: "inspect published mappings without treating them as a compliance determination.", href: "/hive" },
   { n: "Protect", d: "shield a person's identity and likeness from deepfakes.", href: "/protect" },
 ];
 
@@ -39,9 +39,9 @@ export default function Ontology() {
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The semantic layer for <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">AI governance.</span></h1>
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             What Palantir's Ontology did for enterprise data — turning scattered records into <b className="text-emerald-200">objects,
-            links and actions</b> you can reason over — the Council Ontology does for AI governance. Every framework, agent,
-            company, government, threat and person becomes a governed object, connected by how it relates, and actionable on one
-            signed Layer 0 floor. It's live on the globe — toggle the <b className="text-emerald-200">Ontology</b> layer and watch the web light up.
+            links and actions</b> you can reason over — this Council Ontology proposes the same pattern for AI governance.
+            It catalogues representative object types and relationships; it does not claim every framework, organisation or agent
+            is covered or governed. Toggle the <b className="text-emerald-200">Ontology</b> layer to explore the visual map.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <a href="/world" className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">See it on the globe →</a>
@@ -69,8 +69,9 @@ export default function Ontology() {
           </div>
         </div>
         <div className="rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-5 text-sm text-emerald-100/70">
-          One ontology, one signed floor. Objects and links are open and crosswalked; actions are governed and sealed to Layer 0.
-          <span className="text-emerald-300"> Reason over the whole world of AI governance in one place.</span>
+          One proposed ontology, with open object and link mappings. Any signed evidence remains artifact-specific;
+          ordinary actions are not automatically governed or signed.
+          <span className="text-emerald-300"> Explore the catalogue from one place.</span>
         </div>
       </section>
     </div>

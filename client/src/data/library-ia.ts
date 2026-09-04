@@ -24,7 +24,7 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 // Audit 2026-08-26 found EIGHT such paths already live in the header and shipping
 // the archive banner: /models /tools /sectors /registers /eunomia /eunomia-data
 // /first-fine-watch /xrpl-attest. They are registered below, along with the
-// surfaces this front-door pass promotes (/report, /workbench, /start).
+// surfaces this front-door pass promotes (/watchdog-hub, /workbench, /start).
 export const PRIMARY_PATHS = new Set<string>([
   "/compliance-training-world/catalog.html", // games-catalog entry; a catalogued path ships primary, never archived
   "/",
@@ -40,7 +40,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/leaderboard",
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
-  "/models", "/tools", "/plugin", "/report",
+  "/models", "/tools", "/plugin", "/watchdog-hub",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
   // A promoted self-serve destination (footer + /tools + /mcp cross-link); unregistered
   // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
@@ -101,9 +101,8 @@ export const PRIMARY_PATHS = new Set<string>([
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
   "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
-  // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
-  // registered here so it can never ship flagged "archived".
-  "/report",
+  // Promoted to a first-class Council OS read-only Watchdog destination.
+  "/watchdog-hub",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
   "/system-card", "/xrpl-attest", "/claims-register",

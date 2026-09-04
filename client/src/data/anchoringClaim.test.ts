@@ -44,7 +44,7 @@ describe("OTS state follows the current root sidecar", () => {
     if (status === "CONFIRMED_BITCOIN") {
       expect(ANCHORING_CLAIM).toMatch(/OpenTimestamps witness(?: at block \d+)?/i);
     } else if (status === "STAMPED_PENDING_BITCOIN") {
-      expect(ANCHORING_CLAIM).toMatch(/not yet Bitcoin-anchored/i);
+      expect(ANCHORING_CLAIM).toMatch(/does not yet prove inclusion in a Bitcoin block/i);
     }
   });
 });

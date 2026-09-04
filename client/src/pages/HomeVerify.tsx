@@ -50,7 +50,7 @@ export default function HomeVerify() {
   useEffect(() => {
     document.title = "Council of AI — check an AI claim, read the GSPC board";
     setMetaDescription(
-      "Paste a signed card or read the live GSPC leaderboard. Verify is free. Nine products. Empty cells stay empty. We measure; we do not sell a rank.",
+      "Paste a signed card or read the current GSPC board. Verification is free. Empty cells stay empty. Measurement is a scoped engagement; a rank is never sold.",
     );
   }, []);
 
@@ -62,15 +62,16 @@ export default function HomeVerify() {
       <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
         <section aria-labelledby="os-h1">
           <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
-            Check a claim. Measure a system.
+            Check a claim. Request a measurement.
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
-            Empty means not measured. Not a certificate. Free, no account.
+            Empty means not measured. Not a certificate. Verification is free, no account.
+            Measurement is paid and booking is not live yet.
           </p>
           {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
           <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/extension/">Chrome extension</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/what-is-new.html">Hermes skill</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">REST + curl</a>
@@ -81,7 +82,7 @@ export default function HomeVerify() {
             items={[
               "Click a row. The figure, n and status open underneath — living GET /api/gspc.",
               "Paste a signed card. Your browser checks the hash and the signature. Nothing is sent.",
-              "Say what you use AI for. We route you to get measured — free, no account.",
+              "Say what you use AI for. We route you to the paid measurement waitlist; booking is not live yet.",
               { kind: "usp", text: "Verification is free forever. A rank is never sold." },
             ]}
           />

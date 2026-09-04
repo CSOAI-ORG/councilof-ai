@@ -8,7 +8,7 @@ const LAYERS: Layer[] = [
   { name: "Voice + Cognition", what: "Your Council assistant companion - it understands, navigates, and acts with you across the OS.", status: "Live demo", href: "/minds", glyph: "VOX" },
   { name: "Social Character + Avatar", what: "Your AI character with your avatar, governing and posting across 12 platforms.", status: "Configurable", href: "/connect", glyph: "AVA" },
   { name: "Compliance Passport", what: "Your Ed25519-signed governance identity - provable, portable, never deniable.", status: "Live", href: "/readiness", glyph: "PASS" },
-  { name: "Council Design", what: "Explore the proposed 33-seat roster and 23/33 target. No live vote or fault-tolerance property is claimed.", status: "Design only", href: "/council", glyph: "33" },
+  { name: "Council Design", what: "Explore the proposed 33-seat roster and 23/33 target. No live vote or failure-resilience property is claimed.", status: "Design only", href: "/council", glyph: "33" },
 ];
 export default function CouncilHub() {
   useEffect(() => { document.title = "Your Council assistant - one identity across the OS | CSOAI"; }, []);

@@ -71,8 +71,8 @@ const FRAMEWORKS = [
 
 const EXPLAINERS = [
   {
-    t: "Explore the live governance grid →",
-    d: "The immersive globe — 177 jurisdictions, council nodes, the MCP fleet and the Council Town feed, live on one Earth.",
+    t: "Explore the governance map →",
+    d: "A visual catalogue of jurisdictions, Council design nodes, registered MCP entries and published Council Town data.",
     href: "/globe3d.html",
   },
   {
@@ -82,7 +82,7 @@ const EXPLAINERS = [
   },
   {
     t: "Track global AI regulation",
-    d: "Every binding and emerging framework in force, mapped across 177 jurisdictions.",
+    d: "Explore the currently catalogued regulatory mappings. Coverage is not asserted for every law or jurisdiction.",
     href: "/regulation-tracker",
   },
   {
@@ -99,7 +99,7 @@ export default function CouncilTown() {
   const [s, setS] = useState<SovTownStats>(FALLBACK);
 
   useEffect(() => {
-    document.title = "Council Town — Live Governed AI World · CSOAI";
+    document.title = "Council Town — Governance Simulation Record · CSOAI";
     let live = true;
     fetchSovTownStats()
       .then((d) => {
@@ -280,13 +280,13 @@ export default function CouncilTown() {
         <div className="max-w-5xl mx-auto px-6 py-16">
           <h2 className="text-2xl font-bold text-gray-900 text-center">Compliance tooling</h2>
           <p className="mt-3 text-center text-gray-600 max-w-2xl mx-auto">
-            The governance moat, made operational — standards interoperability, continuous evidence, and the live grid.
+            Explore standards mappings, published evidence and the governance-map catalogue. Each surface states its own evidence status.
           </p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
               { t: "OSCAL Studio", d: "Import/export NIST OSCAL — FedRAMP 20x ready.", href: "/oscal" },
-              { t: "Evidence Hub", d: "Continuous, automated compliance evidence.", href: "/evidence-rail" },
-              { t: "Live governance grid", d: "The immersive globe across 177 jurisdictions.", href: "/globe3d.html" },
+              { t: "Evidence Hub", d: "Browse published evidence and its current witness state.", href: "/evidence-rail" },
+              { t: "Governance map", d: "Explore the visual jurisdiction catalogue; coverage is not universal.", href: "/globe3d.html" },
               { t: "3D governance Earth", d: "Photorealistic CesiumJS globe (beta).", href: "/globe3d.html" },
             ].map((x) => (
               <a key={x.t} href={x.href} className="block rounded-2xl border border-gray-200 bg-white p-5 hover:border-emerald-300 hover:bg-emerald-50/40 transition">

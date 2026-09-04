@@ -93,18 +93,21 @@ async function interactive(b) {
   try { const p = await open(b, "/classifier"); await p.waitForSelector("input", { timeout: 12000 });
     await p.fill("input", "AI that screens job applicants"); await p.getByText(/Classify/).first().click(); await p.waitForTimeout(6000);
     const body = await p.innerText("body"); /high[-\s]?risk|risk tier|obligation/i.test(body) ? pass('CLAIM "classify your AI"', "risk classification returned") : fail("classify", "no classification"); await p.close(); } catch (e) { fail("classifier", e.message.slice(0, 45)); }
-  // Report — real seal
-  try { const p = await open(b, "/report"); await p.waitForSelector("textarea", { timeout: 12000 });
-    await p.fill("textarea", "Proxy discrimination in an AI hiring tool."); await p.getByText(/Submit \+ seal/).first().click(); await p.waitForTimeout(6000);
-    const body = await p.innerText("body"); /(SOV:|Ed25519|sig |sha256:|sealed|receipt|WD-)/i.test(body) ? pass('CLAIM "sealed to Layer 0"', "receipt/seal shown") : fail("report seal", "no receipt"); await p.close(); } catch (e) { fail("report", e.message.slice(0, 45)); }
+  // Report — fail closed while the write endpoint is not implemented.
+  try { const p = await open(b, "/report"); await p.waitForTimeout(1200);
+    const body = await p.innerText("body");
+    /review|not (?:currently )?(?:live|implemented)|withdrawn/i.test(body) && !/Submit \+ seal/i.test(body)
+      ? pass('CLAIM "incident submission is unavailable"', "withdrawn surface fails closed")
+      : fail("report", "unavailable intake was presented as live"); await p.close(); } catch (e) { fail("report", e.message.slice(0, 45)); }
   // Workbench
   try { const p = await open(b, "/workbench"); await p.waitForSelector("input", { timeout: 12000 });
     await p.locator("input").first().fill("Classify an EU AI Act risk tier for a credit model"); await p.getByText(/Run \+ seal/).first().click(); await p.waitForTimeout(7000);
     const body = await p.innerText("body"); /seal|Ed25519|Layer 0|council/i.test(body) ? pass('CLAIM "signed artifacts"', "sealed artifact produced") : fail("workbench", "no artifact"); await p.close(); } catch (e) { fail("workbench", e.message.slice(0, 45)); }
-  // Council viz
-  try { const p = await open(b, "/try"); await p.waitForTimeout(1200);
-    await p.getByText(/screen job applicants|facial recognition/i).first().click().catch(() => {}); await p.waitForTimeout(3500);
-    const body = await p.innerText("body"); /quorum|care-floor|Byzantine|consensus/i.test(body) ? pass('CLAIM "33-agent council"', "BFT viz present") : fail("council viz", "not shown"); await p.close(); } catch (e) { fail("council", e.message.slice(0, 45)); }
+  // Council design — the page must not present the proposed 33 seats as live BFT.
+  try { const p = await open(b, "/council"); await p.waitForTimeout(1200);
+    const body = await p.innerText("body"); /DESIGN.{0,20}not a live system/is.test(body) && /n_eff\s*=\s*1/i.test(body)
+      ? pass('CLAIM "Council is a design"', "n_eff=1 boundary rendered")
+      : fail("council", "design/live boundary missing"); await p.close(); } catch (e) { fail("council", e.message.slice(0, 45)); }
   // Globe
   try { const p = await b.newPage(); await p.goto(SITE + "/globe3d.html", { waitUntil: "domcontentloaded", timeout: 25000 }); await p.waitForTimeout(4500);
     (await p.evaluate(() => !!document.querySelector("canvas"))) ? pass('CLAIM "live globe"', "Cesium canvas rendered") : fail("globe", "no canvas"); await p.close(); } catch (e) { fail("globe", e.message.slice(0, 45)); }

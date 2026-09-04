@@ -8,7 +8,7 @@ import { setMetaDescription } from "@/lib/utils";
  * /methodology — how the instrument works.
  *
  * The five deterministic predicates, the care_cost rubric, and the spectrum.
- * No LLM-as-judge. Every verdict traces to a signed record, and every hedge
+ * No LLM-as-judge. A published verdict must trace to a verifiable record, and every hedge
  * (n, lower bound, INCOMPLETE) propagates to the surface.
  */
 
@@ -48,7 +48,7 @@ const PREDICATES = [
 export default function Methodology() {
   useEffect(() => {
     document.title = "Methodology — deterministic predicates, no LLM-as-judge | CSOAI";
-    setMetaDescription("Council of AI methodology: deterministic predicates, no LLM-as-judge, gold labels, nothing quoted below n=30, every number recomputable from its rows. Corrections are published, never silently edited.");
+    setMetaDescription("Council of AI methodology: deterministic predicates, no LLM-as-judge, row-declared methods and evidence boundaries. Model comparisons and deterministic facts use different sample rules; some aggregates remain uncarded.");
   }, []);
 
   return (
@@ -68,7 +68,7 @@ export default function Methodology() {
           <p className="mt-4 max-w-3xl text-emerald-100/80 leading-relaxed">
             Every compliance verdict is produced by a deterministic predicate inspecting a
             recorded trace — <strong className="text-emerald-50">no model decides, no LLM-as-judge, ever</strong>.
-            Every verdict traces to a signed record you can recompute yourself, and every hedge
+            A published verdict must trace to a verifiable record you can recompute yourself, and every hedge
             (sample size, lower bound, INCOMPLETE) is carried to the surface instead of being
             averaged away.
           </p>
@@ -129,29 +129,28 @@ export default function Methodology() {
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
               <h3 className="text-[15px] font-bold text-emerald-50">Wilson 95% intervals — always</h3>
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                Every accuracy / pass-rate carries a <strong className="text-emerald-50">Wilson
-                score 95% interval</strong>, never a Wald interval (which fails near 0 and 1).
-                Nothing goes on the board below n=30 usable items — a wave queued at n=24 returned
-                UNMEASURED across all eight jobs rather than being quoted, and that is in the
-                corrections ledger. Figures below that floor may still appear on this page as
-                worked illustrations of the rubric; where they do, they are labelled as such and
-                are not board numbers. Reference: E. B. Wilson (1927), <em>JASA</em> 22(158).
+                Model-comparison point-estimate grades carry a <strong className="text-emerald-50">Wilson
+                score 95% interval</strong>, never a Wald interval (which fails near 0 and 1), and
+                use the stated n≥30 floor. Deterministic-fact axes can be MEASURED at smaller n
+                because they are not model accuracy estimates. The swarm row publishes a Wilson
+                lower bound as its figure and names that basis rather than presenting a full
+                interval field. Read each row&apos;s method and sample size from GET /api/gspc;
+                these categories are not interchangeable. Reference: E. B. Wilson (1927),{" "}
+                <em>JASA</em> 22(158).
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
               <h3 className="text-[15px] font-bold text-emerald-50">Separation — a deliberately conservative rule</h3>
               <p className="mt-2 text-[13px] text-emerald-100/70 leading-relaxed">
-                The separation determination published on each board axis is a paired
-                <strong className="text-emerald-50"> McNemar test at p&lt;0.05</strong> on the items
-                where the models actually disagreed. Beside it we run a second, deliberately
-                blunter screen: whether the leader&apos;s Wilson interval clears the fleet mean.
-                Where either says no, we report{" "}
-                <strong className="text-amber-300">TIE — statistically indistinguishable</strong>{" "}
-                and never a win, including when the model in front is one of ours. We state plainly
-                that the second rule is conservative — overlapping intervals do not by themselves
-                prove non-significance — and it errs toward not overclaiming, which is the honest
-                direction for a body whose product is trust. The current split of separated leaders
-                to ties is in the totals block of GET /api/gspc; we do not type it here.
+                There is no single separation rule silently applied to every axis. Each board row
+                declares the evidence it actually has through <code>separation_p</code>,{" "}
+                <code>separation_basis</code>, or <code>separation_method</code>. Paired comparisons
+                may use a <strong className="text-emerald-50">McNemar test at p&lt;0.05</strong> when
+                item-level disagreements exist. Other published rows may use a stated Wilson-bound
+                screen, including comparison with a fleet mean, and say when paired McNemar remains
+                pending. A row is called <strong className="text-amber-300">TIE</strong> only under
+                the method named on that row; it is never promoted to a win by a universal rule we
+                did not run. The current methods and states are in GET /api/gspc.
               </p>
             </div>
             <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
@@ -235,11 +234,12 @@ export default function Methodology() {
             <li><strong className="text-emerald-50">Read the claim.</strong> What did we assert?</li>
             <li><strong className="text-emerald-50">Read the result.</strong> What did the measurement show?</li>
             <li>
-              <strong className="text-emerald-50">Check the signed record.</strong>{" "}
+              <strong className="text-emerald-50">Check a signed card when one is linked.</strong>{" "}
               <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-                Recompute the chain hash
+                Verify exact card bytes
               </Link>{" "}
-              — tamper-evidence, not authenticity.
+              against the published key. A refutation row without linked card bytes and signature
+              remains unverified through this path; its label alone is not cryptographic proof.
             </li>
             <li><strong className="text-emerald-50">Check the n.</strong> Every n&lt;20 is labelled lower bound.</li>
             <li>
@@ -295,7 +295,7 @@ export default function Methodology() {
             Enter the arena →
           </Link>
           <Link href="/gspc-verify" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
-            Verify the chain →
+            Verify a signed card or root membership →
           </Link>
           <Link href="/refutation-ledger" className="inline-flex min-h-[44px] items-center text-emerald-300 hover:underline">
             Read the refutation ledger →

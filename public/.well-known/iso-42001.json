@@ -1,25 +1,26 @@
 {
   "door": {
-    "canonical_form": "JCS (RFC 8785)-style canonical JSON \u2014 Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
+    "canonical_form": "CPython json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True) profile \u2014 explicitly not RFC 8785/JCS",
     "endpoints": {
       "corrections": "https://councilof.ai/api/corrections",
       "discover": "https://councilof.ai/.well-known/iso-42001.json",
       "root": "https://councilof.ai/root.json",
       "verify": "https://councilof.ai/gspc-verify"
     },
-    "evidence_pack": "https://councilof.ai/api/evidence-bundle?obligation=iso-42001",
+    "evidence_pack": null,
+    "evidence_pack_status": "UNMAPPED \u2014 no evidence-bundle resolver for this standard",
     "publisher": "Council of AI (CSOAI Ltd)"
   },
   "measurement": {
-    "axes_covered": 22,
-    "lid": "22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact",
+    "axes_covered": 0,
+    "lid": "Discovery document only; no standard-specific GSPC coverage is claimed.",
     "schema": "csoai.gspc-axes/0.5",
-    "status": "live"
+    "status": "UNMAPPED"
   },
   "notes": [
     "Discovery doc for ISO/IEC 42001",
     "Description: ISO/IEC 42001:2023 AI Management System",
-    "Anyone can re-check the measurement at /gspc-verify.",
+    "No measurement is asserted by this discovery document. Verify only a specifically published card at /gspc-verify.",
     "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
   ],
   "publisher": "CSOAI Ltd (UK 16939677)",

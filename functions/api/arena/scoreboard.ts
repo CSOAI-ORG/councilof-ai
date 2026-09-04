@@ -11,9 +11,12 @@
 // ("not sufficient to rank"), never invented. Measurement-not-certification.
 //
 // GET /api/arena/scoreboard           -> full signed per-axis leaderboard
-// GET /api/arena/scoreboard?verify=1  -> recompute sha256(canonical body), return match
+// GET /api/arena/scoreboard?verify=1  -> recompute the content hash AND verify
+//                                        Ed25519(content_id ASCII) against the pinned key
 
 const BRICK = "did:web:csoai.org#card-attestation-1";
+const CARD_ATTESTATION_HEX =
+  "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38";
 
 function canonize(o: unknown): string {
   if (Array.isArray(o)) return "[" + o.map(canonize).join(",") + "]";
@@ -27,6 +30,37 @@ function canonize(o: unknown): string {
     return s.includes(".") ? s : s + ".0";
   }
   return JSON.stringify(o);
+}
+
+function hexBytes(value: unknown, expectedBytes: number): Uint8Array | null {
+  if (typeof value !== "string" || !new RegExp(`^[0-9a-fA-F]{${expectedBytes * 2}}$`).test(value)) {
+    return null;
+  }
+  return Uint8Array.from(value.match(/../g) ?? [], (byte) => Number.parseInt(byte, 16));
+}
+
+async function verifyArenaSignature(contentId: string, signature: unknown, kid: unknown): Promise<boolean> {
+  if (kid !== BRICK) return false;
+  const publicKey = hexBytes(CARD_ATTESTATION_HEX, 32);
+  const sig = hexBytes(signature, 64);
+  if (!publicKey || !sig) return false;
+  try {
+    const key = await crypto.subtle.importKey(
+      "raw",
+      publicKey as unknown as BufferSource,
+      { name: "Ed25519" },
+      false,
+      ["verify"],
+    );
+    return await crypto.subtle.verify(
+      { name: "Ed25519" },
+      key,
+      sig as unknown as BufferSource,
+      new TextEncoder().encode(contentId) as unknown as BufferSource,
+    );
+  } catch {
+    return false;
+  }
 }
 
 /** HEAD must not 404 when GET is 200 — probes and MCP hosts send HEAD first. */
@@ -56,12 +90,24 @@ export async function onRequestGet({ request }) {
     const canonical = canonize(body);
     const cid = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(canonical));
     const hex = [...new Uint8Array(cid)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    const expected = typeof board.signature.content_id === "string" ? board.signature.content_id : "";
+    const hashMatch = hex === expected;
+    const signatureValid = hashMatch
+      ? await verifyArenaSignature(hex, board.signature.sig, board.signature.kid)
+      : false;
     return new Response(JSON.stringify({
       content_id: hex,
-      expected: board.signature.content_id,
-      match: hex === board.signature.content_id,
+      expected,
+      hash_match: hashMatch,
+      signature_valid: signatureValid,
+      verified: hashMatch && signatureValid,
+      // Backward-compatible hash field. Consumers must use `verified` for the
+      // combined trust decision; `match` alone never means signature-valid.
+      match: hashMatch,
       kid: board.signature.kid,
-      note: "signature over the did:web:csoai.org key must also be checked against the published key; this recomputes the content hash only",
+      note: signatureValid
+        ? "content hash matches and Ed25519 verifies over the content_id under the pinned card-attestation key"
+        : "verification requires both hash_match and signature_valid; match alone is only content integrity",
     }), { headers: { "content-type": "application/json", "cache-control": "no-store" } });
   }
 

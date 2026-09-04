@@ -131,6 +131,7 @@ if ok; then
     exit 1
   fi
   git add -- "${witness_files[@]}"
+  git add -- public/interop/root-witness-pointer.json
   if [ -f public/interop/eas-root-attestations.json ]; then
     git add -- public/interop/eas-root-attestations.json
   fi

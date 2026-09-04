@@ -71,7 +71,6 @@ const PRIORITY = new Map([
   ["/gspc-verify", P_TOP],
   ["/gspc-anchors", P_HIGH],
   ["/gspc-gap-map", P_HIGH],
-  ["/live-ledger", P_HIGH],
   ["/instrument", P_HIGH],
   ["/tour", P_HIGH],
   ["/learn", P_HIGH],
@@ -89,11 +88,19 @@ const PRIORITY = new Map([
 ]);
 
 const CHANGEFREQ = new Map([
-  ["/live-ledger", "daily"],
   ["/status", "hourly"],
   ["/blog", "daily"],
   ["/", "weekly"],
 ]);
+
+// Routes intentionally sent to ContentReviewNotice are withdrawn, not public
+// catalogue entries. Derive this set from App.tsx so a newly quarantined route
+// cannot remain advertised to crawlers by accident.
+const src = readFileSync(APP_TSX, "utf8");
+const reviewNoticePaths = new Set(
+  [...src.matchAll(/<Route\b[^>]*?\bpath="([^"]+)"[^>]*?\bcomponent=\{ContentReviewNotice\}/g)]
+    .map((match) => match[1]),
+);
 
 // --- Junk / legacy / non-indexable filters --------------------------------
 const EXCLUDE_EXACT = new Set([
@@ -180,6 +187,7 @@ const EXCLUDE_PREFIX = [
 ];
 
 function isJunk(path) {
+  if (reviewNoticePaths.has(path)) return true;
   if (EXCLUDE_EXACT.has(path)) return true;
   return EXCLUDE_PREFIX.some((p) => path === p || path.startsWith(p));
 }
@@ -200,7 +208,6 @@ function changefreqFor(path) {
 }
 
 // --- Parse routes ---------------------------------------------------------
-const src = readFileSync(APP_TSX, "utf8");
 const routeRe = /<Route\b[^>]*?\bpath="([^"]+)"/g;
 const seen = new Set();
 const paths = [];
@@ -422,7 +429,6 @@ const REQUIRED = [
   "/methodology",
   "/refutation-ledger",
   "/instrument",
-  "/live-ledger",
   "/tour",
   // The six audience pages. They were redirect-suppressed for two days and nothing
   // failed, because nothing asserted they should be reachable. Now something does.

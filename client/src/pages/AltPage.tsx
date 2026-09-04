@@ -7,7 +7,7 @@ import SovereignSpot from "../components/SovereignSpot";
 
 type Row = { dim: string; csoai: string; them: string };
 type Comp = { key: string; name: string; their: string; rows: Row[]; faqs: { q: string; a: string }[] };
-const COUNCIL_DESIGN = "Designed 33-seat Council, target 23/33; not live and no demonstrated independence or fault tolerance. Signed measurement cards are a separate capability.";
+const COUNCIL_DESIGN = "Designed 33-seat Council, target 23/33; not live and no demonstrated independent operation or resilience under failed voters. Signed measurement cards are a separate capability.";
 const COMPS: Record<string, Comp> = {
   vanta: {
     key: "vanta", name: "Vanta", their: "Security-compliance automation (SOC 2 / ISO 27001), with AI features added on top",
@@ -48,7 +48,7 @@ const COMPS: Record<string, Comp> = {
     ],
     faqs: [
       { q: "Is CSOAI an alternative to Credo AI?", a: "Both address AI governance. CSOAI focuses on deterministic measurements, public evidence states, and Ed25519-signed measurement cards. Its 33-seat Council remains a design, not a live consensus capability." },
-      { q: "What makes CSOAI different from other AI-governance tools?", a: "CSOAI publishes deterministic measurement evidence and verifiable cards. Its Council design has 33 seats and a target threshold of 23/33, but no live independent or fault-tolerant council is claimed." },
+      { q: "What makes CSOAI different from other AI-governance tools?", a: "CSOAI publishes deterministic measurement evidence and verifiable cards. Its Council design has 33 seats and a target threshold of 23/33, but no live independently operated or failure-resilient council is claimed." },
     ],
   },
 };

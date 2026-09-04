@@ -27,7 +27,7 @@ const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "u
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
-    expect(src).toMatch(/Check a claim\. Measure a system\./);
+    expect(src).toMatch(/Check a claim\. Request a measurement\./);
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
@@ -66,7 +66,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(stack).toContain("Embed and white-label kit");
     expect(stack).toContain("Insurance evidence rail");
     expect(stack).toContain("Specialist registers");
-    expect(stack).toContain("Report an incident");
+    expect(stack).toContain("Watchdog evidence");
     expect(stack).toContain("/images/");
     expect(stack).toContain("ticks:");
     expect(stack).toContain("Why these nine, and not a catalogue");
@@ -90,7 +90,7 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/report'");
+    expect(header).toContain("href: '/watchdog-hub'");
     expect(header).toContain("href: '/for/enterprise'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
@@ -131,7 +131,7 @@ describe("home lock — later merges must not restore the desk video", () => {
     expect(home).toContain("HfLivingRecord");
     expect(home).toContain("ReachStrip");
     expect(home).toContain("The living board");
-    expect(home).toMatch(/Check a claim\. Measure a system\./);
+    expect(home).toMatch(/Check a claim\. Request a measurement\./);
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");
     expect(home).not.toContain("HomeBoard");

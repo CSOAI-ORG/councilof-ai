@@ -83,6 +83,21 @@ def discover_endpoints() -> list[dict]:
             # A route may remain deployed solely to return a fail-closed 503.
             # Keep it discoverable, but never regenerate a fictional 200 contract.
             "unavailable": "@openapi-unavailable" in text,
+            # Unimplemented facades fail closed at 501 and explicitly attest that
+            # they accepted, persisted, and signed nothing.
+            "not_implemented": "@openapi-not-implemented" in text,
+            "not_implemented_methods": [
+                verb.upper() for verb in re.findall(
+                    r"@openapi-(get|post|put|delete|patch)-not-implemented", text
+                )
+            ],
+            "method_not_allowed_methods": [
+                verb.upper() for verb in re.findall(
+                    r"@openapi-(get|post|put|delete|patch)-method-not-allowed", text
+                )
+            ],
+            # Some read-only routes publish static summaries without proof material.
+            "unsigned_static": "@openapi-unsigned-static" in text,
         })
     return endpoints
 
@@ -116,23 +131,63 @@ def build_openapi(endpoints: list[dict]) -> dict:
         item = {}
         for verb in ep["methods"]:
             unavailable = bool(ep.get("unavailable"))
+            not_implemented = bool(ep.get("not_implemented")) or verb in ep.get("not_implemented_methods", [])
+            method_not_allowed = verb in ep.get("method_not_allowed_methods", [])
+            unsigned_static = bool(ep.get("unsigned_static"))
+            if method_not_allowed:
+                response_status = "405"
+                response_description = "Method not allowed — use the documented read method"
+            elif not_implemented:
+                response_status = "501"
+                response_description = (
+                    "Not implemented — no input was accepted, persisted, or signed"
+                )
+            elif unavailable:
+                response_status = "503"
+                response_description = (
+                    "Unavailable — quarantined pre-release; no evidence is manufactured"
+                )
+            elif unsigned_static:
+                response_status = "200"
+                response_description = (
+                    "Unsigned static benchmark summary — no signature or proof material supplied"
+                )
+            else:
+                response_status = "200"
+                response_description = "OK"
             op: dict = {
                 "summary": ep.get("description", "")[:200],
                 "operationId": f"{verb.lower()}_{path.replace('/', '_').replace('{', '').replace('}', '')}",
                 "responses": {
-                    ("503" if unavailable else "200"): {
-                        "description": (
-                            "Unavailable — quarantined pre-release; no evidence is manufactured"
-                            if unavailable
-                            else "OK"
-                        ),
+                    response_status: {
+                        "description": response_description,
                         "content": {"application/json": {}},
                     },
                 },
             }
-            if unavailable:
+            if method_not_allowed:
+                op["x-csoai-lifecycle"] = "METHOD_NOT_ALLOWED"
+            elif not_implemented:
+                op["x-csoai-lifecycle"] = "NOT_IMPLEMENTED"
+                op["responses"]["501"]["content"]["application/json"]["example"] = {
+                    "schema": "csoai.capability-state/0.1",
+                    "endpoint": path,
+                    "state": "NOT_IMPLEMENTED",
+                    "accepted": False,
+                    "persisted": False,
+                    "signed": False,
+                }
+            elif unavailable:
                 op["x-csoai-lifecycle"] = "QUARANTINED_PRE_RELEASE"
-            if not unavailable and "live" in ep and ep["live"].get("ok"):
+            elif unsigned_static:
+                op["x-csoai-evidence-state"] = "UNSIGNED_STATIC_SUMMARY"
+                op["responses"]["200"]["content"]["application/json"]["example"] = {
+                    "state": "UNSIGNED_STATIC_SUMMARY",
+                    "signed": False,
+                    "measurement_not_certification": True,
+                }
+            if (not unavailable and not not_implemented and not method_not_allowed and not unsigned_static
+                    and "live" in ep and ep["live"].get("ok")):
                 op["responses"]["200"]["content"]["application/json"]["example"] = {
                     "_top_keys": ep["live"].get("top_keys", []),
                 }

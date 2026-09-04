@@ -491,9 +491,9 @@ function LiveStateBar({
           "Catalogued: ids with no published endpoint, never contacted.\n" +
           "These are different kinds and are never added together.\n\n" +
           `reachable — ${provenance(fleet.reachable)}\n` +
-          `catalogued — ${provenance(fleet.catalogued)}\n\nOpens the published fleet manifest.`
+          `catalogued — ${provenance(fleet.catalogued)}\n\nOpens the Tools pane; a catalogue entry is not runtime reachability.`
         }
-        onClick={() => onOpenHit({ route: "/mcp-fleet", label: "MCP fleet" })}
+        onClick={() => onOpenHit({ tab: tabOf("tools"), label: "Tools" })}
       />
       {/* This chip said "150 published · 150 signed". /api/state gives that fact
           kind "catalogued" and sources it from card_index.json; it is the curated

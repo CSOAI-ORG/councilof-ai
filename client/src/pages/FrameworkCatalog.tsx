@@ -45,10 +45,10 @@ const FRAMEWORKS: Framework[] = [
   { name: "ISO 23894 (AI risk)", category: "AI", region: "Global", status: "Mapped" },
 ];
 
-// Acknowledged gaps — handled via CSOAI's specialist partner network (honesty signal).
+// Acknowledged gaps — no coverage or partner delivery is claimed.
 const PARTNER_GAPS = [
-  "HITRUST", "FedRAMP", "EUCS", "APPI (Japan)", "PIPL (China)", "PDPA (Singapore)",
-  "DPDPA (India)", "LGPD (Brazil)", "Privacy Act (AU)", "PIPEDA (CA)", "GLBA / SOX",
+  "HITRUST", "EUCS", "APPI (Japan)", "PIPL (China)", "PDPA (Singapore)",
+  "DPDPA (India)", "LGPD (Brazil)", "Privacy Act (AU)", "PIPEDA (CA)", "GLBA",
   "NERC CIP", "GxP / 21 CFR Part 11", "ISO 21434 / UN R155",
 ];
 
@@ -125,11 +125,11 @@ export default function FrameworkCatalog() {
         {list.length === 0 && <p className="mt-6 text-sm text-gray-500">No frameworks match.</p>}
 
         <div className="mt-12 rounded-2xl border border-gray-200 bg-gray-50 p-6">
-          <h2 className="text-lg font-bold text-gray-900">Acknowledged gaps — partner network</h2>
+          <h2 className="text-lg font-bold text-gray-900">Acknowledged gaps — prospective contributors</h2>
           <p className="mt-2 max-w-3xl text-sm text-gray-600">
-            We don&rsquo;t pretend to cover everything. These regimes are handled through CSOAI&rsquo;s specialist
-            partner network rather than claimed directly &mdash; an honesty signal that builds trust, and a
-            revenue channel for certified partners.
+            We don&rsquo;t pretend to cover everything. These regimes are not currently represented as supported
+            or delivered through a contracted partner network. Qualified contributors may propose sourced
+            mappings; proposals still require review and do not create certification authority.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             {PARTNER_GAPS.map((g) => (
@@ -137,7 +137,7 @@ export default function FrameworkCatalog() {
             ))}
           </div>
           <a href="mailto:nicholas@csoai.org?subject=CSOAI%20framework%20partner" className="mt-5 inline-block rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800">
-            Become a framework partner →
+            Discuss a framework contribution →
           </a>
         </div>
       </section>

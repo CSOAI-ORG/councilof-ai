@@ -41,7 +41,7 @@ export default function Services() {
       <section className="max-w-6xl mx-auto px-6 pb-16">
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">
           <div className="text-xl font-black text-emerald-900">Governance, rediscovered - not invented</div>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-emerald-900/80">The site documents historical governance patterns and a proposed Council architecture. The architecture is not a live consensus or fault-tolerance claim.</p>
+          <p className="mx-auto mt-2 max-w-2xl text-sm text-emerald-900/80">The site documents historical governance patterns and a proposed Council architecture. The architecture is not a live consensus or failure-resilience claim.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <a href="/lineage" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4,000-year lineage -&gt;</a>
             <a href="/dragonfly" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4-Wing architecture -&gt;</a>

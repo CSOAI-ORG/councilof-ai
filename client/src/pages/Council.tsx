@@ -59,25 +59,25 @@ const councilRoles = [
   {
     title: "Compliance Validators",
     count: 11,
-    description: "Check AI systems against regulatory frameworks (EU AI Act, NIST, etc.)",
+    description: "Designed to check evidence against selected regulatory mappings",
     icon: FileCheck,
   },
   {
     title: "Risk Assessors",
     count: 8,
-    description: "Evaluate potential harms and assign risk levels to AI deployments",
+    description: "Designed to propose risk levels for accountable human review",
     icon: AlertTriangle,
   },
   {
     title: "Incident Analyzers",
     count: 7,
-    description: "Investigate reported AI safety incidents and determine root causes",
+    description: "Designed to help investigate reported incidents and possible causes",
     icon: Activity,
   },
   {
     title: "Watchdog Monitors",
     count: 7,
-    description: "Continuous real-time monitoring of registered AI systems",
+    description: "Design target: scoped monitoring of registered systems; not live",
     icon: Eye,
   },
 ];
@@ -117,14 +117,14 @@ export default function Council() {
             </p>
             <p className="text-sm text-amber-300/90 mb-8 leading-relaxed max-w-2xl mx-auto">
               Status: <b>DESIGN — not a live system.</b> The <a href="/interop/council-independence.json" className="underline">latest published three-leg point experiment</a> measured n_eff=1
-              at rho=1. The historical DR-0007 number is unbound because its cited result artifact is absent. The fault-tolerance claim remains rejected; see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.
+              at rho=1. The historical DR-0007 number is unbound because its cited result artifact is absent. The claimed resilience under failed or adversarial voters remains rejected; see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.
               Everything below is the design visualization, not measured production behaviour.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/training">
+              <Link href="/interop/council-independence.json">
                 <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                  <Users className="mr-2 h-5 w-5" />
-                  Become an Analyst
+                  <Eye className="mr-2 h-5 w-5" />
+                  Inspect the experiment
                 </Button>
               </Link>
               <Link href="/refutation-ledger">
@@ -205,7 +205,7 @@ export default function Council() {
                       <div>
                         <h4 className="font-bold text-gray-900 mb-2">Fail-Safe Operation (designed)</h4>
                         <p className="text-gray-600">
-                          A 23-of-33 threshold is only arithmetic. It does not provide a fault-tolerance
+                          A 23-of-33 threshold is only arithmetic. It does not provide a failure-resilience
                           guarantee unless voter independence, identity, transport, and signatures are real.
                         </p>
                       </div>
@@ -281,8 +281,8 @@ export default function Council() {
                 <CardContent className="p-6 flex flex-col justify-center h-full">
                   <div className="text-center">
                     <span className="text-4xl font-bold text-emerald-400">33</span>
-                    <p className="text-emerald-300 mt-2">Total Agents</p>
-                    <p className="text-gray-400 text-sm mt-1">23 needed for consensus</p>
+                    <p className="text-emerald-300 mt-2">Designed Seats</p>
+                    <p className="text-gray-400 text-sm mt-1">23-seat target threshold</p>
                   </div>
                 </CardContent>
               </Card>
@@ -329,8 +329,8 @@ export default function Council() {
               Council <span className="text-emerald-600">Responsibilities</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Each agent is assigned to specialized roles based on their capabilities.
-              Together, they provide comprehensive AI safety oversight.
+              The proposed roster assigns seats to specialized review roles. These are design
+              responsibilities, not provisioned agents or comprehensive live oversight.
             </p>
           </motion.div>
 
@@ -353,7 +353,7 @@ export default function Council() {
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-bold text-gray-900">{role.title}</h4>
                           <Badge className="bg-emerald-100 text-emerald-700 border-emerald-200">
-                            {role.count} agents
+                            {role.count} designed seats
                           </Badge>
                         </div>
                         <p className="text-gray-600">{role.description}</p>
@@ -384,15 +384,15 @@ export default function Council() {
                 Human <span className="text-emerald-600">Oversight</span>
               </h2>
               <p className="text-lg text-gray-600 mb-8">
-                While the Council handles continuous monitoring, certified
-                AI Safety Analysts provide essential human judgment for critical decisions.
+                In the proposed workflow, automated tools support scoped monitoring while accountable
+                human reviewers retain judgment for critical decisions. That Council workflow is not live.
               </p>
 
               <div className="space-y-4">
                 {[
-                  "Review and approve high-stakes Council decisions",
+                  "Review and approve high-stakes system decisions",
                   "Investigate escalated incidents requiring human judgment",
-                  "Override Council decisions in edge cases",
+                  "Override automated recommendations in edge cases",
                   "Provide contextual understanding AI may miss",
                   "Ensure ethical considerations are properly weighed",
                 ].map((item, i) => (
@@ -406,7 +406,7 @@ export default function Council() {
               <div className="mt-8">
                 <Link href="/training">
                   <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                    Become a Certified Analyst
+                    Explore Analyst Training
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -433,7 +433,7 @@ export default function Council() {
                       <Badge className="bg-blue-100 text-blue-700">AI Council</Badge>
                     </div>
                     <p className="text-sm text-gray-600">
-                      24/7 automated monitoring of registered AI systems
+                      Design target for scoped monitoring — not a live 24/7 service
                     </p>
                   </div>
 
@@ -453,7 +453,7 @@ export default function Council() {
                       <Badge className="bg-amber-100 text-amber-700">Human</Badge>
                     </div>
                     <p className="text-sm text-gray-600">
-                      License revocations, major violations require human approval
+                      Proposed enforcement actions would require authorised human approval
                     </p>
                   </div>
                 </CardContent>
@@ -493,7 +493,7 @@ export default function Council() {
               { value: "33", label: "Designed Seats", icon: Server },
               { value: "23", label: "Target Threshold", icon: CheckCircle },
               { value: "1.00", label: "Latest n_eff", icon: Activity },
-              { value: "0", label: "Live Council Votes", icon: Shield },
+              { value: "0", label: "Published Council Votes", icon: Shield },
             ].map((stat, index) => (
               <motion.div key={stat.label} variants={fadeInUp}>
                 <Card className="bg-white/5 border-white/10 text-center">
@@ -519,16 +519,16 @@ export default function Council() {
             variants={fadeInUp}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Join the Council
+              Inspect the Council design
             </h2>
             <p className="text-xl text-emerald-100 mb-8">
-              Become a certified AI Safety Analyst and work alongside the Council
-              to ensure AI systems are safe for humanity.
+              Review the proposed seats, the evidence boundary, and the failed independence
+              experiment. No membership, certification, or live Council service is offered here.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/training">
+              <Link href="/methodology">
                 <Button size="lg" className="bg-white text-emerald-700 hover:bg-gray-100">
-                  Start Free Training
+                  Read the methodology
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>

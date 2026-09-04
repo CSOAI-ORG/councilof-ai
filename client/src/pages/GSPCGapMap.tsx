@@ -321,8 +321,8 @@ export default function GSPCGapMap() {
                 <h3 className="text-xl font-bold">For IP & Legal Counsel</h3>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                The chain is the instrument regulators enforce with. Every measurement is a signed
-                event; every record is tamper-evident. Defensible in deposition, audit, and litigation.
+                Published measurement cards can be Ed25519-signed and linked to an exact root.
+                That proves specific bytes and signer; it does not make every run tamper-evident or establish legal acceptance.
               </p>
               <ul className="text-sm space-y-2 text-muted-foreground">
                 <li className="flex gap-2"><span className="text-primary">→</span> Chain integrity verified (DR-0032, DR-0033)</li>

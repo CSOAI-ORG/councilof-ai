@@ -183,7 +183,7 @@ export default function FrameworkHive() {
           <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search frameworks, sectors, threats…" className="w-full rounded-xl border border-emerald-500/25 bg-[#05140d] px-4 py-2.5 text-sm text-emerald-50 placeholder-emerald-300/40 focus:border-emerald-400 focus:outline-none" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((f) => <Card key={f.slug} f={f} />)}</div>
-        <p className="mt-8 text-center text-xs text-emerald-300/50">{HIVE.length} frameworks collected · comply once, crosswalk everywhere · every action signed to Layer 0</p>
+        <p className="mt-8 text-center text-xs text-emerald-300/50">{HIVE.length} framework entries collected · crosswalks are mappings, not compliance determinations · verify any published card separately</p>
       </section>
     </div>
   );

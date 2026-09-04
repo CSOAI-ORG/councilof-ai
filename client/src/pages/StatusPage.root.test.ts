@@ -21,13 +21,14 @@ describe("/status reads /root.json, /api/xrpl state, publisher-health", () => {
     expect(page).not.toMatch(/\$\d/);
   });
 
-  it("states 3KB vs ML-DSA-65 and #board-pqc-1 ABSENT", () => {
+  it("states current size, envelope cap, ML-DSA-65 and #board-pqc-1 ABSENT", () => {
     expect(page).toContain("pqc-honesty");
-    expect(page).toContain("3KB atom is binding");
+    expect(page).toContain("under 1KB");
+    expect(page).toContain("binding 3KB ceiling");
     expect(page).toContain("~3.3KB");
     expect(page).toContain("#board-pqc-1");
     expect(page).toContain("ABSENT");
-    expect(page).toContain("tsa.status: err");
+    expect(page).toContain("CURRENT_ROOT_OTS_CLAIM");
     expect(page).toContain("csoai/gspc-asi");
   });
 });

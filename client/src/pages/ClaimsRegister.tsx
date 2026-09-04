@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
+import { CURRENT_ROOT_OTS_CLAIM } from "../data/anchoringClaim";
 
 /**
  * /claims-register — every material public claim, its evidence, and the status
@@ -161,9 +162,9 @@ export default function ClaimsRegister() {
           </h1>
           <p className="mt-4 max-w-3xl leading-relaxed text-slate-700">{register.purpose}</p>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600">
-            Time-anchor: <code className="font-mono text-[12px]">tsa.status: err</code>. No
-            OpenTimestamps proof is published on a <code className="font-mono text-[12px]">content_id</code>.
-            Cards verify by Ed25519, not Bitcoin.
+            Time-anchor: {CURRENT_ROOT_OTS_CLAIM}. It covers the exact public-root bytes only, not
+            an individual <code className="font-mono text-[12px]">content_id</code> or the separate
+            signed-card index. Cards verify by Ed25519, not Bitcoin.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">

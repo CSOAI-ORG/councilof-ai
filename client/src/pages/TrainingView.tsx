@@ -1,8 +1,7 @@
 // TrainingView — the Council OS "Live Training" tab.
-// The frozen→fluid bridge: regulation/AI changes (from the signed /api/regulation
-// feed, reverified quarterly + on provision-change) surface as LIVE training
-// quests. Each quest links the existing Academy/CEASAI courses into the town
-// simulation (in-game training) and ends in a signed training record.
+// The frozen→fluid bridge maps selected /api/regulation deadline rows to existing
+// Academy courses. The in-game trainer and per-quest signed record are designs,
+// not shipped capabilities.
 //
 // Register: training attestation, never certification. A completed quest attests
 // that training HAPPENED against the provision-version at completion time — it
@@ -83,9 +82,9 @@ export default function TrainingView() {
       <div className="mb-6">
         <h1 className="text-2xl font-black text-emerald-100">Live Training</h1>
         <p className="mt-1 text-xs text-emerald-200/60">
-          Frozen → fluid: every regulation and AI change on the signed feed becomes a{" "}
-          <span className="text-emerald-300">live training quest</span>. When a provision changes
-          or a deadline lands, the quest updates here. What is live today: the deadline feed and
+          Frozen → fluid: selected deadline rows from the regulation feed map to{" "}
+          <span className="text-emerald-300">course prompts</span>. When a mapped row changes,
+          this view can update. What is available today: the deadline feed and
           the Academy course each quest maps to. The in-game town leg and the signed per-quest
           training record are <span className="text-amber-300">not built yet</span> — the cards
           below say so instead of linking you to a page that cannot train you.
@@ -167,12 +166,12 @@ export default function TrainingView() {
       )}
 
       <p className="mt-4 text-[10px] text-emerald-200/40">
-        Quest source: /api/regulation (schema csoai.regulation-deadlines/0.1, verified 2026-08-19,
-        reverified quarterly + on provision-change). When the signed per-quest training record
+        Quest source: /api/regulation (schema csoai.regulation-deadlines/0.1; inspect the response
+        for its own source and freshness fields). When the signed per-quest training record
         ships it will attest training against the provision-version at completion time — never a
         certification of conformity. Today the Academy issues its own completion records; no
         per-quest record exists yet and none is implied.
-        Frozen→fluid: a provision change re-issues the quest.
+        A mapped feed-row change can update this course prompt.
       </p>
     </div>
   );

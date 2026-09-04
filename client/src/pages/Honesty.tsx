@@ -221,8 +221,8 @@ export default function Honesty() {
         <p className="mt-4 leading-relaxed text-slate-700">
           Two more limits in the same family. There is no RFC-3161 timestamp authority and no
           blockchain anchoring behind any card — our records say{" "}
-          <code>timestamp_authority: none</code>. {ANCHORING_CLAIM} Nothing is attested on any
-          Ethereum chain, because that backend is not built.
+          <code>timestamp_authority: none</code>. {ANCHORING_CLAIM} There is no
+          Ethereum-chain attestation backend.
         </p>
 
         {/* ── 3. what we have not measured ───────────────────────────── */}

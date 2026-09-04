@@ -14,7 +14,7 @@ export default function BadgeKit() {
   useEffect(() => {
     document.title = "White-label badge — Council of AI";
     setMetaDescription(
-      "Drop one script tag on your site. The badge reads the live Council of AI board and goes to verify. Measurement, not certification.",
+      "Drop one script tag on your site. The badge reads the live GSPC board and links to verification. Measurement, not certification.",
     );
   }, []);
 

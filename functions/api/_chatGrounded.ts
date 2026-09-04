@@ -24,10 +24,10 @@ async function grounded(q: string, origin: string): Promise<string | null> {
 
   for (const [k, rxs] of ART5_CUES) {
     if (rxs.every((rx) => rx.test(q))) {
-      return `That is prohibited under **EU AI Act Article 5(1)(${k})** - ${ART5[k]}.\n\n` +
+      return `This description is a **possible text match** for EU AI Act Article 5(1)(${k}) - ${ART5[k]}.\n\n` +
         why(k) +
-        `\n\nArticle 5 prohibitions are absolute (since 2 February 2025).\n\n` +
-        `_Classified by a deterministic rule, not by a model._`;
+        `\n\nThe keyword rule has not established every legal element, exception, role, jurisdiction, or factual context. It cannot determine that a practice is prohibited or that you are compliant. Review the complete provision and obtain a qualified determination before acting.\n\n` +
+        `_Screened by a deterministic keyword rule, not by a model or legal assessor._`;
     }
   }
 
@@ -43,7 +43,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (refused) return refused;
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
-    return `No SaaS tiers. Measurement and verification are free forever. See GET /api/gspc, /gspc-verify/, /assess/, or the lobby door /os?lobby=assess&task=pricing-overview.\n\n_Grounded in the published free rail, not by a model._`;
+    return `Verification and the published board are free. A scoped measurement is paid; booking and Paddle checkout are not live yet. /assess is the current request/waitlist surface, not a runnable free measurement. A rank is never sold.\n\n_Grounded in the published release state, not by a model._`;
   }
 
   if (
@@ -164,7 +164,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   }
   if (/\b(who are you|what (is|are|s) (this|you|council|csoai|the council of ai)|what do you do|tell me about (council|csoai|this|you)|about (council|csoai|you)|explain (council|csoai|this)|are you (an? )?(ai|bot|chatbot))\b/i.test(t)) {
     return (
-      `The **Council of AI** is an independent measurement instrument: it measures how AI systems behave against the rules that govern them, signs each result with Ed25519, and publishes what it cannot yet measure. It does **not** certify and issues no conformity mark.\n\n` +
+      `The **Council of AI** is an independent measurement instrument: it publishes scoped AI measurements, signed cards where the cited signature verifies, and explicit unknowns. It does **not** certify and issues no conformity mark.\n\n` +
       `The GSPC board publishes **${canon.publicCount}**` +
       (canon.unmeasured !== null && canon.slots !== null
         ? ` \u2014 ${canon.unmeasured} of its ${canon.slots} slots carry no number, and say so`
@@ -178,10 +178,10 @@ async function grounded(q: string, origin: string): Promise<string | null> {
       `Here's what I can answer from published facts:\n\n` +
       `- **A named board axis** - its measured accuracy, Wilson interval and n (or UNMEASURED, honestly).\n` +
       `- **The board** - how many of its published slots carry a measurement, and how many carry none.\n` +
-      `- **EU AI Act Article 5** - the prohibited practices, by a deterministic rule.\n` +
+      `- **EU AI Act Article 5** - possible phrase matches from a deterministic screen, never a legal determination.\n` +
       `- **The measurement method** - unparsed counted wrong, n>=30 to quote, three outcomes.\n` +
-      `- **Pricing** - no SaaS tiers; verification is free forever.\n` +
-      `- **Get measured** - how to run a signed assessment.\n\n` +
+      `- **Pricing** - verification is free; scoped measurement is paid and booking is not live yet.\n` +
+      `- **Get measured** - how to join the current request/waitlist; no signed run is implied.\n\n` +
       `_I answer from published measurement; I won't invent a number or a legal opinion._`
     );
   }
@@ -201,7 +201,10 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
     Array.isArray(body.messages) ? body.messages :
     typeof body.prompt === "string" ? [{ role: "user", content: body.prompt }] :
     typeof body.message === "string" ? [{ role: "user", content: body.message }] : [];
-  const model = typeof body.model === "string" ? body.model : "sov6-ethics-v3-light";
+  const requestedModel = typeof body.model === "string" ? body.model : null;
+  // The private gate's routing id is never returned to public clients.
+  const runtimeModel = requestedModel || "sov6-ethics-v3-light";
+  const publicModel = requestedModel || "council-routing-default";
   if (!messages.length) return Response.json({ error: "no message" }, { status: 400, headers: CORS });
 
   const question = String(messages[messages.length - 1]?.content ?? "");
@@ -212,15 +215,18 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   // board with no model in the path at all. A client reading that field was told a model wrote
   // an answer no model had seen. It is now null unless a model actually produced the text, and
   // `answered_by` says which path did.
-  const reply = (answer: string, signature: string, state: string, extra: Record<string, unknown> = {}) =>
+  const reply = (answer: string, provenance: string, state: string, extra: Record<string, unknown> = {}) =>
     Response.json(
       {
         answer,
         reply: answer,
-        signature,
+        // Chat text is not a signed measurement envelope. Keep this null unless
+        // the endpoint actually emits verifiable signature bytes and a key id.
+        signature: null,
+        provenance,
         state,
-        model: state === "live" ? model : null,
-        answered_by: state === "live" ? `model:${model}` : "deterministic (no model in the path)",
+        model: state === "model_response" ? publicModel : null,
+        answered_by: state === "model_response" ? "upstream model runtime (single response)" : "deterministic (no model in the path)",
         message: { role: "assistant", content: answer },
         ...extra,
       },
@@ -239,12 +245,12 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
       const r = await fetch(env.SOV_GATE_URL.replace(/\/+$/, "") + "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + env.SOV_GATE_TOKEN },
-        body: JSON.stringify({ model, messages, stream: false, options: { temperature: 0, num_predict: 400 } }),
+        body: JSON.stringify({ model: runtimeModel, messages, stream: false, options: { temperature: 0, num_predict: 400 } }),
       });
       if (!r.ok) throw new Error("gate HTTP " + r.status);
       const data: any = await r.json();
       const content = data?.message?.content ?? String(data?.response ?? "");
-      if (content.trim()) return reply(content, "council - signed - verifiable offline", "live");
+      if (content.trim()) return reply(content, "upstream runtime response · unsigned", "model_response");
     } catch { /* fall through */ }
   }
 

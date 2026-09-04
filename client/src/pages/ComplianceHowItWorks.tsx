@@ -227,7 +227,7 @@ export default function ComplianceHowItWorks() {
         <div className="mb-20">
           <h2 className="text-4xl font-bold mb-12 text-center">SOAI-PDCA Continuous Improvement</h2>
           <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto">
-            SOAI-PDCA applies the Deming Cycle to scoped evidence, remediation, and retesting. It does not guarantee legal compliance. The Council has a designed 33-seat roster and target threshold of 23/33, but it is not live; independence and fault tolerance have not been demonstrated.
+            SOAI-PDCA applies the Deming Cycle to scoped evidence, remediation, and retesting. It does not guarantee legal compliance. The Council has a designed 33-seat roster and target threshold of 23/33, but it is not live; independent operation and failure resilience have not been demonstrated.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {soaiPdcaSteps.map((step, idx) => (

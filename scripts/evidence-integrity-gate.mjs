@@ -295,6 +295,19 @@ export function legacyCoseIssues(envelope) {
   return issues;
 }
 
+export function scittProfileIssues(profile) {
+  const issues = [];
+  if (profile?.implementation_status !== "PLANNED") issues.push("implementation is not PLANNED");
+  if (profile?.verification?.scitt_receipt !== null) issues.push("SCITT receipt is not explicitly null");
+  if (profile?.door?.evidence_pack !== null) issues.push("unsupported SCITT evidence pack is advertised");
+  if (profile?.measurement?.status !== "UNMAPPED") issues.push("SCITT door borrows a measurement status");
+  if (profile?.measurement?.axes_covered !== 0) issues.push("SCITT door borrows the global axis count");
+  if (!Array.isArray(profile?.statements) || profile.statements.length !== 0) {
+    issues.push("unregistered candidate statements are advertised");
+  }
+  return issues;
+}
+
 function runSelftest() {
   assert.deepEqual(
     legacyXrplCardIssues({
@@ -429,6 +442,25 @@ function runSelftest() {
       signature_hex: "0".repeat(128),
       scitt_compliant: true,
     }).length >= 3,
+  );
+  assert.deepEqual(
+    scittProfileIssues({
+      implementation_status: "PLANNED",
+      verification: { scitt_receipt: null },
+      door: { evidence_pack: null },
+      measurement: { status: "UNMAPPED", axes_covered: 0 },
+      statements: [],
+    }),
+    [],
+  );
+  assert.ok(
+    scittProfileIssues({
+      implementation_status: "LIVE",
+      verification: { scitt_receipt: "NONE_PUBLISHED" },
+      door: { evidence_pack: "/api/evidence-bundle?obligation=scitt" },
+      measurement: { status: "BOARD_LIVE", axes_covered: 22 },
+      statements: [{}],
+    }).length >= 6,
   );
   console.log("evidence-integrity-gate selftest: PASS");
 }
@@ -848,7 +880,7 @@ function checkPublicClaims(errors) {
     errors.push("legacy SCITT wrap design sketch is not visibly quarantined");
   }
   const profile = readJson("public/.well-known/scitt.json");
-  if (profile.implementation_status !== "PLANNED" || profile.verification?.scitt_receipt !== "NONE_PUBLISHED") {
+  if (scittProfileIssues(profile).length > 0) {
     errors.push("SCITT discovery document overstates implementation or receipt status");
   }
 

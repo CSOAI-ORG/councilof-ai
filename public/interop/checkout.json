@@ -1,24 +1,34 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "POST /api/checkout",
-  "description": "x402 checkout",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "POST",
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Public checkout (closed)",
+  "state": "NOT_CONFIGURED",
+  "description": "The public checkout door is deliberately closed. It exposes no public prices and initiates no payment.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/checkout.ts",
+    "methods": [
+      "POST"
+    ],
     "path": "/api/checkout",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+    "outcomes": [
+      {
+        "http_status": 404,
+        "output": "JSON with configured:false and public_prices:false"
       }
-    }
+    ]
+  },
+  "output": {
+    "configured": false,
+    "public_prices": false,
+    "payment_initiated": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

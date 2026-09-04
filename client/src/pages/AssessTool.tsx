@@ -8,7 +8,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShieldCheck, BadgeCheck, XCircle } from "lucide-react";
+import { ShieldCheck, SearchCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -20,15 +20,16 @@ const API_BASE: string =
   ((import.meta as any).env && (import.meta as any).env.VITE_ASSESS_API) || "";
 
 type Report = {
-  report_id: string; tier: string; verdict: string; compliance_score: number;
-  gaps: string[]; rationale: string; basis: string;
+  result_id: string; screening_state: string; explanation: string;
+  claimed_control_coverage: { claimed: number; total: number; percent: number; evidence_state: string; note: string };
+  unclaimed_controls: string[]; rationale: string; basis: string;
   signed_payload: string; sig: string; pub: string; kid: string; alg: string;
 };
 
-const TIER_STYLE: Record<string, string> = {
-  prohibited: "text-red-600", PROHIBITED: "text-red-600",
-  high_risk: "text-amber-600", HIGH_RISK: "text-amber-600",
-  limited_risk: "text-blue-600", LIMITED_OR_MINIMAL: "text-blue-600",
+const SCREEN_STYLE: Record<string, string> = {
+  POSSIBLE_PROHIBITED_TEXT_MATCH: "text-red-600",
+  POSSIBLE_ANNEX_III_TEXT_MATCH: "text-amber-600",
+  NO_MATCH_IN_LIMITED_KEYWORD_SET: "text-blue-600",
   UNMEASURED: "text-slate-600",
 };
 
@@ -49,7 +50,7 @@ export default function AssessTool() {
     try {
       const res = await fetch(`${API_BASE}/api/lead`, {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...lead, report_id: report?.report_id, tier: report?.tier, verdict: report?.verdict, wants: "signed_report" }),
+        body: JSON.stringify({ ...lead, result_id: report?.result_id, screening_state: report?.screening_state, explanation: report?.explanation, wants: "measurement_enquiry" }),
       });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(`Could not save (${res.status})`);
@@ -129,37 +130,39 @@ export default function AssessTool() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span className={TIER_STYLE[report.tier] || ""}>
-                    {report.tier.replace("_", " ").toUpperCase()}
+                  <span className={SCREEN_STYLE[report.screening_state] || ""}>
+                    {report.screening_state.replaceAll("_", " ")}
                   </span>
-                  <span className="text-sm font-normal text-muted-foreground">score {report.compliance_score}</span>
+                  <span className="text-sm font-normal text-muted-foreground">
+                    claimed {report.claimed_control_coverage.claimed}/{report.claimed_control_coverage.total}
+                  </span>
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="flex items-start gap-2 font-semibold">
-                  {report.alg === "Ed25519" && report.tier === "LIMITED_OR_MINIMAL"
-                    ? <><BadgeCheck className="h-5 w-5 text-emerald-600 shrink-0" />{report.verdict}</>
-                    : <><XCircle className="h-5 w-5 text-amber-600 shrink-0" />{report.verdict}{report.alg !== "Ed25519" ? " — UNCHECKABLE until the living stamp ceremony" : ""}</>}
+                  <SearchCheck className="h-5 w-5 text-amber-600 shrink-0" />
+                  {report.explanation}
                 </p>
                 <p className="text-sm text-muted-foreground">{report.rationale}</p>
-                {report.gaps.length > 0 && (
+                {report.unclaimed_controls.length > 0 && (
                   <div>
-                    <p className="text-sm font-semibold mb-1">Control gaps (EU AI Act):</p>
-                    <ul className="text-sm list-disc pl-5">{report.gaps.map((g) => <li key={g}>{g}</li>)}</ul>
+                    <p className="text-sm font-semibold mb-1">Controls not claimed by the caller:</p>
+                    <ul className="text-sm list-disc pl-5">{report.unclaimed_controls.map((g) => <li key={g}>{g}</li>)}</ul>
+                    <p className="mt-2 text-xs text-muted-foreground">Not claiming a control is not proof of a deficiency. Claimed controls were not verified.</p>
                   </div>
                 )}
                 <div className="rounded-lg bg-muted/50 p-3 text-xs font-mono break-all">
-                  <div><span className="text-muted-foreground">report_id:</span> {report.report_id}</div>
+                  <div><span className="text-muted-foreground">result_id:</span> {report.result_id}</div>
                   <div><span className="text-muted-foreground">signed by:</span> {report.kid} ({report.alg})</div>
                   <div><span className="text-muted-foreground">signature:</span> {report.sig.slice(0, 44)}…</div>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {report.alg === "Ed25519"
-                    ? <>This result is Ed25519-signed. Anyone can verify it against the public key at
+                    ? <>These screening bytes are Ed25519-signed. Anyone can verify byte integrity against the public key at
                       <code className="mx-1">{API_BASE || ""}/api/assess/key</code>.</>
                     : <>This result is <strong>UNSIGNED</strong> — the signing key is not bound on this deploy.</>}
-                  {" "}It records a keyword measurement against published rules. It does not say
-                  the system is lawful or certified. We do not remediate.
+                  {" "}A signature does not validate the input or establish legal tier, lawfulness,
+                  compliance, conformity, or certification. No remediation occurred.
                 </p>
 
                 {leadSent ? (
@@ -168,7 +171,7 @@ export default function AssessTool() {
                   </div>
                 ) : (
                   <div className="rounded-lg border p-4 space-y-3">
-                    <p className="text-sm font-semibold">Email me this signed report + a full Annex III walkthrough</p>
+                    <p className="text-sm font-semibold">Ask about a scoped measurement engagement</p>
                     <div className="flex flex-col sm:flex-row gap-2">
                       <input className="flex-1 rounded-lg border px-3 py-2 text-sm" placeholder="you@company.com"
                         value={lead.email} onChange={(e) => setLead({ ...lead, email: e.target.value })} />

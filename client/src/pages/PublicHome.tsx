@@ -227,7 +227,7 @@ export default function PublicHome() {
                 <h3 className="font-semibold text-lg mb-2">Designed 33-seat council</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   The target roster has 11 Guardian, 11 Arbiter, and 11 Scribe seats, with a
-                  23/33 threshold. It is not a live council; independence and fault tolerance are not demonstrated.
+                  23/33 threshold. It is not a live council; independent operation and resilience under failed voters are not demonstrated.
                 </p>
                 <Link href="/agent-council" className="text-sm text-primary flex items-center gap-1 hover:underline">
                   Learn more <ChevronRight className="w-4 h-4" />

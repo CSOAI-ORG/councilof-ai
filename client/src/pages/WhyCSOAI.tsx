@@ -14,7 +14,7 @@ const MATRIX: { cap: string; csoai: string; others: string }[] = [
 ];
 
 const USPS: { t: string; d: string }[] = [
-  { t: "Get measured", d: "Describe the system. POST /api/assess returns a signed card: tier, gaps, and what we could not measure. Not a GSPC bench run. Not a certificate." },
+  { t: "Screen the scope", d: "Describe the system. POST /api/assess returns possible provision matches and unverified caller-claimed control coverage. It does not decide legal tier, run a GSPC benchmark, or issue a certificate." },
   { t: "Ask gets a published answer", d: "The lobby Ask is grounded. Empty cells stay empty. We do not invent scores." },
   { t: "Verify is free", d: "Anyone can verify a signed artefact at /gspc-verify. A grade is never sold." },
   { t: "Enterprise is a lobby door", d: "/enterprise opens the measured lobby. It is not a pricing page and not a certification desk." },

@@ -1,24 +1,33 @@
 {
-  "schema": "csoai.api-spec/0.1",
-  "route": "POST /api/decide",
-  "description": "Make a decision",
-  "as_of": "20260904T044700Z",
-  "spec": {
-    "method": "POST",
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Decision attestation API (unavailable)",
+  "state": "NOT_IMPLEMENTED",
+  "description": "The GET route returns a fail-closed capability-state document; no decision attestation is created.",
+  "as_of": "20260904T210000Z",
+  "transport": {
+    "handler": "functions/api/decide.ts",
+    "methods": [
+      "GET"
+    ],
     "path": "/api/decide",
-    "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+    "outcomes": [
+      {
+        "http_status": 501,
+        "output": "csoai.capability-state/0.1 with accepted:false, persisted:false, signed:false"
       }
-    }
+    ]
+  },
+  "output": {
+    "state": "NOT_IMPLEMENTED",
+    "attestation_created": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
   }
 }

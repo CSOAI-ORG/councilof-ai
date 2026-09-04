@@ -129,9 +129,9 @@ describe("Council OS tabs", () => {
 
   it("frames extra live routes from a chat command without a new tab", () => {
     expect(matchRoute("open the instrument")?.path).toBe("/instrument");
-    expect(matchRoute("show the system card")?.path).toBe("/system-card");
-    expect(matchRoute("open the mcp fleet")?.path).toBe("/mcp-fleet");
-    expect(matchRoute("show the regulation feed")?.path).toBe("/feed");
+    expect(matchRoute("show the system card")?.path).toBe("/dashboard?tab=cards");
+    expect(matchRoute("open the mcp fleet")?.path).toBe("/dashboard?tab=tools");
+    expect(matchRoute("show the regulation feed")?.path).toBe("/dashboard?tab=standards");
     expect(matchTab("open the crosswalk")?.id).toBe("matrix");
     expect(matchRoute("what is the weather")).toBeNull();
   });
@@ -174,7 +174,7 @@ describe("Council OS tabs", () => {
     // Framed product routes.
     for (const p of [
       "/products",
-      "/report",
+      "/watchdog-hub",
       "/honesty",
       "/regulators",
       "/cra-readiness",
@@ -272,7 +272,7 @@ describe("every OS destination is a CURRENT page — the archived-banner trap", 
    *
    * A sweep on 2026-08-26 found NINE live OS destinations in exactly that state:
    * /readiness-assessment /layer0 /network /hive /intel /benchmark-quality
-   * /mcp-fleet /mcps /feed. This test is the guard, so the tenth cannot be added
+   * /mcps. This test is the guard, so a new archived destination cannot be added
    * quietly: adding a tab without registering its path fails right here.
    */
   const NOT_LIBRARIED_PREFIX =
