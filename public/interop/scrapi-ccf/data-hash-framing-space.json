@@ -1,0 +1,108 @@
+{
+  "schema": "csoai.scrapi-ccf-framing-space/0.1",
+  "supersedes_nothing": "data-hash-vector.json and data-hash-tag-vector.json are unchanged. This adds a third artifact; published bytes are added to or superseded, never edited.",
+  "raised_by": "Extends the tag axis (Nicholas Templeman) and the outer-array axis (Konrad Gruszka, b7n0de) by measuring the SIZE OF THE CLASS both belong to.",
+  "derived_from": {
+    "file": "data-hash-vector.json",
+    "field": "A_signed_statement_as_registered.bytes_hex",
+    "sha256_of_A": "8595e4a4c8b93e7b1b7b798dc302a2b7d2890021f7eff372d79b32f78867e4ac",
+    "size_bytes": 165
+  },
+  "method": "Decode A once, then re-emit the identical COSE_Sign1 data item under every combination of six CBOR encoding freedoms. No element value changes; only its encoding.",
+  "encoding_freedoms_tested": [
+    "tag18",
+    "outer_array_indefinite",
+    "unprotected_map_indefinite",
+    "protected_bstr_chunked",
+    "payload_bstr_chunked",
+    "signature_bstr_chunked"
+  ],
+  "finding": {
+    "distinct_byte_encodings": 64,
+    "distinct_data_hash_values": 64,
+    "digest_collisions": 0,
+    "rejected_by_stock_parser": 0,
+    "silently_reserialising_to_A": 31,
+    "reader": "cbor2 6.1.3, CPython 3.13, macOS arm64",
+    "plain_english": "Sixty-four legal CBOR encodings of the same COSE_Sign1 produce sixty-four different data-hash values. A stock parser rejects none of them, and thirty-one are repaired into the canonical form by the act of reading them, so an issuer and a verifier can disagree with no error raised anywhere."
+  },
+  "why_it_settles_the_wording": "Two framing axes were found by accident in one week. Six freedoms give sixty-four encodings, and this does not test integer-width encoding or map key ordering, so the space is larger still. A rule that enumerates framings cannot close a combinatorial class; a rule that binds the octets AS REGISTERED closes all of them, including the ones not yet found.",
+  "supports": "Konrad Gruszka's proposed wording on the SCITT list, 2026-09-04: data-hash is HASH over the octets of the Signed Statement as registered, ... not over any re-serialisation of them.",
+  "not_a_transparency_service": "Not a Transparency Service. Not a real Receipt. Not a claim about what any deployed implementation does. Vectors derived from A above; the seed, bytes and signature are from data-hash-vector.json.",
+  "as_of": "2026-09-04T10:45:37Z",
+  "named_variants": [
+    {
+      "label": "C \u2014 tag removed (raised by Nicholas Templeman)",
+      "freedoms_set": [],
+      "size_bytes": 164,
+      "sha256": "fead5e6058d01360024bcd0d539138d26053c3d7c48475dbccb32b6139e53a00",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": false
+    },
+    {
+      "label": "A \u2014 as registered (definite everywhere, tagged)",
+      "freedoms_set": [
+        "tag18"
+      ],
+      "size_bytes": 165,
+      "sha256": "8595e4a4c8b93e7b1b7b798dc302a2b7d2890021f7eff372d79b32f78867e4ac",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    },
+    {
+      "label": "H \u2014 signature byte string chunked",
+      "freedoms_set": [
+        "tag18",
+        "signature_bstr_chunked"
+      ],
+      "size_bytes": 169,
+      "sha256": "3a0b2c7b207af2f6775e76805554ae5e52537d0fd6447d73320260b9fed44603",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    },
+    {
+      "label": "G \u2014 payload byte string chunked",
+      "freedoms_set": [
+        "tag18",
+        "payload_bstr_chunked"
+      ],
+      "size_bytes": 170,
+      "sha256": "8c5cff1ae618e0a7b70ee6f4eccfc0a261bcdcef258b3406f4ed89b08f5f2ee5",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    },
+    {
+      "label": "F \u2014 protected byte string chunked",
+      "freedoms_set": [
+        "tag18",
+        "protected_bstr_chunked"
+      ],
+      "size_bytes": 168,
+      "sha256": "31ac0ff6027a00e5ed72a7633e0dc62e4ba0343db9810d51f65bf40de8c97530",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    },
+    {
+      "label": "E \u2014 unprotected map indefinite",
+      "freedoms_set": [
+        "tag18",
+        "unprotected_map_indefinite"
+      ],
+      "size_bytes": 166,
+      "sha256": "1afbdbb466a80be1c95849c055496f56fab868962b87ba55ad7e2b2b044a4be2",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    },
+    {
+      "label": "D \u2014 outer array indefinite (raised by Konrad Gruszka)",
+      "freedoms_set": [
+        "tag18",
+        "outer_array_indefinite"
+      ],
+      "size_bytes": 166,
+      "sha256": "79c6215d691cd72ce47feb4e5b26eb047e1880a64c7ef6fbd51f6a0cba092a11",
+      "accepted_by_stock_parser": true,
+      "reserialises_to_A": true
+    }
+  ]
+}
