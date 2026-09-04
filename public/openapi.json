@@ -517,18 +517,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "wave",
-                    "contract",
-                    "counters",
-                    "board_crosscheck",
-                    "note"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -825,24 +814,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "record_type",
-                    "title",
-                    "as_of",
-                    "freshness",
-                    "first_fine_watch",
-                    "fines_by_jurisdiction",
-                    "deadlines_calendar",
-                    "correction_59",
-                    "honest_register",
-                    "bright_lines",
-                    "signature"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -862,6 +834,20 @@
           }
         },
         "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay"
+      }
+    },
+    "/api/growth-loops": {
+      "get": {
+        "operationId": "get__api_growth-loops",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/growth-loops \u2014 run every growth loop on demand.\n *\n * Returns the manifest + which loops ran successfully."
       }
     },
     "/api/gspc": {
@@ -975,7 +961,13 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "bound"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -987,7 +979,13 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "example": {
+                  "_top_keys": [
+                    "bound"
+                  ]
+                }
+              }
             },
             "description": "OK"
           }
@@ -1073,19 +1071,7 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
-                "example": {
-                  "_top_keys": [
-                    "schema",
-                    "doctrine",
-                    "instruments",
-                    "honesty_rules",
-                    "claims_refused",
-                    "generated_at",
-                    "site_attestation"
-                  ]
-                }
-              }
+              "application/json": {}
             },
             "description": "OK"
           }
@@ -1197,6 +1183,20 @@
           }
         },
         "summary": "* GET /api/pqc \u2014 continuity mill vs estate signer.\n * Not a 23rd axis. Continuity MEASURED \u2260 we are PQC."
+      }
+    },
+    "/api/prod-readiness": {
+      "get": {
+        "operationId": "get__api_prod-readiness",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/prod-readiness \u2014 the production readiness checklist."
       }
     },
     "/api/proof": {
@@ -1411,6 +1411,20 @@
         "summary": "* GET /api/root \u2014 alias of public/root.json.\n * Same bytes the static door serves. Never a second forest."
       }
     },
+    "/api/router": {
+      "get": {
+        "operationId": "get__api_router",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/router \u2014 the unified discovery + interop + packages router.\n *\n * Every /.well-known/ door \u2192 ?slug=\n * Every /interop/ format \u2192 ?slug=\n * Every /packages/ manifest \u2192 ?name=\n * Growth loops + sy"
+      }
+    },
     "/api/security": {
       "get": {
         "operationId": "get__api_security",
@@ -1548,6 +1562,20 @@
           }
         },
         "summary": "* GET /api/swift \u2014 reader of public/interop/swift-census.json.\n * Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first,\n * not MEASURED. Not a SWIFT client feed. writes_board=fals"
+      }
+    },
+    "/api/synthesis": {
+      "get": {
+        "operationId": "get__api_synthesis",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/synthesis \u2014 the cross-reference layer.\n *\n * Maps standards to axes, packages to doctrine, loops to counters, doors to APIs."
       }
     },
     "/api/tools": {
