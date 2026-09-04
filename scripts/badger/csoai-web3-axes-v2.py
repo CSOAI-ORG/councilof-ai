@@ -500,11 +500,25 @@ def main() -> None:
     # 1. The new 22 axes
     print("[1] The 22 axes (Web3-native, no SaaS/TaaS)...")
     axes_path = INTEROP / "axes-v2-web3.json"
+    # WEB3_AXES contains the current GSPC board status alongside a proposed
+    # future rail mapping. Do not collapse those two states: a measured GSPC
+    # axis does not establish that EAS, Rekor, OTS, ZK, MPC or TEE issuance is
+    # live for that axis.
+    planned_axes = [
+        {
+            **axis,
+            "gspc_axis_status": axis["status"],
+            "status": "PLANNED",
+            "claim_boundary": "The GSPC axis is measured; this Web3 rail mapping is a design proposal, not runtime evidence.",
+        }
+        for axis in WEB3_AXES
+    ]
     axes_path.write_text(json.dumps({
         "schema": "csoai.axes-v2/0.1",
         "as_of": now(),
-        "principle": "Strip SaaS / TaaS. Replace with on-chain attestation, ZK proofs, MPC, TEE, self-custody. Every axis is Web3-native.",
-        "axes": WEB3_AXES,
+        "status": "DESIGN_PROPOSAL",
+        "principle": "Map the 22 measured GSPC axes to candidate portable evidence rails without claiming those rails are deployed.",
+        "axes": planned_axes,
         "migration": {
             "from": "SaaS / TaaS model (cloud vendor controls the keys, vendor attests)",
             "to": "Web3-native model (self-custody, on-chain attestation, ZK proofs, MPC, TEE)",

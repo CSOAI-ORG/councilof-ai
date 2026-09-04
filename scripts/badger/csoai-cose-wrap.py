@@ -41,6 +41,17 @@ QUEUE = HERE / "_queue" / "cose-wrap"
 DID = "did:web:csoai.org"
 CSOAI_ED25519_KID_HEX = hashlib.sha256(b"did:web:csoai.org#card-attestation-1").hexdigest()
 
+# Incident quarantine (2026-09-04): the historical implementation below did
+# not create a verifiable COSE_Sign1. It reused a card signature over different
+# bytes and its Sig_structure omitted the required RFC 9052 "Signature1"
+# context. The code remains readable so the incident is reproducible, but the
+# executable entry point refuses to mint any more artifacts.
+QUARANTINED_GENERATOR = True
+QUARANTINE_REASON = (
+    "retired: historical output is not a verifiable COSE_Sign1; use a "
+    "standards-library implementation with an independent verification test"
+)
+
 
 def canonical(obj) -> bytes:
     """RFC 8785 JCS canonical form."""
@@ -198,6 +209,10 @@ def main():
     ap = argparse.ArgumentParser(description="Wrap card-v0 atoms as COSE_Sign1.")
     ap.add_argument("--limit", type=int, default=10)
     args = ap.parse_args()
+
+    if QUARANTINED_GENERATOR:
+        print(f"QUARANTINED: {QUARANTINE_REASON}", file=sys.stderr)
+        return 78
 
     print("================================================================")
     print("  CSOAI — CARD-V0 → COSE_SIGN1 WRAPPER")

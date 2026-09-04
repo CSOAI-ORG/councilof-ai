@@ -142,8 +142,17 @@ describe("Tier 3 — /api/eunomia-data", () => {
 describe("catalog + discovery", () => {
   it("/api/x402 and /.well-known/x402.json name no amounts and report the honest mode", async () => {
     const c = await (await catalog(ctx("/api/x402"))).json();
-    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "witness_hash", "provider_diff_feed", "receipts_batch"]);
-    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "witness_hash", "receipts_batch"]);
+    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "provider_diff_feed", "receipts_batch"]);
+    expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]);
+    expect(JSON.stringify(c)).not.toContain('"id":"witness_hash"');
+    expect(c.free_forever).toEqual(
+      expect.arrayContaining([
+        `${ORIGIN}/api/witness/status?sha256=<64-hex>`,
+        `${ORIGIN}/api/receipts/batch?from=<iso>&preview=1`,
+        `${ORIGIN}/receipts/root-history.json`,
+      ]),
+    );
+    expect(new Set(c.free_forever).size).toBe(c.free_forever.length);
     expect(JSON.stringify(c.mcp)).not.toMatch(/\bsafe\b|verified registry/i);
     expect(c.rail).toMatchObject({ mode: "challenge-only", pay_to: ESTATE_PAY_TO });
     expect(JSON.stringify(c)).not.toMatch(/[£$€]\s?\d|"amount":\s*"\d/);

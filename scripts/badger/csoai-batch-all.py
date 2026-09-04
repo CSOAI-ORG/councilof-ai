@@ -15,18 +15,18 @@ Jobs in priority order:
   8. SIGN-PREP  — prep canonical-form for the mill (csoai-auto-stage.py)
   9. DOORS      — regenerate 40 discovery docs (csoai-door-docs.py)
  10. DOOR-EXPAND — mine 40 standards as atoms (csoai-door-expand.py)
- 11. COSE       — wrap 10 cards (csoai-cose-wrap.py --limit 10)
- 12. BANK       — re-classify + repack banks (csoai-bank-classify.py, csoai-bank-pack.py --no-ots)
- 13. REG-MINE   — re-mine regulatory (csoai-regulatory-mine.py)
- 14. UK         — re-mine UK open data (csoai-uk-open-data.py)
- 15. PUBLIC     — re-mine public data (csoai-public-data-mine.py)
- 16. ARCHIVE    — re-mine archive (csoai-archive-deep.py)
- 17. LAYER0     — re-run Layer 0 ceremony (csoai-layer0-ceremony.py --no-ots)
- 18. EAT-4      — re-mine 4 sources (csoai-eat-4.py)
- 19. SEM-SCHOLAR — mine Semantic Scholar (csoai-semantic-scholar.py)
- 20. FEEDBACK   — learn from feedback (csoai-learn-from-feedback.py)
- 21. GRANTS     — finalize grants (this script)
- 22. AUDIT-CONSISTENCY — verify state (this script)
+ 11. BANK       — re-classify + repack banks (csoai-bank-classify.py, csoai-bank-pack.py --no-ots)
+ 12. REG-MINE   — re-mine regulatory (csoai-regulatory-mine.py)
+ 13. UK         — re-mine UK open data (csoai-uk-open-data.py)
+ 14. PUBLIC     — re-mine public data (csoai-public-data-mine.py)
+ 15. ARCHIVE    — re-mine archive (csoai-archive-deep.py)
+ 16. LAYER0     — re-run Layer 0 ceremony (csoai-layer0-ceremony.py --no-ots)
+ 17. EAT-4      — re-mine 4 sources (csoai-eat-4.py)
+ 18. SEM-SCHOLAR — mine Semantic Scholar (csoai-semantic-scholar.py)
+ 19. FEEDBACK   — learn from feedback (csoai-learn-from-feedback.py)
+
+The retired COSE wrapper is deliberately absent. It remains on disk as incident
+evidence but cannot create a verifiable COSE_Sign1.
 
 Each job is idempotent. Total elapsed <10 min for the full batch.
 """
@@ -56,7 +56,6 @@ JOBS = [
     (8, "SIGN-PREP",       "csoai-auto-stage.py",                                           30),
     (9, "DOORS",           "csoai-door-docs.py",                                            30),
     (10, "DOOR-EXPAND",    "csoai-door-expand.py",                                          30),
-    (11, "COSE",           "csoai-cose-wrap.py --limit 10",                                 60),
     (12, "BANK-CLASSIFY",  "csoai-bank-classify.py --dry-run",                              60),
     (13, "BANK-PACK",      "csoai-bank-pack.py --no-ots",                                   120),
     (14, "REG-MINE",       "csoai-regulatory-mine.py",                                      30),
@@ -68,6 +67,10 @@ JOBS = [
     (20, "SEM-SCHOLAR",    "csoai-semantic-scholar.py",                                     60),
     (21, "FEEDBACK",       "csoai-learn-from-feedback.py",                                  30),
 ]
+
+QUARANTINED_JOBS = {
+    "COSE": "csoai-cose-wrap.py retired 2026-09-04; historical envelopes do not verify",
+}
 
 
 def run_job(priority: int, name: str, script: str, timeout: int = 300) -> dict:
@@ -128,7 +131,7 @@ def main():
         # Split script into args so subprocess gets a proper argv list
         script_args = script.split()
         full_args = ["python3", f"scripts/badger/{script_args[0]}"] + script_args[1:]
-        print(f"--- [{priority:>2}/21] {name} ({script}) ---")
+        print(f"--- [{priority:>2}/{len(JOBS)}] {name} ({script}) ---")
         t0 = time.time()
         try:
             r = subprocess.run(
@@ -179,6 +182,7 @@ def main():
         "n_jobs": len(results),
         "n_ok": n_ok,
         "n_fail": n_fail,
+        "quarantined_jobs": QUARANTINED_JOBS,
         "total_elapsed_s": round(time.time() - overall_started, 2),
         "results": {k: {kk: vv for kk, vv in v.items() if kk != "stderr_tail" or len(str(vv)) < 200}
                     for k, v in results.items()},

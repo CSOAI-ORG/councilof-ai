@@ -24,20 +24,6 @@
   },
   "openapi": "3.0.3",
   "paths": {
-    "/api/_chatGrounded": {
-      "post": {
-        "operationId": "post__api__chatGrounded",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "summary": ""
-      }
-    },
     "/api/agentic-fix": {
       "get": {
         "operationId": "get__api_agentic-fix",
@@ -1053,26 +1039,28 @@
       "get": {
         "operationId": "get__api_learn-loop",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable — quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "*\n * /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)         \u2014 live\n *   2. Wit"
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface. Candidate learning never becomes evidence without admission, signing and independently verifiable witnesses.",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
         "operationId": "post__api_learn-loop",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable — quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "*\n * /api/learn-loop \u2014 the end-user learning loop.\n *\n * Every interaction (chat, game, measure, verify, attest) becomes:\n *   1. A 3KB signed card (Ed25519, max 3072 bytes)         \u2014 live\n *   2. Wit"
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface. Candidate learning never becomes evidence without admission, signing and independently verifiable witnesses.",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/locale": {
@@ -1131,20 +1119,6 @@
           }
         },
         "summary": "* GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return a hardcoded array of 6 servers in which every entry set\n *   l"
-      }
-    },
-    "/api/metered-endpoints.test": {
-      "get": {
-        "operationId": "get__api_metered-endpoints.test",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "summary": ""
       }
     },
     "/api/methodology": {
@@ -1222,20 +1196,6 @@
           }
         },
         "summary": "* GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that\n * already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.\n *\n * Honesty rules for this fi"
-      }
-    },
-    "/api/openapi.test": {
-      "get": {
-        "operationId": "get__api_openapi.test",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "summary": "* openapi.test.ts \u2014 every path /api/openapi.json describes must EXIST as bytes: a Pages\n * Function file or a static file under public/. A spec that names an endpoint nobody\n * serves is a promise the"
       }
     },
     "/api/otel": {
@@ -1991,52 +1951,28 @@
       "get": {
         "operationId": "get__api_witness",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable — paid witness issuance is quarantined pre-release"
           }
         },
-        "summary": "* /api/witness \u2014 \"attest what you're shown\": existence of a SHA-256 digest at a time, sold to\n * machines over the existing x402 rail. Hash-only, never the content.\n *\n *   GET  ?sha256=<64hex>[&label"
+        "summary": "* /api/witness \u2014 quarantined paid surface. No payment is accepted until the evidence chain publishes atomically and verifies against exact bytes.",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       },
       "post": {
         "operationId": "post__api_witness",
         "responses": {
-          "200": {
+          "503": {
             "content": {
               "application/json": {}
             },
-            "description": "OK"
+            "description": "Unavailable — paid witness issuance is quarantined pre-release"
           }
         },
-        "summary": "* /api/witness \u2014 \"attest what you're shown\": existence of a SHA-256 digest at a time, sold to\n * machines over the existing x402 rail. Hash-only, never the content.\n *\n *   GET  ?sha256=<64hex>[&label"
-      }
-    },
-    "/api/witness.test": {
-      "get": {
-        "operationId": "get__api_witness.test",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "summary": "A minimal TimeStampResp the parser accepts: status INTEGER + a token carrying digest and nonce."
-      },
-      "post": {
-        "operationId": "post__api_witness.test",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {}
-            },
-            "description": "OK"
-          }
-        },
-        "summary": "A minimal TimeStampResp the parser accepts: status INTEGER + a token carrying digest and nonce."
+        "summary": "* /api/witness \u2014 quarantined paid surface. No payment is accepted until the evidence chain publishes atomically and verifies against exact bytes.",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/worker": {

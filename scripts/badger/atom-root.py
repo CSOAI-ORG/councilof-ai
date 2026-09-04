@@ -51,6 +51,25 @@ merkle_root, merkle_proof, sha256_hex = _ppr.merkle_root, _ppr.merkle_proof, _pp
 QUEUE = HERE / "_queue"
 OUT = REPO / "public" / "interop"
 
+# These directories are immutable incident evidence, not admissible atom inputs.
+#
+# - cose-wrap/: the retired wrapper reused a signature over the card bytes for a
+#   different COSE Sig_structure and omitted the RFC 9052 "Signature1" context.
+# - xrpl-settlement/: the retired batch equated a successful ledger read with a
+#   GSPC MEASURED result and emitted hash-shaped placeholders when no signing key
+#   was available.
+#
+# Keep the files for auditability, but never commit them into a new root. The
+# release gate independently checks this list so removing a prefix here cannot
+# silently make either incident admissible again.
+QUARANTINED_SOURCE_PREFIXES = ("cose-wrap/", "xrpl-settlement/")
+
+
+def source_is_quarantined(source: str) -> bool:
+    """Return True when an audit-only queue path must not enter a new root."""
+    normalized = source.replace("\\", "/")
+    return normalized.startswith(QUARANTINED_SOURCE_PREFIXES)
+
 
 def canonical(obj) -> bytes:
     def rec(v):
@@ -66,6 +85,9 @@ def collect() -> list[tuple[str, str]]:
     """(leaf_digest, source) for every atom, deduplicated, in stable order."""
     seen, leaves = set(), []
     for jsonl in sorted(QUEUE.rglob("*.jsonl")):
+        source = str(jsonl.relative_to(QUEUE)).replace("\\", "/")
+        if source_is_quarantined(source):
+            continue
         for line in jsonl.read_text(errors="replace").splitlines():
             line = line.strip()
             if not line:
@@ -80,7 +102,7 @@ def collect() -> list[tuple[str, str]]:
             if d in seen:
                 continue
             seen.add(d)
-            leaves.append((d, str(jsonl.relative_to(QUEUE))))
+            leaves.append((d, source))
     leaves.sort()
     return leaves
 

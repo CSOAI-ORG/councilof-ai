@@ -1,6 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CSOAI_LID } from "./_x402";
-import { onRequestGet as witnessGet, onRequestPost as witnessPost } from "./witness";
+import {
+  __testOnlyOnRequestGet as witnessGet,
+  __testOnlyOnRequestPost as witnessPost,
+  onRequestGet as publicWitnessGet,
+  onRequestPost as publicWitnessPost,
+} from "./witness";
 import { onRequestGet as status } from "./witness/status";
 import { ATTESTS, VERDICT_RE, derTimeStampReq, guardTarget, kvKey, parseTimeStampResp, robotsAllows, tlv } from "./_witness";
 import { ESTATE_PAY_TO } from "./_x402_config";
@@ -123,6 +128,29 @@ describe("_witness helpers", () => {
 });
 
 describe("/api/witness — doors", () => {
+  it.each([
+    ["GET", publicWitnessGet],
+    ["POST", publicWitnessPost],
+  ] as const)("public %s is quarantined before payment or evidence work", async (method, handler) => {
+    stub();
+    const r = await handler(
+      ctx(
+        `/api/witness?sha256=${SHA}`,
+        { WITNESS_KV: fakeKv(), X402_FACILITATOR_URL: "https://f.example" },
+        { "x-payment": receipt },
+        method === "POST" ? { method, body: "bytes" } : {},
+      ),
+    );
+    expect(r.status).toBe(503);
+    expect(r.headers.get("retry-after")).toBe("86400");
+    expect(await r.json()).toMatchObject({
+      status: "UNAVAILABLE",
+      lifecycle: "QUARANTINED_PRE_RELEASE",
+      nothing_charged: true,
+    });
+    expect(calls).toEqual([]);
+  });
+
   it("400: bad sha, a verdict word in the label, nothing to hash, a non-https url", async () => {
     stub();
     expect((await witnessGet(ctx("/api/witness?sha256=zz"))).status).toBe(400);
@@ -278,13 +306,20 @@ describe("/api/witness — rail: fail-closed queue, dedupe, paid path", () => {
 describe("/api/witness/status — free", () => {
   const witnessedEntry = { schema: "csoai.witness-entry/0.1", sha256: SHA, label: "x", url: "https://example.org/x", url_hash: "u".repeat(64), fetched_at: "2026-09-02T08:00:00Z", http_status: 200, headers: null, payment_ref: "0xtx", rfc3161_tsa: "https://freetsa.org/tsr", rfc3161_status: "TIMESTAMPED", rfc3161_token: "AA==", rfc3161_token_sha256: "t".repeat(64), status: "witnessed", queued_at: "2026-09-02T08:00:01Z", witnessed: { root_as_of: "2026-09-02T08:07:00Z", merkle_root: MERKLE, card_sha256: CARD, card_url: "/cards/cccccccccccccccc.json", proof_url: `/api/proof?sha=${CARD}` } };
 
-  it("503 without KV, 400 on a bad sha, 404 unknown with the way to queue", async () => {
+  it("503 without KV, 400 on a bad sha, 404 unknown with issuance quarantined", async () => {
     stub();
     expect((await status(ctx(`/api/witness/status?sha256=${SHA}`))).status).toBe(503);
     expect((await status(ctx("/api/witness/status?sha256=nope", { WITNESS_KV: fakeKv() }))).status).toBe(400);
     const r = await status(ctx(`/api/witness/status?sha256=${SHA}`, { WITNESS_KV: fakeKv() }));
     expect(r.status).toBe(404);
-    expect(await r.json()).toMatchObject({ status: "unknown", queue: `${ORIGIN}/api/witness?sha256=${SHA}` });
+    expect(await r.json()).toMatchObject({
+      status: "unknown",
+      issuance: {
+        status: "UNAVAILABLE",
+        lifecycle: "QUARANTINED_PRE_RELEASE",
+        route: `${ORIGIN}/api/witness`,
+      },
+    });
   });
 
   it("queued → the timestamp and the next-root note; witnessed → root, card, proof, anchors from the sidecar, live inclusion check", async () => {

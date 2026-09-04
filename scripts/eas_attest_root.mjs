@@ -8,8 +8,6 @@
  */
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { ethers } from "ethers";
-import { EAS, SchemaEncoder, SchemaRegistry } from "@ethereum-attestation-service/eas-sdk";
 
 const EAS_ADDR = "0x4200000000000000000000000000000000000021";      // Base mainnet (OP-stack predeploy)
 const REGISTRY_ADDR = "0x4200000000000000000000000000000000000020";
@@ -28,6 +26,14 @@ if (!key) {
   writeFileSync(OUT, JSON.stringify(log, null, 1) + "\n"); process.exit(0);
 }
 if (log.attestations.some((a) => a.sha256 === sha)) { console.log("EAS: root already attested", sha.slice(0, 16)); process.exit(0); }
+
+// Dependencies are needed only for the explicit owner-funded EAS branch. Keeping
+// these imports below the no-key exit lets the workflow record NOT_YET without a
+// best-effort install or a swallowed module-resolution failure.
+const [{ ethers }, { EAS, SchemaEncoder, SchemaRegistry }] = await Promise.all([
+  import("ethers"),
+  import("@ethereum-attestation-service/eas-sdk"),
+]);
 
 const provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL || "https://mainnet.base.org");
 const signer = new ethers.Wallet(key, provider);

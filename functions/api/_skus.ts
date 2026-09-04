@@ -170,9 +170,10 @@ export const SKUS: Record<string, Sku> = {
       "owner invoices; the Function only issues the reference. Never a compliance conclusion.",
   },
 
-  // SKU — Witness a digest (attest what you're shown). Existence of a SHA-256 at a time: one
-  // public.notice leaf in the next hourly signed root + an RFC-3161 timestamp + the ONE root's
-  // free anchors (Rekor, OTS). Never the content; never a verdict on it.
+  // QUARANTINED PRE-RELEASE — retained only so the unexposed implementation can be fixture-tested.
+  // /api/witness returns 503 before payment, and neither /api/x402 nor MCP advertises this SKU.
+  // Do not re-expose it until the leaf, signed root, sidecar, Rekor snapshot and OTS proof are
+  // committed atomically and the release gate verifies every identifier against the exact bytes.
   witness_hash: {
     id: "witness_hash",
     name: "Witness a digest (attest what you're shown)",
@@ -187,7 +188,8 @@ export const SKUS: Record<string, Sku> = {
     },
     rail: "x402-or-invoice",
     notes:
-      "Hash-only: buyer-supplied bytes are hashed and dropped; a URL is fetched once with our UA, " +
+      "QUARANTINED_PRE_RELEASE; unavailable for sale and no payment may be accepted. Hash-only: " +
+      "buyer-supplied bytes are hashed and dropped; a URL is fetched once with our UA, " +
       "robots.txt honoured, never past a login/paywall/bot check (UNCHECKABLE, no charge). Existence of " +
       "the digest at the root's as_of — nothing about content, legality or provenance. A self-signed " +
       "card carries no legal presumption. Invoice path for a human deal (owner-decision).",

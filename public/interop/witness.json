@@ -1,23 +1,16 @@
 {
   "schema": "csoai.api-spec/0.1",
   "route": "POST /api/witness",
-  "description": "Witness a digest",
+  "description": "Witness a digest — quarantined pre-release",
+  "lifecycle": "QUARANTINED_PRE_RELEASE",
+  "availability": "UNAVAILABLE",
   "as_of": "20260904T044700Z",
   "spec": {
     "method": "POST",
     "path": "/api/witness",
     "responses": {
-      "200": {
-        "description": "OK"
-      },
-      "402": {
-        "description": "Payment Required"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "Not Found"
+      "503": {
+        "description": "Unavailable — no payment is accepted until exact-byte evidence gates pass"
       }
     }
   }
