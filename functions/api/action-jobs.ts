@@ -13,6 +13,8 @@
  * a Durable Object or transactional D1 ledger before execution can be enabled.
  */
 
+import { PHASE1_EXECUTOR_FIXTURE_CONTRACT } from "../_lib/phase1ActionExecutor";
+
 interface Env {
   LEADS?: KVNamespace;
   ACTION_JOBS_WRITER_SECRET?: string;
@@ -101,6 +103,7 @@ export const ACTION_JOB_LEDGER_CONTRACT = Object.freeze({
     model_training: false,
     external_egress: false,
   },
+  phase1_executor_fixture: PHASE1_EXECUTOR_FIXTURE_CONTRACT,
   limits: {
     request_bytes: MAX_ACTION_JOB_REQUEST_BYTES,
     events_per_job: MAX_ACTION_JOB_EVENTS,

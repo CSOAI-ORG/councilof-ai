@@ -143,6 +143,13 @@ describe("/api/action-jobs durable intent ledger", () => {
         model_training: false,
         external_egress: false,
       },
+      phase1_executor_fixture: {
+        mode: "IN_MEMORY_TEST_FIXTURE",
+        public_endpoint_enabled: false,
+        production_enabled: false,
+        staging_enabled: false,
+        durability: "NONE",
+      },
     });
   });
 
