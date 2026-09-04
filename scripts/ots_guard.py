@@ -33,6 +33,7 @@ otherwise here would be the same class of error this guard exists to catch.
 """
 from __future__ import annotations
 import hashlib
+import re
 import sys
 from pathlib import Path
 
@@ -69,8 +70,18 @@ def covers(p: Path) -> tuple[str, str]:
     Returns (state, detail). UNKNOWN when the stamped file is absent, because a missing subject
     says nothing about coverage and must never read as OK.
     """
+    # TWO NAMING CONVENTIONS, and only one implies a sibling file. Credit to
+    # scripts/ots-coverage-audit.py (another lane, same day) for pinning this: a naive run
+    # reports ~1,580 proofs as having "no target file" and looks catastrophic, when those are
+    # DIGEST-NAMED — the filename IS the digest the proof commits to, so it is self-describing
+    # and no sibling is expected. Only file-named proofs (foo.json.ots beside foo.json) can be
+    # orphaned. Reporting the digest-named ones as UNKNOWN is not wrong, but it buries the real
+    # finding under 1,580 lines of noise, and a guard nobody can read is a guard nobody runs.
     subject = p.with_suffix("")  # foo.json.ots -> foo.json
+    stem = subject.name
     if not subject.exists():
+        if re.fullmatch(r"[0-9a-f]{8,64}(\.[a-z]+)?", stem) or re.search(r"-[0-9a-f]{8,64}(\.[a-z]+)?$", stem):
+            return ("SELF_DESCRIBING", "digest-named proof; the name is the commitment, no sibling expected")
         return ("UNKNOWN", "stamped file not present beside the proof")
     try:
         from opentimestamps.core.serialize import BytesDeserializationContext
