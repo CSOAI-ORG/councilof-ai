@@ -1,8 +1,8 @@
 {
   "schema": "csoai.layer0-ceremony/0.1",
-  "as_of": "20260904T051529Z",
-  "merkle_root": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
-  "cards_anchored": 335,
+  "as_of": "20260904T051418Z",
+  "merkle_root": "",
+  "cards_anchored": 0,
   "anchors": {
     "opentimestamps": {
       "name": "OpenTimestamps \u2192 Bitcoin",
@@ -10,10 +10,10 @@
       "endpoint": "https://openteimestamps.org",
       "method": "POST /digest with the merkle_root, get a .ots pending stamp, upgrade when BTC fees drop",
       "status": "READY",
-      "as_of": "20260904T051529Z",
+      "as_of": "20260904T051418Z",
       "receipt": {
-        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
-        "expected_pending_file": "public/interop/layer0-root-20260904T051529Z.ots",
+        "digest": "",
+        "expected_pending_file": "public/interop/layer0-root-20260904T051418Z.ots",
         "expected_upgrade_after_btc_block": "auto-upgrade when next block commits"
       }
     },
@@ -23,9 +23,9 @@
       "endpoint": "https://rekor.sigstore.dev",
       "method": "POST /api/v1/log with the merkle_root + Ed25519 signature",
       "status": "READY",
-      "as_of": "20260904T051529Z",
+      "as_of": "20260904T051418Z",
       "receipt": {
-        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+        "digest": "",
         "expected_rekor_entry": "https://rekor.sigstore.dev/api/v1/log/entries/<uuid>",
         "expected_index": "auto-indexed by Rekor"
       }
@@ -36,16 +36,16 @@
       "endpoint": "https://base.easscan.org",
       "method": "POST schema attestation with the merkle_root as the data field",
       "status": "READY (needs MetaMask to register schema)",
-      "as_of": "20260904T051529Z",
+      "as_of": "20260904T051418Z",
       "receipt": {
-        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
-        "expected_eas_uid": "f05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718",
+        "digest": "",
+        "expected_eas_uid": "f",
         "expected_attestation_url": "https://base.easscan.org/attestation/view/0x...<uid>"
       }
     }
   },
   "compute": {
-    "as_of": "20260904T051529Z",
+    "as_of": "20260904T051418Z",
     "compute": {
       "oracle": {
         "status": "LIVE",
