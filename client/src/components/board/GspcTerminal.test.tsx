@@ -125,6 +125,39 @@ describe("canonical GSPC terminal evidence truth", () => {
     });
   });
 
+  it("fails closed visibly when a measured facts row has no run artifact", () => {
+    const html = renderToStaticMarkup(
+      <AxisDrilldown
+        a={{ axis: "future-fact", kind: "deterministic-facts", status: "MEASURED" }}
+        elo={EMPTY_ELO}
+        cardIndex={EMPTY_CARDS}
+      />,
+    );
+    expect(html).toContain("No run artifact published.");
+    expect(html).not.toContain("Verify signed card");
+  });
+
+  it("does not label rendered Elo rows signed from a content ID alone", () => {
+    const html = renderToStaticMarkup(
+      <AxisDrilldown
+        a={{ axis: "safety", kind: "model-comparison", status: "MEASURED", accuracy: 0.9 }}
+        elo={{
+          state: "ok",
+          data: {
+            content_id: "abcdef1234567890",
+            per_axis: {
+              safety: [{ model: "example/model", elo: 1000, winrate: 0.5, games: 10 }],
+            },
+          },
+        }}
+        cardIndex={EMPTY_CARDS}
+      />,
+    );
+    expect(html).toContain("Elo reference content-addressed unsigned");
+    expect(html).not.toContain("signed Elo reference");
+    expect(html).not.toContain("Elo reference Ed25519-signed");
+  });
+
   it("does not infer an Elo signature from a content ID", () => {
     expect(eloReferenceEvidence({ content_id: "abcdef1234567890" })).toBe(
       "Elo reference content-addressed unsigned · content_id abcdef1234…",

@@ -172,14 +172,22 @@ function figure(a: Axis): string {
   return "UNMEASURED";
 }
 
-function ModelRankings({ axis, rows }: { axis: Axis; rows: EloRow[] }) {
+function ModelRankings({
+  axis,
+  rows,
+  referenceEvidence,
+}: {
+  axis: Axis;
+  rows: EloRow[];
+  referenceEvidence: string;
+}) {
   const separated = axis.separation === "SEPARATED";
   const top = [...rows].sort((x, y) => y.elo - x.elo).slice(0, 9);
   return (
     <div>
       <div className="mb-2 flex flex-wrap items-center gap-2">
         <span className="font-mono text-[10px] font-bold uppercase tracking-wide text-slate-500">
-          Top models · signed Elo reference
+          Top models · {referenceEvidence}
         </span>
         {separated ? (
           <span className="rounded bg-emerald-100 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase text-emerald-800">
@@ -295,7 +303,11 @@ export function AxisDrilldown({
 
       {/* Per-model ranking where a signed reference exists; honest absence otherwise */}
       {rows && rows.length > 0 ? (
-        <ModelRankings axis={a} rows={rows} />
+        <ModelRankings
+          axis={a}
+          rows={rows}
+          referenceEvidence={eloReferenceEvidence(elo.data)}
+        />
       ) : isFacts(a) ? (
         <p className="text-[11px] leading-relaxed text-slate-500">
           Deterministic-facts axis — a coverage read over its own declared universe, with no model
@@ -323,6 +335,9 @@ export function AxisDrilldown({
             </a>
             <span className="font-mono text-slate-400">{runEvidence.detail}</span>
           </span>
+        )}
+        {isFacts(a) && !runEvidence && (
+          <span className="font-mono text-slate-500">No run artifact published.</span>
         )}
         {a.kind === "model-comparison" && cardCount > 0 && (
           <span className="inline-flex flex-wrap items-center gap-x-2 gap-y-1">
