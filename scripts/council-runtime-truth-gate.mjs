@@ -152,6 +152,24 @@ function assertCurrentGspcClaims(board) {
   assert.doesNotMatch(board.totals.sweep_note, /each (?:of the )?8[^.]*signed run/i);
 }
 
+function findUnreviewedPublicHtmlAppRoutes(
+  appRoutes,
+  reviewedRoutes,
+  fileExists = existsSync,
+) {
+  const collisions = [...new Set(appRoutes)]
+    .map((route) => route.replace(/\/+$/, "") || "/")
+    .filter((route) => route !== "/" && route.startsWith("/"))
+    .filter((route) => {
+      const relative = route.replace(/^\//, "");
+      return (
+        fileExists(join("public", `${relative}.html`)) ||
+        fileExists(join("public", relative, "index.html"))
+      );
+    });
+  return collisions.filter((route) => !reviewedRoutes.has(route));
+}
+
 if (process.argv.includes("--selftest")) {
   const fixtureDir = "scripts/fixtures/council-runtime-truth";
   const safe = readFileSync(join(fixtureDir, "safe.txt"), "utf8");
@@ -251,6 +269,22 @@ if (process.argv.includes("--selftest")) {
   const overclaimedBoard = structuredClone(goodBoard);
   overclaimedBoard.totals.financial_run_attestations.ed25519_signed = 8;
   assert.throws(() => assertCurrentGspcClaims(overclaimedBoard));
+
+  // Both static ownership forms can silently shadow a maintained App route.
+  // The guard must reject either form unless the route was explicitly reviewed.
+  const collisionFixture = new Set([
+    join("public", "flat.html"),
+    join("public", "nested", "index.html"),
+    join("public", "reviewed.html"),
+  ]);
+  assert.deepEqual(
+    findUnreviewedPublicHtmlAppRoutes(
+      ["/flat", "/nested/", "/reviewed", "/clean"],
+      new Set(["/reviewed"]),
+      (path) => collisionFixture.has(path),
+    ),
+    ["/flat", "/nested"],
+  );
 
   console.log("council-runtime-truth-gate selftest: PASS");
   process.exit(0);
@@ -1060,6 +1094,39 @@ for (const source of [redirectGeneratorSource, redirectsSource]) {
   assert.match(source, /\/widget\/?\s+\/dashboard\?tab=learn\s+308/);
   assert.match(source, /\/widget\/\*\s+\/dashboard\?tab=learn\s+308/);
 }
+
+// A public/foo.html can take ownership of the clean /foo URL and silently
+// displace a maintained React route. Keep the reviewed exceptions explicit and
+// fail closed on every new collision. GovBench/ProvBench are deliberately not
+// exceptions: their retired human HTML must stay quarantined from public/.
+const reviewedPublicHtmlAppRoutes = new Set([
+  "/404",
+  "/advisory",
+  "/benchmarks",
+  "/globe",
+]);
+const concreteAppRoutes = [...appSource.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
+  .map((match) => match[1].replace(/\/+$/, "") || "/")
+  .filter((route) => route.startsWith("/") && !route.includes(":") && !route.includes("*"));
+assert.deepEqual(
+  findUnreviewedPublicHtmlAppRoutes(concreteAppRoutes, reviewedPublicHtmlAppRoutes),
+  [],
+  "an unreviewed public HTML file shadows a maintained App route",
+);
+for (const route of ["govbench", "provbench"]) {
+  assert.equal(existsSync(`public/${route}.html`), false, `${route}.html must stay out of public/`);
+  for (const source of [redirectGeneratorSource, redirectsSource]) {
+    assert.match(source, new RegExp(`/${route}\\s+/${route}/\\s+308`));
+    assert.match(source, new RegExp(`/${route}\\.html\\s+/${route}/\\s+308`));
+  }
+}
+
+const axisSetsSource = readFileSync("client/src/data/axis-sets.ts", "utf8");
+const measurementBoardSource = readFileSync("client/src/pages/MeasurementBoard.tsx", "utf8");
+assert.match(axisSetsSource, /the content-addressed unsigned run/);
+assert.match(axisSetsSource, /fallbackStatusUrl:\s*"\/signed\/gspc-board\.status\.json"/);
+assert.match(axisSetsSource, /status\?\.current !== true \|\| status\?\.state !== "CURRENT"/);
+assert.match(measurementBoardSource, /fetchPublishedSet\(set\)/);
 
 // The generated, unsigned snapshot is the regression oracle for the current
 // API contract. Historical leader prose may be retained, but only in a

@@ -5,6 +5,7 @@ import {
   AXIS_SETS,
   BOARD_FALLBACK,
   CARD_AXIS_ALIASES,
+  fetchPublishedSet,
   type AxisRow,
   type AxisSet,
   type LoadedSet,
@@ -197,38 +198,22 @@ function useAllSets(): Record<string, SetState> {
         }
         continue;
       }
-      const json = (u: string) =>
-        fetch(u).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-
-      json(set.fetchUrl)
-        .then((d) => put(set.id, { phase: "ready", data: set.load(d) }))
-        .catch((liveErr) => {
-          // A declared fallback artifact is tried before the set is given up on.
-          // This is what makes the board render real rows in a prerendered page,
-          // where no function is running to answer /api/gspc — and the fallback
-          // is LABELLED as a snapshot rather than passed off as a live read.
-          if (!set.fallbackUrl) {
-            put(set.id, {
-              phase: "error",
-              message: String(liveErr?.message ?? liveErr),
-              data: set.id === "board" ? BOARD_FALLBACK() : EMPTY,
-            });
-            return;
-          }
-          json(set.fallbackUrl)
-            .then((d) =>
-              put(set.id, {
-                phase: "ready",
-                data: set.load(d, set.fallbackProvenance),
-              }),
-            )
-            .catch((snapErr) =>
-              put(set.id, {
-                phase: "error",
-                message: `${liveErr?.message ?? liveErr}; snapshot: ${snapErr?.message ?? snapErr}`,
-                data: set.id === "board" ? BOARD_FALLBACK() : EMPTY,
-              }),
-            );
+      fetchPublishedSet(set)
+        .then((data) => put(set.id, { phase: "ready", data }))
+        .catch((error) => {
+          const message = error instanceof Error ? error.message : String(error);
+          put(set.id, {
+            phase: "error",
+            message,
+            data:
+              set.id === "board"
+                ? BOARD_FALLBACK(
+                    "The live board endpoint did not answer and its signed fallback was not eligible " +
+                      `for current use (${message}). No rows are drawn. The dated figure below is only ` +
+                      "a recorded observation; GET /api/gspc remains the authority.",
+                  )
+                : EMPTY,
+          });
         });
     }
 

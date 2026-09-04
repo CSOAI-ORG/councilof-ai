@@ -73,14 +73,20 @@
         "authority": "GET /api/gspc totals.public_count",
         "status": "live",
         "observed": "22 axes · 22 measured (14 GSPC behavioural + 8 financial/domain)",
-        "self_description_note": "The board is the count authority, so its own payload and signed snapshot are exonerated from being compared against themselves. The payload legitimately describes its own composition; flagging the authority against itself is a tautology, not a check.",
+        "self_description_note": "The live board API is the current count authority and legitimately describes its own composition. The preserved signed snapshot is not a current board surface while /signed/gspc-board.status.json says current=false; it is scoped separately below.",
         "surfaces": [
           "/api/gspc",
-          "/signed/gspc-board.signed.json",
           "/board"
         ],
         "board_navigator_note": "/board is the navigator ACROSS the sets: it renders every namespace's count on one page, each labelled with the set it belongs to. That is this estate's own rule — every count names its set — made true in the interface instead of only in this file. It is declared as a surface of each namespace it renders, so the gate exonerates a LABELLED count rather than the gate being loosened for an unlabelled one.",
         "surfaces_note": "/six-axes/gspc-axes.json was listed here until 2026-08-26 and has been moved to its own namespace below. It is a DATED SNAPSHOT from 2026-08-05, not the board: listing it as a board-count authority exonerated a smaller, older count from ever being checked against the board it claimed to describe. Moving it does not change a single number in it — it changes what the file is allowed to be cited as."
+      },
+      "gspc_board_signed_snapshot_2026_09_02": {
+        "authority": "none — this is preserved signed evidence, not the current board. GET /api/gspc is authoritative.",
+        "status": "superseded-known-claim-defect",
+        "observed": "a verified historical 22/22 MPC-signed snapshot whose separate status document forbids current reliance",
+        "note": "The original signature still verifies, but /signed/gspc-board.status.json records a financial-run signature overclaim and historical leader-note ambiguity. Integrity of the bytes does not make those claims current. The snapshot remains published for audit and is never a live fallback unless a replacement MPC ceremony makes its status CURRENT.",
+        "surface": "/signed/gspc-board.signed.json"
       },
       "gspc_board_snapshot_2026_08_05": {
         "authority": "none — this is a record, not an authority. The count authority is GET /api/gspc.",
