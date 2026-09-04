@@ -193,17 +193,39 @@ function evaluate(pages, absent, sec = null, scitt = null) {
       `crawlers that every URL in the 350-entry sitemap is a real page. Serve a real 404.`);
   }
 
-  // 6. SCITT PROFILE SURFACE — /.well-known/scitt.json must serve JSON (the
-  // RFC 9943 statement mapping is itself a machine contract; a soft-404 or
-  // stale document silently breaks agent discovery of the signed surfaces).
+  // 6. SCITT PROFILE SURFACE — /.well-known/scitt.json must serve JSON. A
+  // PLANNED discovery profile truthfully has no statements, signing keys or
+  // receipt; an implemented profile must carry the statement/key arrays that
+  // agents need. Do not force a planned surface to advertise fake anchors just
+  // to satisfy the crawler gate.
   if (scitt !== null) {
     if (scitt.status !== 200) {
       failures.push(`/.well-known/scitt.json: HTTP ${scitt.status}`);
     } else {
       try {
         const j = JSON.parse(scitt.html);
-        if (!Array.isArray(j.statements) || !Array.isArray(j.trust_anchor?.signing_keys)) {
-          failures.push("/.well-known/scitt.json: missing statements[] / trust_anchor.signing_keys[]");
+        if (!Array.isArray(j.statements)) {
+          failures.push("/.well-known/scitt.json: missing statements[]");
+        } else if (j.implementation_status === "PLANNED") {
+          if (j.statements.length !== 0) {
+            failures.push("/.well-known/scitt.json: PLANNED profile must keep statements[] empty");
+          }
+          const plannedKeys = j.trust_anchor?.signing_keys;
+          if (j.trust_anchor != null && (!Array.isArray(plannedKeys) || plannedKeys.length !== 0)) {
+            failures.push("/.well-known/scitt.json: PLANNED profile must not advertise SCITT signing keys");
+          }
+          if (
+            j.measurement?.status !== "UNMAPPED" ||
+            j.measurement?.axes_covered !== 0 ||
+            j.transparency_service?.status !== "NOT_IMPLEMENTED" ||
+            j.verification?.scitt_receipt !== null
+          ) {
+            failures.push(
+              "/.well-known/scitt.json: PLANNED profile must declare UNMAPPED/0 axes, " +
+              "NOT_IMPLEMENTED transparency service, and a null SCITT receipt");
+          }
+        } else if (!Array.isArray(j.trust_anchor?.signing_keys)) {
+          failures.push("/.well-known/scitt.json: implemented profile missing trust_anchor.signing_keys[]");
         }
       } catch {
         failures.push("/.well-known/scitt.json: not valid JSON");
@@ -218,6 +240,14 @@ async function selftest() {
   const shell = "<html><head><title>x</title></head><body>short</body></html>";
   const rich = "<html><body>" + "governance measurement evidence ".repeat(60) + "</body></html>";
   const mk = (h, status = 200) => ({ status, html: h, text: visibleText(h), key: canonical(h) });
+  const plannedScitt = {
+    implementation_status: "PLANNED",
+    statements: [],
+    measurement: { status: "UNMAPPED", axes_covered: 0 },
+    transparency_service: { status: "NOT_IMPLEMENTED" },
+    verification: { scitt_receipt: null },
+  };
+  const scittResponse = (body) => ({ status: 200, html: JSON.stringify(body) });
 
   const cases = [
     ["distinctness", [["/a", mk(rich)], ["/b", mk(rich)]], mk("", 404), /IDENTICAL DOCUMENT/],
@@ -231,6 +261,12 @@ async function selftest() {
                      mk("", 404), /canonical points at/],
     ["scitt surface", [["/a", mk(rich)]], mk("", 404), /scitt.json/,
                      null, {status: 200, html: "not json"}],
+    ["planned SCITT statements", [["/a", mk(rich)]], mk("", 404), /PLANNED profile must keep statements\[\] empty/,
+                     null, scittResponse({ ...plannedScitt, statements: [{ type: "unsupported" }] })],
+    ["planned SCITT signing keys", [["/a", mk(rich)]], mk("", 404), /PLANNED profile must not advertise SCITT signing keys/,
+                     null, scittResponse({ ...plannedScitt, trust_anchor: { signing_keys: [{ id: "unverified" }] } })],
+    ["planned SCITT state", [["/a", mk(rich)]], mk("", 404), /PLANNED profile must declare UNMAPPED\/0 axes/,
+                     null, scittResponse({ ...plannedScitt, measurement: { status: "MEASURED", axes_covered: 22 } })],
   ];
   let ok = true;
   console.log("SELFTEST — each rule must fire on a seeded violation:");
@@ -244,7 +280,7 @@ async function selftest() {
   const clean = evaluate(
     [["/a", mk(rich + '<link rel="canonical" href="https://x.test/a"/>')],
      ["/b", mk(rich + '<p>distinct</p><link rel="canonical" href="https://x.test/b"/>')]],
-    mk("", 404));
+    mk("", 404), null, scittResponse(plannedScitt));
   const quiet = clean.length === 0;
   ok &&= quiet;
   console.log(`  ${quiet ? "OK  " : "FAIL"} clean sample stays silent`);
