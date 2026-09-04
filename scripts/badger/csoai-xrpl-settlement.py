@@ -27,6 +27,16 @@ ROOT = Path(__file__).resolve().parents[2]
 QUEUE = ROOT / "scripts" / "badger" / "_queue" / "xrpl-settlement"
 QUEUE.mkdir(parents=True, exist_ok=True)
 
+# Incident quarantine (2026-09-04): the historical batch treated an attempted
+# ledger fetch as a GSPC measurement and used digest-shaped values when a real
+# signing key was unavailable. Read-only XRPL readers remain supported; this
+# batch writer is retired until it emits PROBED facts through the canonical
+# evidence admission path.
+QUARANTINED_GENERATOR = True
+QUARANTINE_REASON = (
+    "retired: ledger reachability is not MEASURED and unsigned digests are not signatures"
+)
+
 
 def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -96,7 +106,7 @@ def build_evidence_card(issuer: dict, fetched: dict) -> dict:
             "tier": 3,
         },
         "measurement": {
-            "status": "MEASURED",
+            "status": "PROBED",
             "verified_via": "XRPL public servers (xrplcluster.com + s1.ripple.com + s2.ripple.com)",
             "x402_sku": "xrpl-asset-evidence",
             "x402_price_usdc": 0.05,
@@ -132,11 +142,13 @@ def sign_card(card: dict) -> dict:
             card["sig_ed25519"] = sig.hex()
             card["signed"] = True
         except Exception:
-            card["sig_ed25519"] = hashlib.sha256(blob).hexdigest()
+            card["sig_ed25519"] = None
             card["signed"] = False
+            card["signature_state"] = "UNSIGNED"
     else:
-        card["sig_ed25519"] = hashlib.sha256(blob).hexdigest()
+        card["sig_ed25519"] = None
         card["signed"] = False
+        card["signature_state"] = "UNSIGNED"
 
     return card
 
@@ -176,7 +188,10 @@ ISSUERS = [
 ]
 
 
-def main() -> None:
+def main() -> int:
+    if QUARANTINED_GENERATOR:
+        print(f"QUARANTINED: {QUARANTINE_REASON}")
+        return 78
     print("=== XRPL REAL SETTLEMENT ===")
     print()
 
@@ -247,4 +262,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

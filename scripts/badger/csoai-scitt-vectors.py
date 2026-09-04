@@ -43,6 +43,17 @@ PINNED_PAYLOAD_HEX = (
     "0baa437d8b9c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e"
 )
 
+# Incident quarantine (2026-09-04): this historical generator described a
+# zero-filled placeholder signature as a conformant vector and its hand-written
+# CBOR encoder cannot encode the negative ES256 algorithm identifier. Preserve
+# the source for audit history, but refuse all new output until it is replaced
+# by a standards-library round trip against an independent verifier.
+QUARANTINED_GENERATOR = True
+QUARANTINE_REASON = (
+    "retired: placeholder signatures and a broken negative-integer encoder "
+    "cannot produce conformant SCITT/COSE vectors"
+)
+
 
 def sha256_hex(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
@@ -343,6 +354,10 @@ def main():
     ap = argparse.ArgumentParser(description="SCITT test vector generator + CI harness.")
     ap.add_argument("--no-write", action="store_true")
     args = ap.parse_args()
+
+    if QUARANTINED_GENERATOR:
+        print(f"QUARANTINED: {QUARANTINE_REASON}", file=sys.stderr)
+        return 78
 
     print("================================================================")
     print("  CSOAI — SCITT TEST VECTORS + CI HARNESS (for John)")

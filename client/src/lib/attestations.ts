@@ -308,6 +308,16 @@ export interface WitnessRail {
   links: RailLink[];
 }
 
+function staleRails(rails: WitnessRail[], binding: Check): WitnessRail[] {
+  const state = binding.state === "INVALID" ? "STALE / UNCHECKABLE" : "UNCHECKABLE";
+  return rails.map((rail) => ({
+    ...rail,
+    state,
+    tone: "absent",
+    detail: `${binding.reason}${rail.detail ? ` Historical sidecar detail: ${rail.detail}` : ""}`,
+  }));
+}
+
 export function isoFromUnix(t: unknown): string | null {
   const n = typeof t === "number" ? t : typeof t === "string" ? Number(t) : NaN;
   if (!Number.isFinite(n) || n <= 0) return null;
@@ -319,7 +329,12 @@ export function isoFromUnix(t: unknown): string | null {
  * `easHttp` is the status the fetch returned (404 today) so the rail can say
  * where its state came from instead of pretending the log exists.
  */
-export function witnessRails(w: WitnessDoc | null, eas: EasDoc | null, easHttp: number | null): WitnessRail[] {
+export function witnessRails(
+  w: WitnessDoc | null,
+  eas: EasDoc | null,
+  easHttp: number | null,
+  currentRootBinding?: Check | null,
+): WitnessRail[] {
   const ws = (w && w.witnesses) || {};
   const rekor = (ws.rekor || {}) as Record<string, unknown>;
   const ots = (ws.ots || {}) as Record<string, unknown>;
@@ -368,12 +383,25 @@ export function witnessRails(w: WitnessDoc | null, eas: EasDoc | null, easHttp: 
   const xrplLinks: RailLink[] = [];
   if (typeof xrpl.tx === "string") xrplLinks.push({ href: `https://livenet.xrpl.org/transactions/${xrpl.tx}`, label: "XRPL transaction" });
 
-  return [
+  const rails: WitnessRail[] = [
     { id: "rekor", label: "Rekor (Sigstore transparency log)", state: rekorState, tone: railTone(rekorState), detail: rekorDetailParts.join(" · "), links: rekorLinks },
     { id: "ots", label: "OpenTimestamps (Bitcoin)", state: otsState, tone: railTone(otsState), detail: typeof ots.note === "string" ? String(ots.note) : "", links: otsLinks },
     { id: "eas_base", label: "EAS on Base", state: easState, tone: railTone(easState), detail: easDetail, links: easLinks },
     { id: "xrpl_memo", label: "XRPL memo", state: xrplState, tone: railTone(xrplState), detail: xrplDetail, links: xrplLinks },
   ];
+  // The sidecar may truthfully describe an older root, but none of its green states
+  // may be presented as witnesses of the bytes loaded now. While the byte check is
+  // pending it is UNCHECKABLE; an exact mismatch is STALE / UNCHECKABLE.
+  if (currentRootBinding !== undefined && currentRootBinding?.state !== "VALID") {
+    return staleRails(
+      rails,
+      currentRootBinding ?? {
+        state: "UNCHECKABLE",
+        reason: "The current root bytes have not yet been bound to this sidecar.",
+      },
+    );
+  }
+  return rails;
 }
 
 /* ------------------------------------------------------------------ search */

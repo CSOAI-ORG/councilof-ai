@@ -64,17 +64,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
       },
       {
-        tier: 1,
-        id: "witness_hash",
-        name: "Witness a digest (attest what you're shown)",
-        resource: u("/api/witness?sha256=<64-hex>&label=<text>") + "  |  " + u("/api/witness?url=<https public URL>") + "  |  POST " + u("/api/witness") + " (raw bytes ≤4 MiB, hashed then dropped)",
-        free_preview: u("/api/witness?sha256=<64-hex>") + " (the 402 body carries csoai.preview: the digest, the fetch outcome, the TSA, the anchors, what happens)",
-        free_status: u("/api/witness/status?sha256=<64-hex>"),
-        deliverable: "one public.notice leaf (csoai.witness.hash/0.1) in the next hourly signed root under did:web:csoai.org#board-attestation-1 + an RFC-3161 timestamp reply over the digest from a documented public TSA + the ONE root's Rekor and OpenTimestamps anchors; queued in WITNESS_KV (503 NOT_YET when unbound — nothing charged)",
-        attests: "existence of this digest at the root's as_of — nothing about its content, legality, or provenance",
-        never: ["storage or republication of the bytes", "a bypass of a login, paywall, robots.txt or bot check (UNCHECKABLE, no charge)", "a verdict on the content", "a certificate", "a legal presumption"],
-      },
-      {
         // Was `tier: 1, tier: 4` — two keys in one literal. The second silently won, so the
         // catalog published tier 4 while the source read as tier 1. Keeping 4 preserves the
         // value that has actually been served; this is a de-duplication, not a re-pricing.
@@ -98,7 +87,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],
       },
     ],
-    free_forever: [u("/gspc-verify"), u("/api/gspc"), u("/root.json"), u("/api/fines"), u("/api/proof?sha=<64-hex>"), u("/api/witness/status?sha256=<64-hex>"), u("/methodology")],
     mcp: {
       url: u("/mcp"),
       free_tools: ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"],
@@ -106,12 +94,11 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         { name: "commission_card", route: u("/api/request-attestation"), sells: "issuance" },
         { name: "art50_marking_evidence", route: u("/api/art50/marking-evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
         { name: "rwa_evidence", route: u("/api/rwa/evidence"), sells: "issuance", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
-        { name: "witness_hash", route: u("/api/witness"), sells: "independent-signature", note: "deployed; the tool still answers NOT_DEPLOYED on any origin where the route 404s" },
         { name: "receipts_batch", route: u("/api/receipts/batch"), sells: "assembly" },
       ],
       how: "tools/call without x_payment → the route's 402 challenge as structuredContent (accepts[], PAYMENT-REQUIRED); pay from your wallet; call again with x_payment. Every paid tool is measurement, not certification — no tool carries or awards a trust label of any kind. The catalogue (tools/list) is free; stdio (npm csoai-gspc-mcp) stays free-only.",
     },
-    free_forever: [u("/gspc-verify"), u("/api/gspc"), u("/root.json"), u("/api/fines"), u("/api/proof?sha=<64-hex>"), u("/api/receipts/batch?from=<iso>&preview=1"), u("/receipts/root-history.json"), u("/methodology")],
+    free_forever: [u("/gspc-verify"), u("/api/gspc"), u("/root.json"), u("/api/fines"), u("/api/proof?sha=<64-hex>"), u("/api/witness/status?sha256=<64-hex>"), u("/api/receipts/batch?from=<iso>&preview=1"), u("/receipts/root-history.json"), u("/methodology")],
     invariants: {
       measurement_not_certification: "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
       never_a_grade: "No tier sells a grade, a score, a pass/fail verdict, or a place on the board.",

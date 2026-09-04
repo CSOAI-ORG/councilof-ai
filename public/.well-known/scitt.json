@@ -13,6 +13,7 @@
     ]
   },
   "do_not_template": true,
+  "implementation_status": "PLANNED",
   "door": {
     "canonical_form": "JCS (RFC 8785)-style canonical JSON \u2014 Python json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True)",
     "endpoints": {
@@ -28,12 +29,13 @@
     "axes_covered": 22,
     "lid": "22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact",
     "schema": "csoai.gspc-axes/0.5",
-    "status": "live"
+    "status": "BOARD_LIVE_SCITT_REGISTRATION_UNMEASURED"
   },
   "notes": [
     "Discovery doc for IETF SCITT",
     "Description: RFC 9943 \u2014 An Architecture for Trustworthy and Transparent Digital Supply Chains",
-    "Anyone can re-check the measurement at /gspc-verify.",
+    "No conformant CSOAI SCITT Signed Statement or transparency-service receipt is published today; the JSON statements listed below describe candidate subjects for a future integration.",
+    "Anyone can re-check the underlying CSOAI JSON signature at /gspc-verify; that verifier does not establish SCITT registration.",
     "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
   ],
   "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
@@ -99,6 +101,7 @@
   "verification": {
     "evidence": "corrections ledger content_id 20ef8ec4 (brick key), board + regulation edge-signed (board-attestation-1)",
     "live_verifier": "https://councilof.ai/gspc-verify",
+    "scitt_receipt": "NONE_PUBLISHED",
     "stranger_walk": "fetch did.json \u2192 resolve signer key \u2192 recompute canonical JSON \u2192 verify Ed25519"
   }
 }

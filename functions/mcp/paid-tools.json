@@ -50,21 +50,6 @@
       "csoai": { "paid": true, "rail": "x402", "route": "/api/rwa/evidence", "sku": "rwa_evidence", "free_preview": "preview=true", "deliverable": "one card-v0 leaf, surface public.notice, kind csoai.eater.xrpl-issuer/0.1", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
     },
     {
-      "name": "witness_hash",
-      "description": "PAID (x402 or CSOAI LTD invoice). Witness a SHA-256 digest — 'attest what you're shown' — via https://councilof.ai/api/witness: one public.notice leaf (csoai.witness.hash/0.1) in the next hourly signed public root, an RFC-3161 timestamp over the digest, and the root's Rekor + OpenTimestamps anchors. Hash-only: name a digest, or a public URL fetched once (robots honoured, never past a login, paywall or bot check → UNCHECKABLE, nothing charged). Attests existence of the digest at the root's as_of — nothing about content, legality or provenance; a self-signed card carries no legal presumption. Measurement, not certification. Status is free at /api/witness/status. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$", "description": "The digest to witness (64 lowercase hex). Or pass url." },
-          "url": { "type": "string", "description": "Optional public https URL, fetched once with our UA, hashed, never stored." },
-          "label": { "type": "string", "description": "Optional label (≤120 chars, no verdict words); appears on the leaf." },
-          "x_payment": { "type": "string", "description": "The X-PAYMENT header value signed against accepts[] from the previous 402. Omit to receive the challenge." }
-        },
-        "additionalProperties": false
-      },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/witness", "sku": "witness_hash", "free_status": "/api/witness/status?sha256=", "deliverable": "one public.notice leaf in the next hourly root + RFC-3161 reply + Rekor/OTS anchors", "deployed_by": "live on councilof.ai (verified 2026-09-03)" }
-    },
-    {
       "name": "receipts_batch",
       "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
       "inputSchema": {

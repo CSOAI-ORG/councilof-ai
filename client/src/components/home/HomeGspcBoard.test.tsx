@@ -149,6 +149,8 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
     expect(html).toContain('href="/dashboard?tab=leaderboard"');
     expect(html).toContain('href="/api/gspc"');
     expect(html).toContain("Measurement, not certification. Empty stays empty.");
+    expect(html).toContain("Witnesses bind exact root bytes and may still be pending.");
+    expect(html).not.toContain("Root is signed and witnessed.");
     expect(html).not.toMatch(/sovereign|ceasai|byzantine|\bBFT\b/i);
     expect(html).not.toMatch(/\bcertif(y|ied)\b/i);
   });

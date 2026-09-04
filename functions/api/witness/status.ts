@@ -1,7 +1,7 @@
 /**
  * GET /api/witness/status?sha256=<64hex> — free, always. The state of one witnessed digest:
  *
- *   unknown    404  never queued here (how to queue it)
+ *   unknown    404  never queued here (paid issuance is currently quarantined)
  *   queued     200  settled + timestamped, waiting for the next hourly public root
  *   witnessed  200  the root as_of + merkle root that first carried it, the leaf's card sha256,
  *                   the /api/proof inclusion path, the RFC-3161 reply, and the ONE root's anchors
@@ -46,7 +46,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: WITNESS_SCHEMA, status: "UNCHECKABLE", reason: `queue read failed: ${(e as Error).message}`, sha256 }, 503);
   }
   if (!entry || entry.schema !== ENTRY_SCHEMA) {
-    return json({ schema: WITNESS_SCHEMA, status: "unknown", sha256, queue: `${origin}/api/witness?sha256=${sha256}`, note: "Never queued on this rail. Anyone may queue it; verification stays free." }, 404);
+    return json({
+      schema: WITNESS_SCHEMA,
+      status: "unknown",
+      sha256,
+      issuance: {
+        status: "UNAVAILABLE",
+        lifecycle: "QUARANTINED_PRE_RELEASE",
+        route: `${origin}/api/witness`,
+      },
+      note: "Never queued on this rail. Paid witness issuance is unavailable until exact-byte root, signature, Rekor and OpenTimestamps release gates pass; verification stays free.",
+    }, 404);
   }
 
   const view = publicView(entry);

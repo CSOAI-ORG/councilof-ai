@@ -19,12 +19,14 @@
   {
     "slug": "ietf-scitt-rfc9424-ai-attestation",
     "id": "aeo-ietf-scitt-rfc9424-ai-attestation",
-    "title": "IETF SCITT RFC 9424 and AI Supply-Chain Attestation — Turning Model Claims Into Verifiable Evidence",
-    "body": "The IETF SCITT working group (Supply Chain Integrity, Transparency, and Trust) standardizes how claims about a digital artifact -- who built it, how it was tested, what it contains -- are recorded so any later party can verify them without trusting the claimant. RFC 9424 defines the architecture: a transparency service holds a tamper-evident ledger of signed statements about software and, increasingly, AI model artifacts, training datasets, and benchmark results. This matters for AI governance because a self-attested safety claim is weak, while a signed statement about a measured benchmark run, anchored to a specific model artifact hash, is strong. The Council of AI aligns its verified measurement credential with SCITT: each signed measurement run is recorded as a signed statement over the artifact, so a model's performance and containment posture can be checked against an immutable transparency service instead of a marketing page. Key near-term steps for operators: (1) compute and record content hashes for every shipped model and dataset; (2) attach signed measurement statements to those hashes; (3) point procurement and audit teams at the transparency ledger, so 'trusted' is replaced by 'verifiable'.",
+    "title": "IETF SCITT RFC 9943 and AI Supply-Chain Attestation — Turning Model Claims Into Verifiable Evidence",
+    "body": "RFC 9943 defines the IETF SCITT architecture for trustworthy and transparent digital supply chains. In that architecture, an issuer creates a Signed Statement as a COSE_Sign1 message; registration with a Transparency Service can add a receipt, producing a Transparent Statement. A signed JSON object is not automatically either one. Council of AI currently publishes its own Ed25519-signed JSON measurement evidence, but does not yet publish a verified COSE_Sign1 conversion or a receipt from an identified SCITT Transparency Service. That integration remains planned. Operators can prepare honestly by binding every claim to an artifact digest, preserving the measurement method and scope, and verifying issuer signatures independently; they should only describe an item as SCITT-registered when a verifiable transparency-service receipt exists.",
     "references": [
-      "RFC 9424: An Architecture for Trustworthy and Transparent Digital Supply Chains (SCITT)",
-      "IETF SCITT working group charter and AI attestation drafts",
-      "Council of AI verified measurement credential (csoai.org/verify)"
+      "RFC 9943: An Architecture for Trustworthy and Transparent Digital Supply Chains",
+      "RFC 9052: CBOR Object Signing and Encryption (COSE): Structures and Process",
+      "RFC 9942: CBOR Object Signing and Encryption (COSE) Receipts",
+      "draft-ietf-scitt-scrapi: SCITT Reference APIs",
+      "Council of AI measurement-card verifier (councilof.ai/gspc-verify)"
     ],
     "audience": [
       "ai-operator",

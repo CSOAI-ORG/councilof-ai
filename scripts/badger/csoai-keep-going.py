@@ -43,7 +43,6 @@ JOBS = [
     ("MASTER-PLAN",   "csoai-master-plan.py",                             30,  "7 vectors"),
     ("MASTER-CATALOG","csoai-master-catalog.py",                           30,  "every catalog merged"),
     ("CHECKLIST",     "csoai-checklist.py",                                60,  "what's done / not"),
-    ("COSE-WRAP",     "csoai-cose-wrap.py --limit 5",                     30,  "COSE_Sign1 wrap"),
     ("FACILITATOR",   "csoai-open-facilitator.py",                         30,  "MetaMask facilitator"),
     ("FACILITATOR-T", "csoai-x402-tester.py",                              60,  "x402 live tester"),
     ("BURNER",        "csoai-burner-wallet.py",                           5,   "burner wallet generator"),
@@ -53,6 +52,10 @@ JOBS = [
     ("COMPASS",       "csoai-compass.py",                                 60,  "9 supply-chain actions"),
     ("X402-CHECKLIST","csoai-checklist.py",                                60,  "re-check live rails"),
 ]
+
+QUARANTINED_JOBS = {
+    "COSE-WRAP": "csoai-cose-wrap.py retired 2026-09-04; historical envelopes do not verify",
+}
 
 
 def run(name: str, script: str, timeout: int, desc: str) -> dict:
@@ -117,6 +120,7 @@ def main():
         "n_jobs": len(results),
         "n_ok": n_ok,
         "n_fail": n_fail,
+        "quarantined_jobs": QUARANTINED_JOBS,
         "total_elapsed_s": round(time.time() - overall, 2),
         "results": results,
     }
