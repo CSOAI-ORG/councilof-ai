@@ -324,13 +324,27 @@ async function readGspcJson(signal?: AbortSignal): Promise<any> {
 
 export async function fetchAxes(signal?: AbortSignal): Promise<Omit<AxesState, "loading">> {
   try {
+    // ONE retry at a fixed 350ms was not enough, and the deploy proved it. /api/gspc
+    // intermittently returns Cloudflare error 1102 (Worker CPU ceiling) — measured 2/10 on
+    // 2026-09-04 — and the prerenderer proxies /api/* to production while walking 605 routes,
+    // so it hits this endpoint hard. Two consecutive misses on a single route is then likely
+    // rather than rare, and the second miss baked "HTML instead of JSON" into /insurers,
+    // which the prerender guard correctly refused to ship. That failure blocked the deploy of
+    // eight merged PRs — including the edge-cache fix for these very 1102s.
+    //
+    // Four attempts with exponential backoff (300/600/1200ms). This is a read-only GET, so
+    // retrying is safe; the only non-retryable condition is an abort, which is the caller
+    // deliberately giving up and must not be overridden.
     let j: any;
-    try {
-      j = await readGspcJson(signal);
-    } catch (first) {
-      if (signal?.aborted) throw first;
-      await new Promise((res) => setTimeout(res, 350));
-      j = await readGspcJson(signal);
+    const delays = [300, 600, 1200];
+    for (let attempt = 0; ; attempt++) {
+      try {
+        j = await readGspcJson(signal);
+        break;
+      } catch (err) {
+        if (signal?.aborted || attempt >= delays.length) throw err;
+        await new Promise((res) => setTimeout(res, delays[attempt]));
+      }
     }
     const live: any[] = Array.isArray(j?.axes) ? j.axes : [];
     if (!live.length) throw new Error("no axis in payload");
