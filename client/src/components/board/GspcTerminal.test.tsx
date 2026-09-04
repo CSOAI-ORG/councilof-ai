@@ -100,8 +100,16 @@ describe("canonical GSPC terminal evidence truth", () => {
     const noCardHtml = renderToStaticMarkup(
       <AxisDrilldown a={model} elo={EMPTY_ELO} cardIndex={EMPTY_CARDS} />,
     );
+    const unsignedCardHtml = renderToStaticMarkup(
+      <AxisDrilldown
+        a={model}
+        elo={EMPTY_ELO}
+        cardIndex={{ state: "ok", data: { cards: [{ axis: "gspc-safety", signed: false }] } }}
+      />,
+    );
     expect(withCardHtml).toContain("Verify signed card");
     expect(noCardHtml).not.toContain("Verify signed card");
+    expect(unsignedCardHtml).not.toContain("Verify signed card");
   });
 
   it("does not infer an attestation state from an evidence URL", () => {

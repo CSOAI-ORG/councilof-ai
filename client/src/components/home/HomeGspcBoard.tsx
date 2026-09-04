@@ -122,7 +122,7 @@ function AxisName({ a }: { a: GspcAxis }) {
     return <span className="text-sm font-bold text-slate-900 dark:text-emerald-50">{label}</span>;
   }
   return (
-    <a href="/dashboard?tab=leaderboard" className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
+    <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="text-sm font-bold text-slate-900 hover:text-emerald-800 dark:text-emerald-50 dark:hover:text-emerald-300">
       {label}
     </a>
   );
@@ -130,7 +130,13 @@ function AxisName({ a }: { a: GspcAxis }) {
 
 function RunEvidence({ a }: { a: GspcAxis }) {
   const evidence = axisRunEvidence(a);
-  if (!evidence) return null;
+  if (!evidence) {
+    return (
+      <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
+        No run artifact published.
+      </span>
+    );
+  }
   return (
     <span className="block text-[11px] leading-relaxed text-slate-500 dark:text-emerald-100/60">
       <a href={evidence.href} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
@@ -202,8 +208,8 @@ export function BoardStrip({
                   </td>
                   <td className={td}>
                     {a.kind === "model-comparison" ? (
-                      <a href="/dashboard?tab=leaderboard" className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
-                        Signed model-card matrix
+                      <a href={`/gspc/${encodeURIComponent(a.axis)}/`} className="font-semibold text-emerald-800 hover:underline dark:text-emerald-300">
+                        Axis detail
                       </a>
                     ) : (
                       <RunEvidence a={a} />

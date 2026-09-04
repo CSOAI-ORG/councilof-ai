@@ -249,7 +249,9 @@ export function AxisDrilldown({
   const groups = AXIS_TO_CARDGROUP[a.axis] || [a.axis];
   const cardCount =
     cardIndex.state === "ok"
-      ? (cardIndex.data?.cards || []).filter((c) => c.axis && groups.includes(c.axis)).length
+      ? (cardIndex.data?.cards || []).filter(
+          (c) => c.signed === true && c.axis && groups.includes(c.axis),
+        ).length
       : 0;
   const runEvidence = axisRunEvidence(a);
 

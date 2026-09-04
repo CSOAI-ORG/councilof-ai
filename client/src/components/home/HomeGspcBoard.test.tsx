@@ -153,9 +153,17 @@ describe("HomeGspcBoard (mocked /api/gspc)", () => {
 
   it("links model axes to model evidence while fact axes link their own run", () => {
     const html = renderToStaticMarkup(<BoardStrip axes={[comparison[1], facts[1]]} initiallyExpanded />);
-    expect(html).toContain('href="/dashboard?tab=leaderboard"');
+    expect(html).toContain('href="/gspc/safety/"');
     expect(html).toContain('href="/interop/reserve-attestation.json"');
-    expect(html).not.toContain('tab=leaderboard#');
+    expect(html).not.toContain('tab=leaderboard');
+  });
+
+  it("fails closed when a facts row has no published run artifact", () => {
+    const html = renderToStaticMarkup(
+      <BoardStrip axes={[{ axis: "future-fact", kind: "deterministic-facts", status: "MEASURED" }]} />,
+    );
+    expect(html).toContain("No run artifact published.");
+    expect(html).not.toContain('href="/dashboard?tab=leaderboard"');
   });
 
   it("renders the actual eight financial runs as exactly one signed and seven unsigned links", () => {
