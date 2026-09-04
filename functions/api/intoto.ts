@@ -72,3 +72,57 @@ export async function toDsse(
   const sig = new Uint8Array(await crypto.subtle.sign("Ed25519", key, pae(DSSE_PAYLOAD_TYPE, payload)));
   return { payloadType: DSSE_PAYLOAD_TYPE, payload: b64(payload), signatures: [{ keyid, sig: b64(sig) }] };
 }
+
+/**
+ * measurementPredicate — the in-toto predicate for a GSPC measurement, carrying the inputs a
+ * stranger needs to RECOMPUTE the number rather than trust our signature for it.
+ *
+ * WHY THIS EXISTS. A signed card fetched from the live site on 2026-09-04 had this complete body:
+ *   accuracy 0.0968 · axis care-refusal-protect · model clan-csoai-plain:latest ·
+ *   created · issuer · kind · prev · public_framing · verify
+ * No inputs_sha256, no frozen-bank reference, no item digest, no grader, no n. 0.0968 cannot be
+ * re-derived from it, so a reader's only route to believing the number is our Ed25519 key. That
+ * is trust-as-a-service welded into the artefact, and it makes the signature answer "whether"
+ * when a signature should only ever answer "when".
+ *
+ * in-toto is the right home for the fix — a predicate exists precisely to say how a subject was
+ * produced — and toInTotoStatement already defaults `predicate` to the payload, which faithfully
+ * wraps a card that still cannot be checked. This builds a predicate that names the inputs.
+ *
+ * IT DOES NOT INVENT THEM. Where an input is absent the predicate says so in `unreproducible[]`
+ * and sets `reproducible:false`, because the estate's own rule is that UNMEASURED is first-class
+ * and a gap is a finding rather than something to smooth over. A predicate that quietly omitted
+ * a missing bank digest would be worse than the card it replaces: it would look like provenance.
+ */
+export type MeasurementInputs = {
+  bank_sha256?: string;      // the frozen bank the probe ran against
+  items_sha256?: string;     // digest over the exact item ids scored
+  grader?: string;           // grader name and version, e.g. "gspc-arith@0.4.1"
+  n?: number;                // sample size behind the figure
+  rerun?: string;            // the command a stranger runs to reproduce it
+};
+
+export function measurementPredicate(
+  figure: Record<string, unknown>,
+  inputs: MeasurementInputs,
+): Record<string, unknown> {
+  const required: (keyof MeasurementInputs)[] = ["bank_sha256", "items_sha256", "grader", "n"];
+  const missing = required.filter((k) => inputs[k] === undefined || inputs[k] === null || inputs[k] === "");
+  return {
+    figure,
+    inputs: {
+      bank_sha256: inputs.bank_sha256 ?? null,
+      items_sha256: inputs.items_sha256 ?? null,
+      grader: inputs.grader ?? null,
+      n: inputs.n ?? null,
+      rerun: inputs.rerun ?? null,
+    },
+    reproducible: missing.length === 0,
+    unreproducible: missing,
+    note:
+      missing.length === 0
+        ? "every input needed to recompute this figure is named above; the signature attests WHEN, the bank attests WHAT"
+        : `cannot be recomputed from this attestation: ${missing.join(", ")} absent. The signature attests only that we published this figure at this time.`,
+    never: ["a certificate", "a grade", "a rank", "a claim that the signature makes the figure true"],
+  };
+}
