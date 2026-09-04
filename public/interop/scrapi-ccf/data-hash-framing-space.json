@@ -104,5 +104,14 @@
       "accepted_by_stock_parser": true,
       "reserialises_to_A": true
     }
-  ]
+  ],
+  "root_cause": {
+    "asymmetry": "The signature is framing-invariant; data-hash is framing-sensitive.",
+    "sig_structure_sha256": "60b4c76b84c456ed0604305075f51f6d050476177ef17be70a13a7b9abfb370f",
+    "sig_structure_bytes": 109,
+    "distinct_sig_structures_across_all_64": 1,
+    "distinct_data_hash_values_across_all_64": 64,
+    "consequence": "Two parties can agree that a signature is valid and still disagree on the data-hash of the statement they both just verified. Per RFC 9052 Section 4.4 the Sig_structure covers the protected header and the payload and not the container framing, which is exactly why one signature verifies over all 64 encodings. data-hash is taken over the wire octets, which the framing does change.",
+    "why_it_matters_for_the_wording": "The fix is not to make data-hash framing-invariant \u2014 the wire octets are what a client fetches and byte-compares, so hashing them is the right choice. The fix is to say WHICH octets. That is Konrad Gruszka's sentence, and it carries a consequence worth stating: a Transparency Service must retain the octets it received rather than a re-serialisation of them, or it cannot reproduce the data-hash it published."
+  }
 }
