@@ -143,12 +143,64 @@ const ALLOW = [
 ];
 const allowedFor = (rel) => ALLOW.find((a) => a.pages.test(rel));
 
-const walk = (dir, out = []) => {
+const walk = (dir, out = [], ext = ".html") => {
   if (!fs.existsSync(dir)) return out;
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, e.name);
-    if (e.isDirectory()) walk(p, out);
-    else if (e.name.endsWith(".html")) out.push(p);
+    if (e.isDirectory()) walk(p, out, ext);
+    else if (e.name.endsWith(ext)) out.push(p);
+  }
+  return out;
+};
+
+/**
+ * THE JSON SURFACE, and why this gate was blind to it until 2026-09-04.
+ *
+ * The doctrine is "no public $ prices". On that day the claim was found in TEN separate homes,
+ * and this gate — which walks dist/client for HTML — could see none of them, because every one
+ * lived in JSON that machines read:
+ *
+ *   · 10 .well-known game documents with  "price_usdc": 0.50  and an invented "x402_sku"
+ *   · 8 public/interop/engine-*.json with "x402_price_usdc": 0.5, likewise invented
+ *   · a Python client whose banner printed five amounts matching no SKU at all
+ *
+ * A machine-readable price is worse than one in HTML, not better: an agent acts on it without a
+ * human ever reading the page. And these are the harder kind to catch by eye, because nobody
+ * opens a .well-known file to admire it.
+ *
+ * The check is deliberately narrow — a NUMERIC value under a key that names money. A number is
+ * unambiguous in a way prose is not: "price_usdc": 0.5 cannot be a penalty, a fund size or a
+ * reader's own input, which is the ambiguity FOREIGN_MONEY exists to handle on the HTML side.
+ * Zero is allowed, because "free" is a commitment doctrine requires us to state.
+ */
+// NAMED "price", not merely denominated in a currency. The first draft of this rule also matched
+// a bare currency suffix (usd|eur|gbp|usdc) and produced 21 false positives on the real tree, all
+// of them foreign money the estate reports rather than charges:
+//   exposure_cap_eur: 15000000        the EU AI Act Art 99(4) fine ceiling
+//   distributed_asset_value_usd: …    market TVL cited from rwa.xyz, whose own file says
+//                                     "figures are theirs. We hash the page."
+//   represented_tvl.usd: …            likewise, in publisher-health
+// A gate that flags a penalty ceiling as our price gets switched off, and then it protects
+// nothing — which is the failure this file already records for the HTML side. Every genuine
+// finding across the ten homes named the field "price" (price_usdc, x402_price_usdc, price_usd),
+// so the narrower rule loses no true positive and drops all 21 false ones.
+const MONEY_KEY = /price|(^|_)(fee|cost)(_|$)/i;
+// Money-shaped names that are never OUR published price, even when they contain one of the above.
+const NOT_A_PRICE_KEY = /^(gas_?fee|network_?fee|fee_tier|penalty|fine|turnover|threshold|budget|raised|valuation)$/i;
+
+const jsonPriceFindings = (obj, rel, at = "$", out = []) => {
+  if (Array.isArray(obj)) {
+    obj.forEach((v, i) => jsonPriceFindings(v, rel, `${at}[${i}]`, out));
+    return out;
+  }
+  if (!obj || typeof obj !== "object") return out;
+  for (const [k, v] of Object.entries(obj)) {
+    const here = `${at}.${k}`;
+    if (typeof v === "number" && v > 0 && MONEY_KEY.test(k) && !NOT_A_PRICE_KEY.test(k)) {
+      out.push({ rel, text: `${k}: ${v}`, rule: "published_price", where: here });
+    } else if (typeof v === "object") {
+      jsonPriceFindings(v, rel, here, out);
+    }
   }
   return out;
 };
@@ -229,7 +281,27 @@ for (const f of files) {
   }
 }
 
-console.log(`price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)}`);
+// Machine-readable surfaces get the same rule. Scanned from the SOURCE tree (public/), because
+// these files are served as-is and a prerender is not required to reach them — the gate should
+// catch a published price before a build, not after.
+const jsonRoot = path.resolve(REPO, "public");
+const jsonFiles = walk(jsonRoot, [], ".json");
+for (const f of jsonFiles) {
+  const rel = path.relative(jsonRoot, f);
+  if (allowedFor(rel)) continue;
+  let doc;
+  try {
+    doc = JSON.parse(fs.readFileSync(f, "utf8"));
+  } catch {
+    continue; // not our problem here; a malformed JSON file is a different gate's finding
+  }
+  findings.push(...jsonPriceFindings(doc, rel));
+}
+
+console.log(
+  `price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)} ` +
+    `and ${jsonFiles.length} JSON file(s) under public/`,
+);
 if (!findings.length) {
   console.log("✓ price-gate: no published price and no unevidenced popularity claim.");
   process.exit(0);
