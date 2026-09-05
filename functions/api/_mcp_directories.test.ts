@@ -75,3 +75,57 @@ describe("every directory row names the surface its state came from", () => {
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// WHY THIS EXISTS. The mandate on directory listings is "we are listed, the
+// listing resolves, and the tool count is TRUE". The third clause is the one
+// that rots silently: nothing on Smithery re-reads our tool definitions, so a
+// tool added or dropped here stays as it was there until someone republishes.
+// csoai/gspc still advertises `measure` and `jail-probe`, which this door
+// answers with -32601 "mill-tool dropped". These assertions re-derive the
+// served set from the two canonical files the door actually reads, so the
+// census cannot quietly disagree with the code it describes.
+// ---------------------------------------------------------------------------
+describe("the recorded tool counts are derived from the door, not typed", () => {
+  const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+  const free: string[] = J("../mcp/gspc-tools.json").tools.map((t: { name: string }) => t.name);
+  const paid: string[] = J("../mcp/paid-tools.json").tools.map((t: { name: string }) => t.name);
+  const row = J("../../public/interop/mcp-directories.json").directories.find(
+    (r: { id: string }) => r.id === "smithery",
+  );
+
+  it("served counts match the canonical tool-definition files", () => {
+    expect(row.tool_counts.served_by_the_door.free).toBe(free.length);
+    expect(row.tool_counts.served_by_the_door.paid).toBe(paid.length);
+    expect(row.tool_counts.served_by_the_door.total).toBe(free.length + paid.length);
+    expect(row.tool_counts.served_by_the_door.names).toEqual([...free, ...paid]);
+  });
+
+  it("nothing recorded as declared-not-served is in fact served", () => {
+    const servedNames = new Set([...free, ...paid]);
+    for (const l of row.tool_counts.listings as Array<Record<string, any>>) {
+      for (const n of l.declared_not_served ?? []) {
+        expect(servedNames.has(n), `${n} is recorded as not served but the door serves it`).toBe(false);
+      }
+    }
+  });
+
+  it("nothing recorded as served-not-declared has been dropped from the door", () => {
+    const servedNames = new Set([...free, ...paid]);
+    for (const l of row.tool_counts.listings as Array<Record<string, any>>) {
+      for (const n of l.served_not_declared ?? []) {
+        expect(servedNames.has(n), `${n} is recorded as served but the door no longer serves it`).toBe(true);
+      }
+    }
+  });
+
+  it("a listing whose declared names are all real is not marked FALSE", () => {
+    const servedNames = new Set([...free, ...paid]);
+    for (const l of row.tool_counts.listings as Array<Record<string, any>>) {
+      const unreal = (l.declared_not_served ?? []).filter((n: string) => !servedNames.has(n));
+      if (l.verdict === "FALSE") {
+        expect(unreal.length, `${l.qualifiedName} is marked FALSE with no unserved tool named`).toBeGreaterThan(0);
+      }
+    }
+  });
+});
