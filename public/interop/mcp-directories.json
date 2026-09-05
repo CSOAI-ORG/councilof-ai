@@ -117,6 +117,30 @@
         ],
         "detail": "Glama publishes one page per tool under the Council of AI GSPC connector: 11 pages, and the 11 names are IDENTICAL to the set the door serves (7 free + 4 paid), with nothing extra and nothing missing. This is the only directory whose tool count is exactly right. It is also the only one that advertises the four x402-metered tools — Smithery's accurate listing (csoai/gspc-mcp) shows the free seven and hides the paid four, and its other listing (csoai/gspc) advertises four tools the door refuses by name.",
         "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
+      },
+      "tool_count_audit": {
+        "scope": "45 of the 317 /mcp/servers/ pages sampled; 12 of those declare a tool count; 10 map to a package the registry names",
+        "method": "For each, the wheel for the EXACT version the registry names was downloaded from PyPI and its decorated tool functions counted (@<x>.tool(...) immediately preceding a def). Declared-vs-registered, not declared-vs-tools/list: no server was started and no tool was called.",
+        "checked": 10,
+        "match": 9,
+        "mismatch": 1,
+        "mismatches": [
+          {
+            "package": "agent-identity-trust-mcp",
+            "declared": 19,
+            "registered": 5,
+            "tools": [
+              "register_agent_identity",
+              "issue_credential",
+              "verify_credential",
+              "get_agent_reputation",
+              "list_registered_agents"
+            ],
+            "detail": "PyPI's latest IS the version the registry names (1.0.13) and the GitHub repo's server.py registers the same five. Package and repository agree; the directory does not. Glama's figure is not derived from anything we publish."
+          }
+        ],
+        "counter_defect": "The first pass reported 3 mismatches. Two were MY counter's fault: these packages ship an auth_middleware.py carrying a template example decorated as a tool and named `my_tool`, which is not a registered server tool. Excluding that file, crypto-tracker-ai-mcp (4) and competitor-monitor-ai-mcp (11) both match Glama exactly. An off-by-one that appears in more than one package at once is a defect in the instrument before it is a defect in the subject.",
+        "probe": "download the wheel for the registry-named version and count @<x>.tool( decorators outside auth_middleware.py"
       }
     },
     {
@@ -184,7 +208,8 @@
     "2026-09-05: mcp-so and pulsemcp both sat at UNKNOWN because their APIs were missing or dead (404 / 410). A SITEMAP IS A DIRECTORY'S OWN INDEX OF WHAT IT LISTS and answered both: mcp.so 0 of 27,929, pulsemcp 213 of 23,833. Reach for the sitemap before recording UNKNOWN — and note the rendered mcp.so search showed '2 csoai mentions' that the sitemap proves were query echo.",
     "2026-09-05: the smithery row's own probe went stale without the listing changing. `?q=csoai&pageSize=50` returned csoai/gspc and 49 unrelated servers but NOT csoai/gspc-mcp, which is alive and returns 200 with seven tools at its detail endpoint. A search index and a detail endpoint are different surfaces, and a row whose evidence says '2 servers' must be probed where both are visible. Had the row been re-derived from that search it would have recorded a delisting that never happened.",
     "2026-09-05: csoai/gspc advertises four tools the door does not serve, two of which it explicitly refuses by name. A directory listing is not self-correcting — nothing on Smithery re-reads our tool definitions, so a tool dropped here stays advertised there until someone re-publishes. Dropping a tool is therefore a DISTRIBUTION change, not only a code change.",
-    "2026-09-05: this row was published claiming '367 csoai connector URLs shaped /mcp/connectors/...'. The SHAPE was wrong. Glama carries 368 csoai URLs in two different shapes — 317 /mcp/servers/CSOAI-ORG/<name> and only 51 /mcp/connectors/io.github.CSOAI-ORG/<name> — and 11 of those 51 are per-tool pages, not servers. A count taken across a sitemap without reading the paths it counted collapsed three distinct kinds of page into one number. A guessed /mcp/servers/io.github.CSOAI-ORG/<name> URL 404s, which is a 404 on a path nobody publishes and proves nothing; the sitemap publishes both real shapes."
+    "2026-09-05: this row was published claiming '367 csoai connector URLs shaped /mcp/connectors/...'. The SHAPE was wrong. Glama carries 368 csoai URLs in two different shapes — 317 /mcp/servers/CSOAI-ORG/<name> and only 51 /mcp/connectors/io.github.CSOAI-ORG/<name> — and 11 of those 51 are per-tool pages, not servers. A count taken across a sitemap without reading the paths it counted collapsed three distinct kinds of page into one number. A guessed /mcp/servers/io.github.CSOAI-ORG/<name> URL 404s, which is a 404 on a path nobody publishes and proves nothing; the sitemap publishes both real shapes.",
+    "2026-09-05: a first pass at auditing Glama's tool counts reported 3 of 10 wrong. Two of the three were the COUNTER's error, not Glama's: several packages ship an auth_middleware.py containing a template example decorated as a tool and named `my_tool`, and a naive regex counted it. Both wrong rows were off by exactly one, in the same direction, in different packages — the signature of an instrument defect rather than a subject defect. Excluding that file the score is 9 of 10, and the one real mismatch is off by fourteen."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
