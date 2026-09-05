@@ -2,16 +2,26 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `3bbfccb033e9db35061c9f7d2027478e230ff3ea` (origin/master, 2026-09-05)
-**Head:** `f2b7e167f98f123a2701d9b466aac249255ba7cf` — 11 commits, 14 files changed, 1259 insertions(+), 103 deletions(-)
+**Rebased onto:** `45d6c3dd68ffa932e9f037eccc0417f7b689f964` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `18551df77dd1b74256fb8e06117e734a0e6bc8f1` — 13 commits, 22 files changed, 1931 insertions(+), 107 deletions(-)
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
-**RE-REBASE BEFORE APPLYING.** master moved twice during this lane. Both times
+**RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
 `git diff origin/master..HEAD` began showing other lanes' work as REVERSIONS — the second time
-573 files and 12,567 deletions, which would have wiped `free-door`, the public-root adapters and
-the research alignment had anyone applied it. Rebased again before packaging.
+573 files and 12,567 deletions, and the third time 972 files and 42,620 deletions — which
+would have wiped `free-door`, the public-root adapters, the research alignment, the nine game
+pages, the XRPL settlement work and the ChatGPT/dashboard feature set had anyone applied it.
+Rebased again before packaging; verified again after.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~14 files and only the paths
+**MASTER MOVES EVERY ~100 SECONDS.** Measured over the last 40 commits: median gap 100s
+(1.7 min), minimum 0s. During this lane's final rebase master advanced again mid-rebase —
+`45d6c3dd6` is 17 seconds newer than the `c47a1e54f` I started the rebase against, and the
+rebase landed on the newer tip. So the diff in this bundle is guaranteed to be stale by the
+time you read it. Re-rebasing is not a precaution here, it is the only way to get a diff
+that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
+before you judge the diffstat.
+
+Check this first: `git diff --stat origin/master..HEAD` must show ~22 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -30,11 +40,14 @@ re-rebase.
 | `44a3664c0` | install: the surfaces are honest, and the probe that said otherwise was wrong |
 | `4935824d3` | AxisProof: name the cohort table for screen readers |
 | `f2b7e167f` | handoff: bring the bundle up to the current head |
+| `6e8f15103` | handoff: master moved twice — re-rebase before applying |
+| `50f1fdf52` | gspc: the published Hub results were served and never rendered |
 
 ## Files
 
 ```
 capabilities/cohort-provenance.test.mjs
+capabilities/hub-results.test.mjs
 capabilities/gspc-parity.test.mjs
 capabilities/install-truth.test.mjs
 capabilities/registry.json
@@ -42,6 +55,12 @@ capabilities/registry.test.mjs
 capabilities/tool-catalogue-parity.test.mjs
 capabilities/transport-availability.test.mjs
 client/src/components/AxisProof.test.tsx
+client/src/components/hub/HubResultsPane.tsx
+client/src/components/hub/HubResultsPane.test.tsx
+client/src/components/hub/useHubCards.ts
+client/src/components/DashboardPane.tsx
+client/src/components/DashboardLayout.test.ts
+client/src/components/lobby/tabs.ts
 client/src/components/AxisProof.tsx
 client/src/components/board/useGspcBoard.ts
 client/src/routes.duplicate.test.ts
@@ -52,10 +71,10 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 
 ## Tests
 
-    npx vitest run client/src                                  110 files, 595 passed
+    npx vitest run client/src                                  111 files, 607 passed
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
-      node --test capabilities/*.test.mjs                      25 passed, 0 failed
+      LIVE_HUB=1 node --test capabilities/*.test.mjs           30 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -63,6 +82,8 @@ Every guard was proven to fail before being trusted:
 - routes — injecting a third duplicate → fails naming `/dashboard`
 - cohort render — adding a file referencing `per_model` → fails naming the file
 - parity — both recorded gap lists were WRONG on first run and the live test corrected them
+- hub results — deleting the `status !== "MEASURED"` check in `displayAccuracy` fails three
+  tests, one naming the consequence: an UNMEASURED cell's number rendered as a result
 
 ## Screenshot
 
