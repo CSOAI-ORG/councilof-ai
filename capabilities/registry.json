@@ -979,7 +979,18 @@
         "availability": "VERIFIED",
         "reason": "csoai-gspc-mcp is published on npm at 0.2.1 (4 versions) and the published tarball is BYTE-IDENTICAL to mcp/gspc-server: index.mjs, gspc-tools.json, verify-card.mjs and paid-tools.json all match. This is the SDK/plugin surface a user actually installs. Drift is the default failure here because publishing needs the owner's Bypass-2FA token (the account is WebAuthn, so --otp= can never work), so anyone can change the repo and nobody can republish — guarded by capabilities/npm-package-parity.test.mjs.",
         "endpoint": "https://registry.npmjs.org/csoai-gspc-mcp"
+      },
+      "governance_mcp_npm": {
+        "availability": "DRIFTED",
+        "reason": "csoai-governance-mcp: repo is 0.1.1, npm serves 0.1.0. docs/PHASE3_GO_LIVE.md records `npx -y csoai-governance-mcp` as a live install path, so users get 0.1.0. The ONLY change in 0.1.1 is a truth fix: 0.1.0's tool description advertises 'the 377 governed CSOAI tools / MCPs' and 0.1.1 replaces that hardcoded count with 'published governed tools'. Every current install therefore still serves the stale count. Publishing is owner-gated (WebAuthn account, needs a Bypass-2FA token; --otp= can never work).",
+        "endpoint": "https://registry.npmjs.org/csoai-governance-mcp"
+      },
+      "card_verifier_npm": {
+        "availability": "UNAVAILABLE",
+        "reason": "gspc-card-verifier 1.0.0 exists at packages/gspc-card-verifier with a `gspc-verify` bin and a files[] manifest, and is NOT published on npm under that name or any @csoai scope tried. Nothing may describe it as installable.",
+        "endpoint": "https://registry.npmjs.org/gspc-card-verifier"
       }
-    }
+    },
+    "scope_note": "Eleven package.json files ship in this repo. Two names are published (csoai-gspc-mcp, csoai-governance-mcp); the other nine are not. An earlier version of this record assessed ONE package and called the SDK surface covered — it was not, and widening the check is what surfaced the governance-mcp drift."
   }
 }

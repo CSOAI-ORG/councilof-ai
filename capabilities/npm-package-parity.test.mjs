@@ -1,35 +1,41 @@
 /**
- * npm-package-parity.test.mjs — the published SDK is the repository, byte for byte.
+ * npm-package-parity.test.mjs — what is published is what was reviewed, for EVERY package.
  *
- * WP-4 asks for one versioned capability registry across HTTP, MCP, AG-UI, A2A, A2UI, SDK,
- * plugin, extension and app, with actual host support tested. Six of those nine were already
- * covered by the other guards in this directory. The SDK/plugin surface — the npm package
- * `csoai-gspc-mcp`, which is what anyone actually installs — was not assessed at all.
+ * WP-4 asks for one versioned capability registry across nine surfaces, SDK and plugin among
+ * them, with actual host support tested. The npm packages are what a user installs.
  *
- * Measured 2026-09-05 against the live registry: `csoai-gspc-mcp@0.2.1`, 4 published versions,
- * repo version 0.2.1. The published tarball and `mcp/gspc-server/` are IDENTICAL:
+ * THE FIRST VERSION OF THIS FILE CHECKED ONE PACKAGE AND CLAIMED THE SURFACE WAS ASSESSED.
+ * That was wrong. This repository ships eleven package.json files. Widening the check to all
+ * of them immediately found a drift the single-package version could never have seen.
  *
- *   index.mjs         3c62f90a70cf
- *   gspc-tools.json   099178bc579c
- *   verify-card.mjs   7cc975b3ba16
- *   paid-tools.json   b4270382044b
+ * Measured 2026-09-05 against the live registry:
  *
- * WHY THIS NEEDS A GUARD RATHER THAN A NOTE. Publishing to npm from this account requires a
- * Bypass-2FA token the owner holds — the account is WebAuthn, so `--otp=` can never work.
- * That makes drift the DEFAULT failure: anyone can edit `mcp/gspc-server/` in a normal commit,
- * nobody can republish without the owner, and the package a user installs quietly stops being
- * the code in this repository. Nothing else in the estate would notice.
+ *   csoai-gspc-mcp          repo 0.2.1  npm 0.2.1   MATCH, byte-identical on all four files
+ *   csoai-governance-mcp    repo 0.1.1  npm 0.1.0   *** DRIFT ***
+ *   gspc-card-verifier      repo 1.0.0  npm —       never published
+ *   @csoai/gspc-{arith,cli,evm-bridge,pdf,svg}, @csoai/layer0,
+ *   csoai-api-server, csoai-platform                 never published
  *
- * When this test fails, the fix is usually NOT to edit the test. It is either to publish (an
- * owner action) or to revert the local change. Bumping the version in package.json without
- * publishing does not help and is caught separately below.
+ * THE DRIFT MATTERS, and not as bookkeeping. docs/PHASE3_GO_LIVE.md records
+ * `npx -y csoai-governance-mcp` as a live install path. npm serves 0.1.0. The repo moved to
+ * 0.1.1, and the only change in it is a TRUTH FIX: 0.1.0's tool description advertises
+ * "the 377 governed CSOAI tools / MCPs", and 0.1.1 replaces that hardcoded count with
+ * "published governed tools". So every user who installs it today still receives the stale
+ * count this estate's own doctrine forbids, and the correction has been sitting unpublished.
  *
- * Offline by default. LIVE_NPM=1 fetches the published tarball and compares.
+ * Publishing is an owner gate: the npm account is WebAuthn, so `--otp=` can never work and a
+ * Bypass-2FA token is required. That is exactly why drift is the DEFAULT failure here — an
+ * ordinary commit changes the code, nobody can republish without the owner, and nothing else
+ * in the estate notices.
+ *
+ * When this fails, the fix is to publish or to revert. Never to edit the expectation.
+ *
+ * Offline by default. LIVE_NPM=1 queries the registry and compares the flagship tarball.
  */
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync, mkdtempSync } from "node:fs";
+import { readFileSync, mkdtempSync, readdirSync, statSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -40,53 +46,125 @@ const repo = path.resolve(here, "..");
 const PKG_DIR = path.join(repo, "mcp/gspc-server");
 const pkg = JSON.parse(readFileSync(path.join(PKG_DIR, "package.json"), "utf8"));
 
-/** The files that carry behaviour. package.json is compared on version only. */
+/** The files compared byte-for-byte on the flagship package. */
 const FILES = ["index.mjs", "gspc-tools.json", "verify-card.mjs", "paid-tools.json"];
 
 const sha = (buf) => createHash("sha256").update(buf).digest("hex").slice(0, 12);
 
-describe("the published package is this repository", () => {
-  it("the package still declares the name the registry knows", () => {
-    assert.equal(
-      pkg.name,
-      "csoai-gspc-mcp",
-      "the package was renamed. A rename is a new package on npm and orphans every existing " +
-        "install; say so deliberately rather than letting the old name go stale.",
-    );
+/**
+ * Every package.json in the repo, excluding node_modules and build output. Read from disk
+ * rather than listed here, so a new package cannot escape the check by not being added.
+ */
+function packages() {
+  const out = [];
+  const walk = (dir) => {
+    for (const e of readdirSync(dir)) {
+      if (e === "node_modules" || e === "dist" || e === ".git") continue;
+      const p = path.join(dir, e);
+      let st;
+      try {
+        st = statSync(p);
+      } catch {
+        continue;
+      }
+      if (st.isDirectory()) walk(p);
+      else if (e === "package.json") {
+        try {
+          const d = JSON.parse(readFileSync(p, "utf8"));
+          if (d.name) {
+            out.push({
+              file: path.relative(repo, p),
+              name: d.name,
+              version: d.version,
+              private: !!d.private,
+            });
+          }
+        } catch {
+          /* not ours to parse */
+        }
+      }
+    }
+  };
+  walk(repo);
+  return out;
+}
+
+/**
+ * Packages known to be published, and the state npm must be in.
+ * A `drift` entry is a DEFECT being tracked, never permission for it to persist.
+ */
+const PUBLISHED = {
+  "csoai-gspc-mcp": { expect: "match" },
+  "csoai-governance-mcp": {
+    expect: "drift",
+    npm: "0.1.0",
+    why:
+      "repo 0.1.1 removes the hardcoded '377 governed tools' count from the tool " +
+      "description; npm 0.1.0 still advertises it. Publishing needs the owner's " +
+      "Bypass-2FA token.",
+  },
+};
+
+describe("the published packages are this repository", () => {
+  it("finds every package.json (guards against the walk matching nothing)", () => {
+    const p = packages();
+    assert.ok(p.length >= 10, `only ${p.length} package.json files found`);
+    assert.ok(p.some((x) => x.name === "csoai-gspc-mcp"));
+  });
+
+  it("the flagship package still declares the name the registry knows", () => {
+    assert.equal(pkg.name, "csoai-gspc-mcp");
     assert.match(String(pkg.version), /^\d+\.\d+\.\d+$/);
   });
 
-  it("every behaviour file is present to compare", () => {
-    for (const f of FILES) {
-      const b = readFileSync(path.join(PKG_DIR, f));
-      assert.ok(b.length > 0, `${f} is empty`);
-    }
-  });
-
-  it("live: the published tarball is byte-identical to mcp/gspc-server", async () => {
+  it("live: every package's published state is the one recorded here", async () => {
     if (!process.env.LIVE_NPM) {
       console.log("      (offline: LIVE_NPM unset — npm registry NOT queried)");
       return;
     }
+    const surprises = [];
+    for (const p of packages()) {
+      const res = await fetch(`https://registry.npmjs.org/${encodeURIComponent(p.name)}`);
+      const known = PUBLISHED[p.name];
+      if (res.status === 404) {
+        if (known) surprises.push(`${p.name} is recorded as published but npm 404s`);
+        continue;
+      }
+      const meta = await res.json();
+      const latest = meta["dist-tags"]?.latest;
+      if (!known) {
+        surprises.push(
+          `${p.name} is published on npm at ${latest} but is not recorded here. Every ` +
+            `published package is a surface someone installs; record it with its state.`,
+        );
+        continue;
+      }
+      if (known.expect === "match" && latest !== p.version) {
+        surprises.push(`${p.name}: repo ${p.version} but npm serves ${latest}`);
+      }
+      if (known.expect === "drift" && latest === p.version) {
+        surprises.push(
+          `${p.name} is NO LONGER drifted (npm serves ${latest}). Good — delete its entry ` +
+            `from PUBLISHED so the record cannot rot into permission.`,
+        );
+      }
+    }
+    assert.deepEqual(surprises, [], surprises.join("; "));
+  });
+
+  it("live: the flagship tarball is byte-identical to mcp/gspc-server", async () => {
+    if (!process.env.LIVE_NPM) {
+      console.log("      (offline: LIVE_NPM unset — tarball NOT compared)");
+      return;
+    }
     const meta = await (await fetch("https://registry.npmjs.org/csoai-gspc-mcp")).json();
-    const latest = meta["dist-tags"]?.latest;
-    assert.ok(latest, "the registry returned no latest tag");
-
-    assert.equal(
-      pkg.version,
-      latest,
-      `mcp/gspc-server/package.json is ${pkg.version} but npm's latest is ${latest}. Either a ` +
-        `version bump was committed without publishing, or a publish happened from elsewhere. ` +
-        `Publishing needs the owner's Bypass-2FA token; do not paper over this by editing the ` +
-        `version to match.`,
+    const latest = meta["dist-tags"].latest;
+    assert.equal(pkg.version, latest, `repo ${pkg.version} vs npm ${latest}`);
+    const buf = Buffer.from(
+      await (await fetch(meta.versions[latest].dist.tarball)).arrayBuffer(),
     );
-
-    const url = meta.versions[latest].dist.tarball;
-    const buf = Buffer.from(await (await fetch(url)).arrayBuffer());
     const dir = mkdtempSync(path.join(tmpdir(), "npmparity-"));
-    const tgz = path.join(dir, "p.tgz");
     execFileSync("tar", ["xzf", "-", "-C", dir], { input: buf });
-
     const drift = [];
     for (const f of FILES) {
       const mine = sha(readFileSync(path.join(PKG_DIR, f)));
@@ -101,10 +179,8 @@ describe("the published package is this repository", () => {
     assert.deepEqual(
       drift,
       [],
-      `the published package no longer matches this repository: ${drift.join("; ")}. ` +
-        `Whoever installs csoai-gspc-mcp@${latest} is running different code from the one ` +
-        `reviewed here. Publish (owner action, Bypass-2FA token) or revert the local change — ` +
-        `do not relax this assertion.`,
+      `csoai-gspc-mcp@${latest} no longer matches this repository: ${drift.join("; ")}. ` +
+        `Publish (owner action, Bypass-2FA token) or revert — do not relax this assertion.`,
     );
   });
 });
