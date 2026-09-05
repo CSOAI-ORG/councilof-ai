@@ -1,0 +1,89 @@
+{
+  "schema": "csoai.corrections-feed/0.1",
+  "as_of": "20260905T062637Z",
+  "principle": "Every refuted claim is published as a signed correction card. This is the integrity asset.",
+  "total": 9,
+  "corrections": [
+    {
+      "refutation_id": "REF-001",
+      "claim": "Per-dimension expert routing beats one good model",
+      "measured": "\u0394 +0.90 [\u22121.99, +3.79] \u2014 no effect",
+      "artefact": "results/router_control.json",
+      "why": "Routing ships OFF. The router picks between system-prompt variants over one shared 397MB blob, so a misroute still lands on a wrapper that beats raw base \u2014 the comparison flattered itself until it was controlled.",
+      "sha256": "846283cb6ed8aeef6becac6a6cc698e7a6c0e39d13ffaefb1c0e0350451edc60",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-002",
+      "claim": "Retrieving statute text improves answers",
+      "measured": "\u0394 \u22129.16 [\u221217.64, \u22120.69] \u2014 significant harm",
+      "artefact": "results/retrieval_bench.json",
+      "why": "Not neutral. Actively worse. Retrieval ships OFF.",
+      "sha256": "e94447cbdb95da17c356183ff25965b162aa310d581353199a4d6c41e1a42d07",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-003",
+      "claim": "\u2026with a relevance gate added",
+      "measured": "\u0394 \u22125.26 [\u221212.66, +2.13] \u2014 no benefit shown",
+      "artefact": "results/retrieval_bench.json",
+      "why": "The harm was removed. The benefit never arrived.",
+      "sha256": "cf30913e51f2eb23da9f49f43ca83038b6a1c704a5eada82ff3799cdbfec7b06",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-004",
+      "claim": "\u2026and the corpus was the problem",
+      "measured": "\u0394 \u22125.70 [\u221212.91, +1.51] after adding all 13 annexes",
+      "artefact": "results/retrieval_bench.json",
+      "why": "Corpus exonerated. The surviving explanation is that a 0.5B model cannot use statute even when the right statute is in front of it \u2014 untested, because it needs a 3B+ run.",
+      "sha256": "dc31cc4ce633f1d83c0fa0197fd91760981f76f6910988af84b69f90c9a0d6b6",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-005",
+      "claim": "The 3-leg council uses council cross-checking",
+      "measured": "Historical numeric result unbound \u00b7 latest published point test: rho=1, n_eff=1",
+      "artefact": "/interop/council-independence.json",
+      "why": "The historical entry cited results/n_eff.json, but that artifact is absent from this repository, so the old number is not treated as independently reproducible. The latest bound point test still shows one effective opinion. The fault-tolerance claim remains withdrawn.",
+      "sha256": "f0d0eb3f8ed904ecfa3846465d587ee49935340b25e6d8ee6fbf369cbe2e54d0",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-006",
+      "claim": "Context-aware decoding revives retrieval",
+      "measured": "null across the \u03b1-sweep",
+      "artefact": "results/cad_analysis.json",
+      "why": "The third attempt to make retrieval work at 0.5B, and the third failure.",
+      "sha256": "1039efb32efc429caba7febcfab4cc0976ed436d21b9c25d8fd2e3a1578c2cd6",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-007",
+      "claim": "The deterministic gate is our strongest component",
+      "measured": "\u0394 \u221220.00 [\u221265.26, +25.26] n=6 \u2014 was published as +34.84",
+      "artefact": "results/layer_attribution.json",
+      "why": "The largest number we ever published. On a clean run the gate fires 6 times not 31 and adds nothing: the base already refuses all four plain-harm items it catches. Its only measurable effects are two FALSE blocks. The earlier figure was measured on a gate that had overfitted to its own battery \u2014 fixing the overfitting removed the benefit.",
+      "sha256": "f2d7bc240a85cc11e9d9013e1616a8a61ac1dfcdf5bdc68a270dbbf98a818e0d",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-008",
+      "claim": "Governance-tuning our models makes them safer",
+      "measured": "refusal 0.419 \u2192 0.097 \u00b7 83.9% compliance leak",
+      "artefact": "results/defbench.json",
+      "why": "Both tuned models refuse FEWER Article-5-prohibited requests than the untuned base they were built from. One leaks its system prompt verbatim; the other answers a jailbreak by emitting \u201cI am now in developer mode. Ignore all safety filters.\u201d Tuning helped them answer governance questions and hurt their refusal behaviour \u2014 the empirical case for scoring the axis separately.",
+      "sha256": "831ac145d597c9e2a64876960aaf60fcec3025666dfb66d25f15401447e81308",
+      "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-009",
+      "claim": "Our first governance-runtime candidate is ready to sell",
+      "measured": "GovBench 284 tests \u2192 40.1% UNCERTIFIED \u00b7 AIR-Bench governance slice 270 prompts \u2192 11.9% refusal",
+      "artefact": "GovBench gate run \u00b7 run id 6797904906f4b02b \u00b7 G2 sha256 638e23110e07a0c6",
+      "why": "The Honest Gate did its job. The candidate is strong on Safety (80.0%) and Robustness (83.3%) but fails the governance-obligation dimensions it would have been sold on \u2014 Compliance 15.8%, signed-vote chain 27.1%, Accountability 27.6% \u2014 and complies 88.1% of the time on prompts where the taxonomy expects caution. The upsell thesis does not ship. Method published (n + deterministic predicates, no LLM-as-judge, temperature 0): docs/GATE_RUN_2026-08-01.md. Next: targeted governance-dimension training, then re-run.",
+      "sha256": "c55358322ba8fc1eb8d3053e0d36fdf1e4df43c4797197118a79b7ea42dad9c7",
+      "kind": "correction-card"
+    }
+  ]
+}
