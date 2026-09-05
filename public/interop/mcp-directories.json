@@ -2,8 +2,8 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260905T133000Z",
-  "principle": "Where the fleet is listed, and where it is not. Every row is a probe result taken at as_of, never an assumption. NOT_LISTED is stated rather than omitted.",
+  "as_of": "20260905T174855Z",
+  "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
     "registry_version_entries": 1272,
@@ -17,15 +17,57 @@
       "name": "Official Model Context Protocol registry",
       "url": "https://registry.modelcontextprotocol.io",
       "state": "LISTED",
-      "evidence": "io.github.CSOAI-ORG/gspc isLatest v1.2.0; remote https://councilof.ai/mcp returns 200",
-      "probe": "curl -s 'https://registry.modelcontextprotocol.io/v0/servers?search=gspc'"
+      "evidence": "330 isLatest servers under search=CSOAI-ORG; 25 of them name a repository that does not exist (see csoai/mcp-registry-self-audit)",
+      "probe": "curl -s 'https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100' and page nextCursor"
     },
-    { "id": "smithery", "name": "Smithery", "url": "https://smithery.ai", "state": "NOT_LISTED", "evidence": "no estate slug records a Smithery listing", "probe": "slug scan of /.well-known/index.json and /interop/index.json" },
-    { "id": "glama", "name": "Glama MCP", "url": "https://glama.ai/mcp", "state": "NOT_LISTED", "evidence": "no estate slug records a Glama listing", "probe": "slug scan" },
-    { "id": "pulsemcp", "name": "PulseMCP", "url": "https://pulsemcp.com", "state": "NOT_LISTED", "evidence": "no estate slug records a PulseMCP listing", "probe": "slug scan" },
-    { "id": "mcp-so", "name": "mcp.so", "url": "https://mcp.so", "state": "NOT_LISTED", "evidence": "no estate slug records an mcp.so listing", "probe": "slug scan" },
-    { "id": "cline", "name": "Cline MCP marketplace", "url": "https://github.com/cline/mcp-marketplace", "state": "NOT_LISTED", "evidence": "no estate slug records a Cline listing", "probe": "slug scan" },
-    { "id": "docker-mcp", "name": "Docker MCP catalog", "url": "https://hub.docker.com/mcp", "state": "NOT_LISTED", "evidence": "no estate slug records a Docker MCP listing", "probe": "slug scan" }
+    {
+      "id": "smithery",
+      "name": "Smithery",
+      "url": "https://smithery.ai",
+      "state": "NOT_LISTED",
+      "evidence": "zero csoai mentions on a Playwright-RENDERED search page; smithery.ai/api/servers?q= answers 404 so the rendered page is the only honest check",
+      "probe": "playwright: goto https://smithery.ai/?q=csoai, networkidle, count /csoai/i in document.body.innerText"
+    },
+    {
+      "id": "glama",
+      "name": "Glama MCP",
+      "url": "https://glama.ai/mcp",
+      "state": "LISTED",
+      "evidence": "27 csoai mentions and 85 csoai links on a Playwright-RENDERED search. The previous NOT_LISTED was produced by scanning our OWN slug files, which cannot see a third-party directory",
+      "probe": "playwright: goto https://glama.ai/mcp/servers?query=csoai, networkidle, count anchors whose text or href matches /csoai/i"
+    },
+    {
+      "id": "pulsemcp",
+      "name": "PulseMCP",
+      "url": "https://pulsemcp.com",
+      "state": "UNKNOWN",
+      "evidence": "api.pulsemcp.com/v0beta/servers answers 410 Gone, so the documented probe no longer exists. Not checked by another method, therefore UNKNOWN and not NOT_LISTED",
+      "probe": "curl -s -o /dev/null -w '%{http_code}' 'https://api.pulsemcp.com/v0beta/servers?query=csoai'  -> 410"
+    },
+    {
+      "id": "mcp-so",
+      "name": "mcp.so",
+      "url": "https://mcp.so",
+      "state": "UNKNOWN",
+      "evidence": "2 csoai mentions and 0 csoai links on a rendered search \u2014 present in text, nothing that resolves. Neither LISTED nor NOT_LISTED is supported by that",
+      "probe": "playwright: goto https://mcp.so/search?q=csoai, networkidle, count mentions and anchors"
+    },
+    {
+      "id": "cline",
+      "name": "Cline MCP marketplace",
+      "url": "https://github.com/cline/mcp-marketplace",
+      "state": "NOT_LISTED",
+      "evidence": "GitHub code search over cline/mcp-marketplace returns total_count 0 and the README carries no csoai mention. A rendered search page showed 9 'mentions' \u2014 that was the UI echoing the query, not a listing",
+      "probe": "gh api 'search/code?q=csoai+repo:cline/mcp-marketplace' --jq .total_count  -> 0"
+    },
+    {
+      "id": "docker-mcp",
+      "name": "Docker MCP catalog",
+      "url": "https://hub.docker.com/mcp",
+      "state": "LISTED",
+      "evidence": "Docker Hub search API returns 1 repository: csoai/meok-sovereign. The previous NOT_LISTED was a slug scan of our own files",
+      "probe": "curl -s 'https://hub.docker.com/v2/search/repositories/?query=csoai' | jq '.count, .results[].repo_name'  -> 1, csoai/meok-sovereign"
+    }
   ],
   "known_defects": [
     {
@@ -47,12 +89,18 @@
       "severity": "informational",
       "detail": "A 2026-09-02 brief advises keeping gspc v1.0.0. That version advertises csoai-gspc-mcp.nicholastempleman.workers.dev/mcp, which returns 404. isLatest is v1.2.0 and points at councilof.ai/mcp, which returns 200.",
       "probe": "curl -o /dev/null -w '%{http_code}' https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
-    }
+    },
+    "2026-09-05: glama and docker-mcp were published as NOT_LISTED and were LISTED. Cause: state derived from a scan of our own slug files, not from the directory. Corrected with rendered/API probes, each row now carries the command that produced it.",
+    "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
     "NOT_LISTED means no listing was found at as_of, not that a submission was refused.",
     "No download or install count is claimed. Package-registry download totals are dominated by mirror traffic and are not adoption."
   ],
-  "links": { "self": "https://councilof.ai/interop/mcp-directories.json", "mcp_door": "https://councilof.ai/mcp", "live_board": "https://councilof.ai/api/gspc" }
+  "links": {
+    "self": "https://councilof.ai/interop/mcp-directories.json",
+    "mcp_door": "https://councilof.ai/mcp",
+    "live_board": "https://councilof.ai/api/gspc"
+  }
 }
