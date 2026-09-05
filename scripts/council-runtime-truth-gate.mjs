@@ -994,6 +994,39 @@ assert.match(bftRegression, /fail-closed tests: PASS/);
 // resembling the quarantined artifacts (a reached quorum, any YES vote, any per-voter signature,
 // a non-zero vote count) fails, and it fails whatever the file is named. Verified against a real
 // quarantined artifact in the selftest below, so this cannot rot into a check that passes them.
+// PHANTOM DOORS: an endpoint that CLAIMS to read a source it never reads.
+//
+// On 2026-09-05 a single commit replaced eight functions/api handlers with an identical
+// 39-line template whose note read "Returns the live data from <source>" — with zero fetch()
+// calls in any of them. Five had been honest `unavailable()` stubs declaring NOT_IMPLEMENTED,
+// so an explicit 501 became a false 200; /api/trace lost a real, working card resolver;
+// /api/regulation lost a 114-line source-cited deadline register; and /api/reported lost the
+// empty-set contract whose own docstring records that this exact regression took the site down
+// on 2026-09-04 and kept it down across eight merged PRs.
+//
+// The rule is narrow on purpose: it fires only when a handler asserts it returns live/fetched
+// data from a named source while containing no fetch at all. An honest "NOT_IMPLEMENTED", an
+// empty array with an explanation, or a computed answer that claims nothing are all untouched.
+const LIVE_CLAIM = /returns?\s+the\s+live\s+data\s+from|live\s+data\s+fetched\s+from/i;
+/**
+ * Comments are documentation, not claims. reported.ts QUOTES the false note in its docstring to
+ * record how the outage happened — a gate that fired on that would punish writing the history
+ * down, so only the code that actually runs is tested.
+ */
+const stripComments = (src) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
+for (const name of readdirSync("functions/api")) {
+  if (!name.endsWith(".ts") || name.endsWith(".test.ts") || name.startsWith("_")) continue;
+  const where = `functions/api/${name}`;
+  const src = stripComments(readFileSync(where, "utf8"));
+  if (!LIVE_CLAIM.test(src)) continue;
+  assert.ok(
+    /\bfetch\s*\(/.test(src),
+    `${where} claims to return live data from a source but contains no fetch() — an endpoint ` +
+      "must not describe a read it never performs",
+  );
+}
+
 const ACTIVE_BFT_QUEUE = "scripts/badger/_queue/bft-council";
 if (existsSync(ACTIVE_BFT_QUEUE)) {
   for (const name of readdirSync(ACTIVE_BFT_QUEUE)) {

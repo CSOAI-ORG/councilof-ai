@@ -112,7 +112,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // refreshes it (probed across a further successful settle; `lastUpdated` never moved). Renaming
   // one would break the contract a stranger reads from the index. Extra keys are safe to add; the
   // promised five are not safe to remove.
-  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  // allowZeroAmount: this door's advertised price of 0 is the real price, not a missing config.
+  // Without it verifyX402Payment rejects with "no amount configured for this resource" and the
+  // door can never fulfil, however correctly the caller pays.
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0], {
+    allowZeroAmount: true,
+  });
   if (payment.ok) {
     const links = {
       schema: "csoai.free-door/0.1",
@@ -161,7 +166,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // nothing; a client that simply reads the body already has every free link it needs — the
   // content behind this door is published free at the links above, so the handshake gates
   // discovery, never access.
-  return new Response(JSON.stringify(body, null, 2), {
+  // Say why, when a payment was presented and refused. The first version returned the plain
+  // challenge, so an agent that had settled correctly got an identical 402 with no way to tell
+  // a rejected receipt from "you have not paid yet".
+  const presented = !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
+  const answer = presented ? { ...body, csoai: { not_paid_reason: payment.reason } } : body;
+
+  return new Response(JSON.stringify(answer, null, 2), {
     status: 402,
     headers: {
       "content-type": "application/json; charset=utf-8",
