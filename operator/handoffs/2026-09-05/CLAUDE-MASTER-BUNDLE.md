@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `61762119b768c8b3053784e26ef41cad50bddf15` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `25056901621e38dc607e5bb66d263d4340f5a95b` — 37 commits, 51 files changed
+**Rebased onto:** `924d57730ad40c3aee05ab601928b9e7df91777a` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `fae46170f89a4219da9a894dc9c4c08d94a7089c` — 42 commits, 55 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~51 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~55 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -90,6 +90,9 @@ client/src/components/DashboardMemoryPane.tsx
 client/src/components/DashboardFabricPane.tsx
 client/src/data/gspcInstall.test.ts
 client/src/launchers.shell.test.ts
+client/src/pages/GSPCVerify.privacy.test.ts
+capabilities/brand-gate-coverage.test.mjs
+scripts/one-door-guard.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
@@ -118,14 +121,14 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 
 ## Tests
 
-    npx vitest run client/src                                  638 passed
+    npx vitest run client/src                                  643 passed
     node scripts/brand-gate.mjs dist/client                    EXIT 0 (was EXIT 1 on master)
     node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
       LIVE_NPM=1 LIVE_CARDS=1 LIVE_ATTESTATION=1 \
-      node --test capabilities/*.test.mjs                      51 passed, 0 failed
+      node --test capabilities/*.test.mjs                      56 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -286,6 +289,9 @@ client/src/components/DashboardMemoryPane.tsx
 client/src/components/DashboardFabricPane.tsx
 client/src/data/gspcInstall.test.ts
 client/src/launchers.shell.test.ts
+client/src/pages/GSPCVerify.privacy.test.ts
+capabilities/brand-gate-coverage.test.mjs
+scripts/one-door-guard.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
@@ -428,6 +434,45 @@ contract's `state:"SIGNED"` sits beside `HISTORICAL_REPLAY` and `NONCANONICAL_15
 others. Also verified already-correct: `LobbyPlay`'s game honesty, the nine-rank Elo table
 (the rows exist, the source and tie caveat are stated), and the homepage hero, which another
 lane already guards with `heroBoard.test.ts`.
+
+## Guard integrity — three findings, one fixed here
+
+**`one-door-guard` was vacuous in three places, and it blocks the deploy.** Its `read()` helper
+returns `""` for an absent path, and three call sites treated that as a pass:
+
+| line | input | what silently skipped |
+|---|---|---|
+| 37 | `AgUiBridge.tsx` | the iframe-regression checks it exists for |
+| 77 | `App.tsx` | the `/sov-os` convergence check |
+| 89 | the redirects loop | **all four redirect checks** |
+
+The loop is the serious one: `public/_redirects` is the file that IMPLEMENTS the one door, and
+deleting it left the guard printing "PASS — one public Council OS door" having checked nothing.
+**Fixed and proven both directions** — all inputs present PASS exit 0 (unchanged today), any
+input missing FAIL exit 1. The `SovOS` branch beside it was already correct, because that file
+is *expected* absent; the distinction was made there and not for the others.
+
+Every other selftest-less guard that runs was checked for the same shape and is fail-safe
+(`drift-guard` calls `fail()` in its catch; `machine-contract-guard` and `pages-size-guard`
+throw). **`functions-guard` runs nowhere at all** — no workflow, no hook, no deploy script.
+
+**`brand-gate` proves 3 of its 17 rules and prints "3/3".** The unproven fourteen include
+`certify_claim`, `rank_for_sale` and `pricing_leak` — the estate's core doctrine. Not patched:
+adding cases to a shared deploy gate risks stopping every lane's ship if a rule differs from
+what a new case expects. Guarded from outside instead (`brand-gate-coverage.test.mjs`), which
+pins the ratio, asserts those four rules still EXIST, and prints real coverage each run.
+
+## Production is behind master — with evidence
+
+`/enterprise` live takes **three hops**: `/enterprise` → `/os?lobby=assess&task=enterprise-start`
+→ `/dashboard/?task=enterprise-start&tab=measured`. The end state is correct (the
+`lobby=assess` → `tab=measured` alias works and `task` survives), so no user is harmed.
+
+But `public/_redirects` in master says **one hop**, straight to `/dashboard?tab=measured&task=…`.
+Production is serving an older rule than the repository — which is exactly what a blocked deploy
+gate produces, and independent corroboration that the `brand-gate` failure above had real
+consequences. The other six one-door redirects (`/ag-ui`, `/agui`, `/sov-os`, `/chat`, `/os`,
+`/rankings`) all converge correctly.
 
 ## Open owner gates, in priority order
 
