@@ -257,6 +257,11 @@ def build_persona_tests() -> dict:
                     "/api/anchor",
                     "/api/verify",
                 ],
+                "endpoints_to_test_status": {
+                    "/api/measure": "NOT_IMPLEMENTED - probed 2026-09-05 (GET and POST, https://councilof.ai) -> HTTP 404",
+                    "/api/anchor": "NOT_IMPLEMENTED - probed 2026-09-05 (GET and POST, https://councilof.ai) -> HTTP 404",
+                    "/api/verify": "NOT_IMPLEMENTED - probed 2026-09-05 (GET and POST, https://councilof.ai) -> HTTP 404",
+                },
                 "outcome": "Can measure + sign + anchor + verify any model in 1 minute",
             },
             {

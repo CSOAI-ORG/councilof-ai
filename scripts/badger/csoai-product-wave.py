@@ -28,7 +28,7 @@ SKUS = [
     {"id": "anchor-daily", "name": "Daily anchor subscription", "price_usdc": 1.00, "endpoint": "/api/x402?sku=anchor-daily", "description": "Subscribe to daily OTS anchors for one year."},
     {"id": "council-vote", "name": "Council vote (1 of 33)", "price_usdc": 0.10, "endpoint": "/api/x402?sku=council-vote", "description": "Cast one vote in the 33-agent BFT council."},
     {"id": "council-quorum", "name": "Full quorum vote", "price_usdc": 3.30, "endpoint": "/api/x402?sku=council-quorum", "description": "Cast a full 23/33 quorum vote."},
-    {"id": "verification-public", "name": "Public verification", "price_usdc": 0.00, "endpoint": "/api/verify", "description": "Free. Verify any signed card against the public root."},
+    {"id": "verification-public", "name": "Public verification", "price_usdc": 0.00, "endpoint": "/api/proof", "description": "Free. GET /api/proof?sha=<64-hex> returns a Merkle inclusion proof against the public root. (/api/verify was 404 when probed 2026-09-05.)"},
     {"id": "verification-bulk", "name": "Bulk verification", "price_usdc": 0.05, "endpoint": "/api/x402?sku=verification-bulk", "description": "Verify 100 cards at once."},
     {"id": "correction", "name": "File a correction", "price_usdc": 1.00, "endpoint": "/api/x402?sku=correction", "description": "File a correction to the public root."},
     {"id": "witness-receipt", "name": "Witness receipt", "price_usdc": 0.05, "endpoint": "/api/x402?sku=witness-receipt", "description": "Get a witness receipt for any claim."},

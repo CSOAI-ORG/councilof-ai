@@ -144,7 +144,7 @@ def build_chatgpt_features_map() -> dict:
                 "kind": "research",
                 "scope": "8-step research pipeline. Every claim measured + signed + anchored.",
                 "endpoint": "/api/research",
-                "status": "live",
+                "status": "NOT_IMPLEMENTED - probed 2026-09-05 (GET and POST, https://councilof.ai) -> HTTP 404",
                 "wasm_required": False,
             },
             {

@@ -130,6 +130,7 @@ def build_chatgpt_skills_manifest() -> dict:
                 "description": "Deep research pipeline. Every finding is signed + anchored.",
                 "card_kind": "research",
                 "endpoints": ["/api/research"],
+                "endpoints_status": {"/api/research": "NOT_IMPLEMENTED - probed 2026-09-05 (GET and POST, https://councilof.ai) -> HTTP 404"},
             },
             "chatgpt_atlas": {
                 "csoai_equivalent": "Council OS browser",
