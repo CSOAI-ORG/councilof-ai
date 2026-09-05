@@ -75,6 +75,53 @@ describe("install surfaces state only what they are", () => {
     assert.ok(Array.isArray(webManifest.icons) && webManifest.icons.length >= 1);
   });
 
+  /**
+   * The extension hardcodes councilof.ai URLs — the board endpoint, signed card fixtures its
+   * tests verify against, and the HOW-TO-VERIFY documents it points a reader at. It also
+   * injects a badge on huggingface.co linking to /gspc-verify, so a rotted URL is a broken
+   * link on somebody else's site, published under our name.
+   *
+   * Probed 2026-09-05: all ten resolve. Nothing in the repository can prove that — a
+   * hardcoded URL is only as good as the host, and the host is not this checkout.
+   */
+  it("live: every councilof.ai URL the extension hardcodes still resolves", async () => {
+    if (!process.env.LIVE_INSTALL) {
+      console.log("      (offline: LIVE_INSTALL unset — extension URLs NOT probed)");
+      return;
+    }
+    const { readdirSync, statSync } = await import("node:fs");
+    const dir = path.join(repo, "extensions/chrome-gspc-verify");
+    const files = [];
+    const walk = (d) => {
+      for (const e of readdirSync(d)) {
+        const p = path.join(d, e);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.(js|html|json|md)$/.test(e)) files.push(p);
+      }
+    };
+    walk(dir);
+    const urls = new Set();
+    for (const f of files) {
+      for (const m of readFileSync(f, "utf8").matchAll(/https:\/\/councilof\.ai[a-zA-Z0-9./_-]*/g)) {
+        urls.add(m[0]);
+      }
+    }
+    assert.ok(urls.size >= 5, `only ${urls.size} councilof.ai URLs found — the walk missed the extension`);
+
+    const dead = [];
+    for (const u of urls) {
+      const res = await fetch(u, { redirect: "follow" });
+      if (!res.ok) dead.push(`${u} -> ${res.status}`);
+    }
+    assert.deepEqual(
+      dead,
+      [],
+      `the extension points at URLs that no longer resolve: ${dead.join("; ")}. One of these ` +
+        `is injected as a badge link on huggingface.co, so a rot here is a broken link on ` +
+        `someone else's site carrying our name.`,
+    );
+  });
+
   it("production serves the manifest link on the routes it claims to", async () => {
     if (!process.env.LIVE_INSTALL) {
       console.log("      (offline: LIVE_INSTALL unset — production NOT probed)");
