@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `cd56fed9fc976eecf4fdd124680bc7f8e76f4c4b` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `428786963f61ab58b0eb9f4258327bbaec7d9c3f` — 25 commits, 39 files changed
+**Rebased onto:** `9611abdd1221f48e95a906e98109b5df48ce4290` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `b54979f2d3c4d3cbe277119af95fe752bb323b99` — 27 commits, 39 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -111,7 +111,7 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
-      LIVE_NPM=1 node --test capabilities/*.test.mjs           41 passed, 0 failed
+      LIVE_NPM=1 node --test capabilities/*.test.mjs           42 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -160,7 +160,7 @@ the page shows it.
 | HTTP drops **observation date** at axis level | present at response top level; absent per axis |
 | `witness_hash` declared, not served | `/api/witness` 503 `QUARANTINED_PRE_RELEASE` — deliberate |
 | Other 72 HTTP/A2A capabilities UNASSESSED | only MCP can be checked against a live `tools/list` |
-| SDK/plugin (npm) — **now assessed, and clean** | `csoai-gspc-mcp@0.2.1` published; tarball **byte-identical** to `mcp/gspc-server` on all four behaviour files. Guarded, because publishing needs the owner's Bypass-2FA token, so drift is the default failure |
+| SDK/plugin (npm) — **all 11 packages now checked** | `csoai-gspc-mcp@0.2.1` byte-identical. **`csoai-governance-mcp` HAS DRIFTED** (repo 0.1.1, npm 0.1.0). `gspc-card-verifier@1.0.0` never published. 8 others never published |
 | Cohort exists only on `jail` | every other axis carries no `per_model` |
 
 ## WP-1: "every public launcher opens this shell" — measured, and the answer is a decision
@@ -251,6 +251,45 @@ promising an execute path over a 404.
 
 WP-6's completed-job and receipt counts cannot be measured from runtime for the same reason,
 and are therefore not estimated.
+
+## ⚠ OWNER ACTION — an unpublished truth fix is costing us on every install
+
+`csoai-governance-mcp` has drifted: **repo 0.1.1, npm serves 0.1.0.**
+`docs/PHASE3_GO_LIVE.md` records `npx -y csoai-governance-mcp` as a live install path.
+
+Diffed against the published tarball, not assumed — repo `a8b9f644a141` (6839 bytes) vs npm
+0.1.0 `bd59717c0e64` (6827 bytes), **8 diff lines, all one sentence**:
+
+> 0.1.0 advertises **"the 377 governed CSOAI tools / MCPs"**
+> 0.1.1 replaces that hardcoded count with **"published governed tools"**
+
+Someone fixed exactly the stale-hardcoded-count defect our own doctrine forbids, and it has
+never shipped. **Every user installing it today still receives the 377 claim.**
+
+Publishing `0.1.1` is the fix and it is **owner-gated**: the npm account is WebAuthn, so
+`--otp=` can never work and a Bypass-2FA token is required. I have published nothing.
+
+Bounded, for accuracy: the built site carries **zero** user-facing tool-count claims, and
+`councilof.ai/api/tools` returns 8 — the 377 figure refers to `os.meok.ai`'s catalogue, a
+different host. So this is a defect in a published package, not on the live site.
+
+Also found and recorded: **`gspc-card-verifier@1.0.0`** (the package TUI 1's brief item 4
+names) exists at `packages/gspc-card-verifier` with a `gspc-verify` bin and is **not published
+on npm** under that name or any `@csoai` scope tried. Nothing may describe it as installable.
+
+**A correction to this bundle's own earlier claim.** It said the SDK surface was assessed on
+the strength of one package. There are eleven. Widening the walk is what found the drift — the
+single-package version could never have seen it. The guard now enumerates `package.json` from
+disk so a new package cannot escape by not being added.
+
+## The three READ FIRST documents are still not on master
+
+Re-checked after ~30 further commits: `operator/MASTER-RELEASE-LEDGER-2026-09-05.md` and
+`operator/audits/COUNCIL-OS-RUNTIME-TRUTH-GATE-2026-09-05.md` exist only on unmerged
+`233d763c4` and `d0efe80ea`. `operator/COUNCIL-OS-BUSINESS-EAT-PLAYBOOK-2026-09-05.md` appears
+nowhere in history at all. The other TUI files in `operator/handoffs/2026-09-05/` are the
+paste-in **briefs** for those lanes, not delivered handoffs — there is no TUI 1 or TUI 2
+result to integrate against yet.
 
 ## Dependencies
 
