@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-05T08:58:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:ethereum",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xdd50c053c096cb04a3e3362e2b622529ec5f2e8a",
+      "block": 25910083,
+      "block_hash": "0xea44d86fe8d30933f2d62519eedc8fd4d06f229f055dc34b15bad5cbf48affca",
+      "block_time": "2026-09-05T08:58:59Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 6,
+        "totalSupply": 18653320398425,
+        "owner": "0x8ec4dd2df01c188ac5a5d870029e9cbb820d5844",
+        "kycManager": "0x51be497aced1a2c19f6151064301e356b020d947",
+        "eip1967_implementation": "0xc4545bf80f935894cbe138d86b506923dab7c048"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "0e83b73d6f6e41d6e3a0095d46c94ba038ba433edee58e8c8619d25ce4b0c0c8",
+        "bytes": 12964,
+        "url": "/archive/proofs/eip1186/0e83b73d6f6e41d6.json",
+        "rpc": "ethereum-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x932cddc50793da935ccf915651ad67f6b746e9936fcc5614f0ff492563782c75",
+          "storageHash": "0x1aec9a421a500876757cf301bf1c9ab644897c0c4e93b168b9152907cecf4c14",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xc4545bf80f935894cbe138d86b506923dab7c048",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 25910083 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "bec570fb601323dabd407d9cbb16c44c90c7b25d1cf00a903fa448f72ab4b7ba",
+    "sig_ed25519": "48c2aa66164bc2ccb55ca6b7b2cf8ef732fc39694b7cc652c31c986c255669e278febc873370c8c3506067ee503866fe78a890abfec4ecb28bd495d0a9bb4a03",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:ethereum permission state at block 25910083",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "7bc795277f2811fcddef3003c918220075fbcfc4b5b45abf306e5111e9e1632c",
+    "2074de53d802668b677f5f0a4ff4fcdfd6c2ca8160976970da50c30035b3a7b3",
+    "3ccd5dac82971b6e080c18e4331cf4352780b4095d8b16ac769b346608484ed5",
+    "3ac1088591177ec524d89512c83b6c28d5d959558db060a423f83e6498a577fa",
+    "14729e79a3043066ab0bedabc8c2d0d10d1184beb089223a90d317c9dc985dca",
+    "3153cba2d6ed7c76f9b3ceadc3a988fa6026fb9d362d1d0157e82cc7104fc925",
+    "49a28568b501b8850cd3946f215ce8864c26464d9b8854fd33d0310c23a5abe2",
+    "c775c0a60dbbcd15fd6c4aee9c9f23c7c0aa53d95d0fcd221a24bebed5cdf1d7"
+  ]
+}
