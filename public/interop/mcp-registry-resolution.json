@@ -54,7 +54,7 @@
     "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
   },
   "coverage": {
-    "verdict": "142 BUILT SERVERS ARE UNPUBLISHED",
+    "verdict": "153 BUILT SERVERS ARE UNPUBLISHED",
     "question": "The first clause of the mandate is 'we are listed'. This asks it the other way round: what exists here that the registry does not carry?",
     "repos_public": 639,
     "mcp_named": 372,
@@ -70,16 +70,18 @@
     },
     "superseded_figure": {
       "value": 64,
-      "why_wrong": "Published earlier today in this same file and WRONG BY MORE THAN HALF. It counted only repositories with 'mcp' in the NAME, and a name is not a detector. digital-human-library depends on @modelcontextprotocol/sdk and ships a binary called digital-human-library-mcp; Glama lists it as one of our servers; the name filter never saw it. Eighty-one more are in the same position. The filter was inherited from CLAUDE.md's headline '372 MCP-named repos', which understates the MCP surface for exactly the same reason."
+      "then": 142,
+      "now": 153,
+      "why_wrong": "Three answers in one evening, each larger, each from a better instrument. 64 filtered on the repo NAME and a name is not a detector. 142 used a dependency scan whose pattern matched the quoted string mcp but NOT mcp>=1.0.0 -- the ordinary way a Python project pins it -- so it missed repos like mismo-bridge-mcp that declare mcp>=1.0.0 outright. 153 matches an mcp dependency token followed by any version specifier or extras. Each number was published with its method, and each method was wrong in a way the next one exposed."
     },
-    "detector": "ONE test applied to every unarchived public repository: does package.json or pyproject.toml declare an MCP SDK dependency (modelcontextprotocol, fastmcp, or an mcp extra)? The superseded 64 used a different, weaker test (file shape) on a name-filtered subset, so it was neither the same question nor the same population. Applying the SDK detector to that same mcp-named subset gives 61, not 64 — the three it drops had the file shape without declaring the dependency.",
+    "detector": "Match modelcontextprotocol, fastmcp, the npm scope @modelcontextprotocol/, or an mcp dependency token carrying any version specifier or extras, in pyproject.toml or package.json, across every unarchived public repository. 428 of 628 declare one; 153 of those are absent from the registry.",
     "unpublished": {
-      "total": 142,
-      "mcp_named": 61,
-      "not_mcp_named": 81,
+      "total": 153,
       "registry_today": 330,
-      "available_if_published": 472,
-      "examples_not_mcp_named": [
+      "available_if_published": 483,
+      "repos_declaring_an_mcp_sdk": 428,
+      "unarchived_public_scanned": 628,
+      "examples": [
         "OPENMOE",
         "OpenHands",
         "agriculture-ai",
@@ -90,19 +92,14 @@
         "autonomous-vehicles",
         "autonomous-vehicles-ai",
         "aws-cloud"
-      ],
-      "examples_mcp_named": [
-        "blizzard-wow-mcp",
-        "credential-manager-mcp",
-        "csoai-aaif-agent-card-mcp",
-        "csoai-abci-bridge-mcp",
-        "csoai-agents-md-lint-mcp",
-        "csoai-ap2-mandate-mcp",
-        "csoai-c2pa-durable-mcp",
-        "csoai-coinbase-x402-receipt-mcp",
-        "csoai-cra-annex-iv-classifier-mcp",
-        "csoai-cra-art14-reporter-mcp"
       ]
+    },
+    "instrument_disagreement": {
+      "note": "An earlier commit said file-shape and dependency-scan disagree by three. THREE WAS THE NET, not the disagreement: 10 repos had the file shape without matching the dependency scan and 7 matched the scan without the file shape -- seventeen repos, netting to three. Publishing the net as if it were the disagreement is the same error as publishing a subtotal as a total, and it hid the ten that exposed the pattern defect. mismo-bridge-mcp was among those ten.",
+      "file_shape_only": 10,
+      "dependency_only": 7,
+      "net": 3,
+      "actual_disagreement": 17
     }
   }
 }
