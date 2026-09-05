@@ -182,6 +182,12 @@ jobs:
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
+      # A door that serves 200 but is missing from /.well-known/index.json is live and
+      # undiscoverable through the canonical route. The index was append-only until
+      # 2026-09-05 (300 files on disk vs 292 indexed). Derived now; gated here.
+      - name: Well-known index gate — the index must describe the directory
+        run: node scripts/wellknown-index-gen.mjs --check
+
       # Owner ruling 2026-08-26: strip ALL public prices. Verification is free forever and
       # a grade is never sold, so no public page carries a figure anyone pays us — a service
       # is quoted privately. This also blocks "Most Popular"/"Best Value" badges, which are
