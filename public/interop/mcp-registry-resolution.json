@@ -54,7 +54,7 @@
     "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
   },
   "coverage": {
-    "verdict": "108 BUILT SERVERS ARE UNPUBLISHED",
+    "verdict": "142 BUILT SERVERS ARE UNPUBLISHED",
     "question": "The first clause of the mandate is 'we are listed'. This asks it the other way round: what exists here that the registry does not carry?",
     "repos_public": 639,
     "mcp_named": 372,
@@ -72,15 +72,16 @@
       "value": 64,
       "then": 142,
       "overcounted": 153,
-      "now": 108,
-      "why_wrong": "Four answers to one question in one evening: 64, 142, 153, 108. Each of the first three was published with its method and each method was wrong. 64 filtered on the repo NAME, and a name is not a detector. 142 scanned dependencies with a pattern that matched the quoted string mcp but NOT mcp>=1.0.0, the ordinary way a Python project pins it, so it UNDERCOUNTED. 153 loosened that pattern and then matched anywhere in the file, so it OVERCOUNTED: a spot-check of eight found three hits that were a keywords list or the word FastMCP inside a description, not a dependency at all. 108 parses package.json dependencies as JSON and reads pyproject only inside a dependencies array or a poetry dependencies table. Loosening a pattern to cure an undercount is how you buy an overcount, and the only way either was caught was sampling the output by hand."
+      "undercounted_again": 108,
+      "now": 142,
+      "why_wrong": "Five passes at one question in one evening: 64, 142, 153, 108, 142. 64 filtered on the repo NAME and a name is not a detector. The first 142 matched the quoted string mcp but not mcp>=1.0.0, so it UNDERCOUNTED. 153 loosened that to match anywhere in the file and OVERCOUNTED: three of eight sampled hits were a keywords list or the word FastMCP in a description. 108 read only inside a dependencies array, but extracted that array with a non-greedy match to the FIRST closing bracket -- which in mcp[cli]>=1.3.0 sits inside the dependency itself, truncating the array to nothing and silently dropping every repo that pins the CLI extra. Sampling ten EXCLUDED repos found three of exactly that. The current pass walks the brackets and balances them. The final number equals the second one by coincidence of two unrelated errors, not by agreement."
     },
-    "detector": "package.json is PARSED and its dependencies/devDependencies keys inspected for @modelcontextprotocol/*, mcp or fastmcp; pyproject.toml is read ONLY inside a dependencies array or a tool.poetry.dependencies table, so a keywords list or a description never counts. 362 of 628 unarchived public repos declare such a dependency; 108 of those are absent from the registry.",
+    "detector": "package.json is parsed as JSON and its dependencies/devDependencies keys inspected for @modelcontextprotocol/*, mcp or fastmcp. pyproject.toml is read only inside a dependencies array whose brackets are BALANCED, or a tool.poetry.dependencies table, so mcp[cli]>=1.3.0 is read whole and a keywords list is never read at all. 417 of 628 unarchived public repos declare such a dependency; 142 of those are absent from the registry.",
     "unpublished": {
-      "total": 108,
+      "total": 142,
       "registry_today": 330,
-      "available_if_published": 438,
-      "repos_declaring_an_mcp_sdk": 362,
+      "available_if_published": 472,
+      "repos_declaring_an_mcp_sdk": 417,
       "unarchived_public_scanned": 628,
       "examples": [
         "OPENMOE",
@@ -103,14 +104,11 @@
       "actual_disagreement": 17
     },
     "what_a_sample_caught": {
-      "sampled": 8,
+      "kept_sampled": 8,
       "false_positives": 3,
-      "examples": [
-        "openchronicle-mcp: keywords = [.., mcp, ..]",
-        "csoai-x402-wrap-mcp: the word FastMCP inside description",
-        "csoai-watermark-attest-mcp: keywords = [mcp, ..]"
-      ],
-      "note": "Three in eight. These repos are probably servers on other evidence — but they were counted for a reason that was not evidence, and a number is only as good as the reason each row is in it."
+      "excluded_sampled": 10,
+      "false_negatives": 3,
+      "note": "Both directions, and both by hand. Sampling what a filter KEEPS finds what it wrongly let in; sampling what it EXCLUDES finds what it wrongly dropped, and only the second sample exists because the first one had already proved the instrument was fallible. Three in eight, then three in ten. Nothing in the pipeline caught any of it."
     }
   }
 }

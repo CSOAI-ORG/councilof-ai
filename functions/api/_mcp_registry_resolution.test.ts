@@ -87,7 +87,10 @@ describe("the coverage measurement keeps its weak number quarantined", () => {
     expect(c.superseded_figure.overcounted).toBe(153);
     expect(c.superseded_figure.why_wrong).toMatch(/UNDERCOUNTED/);
     expect(c.superseded_figure.why_wrong).toMatch(/OVERCOUNTED/);
+    expect(c.superseded_figure.undercounted_again).toBe(108);
+    // both sampling directions must stay recorded: keeps-sample and excludes-sample
     expect(c.what_a_sample_caught.false_positives).toBeGreaterThan(0);
+    expect(c.what_a_sample_caught.false_negatives).toBeGreaterThan(0);
     expect(c.superseded_figure.why_wrong).toMatch(/mcp>=1\.0\.0/);
     // the net was published as if it were the disagreement; both numbers must stay
     expect(c.instrument_disagreement.actual_disagreement).toBe(
