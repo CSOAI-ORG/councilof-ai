@@ -1,10 +1,11 @@
 #!/bin/bash
-# runpod-ollama-bridge.sh — keep SSH tunnels to ALL Ollama endpoints.
+# runpod-ollama-bridge.sh — keep SSH tunnels to approved Ollama endpoints.
 # RunPod endpoints drift across restarts → re-resolved via runpodctl.
 # Oracle Cloud micros have static IPs → direct SSH.
 #
 # Tunnels:
-#   11434 -> A100  (sovos-light-master-mine)  via runpodctl
+#   11434 -> A100  DISABLED: no admitted workload; resolving a stopped pod
+#                      through runpodctl resumes it at $1.59/hr
 #   11436 -> Oracle micro1 (sov33-owem-micro) static IP
 #   11437 -> Oracle micro2 (sov33-owem-micro2) static IP
 #   11439 -> 3090  (sov-repull) via runpodctl
@@ -52,7 +53,8 @@ start_oracle_tunnel() { # host_ip local_port
 }
 
 # ── Initial launch ──────────────────────────────────────────────────────────
-start_runpod_tunnel "l7g747oivyq6ab" 11434   # sovos-light-master-mine (A100)
+# A100 intentionally omitted. Do not resolve it here: `runpodctl ssh info` may
+# resume a stopped pod, turning a tunnel health check into a paid-resource start.
 start_oracle_tunnel "145.241.232.16"  11436   # sov33-owem-micro
 start_oracle_tunnel "141.147.73.85"   11437   # sov33-owem-micro2
 start_runpod_tunnel "fpowppss5ngtkw" 11439   # sov-repull (3090)
@@ -62,7 +64,7 @@ while :; do
   sleep 60
 
   # Re-resolve RunPod tunnels if dead
-  for spec in "l7g747oivyq6ab 11434" "fpowppss5ngtkw 11439"; do
+  for spec in "fpowppss5ngtkw 11439"; do
     set -- $spec
     pod_id="$1"; local_port="$2"
     if ! lsof -iTCP:"$local_port" -sTCP:LISTEN >/dev/null 2>&1; then
