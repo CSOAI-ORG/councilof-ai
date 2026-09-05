@@ -77,3 +77,44 @@ describe("recordSettlement reports whether it actually wrote", () => {
     if (out.stored) expect(out.record.self).toBe(true);
   });
 });
+
+describe("a settlement of zero is marked, so it can never be counted as a buyer", () => {
+  // Measured live 2026-09-05: ONE zero-value settle through /api/free-door, signed by an
+  // ephemeral wallet created in the test itself, moved /api/revenue one_number.all_time from
+  // 0 to 1. A wallet we created and controlled, paying nothing, was counted as a distinct
+  // non-self BUYER — contradicting the number's own definition ("A wallet we control paying us
+  // is recorded but is neither revenue nor a buyer") and enough to trip its gate,
+  // "≥1 repeat: open the next door", on our own test traffic.
+  //
+  // `self` cannot catch this: it tests membership of X402_SELF_WALLETS and a seed signs from a
+  // throwaway key no list can enumerate in advance. Amount is the only test that holds.
+  const kv = () => {
+    const store = new Map<string, string>();
+    return { store, get: async (k: string) => store.get(k) ?? null, put: async (k: string, v: string) => void store.set(k, v) };
+  };
+
+  it("marks a 0-amount settlement zero_value, even from an unlisted wallet", async () => {
+    const k = kv();
+    const out = await recordSettlement({ REVENUE_KV: k } as never, { ...rec, amount_atomic: "0" });
+    expect(out.stored).toBe(true);
+    if (out.stored) {
+      expect(out.record.zero_value).toBe(true);
+      expect(out.record.self).toBe(false); // ephemeral wallet — no list could have held it
+    }
+  });
+
+  it("does not mark a real payment zero_value", async () => {
+    const k = kv();
+    const out = await recordSettlement({ REVENUE_KV: k } as never, { ...rec, amount_atomic: "20000" });
+    expect(out.stored).toBe(true);
+    if (out.stored) expect(out.record.zero_value).toBe(false);
+  });
+
+  it("treats a missing or non-numeric amount as zero_value, never as a purchase", async () => {
+    const k = kv();
+    for (const amt of [null, "", "abc", "0", "00"]) {
+      const out = await recordSettlement({ REVENUE_KV: k } as never, { ...rec, transaction: `0x${amt}`, amount_atomic: amt as string | null });
+      if (out.stored) expect(out.record.zero_value, `amount ${JSON.stringify(amt)}`).toBe(true);
+    }
+  });
+});

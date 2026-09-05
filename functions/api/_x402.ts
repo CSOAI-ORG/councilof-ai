@@ -243,6 +243,19 @@ export type SettlementRecord = {
   network: string | null;
   payer: string | null;
   self: boolean; // payer ∈ selfWallets(env) — the estate paying itself
+  /**
+   * A SETTLEMENT OF ZERO IS NOT A PURCHASE, and the distinct-payer count must not treat it as
+   * one. `self` cannot carry this: it tests membership of X402_SELF_WALLETS, and a seed or a
+   * probe signs from an EPHEMERAL key that no list can ever enumerate. Measured 2026-09-05 —
+   * one zero-value settle through /api/free-door from a throwaway wallet moved
+   * /api/revenue one_number.all_time from 0 to 1, i.e. a wallet we created and controlled,
+   * paying nothing, was counted as a distinct non-self BUYER. That contradicts the number's own
+   * definition ("A wallet we control paying us is recorded but is neither revenue nor a buyer")
+   * and would trip its own gate, "≥1 repeat: open the next door", on our own test traffic.
+   *
+   * Amount is the only test that holds for a wallet nobody can list in advance.
+   */
+  zero_value: boolean;
   resource: string;
   amount_atomic: string | null; // what the 402 asked for; the facilitator does not echo the amount
   settled_at: string;
@@ -269,12 +282,19 @@ export type RecordOutcome =
 
 export async function recordSettlement(
   env: X402Env,
-  rec: Omit<SettlementRecord, "schema" | "self" | "settled_at">,
+  rec: Omit<SettlementRecord, "schema" | "self" | "zero_value" | "settled_at">,
 ): Promise<RecordOutcome> {
   const kv = env.REVENUE_KV;
   if (!kv) return { stored: false, reason: "no REVENUE_KV bound", record: null };
   const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
-  const record: SettlementRecord = { schema: "csoai.x402.settlement/0.1", ...rec, self, settled_at: new Date().toISOString() };
+  const zero_value = !rec.amount_atomic || !/^[1-9]\d*$/.test(rec.amount_atomic);
+  const record: SettlementRecord = {
+    schema: "csoai.x402.settlement/0.1",
+    ...rec,
+    self,
+    zero_value,
+    settled_at: new Date().toISOString(),
+  };
   try {
     const key = `settled:tx:${record.transaction || `unknown:${Date.now()}`}`;
     if ((await kv.get(key)) == null) await kv.put(key, JSON.stringify(record));
