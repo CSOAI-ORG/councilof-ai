@@ -1,0 +1,96 @@
+{
+  "schema": "csoai.grants-facts/0.1",
+  "read_at": "2026-09-05T13:41:57Z",
+  "rule": "Every figure here was read from the named source at read_at. Applications quote these and state the as_of; nothing is typed.",
+  "board": {
+    "source": "https://councilof.ai/api/gspc",
+    "lid_verbatim": "22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
+    "axes": 22,
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "model_fleets": 14,
+    "fact_runs": 8,
+    "public_leader_count": 3,
+    "license": "CC-BY-4.0"
+  },
+  "public_root": {
+    "source": "https://councilof.ai/root.json",
+    "as_of": "2026-09-05T12:39:29Z",
+    "card_count": 167,
+    "merkle_root": "6347384aa686920feca2f6cd875664c4719b1cd8224c0021dd7a38347f872353",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "kind": "csoai.public-root/v1",
+    "leaf_list_matches_count": true
+  },
+  "revenue": {
+    "source": "https://councilof.ai/api/revenue",
+    "one_number_id": "distinct_nonself_payers",
+    "all_time": 1,
+    "last_30d": 1,
+    "settled_usdc_status": "UNMEASURED",
+    "settled_usdc_count": null
+  },
+  "corrections": {
+    "source": "https://councilof.ai/api/corrections",
+    "count": 46,
+    "latest_id": "C-2026-0905-02",
+    "latest_date": "2026-09-05",
+    "license": "CC-BY-4.0"
+  },
+  "x402": {
+    "source": "https://councilof.ai/.well-known/x402.json",
+    "x402Version": 2,
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+    "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "mode": "live",
+    "resource_count": 9
+  },
+  "packages": {
+    "pypi_csoai_gspc": {
+      "source": "https://pypi.org/project/csoai-gspc/",
+      "version": "0.2.20260905"
+    },
+    "npm_csoai_gspc_mcp": {
+      "source": "https://www.npmjs.com/package/csoai-gspc-mcp",
+      "version": "0.2.1"
+    }
+  },
+  "dois": {
+    "methodology": {
+      "doi": "10.5281/zenodo.21991104",
+      "resolves_to": "https://zenodo.org/records/21991105",
+      "title": "GSPC Methodology and the 417-Provision Frozen Corpus Anchor \u2014 Council of AI (CSOAI)",
+      "publication_date": "2026-08-18"
+    },
+    "board_snapshot": {
+      "doi": "10.5281/zenodo.22344048",
+      "resolves_to": "https://zenodo.org/records/22344048",
+      "title": "GSPC board snapshot, 2026-09-05T09:00:28Z \u2014 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
+      "publication_date": "2026-09-05"
+    }
+  },
+  "repo": {
+    "source": "https://github.com/CSOAI-ORG/councilof-ai",
+    "license": "MIT",
+    "created_at": "2026-02-10T07:59:44Z",
+    "pushed_at": "2026-09-05T13:39:41Z",
+    "default_branch": "master",
+    "commits_last_90d": 4439,
+    "distinct_commit_days_last_90d": 51,
+    "gitcoin_oss_activity_note": "Gitcoin general eligibility asks for 3 of: first commit >90 days ago, a commit in the last 30 days, activity on >20 days in the last 90 days, permissive licence."
+  },
+  "entity": {
+    "name": "CSOAI LTD",
+    "companies_house": "16939677",
+    "source": "https://find-and-update.company-information.service.gov.uk/company/16939677",
+    "registered_office": "3rd Floor 86-90 Paul Street, London EC2A 4NE",
+    "contact": "nicholas@csoai.org"
+  },
+  "standards": {
+    "ietf_draft": "https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/",
+    "a2a_issue": "https://github.com/a2aproject/A2A/issues/2150",
+    "hf_org": "https://huggingface.co/csoai"
+  }
+}

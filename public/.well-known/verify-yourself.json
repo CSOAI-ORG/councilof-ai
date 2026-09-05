@@ -1,0 +1,59 @@
+{
+  "schema": "csoai.verify-yourself/0.1",
+  "slug": "verify-yourself",
+  "name": "Verify this estate yourself",
+  "description": "A runnable, dependency-free verifier for the whole evidence chain. Free forever, no account, nothing to pay, and it trusts no Council of AI service.",
+  "as_of": "20260905T150000Z",
+  "principle": "A body that asks others to show their evidence must let anyone check its own, without asking us. This door is that check, as a script rather than a promise.",
+  "run_it": {
+    "requires": "Node >= 18. No dependencies — Ed25519 comes from node:crypto.",
+    "script": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/verify-estate.mjs",
+    "command": "node scripts/verify-estate.mjs",
+    "sample": "node scripts/verify-estate.mjs --limit 25",
+    "exit_code": "0 if every check passes, 1 otherwise"
+  },
+  "what_it_checks": [
+    "every signed card fetches, and its id equals sha256 of its own canonical body",
+    "each card body agrees with signed/card_index.json on id, signature and pubkey",
+    "each Ed25519 signature verifies",
+    "the card signing key is the one published in the DID document on csoai.org",
+    "root.json's signature verifies against the key it names, using the preimage rule root.json publishes about itself",
+    "whether the root carries a timechain anchor — reported honestly either way"
+  ],
+  "trust_model": {
+    "cards_from": "https://councilof.ai",
+    "keys_from": "https://csoai.org/.well-known/did.json",
+    "note": "The evidence and the keys come from different hosts, and the arithmetic runs on your machine. No Council of AI service is trusted at any step."
+  },
+  "result_2026_09_05": {
+    "cards_checked": 335,
+    "id_recomputed": "335/335",
+    "agrees_with_index": "335/335",
+    "ed25519_valid": "335/335",
+    "root_signature": "VALID against did:web:csoai.org#board-attestation-1",
+    "indexed_urls_resolving": "664/664 across the doors and interop indexes"
+  },
+  "known_trap_for_reimplementers": {
+    "problem": "The per-card preimage_rule is a Python expression: json.dumps(body, sort_keys=True, separators=(',',':'), ensure_ascii=True). Two of its behaviours do not reproduce in JavaScript.",
+    "one": "ensure_ascii=True escapes non-ASCII as \\uXXXX; JSON.stringify emits it literally.",
+    "two": "Python renders a whole-number float as 1.0; JavaScript has a single number type and renders it as 1. Measured on this chain: 117 of 335 cards (34.9%) carry an accuracy that is a whole-number float.",
+    "consequence": "A naive JavaScript verifier reports roughly a third of an intact chain as INVALID. That is a defect in the verifier, not in the chain.",
+    "fix": "Parse the raw card bytes with a tokeniser that preserves every numeric literal exactly as sent, and re-emit that text. scripts/verify-estate.mjs does this and passes 335/335.",
+    "why_published": "Anyone reimplementing this check will hit the same wall. Publishing the trap is cheaper for them and more honest than letting them conclude our chain is broken."
+  },
+  "what_a_pass_does_not_establish": [
+    "One key signs every card. A pass proves CUSTODY, not independence — it shows CSOAI signed these bytes, not that anyone else agrees with them.",
+    "The root is signed and NOT anchored to any timechain. A pass proves WHO, and nothing here proves WHEN.",
+    "No counterparty signature exists anywhere in the estate. The chain is one-sided.",
+    "Signature validity is not measurement correctness. These checks prove the bytes are intact and authentically signed, not that a measurement is right."
+  ],
+  "links": {
+    "self": "https://councilof.ai/.well-known/verify-yourself.json",
+    "card_index": "https://councilof.ai/signed/card_index.json",
+    "root": "https://councilof.ai/root.json",
+    "did": "https://csoai.org/.well-known/did.json",
+    "anchor_posture": "https://councilof.ai/.well-known/anchor-posture.json",
+    "corrections": "https://councilof.ai/api/corrections"
+  },
+  "doctrine": "Verification is free forever. We measure; we do not certify."
+}

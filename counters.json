@@ -120,7 +120,7 @@
    "evidence": "KV x402 replay store (keyed on issued sha256, paid vs free) — not yet provisioned",
    "last_verified": null,
    "owner": "Revenue",
-   "note": "SKU-1. No live settle path (x402 is fail-closed, mode:mock). value is null, never 0 — 0 would assert a measured count. Instrumented by functions/api/revenue.ts; source of truth is settled receipts on-chain, not intent."
+   "note": "SKU-1. value is null, never 0 — 0 would assert a measured count. The rail state is NOT typed here: functions/api/revenue.ts derives it from railMode(env) and appends it when it serves this note. Source of truth is settled receipts on-chain, not intent."
   },
   "revenue_proofs": {
    "value": null,

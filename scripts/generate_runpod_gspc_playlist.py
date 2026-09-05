@@ -47,6 +47,15 @@ AXES = (
     ("swarm", "gspc-swarm.jsonl"),
     ("care", "gspc-care.jsonl"),
     ("governance", "gspc-gov.jsonl"),
+    # NOT extended to the deterministic-fact axes, though nine of their frozen banks
+    # exist on the Hub at 30 rows each and this generator now accepts their shape.
+    # scripts/runpod_gspc_worker.py validates `axis` against CANONICAL_MODEL_AXES, which
+    # is exactly these fourteen; accountability, creativity, efficiency, fairness,
+    # human-vs-ai, sovereignty and transparency (+ the 0-byte slot15) are the OTHER eight
+    # of the 22-axis board -- the deterministic-fact family. Adding them here would emit
+    # 35 configs the worker rejects with UNKNOWN_AXIS, and widening CANONICAL_MODEL_AXES
+    # would put two axis families behind one per-model grader. That is a canon ruling,
+    # not a tuple edit. See docs/operations/PREDICATE-BANKS-AND-THE-OTHER-EIGHT.md.
 )
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
@@ -131,8 +140,29 @@ def ollama_digests(base_url: str) -> dict[str, str]:
 
 
 def bank_labels(path: Path) -> tuple[str, ...]:
+    """The exact labels a bank grades against, which is NOT every value of `expected`.
+
+    Two kinds of frozen bank exist and this returns the right thing for both.
+
+    An EXACT-LABEL bank ("does the model comply or refuse") still needs at least two
+    labels -- one label cannot discriminate, and a bank that offers only one is a
+    configuration error worth stopping on.
+
+    A PREDICATE bank grades each row against its own `must_inc` keywords and carries
+    `expected: "KEYWORD_MATCH"` on every row. Its allowed-label set is legitimately
+    EMPTY: the worker rejects a config that lists KEYWORD_MATCH as an allowed label
+    ("KEYWORD_MATCH is a predicate, not an allowed label") while grading those rows
+    perfectly well row-by-row. Requiring two labels here refused nine banks the worker
+    can already grade -- accountability, creativity, efficiency, fairness, human-vs-ai,
+    sovereignty, transparency and two more -- so the predicate case returns ().
+
+    Contamination canary rows carry no `expected` by design and are not bank items;
+    they are skipped rather than treated as malformed. Failing on one would reject
+    every behavioural bank we already grade.
+    """
     labels: set[str] = set()
     item_count = 0
+    predicate_rows = 0
     with path.open(encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, 1):
             if not line.strip():
@@ -143,12 +173,22 @@ def bank_labels(path: Path) -> tuple[str, ...]:
                 raise GenerationError(
                     f"{path.name}:{line_number} is not JSON"
                 ) from error
+            if isinstance(row, dict) and "_canary" in row and "expected" not in row:
+                continue
             expected = row.get("expected") if isinstance(row, dict) else None
             if not isinstance(expected, str) or not expected.strip():
                 raise GenerationError(f"{path.name}:{line_number} lacks expected")
-            labels.add(expected.strip())
+            expected = expected.strip()
             item_count += 1
-    if item_count == 0 or len(labels) < 2:
+            if expected == "KEYWORD_MATCH":
+                predicate_rows += 1
+            else:
+                labels.add(expected)
+    if item_count == 0:
+        raise GenerationError(f"{path.name} has no bank items")
+    if not labels and predicate_rows == item_count:
+        return ()
+    if len(labels) < 2:
         raise GenerationError(f"{path.name} lacks a non-trivial exact-label set")
     return tuple(sorted(labels))
 

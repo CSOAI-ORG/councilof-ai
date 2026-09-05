@@ -7,8 +7,14 @@ name: hub-index-drift
 # and nothing rebuilt them. A unit test proves the generator is honest; it can
 # never prove the published bytes came from that generator.
 #
-# Expected to FAIL until the 82 rows are regenerated and re-uploaded. That is
-# the point: it is red because the estate is wrong, not because the check is.
+# Expected to FAIL until those rows are regenerated and re-uploaded. That is the
+# point: it is red because the estate is wrong, not because the check is.
+#
+# It went green on 2026-09-05 without a single row being regenerated, because the
+# fix wrote NEW superseding cards and left the stale rows pointing at the retired
+# ones -- which still say UNMEASURED, so row and card agreed. The check now also
+# fails a row whose card SUPERSEDED.jsonl has retired, and carries a --selftest
+# that proves it can go both ways.
 
 on:
   schedule:
@@ -27,5 +33,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Published index rows must mirror their signed card bodies
+      # The check must be shown able to fail BEFORE its verdict on the live Hub means
+      # anything. It reported "[OK] 725 rows all mirror their signed card body" for
+      # days while 70 rows cited cards the ledger had retired -- those rows were
+      # self-consistent, so green was never evidence.
+      - name: The check must provably catch a retired-card row, and pass without one
+        run: python3 harness/gspc-top100/check_published_index.py --selftest
+      - name: Published rows must mirror their card AND cite the live card
         run: python3 harness/gspc-top100/check_published_index.py

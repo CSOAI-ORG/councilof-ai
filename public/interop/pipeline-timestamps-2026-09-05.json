@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.pipeline-timestamps/0.1",
+  "as_of": "2026-09-05T163500Z",
+  "rows": [
+    {
+      "stage": "board",
+      "url": "https://councilof.ai/api/gspc",
+      "status": 200,
+      "timestamp_field": "measured_on (top-level per board schema)",
+      "as_of_read": "2026-09-05T16:35Z"
+    },
+    {
+      "stage": "body_state",
+      "url": "https://councilof.ai/api/body-state",
+      "status": 200,
+      "timestamp_field": "as_of",
+      "value": "2026-09-05T15:06:28.676Z"
+    },
+    {
+      "stage": "corrections",
+      "url": "https://councilof.ai/api/corrections",
+      "status": 200,
+      "timestamp_field": "not top-level; per-row timestamps in ledger schema"
+    },
+    {
+      "stage": "revenue",
+      "url": "https://councilof.ai/api/revenue",
+      "status": 200,
+      "timestamp_field": "not top-level; contract + counters canon"
+    },
+    {
+      "stage": "well_known_index",
+      "url": "https://councilof.ai/.well-known/index.json",
+      "status": 200,
+      "timestamp_field": "as_of",
+      "value": "20260905T123626Z"
+    },
+    {
+      "stage": "root",
+      "url": "https://councilof.ai/api/root",
+      "status": 200,
+      "timestamp_field": "as_of/updated",
+      "value": "2026-09-05T12:39:29Z"
+    },
+    {
+      "stage": "x402_door",
+      "url": "https://councilof.ai/.well-known/x402.json",
+      "status": 200,
+      "timestamp_field": "not top-level; probe_method + honesty contract"
+    }
+  ],
+  "principle": "Stage timestamps are the only liveness claim; where a stage does not expose a top-level as_of, that is stated (NULL, never implied). Audit reference: live-audit-2026-09-05."
+}

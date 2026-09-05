@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.regulator-cadence/0.1",
+  "as_of": "2026-09-05T194500Z",
+  "cadence": "weekly",
+  "rows": [
+    {
+      "floor": "eu-ai-act-official",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "status": 200
+    },
+    {
+      "floor": "ico-fee-payers",
+      "url": "https://ico.org.uk/about-the-ico/what-we-do/register-of-fee-payers/",
+      "status": 200
+    },
+    {
+      "floor": "gleif-lei-data",
+      "url": "https://www.gleif.org/en/lei-data",
+      "status": 200
+    },
+    {
+      "floor": "art71-register",
+      "url": "https://ai-act-register.ec.europa.eu/",
+      "status": "ERR"
+    }
+  ],
+  "art71_dns": "NXDOMAIN/ERR:[Errno 8] nodename nor servname provided",
+  "principle": "Weekly re-probe record; statuses are at-retrieval results. Register not launched when NXDOMAIN."
+}

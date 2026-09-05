@@ -23,6 +23,7 @@ concurrency:
 permissions:
   contents: write
   id-token: write
+  actions: write   # to dispatch hub-queue-flip; a workflow-token push fires no push event
 
 jobs:
   sign:
@@ -50,6 +51,7 @@ jobs:
             python3 scripts/sign_financial_runs.py
           fi
       - name: commit signed cards
+        id: commit
         run: |
           set -euo pipefail
           git config user.name "csoai-financial-measure"
@@ -72,3 +74,18 @@ jobs:
           else
             git push origin HEAD:master
           fi
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+      # A push made with the workflow token fires NO push event, by GitHub's design (it is what
+      # stops workflows recursing). hub-queue-flip triggers on push to master under
+      # public/interop/mill-cards-signed/**, so the signer's own commit could never start it:
+      # cards were signed and the census was never reprinted. Ask for the run explicitly.
+      # Only for a push that reached master -- a mill run lands on its own branch, where the
+      # census has nothing to print yet, and the flip runs after that branch's PR merges.
+      - name: dispatch hub-queue-flip (a workflow-token push starts nothing)
+        if: steps.commit.outputs.pushed == 'true' && (inputs.target || 'financial') != 'mill'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh workflow run hub-queue-flip.yml --ref master -f dry_run=false
+          echo "requested hub-queue-flip on master"

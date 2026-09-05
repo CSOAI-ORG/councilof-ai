@@ -51,8 +51,14 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         tier: 2,
         id: "evidence_bundle",
         name: "Evidence bundle mapped to an obligation",
-        resource: u("/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<s>&bundle=1"),
-        free_preview: u("/api/evidence-bundle?obligation=<id>&subject=<s>"),
+        resource: u("/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<model-id>&bundle=1"),
+        // `<id>` MEANT A MODEL ID on the request-attestation tier ten lines above, and an
+        // OBLIGATION id here. A buyer who does the obvious thing gets 404 unknown_obligation —
+        // measured 2026-09-05: this exact free_preview, fetched verbatim, answered 404 while
+        // ?obligation=dora&subject=gpt-4o answered 200. The valid set is named in the endpoint's
+        // own 404 body (article-50, article-53, dora, cra; eu-cra resolves as an alias, checked).
+        // A placeholder that names the wrong kind of value costs a buyer their first call.
+        free_preview: u("/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>"),
         deliverable: "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)",
         never: ["a conformity determination", "satisfied/not-satisfied findings", "a certificate"],
       },
