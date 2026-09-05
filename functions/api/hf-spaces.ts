@@ -1,6 +1,13 @@
 // /api/hf-spaces — server-side cached mirror of the csoai HF org Space catalog.
 // Lane-doable: only reads from huggingface.co/api, no keys, no writes.
 // Cache-Control: 5 min (the HF list is dynamic but stable on a per-day scale).
+//
+// A FAILED LISTING IS NOT AN EMPTY ONE. fetchJSON used to return [] on any
+// non-OK response and counts was the .length of whatever survived, so one HF
+// throttle published `models: 0` — a statement that the org has no models,
+// indistinguishable from the truth. Same defect as /api/hub-cards: a fan-out
+// totalling whatever came back. A count is now null unless its listing answered,
+// and listings_unread names the ones that did not.
 
 /// <reference types="@cloudflare/workers-types" />
 
@@ -9,14 +16,21 @@ const HF_DATASETS = "https://huggingface.co/api/datasets?author=csoai&limit=200"
 const HF_MODELS = "https://huggingface.co/api/models?author=csoai&limit=200";
 const TTL = 300; // 5 min
 
-async function fetchJSON(url: string): Promise<unknown> {
-  const r = await fetch(url, { headers: { "Accept": "application/json" } });
-  if (!r.ok) return [];
-  return await r.json();
-}
+type Listing =
+  | { ok: true; name: string; rows: unknown[] }
+  | { ok: false; name: string; reason: string };
 
-function asArray(v: unknown): unknown[] {
-  return Array.isArray(v) ? v : [];
+async function fetchListing(name: string, url: string): Promise<Listing> {
+  try {
+    const r = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!r.ok) return { ok: false, name, reason: `http ${r.status}` };
+    const v = await r.json().catch(() => undefined);
+    // A 200 that is not a list is not an empty catalogue; it is an unread one.
+    if (!Array.isArray(v)) return { ok: false, name, reason: "not a json array" };
+    return { ok: true, name, rows: v };
+  } catch (e) {
+    return { ok: false, name, reason: `fetch failed: ${(e as Error)?.message ?? "unknown"}` };
+  }
 }
 
 interface SlimSpace {
@@ -39,11 +53,20 @@ function slimSpace(s: any): SlimSpace {
 
 export const onRequestGet: PagesFunction = async (ctx) => {
   try {
-    const [spaces, datasets, models] = await Promise.all([
-      fetchJSON(HF_API).then(asArray),
-      fetchJSON(HF_DATASETS).then(asArray),
-      fetchJSON(HF_MODELS).then(asArray),
+    const [spacesL, datasetsL, modelsL] = await Promise.all([
+      fetchListing("spaces", HF_API),
+      fetchListing("datasets", HF_DATASETS),
+      fetchListing("models", HF_MODELS),
     ]);
+
+    const rows = (l: Listing): unknown[] => (l.ok ? l.rows : []);
+    const spaces = rows(spacesL);
+    const datasets = rows(datasetsL);
+    const models = rows(modelsL);
+
+    const unread = [spacesL, datasetsL, modelsL]
+      .filter((l): l is Extract<Listing, { ok: false }> => !l.ok)
+      .map((l) => ({ listing: l.name, reason: l.reason }));
 
     const slimSpaces = (spaces as any[]).map(slimSpace);
     const slimDatasets = (datasets as any[]).map((d: any) => ({
@@ -69,10 +92,15 @@ export const onRequestGet: PagesFunction = async (ctx) => {
         datasets: slimDatasets,
         models: slimModels,
         counts: {
-          spaces: slimSpaces.length,
-          datasets: slimDatasets.length,
-          models: slimModels.length,
+          // null, never 0, for a listing that did not answer.
+          spaces: spacesL.ok ? slimSpaces.length : null,
+          datasets: datasetsL.ok ? slimDatasets.length : null,
+          models: modelsL.ok ? slimModels.length : null,
+          complete: unread.length === 0,
+          listings_unread: unread,
         },
+        null_means:
+          "A null count is a listing that did not answer, never an empty catalogue. See counts.listings_unread.",
         live_board: "https://councilof.ai/api/gspc",
         verify: "https://councilof.ai/gspc-verify",
       },
