@@ -23,7 +23,6 @@ import { fileURLToPath } from "node:url";
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SELFTEST = process.argv.includes("--selftest");
-const REQUIRE_FAQ = process.argv.includes("--require-faq");
 const DIR = resolve(REPO, process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : "dist/client");
 
 const LD = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
@@ -102,23 +101,16 @@ if (!honesty) fail("/honesty/", "not present in the built tree");
 else {
   const nodes = nodesIn(honesty, (m) => fail("/honesty/", `unparseable ld+json block (${m})`));
   const faq = hasType(nodes, "FAQPage")[0];
-  // NOT yet a failure, deliberately, and this comment is the flip switch.
-  // The FAQPage emitter in PageSchema.tsx has never been observed running through a real
-  // prerender — it could not be: this repo's prerender needs a full install and a browser.
-  // Arming an assertion whose subject is unproven, inside the workflow that ships the site and
-  // also runs on a 3h cron, would put the estate's deploy at risk of a defect in MY code.
-  // A gate must be able to fail (see --selftest); it must not be armed before the thing it
-  // guards has been seen working once.
-  // FLIP IT: after the first deploy where this prints "FAQPage present", change the next line
-  // to `fail("/honesty/", "no FAQPage node")` and delete this block.
-  if (!faq) {
-    console.error("⚠ /honesty/: no FAQPage node — REPORTED, not failed (see the flip note in this file).");
-    console.error("   This is a named gap, not a pass: nothing here verified a FAQ exists.");
-  } else if ((faqSeen = (faq.mainEntity || []).length) && !REQUIRE_FAQ) {
-    console.log(`✓ /honesty/: FAQPage present with ${(faq.mainEntity || []).length} question(s) — arm it now (flip note in this file)`);
-  }
+  // ARMED 2026-09-05. The flip note that stood here said: arm this once the emitter has been
+  // seen working through a real prerender. It has been. Deploy run 33967264133 ran this gate
+  // against its prerendered dist/client and the shipped page carries the node —
+  // GET https://councilof.ai/honesty/ returns an FAQPage with 5 questions, read off the live
+  // page, whose text is the page's own section content. So a missing FAQPage is now a failure
+  // rather than a warning: the thing exists, and its disappearance would be a regression.
+  if (!faq) fail("/honesty/", "no FAQPage node — /honesty is the page that states what we have NOT measured; it had none before 2026-09-05 and losing it again is a regression");
   if (faq) {
     const qs = faq.mainEntity || [];
+    faqSeen = qs.length;
     if (!qs.length) fail("/honesty/", "FAQPage has an empty mainEntity — a FAQ with no questions");
     for (const q of qs) {
       const a = q.acceptedAnswer && q.acceptedAnswer.text;
