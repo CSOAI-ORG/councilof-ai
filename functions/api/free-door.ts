@@ -30,10 +30,20 @@ import { x402Accepts, buildPaymentRequiredV2, type X402Env } from "./_x402";
 
 type Env = X402Env;
 
-const DESCRIPTION =
-  "CSOAI free door: the live GSPC board totals and the public signed root. Priced at zero " +
-  "because it is free forever — this is the real price, not a promotion. Paid artefacts are " +
-  "catalogued at https://councilof.ai/api/x402. Measurement, not certification.";
+/**
+ * THE FIRST SENTENCE MUST STAND ALONE INSIDE ~120 CHARACTERS, and that is a hard-won constraint
+ * rather than a style note. The Bazaar record for this door was created on 2026-09-05 from a seed
+ * that truncated this text to 120 chars, so the live listing reads "...free forever — this",
+ * cut mid-clause. Re-seeding does NOT repair it: probed over 8 minutes across a further successful
+ * settle (tx 0xf054d2e4…, extension status "processing"), `lastUpdated` never moved off
+ * 03:27:26.273Z. The index writes a resource once and subsequent settles do not refresh it.
+ * The seed script no longer truncates, but any OTHER indexer may, so the opening sentence is
+ * written to survive being cut at 120 with its meaning intact.
+ */
+export const DESCRIPTION =
+  "CSOAI free door: the live GSPC board totals and the public signed root, at a price of zero " +
+  "because it is free forever. That is the real price, not a promotion — a grade is never sold. " +
+  "Paid artefacts are catalogued at https://councilof.ai/api/x402. Measurement, not certification.";
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);

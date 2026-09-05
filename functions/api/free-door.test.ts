@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { onRequestGet } from "./free-door";
+import { DESCRIPTION, onRequestGet } from "./free-door";
 
 const call = async () =>
   (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
@@ -58,5 +58,30 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     const extra = Object.keys(info.input).filter((k) => !allowed.has(k));
     expect(extra, `info.input carries keys the schema forbids: ${extra.join(", ")}`).toEqual([]);
     for (const r of declared.required) expect(info.input).toHaveProperty(r);
+  });
+
+  // REGRESSION, and a real one that is already visible in production. The Bazaar record for this
+  // door was written on 2026-09-05 from a seed that cut the description to 120 characters, so the
+  // live listing ends mid-clause: "...Priced at zero because it is free forever — this".
+  // Re-seeding cannot repair it — probed across a further successful settle (tx 0xf054d2e4…),
+  // `lastUpdated` never moved off 03:27:26.273Z, so the index writes a resource once and never
+  // refreshes it. Our own seed no longer truncates, but a different indexer may, and the record it
+  // writes will be just as permanent.
+  //
+  // THE PROPERTY IS NOT "the first sentence is short". That was the first version of this test and
+  // it was vacuous: the description that produced the mangled listing opens with a 71-character
+  // sentence and passes such a check comfortably. What went wrong is the SECOND sentence being
+  // sliced, leaving 49 characters of dangling clause. So the real property is that a cut at 120
+  // must land within a few characters of a sentence boundary, leaving no half-sentence behind.
+  it("leaves no dangling half-sentence when a listing truncates it at 120 chars", () => {
+    const CUT = 120;
+    const lastStop = DESCRIPTION.lastIndexOf(".", CUT - 1);
+    expect(lastStop).toBeGreaterThan(0);
+    const dangling = CUT - (lastStop + 1);
+    expect(dangling).toBeLessThanOrEqual(5);
+    // and what survives the cut must be the honest claim, never a fragment implying a sold grade
+    const surviving = DESCRIPTION.slice(0, lastStop + 1);
+    expect(surviving).toMatch(/free/i);
+    expect(surviving).not.toMatch(/certif/i);
   });
 });
