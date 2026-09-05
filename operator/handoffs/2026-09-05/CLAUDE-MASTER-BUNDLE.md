@@ -238,6 +238,9 @@ operator/handoffs/2026-09-05/board-observed-instrument-grading.jpg
 operator/handoffs/2026-09-05/hub-results-unmeasured-withheld.jpg
 operator/handoffs/2026-09-05/journey-stages-unavailable-named.jpg
 capabilities/root-conflict-disclosure.test.mjs
+capabilities/axis-family-split.test.mjs
+capabilities/integration-endpoints.test.mjs
+public/cards-bundle.json
 public/signed/HOW-TO-VERIFY-ROOT.md
 public/signed/index.html
 public/civic.html
@@ -264,12 +267,12 @@ before the build ran, and a reviewer would reasonably distrust everything else h
     npx vitest run client/src                                  643 passed at handoff
 
     # The capability guards need NO install and NO build. Verified from a bare
-    # `git archive HEAD` export with zero node_modules: 87 passed, offline and live.
+    # `git archive HEAD` export with zero node_modules: 97 passed, offline and live.
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 LIVE_NPM=1 LIVE_CARDS=1 \
       LIVE_ATTESTATION=1 LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
       LIVE_A2A=1 LIVE_X402=1 \
-      node --test capabilities/*.test.mjs                      87 passed at handoff, 0 failed
+      node --test capabilities/*.test.mjs                      97 passed at handoff, 0 failed
 
 Counts are stated **at handoff** deliberately. They move as master moves; a mismatch means drift
 to re-read, not an error. The claims that must hold regardless are asserted by
@@ -312,7 +315,7 @@ an instruction is only worth writing if it works for the person who did not writ
 |---|---|---|
 | 1 | `git rev-list --count HEAD..origin/master` | **0** — nothing to re-rebase |
 | 2 | every path in `git diff --name-only origin/master..HEAD` appears under Files | **61 of 61**, none unlisted |
-| 3 | capability guards, no install and no build, all `LIVE_*` set | **87 passed, 0 failed** |
+| 3 | capability guards, no install and no build, all `LIVE_*` set | **97 passed, 0 failed** |
 | 4 | `node scripts/one-door-guard.mjs` | **exit 0** |
 
 **And the ordering warning is not hypothetical.** Running `node scripts/brand-gate.mjs
@@ -763,7 +766,7 @@ above. Five of six apparent hits were my own weaker patterns matching denials �
 "we certify NOTHING" and "can never buy a score". brand-gate is more careful than the version I
 wrote to test it.
 
-## A published rule a reader could not yet observe
+## A published rule a reader could not yet observe — and the guard that forced its retraction
 
 A SCITT peer (Iman Schrock, Emilia Protocol) asked on 2026-09-05 for two pins: the rule and
 verifier path that detect **two conflicting roots for the same issuer and epoch**, and the ones
@@ -777,11 +780,20 @@ and `find_root_conflicts` in `scripts/witness_public_root.py` implements it, on 
 `78bba84269fa8ee8371140f27da9d6dc98657d11`. `python3 scripts/witness_public_root.py --selftest`
 proves NONE, CONFLICT and UNCHECKABLE are all reachable.
 
-**But no published artifact carries a `conflict` block yet.** The code landed at 06:25:32Z; the
-most recent root run was 04:16:50Z. So the guide described, in the present tense, a field that a
-reader fetching `/interop/root-witness-pointer.json` would not find — and would reasonably read
-as the document lying. The guide now states that, and states the thing that matters more:
-**absence of the field means the artifact predates the rule, never that the check returned NONE.**
+**For four hours no published artifact carried a `conflict` block.** The code landed at
+06:25:32Z; the most recent root run was 04:16:50Z. So the guide described, in the present tense,
+a field that a reader fetching `/interop/root-witness-pointer.json` would not find — and would
+reasonably read as the document lying. A disclosure paragraph was added saying so, and saying the
+part that mattered more: absence of the field meant the artifact predated the rule, never that
+the check returned NONE.
+
+**Then it published, and the guard retracted it.** The 09:00:28Z root run emitted the first one.
+`root-conflict-disclosure.test.mjs` failed on schedule, named the paragraph to delete and the
+peer to tell, and the paragraph is gone — its stated limit kept. Both
+`/interop/root-witness-latest.json` and `/interop/root-witness-pointer.json` now serve
+`conflict.status: NONE` over 10 and 11 scanned sidecars. **This is the first retraction in this
+lane forced by a guard rather than remembered by a person**, which is the entire reason for
+writing a disclosure with an expiry date attached.
 
 **The freshness half we do not have, and the peer was told so.** There is no signed head, no
 epoch counter, no maximum merge delay, no freshness bound on `root.json`. What exists is
@@ -798,6 +810,75 @@ the ledger id, the verifier function and the stated limit stay in the guide; and
 tell. A retraction nobody is forced to retract is a story about honesty rather than the thing
 itself — which is the disease this bundle documents six times over. Both directions were proven
 by mutation, not by passing.
+
+## WP-2 and WP-4, measured rather than assumed to be blocked
+
+Both were reported blocked on TUI 1's runtime. Re-inspected, and each had unblocked work left.
+
+### WP-2 — the 14/8 split holds, and now stays held
+
+WP-2 warns: "22 axes: 14 model comparisons and 8 fact axes, not 22 industries … Never invent
+nine ranks." Measured against `/api/gspc`:
+
+    totals.axes 22 · totals.model_fleets 14 · totals.fact_runs 8
+    kind counts   model-comparison 14 · deterministic-facts 8   (they partition the board)
+    per_model     jail only, 7 models — every other axis carries none
+
+The product already honours it. A facts axis gets a FACTS badge, "deterministic facts · no
+leader accuracy" in place of a score, and "facts · no separation test" in place of a verdict;
+the lid sentence prefers live `totals.lid` verbatim and derives the counts from the axes when it
+must. `cohort-provenance` and `gspc-parity` already assert the jail cohort's integrity. **Nothing
+changed in the product, because nothing needed to.**
+
+What was NOT held is that it stays that way, in two directions nothing here would have noticed:
+
+  · **The counts get typed in.** "14 model fleets · 8 fact runs" is a short, stable-looking
+    sentence and exactly what a tidy-up hardcodes. The identical construction in the x402 offer
+    is guarded for that reason; this one was not.
+  · **A facts axis grows a cohort.** A fact run has no fleet, so per-model rows under one are
+    invented rows — the "nine ranks" WP-2 forbids — and AxisProof would render them as real.
+
+`capabilities/axis-family-split.test.mjs` asserts both, plus that `totals.model_fleets` and
+`totals.fact_runs` agree with the axes they claim to count (the lid quotes the totals while the
+rows render from `kind`; if they diverge the page contradicts itself silently). Six mutations —
+three in source, three against a doctored board — all caught.
+
+### WP-4 — "test actual host support", applied to the integrations registry
+
+`client/src/data/intel/integrations.ts` is a ten-entry registry rendered by `/opengridworks`
+(HTTP 200). Seven entries name an endpoint. Nothing had ever compared them to runtime.
+**Three of seven do not answer:**
+
+    https://app.csoai.org/mcp                          200
+    https://app.csoai.org/.well-known/mcp.json         200
+    https://app.csoai.org/crosswalks                   200
+    https://app.csoai.org/eu-ai-act-classifier         200
+    https://app.csoai.org/agent.json                   404
+    https://app.csoai.org/data/regulation-deltas.json  404
+    https://meok-attestation-api.vercel.app            402
+
+The 402 is the dead-Vercel signature — Vercel was unlinked on 2026-08-31 and every leftover host
+answers 402. That entry reads "Issue and verify Ed25519-signed compliance attestations —
+provenance you can prove", with "POST /sign to issue an attestation". It cannot issue anything,
+and for this estate it is the worst possible entry to have pointing at a dead host.
+
+**What is NOT claimed, because it was measured and is not true: none of this is on screen today.**
+`/opengridworks` renders 2,700 characters at 1400px and 2,596 on a phone, and neither contains
+"Ed25519" or "meok-attestation-api" — the list needs an interaction to surface, and local and
+production agree exactly on both counts. A first pass concluded "not surfaced to users" from a
+phone-only probe, which proved nothing about desktop; the desktop probe was run before the
+conclusion was kept. So this is a LATENT trap, not a live defect — and this estate has already
+shipped a retracted claim exactly that way.
+
+`capabilities/integration-endpoints.test.mjs` records the three, fails on a fourth, fails on any
+NEW `vercel.app` endpoint entering the registry (statically, so it bites with no network), and
+fails when a KNOWN_DEAD endpoint revives — so the excuse list cannot only grow. Three mutations,
+all caught.
+
+**OWNER CALL, not taken here.** `client/src/components/evidence/EvidencePackage.tsx` is 323 lines
+imported by nothing; route `/evidence-package` is 404; it fetches the same dead 402 host. Its own
+README notes `/evidence` is already taken by a different product. It is another lane's port, so
+this bundle records it and deletes nothing.
 
 ## Open owner gates, in priority order
 
@@ -821,8 +902,8 @@ by mutation, not by passing.
 **The "bare worktree" claim is verified, not asserted.** `git archive HEAD` into an empty
 directory — **zero `node_modules`** — then `node --test capabilities/*.test.mjs`:
 
-    offline                     87 passed, 0 failed
-    every LIVE_* flag set       87 passed, 0 failed
+    offline                     97 passed, 0 failed
+    every LIVE_* flag set       97 passed, 0 failed
 
 Every capability guard imports `node:` builtins and relative paths only. That matters for a
 reviewer: you can check this bundle's evidence from a clean export, without trusting my

@@ -11,7 +11,11 @@ Shared working agreement for ALL agents on this repo. Read this first.
   Cards: **THREE corpora, zero overlap** — say which one you mean, every time.
   Full map + the correct sentence: `council-os/CARD-CORPORA.md`. In short:
   · `public/cards-bundle.json` → `card_count` = every `public/cards/*.json` wrapper on
-    disk (**1072**, read 2026-09-05). Its own generator note: "signs nothing, measures
+    disk. **Do not quote a fixed number here.** It was 1072 in this file, 1115 an hour later
+    and 1160 an hour after that — master adds wrappers continuously, so any integer typed
+    into this file is stale before the next agent reads it. Read it from
+    `public/cards-bundle.json` → `card_count`, which `capabilities/card-counts.test.mjs`
+    asserts equals the directory. Its own generator note: "signs nothing, measures
     nothing." A build-time aggregate, not an attestation. Not in `/api/state`.
   · `public/root.json` → `card_count` = the `card_sha256` leaves under the SIGNED Merkle
     root (**152**, verified 2026-09-05 in ALL THREE of the deployed `root.json`, the

@@ -77,6 +77,38 @@ describe("the three card counts, and the ruling behind 335", () => {
     assert.match(ruling, /n_cards == n_cells == rows == files == 335/);
   });
 
+  it("CLAUDE.md names where to read card_count instead of pinning a number", () => {
+    // FIRST VERSION OF THIS ASSERTION WAS THE WRONG FIX. It checked that CLAUDE.md's pinned
+    // card_count equalled the directory, and corrected 1072 -> 1115. Within the hour master
+    // had taken it to 1160. The figure moves continuously, so ANY integer typed into the file
+    // every agent reads first is stale before the next agent reads it — chasing it just moves
+    // the rot from one commit to the next.
+    //
+    // So the rule is now the property, not the value: this line must point at the artifact.
+    // The bundle-vs-directory assertion above is what keeps that artifact honest.
+    const claude = read("CLAUDE.md");
+    const line = claude.match(/`card_count`[^.]*?every\s+`public\/cards\/\*\.json`\s+wrapper[\s\S]{0,400}/);
+    assert.ok(
+      line,
+      "CLAUDE.md no longer describes cards-bundle.json's card_count at all. It is one of three " +
+        "counts that measure different things, and dropping it is how agents conflate them.",
+    );
+    const block = line[0].slice(0, 400);
+    const pinned = [...block.matchAll(/\*\*(\d{3,5})\*\*/g)].map((m) => m[1]);
+    assert.deepEqual(
+      pinned,
+      [],
+      `CLAUDE.md pins card_count at ${pinned.join(", ")} again. That number changed three times ` +
+        `on 2026-09-05 alone (1072 -> 1115 -> 1160) because master adds wrappers continuously. ` +
+        `Name the artifact to read it from; do not type the integer.`,
+    );
+    assert.match(
+      block,
+      /cards-bundle\.json/,
+      "the line no longer names public/cards-bundle.json as the place to read the count",
+    );
+  });
+
   it("CLAUDE.md does not tell every agent that 335/335 is wrong", () => {
     // The defect this file exists for. CLAUDE.md is read first by every agent, so a false
     // claim in it propagates further than the same claim anywhere else.
