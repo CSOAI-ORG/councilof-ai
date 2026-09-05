@@ -157,3 +157,59 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     }
   });
 });
+
+describe("the zero price must survive verifyX402Payment itself", () => {
+  // THIS TEST EXISTS BECAUSE THE MOCKED ONE MISSED IT. The fulfilment test above stubs
+  // verifyX402Payment to reach the 200 branch, which is the only way to assert the response
+  // shape — but it therefore proves nothing about whether the real function would ever say ok.
+  // It would not: _x402.ts refuses any accept whose maxAmountRequired is "0" with "no amount
+  // configured for this resource", because the paid-door default is `env.X402_AMOUNT || "0"`
+  // and settling an unconfigured door would give away a paid artefact. /api/free-door's price
+  // really is 0, so it tripped that guard and answered 402 to a caller who had settled
+  // correctly — found 2026-09-05 by paying the live door end to end, not by any test.
+  //
+  // The guard now admits zero only when the caller passes allowZeroAmount, and these two tests
+  // hold both halves of that: the free door passes it, and nothing else may.
+  it("still refuses a zero amount when the caller has NOT declared it deliberate", async () => {
+    const { verifyX402Payment } = await import("./_x402");
+    const r = await verifyX402Payment(
+      new Request("https://councilof.ai/api/anything", { headers: { "x-payment": "e30=" } }),
+      { X402_FACILITATOR_URL: "https://facilitator.example" } as never,
+      "https://councilof.ai/api/anything",
+      { scheme: "exact", network: "base", maxAmountRequired: "0", amount: "0",
+        asset: "0x0", payTo: "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31" } as never,
+    );
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/no amount configured/i);
+  });
+
+  it("does not refuse on the amount when the caller declares zero deliberate", async () => {
+    const { verifyX402Payment } = await import("./_x402");
+    const r = await verifyX402Payment(
+      new Request("https://councilof.ai/api/free-door", { headers: { "x-payment": "e30=" } }),
+      { X402_FACILITATOR_URL: "https://facilitator.example" } as never,
+      "https://councilof.ai/api/free-door",
+      { scheme: "exact", network: "base", maxAmountRequired: "0", amount: "0",
+        asset: "0x0", payTo: "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31" } as never,
+      { allowZeroAmount: true },
+    );
+    // It may still fail further along (no reachable facilitator in a unit test) — the point is
+    // that it must get PAST the amount guard, which is what blocked the live door.
+    expect(r.reason ?? "").not.toMatch(/no amount configured/i);
+  });
+
+  it("tells a caller who presented a payment WHY it was not accepted", async () => {
+    const res = (await (onRequestGet as unknown as (c: unknown) => Promise<Response>)({
+      request: new Request("https://councilof.ai/api/free-door", {
+        headers: { "x-payment": "e30=" },
+      }),
+      env: {},
+    })) as Response;
+    expect(res.status).toBe(402);
+    const body = (await res.json()) as { csoai?: { not_paid_reason?: string } };
+    expect(body.csoai?.not_paid_reason).toBeTruthy();
+    // and a caller who presented nothing gets the plain challenge, with no verdict invented
+    const plain = (await (await call()).json()) as Record<string, unknown>;
+    expect(plain.csoai).toBeUndefined();
+  });
+});

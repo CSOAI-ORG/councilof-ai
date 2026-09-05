@@ -232,6 +232,7 @@ export async function verifyX402Payment(
   env: X402Env,
   resourceUrl: string,
   accept?: X402Accept,
+  opts?: { allowZeroAmount?: boolean },
 ): Promise<X402Result> {
   const header = request.headers.get("x-payment") || request.headers.get("payment-signature");
   if (!header) return { ok: false, reason: "no x-payment header" };
@@ -276,7 +277,21 @@ export async function verifyX402Payment(
       extra: { name: USDC_BASE_EIP712.name, version: USDC_BASE_EIP712.version },
     } as X402Accept);
   if (!entry.payTo) return { ok: false, reason: "no payTo configured — refusing to settle to nowhere" };
-  if (entry.maxAmountRequired === "0") return { ok: false, reason: "no amount configured for this resource" };
+  // ZERO MEANS "UNCONFIGURED" UNLESS THE CALLER SAYS IT MEANT ZERO. The default a few lines
+  // above is `env.X402_AMOUNT || "0"`, so a paid door whose amount env var is missing arrives
+  // here advertising 0 — settling that would hand over a paid artefact for nothing. The guard
+  // must stay for exactly that case.
+  //
+  // But /api/free-door's true price IS zero, and this guard made it unable to ever fulfil:
+  // it advertised 0, tripped the "unconfigured" branch, and answered 402 to a caller who had
+  // correctly settled. Found 2026-09-05 by paying the live door end to end. It was invisible
+  // to the fulfilment test because that test mocked verifyX402Payment — it stubbed out the one
+  // function that was refusing.
+  //
+  // So zero is admissible only when the CALLER declares it, never by inference from the value.
+  if (entry.maxAmountRequired === "0" && !opts?.allowZeroAmount) {
+    return { ok: false, reason: "no amount configured for this resource" };
+  }
 
   // Auth is per-endpoint, not per-session: CDP binds each JWT to the exact method+host+path via
   // its `uri` claim, so /supported, /verify and /settle each need their own bearer. A non-CDP
