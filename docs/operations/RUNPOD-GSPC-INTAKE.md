@@ -15,6 +15,11 @@ to a Hugging Face repository.
 Create the allowlist on the control plane from banks reviewed and frozen there.
 Do not accept an allowlist shipped beside the pod result.
 
+The repository includes the currently reviewed digest set at
+`scripts/runpod_gspc_bank_allowlist.current.json`. Treat changes to that file
+as measurement-instrument changes: review the referenced bank bytes and land
+the manifest through the trusted control plane before using it for intake.
+
 ```json
 {
   "schema": "csoai.runpod-gspc-bank-allowlist/0.1",
