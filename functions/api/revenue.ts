@@ -81,6 +81,60 @@ async function metric(
   };
 }
 
+/**
+ * THE ONE NUMBER — distinct wallets that are not ours and paid. Every outside read of this estate
+ * on 2026-09-05 converged on it as the only figure that decides the next move. Derived from the
+ * settlement records recordSettlement() writes (functions/api/_x402.ts), never from the tally:
+ * a record names the payer, the tally does not. Null, never 0, when no store is bound. Zero is a
+ * real zero only when the store is bound and holds no non-self record.
+ */
+async function oneNumber(env: Env): Promise<Record<string, unknown>> {
+  const kv = env.REVENUE_KV;
+  const base = {
+    id: "distinct_nonself_payers",
+    definition:
+      "Count of distinct payer wallets, excluding payTo and X402_SELF_WALLETS, across facilitator-confirmed " +
+      "settlements. A wallet we control paying us is recorded but is neither revenue nor a buyer.",
+  };
+  if (!kv) {
+    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
+      source: "no REVENUE_KV bound — nothing is recorded, so nothing is counted" };
+  }
+  try {
+    const keys: string[] = [];
+    let cursor: string | undefined;
+    do {
+      const page = await kv.list({ prefix: "settled:tx:", cursor, limit: 1000 });
+      for (const k of page.keys) keys.push(k.name);
+      cursor = page.list_complete ? undefined : page.cursor;
+    } while (cursor && keys.length < 5000);
+    const since = Date.now() - 30 * 24 * 3600 * 1000;
+    const all = new Set<string>();
+    const recent = new Set<string>();
+    let settlements = 0;
+    let selfSettlements = 0;
+    let unreadable = 0;
+    for (const name of keys) {
+      const raw = await kv.get(name);
+      if (!raw) { unreadable++; continue; }
+      let r: { payer?: string | null; self?: boolean; settled_at?: string };
+      try { r = JSON.parse(raw); } catch { unreadable++; continue; }
+      if (r.self) { selfSettlements++; continue; }
+      settlements++;
+      const payer = (r.payer || "").toLowerCase();
+      if (!payer) continue;
+      all.add(payer);
+      if (r.settled_at && Date.parse(r.settled_at) >= since) recent.add(payer);
+    }
+    return { ...base, status: "MEASURED", all_time: all.size, last_30d: recent.size, settlements, self_settlements: selfSettlements,
+      records_unreadable: unreadable, source: "REVENUE_KV settled:tx:* records",
+      gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
+  } catch (e) {
+    return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
+      source: `REVENUE_KV read failed (${(e as Error).message}) — count stays null, never substituted` };
+  }
+}
+
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
@@ -109,11 +163,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     }
   }
 
-  const [issuances, proofs, licences, settled] = await Promise.all([
+  const [issuances, proofs, licences, settled, one_number] = await Promise.all([
     metric(env, "revenue_issuances", "count:issuances"),
     metric(env, "revenue_proofs", "count:proofs"),
     metric(env, "revenue_licences", "count:licences"),
     metric(env, "revenue_settled_usdc", "settled:usdc_atomic"),
+    oneNumber(env),
   ]);
 
   return json({
@@ -147,7 +202,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       proofs: { sku: "SKU-2", ...proofs },
       licences: { sku: "SKU-3", ...licences },
     },
-    settled_usdc: { ...settled, unit: "USDC atomic (6dp) on Base" },
+    settled_usdc: { ...settled, unit: "USDC atomic (6dp) on Base", excludes_self: true },
+    one_number,
     provisioning: {
       kv_bound: !!env.REVENUE_KV,
       gated: !!env.REVENUE_KEY,

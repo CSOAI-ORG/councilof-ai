@@ -126,6 +126,44 @@ describe("x402 rail — settlement is fail-closed and verify≠settle", () => {
     expect(seen[0].body.paymentRequirements.network).toBe("eip155:8453");
   });
 
+  it("writes a settlement record and tallies non-self USDC only — the One Number's source", async () => {
+    const store = new Map<string, string>();
+    const kv = {
+      get: async (k: string) => store.get(k) ?? null,
+      put: async (k: string, v: string) => { store.set(k, v); },
+      list: async () => ({ keys: [...store.keys()].map((name) => ({ name })), list_complete: true, cursor: "" }),
+    } as unknown as KVNamespace;
+    const self = "0x000000000000000000000000000000000000dEaD";
+    let payer = "0xBuyer0000000000000000000000000000000001";
+    vi.stubGlobal("fetch", async (u: string) => {
+      if (String(u).endsWith("/supported")) return new Response("{}", { status: 404 });
+      if (String(u).endsWith("/verify")) return new Response(JSON.stringify({ isValid: true }), { status: 200 });
+      return new Response(JSON.stringify({ success: true, transaction: `0xtx${payer.slice(-1)}`, network: "base", payer }), { status: 200 });
+    });
+    const env = { X402_FACILITATOR_URL: "https://f.example", REVENUE_KV: kv, X402_SELF_WALLETS: self };
+    const [a] = x402Accepts(env, RESOURCE, { skuId: "request_attestation", tier: "per_request" });
+    const amount = BigInt(a.amount || a.maxAmountRequired);
+    expect(amount > 0n).toBe(true);
+
+    const r1 = await verifyX402Payment(req(receipt(1)), env, RESOURCE, a);
+    expect(r1.ok).toBe(true);
+    const rec = JSON.parse(store.get("settled:tx:0xtx1")!);
+    expect(rec).toMatchObject({ schema: "csoai.x402.settlement/0.1", payer, self: false, resource: RESOURCE, amount_atomic: amount.toString() });
+    expect(store.get("settled:usdc_atomic")).toBe(amount.toString());
+
+    // the estate paying itself: recorded, kept apart, never revenue
+    payer = self;
+    const r2 = await verifyX402Payment(req(receipt(1)), env, RESOURCE, a);
+    expect(r2.ok).toBe(true);
+    expect(JSON.parse(store.get("settled:tx:0xtxD")!)).toMatchObject({ self: true });
+    expect(store.get("settled:usdc_atomic")).toBe(amount.toString());
+    expect(store.get("settled:self_usdc_atomic")).toBe(amount.toString());
+
+    // no store bound: the grant is unaffected and nothing is written
+    const r3 = await verifyX402Payment(req(receipt(1)), { X402_FACILITATOR_URL: "https://f.example" }, RESOURCE, a);
+    expect(r3.ok).toBe(true);
+  });
+
   // THE MONEY BUG, end to end. Our /.well-known/x402.json advertises x402Version 2, so a stock
   // client pays in v2. PayAI is the only keyless facilitator that settles on Base MAINNET and it
   // speaks v1 only. Before negotiation we mirrored the client and sent v2 — which PayAI rejects as

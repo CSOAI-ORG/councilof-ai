@@ -33,6 +33,7 @@
 
 import { SKUS, USDC_BASE, usdToAtomic, resolvePriceUsd } from "./_skus";
 import {
+  ESTATE_PAY_TO,
   resolvePayTo,
   facilitatorUrl,
   USDC_BASE_EIP712,
@@ -51,6 +52,13 @@ export { toCaip2Network, toLegacyNetwork };
 // CdpEnv carries CDP_API_KEY_ID/SECRET — declared once in _cdp_jwt.ts so the credential shape
 // cannot drift between the minter and its caller.
 export type X402Env = CdpEnv & {
+  // Optional settlement ledger (same binding /api/revenue reads). Absent ⇒ nothing is recorded and
+  // /api/revenue stays honestly null. Present ⇒ every facilitator-CONFIRMED settle writes one
+  // record and moves the non-self tally. Recording never gates the grant.
+  REVENUE_KV?: KVNamespace;
+  // Comma-separated wallets the estate controls (besides payTo). A settlement whose payer is one
+  // of these is SELF: recorded, but never counted as revenue or as a buyer.
+  X402_SELF_WALLETS?: string;
   // The x402 facilitator that verifies (and settles) a receipt. Absent → metered endpoints
   // stay 402: an unverified receipt is never accepted.
   X402_FACILITATOR_URL?: string;
@@ -216,6 +224,67 @@ export function toV2Requirements(a: X402Accept): Record<string, unknown> {
     maxTimeoutSeconds: a.maxTimeoutSeconds,
     extra: { name: a.extra.name, version: a.extra.version },
   };
+}
+
+/** Wallets whose payments are the estate paying itself: payTo plus X402_SELF_WALLETS. Lowercased. */
+export function selfWallets(env: Pick<X402Env, "X402_PAY_TO" | "X402_SELF_WALLETS">): Set<string> {
+  const out = new Set<string>();
+  const pt = resolvePayTo(env);
+  if (pt) out.add(pt.toLowerCase());
+  out.add(ESTATE_PAY_TO.toLowerCase());
+  for (const w of (env.X402_SELF_WALLETS || "").split(","))
+    if (/^0x[0-9a-fA-F]{40}$/.test(w.trim())) out.add(w.trim().toLowerCase());
+  return out;
+}
+
+export type SettlementRecord = {
+  schema: "csoai.x402.settlement/0.1";
+  transaction: string | null;
+  network: string | null;
+  payer: string | null;
+  self: boolean; // payer ∈ selfWallets(env) — the estate paying itself
+  resource: string;
+  amount_atomic: string | null; // what the 402 asked for; the facilitator does not echo the amount
+  settled_at: string;
+};
+
+/**
+ * recordSettlement — THE ONE NUMBER's source. Every outside read of this estate on 2026-09-05
+ * said the same thing: the only figure that decides the next move is "distinct non-self wallets
+ * that paid", and nothing here was writing it down. /api/revenue read a KV tally that no code
+ * path ever incremented, so it reported null forever, while the rail was live and settling.
+ *
+ * Writes (only when REVENUE_KV is bound):
+ *   settled:tx:<transaction|unknown:<ts>>  → one SettlementRecord (append-only, never overwritten)
+ *   settled:usdc_atomic                     → non-self USDC atomic total (what /api/revenue shows)
+ *   settled:self_usdc_atomic                → the estate paying itself, kept apart, never revenue
+ * The tally is read-add-put, which can under-count under concurrent settles; the records are the
+ * truth and /api/revenue derives the distinct-payer count from them, not from the tally.
+ * Never throws and never affects the grant: a lost record is a gap to notice, not a reason to
+ * refuse a paid artefact.
+ */
+export async function recordSettlement(
+  env: X402Env,
+  rec: Omit<SettlementRecord, "schema" | "self" | "settled_at">,
+): Promise<SettlementRecord | null> {
+  const kv = env.REVENUE_KV;
+  if (!kv) return null;
+  const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
+  const record: SettlementRecord = { schema: "csoai.x402.settlement/0.1", ...rec, self, settled_at: new Date().toISOString() };
+  try {
+    const key = `settled:tx:${record.transaction || `unknown:${Date.now()}`}`;
+    if ((await kv.get(key)) == null) await kv.put(key, JSON.stringify(record));
+    const amt = record.amount_atomic && /^\d+$/.test(record.amount_atomic) ? BigInt(record.amount_atomic) : 0n;
+    if (amt > 0n) {
+      const tallyKey = self ? "settled:self_usdc_atomic" : "settled:usdc_atomic";
+      const prev = await kv.get(tallyKey);
+      const base = prev && /^\d+$/.test(prev) ? BigInt(prev) : 0n;
+      await kv.put(tallyKey, (base + amt).toString());
+    }
+  } catch {
+    // Recording is observation, not gating. Say nothing to the payer; the gap shows on /api/revenue.
+  }
+  return record;
 }
 
 /**
@@ -421,6 +490,14 @@ export async function verifyX402Payment(
     // which is the worst possible place to learn that lesson.
     const { bazaar: _bazaarSidechannel, ...buyerFacing } = settlement;
     const paymentResponse = btoa(JSON.stringify({ success: true, ...buyerFacing }));
+    // Write it down. The grant above does not depend on this line.
+    await recordSettlement(env, {
+      transaction: settlement.transaction,
+      network: settlement.network,
+      payer: settlement.payer,
+      resource: resourceUrl,
+      amount_atomic: accept?.amount || accept?.maxAmountRequired || null,
+    });
     return { ok: true, reason: "facilitator verified and settled receipt", paymentResponse, settlement };
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
