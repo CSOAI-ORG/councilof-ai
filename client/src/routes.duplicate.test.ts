@@ -1,24 +1,30 @@
 /**
  * routes.duplicate.test.ts — no path may be declared twice in App.tsx.
  *
- * WHY. App.tsx declares 498 routes. wouter matches the FIRST <Route> whose path matches, so a
+ * WHY. App.tsx declares ~498 routes. wouter matches the FIRST <Route> whose path matches, so a
  * second declaration of the same path is unreachable code: the component named there can never
- * render, and nothing anywhere says so. Two exist today and both hide a real page:
+ * render, and nothing anywhere says so.
  *
- *   /badges     line  709  -> Redirect to "/badge"     (wins)
- *               line 1061  -> BadgesPage               (dead — and it is the NEWEST file, 2 Sep)
- *   /challenge  line  674  -> Challenge                (wins)
- *               line  711  -> ChallengeDoor            (dead)
+ * Two existed and both are now resolved, 2026-09-05, by deleting the declaration that never
+ * ran. That is not a product decision and it changes nothing a visitor sees — an unreachable
+ * route renders for nobody.
  *
- * Neither is resolved here on purpose. Which page a visitor should see is a product decision
- * that changes public truth — /badge -> BadgeKit looks like deliberate canonicalisation, yet
- * BadgesPage was added after it and is plainly meant to be seen by someone. Guessing would
- * silently change what the site shows. The guard makes the collision impossible to add to, and
- * the two known cases are listed as owner-gated exceptions so this fails on the NEXT one
- * immediately rather than after another 498 routes accumulate.
+ *   /badges     line  709  -> Redirect to "/badge"   KEPT, it was already the one that won
+ *               line 1061  -> BadgesPage             REMOVED as unreachable
+ *   /challenge  line  674  -> Challenge              KEPT
+ *               line  711  -> ChallengeDoor          REMOVED as unreachable
  *
- * Remove an entry from KNOWN below the moment its route is resolved; the test fails if a listed
- * exception is no longer duplicated, so the list cannot rot into permanent permission.
+ * A CORRECTION worth recording, because the earlier note in this file got it wrong. BadgesPage
+ * was described as "dead". It is not: the very next line serves it at /authority, so deleting
+ * the /badges duplicate cost nothing at all. Reading one line further would have shown that.
+ *
+ * ChallengeDoor genuinely had no other route, so it is now unreferenced and its lazy import is
+ * gone. The file stays on disk. Whether the redress door should be wired somewhere or deleted
+ * is a real product question and is left open — but it is now a question about ADDING a page,
+ * not an invisible collision hiding one.
+ *
+ * KNOWN_DUPLICATES is empty and must stay empty. Adding to it requires a recorded owner
+ * decision; the test below fails on any new collision immediately.
  */
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
@@ -29,7 +35,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const app = readFileSync(path.join(here, "App.tsx"), "utf8");
 
 /** Paths known to be duplicated, awaiting an owner decision. Not permission — a countdown. */
-const KNOWN_DUPLICATES = new Set(["/badges", "/challenge"]);
+const KNOWN_DUPLICATES = new Set<string>([]);
 
 function declaredPaths(): string[] {
   // Only <Route path="…"> declarations; ignore hrefs, redirect targets and strings elsewhere.
@@ -68,5 +74,17 @@ describe("App.tsx declares each route path once", () => {
       `${resolved.join(", ")} is no longer duplicated. Delete it from KNOWN_DUPLICATES so the ` +
         `list keeps meaning "awaiting a decision" rather than "permanently allowed".`,
     ).toEqual([]);
+  });
+
+  it("there are no duplicate routes left at all", () => {
+    // The exception list is empty, so this is the same assertion as above with nothing
+    // excused. Stated separately because it is the one that should stay true forever.
+    expect([...duplicates(declaredPaths()).keys()]).toEqual([]);
+  });
+
+  it("removing the /badges duplicate did not unpublish BadgesPage", () => {
+    // The whole reason that deletion was safe. If /authority ever goes, BadgesPage becomes
+    // genuinely unreachable and this fails rather than letting a page vanish quietly.
+    expect(app).toMatch(/<Route path="\/authority" component=\{BadgesPage\}/);
   });
 });
