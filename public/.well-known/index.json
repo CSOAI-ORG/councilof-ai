@@ -1,7 +1,7 @@
 {
   "schema": "csoai.well-known-index/0.1",
-  "as_of": "20260905T045748Z",
-  "total_doors": 193,
+  "as_of": "20260905T115502Z",
+  "total_doors": 294,
   "doors": [
     {
       "slug": "agent-card",
@@ -46,6 +46,36 @@
       "url": "https://councilof.ai/.well-known/aida.json"
     },
     {
+      "slug": "anthropic-batch",
+      "name": "Anthropic Batch API",
+      "description": "Async batch processing",
+      "url": "https://councilof.ai/.well-known/anthropic-batch.json"
+    },
+    {
+      "slug": "anthropic-extended-thinking",
+      "name": "Anthropic Extended Thinking",
+      "description": "Chain-of-thought reasoning",
+      "url": "https://councilof.ai/.well-known/anthropic-extended-thinking.json"
+    },
+    {
+      "slug": "anthropic-messages",
+      "name": "Anthropic Messages API",
+      "description": "Claude messages + system",
+      "url": "https://councilof.ai/.well-known/anthropic-messages.json"
+    },
+    {
+      "slug": "anthropic-prompt-caching",
+      "name": "Anthropic Prompt Caching",
+      "description": "Cached content blocks",
+      "url": "https://councilof.ai/.well-known/anthropic-prompt-caching.json"
+    },
+    {
+      "slug": "anthropic-tools",
+      "name": "Anthropic Tool Use",
+      "description": "Claude tool calling",
+      "url": "https://councilof.ai/.well-known/anthropic-tools.json"
+    },
+    {
       "slug": "anthropic",
       "name": "Anthropic Claude",
       "description": "Claude family models (Opus, Sonnet, Haiku)",
@@ -86,6 +116,54 @@
       "name": "BaFin",
       "description": "German Federal Financial Supervisory Authority AI guidance",
       "url": "https://councilof.ai/.well-known/bafin.json"
+    },
+    {
+      "slug": "bank-bnp-paribas",
+      "name": "Bank census \u2014 BNP Paribas",
+      "description": "Census evidence for BNP Paribas (FR) \u2014 EVM-treasury. 150 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-bnp-paribas.json"
+    },
+    {
+      "slug": "bank-bny-mellon",
+      "name": "Bank census \u2014 BNY Mellon",
+      "description": "Census evidence for BNY Mellon (US) \u2014 XRPL-direct. 150 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-bny-mellon.json"
+    },
+    {
+      "slug": "bank-deutsche-bank",
+      "name": "Bank census \u2014 Deutsche Bank",
+      "description": "Census evidence for Deutsche Bank (DE) \u2014 EVM-treasury. 150 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-deutsche-bank.json"
+    },
+    {
+      "slug": "bank-hsbc",
+      "name": "Bank census \u2014 HSBC",
+      "description": "Census evidence for HSBC (GB) \u2014 XRPL-direct. 180 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-hsbc.json"
+    },
+    {
+      "slug": "bank-sg-forge",
+      "name": "Bank census \u2014 SG-FORGE",
+      "description": "Census evidence for SG-FORGE (FR) \u2014 XRPL-direct. 160 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-sg-forge.json"
+    },
+    {
+      "slug": "bank-stanchart",
+      "name": "Bank census \u2014 StanChart",
+      "description": "Census evidence for StanChart (GB) \u2014 XRPL-direct. 180 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-stanchart.json"
+    },
+    {
+      "slug": "bank-ubs",
+      "name": "Bank census \u2014 UBS",
+      "description": "Census evidence for UBS (CH) \u2014 EVM-treasury. 150 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-ubs.json"
+    },
+    {
+      "slug": "bank-uob",
+      "name": "Bank census \u2014 UOB",
+      "description": "Census evidence for UOB (SG) \u2014 XRPL-direct. 180 records, chains: Arbitrum, Base, Ethereum, Polygon, XRPL.",
+      "url": "https://councilof.ai/.well-known/bank-uob.json"
     },
     {
       "slug": "basel3",
@@ -208,6 +286,18 @@
       "url": "https://councilof.ai/.well-known/cn-genai.json"
     },
     {
+      "slug": "cobol-bridge",
+      "name": "COBOLBridge.ai",
+      "description": "Legacy COBOL modernization with signed conversion attestations.",
+      "url": "https://councilof.ai/.well-known/cobol-bridge.json"
+    },
+    {
+      "slug": "cohere-api",
+      "name": "Cohere API",
+      "description": "Cohere chat + rerank + embed",
+      "url": "https://councilof.ai/.well-known/cohere-api.json"
+    },
+    {
       "slug": "compliance",
       "name": "Compliance",
       "description": "Work through a SOC 2 / ISO 42001 / HIPAA scenario",
@@ -218,6 +308,12 @@
       "name": "Council EU AI Conclusions",
       "description": "EU Council AI Strategy",
       "url": "https://councilof.ai/.well-known/council-eu-ai.json"
+    },
+    {
+      "slug": "coze-bot",
+      "name": "Coze Bot",
+      "description": "Coze bot format (ByteDance)",
+      "url": "https://councilof.ai/.well-known/coze-bot.json"
     },
     {
       "slug": "cra-risk",
@@ -278,6 +374,12 @@
       "name": "EU DGA",
       "description": "Data Governance Act",
       "url": "https://councilof.ai/.well-known/data-governance-act.json"
+    },
+    {
+      "slug": "deepseek-api",
+      "name": "DeepSeek API",
+      "description": "DeepSeek R1 / V3",
+      "url": "https://councilof.ai/.well-known/deepseek-api.json"
     },
     {
       "slug": "dhs-ai",
@@ -352,6 +454,12 @@
       "url": "https://councilof.ai/.well-known/ear.json"
     },
     {
+      "slug": "eba-ai",
+      "name": "EBA AI",
+      "description": "EU Banking Authority AI",
+      "url": "https://councilof.ai/.well-known/eba-ai.json"
+    },
+    {
       "slug": "eba",
       "name": "EBA",
       "description": "European Banking Authority",
@@ -382,6 +490,12 @@
       "url": "https://councilof.ai/.well-known/esg.json"
     },
     {
+      "slug": "esma-ai",
+      "name": "ESMA AI",
+      "description": "EU Securities and Markets Authority AI",
+      "url": "https://councilof.ai/.well-known/esma-ai.json"
+    },
+    {
       "slug": "esma",
       "name": "ESMA",
       "description": "European Securities and Markets Authority",
@@ -406,16 +520,52 @@
       "url": "https://councilof.ai/.well-known/etsi-gr-007.json"
     },
     {
+      "slug": "etsi-gr-sai-007",
+      "name": "ETSI GR SAI 007",
+      "description": "AI threat ontology",
+      "url": "https://councilof.ai/.well-known/etsi-gr-sai-007.json"
+    },
+    {
+      "slug": "etsi-ts-104-222",
+      "name": "ETSI TS 104 222",
+      "description": "Securing AI systems",
+      "url": "https://councilof.ai/.well-known/etsi-ts-104-222.json"
+    },
+    {
       "slug": "etsi-ts-104",
       "name": "ETSI TS 104 222",
       "description": "Securing AI systems",
       "url": "https://councilof.ai/.well-known/etsi-ts-104.json"
     },
     {
+      "slug": "eu-ai-act-art50",
+      "name": "EU AI Act \u2014 Article 50 transparency obligations",
+      "description": "LIVE 2 Aug 2026 \u2014 AI disclosure duties for providers/deployers",
+      "url": "https://councilof.ai/.well-known/eu-ai-act-art50.json"
+    },
+    {
+      "slug": "eu-ai-act-gpai",
+      "name": "EU AI Act \u2014 General-Purpose AI (GPAI)",
+      "description": "Systemic-risk duties for frontier model providers",
+      "url": "https://councilof.ai/.well-known/eu-ai-act-gpai.json"
+    },
+    {
+      "slug": "eu-ai-act-high-risk",
+      "name": "EU AI Act \u2014 High-risk obligations",
+      "description": "LIVE 2 Aug 2027 \u2014 the 12-month cliff",
+      "url": "https://councilof.ai/.well-known/eu-ai-act-high-risk.json"
+    },
+    {
       "slug": "eu-ai-act",
       "name": "eu-ai-act",
       "description": "",
       "url": "https://councilof.ai/.well-known/eu-ai-act.json"
+    },
+    {
+      "slug": "eu-aild",
+      "name": "EU AILD",
+      "description": "EU AI Liability Directive",
+      "url": "https://councilof.ai/.well-known/eu-aild.json"
     },
     {
       "slug": "eu-cra",
@@ -428,6 +578,42 @@
       "name": "eu-data-act",
       "description": "",
       "url": "https://councilof.ai/.well-known/eu-data-act.json"
+    },
+    {
+      "slug": "eu-dga",
+      "name": "EU DGA",
+      "description": "EU Data Governance Act",
+      "url": "https://councilof.ai/.well-known/eu-dga.json"
+    },
+    {
+      "slug": "eu-dma",
+      "name": "EU DMA",
+      "description": "EU Digital Markets Act",
+      "url": "https://councilof.ai/.well-known/eu-dma.json"
+    },
+    {
+      "slug": "eu-dsa",
+      "name": "EU DSA",
+      "description": "EU Digital Services Act",
+      "url": "https://councilof.ai/.well-known/eu-dsa.json"
+    },
+    {
+      "slug": "eu-open-data",
+      "name": "EU Open Data",
+      "description": "EU Open Data Directive",
+      "url": "https://councilof.ai/.well-known/eu-open-data.json"
+    },
+    {
+      "slug": "eu-pld",
+      "name": "EU PLD",
+      "description": "EU Product Liability Directive",
+      "url": "https://councilof.ai/.well-known/eu-pld.json"
+    },
+    {
+      "slug": "eu-trade-secrets",
+      "name": "EU Trade Secrets",
+      "description": "EU Trade Secrets Directive",
+      "url": "https://councilof.ai/.well-known/eu-trade-secrets.json"
     },
     {
       "slug": "executive-order-14110",
@@ -460,6 +646,12 @@
       "url": "https://councilof.ai/.well-known/fcc-ai.json"
     },
     {
+      "slug": "fda-ai-ml",
+      "name": "FDA AI/ML SaMD",
+      "description": "US FDA AI/ML software as medical device",
+      "url": "https://councilof.ai/.well-known/fda-ai-ml.json"
+    },
+    {
       "slug": "fda-ai",
       "name": "FDA AI/ML",
       "description": "US FDA AI/ML SaMD guidance",
@@ -470,6 +662,12 @@
       "name": "FDIC AI",
       "description": "US Federal Deposit Insurance Corporation",
       "url": "https://councilof.ai/.well-known/fdic-ai.json"
+    },
+    {
+      "slug": "fdic",
+      "name": "FDIC",
+      "description": "US FDIC",
+      "url": "https://councilof.ai/.well-known/fdic.json"
     },
     {
       "slug": "fed-ai",
@@ -514,6 +712,12 @@
       "url": "https://councilof.ai/.well-known/finma.json"
     },
     {
+      "slug": "fireworks-api",
+      "name": "Fireworks API",
+      "description": "Fireworks inference",
+      "url": "https://councilof.ai/.well-known/fireworks-api.json"
+    },
+    {
       "slug": "fisma",
       "name": "FISMA",
       "description": "Federal Information Security Management Act",
@@ -544,6 +748,18 @@
       "url": "https://councilof.ai/.well-known/gdpr.json"
     },
     {
+      "slug": "gemini-api",
+      "name": "Google Gemini API",
+      "description": "Gemini Pro / Flash API",
+      "url": "https://councilof.ai/.well-known/gemini-api.json"
+    },
+    {
+      "slug": "gemini-grounding",
+      "name": "Google Grounding",
+      "description": "Search grounding",
+      "url": "https://councilof.ai/.well-known/gemini-grounding.json"
+    },
+    {
       "slug": "google",
       "name": "Google DeepMind",
       "description": "Gemini family + Gemma open models",
@@ -566,6 +782,12 @@
       "name": "GRI",
       "description": "Global Reporting Initiative",
       "url": "https://councilof.ai/.well-known/gri.json"
+    },
+    {
+      "slug": "groq-api",
+      "name": "Groq API",
+      "description": "Groq LPU inference",
+      "url": "https://councilof.ai/.well-known/groq-api.json"
     },
     {
       "slug": "hhs-ai",
@@ -598,10 +820,28 @@
       "url": "https://councilof.ai/.well-known/iasb.json"
     },
     {
+      "slug": "ico-ai-guidance",
+      "name": "ICO AI Guidance",
+      "description": "UK Information Commissioner's Office AI accountability framework.",
+      "url": "https://councilof.ai/.well-known/ico-ai-guidance.json"
+    },
+    {
       "slug": "ico-uk",
       "name": "ICO UK",
       "description": "UK Information Commissioner's Office",
       "url": "https://councilof.ai/.well-known/ico-uk.json"
+    },
+    {
+      "slug": "ieee-12207",
+      "name": "IEEE 12207",
+      "description": "Systems and software engineering",
+      "url": "https://councilof.ai/.well-known/ieee-12207.json"
+    },
+    {
+      "slug": "ieee-2842",
+      "name": "IEEE 2842",
+      "description": "Privacy and security for IOT",
+      "url": "https://councilof.ai/.well-known/ieee-2842.json"
     },
     {
       "slug": "ieee-7000",
@@ -626,6 +866,24 @@
       "name": "IEEE 7003",
       "description": "Algorithmic bias considerations",
       "url": "https://councilof.ai/.well-known/ieee-7003.json"
+    },
+    {
+      "slug": "ieee-7010",
+      "name": "IEEE 7010",
+      "description": "Wellbeing metrics for AI",
+      "url": "https://councilof.ai/.well-known/ieee-7010.json"
+    },
+    {
+      "slug": "ieee-7012",
+      "name": "IEEE 7012",
+      "description": "Machine learning readme",
+      "url": "https://councilof.ai/.well-known/ieee-7012.json"
+    },
+    {
+      "slug": "ieee-830",
+      "name": "IEEE 830",
+      "description": "Software requirements specification",
+      "url": "https://councilof.ai/.well-known/ieee-830.json"
     },
     {
       "slug": "ietf-audit",
@@ -694,6 +952,12 @@
       "url": "https://councilof.ai/.well-known/iso-27701.json"
     },
     {
+      "slug": "iso-3166",
+      "name": "ISO 3166",
+      "description": "Country codes",
+      "url": "https://councilof.ai/.well-known/iso-3166.json"
+    },
+    {
       "slug": "iso-38505",
       "name": "ISO/IEC 38505",
       "description": "ISO/IEC 38505 IT governance implications of AI",
@@ -718,10 +982,46 @@
       "url": "https://councilof.ai/.well-known/iso-42001.json"
     },
     {
+      "slug": "iso-4217",
+      "name": "ISO 4217",
+      "description": "Currency codes",
+      "url": "https://councilof.ai/.well-known/iso-4217.json"
+    },
+    {
+      "slug": "iso-639",
+      "name": "ISO 639",
+      "description": "Language codes",
+      "url": "https://councilof.ai/.well-known/iso-639.json"
+    },
+    {
       "slug": "iso-8200",
       "name": "ISO/IEC 8200",
       "description": "Software testing",
       "url": "https://councilof.ai/.well-known/iso-8200.json"
+    },
+    {
+      "slug": "iso-8601",
+      "name": "ISO 8601",
+      "description": "Date and time format",
+      "url": "https://councilof.ai/.well-known/iso-8601.json"
+    },
+    {
+      "slug": "iso-iec-23894",
+      "name": "ISO/IEC 23894",
+      "description": "AI risk management guidance",
+      "url": "https://councilof.ai/.well-known/iso-iec-23894.json"
+    },
+    {
+      "slug": "iso-iec-38507",
+      "name": "ISO/IEC 38507",
+      "description": "IT governance implications of AI",
+      "url": "https://councilof.ai/.well-known/iso-iec-38507.json"
+    },
+    {
+      "slug": "iso-iec-8200",
+      "name": "ISO/IEC 8200",
+      "description": "Software testing",
+      "url": "https://councilof.ai/.well-known/iso-iec-8200.json"
     },
     {
       "slug": "itar",
@@ -772,10 +1072,34 @@
       "url": "https://councilof.ai/.well-known/meti-ai.json"
     },
     {
+      "slug": "microsoft-copilot",
+      "name": "Microsoft 365 Copilot Plugin",
+      "description": "M365 Copilot plugin manifest",
+      "url": "https://councilof.ai/.well-known/microsoft-copilot.json"
+    },
+    {
       "slug": "mifid2",
       "name": "MiFID II",
       "description": "Markets in Financial Instruments Directive II",
       "url": "https://councilof.ai/.well-known/mifid2.json"
+    },
+    {
+      "slug": "mifir",
+      "name": "MiFIR",
+      "description": "Markets in financial instruments regulation",
+      "url": "https://councilof.ai/.well-known/mifir.json"
+    },
+    {
+      "slug": "mistral-api",
+      "name": "Mistral API",
+      "description": "Mistral chat + function calling",
+      "url": "https://councilof.ai/.well-known/mistral-api.json"
+    },
+    {
+      "slug": "mistral-functions",
+      "name": "Mistral Functions",
+      "description": "Mistral function calling",
+      "url": "https://councilof.ai/.well-known/mistral-functions.json"
     },
     {
       "slug": "mistral",
@@ -862,6 +1186,12 @@
       "url": "https://councilof.ai/.well-known/occ-ai.json"
     },
     {
+      "slug": "occ",
+      "name": "OCC",
+      "description": "US office of comptroller of currency",
+      "url": "https://councilof.ai/.well-known/occ.json"
+    },
+    {
       "slug": "oecd-ai-principles",
       "name": "OECD AI Principles",
       "description": "OECD AI Principles",
@@ -880,6 +1210,36 @@
       "url": "https://councilof.ai/.well-known/open-data.json"
     },
     {
+      "slug": "openai-assistants",
+      "name": "OpenAI Assistants",
+      "description": "Assistants API + thread + run",
+      "url": "https://councilof.ai/.well-known/openai-assistants.json"
+    },
+    {
+      "slug": "openai-functions",
+      "name": "OpenAI Functions",
+      "description": "ChatGPT's function calling format",
+      "url": "https://councilof.ai/.well-known/openai-functions.json"
+    },
+    {
+      "slug": "openai-responses",
+      "name": "OpenAI Responses API",
+      "description": "Latest API: responses + items",
+      "url": "https://councilof.ai/.well-known/openai-responses.json"
+    },
+    {
+      "slug": "openai-structured-outputs",
+      "name": "OpenAI Structured Outputs",
+      "description": "JSON Schema enforced outputs",
+      "url": "https://councilof.ai/.well-known/openai-structured-outputs.json"
+    },
+    {
+      "slug": "openai-tools",
+      "name": "OpenAI Tools",
+      "description": "OpenAI tools (function calling v2)",
+      "url": "https://councilof.ai/.well-known/openai-tools.json"
+    },
+    {
       "slug": "openai",
       "name": "OpenAI",
       "description": "GPT family + o-series reasoning models",
@@ -896,6 +1256,12 @@
       "name": "OSTP AI Bill of Rights",
       "description": "Blueprint for an AI Bill of Rights",
       "url": "https://councilof.ai/.well-known/ostp-ai-bill.json"
+    },
+    {
+      "slug": "otel",
+      "name": "OpenTelemetry Bridge",
+      "description": "OpenTelemetry-compatible spans for measured data (bank/swift/xrpl).",
+      "url": "https://councilof.ai/.well-known/otel.json"
     },
     {
       "slug": "owasp-agentic",
@@ -940,16 +1306,46 @@
       "url": "https://councilof.ai/.well-known/pci-dss-4.json"
     },
     {
+      "slug": "pci-dss-v4",
+      "name": "PCI DSS v4.0",
+      "description": "Payment card industry DSS",
+      "url": "https://councilof.ai/.well-known/pci-dss-v4.json"
+    },
+    {
       "slug": "pci-dss",
       "name": "pci-dss",
       "description": "",
       "url": "https://councilof.ai/.well-known/pci-dss.json"
     },
     {
+      "slug": "perplexity-api",
+      "name": "Perplexity API",
+      "description": "Perplexity sonar + pro",
+      "url": "https://councilof.ai/.well-known/perplexity-api.json"
+    },
+    {
+      "slug": "perplexity-pages",
+      "name": "Perplexity Pages",
+      "description": "Perplexity Pages (citation-backed pages)",
+      "url": "https://councilof.ai/.well-known/perplexity-pages.json"
+    },
+    {
+      "slug": "pi-api",
+      "name": "Pi API",
+      "description": "Inflection Pi assistant API",
+      "url": "https://councilof.ai/.well-known/pi-api.json"
+    },
+    {
       "slug": "pipl",
       "name": "China PIPL",
       "description": "Personal Information Protection Law",
       "url": "https://councilof.ai/.well-known/pipl.json"
+    },
+    {
+      "slug": "poe-bot",
+      "name": "Poe Bot",
+      "description": "Poe bot format (Quora)",
+      "url": "https://councilof.ai/.well-known/poe-bot.json"
     },
     {
       "slug": "product-liability",
@@ -970,10 +1366,64 @@
       "url": "https://councilof.ai/.well-known/psd2.json"
     },
     {
+      "slug": "psp",
+      "name": "PSP",
+      "description": "Payment service providers",
+      "url": "https://councilof.ai/.well-known/psp.json"
+    },
+    {
       "slug": "pspf",
       "name": "pspf",
       "description": "",
       "url": "https://councilof.ai/.well-known/pspf.json"
+    },
+    {
+      "slug": "reka-api",
+      "name": "Reka Core API",
+      "description": "Reka multimodal AI API",
+      "url": "https://councilof.ai/.well-known/reka-api.json"
+    },
+    {
+      "slug": "rfc-3339",
+      "name": "RFC 3339",
+      "description": "Timestamps",
+      "url": "https://councilof.ai/.well-known/rfc-3339.json"
+    },
+    {
+      "slug": "rfc-4122",
+      "name": "RFC 4122",
+      "description": "UUID",
+      "url": "https://councilof.ai/.well-known/rfc-4122.json"
+    },
+    {
+      "slug": "rfc-8259",
+      "name": "RFC 8259",
+      "description": "JSON",
+      "url": "https://councilof.ai/.well-known/rfc-8259.json"
+    },
+    {
+      "slug": "rfc-9162",
+      "name": "RFC 9162",
+      "description": "Certificate transparency v2",
+      "url": "https://councilof.ai/.well-known/rfc-9162.json"
+    },
+    {
+      "slug": "rwa-buidl",
+      "name": "BlackRock BUIDL \u2014 Tokenized US Treasuries",
+      "description": "$500M+ tokenized treasury fund; the canonical institutional RWA benchmark.",
+      "url": "https://councilof.ai/.well-known/rwa-buidl.json"
+    },
+    {
+      "slug": "rwa-registry",
+      "name": "RWA Registry \u2014 Tokenized Treasury Universe",
+      "description": "$26T US Treasuries outstanding; tokenized treasuries = the next $1T. Registers every RWA evidence card.",
+      "url": "https://councilof.ai/.well-known/rwa-registry.json"
+    },
+    {
+      "slug": "rwa-trex",
+      "name": "T-REX \u2014 Tokenized Receivables (ERC-3643)",
+      "description": "Permissioned tokenized receivables on Base/ETH; ERC-3643 standard.",
+      "url": "https://councilof.ai/.well-known/rwa-trex.json"
     },
     {
       "slug": "sasb",
@@ -998,6 +1448,12 @@
       "name": "scitt",
       "description": "",
       "url": "https://councilof.ai/.well-known/scitt.json"
+    },
+    {
+      "slug": "sec-ai-guidance",
+      "name": "SEC AI Guidance",
+      "description": "US SEC guidance on AI disclosure for public companies.",
+      "url": "https://councilof.ai/.well-known/sec-ai-guidance.json"
     },
     {
       "slug": "sec-cyber",
@@ -1042,6 +1498,30 @@
       "url": "https://councilof.ai/.well-known/state-dept-ai.json"
     },
     {
+      "slug": "statedept-ai",
+      "name": "State Dept AI",
+      "description": "US State Dept AI",
+      "url": "https://councilof.ai/.well-known/statedept-ai.json"
+    },
+    {
+      "slug": "swift-mt103",
+      "name": "SWIFT MT103",
+      "description": "Single Customer Credit Transfer (the most-used SWIFT rail, $1.25 quadrillion/yr flow)",
+      "url": "https://councilof.ai/.well-known/swift-mt103.json"
+    },
+    {
+      "slug": "swift-mt202",
+      "name": "SWIFT MT202",
+      "description": "General Financial Institution Transfer",
+      "url": "https://councilof.ai/.well-known/swift-mt202.json"
+    },
+    {
+      "slug": "swift-mt760",
+      "name": "SWIFT MT760",
+      "description": "Guarantee / Standby Letter of Credit",
+      "url": "https://councilof.ai/.well-known/swift-mt760.json"
+    },
+    {
       "slug": "tcfd-2026",
       "name": "TCFD 2026 Update",
       "description": "TCFD 2026 Update",
@@ -1058,6 +1538,12 @@
       "name": "tisax",
       "description": "",
       "url": "https://councilof.ai/.well-known/tisax.json"
+    },
+    {
+      "slug": "together-api",
+      "name": "Together API",
+      "description": "Together open models",
+      "url": "https://councilof.ai/.well-known/together-api.json"
     },
     {
       "slug": "tournament",
@@ -1082,6 +1568,66 @@
       "name": "uk-ai-bill",
       "description": "",
       "url": "https://councilof.ai/.well-known/uk-ai-bill.json"
+    },
+    {
+      "slug": "uk-aisi",
+      "name": "AISI UK",
+      "description": "UK AI Safety Institute",
+      "url": "https://councilof.ai/.well-known/uk-aisi.json"
+    },
+    {
+      "slug": "uk-bsi",
+      "name": "BSI UK",
+      "description": "UK BSI",
+      "url": "https://councilof.ai/.well-known/uk-bsi.json"
+    },
+    {
+      "slug": "uk-cdei",
+      "name": "CDEI",
+      "description": "UK Centre for Data Ethics",
+      "url": "https://councilof.ai/.well-known/uk-cdei.json"
+    },
+    {
+      "slug": "uk-cma",
+      "name": "CMA UK",
+      "description": "UK Competition and Markets Authority",
+      "url": "https://councilof.ai/.well-known/uk-cma.json"
+    },
+    {
+      "slug": "uk-dpa",
+      "name": "UK DPA",
+      "description": "UK Data Protection Act",
+      "url": "https://councilof.ai/.well-known/uk-dpa.json"
+    },
+    {
+      "slug": "uk-fca",
+      "name": "FCA UK",
+      "description": "UK FCA",
+      "url": "https://councilof.ai/.well-known/uk-fca.json"
+    },
+    {
+      "slug": "uk-gdpr",
+      "name": "UK GDPR",
+      "description": "UK GDPR",
+      "url": "https://councilof.ai/.well-known/uk-gdpr.json"
+    },
+    {
+      "slug": "uk-ico-aud",
+      "name": "ICO Audit",
+      "description": "UK ICO audit",
+      "url": "https://councilof.ai/.well-known/uk-ico-aud.json"
+    },
+    {
+      "slug": "uk-ico",
+      "name": "ICO UK",
+      "description": "UK Information Commissioner",
+      "url": "https://councilof.ai/.well-known/uk-ico.json"
+    },
+    {
+      "slug": "uk-pra",
+      "name": "PRA UK",
+      "description": "UK PRA",
+      "url": "https://councilof.ai/.well-known/uk-pra.json"
     },
     {
       "slug": "unesco-ai-ethics",
@@ -1144,21 +1690,82 @@
       "url": "https://councilof.ai/.well-known/wef-ai-governance.json"
     },
     {
+      "slug": "xai-api",
+      "name": "xAI Grok API",
+      "description": "Grok chat + image",
+      "url": "https://councilof.ai/.well-known/xai-api.json"
+    },
+    {
+      "slug": "xrpl-eurcv",
+      "name": "XRPL EURCV \u2014 Soci\u00e9t\u00e9 G\u00e9n\u00e9rale Forge EURCV",
+      "description": "On-chain evidence for Soci\u00e9t\u00e9 G\u00e9n\u00e9rale Forge EURCV (EURCV). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-eurcv.json"
+    },
+    {
+      "slug": "xrpl-eurq",
+      "name": "XRPL EURQ \u2014 Quantoz Payments EURQ",
+      "description": "On-chain evidence for Quantoz Payments EURQ (EURQ). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-eurq.json"
+    },
+    {
+      "slug": "xrpl-eur\u00f8p",
+      "name": "XRPL EUR\u00d8P \u2014 Schuman Financial EUR\u00d8P",
+      "description": "On-chain evidence for Schuman Financial EUR\u00d8P (EUR\u00d8P). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-eur\u00f8p.json"
+    },
+    {
+      "slug": "xrpl-love",
+      "name": "XRPL LOVE \u2014 Palau",
+      "description": "On-chain evidence for Palau (LOVE). 8 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-love.json"
+    },
+    {
+      "slug": "xrpl-ousg",
+      "name": "XRPL OUSG \u2014 Ondo Finance OUSG",
+      "description": "On-chain evidence for Ondo Finance OUSG (OUSG). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-ousg.json"
+    },
+    {
+      "slug": "xrpl-psc",
+      "name": "XRPL PSC \u2014 Republic of Palau PSC",
+      "description": "On-chain evidence for Republic of Palau PSC (PSC). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-psc.json"
+    },
+    {
       "slug": "xrpl-rlusd",
-      "name": "Ripple RLUSD on XRPL",
-      "description": "Ripple's USD stablecoin. Live on XRPL mainnet. 67,224 holders.",
+      "name": "XRPL RLUSD \u2014 Ripple RLUSD",
+      "description": "On-chain evidence for Ripple RLUSD (RLUSD). 9 cards observed.",
       "url": "https://councilof.ai/.well-known/xrpl-rlusd.json"
     },
     {
+      "slug": "xrpl-usd-bs",
+      "name": "XRPL USD.bs \u2014 Bitstamp USD",
+      "description": "On-chain evidence for Bitstamp USD (USD.bs). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-usd-bs.json"
+    },
+    {
+      "slug": "xrpl-usd-gh",
+      "name": "XRPL USD.gh \u2014 GateHub USD",
+      "description": "On-chain evidence for GateHub USD (USD.gh). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-usd-gh.json"
+    },
+    {
+      "slug": "xrpl-usdb",
+      "name": "XRPL USDB \u2014 BitGo USDB",
+      "description": "On-chain evidence for BitGo USDB (USDB). 1 cards observed.",
+      "url": "https://councilof.ai/.well-known/xrpl-usdb.json"
+    },
+    {
       "slug": "xrpl-usdc",
-      "name": "Circle USDC on XRPL",
-      "description": "Circle's USD stablecoin. Live on XRPL mainnet.",
+      "name": "XRPL USDC \u2014 Circle USDC",
+      "description": "On-chain evidence for Circle USDC (USDC). 9 cards observed.",
       "url": "https://councilof.ai/.well-known/xrpl-usdc.json"
     },
     {
-      "slug": "chatgpt-skills",
-      "name": "ChatGPT Skills",
-      "description": "Every ChatGPT skill \u2192 csoai: primitive"
+      "slug": "you-api",
+      "name": "You.com API",
+      "description": "You.com AI search API",
+      "url": "https://councilof.ai/.well-known/you-api.json"
     }
   ]
 }
