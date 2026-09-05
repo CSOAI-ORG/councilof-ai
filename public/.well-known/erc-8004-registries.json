@@ -1,0 +1,31 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "erc-8004-registries",
+  "name": "ERC-8004 — trustless agent registries",
+  "description": "The canonical place in this estate where the ERC-8004 registry addresses are stated.",
+  "as_of": "20260905T133000Z",
+  "chain": "Ethereum mainnet",
+  "registries": [
+    { "id": "identity", "name": "Identity Registry", "address": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432", "state": "LIVE_UPSTREAM" },
+    { "id": "reputation", "name": "Reputation Registry", "address": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63", "state": "LIVE_UPSTREAM" },
+    { "id": "validation", "name": "Validation Registry", "address": null, "state": "UNSHIPPED", "note": "Not shipped upstream. Validator registration is described in two briefs as the cleanest standing-to-revenue conversion available and is blocked on this, outside this estate. Recorded so the move is not re-proposed as merely undone." }
+  ],
+  "verification_state": {
+    "state": "NOT_INDEPENDENTLY_VERIFIED",
+    "why": "These addresses are transcribed from a research brief dated 2026-09-02, not read from chain by this lane. A contract address transcribed without an on-chain read must never be promoted to verified.",
+    "probe_that_would_settle_it": "eth_getCode against each address on Ethereum mainnet, plus a match against the published ERC-8004 reference deployment",
+    "promote_when": "an on-chain read confirms deployed bytecode at both addresses"
+  },
+  "estate_coverage": {
+    "existing_slugs": ["ledger-card-erc8004-callable", "ledger-card-erc8004-callable-unsigned", "ledger-card-autoeat-erc8004-newagents", "ledger-card-autoeat-erc8004-newagents-unsigned"],
+    "gap": "cards exist; no door stated the addresses until now"
+  },
+  "what_this_does_not_establish": [
+    "No agent registered in ERC-8004 is a client of the Council of AI.",
+    "An identity in a registry is not a measurement. The brief's own finding is that ERC-8004 identities exist today with zero behavioural card behind them.",
+    "No registration by the Council of AI as an ERC-8004 validator has occurred. That requires keys and is owner-gated.",
+    "The addresses above are NOT independently verified by this lane."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/erc-8004-registries.json", "live_board": "https://councilof.ai/api/gspc" },
+  "doctrine": "Transcribed is not verified. The door says which one this is."
+}
