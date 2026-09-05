@@ -27,6 +27,10 @@ describe("/pricing-free — the explainer names no price and sells no grade", ()
     expect(src).toMatch(/A grade is never sold/);
     expect(src).toMatch(/Measurement, not certification/);
     expect(src).toMatch(/free forever/i);
+    expect(src).toMatch(/explicitly UNSIGNED with a machine-readable reason/);
+    expect(src).toMatch(/manifest is Ed25519-signed when the Pages key is available; otherwise it is labelled UNSIGNED/);
+    expect(src).toMatch(/unsigned indexes stay labelled/);
+    expect(src).not.toMatch(/every block carrying its published signature/);
   });
 
   it("is wired four ways: route, prerender, PRIMARY_PATHS (no archive banner), and linked from /products", () => {

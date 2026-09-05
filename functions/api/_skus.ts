@@ -82,17 +82,17 @@ const band = (usd: number, range: [number, number], env_override: string): Price
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The three SKUs (EXEC-A-REVENUE.md §1). All sell the WORK + the durable signature;
-// the buyer can always recompute for free.
+// The SKUs sell the work with explicit verification state. A signature is included only when
+// signing material is available; the buyer can always recompute the underlying evidence for free.
 // ─────────────────────────────────────────────────────────────────────────────
 export const SKUS: Record<string, Sku> = {
-  // SKU-1 — Signed Measurement (ISSUANCE). Metered per signed card.
+  // SKU-1 — Measurement record (ISSUANCE). Metered per issued card.
   issuance: {
     id: "issuance",
-    name: "Signed Measurement (issuance)",
+    name: "Measurement record (issuance)",
     artifact:
-      "one cards/<sha16>.json — sha256, did:web:csoai.org#board-attestation-1, sig_ed25519, " +
-      "payload, source_urls, unmeasured[], plus the proof[] inclusion path to root.json",
+      "one cards/<sha16>.json — sha256, payload, source_urls, unmeasured[], and explicit sig_ed25519 state " +
+      "(Ed25519 under did:web:csoai.org#board-attestation-1 when signing material is available; null and declared otherwise), plus the proof[] inclusion path to root.json",
     unit: "1 card issued (1 subject × 1 frozen probe × 1 timestamp)",
     sells: "issuance",
     prices: {
@@ -103,9 +103,9 @@ export const SKUS: Record<string, Sku> = {
     },
     rail: "x402",
     notes:
-      "Re-serving a frozen probe is fractions of a cent (an API pull + one Ed25519 sign + a " +
-      "Pages Function invocation); a fresh run is priced to cover fleet compute. Sold in metered " +
-      "blocks via x402. They pay for OUR signature + Merkle anchor, not to avoid the maths.",
+      "Re-serving a frozen probe is fractions of a cent (an API pull + a Pages Function invocation, " +
+      "and one Ed25519 sign when signing material is available); a fresh run is priced to cover fleet " +
+      "compute. Sold in metered blocks via x402. They pay for issuance and evidence assembly, not to avoid the maths.",
   },
 
   // SKU-2 — Compliance Evidence Bundle (PROOF). Metered per bundle.
@@ -113,8 +113,8 @@ export const SKUS: Record<string, Sku> = {
     id: "evidence_bundle",
     name: "Compliance Evidence Bundle (proof)",
     artifact:
-      "a pack directory: <bench>.json + <bench>.sig.json (detached Ed25519) + " +
-      "<bench>_oscal.json (OSCAL 1.1.0 assessment-results) — e.g. public/packs/eu-article-50/",
+      "a pack directory: <bench>.json + <bench>_oscal.json (OSCAL 1.1.0 assessment-results) + " +
+      "<bench>.sig.json where a detached Ed25519 signature is published — e.g. public/packs/eu-article-50/",
     unit: "1 bundle = 1 subject × 1 regulation-obligation × 1 recompute cycle",
     sells: "assembly",
     prices: {
@@ -147,7 +147,7 @@ export const SKUS: Record<string, Sku> = {
       "Board stays free. Verify stays free. Human rail remains Paddle — do not wire Stripe.",
   },
 
-  // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a
+  // SKU — Article 50 marking-evidence pack. One card-v0 leaf per output measured: is a
   // machine-readable mark DETECTABLE in these bytes (C2PA manifest recomputed in the Function;
   // watermarks UNCHECKABLE where no public detector exists), beside the verbatim Art 50(2)
   // excerpt hash and the Art 99(4) ceiling. Point-in-time detection, never a conformity opinion.
@@ -157,7 +157,7 @@ export const SKUS: Record<string, Sku> = {
     artifact:
       "one card-v0 leaf, surface art50.marking-evidence, kind csoai.art50.marking-evidence/0.1 — asset sha256, " +
       "C2PA manifest/assertion/data-hash/signature status, watermark statuses, Art 50(2) excerpt hash, " +
-      "Art 99(4) ceiling, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1",
+      "Art 99(4) ceiling, unmeasured[]; Ed25519 under did:web:csoai.org#board-attestation-1 when signing material is available, explicitly unsigned otherwise",
     unit: "1 pack = 1 output (URL or uploaded bytes) × 1 point in time",
     sells: "issuance",
     prices: {
@@ -165,7 +165,7 @@ export const SKUS: Record<string, Sku> = {
     },
     rail: "x402-or-invoice",
     notes:
-      "Free preview (?preview=1) returns the same measurement unsigned. The signed pack settles on " +
+      "Free preview (?preview=1) returns the same measurement unsigned. The issued pack settles on " +
       "x402 (agent rail) or on a CSOAI LTD GBP invoice (?commissioned_by=<org>&invoice=gbp) — the " +
       "owner invoices; the Function only issues the reference. Never a compliance conclusion.",
   },
@@ -195,11 +195,11 @@ export const SKUS: Record<string, Sku> = {
       "card carries no legal presumption. Invoice path for a human deal (owner-decision).",
   },
 
-  // SKU — Provider Document Diff Feed (ASSEMBLY). The signed, timestamped, hash-only record that
+  // SKU — Provider Document Diff Feed (ASSEMBLY). The signed, timestamped, hash-only records that
   // an AI provider's public document (terms / usage policy / model cards / pricing / safety policy /
   // Article 50 marking statement) changed between two captures. Not reproducible after the fact —
   // you had to have captured it at time T. Recent diffs are free (/api/feeds/provider-diff); the
-  // assembled signed historical batch and a bespoke per-partner target list are what is sold.
+  // assembled historical evidence batch and a bespoke per-partner target list are what is sold.
   // Never sold: a verdict on any change, the content of any page (never captured). See
   // docs/PROVIDER-DIFF-FEED.md.
   provider_diff_feed: {
@@ -212,7 +212,7 @@ export const SKUS: Record<string, Sku> = {
     unit: "1 historical batch (all diffs to date) OR 1 partner-year (bespoke target list, daily cadence)",
     sells: "assembly",
     prices: {
-      // The batch is assembly of already-public leaves + the durable signature — priced as work, not as facts.
+      // The batch is assembly of already-public leaves + their published proofs — priced as work, not as facts.
       history_batch: band(25, [10, 250], "X402_PRICE_PROVIDER_DIFF_BATCH_USD"),
       // Design-partner line: a governance/procurement team, insurer or law firm names its own URLs.
       // GBP invoice (owner issues it; an agent never moves funds). Anchor only — an owner decision.
@@ -236,8 +236,8 @@ export const SKUS: Record<string, Sku> = {
     artifact:
       "one canonical batch document (csoai.receipts.batch/0.1): every card-v0 leaf whose as_of falls in " +
       "[from,to] (≤200 per batch), each with its Merkle inclusion path and the merkle_root(s) that carried " +
-      "it, plus the root index for the window and one signed manifest card-v0 (surface receipts.batch) " +
-      "citing the batch sha256; Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+      "it, plus the root index for the window and one manifest card-v0 (surface receipts.batch) " +
+      "citing the batch sha256; Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present, explicitly unsigned otherwise",
     unit: "1 batch = 1 time window × ≤200 leaves",
     sells: "assembly",
     prices: {
@@ -283,8 +283,8 @@ export const INVARIANTS = {
     "CSOAI is an independent measurement body (CSOAI LTD, UK 16939677). It issues measurements " +
     "and signed attestations, never certificates of conformity.",
   recomputable_for_free:
-    "Every artifact a SKU delivers is independently recomputable; the buyer pays for issuance, " +
-    "assembly, and a durable independent signature — not for the answer.",
+    "Every artifact a SKU delivers is independently recomputable; the buyer pays for issuance and " +
+    "assembly with explicit verification state — not for the answer. A signature is included only when signing material is available.",
   no_public_price: "These price atoms never appear on the free board; they surface only in an x402 402 challenge.",
 } as const;
 

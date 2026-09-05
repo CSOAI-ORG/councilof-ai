@@ -1,5 +1,5 @@
 /**
- * GET /api/request-attestation — Tier 1: commission a signed card for a subject (× optional axis).
+ * GET /api/request-attestation — Tier 1: commission a card-v0 receipt for a subject (× optional axis).
  *
  * Sell path: pay-to-recompute / re-attest per request — never a rank, never a certificate,
  * never a score. Lid: 22 axes · 14 fleets · 3 public leaders · 8 fact runs.
@@ -85,7 +85,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
 
   const description =
-    "Request attestation (RAS): commission a signed card-v0 receipt for one subject on the frozen bank — " +
+    "Request attestation (RAS): commission a card-v0 receipt for one subject on the frozen bank — " +
     "re-serves existing signed measurement cards, never invents a score. Measurement, not certification. " +
     CSOAI_LID + ".";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "request_attestation", tier: "per_request", description });

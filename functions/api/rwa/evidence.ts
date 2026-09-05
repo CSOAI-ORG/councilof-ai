@@ -1,11 +1,11 @@
 /**
- * GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request signed evidence card of ONE
+ * GET /api/rwa/evidence?asset=<symbol|issuer_address> — per-request evidence card of ONE
  * XRPL asset's deterministic on-ledger state. Sold to machines over the existing x402 rail
  * (same accepts entry / facilitator / settle path as /api/request-attestation).
  *
  *   ?preview=1   free — the unsigned state: no signature, no raw-fetch hashes. Verify stays free.
  *   (no header)  402 — the challenge (the amount lives ONLY here).
- *   X-PAYMENT    the signed pack: ONE card-v0 leaf (surface public.notice, kind
+ *   X-PAYMENT    the issued pack: ONE card-v0 leaf (surface public.notice, kind
  *                csoai.eater.xrpl-issuer/0.1 — the SAME schema the free public-root leaf carries,
  *                see harness/rwa-attest/xrpl_swift_eater.py + scripts/adapters/staged_leaves.py),
  *                canonical bytes ≤3072, Ed25519 under did:web:csoai.org#board-attestation-1 when the
@@ -288,7 +288,7 @@ export function toPreview(card: Record<string, unknown>): Record<string, unknown
     const b = p[k] as Record<string, unknown> | null;
     if (b && typeof b === "object") delete b.sha256;
   }
-  return { ...c, preview: true, preview_note: "unsigned preview — no signature, no raw-fetch hashes. The signed pack (same schema, sig_ed25519 + inputs_sha256 + per-fetch sha256) is the metered artefact." };
+  return { ...c, preview: true, preview_note: "unsigned preview — no signature, no raw-fetch hashes. The metered pack uses the same schema, includes inputs_sha256 and per-fetch sha256, and reports whether sig_ed25519 was issued or remains unmeasured." };
 }
 
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {

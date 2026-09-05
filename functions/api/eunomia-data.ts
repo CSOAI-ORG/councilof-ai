@@ -9,10 +9,10 @@
 //   free   GET /api/eunomia-data            → feed preview: what streams exist, their as_of,
 //                                             row counts — read from the signed files, never typed.
 //   402    GET /api/eunomia-data?feed=1     → x402 challenge (the amount lives only here).
-//   paid   + settled X-PAYMENT              → one assembled feed document: the signed signals index,
-//                                             the signed First-Fine Watch feed, the root, the card
-//                                             index — each block carrying its own signature/kid as
-//                                             published, so a stranger verifies every block offline.
+//   paid   + settled X-PAYMENT              → one assembled feed document: the signals index,
+//                                             signed First-Fine Watch feed, root, and card index.
+//                                             Each block preserves its published verification state;
+//                                             unsigned indexes are never described as signed.
 import {
   verifyX402Payment,
   x402Accepts,
@@ -42,6 +42,9 @@ async function getJson<T>(u: string): Promise<{ ok: true; body: T } | { ok: fals
   }
 }
 
+const hasPublishedSignature = (body: Record<string, unknown>): boolean =>
+  Boolean(body.signature || body.sig_ed25519);
+
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
@@ -51,23 +54,23 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   // The streams — read, never typed. A stream that cannot be read says so; it is never a 0.
   const [signals, fines, root, cardIndex] = await Promise.all([
-    getJson<{ signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`),
+    getJson<Record<string, unknown> & { signals?: unknown[]; schema?: string }>(`${origin}/signals/_index.json`),
     getJson<Record<string, unknown>>(`${origin}/api/fines`),
-    getJson<{ as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`),
-    getJson<{ cards?: unknown[] }>(`${origin}/signed/card_index.json`),
+    getJson<Record<string, unknown> & { as_of?: string; card_count?: number; merkle_root?: string }>(`${origin}/root.json`),
+    getJson<Record<string, unknown> & { cards?: unknown[] }>(`${origin}/signed/card_index.json`),
   ]);
   const streams = {
-    signals: signals.ok ? { rows: (signals.body.signals || []).length, schema: signals.body.schema || null, href: `${origin}/signals/_index.json`, each: `${origin}/signals/<axis>.signed.json` } : { rows: null, unreadable: signals.reason },
-    first_fine_watch: fines.ok ? { signed: !!(fines.body.signature || fines.body.sig_ed25519), kid: (fines.body.kid as string) || (fines.body.did as string) || null, href: `${origin}/api/fines` } : { signed: null, unreadable: fines.reason },
-    root: root.ok ? { as_of: root.body.as_of || null, card_count: root.body.card_count ?? null, merkle_root: root.body.merkle_root || null, href: `${origin}/root.json` } : { as_of: null, unreadable: root.reason },
-    card_index: cardIndex.ok ? { rows: (cardIndex.body.cards || []).length, href: `${origin}/signed/card_index.json` } : { rows: null, unreadable: cardIndex.reason },
+    signals: signals.ok ? { rows: (signals.body.signals || []).length, schema: signals.body.schema || null, top_level_signed: hasPublishedSignature(signals.body), href: `${origin}/signals/_index.json`, each: `${origin}/signals/<axis>.signed.json` } : { rows: null, unreadable: signals.reason },
+    first_fine_watch: fines.ok ? { top_level_signed: hasPublishedSignature(fines.body), kid: (fines.body.kid as string) || (fines.body.did as string) || null, href: `${origin}/api/fines` } : { top_level_signed: null, unreadable: fines.reason },
+    root: root.ok ? { as_of: root.body.as_of || null, card_count: root.body.card_count ?? null, merkle_root: root.body.merkle_root || null, top_level_signed: hasPublishedSignature(root.body), href: `${origin}/root.json` } : { as_of: null, unreadable: root.reason },
+    card_index: cardIndex.ok ? { rows: (cardIndex.body.cards || []).length, top_level_signed: hasPublishedSignature(cardIndex.body), href: `${origin}/signed/card_index.json` } : { rows: null, unreadable: cardIndex.reason },
   };
   const preview = {
     lane: "commercial-data",
     data_only: true,
     streams,
     free_for: ["regulators", "the public", "anyone verifying"],
-    sold: "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    sold: "assembly + cadence of the feed (one document preserving each block's published verification state) — never the facts, which stay free",
     never: ["scores as a product", "ranking", "rating", "certificate"],
   };
 
@@ -75,7 +78,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing-free` }, rail: railMode(env) });
   }
 
-  const description = "Signed enforcement + measurement feed, assembled (DATA only — never scores, never ranked). Measurement, not certification. " + CSOAI_LID + ".";
+  const description = "Enforcement + measurement evidence feed, assembled (DATA only — never scores, never ranked). Signed and unsigned states remain explicit. Measurement, not certification. " + CSOAI_LID + ".";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 
@@ -84,7 +87,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       resourceUrl,
       description,
       serviceName: "CSOAI Data Feed",
-      tags: ["data", "feed", "enforcement", "signed", "x402"],
+      tags: ["data", "feed", "enforcement", "evidence", "x402"],
       accepts,
       bazaar: declareBazaarHttpGet({
         method: "GET",
@@ -112,7 +115,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       kind: "feed",
       lane: "commercial-data",
       data_only: true,
-      note: "Each block is the published bytes with its own signature/kid; verify every block offline. Nothing here is a score product.",
+      note: "Each block preserves its published bytes and verification state. Verify signed material offline; unsigned indexes remain explicitly unsigned. Nothing here is a score product.",
+      verification: streams,
       blocks: {
         signals: signals.ok ? signals.body : { unreadable: signals.reason },
         first_fine_watch: fines.ok ? fines.body : { unreadable: fines.reason },

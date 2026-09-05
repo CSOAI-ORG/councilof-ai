@@ -84,6 +84,8 @@ describe("/api/rwa/evidence — doors", () => {
     expect(r.status).toBe(200);
     const { card } = await r.json();
     expect(card.preview).toBe(true);
+    expect(card.preview_note).toContain("reports whether sig_ed25519 was issued or remains unmeasured");
+    expect(card.preview_note).not.toContain("signed pack");
     expect(card).not.toHaveProperty("sig_ed25519");
     expect(card).not.toHaveProperty("sha256");
     expect(card.payload).not.toHaveProperty("inputs_sha256");

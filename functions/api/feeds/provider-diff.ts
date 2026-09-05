@@ -4,7 +4,7 @@
 //                                                        read from /feeds/provider-diff/index.json
 //                                                        (committed by the daily watcher). Never typed here.
 //   free   GET /api/feeds/provider-diff?provider=openai → the same, filtered.
-//   402    GET /api/feeds/provider-diff?history=1       → the signed historical batch (every diff leaf +
+//   402    GET /api/feeds/provider-diff?history=1       → a historical evidence batch (every diff leaf +
 //                                                        its inclusion proof, assembled) behind an x402
 //                                                        challenge. The amount lives ONLY in accepts[].
 //   402    GET /api/feeds/provider-diff?invoice=gbp&commissioned_by=<org>
@@ -12,8 +12,8 @@
 //                                                        list on the same method, settled by a CSOAI LTD
 //                                                        invoice in GBP. No amount here; the invoice states it.
 //
-// What is sold: assembly + a durable independent signature over facts that are already public and
-// recomputable for free (the leaves are in /feeds/provider-diff/leaves/, the signed copies in /cards/).
+// What is sold: assembly of facts that are already public and recomputable for free. The leaves are
+// in /feeds/provider-diff/leaves/; their signed copies and inclusion proofs remain in /cards/.
 // What is never sold: a verdict on any change, a grade, the content of any page (never captured).
 // Doctrine: measurement not certification; verify free forever; hash-only; buyer-led.
 import {
@@ -162,7 +162,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         ...(commissionedBy ? {} : { note_commissioned_by: "add ?commissioned_by=<your organisation> so the reference names you" }),
         artifact: sku ? sku.artifact : null,
         options: [
-          "signed historical batch: every diff leaf to date with its inclusion proof to the signed root, assembled as one document",
+          "historical evidence batch: every diff leaf to date with its inclusion proof to the signed root, assembled as one document",
           "bespoke per-partner feed: your own target list (URLs you name) captured on the same method, hash-only, delivered on your cadence",
         ],
         amount: "stated on the invoice, never here",
@@ -177,9 +177,9 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   if (!wantHistory) return json(free);
 
-  // ── x402 door: the signed historical batch ──
+  // ── x402 door: a historical batch of published evidence ──
   const description =
-    "Provider document diff feed — signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. " +
+    "Provider document diff feed — historical batch of hash-only diff leaves with their inclusion proofs, assembled. The assembly is not a new signature. Nothing about what changed or why. Measurement, not certification. " +
     CSOAI_LID +
     ".";
   const accepts = x402Accepts(env, resourceUrl, { skuId: SKU_ID, tier: "history_batch", description });

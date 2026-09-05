@@ -5,7 +5,7 @@
   "tools": [
     {
       "name": "commission_card",
-      "description": "PAID (x402). Commission one signed card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
+      "description": "PAID (x402). Commission one card-v0 receipt (surface ras.commission) for a named subject on the frozen bank via https://councilof.ai/api/request-attestation. It is Ed25519-signed when the Pages key is present and explicitly unsigned otherwise. Re-serves every signed measurement card already on file for the subject; a payment never mints a MEASURED cell (fresh_run stays UNMEASURED until a published run exists). Without x_payment the tool returns the 402 challenge (accepts[] with asset, amount, payTo) plus a free preview of the cards already on file. Measurement, not certification — never a rank, a grade or a certificate. Verification stays free.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -36,7 +36,7 @@
     },
     {
       "name": "rwa_evidence",
-      "description": "PAID (x402). Per-request signed evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
+      "description": "PAID (x402). Per-request evidence card of ONE XRPL issued asset's deterministic on-ledger state via https://councilof.ai/api/rwa/evidence: AccountRoot lsf* flags, Domain, the two-way xrp-ledger.toml check (PASS / FAIL / UNCHECKABLE — unreachable is never FAIL), gateway_balances obligation, holders as the free reader has them, every raw fetch sha256'd. The paid card is Ed25519-signed when the Pages key is present and explicitly unsigned otherwise; preview=true is free (unsigned state). Historical state at fetched_at — not a rating, not a guarantee, not a conformity mark; /api/xrpl and /root.json stay free. Without x_payment the tool returns the 402 challenge. If the route is not deployed on this origin the tool says NOT_DEPLOYED.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -51,7 +51,7 @@
     },
     {
       "name": "receipts_batch",
-      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one signed manifest card citing the batch sha256. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
+      "description": "PAID (x402 or CSOAI LTD invoice). A historical batch of the estate's measurement receipts via https://councilof.ai/api/receipts/batch: every signed card-v0 leaf whose as_of falls in [from,to] (≤200), each with its Merkle inclusion path and the public root(s) that carried it, plus the root index for the window and one manifest card citing the batch sha256. The manifest is Ed25519-signed when the Pages key is present and explicitly unsigned otherwise. preview=true is free and returns count, span, root count and the sha256 of the exact bytes the paid call returns. Recent leaves are free at /root.json, /cards/ and /api/proof?sha= — the batch sells assembly across history, never a conclusion. No settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED) and this tool never claims one. Without x_payment the tool returns the 402 challenge.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -63,7 +63,7 @@
         "required": ["from"],
         "additionalProperties": false
       },
-      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one signed manifest card-v0 (surface receipts.batch)" }
+      "csoai": { "paid": true, "rail": "x402-or-invoice", "route": "/api/receipts/batch", "sku": "receipts_batch", "free_preview": "preview=true", "deliverable": "csoai.receipts.batch/0.1 + one manifest card-v0 (surface receipts.batch), Ed25519 when the Pages key is present and explicitly unsigned otherwise" }
     }
   ]
 }

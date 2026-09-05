@@ -11,6 +11,8 @@ import { PLAYBOOK_CLAIMS } from "../../client/src/lib/playbookAudit";
 import { FILL_ROWS } from "../../client/src/lib/productFill";
 import { TERMINAL_ROWS } from "../../client/src/lib/governanceTerminal";
 import HTTP_REGISTRY_DESCRIPTOR from "../../mcp/gspc-server/server.json";
+import STDIO_PAID from "../../mcp/gspc-server/paid-tools.json";
+import CAPABILITY_REGISTRY from "../../capabilities/registry.json";
 import MCP_WELL_KNOWN from "../../public/.well-known/mcp.json";
 import MCP_SERVER_CARD from "../../public/.well-known/mcp/server-card.json";
 import PLUGIN_MCP from "../../plugins/gspc/.mcp.json";
@@ -19,7 +21,7 @@ import { onRequest } from "./[[path]]";
 import FREE from "./gspc-tools.json";
 import PAID from "./paid-tools.json";
 
-type ToolDefinition = { name: string };
+type ToolDefinition = { name: string; description?: string; csoai?: unknown };
 
 const ORIGIN = "https://councilof.ai";
 const HTTP_MCP = `${ORIGIN}/mcp`;
@@ -85,6 +87,23 @@ describe("HTTP MCP capability parity", () => {
     expect(new Set(HTTP_TOOL_NAMES).size).toBe(HTTP_TOOL_NAMES.length);
     expect(PAID_NAMES).not.toContain("witness_hash");
     expect(await listHttpTools()).toEqual(HTTP_TOOL_NAMES);
+  });
+
+  it("keeps paid-tool promises identical across HTTP, stdio and the capability registry", () => {
+    const stdio = new Map(
+      (STDIO_PAID.tools as ToolDefinition[]).map((tool) => [tool.name, tool]),
+    );
+    const registry = new Map(
+      (CAPABILITY_REGISTRY.capabilities as Array<{ id: string; description?: string }>).map(
+        (capability) => [capability.id, capability],
+      ),
+    );
+
+    for (const tool of PAID.tools as ToolDefinition[]) {
+      expect(stdio.get(tool.name)?.description).toBe(tool.description);
+      expect(stdio.get(tool.name)?.csoai).toEqual(tool.csoai);
+      expect(registry.get(tool.name)?.description).toBe(tool.description);
+    }
   });
 
   it("keeps both public MCP manifests on the canonical names and counts", () => {

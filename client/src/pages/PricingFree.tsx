@@ -23,23 +23,23 @@ const FREE = [
 export const TIERS = [
   {
     id: "issuance",
-    name: "Tier 1 — Commission a signed card",
+    name: "Tier 1 — Commission an attestation receipt",
     resource: "/api/request-attestation?subject=<id>&axis=<slug>",
-    get: "One card-v0 receipt (≤3KB), Ed25519-signed under the board-attestation key, citing your settlement and re-serving every signed measurement card already on file for that subject.",
+    get: "One card-v0 commission receipt (≤3KB), citing your settlement and re-serving signed measurement cards already on file for that subject. It is Ed25519-signed when the Pages signing key is available; otherwise it is explicitly UNSIGNED with a machine-readable reason.",
     never: "A payment never mints a MEASURED cell. Fresh cells appear only when a published run exists.",
   },
   {
     id: "evidence_bundle",
     name: "Tier 2 — Evidence bundle for an obligation",
     resource: "/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<s>&bundle=1",
-    get: "OSCAL 1.1.0 assessment-results assembled from already-signed cards (observations, relevant-to), one signed manifest card, and the existing signed Article 50 pack where it applies.",
+    get: "OSCAL 1.1.0 assessment-results assembled from already-signed cards (observations, relevant-to), one manifest card with explicit signature state, and the existing signed Article 50 pack where it applies. The manifest is Ed25519-signed when the Pages key is available; otherwise it is labelled UNSIGNED.",
     never: "No finding says satisfied or not-satisfied. Your auditor keeps the compliance call. Not a conformity mark.",
   },
   {
     id: "data_feed",
-    name: "Tier 3 — Signed data feed",
+    name: "Tier 3 — Evidence data feed",
     resource: "/api/eunomia-data?feed=1",
-    get: "One feed document: the signed signals index, the signed First-Fine Watch, root.json and the card index — every block carrying its published signature.",
+    get: "One feed document preserving the published signals index, signed First-Fine Watch, root.json and card index. Every block keeps its published verification state: signed material stays verifiable and unsigned indexes stay labelled.",
     never: "Data, never a score product. Never a ranking. Never a rating.",
   },
 ] as const;
@@ -53,8 +53,8 @@ const STEPS = [
 
 const RULES = [
   { k: "Measurement, not certification", v: "CSOAI LTD is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity." },
-  { k: "A grade is never sold", v: "No tier sells a score, a rank, a pass/fail, or a place on the board. You pay for issuance, assembly and a durable independent signature — never for the answer." },
-  { k: "Recomputable for free", v: "Every artefact stands on public bytes. Whoever holds the card and the published key can recompute it with no service contact." },
+  { k: "A grade is never sold", v: "No tier sells a score, a rank, a pass/fail, or a place on the board. You pay for issuance, assembly and an evidence record with explicit verification state — never for the answer." },
+  { k: "Recomputable for free", v: "Every artefact exposes its source bytes and verification state. Whoever holds a signed card and the published key can recompute it with no service contact." },
   { k: "No financial instrument", v: "No token, no credit, no cash-settled index. An attestation is a signed opinion about an asset; it tokenises nothing and confers no ownership." },
   { k: "Open source", v: "The rail, the verifier and the schemas are Apache-2.0 / CC-BY in the public repo. Fork them." },
 ];
@@ -62,7 +62,7 @@ const RULES = [
 export default function PricingFree() {
   useEffect(() => {
     setMetaDescription(
-      "Verification is free forever. Agents pay per signed artefact over x402 (USDC on Base) — issuance, assembly, cadence. A grade is never sold. Measurement, not certification.",
+      "Verification is free forever. Agents pay per evidence artefact over x402 (USDC on Base) — issuance, assembly, cadence. Every signature state stays explicit. Measurement, not certification.",
     );
   }, []);
 
@@ -72,8 +72,9 @@ export default function PricingFree() {
         <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">Council of AI — the free rail and the metered rail</p>
         <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight">Verification is free forever. Agents pay per artefact.</h1>
         <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
-          Everything you need to check us is free and always will be. What an agent can buy is work with a signature on it —
-          a commissioned card, an assembled evidence bundle, a feed pull — settled machine-to-machine over HTTP 402 in USDC on Base.
+          Everything you need to check us is free and always will be. What an agent can buy is work with an explicit verification state —
+          a commissioned receipt, an assembled evidence bundle, a feed pull — settled machine-to-machine over HTTP 402 in USDC on Base.
+          Signed material stays signed; anything unsigned is labelled rather than dressed up as verified.
           No tiers, no seats, no checkout page. The amount for any artefact appears only inside its own 402 challenge.
         </p>
 
@@ -151,7 +152,7 @@ export default function PricingFree() {
         <section aria-labelledby="human-h" className="mt-12">
           <h2 id="human-h" className="text-xl font-bold text-emerald-300">Not an agent?</h2>
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-300">
-            Humans and institutions use the same artefacts on enquiry — a design-partner engagement invoices from CSOAI LTD, and the deliverable is still a signed card anyone can recompute.
+            Humans and institutions use the same artefacts on enquiry — a design-partner engagement invoices from CSOAI LTD, and the deliverable still exposes its evidence and verification state.
             Start at <Link href="/products" className="text-emerald-300 underline-offset-2 hover:underline">/products</Link> or write to nicholas@csoai.org.
           </p>
         </section>

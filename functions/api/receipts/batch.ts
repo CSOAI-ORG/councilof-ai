@@ -15,9 +15,10 @@
  *   ?from=&to=&preview=1   FREE: count, span, root count, cap/truncation, and the sha256 of the
  *                          exact canonical batch bytes the paid path returns. No leaves.
  *   ?from=&to=             402 challenge (the amount lives ONLY here) + the same preview in csoai.
- *   + settled X-PAYMENT    200: the batch (deterministic; sha256 matches the preview) + one signed
+ *   + settled X-PAYMENT    200: the batch (deterministic; sha256 matches the preview) + one
  *                          manifest card-v0 (surface receipts.batch) citing batch sha256 and the
- *                          settle tx + X-PAYMENT-RESPONSE.
+ *                          settle tx + X-PAYMENT-RESPONSE. Ed25519 when the Pages key is present;
+ *                          explicitly unsigned otherwise.
  *
  * Determinism: the hashed `batch` object carries nothing request-time (no timestamps, no settle
  * data); the manifest card wraps it and is the only thing that changes per purchase. A leaf's
@@ -256,7 +257,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         per: "batch",
         lid: CSOAI_LID,
         never: batch.what_this_is_not,
-        deliverable: "the canonical batch (hashes to preview.batch_sha256) + one signed manifest card-v0 (surface receipts.batch)",
+        deliverable: "the canonical batch (hashes to preview.batch_sha256) + one manifest card-v0 (surface receipts.batch), Ed25519 when the Pages key is present and explicitly unsigned otherwise",
         preview: previewBody,
         free_preview: `${resourceUrl}&preview=1`,
         rail: railMode(env),
@@ -268,7 +269,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponse(paymentRequired);
   }
 
-  // Paid: wrap the deterministic batch in one signed manifest leaf. Never re-sign the leaves.
+  // Paid: wrap the deterministic batch in one manifest leaf with explicit signature state.
   const as_of = nowIso();
   const payload: Record<string, unknown> = {
     kind: SCHEMA,

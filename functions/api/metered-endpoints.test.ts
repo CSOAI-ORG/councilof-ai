@@ -131,8 +131,13 @@ describe("Tier 3 — /api/eunomia-data", () => {
     const p = await (await feed(ctx("/api/eunomia-data"))).json();
     expect(p.kind).toBe("preview");
     expect(p.streams.signals.rows).toBe(2);
-    expect(p.streams.first_fine_watch.signed).toBe(true);
+    expect(p.streams.signals.top_level_signed).toBe(false);
+    expect(p.streams.first_fine_watch.top_level_signed).toBe(true);
     expect(p.streams.root.card_count).toBe(50);
+    expect(p.streams.root.top_level_signed).toBe(false);
+    expect(p.streams.card_index.top_level_signed).toBe(false);
+    expect(p.sold).toMatch(/published verification state/);
+    expect(p.sold).not.toMatch(/every block carrying its published signature/);
     const r = await feed(ctx("/api/eunomia-data?feed=1"));
     expect(r.status).toBe(402);
     expect(JSON.stringify(await r.json())).not.toMatch(/price_usd|amount_usd/);
@@ -156,6 +161,8 @@ describe("catalog + discovery", () => {
     expect(JSON.stringify(c.mcp)).not.toMatch(/\bsafe\b|verified registry/i);
     expect(c.rail).toMatchObject({ mode: "challenge-only", pay_to: ESTATE_PAY_TO });
     expect(JSON.stringify(c)).not.toMatch(/[£$€]\s?\d|"amount":\s*"\d/);
+    expect(JSON.stringify(c)).not.toMatch(/one signed manifest|Commission a signed card|Per-request signed evidence card/);
+    expect(JSON.stringify(c)).toMatch(/explicitly unsigned otherwise/i);
     const w = await (await wellKnown(ctx("/.well-known/x402.json"))).json();
     expect(w).toMatchObject({ schema: "csoai.x402/0.2", mode: "challenge-only", payTo: ESTATE_PAY_TO, network: "eip155:8453" });
     expect(w.resources.every((r: { url: string }) => r.url.startsWith(ORIGIN))).toBe(true);
