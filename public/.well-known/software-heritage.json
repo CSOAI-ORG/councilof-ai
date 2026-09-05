@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "software-heritage",
+  "name": "Software Heritage — independent archival of this estate",
+  "description": "Third-party archival state. Software Heritage has archived this estate on its own initiative; this door records what it holds, with the SWHID, so the durability claim is checkable rather than asserted.",
+  "as_of": "20260905T180000Z",
+  "state": "ARCHIVED_BY_THIRD_PARTY",
+  "why_this_matters": "Every other durability claim in this estate rests on our own signature. This one does not: Software Heritage is an independent, UNESCO-backed archive that crawled and stored these origins without being asked, so the bytes survive us and the archival is not our assertion.",
+  "primary_snapshot": {
+    "origin": "https://github.com/CSOAI-ORG/councilof-ai",
+    "swhid": "swh:1:snp:7b219f859e1ae214b44c0ed4bc01b0e8cc1b920c",
+    "visit_date": "2026-09-02T15:13:58.885000+00:00",
+    "visit_status": "full",
+    "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/https://github.com/CSOAI-ORG/councilof-ai/visits/?limit=1'"
+  },
+  "origins_archived": {
+    "total": 57,
+    "by_host": { "pkg.go.dev": 30, "github.com": 14, "pypi.org": 7, "www.npmjs.com": 6 },
+    "probe": "curl -s 'https://archive.softwareheritage.org/api/1/origin/search/csoai/?limit=100'"
+  },
+  "the_30_pkg_go_dev_entries_are_NOT_go_packages": {
+    "finding": "A first read of these counts suggested the estate publishes 30 Go modules that its own registry census (329 PyPI + 1 npm, no Go) had missed. It does not.",
+    "probe": "curl -o /dev/null -w '%{http_code}' https://pkg.go.dev/github.com/csoai-org/cybersecurity-ai-mcp",
+    "result": "404 — and the GitHub repository behind it is Python, not Go.",
+    "explanation": "pkg.go.dev synthesises a page for any importable-looking path, and Software Heritage archived those pages. The origins are real archive records of URLs; they are not evidence of Go packages.",
+    "conclusion": "The registry census was correct. This entry exists so the next reader does not rediscover the same false lead and publish it."
+  },
+  "what_this_does_not_establish": [
+    "Software Heritage does not endorse, review or verify the Council of AI. It archives source code, and archival is not approval.",
+    "An archived snapshot proves the bytes existed at the visit date. It is not a timestamp anchor for a measurement, and it does not substitute for the missing root anchor recorded at /.well-known/anchor-posture.json.",
+    "57 origins is what a keyword search returns; it is not a curated inventory of what the estate considers its own."
+  ],
+  "links": {
+    "self": "https://councilof.ai/.well-known/software-heritage.json",
+    "browse": "https://archive.softwareheritage.org/browse/origin/directory/?origin_url=https://github.com/CSOAI-ORG/councilof-ai",
+    "anchor_posture": "https://councilof.ai/.well-known/anchor-posture.json",
+    "verify_yourself": "https://councilof.ai/.well-known/verify-yourself.json"
+  },
+  "doctrine": "An independent archive is worth more than our own copy, and worth less than an anchor. Both are stated."
+}
