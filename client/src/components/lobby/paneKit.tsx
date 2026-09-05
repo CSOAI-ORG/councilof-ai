@@ -28,9 +28,9 @@ export function PaneHead({
 }) {
   return (
     <header>
-      <p className={TYPE.section}>{eyebrow}</p>
-      <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">{title}</h2>
-      {children && <div className={`mt-2 ${MEASURE} ${TYPE.body}`}>{children}</div>}
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-800">{eyebrow}</p>
+      <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">{title}</h1>
+      {children && <div className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">{children}</div>}
     </header>
   );
 }

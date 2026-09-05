@@ -605,3 +605,19 @@ html[data-coai-dashboard-shell="1"] [data-council-global-launcher] {
 /* Council OS shell: a product page mounted as a Dashboard pane drops its marketing
    hero art (data-pane-hide) — the shell is the chrome, calm and unbranded. */
 .coai-pane [data-pane-hide] { display: none; }
+
+/* The dashboard canvas is the single scroll owner. Older native panes brought
+   a second full-height scroller and a smaller inset. Normalise only direct pane
+   children in the canonical shell; the legacy overlay keeps its glass layout. */
+.coai-pane { min-height: 100%; }
+.coai-pane > .h-full.overflow-y-auto {
+  min-height: 100%;
+  height: auto;
+  max-width: 72rem;
+  margin-inline: auto;
+  overflow: visible;
+  padding: 1.75rem 1.25rem;
+}
+@media (min-width: 640px) {
+  .coai-pane > .h-full.overflow-y-auto { padding-inline: 2rem; }
+}

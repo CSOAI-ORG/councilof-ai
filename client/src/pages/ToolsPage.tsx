@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import SignedAgentTravel from "@/components/SignedAgentTravel";
 import TwoSpeed from "@/components/TwoSpeed";
 import WatchlistPane from "@/components/WatchlistPane";
+import InstallSurfaceCards from "@/components/InstallSurfaceCards";
 import { setMetaDescription } from "@/lib/utils";
 
 const MCP_URL = "https://councilof.ai/mcp";
@@ -193,6 +194,9 @@ export default function ToolsPage() {
         </a>
         , free.
       </p>
+      <div className="mt-12 border-t border-slate-200 pt-10">
+        <InstallSurfaceCards />
+      </div>
       <SignedAgentTravel />
       <TwoSpeed />
       <WatchlistPane />

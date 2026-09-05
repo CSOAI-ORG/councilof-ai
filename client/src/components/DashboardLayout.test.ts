@@ -1,7 +1,9 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { dashboardActiveLabel } from "./DashboardLayout";
+import { dashboardActiveLabel, EmbeddedDashboardPage } from "./DashboardLayout";
 import { hasPane } from "./DashboardPane";
 import { tabById } from "./lobby/tabs";
 
@@ -33,5 +35,25 @@ describe("dashboard consolidation details", () => {
     );
     expect(source).toContain("top-16");
     expect(source).toContain("xl:top-3");
+  });
+
+  it("renders a framed account page as content, never a nested workspace", () => {
+    const html = renderToStaticMarkup(createElement(
+      EmbeddedDashboardPage,
+      null,
+      createElement("div", { "data-settings-content": "yes" }, "Settings"),
+    ));
+    expect(html).toContain('data-testid="dashboard-embedded-page"');
+    expect(html).toContain('data-settings-content="yes"');
+    expect(html).not.toContain('data-testid="dashboard-workspace"');
+    expect(html).not.toContain("Open workspaces, tasks and chat history");
+  });
+
+  it("gives legacy native panes the canonical width, inset and one scroll owner", () => {
+    const css = readFileSync(resolve(__dirname, "../styles/index.css"), "utf8");
+    expect(css).toContain(".coai-pane > .h-full.overflow-y-auto");
+    expect(css).toContain("max-width: 72rem");
+    expect(css).toContain("overflow: visible");
+    expect(css).toContain("padding: 1.75rem 1.25rem");
   });
 });

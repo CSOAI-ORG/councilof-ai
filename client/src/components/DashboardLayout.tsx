@@ -33,6 +33,19 @@ export function dashboardActiveLabel(activeTab: string, search: string): string 
   );
 }
 
+/** Supporting pages framed by Council OS contribute content only. The parent
+ * dashboard owns navigation, chat, the composer and workspace rail. */
+export function EmbeddedDashboardPage({ children }: { children: React.ReactNode }) {
+  return (
+    <div
+      className="min-h-svh bg-[var(--surface-canvas,#fafaf7)] text-foreground"
+      data-testid="dashboard-embedded-page"
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function DashboardLayout({
   children,
 }: {
@@ -101,20 +114,11 @@ export default function DashboardLayout({
       <DashboardPane id={activeTab} />
     );
 
-  // Embedded tools are a chrome-less view of this same workspace, never the
-  // retired OsLauncher or the old account metrics dashboard. The centre pane,
-  // persistent composer and responsive workspace drawer retain one contract.
+  // The parent Dashboard owns the workspace contract. A supporting route that
+  // itself uses DashboardLayout must not mount a second composer and right rail.
   if (framed)
     return (
-      <div className="h-svh min-h-svh overflow-hidden bg-background">
-        <DashboardWorkspace
-          activePane={pane}
-          activeTab={activeTab}
-          activeLabel={activeLabel}
-        >
-          {children}
-        </DashboardWorkspace>
-      </div>
+      <EmbeddedDashboardPage>{children}</EmbeddedDashboardPage>
     );
 
   return (

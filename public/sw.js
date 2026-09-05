@@ -10,6 +10,8 @@ const CACHE_NAME = `${CACHE_PREFIX}v1`;
 const CORE = [
   "/offline.html",
   "/manifest.json",
+  "/council-os-192.png",
+  "/council-os-512.png",
   "/csoai-icon.svg",
   "/apple-touch-icon.png",
 ];

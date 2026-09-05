@@ -152,10 +152,10 @@ export default function Products() {
           <p className="mt-1 text-xs text-emerald-200/80">board_totals · get_axis · verify_card · list_cards</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
         </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
+        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/dashboard?tab=tools#install-surfaces">
           <p className="font-mono text-sm text-emerald-100">Browser extension</p>
-          <p className="mt-1 text-xs text-emerald-200/80">MV3 — overlays badge on Hugging Face, OpenRouter, Replicate</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/extension/</p>
+          <p className="mt-1 text-xs text-emerald-200/80">MV3 source — Hugging Face badge and local card verification</p>
+          <p className="mt-1 text-[11px] text-emerald-300/60">Source available · unpacked only</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/tools">
           <p className="font-mono text-sm text-emerald-100">Plugin</p>

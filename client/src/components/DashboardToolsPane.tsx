@@ -6,6 +6,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import ToolRunner from "./ToolRunner";
+import InstallSurfaceCards from "./InstallSurfaceCards";
 import { useSearch } from "wouter";
 
 export const FREE_TOOLS = [
@@ -172,6 +173,10 @@ export default function DashboardToolsPane() {
           initialToolName={selectedTool}
           initialArguments={initialArguments}
         />
+      </div>
+
+      <div className="mt-10 border-t border-border pt-8">
+        <InstallSurfaceCards />
       </div>
     </section>
   );

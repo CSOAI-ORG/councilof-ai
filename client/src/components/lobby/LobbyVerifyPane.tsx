@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import RecordVerifyForm from "@/components/gspc/RecordVerifyForm";
 import { markQuest } from "@/components/os/quests";
 import { FOCUS, SP, TYPE } from "./glass";
+import { PaneHead } from "./paneKit";
 
 /**
  * LobbyVerifyPane — the Council OS verify tool. Native, no iframe.
@@ -155,11 +156,7 @@ export default function LobbyVerifyPane() {
 
   return (
     <div className={`${SP.panel} h-full overflow-y-auto`}>
-      <p className={TYPE.section}>Verify a card</p>
-      <h2 className="mt-1 text-[22px] font-semibold tracking-tight text-slate-900">
-        Recompute it here, in this tab
-      </h2>
-      <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700">
+      <PaneHead eyebrow="Verify a card" title="Recompute it here, in this tab">
         Native in Council OS. The record is canonicalised and hashed in your browser, and the
         Ed25519 signature is checked against trust anchors pinned in the verifier's own source —
         the keys published at <code className="font-mono text-[12px]">/.well-known/did.json</code>,
@@ -167,7 +164,7 @@ export default function LobbyVerifyPane() {
         shown as a labelled cross-check only. Nothing you paste leaves this device, and no account
         is asked for — here or ever. Three states only: VALID · INVALID · UNCHECKABLE. This is
         GSPC card-v1 — not a VRO, not an Emilia receipt, not an XRPL credential.
-      </p>
+      </PaneHead>
 
       {/* ── a real published card, so the tool can actually be exercised ── */}
       <div className="mt-5 rounded-2xl border border-slate-900/10 bg-white/70 p-4">

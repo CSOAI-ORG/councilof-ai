@@ -102,9 +102,9 @@ export default function McpFleet() {
               <p className="font-mono text-sm text-emerald-100">/mcp</p>
               <p className="text-xs text-emerald-200/80 mt-1">board_totals · get_axis · verify_card · list_cards — streamable HTTP</p>
             </a>
-            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/extension/">
+            <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/dashboard?tab=tools#install-surfaces">
               <p className="font-mono text-sm text-emerald-100">Chrome extension</p>
-              <p className="text-xs text-emerald-200/80 mt-1">MV3 overlay on HF / OpenRouter / Replicate / 10 model APIs</p>
+              <p className="text-xs text-emerald-200/80 mt-1">MV3 source · Hugging Face badge · offline card verifier · unpacked only</p>
             </a>
             <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/what-is-new.html">
               <p className="font-mono text-sm text-emerald-100">Hermes skill</p>

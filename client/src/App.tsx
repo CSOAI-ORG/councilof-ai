@@ -13,8 +13,8 @@ import { Header } from "./components/Header";
 import { useSearch as useOsSearch } from "wouter";
 import { normalizeLobbyTabId } from "@/components/lobby/tabs";
 /** Council OS = the Dashboard. Legacy /os?lobby=X lands on /dashboard?tab=X so every old door
- *  stays inside one workspace. `embed=1` is preserved and DashboardLayout renders the same
- *  workspace without outer chrome; there is no second embedded Council OS. */
+ *  stays inside one workspace. `embed=1` is preserved for supporting document/account pages;
+ *  a page using DashboardLayout contributes content only, so no second workspace is mounted. */
 function OsRoute() {
   const search = useOsSearch();
   const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
