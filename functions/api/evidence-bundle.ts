@@ -168,8 +168,61 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   };
 
   const resourceUrl = new URL(`/api/evidence-bundle?obligation=${ob.id}&bundle=1${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`, origin).toString();
+
+  // THE HUMAN DOOR. This SKU declares rail "x402-or-invoice" and its notes describe "a CSOAI LTD
+  // invoice for a first human deal", but the 402 challenge named no way to ask for one — so a
+  // buyer with a budget and no Base wallet reached a demand for USDC and stopped there. Most
+  // organisations that need an Article 50 evidence pack cannot pay in USDC at all; they raise a
+  // PO. That is not a payment bug, it is the entire enterprise path being unreachable.
+  //
+  // What this does NOT do is release the bundle. The SKU's own rule is that the owner invoices
+  // and "the Function only issues the reference": an agent must never commit CSOAI LTD to a deal
+  // or hand over an assembled pack against an unsettled promise. So this returns a quotation —
+  // a stable reference, exactly what the pack would cover, and who to talk to — and nothing else.
+  //
+  // NO AMOUNT APPEARS HERE. A price lives only inside a 402 challenge or on the invoice the owner
+  // issues. Naming a figure on this path would put a price on a plain GET, which is the thing the
+  // estate does not do.
+  const invoiceGbp = url.searchParams.get("invoice") === "gbp";
+  const commissionedBy = (url.searchParams.get("commissioned_by") || "").trim().slice(0, 120);
+  if (invoiceGbp) {
+    if (!commissionedBy) {
+      return json({
+        schema: "csoai.evidence-bundle/0.1",
+        error: "missing_commissioned_by",
+        reason: "an invoice is raised to a named organisation — pass &commissioned_by=<legal entity>",
+        usage: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`,
+      }, 400);
+    }
+    const reference = `CSOAI-EB-${(await sha256Hex(new TextEncoder().encode(`${ob.id}|${subject}|${commissionedBy.toLowerCase()}`))).slice(0, 12).toUpperCase()}`;
+    return json({
+      schema: "csoai.evidence-bundle/0.1",
+      kind: "quotation",
+      mode: "invoice-gbp",
+      reference,
+      commissioned_by: commissionedBy,
+      covers: {
+        obligation: preview.obligation,
+        subject: subject || null,
+        relevant_signed_cards: preview.relevant_signed_cards,
+        corpus_merkle_root: preview.corpus.merkle_root,
+        artifact: "<bench>.json + <bench>.sig.json (detached Ed25519) + <bench>_oscal.json (OSCAL 1.1.0 assessment-results)",
+      },
+      next: [
+        "CSOAI LTD issues the invoice against this reference — no amount is quoted on this endpoint.",
+        "The bundle is assembled and delivered once that invoice settles.",
+        "Nothing is assembled or released by this request, and no agent can commit the owner to a deal.",
+      ],
+      contact: "nicholas@csoai.org",
+      entity: "CSOAI LTD (England & Wales, Companies House 16939677), 3rd Floor, 86–90 Paul Street, London EC2A 4NE",
+      free_preview: `${origin}/api/evidence-bundle?obligation=${ob.id}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`,
+      also: { agent_rail: resourceUrl, how: "GET the resource → 402 → pay accepts[] → retry with X-PAYMENT" },
+      never: ["conformity determination", "certificate", "score", "rank"],
+    });
+  }
+
   if (!bundle) {
-    return json({ schema: "csoai.evidence-bundle/0.1", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay the accepts[] entry (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing-free` }, rail: railMode(env) });
+    return json({ schema: "csoai.evidence-bundle/0.1", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay the accepts[] entry (x402) → retry with X-PAYMENT", invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "for a buyer who cannot pay USDC: returns a quotation reference, never an amount and never the pack — CSOAI LTD invoices and delivers on settlement" }, catalog: `${origin}/api/x402`, explainer: `${origin}/pricing-free` }, rail: railMode(env) });
   }
 
   const description =
@@ -198,7 +251,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         },
         outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle", oscal: { "assessment-results": {} }, cards: {}, manifest_card: { surface: "evidence.bundle" } },
       }),
-      csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview, rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
+      csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview, rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
     return paymentRequiredResponse(paymentRequired);
   }
