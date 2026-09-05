@@ -85,6 +85,18 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     expect(surviving).not.toMatch(/certif/i);
   });
 
+
+  // The Bazaar indexes this door and nothing else of ours — the paid doors need a confirmed
+  // settle to be catalogued and the facilitator exposes no registration endpoint. So this is
+  // the one place a discovering agent can learn the paid tiers exist, and it must be machine
+  // readable rather than a sentence in the description.
+  it("points a discovering agent at the paid catalogue, as a URL and never a price", async () => {
+    const body = (await (await call()).json()) as Record<string, unknown>;
+    expect(body.catalog).toBe("https://councilof.ai/api/x402");
+    // No public $ price may appear on this surface — brand-gate forbids it estate-wide.
+    expect(JSON.stringify(body)).not.toMatch(/\$\s?\d/);
+  });
+
   // THE INDEXED CONTRACT. The live Bazaar record advertises an outputSchema, and that record is
   // permanent — the index writes a resource once and never refreshes it. So the keys the door
   // actually serves must be the keys the listing promised. Until 2026-09-05 the handler returned

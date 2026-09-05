@@ -125,6 +125,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       board: `${url.origin}/api/gspc`,
       root: `${url.origin}/root.json`,
       verify: `${url.origin}/gspc-verify`,
+      // WHY A CATALOGUE LINK BELONGS HERE. This is the only CSOAI resource the x402 Bazaar
+      // indexes — the paid doors are absent, because the Bazaar catalogues a resource off a
+      // CONFIRMED SETTLE and its /discovery/resources is GET-only (checked against the
+      // facilitator's own openapi.json, 2026-09-05: no registration endpoint exists). So an
+      // agent that finds us can find only this door, and until now the paid tiers were named
+      // in prose in the description and nowhere a machine could read.
+      //
+      // A URL, never a price. Public $ prices are forbidden on every surface and enforced by
+      // brand-gate; the catalogue states its own terms, and the protocol carries amounts in
+      // accepts[].amount where a buyer agent already reads them.
+      catalog: `${url.origin}/api/x402`,
     };
     // The live totals the docstring promises. Fetched, never restated from memory — a hardcoded
     // count here would be a number invented at deploy time and stale by the next measurement.
@@ -170,7 +181,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // challenge, so an agent that had settled correctly got an identical 402 with no way to tell
   // a rejected receipt from "you have not paid yet".
   const presented = !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
-  const answer = presented ? { ...body, csoai: { not_paid_reason: payment.reason } } : body;
+  // The challenge names the catalogue too. An agent deciding whether to pay reads the 402 body,
+  // not the fulfilment payload it has not earned yet — putting the pointer only behind payment
+  // would hide it from every buyer still deciding.
+  const withCatalog = { ...body, catalog: `${url.origin}/api/x402` };
+  const answer = presented
+    ? { ...withCatalog, csoai: { not_paid_reason: payment.reason } }
+    : withCatalog;
 
   return new Response(JSON.stringify(answer, null, 2), {
     status: 402,
