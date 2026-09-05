@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `924d57730ad40c3aee05ab601928b9e7df91777a` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `fae46170f89a4219da9a894dc9c4c08d94a7089c` — 42 commits, 55 files changed
+**Rebased onto:** `42b121b2a5de8f7659aaa0945eabfe810b76feac` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `1a9c0975dfd3521d6f9d9404b0eae2726821903b` — 47 commits, 60 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~55 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~60 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -121,6 +121,9 @@ client/src/launchers.shell.test.ts
 client/src/pages/GSPCVerify.privacy.test.ts
 capabilities/brand-gate-coverage.test.mjs
 scripts/one-door-guard.mjs
+capabilities/brand-gate-exclusions.test.mjs
+capabilities/ai-crawler-access.test.mjs
+capabilities/openapi-runtime-parity.test.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
@@ -156,7 +159,8 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
       LIVE_NPM=1 LIVE_CARDS=1 LIVE_ATTESTATION=1 \
-      node --test capabilities/*.test.mjs                      56 passed, 0 failed
+      LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
+      node --test capabilities/*.test.mjs                      68 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -320,6 +324,9 @@ client/src/launchers.shell.test.ts
 client/src/pages/GSPCVerify.privacy.test.ts
 capabilities/brand-gate-coverage.test.mjs
 scripts/one-door-guard.mjs
+capabilities/brand-gate-exclusions.test.mjs
+capabilities/ai-crawler-access.test.mjs
+capabilities/openapi-runtime-parity.test.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
@@ -501,6 +508,40 @@ Production is serving an older rule than the repository — which is exactly wha
 gate produces, and independent corroboration that the `brand-gate` failure above had real
 consequences. The other six one-door redirects (`/ag-ui`, `/agui`, `/sov-os`, `/chat`, `/os`,
 `/rankings`) all converge correctly.
+
+## The machine-facing surfaces, tested against runtime
+
+**The API spec omits the paid rail's first step.** `/openapi.json` declares 81 paths and agents
+generate clients from it; nothing compared it to runtime. 69 of 76 GET paths agree. The one that
+matters: **`/api/request-attestation` returns 402 and the spec declares only 200.** That 402 IS
+x402 — it carries the `accepts[]` entry a wallet signs against. A generated client treats the
+protocol's first step as a failure.
+
+Four others (`evidence-bundle`, `interop-bulk`, `proof`, `trace`) return 400 because they need
+query parameters — runtime correct, spec silent. `/api/fulfill` answers 404 with exactly the
+right body (*"No public prices. A grade is never sold"*) — a deliberately closed door; only the
+spec is wrong. `/api/worker` is declared bare with 501 while the implementation is a catch-all
+at `/api/worker/*` that 404s throughout.
+
+`openapi-runtime-parity.test.mjs` records the seven and **fails on the eighth**. It does not
+demand fixes — several are runtime being right and the spec lagging, which is a docs change
+owned elsewhere.
+
+**AI crawlers can read the site — verified at the edge, not inferred from robots.txt.** GPTBot,
+ClaudeBot, PerplexityBot, Google-Extended and OAI-SearchBot all get HTTP 200, the full 195KB
+page, no interstitial, and **24,634 characters of visible text** carrying "22 axis" and
+"UNMEASURED" — the prerender is serving crawlers the real board, which is the part an SPA
+silently fails. `robots.txt` names every agent exactly once, so the 2026-08-06 duplicate-group
+defect (undefined behaviour under RFC 9309) has stayed fixed.
+
+This became a guard because the Cloudflare AI-crawler block is **ON by default, set outside this
+repository, and leaves robots.txt looking correct**. A dashboard toggle voids every `llms.txt`,
+`ai.txt` and prerender in the estate.
+
+**A live scan of all 383 sitemap URLs found zero doctrine violations** beyond the game pages
+above. Five of six apparent hits were my own weaker patterns matching denials — the pages say
+"we certify NOTHING" and "can never buy a score". brand-gate is more careful than the version I
+wrote to test it.
 
 ## Open owner gates, in priority order
 
