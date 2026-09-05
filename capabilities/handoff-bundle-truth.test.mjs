@@ -25,6 +25,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -107,5 +108,39 @@ describe("the handoff bundle's own claims", () => {
     );
     assert.match(rollback, /REMOVES TRUE INFORMATION/);
     assert.match(rollback, /invisible/i);
+  });
+
+  it("every changed path in the branch is listed under Files", () => {
+    // THE PROPERTY THAT DOES NOT ROT. The bundle used to tell root "the diff must show ~64
+    // files" — a number that was 61 by the time it was read, because master advances roughly
+    // every 100 seconds and every rebase moves the counts. A reviewer who runs that check and
+    // sees a mismatch either doubts a sound branch or learns to skip the check. Both are worse
+    // than no check.
+    //
+    // So the bundle now states the property instead: every path in the diff appears under
+    // Files. This asserts it, which is the only way the promise stays true.
+    let changed;
+    try {
+      changed = execFileSync("git", ["diff", "--name-only", "origin/master...HEAD"], {
+        cwd: repo,
+        encoding: "utf8",
+      })
+        .split("\n")
+        .map((l) => l.trim())
+        .filter(Boolean);
+    } catch {
+      console.log("      (no git or no origin/master — diff NOT compared)");
+      return;
+    }
+    if (!changed.length) return;
+    const block = text.slice(text.indexOf("## Files"), text.indexOf("## Tests"));
+    const unlisted = changed.filter((f) => !block.includes(f));
+    assert.deepEqual(
+      unlisted,
+      [],
+      `these files are changed in the branch but are not listed under Files in the handoff: ` +
+        `${unlisted.join(", ")}. Root is told to verify that every path in the diff appears ` +
+        `there; an unlisted path makes that instruction fail on a sound branch.`,
+    );
   });
 });

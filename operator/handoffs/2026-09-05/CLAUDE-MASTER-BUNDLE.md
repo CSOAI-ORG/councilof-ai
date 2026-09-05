@@ -3,7 +3,7 @@
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
 **Rebased onto:** `843692251c0210515d69162db97307a0ebc0bfba` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `35c21146b70b7844e113a7316f2f58f9c0562228` — 51 commits, 64 files changed
+**Head:** `74af3dd87eac89cbce77ddc3ebbf442ffd63a0cb` — 57 commits, 61 files changed, 5079 insertions(+), 161 deletions(-)
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,9 +21,18 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~64 files and only the paths
-listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
-re-rebase.
+**Check this first — and check the PROPERTY, not the number.** The commit count and the
+diffstat move on every rebase, and this branch was rebased on a master that advances roughly
+every 100 seconds. Numbers written here go stale between writing and reading; twice they already
+had.
+
+    git rev-list --count HEAD..origin/master     # must be 0. If not, re-rebase before judging.
+    git diff --name-only origin/master..HEAD     # must contain ONLY paths listed under Files.
+
+The second is the real gate: **every path in that diff must appear under Files below.** If a file
+you cannot find there is listed, or the diff runs to hundreds of files, DO NOT APPLY — master has
+moved and the diff is showing other lanes' work as reversions. That happened three times in this
+lane; once it would have reverted 12,567 lines.
 
 ---
 
@@ -183,6 +192,17 @@ client/src/App.tsx
 docs/PLUGINS.md
 operator/handoffs/2026-09-05/CLAUDE-MASTER-BUNDLE.md
 operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
+operator/handoffs/2026-09-05/board-observed-instrument-grading.jpg
+operator/handoffs/2026-09-05/hub-results-unmeasured-withheld.jpg
+operator/handoffs/2026-09-05/journey-stages-unavailable-named.jpg
+public/civic.html
+public/council-town.html
+public/games-charter.html
+public/games-compliance.html
+public/incident.html
+public/judge.html
+public/swarm.html
+public/tournament.html
 ```
 
 ## Tests
