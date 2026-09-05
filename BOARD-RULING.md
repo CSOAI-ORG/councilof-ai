@@ -1,5 +1,10 @@
 # Board card-index ruling — OWNER 2026-08-28: the chain is 335
 
+> **Scope.** This ruling is about the **signed card index** (`public/signed/card_index.json`) — one of THREE non-overlapping card corpora in this
+> estate. It is not the public-root leaf count and not the on-disk wrapper count.
+> Read [`council-os/CARD-CORPORA.md`](council-os/CARD-CORPORA.md) before quoting any
+> card number. The ruling below is unchanged.
+
 **OWNER RULING 2026-08-28** (supersedes the 313 snapshot and the 150 floor):
 The mine chain is **335 verifying GSPC cards**. The 150-row board was a **subset of
 that chain**, not a second measurement and not a verifying-only elite. Bytes:
