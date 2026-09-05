@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-05T09:06:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "deepseek",
+      "surface": "pricing",
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "prev_sha256": "c53b4c96867501bc5427a0240b38bd38328f52c4eb4e0ac605715a040d97e560",
+      "new_sha256": "fb4cc5399cfca9a29c01b6c822c4391c1d6359843c69c970d33116350c6e1428",
+      "prev_bytes_sha256": "cf2c6fb2dd8a32a538f12a8176175b8809a3516326a5cb30dfe52d63c490a968",
+      "new_bytes_sha256": "fc590e5b2cc856c798d46314828dd790320e177317121a1864ef5428991d12d7",
+      "prev_fetched_at": "2026-09-04T09:40:57Z",
+      "fetched_at": "2026-09-05T09:06:18Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 23168,
+        "new": 46100
+      },
+      "etag": {
+        "prev": "\"9ab0c63f83efd925aaa77a4d8bcfa20a\"",
+        "new": "\"30e0b776ff7df12130f0f64bc4dbf091\""
+      },
+      "last_modified": {
+        "prev": "Fri, 28 Aug 2026 05:44:12 GMT",
+        "new": "Fri, 28 Aug 2026 05:44:14 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "378fd5f472d26d703474ac5c9dfdcae512f85dd76f684a8acc1c25af61e90172",
+    "sig_ed25519": "e19cb09aad8aaa3fa5b6f33803b7e5b6439de25b9bdc2d180d0edb7ddbfa71caf666b0669f18534bb8feae25ff74bc85ed21e6e4317e5420c8787997e8179005",
+    "source_urls": [
+      "https://api-docs.deepseek.com/quick_start/pricing"
+    ],
+    "subject": "DeepSeek — pricing: bytes changed 2026-09-05",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:deepseek",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "9933f7f0459e299686ba953365f0295b8aa1cd6e2b0582a469df1f75c1fe755a",
+    "9a23c7afe7988d24ced4e2eb778842059b242547810368735501a517298ab188",
+    "a276ba63bbabf7fd289972aee457880cfda91ebbde6a93b1f9837dd8b8fdade8",
+    "b45584455dffed854e3c3254b09d878064d49867218e7fd35c479503df9ee39c",
+    "1af43e6fd771805cab006645e4abca6080b60e153b4f8a99c3d341ace18f4b70",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "fc0621337a9c14e91b061793cb2ab6268da22ade7a3244a8d4fddb64ca3ff7c1",
+    "f20ca440adcb790b73ea95058265af8eab8fcd574bcb7e7ecb1e527c57d2bd01"
+  ]
+}

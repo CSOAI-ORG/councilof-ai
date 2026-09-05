@@ -1,0 +1,79 @@
+{
+  "card": {
+    "as_of": "2026-09-05T09:06:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms.daily/0.1",
+      "state": "PROBED",
+      "run_at": "2026-09-05T09:06:18Z",
+      "normaliser": "csoai-norm-v1",
+      "n_targets": 51,
+      "n_ok": 45,
+      "n_unchanged": 5,
+      "n_changed": 14,
+      "n_bytes_only": 26,
+      "n_first_capture": 0,
+      "n_uncheckable": 6,
+      "n_unknown": 0,
+      "changed": [
+        "anthropic/pricing",
+        "anthropic/art50_marking",
+        "google/safety_policy",
+        "xai/terms",
+        "xai/usage_policy",
+        "xai/pricing",
+        "xai/safety_policy",
+        "cohere/usage_policy",
+        "cohere/model_cards",
+        "cohere/safety_policy",
+        "deepseek/model_cards",
+        "deepseek/pricing",
+        "alibaba-qwen/model_cards",
+        "alibaba-qwen/usage_policy"
+      ],
+      "uncheckable": [
+        "openai/terms",
+        "openai/usage_policy",
+        "openai/model_cards",
+        "openai/pricing",
+        "openai/safety_policy",
+        "openai/art50_marking"
+      ],
+      "unknown": [],
+      "attests": "for each target listed as unchanged, the normalised sha256 of this capture equals the previous OK capture — an observation of two captures, nothing about the document between them",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ba75174b85e453d36e8105f090ca58cf2733d4a1fec04d278b90fb38f9425394",
+    "sig_ed25519": "13ec189c7f8af69f6c81654e46f5ea01f9c4da4cf71c12ccbebcb6ec253fddedda1574008bb75016edb53a40451c911ef794e4459eb8c727a29d5407e9c6ff09",
+    "source_urls": [
+      "https://councilof.ai/feeds/provider-diff/index.json"
+    ],
+    "subject": "provider-diff daily capture 2026-09-05: 14 changed, 6 uncheckable, 0 unknown of 51",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "daily",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "targets listed as uncheckable/unknown (nothing observed; never 'unchanged')",
+      "what changed on any changed target",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "a709ffa30cb77dd14727a783ed7529cc3c317555ebcb8c481ea3e210e31cd90f",
+    "9d17367feb1264466a1a1fe48cd95a6ca8b736df70400ca4d1edf3bbe2384292",
+    "d25884225c94bd2d2cb0d43bd853687357c8eb6199102e7319112055c55c5846",
+    "c7e904289cbd57b1784e47424720eea5cb4d671ef131edb88bba8473bf062987",
+    "1af43e6fd771805cab006645e4abca6080b60e153b4f8a99c3d341ace18f4b70",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "fc0621337a9c14e91b061793cb2ab6268da22ade7a3244a8d4fddb64ca3ff7c1",
+    "f20ca440adcb790b73ea95058265af8eab8fcd574bcb7e7ecb1e527c57d2bd01"
+  ]
+}

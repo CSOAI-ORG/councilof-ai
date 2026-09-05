@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-05T09:06:18Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "cohere",
+      "surface": "usage_policy",
+      "url": "https://docs.cohere.com/docs/usage-policy",
+      "prev_sha256": "ee79b54d61c7df6f57decda5eea3e72940010ee89f6ffb6052b2525c5b66beb8",
+      "new_sha256": "244942cf58c1605089b394645862dca11dfb576881dbb1ab2b211ba70698f049",
+      "prev_bytes_sha256": "4dd89bac79be7be2f96c432c2eb5907871dbcc5b2991b18c4070662c9b991ece",
+      "new_bytes_sha256": "1015e67653ff81958f973aa41eba527cab1db2c6f748536840b8025e5b561961",
+      "prev_fetched_at": "2026-09-04T09:40:57Z",
+      "fetched_at": "2026-09-05T09:06:18Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 637057,
+        "new": 636450
+      },
+      "etag": {
+        "prev": "\"5slshym69dnhv\"",
+        "new": "\"pfc8inhrkodn10\""
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "798d53035f1c348c6bdbd3b8e6d8ae4da8165d464d19bf68bd4a2dbbe7ea67b6",
+    "sig_ed25519": "3e19a79a4f4c9f369a45be73591e7cd2527671ec20fc1bf4b9dfc7afc17df1a4c78099a966afa09c9fd3f86dcea09fbf7ecec5e5b2fae914ce6d460e7a969c09",
+    "source_urls": [
+      "https://docs.cohere.com/docs/usage-policy"
+    ],
+    "subject": "Cohere — usage_policy: bytes changed 2026-09-05",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:cohere",
+      "surface:usage_policy",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "4aa4e593f2d9e2eecd92eed0bbd336eee7c9b002a035c4761fb791d3bf27e291",
+    "e0104bdae199c2726db02913a8e9da87b1d48224859b4749d82b95d30bf2dd54",
+    "297d295caa1877478dbbd610392a5ec9c2161b2d470208f33456fb5d36e30f74",
+    "c7e904289cbd57b1784e47424720eea5cb4d671ef131edb88bba8473bf062987",
+    "1af43e6fd771805cab006645e4abca6080b60e153b4f8a99c3d341ace18f4b70",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "fc0621337a9c14e91b061793cb2ab6268da22ade7a3244a8d4fddb64ca3ff7c1",
+    "f20ca440adcb790b73ea95058265af8eab8fcd574bcb7e7ecb1e527c57d2bd01"
+  ]
+}

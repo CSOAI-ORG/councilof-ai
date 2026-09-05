@@ -1,0 +1,108 @@
+{
+  "card": {
+    "as_of": "2026-09-05T12:38:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:ethereum",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "head": {
+        "block": 25911177,
+        "block_hash": "0xb7df54d0651ea8bd569c5163bbe22c485d1d5760a132d6abb2ee5c74a38c6086",
+        "block_time": "2026-09-05T12:38:11Z"
+      },
+      "n_contracts": 6,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:ethereum",
+          "from": 25905692,
+          "to": 25909691,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:BUIDL-I:ethereum",
+          "from": 25906612,
+          "to": 25910611,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:WTGXX:ethereum",
+          "from": 25905692,
+          "to": 25911165,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:JTRSY:ethereum",
+          "from": 25907383,
+          "to": 25911165,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887787,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USTB:ethereum",
+          "from": 25909692,
+          "to": 25911165,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USTBL:ethereum",
+          "from": 25905692,
+          "to": 25909691,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on ethereum that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "70e8b1a6f76e0da7250cceeeb2cbc3dd708587886642f6ce97f60bb45d0df6cc",
+    "sig_ed25519": "44b994c08be1da9e13b7cc891ede2909669975a214a5e4f0954868ad38c4641200cc15cd7b06b93a2e629daee1863f397256bdd50be48e4abc78b61f863b9909",
+    "source_urls": [
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm-events:scan:ethereum coverage at block 25911177",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "3e0ca6a4483b8e0f4715466186d00db90683d53aab83747fb39cef2c9890f969",
+    "69e95251d75a2f32e5242d1b46cea4c886fc1690063357b75d8e91ed11333e42",
+    "4b445ba3a5958623f4a5f6842ba32a68f7a2936f40ec095879df5235be80a368",
+    "e438863c077fffd37e1076758455e009c566eae7d50c3e871c211d141440025d",
+    "0ec24333a6c5589a876e022d2b6842eb3e98483b660346e692017a3cd68907a9",
+    "0b02b04b3f7de43001d8918ca845bfc1f940a8c5945c531b2180d15b199f5482",
+    "8ca4f8551f7cda4ff479566cceea2270cd08f4d1b5be820b8140a4f79cd4cbba",
+    "bb56c5809912c2cb668122f42ad525c72827edb16511c1929f27e7297f0b9e1f"
+  ]
+}
