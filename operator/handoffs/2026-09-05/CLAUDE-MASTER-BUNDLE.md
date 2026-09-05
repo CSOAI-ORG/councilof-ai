@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `2326605c9b9d6bcbd602065085e1f9ba41a72cb4` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `06ce62a7267aa9b22b00d7161d238ac90d1ca16e` — 34 commits, 46 files changed
+**Rebased onto:** `61762119b768c8b3053784e26ef41cad50bddf15` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `25056901621e38dc607e5bb66d263d4340f5a95b` — 37 commits, 51 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~46 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~51 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -82,6 +82,14 @@ capabilities/card-counts.test.mjs
 capabilities/board-attestation.test.mjs
 client/src/components/board/BoardAttestation.tsx
 client/src/components/lobby/tabs.paneWins.test.ts
+client/src/components/JourneyStages.tsx
+client/src/components/JourneyStages.test.tsx
+client/src/components/DashboardFilesPane.tsx
+client/src/components/DashboardFilesPane.test.tsx
+client/src/components/DashboardMemoryPane.tsx
+client/src/components/DashboardFabricPane.tsx
+client/src/data/gspcInstall.test.ts
+client/src/launchers.shell.test.ts
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
@@ -110,7 +118,7 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 
 ## Tests
 
-    npx vitest run client/src                                  112 files, 614 passed
+    npx vitest run client/src                                  638 passed
     node scripts/brand-gate.mjs dist/client                    EXIT 0 (was EXIT 1 on master)
     node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
     npm run build:client                                       clean; route-truth-guard PASS
@@ -270,6 +278,14 @@ capabilities/card-counts.test.mjs
 capabilities/board-attestation.test.mjs
 client/src/components/board/BoardAttestation.tsx
 client/src/components/lobby/tabs.paneWins.test.ts
+client/src/components/JourneyStages.tsx
+client/src/components/JourneyStages.test.tsx
+client/src/components/DashboardFilesPane.tsx
+client/src/components/DashboardFilesPane.test.tsx
+client/src/components/DashboardMemoryPane.tsx
+client/src/components/DashboardFabricPane.tsx
+client/src/data/gspcInstall.test.ts
+client/src/launchers.shell.test.ts
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
@@ -379,6 +395,39 @@ in either tree currently contains the term at all, so the exemption is protectin
 **I did not apply it.** It is a shared deploy gate and root owns the deploy; if I am wrong it
 breaks every lane's ship, and my own guard already closes the hole for authored pages without
 touching theirs. `scripts/` is untouched in this bundle. The page content is fixed either way.
+
+## WP-3 and WP-5, delivered where runtime allows
+
+**WP-3's honest half is built.** `JourneyStages`, in the Connections pane, renders the
+ten-stage case model. Four stages are LIVE; six name their exact endpoint and carry the
+producer's recorded reason verbatim — `/api/ras` 404, `/api/remediation` 404,
+`/api/receipts/latest` UNPUBLISHED, `/api/jobs` 404. The brief asks for the exact unavailable
+capability to be shown, and the estate had been satisfying only the other half of that clause
+(never faking a fix) by saying nothing at all.
+
+It offers **no control that would fail**. A test rejects any `<button>`, `<form>` or
+`disabled` in that component, because a greyed-out "Approve" is the faked fix wearing a
+disabled attribute. Another rejects "soon" / "coming", so it cannot promise a date.
+Screenshot: `journey-stages-unavailable-named.jpg`.
+
+**WP-5: a file was marked SIGNED because the upload succeeded.** `DashboardFilesPane`
+hardcoded `signed: true` on every row and rendered it green. A 200 says the upload was
+accepted, not that anything was signed — and `res.ok` was never checked, so a 500 with a JSON
+body rendered as SIGNED too. It also had no try/catch (stuck spinner on network failure) and
+keyed the list on a possibly-empty `sha256`. The state is now READ from the response; a
+response that does not say carries UNKNOWN and renders "signature state not stated".
+
+`DashboardMemoryPane` had the sibling defect — a swallowed error rendered as "No memory
+entries yet.", making a dead endpoint indistinguishable from an empty store.
+
+**A sweep for that whole class found the rest of the estate correct**, which is worth
+recording as much as the fixes: the `gspcAxes` offline snapshot carries `status:"MEASURED"`
+with real-looking numbers, and all seven consumers disclose it as a snapshot; the Arena
+contract's `state:"SIGNED"` sits beside `HISTORICAL_REPLAY` and `NONCANONICAL_15_AXIS`; and
+`ConnectGSPC` renders no "Verified" badge at all, only an "Unverified shape" warning on the
+others. Also verified already-correct: `LobbyPlay`'s game honesty, the nine-rank Elo table
+(the rows exist, the source and tie caveat are stated), and the homepage hero, which another
+lane already guards with `heroBoard.test.ts`.
 
 ## Open owner gates, in priority order
 
