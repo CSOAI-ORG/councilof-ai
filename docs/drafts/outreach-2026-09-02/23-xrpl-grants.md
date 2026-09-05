@@ -1,7 +1,32 @@
 # 23 — XRPL Grants (unified application / AI Fund) (FORM, not email)
 
 segment: B — XRPL issued-asset disclosure switchboard (reader + monthly signed deltas) + the agent rail that reads it
-status: **GATE CLEARED 2026-09-04** — `GET /api/xrpl` returns 200. Still nothing submitted; owner gate below stands.
+status: **BLOCKED 2026-09-05 — THERE IS NO FORM TO SUBMIT.** Our own gate (`GET /api/xrpl` = 200)
+cleared on 04 Sep, and the answers below are verified. The programme is what closed.
+
+## Checked in a browser 2026-09-05, every door this file named
+
+| door | state |
+|---|---|
+| unified application (`submit.xrplgrants.org/submit/30143c5a-…`) | **redirects to `/submit`**, which says *"There are presently no open calls for applications."* No form element on the page — only Home, a menu, and "View Your Submissions". |
+| AI Fund form (`…/5fdbb7d9-…`) | **same redirect, same empty page.** |
+| Tenity SFIIP (Singapore) | site still shows "Apply now"; **application deadline was 25 July 2026.** Programme runs 5 Oct – 13 Nov. |
+| Brinc HFIP (Hong Kong) | **"The applications are closed."** |
+| `info@xrplgrants.org` | live — the "Inquire Now" button is a `mailto:`, not a form. |
+
+xrplgrants.org still advertises the unified application and still renders two "Apply now" buttons
+pointing at closed programmes, so the *site* is not a reliable signal of what is open; the submit
+portal is. Next opening is stated only as **"additional new programming to be announced in
+October 2026"** — no date, no form.
+
+The earlier reading in this file, "open, rolling", was true when written on 02 Sep or was wrong
+then; either way it is false today and the file should not have carried it into an owner
+decision. Nothing was submitted, because there was nothing to submit to.
+
+**What is actually available now:** an email to info@xrplgrants.org, which is an inquiry rather
+than an application, and waiting for the October announcement. Both are owner calls. The answers
+below stay verified and ready for the moment a form exists — re-run the re-check recipe first,
+because they are only as good as the day they were measured.
 
 **Door:** https://xrplgrants.org/ (read 2026-09-02): tracks Brazil Fund, AI Fund, Onchain Finance, Japan/Korea, global accelerators (Brinc HFIP, Tenity SFIIP); priorities "DeFi, RWA, Payments, Trade Finance"; "Additional new programming to be announced in October 2026"; info@xrplgrants.org. Forms (search 2026-09-02, xrplgrants.org): unified application https://submit.xrplgrants.org/submit/30143c5a-0fec-46bd-ae04-a7a9a407545d/unified-application-xrpl-grants-xrpl-accelerator (considered for all programmes); AI Fund form https://submit.xrplgrants.org/submit/5fdbb7d9-57ee-4005-a309-8308c4ba2b46/xrpl-grants-ai-fund-application ("If AI is not a central component of your project, please return to the main application"); award range as published in the FAQ, "for projects up to 12 months". Field names not read — UNVERIFIED.
 **Owner gate:** grant in XRP/USD = trading income at sterling value (accountant). Ripple/RLUSD is a measured subject on our reader — never described as a client.
