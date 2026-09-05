@@ -198,7 +198,13 @@ export default function DashboardWorkspace({
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           {activePane ? (
             <div
-              className="min-h-0 flex-1 overflow-y-auto bg-background"
+              // pt-14 clears the floating "Workspace" button (absolute right-3 top-3, h-10),
+              // which below `xl` sits ON TOP of the pane. Measured on an iPhone 13 viewport
+              // 2026-09-05: it overlapped the board's H2 by 2994px2, the results pane's error
+              // paragraph by 2078px2 and the fabric eyebrow by 2590px2 — three of four tabs.
+              // The sibling no-pane branch below already allows for it with `mt-12 xl:mt-0`;
+              // this branch never did, and nothing at desktop width could show it.
+              className="min-h-0 flex-1 overflow-y-auto bg-background pt-14 xl:pt-0"
               data-testid="dashboard-tool-canvas"
             >
               {activePane}

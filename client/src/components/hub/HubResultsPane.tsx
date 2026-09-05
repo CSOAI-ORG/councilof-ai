@@ -57,7 +57,7 @@ export default function HubResultsPane() {
 
   if (loading) {
     return (
-      <div className="p-6 text-sm text-emerald-100/70" role="status">
+      <div className="p-6 text-sm text-muted-foreground" role="status">
         Loading published Hub results…
       </div>
     );
@@ -67,10 +67,10 @@ export default function HubResultsPane() {
     // In words. No placeholder rows, no zeroes standing in for data.
     return (
       <div className="p-6 text-sm" role="alert">
-        <p className="font-semibold text-rose-300">
+        <p className="font-semibold text-destructive">
           The published Hub results could not be read.
         </p>
-        <p className="mt-2 text-emerald-100/70">
+        <p className="mt-2 text-muted-foreground">
           GET /api/hub-cards did not answer: {error}. Nothing is shown rather than a
           number that is not a measurement.
         </p>
@@ -82,7 +82,7 @@ export default function HubResultsPane() {
 
   return (
     <section className="p-4 sm:p-6" aria-labelledby="hub-results-heading">
-      <h2 id="hub-results-heading" className="text-lg font-bold text-emerald-100">
+      <h2 id="hub-results-heading" className="text-lg font-bold text-foreground">
         Published Hub results
       </h2>
 
@@ -90,48 +90,48 @@ export default function HubResultsPane() {
       <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
         {data?.population && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-wide text-emerald-300/70">
+            <dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
               Population
             </dt>
-            <dd className="text-emerald-100/85">{data.population}</dd>
+            <dd className="text-foreground">{data.population}</dd>
           </div>
         )}
         {data?.source && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-wide text-emerald-300/70">
+            <dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
               Source
             </dt>
-            <dd className="break-all text-emerald-100/85">{data.source}</dd>
+            <dd className="break-all text-foreground">{data.source}</dd>
           </div>
         )}
         {data?.as_of && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-wide text-emerald-300/70">
+            <dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
               Observed
             </dt>
-            <dd className="text-emerald-100/85">{data.as_of}</dd>
+            <dd className="text-foreground">{data.as_of}</dd>
           </div>
         )}
         {data?.schema && (
           <div>
-            <dt className="font-mono text-[11px] uppercase tracking-wide text-emerald-300/70">
+            <dt className="font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
               Schema
             </dt>
-            <dd className="text-emerald-100/85">{data.schema}</dd>
+            <dd className="text-foreground">{data.schema}</dd>
           </div>
         )}
       </dl>
 
       {/* The producer's own limits, verbatim. Not paraphrased. */}
       {data?.honesty && (
-        <ul className="mt-4 space-y-1 rounded-xl border border-emerald-500/20 bg-black/20 p-4 text-sm text-emerald-100/75">
+        <ul className="mt-4 space-y-1 rounded-xl border border-border bg-muted p-4 text-sm text-muted-foreground">
           {Object.entries(data.honesty).map(([k, v]) => (
             <li key={k}>{v}</li>
           ))}
         </ul>
       )}
 
-      <p className="mt-4 text-sm text-emerald-100/75">
+      <p className="mt-4 text-sm text-muted-foreground">
         {counts.cells ?? cells.length} cells · {counts.measured ?? 0} MEASURED ·{" "}
         {counts.unmeasured ?? 0} UNMEASURED. Every cell here is signed. A signature is
         not a verification: it says the card bytes carry one, not that anyone checked it
@@ -141,9 +141,9 @@ export default function HubResultsPane() {
       {/* Filters */}
       <div className="mt-4 flex flex-wrap gap-3 text-sm">
         <label className="flex items-center gap-2">
-          <span className="text-emerald-100/70">Axis</span>
+          <span className="text-muted-foreground">Axis</span>
           <select
-            className="rounded-lg border border-emerald-500/30 bg-black/30 px-2 py-1 text-emerald-100"
+            className="rounded-lg border border-border bg-background px-2 py-1 text-foreground"
             value={axis}
             onChange={(e) => setAxis(e.target.value)}
           >
@@ -156,9 +156,9 @@ export default function HubResultsPane() {
           </select>
         </label>
         <label className="flex items-center gap-2">
-          <span className="text-emerald-100/70">Status</span>
+          <span className="text-muted-foreground">Status</span>
           <select
-            className="rounded-lg border border-emerald-500/30 bg-black/30 px-2 py-1 text-emerald-100"
+            className="rounded-lg border border-border bg-background px-2 py-1 text-foreground"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           >
@@ -170,7 +170,7 @@ export default function HubResultsPane() {
             ))}
           </select>
         </label>
-        <span className="self-center text-emerald-100/60">
+        <span className="self-center text-muted-foreground">
           {shown.length} shown
         </span>
       </div>
@@ -182,7 +182,7 @@ export default function HubResultsPane() {
             sample size and the signed card behind each.
           </caption>
           <thead>
-            <tr className="text-[11px] uppercase tracking-wide text-emerald-300/70">
+            <tr className="text-[11px] uppercase tracking-wide text-muted-foreground">
               <th scope="col" className="py-2 pr-3">Model</th>
               <th scope="col" className="py-2 pr-3">Axis</th>
               <th scope="col" className="py-2 pr-3">Status</th>
@@ -197,14 +197,14 @@ export default function HubResultsPane() {
               return (
                 <tr
                   key={`${c.model}::${c.axis}::${c.card_sha256 ?? ""}`}
-                  className="border-t border-emerald-500/10"
+                  className="border-t border-border"
                 >
                   <td className="py-1.5 pr-3 font-sans">{c.model}</td>
-                  <td className="py-1.5 pr-3">{c.axis}</td>
+                  <td className="whitespace-nowrap py-1.5 pr-3">{c.axis}</td>
                   <td className="py-1.5 pr-3">
                     {c.status}
                     {c.status !== "MEASURED" && c.unmeasured?.length ? (
-                      <span className="ml-2 font-sans text-emerald-100/60">
+                      <span className="ml-2 font-sans text-muted-foreground">
                         ({c.unmeasured.join(", ")})
                       </span>
                     ) : null}
@@ -213,7 +213,7 @@ export default function HubResultsPane() {
                     {acc === null ? (
                       // The cell may carry a number. It is not a result until the
                       // status says so, so it is not printed as one.
-                      <span className="font-sans text-emerald-100/50">
+                      <span className="font-sans text-muted-foreground">
                         not a measurement
                       </span>
                     ) : (
@@ -224,7 +224,7 @@ export default function HubResultsPane() {
                   <td className="whitespace-nowrap py-1.5 pr-3">
                     {c.card_url ? (
                       <a
-                        className="text-emerald-300 underline hover:text-emerald-200"
+                        className="text-primary underline hover:text-primary/80"
                         href={c.card_url}
                       >
                         {(c.card_sha256 ?? "").slice(0, 12) || "card"}

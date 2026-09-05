@@ -7,7 +7,9 @@
  *   "Every turn emits a signed card."
  *   "Every interaction emits a 3KB signed card. Anchored to OTS + Sigstore Rekor + EAS on Base."
  *
- * Each page is ~1.7KB of static HTML with zero <script>, zero <canvas> and zero <button>.
+ * Each page is ~1.7KB of static HTML with zero <canvas> and zero <button>, and no script of
+ * its own — the one <script> production serves is the shell launcher the build injects into
+ * every page. There is no turn and nothing to sign.
  * There is no turn, no interaction and nothing to sign. The pages also contradicted the
  * estate's own play surface, which states that nothing in the gallery is a measurement and
  * nothing in it is signed.
@@ -44,9 +46,27 @@ const ACTIVE_CLAIMS = [
   /\bwired to the .{0,24}\bBFT\b/i,
 ];
 
-/** Evidence the page can actually do something. */
+/**
+ * Scripts the BUILD injects into every page. These are shell wiring, not game machinery, and
+ * they must not count as evidence that a page can take a turn.
+ *
+ * WHY THIS LIST EXISTS. This guard reads `public/` (source), where these are absent, so it bit
+ * correctly. Then the build's workspace-launcher step injects
+ * `/council-workspace-launcher.js` into all 116 built pages — so the SAME assertion pointed at
+ * `dist/client`, which is what a reviewer checking production would reasonably do, sees a
+ * `<script>` on every page, returns early on every page, and passes vacuously. The claims would
+ * still be live and the guard would report success.
+ *
+ * That is the fifth-plus instance in this lane of a check that matched something incidental and
+ * stopped testing anything. Named rather than left to source-only luck.
+ */
+const SHELL_SCRIPTS = [/council-workspace-launcher\.js/i];
+
+/** Evidence the page can actually do something — a turn, a click, a canvas. */
 function isInteractive(html) {
-  return /<script\b/i.test(html) || /<canvas\b/i.test(html) || /<button\b/i.test(html);
+  const scripts = [...html.matchAll(/<script\b[^>]*>/gi)].map((m) => m[0]);
+  const realScript = scripts.some((s) => !SHELL_SCRIPTS.some((re) => re.test(s)));
+  return realScript || /<canvas\b/i.test(html) || /<button\b/i.test(html);
 }
 
 function htmlFiles(dir, out = []) {

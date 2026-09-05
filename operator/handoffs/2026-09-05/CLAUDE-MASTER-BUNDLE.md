@@ -86,9 +86,38 @@ live consequence, not a hypothetical.
 > "Every turn emits a signed card."
 > "Every interaction emits a 3KB signed card."
 
-Each page is ~1.7KB of static HTML with **zero `<script>`, zero `<canvas>`, zero `<button>`**.
-There is no turn and nothing to sign. For an estate whose promise is that a signature is
-evidence, this is the claim it most cannot make — and it is on eight public pages today.
+Each page is ~1.7KB of static HTML with **zero `<canvas>` and zero `<button>`**, and no script
+of its own — the single `<script>` production serves is `/council-workspace-launcher.js`, the
+shell launcher the build injects into all 116 built pages. There is no turn and nothing to sign.
+For an estate whose promise is that a signature is evidence, this is the claim it most cannot
+make — and it is on eight public pages today.
+
+*(An earlier version of this paragraph said "zero `<script>`". Production serves one. The point
+survives — a launcher is not a game — but the sentence was checkable and wrong, and the same
+error was live in `game-page-claims.test.mjs`, where it was worse than cosmetic: `isInteractive`
+returned true on any `<script>`, so the guard **pointed at `dist/client` would have skipped every
+page and passed vacuously** while the claims stayed live. Proven, then fixed: the launcher is now
+excluded by name, and the guard was re-run against a launcher-injected page carrying the claim —
+old logic skipped it, new logic fails.)*
+
+**Re-measured 09:30, hours after the section was written — both are STILL live:**
+
+    tournament         http=200 bytes=1790 BFT=0 signed-card=2
+    judge              http=200 bytes=1760 BFT=0 signed-card=2
+    civic              http=200 bytes=1760 BFT=0 signed-card=2
+    swarm              http=200 bytes=1760 BFT=0 signed-card=2
+    council-town       http=200 bytes=1802 BFT=0 signed-card=2
+    incident           http=200 bytes=1778 BFT=0 signed-card=2
+    games-charter      http=200 bytes=1776 BFT=1 signed-card=2
+    games-compliance   http=200 bytes=1790 BFT=0 signed-card=2
+
+The exact bytes served for `/games-charter` right now:
+
+> "Charter is one of the 15 games wired to the 33-agent BFT council."
+> "A 22-axis GSPC-governed game. Every turn emits a signed card."
+> "Every interaction emits a 3KB signed card. Anchored to Sigstore Rekor."
+
+Master has moved many times since this was first measured and has fixed neither.
 
 **This bundle fixes both.** The page copy is corrected and
 `capabilities/game-page-claims.test.mjs` catches the class, with no filename allowlist, so it
@@ -188,6 +217,17 @@ client/src/components/lobby/tabs.ts
 client/src/components/AxisProof.tsx
 client/src/components/board/useGspcBoard.ts
 client/src/routes.duplicate.test.ts
+client/src/components/DashboardWorkspace.tsx
+e2e/playwright.mobile.config.ts
+e2e/tests/mobile-journey.spec.ts
+e2e/tests/contrast-aa.spec.ts
+operator/handoffs/2026-09-05/mobile-1-home.jpg
+operator/handoffs/2026-09-05/mobile-2-shell.jpg
+operator/handoffs/2026-09-05/mobile-3-board.jpg
+operator/handoffs/2026-09-05/mobile-4-results.jpg
+operator/handoffs/2026-09-05/mobile-5-fabric.jpg
+operator/handoffs/2026-09-05/mobile-6-results-readable.jpg
+operator/handoffs/2026-09-05/desktop-results-readable.jpg
 client/src/App.tsx
 ci/hf-jobs/deploy.sh
 vitest.config.ts
@@ -307,6 +347,72 @@ build, served from `dist/client`, reading the live board. Shows the jail row (n 
 47.5–69.8%, TIE) with the cohort expanded: seven models, TP/FP/TN/FN, sorted by accuracy.
 `council-inhouse-ft` — our own model — is last at 0.4648 with TP=0 FP=0. It detected nothing and
 the page shows it.
+
+## WP-5: the phone journey, and what looking at the evidence found
+
+Every screenshot in this handoff was taken at desktop width, so "responsive" was an untested
+word in a document. The Chrome automation available to this lane pins its viewport at 1152 CSS
+px and will not go narrower, so a phone screenshot could not be taken that way at all.
+Playwright — already a dependency — does real device viewports, and `e2e/tests/mobile-journey.spec.ts`
+now walks home → shell → board → results → fabric on an **iPhone 13 viewport (390x844)**.
+
+    operator/handoffs/2026-09-05/mobile-1-home.jpg
+    operator/handoffs/2026-09-05/mobile-2-shell.jpg      left nav -> hamburger, right rail ->
+                                                        "Workspace", composer stays pinned
+    operator/handoffs/2026-09-05/mobile-3-board.jpg
+    operator/handoffs/2026-09-05/mobile-4-results.jpg    honest no-data state, /api absent
+    operator/handoffs/2026-09-05/mobile-5-fabric.jpg
+
+**The shell collapses correctly** — that is the WP-1 claim, and it is now shown rather than
+asserted. No page scrolls sideways; the spec asserts it on all five.
+
+**DEFECT 1, found by the journey and fixed.** The floating Workspace toggle
+(`absolute right-3 top-3 ... xl:hidden`) sits ON TOP of the canvas below `xl`. Measured:
+
+    /dashboard?tab=board     H2 "GSPC board"                              2994px2
+    /dashboard?tab=results   P  "The published Hub results could not..."  2078px2
+    /dashboard?tab=fabric    P  "Council of AI · governed capability..."  2590px2
+
+Three of four tabs. The no-pane branch already allowed for it with `mt-12 xl:mt-0`; the
+activePane branch never did. Fixed with `pt-14 xl:pt-0`, and asserted — reverting the class
+fails the spec naming all three overlaps.
+
+**DEFECT 2, worse, and mine.** `HubResultsPane` was written in a fixed dark palette —
+`text-emerald-100`, `text-emerald-100/70`, `text-rose-300`, `bg-black/20` — and renders on
+`bg-background`, which is `rgb(250,250,247)`. Contrast, measured:
+
+    "The published Hub results could not be read."     1.83:1     AA needs 4.5:1
+    "GET /api/hub-cards did not answer: ..."           1.07:1     AA needs 4.5:1
+    the whole data path (heading, provenance, honesty)  1.03-1.09:1
+
+1.07:1 is text you cannot see, on the **error path** — the state WP-5 names, and the state a
+user is in when they most need to read. Every other pane measured clean, so this was one
+component's mistake and not the theme's. Replaced with theme tokens
+(`text-foreground` / `text-muted-foreground` / `text-destructive` / `border-border bg-muted`).
+
+**The part worth reading twice: this was already visible in the evidence I handed over.**
+`hub-results-unmeasured-withheld.jpg`, listed above under Screenshot, SHOWS that pane washed
+out — heading, provenance and honesty block all pale-on-pale. It was handed over as evidence
+because the content was read out of the DOM and the image was never looked at. Reading a
+screenshot is not the same as taking one.
+
+Replaced, legible, and asserted:
+
+    operator/handoffs/2026-09-05/mobile-6-results-readable.jpg
+    operator/handoffs/2026-09-05/desktop-results-readable.jpg
+
+`e2e/tests/contrast-aa.spec.ts` measures every rendered string against WCAG AA on its own
+computed background, on the data path (fixture-stubbed, since the static server has no `/api/*`)
+and on the error path, at both viewports. **A first attempt at this measurement reported 19.95:1
+and 8.33:1 and would have closed the case**: `getComputedStyle` returns `oklch()`/`oklab()`
+here, and parsing those three numbers as sRGB gives a confident, meaningless ratio. Colours are
+normalised through a canvas for that reason. Both specs were proven by reverting the fix.
+
+    npm run build:client
+    npx playwright test --config e2e/playwright.mobile.config.ts     11 passed
+
+Chromium only — `devices["iPhone 13"]` defaults to WebKit, which is not installed here, and the
+failure reads as a Playwright install problem rather than a browser choice.
 
 ## Capability gaps (measured, not assumed)
 
