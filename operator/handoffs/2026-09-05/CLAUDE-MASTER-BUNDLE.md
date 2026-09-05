@@ -2,42 +2,53 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `d0d6767ad3f925acf23d5c469ea82e549f50dd48` (origin/master, 2026-09-05)
-**Head:** see `git log` below — 5 commits, 8 files, +774/−102
+**Rebased onto:** `3bbfccb033e9db35061c9f7d2027478e230ff3ea` (origin/master, 2026-09-05)
+**Head:** `f2b7e167f98f123a2701d9b466aac249255ba7cf` — 11 commits, 14 files changed, 1259 insertions(+), 103 deletions(-)
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
-The branch was originally cut from `464b17cd2`. master gained a commit while this ran, and
-`git diff origin/master..HEAD` was showing another lane's `free-door.*` and `finish-the-rail.sh`
-as reversions. Rebased before packaging, so the diff below is only this lane's work. **If you see
-those files in the bundle, do not apply it — re-rebase first.**
+**RE-REBASE BEFORE APPLYING.** master moved twice during this lane. Both times
+`git diff origin/master..HEAD` began showing other lanes' work as REVERSIONS — the second time
+573 files and 12,567 deletions, which would have wiped `free-door`, the public-root adapters and
+the research alignment had anyone applied it. Rebased again before packaging.
+
+Check this first: `git diff --stat origin/master..HEAD` must show ~14 files and only the paths
+listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
+re-rebase.
 
 ## Exact commits
 
-**Head:** `6fae5360e25dab328f7f7dd6fc0b2d475a2c167b`
-
 | SHA | change |
 |---|---|
-| `45b3c65ef` | capabilities: the registry can now say "declared and deliberately gated" |
-| `0595526ec` | routes: fail on duplicate paths — two pages are currently unreachable |
-| `854e8ed2a` | gspc: one board, two transports — no contradiction, but each drops half of WP-2 |
-| `996faa06a` | gspc: the per-model cohort is served and the product never shows it |
-| `8fc01b6d6` | AxisProof: show the cohort behind the number |
-| `0709b7af2` | handoff: the reviewed bundle for root, and what I got wrong |
-| `f4b95101c` | tools: docs said HTTP carried the same seven — it serves eleven |
-| `922cd27e1` | capabilities: AG-UI, A2A and A2UI now carry the state their endpoint actually returns |
-| `68032672e` | install: the surfaces are honest, and the probe that said otherwise was wrong |
-| `6fae5360e` | AxisProof: name the cohort table for screen readers |
+| `fc2d457ec` | capabilities: the registry can now say "declared and deliberately gated" |
+| `ff3403989` | routes: fail on duplicate paths — two pages are currently unreachable |
+| `820cf292f` | gspc: one board, two transports — no contradiction, but each drops half of WP-2 |
+| `c9e21b4c7` | gspc: the per-model cohort is served and the product never shows it |
+| `df3cf7ca7` | AxisProof: show the cohort behind the number |
+| `f0db67802` | handoff: the reviewed bundle for root, and what I got wrong |
+| `8fe3ac859` | tools: docs said HTTP carried the same seven — it serves eleven |
+| `3ed6e1968` | capabilities: AG-UI, A2A and A2UI now carry the state their endpoint actually returns |
+| `44a3664c0` | install: the surfaces are honest, and the probe that said otherwise was wrong |
+| `4935824d3` | AxisProof: name the cohort table for screen readers |
+| `f2b7e167f` | handoff: bring the bundle up to the current head |
 
 ## Files
 
-    capabilities/registry.json                   +availability states on 12 MCP capabilities
-    capabilities/registry.test.mjs               NEW  fails closed on registry/runtime drift
-    capabilities/gspc-parity.test.mjs            NEW  HTTP vs MCP field agreement
-    capabilities/cohort-provenance.test.mjs      NEW  per-model data integrity
-    client/src/routes.duplicate.test.ts          NEW  duplicate React route guard
-    client/src/components/AxisProof.tsx          +cohort disclosure
-    client/src/components/AxisProof.test.tsx     NEW  5 tests incl. the all-zero row
-    client/src/components/board/useGspcBoard.ts  +PerModelRow type, +per_model/quotable_models
+```
+capabilities/cohort-provenance.test.mjs
+capabilities/gspc-parity.test.mjs
+capabilities/install-truth.test.mjs
+capabilities/registry.json
+capabilities/registry.test.mjs
+capabilities/tool-catalogue-parity.test.mjs
+capabilities/transport-availability.test.mjs
+client/src/components/AxisProof.test.tsx
+client/src/components/AxisProof.tsx
+client/src/components/board/useGspcBoard.ts
+client/src/routes.duplicate.test.ts
+docs/PLUGINS.md
+operator/handoffs/2026-09-05/CLAUDE-MASTER-BUNDLE.md
+operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
+```
 
 ## Tests
 
@@ -93,15 +104,19 @@ are STILL duplicated — so the exception list cannot rot into permanent permiss
 
 ## Rollback
 
-Every commit is independently revertible; nothing is sequenced.
+Every commit is independently revertible; nothing is sequenced. SHAs move on every rebase — take
+them from `git log origin/master..HEAD` at the moment you apply, not from this list.
 
-    git revert 1da8fb2fc     # UI only — removes the cohort disclosure, board unchanged
-    git revert ab7a1ce9e c5216709c 5b3b6c8e2   # tests only — no runtime effect
-    git revert 09862f32d     # restores the registry to counts.by_protocol.mcp = 12
+Only TWO commits have user-visible effect, and both touch one component:
 
-The only commit with user-visible effect is `1da8fb2fc`. It adds a collapsed `<details>` below one
-row of one component; reverting it changes nothing else. The four others are tests and a data file
-that no runtime reads.
+- **the cohort disclosure** — adds a collapsed `<details>` under one row of `AxisProof`. Reverting
+  removes the cohort table and changes nothing else; the board, the axis row and every other
+  component are untouched.
+- **the caption** — adds one `sr-only` `<caption>`. No visual effect at all.
+
+Everything else is tests, a data file no runtime reads (`capabilities/registry.json`), and one
+documentation correction (`docs/PLUGINS.md`). Reverting any of them cannot change what a user
+sees.
 
 ## Growth metrics this lane can now support
 
