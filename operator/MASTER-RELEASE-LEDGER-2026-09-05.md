@@ -32,14 +32,19 @@ Local commits, in order:
 4. `6c9fe2385` — signed, unsigned, and missing GSPC run evidence labelled separately and fail-closed.
 5. `3fa0bf83a` — one scroll/spacing/heading contract, no nested workspace in framed pages, plus truthful web-app/MCP/extension install doors.
 6. `d0efe80ea` — grounded definition of `MEASURED` and an executable runtime-truth gate.
+7. `f039b2c3d` — records the verified candidate and remaining runtime gates.
+8. `85fc8d15c` — legacy `/os` redirect expectations aligned with the canonical dashboard.
+9. `5f6d952fa` — restores `/pricing-free` and aligns paid evidence/signature descriptions across UI, APIs, x402, MCP and the capability registry.
+
+The weekend continuation adds a finite AG-UI board observation directly to chat,
+with dated session retention, explicit refresh, bounded reads and retryable failure.
 
 These changes are committed locally only. They are not merged, pushed, or deployed.
 
 Verified on this candidate:
 
-- 129 focused tests pass across dashboard, GSPC evidence, chat, MCP, AG-UI projection, action staging, PWA, and extension/install contracts.
-- Route truth passes across 487 routes, 39 active navigation entries, 575 exact redirects, and 91 withdrawn routes.
-- Direct Vite production compilation passes across 3,998 modules.
+- The complete Vitest suite passes: 159 files / 976 tests, including 13 adversarial stream-reader tests and four new routing/retention tests. A direct Vite production build passes. Desktop (1440 px) and mobile (390 px) streamed-chat journeys pass. The broad repository TypeScript baseline remains red, with no diagnostics in files changed by this checkpoint.
+- Route truth passes across 487 routes, 39 active navigation entries, 575 exact redirects, and 90 withdrawn routes.
 - Eleven canonical workspace destinations return HTTP 200, render content, produce no page errors, and have no horizontal overflow at desktop width.
 - The home workspace has no horizontal overflow at 390 px mobile width.
 - Signed-card verification loads cleanly once the tracked signed corpus is materialised in the sparse preview checkout.
@@ -71,7 +76,7 @@ Verified on this candidate:
 - MCP discovery is aligned and the eleven declared tools are surfaced from the canonical contract.
 - The website has an installable-web-app contract and a network-honest service worker. The install prompt still depends on a production HTTPS/browser eligibility check; no native App Store wrapper exists.
 - The Chrome extension remains developer/load-unpacked and Hugging-Face-only; there is no Chrome Web Store release.
-- AG-UI board projection exists but central chat does not consume it. A2A is discovery-only, A2UI has no renderer, action storage is non-durable staging, and the latest receipt feed is unpublished.
+- Central chat consumes the finite AG-UI board projection and renders its dated structured observation. General provider-run streaming and consent remain unbound. A2A is discovery-only, A2UI has no renderer, action storage is non-durable staging, and the latest receipt feed is unpublished.
 - The precise eleven executable gates are in `operator/audits/COUNCIL-OS-RUNTIME-TRUTH-GATE-2026-09-05.md`.
 
 ## Canonical RAS lifecycle

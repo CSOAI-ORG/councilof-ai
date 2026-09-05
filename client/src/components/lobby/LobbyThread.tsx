@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import { MEASURE_CHAT, TYPE, TONE } from "./glass";
 import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 import { AnswerText } from "./answerText";
+import LobbyGspcObservation from "./LobbyGspcObservation";
 
 const STATE_TONE: Record<string, string> = {
   model_response: TONE.running,
@@ -43,12 +44,20 @@ export default function LobbyThread({
           className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto max-w-[min(42rem,92%)]" : "max-w-[min(44rem,96%)]"}`}
         >
           <p className="sr-only">
-            {t.role === "user" ? "You asked:" : t.state === "model_response" ? "An upstream model replied:" : "The Council replied:"}
+            {t.role === "user"
+              ? "You asked:"
+              : t.state === "model_response"
+                ? "An upstream model replied:"
+                : "The Council replied:"}
           </p>
           <p
             className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}
           >
-            {t.role === "user" ? "You" : t.state === "model_response" ? "Upstream model" : "Council"}
+            {t.role === "user"
+              ? "You"
+              : t.state === "model_response"
+                ? "Upstream model"
+                : "Council"}
           </p>
           <div
             className={
@@ -62,8 +71,23 @@ export default function LobbyThread({
                 The Council answers in Markdown, so its turn is rendered (see
                 answerText.tsx: React nodes, whitelist, never innerHTML). */}
             {t.role === "user" ? t.text : <AnswerText text={t.text} />}
+            {t.role === "council" && t.gspc && (
+              <LobbyGspcObservation observation={t.gspc} />
+            )}
+            {t.role === "council" && t.boardRead && (
+              <button
+                type="button"
+                disabled={chat.busy}
+                onClick={() =>
+                  void chat.send("Refresh the live GSPC board", () => {})
+                }
+                className="mt-3 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-primary hover:bg-accent disabled:opacity-50"
+              >
+                {t.gspc ? "Read board again" : "Retry board read"}
+              </button>
+            )}
           </div>
-          {t.role === "council" && (t.state || t.signature) && (
+          {t.role === "council" && (t.state || t.signature || t.provenance) && (
             <div className="mt-1.5 flex flex-wrap items-center gap-2">
               {t.state && (
                 <span
@@ -77,6 +101,11 @@ export default function LobbyThread({
               {t.signature && (
                 <span className="font-mono text-[10px] text-slate-600">
                   {t.signature}
+                </span>
+              )}
+              {t.provenance && (
+                <span className="break-all text-[10px] text-muted-foreground">
+                  {t.provenance}
                 </span>
               )}
             </div>

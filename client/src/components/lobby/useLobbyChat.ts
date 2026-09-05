@@ -14,6 +14,12 @@ import {
 } from "./lobbyRefuse";
 import { fetchPinnedCardKey, verifyCard } from "@/lib/cardVerify";
 import { callTool, type ToolResult } from "@/lib/sovTools";
+import {
+  GspcStreamError,
+  parseGspcChatObservation,
+  readAguiGspcOnce,
+  type GspcChatObservation,
+} from "@/lib/aguiGspcRead";
 
 const lobbyEnv = (
   import.meta as ImportMeta & {
@@ -56,6 +62,8 @@ export type Turn = {
   state?: string;
   signature?: string;
   provenance?: string;
+  boardRead?: boolean;
+  gspc?: GspcChatObservation;
   at: string;
 };
 
@@ -108,6 +116,9 @@ function parseStoredTurn(value: unknown): Turn | null {
     state: optionalString(candidate.state),
     signature: optionalString(candidate.signature),
     provenance: optionalString(candidate.provenance),
+    ...(candidate.role === "council" && candidate.boardRead === true
+      ? { boardRead: true, gspc: parseGspcChatObservation(candidate.gspc) }
+      : {}),
   };
 }
 
@@ -166,14 +177,16 @@ export function writeChatSession(
 ): void {
   if (!store) return;
   try {
-    const threads = snapshot.threads.slice(-MAX_STORED_THREADS).map((thread) => ({
-      ...thread,
-      title: thread.title.slice(0, 64),
-      turns: thread.turns.slice(-MAX_STORED_TURNS).map((turn) => ({
-        ...turn,
-        text: turn.text.slice(0, MAX_STORED_TEXT),
-      })),
-    }));
+    const threads = snapshot.threads
+      .slice(-MAX_STORED_THREADS)
+      .map((thread) => ({
+        ...thread,
+        title: thread.title.slice(0, 64),
+        turns: thread.turns.slice(-MAX_STORED_TURNS).map((turn) => ({
+          ...turn,
+          text: turn.text.slice(0, MAX_STORED_TEXT),
+        })),
+      }));
     const activeId = threads.some((thread) => thread.id === snapshot.activeId)
       ? snapshot.activeId
       : null;
@@ -197,8 +210,8 @@ export function clearChatSession(
 export const STATE_LABEL: Record<string, string> = {
   model_response: "upstream model response · unsigned",
   grounded: "grounded in published measurement",
-  runtime_observed: "runtime observed · MCP read",
-  unchecked: "unchecked · MCP reply",
+  runtime_observed: "runtime observed · read",
+  unchecked: "unchecked · response",
   ungrounded: "refused — no grounding available",
   unreachable: "endpoint unreachable",
   deterministic: "deterministic · local, no model",
@@ -332,9 +345,7 @@ export type SafeMcpReadIntent =
  * definitions and execution contract remain functions/mcp/gspc-tools.json and
  * POST /mcp. These four names are the only calls chat may start automatically.
  */
-export function matchSafeMcpReadIntent(
-  text: string,
-): SafeMcpReadIntent | null {
+export function matchSafeMcpReadIntent(text: string): SafeMcpReadIntent | null {
   const readCommand =
     /^(?:please\s+)?(?:(?:(?:can|could|would|will)\s+you|i\s+(?:want|need)\s+you\s+to|i(?:'d|\s+would)\s+like\s+you\s+to)\s+(?:please\s+)?)?(?:call|invoke|run|read|fetch|get|show|list|inspect)\b/i.test(
       text.trim(),
@@ -366,14 +377,16 @@ export function matchSafeMcpReadIntent(
   if (
     /\b(list|read|fetch|which|what|how many|latest|recent)\b[^?\n]{0,48}\b(?:signed |published |measurement )?cards?\b/i.test(
       text,
-    ) || /\bcard index\b/i.test(text)
+    ) ||
+    /\bcard index\b/i.test(text)
   ) {
     return { name: "list_cards", args: { limit: 5 } };
   }
   if (
     /\b(?:what|read|fetch|get|current|latest|show|inspect)\b[^?\n]{0,56}\b(?:public[- ]root|root\.json|merkle root|root head)\b/i.test(
       text,
-    ) || /^\s*(?:public[- ]root|root\.json|merkle root)\s*[?!.]*\s*$/i.test(text)
+    ) ||
+    /^\s*(?:public[- ]root|root\.json|merkle root)\s*[?!.]*\s*$/i.test(text)
   ) {
     return { name: "get_root", args: {} };
   }
@@ -412,6 +425,39 @@ export function matchGuardedActionIntent(
 
 export type SafeMcpReadReply = Pick<Turn, "text" | "state" | "signature">;
 
+/** Explicit in-chat board reads take precedence over plain pane navigation. */
+export function wantsGspcStream(text: string): boolean {
+  return /^(?:please\s+)?(?:(?:can|could|would)\s+you\s+)?(?:show|read|fetch|refresh|stream)(?:\s+me)?\s+(?:the\s+)?(?:live\s+(?:gspc\s+)?board|gspc\s+board)(?:\s+(?:here|in\s+(?:this\s+)?chat))?\s*[?!.]*$/i.test(
+    text.trim(),
+  );
+}
+
+export async function runGspcStreamRead(
+  read: typeof readAguiGspcOnce = readAguiGspcOnce,
+): Promise<Omit<Turn, "role" | "at">> {
+  try {
+    const gspc = await read();
+    return {
+      text: "Here is the published GSPC board at the time of this read. Open the full board for instruments and supporting evidence.",
+      state: "runtime_observed",
+      provenance:
+        "GET /api/agui/gspc-state · STATE_DELTA · read-only observation",
+      boardRead: true,
+      gspc,
+    };
+  } catch (error) {
+    return {
+      text:
+        error instanceof GspcStreamError
+          ? error.message
+          : "The board could not be read. Try again.",
+      state: error instanceof GspcStreamError ? error.state : "unreachable",
+      provenance: "GET /api/agui/gspc-state · no completed observation",
+      boardRead: true,
+    };
+  }
+}
+
 /**
  * Execute one already-parsed read through the same MCP runtime as ToolRunner.
  * The wrapper labels the execution state; it never promotes the returned
@@ -422,7 +468,8 @@ export async function runSafeMcpRead(
   invoke: typeof callTool = callTool,
 ): Promise<SafeMcpReadReply> {
   const result: ToolResult = await invoke(intent.name, intent.args);
-  const state = result.state ?? (result.ok ? "runtime_observed" : "unreachable");
+  const state =
+    result.state ?? (result.ok ? "runtime_observed" : "unreachable");
   const executionState = state.toUpperCase();
   const provenance = `POST /mcp · tools/call · ${intent.name}`;
   if (!result.ok) {
@@ -501,16 +548,19 @@ export function useLobbyChat(): LobbyChat {
       if (!question || busy) return;
 
       // Open (or continue) a thread and record the user's turn.
-      let id = activeId;
+      const threadId =
+        activeId && threads.some((thread) => thread.id === activeId)
+          ? activeId
+          : `t-${crypto.randomUUID()}`;
       const userTurn: Turn = { role: "user", text: question, at: now() };
       setThreads((prev) => {
-        if (id && prev.some((t) => t.id === id)) {
+        if (prev.some((t) => t.id === threadId)) {
           return prev.map((t) =>
-            t.id === id ? { ...t, turns: [...t.turns, userTurn] } : t,
+            t.id === threadId ? { ...t, turns: [...t.turns, userTurn] } : t,
           );
         }
         const fresh: Thread = {
-          id: `t${Date.now().toString(36)}${prev.length}`,
+          id: threadId,
           title:
             question.length > 64
               ? question.slice(0, 63).trimEnd() + "…"
@@ -518,12 +568,8 @@ export function useLobbyChat(): LobbyChat {
           startedAt: now(),
           turns: [userTurn],
         };
-        id = fresh.id;
         return [...prev, fresh];
       });
-      // `id` was assigned synchronously inside the updater above when a thread
-      // was created, so it is safe to adopt it here.
-      const threadId = id!;
       setActiveId(threadId);
 
       const push = (t: Omit<Turn, "at">) =>
@@ -534,6 +580,18 @@ export function useLobbyChat(): LobbyChat {
               : x,
           ),
         );
+
+      // A finite board snapshot renders inside this conversation; plain "open
+      // the board" still switches panes. This read never starts an agent run.
+      if (wantsGspcStream(question)) {
+        setBusy(true);
+        try {
+          push({ role: "council", ...(await runGspcStreamRead()) });
+        } finally {
+          setBusy(false);
+        }
+        return;
+      }
 
       // Lane 1 — deterministic command. Answered locally, labelled locally.
       const tab = matchTab(question);
@@ -740,7 +798,7 @@ export function useLobbyChat(): LobbyChat {
         setBusy(false);
       }
     },
-    [activeId, busy],
+    [activeId, busy, threads],
   );
 
   return {

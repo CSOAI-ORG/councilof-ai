@@ -25,6 +25,7 @@ export default function LobbyComposer({
   seedPrompt,
   seedNonce,
   onFirstReply,
+  onSubmit,
   onClose,
   tools = [],
   onTool,
@@ -38,6 +39,8 @@ export default function LobbyComposer({
   seedNonce?: number;
   /** Called once when the reader gets their first council reply. */
   onFirstReply?: () => void;
+  /** Consume a URL-prefilled prompt after the person submits it. */
+  onSubmit?: () => void;
   /** Folds the composer dock away. The overlay passed this for months while the
    *  composer silently dropped it — once opened, the dock could never be closed. */
   onClose?: () => void;
@@ -143,6 +146,7 @@ export default function LobbyComposer({
     setQ("");
     setSeeded(false);
     setAsksOpen(false);
+    onSubmit?.();
     void chat.send(text, onNavigate, onOpenRoute);
   }
 

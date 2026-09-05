@@ -168,7 +168,7 @@ export default function DashboardWorkspace({
 
   return (
     <div
-      className="relative flex h-full min-h-0 bg-muted/20"
+      className="relative flex h-full min-h-0 bg-muted/20 pt-14 xl:pt-0"
       data-testid="dashboard-workspace"
     >
       <Dialog>
@@ -327,6 +327,13 @@ export default function DashboardWorkspace({
 
                   <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
                     <Link
+                      href="/dashboard?tab=home&ask=Show%20me%20the%20live%20GSPC%20board"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:underline"
+                    >
+                      Read GSPC in chat{" "}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                    <Link
                       href="/dashboard?tab=explore"
                       className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-800 hover:underline"
                     >
@@ -430,6 +437,12 @@ export default function DashboardWorkspace({
           onTool={selectTool}
           seedPrompt={seedPrompt}
           seedNonce={search.length}
+          onSubmit={() => {
+            if (!intentParams.has("ask")) return;
+            const params = new URLSearchParams(intentParams);
+            params.delete("ask");
+            setLocation(`/dashboard?${params.toString()}`, { replace: true });
+          }}
         />
       </section>
       <div className="hidden min-h-0 xl:block">
