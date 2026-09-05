@@ -137,84 +137,6 @@
       "rows": 3,
       "sha256": "8f4d4779e1046932b51552a0a7e15668e31dac0e0b5456ac1f609da089db9493",
       "reason": "receipt-for-quarantined-card"
-    },
-    {
-      "path": "os-production:harness/owem/cards/affect-001-20260825-155335.json",
-      "rows": 1,
-      "sha256": "9fddd9bc03d474296d9eb2034d44d4d822d56931ac26c8346229caf62774c9d0",
-      "reason": "signed-score-without-observations — states sov_score=1 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/agi-002-20260825-155335.json",
-      "rows": 1,
-      "sha256": "3ac72304fbe7bf61aa7381f997ecccb15e1c0f4b03a4abbe440c59233a4265a3",
-      "reason": "signed-score-without-observations — states sov_score=0.6667 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/art5-003-20260825-155335.json",
-      "rows": 1,
-      "sha256": "fb18a3ad4de0c4a4a295f06a212d7611e1a4c82caa8a80c174afb73992b73b23",
-      "reason": "signed-score-without-observations — states sov_score=0.25 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/asi-004-20260825-155335.json",
-      "rows": 1,
-      "sha256": "793f3425e5564678ec96e74edb40976c772d32d151a744d4d0236c45a88fb10b",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/care-005-20260825-155335.json",
-      "rows": 1,
-      "sha256": "898960d9036c1a430bd1624f56a6269f2f319cfa4ec7fe0b1bf38cc43fee028c",
-      "reason": "signed-score-without-observations — states sov_score=1 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/det-006-20260825-155335.json",
-      "rows": 1,
-      "sha256": "316f29188f407a588ebce8a8d072f2f767b8d359bcf6799399ea2628667f61b5",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/gov-007-20260825-155335.json",
-      "rows": 1,
-      "sha256": "e33a51369b045eff65e6cd86e976a705fbe670f91f1dfc961db32ac7f9e42831",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/mach-008-20260825-155335.json",
-      "rows": 1,
-      "sha256": "51b6ebc3bae6bea29356c3f49217d5dba741518a2e79288986eebf817257ffe3",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/mcp-009-20260825-155335.json",
-      "rows": 1,
-      "sha256": "e747cfc89af8d199b1d91bb921b4ef408d951e08d9167912dc3feeed5de1cfdd",
-      "reason": "signed-score-without-observations — states sov_score=0.5 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/oss-010-20260825-155335.json",
-      "rows": 1,
-      "sha256": "aa6faba6728c855b71f9626e8fa705f644ade1f7e7e15e6fb7dd5193c2d4bae6",
-      "reason": "signed-score-without-observations — states sov_score=0.25 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/prv-011-20260825-155335.json",
-      "rows": 1,
-      "sha256": "e9634a49c40613987a542eda838033c5be54964e8d1caa4a4b509f31f28ee550",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/swarm-012-20260825-155335.json",
-      "rows": 1,
-      "sha256": "d86199e2dd57b590105d2b0fa4d07beecf5100af31ad3beac841550165bb23b1",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
-    },
-    {
-      "path": "os-production:harness/owem/cards/xr-013-20260825-155336.json",
-      "rows": 1,
-      "sha256": "a7316420a76aaf568c3d124f20d448b6227c7caf0e3ff15b9f10da4a76b633bc",
-      "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
     }
   ],
   "contaminated_public_roots": [
@@ -266,5 +188,89 @@
       "ots_target_match": true
     }
   ],
-  "harness_card_incident_note": "13 os-production harness cards state a numeric sov_score over n=0 with bench unavailable. Regenerate with: node scripts/mine-harness-cards.mjs"
+  "harness_card_incident_note": "13 os-production harness cards state a numeric sov_score over n=0 with bench unavailable. Regenerate with: node scripts/mine-harness-cards.mjs",
+  "quarantined_sources_outside_the_queue": {
+    "note": "Sources refused for the same reasons as the queue files above, but living OUTSIDE scripts/badger/_queue (here: a local os-production worktree's harness/owem/cards). The gate's quarantined_files list is exactly the cose-wrap + xrpl-settlement queue inventory (queueInventory()), so these cannot be listed there: on 2026-09-05 doing so read as 'quarantine history missing' ×13 and blocked every deploy. Recorded here with their digests so the refusal is not lost; they are not deploy-tree files and nothing publishes them.",
+    "recorded": "2026-09-05",
+    "entries": [
+      {
+        "path": "os-production:harness/owem/cards/affect-001-20260825-155335.json",
+        "rows": 1,
+        "sha256": "9fddd9bc03d474296d9eb2034d44d4d822d56931ac26c8346229caf62774c9d0",
+        "reason": "signed-score-without-observations — states sov_score=1 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/agi-002-20260825-155335.json",
+        "rows": 1,
+        "sha256": "3ac72304fbe7bf61aa7381f997ecccb15e1c0f4b03a4abbe440c59233a4265a3",
+        "reason": "signed-score-without-observations — states sov_score=0.6667 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/art5-003-20260825-155335.json",
+        "rows": 1,
+        "sha256": "fb18a3ad4de0c4a4a295f06a212d7611e1a4c82caa8a80c174afb73992b73b23",
+        "reason": "signed-score-without-observations — states sov_score=0.25 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/asi-004-20260825-155335.json",
+        "rows": 1,
+        "sha256": "793f3425e5564678ec96e74edb40976c772d32d151a744d4d0236c45a88fb10b",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/care-005-20260825-155335.json",
+        "rows": 1,
+        "sha256": "898960d9036c1a430bd1624f56a6269f2f319cfa4ec7fe0b1bf38cc43fee028c",
+        "reason": "signed-score-without-observations — states sov_score=1 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/det-006-20260825-155335.json",
+        "rows": 1,
+        "sha256": "316f29188f407a588ebce8a8d072f2f767b8d359bcf6799399ea2628667f61b5",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/gov-007-20260825-155335.json",
+        "rows": 1,
+        "sha256": "e33a51369b045eff65e6cd86e976a705fbe670f91f1dfc961db32ac7f9e42831",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/mach-008-20260825-155335.json",
+        "rows": 1,
+        "sha256": "51b6ebc3bae6bea29356c3f49217d5dba741518a2e79288986eebf817257ffe3",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/mcp-009-20260825-155335.json",
+        "rows": 1,
+        "sha256": "e747cfc89af8d199b1d91bb921b4ef408d951e08d9167912dc3feeed5de1cfdd",
+        "reason": "signed-score-without-observations — states sov_score=0.5 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/oss-010-20260825-155335.json",
+        "rows": 1,
+        "sha256": "aa6faba6728c855b71f9626e8fa705f644ade1f7e7e15e6fb7dd5193c2d4bae6",
+        "reason": "signed-score-without-observations — states sov_score=0.25 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/prv-011-20260825-155335.json",
+        "rows": 1,
+        "sha256": "e9634a49c40613987a542eda838033c5be54964e8d1caa4a4b509f31f28ee550",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/swarm-012-20260825-155335.json",
+        "rows": 1,
+        "sha256": "d86199e2dd57b590105d2b0fa4d07beecf5100af31ad3beac841550165bb23b1",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      },
+      {
+        "path": "os-production:harness/owem/cards/xr-013-20260825-155336.json",
+        "rows": 1,
+        "sha256": "a7316420a76aaf568c3d124f20d448b6227c7caf0e3ff15b9f10da4a76b633bc",
+        "reason": "signed-score-without-observations — states sov_score=0 with n=0 — a score over zero observations; env_commitment.bench=unavailable"
+      }
+    ]
+  }
 }
