@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `d90e1082fbf9f57fbbc2104a76ec7f3d07674db0` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `4027a17e430e468fd4fb7b27b99f048655a57ca2` — 15 commits, 23 files changed, 2126 insertions(+), 107 deletions(-)
+**Rebased onto:** `e96da8250c4e76ec029e15fd293d9b12711093fb` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `1f81f1d99b193c5134e1280d4668256a4210746e` — 17 commits, 26 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~23 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~26 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -44,6 +44,7 @@ re-rebase.
 | `50f1fdf52` | gspc: the published Hub results were served and never rendered |
 | `072fec07c` | handoff: master moves every ~100s — re-rebase is mandatory |
 | `4ac1fb8ee` | capabilities: the journey's missing backends, measured rather than assumed |
+| (see `git log`) | gspc: the board never said when it was measured, or with what |
 
 ## Files
 
@@ -61,6 +62,8 @@ client/src/components/AxisProof.test.tsx
 client/src/components/hub/HubResultsPane.tsx
 client/src/components/hub/HubResultsPane.test.tsx
 client/src/components/hub/useHubCards.ts
+client/src/components/home/HomeGspcBoard.tsx
+client/src/components/home/HomeGspcBoard.measuredOn.test.tsx
 client/src/components/DashboardPane.tsx
 client/src/components/DashboardLayout.test.ts
 client/src/components/lobby/tabs.ts
@@ -74,7 +77,7 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 
 ## Tests
 
-    npx vitest run client/src                                  111 files, 607 passed
+    npx vitest run client/src                                  112 files, 612 passed
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
@@ -90,8 +93,20 @@ Every guard was proven to fail before being trusted:
   tests, one naming the consequence: an UNMEASURED cell's number rendered as a result
 - journey backends — recording `ras` as VERIFIED fails two tests, one offline on the record
   and one live against the 404, each naming the consequence
+- observation date — dropping `measured_on.date` from the board fails three tests, one
+  asserting the multi-date prose survives rather than being flattened to one timestamp
 
 ## Screenshot
+
+`operator/handoffs/2026-09-05/board-observed-instrument-grading.jpg` — `/dashboard?tab=board`
+on the branch build. The board now leads with OBSERVED (behavioural axes 2026-08-12, jail
+2026-08-18, financial-fact 2026-08-25), INSTRUMENT (19-model fleet; jail's 7-model fleet
+called out as never conflated) and GRADING (15,580 per-item rows, reproducible from a named
+commit). None of it was rendered before; all of it was being served.
+
+`operator/handoffs/2026-09-05/hub-results-unmeasured-withheld.jpg` — `/dashboard?tab=results`
+filtered to UNMEASURED. 70 cells, each signed and each carrying an accuracy, every Accuracy
+cell reading "not a measurement" beside the producer's reason.
 
 `operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg` — `/for/startup`, exact branch
 build, served from `dist/client`, reading the live board. Shows the jail row (n 71, 59.2%,
