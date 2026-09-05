@@ -59,6 +59,11 @@ npm run guard:evidence-integrity
 step 'Council truth gate — no simulated BFT or phantom engine doors'
 npm run guard:council-truth
 
+# Added 2026-09-05: deploy.yml gained this gate in 623d67984 and the mirror did not, so an
+# HF Jobs deploy would have shipped without it while GHA ran it. steps-drift caught the gap.
+step 'Sitemap truth gate — every listed URL is one the edge serves'
+npm run guard:sitemap-truth
+
 step 'Redirects guard — selftest, then the real file'
 node scripts/redirects-guard.mjs --selftest
 node scripts/redirects-guard.mjs public/_redirects

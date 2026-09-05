@@ -75,6 +75,31 @@ describe("the handoff bundle's own claims", () => {
     );
   });
 
+  it("the guard count it quotes is the guard count that exists", () => {
+    // THE SIXTH STALENESS. The bundle quoted "82 passed" twice and "83 passed" once while the
+    // suite stood at 86 — three different numbers for one figure, none of them current. The
+    // original comment here declined to assert it because a TEST count is not a FILE count.
+    // That reasoning was right and the conclusion was wrong: the test count IS derivable
+    // statically, one `it(` per test, so there is no excuse for the bundle disagreeing with it.
+    const files = readdirSync(here).filter((f) => f.endsWith(".test.mjs"));
+    const tests = files
+      .map((f) => (readFileSync(path.join(here, f), "utf8").match(/^\s*it\(/gm) ?? []).length)
+      .reduce((a, b) => a + b, 0);
+    assert.ok(tests > 50, `only ${tests} capability tests counted — the parse is wrong`);
+
+    const quoted = [...new Set([...text.matchAll(/(\d+) passed(?:,| at handoff| at)/g)].map((m) => Number(m[1])))]
+      .filter((n) => n > 50 && n < 400 && n !== 643);
+    assert.ok(quoted.length > 0, "the bundle no longer quotes a capability-guard pass count");
+    const wrong = quoted.filter((n) => n !== tests);
+    assert.deepEqual(
+      wrong,
+      [],
+      `the bundle quotes ${wrong.join(", ")} capability tests passing; there are ${tests}. Root is ` +
+        `told to run the suite and compare, so a stale number turns a green run into a discrepancy ` +
+        `to investigate. Update every occurrence, not the first one found.`,
+    );
+  });
+
   it("every file it lists under Files is actually in the branch", () => {
     const block = text.slice(text.indexOf("## Files"), text.indexOf("## Tests"));
     const listed = [...block.matchAll(/^([a-z][\w./*-]+\.\w+)$/gim)].map((m) => m[1]);

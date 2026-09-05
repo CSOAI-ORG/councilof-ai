@@ -189,12 +189,17 @@ client/src/components/AxisProof.tsx
 client/src/components/board/useGspcBoard.ts
 client/src/routes.duplicate.test.ts
 client/src/App.tsx
+ci/hf-jobs/deploy.sh
+vitest.config.ts
 docs/PLUGINS.md
 operator/handoffs/2026-09-05/CLAUDE-MASTER-BUNDLE.md
 operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 operator/handoffs/2026-09-05/board-observed-instrument-grading.jpg
 operator/handoffs/2026-09-05/hub-results-unmeasured-withheld.jpg
 operator/handoffs/2026-09-05/journey-stages-unavailable-named.jpg
+capabilities/root-conflict-disclosure.test.mjs
+public/signed/HOW-TO-VERIFY-ROOT.md
+public/signed/index.html
 public/civic.html
 public/council-town.html
 public/games-charter.html
@@ -219,12 +224,12 @@ before the build ran, and a reviewer would reasonably distrust everything else h
     npx vitest run client/src                                  643 passed at handoff
 
     # The capability guards need NO install and NO build. Verified from a bare
-    # `git archive HEAD` export with zero node_modules: 82 passed, offline and live.
+    # `git archive HEAD` export with zero node_modules: 87 passed, offline and live.
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 LIVE_NPM=1 LIVE_CARDS=1 \
       LIVE_ATTESTATION=1 LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
       LIVE_A2A=1 LIVE_X402=1 \
-      node --test capabilities/*.test.mjs                      82 passed at handoff, 0 failed
+      node --test capabilities/*.test.mjs                      87 passed at handoff, 0 failed
 
 Counts are stated **at handoff** deliberately. They move as master moves; a mismatch means drift
 to re-read, not an error. The claims that must hold regardless are asserted by
@@ -267,7 +272,7 @@ an instruction is only worth writing if it works for the person who did not writ
 |---|---|---|
 | 1 | `git rev-list --count HEAD..origin/master` | **0** — nothing to re-rebase |
 | 2 | every path in `git diff --name-only origin/master..HEAD` appears under Files | **61 of 61**, none unlisted |
-| 3 | capability guards, no install and no build, all `LIVE_*` set | **83 passed, 0 failed** |
+| 3 | capability guards, no install and no build, all `LIVE_*` set | **87 passed, 0 failed** |
 | 4 | `node scripts/one-door-guard.mjs` | **exit 0** |
 
 **And the ordering warning is not hypothetical.** Running `node scripts/brand-gate.mjs
@@ -652,6 +657,42 @@ above. Five of six apparent hits were my own weaker patterns matching denials �
 "we certify NOTHING" and "can never buy a score". brand-gate is more careful than the version I
 wrote to test it.
 
+## A published rule a reader could not yet observe
+
+A SCITT peer (Iman Schrock, Emilia Protocol) asked on 2026-09-05 for two pins: the rule and
+verifier path that detect **two conflicting roots for the same issuer and epoch**, and the ones
+that establish **a reader holds the current head**. Both were answered in writing the same
+morning. Answering them surfaced a defect of exactly the kind this lane exists to close.
+
+**The conflict half is real and published.** `public/signed/HOW-TO-VERIFY-ROOT.md` carries the
+rule under ledger `C-2026-0905-01` — *two witnessed roots for `did:web:csoai.org` with equal
+`as_of` and unequal `merkle_root` are a CONFLICT, and a reader must treat neither as current* —
+and `find_root_conflicts` in `scripts/witness_public_root.py` implements it, on master at
+`78bba84269fa8ee8371140f27da9d6dc98657d11`. `python3 scripts/witness_public_root.py --selftest`
+proves NONE, CONFLICT and UNCHECKABLE are all reachable.
+
+**But no published artifact carries a `conflict` block yet.** The code landed at 06:25:32Z; the
+most recent root run was 04:16:50Z. So the guide described, in the present tense, a field that a
+reader fetching `/interop/root-witness-pointer.json` would not find — and would reasonably read
+as the document lying. The guide now states that, and states the thing that matters more:
+**absence of the field means the artifact predates the rule, never that the check returned NONE.**
+
+**The freshness half we do not have, and the peer was told so.** There is no signed head, no
+epoch counter, no maximum merge delay, no freshness bound on `root.json`. What exists is
+`compute_drift` — a three-valued observation at `checked_at`, with UNCHECKABLE deliberately
+separate so a failed fetch cannot collapse into MATCH. As served while this was written the
+pointer reads **DRIFTED**, and says in its own `reason` field that the observation *"does not
+establish which is newer"*. A reader who verifies a signature and an inclusion proof can still be
+arbitrarily far behind, and nothing published tells them so.
+
+`capabilities/root-conflict-disclosure.test.mjs` guards **both directions**. It asserts the rule,
+the ledger id, the verifier function and the stated limit stay in the guide; and with
+`LIVE_ROOT_WITNESS=1` it **fails as soon as a served artifact carries a `conflict` block while the
+"Not yet observable" paragraph still stands**, naming the paragraph to delete and the peer to
+tell. A retraction nobody is forced to retract is a story about honesty rather than the thing
+itself — which is the disease this bundle documents six times over. Both directions were proven
+by mutation, not by passing.
+
 ## Open owner gates, in priority order
 
 1. **Deploy** — `brand-gate` was failing on master; this bundle fixes it. Nothing ships until
@@ -674,8 +715,8 @@ wrote to test it.
 **The "bare worktree" claim is verified, not asserted.** `git archive HEAD` into an empty
 directory — **zero `node_modules`** — then `node --test capabilities/*.test.mjs`:
 
-    offline                     77 passed, 0 failed
-    every LIVE_* flag set       77 passed, 0 failed
+    offline                     87 passed, 0 failed
+    every LIVE_* flag set       87 passed, 0 failed
 
 Every capability guard imports `node:` builtins and relative paths only. That matters for a
 reviewer: you can check this bundle's evidence from a clean export, without trusting my
