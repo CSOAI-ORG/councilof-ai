@@ -541,6 +541,19 @@ def main() -> int:
     op = Path(args.out)
     op.parent.mkdir(parents=True, exist_ok=True)
     op.write_text(json.dumps(out, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
+
+    # A counts-only sibling. The full file is ~3.4 MB because it carries a models[] row
+    # for every one of ~6,600 models, so anything that fetches it to quote ONE number
+    # pays the whole payload -- and a figure that is expensive to fetch quietly stops
+    # being fetched, which is how a page ends up quoting a stale constant instead. Same
+    # bytes for the counts, minus the rows.
+    counts_path = op.with_name(op.stem + "-counts" + op.suffix)
+    slim = {k: v for k, v in out.items() if k != "models"}
+    slim["full_table"] = f"/interop/{op.name}"
+    slim["models_omitted"] = len(out.get("models") or [])
+    counts_path.write_text(json.dumps(slim, indent=1, ensure_ascii=True) + "\n", encoding="utf-8")
+    print(f"counts-only sibling: {counts_path.name} "
+          f"({counts_path.stat().st_size} B vs {op.stat().st_size} B)")
     print(json.dumps({k: v for k, v in out["counts"].items()}, indent=1))
     print("providers_ranked (top 12):")
     for p in provider_rank[:12]:
