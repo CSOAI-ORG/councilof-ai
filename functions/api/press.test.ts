@@ -59,3 +59,43 @@ describe("/api/press.json is derived, and refuses to announce what did not happe
     expect(d.signed_cards.corpus_note).toContain("zero identifier overlap");
   });
 });
+
+describe("the FAQ is answered from artifacts", () => {
+  it("every answer is non-trivial and the set is stable across calls", () => {
+    const a = build().faq, b = build().faq;
+    expect(JSON.stringify(a)).toBe(JSON.stringify(b));
+    expect(a.length).toBeGreaterThanOrEqual(5);
+    for (const f of a) {
+      expect(f.q.endsWith("?")).toBe(true);
+      expect(f.a.length).toBeGreaterThan(60);
+    }
+  });
+
+  it("the correction answers carry the REAL count and the REAL newest entry", () => {
+    const d = build();
+    const count = d.faq.find((f) => f.q.includes("corrections"))!.a;
+    expect(count).toContain(String(d.corrections_this_window.total));
+    const newest = d.faq.find((f) => f.q.includes("most recent thing"))!.a;
+    expect(newest).toMatch(/^C-\d{4}-\d{4}-\d{2}/);
+    expect(newest).toContain("The fix:");
+  });
+
+  it("the not-measured answer refuses to turn absence into a zero", () => {
+    const d = build();
+    const a = d.faq.find((f) => f.q.includes("NOT measured"))!.a;
+    expect(a).toContain("null, never 0");
+    if (!d.distribution_surfaces.live) expect(a).toContain("rather than 0");
+  });
+
+  it("the certification answer says we do not certify, in the gate's own vocabulary", () => {
+    const a = build().faq.find((f) => f.q.includes("certify"))!.a;
+    expect(a).toMatch(/we do not certify/i);
+    expect(a).toMatch(/never sold/i);
+  });
+
+  it("the root answer states scope and never implies it anchors more", () => {
+    const a = build().faq.find((f) => f.q.includes("public root"))!.a;
+    expect(a).toContain("bytes only");
+    expect(a).toContain("does not anchor GSPC");
+  });
+});

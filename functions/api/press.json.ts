@@ -98,6 +98,41 @@ export function build() {
         : "NO surface is confirmed live. The spray log records drafted and queued rows only, every one owner-gated. A drafted row is not a published surface, and this field stays null rather than 0 so the gap is legible rather than counted as an achievement.",
       proof: "jq '[.[].status]|group_by(.)|map({(.[0]):length})|add' scripts/badger/_spray-log-v2.json",
     },
+    // The FAQ, ANSWERED FROM THE ARTIFACTS. The questions are ours — a question is a choice
+    // about what a reader wants to know, and nothing derives that. Every ANSWER is computed
+    // here from the ledger, the board or the root, so the FAQ cannot drift from the estate it
+    // describes and no answer can be edited into something the artifacts do not support.
+    // Rendered as schema.org FAQPage on /press/ so an answer engine quotes the derived text
+    // rather than a summary of it.
+    faq: [
+      {
+        q: "Do you certify AI systems?",
+        a: "No. We measure, and we do not certify: no conformity marks, no accreditation, no conformity assessments. A grade is never sold, and verification is free and needs no account, permanently.",
+      },
+      {
+        q: "How many corrections have you issued about your own published figures?",
+        a: `${corrections.length} to date, ${corrections.filter((x) => inWindow(x.date)).length} in the ${from} to ${anchor} window. Each records what was wrong, how it was caught — usually by our own instrument — and the fix. The full ledger is at /api/corrections and the feed is /feeds/corrections.xml.`,
+      },
+      {
+        q: "What is the most recent thing you got wrong?",
+        a: (() => {
+          const newest = corrections.slice().sort((a, b) => (a.date < b.date ? 1 : -1))[0];
+          return newest ? `${newest.id} (${newest.date}). ${newest.what_was_wrong} It was caught: ${newest.how_caught} The fix: ${newest.fix}` : "The ledger is empty, which is a fact about the ledger and not a claim that nothing was wrong.";
+        })(),
+      },
+      {
+        q: "What have you NOT measured?",
+        a: `Revenue: /api/revenue holds every count null until a receipt settles — a count is null, never 0, when there is no source. Distribution: ${live ? `${live} surfaces are confirmed live` : "no surface is confirmed live; the spray log holds drafted and queued rows only, so the count is published as null rather than 0"}. The board publishes its own unmeasured slots rather than hiding them: quote totals.unmeasured_axes from /api/gspc.`,
+      },
+      {
+        q: "Can I verify one of your measurements myself, without an account?",
+        a: "Yes, and without asking us. Each signed card carries an Ed25519 signature over a canonical body whose id is the sha-256 of those bytes. Fetch the card, recompute the id, and check the signature against the key published at did:web:csoai.org using the same verifier we run: https://councilof.ai/signed/verify-card.mjs. A signature is an integrity claim, not a truth claim — it says these are the bytes that were signed, not that the measurement inside them is correct.",
+      },
+      {
+        q: "What does your public root actually prove?",
+        a: `It commits to its own leaf list — ${r.card_count ?? "an unstated number of"} leaves under merkle_root ${r.merkle_root ? String(r.merkle_root).slice(0, 16) + "…" : "(absent)"} as of ${r.as_of ?? "an unstated time"}. Stranger inclusion means membership in that list. Its OpenTimestamps proof covers root.json bytes only: it does not anchor the signed-card index, and it does not anchor GSPC. Those are separate corpora with zero identifier overlap.`,
+      },
+    ],
     not_announced: [
       {
         subject: "first settlement",
