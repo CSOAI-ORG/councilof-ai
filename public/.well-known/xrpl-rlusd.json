@@ -1,14 +1,32 @@
 {
-  "schema": "csoai.door/xrpl-rlusd/0.1",
-  "slug": "xrpl-rlusd",
-  "name": "Ripple RLUSD on XRPL",
-  "description": "Ripple's USD stablecoin. Live on XRPL mainnet. 67,224 holders.",
-  "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
-  "currency_code": "RLUSD",
   "as_of": "2026-09-04",
+  "currency_code": "RLUSD",
+  "description": "Ripple's USD stablecoin, issued on the XRP Ledger. Holder counts and balances are not restated here \u2014 read them live from the reader linked below.",
+  "door": {
+    "canonical_form": "CPython json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True) profile \u2014 explicitly not RFC 8785/JCS",
+    "endpoints": {
+      "corrections": "https://councilof.ai/api/corrections",
+      "discover": "https://councilof.ai/.well-known/xrpl-rlusd.json",
+      "root": "https://councilof.ai/root.json",
+      "verify": "https://councilof.ai/gspc-verify"
+    },
+    "evidence_pack": null,
+    "evidence_pack_status": "UNMAPPED \u2014 no evidence-bundle resolver for this token",
+    "publisher": "Council of AI (CSOAI Ltd)"
+  },
+  "issuer_address": "rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De",
   "links": {
     "discovery": "https://councilof.ai/.well-known/xrpl-rlusd.json",
-    "evidence": "https://councilof.ai/api/xrpl/rlusd",
+    "evidence": "https://councilof.ai/api/xrpl",
     "verify": "https://councilof.ai/gspc-verify"
-  }
+  },
+  "measurement": {
+    "schema": "csoai.gspc-axes/0.5",
+    "status": "UNMAPPED",
+    "axes_covered": 0,
+    "lid": "Discovery document for RLUSD on the XRP Ledger. It records where the token is defined and how to look it up; it measures nothing and no GSPC coverage is claimed."
+  },
+  "name": "Ripple RLUSD on XRPL",
+  "schema": "csoai.door/xrpl-rlusd/0.1",
+  "slug": "xrpl-rlusd"
 }
