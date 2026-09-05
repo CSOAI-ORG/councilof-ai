@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { toolSummary } from "@/lib/mcpTools";
 
 const API: string = ((import.meta as any).env && (import.meta as any).env.VITE_API_BASE) || "";
 
@@ -100,7 +101,7 @@ export default function McpFleet() {
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl">
             <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/mcp">
               <p className="font-mono text-sm text-emerald-100">/mcp</p>
-              <p className="text-xs text-emerald-200/80 mt-1">board_totals · get_axis · verify_card · list_cards — streamable HTTP</p>
+              <p className="text-xs text-emerald-200/80 mt-1">{toolSummary()} — streamable HTTP</p>
             </a>
             <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/extension/">
               <p className="font-mono text-sm text-emerald-100">Chrome extension</p>
