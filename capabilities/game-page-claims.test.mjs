@@ -69,6 +69,30 @@ function isInteractive(html) {
   return realScript || /<canvas\b/i.test(html) || /<button\b/i.test(html);
 }
 
+/**
+ * Does the page ASSERT the claim, or DENY it?
+ *
+ * 2026-09-05: master rewrote public/dashboard/games.html to say "10 Council game concepts in
+ * preview. **No game emits a signed card yet.** This is a design-review surface." That is the
+ * honest sentence this guard exists to produce — and the guard failed it, because
+ * /\bemits a signed card\b/ matches a denial exactly as well as a claim.
+ *
+ * A guard that fails correct copy is worse than one that misses: it teaches the next person to
+ * delete the honest sentence to get green. Same fault this lane has now hit repeatedly — see the
+ * Rollback assertion in handoff-bundle-truth, which searched for the ABSENCE of a phrase its own
+ * correction had to quote.
+ *
+ * So a match counts only when the words just before it are not negating it.
+ */
+const NEGATION = /\b(no|not|never|cannot|can't|nothing|without|yet to|does not|do not|don't)\b[^.]{0,60}$/i;
+
+function asserts(html, re) {
+  const m = re.exec(html);
+  if (!m) return false;
+  const before = html.slice(Math.max(0, m.index - 80), m.index);
+  return !NEGATION.test(before);
+}
+
 function htmlFiles(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const p = path.join(dir, e);
@@ -93,7 +117,7 @@ describe("static pages do not claim capabilities they lack", () => {
     for (const f of htmlFiles(PUBLIC)) {
       const html = readFileSync(f, "utf8");
       if (isInteractive(html)) continue; // it may genuinely do something; not this test's job
-      const hit = ACTIVE_CLAIMS.find((re) => re.test(html));
+      const hit = ACTIVE_CLAIMS.find((re) => asserts(html, re));
       if (hit) offenders.push(`${path.relative(repo, f)} (${hit})`);
     }
     assert.deepEqual(
