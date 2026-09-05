@@ -85,6 +85,21 @@ else:
         api.upload_file(path_or_fileobj=str(p), repo_type="dataset", repo_id="{STAGING}",
                         path_in_repo=f"{axis}/shard-{shard}-of-{shards}/{{p.name}}")
     print(f"uploaded {{len(files)}} file(s) to {STAGING}")
+
+# The dead list rides home too. A single grade-36 sweep of three shards discovered
+# 274 newly-dead models on 2026-09-05 while the committed dead_slugs.jsonl held 5
+# rows -- and every one of those 274 died with the job, because only the cards were
+# uploaded. At ~0.925 min per probe that is about 4.2 hours of grading budget the
+# NEXT sweep spends re-learning what this one already knew.
+dead = pathlib.Path("mill-in/dead.jsonl")
+if dead.is_file() and dead.stat().st_size:
+    api.upload_file(path_or_fileobj=str(dead), repo_type="dataset", repo_id="{STAGING}",
+                    path_in_repo=f"dead/{axis}/shard-{shard}-of-{shards}-dead.jsonl")
+    n = sum(1 for ln in dead.read_text(encoding="utf-8").splitlines() if ln.strip())
+    print(f"uploaded dead list: {{n}} row(s)")
+else:
+    # Absent is not "nothing was dead" -- it means the mill never wrote the file.
+    print("no dead list written by this run")
 UP
 """
 
