@@ -257,6 +257,28 @@ mutated, watched go red with a message naming the consequence, and restored:
 | one-door-guard | deleting `public/_redirects` → **was PASS exit 0, now FAIL exit 1** |
 | handoff truth | unreferencing the WP-3 screenshot → fails by name |
 
+## I followed these instructions myself, from a clean export
+
+Not "the tests pass on my machine". The bundle's own steps, run in order against a
+`git archive HEAD` export — 70 top-level entries, **zero `node_modules`, zero `dist`** — because
+an instruction is only worth writing if it works for the person who did not write it.
+
+| step | as the bundle says to run it | result |
+|---|---|---|
+| 1 | `git rev-list --count HEAD..origin/master` | **0** — nothing to re-rebase |
+| 2 | every path in `git diff --name-only origin/master..HEAD` appears under Files | **61 of 61**, none unlisted |
+| 3 | capability guards, no install and no build, all `LIVE_*` set | **83 passed, 0 failed** |
+| 4 | `node scripts/one-door-guard.mjs` | **exit 0** |
+
+**And the ordering warning is not hypothetical.** Running `node scripts/brand-gate.mjs
+dist/client` in that clean export *before* the build exits **2**. That is exactly what root
+would have hit, in the first command of the reproduction steps, under the order this section
+used to be written in.
+
+The one step not run here is `npm install && npm run build:client && npx vitest run client/src`
+— it needs the install, and the client suite's 643 passing is stated from this worktree rather
+than from the clean export.
+
 ## Screenshot
 
 `operator/handoffs/2026-09-05/board-observed-instrument-grading.jpg` — `/dashboard?tab=board`
