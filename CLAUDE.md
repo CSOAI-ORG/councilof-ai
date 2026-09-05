@@ -8,7 +8,18 @@ Shared working agreement for ALL agents on this repo. Read this first.
   **deleted 31 Aug 2026**. Do not `vercel deploy`. Do not wait for Vercel GitHub checks.
   Merge gate = GHA `deploy.yml` + `curl -I https://councilof.ai`.
 - Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 22 measured · 0 UNMEASURED**.
-  Cards **335/335**. Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
+  Cards: **two numbers, and they measure different things** — quote the one you mean.
+  `cards-bundle.json` emits both, and `scripts/generate-cards-bundle.mjs` says why:
+  · `card_count` = every `public/cards/*.json` wrapper on disk (**1072**). The generator's
+    own note: "Copies bytes that already exist under /cards/ and /proofs/; **signs nothing,
+    measures nothing**." It is a build-time aggregate, not an attestation.
+  · `root_card_count` = the `card_sha256` hashes committed to the SIGNED Merkle root
+    (**152** in the committed bundle, **153** in the deployed `root.json` — the two drift by
+    build timing, not by disagreement). This is the attested set.
+  This line previously read "Cards 335/335", which matches neither and was handed to every
+  agent that loaded this file. Naming both is not clamping the index — the index is
+  untouched; only the description of what it counts is corrected.
+  Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
 - csoai.org = Cloudflare Pages `csoai-site` (DID apex). `os`/`app`.csoai.org CNAME there.
 - Mailbox is **nicholas@csoai.org** on Namecheap Private Email (https://privateemail.com). GitHub sudo codes go there. **Do not use Gmail.**
 - Full eat: `_alignment/ALIGNMENT_2026-08-31.md` (Mac). Cursor feed grammar: cite live totals.public_count (22·22·0 after #1077).
