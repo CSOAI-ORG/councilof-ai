@@ -224,3 +224,68 @@ describe("/api/hub-cards — the live card, not every card ever signed", () => {
     expect(honesty.superseded_ledger).toMatch(/UPPER BOUND/);
   });
 });
+
+// ---------------------------------------------------------------------------
+// The population is what the dataset publishes, not what this file remembers.
+//
+// `indexes_total: 4` was a literal. Reporting it beside `complete: true` claimed
+// completeness over a list the CODE chose: a fifth published index would have been
+// invisible while the endpoint still said "All published indexes were read."
+// ---------------------------------------------------------------------------
+
+const TREE = "https://huggingface.co/api/datasets/csoai/gspc-hub-cards/tree/main/mill-cards";
+
+/** Serve a dataset listing (or fail it) plus one row per named index. */
+const installDiscovery = (names: string[] | null) => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) {
+        return names === null
+          ? new Response("nope", { status: 503 })
+          : new Response(
+              JSON.stringify(names.map((n) => ({ type: "file", path: `mill-cards/${n}.jsonl` }))),
+              { status: 200 },
+            );
+      }
+      if (url.endsWith("SUPERSEDED.jsonl")) return new Response("", { status: 200 });
+      const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
+      return new Response(row(`m/${name}`, "governance", "MEASURED"), { status: 200 });
+    }),
+  );
+};
+
+describe("/api/hub-cards — the index list is discovered, not remembered", () => {
+  it("reads a fifth index the code never knew about", async () => {
+    installDiscovery(["INDEX", "INDEX-safety", "INDEX-art5-affect", "INDEX-empty3", "INDEX-brand-new"]);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.indexes_total).toBe(5);
+    expect(counts.indexes_discovered).toBe(true);
+    expect(counts.cells).toBe(5); // one row per index, all distinct pairs
+  });
+
+  it("falls back to the known four when the listing fails, and says so", async () => {
+    installDiscovery(null);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+    expect(counts.indexes_total).toBe(4);
+    expect(counts.indexes_discovered).toBe(false);
+    expect(honesty.index_list_is).toMatch(/UNCHECKABLE/);
+    // The census stays on the air: a listing hiccup did not touch the indexes.
+    expect(counts.cells).toBe(4);
+    expect(counts.complete).toBe(true);
+  });
+
+  it("an EMPTY listing is not a population of zero", async () => {
+    installDiscovery([]);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    // Trusting an empty listing would publish cells: 0 as a fact about the estate.
+    expect(counts.indexes_discovered).toBe(false);
+    expect(counts.indexes_total).toBe(4);
+    expect(counts.cells).toBe(4);
+  });
+});
