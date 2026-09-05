@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import EvidenceLifecycleView from "@/components/EvidenceLifecycleView";
+import JourneyStages from "@/components/JourneyStages";
 import {
   fabricCounts,
   fetchCapabilityFabric,
@@ -249,6 +250,13 @@ export default function DashboardFabricPane() {
           </div>
         ) : null}
       </section>
+
+      {/* WP-3: the case model, with the exact unavailable capability named at each stage
+          that has no runtime. Sits beside the fabric because this pane's own remit is
+          "missing adapters kept explicit". */}
+      <div className="mt-8">
+        <JourneyStages />
+      </div>
 
       <div className="mt-8">
         <EvidenceLifecycleView
