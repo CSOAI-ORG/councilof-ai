@@ -18,20 +18,40 @@ One branded, chat-first operating surface in which a person or agent can scope a
 - Visual approval must use a clean preview built from the exact release candidate SHA.
 - Main checkout is behind remote and heavily dirty; it is not an acceptable release source.
 
-## Current release-candidate fixes on `codex/council-os-e2e-qa`
+## Current release candidate
 
-1. Stale deployed chunks: detect known dynamic-import/chunk failures, reload the current route once per missing asset, guard against loops, and show a specific recovery state if reload cannot heal it.
-2. Chat continuity: bounded, schema-checked sessionStorage restores threads after reload; no transcript server; visible Clear history control.
-3. MCP usability: structured `board_totals` becomes a concise truthful summary; the full raw MCP response remains available under disclosure.
+Branch: `codex/council-os-e2e-local`
 
-These changes are local only. They are not merged or deployed.
+Preview: `http://127.0.0.1:51026/dashboard?tab=home`
+
+Local commits, in order:
+
+1. `233d763c4` — one workspace shell, stale-chunk recovery, bounded chat continuity, concise MCP results, PWA foundation, and operator handoffs.
+2. `dddd7cd3d` — canonical route-truth gate and withdrawal of dead industry destinations from the surfaced catalogue.
+3. `2224942a1` — one MCP capability contract across runtime, well-known discovery, plugin metadata, and client copy.
+4. `6c9fe2385` — signed, unsigned, and missing GSPC run evidence labelled separately and fail-closed.
+5. `3fa0bf83a` — one scroll/spacing/heading contract, no nested workspace in framed pages, plus truthful web-app/MCP/extension install doors.
+6. `d0efe80ea` — grounded definition of `MEASURED` and an executable runtime-truth gate.
+
+These changes are committed locally only. They are not merged, pushed, or deployed.
+
+Verified on this candidate:
+
+- 129 focused tests pass across dashboard, GSPC evidence, chat, MCP, AG-UI projection, action staging, PWA, and extension/install contracts.
+- Route truth passes across 487 routes, 39 active navigation entries, 575 exact redirects, and 91 withdrawn routes.
+- Direct Vite production compilation passes across 3,998 modules.
+- Eleven canonical workspace destinations return HTTP 200, render content, produce no page errors, and have no horizontal overflow at desktop width.
+- The home workspace has no horizontal overflow at 390 px mobile width.
+- Signed-card verification loads cleanly once the tracked signed corpus is materialised in the sparse preview checkout.
 
 ## Product blockers, ordered
 
-### P0 — release truth
+### Completed locally — release and surface truth
 
-- Build a clean exact-SHA preview and retire stale preview ports from sign-off.
-- Add stale-chunk recovery E2E coverage across a simulated deployment.
+- Clean non-iCloud preview now runs from the release-candidate branch; old preview ports are not sign-off sources.
+- Known stale-chunk failures receive one bounded reload and a specific recovery state rather than a blank page.
+- Route and capability parity now fail closed in automated gates.
+- Dashboard, supporting pages, Settings framing, tool installation, and GSPC evidence use one shared shell and state grammar.
 
 ### P0 — action fabric
 
@@ -40,27 +60,19 @@ These changes are local only. They are not merged or deployed.
 - `/api/fabric` reports execution disabled; A2A key/route are absent, AG-UI health is unavailable, and A2UI is unbound.
 - Implement one bounded, approval-based RAS journey with durable task state before claiming agentic remediation.
 
-### P1 — route and catalogue truth
-
-- React route table contains duplicate ownership for `/challenge` and `/badges`.
-- Edge redirects and React ownership diverge for `/globe`, `/plugin`, and `/enterprise`.
-- Ten PRIMARY library entries currently resolve to review/withdrawn notices.
-- Sixteen industry cards are surfaced while their dynamic destinations are withdrawn.
-- Create one canonical route registry and fail CI whenever a surfaced item has no working destination.
-
 ### P1 — learning, games, and simulation
 
 - Council Space is the only live game surface.
 - Current arena battles, quests, city/town, and training states are prototypes or frozen/local experiences.
 - Implement them as views over one case/evidence graph; do not create separate truth systems.
 
-### P1 — plugin, extension, app, and protocol truth
+### P1 — protocol execution and distribution
 
-- Live MCP advertises 11 tools; plugin metadata, README, and other surfaces advertise conflicting counts.
-- Verifier semantics differ between extension, site, and MCP.
-- Chrome extension is developer/unpacked and Hugging-Face-only.
-- Current web manifest is not evidence of a real offline/installable app; no service worker/native wrapper was found.
-- A2A/AG-UI/A2UI/provider states must come from one runtime capability registry with explicit unavailable states.
+- MCP discovery is aligned and the eleven declared tools are surfaced from the canonical contract.
+- The website has an installable-web-app contract and a network-honest service worker. The install prompt still depends on a production HTTPS/browser eligibility check; no native App Store wrapper exists.
+- The Chrome extension remains developer/load-unpacked and Hugging-Face-only; there is no Chrome Web Store release.
+- AG-UI board projection exists but central chat does not consume it. A2A is discovery-only, A2UI has no renderer, action storage is non-durable staging, and the latest receipt feed is unpublished.
+- The precise eleven executable gates are in `operator/audits/COUNCIL-OS-RUNTIME-TRUTH-GATE-2026-09-05.md`.
 
 ## Canonical RAS lifecycle
 
@@ -80,7 +92,7 @@ Signatures and timestamps prove the scoped evidence/result. They do not make the
 
 ## Exit criteria for the next release
 
-- Exact-SHA local preview is visually approved.
+- Exact-SHA local preview is visually approved by the owner.
 - Route/capability registry gates pass.
 - Stale-tab, chat restore, MCP summary, responsive, keyboard, failure-state, and catalogue destination tests pass.
 - One RAS journey completes locally with explicit approval and candidate receipt.
