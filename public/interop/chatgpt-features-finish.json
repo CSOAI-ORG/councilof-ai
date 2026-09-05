@@ -1,0 +1,160 @@
+{
+  "schema": "csoai.chatgpt-features-finish/0.1",
+  "as_of": "20260905T051359Z",
+  "principle": "Match ChatGPT's surface. But every interaction signed.",
+  "features": [
+    {
+      "id": "voice-mode",
+      "name": "Voice mode",
+      "kind": "voice",
+      "scope": "Audio input + output. Every utterance emits a 3KB signed card.",
+      "endpoint": "/api/voice",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "vision",
+      "name": "Vision",
+      "kind": "vision",
+      "scope": "Upload image. Every measurement (axis, model, score) signed.",
+      "endpoint": "/api/vision",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "image-generation",
+      "name": "Image generation",
+      "kind": "image-gen",
+      "scope": "DALL-E / Stable Diffusion. Every generated image signed + content-addressed.",
+      "endpoint": "/api/image-gen",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "real-time-canvas",
+      "name": "Real-time canvas",
+      "kind": "canvas",
+      "scope": "Side-by-side rendered markdown + code. Every edit emits a signed event card.",
+      "endpoint": "/api/canvas",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "shared-links",
+      "name": "Shared links",
+      "kind": "sharing",
+      "scope": "Public link to a conversation. Link is content-addressed + signed.",
+      "endpoint": "/api/share",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "group-chats",
+      "name": "Group chats",
+      "kind": "collab",
+      "scope": "Multi-user chat room. Every user action signed.",
+      "endpoint": "/api/group",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "custom-gpts-marketplace",
+      "name": "Custom GPTs marketplace",
+      "kind": "marketplace",
+      "scope": "Hosted Custom GPTs. Every GPT signed + content-addressed.",
+      "endpoint": "/api/marketplace",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "apps-sdk",
+      "name": "Apps SDK",
+      "kind": "sdk",
+      "scope": "Plug into Apps. Every plugin call signed.",
+      "endpoint": "/api/apps",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "deep-research",
+      "name": "Deep Research",
+      "kind": "research",
+      "scope": "8-step research pipeline. Every claim measured + signed + anchored.",
+      "endpoint": "/api/research",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "scheduled-tasks",
+      "name": "Scheduled tasks",
+      "kind": "automation",
+      "scope": "Run any pane on schedule. Every run emits signed card.",
+      "endpoint": "/api/scheduled",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "projects",
+      "name": "Projects",
+      "kind": "workspace",
+      "scope": "Workspace with files + chats + memos. Every change signed.",
+      "endpoint": "/api/projects",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "side-by-side-models",
+      "name": "Side-by-side models",
+      "kind": "compare",
+      "scope": "Compare 2+ models on the same prompt. Every response signed.",
+      "endpoint": "/api/compare",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar",
+      "kind": "calendar",
+      "scope": "Schedule + reminders. Every event signed + x402-priced.",
+      "endpoint": "/api/calendar",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "email",
+      "name": "Email",
+      "kind": "email",
+      "scope": "Send / receive email. Every email signed + anchored.",
+      "endpoint": "/api/email",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "sms-phone",
+      "name": "SMS / phone calls",
+      "kind": "telephony",
+      "scope": "Send SMS + place calls. Every message signed.",
+      "endpoint": "/api/phone",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "document-scanner",
+      "name": "Document scanner",
+      "kind": "ocr",
+      "scope": "Scan docs (PDF / image / handwritten). Every field signed.",
+      "endpoint": "/api/scanner",
+      "status": "live",
+      "wasm_required": false
+    },
+    {
+      "id": "qr-code-scanner",
+      "name": "QR code scanner",
+      "kind": "qr",
+      "scope": "Scan QR codes. Every code resolved + signed.",
+      "endpoint": "/api/qr",
+      "status": "live",
+      "wasm_required": false
+    }
+  ]
+}
