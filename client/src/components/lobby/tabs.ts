@@ -771,6 +771,17 @@ const DASHBOARD_NAV_DEFINITION: {
     ],
   },
   {
+    id: "tools",
+    label: "Tools",
+    tabs: [
+      { id: "memory", label: "Memory" },
+      { id: "files", label: "Files" },
+      { id: "sandbox", label: "Sandbox" },
+      { id: "operator", label: "Operator" },
+      { id: "atlas", label: "Atlas" },
+    ],
+  },
+  {
     id: "govern",
     label: "Govern",
     tabs: [

@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.dashboard-wiring/0.1",
+  "as_of": "20260905T045249Z",
+  "principle": "5 ChatGPT-parity panes wired into the master dashboard, all brand standards enforced.",
+  "panes": [
+    {
+      "pane": "DashboardMemoryPane",
+      "endpoint": "/api/memory",
+      "route": "/dashboard/memory"
+    },
+    {
+      "pane": "DashboardFilesPane",
+      "endpoint": "/api/files",
+      "route": "/dashboard/files"
+    },
+    {
+      "pane": "DashboardSandboxPane",
+      "endpoint": "/api/sandbox",
+      "route": "/dashboard/sandbox"
+    },
+    {
+      "pane": "DashboardOperatorPane",
+      "endpoint": "/api/operator",
+      "route": "/dashboard/operator"
+    },
+    {
+      "pane": "DashboardAtlasPane",
+      "endpoint": "/api/atlas",
+      "route": "/dashboard/atlas"
+    }
+  ],
+  "brand_standards": [
+    "WHITE (#ffffff) + GREEN (#16a34a) + neutral grey",
+    "Unified header + footer (site-header / site-footer)",
+    "lid logo: CS<strong>O</strong>AI",
+    "Tailwind + system fonts",
+    "Responsive + accessible + performant + SEO",
+    "Doctrine: measurement, not certification"
+  ]
+}

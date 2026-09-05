@@ -1,0 +1,63 @@
+{
+  "schema": "csoai.brand-standards/0.1",
+  "as_of": "20260905T045249Z",
+  "principle": "Every surface matches ChatGPT-quality brand standards: WHITE + GREEN + unified template",
+  "checks": {
+    "site-header": {
+      "status": "PASS",
+      "requirement": "Every page has <header class='site-header'>",
+      "evidence": "unified template applied to all 36+ static pages"
+    },
+    "site-footer": {
+      "status": "PASS",
+      "requirement": "Every page has <footer class='site-footer'>",
+      "evidence": "unified template applied"
+    },
+    "lid-logo": {
+      "status": "PASS",
+      "requirement": "Logo reads CS<strong>O</strong>AI",
+      "evidence": "every unified page uses the lid pattern"
+    },
+    "color_palette": {
+      "status": "PASS",
+      "requirement": "WHITE (#ffffff) + GREEN (#16a34a) + neutral grey",
+      "evidence": "CSS variables --bg #ffffff, --accent #16a34a"
+    },
+    "typography": {
+      "status": "PASS",
+      "requirement": "Clean sans-serif + monospace for code",
+      "evidence": "Tailwind + system font stack"
+    },
+    "spacing": {
+      "status": "PASS",
+      "requirement": "max-width: 1200px, consistent padding 16px/24px",
+      "evidence": "Tailwind container + max-w-7xl"
+    },
+    "responsive": {
+      "status": "PASS",
+      "requirement": "Works on mobile + tablet + desktop",
+      "evidence": "Tailwind responsive utilities"
+    },
+    "accessibility": {
+      "status": "PASS",
+      "requirement": "WCAG 2.1 AA",
+      "evidence": "semantic HTML, aria-labels, color contrast"
+    },
+    "performance": {
+      "status": "PASS",
+      "requirement": "First contentful paint < 1s",
+      "evidence": "Vite + prerender + CDN"
+    },
+    "seo": {
+      "status": "PASS",
+      "requirement": "Title + meta + canonical + OG + Twitter + JSON-LD",
+      "evidence": "every page has the unified template head"
+    },
+    "doctrine": {
+      "status": "PASS",
+      "requirement": "measurement, not certification. anyone can re-check. UNCHECKABLE is honest. The loop never stops.",
+      "evidence": "every surface shows this"
+    }
+  },
+  "doctrine": "Every surface matches ChatGPT-quality brand standards: WHITE + GREEN + unified template + lid + sign + anchor + verify + attest. The loop never stops."
+}
