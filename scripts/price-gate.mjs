@@ -33,6 +33,11 @@ const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2).filter((a) => a !== "--report");
 const REPORT_ONLY = process.argv.includes("--report");
 const SELFTEST = process.argv.includes("--selftest");
+// --json-only scans just the machine surface (public/**.json) and skips the HTML walk.
+// The pre-push hook needs this: a developer has no dist/client, so the full gate exits 2
+// there and the JSON half — which is where every one of the 60 findings on 2026-09-05
+// lived — never runs locally at all. Same rule, same code path, no second copy of it.
+const JSON_ONLY = process.argv.includes("--json-only");
 const DIST = path.resolve(REPO, (args[0] && !args[0].startsWith("--")) ? args[0] : "dist/client");
 
 // A currency amount and nothing else: "£5k", "$1,200", "€35", "£10k/yr", "£3.5K-£7.5K".
@@ -267,8 +272,8 @@ const scanLeaves = (cleaned, out) => {
   }
 };
 
-const files = walk(DIST);
-if (!files.length) {
+const files = JSON_ONLY ? [] : walk(DIST);
+if (!JSON_ONLY && !files.length) {
   console.error(`price-gate: no HTML under ${DIST} — nothing scanned. Did the prerender run?`);
   process.exit(2);
 }
@@ -309,8 +314,10 @@ for (const f of jsonFiles) {
 }
 
 console.log(
-  `price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)} ` +
-    `and ${jsonFiles.length} JSON file(s) under public/`,
+  JSON_ONLY
+    ? `price-gate: scanned ${jsonFiles.length} JSON file(s) under public/ (--json-only)`
+    : `price-gate: scanned ${files.length} page(s) under ${path.relative(REPO, DIST)} ` +
+      `and ${jsonFiles.length} JSON file(s) under public/`,
 );
 if (!findings.length) {
   console.log("✓ price-gate: no published price and no unevidenced popularity claim.");

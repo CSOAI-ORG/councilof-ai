@@ -45,6 +45,19 @@ node scripts/brand-gate.mjs public >/dev/null 2>&1 \
   || { echo "  ✖ brand-gate: a forbidden display string is in public/"; \
        node scripts/brand-gate.mjs public 2>&1 | tail -8; fail=1; }
 
+# ADDED 2026-09-05. price-gate joined the deploy as a blocking step and immediately
+# stopped one: 60 published_price findings, every one of them a NUMBER in a public
+# JSON file (.well-known/*, interop/x402-*), none in HTML. That is the machine
+# surface an agent reads without a human ever seeing the page, which is why the
+# doctrine treats it as the worse place to print a price, not the safer one.
+# --json-only is the half that needs no dist, so it runs here in a second.
+node scripts/price-gate.mjs --selftest >/dev/null 2>&1 \
+  || { echo "  ✖ price-gate SELFTEST failed — the gate itself is broken"; fail=1; }
+
+node scripts/price-gate.mjs --json-only >/dev/null 2>&1 \
+  || { echo "  ✖ price-gate: a published price is in public/ JSON (no public $ prices)"; \
+       node scripts/price-gate.mjs --json-only 2>&1 | grep -E "^\s+\S+\.json:" | head -12; fail=1; }
+
 if [ "$fail" -ne 0 ]; then
   echo
   echo "  Push blocked. These are the same gates that will fail the deploy in ~12"
@@ -53,5 +66,5 @@ if [ "$fail" -ne 0 ]; then
   echo "  Emergency bypass: git push --no-verify"
   exit 1
 fi
-echo "  ✓ wallet-credential-gate + facts-gate + brand-gate clean"
+echo "  ✓ wallet-credential-gate + facts-gate + brand-gate + price-gate clean"
 exit 0

@@ -1,0 +1,20 @@
+#!/bin/sh
+# pre-push — run the content gates here, not 12 minutes into a deploy.
+#
+# WHY THIS FILE EXISTS AT ALL. scripts/pre-push-gates.sh was installed the
+# documented way, `ln -sf ../../scripts/pre-push-gates.sh .git/hooks/pre-push`,
+# and that symlink is still there. It stopped running on 2026-09-05 at 03:10,
+# when core.hooksPath was set to .githooks to share pre-commit/post-* across
+# lanes. core.hooksPath does not ADD a directory — it REPLACES .git/hooks
+# outright, so every hook that lived there went silent with no warning.
+#
+# The cost was measured, not guessed. In the 2h35m after 03:54Z the deploy
+# workflow ran 60 times: 2 success, 27 failure, 29 cancelled. Five of the last
+# eight failures were brand-gate — the exact gate this hook runs in one second.
+# Production went ~18h stale on content faults that never reach a build here.
+#
+# Bypass for a genuine emergency:  git push --no-verify
+set -u
+ROOT="$(git rev-parse --show-toplevel)" || exit 1
+[ -x "$ROOT/scripts/pre-push-gates.sh" ] || exit 0
+"$ROOT/scripts/pre-push-gates.sh" "$@"
