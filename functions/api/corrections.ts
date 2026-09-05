@@ -66,6 +66,17 @@ const LEDGER = {
         "CORRECTED IN ARTIFACT AND PRODUCER. Whether any Custom GPT or agent acted on the dead manifests is unknown; no request log is kept for those paths. Nothing was ever measured, signed or anchored through them.",
     },
     {
+      id: "C-2026-0905-05",
+      date: "2026-09-05",
+      what_was_wrong:
+        "A merged commit and its PR (#1321) stated that a confirmed x402 settlement never reached the revenue ledger: \"a real payment settled and the ledger never saw it\". That is false. The settlement WAS recorded. The reading behind the claim was taken 6 seconds after the settle, and Cloudflare KV list operations are eventually consistent — the record had not propagated yet. Re-read ~20 minutes later, /api/revenue one_number showed settlements 1, all_time 1, records_unreadable 0. No payment was ever lost.",
+      how_caught:
+        "Re-checking the same endpoint later in the same session instead of trusting the first reading. curl -s https://councilof.ai/api/revenue | python3 -c \"import sys,json;print(json.load(sys.stdin)['one_number'])\" — run twice, minutes apart, and the two disagree while nothing else changed.",
+      fix:
+        "This entry records the false claim; the commit message cannot be rewritten. The code change that shipped with it stands on its own merits and is unaffected: recordSettlement had swallowed every KV error into an empty catch, so a failed write and no settlement really were indistinguishable, and it now returns {stored,reason}. What was wrong was the diagnosis, not the fix. A second defect found while re-reading IS real and is corrected in the same change: one zero-value settle from an ephemeral wallet moved one_number.all_time from 0 to 1, counting a wallet we created and controlled, paying nothing, as a distinct non-self buyer — so settlement records now carry zero_value, because the payer-exclusion list can never enumerate a throwaway key.",
+      status: "RECORDED — the claim was a measurement error (KV eventual consistency read at 6s); no settlement was lost",
+    },
+    {
       id: "C-2026-0905-01",
       date: "2026-09-05",
       what_was_wrong:
