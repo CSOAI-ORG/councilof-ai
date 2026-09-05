@@ -473,6 +473,42 @@ for (const slug of answerSlugs) {
   if (!seen.has(ap)) { seen.add(ap); paths.push(ap); }
 }
 
+// --- Static pages under public/ ---------------------------------------------
+// This generator derives its routes from App.tsx <Route> declarations, so a page that is a
+// PLAIN HTML FILE under public/ is structurally invisible to it. Measured live 2026-09-05:
+// 114 of the 115 static pages were absent from the sitemap and 110 of those answer 200 —
+// real, indexable pages the crawl budget never learned about. /genai-mil is one of them.
+//
+// These are added the same way blog and answers are: push the bare path and let
+// canonicalise() do the deciding, so a page that redirects (from _redirects OR from a Pages
+// function) is dropped by the existing rule rather than by a second opinion here. The four
+// that answered 308 on that audit (/advisory, /claimguard, /globe, /ras) fall out that way.
+// /index.html is the homepage, already present as "/".
+function collectStaticPages(dir, urlPrefix = "") {
+  let out = [];
+  let entries = [];
+  try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return out; }
+  for (const e of entries) {
+    if (e.name.startsWith(".")) continue;
+    if (e.isDirectory()) {
+      if (e.name === "assets" || e.name === "vendor" || e.name === "signed" || e.name === "cards") continue;
+      out = out.concat(collectStaticPages(join(dir, e.name), `${urlPrefix}/${e.name}`));
+    } else if (e.name.endsWith(".html")) {
+      const base = e.name.slice(0, -5);
+      // A subdirectory's index.html is served at the TRAILING-SLASH url; the bare form 308s
+      // to it. Emitting the bare form would put ten redirects straight back into the sitemap.
+      out.push(base === "index" ? (urlPrefix ? `${urlPrefix}/` : "/") : `${urlPrefix}/${base}`);
+    }
+  }
+  return out;
+}
+let staticAdded = 0;
+for (const sp of collectStaticPages(join(ROOT, "public"))) {
+  if (sp === "/" || seen.has(sp) || isJunk(sp)) continue;
+  seen.add(sp); paths.push(sp); staticAdded++;
+}
+console.log(`[sitemap] static public/*.html pages considered: +${staticAdded} before canonicalise`);
+
 // --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
