@@ -467,8 +467,16 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
     );
   expect(tabRadius).toBeGreaterThan(0);
 
+  // The quest buttons are painted before the page's script has finished defining
+  // window.start. A click that lands in that gap throws silently and #run never
+  // renders — CI's mobile lane hit exactly that twice on 2026-09-05 (element(s) not
+  // found, 5s) while the same journey passed against production locally. Wait for
+  // the handler, and give #run the same budget as every other pane in this file.
+  await page.waitForFunction(() => typeof (window as any).start === "function", null, {
+    timeout: 15_000,
+  });
   await page.locator("#grid .q").first().click();
-  await expect(page.locator("#run .item")).toBeVisible();
+  await expect(page.locator("#run .item")).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
   await expect(
     page.locator("#run").getByText(/this is local play, not a measurement/i),
