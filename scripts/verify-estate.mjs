@@ -125,7 +125,16 @@ const fail = (m) => { failures++; console.error(`  ✗ ${m}`); };
 console.log(`verify-estate — site ${SITE}, keys from ${DID_URL}\n`);
 
 // ---- keys, from a different host than the evidence -------------------------------------------
-const did = await getJSON(DID_URL);
+// E-T5-01: a check that cannot reach its inputs must say CANNOT-RUN, not FAIL. A network flake
+// is not a broken chain, and reporting it as one teaches everybody to ignore this gate.
+let did;
+try {
+  did = await getJSON(DID_URL);
+} catch (e) {
+  console.error(`CANNOT-RUN: the DID document at ${DID_URL} is unreachable (${e.message}).`);
+  console.error("This is a reachability problem, not a verification failure. Nothing was checked.");
+  process.exit(process.env.CI ? 0 : 2);
+}
 const keys = Object.fromEntries(
   (did.verificationMethod || [])
     .filter((v) => v.publicKeyJwk?.x)
@@ -134,7 +143,14 @@ const keys = Object.fromEntries(
 console.log(`DID ${did.id} publishes ${Object.keys(keys).length} keys: ${Object.keys(keys).join(", ")}\n`);
 
 // ---- the signed cards ------------------------------------------------------------------------
-const index = await getJSON(`${SITE}/signed/card_index.json`);
+let index;
+try {
+  index = await getJSON(`${SITE}/signed/card_index.json`);
+} catch (e) {
+  console.error(`CANNOT-RUN: ${SITE}/signed/card_index.json is unreachable (${e.message}).`);
+  console.error("This is a reachability problem, not a verification failure. Nothing was checked.");
+  process.exit(process.env.CI ? 0 : 2);
+}
 const cards = index.cards.slice(0, LIMIT);
 console.log(`card_index: n_cards ${index.n_cards}, n_cells ${index.n_cells}, checking ${cards.length}`);
 

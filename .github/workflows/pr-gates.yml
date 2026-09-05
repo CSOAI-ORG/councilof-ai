@@ -74,6 +74,18 @@ jobs:
       - name: Well-known index gate — the index must describe the directory
         run: node scripts/wellknown-index-gen.mjs --check
 
+      # The estate's central claim is that a stranger can recompute and verify the evidence from
+      # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
+      # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
+      # with accuracy === 0, because CPython emits "0.0" where JSON.stringify emits "0". Nobody had
+      # ever run it. A fix published as documentation and never executed is not a fix.
+      #
+      # Breaking the canonicalisation drops this from 335/335 to 218/335, so the gate demonstrably
+      # fails. An unreachable host exits CANNOT-RUN (0 under CI) rather than FAIL: a network flake
+      # is not a broken chain, and reporting it as one teaches everybody to ignore the gate.
+      - name: Stranger verification — 335 signed cards must verify from published bytes
+        run: node scripts/verify-estate.mjs
+
       # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
       # GET /api/gspc and the three card corpora files. Both files used to tell their
       # readers "do not freeze numbers in this file" while freezing the lid three times
