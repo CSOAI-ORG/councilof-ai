@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `9611abdd1221f48e95a906e98109b5df48ce4290` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `b254f959eeeef39f89bb831f9cb081569b5e6668` — 30 commits, 43 files changed
+**Rebased onto:** `2326605c9b9d6bcbd602065085e1f9ba41a72cb4` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `06ce62a7267aa9b22b00d7161d238ac90d1ca16e` — 34 commits, 46 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~43 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~46 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -350,6 +350,36 @@ source header, now corrected to what was measured.
 was touched. `capabilities/board-attestation.test.mjs` fails either way — if a re-sign lands
 and it verifies, the message says the expectation is stale and names which reading worked.
 
+## ⚠ OWNER ACTION 3 — brand-gate has a filename hole, and a retracted claim is LIVE through it
+
+`public/games-charter.html` on master says **"wired to the 33-agent BFT council"** and
+**brand-gate passes it.** Tested side by side, identical sentence: `tournament.html` is flagged,
+`games-charter.html` is not.
+
+`scripts/brand-gate.mjs` line 36:
+
+```js
+allowOn: /refut|retract|ledger|counter-?canon|charter|methodolog|quorum/i,
+```
+
+The intent is right — the refutation ledger and the Firewall Charter must be able to NAME the
+retracted claim. But it matches a **filename substring**, so any page whose name contains
+`charter`, `ledger`, `quorum`, `methodolog`, `retract`, `refut` or `counter-canon` inherits the
+exemption. A game page did exactly that.
+
+**The gate already has the correct mechanism and does not need this one.** `nearAllow` passes a
+hit when a retraction marker sits within ~90 chars — the author's own comment says so: *"ANY
+page may DISCLOSE the retraction — the point is to block the ASSERTION."* That is principled;
+the filename escape is a shortcut that adds a hole without adding protection.
+
+**Tested proposed fix — delete line 36.** With `allowOn` removed entirely, brand-gate still
+passes `dist/client` (124 pages) AND `public/` (123 pages). Zero files rely on it. And no file
+in either tree currently contains the term at all, so the exemption is protecting nothing today.
+
+**I did not apply it.** It is a shared deploy gate and root owns the deploy; if I am wrong it
+breaks every lane's ship, and my own guard already closes the hole for authored pages without
+touching theirs. `scripts/` is untouched in this bundle. The page content is fixed either way.
+
 ## Open owner gates, in priority order
 
 1. **Deploy** — `brand-gate` was failing on master; this bundle fixes it. Nothing ships until
@@ -361,6 +391,8 @@ and it verifies, the message says the expectation is stale and names which readi
    moves the estate's primary conversion path; the alias and the `measured` pane move first.
 5. **`gspc-card-verifier@1.0.0`** — exists with a `gspc-verify` bin, never published. Nothing
    may describe it as installable until it is.
+6. **Delete `brand-gate.mjs` line 36** — the filename escape above. One line, tested against
+   both trees, closes a hole that let a retracted claim ship silently.
 
 ## Dependencies## Dependencies
 
