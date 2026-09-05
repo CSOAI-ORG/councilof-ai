@@ -26,6 +26,15 @@ from verify_card import verify_signed_card_with_did_doc  # noqa: E402
 CARD_URL = "https://councilof.ai/interop/mill-cards-signed/"
 QUOTABLE_N = 30
 
+# Axis scope of each satellite index, derived from what those files actually held on
+# 2026-09-05 rather than assumed. They are views of INDEX.jsonl; they add no cell of
+# their own, which is why /api/hub-cards collapses the duplicate pairs.
+SATELLITES = {
+    "INDEX-safety": {"safety"},
+    "INDEX-art5-affect": {"art5-safeguard", "affect"},
+    "INDEX-empty3": {"machinery-conformity", "cross-reality", "detector-interop"},
+}
+
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -159,6 +168,25 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
         (cards_out / name).write_text(json.dumps(clean, indent=2) + "\n", encoding="utf-8")
     (cards_out / "INDEX.jsonl").write_text("".join(index_lines), encoding="utf-8")
 
+    # The three satellite indexes had NO producer. Nothing in the repository wrote them;
+    # `hub-queue-flip` uploads mill-cards/ + INDEX.jsonl and never touched them. They were
+    # written once by hand and then frozen, so when sign_mill_cards.py corrected 70 bodies
+    # (#1155) by writing NEW cards, the satellites kept citing the RETIRED ones -- and those
+    # rows are self-consistent with the retired card, so hub-index-drift passed them for
+    # days while /api/hub-cards served 70 "UNMEASURED" cells whose live status was MEASURED.
+    #
+    # Deriving them here makes that class of staleness impossible rather than merely fixed:
+    # a satellite is now a filtered VIEW of the rows we just built from the LIVE cards, so it
+    # cannot cite a superseded card and cannot disagree with INDEX.jsonl. The axis scopes are
+    # read off the published bytes, not invented -- INDEX-safety held 11 safety rows,
+    # INDEX-art5-affect 12 art5-safeguard + 12 affect, INDEX-empty3 12 machinery-conformity +
+    # 11 cross-reality + 12 detector-interop (the three emptiest axes when it was made).
+    satellite_counts = {}
+    for name, axes in SATELLITES.items():
+        rows = [ln for ln in index_lines if json.loads(ln).get("axis") in axes]
+        (cards_out / f"{name}.jsonl").write_text("".join(rows), encoding="utf-8")
+        satellite_counts[name] = len(rows)
+
     # `changed` decides whether the workflow uploads. Deriving it from the QUEUE blob alone
     # skipped the upload for any run that adds only INDEX rows -- which is exactly what a card
     # for a model the queue does not list does. On 2026-09-05 the flip built 756 index rows
@@ -206,6 +234,7 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
         "flipped_this_run": after - before,
         "apply_valid_flips_touched": flipped,
         "index_rows": len(index_lines),
+        "satellite_rows": satellite_counts,
         "parquet_written": parquet_ok,
         "cells_written": flipped,
         "queue_changed": after_blob != before_blob,
