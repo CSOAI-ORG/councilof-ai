@@ -970,5 +970,16 @@
       }
     },
     "consequence_for_wp3_and_wp6": "Four of the five backends the journey needs are absent or publish nothing. The reachable part of the case model today is ask -> scope -> inspect -> explain, from /api/findings and /api/gspc. Everything from propose onward has no runtime. Building approve/fix/retest/receipt UI over this would be the faked completed fix WP-3 forbids, so it is not built; this block records why and will fail loudly the moment TUI 1 lands the backend."
+  },
+  "distributed_artifacts": {
+    "observed_at": "2026-09-05T06:35:00Z",
+    "why": "WP-4 lists SDK and plugin among the nine surfaces. This is the one a user installs.",
+    "artifacts": {
+      "sdk_npm": {
+        "availability": "VERIFIED",
+        "reason": "csoai-gspc-mcp is published on npm at 0.2.1 (4 versions) and the published tarball is BYTE-IDENTICAL to mcp/gspc-server: index.mjs, gspc-tools.json, verify-card.mjs and paid-tools.json all match. This is the SDK/plugin surface a user actually installs. Drift is the default failure here because publishing needs the owner's Bypass-2FA token (the account is WebAuthn, so --otp= can never work), so anyone can change the repo and nobody can republish — guarded by capabilities/npm-package-parity.test.mjs.",
+        "endpoint": "https://registry.npmjs.org/csoai-gspc-mcp"
+      }
+    }
   }
 }
