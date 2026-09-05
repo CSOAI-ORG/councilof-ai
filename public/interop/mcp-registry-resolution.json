@@ -54,7 +54,7 @@
     "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
   },
   "coverage": {
-    "verdict": "153 BUILT SERVERS ARE UNPUBLISHED",
+    "verdict": "108 BUILT SERVERS ARE UNPUBLISHED",
     "question": "The first clause of the mandate is 'we are listed'. This asks it the other way round: what exists here that the registry does not carry?",
     "repos_public": 639,
     "mcp_named": 372,
@@ -71,15 +71,16 @@
     "superseded_figure": {
       "value": 64,
       "then": 142,
-      "now": 153,
-      "why_wrong": "Three answers in one evening, each larger, each from a better instrument. 64 filtered on the repo NAME and a name is not a detector. 142 used a dependency scan whose pattern matched the quoted string mcp but NOT mcp>=1.0.0 -- the ordinary way a Python project pins it -- so it missed repos like mismo-bridge-mcp that declare mcp>=1.0.0 outright. 153 matches an mcp dependency token followed by any version specifier or extras. Each number was published with its method, and each method was wrong in a way the next one exposed."
+      "overcounted": 153,
+      "now": 108,
+      "why_wrong": "Four answers to one question in one evening: 64, 142, 153, 108. Each of the first three was published with its method and each method was wrong. 64 filtered on the repo NAME, and a name is not a detector. 142 scanned dependencies with a pattern that matched the quoted string mcp but NOT mcp>=1.0.0, the ordinary way a Python project pins it, so it UNDERCOUNTED. 153 loosened that pattern and then matched anywhere in the file, so it OVERCOUNTED: a spot-check of eight found three hits that were a keywords list or the word FastMCP inside a description, not a dependency at all. 108 parses package.json dependencies as JSON and reads pyproject only inside a dependencies array or a poetry dependencies table. Loosening a pattern to cure an undercount is how you buy an overcount, and the only way either was caught was sampling the output by hand."
     },
-    "detector": "Match modelcontextprotocol, fastmcp, the npm scope @modelcontextprotocol/, or an mcp dependency token carrying any version specifier or extras, in pyproject.toml or package.json, across every unarchived public repository. 428 of 628 declare one; 153 of those are absent from the registry.",
+    "detector": "package.json is PARSED and its dependencies/devDependencies keys inspected for @modelcontextprotocol/*, mcp or fastmcp; pyproject.toml is read ONLY inside a dependencies array or a tool.poetry.dependencies table, so a keywords list or a description never counts. 362 of 628 unarchived public repos declare such a dependency; 108 of those are absent from the registry.",
     "unpublished": {
-      "total": 153,
+      "total": 108,
       "registry_today": 330,
-      "available_if_published": 483,
-      "repos_declaring_an_mcp_sdk": 428,
+      "available_if_published": 438,
+      "repos_declaring_an_mcp_sdk": 362,
       "unarchived_public_scanned": 628,
       "examples": [
         "OPENMOE",
@@ -88,10 +89,10 @@
         "ai-economy-infra",
         "ai-economy-infrastructure",
         "ai-governance",
-        "ai-sdk",
         "autonomous-vehicles",
         "autonomous-vehicles-ai",
-        "aws-cloud"
+        "aws-cloud",
+        "biometrics-ai"
       ]
     },
     "instrument_disagreement": {
@@ -100,6 +101,16 @@
       "dependency_only": 7,
       "net": 3,
       "actual_disagreement": 17
+    },
+    "what_a_sample_caught": {
+      "sampled": 8,
+      "false_positives": 3,
+      "examples": [
+        "openchronicle-mcp: keywords = [.., mcp, ..]",
+        "csoai-x402-wrap-mcp: the word FastMCP inside description",
+        "csoai-watermark-attest-mcp: keywords = [mcp, ..]"
+      ],
+      "note": "Three in eight. These repos are probably servers on other evidence — but they were counted for a reason that was not evidence, and a number is only as good as the reason each row is in it."
     }
   }
 }
