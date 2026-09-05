@@ -311,6 +311,41 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
           </span>
         </p>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The live API response below is the master view. It is rendered directly here; Hugging Face is a distribution mirror.</p>
+          {/*
+            WHEN it was measured and WITH WHAT. Both are served under `measured_on` and
+            neither was rendered: a reader saw "22 axes measured" with no way to learn that
+            the behavioural axes were run on 2026-08-12 and jail on 2026-08-18, or which
+            fleet and grader produced the numbers. WP-2 asks for observation date and
+            instrument beside the figures.
+
+            Every line is the API's own string, printed only when present. Nothing is
+            derived, defaulted or formatted into a date this endpoint did not state — the
+            field is deliberately prose ("behavioural axes 2026-08-12 · jail 2026-08-18 ·
+            ...") because the axes were not all measured on one day, and flattening that to
+            a single timestamp would invent an observation.
+          */}
+          {(() => {
+            const m = (data as any)?.measured_on;
+            if (!m || typeof m !== "object") return null;
+            const rows: [string, string][] = [
+              ["Observed", typeof m.date === "string" ? m.date : ""],
+              ["Instrument", typeof m.model === "string" ? m.model : ""],
+              ["Grading", typeof m.grading === "string" ? m.grading : ""],
+            ].filter(([, v]) => v) as [string, string][];
+            if (!rows.length) return null;
+            return (
+              <dl className="mt-3 grid gap-1.5 text-sm sm:grid-cols-[auto_1fr] sm:gap-x-3">
+                {rows.map(([k, v]) => (
+                  <div key={k} className="sm:contents">
+                    <dt className="font-mono text-[11px] uppercase tracking-wide text-slate-500 dark:text-emerald-300/70">
+                      {k}
+                    </dt>
+                    <dd className="text-slate-600 dark:text-emerald-100/75">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            );
+          })()}
         </div>
         <p className="flex flex-wrap items-center gap-3 text-sm">
           <a href="/dashboard?tab=leaderboard" className="font-medium text-emerald-800 hover:underline dark:text-emerald-300">
