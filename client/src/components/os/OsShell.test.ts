@@ -8,17 +8,19 @@ const shell = readFileSync(resolve(__dirname, "OsShell.tsx"), "utf8");
 const app = readFileSync(resolve(__dirname, "../../App.tsx"), "utf8");
 const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), "utf8");
 
-describe("OsShell is not the homepage or /os directory", () => {
+describe("OsShell is not the homepage or canonical /os route", () => {
   it("keeps four tools in the unused shell", () => {
     expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
     expect(OS_TOOLS).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
     expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
   });
 
-  it("homepage is verify; /os is a directory of real pages", () => {
+  it("homepage stays verify and legacy /os converges on the Dashboard", () => {
     expect(app).toContain("HomeVerify");
     expect(app).toContain("ToolsPage");
-    expect(app).toContain('<Redirect to="/os" />');
+    expect(app).toContain('if (path === "/os") return <OsRoute />');
+    expect(app).toContain('<Route path="/os" component={OsRoute} />');
+    expect(app).toContain('return <Redirect to={"/dashboard?" + p.toString()} />');
     expect(launcher).toContain('data-testid="os-directory"');
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
