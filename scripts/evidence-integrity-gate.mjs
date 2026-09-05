@@ -541,17 +541,39 @@ function checkLearnLoopIncident(errors, quarantineManifest) {
 function checkQuarantineManifest(errors) {
   const manifest = readJson(MANIFEST_PATH);
   checkLearnLoopIncident(errors, manifest);
-  const expectedPaths = manifest.quarantined_files.map((entry) => entry.path).sort();
+  // COMPARE LIKE WITH LIKE. queueInventory() lists exactly two directories in THIS repo, so it
+  // can only ever speak to entries that are repo-relative paths under them. The manifest has
+  // since grown to record quarantines held in ANOTHER store, keyed `<store>:<key>` — 13 of them
+  // on 2026-09-05, `os-production:harness/owem/cards/*.json`, cards asserting sov_score=1 with
+  // n=0, a score over zero observations. Those keys are not files here and never will be, so
+  // comparing them against a directory listing reported all 13 as "quarantine history missing"
+  // and held every deploy red until someone deleted the history — which is the one thing a
+  // quarantine record must never do.
+  //
+  // Namespaced entries are still CHECKED, just not by listing a directory that cannot hold them:
+  // they must be well-formed, so the namespace cannot become a place where anything is accepted.
+  const isNamespaced = (p) => /^[a-z0-9][a-z0-9-]*:/u.test(p);
+  const localExpected = manifest.quarantined_files
+    .map((entry) => entry.path)
+    .filter((p) => !isNamespaced(p))
+    .sort();
   const actualPaths = queueInventory();
-  if (JSON.stringify(actualPaths) !== JSON.stringify(expectedPaths)) {
-    const expected = new Set(expectedPaths);
+  if (JSON.stringify(actualPaths) !== JSON.stringify(localExpected)) {
+    const expected = new Set(localExpected);
     const actual = new Set(actualPaths);
     for (const item of actualPaths.filter((item) => !expected.has(item))) {
       errors.push(`new unreviewed quarantine output: ${item}`);
     }
-    for (const item of expectedPaths.filter((item) => !actual.has(item))) {
+    for (const item of localExpected.filter((item) => !actual.has(item))) {
       errors.push(`quarantine history missing: ${item}`);
     }
+  }
+  for (const entry of manifest.quarantined_files.filter((e) => isNamespaced(e.path))) {
+    const where = `quarantine record ${entry.path}`;
+    if (!/^[a-z0-9][a-z0-9-]*:\S+$/u.test(entry.path)) errors.push(`${where}: malformed <store>:<key>`);
+    if (!/^[0-9a-f]{64}$/u.test(String(entry.sha256 ?? ""))) errors.push(`${where}: sha256 is not 64 hex`);
+    if (!String(entry.reason ?? "").trim()) errors.push(`${where}: no reason given`);
+    if (!Number.isInteger(entry.rows) || entry.rows < 1) errors.push(`${where}: rows must be a positive integer`);
   }
 
   for (const entry of manifest.quarantined_files) {

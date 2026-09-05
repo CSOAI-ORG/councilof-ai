@@ -1,0 +1,157 @@
+{
+  "schema": "csoai.moves-reconciled/0.1",
+  "as_of": "2026-09-05",
+  "source": {
+    "file": "~/Downloads/CSOAI_1000_AGENT_MOVES_01Sep2026.md",
+    "dated": "2026-09-01T04:19+01:00",
+    "superseded_banner": "SUPERSEDED 02Sep2026 - governing stamp is CSOAI_PERMISSIONLESS_BLUEPRINT_02Sep2026.md. Where this file says 22/15/7, four tools, or unsigned root, the Blueprint wins.",
+    "detail_lives_in": "CSOAI_1000_AGENT_MOVES_01Sep2026.xlsx (11 sheets) - the .md carries wave totals only"
+  },
+  "scope_limit": "The 700 OPEN moves are NOT individually enumerated in the .md; it carries wave totals and a mined-unlocks table. Per-move LIVE/NOT therefore CANNOT be derived from this file alone and is recorded UNMEASURED rather than guessed. What IS reconciled here: the wave totals (which sum exactly to 700) and every individually probeable claim in the mined-unlocks table.",
+  "waves": [
+    {
+      "wave": "OSS_GSPC",
+      "n": 148,
+      "open": 136,
+      "yield": "npm, Action, MCP, eval.yaml, locks, skills, directories"
+    },
+    {
+      "wave": "GROWTH",
+      "n": 112,
+      "open": 112,
+      "yield": "citations, honest gaps, no partners"
+    },
+    {
+      "wave": "AXIS_OSS",
+      "n": 110,
+      "open": 43,
+      "yield": "22 axes language+halt; no restamp; no fill"
+    },
+    {
+      "wave": "EAT_XRPL",
+      "n": 85,
+      "open": 51,
+      "yield": "16 assets x poll/card/diff/index/language"
+    },
+    {
+      "wave": "AGENT_MCP",
+      "n": 80,
+      "open": 77,
+      "yield": "read-only tools on agent runtimes"
+    },
+    {
+      "wave": "EAT_PUBLIC",
+      "n": 60,
+      "open": 60,
+      "yield": "SEC/HashKey/x402/8004/DOI/reg hashes"
+    },
+    {
+      "wave": "CARD_FACTORY",
+      "n": 60,
+      "open": 33,
+      "yield": "3KB cap, canon, CI reject"
+    },
+    {
+      "wave": "EAT_SWIFT",
+      "n": 59,
+      "open": 40,
+      "yield": "17 cards + 3 official notices"
+    },
+    {
+      "wave": "AGENT_X402",
+      "n": 50,
+      "open": 0,
+      "yield": "402 on bundle only; root stays free"
+    },
+    {
+      "wave": "ROOT_LOOP",
+      "n": 40,
+      "open": 29,
+      "yield": "one writer; prepare cron; no laptop key"
+    },
+    {
+      "wave": "AGENT_8004",
+      "n": 39,
+      "open": 0,
+      "yield": "sample callable endpoints"
+    },
+    {
+      "wave": "EAT_INDUSTRY",
+      "n": 32,
+      "open": 32,
+      "yield": "32 verticals as visible empty coverage-targets"
+    },
+    {
+      "wave": "WATCHER",
+      "n": 30,
+      "open": 12,
+      "yield": "22/15/7 \u00b7 writes_board=false \u00b7 mill 401"
+    },
+    {
+      "wave": "NEVER",
+      "n": 20,
+      "open": 0,
+      "yield": "hourly grep of halt sentences"
+    },
+    {
+      "wave": "EAT_LOOP_META",
+      "n": 75,
+      "open": 75,
+      "yield": "STATUS_TODAY.md honesty glue"
+    }
+  ],
+  "wave_totals": {
+    "n_total": 1000,
+    "open_total": 700,
+    "arithmetic_check": "open_total == 700, matching the F13 brief"
+  },
+  "mined_unlocks_reconciled": [
+    {
+      "claim": "/api/xrpl 200 n=16 writes_board=false",
+      "probe": "curl -s https://councilof.ai/api/xrpl",
+      "observed": {
+        "http": 200,
+        "n": 16,
+        "writes_board": false
+      },
+      "verdict": "CONFIRMED"
+    },
+    {
+      "claim": "/proof 302",
+      "probe": "curl -s -o /dev/null -w '%{http_code}' https://councilof.ai/proof   # 302, do NOT pass -L",
+      "observed": {
+        "http_no_redirect": 302,
+        "note": "first pass recorded 200 because urllib follows redirects by default; curl without -L shows the real 302"
+      },
+      "verdict": "CONFIRMED"
+    },
+    {
+      "claim": "root: 43 leaves both hosts, UNSIGNED",
+      "probe": "curl -s https://councilof.ai/root.json",
+      "observed": {
+        "card_count": 167,
+        "signed": true
+      },
+      "verdict": "STALE",
+      "note": "The root is now SIGNED (sig_ed25519 present) and carries 167 cards, not 43. The file's own banner already warns that where it says 'unsigned root' the 02 Sep Blueprint wins. Confirmed: it does."
+    },
+    {
+      "claim": "llms.txt FIXED npm 0.1.0",
+      "probe": "curl -o /dev/null -w '%{http_code}' https://councilof.ai/llms.txt ; curl -s https://registry.npmjs.org/csoai-gspc-mcp",
+      "observed": {
+        "llms_txt_http": 200,
+        "npm_latest": "0.2.1"
+      },
+      "verdict": "CONFIRMED_AND_ADVANCED",
+      "note": "llms.txt live; npm has moved 0.1.0 -> 0.2.1 since the file was written."
+    }
+  ],
+  "verdicts_summary": {
+    "CONFIRMED": 2,
+    "STALE": 1,
+    "CONFIRMED_AND_ADVANCED": 1,
+    "per_move_LIVE_NOT": "UNMEASURED - requires the .xlsx, not this file"
+  },
+  "doctrine": "Absent is not zero. A move that could not be probed is UNMEASURED, not NOT-LIVE.",
+  "method_note": "A probe that follows redirects cannot verify a redirect. The /proof row was briefly recorded as DIVERGED for that reason and corrected; the probe command on that row now says do NOT pass -L."
+}

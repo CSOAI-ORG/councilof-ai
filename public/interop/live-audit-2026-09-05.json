@@ -1,0 +1,18 @@
+{
+  "schema": "csoai.live-audit/0.1",
+  "as_of": "2026-09-05T143500Z",
+  "method": "concurrent probes (24 workers, 10s timeout) of every URL referenced by the two public indexes",
+  "well_known": {
+    "indexed_doors": 292,
+    "probed": 292,
+    "non_200_402": 0
+  },
+  "interop": {
+    "indexed_formats": 372,
+    "probed": 371,
+    "non_200_402": 0,
+    "finding": "one duplicate slug in the index (probe set dedup'd) \u2014 generator should dedup; not a live door issue"
+  },
+  "verdict": "ZERO silent-404 doors in the well-known and interop layers (the class of bug the estate has most to lose from). Doors that are intentionally unavailable answer 503/400 with lifecycle+reason (e.g. /api/witness).",
+  "principle": "Every referenced URL answered at probe time; failures would have been recorded with their status, not hidden."
+}

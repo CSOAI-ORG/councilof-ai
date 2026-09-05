@@ -1,55 +1,45 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import Products from "./Products";
+import { describe, it, expect } from "vitest";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { SKUS } from "./Products";
 
 /**
- * /products — derived page tests.
- * Asserts: the page renders the catalog it fetches (no typed SKU list),
- * prints no price-like string, carries the lid, and links the SKU docs.
+ * /products — anchored page tests (v2.1 gates, source-scan style: no DOM deps).
+ * Asserts the three page anchors: the four public SKU lines, the
+ * /pricing-free rail link, and the price-free doctrine.
  */
 
-const CATALOG = {
-  schema: "csoai.x402-catalog/0.2",
-  one_line: "Verification is free forever. Agents pay per artefact.",
-  lid: "22 axes measured · 14 model fleets · not a certificate.",
-  tiers: [
-    { tier: 1, id: "issuance", name: "Commission a signed card (request-attestation)", resource: "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>", free_preview: "https://councilof.ai/api/request-attestation?subject=<id>", deliverable: "one card-v0 leaf" },
-    { tier: 2, id: "evidence_bundle", name: "Evidence bundle mapped to an obligation", resource: "https://councilof.ai/api/evidence-bundle?obligation=article-50", free_preview: "https://councilof.ai/api/evidence-bundle?obligation=<id>", deliverable: "OSCAL observations of already-signed cards" },
-    { tier: 3, id: "data_feed", name: "Signed data feed (assembly + cadence)", resource: "https://councilof.ai/api/eunomia-data?feed=1", free_preview: "https://councilof.ai/api/eunomia-data", deliverable: "one feed document with signed signals index" },
-  ],
-};
+const dir = dirname(fileURLToPath(import.meta.url));
+const src = readFileSync(join(dir, "Products.tsx"), "utf8");
 
-beforeEach(() => {
-  vi.restoreAllMocks();
-});
-
-describe("/products derived page", () => {
-  it("renders tiers from the fetched catalog, not from a typed list", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => CATALOG })));
-    render(<Products />);
-    await waitFor(() => expect(screen.getByText(/Evidence bundle mapped to an obligation/i)).toBeTruthy());
-    expect(screen.getByText(/Signed data feed/i)).toBeTruthy();
-    expect(screen.getByText(/Commission a signed card/i)).toBeTruthy();
+describe("/products anchored page", () => {
+  it("exports exactly the four public SKUs the lock names", () => {
+    expect(SKUS).toHaveLength(4);
+    expect(SKUS.map((s) => s.id)).toEqual(["verify", "run", "ledger", "data"]);
+    expect(SKUS[0].href).toBe("/gspc-verify");
+    expect(SKUS[1].href).toBe("/assess");
   });
 
-  it("carries the lid verbatim from the catalog", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => CATALOG })));
-    render(<Products />);
-    await waitFor(() => expect(screen.getByText(/not a certificate/i)).toBeTruthy());
+  it("never sells a grade or a certificate in any SKU prose", () => {
+    const blob = JSON.stringify(SKUS).toLowerCase();
+    expect(blob).not.toMatch(/start certification/);
+    expect(blob).not.toMatch(/certified analyst/);
+    expect(blob).not.toMatch(/conformity mark/);
+    expect(blob).toMatch(/never a purchased public rank|never buy a score/);
   });
 
-  it("never prints a price-like string (price-gate doctrine)", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => CATALOG })));
-    const { container } = render(<Products />);
-    await waitFor(() => expect(screen.getByText(/Evidence bundle mapped to an obligation/i)).toBeTruthy());
-    const text = container.textContent ?? "";
-    expect(text.match(/[\$£€]\s*\d+(\.\d+)?/)).toBeNull();
-    expect(text).not.toMatch(/\b(?:price|prices?)\s*:\s*\d+/i);
+  it("links the metered /pricing-free page (free rail wiring)", () => {
+    expect(src).toMatch(/href: "\/pricing-free"/);
   });
 
-  it("links each SKU to its docs/product description", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => ({ json: async () => CATALOG })));
-    render(<Products />);
-    await waitFor(() => expect(screen.getByText(/commission-card\.md/i)).toBeTruthy());
+  it("never prints a price-like string (price-gate doctrine)", () => {
+    expect(src).not.toMatch(/[£$€]\s?\d/);
+    expect(src).not.toMatch(/stripe|subscribe now|most popular|best value/i);
+  });
+
+  it("keeps the Verification-is-free-forever framing", () => {
+    expect(src).toMatch(/free forever/i);
+    expect(src).toMatch(/Measurement, not certification|verify .* offline|never a purchased public rank/i);
   });
 });
