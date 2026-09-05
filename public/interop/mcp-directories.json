@@ -2,7 +2,7 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260905T181237Z",
+  "as_of": "20260905T183541Z",
   "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
@@ -40,17 +40,17 @@
       "id": "pulsemcp",
       "name": "PulseMCP",
       "url": "https://pulsemcp.com",
-      "state": "UNKNOWN",
-      "evidence": "api.pulsemcp.com/v0beta/servers answers 410 Gone, so the documented probe no longer exists. Not checked by another method, therefore UNKNOWN and not NOT_LISTED",
-      "probe": "curl -s -o /dev/null -w '%{http_code}' 'https://api.pulsemcp.com/v0beta/servers?query=csoai'  -> 410"
+      "state": "LISTED",
+      "evidence": "213 csoai server URLs in PulseMCP's own sitemap (23,833 URLs total), e.g. /servers/csoai-acord-bridge, /servers/csoai-agent-audit-logger. Five sampled, all resolve 200. Their documented v0beta API answers 410 Gone, which is why this row read UNKNOWN \u2014 a dead API is not absence, and the sitemap answered it.",
+      "probe": "curl -s https://www.pulsemcp.com/sitemap.xml | grep -c 'csoai' ; then fetch a sample of the csoai <loc> URLs and check for 200"
     },
     {
       "id": "mcp-so",
       "name": "mcp.so",
       "url": "https://mcp.so",
-      "state": "UNKNOWN",
-      "evidence": "2 csoai mentions and 0 csoai links on a rendered search \u2014 present in text, nothing that resolves. Neither LISTED nor NOT_LISTED is supported by that",
-      "probe": "playwright: goto https://mcp.so/search?q=csoai, networkidle, count mentions and anchors"
+      "state": "NOT_LISTED",
+      "evidence": "mcp.so's OWN sitemap index \u2014 28 sections, 27,929 URLs \u2014 contains ZERO csoai occurrences. The '2 csoai mentions' an earlier rendered search showed were the query echoed back by the page. There is no public search API (mcp.so/api/servers 404, api.mcp.so 502), so the sitemap is the authoritative surface.",
+      "probe": "curl -s https://mcp.so/sitemap.xml, follow every <loc> section, grep -ci csoai across all of them -> 0"
     },
     {
       "id": "cline",
@@ -93,7 +93,8 @@
     "2026-09-05: glama and docker-mcp were published as NOT_LISTED and were LISTED. Cause: state derived from a scan of our own slug files, not from the directory. Corrected with rendered/API probes, each row now carries the command that produced it.",
     "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0.",
     "2026-09-05: the first correction of this file cited '27 csoai mentions and 85 csoai links' as the evidence for glama=LISTED. 63 of those 85 were HREF-ONLY \u2014 Glama's own facet links carrying query=csoai in the URL, i.e. our search term echoed back. The state was right; the evidence was mostly an artefact. This is the same query-echo trap recorded one entry above for cline, fallen into in the same session. Count links whose TEXT names us, or listings under the author facet.",
-    "2026-09-05: smithery was published NOT_LISTED on the evidence 'zero csoai mentions on a Playwright-RENDERED search page'. WRONG. Smithery's own registry API returns two servers in the csoai namespace. The rendered homepage search and the registry API are different surfaces, and the page not showing a result is not the registry lacking one. A rendered check is necessary where there is no API and is NOT sufficient where there is one \u2014 query the API."
+    "2026-09-05: smithery was published NOT_LISTED on the evidence 'zero csoai mentions on a Playwright-RENDERED search page'. WRONG. Smithery's own registry API returns two servers in the csoai namespace. The rendered homepage search and the registry API are different surfaces, and the page not showing a result is not the registry lacking one. A rendered check is necessary where there is no API and is NOT sufficient where there is one \u2014 query the API.",
+    "2026-09-05: mcp-so and pulsemcp both sat at UNKNOWN because their APIs were missing or dead (404 / 410). A SITEMAP IS A DIRECTORY'S OWN INDEX OF WHAT IT LISTS and answered both: mcp.so 0 of 27,929, pulsemcp 213 of 23,833. Reach for the sitemap before recording UNKNOWN \u2014 and note the rendered mcp.so search showed '2 csoai mentions' that the sitemap proves were query echo."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
