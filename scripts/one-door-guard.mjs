@@ -34,8 +34,23 @@ function read(rel) {
 
 console.log("ONE-DOOR-GUARD — source\n");
 
-const agui = read("client/src/pages/AgUiBridge.tsx").content;
-if (agui) {
+// A MISSING FILE MUST FAIL, NOT SKIP. `read()` returns "" for an absent path, so the checks
+// below — which all ask "does this content contain X" — passed vacuously when the file was
+// gone. Verified 2026-09-05: deleting AgUiBridge.tsx entirely left this guard printing
+// "PASS — one public Council OS door" and exiting 0, while it runs in deploy.yml. It could
+// not detect the removal of the very file it exists to protect.
+//
+// SovOS below is the opposite case and is handled correctly: it is EXPECTED to be absent
+// (retired 2 Sep 2026), so `missing` is a pass there. The distinction is deliberate.
+const aguiRead = read("client/src/pages/AgUiBridge.tsx");
+const agui = aguiRead.content;
+if (!agui) {
+  fail(
+    aguiRead.missing
+      ? "client/src/pages/AgUiBridge.tsx is MISSING — the one-door checks cannot run, and this guard must not pass on an absent file"
+      : "client/src/pages/AgUiBridge.tsx is empty — the one-door checks would pass against nothing",
+  );
+} else {
   const iframeHost =
     /(?:IFRAME_SRC|src)\s*=\s*["'`]https?:\/\/csoai-site\.pages\.dev/i.test(agui) ||
     /<iframe[\s\S]{0,400}csoai-site\.pages\.dev/i.test(agui);
