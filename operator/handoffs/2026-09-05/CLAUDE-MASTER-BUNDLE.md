@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `ba9c9f21c3d6ea7d6c899664ac06a94b3efab712` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `4b266bf242271e902a38ae39dff273c85f0903e9` — 21 commits, 37 files changed
+**Rebased onto:** `623d679844579ab600cd0a1211fc2653e147aea5` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `71c2c6db4299ff4d8de3dc007271ce852cc2abe1` — 23 commits, 38 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~37 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~38 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -77,6 +77,7 @@ capabilities/cohort-provenance.test.mjs
 capabilities/hub-results.test.mjs
 capabilities/journey-backends.test.mjs
 capabilities/game-page-claims.test.mjs
+capabilities/npm-package-parity.test.mjs
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
 capabilities/install-truth.test.mjs
@@ -110,7 +111,7 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
-      node --test capabilities/*.test.mjs                      38 passed, 0 failed
+      LIVE_NPM=1 node --test capabilities/*.test.mjs           41 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -126,6 +127,7 @@ Every guard was proven to fail before being trusted:
   asserting the multi-date prose survives rather than being flattened to one timestamp
 - game-page claims — restoring the old lede fails, naming the page and the pattern. brand-gate
   catches a banned WORD; this catches a true-sounding SENTENCE that happens to be false
+- npm parity — appending one comment line to `index.mjs` fails it with both digests named
 
 ## Screenshot
 
@@ -158,6 +160,7 @@ the page shows it.
 | HTTP drops **observation date** at axis level | present at response top level; absent per axis |
 | `witness_hash` declared, not served | `/api/witness` 503 `QUARANTINED_PRE_RELEASE` — deliberate |
 | Other 72 HTTP/A2A capabilities UNASSESSED | only MCP can be checked against a live `tools/list` |
+| SDK/plugin (npm) — **now assessed, and clean** | `csoai-gspc-mcp@0.2.1` published; tarball **byte-identical** to `mcp/gspc-server` on all four behaviour files. Guarded, because publishing needs the owner's Bypass-2FA token, so drift is the default failure |
 | Cohort exists only on `jail` | every other axis carries no `per_model` |
 
 ## WP-1: both duplicate routes resolved
@@ -204,6 +207,7 @@ the faked completed fix WP-3 forbids.
 
 `capabilities/journey-backends.test.mjs
 capabilities/game-page-claims.test.mjs
+capabilities/npm-package-parity.test.mjs
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
 the failure message says so, so nobody relaxes the assertion to make it pass.
