@@ -408,6 +408,85 @@ async function checkSmithery() {
   }
 }
 
+/**
+ * 7. THE PRODUCERS THAT WOULD REGENERATE A DEAD CLAIM.
+ *
+ * #1312 marked every dead endpoint reference in six /interop manifests, and did it well: they
+ * carry `intended_path` / `*_status: "NOT_IMPLEMENTED — probed ... HTTP 404"` and a
+ * `claims_audit` block. Checked 2026-09-05, ALL SIX are honest and none of them advertises a
+ * 404 as if it worked.
+ *
+ * The manifests are generated. Four generators still emit those paths bare:
+ *
+ *   scripts/badger/csoai-take-over-chatgpt.py:132                "endpoints": ["/api/research"]
+ *   scripts/badger/csoai-finish-chatgpt-features.py:255-258      /api/measure /api/anchor /api/verify
+ *   scripts/badger/csoai-product-wave.py:31                      a SKU priced against /api/verify
+ *   scripts/badger/csoai-finish-chatgpt-and-improve-dashboard.py:146   "endpoint": "/api/research"
+ *
+ * All four 404. None carries the marking. Re-run any of them and #1312's work is silently
+ * overwritten — the claim lives in the artifact AND the generator, and only the artifact was
+ * fixed. That is the estate's most repeated defect, and this is a guard for exactly it.
+ *
+ * scripts/badger/ belongs to another lane, so this REPORTS and does not edit. The fix is to
+ * carry the same `*_status` marking through the generator, or drop the path from it.
+ *
+ * MATCH EXACTLY, NEVER BY PREFIX. A first pass grepped `/api/verify` and flagged
+ * public/interop/verify-card.json and verify-batch.json — which describe `/api/verify-card` and
+ * `/api/verify-batch`, return 501 by design, and are among the most honest documents in the
+ * tree. Substring matching on a path turns two exemplary files into defects.
+ */
+const PRODUCER_DIRS = ["scripts/badger"];
+
+async function checkProducers() {
+  const { readdirSync, readFileSync, statSync, existsSync } = await import("node:fs");
+  const path = await import("node:path");
+
+  // Paths this estate is known to serve 404 for. Probed live so the list cannot go stale into
+  // flagging something that has since been implemented.
+  const CANDIDATES = ["/api/verify", "/api/measure", "/api/anchor", "/api/research"];
+  const dead = [];
+  for (const c of CANDIDATES) {
+    const r = await j(`${SITE}${c}`);
+    if (r.status === 404) dead.push(c);
+  }
+  if (dead.length === 0) return ok("producers", "none of the recorded dead paths is 404 any more");
+
+  const files = [];
+  const walk = (d) => {
+    if (!existsSync(d)) return;
+    for (const e of readdirSync(d)) {
+      const f = path.join(d, e);
+      if (statSync(f).isDirectory()) walk(f);
+      else if (/\.(py|mjs|js|ts)$/.test(e)) files.push(f);
+    }
+  };
+  for (const d of PRODUCER_DIRS) walk(d);
+  if (files.length === 0) {
+    return skip("producers", `${PRODUCER_DIRS.join(", ")} not present in this checkout — nothing scanned`);
+  }
+
+  const offenders = [];
+  for (const f of files) {
+    const src = readFileSync(f, "utf8");
+    // A generator that ALSO emits the honest marking is doing the right thing.
+    if (/NOT_IMPLEMENTED|intended_path_status|claims_audit/.test(src)) continue;
+    for (const d of dead) {
+      // Exact, quoted, and not a prefix of a longer path.
+      const re = new RegExp(`["']${d.replace(/\//g, "\\/")}["']`);
+      if (re.test(src)) offenders.push(`${f} emits ${d}`);
+    }
+  }
+  if (offenders.length) {
+    bad("producers regenerate dead claims",
+      `${offenders.length} generator reference(s) would re-emit a 404 path with no NOT_IMPLEMENTED ` +
+      `marking, overwriting the fix in the artifact: ${offenders.slice(0, 6).join("; ")}` +
+      `${offenders.length > 6 ? ` (+${offenders.length - 6} more)` : ""}. The claim lives in the ` +
+      `artifact AND the generator; only the artifact was fixed.`);
+  } else {
+    ok("producers", `no generator re-emits ${dead.join(", ")} unmarked`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -469,6 +548,7 @@ async function main() {
   await checkRegistry();
   await checkPublishedToolCounts();
   await checkSmithery();
+  await checkProducers();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
