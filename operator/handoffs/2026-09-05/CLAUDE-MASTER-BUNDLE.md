@@ -3,7 +3,7 @@
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
 **Rebased onto:** `ba9c9f21c3d6ea7d6c899664ac06a94b3efab712` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `62a63506c1af6a92c528bce070816c8d7bbf6a67` — 19 commits, 27 files changed
+**Head:** `4b266bf242271e902a38ae39dff273c85f0903e9` — 21 commits, 37 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,9 +21,33 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~27 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~37 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
+
+## ⚠ READ THIS FIRST — master could not ship, and this bundle fixes it
+
+`node scripts/brand-gate.mjs dist/client` — **step 3 of the four-step deploy pipeline in
+CLAUDE.md** — was **exiting 1 on master**. Eight game pages carried the word **BFT**, which
+brand-gate itself records as **RETRACTED 2026-07-29**: *"Byzantine/BFT/fault-tolerant asserts
+the withdrawn claim (n_eff about 1.21/3)"*. Every lane's deploy was blocked, not only that
+content. The gate names its own replacement, so the fix was dictated, not invented.
+
+The same pages also claimed capabilities they do not have:
+
+> "Every turn emits a signed card."
+> "Every interaction emits a 3KB signed card. Anchored to OTS + Sigstore Rekor + EAS on Base."
+
+Each page is ~1.7KB of static HTML with **zero `<script>`, zero `<canvas>`, zero `<button>`**.
+There is no turn and nothing to sign. They also contradicted our own `LobbyPlay`, which states
+that nothing in the gallery is a measurement and nothing in it is signed.
+
+**After this bundle:** brand-gate EXIT 0 (124 pages), signed-json-guard EXIT 0.
+
+Another lane authored those pages. Only the untrue sentences and the deploy-blocking word were
+changed; the pages, routes and structure are theirs and are untouched. If that lane wants
+different wording, it is theirs to set — but it cannot go back to `BFT` without stopping the
+estate shipping again.
 
 ## Exact commits
 
@@ -52,6 +76,8 @@ re-rebase.
 capabilities/cohort-provenance.test.mjs
 capabilities/hub-results.test.mjs
 capabilities/journey-backends.test.mjs
+capabilities/game-page-claims.test.mjs
+public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
 capabilities/install-truth.test.mjs
 capabilities/registry.json
@@ -79,10 +105,12 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 ## Tests
 
     npx vitest run client/src                                  112 files, 614 passed
+    node scripts/brand-gate.mjs dist/client                    EXIT 0 (was EXIT 1 on master)
+    node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
-      node --test capabilities/*.test.mjs                      35 passed, 0 failed
+      node --test capabilities/*.test.mjs                      38 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -96,6 +124,8 @@ Every guard was proven to fail before being trusted:
   and one live against the 404, each naming the consequence
 - observation date — dropping `measured_on.date` from the board fails three tests, one
   asserting the multi-date prose survives rather than being flattened to one timestamp
+- game-page claims — restoring the old lede fails, naming the page and the pattern. brand-gate
+  catches a banned WORD; this catches a true-sounding SENTENCE that happens to be false
 
 ## Screenshot
 
@@ -172,7 +202,9 @@ The case model reaches **ask → scope → inspect → explain** and stops. Ever
 `propose` onward has no runtime, so approve/fix/retest/receipt is not built — that would be
 the faked completed fix WP-3 forbids.
 
-`capabilities/journey-backends.test.mjs` **fails when the backend lands**: when TUI 1 ships
+`capabilities/journey-backends.test.mjs
+capabilities/game-page-claims.test.mjs
+public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
 the failure message says so, so nobody relaxes the assertion to make it pass.
 
