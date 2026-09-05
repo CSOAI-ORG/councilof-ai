@@ -1,37 +1,46 @@
 {
-  "protocolVersion": "1.0.0",
   "name": "Council of AI — Measurement Agent",
-  "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked.",
-  "url": "https://councilof.ai",
-  "version": "1.0.0",
+  "description": "Independent AI-governance MEASUREMENT body. Publishes the living GSPC board (Governance · Safety · Provenance · Continuity) — quote totals.lid and totals.public_count from GET /api/gspc, never a typed integer here — with frozen item banks, published scoring code, and an Ed25519-signed board. Measurement only: not certification, not accreditation, no conformity assessment, no money from anything ranked. A2A v1.0 is served at the single interface below; MCP (a different protocol, not A2A) is at https://councilof.ai/mcp.",
+  "version": "1.1.0",
   "provider": {
     "organization": "CSOAI Ltd",
     "url": "https://councilof.ai"
   },
+  "supportedInterfaces": [
+    {
+      "url": "https://councilof.ai/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "documentationUrl": "https://councilof.ai/llms.txt",
+  "iconUrl": "https://councilof.ai/og-image.png",
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
     "extendedAgentCard": false
   },
   "defaultInputModes": [
-    "application/json",
-    "text/plain"
+    "text/plain",
+    "application/json"
   ],
   "defaultOutputModes": [
+    "text/plain",
     "application/json"
   ],
   "skills": [
     {
       "id": "gspc-board",
       "name": "Signed GSPC Board",
-      "description": "Fetch the live Ed25519-signed GSPC board from GET /api/gspc: per-axis n, leader, Wilson interval, and McNemar separation. Quote totals.public_count. Empty cells stay empty. Live JSON, recomputable from published rows.",
+      "description": "SendMessage answers with the live board: totals.lid verbatim from GET /api/gspc and the derived axis rows (axis, family, kind, status, n, separation, leader state). Empty cells stay empty; a withheld leader is a state, not a zero; a fetch failure is UNCHECKABLE, never a fabricated number. Live JSON, recomputable from published rows.",
       "tags": [
         "measurement",
         "governance",
         "verification"
       ],
       "examples": [
-        "GET /api/gspc — return the signed board JSON"
+        "SendMessage {\"message\": {\"messageId\": \"m-1\", \"role\": \"ROLE_USER\", \"parts\": [{\"text\": \"board\"}]}}",
+        "GET /api/gspc — the same board, outside A2A"
       ]
     },
     {
@@ -78,33 +87,33 @@
     {
       "id": "article50-detect",
       "name": "Article 50 provenance detection (free)",
-      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50). Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
-      "endpoint": "https://councilof.ai/api/detect",
+      "description": "Verify a C2PA-style signed manifest for AI-generated content (EU AI Act Article 50) at POST https://councilof.ai/api/detect. Deterministically checks the Ed25519-signed metadata layer and the IPTC/schema.org digitalSourceType; returns AI_MARKED / NOT_AI_MARKED / UNVERIFIABLE with a signed verdict receipt (in-toto/DSSE when a board key is bound). The imperceptible-watermark layer we cannot see is declared, never claimed. Free for all; unrestricted for authorities, media, fact-checkers, researchers and civil society. Not certification.",
       "tags": [
         "article-50",
         "provenance",
         "detection",
         "verification",
         "c2pa"
+      ],
+      "examples": [
+        "POST /api/detect — multipart image or JSON manifest"
+      ]
+    },
+    {
+      "id": "eu-ai-act-screen",
+      "name": "EU AI Act screening helper (deterministic, text-only)",
+      "description": "POST https://councilof.ai/api/assess with a system description. Keyword matches name the Annex III categories and Article 5 patterns a human should inspect; no model is consulted. It does not establish legal tier, applicability, exceptions or compliance, and an empty description is UNMEASURED, not a low-risk finding. When no signing key is provisioned the report says UNSIGNED out loud.",
+      "tags": [
+        "eu-ai-act",
+        "screening",
+        "deterministic"
+      ],
+      "examples": [
+        "POST /api/assess {\"system\": \"<what the system does and for whom>\"}"
       ]
     }
   ],
-  "supportedInterfaces": [
-    {
-      "url": "https://councilof.ai/api/assess",
-      "protocolBinding": "HTTP+JSON",
-      "protocolVersion": "1.0.0"
-    },
-    {
-      "url": "https://councilof.ai/mcp",
-      "protocolBinding": "JSONRPC",
-      "protocolVersion": "1.0.0",
-      "note": "Live streamable-HTTP door (GET 200) lists seven free readers plus four x402-metered evidence tools. npm stdio csoai-gspc-mcp@0.2.1 lists twelve because it also carries witness_hash, which is quarantined on HTTP. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker."
-    }
-  ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
-  "documentation": "https://councilof.ai/.well-known/agent-card.json",
-  "documentationUrl": "https://councilof.ai/.well-known/agent-card.json",
   "doi": "10.5281/zenodo.21991104",
   "explicitly_not": [
     "certification",
