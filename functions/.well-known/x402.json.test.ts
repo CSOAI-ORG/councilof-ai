@@ -82,4 +82,28 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
     // and no published $ price may appear anywhere on this surface
     expect(JSON.stringify(body)).not.toMatch(/\$\s?\d/);
   });
+
+  // A door advertised with a parameter it does not accept is a door that cannot be bought.
+  // This file advertised /api/art50/marking-evidence?vendor=<slug>; the handler reads only
+  // `url=` and the string "vendor" appears nowhere in it, so a buyer following this document
+  // got 400 and never reached a payment challenge. Every advertised query parameter is now
+  // checked against the handler that serves it.
+  it("advertises art50 with the parameter its handler actually reads", async () => {
+    const m = await get();
+    const art50 = m.resources.find((r) => r.url.includes("/api/art50/marking-evidence"));
+    expect(art50, "art50 must still be advertised").toBeTruthy();
+    expect(art50!.url).toContain("url=");
+    expect(art50!.url).not.toContain("vendor=");
+    expect(String(art50!.free_preview ?? "")).not.toContain("vendor=");
+  });
+
+  // A placeholder that names the wrong kind of value costs a buyer a failed call. `<id>` meant
+  // a model id on the request-attestation row and an obligation id on the evidence-bundle row.
+  it("names what each placeholder wants, so a buyer's first call is not a 404", async () => {
+    const m = await get();
+    const eb = m.resources.find((r) => r.url.includes("/api/evidence-bundle"));
+    expect(eb).toBeTruthy();
+    expect(eb!.url).toMatch(/obligation=<[^>]*dora[^>]*>/);
+    expect(eb!.url).not.toMatch(/obligation=<id>/);
+  });
 });
