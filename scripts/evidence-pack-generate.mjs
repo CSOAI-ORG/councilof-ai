@@ -135,7 +135,10 @@ function selectCards(cards, subject, reg) {
   const subj = (subject || "").trim().toLowerCase();
   return cards.filter((c) => {
     const hay = `${c.subject} ${c.surface} ${c.tags.join(" ")}`.toLowerCase();
-    const subjectMatch = subj ? hay.includes(subj) : false;
+    // Identical to isRelevant() in functions/api/_obligations.ts: an ABSENT subject is no
+    // constraint (PR #1310). This twin still read `: false` after that change and would have
+    // assembled an empty pack for the same request the API now answers.
+    const subjectMatch = subj ? hay.includes(subj) : true;
     const regMatch = reg.keywords.some((k) => hay.includes(k));
     return subjectMatch && regMatch;
   });

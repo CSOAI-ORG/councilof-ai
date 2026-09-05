@@ -103,7 +103,7 @@ async function oscal(ob: Obligation, subject: string, selected: { sha: string; w
     "assessment-results": {
       uuid: await uuidFrom(`ar:${ob.id}:${subject}:${merkle_root || ""}`),
       metadata: {
-        title: `CSOAI evidence bundle — ${ob.title} — subject: ${subject}`,
+        title: `CSOAI evidence bundle — ${ob.title} — subject: ${subject || "(none given — obligation-wide selection)"}`,
         "last-modified": newest,
         version: "0.1",
         "oscal-version": "1.1.0",
