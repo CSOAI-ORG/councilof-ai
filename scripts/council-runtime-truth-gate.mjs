@@ -6,6 +6,64 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, extname, join, normalize } from "node:path";
 
+
+/**
+ * simulatedQuorumProblems — every way a council artifact could claim a consensus it never held.
+ * Returns [] for a fail-closed observation. Shared by the live check and the selftest so the two
+ * can never drift apart; an unparseable file is itself a problem rather than a silent pass.
+ */
+function simulatedQuorumProblems(text) {
+  let doc;
+  try {
+    doc = JSON.parse(text);
+  } catch {
+    // A vote-chain is line-delimited JSON, not one object — the 7 quarantined .jsonl files each
+    // hold 33 records of {"vote":"YES","sig":...}. Parsing the whole file throws, and returning
+    // "unparseable" here would have been a pass-by-accident for exactly the worst artifact type.
+    const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+    const records = [];
+    for (const line of lines) {
+      try {
+        records.push(JSON.parse(line));
+      } catch (e) {
+        return [`is neither JSON nor line-delimited JSON (${e.message})`];
+      }
+    }
+    if (records.length === 0) return ["is empty"];
+    const cast = records.filter((r) => typeof r?.vote === "string");
+    const signed = records.filter((r) => typeof r?.sig === "string" && r.sig.length > 0);
+    const found = [];
+    if (cast.length > 0) found.push(`carries ${cast.length} cast vote records`);
+    if (signed.length > 0) found.push(`carries ${signed.length} per-voter signatures`);
+    return found.length > 0 ? found : ["is a vote chain with no fail-closed declaration"];
+  }
+  const problems = [];
+  if (doc.quorum_reached === true) problems.push("claims quorum_reached: true");
+  if (Number(doc.yes_count) > 0) problems.push(`claims yes_count ${doc.yes_count}`);
+  if (Number(doc.evaluated_vote_count) > 0) problems.push(`claims ${doc.evaluated_vote_count} evaluated votes`);
+  const votes = Array.isArray(doc.votes) ? doc.votes : [];
+  if (votes.length > 0) problems.push(`carries ${votes.length} vote records`);
+  if (votes.some((v) => typeof v?.sig === "string" && v.sig.length > 0)) {
+    problems.push("carries per-voter signatures");
+  }
+  // Every document here must state, in one of the two vocabularies the honest producer uses, that
+  // BFT is not demonstrated: a quorum observation says bft_status, a role registry says bft. The
+  // two QUARANTINED types are caught precisely because neither says either — the fabricated
+  // quorum-vote asserts a reached quorum and no disclaimer, and the council-manifest lists 33
+  // seats and a quorum of 23 while stating nothing about credentials, independence or BFT.
+  // Requiring bft_status alone was too narrow and rejected the honest registry; accepting silence
+  // would be too wide and admit the manifest. Both selftest samples below hold this rule to it.
+  const declaresNotDemonstrated =
+    doc.bft_status === "NOT_DEMONSTRATED" || doc.bft === "NOT_DEMONSTRATED";
+  if (!declaresNotDemonstrated) {
+    problems.push(
+      "does not state NOT_DEMONSTRATED in bft_status or bft " +
+        `(got bft_status=${JSON.stringify(doc.bft_status)}, bft=${JSON.stringify(doc.bft)})`,
+    );
+  }
+  return problems;
+}
+
 const UI_TRUTH_RULES = [
   ["wrong-threshold", /\b22\s*(?:\/|out of)\s*33\b/i],
   ["all-votes-public", /\ball council votes are public\b/i],
@@ -285,6 +343,61 @@ if (process.argv.includes("--selftest")) {
     ),
     ["/flat", "/nested"],
   );
+
+  // THE ACTIVE-QUEUE RULE MOVED FROM PATH TO CONTENTS, so it must be proved on real bytes that it
+  // still catches what the path rule caught. These are the actual quarantined artifacts from
+  // 2026-09-04 — if a future edit softens simulatedQuorumProblems into something that admits a
+  // fabricated unanimous quorum, this fails here rather than in production.
+  const QUARANTINE = "_quarantine/simulated-bft-2026-09-04";
+  // BOTH quarantined shapes, not just the obvious one. Checking only quorum-vote-* would have let
+  // a rule through that silently admits council-manifest-*, which carries no consensus fields at
+  // all and would pass any check written around yes_count and votes.
+  const simulatedSamples = readdirSync(QUARANTINE).filter((n) =>
+    /^(?:quorum-vote|council-manifest|vote-chain)-.*\.jsonl?$/.test(n),
+  );
+  assert.ok(simulatedSamples.length >= 2, "selftest needs quarantined artifacts of both shapes");
+  for (const shape of ["quorum-vote", "council-manifest", "vote-chain"]) {
+    assert.ok(
+      simulatedSamples.some((n) => n.startsWith(shape)),
+      `selftest must cover the quarantined ${shape} shape`,
+    );
+  }
+  for (const name of simulatedSamples) {
+    const problems = simulatedQuorumProblems(readFileSync(join(QUARANTINE, name), "utf8"));
+    assert.ok(
+      problems.length > 0,
+      `simulatedQuorumProblems must reject the quarantined artifact ${name}, but found nothing wrong`,
+    );
+  }
+  // and it must ADMIT a genuinely fail-closed observation, or the gate blocks honest work
+  assert.deepEqual(
+    simulatedQuorumProblems(
+      JSON.stringify({
+        status: "UNCHECKABLE",
+        evaluated_vote_count: 0,
+        yes_count: 0,
+        votes: [],
+        quorum_reached: false,
+        bft_status: "NOT_DEMONSTRATED",
+        reason_code: "NO_INDEPENDENT_VERIFIABLE_VOTES",
+      }),
+    ),
+    [],
+  );
+  assert.deepEqual(
+    simulatedQuorumProblems(
+      JSON.stringify({
+        schema: "csoai.council-role-registry/0.2",
+        status: "DESIGN_ONLY",
+        credentials: "NOT_CONFIGURED",
+        independence: "NOT_MEASURED",
+        bft: "NOT_DEMONSTRATED",
+      }),
+    ),
+    [],
+  );
+  // a file that is not JSON at all is a problem, never a silent pass
+  assert.ok(simulatedQuorumProblems("not json").length > 0);
 
   console.log("council-runtime-truth-gate selftest: PASS");
   process.exit(0);
@@ -862,11 +975,38 @@ const bftRegression = execFileSync(
 );
 assert.match(bftRegression, /fail-closed tests: PASS/);
 
-assert.equal(
-  existsSync("scripts/badger/_queue/bft-council"),
-  false,
-  "simulated BFT output must not remain in the active queue",
-);
+// WHAT THIS RULE IS FOR. On 2026-09-04, 21 artifacts carrying fabricated unanimous votes —
+// yes_count 33, quorum_reached true, 33 "vote":"YES" entries with invented `sig` hex — were
+// quarantined, and this gate froze the active queue directory out of existence to stop them
+// coming back. That was the right shape of rule while nothing legitimate wrote there.
+//
+// It stopped being the right shape when the generator was rewritten to fail closed. This same
+// gate now REQUIRES that generator to emit "bft_status": "NOT_DEMONSTRATED" and
+// NO_INDEPENDENT_VERIFIABLE_VOTES (see the assertions above) — and that generator writes to
+// scripts/badger/_queue/bft-council/. So the gate blessed a producer and simultaneously forbade
+// its output directory, and the deploy went red on 2026-09-05 with an honest artifact in hand:
+//   {"status":"UNCHECKABLE","evaluated_vote_count":0,"votes":[],"quorum_reached":false,
+//    "bft_status":"NOT_DEMONSTRATED","reason_code":"NO_INDEPENDENT_VERIFIABLE_VOTES"}
+// That document is the opposite of a simulated quorum. Blocking it protected nobody.
+//
+// THE RULE IS NOT WEAKENED — it is moved from the path to the contents, which is where the lie
+// would actually live. A file in this directory must now prove it claims no consensus. Anything
+// resembling the quarantined artifacts (a reached quorum, any YES vote, any per-voter signature,
+// a non-zero vote count) fails, and it fails whatever the file is named. Verified against a real
+// quarantined artifact in the selftest below, so this cannot rot into a check that passes them.
+const ACTIVE_BFT_QUEUE = "scripts/badger/_queue/bft-council";
+if (existsSync(ACTIVE_BFT_QUEUE)) {
+  for (const name of readdirSync(ACTIVE_BFT_QUEUE)) {
+    // .jsonl as well as .json. The 21 quarantined artifacts are 14 .json plus 7 .jsonl
+    // vote-chains, and the old path rule forbade every one of them by forbidding the directory.
+    // Scanning only .json would have let a fabricated vote-chain back in through the gap.
+    if (extname(name) !== ".json" && extname(name) !== ".jsonl") continue;
+    const where = `${ACTIVE_BFT_QUEUE}/${name}`;
+    for (const problem of simulatedQuorumProblems(readFileSync(join(ACTIVE_BFT_QUEUE, name), "utf8"))) {
+      assert.fail(`simulated BFT output in the active queue: ${where} ${problem}`);
+    }
+  }
+}
 const bftQuarantine = "_quarantine/simulated-bft-2026-09-04";
 assert.equal(existsSync(`${bftQuarantine}/README.md`), true);
 const quarantinedBftArtifacts = readdirSync(bftQuarantine).filter((name) =>
