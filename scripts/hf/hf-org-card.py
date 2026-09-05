@@ -49,7 +49,7 @@ LINKS = {
     "Methodology DOI": f"https://doi.org/{DOI}",
 }
 # A stale string counts only in a sentence with no negation: "never print 2410 measured" is a guardrail.
-STALE = [r"13 measured of 14", r"mint after final name", r"14-slot", r"14 slot", r"2410 measured", r"22·15·7", r"15,557 rows"]
+STALE = [r"13 measured of 14", r"mint after final name", r"14-slot", r"14 slot", r"2410 measured", r"22·15·7"]
 NEGATION = re.compile(r"\b(never|not|no|nothing|superseded|retired|earlier|history|was|were|old|stale)\b", re.I)
 FILLER_TAGS = ["council-of-ai", "measurement", "transparency", "ai-governance", "responsible-ai", "evaluation"]
 DATA_EXT = (".parquet", ".jsonl", ".csv")
