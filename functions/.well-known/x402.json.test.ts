@@ -68,4 +68,18 @@ describe(".well-known/x402.json — every advertised resource is one that can ac
     const m = await get();
     expect(m.mcp.paid_tools).toEqual(PAID.tools.map((t) => t.name));
   });
+
+  // The Bazaar indexes exactly one CSOAI resource, /api/free-door, and it was absent from this
+  // document — so discovery pointed one way and the catalogue the other. An agent arriving from
+  // the Bazaar landed on a door this file never mentioned. Declared here, and asserted so the
+  // two surfaces cannot drift apart again.
+  it("declares the one resource the Bazaar actually indexes", async () => {
+    const body = (await get()) as { resources: { url: string; paid_for: string | null; amount?: string }[] };
+    const door = body.resources.find((r) => r.url.includes("/api/free-door"));
+    expect(door).toBeDefined();
+    expect(door!.paid_for).toBeNull();
+    expect(door!.amount).toBe("0");
+    // and no published $ price may appear anywhere on this surface
+    expect(JSON.stringify(body)).not.toMatch(/\$\s?\d/);
+  });
 });

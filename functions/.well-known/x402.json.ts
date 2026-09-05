@@ -21,6 +21,25 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     mode: rail.mode,
     mode_note: rail.note,
     resources: [
+      // The ONLY resource of ours the x402 Bazaar actually indexes, and it was missing from the
+      // document agents read after they find the domain. Discovery pointed one way and the
+      // catalogue the other: an agent arriving from the Bazaar landed on /api/free-door, and an
+      // agent reading this file was never told that door exists.
+      //
+      // paid_for is null because nothing is bought. `amount` is the protocol field name, not a
+      // published price: it is the same 0 the door already advertises in accepts[].amount. The real
+      // price — it serves the live board totals and the public signed root, which are published
+      // free at the links it returns. It speaks 402 so that an indexer has a payable resource to
+      // catalogue at all; a genuinely free 200 route is invisible to the Bazaar, which is why the
+      // first seed (against /api/gspc) indexed nothing.
+      {
+        method: "GET",
+        url: `${origin}/api/free-door`,
+        paid_for: null,
+        amount: "0",
+        note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+        indexed_in: "x402 Bazaar (PayAI)",
+      },
       { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance" },
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<id>&subject=<s>&bundle=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
