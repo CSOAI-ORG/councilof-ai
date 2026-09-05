@@ -12,6 +12,7 @@ import { LOBBY_TABS, normalizeLobbyTabId } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
 const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
+const HubResultsPane = lazy(() => import("@/components/hub/HubResultsPane"));
 const LobbyMatrixPane = lazy(
   () => import("@/components/lobby/LobbyMatrixPane"),
 );
@@ -63,7 +64,11 @@ const DashboardLearningPane = lazy(
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
   board: HomeGspcBoard, // canonical GET /api/gspc board + 22-axis strip, inside the shell (owner ruling 2 Sep)
-  results: HomeGspcBoard, // Stale iframe retired: one canonical native result surface.
+  // The published Hugging Face population (GET /api/hub-cards), NOT the board. Until
+  // 2026-09-05 this id rendered HomeGspcBoard, so `board` and `results` were two rail
+  // tabs onto one component and a tab labelled "Benchmark results" served the 22-axis
+  // board. The 699 signed Hub cells were being served and never rendered.
+  results: HubResultsPane,
   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
   terminal: LobbyBoardPane, // GSPC terminal
   console: DashboardConsolePane, // the ONE console — same file as /gspc-console.html and the HF Space

@@ -159,7 +159,7 @@ export const LOBBY_TABS: LobbyTab[] = [
     id: "results",
     label: "Benchmark results",
     blurb:
-      "The canonical living GSPC board — current measurements, fact runs and withheld leaders from the same native source as the main board.",
+      "Published Hugging Face results: third-party models on the Hub, with their own provenance and status. A separate population from the 22-axis board, never joined into it.",
     path: "",
     pathAliases: ["/benchmarks"],
     kind: "native",

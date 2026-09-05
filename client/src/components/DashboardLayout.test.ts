@@ -16,14 +16,30 @@ describe("dashboard consolidation details", () => {
     expect(dashboardActiveLabel("explore", "tab=explore")).toBe("All tools");
   });
 
-  it("renders benchmark results as the canonical native board", () => {
+  it("renders benchmark results natively, and not by duplicating the board", () => {
+    // The original invariant here was "no stale iframe": this pane once framed an
+    // external results page, and retiring it meant pointing the id at a native
+    // component. `kind: "native"` with an empty path is what actually enforces that,
+    // and it is still asserted.
+    //
+    // The old assertion also pinned the component to HomeGspcBoard, which made `board`
+    // and `results` two rail tabs onto one component — a tab labelled "Benchmark
+    // results" serving the 22-axis board, while GET /api/hub-cards served 699 signed
+    // Hub cells that nothing rendered. That pin was a proxy for "not an iframe", not a
+    // ruling that results must be the board, so it now asserts the opposite.
     expect(tabById("results")).toMatchObject({ kind: "native", path: "" });
     expect(hasPane("results")).toBe(true);
     const source = readFileSync(
       resolve(__dirname, "./DashboardPane.tsx"),
       "utf8",
     );
-    expect(source).toMatch(/results:\s*HomeGspcBoard/);
+    const line = source.split("\n").find((l) => /^\s*results:/.test(l));
+    expect(line, "no `results:` entry in the pane map").toBeTruthy();
+    expect(
+      line,
+      "`results` renders HomeGspcBoard again — that is the duplicate entry point, and " +
+        "it hides the published Hub population behind a second door onto the board",
+    ).not.toMatch(/HomeGspcBoard/);
   });
 
   it("keeps embedded page controls below the mobile Workspace button", () => {
