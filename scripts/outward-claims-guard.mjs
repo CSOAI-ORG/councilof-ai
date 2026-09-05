@@ -172,11 +172,12 @@ async function checkAxisCounts() {
  * follows it. Measured 2026-09-05 across all 330 distinct `io.github.CSOAI-ORG/*` servers:
  *
  *   248/248 PyPI packages sampled exist, at the EXACT advertised version.  <- packages are sound
- *    37/330 repository claims a stranger cannot follow, of a 248-server sample triaged by hand:
- *           11 repointable — CSOAI-ORG/<name> exists and is public
- *               · 5 declare github.com/CSAO-ORG/... — a typo for CSOAI-ORG
- *               · 6 declare no repository field at all
- *           23 have no public repo under either name
+ *
+ * CLOSED 2026-09-05 17:3x. Two entries — optometry-ai-safety-mcp and optometry-patient-mcp —
+ * declared github.com/CSOAI-ORG/<name> repositories that do not exist, while their PyPI packages
+ * do. Both were republished (1.0.11 and 1.0.6) WITHOUT the repository field, per the ruling: no
+ * invented repos. Every remaining entry either declares a repository that answers, or declares
+ * none.
  *
  * The first walk of this said 248 servers and 34 unfollowable. It stopped at ten pages and never
  * checked whether the cursor was exhausted, so it measured a prefix and reported it as a total.
@@ -196,7 +197,7 @@ async function checkAxisCounts() {
  * unnoticed, and it fails when the count goes DOWN without this number being lowered, so a fix
  * cannot be quietly un-recorded. Set REGISTRY_BASELINE=n to move it deliberately.
  */
-const REGISTRY_BASELINE = Number(process.env.REGISTRY_BASELINE ?? 37);
+const REGISTRY_BASELINE = Number(process.env.REGISTRY_BASELINE ?? 0);
 const REGISTRY = "https://registry.modelcontextprotocol.io/v0/servers";
 
 /** Semver-ish compare. Version parts are NUMBERS: "1.0.9" must lose to "1.0.10". */
@@ -254,16 +255,27 @@ async function checkRegistry() {
   if (latest.size === 0) return bad("mcp registry", "the search returned no CSOAI servers at all");
   ok("mcp registry", `${latest.size} distinct servers listed`);
 
-  // A repository claim a stranger cannot follow. Anonymous GET is enough to detect it;
-  // distinguishing "private" from "absent" needs a token and is a triage step, not a gate.
+  // A repository claim a stranger cannot follow.
+  //
+  // OWNER RULING 2026-09-05: an entry with NO repository field is VALID and is the correct end
+  // state for a server whose source is not public. The alternative — inventing a repo so the
+  // field can be filled — is the thing this whole guard exists to prevent. 24 entries are in
+  // that state deliberately.
+  //
+  // So the disagreement is narrower than "cannot be followed": it is a DECLARED url that does
+  // not answer. Counting the absent field as a defect made 0 FAIL unreachable by construction
+  // and would have pushed someone toward exactly the invented-repo fix the ruling forbids.
   const unfollowable = [];
+  let noField = 0;
   for (const s of latest.values()) {
     const url = s.repository?.url;
-    if (!url) { unfollowable.push(`${s.name}: no repository field`); continue; }
+    if (!url) { noField++; continue; }
     let status = 0;
     try { status = (await fetch(url, { headers: UA, redirect: "follow" })).status; } catch { status = 0; }
     if (status !== 200) unfollowable.push(`${s.name}: ${url} -> ${status || "unreachable"}`);
   }
+  ok("mcp registry repository field", `${noField} entries declare no repository, which the ` +
+    `2026-09-05 ruling makes the correct state for a server with no public source`);
 
   const n = unfollowable.length;
   if (n > REGISTRY_BASELINE) {
