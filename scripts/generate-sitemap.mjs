@@ -8,7 +8,7 @@
  *
  * Run: node scripts/generate-sitemap.mjs   (wired into `npm run build:client`)
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -45,11 +45,88 @@ try {
  * anything else: keep as-is.
  */
 function canonicalise(path) {
-  const to = redirectRules.get(path);
-  if (!to) return path;
-  if (to === path + "/") return to;
-  return null;
+  // A Pages Function that forwards wins over everything: the edge never serves this path.
+  if (functionRedirectRules.has(path)) {
+    const fnTo = functionRedirectRules.get(path);
+    return fnTo === path + "/" ? canonicaliseOnce(fnTo) : null;
+  }
+  return canonicaliseOnce(path);
 }
+
+/** One _redirects hop, then a final check that the destination itself serves. */
+function canonicaliseOnce(path) {
+  const to = redirectRules.get(path);
+  if (!to) return functionRedirectRules.has(path) ? null : path;
+  if (to !== path + "/") return null; // lands somewhere else entirely — drop
+  // The trailing-slash form is canonical ONLY if something actually serves it. /watchdog ->
+  // /watchdog/ is a real _redirects rule, but /watchdog/ is answered by a function that 308s
+  // to /os?lobby=home, so the rewritten URL is no more listable than the original.
+  return functionRedirectRules.has(to) ? null : to;
+}
+
+
+// --- Redirects implemented as Pages Functions (audit 2026-09-05) -------------
+// canonicalise() above reconciles against public/_redirects, which is the only redirect source
+// it ever knew about. But 29 retired routes redirect from a Pages FUNCTION instead — e.g.
+// functions/about-credential.ts returns `new Response(null, {status: 308, headers:{location:
+// "/honesty/"}})`. Those rules never appear in _redirects, so canonicalise() saw no rule,
+// returned the path unchanged, and the sitemap advertised 29 URLs that 308 away.
+//
+// Measured against the LIVE site before and after: 67 of 413 sitemap URLs answered 308.
+// 38 were blog articles (handled below), 29 were these.
+//
+// The scan is deliberately narrow: a function file counts only if it returns an explicit 3xx
+// status. A function that merely mentions a 3xx in a comment or handles one branch of a
+// redirect is not matched, because the regex requires the status literal in a Response init.
+const functionRedirectRules = new Map();
+function noteFunctionRedirect(path, target) {
+  if (!functionRedirectRules.has(path)) functionRedirectRules.set(path, target);
+}
+function scanFunctionRedirects(dir, urlPrefix = "") {
+  let entries = [];
+  try {
+    entries = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return;
+  }
+  for (const e of entries) {
+    const full = join(dir, e.name);
+    if (e.isDirectory()) {
+      scanFunctionRedirects(full, `${urlPrefix}/${e.name}`);
+      continue;
+    }
+    if (!e.name.endsWith(".ts") || e.name.endsWith(".test.ts")) continue;
+    let src = "";
+    try {
+      src = readFileSync(full, "utf8");
+    } catch {
+      continue;
+    }
+    // Two spellings, both real in this tree:
+    //   new Response(null, { status: 308, headers: { location: "/honesty/" } })
+    //   Response.redirect(scoreboardDestination(request).toString(), 308)
+    // The second has no statically knowable target, so it is recorded with target null and
+    // treated as "forwards somewhere" — which is all a sitemap needs to know to drop it.
+    // Matching only `status: 3xx` missed /gspc-scoreboard and /os, both of which 308.
+    const hasStatus3xx = /status:\s*3\d\d/.test(src);
+    const hasRedirectCall = /Response\.redirect\s*\(/.test(src);
+    if (!hasStatus3xx && !hasRedirectCall) continue;
+    const loc = src.match(/location:\s*["'`]([^"'`]+)["'`]/i);
+    const target = loc ? loc[1] : null;
+    const base = e.name.replace(/\.ts$/, "");
+    if (base === "index") {
+      // functions/watchdog/index.ts answers BOTH /watchdog and /watchdog/. Registering only the
+      // bare form let /watchdog/ through: canonicalise rewrote /watchdog -> /watchdog/ via a
+      // _redirects rule and never rechecked the result, so a path that 308s to /os?lobby=home
+      // stayed in the sitemap.
+      noteFunctionRedirect(urlPrefix || "/", target);
+      noteFunctionRedirect(`${urlPrefix}/`, target);
+    } else {
+      noteFunctionRedirect(`${urlPrefix}/${base}`, target);
+    }
+  }
+}
+scanFunctionRedirects(join(ROOT, "functions"));
 
 // --- Priority tiers -------------------------------------------------------
 const P_TOP = 0.9; // flagship public surfaces
@@ -186,9 +263,24 @@ const EXCLUDE_PREFIX = [
   "/certification/review",
 ];
 
+/**
+ * Asset extensions that can appear as a wouter <Route> but are never an indexable page.
+ * `.txt` is deliberately NOT here: /llms.txt is an intentional AI-discovery surface that
+ * answers 200 and is listed on purpose. The rule targets deleted scripts and binary assets,
+ * not every non-HTML file — an earlier version included txt and dropped llms.txt, which the
+ * sitemap-truth-gate caught.
+ */
+const NON_PAGE_EXT = /\.(?:js|mjs|cjs|css|map|ico|png|jpe?g|svg|webp|gif|woff2?|ttf)$/i;
+
 function isJunk(path) {
   if (reviewNoticePaths.has(path)) return true;
   if (EXCLUDE_EXACT.has(path)) return true;
+  // A sitemap lists pages, never scripts or assets. /stripe-checkout.js is declared as a route
+  // in route-manifest.ts and was therefore emitted; it answers 410 Gone, because Stripe was
+  // removed from this estate on purpose. Advertising a deleted script for indexing is wrong
+  // whatever it answers, so the rule is by kind rather than by status — and it is general,
+  // so the next asset route added does not repeat this.
+  if (NON_PAGE_EXT.test(path)) return true;
   return EXCLUDE_PREFIX.some((p) => path === p || path.startsWith(p));
 }
 
@@ -347,7 +439,18 @@ for (const slug of blogSlugs) {
   // Not snapshotted → the static host 404s it → it must not be in the sitemap.
   if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
   if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
-  if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
+  // THE TRAILING SLASH IS THE CANONICAL FORM AND IT IS NOT OPTIONAL. The prerender snapshots
+  // each article to /blog/<slug>/index.html, so the edge serves 200 at /blog/<slug>/ and 308s
+  // /blog/<slug> onto it. Pushing the bare path listed all 38 built articles at the URL that
+  // redirects — measured live 2026-09-05, every one of them answered 308.
+  //
+  // The /answers/ family below relies on canonicalise() to do this rewrite, which works there
+  // because generate-redirects emits an explicit /answers/<slug> -> /answers/<slug>/ rule for
+  // all 12. There is no equivalent rule for these 38 (the only 6 /blog/<slug> rules in
+  // _redirects send RETIRED articles to /blog/, and are correctly dropped by the branch above),
+  // so the slash is applied here rather than left to a rule that does not exist.
+  const canonicalBlog = bp + "/";
+  if (!seen.has(canonicalBlog)) { seen.add(canonicalBlog); paths.push(canonicalBlog); }
 }
 
 // The AEO answer explainers. /answers/:slug is a :param route (skipped above), so the 12

@@ -46,6 +46,14 @@ jobs:
       - name: Council truth gate — no simulated BFT or phantom engine doors
         run: npm run guard:council-truth
 
+      # Sitemap truth gate. Audited live 2026-09-05: 68 of 413 listed URLs did not answer 200
+      # — 67 redirects and one 410 Gone. A sitemap asks a crawler to index exactly these URLs,
+      # so a redirecting entry spends crawl budget being told to look elsewhere while the real
+      # page competes with the version being advertised. generate-sitemap.mjs now excludes them
+      # by construction; this holds it there.
+      - name: Sitemap truth gate — every listed URL is one the edge serves
+        run: npm run guard:sitemap-truth
+
       # _redirects guard. Cloudflare stops parsing the file after 100 DYNAMIC rules and
       # only warns; on 2026-08-26 that silently dropped the last 53 lines including the
       # SPA catch-all, and the deploy still went green. Selftest first so a guard that
