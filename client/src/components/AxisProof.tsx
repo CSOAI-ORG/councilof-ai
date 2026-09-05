@@ -121,7 +121,14 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                 const acc = accuracyCell(a);
                 const iv = intervalCell(a);
                 const sep = separationNote(a);
-                return (
+                // Sorted by accuracy so the reader sees the spread, not insertion order.
+                // Absent on every axis except jail today; absence renders nothing at all.
+                const cohort = a.per_model
+                  ? Object.entries(a.per_model).sort(
+                      ([, x], [, y]) => (y.accuracy ?? 0) - (x.accuracy ?? 0),
+                    )
+                  : null;
+                return [
                   <tr key={a.axis} className="border-t border-current/10">
                     <td className={`whitespace-nowrap px-5 py-3 font-semibold ${t.axis}`}>{a.axis}</td>
                     <td className={`whitespace-nowrap px-3 py-3 ${t.cell}`}>{a.bench || "—"}</td>
@@ -173,8 +180,74 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                         <span className={`text-[12px] ${t.muted}`}>{sep || a.status || "—"}</span>
                       )}
                     </td>
-                  </tr>
-                );
+                  </tr>,
+                  /* THE COHORT. Until 2026-09-05 GET /api/gspc served per_model — a complete
+                     confusion matrix per model — and nothing in client/ rendered it. A reader
+                     could see "leader accuracy 0.5915, TIE" and had no way to see who was in
+                     the comparison or how close it actually was. WP-2 asks for cohort; it was
+                     being served and dropped.
+
+                     Collapsed by default so the page at rest is unchanged and the table stays
+                     scannable. <details> is used deliberately: it is keyboard-operable and
+                     screen-reader-announced without any JS state of our own. */
+                  cohort && (
+                    <tr key={`${a.axis}-cohort`} className="border-t border-current/5">
+                      <td colSpan={6} className="px-5 pb-4 pt-0">
+                        <details className="group">
+                          <summary
+                            className={`cursor-pointer list-none text-[12px] font-semibold ${t.link} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2`}
+                          >
+                            <span className="group-open:hidden">Show the {cohort.length} models behind this row ▸</span>
+                            <span className="hidden group-open:inline">Hide the cohort ▾</span>
+                          </summary>
+                          <div className="mt-3 overflow-x-auto">
+                            <table className="w-full min-w-[520px] text-[12px]">
+                              <thead>
+                                <tr className={`text-left ${t.sub}`}>
+                                  <th className="whitespace-nowrap py-1 pr-4 font-semibold">Model</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">n</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">TP</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">FP</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">TN</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">FN</th>
+                                  <th className="whitespace-nowrap px-2 py-1 text-right font-semibold">Accuracy</th>
+                                </tr>
+                              </thead>
+                              <tbody className="font-mono">
+                                {cohort.map(([model, r]) => (
+                                  <tr key={model} className="border-t border-current/10">
+                                    <td className={`py-1.5 pr-4 font-sans ${t.cell}`}>
+                                      {model}
+                                      {r.quotable === false && (
+                                        <span className={`ml-2 font-sans text-[10px] ${t.muted}`}>not quotable</span>
+                                      )}
+                                    </td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>{r.n}</td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>{r.tp}</td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>{r.fp}</td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>{r.tn}</td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>{r.fn}</td>
+                                    <td className={`px-2 py-1.5 text-right tabular-nums ${t.cell}`}>
+                                      {typeof r.accuracy === "number" ? r.accuracy.toFixed(4) : "—"}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                          {/* Two things a reader will otherwise get wrong, so they are stated
+                              rather than left to be inferred from the columns. */}
+                          <p className={`mt-2 max-w-prose text-[11px] leading-relaxed ${t.muted}`}>
+                            Each row's TP+FP+TN+FN equals that model's own n. Per-model n varies
+                            because models differ in how many items they answered usably — it is
+                            not a share of the axis n ({a.n}), which counts gold items, and the
+                            two are never summed.
+                          </p>
+                        </details>
+                      </td>
+                    </tr>
+                  ),
+                ];
               })}
             </tbody>
           </table>

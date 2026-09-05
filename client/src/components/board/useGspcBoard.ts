@@ -55,7 +55,32 @@ export interface GspcAxis {
   /** Only read if the API starts publishing one. Never written by this file. */
   human_baseline?: number | { value?: number; accuracy?: number; source?: string; state?: string; note?: string };
   human_accuracy?: number;
+  /**
+   * The cohort behind a model-comparison figure: one row per model, each a complete
+   * confusion matrix. Served today only by `jail`; other axes carry no per-model table.
+   *
+   * `n` here is the model's own usable-response count and varies across the cohort
+   * (68/70/71 on jail, because models differ in how many items they answered usably).
+   * It is NOT a share of the axis `n`, and the two must never be summed or compared as
+   * though they counted the same thing — axis `n` is the gold-item count.
+   */
+  per_model?: Record<string, PerModelRow>;
+  /** The subset of `per_model` the board considers quotable. Must agree with the flags. */
+  quotable_models?: string[];
   [k: string]: unknown;
+}
+
+/** One model's result on an axis. tp+fp+tn+fn always equals this row's own `n`. */
+export interface PerModelRow {
+  n: number;
+  tp: number;
+  fp: number;
+  tn: number;
+  fn: number;
+  accuracy?: number;
+  precision?: number;
+  recall?: number;
+  quotable?: boolean;
 }
 
 export interface GspcTotals {
