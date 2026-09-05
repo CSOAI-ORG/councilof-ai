@@ -1,7 +1,7 @@
 # 24 — FedRAMP RFC-0032 public comment (GitHub Discussion, not email)
 
 segment: E / D — machine-readable minimum information; signed OSCAL observations; free witness half
-status: DRAFT — HOLD until endpoint 200 · deadline **8 Sep 2026** · nothing posted
+status: **POSTED 2026-09-04T14:23:59Z** — https://github.com/FedRAMP/community/discussions/158#discussioncomment-18290814 · comment period closes 8 Sep 2026 · the struck example sentence was NOT posted
 
 **Door:** https://www.fedramp.gov/rfcs/ (read 2026-09-02): RFC-0032 "Offerings By Government", opened 6 Aug 2026, closes 8 Sep 2026, comments via GitHub Discussions in the rfcs repository. https://www.fedramp.gov/rfcs/0032/ (read 2026-09-02): agency-operated cloud offerings obtain FedRAMP status under the agency's own authorisation while "preserving minimum government-wide information requirements to support reuse"; the Agency Certification Package "MUST" include at least the ATO letter with FIPS-199 level, SSP, POA&M, privacy assessment, security assessment; marketplace listings "MUST supply the necessary information required by [CDS-CSO-PUB]". The discussions index https://github.com/FedRAMP/rfcs/discussions returned 403/empty to this lane — the exact RFC-0032 thread URL is UNVERIFIED; the owner opens it in a browser.
 **Owner gate:** the comment links a live example. If `/api/evidence-bundle` is still 404 on 8 Sep, post the comment WITHOUT the example link (strike the bracketed sentence) — a comment linking a 404 is worse than none.
