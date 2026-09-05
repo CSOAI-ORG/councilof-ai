@@ -11,8 +11,8 @@ Where a surface cannot deliver, that is stated — never advertised.
 | evidence_bundle | Evidence bundle mapped to an obligation | /api/evidence-bundle |
 | data_feed | Signed data feed (assembly + cadence) | /api/eunomia-data |
 | rwa_evidence | XRPL asset evidence card (per request) | /api/rwa/evidence |
-| provider_diff_feed | Provider document diff feed | /api/provider-diff (feed) |
-| receipts_batch | Receipts batch — historical measurement leaves | /api/receipts-batch |
+| provider_diff_feed | Provider document diff feed | /api/feeds/provider-diff?history=1 |
+| receipts_batch | Receipts batch — historical measurement leaves | /api/receipts/batch?from=<iso>&to=<iso> |
 
 ## The door's resource set (8, /.well-known/x402.json)
 evidence-bundle · eu-ai-act-pack · swift-bank-pack · xrpl-asset-evidence ·
@@ -36,3 +36,9 @@ stated, not advertised)
 ## Live truth (16:55Z)
 - /pricing-free answers **200 but is WITHDRAWN under evidence review** (estate guard: 'This legacy page is temporarily withdrawn… until each claim has a source, scope, date, and evidence state'). Its wiring test remains the estate contract; the BUYER rail is /pricing (workspace, 'A grade is never sold') and /api/x402 (metered link in the governor's master, correct).
 - /pricing-free references inside this index are therefore flagged WITHDRAWN-UNDER-REVIEW, never 'advertised'.
+
+## The free door
+- /api/free-door — GET, 402 route priced at zero (settles, charges nothing). It is a LIVE door, not a withdrawn one (per the door's own resources note).
+
+## Manifest rule (applied 18:05)
+Every path in this index is probe-verified at write time (200/402/400). Two shortened paths (provider_diff_feed, receipts_batch) previously drifted from the catalog and were corrected on 2026-09-05T18:05Z against the live catalog resources. Re-verify any new row with `curl -w %{http_code}`.
