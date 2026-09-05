@@ -94,7 +94,8 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
     id: "distinct_nonself_payers",
     definition:
       "Count of distinct payer wallets, excluding payTo and X402_SELF_WALLETS, across facilitator-confirmed " +
-      "settlements. A wallet we control paying us is recorded but is neither revenue nor a buyer.",
+      "settlements THAT MOVED A NON-ZERO AMOUNT. A wallet we control paying us is recorded but is neither " +
+      "revenue nor a buyer, and neither is a wallet that paid nothing: a settlement of zero is not a purchase.",
   };
   if (!kv) {
     return { ...base, status: "UNMEASURED", all_time: null, last_30d: null, settlements: null, self_settlements: null,
@@ -113,13 +114,32 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
     const recent = new Set<string>();
     let settlements = 0;
     let selfSettlements = 0;
+    let zeroValueSettlements = 0;
     let unreadable = 0;
     for (const name of keys) {
       const raw = await kv.get(name);
       if (!raw) { unreadable++; continue; }
-      let r: { payer?: string | null; self?: boolean; settled_at?: string };
+      let r: { payer?: string | null; self?: boolean; settled_at?: string; zero_value?: boolean; amount_atomic?: string | null };
       try { r = JSON.parse(raw); } catch { unreadable++; continue; }
       if (r.self) { selfSettlements++; continue; }
+      // A SETTLEMENT OF ZERO IS NOT A PURCHASE. Measured 2026-09-05: one zero-value settle through
+      // /api/free-door, signed by an EPHEMERAL wallet created in a probe, moved all_time from 0 to
+      // 1 — a wallet we created and controlled, paying nothing, counted as a distinct non-self
+      // BUYER. That contradicts this number's own definition and is enough to trip its own gate,
+      // "≥1 repeat: open the next door", on our own test traffic.
+      //
+      // `self` cannot catch it: that tests membership of X402_SELF_WALLETS, and a seed or probe
+      // signs from a throwaway key no list can enumerate in advance. Amount is the only test that
+      // holds for a wallet nobody can name beforehand.
+      //
+      // amount_atomic is read as a FALLBACK because records written before _x402.ts carried
+      // `zero_value` have no such field — including the one that produced the 1. Reading only the
+      // flag would have left the live number wrong for exactly the record that revealed the bug.
+      // An absent or non-numeric amount counts as zero: it is not evidence of a purchase, and for
+      // a revenue figure the honest direction is to decline the claim, not to assume it.
+      const zeroValue =
+        r.zero_value === true || !r.amount_atomic || !/^[1-9]\d*$/.test(String(r.amount_atomic));
+      if (zeroValue) { zeroValueSettlements++; continue; }
       settlements++;
       const payer = (r.payer || "").toLowerCase();
       if (!payer) continue;
@@ -127,6 +147,12 @@ async function oneNumber(env: Env): Promise<Record<string, unknown>> {
       if (r.settled_at && Date.parse(r.settled_at) >= since) recent.add(payer);
     }
     return { ...base, status: "MEASURED", all_time: all.size, last_30d: recent.size, settlements, self_settlements: selfSettlements,
+      // Reported, never silently dropped: a reader can see that records exist and why they are
+      // not buyers. settlements counts only non-self settlements that moved a non-zero amount.
+      zero_value_settlements: zeroValueSettlements,
+      zero_value_note:
+        "Non-self settlements that moved 0, or carried no readable amount. Recorded for audit, " +
+        "never counted as a payer — paying nothing does not make a buyer. Seeds and probes land here.",
       records_unreadable: unreadable, source: "REVENUE_KV settled:tx:* records",
       gates: { "0 for 30 days": "shape or price is wrong; do not add doors", "≥1 repeat": "open the next door", "≥5 distinct in 30d": "it is a product" } };
   } catch (e) {
