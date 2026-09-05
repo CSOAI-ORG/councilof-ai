@@ -49,7 +49,7 @@
     },
     "chatgpt_custom_gpts": {
       "csoai_equivalent": "csoai:space",
-      "description": "Every Custom GPT becomes a csoai:space \u2014 hosted, signed, x402-priced.",
+      "description": "Every Custom GPT becomes a csoai:space — hosted, signed, x402-priced.",
       "card_kind": "space",
       "endpoints": [
         "/games/",
@@ -103,7 +103,7 @@
       "description": "Scheduled tasks. Every task emits a signed result.",
       "card_kind": "task",
       "endpoints": [
-        "/api/scheduler"
+        "/api/scheduler — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
       ]
     },
     "chatgpt_canvas": {
@@ -135,7 +135,7 @@
       "description": "Deep research pipeline. Every finding is signed + anchored.",
       "card_kind": "research",
       "endpoints": [
-        "/api/research"
+        "/api/research — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
       ]
     },
     "chatgpt_atlas": {
@@ -154,5 +154,15 @@
     "step_4": "Every ChatGPT API call becomes a csoai:benchmark (22-axis measurement)",
     "step_5": "Every ChatGPT prompt becomes a csoai:dataset (signed + attested)",
     "step_6": "ChatGPT Deep Research + our research pipeline = the only deep research pipeline with measurement + signing + anchoring"
+  },
+  "claims_audit_2026-09-05": {
+    "schema": "csoai.claims-audit/0.1",
+    "date": "2026-09-05",
+    "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
+    "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "not_implemented": [
+      "/api/research",
+      "/api/scheduler"
+    ]
   }
 }
