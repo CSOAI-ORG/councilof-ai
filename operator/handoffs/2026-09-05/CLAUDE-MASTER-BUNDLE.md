@@ -158,6 +158,7 @@ capabilities/ai-crawler-access.test.mjs
 capabilities/openapi-runtime-parity.test.mjs
 capabilities/agent-card-truth.test.mjs
 capabilities/x402-offer-truth.test.mjs
+capabilities/handoff-bundle-truth.test.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs

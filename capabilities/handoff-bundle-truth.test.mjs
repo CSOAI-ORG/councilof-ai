@@ -1,0 +1,111 @@
+/**
+ * handoff-bundle-truth.test.mjs — the handoff's own numbers, checked like everyone else's.
+ *
+ * This lane spent a day finding claims that were true when written and false by the time they
+ * were read: CLAUDE.md retiring an owner ruling, npm metadata a version behind, a component
+ * header asserting a signature that does not verify, eight game pages promising a signed card.
+ *
+ * The handoff bundle developed exactly the same disease, five times:
+ *
+ *   · Rollback said "only TWO commits have user-visible effect" at 53 commits, when 22 files do.
+ *     A reviewer reverting on that basis would have been misled.
+ *   · "unreachable routes — currently 2" long after this branch removed both.
+ *   · "capability drift incidents — baseline 1" long after six were caught.
+ *   · Three of four screenshots listed; the missing one was the WP-3 evidence.
+ *   · "Other 72 HTTP/A2A capabilities UNASSESSED — only MCP can be checked" after five more
+ *     surfaces had been probed.
+ *
+ * Every one was caught by re-reading, which is the mechanism that failed everywhere else in this
+ * estate. A document nobody re-reads is not evidence; it is a story about evidence. So the
+ * counts that a reader would act on are now asserted from the repository itself.
+ *
+ * NOT ASSERTED: prose. This checks numbers and file references — the claims that go stale on
+ * their own as the branch moves, without anyone touching the sentence.
+ */
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = path.dirname(fileURLToPath(import.meta.url));
+const repo = path.resolve(here, "..");
+const DIR = path.join(repo, "operator/handoffs/2026-09-05");
+const BUNDLE = path.join(DIR, "CLAUDE-MASTER-BUNDLE.md");
+const text = readFileSync(BUNDLE, "utf8");
+
+describe("the handoff bundle's own claims", () => {
+  it("references every screenshot that exists, and no screenshot that does not", () => {
+    const onDisk = readdirSync(DIR).filter((f) => /\.(jpg|jpeg|png)$/i.test(f));
+    assert.ok(onDisk.length > 0, "no screenshots in the handoff directory");
+
+    const unlisted = onDisk.filter((f) => !text.includes(f));
+    assert.deepEqual(
+      unlisted,
+      [],
+      `these screenshots are in the handoff directory but never referenced: ${unlisted.join(", ")}. ` +
+        `An unreferenced screenshot is evidence the reviewer never finds — this is how the WP-3 ` +
+        `image went missing from the section whose job is listing evidence.`,
+    );
+
+    const referenced = [...text.matchAll(/operator\/handoffs\/2026-09-05\/([\w.-]+\.(?:jpg|jpeg|png))/gi)].map(
+      (m) => m[1],
+    );
+    const missing = [...new Set(referenced)].filter((f) => !onDisk.includes(f));
+    assert.deepEqual(
+      missing,
+      [],
+      `the bundle points at screenshots that are not there: ${missing.join(", ")}`,
+    );
+  });
+
+  it("its capability-guard count matches the guards that exist", () => {
+    const files = readdirSync(here).filter((f) => f.endsWith(".test.mjs"));
+    assert.ok(files.length > 5, "the capabilities directory did not enumerate");
+    // The bundle quotes a passing count from `node --test capabilities/*.test.mjs`. That number
+    // is a TEST count, not a file count, so this asserts the weaker, stable thing: every guard
+    // file is named somewhere in the bundle, so none was added without being handed over.
+    const unmentioned = files.filter((f) => !text.includes(f));
+    assert.deepEqual(
+      unmentioned,
+      [],
+      `these capability guards exist but the handoff never names them: ${unmentioned.join(", ")}. ` +
+        `A guard root does not know about is a guard root will not run.`,
+    );
+  });
+
+  it("every file it lists under Files is actually in the branch", () => {
+    const block = text.slice(text.indexOf("## Files"), text.indexOf("## Tests"));
+    const listed = [...block.matchAll(/^([a-z][\w./*-]+\.\w+)$/gim)].map((m) => m[1]);
+    assert.ok(listed.length > 5, "the Files block did not parse");
+    const gone = listed.filter(
+      (f) => !f.includes("*") && !existsSync(path.join(repo, f)),
+    );
+    assert.deepEqual(
+      gone,
+      [],
+      `the handoff lists files that are not in the branch: ${gone.join(", ")}. Either they were ` +
+        `renamed after the list was written, or the list was aspirational.`,
+    );
+  });
+
+  it("its Rollback section still grades reverts by what they cost", () => {
+    // THE FIRST VERSION OF THIS ASSERTION FAILED ON THE FIXED BUNDLE. It searched for the
+    // absence of "Only TWO commits have user-visible effect" — and the corrected Rollback
+    // section QUOTES that sentence while explaining why it was wrong. The guard matched the
+    // documentation of the fix, not the fault. That is the fourth time in this session a guard
+    // of mine has done that, so it now asserts the presence of the correction rather than the
+    // absence of a phrase that legitimately appears in describing it.
+    const rollback = text.slice(text.indexOf("## Rollback"), text.indexOf("## Growth metrics"));
+    assert.ok(rollback.length > 400, "the Rollback section did not parse");
+    assert.match(
+      rollback,
+      /RESTORES AN UNTRUE CLAIM/,
+      "the Rollback section no longer separates reverts that merely undo an improvement from " +
+        "reverts that REPUBLISH something untrue. That distinction is the only reason the " +
+        "section is worth reading before reverting anything.",
+    );
+    assert.match(rollback, /REMOVES TRUE INFORMATION/);
+    assert.match(rollback, /invisible/i);
+  });
+});
