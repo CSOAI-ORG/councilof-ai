@@ -903,5 +903,37 @@
     "UNAVAILABLE": "declared but not served, and not deliberately gated — this is drift",
     "UNSUPPORTED": "not offered on this transport"
   },
-  "availability_scope_note": "Only MCP-declared capabilities carry an availability state. The other 72 HTTP/A2A entries are UNASSESSED and deliberately left without a field rather than given a fabricated one."
+  "availability_scope_note": "Only MCP-declared capabilities carry an availability state. The other 72 HTTP/A2A entries are UNASSESSED and deliberately left without a field rather than given a fabricated one.",
+  "transport_availability": {
+    "observed_at": "2026-09-05",
+    "method": "direct HTTP probe of each endpoint; states use the same five-value vocabulary as the MCP capabilities above",
+    "transports": {
+      "agui": {
+        "availability": "VERIFIED",
+        "reason": "GET /api/agui/gspc-state returns 200 and emits real STATE_DELTA / TEXT_MESSAGE_CONTENT SSE derived from /api/gspc. PRESENTATION ONLY — an AG-UI event never advances MEASURED, SIGNED or WITNESSED, and EOF is not a run completing.",
+        "endpoint": "/api/agui/gspc-state"
+      },
+      "agui_wire": {
+        "availability": "OWNER_GATED",
+        "reason": "GET /api/agui/wire returns 503 agui_wire_unconfigured. The general provider wire needs AGUI_WIRE_URL set; until then the central client consumes no AG-UI stream.",
+        "endpoint": "/api/agui/wire"
+      },
+      "a2a_discovery": {
+        "availability": "VERIFIED",
+        "reason": "GET /.well-known/agent-card.json returns 200, protocolVersion 1.0.0, 5 skills, 2 supportedInterfaces. DISCOVERY ONLY.",
+        "endpoint": "/.well-known/agent-card.json"
+      },
+      "a2a_tasks": {
+        "availability": "UNAVAILABLE",
+        "reason": "GET /api/a2a/key and /api/a2a both return 404. There is no public task send/get/cancel runtime, so the declared card is not backed by an executable A2A surface. Discovery is not a task runtime.",
+        "endpoint": "/api/a2a/key"
+      },
+      "a2ui": {
+        "availability": "UNSUPPORTED",
+        "reason": "GET /api/a2ui returns 404. No renderer endpoint and no proven component round trip, so no A2UI capability is offered on any transport.",
+        "endpoint": "/api/a2ui"
+      }
+    },
+    "note": "HTTP is authoritative. MCP exposes tools. AG-UI streams presentation events and cannot advance evidence state. A2A carries discovery today and no task identity. A2UI has no renderer. Nothing here may be described as live beyond its state."
+  }
 }
