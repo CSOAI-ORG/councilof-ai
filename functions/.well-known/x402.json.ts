@@ -5,6 +5,7 @@
  */
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "../api/_x402_config";
 import { USDC_BASE } from "../api/_skus";
+import PAID_TOOLS from "../mcp/paid-tools.json";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
@@ -25,17 +26,26 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
-      { method: "GET", url: `${origin}/api/witness?sha256=<64-hex>`, paid_for: "independent-signature", also: "POST raw bytes (hashed, dropped) or ?url=<https>", free_status: `${origin}/api/witness/status?sha256=<64-hex>` },
+      { method: "GET", url: `${origin}/api/art50/marking-evidence?vendor=<slug>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?vendor=<slug>&preview=1` },
       { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1` },
     ],
     mcp: {
       url: `${origin}/mcp`,
       transport: "streamable-http",
-      paid_tools: ["commission_card", "art50_marking_evidence", "rwa_evidence", "witness_hash", "receipts_batch"],
+      // Derived, never retyped: this list named witness_hash for as long as it took the SKU to be
+      // quarantined and dropped from the catalogue, and nothing failed. The catalogue is the truth.
+      paid_tools: PAID_TOOLS.tools.map((t) => t.name),
       free_tools: ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"],
       how: "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment",
     },
+    // Named, not hidden: an agent that cached an older manifest learns why the route now 503s
+    // instead of retrying a resource that cannot be sold.
+    quarantined: [
+      { url: `${origin}/api/witness?sha256=<64-hex>`, lifecycle: "QUARANTINED_PRE_RELEASE", buyable: false,
+        reason: "paid witness issuance is disabled until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps",
+        free_status: `${origin}/api/witness/status?sha256=<64-hex>` },
+    ],
     not: ["score", "certificate", "filled-cells", "pay-to-pass", "rank"],
     catalog: `${origin}/api/x402`,
     board: `${origin}/api/gspc`,
