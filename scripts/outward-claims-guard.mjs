@@ -343,6 +343,71 @@ async function checkPublishedToolCounts() {
   }
 }
 
+/**
+ * 6. SMITHERY — where the prose is right and the machine surface is wrong.
+ *
+ * csoai/gspc is listed, and its DESCRIPTION is accurate: "Remote HTTP (7 tools, no auth)",
+ * naming exactly the seven tools the live server serves free (11 total, 4 x402-paid). Measured
+ * 2026-09-05, everything a machine reads is not:
+ *
+ *   connections[0].deploymentUrl  https://gspc--csoai.run.tools  -> 401
+ *   tools[]                       measure, verify, jail-probe, enter-arena  <- none of these exist
+ *                                 and get_root, get_card, verify_inclusion  <- these are missing
+ *
+ * A human reading the listing gets the truth; a client reading the connection gets a locked door
+ * and four tools that are not there. That asymmetry is exactly what an outward-claims guard is
+ * for: our tests check what we do, and this checks what a third party says we do.
+ *
+ * The fix is on Smithery's side and needs the account, so this reports rather than repairs.
+ */
+const SMITHERY = "https://registry.smithery.ai/servers/csoai/gspc";
+
+async function checkSmithery() {
+  if (!process.env.CHECK_REGISTRY) {
+    return skip("smithery listing", "CHECK_REGISTRY unset — third-party listing, run it deliberately");
+  }
+  const r = await j(SMITHERY);
+  if (!r.body) return skip("smithery listing", `not JSON (HTTP ${r.status}) — third-party surface`);
+
+  // The live free set is the thing both surfaces claim to describe. Derive it; never type it.
+  const init = { method: "POST",
+    headers: { "content-type": "application/json", accept: "application/json, text/event-stream" },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }) };
+  const live = await j(`${SITE}/mcp`, init);
+  let payload = live.body;
+  if (!payload && live.text?.includes("data: ")) {
+    const line = live.text.split("\n").find((l) => l.startsWith("data: "));
+    try { payload = JSON.parse(line.slice(6)); } catch { /* */ }
+  }
+  const tools = payload?.result?.tools;
+  if (!Array.isArray(tools)) return skip("smithery listing", "live tools/list unavailable to compare against");
+  const paid = new Set(tools.filter((x) => JSON.stringify(x.inputSchema || {}).includes("x_payment")).map((x) => x.name));
+  const free = tools.map((x) => x.name).filter((n) => !paid.has(n));
+
+  const listed = (r.body.tools || []).map((x) => x.name).filter(Boolean);
+  const phantom = listed.filter((n) => !tools.some((x) => x.name === n));
+  const missing = free.filter((n) => !listed.includes(n));
+  if (phantom.length || missing.length) {
+    bad("smithery tools[]",
+      `lists ${phantom.length} tool(s) the server does not serve (${phantom.join(", ") || "none"}) ` +
+      `and omits ${missing.length} it does (${missing.join(", ") || "none"}). A client reading the ` +
+      `listing calls tools that are not there.`);
+  } else {
+    ok("smithery tools[]", `${listed.length} listed, all served`);
+  }
+
+  const dep = (r.body.connections || [])[0]?.deploymentUrl || r.body.deploymentUrl;
+  if (!dep) {
+    skip("smithery deploymentUrl", "the listing declares no connection URL to check");
+  } else {
+    const probe = await j(dep, init);
+    if (probe.status >= 200 && probe.status < 400) ok("smithery deploymentUrl", `${dep} answers ${probe.status}`);
+    else bad("smithery deploymentUrl",
+      `${dep} answers ${probe.status}; the description points clients at ${SITE}/mcp, which works. ` +
+      `The machine-readable connection is a door a client cannot open.`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -403,6 +468,7 @@ async function main() {
   await checkAxisCounts();
   await checkRegistry();
   await checkPublishedToolCounts();
+  await checkSmithery();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
