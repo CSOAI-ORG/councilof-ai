@@ -331,3 +331,87 @@ jobs:
 
       # csoai.org is the static apex (csoai-site-deploy.yml ← csoai-static-deploy2).
       # Do NOT redeploy the SPA to csoai-site — that overwrites did:web:csoai.org.
+
+  # ---------------------------------------------------------------------------
+  # OUTWARD CLAIMS — what we say about ourselves, to someone else.
+  #
+  # A SEPARATE JOB, deliberately. scripts/outward-claims-guard.mjs reads the LIVE surface, so it
+  # can only ask its question once the deploy has landed; running it as a pre-merge gate would
+  # test the PREVIOUS deploy and block a PR for a defect that PR fixes. Its own header says so.
+  #
+  # NON-BLOCKING by three separate mechanisms, because a reporting job must never be able to fail
+  # a deploy that already succeeded: it `needs` the deploy, it only runs when that deploy
+  # succeeded, and it is continue-on-error. The deploy's own permissions are untouched — this job
+  # declares its own, and `issues: write` lives here and nowhere else.
+  #
+  # ONE issue, refreshed — never a new issue per run. A guard that opens an issue every three
+  # hours is a guard people mute.
+  # ---------------------------------------------------------------------------
+  outward-claims:
+    needs: build-deploy
+    if: ${{ always() && needs.build-deploy.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    continue-on-error: true
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Outward-claims guard (live)
+        id: guard
+        env:
+          # The registry walk is ~330 HTTP requests. Deploys are frequent and the cron runs every
+          # three hours; asking the MCP registry that often is inconsiderate and adds nothing,
+          # so the expensive check runs on the SCHEDULED pass only.
+          CHECK_REGISTRY: ${{ github.event_name == 'schedule' && '1' || '' }}
+        run: |
+          set +e
+          node scripts/outward-claims-guard.mjs > outward.txt 2>&1
+          RC=$?
+          echo "exit=$RC" >> "$GITHUB_OUTPUT"
+          cat outward.txt
+          # The guard's own tally line is the source of the count — never recounted here, or the
+          # issue title and the report could disagree with each other.
+          #
+          # A GUARD THAT CRASHED MUST NOT REPORT ZERO. `grep ... || echo 0` did exactly that:
+          # with no tally line the title became "outward-claims: 0 disagreements", which is a
+          # false all-clear published on a schedule. The absence of a count is its own state.
+          N=$(grep -oE '[0-9]+ FAIL' outward.txt | tail -1 | grep -oE '[0-9]+')
+          if [ -z "$N" ]; then
+            echo "n=unknown" >> "$GITHUB_OUTPUT"
+            echo "::warning::outward-claims guard printed no tally (exit $RC) — reporting unknown, not zero"
+          else
+            echo "n=$N" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open or refresh the one outward-claims issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          N: ${{ steps.guard.outputs.n }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- outward-claims-guard -->"
+          TITLE="outward-claims: ${N} disagreements"
+          BODY="$(printf '%s\n\n_Refreshed by `deploy.yml` after a successful deploy on %s (%s). Guard: `scripts/outward-claims-guard.mjs`._\n\nThese are claims this estate publishes about itself on a surface someone else reads. A FAIL means the published claim and the thing it describes disagree; the fix belongs in the PRODUCER of the claim, not in the guard.\n\n```\n%s\n```\n' "$MARKER" "$(date -u +%FT%TZ)" "${GITHUB_SHA:0:12}" "$(cat outward.txt)")"
+
+          NUM="$(gh issue list --state open --limit 100 --json number,body \
+                  --jq "map(select(.body != null and (.body | contains(\"$MARKER\")))) | .[0].number // empty")"
+
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --title "$TITLE" --body "$BODY"
+            echo "refreshed issue #$NUM -> $TITLE"
+          elif [ "$N" != "0" ]; then
+            # Only OPEN one when there is something to report. A standing "0 disagreements"
+            # issue is noise; a refreshed one is a dashboard.
+            gh issue create --title "$TITLE" --body "$BODY" --label "outward-claims" 2>/dev/null \
+              || gh issue create --title "$TITLE" --body "$BODY"
+          else
+            echo "0 disagreements and no existing issue — nothing to open"
+          fi
+
+          # `unknown` is a real state and reaches the title verbatim: "outward-claims: unknown
+          # disagreements" reads as broken, which is what it is, and cannot be mistaken for clean.
