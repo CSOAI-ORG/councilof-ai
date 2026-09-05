@@ -54,3 +54,45 @@ if __name__ == "__main__":
     test_script_does_not_write_placeholder_ots()
     test_merkle_rule_matches_public_root_v1()
     print("layer0 ceremony fail-closed OTS test: PASS")
+
+
+def test_every_writer_of_the_ceremony_emits_its_own_disclaimer() -> None:
+    """The honesty boundary must live in the PRODUCER, not only in the committed JSON.
+
+    scripts/evidence-integrity-gate.mjs blocks the deploy unless
+    public/interop/layer0-ceremony.json carries status == "DISCOVERY_POINTER" and
+    claim_boundary.is_a_receipt / .is_a_bitcoin_anchor == false. Those fields were once
+    hand-added to the JSON while no generator emitted them, so every regeneration silently
+    stripped the file's own disclaimer. That fired on 2026-09-05: a run at 04:31 rebuilt the
+    ceremony without them and the deploy failed with "Layer 0 discovery path presents itself
+    as a receipt or Bitcoin anchor".
+
+    This test bites: with the emission removed from csoai-pqc-and-ots.py it fails, which is
+    exactly the state master was in when the deploy broke.
+    """
+    here = Path(__file__).parent
+    # A writer that BUILDS the document from scratch must state the boundary itself. A writer
+    # that reads-and-updates (json.loads then mutate) preserves whatever is already there.
+    for name in ("csoai-pqc-and-ots.py",):
+        text = (here / name).read_text()
+        assert "csoai.layer0-ceremony/0.1" in text, f"{name} no longer writes the ceremony"
+        assert '"status": "DISCOVERY_POINTER"' in text, (
+            f"{name} rebuilds layer0-ceremony.json without status=DISCOVERY_POINTER; "
+            "every run of it will strip the disclaimer and block the deploy"
+        )
+        assert '"is_a_receipt": False' in text, f"{name} omits claim_boundary.is_a_receipt"
+        assert '"is_a_bitcoin_anchor": False' in text, (
+            f"{name} omits claim_boundary.is_a_bitcoin_anchor"
+        )
+
+
+def test_the_served_ceremony_still_carries_the_boundary() -> None:
+    """And the artifact currently in the deploy tree must satisfy the gate's exact conditions."""
+    import json
+
+    doc = json.loads(
+        (Path(__file__).parents[2] / "public" / "interop" / "layer0-ceremony.json").read_text()
+    )
+    assert doc.get("status") == "DISCOVERY_POINTER"
+    assert doc.get("claim_boundary", {}).get("is_a_receipt") is False
+    assert doc.get("claim_boundary", {}).get("is_a_bitcoin_anchor") is False

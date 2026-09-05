@@ -281,8 +281,31 @@ if __name__ == "__main__":
     # 5. Update the layer 0 ceremony with the REAL receipts
     print()
     print("[5] Updating the layer 0 ceremony...")
+    # STATUS AND CLAIM_BOUNDARY ARE NOT DECORATION — scripts/evidence-integrity-gate.mjs blocks the
+    # deploy unless this document says, in these exact fields, that it is a pointer and not a proof:
+    #     status !== "DISCOVERY_POINTER"           -> BLOCKED
+    #     claim_boundary.is_a_receipt !== false     -> BLOCKED
+    #     claim_boundary.is_a_bitcoin_anchor !== false -> BLOCKED
+    #
+    # They used to be absent here and present in the committed JSON, i.e. hand-added once and
+    # destroyed by every regeneration. That fired on 2026-09-05: a regeneration at 04:31 dropped
+    # them and the deploy failed with "Layer 0 discovery path presents itself as a receipt or
+    # Bitcoin anchor" — a gate correctly refusing a file that had silently lost its own disclaimer.
+    # The producer emits them now, because a claim lives in the artifact AND in whatever writes it.
+    #
+    # The boundary is unconditional and stays that way. This file lists WHERE anchors can be
+    # verified; it is never itself the receipt, however many receipts the anchors below accumulate.
     ceremony = {
         "schema": "csoai.layer0-ceremony/0.1",
+        "status": "DISCOVERY_POINTER",
+        "claim_boundary": {
+            "is_a_receipt": False,
+            "is_an_ots_proof": False,
+            "is_a_bitcoin_anchor": False,
+            "is_a_measurement": False,
+            "is_a_certificate": False,
+            "what_it_is": "a pointer to where each anchor can be independently verified",
+        },
         "as_of": now(),
         "merkle_root": merkle_root,
         "cards_anchored": cards_anchored,
