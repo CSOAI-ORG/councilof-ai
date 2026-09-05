@@ -61,3 +61,28 @@ describe("the resolution measurement is internally consistent", () => {
     expect(doc.what_this_does_not_establish.join(" ")).toMatch(/not a working server|was not installed/i);
   });
 });
+
+describe("the coverage measurement keeps its weak number quarantined", () => {
+  const c = doc.coverage;
+
+  it("the classification accounts for every absent repo", () => {
+    expect(c.of_those_server_shaped + c.of_those_not_a_server).toBe(c.mcp_repos_absent_from_registry);
+    expect(c.mcp_repos_absent_from_registry).toBeLessThanOrEqual(c.mcp_named_unarchived);
+    expect(c.published_in_registry).toBeLessThanOrEqual(c.mcp_named);
+  });
+
+  it("says out loud that server-shape is a file heuristic, not a running server", () => {
+    expect(c.method).toMatch(/no repo was cloned, installed or run/i);
+  });
+
+  it("the 51 stays quarantined and never becomes a top-level claim", () => {
+    // It overcounts for two independent reasons and the authoritative answer (25) already exists.
+    // If a later edit promotes it out of this box it stops carrying its own refutation.
+    const q = c.a_number_deliberately_not_published;
+    expect(q.value).toBe(51);
+    expect(q.why_not).toMatch(/must not be quoted/i);
+    expect(q.why_not).toMatch(/\b25\b/);
+    const top = JSON.stringify({ ...c, a_number_deliberately_not_published: undefined });
+    expect(top).not.toMatch(/\b51\b/);
+  });
+});
