@@ -80,3 +80,27 @@ payloads — see upstream tree.
 
 If a future re-fetch fails or digests drift, mark the pin **UNCHECKABLE** and
 keep `source_urls` — do not invent a green check.
+
+---
+
+## D. Re-runner's warning: check out in binary mode
+
+Raised by Emek Can Doğru (VERAX Teknoloji / Conarium) while independently recomputing the
+tag vector on 2026-09-03, and caught the right way — by parsing rather than by hashing.
+
+**A text-mode checkout changes a fixture's file hash without changing the vector.** If git
+translates line endings on your platform, `sha256(file)` moves while the CBOR item inside is
+byte-identical. Re-runners then see a digest mismatch and reasonably conclude the fixtures
+have been tampered with, when nothing has.
+
+This is not hypothetical for this repository: the published preimages are byte-exact and the
+whole point of the exercise is that one byte moves the whole hash.
+
+    # before re-running anything here
+    git config core.autocrlf false
+    git config core.eol lf
+
+If a digest still disagrees, decode the CBOR and compare the *item*, not the file. A vector
+that parses to the same COSE_Sign1 with a different file hash is a checkout artefact, not a
+tampered fixture — and that distinction is exactly the VALID / INVALID / UNCHECKABLE call
+these fixtures exist to teach.
