@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `45d6c3dd68ffa932e9f037eccc0417f7b689f964` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `18551df77dd1b74256fb8e06117e734a0e6bc8f1` — 13 commits, 22 files changed, 1931 insertions(+), 107 deletions(-)
+**Rebased onto:** `d90e1082fbf9f57fbbc2104a76ec7f3d07674db0` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `4027a17e430e468fd4fb7b27b99f048655a57ca2` — 15 commits, 23 files changed, 2126 insertions(+), 107 deletions(-)
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~22 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~23 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -42,12 +42,15 @@ re-rebase.
 | `f2b7e167f` | handoff: bring the bundle up to the current head |
 | `6e8f15103` | handoff: master moved twice — re-rebase before applying |
 | `50f1fdf52` | gspc: the published Hub results were served and never rendered |
+| `072fec07c` | handoff: master moves every ~100s — re-rebase is mandatory |
+| `4ac1fb8ee` | capabilities: the journey's missing backends, measured rather than assumed |
 
 ## Files
 
 ```
 capabilities/cohort-provenance.test.mjs
 capabilities/hub-results.test.mjs
+capabilities/journey-backends.test.mjs
 capabilities/gspc-parity.test.mjs
 capabilities/install-truth.test.mjs
 capabilities/registry.json
@@ -74,7 +77,8 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
     npx vitest run client/src                                  111 files, 607 passed
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
-      LIVE_HUB=1 node --test capabilities/*.test.mjs           30 passed, 0 failed
+      LIVE_HUB=1 LIVE_JOURNEY=1 \
+      node --test capabilities/*.test.mjs                      35 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -84,6 +88,8 @@ Every guard was proven to fail before being trusted:
 - parity — both recorded gap lists were WRONG on first run and the live test corrected them
 - hub results — deleting the `status !== "MEASURED"` check in `displayAccuracy` fails three
   tests, one naming the consequence: an UNMEASURED cell's number rendered as a result
+- journey backends — recording `ras` as VERIFIED fails two tests, one offline on the record
+  and one live against the 404, each naming the consequence
 
 ## Screenshot
 
@@ -116,6 +122,33 @@ the page shows it.
 
 Both are listed as `KNOWN_DUPLICATES` in `routes.duplicate.test.ts`, and a third test asserts they
 are STILL duplicated — so the exception list cannot rot into permanent permission.
+
+## WP-3 and WP-6: the gap, now measured rather than asserted
+
+Re-probed 2026-09-05, unauthenticated, against production:
+
+| endpoint | result | state |
+|---|---|---|
+| `/api/findings` | 200, CSOAI fleet with schema + honesty + as_of | VERIFIED |
+| `/api/ras`, `/api/ras/status` | 404 `not_found` | UNAVAILABLE |
+| `/api/remediation` | 404 `not_found` | UNAVAILABLE |
+| `/api/jobs` | 404 `not_found` | UNAVAILABLE |
+| `/api/receipts/latest` | 200, `UNPUBLISHED`, items `[]`, count 0 | OWNER_GATED |
+
+The case model reaches **ask → scope → inspect → explain** and stops. Everything from
+`propose` onward has no runtime, so approve/fix/retest/receipt is not built — that would be
+the faked completed fix WP-3 forbids.
+
+`capabilities/journey-backends.test.mjs` **fails when the backend lands**: when TUI 1 ships
+the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
+the failure message says so, so nobody relaxes the assertion to make it pass.
+
+It also pins the honest client state — **zero** files under `client/` reference these
+endpoints, walked over every `.ts/.tsx` in `client/src`, so no new surface can quietly begin
+promising an execute path over a 404.
+
+WP-6's completed-job and receipt counts cannot be measured from runtime for the same reason,
+and are therefore not estimated.
 
 ## Dependencies
 
