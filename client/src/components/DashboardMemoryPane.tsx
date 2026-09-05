@@ -23,15 +23,25 @@ type MemoryEntry = {
 export default function DashboardMemoryPane() {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  // A failed read is NOT an empty store. The previous version swallowed the error and then
+  // rendered "No memory entries yet.", so an endpoint that was down looked exactly like a
+  // user who had none. Absence has to be distinguishable from not knowing.
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/memory")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error(`/api/memory returned HTTP ${r.status}`);
+        return r.json();
+      })
       .then((d) => {
         setEntries((d as { entries?: MemoryEntry[] }).entries ?? []);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((e) => {
+        setError(e instanceof Error ? e.message : String(e));
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -45,7 +55,12 @@ export default function DashboardMemoryPane() {
         </CardHeader>
         <CardContent>
           {loading ? (
-            <p className="text-sm text-muted-foreground">Loading…</p>
+            <p className="text-sm text-muted-foreground" role="status">Loading…</p>
+          ) : error ? (
+            <p className="text-sm text-red-600" role="alert">
+              Memory could not be read: {error}. This is not an empty store — nothing is known
+              either way until the endpoint answers.
+            </p>
           ) : entries.length === 0 ? (
             <p className="text-sm text-muted-foreground">No memory entries yet.</p>
           ) : (
