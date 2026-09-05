@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0905-01",
+      date: "2026-09-05",
+      what_was_wrong:
+        "The ONE root (public/root.json) is documented as republished hourly. Between 2026-09-02T04:14Z (last successful public-root run) and 2026-09-03T06:20Z (first successful run after GitHub reinstated Actions on the CSOAI-ORG account) it was not republished at all: the hourly runs from 05:14Z to 19:58Z on 2 Sep never started (Actions disabled for the account, Support ticket #4720908), and the eight runs from 2026-09-02T20:58Z to 2026-09-03T06:16Z failed at runner start. Cards signed in that window were not in any root a reader could fetch, and the witness pointer kept reporting the 04:14Z root as current, which it was — but nothing said the cadence had stopped.",
+      how_caught:
+        "Run history of .github/workflows/public-root.yml read back on 2026-09-05 after reinstatement: one success at 04:14Z, a gap with no runs at all, eight failures, then success at 06:20Z on 3 Sep. The gap is visible only in the run list; the root, the pointer and the site all looked normal during it.",
+      fix:
+        "This entry records the window. No root bytes were edited (none existed to edit). The as_of field on the root and the checked_at field on the pointer are the only honest freshness signals; HOW-TO-VERIFY-ROOT.md already tells a reader to re-fetch and compare rather than trust a MATCH observation. Structural fix, same day: the witness now also reports a CONFLICT state when two witnessed roots carry the same as_of and different merkle_root values, so a stalled or forked cadence is named rather than inferred.",
+      status: "RECORDED — a 26-hour publication gap, 2026-09-02T04:14Z to 2026-09-03T06:20Z; no bytes changed, cadence documented as not guaranteed",
+    },
+    {
       id: "C-2026-0903-01",
       date: "2026-09-03",
       what_was_wrong:
