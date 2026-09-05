@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-05T08:30:56Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:bIB01:avalanche",
+      "symbol": "bIB01",
+      "product": "Backed IB01 $ Treasury Bond 0-1yr",
+      "chain": "avalanche",
+      "chain_id": 43114,
+      "address": "0xca30c93b02514f86d5c86a6e375e3a330b435fb5",
+      "block": 94515428,
+      "block_hash": "0x3686eb4d27c32990d2a4115ae6779d04f7981ade040156671c02eb19b01a9daf",
+      "block_time": "2026-09-05T08:30:56Z",
+      "rpc": "api.avax.network",
+      "checked": {
+        "name": "Backed IB01 $ Treasury Bond 0-1yr",
+        "symbol": "bIB01",
+        "decimals": 18,
+        "totalSupply": "21000295821000000000000",
+        "isPaused": false,
+        "owner": "0x49754062e35f7591b93cc4f9915965be89643a65",
+        "sanctionsList": "0x40c57923924b5c5c5455c48d93317139addac8fb",
+        "pauser": "0x8768cda7a463dae1baa6b2500efb025ebd7ffc50",
+        "terms": "https://www.backedassets.fi/legal-documentation",
+        "eip1967_implementation": "0x28a0b491650fe761c8a66528422bc7ca24ecaeda",
+        "eip1967_admin": "0xf2057bdff8439dbffce073e14a9854945d5e5644"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 94515428 on avalanche, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "ac6f6effcfdfdd6c2610eba14dd3f69dd94dd3622dfada1d8e9b484ff64e63ca",
+    "sig_ed25519": "82f4680e95e725d9e11896433af3d0daaa8e83c005eaa14daf6089fb5f16890487f77891f6f15f4f3adb0aa8c037df5cc4cdbd786caf8ecc1fb19ce2b8819a0e",
+    "source_urls": [
+      "https://api.avax.network/ext/bc/C/rpc",
+      "https://snowscan.xyz/token/0xca30c93b02514f86d5c86a6e375e3a330b435fb5"
+    ],
+    "subject": "evm:bIB01:avalanche permission state at block 94515428",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:avalanche",
+      "coverage:permission-state",
+      "subject:bIB01"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ]
+  },
+  "proof": [
+    "475e2b0e627a39df1ead761a70f80ae36eed7685924511769c88d584f320705d",
+    "d0f21dcbb094fa1a37924d008b91b935008f12c5939ad84636cde19b10c3aa66",
+    "2044f1a413ad68d5ffc51d25fd338254fbd880a21b24ff7ab7af0f80d0e30b1b",
+    "96cc43ed1d44747fd8ee6685b9bad2a2dce1a29262c9c8029a4fa89d976604c2",
+    "71c6124fdfc9719eaacf100dd4b164fbd55a54973f7befeb8ff61e637e435acf",
+    "9e24fe17b14e89c99589db95d341e2877b5f024b1fa24eb7119b7423ca6c0022",
+    "48075e28397205449457c202f6bdec4f32583e83cdbb1762e62232ed5387dd2e",
+    "d4bc8e18e67a939ab5115b24bd0e06663c606003788b512599ffe976daf843b2"
+  ]
+}
