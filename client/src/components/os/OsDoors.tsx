@@ -1,4 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from "react";
+import { FREE_TOOL_NAMES } from "@/lib/mcpTools";
 import { Link, useLocation, useSearch } from "wouter";
 import { FOCUS } from "@/components/lobby/glass";
 import { osDoorHref, osPanelHref } from "@/lib/lobbyLink";
@@ -54,12 +55,24 @@ function CardsDoor() {
   );
 }
 
-const HARNESS_TOOLS_FALLBACK: { name: string; blurb: string }[] = [
-  { name: "board_totals", blurb: "live axis counts" },
-  { name: "get_axis", blurb: "single axis detail" },
-  { name: "verify_card", blurb: "check a signed card" },
-  { name: "list_cards", blurb: "published signed-card index" },
-];
+// The fallback shown when the live /mcp probe fails — which, during the 2026-09-05 outage, is
+// what every visitor actually sees. It listed FOUR tools while the door serves eleven, so the
+// page understated us most in the exact circumstance where it was the only thing on screen.
+// Derived now; the blurbs stay hand-written because only a human can write those.
+const TOOL_BLURBS: Record<string, string> = {
+  board_totals: "live axis counts",
+  get_axis: "single axis detail",
+  verify_card: "check a signed card",
+  list_cards: "published signed-card index",
+  get_root: "the current Merkle root",
+  get_card: "one card by id",
+  verify_inclusion: "prove a card is under the root",
+};
+
+const HARNESS_TOOLS_FALLBACK: { name: string; blurb: string }[] = FREE_TOOL_NAMES.map((name) => ({
+  name,
+  blurb: TOOL_BLURBS[name] ?? "free read",
+}));
 
 type McpProbe =
   | { status: "checking" }

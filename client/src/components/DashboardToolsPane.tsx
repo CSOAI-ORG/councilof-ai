@@ -6,24 +6,16 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import ToolRunner from "./ToolRunner";
+import { FREE_TOOL_NAMES, PAID_TOOL_NAMES } from "@/lib/mcpTools";
 import { useSearch } from "wouter";
 
-export const FREE_TOOLS = [
-  "board_totals",
-  "get_axis",
-  "verify_card",
-  "list_cards",
-  "get_root",
-  "get_card",
-  "verify_inclusion",
-] as const;
+// Derived from the two files the /mcp door reads, not typed. This list was correct on
+// 2026-09-05 and that is exactly the problem: a hand-kept duplicate of the door's tool set is
+// right until the day someone adds or drops a tool, and nothing here would have noticed.
+// /products carried the same kind of list and had drifted to four of eleven.
+export const FREE_TOOLS = FREE_TOOL_NAMES;
 
-export const METERED_TOOLS = [
-  "commission_card",
-  "art50_marking_evidence",
-  "rwa_evidence",
-  "receipts_batch",
-] as const;
+export const METERED_TOOLS = PAID_TOOL_NAMES;
 
 export const PUBLISHED_TOOL_COUNT = FREE_TOOLS.length + METERED_TOOLS.length;
 

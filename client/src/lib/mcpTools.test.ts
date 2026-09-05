@@ -40,3 +40,20 @@ describe("neither page carries a hand-typed tool list any more", () => {
     });
   }
 });
+
+describe("no component keeps its own copy of the door's tool set", () => {
+  // WHY: DashboardToolsPane's typed list was CORRECT on 2026-09-05, which is the trap — a
+  // hand-kept duplicate is right until someone adds a tool. OsDoors' fallback was already
+  // wrong at four of eleven, and during the outage the fallback is all anyone sees.
+  const components = ["../components/DashboardToolsPane.tsx", "../components/os/OsDoors.tsx"];
+  for (const c of components) {
+    it(`${c} derives its tool names`, () => {
+      const src = readFileSync(new URL(c, import.meta.url), "utf8");
+      expect(src).toMatch(/FREE_TOOL_NAMES/);
+      // a literal array of quoted tool names is the shape being banned
+      const literalRun = src.match(/"board_totals"\s*,\s*\n\s*"get_axis"/);
+      expect(literalRun, "a typed tool array is a duplicate of the door that cannot stay in step")
+        .toBeNull();
+    });
+  }
+});
