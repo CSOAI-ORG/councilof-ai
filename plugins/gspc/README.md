@@ -1,6 +1,8 @@
 # gspc — Council OS inside the tool you already use
 
-Seven tools: four GSPC (`board_totals` · `get_axis` · `verify_card` · `list_cards`) plus three public-root three-state (`get_root` · `get_card` · `verify_inclusion`).
+This plugin connects directly to `https://councilof.ai/mcp`. Ask that endpoint for
+`tools/list` to discover its current capabilities; the canonical definitions live in
+`functions/mcp/gspc-tools.json` and `functions/mcp/paid-tools.json`, not in copied plugin prose.
 Measurement, never certification. No 23rd axis. No sign. A 404 leaf is INVALID, not UNCHECKABLE.
 
 Strangers with a PDF and no Claude: use https://councilof.ai — verify, free, no plugin.
@@ -27,6 +29,6 @@ claude mcp add gspc -- npx -y csoai-gspc-mcp
 # { "mcpServers": { "gspc": { "url": "https://councilof.ai/mcp" } } }
 ```
 
-Council OS terminal `COMPUTE` reports the two-machine wire (census digest + AG-UI). It is not a fifth MCP tool.
+Council OS terminal `COMPUTE` reports the two-machine wire (census digest + AG-UI). It is not an MCP capability.
 
 Lifestyle MCPs are not this product.

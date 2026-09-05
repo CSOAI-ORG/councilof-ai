@@ -47,7 +47,7 @@ export const TERMINAL_ROWS: TerminalRow[] = [
     id: "moat-mcp",
     kind: "moat",
     title: "Already in the hosts",
-    does: "Four tools in Claude, Cursor, Kimi, Grok. The terminal is already where agents work.",
+    does: "The canonical HTTP /mcp tools/list catalogue is in Claude, Cursor, Kimi, Grok. The terminal is already where agents work.",
   },
   {
     id: "moat-census",
@@ -83,7 +83,7 @@ export const TERMINAL_ROWS: TerminalRow[] = [
     id: "forgot-stale-copy",
     kind: "forgot",
     title: "Stale inner copy",
-    does: "Source pack no longer types a 13-axis product; cite GET /api/gspc. mcp.json measured and planted both name board_totals · get_axis · verify_card · list_cards.",
+    does: "Source pack no longer types a 13-axis product; cite GET /api/gspc. mcp.json derives its HTTP inventory from the canonical tools/list definitions, with no copied shortlist.",
   },
   {
     id: "forgot-settle",

@@ -51,7 +51,7 @@ export const NSITES_BOOTSTRAP = [
 ] as const;
 
 export const PLUGIN_HARVEST = {
-  plugin_reads: "Public board, seven MCP tools, signed cards. Consent first.",
+  plugin_reads: "Public board, the live MCP tools/list catalogue, signed cards. Consent first.",
   plugin_never: [
     "user chat bodies",
     "covert telemetry",
@@ -158,8 +158,8 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     status: "planted",
     kind: "receipt",
     href: "https://councilof.ai/mcp",
-    plant: "Claude, Cursor, Kimi, Grok — one JSON, seven tools.",
-    note: "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion. No 23rd axis.",
+    plant: "Claude, Cursor, Kimi, Grok — one endpoint; discover capabilities with tools/list.",
+    note: "The endpoint serves the canonical MCP definitions. No copied shortlist. No 23rd axis.",
     snippet: MCP_SNIPPET,
   },
   {
@@ -169,7 +169,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://councilof.ai/.well-known/mcp.json",
     plant: "Layer-0 discovery. Agents fetch this, they do not scrape HTML.",
-    note: "Official registry id io.github.CSOAI-ORG/gspc v1.0.3.",
+    note: "Official registry id io.github.CSOAI-ORG/gspc. Read its descriptor for the implementation version.",
     snippet: "https://councilof.ai/.well-known/mcp.json",
   },
   {
@@ -189,7 +189,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc",
     plant: "Hosts that install from GitHub source. Consent first. No --trust until accepted.",
-    note: "Same seven tools as HTTP /mcp. Does not harvest chats or mint regulation scores.",
+    note: "Uses the live HTTP /mcp tools/list catalogue. Does not harvest chats or mint regulation scores.",
     snippet: PLUGIN_SNIPPET,
   },
   {
@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "Published npm 0.2.1 lists 12 tools (7 free + 5 x402). HTTP /mcp lists 11 because witness_hash is quarantined there.",
+    note: "The npm stdio package is separately versioned; ask its tools/list. witness_hash is quarantined on HTTP /mcp.",
     snippet: NPM_SNIPPET,
   },
   {
@@ -209,7 +209,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "registry",
     href: "https://councilof.ai/.well-known/agent-card.json",
     plant: "A2A discovery. Task service is still planned.",
-    note: "HTTP doors are not an A2A task service. MCP is not a supportedInterface.",
+    note: "HTTP doors are not an A2A task service. The MCP supportedInterface is a discovery pointer, not A2A task execution.",
     snippet: "https://councilof.ai/.well-known/agent-card.json",
   },
   {

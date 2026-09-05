@@ -9,9 +9,9 @@
  * pack.councilof.ai/v1/pack/assemble. Live today: /.well-known/x402.json is
  * csoai.x402/0.2, mode challenge-only, payTo configured, resources on councilof.ai.
  * pack.councilof.ai still serves the old mock and is owner-gated to retire.
- * is 404. A2A agent-card is live; task service is not. npm csoai-gspc-mcp
- * 0.2.1 lists twelve tools; HTTP /mcp lists eleven because witness_hash is
- * quarantined there. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
+ * is 404. A2A agent-card is live; task service is not. The npm package is
+ * separately versioned from HTTP /mcp; witness_hash is quarantined on the HTTP
+ * door. Official MCP id io.github.CSOAI-ORG/gspc. Evidence pack
  * csoai.insurability-evidence-pack/0.1 is 200. 100 free calls/day is the
  * typed allowance. Machine-access pricing is pending a published ruling.
  */
@@ -35,13 +35,13 @@ export const EARN_WEDGE =
   "Every host that can verify is a cash register for assembly the moment settlement exists. Until then, the same assembly invoices on enquiry.";
 
 export const OPEN_SDKS = [
-  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Seven read tools in Claude, Cursor, Kimi, Grok." },
-  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "stdio SDK. Published 0.2.1 lists 12 tools (7 free + 5 x402); HTTP /mcp lists 11 because witness_hash is quarantined there." },
-  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc v1.0.3." },
+  { id: "mcp-http", href: "https://councilof.ai/mcp", eats: "Live tools/list catalogue in Claude, Cursor, Kimi, Grok." },
+  { id: "npm", href: "https://www.npmjs.com/package/csoai-gspc-mcp", eats: "Separately versioned stdio SDK; ask its tools/list. witness_hash is quarantined on HTTP /mcp." },
+  { id: "registry", href: "https://registry.modelcontextprotocol.io", eats: "Official id io.github.CSOAI-ORG/gspc. Read its descriptor for the current implementation version." },
   { id: "plugin", href: "https://github.com/CSOAI-ORG/councilof-ai/tree/master/plugins/gspc", eats: "Grok / Cursor plugin. Consent first." },
   { id: "embed", href: "https://councilof.ai/embed.js", eats: "Partner pages read the live count. Never says certified." },
   { id: "badge", href: "https://councilof.ai/hf-badge.html", eats: "README board link or subject-bound signed-cell status. The global board is never a model score." },
-  { id: "a2a-card", href: "https://councilof.ai/.well-known/agent-card.json", eats: "Discovery. Four skills. Task service still planned." },
+  { id: "a2a-card", href: "https://councilof.ai/.well-known/agent-card.json", eats: "Discovery. Read skills from the agent card. Task service still planned." },
   { id: "x402-card", href: "https://councilof.ai/.well-known/x402.json", eats: "Agents already speak 402. Charge assembly. Board stays free." },
   { id: "ras-pack", href: "https://councilof.ai/api/evidence-pack", eats: "csoai.insurability-evidence-pack/0.1 — four-class mapping, live." },
   { id: "eunomia", href: "https://councilof.ai/eunomia-data", eats: "Data-only lane: enforcement record and deadlines. Never scores." },
@@ -110,7 +110,7 @@ export const OPENINGS: Opening[] = [
     title: "A2A paid tasks",
     eats: "Turn the live agent-card into real tasks: assemble pack, re-attest digest, fetch a dated census slice.",
     never: "Certification as a skill. MCP listed as if it were the task service.",
-    feed: "/.well-known/agent-card.json — four skills, no streaming, no push.",
+    feed: "/.well-known/agent-card.json — read the current skills there; no streaming, no push.",
     href: "https://councilof.ai/.well-known/agent-card.json",
   },
   {

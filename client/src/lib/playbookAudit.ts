@@ -63,7 +63,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
     id: "cursor-plugin",
     claim: "Cursor / Grok already have a GSPC plugin door.",
     verdict: "keep",
-    live: "Seven read tools on HTTP /mcp. Consent first. No inline 0–1 safety score. No FRIA stamp.",
+    live: "Capabilities come from HTTP /mcp tools/list. Consent first. No inline 0–1 safety score. No FRIA stamp.",
   },
   {
     id: "scitt-bind",
@@ -87,7 +87,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
     id: "stale-300-mcp",
     claim: "300+ MCP servers are this product and each is an axis test.",
     verdict: "stale",
-    live: "Planted door is four read tools. Extra catalogues are not GSPC.",
+    live: "The planted door is one MCP server; its capabilities come from tools/list. Extra catalogues are not GSPC.",
   },
   {
     id: "false-temples",
