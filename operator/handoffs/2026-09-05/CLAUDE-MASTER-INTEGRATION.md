@@ -1,37 +1,38 @@
-# Goal mode — Claude Master: product integration and release
+GOAL MODE: COUNCIL OS PRODUCT, INTEGRATION AND GROWTH
 
-Paste everything below into Claude Master.
+Own the coherent end-user product. TUI 1 owns RAS/evidence/remediation/payment internals; TUI 2 owns N-site discovery, source packs and distribution adapters. Codex/root alone integrates, merges, pushes and deploys. Work in an isolated branch. Do not overwrite another lane.
 
-```text
-GOAL MODE: MASTER INTEGRATION + RELEASE. Do not duplicate TUI 1 or TUI 2 implementation.
+READ FIRST
+operator/MASTER-RELEASE-LEDGER-2026-09-05.md
+operator/audits/COUNCIL-OS-RUNTIME-TRUTH-GATE-2026-09-05.md
+operator/COUNCIL-OS-BUSINESS-EAT-PLAYBOOK-2026-09-05.md
+Both other TUI handoffs. Recheck every dated claim against runtime.
 
-Canonical starting snapshot: origin/master 2bf948504db36502825871c258741c25dbf7e5bc, successful deploy 33934320792, 814/814 launcher-aligned pages, live root witness PASS, RunPod 3090 at 70/70 for 5 models × 14 model axes, A100 auto-resume disabled. Re-verify volatile facts before acting.
+MISSION
+One Council OS: ask -> scope -> inspect -> explain -> propose -> approve -> fix -> retest -> receipt -> monitor. Reuse what exists. Finish real journeys, not more pages, manifests or unsupported claims.
 
-Important preview truth: ports 4176 and 4181 are divergent old worktree builds, not current master. Do not use them for visual sign-off. Do not touch the dirty main checkout or sibling worktrees.
+1. ONE SHELL
+Keep /dashboard: left job navigation, centre chat/tool canvas, persistent bottom composer, right workspaces/history. Every public launcher opens this shell. Remove duplicate entry points and nested navigation without losing tools or user data.
 
-Objective: own one release ledger and turn verified lane outputs into one coherent Council OS product.
+2. ONE GSPC EXPERIENCE
+Reuse the canonical board on home and dashboard. Show source, observation date, instrument, cohort, sample size, ties and unavailable states. Current API has 22 axes: 14 model comparisons and 8 fact axes, not 22 industries. Only jail currently exposes seven full per-model rows; other axes lack complete tables. Never invent nine ranks.
+Expose published Hugging Face results visibly, with filters and provenance. Different mill-card cohorts belong in a clearly labelled results view, not silently joined into current board rankings. A signed result is not automatically verified. Coordinate producer/HF projection fixes with TUI 1/2.
 
-1. Reconcile every open branch and PR against current origin/master. Mark #1235/deploy-emergency instructions superseded. Consume TUI outputs only after their tests and truth gates pass.
-2. Establish one canonical route registry. Fail tests on exact duplicate React routes, divergent edge-redirect ownership, PRIMARY/current catalogue entries that render ContentReviewNotice, and surfaced industry links without working pages. Choose one owner each for /globe, /plugin, and /enterprise. Remove or label unavailable entries until real implementations pass gates.
-3. Preserve the one branded shell: chat-first centre, persistent bottom composer, tools/pages in the centre canvas, and workspace/tasks/chat history in the right rail. No second Council OS behind the bottom-right launcher.
-4. Establish one canonical RAS lifecycle:
-scope → collect → measure → explain → propose fix → human approve where required → execute safely → retest → attest → monitor → reopen/revoke.
-Signing and OTS prove evidence; they do not perform fixes or certify legal compliance.
-5. Build one safe end-to-end RAS journey before broadening: diagnose a card → explain exact defect → propose bounded reversible repair → explicit approval → repair in sandbox → reverify → downloadable candidate receipt. No payment, production mutation, signing, or external publication in the first journey.
-6. Make website, Council OS, plugin, extension, app, MCP, A2A, AG-UI/A2UI, and API consume the same capability registry and evidence contract. Reconcile the current contradictory tool counts (live MCP 11; plugin metadata 4; plugin README 7; other surfaces 12/11). Unavailable runtimes must be labelled unavailable, not implied live.
-7. Treat the product matrix as 22 axes × industry packs × subject adapters × user roles—not “22 industries.” Coliseum, city, simulation, learning, and policy lab are views over the same case/evidence graph, not independent products.
-8. Revalidate live security regressions: did:web resolution, no fabricated rail identifiers, bounded proof/card_count, published Merkle algorithm, exact-byte OTS state, and honest empty/error states. Never market the correlated council as BFT.
-9. Add E2E tests for stale deploy tabs, route truth, responsive layout, keyboard/a11y, session restoration, provider failure, action approval boundaries, and every surfaced catalogue destination. Add an aggregate JS budget; the current guard is per-file only.
-10. Maintain OWNER-GATES.md covering production deployment, external communications, npm/marketplace publication, signing-key operations, autonomous schedule activation, spending, and partnerships.
+3. REAL USER JOBS
+Guide public users, enterprises/GPAI providers, model/harness builders, regulators, insurers/procurers, COBOL operators and bonds/ledger/contract users through the same case model. Ask for role, subject/version, jurisdiction, purpose and consent. Label guides versus executable tools. Missing backends show the exact unavailable capability; never fake a completed fix.
+Keep human approval bound to the exact proposed change; preserve rollback, retest and evidence history. Separate learning participation from legal compliance and certification.
 
-Deliver:
-- MASTER-RELEASE-LEDGER.md
-- current-vs-stale claim register
-- canonical route/capability registries
-- dependency graph for TUI 1 and TUI 2
-- one tested RAS journey
-- clean exact-master local preview and screenshots
-- release-candidate manifest and owner approvals required
+4. PROTOCOLS AND INSTALL
+One versioned capability registry across HTTP, MCP, AG-UI, A2A, A2UI, SDK, plugin, extension and app. Test actual host support. AG-UI presentation events cannot advance evidence state. A2A discovery is not a working task runtime. A2UI needs a tested renderer round trip. Extension source/load-unpacked is not a store release. Guarded chat review is not execution.
 
-No production deploy, merge, external message, publication, key use, or financial action without Nicholas’s specific confirmation.
-```
+5. POLISH EXISTING DESIGN
+Preserve the restored homepage hero; no green gradient redesign. Refine existing images, copy, spacing and responsive layouts. Keep the Coliseum showcase and positive human-control messaging. Boss Chair is eight authored browser-practice rounds, not live human/AI competition or GSPC training. Show future games honestly. Use accessible keyboard controls and recoverable loading/error states.
+
+6. GROWTH THROUGH DELIVERED VALUE
+Connect free verification/results -> scoped requests -> delivered paid evidence/remediation -> change monitoring -> repeat use. Measure completed jobs, conversion, retention and verified receipts; not page counts or promised revenue. Improve installation, onboarding and clear paid deliverables. Draft outreach locally only; root owns sending.
+
+EXECUTION
+Inspect -> smallest useful patch -> negative tests -> desktop/mobile journey -> evidence -> next bounded task. Continue without asking about routine reads/edits/tests. Never send, publish, spend, use signing keys, enable schedules or delete data. Escalate those gates to root.
+
+HANDOFF
+Provide exact files/SHA, tests, screenshots, capability gaps, dependencies, growth metrics and rollback. No broad staging. One reviewed bundle to root. Done means reproducible end-user behaviour, not a green status label.

@@ -4,6 +4,11 @@ import { Link, useSearch } from "wouter";
 import { dashboardViewHref } from "@/lib/dashboardView";
 import BossChairPractice from "./BossChairPractice";
 
+export function playCardHref(route: string, label: string): string {
+  if (route === "/dashboard" || route.startsWith("/dashboard?")) return route;
+  return dashboardViewHref(route, label);
+}
+
 /**
  * LobbyPlay — the gold "Council OS — local play" section of the centre pane.
  *
@@ -89,8 +94,9 @@ export default function LobbyPlay() {
               The Boss&apos;s Chair
             </h3>
             <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
-              Decide which requests stay autonomous and which stop for human
-              approval. Every answer gets a plain-language explanation.
+              Practice the judgment that keeps people in charge: decide which
+              requests stay autonomous and which stop for human approval. Every
+              answer gets a plain-language explanation.
             </p>
             <Link
               href="/dashboard?tab=play&game=boss-chair"
@@ -183,7 +189,7 @@ export default function LobbyPlay() {
 
                 {live ? (
                   <Link
-                    href={dashboardViewHref(c.route!, c.title)}
+                    href={playCardHref(c.route!, c.title)}
                     className={`mt-3 inline-flex items-center gap-1.5 rounded-xl bg-amber-800 px-4 py-2 text-[12.5px] font-semibold text-white transition hover:bg-amber-900 motion-reduce:transition-none ${FOCUS}`}
                   >
                     {c.chip === "playable now"

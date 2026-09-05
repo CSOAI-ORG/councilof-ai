@@ -1,5 +1,5 @@
 /**
- * Home — living board first, then the Hub record, then the estate.
+ * Home — living board, playable Coliseum showcase, then the estate.
  * No demo video window in section one. No iframe of a Space.
  * Verify is free. We measure; we do not sell a rank.
  */
@@ -13,8 +13,7 @@ import HomeFilms from "@/components/home/HomeFilms";
 import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
 import LiveLeaderboard from "@/components/board/LiveLeaderboard";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
-import HfLivingRecord from "@/components/HfLivingRecord";
-import ReachStrip from "@/components/ReachStrip";
+import HomeColiseum from "@/components/home/HomeColiseum";
 import { gspcDatasetLd } from "@/lib/datasetSchema";
 import { setMetaDescription } from "@/lib/utils";
 
@@ -71,7 +70,7 @@ export default function HomeVerify() {
           {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
           <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/mcp">MCP · POST /mcp</a>
-            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
+            <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://github.com/CSOAI-ORG/councilof-ai/tree/master/extensions/chrome-gspc-verify" target="_blank" rel="noreferrer">Chrome extension source</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/tools">Grok plugin</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="/what-is-new.html">Hermes skill</a>
             <a className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm hover:border-slate-900" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">REST + curl</a>
@@ -130,9 +129,7 @@ export default function HomeVerify() {
           />
         </div>
 
-        <HfLivingRecord />
-
-        <ReachStrip />
+        <HomeColiseum />
 
         <section aria-labelledby="ask-h" className="mt-20 rounded-3xl border border-slate-200/80 bg-white p-6 shadow-[0_20px_44px_-32px_rgba(4,18,12,.45)] sm:mt-24 sm:p-8">
           <h2 id="ask-h" className="text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">

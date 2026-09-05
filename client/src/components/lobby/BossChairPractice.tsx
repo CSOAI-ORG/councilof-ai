@@ -127,8 +127,8 @@ export default function BossChairPractice({
               The Boss&apos;s Chair
             </h2>
             <p className="mt-2 max-w-sm text-sm leading-relaxed text-slate-200">
-              Keep routine work moving. Stop consequential decisions for a
-              human.
+              Put humans back in charge. Let AI handle the routine; keep
+              consequential decisions with you.
             </p>
           </div>
         </div>

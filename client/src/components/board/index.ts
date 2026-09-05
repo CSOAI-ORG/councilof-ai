@@ -24,4 +24,5 @@ export { useGspcBoard } from "./useGspcBoard";
 export type { GspcPayload, GspcAxis, GspcTotals } from "./useGspcBoard";
 
 export { default as LiveLeaderboard } from "./LiveLeaderboard";
+export { default as CanonicalGspcBoard } from "./CanonicalGspcBoard";
 export { default as HumanVsAiPanel } from "./HumanVsAiPanel";

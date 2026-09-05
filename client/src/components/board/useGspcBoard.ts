@@ -11,7 +11,7 @@
  * value is `null` when the payload does not carry it. Counts (how many axes, how
  * many measured) come from `totals` — never from a constant in this file.
  */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export interface GspcAxis {
   axis: string;
@@ -51,9 +51,22 @@ export interface GspcAxis {
   fleet_mean?: number;
   status?: "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED" | string;
   dataset?: string;
+  dataset_url?: string | null;
+  dataset_url_state?: string;
+  dataset_url_note?: string;
+  /** Why a measured model-comparison axis has no public leader figure. */
+  public_leader_state?: "EXCLUDED_OWN_MODEL" | "NO_SIGNED_CARD" | string;
   note?: string;
   /** Only read if the API starts publishing one. Never written by this file. */
-  human_baseline?: number | { value?: number; accuracy?: number; source?: string; state?: string; note?: string };
+  human_baseline?:
+    | number
+    | {
+        value?: number;
+        accuracy?: number;
+        source?: string;
+        state?: string;
+        note?: string;
+      };
   human_accuracy?: number;
   [k: string]: unknown;
 }
@@ -92,6 +105,18 @@ export interface GspcBoardState {
   /** Set to a human-readable reason when the board could not be read. */
   error: string | null;
   loading: boolean;
+  refreshing: boolean;
+  /** Browser receipt time for the last successful read, never the measurement date. */
+  observedAt: string | null;
+  /** Exact URL that supplied the last successful payload. */
+  sourceUrl: string | null;
+  /** A fresh network read. Concurrent callers share the same request. */
+  refresh: () => Promise<void>;
+}
+
+export interface GspcBoardOptions {
+  /** Disabled by default. When set, clamped to 30 s–5 min and paused while hidden. */
+  pollMs?: number;
 }
 
 export const GSPC_ENDPOINT = "/api/gspc";
@@ -99,7 +124,14 @@ export const GSPC_ENDPOINT = "/api/gspc";
 /** Live origin used only when the relative fetch returns HTML (prerender on localhost). */
 const LIVE_GSPC = "https://councilof.ai/api/gspc";
 
-let inflight: Promise<GspcPayload> | null = null;
+interface GspcRead {
+  data: GspcPayload;
+  sourceUrl: string;
+  observedAt: string;
+}
+
+let inflight: Promise<GspcRead> | null = null;
+let refreshInflight: Promise<GspcRead> | null = null;
 
 async function fetchGspcPayload(url: string): Promise<GspcPayload> {
   const r = await fetch(url, { headers: { accept: "application/json" } });
@@ -116,48 +148,203 @@ async function fetchGspcPayload(url: string): Promise<GspcPayload> {
   try {
     return JSON.parse(trimmed) as GspcPayload;
   } catch (e) {
-    throw new Error(`${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`);
+    throw new Error(
+      `${url} was not JSON — ${e instanceof Error ? e.message : String(e)}`,
+    );
   }
 }
 
-/** One fetch per page load, shared by every board component. */
-export function loadGspcBoard(): Promise<GspcPayload> {
+async function fetchGspcRead(): Promise<GspcRead> {
+  try {
+    return {
+      data: await fetchGspcPayload(GSPC_ENDPOINT),
+      sourceUrl: GSPC_ENDPOINT,
+      observedAt: new Date().toISOString(),
+    };
+  } catch (e) {
+    const msg = String((e as Error)?.message ?? e);
+    if (!/HTML|not JSON|Unexpected token/i.test(msg)) throw e;
+    return {
+      data: await fetchGspcPayload(LIVE_GSPC),
+      sourceUrl: LIVE_GSPC,
+      observedAt: new Date().toISOString(),
+    };
+  }
+}
+
+function loadGspcRead(): Promise<GspcRead> {
   if (!inflight) {
-    inflight = fetchGspcPayload(GSPC_ENDPOINT)
-      .catch((e) => {
-        const msg = String((e as Error)?.message ?? e);
-        if (/HTML|not JSON|Unexpected token/i.test(msg)) {
-          return fetchGspcPayload(LIVE_GSPC);
-        }
-        throw e;
-      })
-      .catch((e) => {
-        inflight = null; // let a remount retry rather than cache a failure forever
-        throw e;
-      });
+    inflight = fetchGspcRead().catch((e) => {
+      inflight = null; // let a remount retry rather than cache a failure forever
+      throw e;
+    });
   }
   return inflight;
 }
 
-export function useGspcBoard(): GspcBoardState {
-  const [state, setState] = useState<GspcBoardState>({ data: null, error: null, loading: true });
+/** One fetch per page load, shared by every board component. */
+export function loadGspcBoard(): Promise<GspcPayload> {
+  return loadGspcRead().then((read) => read.data);
+}
 
-  useEffect(() => {
-    let live = true;
-    loadGspcBoard()
-      .then((d) => { if (live) setState({ data: d, error: null, loading: false }); })
-      .catch((e) => { if (live) setState({ data: null, error: String(e?.message ?? e), loading: false }); });
-    return () => { live = false; };
+/** Fresh read used by the board's manual and bounded-poll refresh controls. */
+export function refreshGspcBoard(): Promise<GspcRead> {
+  if (!refreshInflight) {
+    refreshInflight = fetchGspcRead()
+      .then((read) => {
+        inflight = Promise.resolve(read);
+        return read;
+      })
+      .catch((error) => {
+        inflight = null;
+        throw error;
+      })
+      .finally(() => {
+        refreshInflight = null;
+      });
+  }
+  return refreshInflight;
+}
+
+export const MIN_GSPC_POLL_MS = 30_000;
+export const MAX_GSPC_POLL_MS = 5 * 60_000;
+
+/** A board cannot accidentally become a hot loop, even if a caller passes 1 ms. */
+export function boundedGspcPollMs(value: number | undefined): number | null {
+  if (typeof value !== "number" || !Number.isFinite(value) || value <= 0)
+    return null;
+  return Math.min(
+    MAX_GSPC_POLL_MS,
+    Math.max(MIN_GSPC_POLL_MS, Math.round(value)),
+  );
+}
+
+const EMPTY_REFRESH = async () => {};
+
+export function useGspcBoard(options: GspcBoardOptions = {}): GspcBoardState {
+  const [state, setState] = useState<GspcBoardState>({
+    data: null,
+    error: null,
+    loading: true,
+    refreshing: false,
+    observedAt: null,
+    sourceUrl: null,
+    refresh: EMPTY_REFRESH,
+  });
+  const mounted = useRef(true);
+
+  const refresh = useCallback(async () => {
+    if (mounted.current) setState((s) => ({ ...s, refreshing: true }));
+    try {
+      const read = await refreshGspcBoard();
+      if (mounted.current) {
+        setState((s) => ({
+          ...s,
+          data: read.data,
+          error: null,
+          loading: false,
+          refreshing: false,
+          observedAt: read.observedAt,
+          sourceUrl: read.sourceUrl,
+        }));
+      }
+    } catch (e) {
+      if (mounted.current) {
+        setState((s) => ({
+          ...s,
+          error: String((e as Error)?.message ?? e),
+          loading: false,
+          refreshing: false,
+        }));
+      }
+    }
   }, []);
 
-  return state;
+  useEffect(() => {
+    mounted.current = true;
+    let live = true;
+    loadGspcRead()
+      .then((read) => {
+        if (live) {
+          setState({
+            data: read.data,
+            error: null,
+            loading: false,
+            refreshing: false,
+            observedAt: read.observedAt,
+            sourceUrl: read.sourceUrl,
+            refresh,
+          });
+        }
+      })
+      .catch((e) => {
+        if (live) {
+          setState({
+            data: null,
+            error: String((e as Error)?.message ?? e),
+            loading: false,
+            refreshing: false,
+            observedAt: null,
+            sourceUrl: null,
+            refresh,
+          });
+        }
+      });
+    return () => {
+      live = false;
+      mounted.current = false;
+    };
+  }, [refresh]);
+
+  useEffect(() => {
+    const every = boundedGspcPollMs(options.pollMs);
+    if (
+      every === null ||
+      typeof document === "undefined" ||
+      typeof window === "undefined"
+    )
+      return;
+
+    let timer: number | null = null;
+    const stop = () => {
+      if (timer !== null) window.clearInterval(timer);
+      timer = null;
+    };
+    const start = () => {
+      stop();
+      if (document.visibilityState === "hidden") return;
+      timer = window.setInterval(() => {
+        void refresh();
+      }, every);
+    };
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden") stop();
+      else {
+        void refresh();
+        start();
+      }
+    };
+
+    start();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      stop();
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [options.pollMs, refresh]);
+
+  return { ...state, refresh };
 }
 
 /* ── honest readers ──────────────────────────────────────────────────────── */
 
 /** A slot carries a quotable figure only when it is MEASURED and the number is real. */
 export function hasFigure(a: GspcAxis): boolean {
-  return a.status === "MEASURED" && typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
+  return (
+    a.status === "MEASURED" &&
+    typeof a.accuracy === "number" &&
+    Number.isFinite(a.accuracy)
+  );
 }
 
 /**
@@ -169,7 +356,8 @@ export function hasFigure(a: GspcAxis): boolean {
 export function orderedRows(data: GspcPayload | null): GspcAxis[] {
   const axes = Array.isArray(data?.axes) ? [...(data!.axes as GspcAxis[])] : [];
   return axes.sort((x, y) => {
-    const fx = hasFigure(x), fy = hasFigure(y);
+    const fx = hasFigure(x),
+      fy = hasFigure(y);
     if (fx !== fy) return fx ? -1 : 1;
     if (!fx) return 0;
     return (y.accuracy as number) - (x.accuracy as number);
@@ -222,9 +410,14 @@ const num = (v: unknown): number | null =>
 export function findHumanBaseline(data: GspcPayload | null): HumanLeg | null {
   if (!data) return null;
 
-  const fromObject = (o: Record<string, unknown> | undefined | null): HumanLeg | null => {
+  const fromObject = (
+    o: Record<string, unknown> | undefined | null,
+  ): HumanLeg | null => {
     if (!o || typeof o !== "object") return null;
-    const v = num((o as any).value) ?? num((o as any).accuracy) ?? num((o as any).score);
+    const v =
+      num((o as any).value) ??
+      num((o as any).accuracy) ??
+      num((o as any).score);
     if (v === null) return null;
     return {
       value: v,
@@ -238,20 +431,37 @@ export function findHumanBaseline(data: GspcPayload | null): HumanLeg | null {
   const direct = fromObject(data.human_baseline as Record<string, unknown>);
   if (direct) return direct;
 
-  const flat = num((data.human_baseline as unknown) ?? (data.totals as any)?.human_baseline);
+  const flat = num(
+    (data.human_baseline as unknown) ?? (data.totals as any)?.human_baseline,
+  );
   if (flat !== null) {
-    return { value: flat, label: "human baseline", source: "stated in the /api/gspc payload", state: "REPORTED" };
+    return {
+      value: flat,
+      label: "human baseline",
+      source: "stated in the /api/gspc payload",
+      state: "REPORTED",
+    };
   }
 
   for (const a of [...(data.axes ?? []), ...(data.measured_in_lane ?? [])]) {
     const nested = fromObject(a.human_baseline as Record<string, unknown>);
-    if (nested) return { ...nested, label: nested.label === "human baseline" ? `${a.axis} — human baseline` : nested.label };
+    if (nested)
+      return {
+        ...nested,
+        label:
+          nested.label === "human baseline"
+            ? `${a.axis} — human baseline`
+            : nested.label,
+      };
     const v = num(a.human_baseline as unknown) ?? num(a.human_accuracy);
     if (v !== null) {
       return {
         value: v,
         label: `${a.axis} — human baseline`,
-        source: typeof a.dataset === "string" ? a.dataset : "stated on the axis in /api/gspc",
+        source:
+          typeof a.dataset === "string"
+            ? a.dataset
+            : "stated on the axis in /api/gspc",
         state: "REPORTED",
       };
     }

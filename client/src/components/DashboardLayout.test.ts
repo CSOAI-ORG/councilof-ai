@@ -25,7 +25,9 @@ describe("dashboard consolidation details", () => {
       resolve(__dirname, "./DashboardPane.tsx"),
       "utf8",
     );
-    expect(source).toMatch(/results:\s*HomeGspcBoard/);
+    expect(source).toMatch(/board:\s*CanonicalGspcBoard/);
+    expect(source).toMatch(/results:\s*CanonicalGspcBoard/);
+    expect(source).not.toMatch(/(?:board|results):\s*HomeGspcBoard/);
   });
 
   it("keeps embedded page controls below the mobile Workspace button", () => {

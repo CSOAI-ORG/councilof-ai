@@ -1,12 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
-import {
-  Archive,
-  ArrowRight,
-  Compass,
-  Search,
-  Wrench,
-} from "lucide-react";
+import { Archive, ArrowRight, Compass, Search, Wrench } from "lucide-react";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import {
   classify,
@@ -22,6 +16,7 @@ import {
   type LobbyRouteGroup,
 } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
+import IndustryWorkflows from "@/components/IndustryWorkflows";
 import {
   dashboardViewFromSearch,
   dashboardViewHref,
@@ -252,6 +247,10 @@ export default function DashboardCataloguePane() {
             </div>
           ))}
         </dl>
+      </div>
+
+      <div className="my-8">
+        <IndustryWorkflows />
       </div>
 
       <div className="sticky top-0 z-10 -mx-2 mt-5 border-b border-border bg-background/95 px-2 pb-4 pt-2 backdrop-blur">

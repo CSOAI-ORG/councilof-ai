@@ -11,7 +11,9 @@ import { Link } from "wouter";
 import { LOBBY_TABS, normalizeLobbyTabId } from "@/components/lobby/tabs";
 import DashboardEmbeddedView from "@/components/DashboardEmbeddedView";
 const LobbyBoardPane = lazy(() => import("@/components/lobby/LobbyBoardPane"));
-const HomeGspcBoard = lazy(() => import("@/components/home/HomeGspcBoard"));
+const CanonicalGspcBoard = lazy(
+  () => import("@/components/board/CanonicalGspcBoard"),
+);
 const LobbyMatrixPane = lazy(
   () => import("@/components/lobby/LobbyMatrixPane"),
 );
@@ -62,8 +64,8 @@ const DashboardLearningPane = lazy(
 
 const PANES: Record<string, React.LazyExoticComponent<any>> = {
   // home: DashboardWorkspace owns the chat-first landing — no separate pane.
-  board: HomeGspcBoard, // canonical GET /api/gspc board + 22-axis strip, inside the shell (owner ruling 2 Sep)
-  results: HomeGspcBoard, // Stale iframe retired: one canonical native result surface.
+  board: CanonicalGspcBoard, // one canonical GET /api/gspc board, shared with the home and terminal surfaces
+  results: CanonicalGspcBoard, // Stale iframe and duplicate renderer retired: one native result surface.
   leaderboard: Page_Leaderboard, // the full model x axis table, in-shell
   terminal: LobbyBoardPane, // GSPC terminal
   console: DashboardConsolePane, // the ONE console — same file as /gspc-console.html and the HF Space

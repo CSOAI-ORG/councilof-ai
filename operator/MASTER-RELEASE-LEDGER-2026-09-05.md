@@ -67,7 +67,8 @@ Verified on this candidate:
 
 ### P1 — learning, games, and simulation
 
-- Council Space is the only live game surface.
+- Council Space renders recorded historical runs, not a new live networked battle.
+- Boss Chair now has eight authored browser-practice rounds in the local candidate, with desktop/mobile error, completion and retry coverage. Its scores do not update GSPC, train a model or create signed evidence.
 - Current arena battles, quests, city/town, and training states are prototypes or frozen/local experiences.
 - Implement them as views over one case/evidence graph; do not create separate truth systems.
 
@@ -103,3 +104,13 @@ Signatures and timestamps prove the scoped evidence/result. They do not make the
 - One RAS journey completes locally with explicit approval and candidate receipt.
 - Every visible capability is LIVE, READ_ONLY, PREVIEW, UNAVAILABLE, or OWNER_GATED—never implied.
 - No BFT, certification, compliance, OTS-confirmed, signing, or revenue claim exceeds the evidence.
+
+## Latest local refinement checkpoint — 5 September
+
+- Original homepage hero preserved after the owner rejected the redesign. The HF directory/reach blocks are replaced by a bounded Coliseum showcase; the six lower topics use more compact image/copy layouts, optional technical detail and positive human-authority cards. No live-model game is implied.
+- Seven role-based tool guides share the dashboard catalogue and prepare, but never auto-send, a scoped Council question.
+- Canonical GSPC renderer is mounted on home, board, results and terminal routes. Current board source publishes a complete per-model table for jail only (seven rows); thirteen other model axes lack full comparable rows and eight fact axes have no model ranking. Missing scores and TIEs remain explicit.
+- The existing `/api/hub-cards` is being integrated as a separate HF model-card view, not joined into current-board rankings. Its source statuses, dates, sample sizes and provenance stay visible. Backend metadata additions are local until released.
+- Three TUI handoffs and the business EAT playbook are updated. Master brief is 3,972 characters. TUI 1 owns evidence/remediation/revenue, TUI 2 owns N-site/source distribution, Master owns product/protocol experience; Codex/root coordinates integration and release.
+- Regression at this checkpoint: 172 Vitest files / 1,793 tests pass; production Vite client compilation passes. Home/game/role journeys pass at 1440 and 390 px. HF-specific browser parity is checked separately before handoff. The Vite compile is not the full deployment/prerender/witness pipeline.
+- No push, merge, production deployment, payment, external publication or outbound email was performed in this refinement pass. Private email review is stored outside the repository.

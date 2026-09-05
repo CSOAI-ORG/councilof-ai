@@ -44,8 +44,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("defaultExpanded");
     expect(src).not.toContain("HomeDemoLoop");
     expect(src).not.toContain("PluginBlock");
-    expect(src).toContain("HfLivingRecord");
-    expect(src).toContain("ReachStrip");
+    expect(src).toContain("HomeColiseum");
     expect(src).toContain("Printers of the live board");
     expect(src).not.toContain("glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc");
     expect(src).not.toContain("glama.ai/mcp/servers/CSOAI-ORG/councilof-ai");
@@ -128,8 +127,9 @@ describe("home lock — later merges must not restore the desk video", () => {
   it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
     expect(home).toContain("LiveLeaderboard");
-    expect(home).toContain("HfLivingRecord");
-    expect(home).toContain("ReachStrip");
+    expect(home).toContain("HomeColiseum");
+    expect(home).not.toContain("HfLivingRecord");
+    expect(home).not.toContain("ReachStrip");
     expect(home).toContain("The living board");
     expect(home).toMatch(/Check a claim\. Request a measurement\./);
     expect(home).not.toContain("HomeDemoLoop");
