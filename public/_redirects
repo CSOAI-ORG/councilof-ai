@@ -9,12 +9,12 @@
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
-/sov-space      /gspc-arena             308
-/sov-space/     /gspc-arena             308
-/sovereign-space /gspc-arena            308
-/simulate       /gspc-arena             308
-/sovereign-town /gspc-arena?view=towns  308
-/towns          /gspc-arena?view=towns  308
+/sov-space      /dashboard?tab=space     308
+/sov-space/     /dashboard?tab=space     308
+/sovereign-space /dashboard?tab=space    308
+/simulate       /dashboard?tab=space     308
+/sovereign-town /dashboard?tab=space     308
+/towns          /dashboard?tab=space     308
 /globe          /globe3d.html           308
 /byzantine            /council   308
 /byzantine-consensus  /council   308
@@ -22,18 +22,18 @@
 /consensus            /council   308
 /jewels               /          308
 /crown-jewels         /          308
-/plans                /os?lobby=assess&task=pricing-overview   308
-/enterprise-plans     /os?lobby=assess&task=pricing-overview   308
-/council-space  /gspc-arena             308
-/city           /gspc-arena?view=towns  308
+/plans                /dashboard?tab=measured&task=pricing-overview   308
+/enterprise-plans     /dashboard?tab=measured&task=pricing-overview   308
+/council-space  /dashboard?tab=space     308
+/city           /dashboard?tab=space     308
 /ins            /insurers/              308
 /ins/           /insurers/              308
 /insurance      /insurers/              308
 /insurance/     /insurers/              308
 /article50      /article-50/            308
 /article50/     /article-50/            308
-/overlay        /os?lobby=home          308
-/overlay/       /os?lobby=home          308
+/overlay        /dashboard?tab=home     308
+/overlay/       /dashboard?tab=home     308
 /rwa            /distribution-integrity/ 308
 /rwa/           /distribution-integrity/ 308
 /financial-axis /financial-axes/        308
@@ -61,30 +61,48 @@
 /containment/   /blog/what-is-monitored-containment/  308
 /legal                  /disclaimers                 308
 /vulnerability          /vulnerability-disclosure    308
-/gspc                   /gspc-scoreboard             308
+/gspc                   /dashboard?tab=board          308
 /plugin                 /tools                       301
 /plugin/                /tools                       301
-/gspc/ai-economy-index     /gspc-scoreboard#ai-adoption-components  308
-/gspc/human-labour-index   /gspc-scoreboard#labour-components       308
-/scoreboard             /gspc-scoreboard             308
-/scorecard              /gspc-scoreboard             308
-/scorecard/             /gspc-scoreboard             308
-/lobby                  /os?lobby=home               308
-/console                /os?lobby=home               308
-/council-os             /os                          308
-/council-os/            /os                          308
-/sov-os                 /os?lobby=home               308
-/sov-os/                /os?lobby=home               308
-/ag-ui                  /os?lobby=home               308
-/ag-ui/                 /os?lobby=home               308
-/agui                   /os?lobby=home               308
-/agui/                  /os?lobby=home               308
-/chat                   /os?lobby=home               308
-/chat/                  /os?lobby=home               308
-/rankings               /os?lobby=board              308
-/rankings/              /os?lobby=board              308
-/benchmarkers           /os?lobby=verify             308
-/benchmarkers/          /os?lobby=verify             308
+/gspc/ai-economy-index     /dashboard?tab=board#ai-adoption-components  308
+/gspc/human-labour-index   /dashboard?tab=board#labour-components       308
+/scoreboard             /dashboard?tab=board          308
+/scorecard              /dashboard?tab=board          308
+/scorecard/             /dashboard?tab=board          308
+/lobby                  /dashboard?tab=home          308
+/console                /dashboard?tab=home          308
+/council-os             /dashboard?tab=home          308
+/council-os/            /dashboard?tab=home          308
+/sov-os                 /dashboard?tab=home          308
+/sov-os/                /dashboard?tab=home          308
+/ag-ui                  /dashboard?tab=home          308
+/ag-ui/                 /dashboard?tab=home          308
+/agui                   /dashboard?tab=home          308
+/agui/                  /dashboard?tab=home          308
+/chat                   /dashboard?tab=home          308
+/chat/                  /dashboard?tab=home          308
+/demo                   /dashboard?tab=home          308
+/demo/                  /dashboard?tab=home          308
+/enter                  /dashboard?tab=home          308
+/enter/                 /dashboard?tab=home          308
+/home-v3                /dashboard?tab=home          308
+/home-v3/               /dashboard?tab=home          308
+/os-demo                /dashboard?tab=home          308
+/os-demo/               /dashboard?tab=home          308
+/try                    /dashboard?tab=home          308
+/try/                   /dashboard?tab=home          308
+/home-v2                /                              308
+/home-v2/               /                              308
+/old-home               /                              308
+/old-home/              /                              308
+/gspc-arena             /dashboard?tab=space         308
+/gspc-arena/            /dashboard?tab=space         308
+/arena-scoreboard       /dashboard?tab=space         308
+/arena-scoreboard/      /dashboard?tab=space         308
+/rankings               /dashboard?tab=leaderboard   308
+/rankings/              /dashboard?tab=leaderboard   308
+/benchmarkers           /dashboard?tab=results       308
+/benchmarkers/          /dashboard?tab=results       308
 /mcp-registry           /mcps/                       308
 /mcp-registry/          /mcps/                       308
 /library/measurement    /library/axes                308
@@ -92,19 +110,27 @@
 /verify/                /gspc-verify/                308
 /badges                 /badge                       308
 /badges/                /badge                       308
-/verify-certificate     /gspc-verify/                308
-/verify-certificate/    /gspc-verify/                308
-/enterprise             /os?lobby=assess&task=enterprise-start  308
-/enterprise/            /os?lobby=assess&task=enterprise-start  308
-/enterprises            /os?lobby=assess&task=enterprise-start  308
+/enterprise             /dashboard?tab=measured&task=enterprise-start  308
+/enterprise/            /dashboard?tab=measured&task=enterprise-start  308
+/enterprises            /dashboard?tab=measured&task=enterprise-start  308
 /developers             /gspc-verify/                308
-/colosseum              /coliseum/                   308
+/colosseum              /dashboard?tab=space         308
+/coliseum               /dashboard?tab=space         308
+/standards              /dashboard?tab=standards     308
+/integrations           /dashboard?tab=fabric        308
+/integrations/          /dashboard?tab=fabric        308
+/ecosystem              /dashboard?tab=fabric        308
+/ecosystem/             /dashboard?tab=fabric        308
+/governance-commons     /dashboard?tab=fabric        308
+/governance-commons/    /dashboard?tab=fabric        308
+/safe-space             /dashboard?tab=fabric        308
+/safe-space/            /dashboard?tab=fabric        308
 /for                    /for/enterprise/             308
 /for/                   /for/enterprise/             308
 /regulation             /library/regulation/         308
 /regulation/            /library/regulation/         308
-/solutions              /assess/                     308
-/solutions/             /assess/                     308
+/solutions              /dashboard?tab=measured      308
+/solutions/             /dashboard?tab=measured      308
 /company                /library/company/            308
 /company/               /library/company/            308
 /signin                 /login/                      308
@@ -134,10 +160,14 @@
 /blog/nis2-compliance-critical-infrastructure  /blog/  308
 /blog/nis2-compliance-critical-infrastructure/ /blog/  308
 /fabric/agent-incident-reporter-mcp  /mcps/  308
-/readiness-assessment   /assess  308
-/readiness-assessment/  /assess  308
-/ras                    /assess  308
-/ras/                   /assess  308
+/assess                 /dashboard?tab=measured  308
+/assess/                /dashboard?tab=measured  308
+/assessment             /dashboard?tab=measured  308
+/assessment/            /dashboard?tab=measured  308
+/readiness-assessment   /dashboard?tab=measured  308
+/readiness-assessment/  /dashboard?tab=measured  308
+/ras                    /dashboard?tab=measured  308
+/ras/                   /dashboard?tab=measured  308
 /claimguard             /honesty/                308
 /claimguard/            /honesty/                308
 /claimguard.html        /honesty/                308
@@ -153,7 +183,6 @@
 /start  /start/  308
 /insurers  /insurers/  308
 /gspc-verify  /gspc-verify/  308
-/assess  /assess/  308
 /watchdog  /watchdog/  308
 /academy  /academy/  308
 /methodology  /methodology/  308
@@ -163,7 +192,6 @@
 /privacy-policy  /privacy-policy/  308
 /dashboard  /dashboard/  308
 /login  /login/  308
-/gspc-arena  /gspc-arena/  308
 /firewall-charter  /firewall-charter/  308
 /models  /models/  308
 /tools  /tools/  308
@@ -193,7 +221,7 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (355) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (337) ---
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
@@ -217,9 +245,7 @@
 /answers  /answers/  308
 /api-keys  /api-keys/  308
 /architecture  /architecture/  308
-/arena-scoreboard  /arena-scoreboard/  308
 /article-50  /article-50/  308
-/assessment  /assessment/  308
 /assurance  /assurance/  308
 /aug-2026  /aug-2026/  308
 /authority  /authority/  308
@@ -242,7 +268,6 @@
 /classifier  /classifier/  308
 /cobol  /cobol/  308
 /cobolbridge  /cobolbridge/  308
-/coliseum  /coliseum/  308
 /colorado-ai-act  /colorado-ai-act/  308
 /command-center  /command-center/  308
 /commons  /commons/  308
@@ -279,7 +304,6 @@
 /data-processing-agreement  /data-processing-agreement/  308
 /deepfake-protection  /deepfake-protection/  308
 /defence-ai-act  /defence-ai-act/  308
-/demo  /demo/  308
 /disclaimers  /disclaimers/  308
 /dispute  /dispute/  308
 /distribution  /distribution/  308
@@ -291,11 +315,9 @@
 /dragonfly  /dragonfly/  308
 /drift-audit  /drift-audit/  308
 /drift-product  /drift-product/  308
-/ecosystem  /ecosystem/  308
 /ei3  /ei3/  308
 /embed  /embed/  308
 /energy-ai-act  /energy-ai-act/  308
-/enter  /enter/  308
 /enterprise-dashboard  /enterprise-dashboard/  308
 /eu-ai-act  /eu-ai-act/  308
 /eu-ai-act-checklist  /eu-ai-act-checklist/  308
@@ -341,7 +363,6 @@
 /glossary  /glossary/  308
 /gods-eye  /gods-eye/  308
 /gone-space  /gone-space/  308
-/governance-commons  /governance-commons/  308
 /governance-council  /governance-council/  308
 /governance-graph  /governance-graph/  308
 /governance-layer  /governance-layer/  308
@@ -354,7 +375,6 @@
 /graph  /graph/  308
 /gspc-anchors  /gspc-anchors/  308
 /gspc-gap-map  /gspc-gap-map/  308
-/gspc-scoreboard  /gspc-scoreboard/  308
 /gspc/jail  /gspc/jail/  308
 /guides/eu-ai-act  /guides/eu-ai-act/  308
 /guides/iso-42001  /guides/iso-42001/  308
@@ -369,8 +389,6 @@
 /high-risk-ai-systems  /high-risk-ai-systems/  308
 /hive-model  /hive-model/  308
 /hives  /hives/  308
-/home-v2  /home-v2/  308
-/home-v3  /home-v3/  308
 /horus  /horus/  308
 /how  /how/  308
 /how-it-works  /how-it-works/  308
@@ -379,7 +397,6 @@
 /industries  /industries/  308
 /industry-playbooks  /industry-playbooks/  308
 /industry-solutions  /industry-solutions/  308
-/integrations  /integrations/  308
 /iso-42001  /iso-42001/  308
 /iso-42001-vs-eu-ai-act  /iso-42001-vs-eu-ai-act/  308
 /iso-eu  /iso-eu/  308
@@ -407,7 +424,6 @@
 /map-regions  /map-regions/  308
 /marketing  /marketing/  308
 /maternal-covenant  /maternal-covenant/  308
-/mcp  /mcp/  308
 /mcp-tools  /mcp-tools/  308
 /me  /me/  308
 /membership-agreement  /membership-agreement/  308
@@ -420,7 +436,6 @@
 /nist-ai-rmf  /nist-ai-rmf/  308
 /nist-eu  /nist-eu/  308
 /nist-vs-eu-ai-act  /nist-vs-eu-ai-act/  308
-/old-home  /old-home/  308
 /onboard  /onboard/  308
 /one-os  /one-os/  308
 /onetrust-alternative  /onetrust-alternative/  308
@@ -428,8 +443,6 @@
 /open-media  /open-media/  308
 /open-source  /open-source/  308
 /opengridworks  /opengridworks/  308
-/os  /os/  308
-/os-demo  /os-demo/  308
 /oscal  /oscal/  308
 /oscal-readiness  /oscal-readiness/  308
 /our-difference  /our-difference/  308
@@ -482,7 +495,6 @@
 /risk-assessment  /risk-assessment/  308
 /risk-heatmap  /risk-heatmap/  308
 /roi  /roi/  308
-/safe-space  /safe-space/  308
 /scan  /scan/  308
 /sec-ai-disclosure  /sec-ai-disclosure/  308
 /sec-disclosure  /sec-disclosure/  308
@@ -506,7 +518,6 @@
 /sovereign  /sovereign/  308
 /sovereign-network  /sovereign-network/  308
 /sovereign-twin  /sovereign-twin/  308
-/standards  /standards/  308
 /status  /status/  308
 /statute-to-predicate  /statute-to-predicate/  308
 /support  /support/  308
@@ -525,7 +536,6 @@
 /traction  /traction/  308
 /transparency  /transparency/  308
 /transparency-cop  /transparency-cop/  308
-/try  /try/  308
 /uk-ai-regulation  /uk-ai-regulation/  308
 /us-ai-regulation  /us-ai-regulation/  308
 /usp  /usp/  308
@@ -569,7 +579,7 @@
 
 # ================= DYNAMIC (splat) RULES — 100 MAX, NOTHING BELOW THE CATCH-ALL =================
 # --- static asset trees: served directly, never routed to the app ---
-/sov-space/*    /gspc-arena             308
+/sov-space/*    /dashboard?tab=space     308
 /arena/*  /arena/:splat  200
 /benchmarks/*  /benchmarks/:splat  200
 /vendor/*  /vendor/:splat  200
@@ -597,13 +607,3 @@
 # validated with the query string included). That flips every unknown path from
 # honest-404 to 200-plus-shell, which is an OWNER RULING, not a config tidy-up.
 /*  /index.html  200
-
-# --- 4 Sep 2026: gspc-leaderboard + subdomain redirects ---
-/gspc-leaderboard        /gspc-leaderboard.html    308
-/gspc-leaderboard/       /gspc-leaderboard.html    308
-/subdomains/measure      /subdomains/dashboards    308
-/subdomains/signed       /subdomains/issuance      308
-/subdomains/arena        /gspc-arena               308
-/subdomains/benchmarks   /gspc-arena?view=benchmarks 308
-/subdomains/interop      /subdomains/proofs        308
-/subdomains/j-space      /j-space                  308

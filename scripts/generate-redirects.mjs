@@ -30,15 +30,23 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
 
-const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
-                     "/.well-known", "/corpus-watch", "/flywheel", "/packs",
-                     "/datasets",
-                     // /signed is the evidence tree IETF implementers are pointed at.
-                     // Without this the SPA catch-all answers /signed/ with the app
-                     // shell (soft 404) instead of the directory index.
-                     "/signed",
-                     // 48h thesis stack JSON (index + watches) — serve as assets.
-                     "/stack"];
+const STATIC_DIRS = [
+  "/arena",
+  "/benchmarks",
+  "/vendor",
+  "/assets",
+  "/.well-known",
+  "/corpus-watch",
+  "/flywheel",
+  "/packs",
+  "/datasets",
+  // /signed is the evidence tree IETF implementers are pointed at.
+  // Without this the SPA catch-all answers /signed/ with the app
+  // shell (soft 404) instead of the directory index.
+  "/signed",
+  // 48h thesis stack JSON (index + watches) — serve as assets.
+  "/stack",
+];
 
 const src = readFileSync(APP, "utf8");
 const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
@@ -48,13 +56,13 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
-  "/sov-space      /gspc-arena             308",
-  "/sov-space/     /gspc-arena             308",
-  "/sov-space/*    /gspc-arena             308",
-  "/sovereign-space /gspc-arena            308",
-  "/simulate       /gspc-arena             308",
-  "/sovereign-town /gspc-arena?view=towns  308",
-  "/towns          /gspc-arena?view=towns  308",
+  "/sov-space      /dashboard?tab=space     308",
+  "/sov-space/     /dashboard?tab=space     308",
+  "/sov-space/*    /dashboard?tab=space     308",
+  "/sovereign-space /dashboard?tab=space    308",
+  "/simulate       /dashboard?tab=space     308",
+  "/sovereign-town /dashboard?tab=space     308",
+  "/towns          /dashboard?tab=space     308",
   "/globe          /globe3d.html           308",
   "/byzantine            /council   308",
   "/byzantine-consensus  /council   308",
@@ -62,12 +70,12 @@ const EXISTING = [
   "/consensus            /council   308",
   "/jewels               /          308",
   "/crown-jewels         /          308",
-  // Pricing lives in Council OS Assess (functions/pricing.ts). Do not chain
-  // through /pricing — that is itself a 308 door hop.
-  "/plans                /os?lobby=assess&task=pricing-overview   308",
-  "/enterprise-plans     /os?lobby=assess&task=pricing-overview   308",
-  "/council-space  /gspc-arena             308",
-  "/city           /gspc-arena?view=towns  308",
+  // Pricing and enterprise doors land in the canonical Request attestation
+  // workspace. `/os` remains compatibility-only, never an extra UI hop.
+  "/plans                /dashboard?tab=measured&task=pricing-overview   308",
+  "/enterprise-plans     /dashboard?tab=measured&task=pricing-overview   308",
+  "/council-space  /dashboard?tab=space     308",
+  "/city           /dashboard?tab=space     308",
   // Living-measurement / product short doors. Destinations already exist.
   // Do not invent /evm as its own page — the human surface that already
   // publishes EVM coverage is /xrpl-attest (coverage.evm + interop JSON).
@@ -77,8 +85,8 @@ const EXISTING = [
   "/insurance/     /insurers/              308",
   "/article50      /article-50/            308",
   "/article50/     /article-50/            308",
-  "/overlay        /os?lobby=home          308",
-  "/overlay/       /os?lobby=home          308",
+  "/overlay        /dashboard?tab=home     308",
+  "/overlay/       /dashboard?tab=home     308",
   "/rwa            /distribution-integrity/ 308",
   "/rwa/           /distribution-integrity/ 308",
   "/financial-axis /financial-axes/        308",
@@ -109,31 +117,49 @@ const EXISTING = [
   "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /gspc-scoreboard             308",
+  "/gspc                   /dashboard?tab=board          308",
   // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
   "/plugin                 /tools                       301",
   "/plugin/                /tools                       301",
-  "/gspc/ai-economy-index     /gspc-scoreboard#ai-adoption-components  308",
-  "/gspc/human-labour-index   /gspc-scoreboard#labour-components       308",
-  "/scoreboard             /gspc-scoreboard             308",
-  "/scorecard              /gspc-scoreboard             308",
-  "/scorecard/             /gspc-scoreboard             308",
-  "/lobby                  /os?lobby=home               308",
-  "/console                /os?lobby=home               308",
-  "/council-os             /os                          308",
-  "/council-os/            /os                          308",
-  "/sov-os                 /os?lobby=home               308",
-  "/sov-os/                /os?lobby=home               308",
-  "/ag-ui                  /os?lobby=home               308",
-  "/ag-ui/                 /os?lobby=home               308",
-  "/agui                   /os?lobby=home               308",
-  "/agui/                  /os?lobby=home               308",
-  "/chat                   /os?lobby=home               308",
-  "/chat/                  /os?lobby=home               308",
-  "/rankings               /os?lobby=board              308",
-  "/rankings/              /os?lobby=board              308",
-  "/benchmarkers           /os?lobby=verify             308",
-  "/benchmarkers/          /os?lobby=verify             308",
+  "/gspc/ai-economy-index     /dashboard?tab=board#ai-adoption-components  308",
+  "/gspc/human-labour-index   /dashboard?tab=board#labour-components       308",
+  "/scoreboard             /dashboard?tab=board          308",
+  "/scorecard              /dashboard?tab=board          308",
+  "/scorecard/             /dashboard?tab=board          308",
+  "/lobby                  /dashboard?tab=home          308",
+  "/console                /dashboard?tab=home          308",
+  "/council-os             /dashboard?tab=home          308",
+  "/council-os/            /dashboard?tab=home          308",
+  "/sov-os                 /dashboard?tab=home          308",
+  "/sov-os/                /dashboard?tab=home          308",
+  "/ag-ui                  /dashboard?tab=home          308",
+  "/ag-ui/                 /dashboard?tab=home          308",
+  "/agui                   /dashboard?tab=home          308",
+  "/agui/                  /dashboard?tab=home          308",
+  "/chat                   /dashboard?tab=home          308",
+  "/chat/                  /dashboard?tab=home          308",
+  "/demo                   /dashboard?tab=home          308",
+  "/demo/                  /dashboard?tab=home          308",
+  "/enter                  /dashboard?tab=home          308",
+  "/enter/                 /dashboard?tab=home          308",
+  "/home-v3                /dashboard?tab=home          308",
+  "/home-v3/               /dashboard?tab=home          308",
+  "/os-demo                /dashboard?tab=home          308",
+  "/os-demo/               /dashboard?tab=home          308",
+  "/try                    /dashboard?tab=home          308",
+  "/try/                   /dashboard?tab=home          308",
+  "/home-v2                /                              308",
+  "/home-v2/               /                              308",
+  "/old-home               /                              308",
+  "/old-home/              /                              308",
+  "/gspc-arena             /dashboard?tab=space         308",
+  "/gspc-arena/            /dashboard?tab=space         308",
+  "/arena-scoreboard       /dashboard?tab=space         308",
+  "/arena-scoreboard/      /dashboard?tab=space         308",
+  "/rankings               /dashboard?tab=leaderboard   308",
+  "/rankings/              /dashboard?tab=leaderboard   308",
+  "/benchmarkers           /dashboard?tab=results       308",
+  "/benchmarkers/          /dashboard?tab=results       308",
   "/mcp-registry           /mcps/                       308",
   "/mcp-registry/          /mcps/                       308",
   "/library/measurement    /library/axes                308",
@@ -147,13 +173,21 @@ const EXISTING = [
   "/verify/                /gspc-verify/                308",
   "/badges                 /badge                       308",
   "/badges/                /badge                       308",
-  "/verify-certificate     /gspc-verify/                308",
-  "/verify-certificate/    /gspc-verify/                308",
-  "/enterprise             /os?lobby=assess&task=enterprise-start  308",
-  "/enterprise/            /os?lobby=assess&task=enterprise-start  308",
-  "/enterprises            /os?lobby=assess&task=enterprise-start  308",
+  "/enterprise             /dashboard?tab=measured&task=enterprise-start  308",
+  "/enterprise/            /dashboard?tab=measured&task=enterprise-start  308",
+  "/enterprises            /dashboard?tab=measured&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
-  "/colosseum              /coliseum/                   308",
+  "/colosseum              /dashboard?tab=space         308",
+  "/coliseum               /dashboard?tab=space         308",
+  "/standards              /dashboard?tab=standards     308",
+  "/integrations           /dashboard?tab=fabric        308",
+  "/integrations/          /dashboard?tab=fabric        308",
+  "/ecosystem              /dashboard?tab=fabric        308",
+  "/ecosystem/             /dashboard?tab=fabric        308",
+  "/governance-commons     /dashboard?tab=fabric        308",
+  "/governance-commons/    /dashboard?tab=fabric        308",
+  "/safe-space             /dashboard?tab=fabric        308",
+  "/safe-space/            /dashboard?tab=fabric        308",
   // /for is an index with no page of its own — send it to the default audience. The
   // trailing-slash form needs its own rule: it used to be swallowed by a Pages Function
   // at functions/for/index.ts (deleted with the rest of the /for/* suppression), and
@@ -164,8 +198,8 @@ const EXISTING = [
   // --- Stage 39/40 top-down align (J-D1 · J-D2 · J-D5 · datasets) ---
   "/regulation             /library/regulation/         308",
   "/regulation/            /library/regulation/         308",
-  "/solutions              /assess/                     308",
-  "/solutions/             /assess/                     308",
+  "/solutions              /dashboard?tab=measured      308",
+  "/solutions/             /dashboard?tab=measured      308",
   "/company                /library/company/            308",
   "/company/               /library/company/            308",
   "/signin                 /login/                      308",
@@ -204,13 +238,16 @@ const EXISTING = [
   // Pages project (csoai-site), so that redirect belongs in its own deploy.
   "/fabric/agent-incident-reporter-mcp  /mcps/  308",
 
-  // 2026-08-28: /readiness-assessment was a 404 (no edge redirect, SPA catch-all
-  // inert). The live page is /assess. /ras was 200→ras.html (STOREFRONT) but the
-  // user requests a 308→/assess to kill the self-loop and unify the door.
-  "/readiness-assessment   /assess  308",
-  "/readiness-assessment/  /assess  308",
-  "/ras                    /assess  308",
-  "/ras/                   /assess  308",
+  // The classifier stays at POST /api/assess; every human request door opens
+  // the native Request Attestation Service pane in the one workspace.
+  "/assess                 /dashboard?tab=measured  308",
+  "/assess/                /dashboard?tab=measured  308",
+  "/assessment             /dashboard?tab=measured  308",
+  "/assessment/            /dashboard?tab=measured  308",
+  "/readiness-assessment   /dashboard?tab=measured  308",
+  "/readiness-assessment/  /dashboard?tab=measured  308",
+  "/ras                    /dashboard?tab=measured  308",
+  "/ras/                   /dashboard?tab=measured  308",
 
   // 2026-08-28: /claimguard.html 200 rewrite loops with Pages' .html→slashless
   // strip (claimguard → claimguard.html → claimguard). Send humans to the live
@@ -225,24 +262,55 @@ const EXISTING = [
   "/stack/                 /stack/index.json        308",
 ];
 
-const STOREFRONT = [
-  "/catalog.json  /catalog.json     200",
-];
+const STOREFRONT = ["/catalog.json  /catalog.json     200"];
 
 const PERSONA_SLASH = [
   // pricing is a Functions door hop → /os Assess — do not emit /pricing → /pricing/
-  "honesty", "library", "regulators", "start", "insurers",
-  "gspc-verify", "assess", "watchdog", "academy", "methodology", "compare", "layer0",
-  "about", "privacy-policy", "dashboard", "login", "gspc-arena", "firewall-charter",
-  "models", "tools", "api-docs",
-  "workbench", "instrument", "system-card", "feed", "mcp-fleet", "crosswalk",
-  "east-west", "challenge",
+  "honesty",
+  "library",
+  "regulators",
+  "start",
+  "insurers",
+  "gspc-verify",
+  "watchdog",
+  "academy",
+  "methodology",
+  "compare",
+  "layer0",
+  "about",
+  "privacy-policy",
+  "dashboard",
+  "login",
+  "firewall-charter",
+  "models",
+  "tools",
+  "api-docs",
+  "workbench",
+  "instrument",
+  "system-card",
+  "feed",
+  "mcp-fleet",
+  "crosswalk",
+  "east-west",
+  "challenge",
   "refutation-ledger",
-  "benchmarks", "benchmark-index", "benchmark-quality", "watchdog-map",
-  "mcps", "trust-center", "network", "hive", "intel",
+  "benchmarks",
+  "benchmark-index",
+  "benchmark-quality",
+  "watchdog-map",
+  "mcps",
+  "trust-center",
+  "network",
+  "hive",
+  "intel",
 ];
 const PERSONA_FOR_SLASH = [
-  "finance", "healthcare", "startup", "enterprise", "regulator", "sec-filer",
+  "finance",
+  "healthcare",
+  "startup",
+  "enterprise",
+  "regulator",
+  "sec-filer",
 ];
 
 const HASHED_DIRS = ["/assets"];
@@ -272,7 +340,7 @@ const IS_DYNAMIC = (line) => {
 //   · a path public/ serves directly (a real file at /p.html or /p/index.html),
 //   · a path owned by a Pages Function (functions/<p>.ts), e.g. /pricing,
 //   · retired internal-codename stubs owned by 308 functions.
-const normFrom = (p) => (String(p).replace(/\/+$/, "") || "/");
+const normFrom = (p) => String(p).replace(/\/+$/, "") || "/";
 const CLAIMED_FROM = new Set();
 for (const line of [...EXISTING, ...STOREFRONT]) {
   const t = String(line).trim();
@@ -313,7 +381,9 @@ const ROUTE_SLASH = routes
 // trailing-slash form for each explainer instead of a bare 404.
 let ANSWER_SLASH = [];
 try {
-  const answerSlugs = JSON.parse(readFileSync(join(ROOT, "client/src/data/answers.json"), "utf8"))
+  const answerSlugs = JSON.parse(
+    readFileSync(join(ROOT, "client/src/data/answers.json"), "utf8"),
+  )
     .map((a) => a && a.slug)
     .filter(Boolean);
   ANSWER_SLASH = answerSlugs
@@ -321,7 +391,9 @@ try {
     .filter((p) => !CLAIMED_FROM.has(normFrom(p)))
     .map((p) => `${p}  ${p}/  308`);
 } catch {
-  console.warn("[redirects] answers.json unreadable — no /answers/:slug bare→slash rules emitted");
+  console.warn(
+    "[redirects] answers.json unreadable — no /answers/:slug bare→slash rules emitted",
+  );
 }
 
 // Everything with an exact `from`. These land on the 2000-rule STATIC budget.
@@ -347,7 +419,9 @@ const STATIC_RULES = [
 // DYNAMIC budget, and the SPA catch-all is deliberately the very last of them.
 const DYNAMIC_RULES = [
   ...EXISTING.filter(IS_DYNAMIC),
-  ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map((d) => `${d}/*  ${d}/:splat  200`),
+  ...STATIC_DIRS.filter((d) => !HASHED_DIRS.includes(d)).map(
+    (d) => `${d}/*  ${d}/:splat  200`,
+  ),
 ];
 
 const lines = [
@@ -372,8 +446,8 @@ const lines = [
   "#",
   "# READ THIS BEFORE DEBUGGING THE CANARY. This rule is currently INERT, and not",
   "# because of the rule cap. Cloudflare's parser rejects it outright:",
-  "#   from ends in `/*` AND to ends in `/index.html`  ->  \"Infinite loop detected in",
-  "#   this rule and has been ignored.\"",
+  '#   from ends in `/*` AND to ends in `/index.html`  ->  "Infinite loop detected in',
+  '#   this rule and has been ignored."',
   "# Verified 2026-08-26 against wrangler 4.126.0 `pages dev`, which logs the rejection",
   "# and STILL serves index.html for unknown paths — that is Pages' built-in SPA",
   "# fallback, which applies only when the output has no 404.html. This build ships a",
@@ -387,7 +461,14 @@ const lines = [
 ];
 
 writeFileSync(OUT, lines.join("\n"));
-const nStatic = STATIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length;
-const nDynamic = DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
-console.log(`[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`);
-console.log(`[redirects] ${nStatic} static rules (cap 2000) + ${nDynamic} dynamic rules incl. catch-all (cap 100)`);
+const nStatic = STATIC_RULES.filter(
+  (l) => l.trim() && !l.trim().startsWith("#"),
+).length;
+const nDynamic =
+  DYNAMIC_RULES.filter((l) => l.trim() && !l.trim().startsWith("#")).length + 1; // +1 catch-all
+console.log(
+  `[redirects] ${routes.length} app routes detected (not emitted; catch-all covers them)`,
+);
+console.log(
+  `[redirects] ${nStatic} static rules (cap 2000) + ${nDynamic} dynamic rules incl. catch-all (cap 100)`,
+);

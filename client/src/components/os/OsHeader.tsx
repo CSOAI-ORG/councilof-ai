@@ -155,7 +155,7 @@ export default function OsHeader() {
           <a
             href="/compliance-training-world/catalog.html"
             className={`hidden rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50 lg:inline-flex ${FOCUS}`}
-            title="Industry quests — training attestation, never certification"
+            title="Industry practice quests — local results, not certification"
           >
             Train
           </a>

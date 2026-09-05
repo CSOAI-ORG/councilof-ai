@@ -15,7 +15,11 @@
  * `window.self !== window.top` is the fallback when a framed page drops the query.
  */
 import { useEffect } from "react";
-import { isSiteDoor, LOBBY_TABS, type LobbyTab } from "../components/lobby/tabs";
+import {
+  isSiteDoor,
+  LOBBY_TABS,
+  type LobbyTab,
+} from "../components/lobby/tabs";
 import { pathBare, isUnframeable, withoutEmbed } from "./unframeable";
 
 export const EMBED_PARAM = "embed";
@@ -31,7 +35,8 @@ export type EmbedNavMessage = {
 export function isEmbedded(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    if (new URLSearchParams(window.location.search).get(EMBED_PARAM) === "1") return true;
+    if (new URLSearchParams(window.location.search).get(EMBED_PARAM) === "1")
+      return true;
     return window.self !== window.top;
   } catch {
     // Cross-origin frame access threw — treat as embedded and stay quiet.
@@ -118,9 +123,18 @@ export function postEmbedNav(): void {
 
 /** Leave the iframe as a top-level page, without `embed=1`. */
 export function breakOutOfFrame(href: string): void {
-  const dest = withoutEmbed(href, typeof window !== "undefined" ? window.location.origin : "https://councilof.ai");
+  const dest = withoutEmbed(
+    href,
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://councilof.ai",
+  );
   try {
-    if (typeof window !== "undefined" && window.top && window.top !== window.self) {
+    if (
+      typeof window !== "undefined" &&
+      window.top &&
+      window.top !== window.self
+    ) {
       window.top.location.assign(dest);
       return;
     }
@@ -190,13 +204,26 @@ export function useEmbedNavigation(): void {
 
     // Chrome branches and DSH only work with their own nav. Break out before
     // stamping embed=1 or pinging the parent (a `/` ping must not become an override).
-    // "OS must never nest inside OS" is the FRAMED case. A top-level `/os?embed=1&lobby=…`
-    // is the harness AG-UI panel minted by osPanelHref() — it must keep embed=1, not be
-    // broken out (which stripped the flag and, post-#1093, bounced it into the Dashboard).
-    const framed = (() => { try { return window.self !== window.top; } catch { return true; } })();
-    const topLevelOsPanel = !framed && pathBare(window.location.pathname) === "/os";
-    if (isUnframeable(window.location.pathname) && !topLevelOsPanel) {
-      breakOutOfFrame(window.location.pathname + window.location.search + window.location.hash);
+    // "OS must never nest inside OS" is the FRAMED case. Top-level `/os?embed=1`
+    // and `/dashboard?embed=1` are harness/desktop panels minted by osPanelHref();
+    // they must keep embed=1. A real iframe that reaches either host still breaks out.
+    const framed = (() => {
+      try {
+        return window.self !== window.top;
+      } catch {
+        return true;
+      }
+    })();
+    const currentBarePath = pathBare(window.location.pathname);
+    const topLevelWorkspacePanel =
+      !framed &&
+      (currentBarePath === "/os" || currentBarePath === "/dashboard");
+    if (isUnframeable(window.location.pathname) && !topLevelWorkspacePanel) {
+      breakOutOfFrame(
+        window.location.pathname +
+          window.location.search +
+          window.location.hash,
+      );
       return;
     }
 
@@ -211,13 +238,26 @@ export function useEmbedNavigation(): void {
     const origPush = window.history.pushState.bind(window.history);
     const origReplace = window.history.replaceState.bind(window.history);
 
-    const keep = (urlLike: string | URL | null | undefined): string | URL | null | undefined => {
+    const keep = (
+      urlLike: string | URL | null | undefined,
+    ): string | URL | null | undefined => {
       if (urlLike == null || urlLike === "") return urlLike;
       const raw = typeof urlLike === "string" ? urlLike : urlLike.toString();
       if (isIgnorableHref(raw)) return urlLike;
       const parsed = sameOriginUrl(raw);
       if (!parsed) return urlLike;
-      return withEmbed(parsed.pathname + parsed.search + parsed.hash, window.location.origin);
+      if (
+        topLevelWorkspacePanel &&
+        currentBarePath === "/dashboard" &&
+        pathBare(parsed.pathname) === "/dashboard"
+      ) {
+        parsed.searchParams.set(EMBED_PARAM, "1");
+        return parsed.pathname + parsed.search + parsed.hash;
+      }
+      return withEmbed(
+        parsed.pathname + parsed.search + parsed.hash,
+        window.location.origin,
+      );
     };
 
     const orBreakOut = (urlLike: string | URL | null | undefined): boolean => {
@@ -225,6 +265,13 @@ export function useEmbedNavigation(): void {
       const raw = typeof urlLike === "string" ? urlLike : urlLike.toString();
       if (isIgnorableHref(raw)) return false;
       const parsed = sameOriginUrl(raw);
+      if (
+        topLevelWorkspacePanel &&
+        currentBarePath === "/dashboard" &&
+        parsed &&
+        pathBare(parsed.pathname) === "/dashboard"
+      )
+        return false;
       if (!parsed || !isUnframeable(parsed.pathname)) return false;
       breakOutOfFrame(parsed.pathname + parsed.search + parsed.hash);
       return true;
@@ -270,7 +317,14 @@ export function useEmbedNavigation(): void {
       }
 
       // Unframeable chrome and marketing site doors leave the iframe without embed=1.
-      if (isUnframeable(dest.pathname) || isSiteDoor(dest.pathname + dest.search)) {
+      const staysInDashboardPanel =
+        topLevelWorkspacePanel &&
+        currentBarePath === "/dashboard" &&
+        pathBare(dest.pathname) === "/dashboard";
+      if (
+        (isUnframeable(dest.pathname) && !staysInDashboardPanel) ||
+        isSiteDoor(dest.pathname + dest.search)
+      ) {
         e.preventDefault();
         breakOutOfFrame(dest.pathname + dest.search + dest.hash);
         return;
@@ -278,8 +332,19 @@ export function useEmbedNavigation(): void {
 
       // Same-origin: never leave the iframe, even on _blank / modified-click.
       e.preventDefault();
-      const next = withEmbed(dest.pathname + dest.search + dest.hash, window.location.origin);
-      if (next === window.location.pathname + window.location.search + window.location.hash) {
+      const next = staysInDashboardPanel
+        ? (() => {
+            dest.searchParams.set(EMBED_PARAM, "1");
+            return dest.pathname + dest.search + dest.hash;
+          })()
+        : withEmbed(
+            dest.pathname + dest.search + dest.hash,
+            window.location.origin,
+          );
+      if (
+        next ===
+        window.location.pathname + window.location.search + window.location.hash
+      ) {
         postEmbedNav();
         return;
       }

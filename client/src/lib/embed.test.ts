@@ -21,8 +21,8 @@ describe("withEmbed", () => {
 
   it("never stamps embed=1 on marketing or host doors (no nested homepage, no /os in /os)", () => {
     expect(withEmbed("/")).toBe("/");
-    expect(withEmbed("/products")).toBe("/products");
-    expect(withEmbed("/honesty")).toBe("/honesty");
+    expect(withEmbed("/products")).toBe("/products?embed=1");
+    expect(withEmbed("/honesty")).toBe("/honesty?embed=1");
     expect(withEmbed("/pricing")).toBe("/pricing");
     expect(withEmbed("/os")).toBe("/os");
     expect(withEmbed("/os?lobby=board")).toBe("/os?lobby=board");

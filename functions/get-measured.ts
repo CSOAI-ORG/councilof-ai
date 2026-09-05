@@ -5,7 +5,7 @@ export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=assess&task=get-measured",
+      location: "/dashboard?tab=measured&task=get-measured",
       "cache-control": "public, max-age=300",
     },
   });

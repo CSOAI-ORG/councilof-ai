@@ -53,19 +53,14 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Accreditation"
  },
  {
-  "path": "/admin",
-  "comp": "RequireAuth",
-  "title": "Admin"
- },
- {
   "path": "/advisory",
   "comp": "PartnersAdvisory",
   "title": "Partners Advisory"
  },
  {
   "path": "/ag-ui",
-  "comp": "AgUiBridge",
-  "title": "Ag Ui Bridge"
+  "comp": "Redirect",
+  "title": "Ag Ui"
  },
  {
   "path": "/agent-council",
@@ -163,18 +158,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Api Docs"
  },
  {
-  "path": "/api-keys",
-  "comp": "RequireAuth",
-  "title": "Api Keys"
- },
- {
   "path": "/architecture",
   "comp": "Technology",
   "title": "Technology"
  },
  {
   "path": "/arena-scoreboard",
-  "comp": "ArenaScoreboard",
+  "comp": "Redirect",
   "title": "Arena Scoreboard"
  },
  {
@@ -184,13 +174,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/assess",
-  "comp": "RequireAuth",
+  "comp": "Redirect",
   "title": "Assess"
  },
  {
   "path": "/assessment",
-  "comp": "ReadinessAssessment",
-  "title": "Readiness Assessment"
+  "comp": "Redirect",
+  "title": "Assessment"
  },
  {
   "path": "/assurance",
@@ -204,8 +194,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/authority",
-  "comp": "BadgesPage",
-  "title": "Badges Page"
+  "comp": "Redirect",
+  "title": "Authority"
  },
  {
   "path": "/badge",
@@ -349,8 +339,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/chat",
-  "comp": "AgUiBridge",
-  "title": "Ag Ui Bridge"
+  "comp": "Redirect",
+  "title": "Chat"
  },
  {
   "path": "/checklist",
@@ -384,7 +374,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/coliseum",
-  "comp": "Coliseum",
+  "comp": "Redirect",
   "title": "Coliseum"
  },
  {
@@ -619,8 +609,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/demo",
-  "comp": "DemoOS",
-  "title": "Demo OS"
+  "comp": "Redirect",
+  "title": "Demo"
  },
  {
   "path": "/disclaimers",
@@ -689,8 +679,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/ecosystem",
-  "comp": "Integrations",
-  "title": "Integrations"
+  "comp": "Redirect",
+  "title": "Ecosystem"
  },
  {
   "path": "/ei3",
@@ -709,8 +699,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/enter",
-  "comp": "OsEnter",
-  "title": "Os Enter"
+  "comp": "Redirect",
+  "title": "Enter"
  },
  {
   "path": "/enterprise",
@@ -1054,8 +1044,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gspc-arena",
-  "comp": "CouncilSpace",
-  "title": "Council Space"
+  "comp": "Redirect",
+  "title": "Gspc Arena"
  },
  {
   "path": "/gspc-gap-map",
@@ -1149,13 +1139,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/home-v2",
-  "comp": "NewHomeV2",
-  "title": "New Home"
+  "comp": "Redirect",
+  "title": "Home V2"
  },
  {
   "path": "/home-v3",
-  "comp": "NewHomeV3",
-  "title": "New Home"
+  "comp": "Redirect",
+  "title": "Home V3"
  },
  {
   "path": "/honesty",
@@ -1239,7 +1229,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/integrations",
-  "comp": "Integrations",
+  "comp": "Redirect",
   "title": "Integrations"
  },
  {
@@ -1413,11 +1403,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Maternal Covenant"
  },
  {
-  "path": "/mcp",
-  "comp": "MCPRegistry",
-  "title": "MCPRegistry"
- },
- {
   "path": "/mcp-fleet",
   "comp": "McpFleet",
   "title": "Mcp Fleet"
@@ -1473,16 +1458,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Motion Lab"
  },
  {
-  "path": "/my-applications",
-  "comp": "RequireAuth",
-  "title": "My Applications"
- },
- {
-  "path": "/my-courses",
-  "comp": "RequireAuth",
-  "title": "My Courses"
- },
- {
   "path": "/network",
   "comp": "NetworkPage",
   "title": "Network Page"
@@ -1509,8 +1484,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/old-home",
-  "comp": "Home",
-  "title": "Home"
+  "comp": "Redirect",
+  "title": "Old Home"
  },
  {
   "path": "/onboard",
@@ -1554,8 +1529,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/os-demo",
-  "comp": "DemoOS",
-  "title": "Demo OS"
+  "comp": "Redirect",
+  "title": "Os Demo"
  },
  {
   "path": "/oscal",
@@ -1938,21 +1913,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Services"
  },
  {
-  "path": "/settings",
-  "comp": "RequireAuth",
-  "title": "Settings"
- },
- {
-  "path": "/settings/billing",
-  "comp": "RequireAuth",
-  "title": "Settings Billing"
- },
- {
-  "path": "/settings/notifications",
-  "comp": "RequireAuth",
-  "title": "Settings Notifications"
- },
- {
   "path": "/signals",
   "comp": "Signals",
   "title": "Signals"
@@ -2059,7 +2019,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/standards",
-  "comp": "Standards",
+  "comp": "Redirect",
   "title": "Standards"
  },
  {
@@ -2174,7 +2134,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/training-hub",
-  "comp": "TrainingHub",
+  "comp": "Redirect",
   "title": "Training Hub"
  },
  {
@@ -2194,8 +2154,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/try",
-  "comp": "TryCouncil",
-  "title": "Try Council"
+  "comp": "Redirect",
+  "title": "Try"
  },
  {
   "path": "/uk-ai-regulation",
@@ -2224,8 +2184,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/verify-certificate",
-  "comp": "Redirect",
-  "title": "Verify Certificate"
+  "comp": "CertificateVerification",
+  "title": "Certificate Verification"
  },
  {
   "path": "/verify-leaderboard",
@@ -2240,12 +2200,12 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  {
   "path": "/vs",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs"
  },
  {
   "path": "/vs-competitors",
   "comp": "Compare",
-  "title": "Compare"
+  "title": "Vs Competitors"
  },
  {
   "path": "/vulnerability-disclosure",
@@ -2331,11 +2291,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/widget",
   "comp": "WidgetCourses",
   "title": "Widget Courses"
- },
- {
-  "path": "/workbench",
-  "comp": "RequireAuth",
-  "title": "Workbench"
  },
  {
   "path": "/workbench-paper",

@@ -1,92 +1,122 @@
 import { useEffect, useState } from "react";
 
-/**
- * OtelReaderRail — the live OTel GenAI spans tape.
- * OTel GenAI conventions live; vendor-neutral. Each harness run emits spans
- * that are hashed and bound to the signed card.
- */
-
-type OtelSpan = {
-  trace_id?: string;
-  span_id?: string;
-  op?: string;
-  duration_ms?: number;
-};
-
 type OtelDoc = {
   schema?: string;
-  kind?: string;
   writes_board?: boolean;
-  n?: number;
-  as_of?: string;
-  counts?: Record<string, number>;
-  spans?: OtelSpan[];
+  collector?: string;
+  otlp?: string;
+  gen_ai_spans?: string;
+  otel_trace_id?: string | null;
+  otel_trace_hash?: string | null;
+  honesty?: string;
 };
 
 type Wire =
   | { state: "loading" }
   | { state: "unreachable"; detail: string }
-  | { state: "live"; doc: OtelDoc };
+  | { state: "ready"; doc: OtelDoc };
 
 export default function OtelReaderRail({
-  heading = "OTel reader — live",
+  heading = "OTel reader",
   className = "",
-}: { heading?: string; className?: string }) {
+}: {
+  heading?: string;
+  className?: string;
+}) {
   const [wire, setWire] = useState<Wire>({ state: "loading" });
 
   useEffect(() => {
-    let dead = false;
-    fetch("https://councilof.ai/api/gspc", { headers: { Accept: "application/json" } })
-      .then((r) => r.ok ? r.json() : null)
-      .catch(() => null)
-      .then(() => {
-        if (dead) return;
+    const ac = new AbortController();
+    fetch("/api/otel", {
+      signal: ac.signal,
+      headers: { accept: "application/json" },
+    })
+      .then(async (response) => {
+        if (!response.ok)
+          throw new Error(`GET /api/otel HTTP ${response.status}`);
+        const doc = (await response.json()) as OtelDoc;
+        if (!doc || typeof doc !== "object")
+          throw new Error("GET /api/otel returned no status document");
+        setWire({ state: "ready", doc });
+      })
+      .catch((error) => {
+        if (ac.signal.aborted) return;
         setWire({
-          state: "live",
-          doc: {
-            schema: "csoai.otel/0.1-stub",
-            kind: "reader-tape",
-            writes_board: false,
-            n: 0,
-            as_of: new Date().toISOString().replace("+00:00", "Z"),
-            counts: { SPANS_EMITTED: 0, RUNS_TRACED: 0 },
-            spans: [],
-          },
+          state: "unreachable",
+          detail: String(error?.message || error),
         });
       });
-    return () => { dead = true; };
+    return () => ac.abort();
   }, []);
 
   if (wire.state === "loading") {
     return (
-      <section className={`rounded-lg border border-slate-200 bg-white p-4 ${className}`} data-testid="rail-otel">
+      <section
+        className={`rounded-lg border border-slate-200 bg-white p-4 ${className}`}
+        data-testid="rail-otel"
+      >
         <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
-        <p className="mt-1 text-xs text-slate-500">LOADING…</p>
+        <p className="mt-1 text-xs text-slate-500">
+          LOADING — fetching GET /api/otel…
+        </p>
       </section>
     );
   }
+
   if (wire.state === "unreachable") {
     return (
-      <section className={`rounded-lg border border-amber-200 bg-amber-50 p-4 ${className}`} data-testid="rail-otel">
+      <section
+        className={`rounded-lg border border-amber-200 bg-amber-50 p-4 ${className}`}
+        data-testid="rail-otel"
+      >
         <h3 className="text-sm font-semibold text-amber-800">{heading}</h3>
-        <p className="mt-1 text-xs text-amber-700">UNREACHABLE — {wire.detail}.</p>
+        <p
+          className="mt-1 text-xs text-amber-700"
+          data-testid="rail-otel-unreachable"
+        >
+          UNREACHABLE — {wire.detail}.
+        </p>
       </section>
     );
   }
+
   const doc = wire.doc;
-  const counts = doc.counts ?? {};
   return (
-    <section className={`rounded-lg border border-slate-200 bg-white p-4 ${className}`} data-testid="rail-otel">
+    <section
+      className={`rounded-lg border border-slate-200 bg-white p-4 ${className}`}
+      data-testid="rail-otel"
+    >
       <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
-      <p className="mt-1 text-xs text-slate-600">
-        <strong className="text-slate-900">{counts.SPANS_EMITTED ?? 0}</strong> spans emitted
-        {counts.RUNS_TRACED ? <> · <strong>{counts.RUNS_TRACED}</strong> runs traced</> : null}
-        {" — "}writes_board: <code>{String(doc.writes_board ?? false)}</code>
-      </p>
-      <p className="mt-2 text-[11px] text-slate-500">
-        OTel GenAI conventions live, vendor-neutral. Hash the trace; bind to the card.
-        Honest stub beats silent zero.
-      </p>
+      <dl
+        className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs"
+        data-testid="rail-otel-facts"
+      >
+        <dt className="text-slate-500">collector</dt>
+        <dd className="font-mono text-slate-800">
+          {doc.collector ?? "UNCHECKABLE"}
+        </dd>
+        <dt className="text-slate-500">OTLP</dt>
+        <dd className="font-mono text-slate-800">
+          {doc.otlp ?? "UNCHECKABLE"}
+        </dd>
+        <dt className="text-slate-500">GenAI spans</dt>
+        <dd className="font-mono text-slate-800">
+          {doc.gen_ai_spans ?? "UNCHECKABLE"}
+        </dd>
+        <dt className="text-slate-500">trace id</dt>
+        <dd className="font-mono text-slate-800">
+          {doc.otel_trace_id ?? "UNCHECKABLE"}
+        </dd>
+        <dt className="text-slate-500">writes_board</dt>
+        <dd className="font-mono text-slate-800">
+          {typeof doc.writes_board === "boolean"
+            ? String(doc.writes_board)
+            : "UNCHECKABLE"}
+        </dd>
+      </dl>
+      {doc.honesty ? (
+        <p className="mt-2 text-[11px] text-slate-500">{doc.honesty}</p>
+      ) : null}
     </section>
   );
 }

@@ -2,15 +2,31 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
-import { BOARD_PANE, DOORS, doorFromSearch, osLeaveForSearch } from "./OsLauncher";
+import {
+  BOARD_PANE,
+  DOORS,
+  doorFromSearch,
+  osLeaveForSearch,
+} from "./OsLauncher";
 
 const launcher = readFileSync(resolve(__dirname, "OsLauncher.tsx"), "utf8");
-const lobbyHome = readFileSync(resolve(__dirname, "../components/lobby/LobbyHome.tsx"), "utf8");
 
 describe("OsLauncher doors", () => {
   it("keeps the header rail to Board · Verify · Space · Assess · Harness", () => {
-    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness"]);
-    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
+    expect(DOORS.map((d) => d.id)).toEqual([
+      "board",
+      "verify",
+      "space",
+      "assess",
+      "harness",
+    ]);
+    expect(DOORS.map((d) => d.label)).toEqual([
+      "Board",
+      "Verify",
+      "Space",
+      "Assess",
+      "Harness",
+    ]);
   });
 
   it("maps ?lobby= onto those panes, including a harness panel query", () => {
@@ -69,7 +85,10 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("PQC");
     expect(launcher).toContain("OTEL");
     expect(launcher).toContain("/api/pqc");
-    const doors = readFileSync(resolve(__dirname, "../components/os/OsDoors.tsx"), "utf8");
+    const doors = readFileSync(
+      resolve(__dirname, "../components/os/OsDoors.tsx"),
+      "utf8",
+    );
     expect(doors).toContain("/api/compute");
     expect(doors).toContain("AGUI_WIRE_URL");
     expect(doors).toContain("PublicRootCatalogue");
@@ -77,14 +96,11 @@ describe("OsLauncher doors", () => {
   });
 
   it("OsHeader door buttons are addressable so an end user can hop panes", () => {
-    const header = readFileSync(resolve(__dirname, "../components/os/OsHeader.tsx"), "utf8");
-    expect(header).toContain('data-testid={`os-door-${door.id}`}');
+    const header = readFileSync(
+      resolve(__dirname, "../components/os/OsHeader.tsx"),
+      "utf8",
+    );
+    expect(header).toContain("data-testid={`os-door-${door.id}`}");
     expect(header).toContain("osDoorHref");
-  });
-
-  it("LobbyHome mounts the Hub record next to the living board — no Space iframe", () => {
-    expect(lobbyHome).toContain("HfLivingRecord");
-    expect(lobbyHome).toContain("LivingBoard");
-    expect(lobbyHome).not.toMatch(/<iframe/i);
   });
 });

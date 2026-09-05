@@ -23,10 +23,10 @@ const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/sov-os", "/os?lobby=home"],
-  ["/ag-ui", "/os?lobby=home"],
-  ["/agui", "/os?lobby=home"],
-  ["/chat", "/os?lobby=home"],
+  ["/sov-os", "/dashboard?tab=home"],
+  ["/ag-ui", "/dashboard?tab=home"],
+  ["/agui", "/dashboard?tab=home"],
+  ["/chat", "/dashboard?tab=home"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
@@ -69,12 +69,12 @@ const PAGES = [
 
 // Functions-first leftover hops (not necessarily in public/_redirects).
 const LIVE_HOPS = [
-  ["/pricing", "/os?lobby=assess&task=pricing-overview"],
-  ["/plans", "/os?lobby=assess&task=pricing-overview"],
-  ["/enterprise-plans", "/os?lobby=assess&task=pricing-overview"],
-  ["/enterprise", "/os?lobby=assess&task=enterprise-start"],
-  ["/get-measured", "/os?lobby=assess&task=get-measured"],
-  ["/overlay", "/os?lobby=home"],
+  ["/pricing", "/dashboard?tab=measured&task=pricing-overview"],
+  ["/plans", "/dashboard?tab=measured&task=pricing-overview"],
+  ["/enterprise-plans", "/dashboard?tab=measured&task=pricing-overview"],
+  ["/enterprise", "/dashboard?tab=measured&task=enterprise-start"],
+  ["/get-measured", "/dashboard?tab=measured&task=get-measured"],
+  ["/overlay", "/dashboard?tab=home"],
   ["/certification", "/honesty/"],
   ["/claimguard", "/honesty/"],
 ];
@@ -131,8 +131,14 @@ for (const [from, to] of ALIASES) {
   try {
     const res = await fetchHead(from);
     const loc = res.headers.get("location") || "";
-    const destOk = loc.includes(to.replace(/^\//, "")) || loc.endsWith(to) || loc.includes(to);
-    if ((res.status === 301 || res.status === 302 || res.status === 308) && destOk) {
+    const destOk =
+      loc.includes(to.replace(/^\//, "")) ||
+      loc.endsWith(to) ||
+      loc.includes(to);
+    if (
+      (res.status === 301 || res.status === 302 || res.status === 308) &&
+      destOk
+    ) {
       pass(`${from} ${res.status} → ${loc}`);
     } else {
       fail(`${from} expected 308 ${to}`, `${res.status} ${loc}`);
@@ -147,7 +153,10 @@ for (const [from, to] of LIVE_HOPS) {
     const res = await fetchHead(from);
     const loc = res.headers.get("location") || "";
     const destOk = loc.includes(to) || loc.endsWith(to);
-    if ((res.status === 301 || res.status === 302 || res.status === 308) && destOk) {
+    if (
+      (res.status === 301 || res.status === 302 || res.status === 308) &&
+      destOk
+    ) {
       pass(`live hop ${from} ${res.status} → ${loc}`);
     } else {
       fail(`live hop ${from} expected 308 ${to}`, `${res.status} ${loc}`);
@@ -162,7 +171,10 @@ for (const path of MUST_RESOLVE) {
     const { res, text } = await fetchText(path);
     const title = (text.match(/<title>([^<]+)/i) || [])[1] || "";
     if (res.status >= 400 || /404 — Not found/i.test(title)) {
-      fail(`${path} must resolve for a stranger`, `HTTP ${res.status} ${title}`);
+      fail(
+        `${path} must resolve for a stranger`,
+        `HTTP ${res.status} ${title}`,
+      );
     } else if (path.includes("gspc") && /13 axes\s*[x×]\s*19/i.test(text)) {
       fail(`${path} leftover static table`, "hardcoded 13×19");
     } else {
@@ -176,7 +188,8 @@ for (const path of MUST_RESOLVE) {
 try {
   const { res, text } = await fetchText("/api/gspc");
   const json = JSON.parse(text);
-  if (res.ok && json?.totals) pass("/api/gspc JSON", json.totals.public_count || "totals present");
+  if (res.ok && json?.totals)
+    pass("/api/gspc JSON", json.totals.public_count || "totals present");
   else fail("/api/gspc JSON", `status ${res.status}`);
 } catch (e) {
   fail("/api/gspc JSON", String(e).slice(0, 120));
@@ -185,11 +198,16 @@ try {
 try {
   const { text: home } = await fetchText("/");
   if (home.length < 20000) {
-    fail("homepage is prerendered (not a thin Vite shell)", `${home.length} bytes`);
+    fail(
+      "homepage is prerendered (not a thin Vite shell)",
+      `${home.length} bytes`,
+    );
   } else {
     pass("homepage is prerendered", `${home.length} bytes`);
   }
-  if (!/data-testid="home-verify"|Check an AI claim in your browser/i.test(home)) {
+  if (
+    !/data-testid="home-verify"|Check an AI claim in your browser/i.test(home)
+  ) {
     fail("homepage is verify (home-verify)");
   } else {
     pass("homepage is verify", "home-verify");
@@ -202,12 +220,17 @@ try {
   const { res, text } = await fetchText("/sitemap.xml");
   if (!res.ok) fail("sitemap.xml", `HTTP ${res.status}`);
   else {
-    const hasOs = text.includes("<loc>https://councilof.ai/os</loc>") || text.includes("<loc>https://councilof.ai/os/</loc>");
+    const hasOs =
+      text.includes("<loc>https://councilof.ai/os</loc>") ||
+      text.includes("<loc>https://councilof.ai/os/</loc>");
     const hasHonesty = text.includes("councilof.ai/honesty");
     const hasCloud = /<loc>https:\/\/councilof\.ai\/cloud\/?<\/loc>/.test(text);
     (hasOs ? pass : fail)("sitemap lists /os");
     (hasHonesty ? pass : fail)("sitemap lists /honesty");
-    (hasCloud ? fail : pass)("sitemap does not list leftover /cloud 404", hasCloud ? "flagship 404" : "absent");
+    (hasCloud ? fail : pass)(
+      "sitemap does not list leftover /cloud 404",
+      hasCloud ? "flagship 404" : "absent",
+    );
   }
 } catch (e) {
   fail("sitemap.xml", String(e).slice(0, 120));

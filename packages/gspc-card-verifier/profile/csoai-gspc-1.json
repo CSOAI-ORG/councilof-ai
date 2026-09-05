@@ -11,7 +11,8 @@
     "sha256(canonical body)"
   ],
   "bodyKinds": [
-    "gspc.measurement-card"
+    "gspc.measurement-card",
+    "gspc.card-chain"
   ],
   "genesisMarkers": [
     "GSPC-CARD-FACTORY-GENESIS"
@@ -32,6 +33,9 @@
       "_accuracy"
     ],
     "intFields": [
+      "bodies_published",
+      "bodies_withheld",
+      "length",
       "n",
       "n_items",
       "n_cards",
@@ -67,7 +71,10 @@
         ],
         "intFields": [
           "accuracy",
+          "bodies_published",
+          "bodies_withheld",
           "count",
+          "length",
           "n",
           "n_cards",
           "n_cells",

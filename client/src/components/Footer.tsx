@@ -5,10 +5,11 @@
  * Newsletter is inline. No duplicate columns.
  */
 
-import { Link } from 'wouter';
-import { Github, Linkedin, Mail } from 'lucide-react';
-import FooterVerifyStrip from './FooterVerifyStrip';
-import { useSiteChromeHidden } from '@/lib/osChrome';
+import { Link } from "wouter";
+import { Github, Linkedin, Mail } from "lucide-react";
+import FooterVerifyStrip from "./FooterVerifyStrip";
+import { useSiteChromeHidden } from "@/lib/osChrome";
+import { CouncilBrand } from "@/components/brand/CouncilBrand";
 
 interface FooterLink {
   name: string;
@@ -23,55 +24,59 @@ export function Footer() {
 
   const footerSections: { title: string; links: FooterLink[] }[] = [
     {
-      title: 'Product',
+      title: "Product",
       links: [
-        { name: 'Verify a card', href: '/gspc-verify' },
-        { name: 'Get measured', href: '/assess' },
-        { name: 'Board', href: '/dashboard?tab=board' },
-        { name: 'Tools — plugin snippet', href: '/tools' },
-        { name: 'Run / re-attest', href: '/assess' },
-        { name: 'Ledger', href: '/contact?arm=ledger' },
-        { name: 'Data', href: '/contact?arm=data' },
-        { name: 'Library', href: '/library' },
+        { name: "Verify a card", href: "/gspc-verify" },
+        { name: "Request attestation", href: "/dashboard?tab=measured" },
+        { name: "Board", href: "/dashboard?tab=board" },
+        { name: "Tools — plugin snippet", href: "/tools" },
+        { name: "Run / re-attest", href: "/dashboard?tab=measured" },
+        { name: "Ledger", href: "/contact?arm=ledger" },
+        { name: "Data", href: "/contact?arm=data" },
+        { name: "Library", href: "/library" },
       ],
     },
     {
-      title: 'Evidence',
+      title: "Evidence",
       links: [
-        { name: 'GSPC JSON', href: '/api/gspc', external: true },
-        { name: 'Methodology', href: '/methodology' },
-        { name: 'Honesty gate', href: '/honesty' },
-        { name: 'Corrections', href: '/api/corrections', external: true },
-        { name: 'llms.txt', href: '/llms.txt', external: true },
-        { name: 'API docs', href: '/api-docs' },
+        { name: "GSPC JSON", href: "/api/gspc", external: true },
+        { name: "Methodology", href: "/methodology" },
+        { name: "Honesty gate", href: "/honesty" },
+        { name: "Corrections", href: "/api/corrections", external: true },
+        { name: "llms.txt", href: "/llms.txt", external: true },
+        { name: "API docs", href: "/api-docs" },
       ],
     },
     {
-      title: 'Company',
+      title: "Company",
       links: [
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Partners', href: '/partners' },
-        { name: 'Blog', href: '/blog' },
-        { name: 'FAQ', href: '/faq' },
-        { name: 'Careers', href: '/careers' },
+        { name: "About", href: "/about" },
+        { name: "Contact", href: "/contact" },
+        { name: "Partners", href: "/partners" },
+        { name: "Blog", href: "/blog" },
+        { name: "FAQ", href: "/faq" },
+        { name: "Careers", href: "/careers" },
       ],
     },
     {
-      title: 'Legal',
+      title: "Legal",
       links: [
-        { name: 'Disclaimers', href: '/disclaimers' },
-        { name: 'Privacy', href: '/privacy-policy' },
-        { name: 'Terms', href: '/terms-of-service' },
-        { name: 'GDPR / DPA', href: '/dpa' },
+        { name: "Disclaimers", href: "/disclaimers" },
+        { name: "Privacy", href: "/privacy-policy" },
+        { name: "Terms", href: "/terms-of-service" },
+        { name: "GDPR / DPA", href: "/dpa" },
       ],
     },
   ];
 
   const socialLinks = [
-    { name: 'GitHub', icon: Github, href: 'https://github.com/CSOAI-ORG' },
-    { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/csoai' },
-    { name: 'Email', icon: Mail, href: 'mailto:contact@csoai.org' },
+    { name: "GitHub", icon: Github, href: "https://github.com/CSOAI-ORG" },
+    {
+      name: "LinkedIn",
+      icon: Linkedin,
+      href: "https://linkedin.com/company/csoai",
+    },
+    { name: "Email", icon: Mail, href: "mailto:contact@csoai.org" },
   ];
 
   return (
@@ -79,37 +84,16 @@ export function Footer() {
       <div className="section-shell py-12 sm:py-14">
         {/* Brand + socials */}
         <div className="mb-10 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-6">
-          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-            <svg viewBox="0 0 100 100" className="h-9 w-9" aria-hidden="true">
-              <defs>
-                <linearGradient id="footerShieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#047857" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M50 5 L90 20 L90 50 C90 75 50 95 50 95 C50 95 10 75 10 50 L10 20 Z"
-                fill="url(#footerShieldGradient)"
-              />
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <line x1="25" y1="30" x2="25" y2="70"/>
-                <line x1="25" y1="40" x2="40" y2="40"/>
-                <line x1="25" y1="55" x2="35" y2="55"/>
-                <circle cx="25" cy="30" r="4" fill="#fff"/>
-                <circle cx="40" cy="40" r="4" fill="#fff"/>
-                <circle cx="35" cy="55" r="4" fill="#fff"/>
-                <circle cx="25" cy="70" r="4" fill="#fff"/>
-              </g>
-              <g stroke="#fff" strokeWidth="3" fill="none" opacity="0.9">
-                <path d="M55 35 Q70 30 72 45 Q82 45 78 58 Q85 65 70 72 Q65 80 55 72"/>
-                <circle cx="62" cy="45" r="5" fill="#fff"/>
-                <circle cx="72" cy="60" r="5" fill="#fff"/>
-              </g>
-            </svg>
-            <span className="text-xl font-bold">CSOAI</span>
+          <Link
+            href="/"
+            className="transition-opacity hover:opacity-80"
+            aria-label="Council of AI home"
+          >
+            <CouncilBrand size="sm" strapline="Independent measurement" />
           </Link>
           <p className="text-muted-foreground text-sm max-w-md">
-            Independent measurement body. Signed attestation and transparent measurement — never certification.
+            Signed attestations and transparent measurements — never
+            certification.
           </p>
           <div className="flex space-x-4 sm:ml-auto">
             {socialLinks.map((social) => (
@@ -145,7 +129,10 @@ export function Footer() {
                         {link.name}
                       </a>
                     ) : (
-                      <Link href={link.href} className="text-muted-foreground hover:text-primary text-sm transition-colors">
+                      <Link
+                        href={link.href}
+                        className="text-muted-foreground hover:text-primary text-sm transition-colors"
+                      >
                         {link.name}
                       </Link>
                     )}
@@ -164,58 +151,63 @@ export function Footer() {
           <ul className="flex flex-wrap items-center justify-center gap-2.5 list-none p-0 m-0">
             {[
               {
-                src: '/images/badges/frameworks/eu-ai-act.svg',
-                alt: 'EU AI Act',
-                href: 'https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai',
-                title: 'EU Artificial Intelligence Act — framework we measure against',
+                src: "/images/badges/frameworks/eu-ai-act.svg",
+                alt: "EU AI Act",
+                href: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+                title:
+                  "EU Artificial Intelligence Act — framework we measure against",
               },
               {
-                src: '/images/badges/frameworks/nist-ai-rmf.svg',
-                alt: 'NIST AI RMF',
-                href: 'https://www.nist.gov/itl/ai-risk-management-framework',
-                title: 'NIST AI Risk Management Framework — we measure against; we are not certified',
+                src: "/images/badges/frameworks/nist-ai-rmf.svg",
+                alt: "NIST AI RMF",
+                href: "https://www.nist.gov/itl/ai-risk-management-framework",
+                title:
+                  "NIST AI Risk Management Framework — we measure against; we are not certified",
               },
               {
-                src: '/images/badges/frameworks/iso-42001.svg',
-                alt: 'ISO/IEC 42001',
-                href: 'https://www.iso.org/standard/81230.html',
-                title: 'ISO/IEC 42001 AI management systems — we are not certified',
+                src: "/images/badges/frameworks/iso-42001.svg",
+                alt: "ISO/IEC 42001",
+                href: "https://www.iso.org/standard/81230.html",
+                title:
+                  "ISO/IEC 42001 AI management systems — we are not certified",
               },
               {
-                src: '/images/badges/frameworks/dora.svg',
-                alt: 'DORA',
-                href: 'https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en',
-                title: 'Digital Operational Resilience Act — we measure against; we are not certified',
+                src: "/images/badges/frameworks/dora.svg",
+                alt: "DORA",
+                href: "https://www.eiopa.europa.eu/digital-operational-resilience-act-dora_en",
+                title:
+                  "Digital Operational Resilience Act — we measure against; we are not certified",
               },
               {
-                src: '/images/badges/frameworks/c2pa.svg',
-                alt: 'C2PA',
-                href: 'https://c2pa.org/',
-                title: 'C2PA Content Credentials — contributor member',
+                src: "/images/badges/frameworks/c2pa.svg",
+                alt: "C2PA",
+                href: "https://c2pa.org/",
+                title: "C2PA Content Credentials — contributor member",
               },
               {
-                src: '/images/badges/frameworks/oin.svg',
-                alt: 'Open Invention Network',
-                href: 'https://openinventionnetwork.com/',
-                title: 'Open Invention Network — member',
+                src: "/images/badges/frameworks/oin.svg",
+                alt: "Open Invention Network",
+                href: "https://openinventionnetwork.com/",
+                title: "Open Invention Network — member",
               },
               {
-                src: '/images/badges/frameworks/lot-network.svg',
-                alt: 'LOT Network',
-                href: 'https://lotnet.com/',
-                title: 'LOT Network — member',
+                src: "/images/badges/frameworks/lot-network.svg",
+                alt: "LOT Network",
+                href: "https://lotnet.com/",
+                title: "LOT Network — member",
               },
               {
-                src: '/images/badges/frameworks/dif.svg',
-                alt: 'Decentralized Identity Foundation',
-                href: 'https://identity.foundation/',
-                title: 'Decentralized Identity Foundation — did:web trust root',
+                src: "/images/badges/frameworks/dif.svg",
+                alt: "Decentralized Identity Foundation",
+                href: "https://identity.foundation/",
+                title: "Decentralized Identity Foundation — did:web trust root",
               },
               {
-                src: '/images/badges/frameworks/linux-foundation.svg',
-                alt: 'Linux Foundation',
-                href: 'https://www.linuxfoundation.org/',
-                title: 'Linux Foundation — hosts our DIF and C2PA memberships (LFX profile). Not a Linux Foundation corporate membership.',
+                src: "/images/badges/frameworks/linux-foundation.svg",
+                alt: "Linux Foundation",
+                href: "https://www.linuxfoundation.org/",
+                title:
+                  "Linux Foundation — hosts our DIF and C2PA memberships (LFX profile). Not a Linux Foundation corporate membership.",
               },
             ].map((b) => (
               <li key={b.alt}>
@@ -240,7 +232,8 @@ export function Footer() {
             ))}
           </ul>
           <p className="text-muted-foreground text-xs text-center mt-4 font-medium">
-            We are not certified to SOC 2 or ISO 42001. Measurement credential, never certification.
+            We are not certified to SOC 2 or ISO 42001. Measurement credential,
+            never certification.
           </p>
         </div>
 
@@ -250,10 +243,12 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-xs">
-            © {currentYear} CSOAI Ltd · UK Companies House 16939677 · London · contact@csoai.org
+            © {currentYear} CSOAI Ltd · UK Companies House 16939677 · London ·
+            contact@csoai.org
           </p>
           <p className="text-muted-foreground text-xs text-center md:text-right max-w-md">
-            Independent. No financial ties to OpenAI, Anthropic, Google, Microsoft, Meta, or any AI vendor.
+            Independent. No financial ties to OpenAI, Anthropic, Google,
+            Microsoft, Meta, or any AI vendor.
           </p>
         </div>
       </div>

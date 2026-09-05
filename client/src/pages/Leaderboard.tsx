@@ -9,9 +9,9 @@
  * correct. So this page has NO forced "overall rank": the reader sorts by the
  * axis they care about, the composite is opt-in with its formula shown in the
  * open, and the per-axis breakdown is always visible beside any composite. Every
- * measured cell links to the signed card behind it; every unmeasured pair is
- * shown as empty, never as a zero. The board audits itself in a panel at the
- * bottom. Lead by example.
+ * admitted measured cell links to the signed card and independent admission
+ * behind it; every unmeasured pair is shown as empty, never as a zero. The
+ * board audits itself in a panel at the bottom. Lead by example.
  *
  * Data core: client/src/lib/gspcFleet.ts (reads /signed/card-matrix.json). Counts
  * are derived from the arrays there, never typed here. The axis-level statistics
@@ -68,7 +68,7 @@ export default function Leaderboard() {
   useEffect(() => {
     document.title = "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI";
     setMetaDescription(
-      "Not a single 'best AI'. Sort 64 signed models across every governance axis — safety, provenance, refusal, jailbreak-resistance — every cell verifiable against its Ed25519 card. Measurement, not certification.",
+      "Not a single 'best AI'. Compare independently admitted measurements across governance axes — every displayed cell must pass its card signature and separate admission check. Measurement, not certification.",
     );
   }, []);
 
@@ -113,8 +113,8 @@ function Hero() {
           <strong className="text-emerald-200">There is no single &ldquo;best AI&rdquo;.</strong> A model strong on
           one axis is often weak on another; hiding that is the malpractice this board exists to correct. So there is
           no forced overall rank here. Sort by the axis <em>you</em> care about — safety, provenance, refusal,
-          jailbreak-resistance. Every measured cell links to the Ed25519 card behind it. Every unmeasured pair is shown
-          empty, never as a zero.
+          jailbreak-resistance. Every displayed cell must pass both its Ed25519 card signature and an independent
+          measurement-admission signature. Every unmeasured pair is shown empty, never as a zero.
         </p>
       </div>
     </header>
@@ -204,6 +204,19 @@ function Board({ matrix, board, pinnedKey }: { matrix: FleetMatrix; board: impor
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
+
+  if (counts.measuredCells === 0) {
+    return (
+      <div className="mx-auto max-w-[1400px] px-5 pb-24">
+        <CountStrip counts={counts} matrix={matrix} board={board} />
+        <NoAdmittedCells matrix={matrix} />
+        <TwoInstrumentNote matrix={matrix} board={board} />
+        <Methodology matrix={matrix} />
+        <SelfAudit matrix={matrix} counts={counts} board={board} />
+        <ShaVerifyBox pinnedKey={pinnedKey} />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 pb-24">
@@ -336,13 +349,52 @@ function CountStrip({ counts, matrix, board }: { counts: ReturnType<typeof deriv
   const cov = counts.coverage;
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
-      <Stat n={counts.models} label="models (rows)" />
-      <Stat n={counts.axes} label="signed axes (columns)" />
-      <Stat n={counts.measuredCells} label="measured cells" />
+      <Stat n={counts.models} label="admitted models (rows)" />
+      <Stat n={counts.axes} label="admitted axes (columns)" />
+      <Stat n={counts.measuredCells} label="admitted measured cells" />
       <Stat n={counts.possibleCells} label="possible cells" sub={cov !== null ? `${(cov * 100).toFixed(0)}% covered` : undefined} />
-      <Stat n={counts.signedCells} label="signed cells" sub={counts.signedCells === counts.measuredCells ? "every cell signed" : undefined} />
+      <Stat n={counts.signedCells} label="verified + admitted cells" sub={counts.measuredCells > 0 && counts.signedCells === counts.measuredCells ? "every displayed cell passed both checks" : undefined} />
       <Stat text={boardCount ?? "—"} label="governance board" sub="separate instrument · /api/gspc" />
     </div>
+  );
+}
+
+function NoAdmittedCells({ matrix }: { matrix: FleetMatrix }) {
+  const numeric = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? value : 0;
+  const cards = numeric(matrix.counts.cards_read);
+  const verified = numeric(matrix.counts.signature_verified_records);
+  const legacy = numeric(matrix.counts.legacy_unadjudicated_records);
+  const unverified = numeric(matrix.counts.unverified_records);
+  const inventoryModels = numeric(matrix.counts.inventory_models);
+  const inventoryAxes = numeric(matrix.counts.inventory_axes);
+
+  return (
+    <section
+      role="status"
+      className="mt-6 rounded-xl border border-amber-400/35 bg-amber-400/[0.06] p-5 text-amber-50"
+    >
+      <p className="font-mono text-[10px] uppercase tracking-[2px] text-amber-300/70">
+        Evidence gate · fail closed
+      </p>
+      <h2 className="mt-2 text-xl font-black">No independently admitted measurement cells yet</h2>
+      <p className="mt-2 max-w-4xl text-[13px] leading-relaxed text-amber-50/85">
+        This is an admission state, <strong>not a 0% model score</strong>. The inventory contains {cards.toLocaleString()} source
+        records across {inventoryModels.toLocaleString()} recorded model names and {inventoryAxes.toLocaleString()} recorded
+        axes. Of those, {verified.toLocaleString()} card signatures verify, but {legacy.toLocaleString()} records predate the
+        separate <span className="font-mono">csoai.measurement-admission/0.1</span> decision and remain explicitly
+        <span className="font-mono"> LEGACY_UNADJUDICATED</span>.
+        {unverified > 0 && <> {unverified.toLocaleString()} records also failed verification.</>}
+      </p>
+      <p className="mt-2 max-w-4xl text-[13px] leading-relaxed text-amber-50/75">
+        Until a card and its independent admission both verify under pinned keys, it is excluded from scores, rankings,
+        composites, and findings. The original records remain available for audit; they have not been deleted or silently
+        promoted.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2 text-[12px]">
+        <a href="/signed/card-matrix.json" className="rounded-md border border-amber-300/35 px-3 py-1.5 text-amber-100 hover:bg-amber-300/10">Inspect retained inventory →</a>
+        <a href="/signed/HOW-TO-VERIFY.md" className="rounded-md border border-amber-300/35 px-3 py-1.5 text-amber-100 hover:bg-amber-300/10">Verify the evidence chain →</a>
+      </div>
+    </section>
   );
 }
 
@@ -557,12 +609,17 @@ function AxisStat({ axisId, matrix, twin }: { axisId: string; matrix: FleetMatri
 /* ── two-instrument note ─────────────────────────────────────────────────── */
 
 function TwoInstrumentNote({ matrix, board }: { matrix: FleetMatrix; board: any }) {
+  const hasAdmittedCells = matrix.cells.length > 0;
   return (
     <div className="mt-6 rounded-xl border border-emerald-500/15 bg-emerald-500/[0.03] p-5 text-[13px] leading-relaxed text-emerald-100/80">
       <h2 className="text-[13px] font-bold uppercase tracking-wide text-emerald-300/80">Two instruments, never summed</h2>
       <p className="mt-2">
-        This grid is the <strong>benchmark card corpus</strong>: {matrix.models.length} models measured on{" "}
-        {matrix.axes.length} benchmark axes, one signed card per cell. The{" "}
+        {hasAdmittedCells ? (
+          <>This grid is the <strong>admitted benchmark card corpus</strong>: {matrix.models.length} models measured on {matrix.axes.length} benchmark axes, with a verified card and independent admission per cell. </>
+        ) : (
+          <>The benchmark grid is empty because no retained card has yet passed a separate independent admission. Historical records remain in the audit inventory and are not counted as measurements. </>
+        )}
+        The{" "}
         <Link href="/board" className="text-emerald-300 underline">governance board</Link>{" "}
         (<span className="font-mono">/api/gspc</span>
         {board?.totals?.axes ? `, ${board.totals.axes} slots` : ""}) is a <strong>different instrument</strong> measuring
@@ -584,7 +641,7 @@ function Methodology({ matrix }: { matrix: FleetMatrix }) {
       <div className="mt-3 grid gap-4 md:grid-cols-2">
         <ul className="space-y-2 text-[13px] text-emerald-100/80">
           <li><strong className="text-emerald-300">Deterministic grading.</strong> Gold labels on frozen banks. A cell is a proportion correct, graded by exact rule — no model judges another model.</li>
-          <li><strong className="text-emerald-300">Every number recomputable.</strong> Each cell is one signed card whose sha256 <em>is</em> its id; the whole matrix is derived by reading those cards, never typed.</li>
+          <li><strong className="text-emerald-300">Every displayed number recomputable.</strong> A score enters only after its signed card and separate admission both verify under pinned keys; the matrix is derived from those records, never typed.</li>
           <li><strong className="text-emerald-300">Absence is shown.</strong> An unmeasured pair is empty, not zero. {matrix.counts.possible_cells ? `${matrix.cells.length} of ${matrix.counts.possible_cells} possible pairs are measured.` : ""}</li>
         </ul>
         <ul className="space-y-2 text-[13px] text-emerald-100/80">
@@ -616,12 +673,15 @@ function SelfAudit({ matrix, counts, board }: { matrix: FleetMatrix; counts: Ret
       <ul className="mt-3 grid gap-2 text-[13px] text-amber-50/85 md:grid-cols-2">
         <li>
           <strong>Coverage is partial by design.</strong>{" "}
-          {cov !== null ? `Only ${(cov * 100).toFixed(0)}% of possible model×axis pairs are measured (${counts.measuredCells} of ${counts.possibleCells}).` : ""}{" "}
-          The empty cells are shown, not hidden.
+          {cov !== null
+            ? `Only ${(cov * 100).toFixed(0)}% of possible model×axis pairs are admitted and measured (${counts.measuredCells} of ${counts.possibleCells}). The empty cells are shown, not hidden.`
+            : "No model×axis denominator exists because no measurement cells are admitted; no coverage percentage is published."}
         </li>
         <li>
           <strong>Some axes have small n.</strong>{" "}
-          {thin.length
+          {matrix.axes.length === 0
+            ? "No admitted axes are available, so no fleet-size claim is made."
+            : thin.length
             ? `${thin.length} of the measures rest on fewer than 10 models each: ${thin.slice(0, 4).map((a) => `${axisMeta(a.id).label} (${a.models})`).join(", ")}${thin.length > 4 ? "…" : ""}.`
             : "Every axis carries at least 10 models."}
         </li>
@@ -631,9 +691,9 @@ function SelfAudit({ matrix, counts, board }: { matrix: FleetMatrix; counts: Ret
           show none rather than invent one.
         </li>
         <li>
-          <strong>The living stamp is UNCHECKABLE by a stranger.</strong> The signed cards are verifiable; the claim that
-          this corpus is the <em>current</em> one rests on the board&rsquo;s attestation, not on cryptography a visitor can
-          re-run. See the{" "}
+          <strong>The living stamp is UNCHECKABLE by a stranger.</strong> Individual retained card signatures may be
+          verifiable without making those records admitted measurements; the claim that this corpus is the <em>current</em>{" "}
+          one rests on the board&rsquo;s attestation, not on cryptography a visitor can re-run. See the{" "}
           <Link href="/refutation-ledger" className="underline">corrections ledger</Link>.
         </li>
         {counts.withheldNames > 0 && (

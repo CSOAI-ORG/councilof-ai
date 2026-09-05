@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { DASHBOARD_TABS, LOBBY_ROUTES, LOBBY_TABS, matchRoute, matchTab, tabById } from "./tabs";
+import {
+  DASHBOARD_TABS,
+  LOBBY_ROUTES,
+  LOBBY_TABS,
+  matchRoute,
+  matchTab,
+  tabById,
+} from "./tabs";
 import { PANE_IDS } from "../DashboardPane";
 import { PRIMARY_PATHS } from "../../data/library-ia";
 
@@ -32,7 +39,7 @@ describe("attestations tab — one door, /dashboard?tab=attestations", () => {
     expect(matchRoute("open the attestations")).toBeNull();
   });
 
-  it("stays out of the DSH sidebar (no URL) and out of LOBBY_ROUTES (one owner)", () => {
+  it("has one catalogue owner and no duplicate route", () => {
     expect(DASHBOARD_TABS.some((t) => t.id === "attestations")).toBe(false);
     expect(LOBBY_ROUTES.some((r) => /attest/i.test(r.path))).toBe(false);
     expect(LOBBY_TABS.filter((t) => t.id === "attestations").length).toBe(1);

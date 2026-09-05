@@ -2,8 +2,7 @@
  * CesiumPortalCard — Reusable per-landing-page 3D portal.
  *
  * Each landing page gets a custom 3D card that routes the right end-user to
- * the right lens (csoai=measurement, defoneos=regulator, meok=end-user OS),
- * with geolibre region lens (opt-in only) and demo-tour hook.
+ * the right lens, with a region lens (opt-in only) and a workspace hand-off.
  *
  * Mounted on /, /article-50, /provenance-finding, /govbench, /leaderboard.
  * Each with its own lens preset.
@@ -12,16 +11,24 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import {
-  Globe2, MapPin, Play, ChevronRight, X, Info,
-} from "lucide-react";
+import { Globe2, MapPin, Play, ChevronRight, X, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 type Lens = "csoai" | "defoneos" | "meok";
 
-const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: string; preset: string; tour: string; routes: { label: string; href: string; tour?: boolean }[] }> = {
+const LENS_PRESETS: Record<
+  Lens,
+  {
+    title: string;
+    subtitle: string;
+    color: string;
+    preset: string;
+    tour: string;
+    routes: { label: string; href: string; tour?: boolean }[];
+  }
+> = {
   csoai: {
     title: "Measurement Lens",
     subtitle: "Frozen corpus · live axis · deterministic",
@@ -29,7 +36,11 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     preset: "EU_Brussels_50_85_4_35",
     tour: "measurement",
     routes: [
-      { label: "Open Council Console", href: "/", tour: true },
+      {
+        label: "Open Council workspace",
+        href: "/dashboard?tab=home",
+        tour: true,
+      },
       { label: "View Refutation Ledger", href: "/refutation-ledger" },
       { label: "GSPC Instrument", href: "/instrument" },
       { label: "Measured Results", href: "/benchmarks" },
@@ -55,7 +66,11 @@ const LENS_PRESETS: Record<Lens, { title: string; subtitle: string; color: strin
     preset: "US_SF_37_77_-122_42",
     tour: "sovspace",
     routes: [
-      { label: "Open Council Space", href: "/gspc-arena", tour: true },
+      {
+        label: "Open measured arena",
+        href: "/dashboard?tab=space",
+        tour: true,
+      },
       { label: "Council OS", href: "/dashboard?tab=home" },
       { label: "Tool Commons (published MCP)", href: "/tools" },
       { label: "Your Council assistant Twin", href: "/sovereign-twin" },
@@ -69,7 +84,7 @@ export interface CesiumPortalCardProps {
   globeUrl?: string;
   /** Camera target preset (lat/lng/height) — defaults to lens preset */
   preset?: string;
-  /** Topic to pass to the demo-tour via SovereignDock */
+  /** Topic to carry into the canonical workspace */
   tourTopic?: string;
 }
 
@@ -86,8 +101,10 @@ export default function CesiumPortalCard({
   const tour = tourTopic || meta.tour;
 
   const openTour = () => {
-    // SovereignDock is mounted globally; open it with ?tour=<topic>
-    window.dispatchEvent(new CustomEvent("sov:openDock", { detail: { tour } }));
+    const prompt = `Show me the ${tour.replace(/[-_]/g, " ")} workspace`;
+    window.location.assign(
+      `/dashboard?tab=home&ask=${encodeURIComponent(prompt)}`,
+    );
   };
 
   return (
@@ -106,14 +123,20 @@ export default function CesiumPortalCard({
               className="h-16 w-16 mx-auto mb-3 transition-transform group-hover:scale-110 group-hover:rotate-12"
               style={{ color: meta.color }}
             />
-            <p className="text-xs text-gray-500 font-mono">click to launch {cameraPreset}</p>
+            <p className="text-xs text-gray-500 font-mono">
+              click to launch {cameraPreset}
+            </p>
           </div>
         </div>
 
         {/* Lens badge */}
         <Badge
           className="absolute top-3 left-3 text-[10px]"
-          style={{ backgroundColor: meta.color + "30", color: meta.color, borderColor: meta.color + "50" }}
+          style={{
+            backgroundColor: meta.color + "30",
+            color: meta.color,
+            borderColor: meta.color + "50",
+          }}
         >
           {meta.title}
         </Badge>
@@ -128,7 +151,10 @@ export default function CesiumPortalCard({
               loading="lazy"
             />
             <button
-              onClick={(e) => { e.stopPropagation(); setShowIframe(false); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowIframe(false);
+              }}
               className="absolute top-3 right-3 p-1.5 rounded-full bg-black/60 hover:bg-black/80 text-white"
             >
               <X className="h-4 w-4" />

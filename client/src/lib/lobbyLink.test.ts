@@ -49,9 +49,9 @@ describe("lobbyLink — demographic task registry", () => {
   });
 
   it("mints a harness panel URL without using withEmbed on /os", () => {
-    expect(osPanelHref("board")).toBe("/os?embed=1&lobby=board");
-    expect(osPanelHref("verify")).toBe("/os?embed=1&lobby=verify");
-    expect(osPanelHref("cards")).toBe("/os?embed=1&lobby=cards");
+    expect(osPanelHref("board")).toBe("/dashboard?embed=1&tab=board");
+    expect(osPanelHref("verify")).toBe("/dashboard?embed=1&tab=verify");
+    expect(osPanelHref("cards")).toBe("/dashboard?embed=1&tab=cards");
   });
 
   it("preserves embed=1 on a door hop and does not invent it", () => {

@@ -1,39 +1,39 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  MessageCircle, 
-  Mail, 
-  Send, 
-  Bot, 
-  User, 
-  ChevronDown, 
-  BookOpen, 
-  AlertCircle, 
+import React, { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  MessageCircle,
+  Mail,
+  Send,
+  Bot,
+  User,
+  ChevronDown,
+  BookOpen,
+  AlertCircle,
   CheckCircle,
   Loader2,
   ArrowRight,
   Clock,
-  Search
-} from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-import { trpc } from '@/lib/trpc';
+  Search,
+} from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
 
 interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp: Date;
   isHumanRequest?: boolean;
 }
 
 const INITIAL_MESSAGE: ChatMessage = {
-  id: '1',
-  role: 'assistant',
+  id: "1",
+  role: "assistant",
   content: `Hello! 👋 I'm the CSOAI Support Assistant, available 24/7 to help you.
 
 I can assist you with:
@@ -51,7 +51,15 @@ How can I help you today?`,
 // Knowledge base for AI responses
 const KNOWLEDGE_BASE = {
   password: {
-    keywords: ['password', 'forgot', 'reset', 'login', 'cant login', "can't login", 'access'],
+    keywords: [
+      "password",
+      "forgot",
+      "reset",
+      "login",
+      "cant login",
+      "can't login",
+      "access",
+    ],
     response: `I understand you're having trouble with your password. Here's how to reset it:
 
 1. Go to the **Login page**
@@ -62,24 +70,48 @@ const KNOWLEDGE_BASE = {
 
 **Note:** The reset link expires in 1 hour. If you don't receive the email within 5 minutes, please check your spam folder or try again.
 
-Would you like me to connect you with a human support agent for further assistance?`
+Would you like me to connect you with a human support agent for further assistance?`,
   },
   payment: {
-    keywords: ['payment', 'billing', 'charge', 'refund', 'subscription', 'cancel', 'price', 'cost', 'promo', 'discount', 'founding', 'free'],
-    response: `There are no SaaS tiers and no public prices. Measurement and verification are free forever.
+    keywords: [
+      "payment",
+      "billing",
+      "charge",
+      "refund",
+      "subscription",
+      "cancel",
+      "price",
+      "cost",
+      "promo",
+      "discount",
+      "founding",
+      "free",
+    ],
+    response: `There are no SaaS tiers. Reading the public board and verifying signed records are free. Commissioned receipts and evidence artefacts use the live x402 challenge or an agreed invoice; payment never buys a score or ranking.
 
 **The free rail:**
-• **Get measured** at /assess — a deterministic EU AI Act keyword classifier. Not a certificate. We do not remediate.
+• **Describe a system** with POST /api/assess — a deterministic keyword classifier over submitted text, not a bench run or certificate.
 • **Verify** any signed record at /gspc-verify/
 • **Living board** at GET /api/gspc
-• **Lobby door** /os?lobby=assess&task=pricing-overview
+• **Request attestation** at /dashboard?tab=measured — inspect the challenge before authorising anything
 
 If you have a signed report_id and no datastore is bound yet, email nicholas@csoai.org with that id.
 
-Would you like me to connect you with a human agent?`
+Would you like me to connect you with a human agent?`,
   },
   course: {
-    keywords: ['course', 'training', 'enroll', 'enrolled', 'progress', 'lesson', 'module', 'certificate', 'complete', 'finish'],
+    keywords: [
+      "course",
+      "training",
+      "enroll",
+      "enrolled",
+      "progress",
+      "lesson",
+      "module",
+      "certificate",
+      "complete",
+      "finish",
+    ],
     response: `The academy is how we explain the measurement rail. It is not a certificate and it is not sold as one.
 
 **Where to start:**
@@ -87,10 +119,19 @@ Would you like me to connect you with a human agent?`
 • Get measured at /assess — describe the system; we sign what we could measure
 • Empty cells stay empty. We do not remediate.
 
-**Having trouble with a specific lesson?** Tell me which page, or I can connect you with human support.`
+**Having trouble with a specific lesson?** Tell me which page, or I can connect you with human support.`,
   },
   exam: {
-    keywords: ['exam', 'test', 'certification', 'pass', 'fail', 'score', 'retake', 'attempt'],
+    keywords: [
+      "exam",
+      "test",
+      "certification",
+      "pass",
+      "fail",
+      "score",
+      "retake",
+      "attempt",
+    ],
     response: `There is no certification exam and no passing score. A grade is never sold.
 
 **Get measured:**
@@ -100,10 +141,18 @@ Would you like me to connect you with a human agent?`
 
 **Verify** the signature at /gspc-verify/. The card is not a certificate, not a conformity mark, and not legal advice.
 
-Need help reading a signed card?`
+Need help reading a signed card?`,
   },
   watchdog: {
-    keywords: ['watchdog', 'incident', 'report', 'analyst', 'safety', 'job', 'apply'],
+    keywords: [
+      "watchdog",
+      "incident",
+      "report",
+      "analyst",
+      "safety",
+      "job",
+      "apply",
+    ],
     response: `The Watchdog Program is our AI safety incident reporting system.
 
 **For the Public:**
@@ -121,10 +170,21 @@ Need help reading a signed card?`
 • Remote work, flexible hours
 • Meaningful work protecting humanity
 
-Would you like more details about the analyst program?`
+Would you like more details about the analyst program?`,
   },
   technical: {
-    keywords: ['bug', 'error', 'broken', 'not working', "doesn't work", 'issue', 'problem', 'crash', 'slow', 'loading'],
+    keywords: [
+      "bug",
+      "error",
+      "broken",
+      "not working",
+      "doesn't work",
+      "issue",
+      "problem",
+      "crash",
+      "slow",
+      "loading",
+    ],
     response: `I'm sorry you're experiencing technical issues. Let me help troubleshoot:
 
 **Quick Fixes:**
@@ -139,10 +199,18 @@ Please describe:
 • What error message you see (if any)
 • Which browser you're using
 
-I can connect you with our technical team for complex issues.`
+I can connect you with our technical team for complex issues.`,
   },
   human: {
-    keywords: ['human', 'person', 'real person', 'agent', 'talk to someone', 'speak to', 'contact'],
+    keywords: [
+      "human",
+      "person",
+      "real person",
+      "agent",
+      "talk to someone",
+      "speak to",
+      "contact",
+    ],
     response: `I'll connect you with a human support agent right away.
 
 **Please provide:**
@@ -153,31 +221,32 @@ Our support team typically responds within:
 • **Email:** 2-4 hours during business hours
 • **Urgent issues:** Escalated immediately
 
-Click the button below to submit your request to our human support team.`
-  }
+Click the button below to submit your request to our human support team.`,
+  },
 };
 
 export default function Support() {
   const { user } = useAuth();
   const submitHumanRequest = trpc.support.submitHumanRequest.useMutation();
   const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_MESSAGE]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showHumanForm, setShowHumanForm] = useState(false);
-  const [humanRequestEmail, setHumanRequestEmail] = useState(user?.email || '');
-  const [humanRequestMessage, setHumanRequestMessage] = useState('');
-  const [isSubmittingHumanRequest, setIsSubmittingHumanRequest] = useState(false);
+  const [humanRequestEmail, setHumanRequestEmail] = useState(user?.email || "");
+  const [humanRequestMessage, setHumanRequestMessage] = useState("");
+  const [isSubmittingHumanRequest, setIsSubmittingHumanRequest] =
+    useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    document.title = 'Support - CSOAI';
+    document.title = "Support - CSOAI";
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const fadeInUp = {
@@ -188,14 +257,14 @@ export default function Support() {
 
   const findBestResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
-    
+
     // Check each knowledge base category
     for (const [category, data] of Object.entries(KNOWLEDGE_BASE)) {
-      if (data.keywords.some(keyword => lowerMessage.includes(keyword))) {
+      if (data.keywords.some((keyword) => lowerMessage.includes(keyword))) {
         return data.response;
       }
     }
-    
+
     // Default response if no match
     return `Thank you for your question. I want to make sure I understand correctly so I can help you best.
 
@@ -211,46 +280,50 @@ Alternatively, I can connect you with a human support agent who can assist you d
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
-      role: 'user',
+      role: "user",
       content: inputValue,
       timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setInputValue('');
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
     setIsTyping(true);
 
     // Check if user wants human support
-    const wantsHuman = inputValue.toLowerCase().includes('human') || 
-                       inputValue.toLowerCase().includes('person') ||
-                       inputValue.toLowerCase().includes('agent') ||
-                       inputValue.toLowerCase().includes('talk to someone');
+    const wantsHuman =
+      inputValue.toLowerCase().includes("human") ||
+      inputValue.toLowerCase().includes("person") ||
+      inputValue.toLowerCase().includes("agent") ||
+      inputValue.toLowerCase().includes("talk to someone");
 
     // Simulate AI thinking time
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 1000));
+    await new Promise((resolve) =>
+      setTimeout(resolve, 1000 + Math.random() * 1000),
+    );
 
     const response = findBestResponse(inputValue);
-    
+
     const assistantMessage: ChatMessage = {
       id: (Date.now() + 1).toString(),
-      role: 'assistant',
+      role: "assistant",
       content: response,
       timestamp: new Date(),
-      isHumanRequest: wantsHuman || response.includes('connect you with a human'),
+      isHumanRequest:
+        wantsHuman || response.includes("connect you with a human"),
     };
 
-    setMessages(prev => [...prev, assistantMessage]);
+    setMessages((prev) => [...prev, assistantMessage]);
     setIsTyping(false);
 
     // Show human form if appropriate
-    if (wantsHuman || response.includes('connect you with a human')) {
+    if (wantsHuman || response.includes("connect you with a human")) {
       setShowHumanForm(true);
     }
   };
 
   const handleHumanSupportRequest = async () => {
     if (!humanRequestEmail.trim()) {
-      toast.error('Please enter your email address');
+      toast.error("Please enter your email address");
       return;
     }
 
@@ -260,8 +333,8 @@ Alternatively, I can connect you with a human support agent who can assist you d
       // Send email to admin via tRPC
       const result = await submitHumanRequest.mutateAsync({
         email: humanRequestEmail,
-        message: humanRequestMessage || 'User requested human support via chat',
-        chatHistory: messages.map(m => ({
+        message: humanRequestMessage || "User requested human support via chat",
+        chatHistory: messages.map((m) => ({
           role: m.role,
           content: m.content,
           timestamp: m.timestamp.toISOString(),
@@ -271,12 +344,14 @@ Alternatively, I can connect you with a human support agent who can assist you d
       });
 
       if (result.success) {
-        toast.success('Your request has been submitted! Our team will contact you within 2-4 hours.');
+        toast.success(
+          "Your request has been submitted! Our team will contact you within 2-4 hours.",
+        );
         setShowHumanForm(false);
-        
+
         const confirmMessage: ChatMessage = {
           id: Date.now().toString(),
-          role: 'assistant',
+          role: "assistant",
           content: `✅ **Request Submitted Successfully!**
 
 Your human support request has been sent to our team. Here's what happens next:
@@ -290,10 +365,12 @@ Our team has access to this chat history to help resolve your issue quickly.
 Is there anything else I can help you with in the meantime?`,
           timestamp: new Date(),
         };
-        setMessages(prev => [...prev, confirmMessage]);
+        setMessages((prev) => [...prev, confirmMessage]);
       }
     } catch (error) {
-      toast.error('Failed to submit request. Please try again or email support@csoai.org directly.');
+      toast.error(
+        "Failed to submit request. Please try again or email support@csoai.org directly.",
+      );
     } finally {
       setIsSubmittingHumanRequest(false);
     }
@@ -301,49 +378,55 @@ Is there anything else I can help you with in the meantime?`,
 
   const faqs = [
     {
-      question: 'How do I reset my password?',
-      answer: 'Go to the Login page and click "Forgot Password?" Enter your email address and check your inbox for the reset link. The link expires in 1 hour.',
+      question: "How do I reset my password?",
+      answer:
+        'Go to the Login page and click "Forgot Password?" Enter your email address and check your inbox for the reset link. The link expires in 1 hour.',
     },
     {
-      question: 'Is Get measured free?',
-      answer: 'Yes. Measurement and verification are free forever. There are no SaaS tiers and no public prices. Start at /assess or the lobby door /os?lobby=assess&task=get-measured.',
+      question: "Is Get measured free?",
+      answer:
+        "Verification is free. Published measurement terms are shown at the point of request; no rank or grade is sold. Start at /dashboard?tab=measured&task=get-measured.",
     },
     {
-      question: 'What does the assessment actually run?',
-      answer: 'A deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench. You get a signed card — not a certificate. We do not remediate.',
+      question: "What does the assessment actually run?",
+      answer:
+        "A deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench. You get a signed card — not a certificate. We do not remediate.",
     },
     {
-      question: 'How do I become a Watchdog Analyst?',
-      answer: 'Complete the academy materials, get a system measured at /assess, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents. Review is not a certificate.',
+      question: "How do I become a Watchdog Analyst?",
+      answer:
+        "Complete the academy materials, get a system measured at /assess, then apply through the Watchdog → Analyst Jobs page. Analysts review AI safety incidents. Review is not a certificate.",
     },
     {
-      question: 'Do you sell plans or refunds?',
-      answer: 'No. There is nothing to buy on the public rail and nothing to refund. Measurement and verify stay free. Email nicholas@csoai.org with a report_id if you need a human.',
+      question: "Do you sell plans or refunds?",
+      answer:
+        "No. There is nothing to buy on the public rail and nothing to refund. Measurement and verify stay free. Email nicholas@csoai.org with a report_id if you need a human.",
     },
     {
-      question: 'How do I verify a signed card?',
-      answer: 'Open /gspc-verify/ and paste the signed payload. Verify is free forever. A verified signature is evidence, not a certificate.',
+      question: "How do I verify a signed card?",
+      answer:
+        "Open /gspc-verify/ and paste the signed payload. Verify is free forever. A verified signature is evidence, not a certificate.",
     },
   ];
 
   const helpCategories = [
     {
-      title: 'Getting Started',
+      title: "Getting Started",
       icon: BookOpen,
-      description: 'Learn the basics and get up and running',
-      link: '/how-it-works',
+      description: "Learn the basics and get up and running",
+      link: "/how-it-works",
     },
     {
-      title: 'Academy',
+      title: "Academy",
       icon: CheckCircle,
-      description: 'Learn the measurement rail — not a certificate',
-      link: '/academy',
+      description: "Learn the measurement rail — not a certificate",
+      link: "/academy",
     },
     {
-      title: 'Watchdog Program',
+      title: "Watchdog Program",
       icon: AlertCircle,
-      description: 'Incident reporting and analyst roles',
-      link: '/watchdog',
+      description: "Incident reporting and analyst roles",
+      link: "/watchdog",
     },
   ];
 
@@ -357,7 +440,8 @@ Is there anything else I can help you with in the meantime?`,
               24/7 Support Center
             </h1>
             <p className="text-xl text-gray-600 mb-2">
-              Get instant help from our AI assistant or connect with our human support team.
+              Get instant help from our AI assistant or connect with our human
+              support team.
             </p>
             <p className="text-sm text-emerald-600 font-medium">
               <Clock className="inline h-4 w-4 mr-1" />
@@ -381,7 +465,9 @@ Is there anything else I can help you with in the meantime?`,
                       <Bot className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">CSOAI Support Assistant</h3>
+                      <h3 className="font-semibold text-gray-900">
+                        CSOAI Support Assistant
+                      </h3>
                       <p className="text-sm text-emerald-600 flex items-center gap-1">
                         <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
                         Online - Available 24/7
@@ -391,54 +477,63 @@ Is there anything else I can help you with in the meantime?`,
                 </div>
 
                 {/* Chat Messages */}
-                <div 
+                <div
                   ref={chatContainerRef}
                   className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50"
                 >
                   {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                     >
                       <div
                         className={`max-w-[80%] rounded-lg p-4 ${
-                          message.role === 'user'
-                            ? 'bg-emerald-600 text-white'
-                            : 'bg-white border border-gray-200 text-gray-900'
+                          message.role === "user"
+                            ? "bg-emerald-600 text-white"
+                            : "bg-white border border-gray-200 text-gray-900"
                         }`}
                       >
-                        {message.role === 'assistant' && (
+                        {message.role === "assistant" && (
                           <div className="flex items-center gap-2 mb-2">
                             <Bot className="h-4 w-4 text-emerald-600" />
-                            <span className="text-xs font-medium text-emerald-600">Support Assistant</span>
+                            <span className="text-xs font-medium text-emerald-600">
+                              Support Assistant
+                            </span>
                           </div>
                         )}
-                        <div 
+                        <div
                           className="text-sm whitespace-pre-wrap"
-                          dangerouslySetInnerHTML={{ 
+                          dangerouslySetInnerHTML={{
                             __html: message.content
-                              .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                              .replace(/\n/g, '<br/>')
+                              .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+                              .replace(/\n/g, "<br/>"),
                           }}
                         />
-                        <p className={`text-xs mt-2 ${message.role === 'user' ? 'text-emerald-100' : 'text-gray-400'}`}>
-                          {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        <p
+                          className={`text-xs mt-2 ${message.role === "user" ? "text-emerald-100" : "text-gray-400"}`}
+                        >
+                          {message.timestamp.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
                         </p>
                       </div>
                     </div>
                   ))}
-                  
+
                   {isTyping && (
                     <div className="flex justify-start">
                       <div className="bg-white border border-gray-200 rounded-lg p-4">
                         <div className="flex items-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin text-emerald-600" />
-                          <span className="text-sm text-gray-500">Typing...</span>
+                          <span className="text-sm text-gray-500">
+                            Typing...
+                          </span>
                         </div>
                       </div>
                     </div>
                   )}
-                  
+
                   <div ref={messagesEndRef} />
                 </div>
 
@@ -498,12 +593,14 @@ Is there anything else I can help you with in the meantime?`,
                     <Input
                       value={inputValue}
                       onChange={(e) => setInputValue(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                      onKeyPress={(e) =>
+                        e.key === "Enter" && handleSendMessage()
+                      }
                       placeholder="Type your question..."
                       className="flex-1"
                       disabled={isTyping}
                     />
-                    <Button 
+                    <Button
                       onClick={handleSendMessage}
                       disabled={!inputValue.trim() || isTyping}
                       className="bg-emerald-600 hover:bg-emerald-700"
@@ -522,7 +619,9 @@ Is there anything else I can help you with in the meantime?`,
             <div className="space-y-6">
               {/* Quick Links */}
               <Card className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4">Quick Links</h3>
+                <h3 className="font-semibold text-gray-900 mb-4">
+                  Quick Links
+                </h3>
                 <div className="space-y-3">
                   {helpCategories.map((category) => (
                     <a
@@ -534,8 +633,12 @@ Is there anything else I can help you with in the meantime?`,
                         <category.icon className="h-5 w-5 text-emerald-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="font-medium text-gray-900 text-sm">{category.title}</p>
-                        <p className="text-xs text-gray-500">{category.description}</p>
+                        <p className="font-medium text-gray-900 text-sm">
+                          {category.title}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {category.description}
+                        </p>
                       </div>
                       <ArrowRight className="h-4 w-4 text-gray-400 group-hover:text-emerald-600 transition-colors" />
                     </a>
@@ -551,7 +654,10 @@ Is there anything else I can help you with in the meantime?`,
                     <Mail className="h-5 w-5 text-emerald-600" />
                     <div>
                       <p className="text-sm font-medium text-gray-900">Email</p>
-                      <a href="mailto:support@csoai.org" className="text-sm text-emerald-600 hover:underline">
+                      <a
+                        href="mailto:support@csoai.org"
+                        className="text-sm text-emerald-600 hover:underline"
+                      >
                         support@csoai.org
                       </a>
                     </div>
@@ -559,8 +665,12 @@ Is there anything else I can help you with in the meantime?`,
                   <div className="flex items-center gap-3">
                     <MessageCircle className="h-5 w-5 text-emerald-600" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Chat Support</p>
-                      <p className="text-sm text-gray-600">24/7 AI + Human backup</p>
+                      <p className="text-sm font-medium text-gray-900">
+                        Chat Support
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        24/7 AI + Human backup
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -573,10 +683,13 @@ Is there anything else I can help you with in the meantime?`,
       {/* FAQs Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-4xl mx-auto">
-          <motion.h2 {...fadeInUp} className="text-3xl font-bold mb-8 text-center text-gray-900">
+          <motion.h2
+            {...fadeInUp}
+            className="text-3xl font-bold mb-8 text-center text-gray-900"
+          >
             Frequently Asked Questions
           </motion.h2>
-          
+
           {/* Search FAQs */}
           <div className="relative max-w-xl mx-auto mb-8">
             <Search className="absolute left-4 top-3 h-5 w-5 text-gray-400" />
@@ -591,38 +704,45 @@ Is there anything else I can help you with in the meantime?`,
 
           <div className="space-y-4">
             {faqs
-              .filter(faq => 
-                !searchQuery || 
-                faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
+              .filter(
+                (faq) =>
+                  !searchQuery ||
+                  faq.question
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()) ||
+                  faq.answer.toLowerCase().includes(searchQuery.toLowerCase()),
               )
               .map((faq, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-              >
-                <Card
-                  className="cursor-pointer hover:shadow-md transition-shadow"
-                  onClick={() => setExpandedFAQ(expandedFAQ === index ? null : index)}
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900">{faq.question}</h3>
-                      <ChevronDown
-                        className={`h-5 w-5 text-gray-600 transition-transform ${
-                          expandedFAQ === index ? 'transform rotate-180' : ''
-                        }`}
-                      />
+                  <Card
+                    className="cursor-pointer hover:shadow-md transition-shadow"
+                    onClick={() =>
+                      setExpandedFAQ(expandedFAQ === index ? null : index)
+                    }
+                  >
+                    <div className="p-6">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold text-gray-900">
+                          {faq.question}
+                        </h3>
+                        <ChevronDown
+                          className={`h-5 w-5 text-gray-600 transition-transform ${
+                            expandedFAQ === index ? "transform rotate-180" : ""
+                          }`}
+                        />
+                      </div>
+                      {expandedFAQ === index && (
+                        <p className="mt-4 text-gray-600">{faq.answer}</p>
+                      )}
                     </div>
-                    {expandedFAQ === index && (
-                      <p className="mt-4 text-gray-600">{faq.answer}</p>
-                    )}
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
+                  </Card>
+                </motion.div>
+              ))}
           </div>
         </div>
       </section>
@@ -638,7 +758,10 @@ Is there anything else I can help you with in the meantime?`,
               Our support team is here to help you succeed with CSOAI.
             </p>
             <a href="mailto:support@csoai.org">
-              <Button size="lg" className="bg-white text-emerald-600 hover:bg-gray-100">
+              <Button
+                size="lg"
+                className="bg-white text-emerald-600 hover:bg-gray-100"
+              >
                 <Mail className="h-5 w-5 mr-2" />
                 Email Support Team
               </Button>

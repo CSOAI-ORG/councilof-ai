@@ -145,7 +145,7 @@ for (const r of results) tally[r.state]++;
 
 // Some findings describe the evidence; others describe only the copy you happen to hold.
 // Holding a subset is not a defect in what was published, so it does not change the exit code.
-const INFORMATIONAL = new Set(["INDEX_UNSIGNED", "CHAIN_UNSIGNED", "BODY_NOT_HELD"]);
+const INFORMATIONAL = new Set(["INDEX_UNSIGNED", "CHAIN_UNSIGNED", "CHAIN_ENVELOPE_PRESENT", "BODY_NOT_HELD"]);
 const allFindings = [...(set ? set.findings : []), ...(chainReport ? chainReport.findings : [])];
 const blockingSetFindings = allFindings.filter((f) => !INFORMATIONAL.has(f.code));
 
@@ -164,11 +164,12 @@ if (opts.json) {
   process.stdout.write(`VALID ${tally.VALID} · INVALID ${tally.INVALID} · UNCHECKABLE ${tally.UNCHECKABLE}\n`);
   if (chainReport) {
     const c = chainReport;
+    const withheld = c.withheld ?? { total: 0, attestedBySignedPrev: 0, assertedOnly: 0 };
     process.stdout.write(
       `manifest: ${c.positions} positions, walk ${c.walkLength}${c.reachesGenesis ? " to genesis" : " DID NOT REACH GENESIS"}; ` +
         `${c.bodiesHeld}/${c.bodiesDeclaredPublished} published bodies held; ` +
-        `${c.withheld.total} withheld (${c.withheld.attestedBySignedPrev} attested by a signed prev, ` +
-        `${c.withheld.assertedOnly} asserted only)\n`,
+        `${withheld.total} withheld (${withheld.attestedBySignedPrev} attested by a signed prev, ` +
+        `${withheld.assertedOnly} asserted only)\n`,
     );
   }
   if (set)

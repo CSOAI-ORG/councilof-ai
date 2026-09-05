@@ -2,9 +2,9 @@
 /**
  * build-findings-index.mjs — materialise the REGULATION-FINDINGS index.
  *
- * Joins, per (model × axis) SIGNED card cell, three things nobody else cross-references:
+ * Joins, per (model × axis) ADMITTED+VERIFIED card cell, three things nobody else cross-references:
  *   1. the MEASUREMENT   — from public/signed/card-matrix.json (itself derived, byte-for-byte,
- *                          from the 335 signed cards; it already neutralises retired brand names
+ *                          from the signed-card inventory; it already neutralises retired brand names
  *                          to withheld-name-N, so we inherit that display policy unchanged).
  *   2. the CROSSWALK     — from client/src/data/regulator-crosswalk.json: axis → 'relevant-to'
  *                          pointers at EU AI Act articles, NIST AI RMF functions, OWASP ASI controls.
@@ -12,8 +12,8 @@
  *                          matching the live edge-signed /api/regulation feed.
  *
  * HONESTY (absolute — enforced structurally here, not by good intentions):
- *   · Every finding is DISCOVERED and stands behind a signed card (card_url + signed:true). A cell
- *     with no card is not emitted. Nothing is MEASURED without a card.
+ *   · Every finding is DISCOVERED and stands behind a cryptographically verified card plus a
+ *     separately verified measurement admission. Legacy signatures are inventory, not findings.
  *   · Regulatory mappings are POINTERS. relation is always "relevant-to" — never "violates",
  *     never "complies". This script refuses to emit any other relation.
  *   · No fine is asserted as owed. Each finding carries only statutory_maximum for the tier, cited;
@@ -30,6 +30,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { isQuotableMatrixCell } from "./card-evidence-trust.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, "..");
@@ -95,9 +96,16 @@ function main() {
   // per-model published-name policy, inherited from the matrix
   const modelMeta = Object.fromEntries((matrix.models || []).map((m) => [m.id, m]));
 
-  // one finding per signed cell
+  // The matrix keeps historical envelopes in a separate non-quotable inventory,
+  // but repeat the complete gate here so a stale/hand-edited matrix cannot turn
+  // `signed:true` into a finding. All four fields must agree on the stronger state.
+  const matrixCells = Array.isArray(matrix.cells) ? matrix.cells : [];
+  const admittedCells = matrixCells.filter(isQuotableMatrixCell);
+  const excludedMatrixCells = matrixCells.length - admittedCells.length;
+
+  // one finding per admitted and cryptographically verified cell
   const findings = [];
-  for (const c of matrix.cells) {
+  for (const c of admittedCells) {
     const ab = axisBlock[c.axis];
     if (!ab) {
       // an axis in the matrix with no crosswalk entry: emit honestly with empty pointers rather than drop it
@@ -203,18 +211,19 @@ function main() {
   }).sort((a, b) => a.axis.localeCompare(b.axis));
 
   const out = {
-    schema: "csoai.regulation-findings-index/0.1",
-    title: "Regulation-findings index — every signed (model × axis) card, joined to its regulator crosswalk and statutory fine tier",
+    schema: "csoai.regulation-findings-index/0.2",
+    title: "Regulation-findings index — admitted and verified model × axis cards joined to regulator pointers",
     honesty: {
-      findings_are: "DISCOVERED / measured, and every one stands behind an Ed25519-signed card (card_url, signed:true). Nothing here is MEASURED without a card.",
+      findings_are: "DISCOVERED / measured. Every finding stands behind a verified Ed25519 card signature and a separately pinned, verified measurement admission. A signature alone is not admission.",
+      legacy_evidence: "Historical signed envelopes without csoai.measurement-admission/0.1 remain listed in card-matrix.json as LEGACY_UNADJUDICATED. They are intentionally excluded from findings, scores and rankings.",
       mappings_are: "CROSSWALK POINTERS. Every relation is 'relevant-to' — this index never says a model 'violates' or 'complies with' any provision. Whether a measured result clears an obligation is a legal question for counsel and the competent authority, not a measured one.",
       fines_are: "the STATUTORY MAXIMUM for the mapped tier, cited to EU AI Act Art 99. No fine is asserted as owed by anyone (no_fine_asserted_owed:true on every pointer). Voluntary frameworks (NIST AI RMF, ISO 42001) and security taxonomies (OWASP ASI) carry no fine — stated as null, never a fabricated figure.",
       measure_not_certify: "CSOAI measures; it does not certify, and is not a notified body or an enforcer.",
       capability_benchmarks: "ARC / GSM8K / MMLU / SWAG carry ZERO obligation pointers on purpose — a capability score is not a compliance finding.",
-      empty_is_first_class: "Only measured cells appear. The 689 unmeasured (model × axis) pairs (of 1024 possible) are honestly absent, not zeros.",
+      empty_is_first_class: "Only admitted and verified cells appear. Empty, legacy-unadjudicated and unverified records are never converted to zero.",
     },
     generated_from: {
-      measurement: "public/signed/card-matrix.json (derived byte-for-byte from public/signed/cards/*.json, 335 signed cards)",
+      measurement: "public/signed/card-matrix.json (cryptographically derived from the card inventory; only ADMITTED_VERIFIED cells are eligible)",
       crosswalk: "client/src/data/regulator-crosswalk.json",
       fine_tiers: "EU AI Act Art 99 — transcribed to match the live edge-signed /api/regulation feed",
       note: "Rebuild with: node scripts/build-findings-index.mjs. Deterministic — unchanged inputs write identical bytes.",
@@ -228,6 +237,9 @@ function main() {
       regulators: regulators.length,
       possible_cells: matrix.counts?.possible_cells ?? null,
       unmeasured_cells: (matrix.counts?.possible_cells ?? 0) - findings.length,
+      matrix_cells_excluded_by_admission_guard: excludedMatrixCells,
+      legacy_unadjudicated_records: matrix.counts?.legacy_unadjudicated_records ?? null,
+      unverified_records: matrix.counts?.unverified_records ?? null,
     },
     fine_tiers: tierTable,
     regulators,
@@ -243,12 +255,16 @@ function main() {
     return {
       accuracy: round(c.accuracy),
       status: "DISCOVERED",
-      status_note: "measured on one small bank on one date; a signed card stands behind it",
+      status_note: "measured on one small bank on one date; independently admitted and cryptographically verified",
       card: c.card,
       card_url: c.card_url,
-      signed: c.signed === true,
+      signed: true,
+      signature_verified: true,
+      admitted: true,
+      evidence_state: "ADMITTED_VERIFIED",
       alg: c.alg,
       pubkey: c.pubkey,
+      did: c.did,
       measured_on: c.created,
     };
   }

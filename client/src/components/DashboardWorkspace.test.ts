@@ -1,20 +1,42 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { paneForTool } from "./DashboardWorkspace";
 import { LOBBY_TABS } from "./lobby/tabs";
 
 describe("canonical dashboard workspace", () => {
-  it("names the canonical living board GSPC", () => {
-    expect(LOBBY_TABS.find((tab) => tab.id === "board")?.label).toBe("GSPC");
+  it("separates MCP catalogue discovery from observed tool execution", () => {
+    const source = readFileSync(
+      resolve(__dirname, "./DashboardWorkspace.tsx"),
+      "utf8",
+    );
+    expect(source).toMatch(/declared by tools\/list/);
+    expect(source).toMatch(/runtime-observed only after its own tools\/call/);
+    expect(source).not.toMatch(/returned live/);
   });
 
-  it("opens every currently published free MCP tool in a usable pane", () => {
-    expect(paneForTool("board_totals")).toBe("board");
-    expect(paneForTool("get_axis")).toBe("board");
-    expect(paneForTool("verify_card")).toBe("verify");
-    expect(paneForTool("list_cards")).toBe("cards");
-    expect(paneForTool("get_root")).toBe("attestations");
-    expect(paneForTool("get_card")).toBe("cards");
-    expect(paneForTool("verify_inclusion")).toBe("attestations");
+  it("names the canonical living board GSPC board", () => {
+    expect(LOBBY_TABS.find((tab) => tab.id === "board")?.label).toBe(
+      "GSPC board",
+    );
+  });
+
+  it("opens every MCP capability in the exact live tool runner", () => {
+    for (const tool of [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion",
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "witness_hash",
+      "receipts_batch",
+    ])
+      expect(paneForTool(tool)).toBe("tools");
   });
 
   it("sends newly discovered tools to the live Tools workspace instead of inventing a UI", () => {

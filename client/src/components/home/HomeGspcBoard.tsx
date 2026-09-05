@@ -269,7 +269,9 @@ export default function HomeGspcBoard({ data: injected, error: injectedError = n
             if (liveLid) return liveLid;
             return ax.length ? `${ax.length} axes measured · ${mc.length} model fleets · ${leaders} public leader scores · ${facts} fact runs · TIE is TIE · not a certificate.` : "";
           })()}
-          <span className="block">Root is signed and witnessed. Verify is free. Empty cells stay empty.</span>
+          <span className="block">
+            Root is signed. Witnesses bind exact root bytes and may still be pending. Verify is free.
+          </span>
         </p>
           <p className="mt-1 text-sm text-slate-600 dark:text-emerald-100/70">The living board below is the master. This page embeds it and does not redraw it.</p>
         </div>

@@ -78,6 +78,7 @@ def test_envelope_preimage_under_3kb() -> None:
         "merkle_root": "4a9a5036b7e82b682e0908062e6b43043e3b16f02d1e4694b73607ad565ac69c",
         "card_count": 43,
         "did_intended": "did:web:csoai.org#board-attestation-1",
+        "leaf_digest_domain": "csoai.card-digest/whole-card-except-sha256-and-sig_ed25519/v1",
         "card_sha256": ["ab"] * 43,
         "note": "noise not in preimage",
     }
@@ -92,6 +93,10 @@ def test_envelope_preimage_under_3kb() -> None:
         "did_intended",
     }
     assert "card_sha256" not in pre
+    # The signed versioned kind selects the domain. Keeping this field outside
+    # preserves the deployed six-field verifier contract; code rejects it when
+    # it disagrees with kind.
+    assert "leaf_digest_domain" not in pre
     assert len(raw) <= PAYLOAD_CAP
     assert len(raw) < 512
 

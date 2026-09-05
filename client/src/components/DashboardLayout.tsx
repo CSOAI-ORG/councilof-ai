@@ -1,44 +1,47 @@
-/*
- * Council software (DSH) — same destinations as Council OS.
- *
- * Standalone /dashboard keeps this rail. When the OS frames this page
- * (?embed=1) the rail is dropped so there is only one tab list.
- */
-
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "wouter";
-import { motion } from "framer-motion";
-import {
-  Settings,
-  ChevronLeft,
-  Sun,
-  Moon,
-} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
+import { ChevronLeft, Menu, Moon, Settings, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/contexts/ThemeContext";
 import { isEmbedded } from "@/lib/embed";
-import { DASHBOARD_TABS } from "@/components/lobby/tabs";
-import DashboardPane, { paneLabel, resolvePaneId } from "@/components/DashboardPane";
+import {
+  DASHBOARD_NAV_GROUPS,
+  normalizeLobbyTabId,
+} from "@/components/lobby/tabs";
+import DashboardPane, { paneLabel } from "@/components/DashboardPane";
 import DashboardWorkspace from "@/components/DashboardWorkspace";
 import DashboardAccountMenu from "@/components/DashboardAccountMenu";
-import { useSearch as useTabSearch } from "wouter";
-import { dashboardCrumbs } from "@/components/lobby/breadcrumbs";
+import { CouncilBrand } from "@/components/brand/CouncilBrand";
+import { dashboardViewHref } from "@/lib/dashboardView";
 import { setOsOpen } from "@/lib/osChrome";
+import { NAV_ID, PANEL_ID } from "@/components/lobby/LobbyPaneTabs";
 
-/** Route crumbs, plus the open pane as the current crumb when a tab is selected. */
-function crumbsFor(location: string, paneCrumbLabel: string | null) {
-  const base = dashboardCrumbs(location);
-  if (!paneCrumbLabel) return base;
-  return [...base.map((c) => (c.current ? { ...c, current: false, path: c.path ?? "/dashboard" } : c)), { label: paneCrumbLabel, current: true }];
-}
+const SMALL_QUERY = "(max-width: 767px)";
 
-interface DashboardLayoutProps {
+export default function DashboardLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export default function DashboardLayout({ children }: DashboardLayoutProps) {
+}) {
   const [location] = useLocation();
+  const search = useSearch();
+  const navRef = useRef<HTMLElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [isSmall, setIsSmall] = useState(
+    () =>
+      typeof window !== "undefined" && window.matchMedia?.(SMALL_QUERY).matches,
+  );
+  const [sidebarOpen, setSidebarOpen] = useState(
+    () =>
+      !(
+        typeof window !== "undefined" &&
+        window.matchMedia?.(SMALL_QUERY).matches
+      ),
+  );
+  const { theme, toggleTheme } = useTheme();
+  const framed = isEmbedded();
+
   useEffect(() => {
     document.documentElement.setAttribute("data-coai-dashboard-shell", "1");
     window.dispatchEvent(new Event("coai:dashboard-shell"));
@@ -49,174 +52,211 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       setOsOpen(false);
     };
   }, []);
-  // P2 (mobile): phones start with the rail closed and open it as a drawer over the pane —
-  // a 260px rail beside a 375px viewport squeezed the board to one word per line.
-  const smallQuery = "(max-width: 767px)";
-  const [isSmall, setIsSmall] = useState<boolean>(() =>
-    typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(smallQuery).matches : false,
-  );
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(() =>
-    typeof window !== "undefined" && typeof window.matchMedia === "function" ? window.matchMedia(smallQuery).matches : false,
-  );
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
-    const mq = window.matchMedia(smallQuery);
-    const onChange = (e: MediaQueryListEvent) => { setIsSmall(e.matches); setSidebarCollapsed(e.matches); };
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
-  }, []);
-  const { theme, toggleTheme } = useTheme();
-  // Every hook runs before the framed early-return below — React's hook order must
-  // not depend on a render-time branch.
-  const tabSearch = useTabSearch();
-  const framed = isEmbedded();
 
-  if (framed) {
+  useEffect(() => {
+    if (!window.matchMedia) return;
+    const query = window.matchMedia(SMALL_QUERY);
+    const update = (event: MediaQueryListEvent) => {
+      setIsSmall(event.matches);
+      setSidebarOpen(!event.matches);
+    };
+    query.addEventListener?.("change", update);
+    return () => query.removeEventListener?.("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!isSmall || !sidebarOpen) return;
+    navRef.current?.querySelector<HTMLElement>("a")?.focus();
+    const close = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setSidebarOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    window.addEventListener("keydown", close);
+    return () => window.removeEventListener("keydown", close);
+  }, [isSmall, sidebarOpen]);
+
+  const params = new URLSearchParams(
+    search.startsWith("?") ? search.slice(1) : search,
+  );
+  const rawTab = params.get("tab") || "home";
+  const activeTab = normalizeLobbyTabId(rawTab);
+  const activeLabel =
+    activeTab === "home" ? "Conversation" : paneLabel(activeTab) || activeTab;
+  const pane =
+    activeTab === "home" || activeTab === "software" ? null : (
+      <DashboardPane id={activeTab} />
+    );
+
+  // Embedded tools are a chrome-less view of this same workspace, never the
+  // retired OsLauncher or the old account metrics dashboard. The centre pane,
+  // persistent composer and responsive workspace drawer retain one contract.
+  if (framed)
     return (
-      <div className="min-h-screen bg-background">
-        {children}
+      <div className="h-svh min-h-svh overflow-hidden bg-background">
+        <DashboardWorkspace
+          activePane={pane}
+          activeTab={activeTab}
+          activeLabel={activeLabel}
+        >
+          {children}
+        </DashboardWorkspace>
       </div>
     );
-  }
-
-  const current = DASHBOARD_TABS.find((t) => t.path && location.startsWith(t.path));
-  const rawTab = new URLSearchParams(tabSearch.startsWith("?") ? tabSearch.slice(1) : tabSearch).get("tab") || "home";
-  const activeTab = resolvePaneId(rawTab);
-  // Council OS = this shell. A tab renders its pane HERE; it never navigates out to the site.
-  const pane = activeTab !== "home" && activeTab !== "software" ? <DashboardPane id={rawTab} /> : null;
-  // The header trail names the pane that is open: "Council OS › GSPC". A pane id nothing
-  // owns is printed as typed, so the crumb never pretends an unknown door exists.
-  const paneCrumbLabel = pane ? (paneLabel(rawTab) ?? rawTab) : null;
-  const isDashboardHome = location === "/dashboard";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      <motion.aside
-        initial={false}
-        animate={{ width: sidebarCollapsed ? 0 : 260 }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
-        className={cn(
-          "flex flex-col border-r border-sidebar-border bg-sidebar overflow-hidden",
-          isSmall && "fixed inset-y-0 left-0 z-40 shadow-xl",
-          sidebarCollapsed && "border-r-0",
-        )}
-      >
-        <div className="flex items-center justify-between p-2 pt-3">
-          <Link href="/dashboard">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2 w-full justify-start px-3 py-2 text-sm font-medium hover:bg-accent"
-            >
-              <img
-                src="/csoai-icon.svg"
-                alt=""
-                className="w-8 h-8 rounded-lg"
-              />
-              <span className="font-semibold">Council OS</span>
-            </Button>
-          </Link>
-        </div>
-
-        <nav
-          aria-label="Council software destinations"
-          className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5"
+    <div
+      className="flex h-dvh min-h-svh overflow-hidden bg-[var(--surface-canvas,#fafaf7)]"
+      data-testid="dashboard-shell"
+    >
+      {sidebarOpen ? (
+        <aside
+          className={cn(
+            "z-40 flex w-[17rem] shrink-0 flex-col border-r border-sidebar-border bg-sidebar",
+            isSmall && "fixed inset-y-0 left-0 shadow-2xl",
+          )}
+          aria-label="Council of AI workspace navigation"
         >
-          {DASHBOARD_TABS.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <Link key={tab.id} href={`/dashboard?tab=${tab.id}`} onClick={() => { if (isSmall) setSidebarCollapsed(true); }}>
-                <div
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors",
-                    isActive
-                      ? "bg-accent text-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  <span className="truncate">{tab.label}</span>
-                </div>
-              </Link>
-            );
-          })}
-          <Link
-            href="/dashboard?tab=home"
-            onClick={() => { if (isSmall) setSidebarCollapsed(true); }}
-            className={cn(
-              "mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors",
-              activeTab === "home" ? "bg-accent text-foreground font-medium" : "text-muted-foreground hover:bg-accent hover:text-foreground",
-            )}
-          >
-            Overview
-          </Link>
-        </nav>
-      </motion.aside>
-      {isSmall && !sidebarCollapsed && (
-        <button
-          type="button"
-          aria-label="Close menu"
-          data-testid="sidebar-backdrop"
-          className="fixed inset-0 z-30 bg-black/40"
-          onClick={() => setSidebarCollapsed(true)}
-        />
-      )}
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <header className="flex h-12 items-center justify-between border-b border-border px-4">
-          <div className="flex items-center gap-2">
+          <div className="flex h-[4.5rem] items-center justify-between border-b border-border px-4">
+            <Link
+              href="/dashboard?tab=home"
+              className="min-w-0 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <CouncilBrand
+                context="Workspace"
+                size="sm"
+                className="[&_[data-council-brand]]:min-w-0"
+              />
+            </Link>
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              aria-label="Collapse or expand sidebar"
-              className="h-8 w-8"
+              aria-label="Close workspace navigation"
+              onClick={() => {
+                setSidebarOpen(false);
+                menuButtonRef.current?.focus();
+              }}
+              className="h-9 w-9 shrink-0"
             >
-              <ChevronLeft
-                className={cn(
-                  "h-4 w-4 transition-transform",
-                  sidebarCollapsed && "rotate-180",
-                )}
-              />
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
             </Button>
-            {/* Route-derived breadcrumbs (see lobby/breadcrumbs.ts): the trail
-                says where this page sits, each non-current crumb is a real link,
-                and the current one is text. The sidebar tab's label names the
-                current destination when it owns this exact route. */}
-            <nav aria-label="You are here" className="flex min-w-0 items-center gap-1 text-sm">
-              {crumbsFor(location, paneCrumbLabel).map((c, i, all) => {
-                const label =
-                  c.current && current?.path && location.startsWith(current.path) && i === all.length - 1 && current.path === location
-                    ? current.label
-                    : c.label;
-                return (
-                  <span key={`${c.label}-${i}`} className="flex min-w-0 items-center gap-1">
-                    {i > 0 && <span aria-hidden="true" className="text-muted-foreground">›</span>}
-                    {c.current ? (
-                      <span aria-current="page" className="truncate font-medium">{label}</span>
-                    ) : c.path ? (
-                      <Link href={c.path} className="truncate text-muted-foreground hover:text-foreground hover:underline">
-                        {label}
-                      </Link>
-                    ) : (
-                      <span className="truncate text-muted-foreground">{label}</span>
-                    )}
-                  </span>
-                );
-              })}
-            </nav>
           </div>
 
-          <div className="flex items-center gap-2">
-            {/* Nav-integrity 2026-08-26: ThemeProvider is mounted without `switchable`,
-                so `toggleTheme` is undefined and this control did nothing on 8 public
-                routes. A button that says "toggle" and does not toggle is a lie — it is
-                only rendered when a real toggle exists. */}
+          <nav
+            id={NAV_ID}
+            ref={navRef}
+            tabIndex={-1}
+            aria-label="Workspace destinations"
+            className="min-h-0 flex-1 overflow-y-auto px-3 py-3"
+          >
+            {DASHBOARD_NAV_GROUPS.map((group) => (
+              <section
+                key={group.id}
+                className="mb-4"
+                aria-labelledby={`dashboard-nav-${group.id}`}
+              >
+                <h2
+                  id={`dashboard-nav-${group.id}`}
+                  className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground"
+                >
+                  {group.label}
+                </h2>
+                <div className="space-y-0.5">
+                  {group.tabs.map((tab) => {
+                    const active = activeTab === tab.id;
+                    return (
+                      <Link
+                        key={tab.id}
+                        href={`/dashboard?tab=${tab.id}`}
+                        aria-current={active ? "page" : undefined}
+                        onClick={() => {
+                          if (isSmall) setSidebarOpen(false);
+                        }}
+                        className={cn(
+                          "relative flex min-h-10 items-center rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                          active
+                            ? "bg-[var(--surface-selection,#ecfdf5)] font-semibold text-emerald-950 before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:rounded-full before:bg-[var(--brand-institutional,#04624a)]"
+                            : "text-muted-foreground hover:bg-accent hover:text-foreground",
+                        )}
+                      >
+                        <span className="truncate">{tab.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            ))}
+          </nav>
+
+          <div className="border-t border-border p-3">
+            <Link
+              href="/dashboard?tab=explore"
+              className="mb-3 flex min-h-10 items-center rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
+            >
+              All tools
+            </Link>
+            <p className="mb-2 px-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+              Account & workspace
+            </p>
+            <div className="flex items-center justify-between gap-2">
+              <DashboardAccountMenu />
+              <Link
+                href={dashboardViewHref("/settings", "Settings")}
+                aria-label="Open settings in workspace"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
+              >
+                <Settings className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+          </div>
+        </aside>
+      ) : null}
+
+      {isSmall && sidebarOpen ? (
+        <button
+          type="button"
+          aria-label="Close workspace navigation"
+          className="fixed inset-0 z-30 bg-black/45"
+          onClick={() => setSidebarOpen(false)}
+        />
+      ) : null}
+
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <header className="flex h-[4.5rem] shrink-0 items-center justify-between gap-3 border-b border-border bg-card/95 px-3 sm:px-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <Button
+              ref={menuButtonRef}
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen((open) => !open)}
+              aria-expanded={sidebarOpen}
+              aria-controls={NAV_ID}
+              aria-label={
+                sidebarOpen
+                  ? "Close workspace navigation"
+                  : "Open workspace navigation"
+              }
+              className="h-10 w-10 shrink-0"
+            >
+              <Menu className="h-4 w-4" aria-hidden="true" />
+            </Button>
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-foreground">
+                {activeLabel}
+              </p>
+              <p className="truncate text-[11px] text-muted-foreground">
+                Council of AI · measure, sign, verify
+              </p>
+            </div>
+          </div>
+          <div className="flex shrink-0 items-center gap-1">
             {toggleTheme ? (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleTheme}
-                aria-label="Toggle light/dark theme"
-                className="h-8 w-8"
+                aria-label="Toggle light or dark theme"
+                className="h-9 w-9"
               >
                 {theme === "dark" ? (
                   <Sun className="h-4 w-4" />
@@ -225,39 +265,33 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 )}
               </Button>
             ) : null}
-            <Link href="/settings">
-              <Button aria-label="Settings" variant="ghost" size="icon" className="h-8 w-8">
-                <Settings className="h-4 w-4" />
-              </Button>
+            <Link
+              href={dashboardViewHref("/settings", "Settings")}
+              aria-label="Open settings in workspace"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground"
+            >
+              <Settings className="h-4 w-4" aria-hidden="true" />
             </Link>
             <DashboardAccountMenu />
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.15 }}
-            className="h-full"
+        <div
+          id={PANEL_ID}
+          role="region"
+          aria-label={`${activeLabel} workspace canvas`}
+          tabIndex={-1}
+          className="min-h-0 flex-1 overflow-hidden"
+        >
+          <DashboardWorkspace
+            activePane={pane}
+            activeTab={activeTab}
+            activeLabel={activeLabel}
           >
-            {isDashboardHome ? (
-              <DashboardWorkspace activePane={pane} activeTab={activeTab} activeLabel={paneCrumbLabel}>
-                {children}
-              </DashboardWorkspace>
-            ) : (
-              pane ?? children
-            )}
-            {/* Canon free rail (doctrine + persona gauntlet 'buyer'): verify is free, a grade is never sold. */}
-            {!isDashboardHome && (
-              <p className="mt-6 px-6 pb-6 text-xs text-muted-foreground" data-testid="free-rail">
-                Verify is free. A grade is never sold. No public prices — measurement, not certification.
-              </p>
-            )}
-          </motion.div>
-        </main>
+            {children}
+          </DashboardWorkspace>
+        </div>
       </div>
-      <DashboardAccountMenu placement="dock" />
     </div>
   );
 }

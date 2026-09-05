@@ -14,6 +14,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 from adapters import witness_queue as wq  # noqa: E402
+from publish_public_root import make_card  # noqa: E402
+from root_digest_domain import PAYLOAD_ONLY_V0, WHOLE_CARD_V1
 
 FX = json.loads((HERE / "fixtures" / "witness_kv_recorded.json").read_text(encoding="utf-8"))
 ENV = {"CLOUDFLARE_API_TOKEN": "t", "CLOUDFLARE_ACCOUNT_ID": "acct", "WITNESS_KV_NAMESPACE_ID": "ns"}
@@ -54,6 +56,31 @@ def _repo(tmp: str) -> Path:
     root = Path(tmp)
     (root / "public" / "interop").mkdir(parents=True)
     return root
+
+
+def _write_root(
+    root: Path,
+    cards: list[dict],
+    *,
+    kind: str = "csoai.public-root/v1",
+    domain: str | None = WHOLE_CARD_V1,
+) -> dict:
+    cards_dir = root / "public" / "cards"
+    cards_dir.mkdir(parents=True, exist_ok=True)
+    shas = [card["sha256"] for card in cards]
+    for card in cards:
+        (cards_dir / f"{card['sha256'][:16]}.json").write_text(json.dumps({"card": card}))
+    body = {
+        "kind": kind,
+        "as_of": "2026-09-02T08:07:00Z",
+        "merkle_root": wq.merkle_root(shas),
+        "card_count": len(shas),
+        "card_sha256": shas,
+    }
+    if domain is not None:
+        body["leaf_digest_domain"] = domain
+    (root / "public" / "root.json").write_text(json.dumps(body))
+    return body
 
 
 def test_absent_config_no_leaves_never_raises() -> None:
@@ -98,11 +125,14 @@ def test_recorded_queue_becomes_canonical_leaves() -> None:
 
 def test_mark_is_idempotent_and_mirrors_public_fields_only() -> None:
     kv = FakeKv()
-    a_card = wq.payload_sha256(wq.leaf_payload(FX["values"]["witness:" + A]))
+    a_entry = FX["values"]["witness:" + A]
+    a_card_obj = make_card(wq.leaf_from_entry(a_entry), "fixture-signature")
+    a_card = a_card_obj["sha256"]
+    assert a_card != wq.payload_sha256(wq.leaf_payload(a_entry))
     with tempfile.TemporaryDirectory() as tmp:
         root = _repo(tmp)
-        merkle = "m" * 64
-        (root / "public" / "root.json").write_text(json.dumps({"as_of": "2026-09-02T08:07:00Z", "merkle_root": merkle, "card_sha256": [a_card, "x" * 64]}))
+        root_json = _write_root(root, [a_card_obj])
+        merkle = root_json["merkle_root"]
         side = json.loads(json.dumps(FX["root_witness_latest"]))
         side["artifact"]["merkle_root"] = merkle
         (root / "public" / "interop" / "root-witness-latest.json").write_text(json.dumps(side))
@@ -113,6 +143,8 @@ def test_mark_is_idempotent_and_mirrors_public_fields_only() -> None:
         assert e["status"] == "witnessed"
         assert e["witnessed"] == {
             "root_as_of": "2026-09-02T08:07:00Z", "merkle_root": merkle, "card_sha256": a_card,
+            "card_digest_domain": WHOLE_CARD_V1, "root_kind": "csoai.public-root/v1",
+            "root_digest_domain_source": "declared",
             "card_url": f"/cards/{a_card[:16]}.json", "proof_url": f"/api/proof?sha={a_card}",
             "anchors": {"merkle_root": merkle, "rekor": {"status": "WITNESSED", "logIndex": 2684053226, "uuid": "108e", "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2684053226"}, "ots": {"status": "STAMPED_PENDING_BITCOIN", "path": "public/interop/root-728e8c5e.json.ots", "url": "https://councilof.ai/interop/root-728e8c5e.json.ots"}, "sidecar": "https://councilof.ai/interop/root-witness-latest.json"},
         }
@@ -135,7 +167,7 @@ def test_mark_is_idempotent_and_mirrors_public_fields_only() -> None:
         assert both["sidecar"]["n_mirror"] == 1
         alone = wq.collect(root, env={})
         assert [l["payload"]["sha256"] for l in alone["leaves"]] == [A]
-        assert wq.payload_sha256(alone["leaves"][0]["payload"]) == a_card
+        assert wq.payload_sha256(alone["leaves"][0]["payload"]) != a_card
 
 
 def test_kv_unreachable_never_raises_and_mirrors_still_land() -> None:
@@ -150,6 +182,100 @@ def test_kv_unreachable_never_raises_and_mirrors_still_land() -> None:
         assert "errors" in out["sidecar"]["kv"]
         m = wq.mark(root, env=ENV, transport=down)
         assert m["status"] == "UNCHECKABLE"  # no root.json in the temp repo — recorded, not raised
+
+
+def test_fieldless_versioned_v1_root_is_safe_only_after_whole_card_reproduction() -> None:
+    kv = FakeKv()
+    entry = FX["values"]["witness:" + A]
+    card = make_card(wq.leaf_from_entry(entry), "fixture-signature")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _repo(tmp)
+        _write_root(root, [card], domain=None)
+        out = wq.mark(root, env=ENV, transport=kv)
+    assert out["status"] == "ok"
+    assert out["root_digest_domain"] == WHOLE_CARD_V1
+    assert out["root_digest_domain_source"] == "legacy-kind"
+    assert out["marked"] == [A[:16]]
+    assert kv.values["witness:" + A]["witnessed"]["card_sha256"] == card["sha256"]
+
+
+def test_explicit_v0_root_marks_the_payload_digest_not_a_whole_card_digest() -> None:
+    kv = FakeKv()
+    entry = FX["values"]["witness:" + A]
+    leaf = wq.leaf_from_entry(entry)
+    card = {
+        "as_of": leaf["as_of"],
+        "did": "did:web:csoai.org#board-attestation-1",
+        "payload": leaf["payload"],
+        "schema": "https://councilof.ai/schema/card-v0.json",
+        "sha256": wq.payload_sha256(leaf["payload"]),
+        "sig_ed25519": "fixture-signature",
+        "source_urls": leaf["source_urls"],
+        "subject": leaf["subject"],
+        "surface": leaf["surface"],
+        "tags": leaf["tags"],
+        "unmeasured": leaf["unmeasured"],
+    }
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _repo(tmp)
+        _write_root(root, [card], kind="csoai.public-root/v0", domain=PAYLOAD_ONLY_V0)
+        out = wq.mark(root, env=ENV, transport=kv)
+    assert out["status"] == "ok" and out["marked"] == [A[:16]]
+    witnessed = kv.values["witness:" + A]["witnessed"]
+    assert witnessed["card_sha256"] == wq.payload_sha256(leaf["payload"])
+    assert witnessed["card_digest_domain"] == PAYLOAD_ONLY_V0
+
+
+def test_contradictory_or_unknown_root_domain_fails_closed_without_put() -> None:
+    entry = FX["values"]["witness:" + A]
+    card = make_card(wq.leaf_from_entry(entry), "fixture-signature")
+    for kind, domain in (
+        ("csoai.public-root/v1", PAYLOAD_ONLY_V0),
+        ("csoai.public-root/unknown", None),
+    ):
+        kv = FakeKv()
+        with tempfile.TemporaryDirectory() as tmp:
+            root = _repo(tmp)
+            _write_root(root, [card], kind=kind, domain=domain)
+            out = wq.mark(root, env=ENV, transport=kv)
+        assert out["status"] == "UNCHECKABLE"
+        assert "digest domain" in out["errors"][0]
+        assert kv.puts == []
+
+
+def test_duplicate_whole_cards_for_one_witness_payload_are_not_guessed() -> None:
+    kv = FakeKv()
+    entry = FX["values"]["witness:" + A]
+    leaf = wq.leaf_from_entry(entry)
+    first = make_card(leaf, "fixture-signature")
+    second = make_card({**leaf, "subject": leaf["subject"] + " duplicate"}, "fixture-signature")
+    assert first["sha256"] != second["sha256"]
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _repo(tmp)
+        _write_root(root, [first, second])
+        out = wq.mark(root, env=ENV, transport=kv)
+    assert out["marked"] == [] and kv.puts == []
+    assert any("ambiguous" in item["reason"] for item in out["skipped"] if item["sha256"] == A[:16])
+
+
+def test_domainless_historical_stamp_is_not_mirrored_when_original_root_cannot_be_proved() -> None:
+    values = json.loads(json.dumps(FX["values"]))
+    values["witness:" + A]["status"] = "witnessed"
+    values["witness:" + A]["witnessed"] = {
+        "root_as_of": "2026-09-01T00:00:00Z",
+        "merkle_root": "e" * 64,
+        "card_sha256": wq.payload_sha256(wq.leaf_payload(values["witness:" + A])),
+    }
+    kv = FakeKv(values)
+    card = make_card(wq.leaf_from_entry(values["witness:" + A]), "fixture-signature")
+    with tempfile.TemporaryDirectory() as tmp:
+        root = _repo(tmp)
+        _write_root(root, [card])
+        out = wq.mark(root, env=ENV, transport=kv)
+        mirror = root / "public" / "interop" / "witness" / f"{A}.json"
+        assert not mirror.exists()
+    assert out["upgraded_legacy"] == [] and kv.puts == []
+    assert any("cannot be uniquely proved" in item["reason"] for item in out["skipped"])
 
 
 def test_mark_without_config_is_not_yet() -> None:

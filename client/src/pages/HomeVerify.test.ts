@@ -2,12 +2,16 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { wantsGetMeasured } from "@/components/os/osChat";
+import { PRIMARY_LINKS, navigation } from "@/components/HeaderNav";
 
 const here = resolve(__dirname);
 const src = [
   readFileSync(resolve(here, "HomeVerify.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/board/LiveLeaderboard.tsx"), "utf8"),
+  readFileSync(
+    resolve(here, "../components/board/LiveLeaderboard.tsx"),
+    "utf8",
+  ),
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/HfLivingRecord.tsx"), "utf8"),
   readFileSync(resolve(here, "../lib/hfLivingRecord.ts"), "utf8"),
@@ -23,7 +27,10 @@ const header =
   readFileSync(resolve(here, "../components/Header.tsx"), "utf8") +
   readFileSync(resolve(here, "../components/HeaderNav.tsx"), "utf8");
 const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
-const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
+const stack = readFileSync(
+  resolve(here, "../components/home/ToolStack.tsx"),
+  "utf8",
+);
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
@@ -82,16 +89,21 @@ describe("homepage is chat + GSPC list plus the estate", () => {
   });
 });
 
-describe("header restores master menu and Council OS", () => {
-  it("keeps Verify · Get measured · Board · Council OS · Tools", () => {
-    expect(header).toContain('name: "Verify"');
-    expect(header).toContain('name: "Get measured"');
-    expect(header).toContain('name: "Board"');
-    expect(header).toContain('name: "Council OS"');
-    expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/report'");
-    expect(header).toContain("href: '/for/enterprise'");
-    expect(header).not.toContain("href: '/watchdog'");
+describe("header keeps one master menu and workspace door", () => {
+  it("keeps Verify · Request attestation · Board · Workspace · Tools", () => {
+    expect(PRIMARY_LINKS.map((item) => item.name)).toEqual([
+      "Verify",
+      "Request attestation",
+      "Board",
+      "Workspace",
+      "Tools",
+    ]);
+    const hrefs = navigation.flatMap((group) =>
+      group.submenu.map((item) => item.href),
+    );
+    expect(hrefs).toContain("/report");
+    expect(hrefs).toContain("/for/enterprise");
+    expect(hrefs).not.toContain("/watchdog");
     expect(header).not.toContain("Chat is Council OS");
     expect(header).not.toContain("Start free");
     expect(header).toContain("SPA hops keep this header mounted");
@@ -99,9 +111,14 @@ describe("header restores master menu and Council OS", () => {
 
   it("renders the mega-menu groups", () => {
     expect(header).toContain("{navigation.map");
-    expect(header).toContain("name: 'Measure'");
-    expect(header).toContain("name: 'Products'");
-    expect(header).toContain("name: 'Council OS'");
+    expect(navigation.map((group) => group.name)).toEqual([
+      "Measure",
+      "Products",
+      "Regulation",
+      "Council OS",
+      "Evidence",
+      "Company",
+    ]);
   });
 });
 
@@ -114,7 +131,9 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
     expect(tools).toMatch(/Ask: board totals/);
-    expect(tools).toContain("board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion");
+    expect(tools).toContain(
+      "board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion",
+    );
     expect(tools).not.toContain("HundredGate"); // internal planning envelope — never on a public page
     expect(tools).toContain("WatchlistPane");
     expect(tools).not.toMatch(/lifestyle/i);

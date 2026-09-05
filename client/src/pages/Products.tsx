@@ -52,9 +52,18 @@ export const SKUS = [
 ] as const;
 
 const ENGINE = [
-  { k: "Signed", v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md). Every published card carries its signature bytes, the public key and the preimage rule, and verifies offline with the zero-dependency verifier at /signed/verify-card.mjs — no account, no permission." },
-  { k: "Three-state", v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden" },
-  { k: "Live-sourced", v: "board numbers from GET /api/gspc, card-chain numbers from GET /api/state — both carry the artifact and the date they were read from. No page types a count." },
+  {
+    k: "Signed",
+    v: "Ed25519 over canonical JSON (not JCS — see /signed/HOW-TO-VERIFY.md). Every published card carries its signature bytes, the public key and the preimage rule, and verifies offline with the zero-dependency verifier at /signed/verify-card.mjs — no account, no permission.",
+  },
+  {
+    k: "Three-state",
+    v: "pass / fail / UNMEASURED — what we cannot measure is published, not hidden",
+  },
+  {
+    k: "Live-sourced",
+    v: "board numbers from GET /api/gspc, card-chain numbers from GET /api/state — both carry the artifact and the date they were read from. No page types a count.",
+  },
   {
     k: "Method-bound",
     v: "unparsed counts incorrect · no model judges another · no model-comparison axis is quoted below n=30, and an axis whose n counts something other than bank items says what it counts",
@@ -62,11 +71,32 @@ const ENGINE = [
 ];
 
 const FREE_RAIL = [
-  { name: "Verify a card", href: "/gspc-verify", what: "Check any signed verdict offline. Free forever, for anyone." },
-  { name: "The live board", href: "/gspc-scoreboard", what: "Every quotable axis, measured or honestly UNMEASURED." },
-  { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
-  { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
-  { name: "Metered for agents", href: "/pricing-free", what: "Three artefacts an agent can buy over HTTP 402 (USDC on Base) — issuance, assembly, cadence. Never a grade." },
+  {
+    name: "Verify a card",
+    href: "/gspc-verify",
+    what: "Check any signed verdict offline. Free forever, for anyone.",
+  },
+  {
+    name: "The live board",
+    href: "/gspc-scoreboard",
+    what: "Every quotable axis, measured or honestly UNMEASURED.",
+  },
+  {
+    name: "The API",
+    href: "/api/gspc",
+    what: "The same board, machine-readable. Agents welcome.",
+    external: true,
+  },
+  {
+    name: "The method",
+    href: "/methodology",
+    what: "The frozen rules every number above is computed under.",
+  },
+  {
+    name: "Metered for agents",
+    href: "/pricing-free",
+    what: "Three artefacts an agent can buy over HTTP 402 (USDC on Base) — issuance, assembly, cadence. Never a grade.",
+  },
 ];
 
 const MODULES = [
@@ -122,210 +152,332 @@ const MODULES = [
 
 const AUDIENCES = [
   { who: "Anyone", deal: "Verify and Council OS. Free, loginless, forever." },
-  { who: "Insurers & relying parties", deal: "Council Ledger — a feed you can price against, from a body that will never underwrite." },
-  { who: "Deployers & GPAI teams", deal: "An evidence pack for a system you asked us to measure. Not a purchased public rank." },
-  { who: "Researchers & AI teams", deal: "Council Data — licensed traces. Data, never a score." },
-  { who: "Regulators & the public", deal: "The whole public rail, free. Boards, cards, proofs, the API." },
-  { who: "Partner sites", deal: "The white-label embed. Partner branding does not change the evidence." },
+  {
+    who: "Insurers & relying parties",
+    deal: "Council Ledger — a feed you can price against, from a body that will never underwrite.",
+  },
+  {
+    who: "Deployers & GPAI teams",
+    deal: "An evidence pack for a system you asked us to measure. Not a purchased public rank.",
+  },
+  {
+    who: "Researchers & AI teams",
+    deal: "Council Data — licensed traces. Data, never a score.",
+  },
+  {
+    who: "Regulators & the public",
+    deal: "The whole public rail, free. Boards, cards, proofs, the API.",
+  },
+  {
+    who: "Partner sites",
+    deal: "The white-label embed. Partner branding does not change the evidence.",
+  },
 ];
 
 export default function Products() {
   const board = useBoardCount();
   return (
-    <div className="min-h-screen bg-[#03110b]">
-    <main className="mx-auto max-w-5xl px-5 py-14 text-slate-100 sm:px-8">
-      <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-400">
-        Council of AI — verify free, three arms on enquiry
-      </p>
-      <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
-        Verify is free. Three things invoice.
-      </h1>
-      <p className="mt-5 max-w-3xl text-lg leading-relaxed text-slate-300">
-        We measure AI systems against frozen, published tests, sign the result, and
-        sell the evidence — never the score, never a certificate, never to anyone we rank.
-      </p>
-
-      {/* The five access surfaces — every way a user can reach the measurement rail today. */}
-      <section aria-label="Five access surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
-          <p className="font-mono text-sm text-emerald-100">MCP</p>
-          <p className="mt-1 text-xs text-emerald-200/80">board_totals · get_axis · verify_card · list_cards</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
-        </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
-          <p className="font-mono text-sm text-emerald-100">Browser extension</p>
-          <p className="mt-1 text-xs text-emerald-200/80">MV3 — overlays badge on Hugging Face, OpenRouter, Replicate</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/extension/</p>
-        </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/tools">
-          <p className="font-mono text-sm text-emerald-100">Plugin</p>
-          <p className="mt-1 text-xs text-emerald-200/80">Council of AI Grok plugin — 4 skills, 4 commands</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">/tools</p>
-        </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/what-is-new.html">
-          <p className="font-mono text-sm text-emerald-100">Hermes skill</p>
-          <p className="mt-1 text-xs text-emerald-200/80">~/.hermes/skills/council-of-ai/ — 6/6 tests pass</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">skill_view</p>
-        </a>
-        <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="https://councilof.ai/api/gspc" target="_blank" rel="noreferrer">
-          <p className="font-mono text-sm text-emerald-100">REST + curl</p>
-          <p className="mt-1 text-xs text-emerald-200/80">GET /api/gspc · /api/state · /api/corrections</p>
-          <p className="mt-1 text-[11px] text-emerald-300/60">application/json</p>
-        </a>
-      </section>
-
-      <section aria-labelledby="sku-h" className="mt-12">
-        <h2 id="sku-h" className="text-xl font-bold text-emerald-300">The four SKUs</h2>
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {SKUS.map((p) => (
-            <li key={p.id}>
-              <Link
-                href={p.href}
-                className="block h-full rounded-2xl border border-emerald-400/30 bg-emerald-950/40 p-5 transition hover:border-emerald-400/60 hover:bg-emerald-950/60"
-              >
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-lg font-bold text-slate-100">{p.name}</span>
-                  <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
-                    {p.tag}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.what}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <ProductFill tone="dark" />
-      <HealthInventory tone="dark" />
-      <HealthTerms tone="dark" />
-      <GovernanceTerminal tone="dark" />
-      <PermissionlessRevenue tone="dark" />
-      <SovExternalAudit tone="dark" />
-      <PlaybookAudit tone="dark" />
-      <EmptySlots tone="dark" />
-
-      <section aria-labelledby="engine-h" className="mt-12">
-        <h2 id="engine-h" className="text-xl font-bold text-emerald-300">The engine</h2>
-        <dl className="mt-4 grid gap-3 sm:grid-cols-2">
-          {ENGINE.map((e) => (
-            <div key={e.k} className="rounded-2xl border border-emerald-400/20 bg-emerald-950/40 p-4">
-              <dt className="font-mono text-[11px] uppercase tracking-wider text-emerald-400">{e.k}</dt>
-              <dd className="mt-1 text-sm leading-relaxed text-slate-300">{e.v}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="mt-4 text-sm leading-relaxed text-slate-400">
-          The board this rail publishes today:{" "}
-          <span className="font-semibold text-emerald-300">{board.public_count}</span>{" "}
-          {board.live ? (
-            <span className="text-slate-500">— read from GET /api/gspc as this page loaded.</span>
-          ) : (
-            <span className="text-slate-500">
-              — the last recorded observation in the facts ledger. The live board could not be read,
-              and a dated observation is shown rather than a fabricated number; GET /api/gspc wins.
-            </span>
-          )}{" "}
-          <span className="text-slate-400">{board.count_grammar}</span>
+    <div className="min-h-screen bg-[var(--surface-canvas,#fafaf7)]">
+      <main className="mx-auto max-w-5xl px-5 py-14 text-foreground sm:px-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-800">
+          Council of AI — verify free, three arms on enquiry
         </p>
-      </section>
-
-      <section aria-labelledby="free-h" className="mt-12">
-        <h2 id="free-h" className="text-xl font-bold text-emerald-300">Free forever, before anything else</h2>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-400">
-          Verification is free forever. A grade is never sold. Regulators and the public pay nothing.
-          Paid SKUs fund the rail; they do not replace it.
+        <h1 className="mt-3 max-w-3xl text-4xl font-extrabold leading-tight sm:text-4xl">
+          Verify is free. Three things invoice.
+        </h1>
+        <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+          We measure AI systems against frozen, published tests, sign the
+          result, and sell the evidence — never the score, never a certificate,
+          never to anyone we rank.
         </p>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {FREE_RAIL.map((f) => (
-            <li key={f.href}>
-              {f.external ? (
-                <a href={f.href} className="block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/40">
-                  <span className="font-semibold text-slate-100">{f.name}</span>
-                  <span className="mt-1 block text-[13px] leading-relaxed text-slate-400">{f.what}</span>
-                </a>
-              ) : (
-                <Link href={f.href} className="block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-4 transition hover:border-emerald-400/40">
-                  <span className="font-semibold text-slate-100">{f.name}</span>
-                  <span className="mt-1 block text-[13px] leading-relaxed text-slate-400">{f.what}</span>
+
+        {/* The five access surfaces — every way a user can reach the measurement rail today. */}
+        <section
+          aria-label="Five access surfaces"
+          className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5"
+        >
+          <a
+            className="rounded-xl border border-border bg-card p-4 shadow-sm hover:border-emerald-300"
+            href="/mcp"
+          >
+            <p className="font-mono text-sm text-emerald-900">MCP</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              board_totals · get_axis · verify_card · list_cards
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-700">POST /mcp</p>
+          </a>
+          <a
+            className="rounded-xl border border-border bg-card p-4 shadow-sm hover:border-emerald-300"
+            href="/extension/"
+          >
+            <p className="font-mono text-sm text-emerald-900">
+              Browser extension
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              MV3 — overlays badge on Hugging Face, OpenRouter, Replicate
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-700">/extension/</p>
+          </a>
+          <a
+            className="rounded-xl border border-border bg-card p-4 shadow-sm hover:border-emerald-300"
+            href="/tools"
+          >
+            <p className="font-mono text-sm text-emerald-900">Plugin</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Council of AI Grok plugin — 4 skills, 4 commands
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-700">/tools</p>
+          </a>
+          <a
+            className="rounded-xl border border-border bg-card p-4 shadow-sm hover:border-emerald-300"
+            href="/what-is-new.html"
+          >
+            <p className="font-mono text-sm text-emerald-900">Hermes skill</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              ~/.hermes/skills/council-of-ai/ — 6/6 tests pass
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-700">skill_view</p>
+          </a>
+          <a
+            className="rounded-xl border border-border bg-card p-4 shadow-sm hover:border-emerald-300"
+            href="https://councilof.ai/api/gspc"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <p className="font-mono text-sm text-emerald-900">REST + curl</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              GET /api/gspc · /api/state · /api/corrections
+            </p>
+            <p className="mt-1 text-[11px] text-emerald-700">
+              application/json
+            </p>
+          </a>
+        </section>
+
+        <section aria-labelledby="sku-h" className="mt-12">
+          <h2 id="sku-h" className="text-xl font-bold text-emerald-900">
+            The four SKUs
+          </h2>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {SKUS.map((p) => (
+              <li key={p.id}>
+                <Link
+                  href={p.href}
+                  className="block h-full rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50/40"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-lg font-bold text-foreground">
+                      {p.name}
+                    </span>
+                    <span className="shrink-0 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-800">
+                      {p.tag}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {p.what}
+                  </p>
                 </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <section aria-labelledby="mod-h" className="mt-12">
-        <h2 id="mod-h" className="text-xl font-bold text-emerald-300">Modules (not extra products)</h2>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-400">
-          These are panes of Council OS or packs under Council Ledger. They are not a fifth SKU.
-        </p>
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {MODULES.map((p) => (
-            <li key={p.href}>
-              <Link
-                href={p.href}
-                className="block h-full rounded-2xl border border-slate-100/10 bg-white/[0.03] p-5 transition hover:border-emerald-400/40 hover:bg-white/[0.05]"
+        <ProductFill tone="light" />
+        <HealthInventory tone="light" />
+        <HealthTerms tone="light" />
+        <GovernanceTerminal tone="light" />
+        <PermissionlessRevenue tone="light" />
+        <SovExternalAudit tone="light" />
+        <PlaybookAudit tone="light" />
+        <EmptySlots tone="light" />
+
+        <section aria-labelledby="engine-h" className="mt-12">
+          <h2 id="engine-h" className="text-xl font-bold text-emerald-900">
+            The engine
+          </h2>
+          <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+            {ENGINE.map((e) => (
+              <div
+                key={e.k}
+                className="rounded-2xl border border-border bg-card p-4 shadow-sm"
               >
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="text-lg font-bold text-slate-100">{p.name}</span>
-                  <span className="shrink-0 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
-                    {p.tag}
-                  </span>
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{p.what}</p>
+                <dt className="font-mono text-[11px] uppercase tracking-wider text-emerald-800">
+                  {e.k}
+                </dt>
+                <dd className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {e.v}
+                </dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            The board this rail publishes today:{" "}
+            <span className="font-semibold text-emerald-800">
+              {board.public_count}
+            </span>{" "}
+            {board.live ? (
+              <span className="text-muted-foreground">
+                — read from GET /api/gspc as this page loaded.
+              </span>
+            ) : (
+              <span className="text-muted-foreground">
+                — the last recorded observation in the facts ledger. The live
+                board could not be read, and a dated observation is shown rather
+                than a fabricated number; GET /api/gspc wins.
+              </span>
+            )}{" "}
+            <span className="text-muted-foreground">{board.count_grammar}</span>
+          </p>
+        </section>
+
+        <section aria-labelledby="free-h" className="mt-12">
+          <h2 id="free-h" className="text-xl font-bold text-emerald-900">
+            Free forever, before anything else
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            Verification is free forever. A grade is never sold. Regulators and
+            the public pay nothing. Paid SKUs fund the rail; they do not replace
+            it.
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {FREE_RAIL.map((f) => (
+              <li key={f.href}>
+                {f.external ? (
+                  <a
+                    href={f.href}
+                    className="block h-full rounded-2xl border border-border bg-card p-4 shadow-sm transition hover:border-emerald-300"
+                  >
+                    <span className="font-semibold text-foreground">
+                      {f.name}
+                    </span>
+                    <span className="mt-1 block text-[13px] leading-relaxed text-muted-foreground">
+                      {f.what}
+                    </span>
+                  </a>
+                ) : (
+                  <Link
+                    href={f.href}
+                    className="block h-full rounded-2xl border border-border bg-card p-4 shadow-sm transition hover:border-emerald-300"
+                  >
+                    <span className="font-semibold text-foreground">
+                      {f.name}
+                    </span>
+                    <span className="mt-1 block text-[13px] leading-relaxed text-muted-foreground">
+                      {f.what}
+                    </span>
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="mod-h" className="mt-12">
+          <h2 id="mod-h" className="text-xl font-bold text-emerald-900">
+            Modules (not extra products)
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+            These are panes of Council OS or packs under Council Ledger. They
+            are not a fifth SKU.
+          </p>
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {MODULES.map((p) => (
+              <li key={p.href}>
+                <Link
+                  href={p.href}
+                  className="block h-full rounded-2xl border border-border bg-card p-5 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50/40"
+                >
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-lg font-bold text-foreground">
+                      {p.name}
+                    </span>
+                    <span className="shrink-0 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-800">
+                      {p.tag}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {p.what}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="aud-h" className="mt-12">
+          <h2 id="aud-h" className="text-xl font-bold text-emerald-900">
+            Who it serves
+          </h2>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+            {AUDIENCES.map((a) => (
+              <li
+                key={a.who}
+                className="rounded-2xl border border-border bg-card p-4 shadow-sm"
+              >
+                <span className="font-semibold text-foreground">{a.who}</span>
+                <span className="mt-1 block text-[13px] leading-relaxed text-muted-foreground">
+                  {a.deal}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section
+          aria-labelledby="bound-h"
+          className="mt-12 rounded-2xl border border-amber-200 bg-amber-50 p-6"
+        >
+          <h2 id="bound-h" className="text-base font-bold text-amber-900">
+            The boundary, stated plainly
+          </h2>
+          <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-amber-950/80">
+            <li>
+              We measure. We do not certify, and nothing here is a conformity
+              assessment or a conformity mark.
+            </li>
+            <li>
+              UNMEASURED is a first-class answer — it appears on this page and
+              on the board wherever it is true.
+            </li>
+            <li>
+              No public prices, here or anywhere: verification is free forever,
+              and a grade is never sold.
+            </li>
+            <li>
+              Determinations of legal compliance remain with the competent
+              authorities, always.
+            </li>
+            <li>
+              We measure against regulation; we do not enforce it. We cannot
+              approve, ban, fine or clear any system, and we are not a notified
+              body under the EU AI Act or anything else.
+            </li>
+            <li>
+              Where a capability is not there yet we say &quot;not yet
+              available&quot; and give the reason — see{" "}
+              <Link href="/claims-register" className="underline">
+                the claims register
               </Link>
+              .
             </li>
-          ))}
-        </ul>
-      </section>
+          </ul>
+        </section>
 
-      <section aria-labelledby="aud-h" className="mt-12">
-        <h2 id="aud-h" className="text-xl font-bold text-emerald-300">Who it serves</h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-          {AUDIENCES.map((a) => (
-            <li key={a.who} className="rounded-2xl border border-slate-100/10 bg-white/[0.03] p-4">
-              <span className="font-semibold text-slate-100">{a.who}</span>
-              <span className="mt-1 block text-[13px] leading-relaxed text-slate-400">{a.deal}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section aria-labelledby="bound-h" className="mt-12 rounded-2xl border border-amber-400/25 bg-amber-950/20 p-6">
-        <h2 id="bound-h" className="text-base font-bold text-amber-300">The boundary, stated plainly</h2>
-        <ul className="mt-3 space-y-1.5 text-sm leading-relaxed text-slate-300">
-          <li>We measure. We do not certify, and nothing here is a conformity assessment or a conformity mark.</li>
-          <li>UNMEASURED is a first-class answer — it appears on this page and on the board wherever it is true.</li>
-          <li>No public prices, here or anywhere: verification is free forever, and a grade is never sold.</li>
-          <li>Determinations of legal compliance remain with the competent authorities, always.</li>
-          <li>
-            We measure against regulation; we do not enforce it. We cannot approve, ban, fine or
-            clear any system, and we are not a notified body under the EU AI Act or anything else.
-          </li>
-          <li>
-            Where a capability is not there yet we say &quot;not yet available&quot; and give the
-            reason — see{" "}
-            <Link href="/claims-register" className="underline">the claims register</Link>.
-          </li>
-        </ul>
-      </section>
-
-      <div className="mt-12 flex flex-wrap gap-3">
-        <Link
-          href="/gspc-verify"
-          className="rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-emerald-950 transition hover:bg-emerald-400"
-        >
-          Verify a card — free
-        </Link>
-        <Link
-          href="/contact?arm=ledger"
-          className="rounded-xl border border-slate-100/20 px-6 py-3 font-semibold text-slate-100 transition hover:border-emerald-400/50"
-        >
-          Enquire for Ledger or Data
-        </Link>
-      </div>
-    </main>
+        <div className="mt-12 flex flex-wrap gap-3">
+          <Link
+            href="/gspc-verify"
+            className="rounded-xl bg-emerald-700 px-6 py-3 font-semibold text-white transition hover:bg-emerald-800"
+          >
+            Verify a card — free
+          </Link>
+          <Link
+            href="/contact?arm=ledger"
+            className="rounded-xl border border-border bg-card px-6 py-3 font-semibold text-foreground transition hover:border-emerald-300"
+          >
+            Enquire for Ledger or Data
+          </Link>
+        </div>
+      </main>
     </div>
   );
 }

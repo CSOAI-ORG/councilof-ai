@@ -327,7 +327,7 @@ function currentPath(): string {
   return LOBBY_HOME_PATH;
 }
 
-/** OsLauncher doors. ?lobby= / assess ?task= on /os are the product frame, not the overlay. */
+/** Legacy /os door ids accepted by the redirect into the canonical Dashboard. */
 export const OS_DOOR_LOBBIES = new Set([
   "home",
   "board",
@@ -342,26 +342,36 @@ export const OS_DOOR_LOBBIES = new Set([
 ]);
 
 /** Native instrument ids a harness panel may open. */
-export const OS_PANEL_LOBBIES = ["board", "verify", "cards", "harness"] as const;
+export const OS_PANEL_LOBBIES = [
+  "board",
+  "verify",
+  "cards",
+  "harness",
+] as const;
 export type OsPanelLobby = (typeof OS_PANEL_LOBBIES)[number];
 
 /**
- * Harness AG-UI panel URL. Top-level `/os?embed=1&lobby=board` — native pane,
- * site chrome off. Not an iframe of /os, and not minted by withEmbed()
- * (that helper must never stamp embed=1 onto /os, or OS nests inside OS).
+ * Harness panel URL. It targets the canonical Dashboard directly and uses the
+ * same chrome-less workspace contract as every embedded dashboard tool.
  */
 export function osPanelHref(lobby: OsPanelLobby = "board"): string {
-  return `/os?${EMBED_PARAM}=1&${LOBBY_PARAM}=${lobby}`;
+  return `/dashboard?${EMBED_PARAM}=1&${TAB_PARAM}=${lobby}`;
 }
 
 /**
  * Door hop on /os. Keeps embed=1 when already a harness panel so tab switches
  * stay in the panel. Never invents embed=1 (that is osPanelHref).
  */
-export function osDoorHref(lobby: string, currentSearch = "", hostPath = "/os"): string {
+export function osDoorHref(
+  lobby: string,
+  currentSearch = "",
+  hostPath = "/os",
+): string {
   const next = new URLSearchParams();
   next.set(LOBBY_PARAM, lobby);
-  const raw = currentSearch.startsWith("?") ? currentSearch.slice(1) : currentSearch;
+  const raw = currentSearch.startsWith("?")
+    ? currentSearch.slice(1)
+    : currentSearch;
   const cur = new URLSearchParams(raw);
   if (cur.get(EMBED_PARAM) === "1") next.set(EMBED_PARAM, "1");
   const base = hostPath === "/" ? "/" : "/os";
@@ -381,7 +391,9 @@ export function isOsDoorPath(path: string): boolean {
 /** True when /os should keep the query and leave the overlay closed. */
 export function osKeepsDoorQuery(path: string, search: string): boolean {
   if (!isOsDoorPath(path)) return false;
-  const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
+  const p = new URLSearchParams(
+    search.startsWith("?") ? search.slice(1) : search,
+  );
   if (p.has(ASK_PARAM)) return false;
   const lobby = p.get(LOBBY_PARAM);
   const task = p.get(TASK_PARAM);
@@ -398,7 +410,11 @@ export function osKeepsDoorQuery(path: string, search: string): boolean {
 export function lobbyHref(opts: LobbyLinkOptions = {}): string {
   const q = new URLSearchParams();
   const task = isTask(opts.task) ? opts.task : undefined;
-  const pane = isPane(opts.pane) ? opts.pane : task ? LOBBY_TASKS[task].pane : undefined;
+  const pane = isPane(opts.pane)
+    ? opts.pane
+    : task
+      ? LOBBY_TASKS[task].pane
+      : undefined;
 
   const path = opts.path ?? currentPath();
   const onDashboard = path === LOBBY_HOME_PATH;
@@ -418,7 +434,10 @@ export function lobbyHref(opts: LobbyLinkOptions = {}): string {
 }
 
 /** Shorthand for a registry task. */
-export function lobbyTaskHref(task: LobbyTaskId, opts: Omit<LobbyLinkOptions, "task"> = {}): string {
+export function lobbyTaskHref(
+  task: LobbyTaskId,
+  opts: Omit<LobbyLinkOptions, "task"> = {},
+): string {
   return lobbyHref({ ...opts, task });
 }
 
@@ -432,13 +451,24 @@ export function resolveIntent(input: {
   task?: unknown;
 }): LobbyIntent | null {
   const task = isTask(input.task) ? input.task : undefined;
-  const ctx = typeof input.ctx === "string" && input.ctx.trim() ? input.ctx.trim() : undefined;
-  const pane = isPane(input.pane) ? input.pane : task ? LOBBY_TASKS[task].pane : undefined;
-  const explicit = typeof input.prompt === "string" && input.prompt.trim() ? input.prompt.trim() : undefined;
+  const ctx =
+    typeof input.ctx === "string" && input.ctx.trim()
+      ? input.ctx.trim()
+      : undefined;
+  const pane = isPane(input.pane)
+    ? input.pane
+    : task
+      ? LOBBY_TASKS[task].pane
+      : undefined;
+  const explicit =
+    typeof input.prompt === "string" && input.prompt.trim()
+      ? input.prompt.trim()
+      : undefined;
   const prompt = explicit ?? (task ? LOBBY_TASKS[task].prompt(ctx) : undefined);
 
   if (!pane && !prompt) return null;
-  const route = task && LOBBY_TASKS[task].route ? LOBBY_TASKS[task].route : undefined;
+  const route =
+    task && LOBBY_TASKS[task].route ? LOBBY_TASKS[task].route : undefined;
   return {
     pane: pane ?? "home",
     route,
@@ -464,16 +494,26 @@ function clearLobbyParams(): void {
   const url = new URL(window.location.href);
   let touched = false;
   for (const k of [LOBBY_PARAM, ASK_PARAM, CTX_PARAM, TASK_PARAM]) {
-    if (url.searchParams.has(k)) { url.searchParams.delete(k); touched = true; }
+    if (url.searchParams.has(k)) {
+      url.searchParams.delete(k);
+      touched = true;
+    }
   }
   if (!touched) return;
   const q = url.searchParams.toString();
-  window.history.replaceState(window.history.state, "", url.pathname + (q ? `?${q}` : "") + url.hash);
+  window.history.replaceState(
+    window.history.state,
+    "",
+    url.pathname + (q ? `?${q}` : "") + url.hash,
+  );
 }
 
 function readSearch(search: string): LobbyIntent | null {
-  const p = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);
-  if (!p.has(LOBBY_PARAM) && !p.has(TASK_PARAM) && !p.has(ASK_PARAM)) return null;
+  const p = new URLSearchParams(
+    search.startsWith("?") ? search.slice(1) : search,
+  );
+  if (!p.has(LOBBY_PARAM) && !p.has(TASK_PARAM) && !p.has(ASK_PARAM))
+    return null;
   return resolveIntent({
     pane: p.get(LOBBY_PARAM) ?? undefined,
     prompt: p.get(ASK_PARAM) ?? undefined,
@@ -491,33 +531,41 @@ function readSearch(search: string): LobbyIntent | null {
  * Mounted once, inside CouncilLobby. It does not open anything itself; the lobby
  * decides what to do with the intent.
  */
-export function useLobbyDeepLink(): LobbyIntent | null {
+export function useLobbyDeepLink(enabled = true): LobbyIntent | null {
   const search = useSearch();
   const [intent, setIntent] = useState<LobbyIntent | null>(null);
   const seen = useRef<string>("");
 
   useEffect(() => {
+    if (!enabled) return;
     if (seen.current === search) return;
     seen.current = search;
     const found = readSearch(search);
     if (!found) return;
-    const path = typeof window !== "undefined" ? window.location.pathname || "/" : "/os";
+    const path =
+      typeof window !== "undefined" ? window.location.pathname || "/" : "/os";
     // /os?lobby=assess&task=pricing-overview is OsLauncher's door, not the overlay.
     if (osKeepsDoorQuery(path, search)) return;
     clearLobbyParams();
     setIntent(found);
-  }, [search]);
+  }, [enabled, search]);
 
   useEffect(() => {
+    if (!enabled) return;
     const onOpen = (e: Event) => {
       const detail = (e as CustomEvent).detail;
-      if (detail && typeof detail === "object" && isPane((detail as LobbyIntent).pane)) {
+      if (
+        detail &&
+        typeof detail === "object" &&
+        isPane((detail as LobbyIntent).pane)
+      ) {
         setIntent(detail as LobbyIntent);
       }
     };
     window.addEventListener(LOBBY_EVENT, onOpen as EventListener);
-    return () => window.removeEventListener(LOBBY_EVENT, onOpen as EventListener);
-  }, []);
+    return () =>
+      window.removeEventListener(LOBBY_EVENT, onOpen as EventListener);
+  }, [enabled]);
 
   return intent;
 }

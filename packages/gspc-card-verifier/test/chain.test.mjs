@@ -120,6 +120,21 @@ test("a malformed manifest is rejected rather than half-read", () => {
   for (const junk of [null, {}, { links: "nope" }]) {
     const r = analyseChain([], junk, profile);
     assert.equal(r.ok, false);
+    assert.deepEqual(r.withheld, { total: 0, attestedBySignedPrev: 0, assertedOnly: 0 });
     assert.ok(r.findings.some((f) => f.code === "CHAIN_MANIFEST_MALFORMED"));
   }
+});
+
+test("a card-shaped signed envelope is structurally analysed through its body", () => {
+  const body = manifest(goodLinks);
+  const envelope = { body, id: ID(99), signature: "a".repeat(128) };
+  const cards = [card(3, ID(2)), card(2, ID(1)), card(1, "GSPC-CARD-FACTORY-GENESIS")];
+  const r = analyseChain(cards, envelope, profile);
+
+  assert.equal(r.ok, true);
+  assert.equal(r.envelopePresent, true);
+  assert.equal(r.positions, 3);
+  assert.equal(r.withheld.total, 0);
+  assert.ok(r.findings.some((f) => f.code === "CHAIN_ENVELOPE_PRESENT"));
+  assert.ok(!r.findings.some((f) => f.code === "CHAIN_UNSIGNED"));
 });

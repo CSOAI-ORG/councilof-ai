@@ -2,7 +2,8 @@
 """One writer: adapters → cards → merkle → root → proofs → publisher-health.
 
 Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false.
-SHA-256 of the canonical payload object is the card id. 3KB cap on that payload.
+Root v1 uses SHA-256 of the whole card except its own digest and signature;
+root v0 used the canonical payload object. The payload itself has a 3KB cap.
 Do not mix with the GSPC ensure_ascii=true signer.
 
 Halt-on-split: live apex merkle is newer than committed.
@@ -46,6 +47,13 @@ from adapters import (  # noqa: E402
     swift_notices,
     witness_queue,
     xrpl,
+)
+from root_digest_domain import (  # noqa: E402
+    LEAF_DIGEST_DOMAIN_FIELD,
+    PAYLOAD_ONLY_V0,
+    WHOLE_CARD_V1,
+    DigestDomainError,
+    resolve_leaf_digest_domain,
 )
 
 CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
@@ -113,6 +121,10 @@ ENVELOPE_PREIMAGE_KEYS = (
 
 
 def envelope_preimage(root_body: dict) -> dict:
+    # `kind` is the signed version switch for the digest rule. The explicit
+    # leaf_digest_domain is machine-readable and MUST agree with kind (enforced
+    # by resolve_leaf_digest_domain), while retaining the deployed six-field
+    # signature contract used by browser and API verifiers.
     return {k: root_body[k] for k in ENVELOPE_PREIMAGE_KEYS}
 
 
@@ -160,6 +172,17 @@ def card_sha256(card: dict) -> str:
     if len(canonical_bytes(card.get("payload") or {})) > PAYLOAD_CAP:
         raise ValueError("payload exceeds cap")
     return sha256_hex(raw)
+
+
+def card_digest_for_domain(card: dict, domain: str) -> str:
+    if domain == WHOLE_CARD_V1:
+        return card_sha256(card)
+    if domain == PAYLOAD_ONLY_V0:
+        payload = card.get("payload")
+        if not isinstance(payload, dict):
+            raise ValueError("card payload is not an object")
+        return payload_sha256(payload)
+    raise ValueError(f"unsupported leaf digest domain {domain!r}")
 
 
 def payload_of(card: dict) -> dict:
@@ -398,6 +421,10 @@ def halt_on_split(committed: dict) -> int | None:
 
 
 def validate_committed(committed: dict) -> None:
+    try:
+        digest_domain, domain_source = resolve_leaf_digest_domain(committed)
+    except DigestDomainError as exc:
+        raise SystemExit(f"committed root digest domain is ambiguous: {exc}") from exc
     shas = list(committed.get("card_sha256") or [])
     cards_dir = ROOT / "public" / "cards"
     for sha in shas:
@@ -408,16 +435,19 @@ def validate_committed(committed: dict) -> None:
         card = wrapped.get("card") or wrapped
         if card.get("sha256") != sha:
             raise SystemExit(f"sha mismatch in {path}")
-        # v1 leaves cover the whole card; v0 leaves already in a published root
-        # cover the payload only. Both must stay checkable.
-        if sha not in (card_sha256(card), payload_sha256(card["payload"])):
-            raise SystemExit(f"leaf digest\u2260id in {path}: {sha}")
+        # Reproduce the ONE domain carried by this root. Accepting whichever of
+        # payload/whole-card happens to match would permit a mixed-domain tree.
+        if sha != card_digest_for_domain(card, digest_domain):
+            raise SystemExit(f"leaf digest\u2260id under {digest_domain} in {path}: {sha}")
         if len(canonical_bytes(card["payload"])) > PAYLOAD_CAP:
             raise SystemExit(f"payload cap in {path}")
     got_m = merkle_root(shas)
     if got_m != committed.get("merkle_root"):
         raise SystemExit(f"committed merkle mismatch {got_m}")
-    print(f"committed tree ok: n={len(shas)} merkle={got_m}")
+    print(
+        f"committed tree ok: n={len(shas)} merkle={got_m} "
+        f"digest_domain={digest_domain} ({domain_source})"
+    )
 
 
 def write_pretty(path: Path, obj: Any) -> None:
@@ -669,12 +699,12 @@ def main() -> int:
         "card_sha256": shas,
         "did_intended": DID,
         # v1 since 2026-09-03: the leaf is the WHOLE-CARD digest, not the payload
-        # digest. `kind` is inside ENVELOPE_PREIMAGE_KEYS, so this is a SIGNED
-        # declaration of which leaf rule applies. Publishing v1 leaves under a v0
-        # label would tell a stranger to apply the payload rule, fail to reproduce
-        # the leaf, and reasonably conclude the cards had been tampered with.
-        # Roots already published as v0 stay v0 and stay checkable.
+        # digest. `kind` is in the signed compact preimage; this explicit,
+        # machine-readable domain must agree with that version. Roots published
+        # before the field existed remain checkable via kind, while unknown or
+        # contradictory declarations fail.
         "kind": "csoai.public-root/v1",
+        LEAF_DIGEST_DOMAIN_FIELD: WHOLE_CARD_V1,
         "leaf_definition": (
             "sha256(canonical(card minus sha256 and sig_ed25519)) — binds subject, "
             "source_urls, tags, as_of, did, surface, unmeasured and payload"
@@ -716,11 +746,11 @@ def main() -> int:
         root_body["sig_preimage"] = (
             "Ed25519 over canonical JSON of {kind, schema, as_of, merkle_root, "
             "card_count, did_intended} only. card_sha256[] is bound by merkle_root. "
+            "kind is the signed digest-version switch; leaf_digest_domain must agree. "
             "PKCS8 stays on Pages (OIDC). Not a certificate."
         )
         root_body["note"] = (
-            "Envelope schema is public-root-v0, not card-v0. This root.json envelope "
-            "is Ed25519-signed over the compact preimage under "
+            "This root.json envelope is Ed25519-signed over the compact preimage under "
             "did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
             "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."
         )

@@ -31,10 +31,8 @@
  * this file fails the check. It runs in the release gate. The guard's import-walk is being
  * extended to cover gateway fetch calls — the blind spot this version corrects by hand.
  *
- * GLOBAL SURFACE, NOT A ROUTE: the Council Signal (components/SovereignDock.tsx) is mounted
- * site-wide from App.tsx and chats with the live endpoint. It is an AI-system surface; the
- * notice wiring for it is tracked in the Art 50 pack, and it is named here because a registry
- * that only counts routes would miss it.
+ * CANONICAL AI SURFACE: the dashboard conversation calls the live endpoint. Static and React
+ * pages link into that workspace; they do not each mount a second AI dock.
  */
 
 export type SurfaceNature = "rule_based" | "ai_system" | "unclassified";
@@ -47,534 +45,1440 @@ export interface Surface {
   evidence: string[];
 }
 
-
 export const SURFACES: Surface[] = [
-  { route: "/dashboard?tab=home", label: "Council Signal (global) — inside Council OS", nature: "ai_system",
-    mechanism: "The dock sends your message to the live Council gateway (councilof.ai/api/gspc) and a model writes the reply. It is mounted on every page; the notice below the dock header discloses this at first interaction, per Article 50(1).",
-    evidence: ["client/src/components/SovereignDock.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/", label: "Home + Council Console", nature: "rule_based",
-    mechanism: "The console pattern-matches your question against frozen statute text and renders the matching provision. There is no inference call in the console's code, and nothing you type into it is transmitted or stored. The page also carries an email form posting to /api/subscribe, and — like every page — the global Council Signal, which IS an AI-system surface (see the note at the top of this file).",
-    evidence: ["client/src/components/SovereignConsole.tsx", "client/src/pages/NewHome-v2.tsx"] },
-  { route: "/tour", label: "Guided product tour", nature: "rule_based",
-    mechanism: "A scripted walkthrough. Every step, its copy and its ordering are hard-coded in client/src/lib/demoTour.ts; the module contains no fetch, no model call and no network egress of any kind, so the tour shows the same thing to every visitor. It narrates surfaces — it never generates their content.",
-    evidence: ["client/src/lib/demoTour.ts", "client/src/pages/OnboardOS.tsx"] },
-  { route: "/instrument", label: "The GSPC instrument", nature: "rule_based",
-    mechanism: "One chat pane over four lenses. Dispatch is deterministic pattern matching over frozen statute; no model is consulted and nothing is sent anywhere. Deliberately not LMArena: pairwise human preference voting is crowd judgement, which the design rules exclude from a primary score.",
-    evidence: ["client/src/pages/Instrument.tsx"] },
-  { route: "/benchmarks", label: "Measured results", nature: "rule_based",
-    mechanism: "Static rendering of figures read from published artefacts in the govbench dataset. Nothing is computed at render time and nothing is typed in by hand — each row names the artefact it came from.",
-    evidence: ["client/src/pages/Benchmarks.tsx"] },
-  { route: "/agent-council", label: "AgentCouncil", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AgentCouncil.tsx"] },
-  { route: "/agent-registry", label: "AgentRegistry", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/AgentRegistry.tsx"] },
-  { route: "/agents-network", label: "NetworkPage", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/NetworkPage.tsx"] },
-  { route: "/ai-act-faq", label: "AiActFaq", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AiActFaq.tsx"] },
-  { route: "/ai-act-summary", label: "ActSummary", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/ActSummary.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/ai-glossary", label: "Glossary", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Glossary.tsx"] },
-  { route: "/ai-governance", label: "AiGovernanceHub", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AiGovernanceHub.tsx"] },
-  { route: "/ai-governance-guide", label: "AiGovernanceHub", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AiGovernanceHub.tsx"] },
-  { route: "/ai-systems", label: "AISystems", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/AISystems.tsx"] },
-  { route: "/all", label: "RegistryAll", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegistryAll.tsx"] },
-  { route: "/api-keys", label: "ApiKeys", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ApiKeys.tsx"] },
-  { route: "/assess", label: "Readiness assessment", nature: "rule_based",
-    mechanism: "A decision table over your answers, scored by the signed /api/assess endpoint. Each response maps to a fixed control identifier; unclaimed controls are reported as gaps. No model is consulted.",
-    evidence: ["client/src/pages/AssessTool.tsx"] },
-  { route: "/assurance", label: "SystemCard", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/SystemCard.tsx"] },
-  { route: "/battlecards", label: "Competitors", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Competitors.tsx"] },
-  { route: "/bft", label: "BftConfig", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/BftConfig.tsx"] },
-  { route: "/blog", label: "Blog index", nature: "rule_based",
+  {
+    route: "/dashboard?tab=home",
+    label: "Council workspace conversation",
+    nature: "ai_system",
+    mechanism:
+      "The dashboard composer sends your message to the live Council gateway and displays the grounded response. Other pages open this canonical workspace instead of mounting a second chat surface.",
+    evidence: [
+      "client/src/components/DashboardWorkspace.tsx",
+      "client/src/components/lobby/useLobbyChat.ts",
+    ],
+  },
+  {
+    route: "/",
+    label: "Home + Council Console",
+    nature: "rule_based",
+    mechanism:
+      "The homepage presents published measurement and links to the canonical dashboard conversation. It does not mount a second site-wide AI dock.",
+    evidence: [
+      "client/src/components/SovereignConsole.tsx",
+      "client/src/pages/NewHome-v2.tsx",
+    ],
+  },
+  {
+    route: "/tour",
+    label: "Guided product tour",
+    nature: "rule_based",
+    mechanism:
+      "A scripted walkthrough. Every step, its copy and its ordering are hard-coded in client/src/lib/demoTour.ts; the module contains no fetch, no model call and no network egress of any kind, so the tour shows the same thing to every visitor. It narrates surfaces — it never generates their content.",
+    evidence: ["client/src/lib/demoTour.ts", "client/src/pages/OnboardOS.tsx"],
+  },
+  {
+    route: "/instrument",
+    label: "The GSPC instrument",
+    nature: "rule_based",
+    mechanism:
+      "One chat pane over four lenses. Dispatch is deterministic pattern matching over frozen statute; no model is consulted and nothing is sent anywhere. Deliberately not LMArena: pairwise human preference voting is crowd judgement, which the design rules exclude from a primary score.",
+    evidence: ["client/src/pages/Instrument.tsx"],
+  },
+  {
+    route: "/benchmarks",
+    label: "Measured results",
+    nature: "rule_based",
+    mechanism:
+      "Static rendering of figures read from published artefacts in the govbench dataset. Nothing is computed at render time and nothing is typed in by hand — each row names the artefact it came from.",
+    evidence: ["client/src/pages/Benchmarks.tsx"],
+  },
+  {
+    route: "/agent-council",
+    label: "AgentCouncil",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AgentCouncil.tsx"],
+  },
+  {
+    route: "/agent-registry",
+    label: "AgentRegistry",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/AgentRegistry.tsx"],
+  },
+  {
+    route: "/agents-network",
+    label: "NetworkPage",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/NetworkPage.tsx"],
+  },
+  {
+    route: "/ai-act-faq",
+    label: "AiActFaq",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AiActFaq.tsx"],
+  },
+  {
+    route: "/ai-act-summary",
+    label: "ActSummary",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/ActSummary.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/ai-glossary",
+    label: "Glossary",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Glossary.tsx"],
+  },
+  {
+    route: "/ai-governance",
+    label: "AiGovernanceHub",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AiGovernanceHub.tsx"],
+  },
+  {
+    route: "/ai-governance-guide",
+    label: "AiGovernanceHub",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AiGovernanceHub.tsx"],
+  },
+  {
+    route: "/ai-systems",
+    label: "AISystems",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/AISystems.tsx"],
+  },
+  {
+    route: "/all",
+    label: "RegistryAll",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegistryAll.tsx"],
+  },
+  {
+    route: "/api-keys",
+    label: "ApiKeys",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ApiKeys.tsx"],
+  },
+  {
+    route: "/assess",
+    label: "Readiness assessment",
+    nature: "rule_based",
+    mechanism:
+      "A decision table over your answers, scored by the signed /api/assess endpoint. Each response maps to a fixed control identifier; unclaimed controls are reported as gaps. No model is consulted.",
+    evidence: ["client/src/pages/AssessTool.tsx"],
+  },
+  {
+    route: "/assurance",
+    label: "SystemCard",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/SystemCard.tsx"],
+  },
+  {
+    route: "/battlecards",
+    label: "Competitors",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Competitors.tsx"],
+  },
+  {
+    route: "/bft",
+    label: "BftConfig",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/BftConfig.tsx"],
+  },
+  {
+    route: "/blog",
+    label: "Blog index",
+    nature: "rule_based",
     mechanism: "Static post index with a client-side substring filter.",
-    evidence: ["client/src/pages/Blog.tsx"] },
-  { route: "/bulk-import", label: "BulkAISystemImport", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/BulkAISystemImport.tsx"] },
-  { route: "/byzantine", label: "AgentCouncil", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AgentCouncil.tsx"] },
-  { route: "/certification/review", label: "ExamReview", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ExamReview.tsx"] },
-  { route: "/classifier", label: "Annex III classifier", nature: "ai_system",
-    mechanism: "CORRECTED 1 Aug 2026 — v1.0.0 registered this as keyword matching; the code actually sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/EuActClassifier.tsx"] },
-  { route: "/command-center", label: "ComplianceCommandCenter", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ComplianceCommandCenter.tsx"] },
-  { route: "/commons", label: "OpenMedia", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/OpenMedia.tsx"] },
-  { route: "/competitors", label: "Competitors", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Competitors.tsx"] },
-  { route: "/compliance", label: "Compliance", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Compliance.tsx"] },
-  { route: "/conformity-assessment", label: "ConformityAssessment", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ConformityAssessment.tsx"] },
-  { route: "/connect", label: "SocialConnect", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/SocialConnect.tsx"] },
-  { route: "/consensus", label: "BftConfig", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/BftConfig.tsx"] },
-  { route: "/courses", label: "Courses", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Courses.tsx"] },
-  { route: "/cyber-scan", label: "CyberScan", nature: "ai_system",
-    mechanism: "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/CyberScan.tsx"] },
-  { route: "/dashboard/progress", label: "StudentProgress", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/StudentProgress.tsx"] },
-  { route: "/deepfake-protection", label: "Protect", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Protect.tsx"] },
-  { route: "/demo", label: "DemoOS", nature: "ai_system",
-    mechanism: "The guided demo answers questions by sending your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/me", label: "CouncilTwin", nature: "rule_based",
-    mechanism: "A canvas visualisation plus a passport-minting call to a signing endpoint (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/CouncilTwin.tsx"] },
-  { route: "/enter", label: "OsEnter", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/OsEnter.tsx"] },
-  { route: "/enterprise-onboarding", label: "EnterpriseOnboarding", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/EnterpriseOnboarding.tsx"] },
-  { route: "/eu-ai-act", label: "EUAIActGuide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/EUAIActGuide.tsx"] },
-  { route: "/eu-ai-act-explained", label: "ActSummary", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/ActSummary.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/eu-ai-act-faq", label: "AiActFaq", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/AiActFaq.tsx"] },
-  { route: "/evidence", label: "Evidence explorer", nature: "rule_based",
-    mechanism: "Renders stored evidence records and checks their hash chain. It verifies integrity, not truth.",
-    evidence: ["client/src/pages/EvidenceHub.tsx"] },
-  { route: "/faq", label: "FAQ", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/FAQ.tsx"] },
-  { route: "/fines", label: "Penalties", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Penalties.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/foundation-models", label: "GpaiObligations", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/GpaiObligations.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/framework-catalog", label: "FrameworkCatalog", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/FrameworkCatalog.tsx"] },
-  { route: "/frameworks/eu-ai-act", label: "EUAIActGuide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/EUAIActGuide.tsx"] },
-  { route: "/frameworks/iso-42001", label: "ISO42001Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ISO42001Guide.tsx"] },
-  { route: "/frameworks/nist", label: "NISTAIRMFGuide", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/NISTAIRMFGuide.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/frameworks/tc260", label: "TC260Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/TC260Guide.tsx"] },
-  { route: "/frequently-asked-questions", label: "FAQ", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/FAQ.tsx"] },
-  { route: "/global-regulations", label: "GlobalRegulationTracker", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GlobalRegulationTracker.tsx"] },
-  { route: "/globe", label: "WorldGlobe", nature: "ai_system",
-    mechanism: "'Ask your Council assistant about the world' sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The answer can also drive the globe (layers, flights) through a deterministic action layer. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/WorldGlobe.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/glossary", label: "Glossary", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Glossary.tsx"] },
-  { route: "/gods-eye", label: "CyberScan", nature: "ai_system",
-    mechanism: "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/CyberScan.tsx"] },
-  { route: "/governance-graph", label: "GovGraph", nature: "ai_system",
-    mechanism: "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/GovGraph.tsx"] },
-  { route: "/government", label: "GovernmentDashboard", nature: "rule_based",
-    mechanism: "A dashboard preview: headline figures are withheld rather than invented and the panels carry an explicit illustrative-data notice. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovernmentDashboard.tsx"] },
-  { route: "/government-dashboard", label: "GovernmentDashboard", nature: "rule_based",
-    mechanism: "A dashboard preview: headline figures are withheld rather than invented and the panels carry an explicit illustrative-data notice. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovernmentDashboard.tsx"] },
-  { route: "/gpai", label: "GpaiObligations", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/GpaiObligations.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/graph", label: "GovGraph", nature: "ai_system",
-    mechanism: "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/GovGraph.tsx"] },
-  { route: "/guides/eu-ai-act", label: "EUAIActGuide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/EUAIActGuide.tsx"] },
-  { route: "/guides/iso-42001", label: "ISO42001Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ISO42001Guide.tsx"] },
-  { route: "/guides/nist-ai-rmf", label: "NISTAIRMFGuide", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/NISTAIRMFGuide.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/guides/tc260", label: "TC260Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/TC260Guide.tsx"] },
-  { route: "/heatmap", label: "WatchdogMap", nature: "ai_system",
-    mechanism: "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/WatchdogMap.tsx"] },
-  { route: "/high-risk-ai", label: "HighRiskSystems", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/HighRiskSystems.tsx"] },
-  { route: "/high-risk-ai-systems", label: "HighRiskSystems", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/HighRiskSystems.tsx"] },
-  { route: "/hive/:slug", label: "FrameworkHive", nature: "ai_system",
-    mechanism: "The framework Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/FrameworkHive.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/humanoids-poc", label: "PocShowcase", nature: "ai_system",
-    mechanism: "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/PocShowcase.tsx"] },
-  { route: "/iso-42001", label: "ISO42001Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ISO42001Guide.tsx"] },
-  { route: "/iso-42001-vs-eu-ai-act", label: "Iso42001VsEuAct", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Iso42001VsEuAct.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/iso-eu", label: "Iso42001VsEuAct", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Iso42001VsEuAct.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/jobs", label: "Jobs", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Jobs.tsx"] },
-  { route: "/join", label: "Council Registry", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/CouncilRegistry.tsx"] },
-  { route: "/knowledge-base", label: "KnowledgeBase", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/KnowledgeBase.tsx"] },
-  { route: "/login", label: "Login", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Login.tsx"] },
-  { route: "/marketing", label: "MarketingHome", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/MarketingHome.tsx"] },
-  { route: "/mcp-fleet", label: "McpFleet", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/McpFleet.tsx"] },
-  { route: "/mcp-tools", label: "ToolCommons", nature: "rule_based",
-    mechanism: "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ToolCommons.tsx"] },
-  { route: "/network", label: "NetworkPage", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/NetworkPage.tsx"] },
-  { route: "/nist-ai-rmf", label: "NISTAIRMFGuide", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/NISTAIRMFGuide.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/nist-eu", label: "NistVsEuAct", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/NistVsEuAct.tsx"] },
-  { route: "/nist-vs-eu-ai-act", label: "NistVsEuAct", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/NistVsEuAct.tsx"] },
-  { route: "/one-os", label: "PocShowcase", nature: "ai_system",
-    mechanism: "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/PocShowcase.tsx"] },
-  { route: "/open-media", label: "OpenMedia", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/OpenMedia.tsx"] },
-  { route: "/dashboard?tab=home", label: "OsLauncher", nature: "ai_system",
-    mechanism: "The launcher command box posts to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/OsLauncher.tsx"] },
-  { route: "/os-demo", label: "DemoOS", nature: "ai_system",
-    mechanism: "The guided demo answers questions by sending your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/oscal", label: "OscalStudio", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/OscalStudio.tsx"] },
-  { route: "/our-difference", label: "WhyCSOAI", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/WhyCSOAI.tsx"] },
-  { route: "/pdca", label: "PDCACycles", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/PDCACycles.tsx"] },
-  { route: "/penalties", label: "Penalties", nature: "ai_system",
-    mechanism: "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Penalties.tsx", "client/src/components/SovereignSpot.tsx"] },
-  { route: "/personal-protection", label: "Protect", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Protect.tsx"] },
-  { route: "/poc", label: "PocShowcase", nature: "ai_system",
-    mechanism: "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/PocShowcase.tsx"] },
-  { route: "/policy-generator", label: "PolicyGenerator", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/PolicyGenerator.tsx"] },
-  { route: "/protect", label: "Protect", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Protect.tsx"] },
-  { route: "/public-watchdog", label: "PublicWatchdog", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/PublicWatchdog.tsx"] },
-  { route: "/pulse", label: "GovernancePulse", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovernancePulse.tsx"] },
-  { route: "/recommendations", label: "Recommendations", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Recommendations.tsx"] },
-  { route: "/register", label: "Council Registry", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/CouncilRegistry.tsx"] },
-  { route: "/registry", label: "RegistryAll", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegistryAll.tsx"] },
-  { route: "/regulation-tracker", label: "GlobalRegulationTracker", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GlobalRegulationTracker.tsx"] },
-  { route: "/regulator", label: "RegulatorDashboard", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegulatorDashboard.tsx"] },
-  { route: "/regulator-atlas", label: "RegulatorAtlas", nature: "ai_system",
-    mechanism: "The atlas Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/RegulatorAtlas.tsx"] },
-  { route: "/regulators", label: "RegulatorAtlas", nature: "ai_system",
-    mechanism: "The atlas Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/RegulatorAtlas.tsx"] },
-  { route: "/report", label: "IncidentReport", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/IncidentReport.tsx"] },
-  { route: "/reports", label: "Reports", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Reports.tsx"] },
-  { route: "/roi", label: "ROICalculator", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ROICalculator.tsx"] },
-  { route: "/roi-calculator", label: "ROICalculator", nature: "rule_based",
-    mechanism: "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ROICalculator.tsx"] },
-  { route: "/scan", label: "CyberScan", nature: "ai_system",
-    mechanism: "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/CyberScan.tsx"] },
-  { route: "/settings", label: "Settings", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Settings.tsx"] },
-  { route: "/settings/notifications", label: "NotificationSettings", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/NotificationSettings.tsx"] },
-  { route: "/signup", label: "Signup", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Signup.tsx"] },
-  { route: "/simulate", label: "CouncilSpace", nature: "ai_system",
-    mechanism: "Scenario verdicts are written by the live Council chat endpoint (councilof.ai/api/gspc), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/CouncilSpace.tsx"] },
-  { route: "/gspc-arena", label: "CouncilSpace", nature: "ai_system",
-    mechanism: "Scenario verdicts are written by the live Council chat endpoint (councilof.ai/api/gspc), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/CouncilSpace.tsx"] },
-  { route: "/sov-towns", label: "SovTowns", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/SovTowns.tsx"] },
-  { route: "/workbench", label: "Workbench", nature: "ai_system",
-    mechanism: "The workbench asks the live Council assistant to produce the governance artifact for the skill you pick. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Workbench.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/network", label: "NetworkPage", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/NetworkPage.tsx"] },
-  { route: "/sovereign-space", label: "Gone", nature: "rule_based",
+    evidence: ["client/src/pages/Blog.tsx"],
+  },
+  {
+    route: "/bulk-import",
+    label: "BulkAISystemImport",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/BulkAISystemImport.tsx"],
+  },
+  {
+    route: "/byzantine",
+    label: "AgentCouncil",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AgentCouncil.tsx"],
+  },
+  {
+    route: "/certification/review",
+    label: "ExamReview",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ExamReview.tsx"],
+  },
+  {
+    route: "/classifier",
+    label: "Annex III classifier",
+    nature: "ai_system",
+    mechanism:
+      "CORRECTED 1 Aug 2026 — v1.0.0 registered this as keyword matching; the code actually sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/EuActClassifier.tsx"],
+  },
+  {
+    route: "/command-center",
+    label: "ComplianceCommandCenter",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ComplianceCommandCenter.tsx"],
+  },
+  {
+    route: "/commons",
+    label: "OpenMedia",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/OpenMedia.tsx"],
+  },
+  {
+    route: "/competitors",
+    label: "Competitors",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Competitors.tsx"],
+  },
+  {
+    route: "/compliance",
+    label: "Compliance",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Compliance.tsx"],
+  },
+  {
+    route: "/conformity-assessment",
+    label: "ConformityAssessment",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ConformityAssessment.tsx"],
+  },
+  {
+    route: "/connect",
+    label: "SocialConnect",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/SocialConnect.tsx"],
+  },
+  {
+    route: "/consensus",
+    label: "BftConfig",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/BftConfig.tsx"],
+  },
+  {
+    route: "/courses",
+    label: "Courses",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Courses.tsx"],
+  },
+  {
+    route: "/cyber-scan",
+    label: "CyberScan",
+    nature: "ai_system",
+    mechanism:
+      "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/CyberScan.tsx"],
+  },
+  {
+    route: "/dashboard/progress",
+    label: "StudentProgress",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/StudentProgress.tsx"],
+  },
+  {
+    route: "/deepfake-protection",
+    label: "Protect",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Protect.tsx"],
+  },
+  {
+    route: "/demo",
+    label: "DemoOS",
+    nature: "ai_system",
+    mechanism:
+      "The guided demo answers questions by sending your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/me",
+    label: "CouncilTwin",
+    nature: "rule_based",
+    mechanism:
+      "A canvas visualisation plus a passport-minting call to a signing endpoint (sha256 / Ed25519), not a model. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/CouncilTwin.tsx"],
+  },
+  {
+    route: "/enter",
+    label: "OsEnter",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/OsEnter.tsx"],
+  },
+  {
+    route: "/enterprise-onboarding",
+    label: "EnterpriseOnboarding",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/EnterpriseOnboarding.tsx"],
+  },
+  {
+    route: "/eu-ai-act",
+    label: "EUAIActGuide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/EUAIActGuide.tsx"],
+  },
+  {
+    route: "/eu-ai-act-explained",
+    label: "ActSummary",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/ActSummary.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/eu-ai-act-faq",
+    label: "AiActFaq",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/AiActFaq.tsx"],
+  },
+  {
+    route: "/evidence",
+    label: "Evidence explorer",
+    nature: "rule_based",
+    mechanism:
+      "Renders stored evidence records and checks their hash chain. It verifies integrity, not truth.",
+    evidence: ["client/src/pages/EvidenceHub.tsx"],
+  },
+  {
+    route: "/faq",
+    label: "FAQ",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/FAQ.tsx"],
+  },
+  {
+    route: "/fines",
+    label: "Penalties",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/Penalties.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/foundation-models",
+    label: "GpaiObligations",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/GpaiObligations.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/framework-catalog",
+    label: "FrameworkCatalog",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/FrameworkCatalog.tsx"],
+  },
+  {
+    route: "/frameworks/eu-ai-act",
+    label: "EUAIActGuide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/EUAIActGuide.tsx"],
+  },
+  {
+    route: "/frameworks/iso-42001",
+    label: "ISO42001Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ISO42001Guide.tsx"],
+  },
+  {
+    route: "/frameworks/nist",
+    label: "NISTAIRMFGuide",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/NISTAIRMFGuide.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/frameworks/tc260",
+    label: "TC260Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/TC260Guide.tsx"],
+  },
+  {
+    route: "/frequently-asked-questions",
+    label: "FAQ",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/FAQ.tsx"],
+  },
+  {
+    route: "/global-regulations",
+    label: "GlobalRegulationTracker",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GlobalRegulationTracker.tsx"],
+  },
+  {
+    route: "/globe",
+    label: "WorldGlobe",
+    nature: "ai_system",
+    mechanism:
+      "'Ask your Council assistant about the world' sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The answer can also drive the globe (layers, flights) through a deterministic action layer. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/WorldGlobe.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/glossary",
+    label: "Glossary",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Glossary.tsx"],
+  },
+  {
+    route: "/gods-eye",
+    label: "CyberScan",
+    nature: "ai_system",
+    mechanism:
+      "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/CyberScan.tsx"],
+  },
+  {
+    route: "/governance-graph",
+    label: "GovGraph",
+    nature: "ai_system",
+    mechanism:
+      "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/GovGraph.tsx"],
+  },
+  {
+    route: "/government",
+    label: "GovernmentDashboard",
+    nature: "rule_based",
+    mechanism:
+      "A dashboard preview: headline figures are withheld rather than invented and the panels carry an explicit illustrative-data notice. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovernmentDashboard.tsx"],
+  },
+  {
+    route: "/government-dashboard",
+    label: "GovernmentDashboard",
+    nature: "rule_based",
+    mechanism:
+      "A dashboard preview: headline figures are withheld rather than invented and the panels carry an explicit illustrative-data notice. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovernmentDashboard.tsx"],
+  },
+  {
+    route: "/gpai",
+    label: "GpaiObligations",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/GpaiObligations.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/graph",
+    label: "GovGraph",
+    nature: "ai_system",
+    mechanism:
+      "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/GovGraph.tsx"],
+  },
+  {
+    route: "/guides/eu-ai-act",
+    label: "EUAIActGuide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/EUAIActGuide.tsx"],
+  },
+  {
+    route: "/guides/iso-42001",
+    label: "ISO42001Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ISO42001Guide.tsx"],
+  },
+  {
+    route: "/guides/nist-ai-rmf",
+    label: "NISTAIRMFGuide",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/NISTAIRMFGuide.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/guides/tc260",
+    label: "TC260Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/TC260Guide.tsx"],
+  },
+  {
+    route: "/heatmap",
+    label: "WatchdogMap",
+    nature: "ai_system",
+    mechanism:
+      "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/WatchdogMap.tsx"],
+  },
+  {
+    route: "/high-risk-ai",
+    label: "HighRiskSystems",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/HighRiskSystems.tsx"],
+  },
+  {
+    route: "/high-risk-ai-systems",
+    label: "HighRiskSystems",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/HighRiskSystems.tsx"],
+  },
+  {
+    route: "/hive/:slug",
+    label: "FrameworkHive",
+    nature: "ai_system",
+    mechanism:
+      "The framework Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/FrameworkHive.tsx",
+      "client/src/lib/sovAsk.ts",
+    ],
+  },
+  {
+    route: "/humanoids-poc",
+    label: "PocShowcase",
+    nature: "ai_system",
+    mechanism:
+      "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/PocShowcase.tsx"],
+  },
+  {
+    route: "/iso-42001",
+    label: "ISO42001Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ISO42001Guide.tsx"],
+  },
+  {
+    route: "/iso-42001-vs-eu-ai-act",
+    label: "Iso42001VsEuAct",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/Iso42001VsEuAct.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/iso-eu",
+    label: "Iso42001VsEuAct",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/Iso42001VsEuAct.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/jobs",
+    label: "Jobs",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Jobs.tsx"],
+  },
+  {
+    route: "/join",
+    label: "Council Registry",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/CouncilRegistry.tsx"],
+  },
+  {
+    route: "/knowledge-base",
+    label: "KnowledgeBase",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/KnowledgeBase.tsx"],
+  },
+  {
+    route: "/login",
+    label: "Login",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Login.tsx"],
+  },
+  {
+    route: "/marketing",
+    label: "MarketingHome",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/MarketingHome.tsx"],
+  },
+  {
+    route: "/mcp-fleet",
+    label: "McpFleet",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/McpFleet.tsx"],
+  },
+  {
+    route: "/mcp-tools",
+    label: "ToolCommons",
+    nature: "rule_based",
+    mechanism:
+      "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ToolCommons.tsx"],
+  },
+  {
+    route: "/network",
+    label: "NetworkPage",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/NetworkPage.tsx"],
+  },
+  {
+    route: "/nist-ai-rmf",
+    label: "NISTAIRMFGuide",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/NISTAIRMFGuide.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/nist-eu",
+    label: "NistVsEuAct",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/NistVsEuAct.tsx"],
+  },
+  {
+    route: "/nist-vs-eu-ai-act",
+    label: "NistVsEuAct",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/NistVsEuAct.tsx"],
+  },
+  {
+    route: "/one-os",
+    label: "PocShowcase",
+    nature: "ai_system",
+    mechanism:
+      "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/PocShowcase.tsx"],
+  },
+  {
+    route: "/open-media",
+    label: "OpenMedia",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/OpenMedia.tsx"],
+  },
+  {
+    route: "/dashboard?tab=home",
+    label: "OsLauncher",
+    nature: "ai_system",
+    mechanism:
+      "The launcher command box posts to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/OsLauncher.tsx"],
+  },
+  {
+    route: "/os-demo",
+    label: "DemoOS",
+    nature: "ai_system",
+    mechanism:
+      "The guided demo answers questions by sending your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/DemoOS.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/oscal",
+    label: "OscalStudio",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/OscalStudio.tsx"],
+  },
+  {
+    route: "/our-difference",
+    label: "WhyCSOAI",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/WhyCSOAI.tsx"],
+  },
+  {
+    route: "/pdca",
+    label: "PDCACycles",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/PDCACycles.tsx"],
+  },
+  {
+    route: "/penalties",
+    label: "Penalties",
+    nature: "ai_system",
+    mechanism:
+      "The embedded 'Ask your Council assistant' panel (SovereignSpot) sends questions to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: [
+      "client/src/pages/Penalties.tsx",
+      "client/src/components/SovereignSpot.tsx",
+    ],
+  },
+  {
+    route: "/personal-protection",
+    label: "Protect",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Protect.tsx"],
+  },
+  {
+    route: "/poc",
+    label: "PocShowcase",
+    nature: "ai_system",
+    mechanism:
+      "The showcase Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/PocShowcase.tsx"],
+  },
+  {
+    route: "/policy-generator",
+    label: "PolicyGenerator",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/PolicyGenerator.tsx"],
+  },
+  {
+    route: "/protect",
+    label: "Protect",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Protect.tsx"],
+  },
+  {
+    route: "/public-watchdog",
+    label: "PublicWatchdog",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/PublicWatchdog.tsx"],
+  },
+  {
+    route: "/pulse",
+    label: "GovernancePulse",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovernancePulse.tsx"],
+  },
+  {
+    route: "/recommendations",
+    label: "Recommendations",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Recommendations.tsx"],
+  },
+  {
+    route: "/register",
+    label: "Council Registry",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/CouncilRegistry.tsx"],
+  },
+  {
+    route: "/registry",
+    label: "RegistryAll",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegistryAll.tsx"],
+  },
+  {
+    route: "/regulation-tracker",
+    label: "GlobalRegulationTracker",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GlobalRegulationTracker.tsx"],
+  },
+  {
+    route: "/regulator",
+    label: "RegulatorDashboard",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegulatorDashboard.tsx"],
+  },
+  {
+    route: "/regulator-atlas",
+    label: "RegulatorAtlas",
+    nature: "ai_system",
+    mechanism:
+      "The atlas Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/RegulatorAtlas.tsx"],
+  },
+  {
+    route: "/regulators",
+    label: "RegulatorAtlas",
+    nature: "ai_system",
+    mechanism:
+      "The atlas Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/RegulatorAtlas.tsx"],
+  },
+  {
+    route: "/report",
+    label: "IncidentReport",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/IncidentReport.tsx"],
+  },
+  {
+    route: "/reports",
+    label: "Reports",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Reports.tsx"],
+  },
+  {
+    route: "/roi",
+    label: "ROICalculator",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ROICalculator.tsx"],
+  },
+  {
+    route: "/roi-calculator",
+    label: "ROICalculator",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic instrument — fixed tables, templates or arithmetic over your input, so the same input gives the same output. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ROICalculator.tsx"],
+  },
+  {
+    route: "/scan",
+    label: "CyberScan",
+    nature: "ai_system",
+    mechanism:
+      "The triage box sends pasted scanner output to the live Council chat endpoint (councilof.ai/api/gspc), where a model ranks the findings and maps them to frameworks. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/CyberScan.tsx"],
+  },
+  {
+    route: "/settings",
+    label: "Settings",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Settings.tsx"],
+  },
+  {
+    route: "/settings/notifications",
+    label: "NotificationSettings",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/NotificationSettings.tsx"],
+  },
+  {
+    route: "/signup",
+    label: "Signup",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Signup.tsx"],
+  },
+  {
+    route: "/simulate",
+    label: "CouncilSpace",
+    nature: "ai_system",
+    mechanism:
+      "Scenario verdicts are written by the live Council chat endpoint (councilof.ai/api/gspc), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/CouncilSpace.tsx"],
+  },
+  {
+    route: "/gspc-arena",
+    label: "CouncilSpace",
+    nature: "ai_system",
+    mechanism:
+      "Scenario verdicts are written by the live Council chat endpoint (councilof.ai/api/gspc), a model prompted as the governance council. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/CouncilSpace.tsx"],
+  },
+  {
+    route: "/sov-towns",
+    label: "SovTowns",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/SovTowns.tsx"],
+  },
+  {
+    route: "/workbench",
+    label: "Workbench",
+    nature: "ai_system",
+    mechanism:
+      "The workbench asks the live Council assistant to produce the governance artifact for the skill you pick. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/Workbench.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/network",
+    label: "NetworkPage",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/NetworkPage.tsx"],
+  },
+  {
+    route: "/sovereign-space",
+    label: "Gone",
+    nature: "rule_based",
     mechanism: "Route retired 17 Aug 2026 — returns 410 Gone.",
-    evidence: ["client/src/pages/Gone.tsx"] },
-  { route: "/system-card", label: "SystemCard", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/SystemCard.tsx"] },
-  { route: "/systemcard", label: "SystemCard", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/SystemCard.tsx"] },
-  { route: "/tc260", label: "TC260Guide", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/TC260Guide.tsx"] },
-  { route: "/tool-commons", label: "ToolCommons", nature: "rule_based",
-    mechanism: "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ToolCommons.tsx"] },
-  { route: "/tools", label: "ToolCommons", nature: "rule_based",
-    mechanism: "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ToolCommons.tsx"] },
-  { route: "/towns", label: "SovTowns", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/SovTowns.tsx"] },
-  { route: "/try", label: "TryCouncil", nature: "ai_system",
-    mechanism: "The first pass (risk classification) runs locally on fixed rules; 'Convene the council' sends your system description to the live Council chat endpoint (councilof.ai/api/gspc), where five model agents answer in role. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/TryCouncil.tsx"] },
-  { route: "/usp", label: "WhyCSOAI", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/WhyCSOAI.tsx"] },
-  { route: "/verify-certificate", label: "CertificateVerification", nature: "rule_based",
-    mechanism: "A certificate ID lookup against the verification service, rendered deterministically. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/CertificateVerification.tsx"] },
-  { route: "/watchdog-heatmap", label: "WatchdogMap", nature: "ai_system",
-    mechanism: "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/WatchdogMap.tsx"] },
-  { route: "/watchdog-map", label: "WatchdogMap", nature: "ai_system",
-    mechanism: "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/WatchdogMap.tsx"] },
-  { route: "/watchdog-signup", label: "WatchdogSignup", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/WatchdogSignup.tsx"] },
-  { route: "/webhooks", label: "Webhooks", nature: "rule_based",
-    mechanism: "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Webhooks.tsx"] },
-  { route: "/why", label: "WhyCSOAI", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/WhyCSOAI.tsx"] },
-  { route: "/widget", label: "WidgetCourses", nature: "rule_based",
-    mechanism: "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/WidgetCourses.tsx"] },
-  { route: "/workbench", label: "Workbench", nature: "ai_system",
-    mechanism: "The workbench asks the live Council assistant to produce the governance artifact for the skill you pick. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/Workbench.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/world", label: "WorldGlobe", nature: "ai_system",
-    mechanism: "'Ask your Council assistant about the world' sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The answer can also drive the globe (layers, flights) through a deterministic action layer. The Article 50(1) notice is mounted above the input.",
-    evidence: ["client/src/pages/WorldGlobe.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/world-data", label: "GovGraph", nature: "ai_system",
-    mechanism: "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
-    evidence: ["client/src/pages/GovGraph.tsx"] },
-  { route: "/ab-testing", label: "ABTesting", nature: "rule_based",
-    mechanism: "Forms and tables over the experiments API (trpc.abTesting: create, list, update status, read results). Rendering is deterministic — CRUD on stored experiment records; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/ABTesting.tsx"] },
-  { route: "/certificate-verification", label: "CertificateVerification", nature: "rule_based",
-    mechanism: "A lookup form: the certificate number you type is matched against stored records (trpc.certificates.verifyCertificate) and the matching record is rendered. Deterministic lookup and validation; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/CertificateVerification.tsx"] },
-  { route: "/conformity-route", label: "ConformityRoute", nature: "rule_based",
-    mechanism: "A deterministic decision tree: fixed answers to fixed questions select the Annex VI vs Annex VII conformity route by rules written in the page. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/ConformityRoute.tsx"] },
-  { route: "/contact", label: "Contact", nature: "rule_based",
-    mechanism: "A contact form that composes a mailto: draft in your own mail client (window.location.href = mailto:…). Nothing is transmitted by the page itself and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Contact.tsx"] },
-  { route: "/courses/:id", label: "CourseDetail", nature: "rule_based",
-    mechanism: "Course catalogue detail with an enrolment form (trpc.courses: getCourseDetails, enrollInCourse). Deterministic database content and a plain enrolment mutation; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/CourseDetail.tsx"] },
-  { route: "/drift-audit", label: "DriftProduct", nature: "rule_based",
-    mechanism: "A product page that renders a static, batch-produced status file (/corpus-watch/status.json). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/DriftProduct.tsx"] },
-  { route: "/drift-product", label: "DriftProduct", nature: "rule_based",
-    mechanism: "A product page that renders a static, batch-produced status file (/corpus-watch/status.json). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/DriftProduct.tsx"] },
-  { route: "/early-access", label: "EarlyAccessLanding", nature: "rule_based",
-    mechanism: "An email-capture form whose submit handler only updates local component state (no network call exists in the page's code). No model call exists in this surface's code.",
-    evidence: ["client/src/pages/EarlyAccessLanding.tsx"] },
-  { route: "/feed", label: "RegulationFeed", nature: "rule_based",
-    mechanism: "Renders a static, batch-generated deltas file (/data/regulation-deltas.json) with client-side filtering. The collection happens offline; the page itself is deterministic rendering, and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegulationFeed.tsx"] },
-  { route: "/global-ai-safety-initiative", label: "GlobalAISafetyInitiative", nature: "rule_based",
-    mechanism: "Static guidance content with client-side navigation only. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GlobalAISafetyInitiative.tsx"] },
-  { route: "/govbench", label: "GovBench", nature: "rule_based",
-    mechanism: "A static benchmark methodology and results page. The only model string in the file is a documentation command snippet shown as text; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovBench.tsx"] },
-  { route: "/government-portal", label: "GovernmentPortal", nature: "rule_based",
-    mechanism: "Static portal content with presentational form shells; no fetch, form post or model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovernmentPortal.tsx"] },
-  { route: "/gspc-verify", label: "GSPCVerify", nature: "rule_based",
-    mechanism: "A client-side chain verifier: it recomputes the hash chain deterministically in your browser so you can check the evidence yourself. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/GSPCVerify.tsx"] },
-  { route: "/help", label: "HelpCenter", nature: "rule_based",
-    mechanism: "A FAQ centre with client-side search filtering over static entries. Deterministic string matching; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/HelpCenter.tsx"] },
-  { route: "/help-center", label: "HelpCenter", nature: "rule_based",
-    mechanism: "A FAQ centre with client-side search filtering over static entries. Deterministic string matching; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/HelpCenter.tsx"] },
-  { route: "/hive", label: "FrameworkHive", nature: "ai_system",
-    mechanism: "The hive list view mounts the same component as /hive/:slug, whose detail view asks the live Council assistant about the framework you open. Because this surface's code reaches the live chat endpoint it is registered ai_system; the Article 50(1) notice is mounted at the top of the list view.",
-    evidence: ["client/src/pages/FrameworkHive.tsx", "client/src/lib/sovAsk.ts"] },
-  { route: "/landscape", label: "Landscape", nature: "rule_based",
-    mechanism: "A data display of aggregate AI-compliance intelligence with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Landscape.tsx"] },
-  { route: "/live-ledger", label: "LiveLedger", nature: "rule_based",
-    mechanism: "Fetches the public ledger API (/api/worker/ledger and /stats) and renders the signed entries as tables. Deterministic rendering of stored records; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/LiveLedger.tsx"] },
-  { route: "/mcp", label: "MCPRegistry", nature: "rule_based",
-    mechanism: "A catalogue browser over the static MCP registry data with client-side search and filtering. Deterministic rendering; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/MCPRegistry.tsx"] },
-  { route: "/mcps", label: "MCPRegistry", nature: "rule_based",
-    mechanism: "A catalogue browser over the static MCP registry data with client-side search and filtering. Deterministic rendering; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/MCPRegistry.tsx"] },
-  { route: "/old-home", label: "Home (legacy chat)", nature: "ai_system",
-    mechanism: "The legacy home is a chat panel: every message you send goes to the chat backend (trpc.chat.sendMessage) and an assistant-written reply is rendered. The server router's types are not in this repo (a pre-existing broken import), so the backend cannot be inspected from here; under this registry's strictest-reading rule a chat-with-assistant surface is treated as an AI system. The Article 50(1) notice is mounted above the message area.",
-    evidence: ["client/src/pages/Home.tsx"] },
-  { route: "/opengridworks", label: "OpenGridWorks", nature: "rule_based",
-    mechanism: "A map that fetches static world-atlas GeoJSON and lazily overlays admin-1 boundaries as you zoom, plus a local search form. Deterministic map rendering over static geographic data; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/OpenGridWorks.tsx"] },
-  { route: "/outreach", label: "Outreach", nature: "rule_based",
-    mechanism: "A deterministic queue over local entity and risk-signal data; it composes mailto: drafts and copy-to-clipboard message text from fixed templates. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/Outreach.tsx"] },
-  { route: "/radar", label: "RegulationRadar", nature: "rule_based",
-    mechanism: "A deadline tracker with client-side filtering (jurisdiction, binding-only) over a static dataset of regulatory dates. Deterministic filtering; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegulationRadar.tsx"] },
-  { route: "/regional-analytics", label: "RegionalAnalytics", nature: "rule_based",
-    mechanism: "Dashboards over the analytics API (trpc.regionalAnalytics: certificate issuances, enrolments, regional comparisons). Deterministic database reads rendered as charts; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/RegionalAnalytics.tsx"] },
-  { route: "/soai-pdca/government", label: "GovernmentPortal", nature: "rule_based",
-    mechanism: "Static portal content with presentational form shells; no fetch, form post or model call exists in this surface's code.",
-    evidence: ["client/src/pages/GovernmentPortal.tsx"] },
-  { route: "/sov-town-lab", label: "SovTownLab", nature: "rule_based",
-    mechanism: "A design page that renders a static state file (/api/sov-town/state.jsonl). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/SovTownLab.tsx"] },
-  { route: "/support", label: "Support", nature: "rule_based",
-    mechanism: "A support request form posting to the support API (trpc.support.submitHumanRequest). A form alone is not an AI system: the request is stored for a human, and no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Support.tsx"] },
-  { route: "/system-status", label: "Status", nature: "rule_based",
-    mechanism: "A status dashboard over the status API (trpc.status: incidents, uptime, service status) plus a subscribe form. Deterministic rendering of stored status records; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/Status.tsx"] },
-  { route: "/watchdog-hub", label: "PublicWatchdogHub", nature: "rule_based",
-    mechanism: "The public watchdog hub: static content and navigation with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/PublicWatchdogHub.tsx"] },
-  { route: "/watchdog/incident", label: "WatchdogIncidentReport", nature: "rule_based",
-    mechanism: "An incident report form (trpc.watchdog.submit) with a deterministic list of prior reports (trpc.watchdog.list). A form alone is not an AI system; no model call exists in this surface's code.",
-    evidence: ["client/src/pages/WatchdogIncidentReport.tsx"] },
-  { route: "/watchdog/report", label: "PublicWatchdogHub", nature: "rule_based",
-    mechanism: "The public watchdog hub: static content and navigation with deterministic rendering. No model call exists in this surface's code.",
-    evidence: ["client/src/pages/PublicWatchdogHub.tsx"] },
-  { route: "/why-csoai", label: "WhyCSOAI", nature: "ai_system",
-    mechanism: "The page mounts SovereignSpot, whose 'Ask your Council assistant' box sends your question through askSovereign to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Article 50(1) notice is mounted at the top of the page, before the chat panel.",
-    evidence: ["client/src/pages/WhyCSOAI.tsx", "client/src/components/SovereignSpot.tsx", "client/src/lib/sovAsk.ts"] },
+    evidence: ["client/src/pages/Gone.tsx"],
+  },
+  {
+    route: "/system-card",
+    label: "SystemCard",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/SystemCard.tsx"],
+  },
+  {
+    route: "/systemcard",
+    label: "SystemCard",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/SystemCard.tsx"],
+  },
+  {
+    route: "/tc260",
+    label: "TC260Guide",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/TC260Guide.tsx"],
+  },
+  {
+    route: "/tool-commons",
+    label: "ToolCommons",
+    nature: "rule_based",
+    mechanism:
+      "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ToolCommons.tsx"],
+  },
+  {
+    route: "/tools",
+    label: "ToolCommons",
+    nature: "rule_based",
+    mechanism:
+      "A search proxy over the tool-registry endpoint: your query is matched against the catalogue and matching tools are listed. Filtering is deterministic and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ToolCommons.tsx"],
+  },
+  {
+    route: "/towns",
+    label: "SovTowns",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/SovTowns.tsx"],
+  },
+  {
+    route: "/try",
+    label: "TryCouncil",
+    nature: "ai_system",
+    mechanism:
+      "The first pass (risk classification) runs locally on fixed rules; 'Convene the council' sends your system description to the live Council chat endpoint (councilof.ai/api/gspc), where five model agents answer in role. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/TryCouncil.tsx"],
+  },
+  {
+    route: "/usp",
+    label: "WhyCSOAI",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/WhyCSOAI.tsx"],
+  },
+  {
+    route: "/verify-certificate",
+    label: "CertificateVerification",
+    nature: "rule_based",
+    mechanism:
+      "A certificate ID lookup against the verification service, rendered deterministically. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/CertificateVerification.tsx"],
+  },
+  {
+    route: "/watchdog-heatmap",
+    label: "WatchdogMap",
+    nature: "ai_system",
+    mechanism:
+      "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/WatchdogMap.tsx"],
+  },
+  {
+    route: "/watchdog-map",
+    label: "WatchdogMap",
+    nature: "ai_system",
+    mechanism:
+      "The map Q&A sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/WatchdogMap.tsx"],
+  },
+  {
+    route: "/watchdog-signup",
+    label: "WatchdogSignup",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/WatchdogSignup.tsx"],
+  },
+  {
+    route: "/webhooks",
+    label: "Webhooks",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the account API. Rendering is deterministic (lookup, filtering, validation); no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Webhooks.tsx"],
+  },
+  {
+    route: "/why",
+    label: "WhyCSOAI",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation and filtering only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/WhyCSOAI.tsx"],
+  },
+  {
+    route: "/widget",
+    label: "WidgetCourses",
+    nature: "rule_based",
+    mechanism:
+      "A data display (registry, dashboard, map or list) with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/WidgetCourses.tsx"],
+  },
+  {
+    route: "/workbench",
+    label: "Workbench",
+    nature: "ai_system",
+    mechanism:
+      "The workbench asks the live Council assistant to produce the governance artifact for the skill you pick. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/Workbench.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/world",
+    label: "WorldGlobe",
+    nature: "ai_system",
+    mechanism:
+      "'Ask your Council assistant about the world' sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The answer can also drive the globe (layers, flights) through a deterministic action layer. The Article 50(1) notice is mounted above the input.",
+    evidence: ["client/src/pages/WorldGlobe.tsx", "client/src/lib/sovAsk.ts"],
+  },
+  {
+    route: "/world-data",
+    label: "GovGraph",
+    nature: "ai_system",
+    mechanism:
+      "The query box sends your input to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Art 50(1) notice for this surface is registered here and being wired; until the component ships, this registry entry is the disclosure.",
+    evidence: ["client/src/pages/GovGraph.tsx"],
+  },
+  {
+    route: "/ab-testing",
+    label: "ABTesting",
+    nature: "rule_based",
+    mechanism:
+      "Forms and tables over the experiments API (trpc.abTesting: create, list, update status, read results). Rendering is deterministic — CRUD on stored experiment records; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/ABTesting.tsx"],
+  },
+  {
+    route: "/certificate-verification",
+    label: "CertificateVerification",
+    nature: "rule_based",
+    mechanism:
+      "A lookup form: the certificate number you type is matched against stored records (trpc.certificates.verifyCertificate) and the matching record is rendered. Deterministic lookup and validation; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/CertificateVerification.tsx"],
+  },
+  {
+    route: "/conformity-route",
+    label: "ConformityRoute",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic decision tree: fixed answers to fixed questions select the Annex VI vs Annex VII conformity route by rules written in the page. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/ConformityRoute.tsx"],
+  },
+  {
+    route: "/contact",
+    label: "Contact",
+    nature: "rule_based",
+    mechanism:
+      "A contact form that composes a mailto: draft in your own mail client (window.location.href = mailto:…). Nothing is transmitted by the page itself and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Contact.tsx"],
+  },
+  {
+    route: "/courses/:id",
+    label: "CourseDetail",
+    nature: "rule_based",
+    mechanism:
+      "Course catalogue detail with an enrolment form (trpc.courses: getCourseDetails, enrollInCourse). Deterministic database content and a plain enrolment mutation; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/CourseDetail.tsx"],
+  },
+  {
+    route: "/drift-audit",
+    label: "DriftProduct",
+    nature: "rule_based",
+    mechanism:
+      "A product page that renders a static, batch-produced status file (/corpus-watch/status.json). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/DriftProduct.tsx"],
+  },
+  {
+    route: "/drift-product",
+    label: "DriftProduct",
+    nature: "rule_based",
+    mechanism:
+      "A product page that renders a static, batch-produced status file (/corpus-watch/status.json). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/DriftProduct.tsx"],
+  },
+  {
+    route: "/early-access",
+    label: "EarlyAccessLanding",
+    nature: "rule_based",
+    mechanism:
+      "An email-capture form whose submit handler only updates local component state (no network call exists in the page's code). No model call exists in this surface's code.",
+    evidence: ["client/src/pages/EarlyAccessLanding.tsx"],
+  },
+  {
+    route: "/feed",
+    label: "RegulationFeed",
+    nature: "rule_based",
+    mechanism:
+      "Renders a static, batch-generated deltas file (/data/regulation-deltas.json) with client-side filtering. The collection happens offline; the page itself is deterministic rendering, and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegulationFeed.tsx"],
+  },
+  {
+    route: "/global-ai-safety-initiative",
+    label: "GlobalAISafetyInitiative",
+    nature: "rule_based",
+    mechanism:
+      "Static guidance content with client-side navigation only. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GlobalAISafetyInitiative.tsx"],
+  },
+  {
+    route: "/govbench",
+    label: "GovBench",
+    nature: "rule_based",
+    mechanism:
+      "A static benchmark methodology and results page. The only model string in the file is a documentation command snippet shown as text; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovBench.tsx"],
+  },
+  {
+    route: "/government-portal",
+    label: "GovernmentPortal",
+    nature: "rule_based",
+    mechanism:
+      "Static portal content with presentational form shells; no fetch, form post or model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovernmentPortal.tsx"],
+  },
+  {
+    route: "/gspc-verify",
+    label: "GSPCVerify",
+    nature: "rule_based",
+    mechanism:
+      "A client-side chain verifier: it recomputes the hash chain deterministically in your browser so you can check the evidence yourself. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/GSPCVerify.tsx"],
+  },
+  {
+    route: "/help",
+    label: "HelpCenter",
+    nature: "rule_based",
+    mechanism:
+      "A FAQ centre with client-side search filtering over static entries. Deterministic string matching; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/HelpCenter.tsx"],
+  },
+  {
+    route: "/help-center",
+    label: "HelpCenter",
+    nature: "rule_based",
+    mechanism:
+      "A FAQ centre with client-side search filtering over static entries. Deterministic string matching; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/HelpCenter.tsx"],
+  },
+  {
+    route: "/hive",
+    label: "FrameworkHive",
+    nature: "ai_system",
+    mechanism:
+      "The hive list view mounts the same component as /hive/:slug, whose detail view asks the live Council assistant about the framework you open. Because this surface's code reaches the live chat endpoint it is registered ai_system; the Article 50(1) notice is mounted at the top of the list view.",
+    evidence: [
+      "client/src/pages/FrameworkHive.tsx",
+      "client/src/lib/sovAsk.ts",
+    ],
+  },
+  {
+    route: "/landscape",
+    label: "Landscape",
+    nature: "rule_based",
+    mechanism:
+      "A data display of aggregate AI-compliance intelligence with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Landscape.tsx"],
+  },
+  {
+    route: "/live-ledger",
+    label: "LiveLedger",
+    nature: "rule_based",
+    mechanism:
+      "Fetches the public ledger API (/api/worker/ledger and /stats) and renders the signed entries as tables. Deterministic rendering of stored records; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/LiveLedger.tsx"],
+  },
+  {
+    route: "/mcp",
+    label: "MCPRegistry",
+    nature: "rule_based",
+    mechanism:
+      "A catalogue browser over the static MCP registry data with client-side search and filtering. Deterministic rendering; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/MCPRegistry.tsx"],
+  },
+  {
+    route: "/mcps",
+    label: "MCPRegistry",
+    nature: "rule_based",
+    mechanism:
+      "A catalogue browser over the static MCP registry data with client-side search and filtering. Deterministic rendering; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/MCPRegistry.tsx"],
+  },
+  {
+    route: "/old-home",
+    label: "Home (legacy chat)",
+    nature: "ai_system",
+    mechanism:
+      "The legacy home is a chat panel: every message you send goes to the chat backend (trpc.chat.sendMessage) and an assistant-written reply is rendered. The server router's types are not in this repo (a pre-existing broken import), so the backend cannot be inspected from here; under this registry's strictest-reading rule a chat-with-assistant surface is treated as an AI system. The Article 50(1) notice is mounted above the message area.",
+    evidence: ["client/src/pages/Home.tsx"],
+  },
+  {
+    route: "/opengridworks",
+    label: "OpenGridWorks",
+    nature: "rule_based",
+    mechanism:
+      "A map that fetches static world-atlas GeoJSON and lazily overlays admin-1 boundaries as you zoom, plus a local search form. Deterministic map rendering over static geographic data; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/OpenGridWorks.tsx"],
+  },
+  {
+    route: "/outreach",
+    label: "Outreach",
+    nature: "rule_based",
+    mechanism:
+      "A deterministic queue over local entity and risk-signal data; it composes mailto: drafts and copy-to-clipboard message text from fixed templates. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/Outreach.tsx"],
+  },
+  {
+    route: "/radar",
+    label: "RegulationRadar",
+    nature: "rule_based",
+    mechanism:
+      "A deadline tracker with client-side filtering (jurisdiction, binding-only) over a static dataset of regulatory dates. Deterministic filtering; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegulationRadar.tsx"],
+  },
+  {
+    route: "/regional-analytics",
+    label: "RegionalAnalytics",
+    nature: "rule_based",
+    mechanism:
+      "Dashboards over the analytics API (trpc.regionalAnalytics: certificate issuances, enrolments, regional comparisons). Deterministic database reads rendered as charts; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/RegionalAnalytics.tsx"],
+  },
+  {
+    route: "/soai-pdca/government",
+    label: "GovernmentPortal",
+    nature: "rule_based",
+    mechanism:
+      "Static portal content with presentational form shells; no fetch, form post or model call exists in this surface's code.",
+    evidence: ["client/src/pages/GovernmentPortal.tsx"],
+  },
+  {
+    route: "/sov-town-lab",
+    label: "SovTownLab",
+    nature: "rule_based",
+    mechanism:
+      "A design page that renders a static state file (/api/sov-town/state.jsonl). Deterministic rendering of pre-computed data; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/SovTownLab.tsx"],
+  },
+  {
+    route: "/support",
+    label: "Support",
+    nature: "rule_based",
+    mechanism:
+      "A support request form posting to the support API (trpc.support.submitHumanRequest). A form alone is not an AI system: the request is stored for a human, and no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Support.tsx"],
+  },
+  {
+    route: "/system-status",
+    label: "Status",
+    nature: "rule_based",
+    mechanism:
+      "A status dashboard over the status API (trpc.status: incidents, uptime, service status) plus a subscribe form. Deterministic rendering of stored status records; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/Status.tsx"],
+  },
+  {
+    route: "/watchdog-hub",
+    label: "PublicWatchdogHub",
+    nature: "rule_based",
+    mechanism:
+      "The public watchdog hub: static content and navigation with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/PublicWatchdogHub.tsx"],
+  },
+  {
+    route: "/watchdog/incident",
+    label: "WatchdogIncidentReport",
+    nature: "rule_based",
+    mechanism:
+      "An incident report form (trpc.watchdog.submit) with a deterministic list of prior reports (trpc.watchdog.list). A form alone is not an AI system; no model call exists in this surface's code.",
+    evidence: ["client/src/pages/WatchdogIncidentReport.tsx"],
+  },
+  {
+    route: "/watchdog/report",
+    label: "PublicWatchdogHub",
+    nature: "rule_based",
+    mechanism:
+      "The public watchdog hub: static content and navigation with deterministic rendering. No model call exists in this surface's code.",
+    evidence: ["client/src/pages/PublicWatchdogHub.tsx"],
+  },
+  {
+    route: "/why-csoai",
+    label: "WhyCSOAI",
+    nature: "ai_system",
+    mechanism:
+      "The page mounts SovereignSpot, whose 'Ask your Council assistant' box sends your question through askSovereign to the live Council chat endpoint (councilof.ai/api/gspc), where a model writes the answer. The Article 50(1) notice is mounted at the top of the page, before the chat panel.",
+    evidence: [
+      "client/src/pages/WhyCSOAI.tsx",
+      "client/src/components/SovereignSpot.tsx",
+      "client/src/lib/sovAsk.ts",
+    ],
+  },
 ];
 
 export function surfaceFor(route: string): Surface {
   return (
     SURFACES.find((s) => s.route === route) ?? {
-      route, label: route, nature: "unclassified",
-      mechanism: "Not registered in client/src/lib/ai-surfaces.ts. Until it is classified it is treated under the strictest reading — as if it were an AI system.",
+      route,
+      label: route,
+      nature: "unclassified",
+      mechanism:
+        "Not registered in client/src/lib/ai-surfaces.ts. Until it is classified it is treated under the strictest reading — as if it were an AI system.",
       evidence: [],
     }
   );
 }
 
-export const AI_SYSTEM_SURFACES = SURFACES.filter((s) => s.nature === "ai_system");
+export const AI_SYSTEM_SURFACES = SURFACES.filter(
+  (s) => s.nature === "ai_system",
+);
 
 export const COUNTS = {
   total: SURFACES.length,
@@ -584,7 +1488,11 @@ export const COUNTS = {
 };
 
 /** Model SDKs present in package.json but never imported. Measured, not asserted. */
-export const DECLARED_UNCALLED_SDKS = ["@anthropic-ai/sdk", "openai", "@google/generative-ai"];
+export const DECLARED_UNCALLED_SDKS = [
+  "@anthropic-ai/sdk",
+  "openai",
+  "@google/generative-ai",
+];
 
 /** Routes that resolve to a page file, of which SURFACES are the interactive ones. */
 export const ROUTES_SCANNED = 311;
@@ -594,7 +1502,17 @@ export const AI_SYSTEM_COMPONENTS = 14;
 
 /** AI-system routes that mount <AISystemNotice> above the interaction today.
     The rest carry their disclosure in this registry while the component is wired. */
-export const NOTICE_MOUNTED_ROUTES = ["/", "/instrument", "/globe", "/world", "/try", "/scan", "/cyber-scan", "/gods-eye", "/classifier"];
+export const NOTICE_MOUNTED_ROUTES = [
+  "/",
+  "/instrument",
+  "/globe",
+  "/world",
+  "/try",
+  "/scan",
+  "/cyber-scan",
+  "/gods-eye",
+  "/classifier",
+];
 
 export const REGISTRY_VERSION = "2.0.0";
 export const ASSESSED_AT = "2026-08-01";

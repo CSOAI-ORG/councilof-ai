@@ -69,6 +69,12 @@ export type WitnessEntry = {
     root_as_of: string;
     merkle_root: string;
     card_sha256: string;
+    /** Exact digest rule under which card_sha256 was reproduced against the public root. */
+    card_digest_domain?: string;
+    /** Signed root version selecting that digest rule. Missing only on historical stamps. */
+    root_kind?: string;
+    /** Whether the root declared the rule directly or used the safe kind-version mapping. */
+    root_digest_domain_source?: "declared" | "legacy-kind";
     card_url: string;
     proof_url: string;
     anchors?: Record<string, unknown>;

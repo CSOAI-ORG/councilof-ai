@@ -15,8 +15,8 @@ import HomeUnderstand from "./HomeUnderstand";
  * they could DO here. This band answers the other question: nine tools, each with the
  * pain it removes stated in the reader's words, and a door that opens the tool.
  *
- * EACH TILE IS A REAL PAGE HREF. Board and OS go to /os?lobby=board or
- * /os?lobby=home. Verify is /gspc-verify. Assess, evidence, embed, report,
+ * EACH TILE IS A REAL PAGE HREF. Workspace panes go to /dashboard?tab=… .
+ * Verify is /gspc-verify. Assess, evidence, embed, report,
  * insurers, registers are pages. No /?lobby= dump and no openLobby intercept.
  *
  * NINE, NOT NINE-ISH. Every tile below has a destination a stranger can reach today.
@@ -67,10 +67,8 @@ const TOOLS: Tool[] = [
     id: "tool-os",
     family: "The workspace",
     name: "Council OS",
-    what:
-      "One window that opens every surface here — the board, the verifier, the assessment, the evidence pack — without a second tab or a second login.",
-    pain:
-      "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
+    what: "One window that opens every surface here — the board, the verifier, the assessment, the evidence pack — without a second tab or a second login.",
+    pain: "Otherwise each answer lives on a different page, and nothing you find on one is usable on the next.",
     ticks: [
       "Board, verify, get measured and the evidence pack in one window.",
       "No second tab and no second login.",
@@ -84,10 +82,8 @@ const TOOLS: Tool[] = [
     id: "tool-board",
     family: "GSPC · the living board",
     name: "The living board",
-    what:
-      "Every slot we publish about how AI systems behave, with the measurement behind it — and a visibly empty cell wherever there is no measurement.",
-    pain:
-      "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
+    what: "Every slot we publish about how AI systems behave, with the measurement behind it — and a visibly empty cell wherever there is no measurement.",
+    pain: "Otherwise you compare suppliers on scorecards that quietly leave out the tests they did badly on.",
     ticks: [
       "A filled cell is a measurement. A dash is honest emptiness.",
       "Counts come from living GET /api/gspc — never typed into the page.",
@@ -101,10 +97,8 @@ const TOOLS: Tool[] = [
     id: "tool-verify",
     family: "Free forever",
     name: "Verify a card",
-    what:
-      "Paste a signed measurement record and your own browser recomputes its hash and checks the signature. Nothing is sent to us, and nothing needs our permission.",
-    pain:
-      "Otherwise checking somebody's AI claim means trusting the company that made the claim.",
+    what: "Paste a signed measurement record and your own browser recomputes its hash and checks the signature. Nothing is sent to us, and nothing needs our permission.",
+    pain: "Otherwise checking somebody's AI claim means trusting the company that made the claim.",
     ticks: [
       "Your browser recomputes the hash and checks Ed25519.",
       "Nothing is sent to us. Nothing needs our permission.",
@@ -119,10 +113,8 @@ const TOOLS: Tool[] = [
     id: "tool-measured",
     family: "Your own system",
     name: "Get measured",
-    what:
-      "We run your system against the frozen, published tests that apply to it and hand you a small signed record you keep — the scores, the sample size behind each one, and the slots we could not fill.",
-    pain:
-      "Otherwise you hand a buyer a policy document where they asked for evidence.",
+    what: "We run your system against the frozen, published tests that apply to it and hand you a small signed record you keep — the scores, the sample size behind each one, and the slots we could not fill.",
+    pain: "Otherwise you hand a buyer a policy document where they asked for evidence.",
     ticks: [
       "Frozen, published tests — the target does not move after you sit.",
       "You keep the signed card. Publishing it is your decision.",
@@ -139,10 +131,8 @@ const TOOLS: Tool[] = [
     id: "tool-gpai",
     family: "EU AI Act · GPAI",
     name: "GPAI evidence pack",
-    what:
-      "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
-    pain:
-      "GPAI duties have been in force since 2 August 2025, and most providers have only their own paperwork to show for them.",
+    what: "Builds the evidence index for one general-purpose AI system: the live rows that exist, the published banks they resolve to, and the gaps, named rather than skipped.",
+    pain: "GPAI duties have been in force since 2 August 2025, and most providers have only their own paperwork to show for them.",
     ticks: [
       "Live rows that exist, the banks they resolve to, and the gaps.",
       "Gaps are named rather than skipped.",
@@ -157,10 +147,8 @@ const TOOLS: Tool[] = [
     id: "tool-embed",
     family: "For your own site",
     name: "Embed and white-label kit",
-    what:
-      "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
-    pain:
-      "Otherwise the people reading your site still have to take your word for the result.",
+    what: "Builds a badge or card you can paste into your own site that re-checks its own signature in each reader's browser — it goes green only when the bytes are true.",
+    pain: "Otherwise the people reading your site still have to take your word for the result.",
     ticks: [
       "A badge that goes green only when the bytes are true.",
       "Each reader's browser re-checks the signature.",
@@ -175,10 +163,8 @@ const TOOLS: Tool[] = [
     id: "tool-insurers",
     family: "Underwriting",
     name: "Insurance evidence rail",
-    what:
-      "The measured rows, the honestly empty ones, and third-party reported figures — kept in three separate columns and never blended into a single number an underwriter could mistake for a rating.",
-    pain:
-      "Otherwise AI exposure is priced off a questionnaire the applicant filled in about itself, and nothing updates between binding and renewal.",
+    what: "The measured rows, the honestly empty ones, and third-party reported figures — kept in three separate columns and never blended into a single number an underwriter could mistake for a rating.",
+    pain: "Otherwise AI exposure is priced off a questionnaire the applicant filled in about itself, and nothing updates between binding and renewal.",
     ticks: [
       "Measured, empty and reported figures stay in three separate columns.",
       "Nothing is blended into a single number an underwriter could mistake for a rating.",
@@ -193,10 +179,8 @@ const TOOLS: Tool[] = [
     id: "tool-registers",
     family: "Financial and legacy systems",
     name: "Specialist registers",
-    what:
-      "A separate board for money and mainframes: whether a COBOL copybook off a bond desk can be turned into an attestable record, whether an underwriting rule reads as covered or excluded — one row per instrument, each with its own item count.",
-    pain:
-      "Otherwise the systems that actually run a bond desk or a claims book sit outside every AI measurement anybody publishes.",
+    what: "A separate board for money and mainframes: whether a COBOL copybook off a bond desk can be turned into an attestable record, whether an underwriting rule reads as covered or excluded — one row per instrument, each with its own item count.",
+    pain: "Otherwise the systems that actually run a bond desk or a claims book sit outside every AI measurement anybody publishes.",
     ticks: [
       "One row per instrument, each with its own item count.",
       "COBOL copybook and underwriting-rule rows sit beside the public board.",
@@ -210,10 +194,8 @@ const TOOLS: Tool[] = [
     id: "tool-report",
     family: "Open to everyone",
     name: "Report an incident",
-    what:
-      "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
-    pain:
-      "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
+    what: "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
+    pain: "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
     ticks: [
       "A public form for AI behaviour that looks wrong.",
       "You get a signed acknowledgement of exactly what you filed.",
@@ -231,11 +213,15 @@ export function hrefFor(door: Door): string {
   if (door.kind === "route") return door.path;
   if (door.kind === "pane") {
     if (door.pane === "verify") return "/gspc-verify";
-    if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
+    if (door.pane === "measured" || door.pane === "ras") return "/assess";
     if (door.pane === "evidence") return "/gpai-evidence";
     if (door.pane === "embed") return "/embed";
     if (door.pane === "watchdog") return "/report";
-    if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
+    if (
+      door.pane === "cards" ||
+      door.pane === "harness" ||
+      door.pane === "space"
+    ) {
       return `/dashboard?tab=${door.pane}`;
     }
     return "/dashboard?tab=board";
@@ -279,10 +265,20 @@ function useLiveFigures() {
   } as Record<string, { value: string; source: string } | null | undefined>;
 }
 
-function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: string } | null }) {
+function Tile({
+  tool,
+  figure,
+}: {
+  tool: Tool;
+  figure?: { value: string; source: string } | null;
+}) {
   const href = hrefFor(tool.door);
   return (
-    <article id={tool.id} aria-labelledby={`${tool.id}-name`} className="h-full">
+    <article
+      id={tool.id}
+      aria-labelledby={`${tool.id}-name`}
+      className="h-full"
+    >
       <a
         href={href}
         className="card-quiet group flex h-full flex-col overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
@@ -294,12 +290,21 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           decoding="async"
           width={1376}
           height={774}
-          style={tool.objectPosition ? { objectPosition: tool.objectPosition } : undefined}
+          style={
+            tool.objectPosition
+              ? { objectPosition: tool.objectPosition }
+              : undefined
+          }
           className="aspect-[16/9] w-full bg-emerald-500/[0.06] object-cover transition-transform duration-500 motion-safe:group-hover:scale-[1.03]"
         />
         <div className="flex flex-1 flex-col gap-3 p-6">
-          <span className="t-kicker text-emerald-700 dark:text-emerald-300">{tool.family}</span>
-          <h3 id={`${tool.id}-name`} className="t-card text-lg text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
+          <span className="t-kicker text-emerald-700 dark:text-emerald-300">
+            {tool.family}
+          </span>
+          <h3
+            id={`${tool.id}-name`}
+            className="t-card text-lg text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-300"
+          >
             {tool.name}
           </h3>
           <p className="t-body text-foreground/80">{tool.what}</p>
@@ -316,14 +321,21 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
           )}
 
           {tool.note && (
-            <p className={`text-[12.5px] font-medium leading-snug text-muted-foreground ${figure ? "" : "mt-auto"}`}>
+            <p
+              className={`text-[12.5px] font-medium leading-snug text-muted-foreground ${figure ? "" : "mt-auto"}`}
+            >
               {tool.note}
             </p>
           )}
 
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-extrabold text-emerald-700 dark:text-emerald-300">
             Open this tool
-            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
+            <span
+              aria-hidden
+              className="transition-transform group-hover:translate-x-0.5"
+            >
+              →
+            </span>
           </span>
         </div>
       </a>
@@ -334,15 +346,25 @@ function Tile({ tool, figure }: { tool: Tool; figure?: { value: string; source: 
 export default function ToolStack() {
   const figures = useLiveFigures();
   return (
-    <section id="what-we-fix" aria-labelledby="what-we-fix-title" className="surface-sunken section-y-lg">
+    <section
+      id="what-we-fix"
+      aria-labelledby="what-we-fix-title"
+      className="surface-sunken section-y-lg"
+    >
       <div className="section-shell">
-        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">Nine products</p>
-        <h2 id="what-we-fix-title" className="t-section mt-4 text-center text-foreground">
+        <p className="t-kicker text-center text-emerald-700 dark:text-emerald-300">
+          Nine products
+        </p>
+        <h2
+          id="what-we-fix-title"
+          className="t-section mt-4 text-center text-foreground"
+        >
           Nine doors. Each one opens today.
         </h2>
         <p className="t-lede measure measure-center mt-5 text-center text-muted-foreground">
-          Independent measurement body. We run AI systems against frozen published tests, sign the
-          result, and leave empty cells empty. Nine doors, each a real page.
+          Independent measurement body. We run AI systems against frozen
+          published tests, sign the result, and leave empty cells empty. Nine
+          doors, each a real page.
         </p>
         <div className="mx-auto mt-8 max-w-3xl rounded-2xl border border-emerald-200/70 bg-emerald-50/60 px-5 py-4">
           <HomeUnderstand
@@ -350,11 +372,13 @@ export default function ToolStack() {
             items={[
               "Each tile opens a page that exists today. A tool with no destination is not on this band.",
               "Empty cells stay empty. We do not invent a figure to fill a gap.",
-              { kind: "usp", text: "We measure. We do not sell a rank, a certificate, or a placement." },
+              {
+                kind: "usp",
+                text: "We measure. We do not sell a rank, a certificate, or a placement.",
+              },
             ]}
           />
         </div>
-
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TOOLS.map((t) => (

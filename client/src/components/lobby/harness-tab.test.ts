@@ -6,7 +6,7 @@ describe("harness tab", () => {
     const t = tabById("harness" as any);
     expect(t).toBeTruthy();
     expect(t!.path).toBe("/harness");
-    expect(t!.label).toBe("The harness");
+    expect(t!.label).toBe("Measurement harness");
   });
   it("resolves from a chat cue", () => {
     expect(matchTab("open the harness")?.id).toBe("harness");
@@ -17,8 +17,8 @@ describe("harness tab", () => {
     expect(matchTab("show the products")?.id).toBe("products");
     expect(matchTab("verify a card")?.id).not.toBe("harness");
   });
-  it("appears in the dashboard sidebar (it has a real path)", () => {
-    expect(DASHBOARD_TABS.some((t) => t.id === "harness")).toBe(true);
+  it("stays available through All tools without crowding the sidebar", () => {
+    expect(DASHBOARD_TABS.some((t) => t.id === "harness")).toBe(false);
   });
   it("has no duplicate path across tabs", () => {
     const paths = LOBBY_TABS.map((t) => t.path).filter(Boolean);

@@ -93,7 +93,7 @@ step 'provable archive index (append-only; bytes from this tree + witnesses; no 
 step 'commit published tree'
 if ok; then
   git add public/root.json public/cards public/proofs public/publisher-health.json
-  git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
+  bash scripts/stage-public-root-interop.sh
   if git_commit_push "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"; then
     echo "pushed $(git rev-parse --short HEAD) to master"
   else

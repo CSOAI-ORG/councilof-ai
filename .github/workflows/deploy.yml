@@ -55,6 +55,11 @@ jobs:
       - name: Install deps
         run: npm install --no-audit --no-fund
 
+      - name: TypeScript debt ratchet — selftest, then non-mutating check
+        run: |
+          npm run ts-ratchet:selftest
+          npm run ts-ratchet
+
       - name: Build client
         run: npm run build:client
 

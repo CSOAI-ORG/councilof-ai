@@ -101,8 +101,7 @@ jobs:
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
           git add public/archive 2>/dev/null || true
-          git add public/interop/root-witness-*.json public/interop/rekor-root-*.json public/interop/root-witness-pointer.json public/interop/*.ots public/interop/eas-root-attestations.json 2>/dev/null || true
-          git add public/interop/witness/*.json 2>/dev/null || true
+          bash scripts/stage-public-root-interop.sh
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0

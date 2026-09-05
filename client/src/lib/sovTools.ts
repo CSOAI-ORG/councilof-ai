@@ -1,96 +1,186 @@
-// sovTools — the bridge from the front end to the published MCP server.
-//
-// WHAT WAS WRONG (found by operating it, 2026-08-26): every call went to POST /api/mcp,
-// which exposes only onRequestGet (the registry artifact) and answers
-//   404 {"error":"not_found","path":"/api/mcp"}
-// to a POST. listTools() swallowed that in its catch and returned [], so ToolRunner sat on
-// the badge "connecting…" forever, on /tools and in the Council OS tools pane. A control
-// that is permanently mid-connection is telling the reader a process is under way when
-// nothing is. The JSON-RPC endpoint is /mcp (functions/mcp/[[path]].ts, proxied to the
-// GSPC MCP worker); /api/mcp is the read-only registry and is not an RPC target.
-//
-// listTools() now distinguishes "no tools" from "could not ask", so the caller can say which.
+// Browser bridge to the public JSON-RPC MCP door. /api/mcp is a read-only
+// registry artefact; POST /mcp is the callable endpoint.
 
-const GW: string =
-  ((import.meta as any).env && (import.meta as any).env.VITE_KNOWLEDGE_BASE) ||
-  "/api";
+export type JsonSchema = {
+  type?:
+    "object" | "array" | "string" | "number" | "integer" | "boolean" | "null";
+  description?: string;
+  properties?: Record<string, JsonSchema>;
+  required?: string[];
+  additionalProperties?: boolean;
+  minimum?: number;
+  maximum?: number;
+  pattern?: string;
+  enum?: unknown[];
+  anyOf?: JsonSchema[];
+  oneOf?: JsonSchema[];
+  default?: unknown;
+};
 
 export type SovTool = {
   name: string;
   description: string;
-  inputSchema?: { type?: string; properties?: Record<string, any>; required?: string[] };
+  inputSchema?: JsonSchema;
+  csoai?: {
+    paid?: boolean;
+    rail?: string;
+    route?: string;
+    sku?: string;
+    free_preview?: string;
+    free_status?: string;
+  };
 };
 
-export type ToolResult = { ok: boolean; text: string; raw?: any };
+export type ToolResult = {
+  ok: boolean;
+  state: "runtime_observed" | "unreachable" | "unchecked";
+  text: string;
+  raw?: unknown;
+  structuredContent?: unknown;
+};
 
-/** The JSON-RPC endpoint. NOT `${GW}/mcp` — that is the registry artifact, GET-only. */
-const RPC = "/mcp";
+const env = (
+  import.meta as ImportMeta & {
+    env?: Record<string, string | boolean | undefined>;
+  }
+).env;
 
-async function rpc(method: string, params?: any): Promise<any> {
-  const r = await fetch(RPC, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
-  });
-  return r.json();
+/**
+ * Production is same-origin. A local Vite preview has no Pages Functions
+ * runtime, so it uses the public endpoint unless VITE_MCP_ENDPOINT overrides it.
+ */
+export const MCP_RPC_ENDPOINT =
+  (typeof env?.VITE_MCP_ENDPOINT === "string" && env.VITE_MCP_ENDPOINT) ||
+  (env?.DEV ? "https://councilof.ai/mcp" : "/mcp");
+
+async function rpc(
+  method: string,
+  params?: unknown,
+): Promise<Record<string, unknown>> {
+  const controller = new AbortController();
+  const timer = globalThis.setTimeout(() => controller.abort(), 20_000);
+  try {
+    const response = await fetch(MCP_RPC_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ jsonrpc: "2.0", id: Date.now(), method, params }),
+      signal: controller.signal,
+    });
+    if (!response.ok)
+      throw new Error(`POST /mcp answered HTTP ${response.status}`);
+    const body = (await response.json()) as unknown;
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
+      throw new Error("POST /mcp returned an unreadable JSON-RPC body");
+    }
+    return body as Record<string, unknown>;
+  } finally {
+    globalThis.clearTimeout(timer);
+  }
 }
 
-// The live, server-executed governance tools (govern, sign, verify, talk, agent-card).
+// A tools/list reply proves catalogue discovery only. Each advertised tool must
+// still be called before the UI may describe its behaviour as runtime-observed.
 export type ToolListing =
-  | { state: "ok"; tools: SovTool[] }
-  | { state: "unreachable"; reason: string };
+  { state: "ok"; tools: SovTool[] } | { state: "unreachable"; reason: string };
 
 export async function listTools(): Promise<ToolListing> {
   try {
     const d = await rpc("tools/list");
-    if (d && d.error) return { state: "unreachable", reason: String(d.error.message || "the server returned an error") };
-    const tools = d && d.result && d.result.tools;
-    if (!Array.isArray(tools)) return { state: "unreachable", reason: "the reply carried no tools list" };
-    return { state: "ok", tools };
+    const error = d.error as { message?: unknown } | undefined;
+    if (error) {
+      return {
+        state: "unreachable",
+        reason: String(error.message || "the server returned a JSON-RPC error"),
+      };
+    }
+    const result = d.result as { tools?: unknown } | undefined;
+    const tools = result?.tools;
+    if (!Array.isArray(tools))
+      return {
+        state: "unreachable",
+        reason: "the reply carried no tools list",
+      };
+    return { state: "ok", tools: tools as SovTool[] };
   } catch (e) {
-    return { state: "unreachable", reason: e instanceof Error ? e.message : "the request failed" };
+    return {
+      state: "unreachable",
+      reason: e instanceof Error ? e.message : "the request failed",
+    };
   }
 }
 
-// Actually run a tool and get a real, governed result back.
-export async function callTool(name: string, args: Record<string, any>): Promise<ToolResult> {
+// Run one advertised tool. A completed tools/call is RUNTIME_OBSERVED, not
+// automatically MEASURED, REPRODUCED or SIGNED; those states belong to the
+// returned artefact only when its own evidence supports them.
+export async function callTool(
+  name: string,
+  args: Record<string, unknown>,
+): Promise<ToolResult> {
   try {
     const d = await rpc("tools/call", { name, arguments: args });
-    if (d && d.error) return { ok: false, text: "The brain declined: " + (d.error.message || "unknown"), raw: d };
-    const content = (d && d.result && d.result.content) || [];
-    const text = content.map((c: any) => c && c.text).filter(Boolean).join("\n") || JSON.stringify(d && d.result ? d.result : d);
-    return { ok: true, text, raw: d };
+    const error = d.error as { message?: unknown } | undefined;
+    if (error) {
+      return {
+        ok: false,
+        state: "unchecked",
+        text: String(error.message || "The server returned a JSON-RPC error."),
+        raw: d,
+      };
+    }
+
+    const result = (d.result || {}) as {
+      content?: unknown;
+      structuredContent?: unknown;
+      isError?: boolean;
+    };
+    const content = Array.isArray(result.content) ? result.content : [];
+    const text =
+      content
+        .map((item) =>
+          item && typeof item === "object" && "text" in item
+            ? String((item as { text?: unknown }).text || "")
+            : "",
+        )
+        .filter(Boolean)
+        .join("\n") || JSON.stringify(result, null, 2);
+
+    if (result.isError === true) {
+      return {
+        ok: false,
+        state: "unchecked",
+        text,
+        raw: d,
+        structuredContent: result.structuredContent,
+      };
+    }
+    return {
+      ok: true,
+      state: "runtime_observed",
+      text,
+      raw: d,
+      structuredContent: result.structuredContent,
+    };
   } catch (e) {
-    return { ok: false, text: "Couldn't reach the Council engine — check your connection and try again." };
+    return {
+      ok: false,
+      state: "unreachable",
+      text: e instanceof Error ? e.message : "POST /mcp could not be reached.",
+    };
   }
 }
 
-// Seal any text to Layer 0 (Ed25519) → SOV: fingerprint. Real cryptographic proof.
-// Uses the /sign endpoint (the one that actually returns a signature); falls back
-// to a real in-browser SHA-256 content hash if the brain is unreachable — never faked.
-export async function sealArtifact(artifact: string): Promise<ToolResult> {
-  try {
-    const r = await fetch(GW + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: artifact }) });
-    if (r.ok) {
-      const d = await r.json();
-      const sig = String((d && (d.signature || d.sig)) || "");
-      const fp = String((d && (d.fingerprint || d.publicKey || d.key)) || "");
-      if (sig || fp) return { ok: true, text: "COAI:" + fp.slice(0, 40) + "\nsig " + sig.slice(0, 56) + " · Ed25519 · Layer 0", raw: d };
-    }
-  } catch (e) {}
-  try {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(artifact));
-    const hex = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
-    return { ok: true, text: "sha256:" + hex.slice(0, 48) + " · content hash (offline, brain unreachable)" };
-  } catch (e) {}
-  return { ok: false, text: "Seal unavailable." };
-}
-
-// Friendly labels for the known live tools.
+// Friendly names for the twelve tools currently advertised by tools/list.
 export const TOOL_META: Record<string, { glyph: string; label: string }> = {
-  meok_govern: { glyph: "⚖", label: "What governs this?" },
-  meok_sign: { glyph: "✶", label: "Seal to Layer 0" },
-  meok_verify: { glyph: "✓", label: "Verify a seal" },
-  meok_talk: { glyph: "◉", label: "Ask the Council" },
-  meok_agent_card: { glyph: "🪪", label: "Agent card" },
+  board_totals: { glyph: "▦", label: "Board totals" },
+  get_axis: { glyph: "◎", label: "Read one axis" },
+  verify_card: { glyph: "✓", label: "Verify signed card" },
+  list_cards: { glyph: "≡", label: "List signed cards" },
+  get_root: { glyph: "◇", label: "Read public root" },
+  get_card: { glyph: "□", label: "Read root card" },
+  verify_inclusion: { glyph: "⌁", label: "Verify inclusion" },
+  commission_card: { glyph: "+", label: "Commission card" },
+  art50_marking_evidence: { glyph: "A", label: "Article 50 evidence" },
+  rwa_evidence: { glyph: "R", label: "RWA evidence" },
+  witness_hash: { glyph: "#", label: "Witness hash" },
+  receipts_batch: { glyph: "B", label: "Receipts batch" },
 };

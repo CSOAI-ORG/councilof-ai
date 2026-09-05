@@ -32,6 +32,27 @@ const invalid = (code, reason) => ({ state: STATES.INVALID, code, reason });
 const uncheckable = (code, reason) => ({ state: STATES.UNCHECKABLE, code, reason });
 
 /**
+ * Accept either the historical bare chain manifest or the currently published,
+ * card-shaped signed envelope whose `body` is that manifest. Structural chain
+ * analysis does not itself verify the envelope signature; callers must run the
+ * outer object through verifyCard as a separate step.
+ */
+function chainManifestFromDocument(document) {
+  if (!document || typeof document !== "object" || Array.isArray(document)) return null;
+  // Preserve the historical bare-manifest contract: callers supplied objects
+  // with `links` before the kind field was standardised.
+  if (Array.isArray(document.links))
+    return { manifest: document, envelope: null };
+  const body = document.body;
+  if (
+    body && typeof body === "object" && !Array.isArray(body) &&
+    body.kind === "gspc.card-chain" && Array.isArray(body.links) &&
+    typeof document.id === "string" && typeof document.signature === "string"
+  ) return { manifest: body, envelope: document };
+  return null;
+}
+
+/**
  * Verify one parsed card object against a profile.
  * @returns {Promise<{state:string, code:string, reason?:string, id?:string, axis?:string}>}
  */
@@ -176,8 +197,9 @@ export function analyseSet(cards, index, profile, chain = null) {
   // declared position is then accounted for, not dangling — the card is simply one we do not
   // hold. Without a manifest there is no way to tell those two cases apart, which is exactly
   // why the manifest is worth publishing.
+  const chainParts = chainManifestFromDocument(chain);
   const declaredPositions = new Set(
-    chain && Array.isArray(chain.links) ? chain.links.map((l) => l && l.id).filter(Boolean) : [],
+    chainParts ? chainParts.manifest.links.map((l) => l && l.id).filter(Boolean) : [],
   );
 
   const danglingPrev = [];
@@ -235,33 +257,46 @@ export function analyseSet(cards, index, profile, chain = null) {
  * So when a published card names a predecessor, that predecessor's id and position are
  * committed to by a signature, whether or not its body is published.
  *
- * WHAT IS NOT. The manifest file itself carries no signature. A withheld position that no
- * published body names is therefore an assertion in an unsigned file and nothing more: its
- * existence, its contents and its place in the order all rest on trust. In a RUN of
- * consecutive withheld positions only the one adjoining a published successor is attested;
- * the rest of the run is not. Nor can a withheld position's signature be checked at all —
- * Ed25519 signs the message, and the message is the body you were not given.
+ * WHAT IS NOT. A bare manifest carries no signature. The newer card-shaped document signs
+ * the manifest as its body, but that outer envelope must be checked separately with
+ * verifyCard; this structural function never assumes a signature is valid merely because it
+ * is present. Nor can a withheld position's own signature be checked at all — Ed25519 signs
+ * the message, and the message is the body you were not given.
  *
  * This function counts both kinds separately, because reporting "the chain is complete" while
  * a fifth of its tombstones are unattested would be a claim the evidence does not support.
  */
 export function analyseChain(cards, chain, profile) {
   const findings = [];
-  if (!chain || !Array.isArray(chain.links))
-    return { ok: false, findings: [{ code: "CHAIN_MANIFEST_MALFORMED", detail: "no `links` array" }] };
+  const parts = chainManifestFromDocument(chain);
+  if (!parts)
+    return {
+      ok: false,
+      declaredLength: null,
+      positions: 0,
+      walkLength: 0,
+      reachesGenesis: false,
+      bodiesDeclaredPublished: 0,
+      bodiesHeld: 0,
+      bodiesMissingLocally: 0,
+      withheld: { total: 0, attestedBySignedPrev: 0, assertedOnly: 0 },
+      envelopePresent: false,
+      findings: [{ code: "CHAIN_MANIFEST_MALFORMED", detail: "no `links` array in a bare gspc.card-chain manifest or signed envelope body" }],
+    };
+  const manifest = parts.manifest;
 
   const links = new Map();
-  for (const l of chain.links) {
+  for (const l of manifest.links) {
     if (!l || typeof l.id !== "string") { findings.push({ code: "CHAIN_MANIFEST_MALFORMED", detail: "a link has no id" }); continue; }
     if (links.has(l.id)) findings.push({ code: "CHAIN_DUPLICATE_POSITION", detail: `${l.id.slice(0, 16)}… appears more than once` });
     links.set(l.id, l);
   }
 
   // Walk prev from the declared head. Every position must be reached exactly once.
-  const genesis = new Set([chain.genesis_prev, ...(profile.genesisMarkers || [])].filter(Boolean));
+  const genesis = new Set([manifest.genesis_prev, ...(profile.genesisMarkers || [])].filter(Boolean));
   const walked = [];
   const visited = new Set();
-  let cur = chain.head;
+  let cur = manifest.head;
   let broke = null;
   while (typeof cur === "string" && links.has(cur)) {
     if (visited.has(cur)) { broke = `cycle at ${cur.slice(0, 16)}…`; break; }
@@ -277,8 +312,8 @@ export function analyseChain(cards, chain, profile) {
     if (!visited.has(id))
       findings.push({ code: "CHAIN_ORPHAN_LINK", detail: `${id.slice(0, 16)}… is listed but not reachable from head` });
 
-  if (typeof chain.length === "number" && chain.length !== links.size)
-    findings.push({ code: "CHAIN_LENGTH_MISMATCH", detail: `manifest declares length ${chain.length} but lists ${links.size}` });
+  if (typeof manifest.length === "number" && manifest.length !== links.size)
+    findings.push({ code: "CHAIN_LENGTH_MISMATCH", detail: `manifest declares length ${manifest.length} but lists ${links.size}` });
 
   // Cross-check the bodies actually held against the positions.
   const byId = new Map();
@@ -322,16 +357,23 @@ export function analyseChain(cards, chain, profile) {
     findings.push({
       code: "WITHHELD_UNATTESTED",
       detail:
-        `${asserted.length} of those ${withheld.length} are named by no signed body you hold. The manifest is unsigned, so their ` +
-        `existence, contents and place in the order rest on trust alone` +
+        `${asserted.length} of those ${withheld.length} are named by no signed body you hold. Structural analysis alone does not ` +
+        `authenticate their existence, contents or place in the order` +
         (attested.length ? `; the other ${attested.length} is named inside a signed body's prev and is attested` : ""),
     });
 
-  findings.push({ code: "CHAIN_UNSIGNED", detail: "the manifest carries no signature of its own; it is anchored only where a signed body's prev names a position" });
+  if (parts.envelope) {
+    findings.push({
+      code: "CHAIN_ENVELOPE_PRESENT",
+      detail: "the structural walk used the signed envelope's body; verify the outer envelope with verifyCard before trusting this listing",
+    });
+  } else {
+    findings.push({ code: "CHAIN_UNSIGNED", detail: "the bare manifest carries no signature of its own; it is anchored only where a signed body's prev names a position" });
+  }
 
   return {
     ok: !broke,
-    declaredLength: chain.length ?? null,
+    declaredLength: manifest.length ?? null,
     positions: links.size,
     walkLength: walked.length,
     reachesGenesis,
@@ -339,6 +381,7 @@ export function analyseChain(cards, chain, profile) {
     bodiesHeld: held,
     bodiesMissingLocally: missingLocally,
     withheld: { total: withheld.length, attestedBySignedPrev: attested.length, assertedOnly: asserted.length },
+    envelopePresent: Boolean(parts.envelope),
     findings,
   };
 }

@@ -3,7 +3,7 @@ export function onRequest() {
   return new Response(null, {
     status: 308,
     headers: {
-      location: "/os?lobby=home",
+      location: "/dashboard?tab=home",
       "cache-control": "public, max-age=300",
     },
   });

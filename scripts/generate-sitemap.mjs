@@ -59,9 +59,8 @@ const P_LOW = 0.4; // legal / policy pages
 
 const PRIORITY = new Map([
   ["/", 1.0],
-  // /pricing and /certification are Functions door hops (OS Assess / honesty).
-  // Rank the live destinations, not the hop URLs.
-  ["/os", P_TOP],
+  // `/os` is compatibility-only. Rank the one end-user workspace.
+  ["/dashboard", P_TOP],
   ["/honesty", P_TOP],
   ["/gspc-arena", P_TOP],
   ["/layer0", P_TOP],
@@ -118,7 +117,7 @@ const EXCLUDE_EXACT = new Set([
   "/workbench",
   "/command-center",
   "/admin",
-  "/dashboard",
+  "/os",
   "/enterprise-dashboard",
   "/enterprise-onboarding",
   "/government-dashboard",
@@ -187,8 +186,12 @@ function isJunk(path) {
 function priorityFor(path) {
   if (PRIORITY.has(path)) return PRIORITY.get(path);
   // The six audience pages and the industry pages are entry surfaces, not archive.
-  if (path.startsWith("/for/") || path.startsWith("/industries/")) return P_HIGH;
-  if (path.startsWith("/legal/") || /privacy|terms|cookie|disclaimer|sla|dpa|agreement/.test(path))
+  if (path.startsWith("/for/") || path.startsWith("/industries/"))
+    return P_HIGH;
+  if (
+    path.startsWith("/legal/") ||
+    /privacy|terms|cookie|disclaimer|sla|dpa|agreement/.test(path)
+  )
     return P_LOW;
   return P_DEFAULT;
 }
@@ -224,9 +227,21 @@ while ((m = routeRe.exec(src)) !== null) {
 }
 // Library IA: the /library/:sector pages are dynamic routes (skipped above as :param) but are
 // prime AEO citation surface — one sector-organized archive index each. List them explicitly.
-for (const s of ["regulation", "regions", "academy", "tech", "axes", "governance", "product", "company"]) {
+for (const s of [
+  "regulation",
+  "regions",
+  "academy",
+  "tech",
+  "axes",
+  "governance",
+  "product",
+  "company",
+]) {
   const lp = `/library/${s}`;
-  if (!seen.has(lp)) { seen.add(lp); paths.push(lp); }
+  if (!seen.has(lp)) {
+    seen.add(lp);
+    paths.push(lp);
+  }
 }
 
 // --- Dynamic route families the :param filter above drops on the floor ------
@@ -248,7 +263,9 @@ const derived = (label, file, re, prefix) => {
     if (!out.includes(p)) out.push(p);
   }
   if (!out.length) {
-    console.error(`[sitemap] ERROR: derived 0 ${label} paths from ${file} — the source shape changed.`);
+    console.error(
+      `[sitemap] ERROR: derived 0 ${label} paths from ${file} — the source shape changed.`,
+    );
     process.exit(1);
   }
   return out;
@@ -260,7 +277,9 @@ const PERSONA_KEYS = (() => {
   const src = readFileSync(PERSONA_TSX, "utf8");
   const m = src.match(/key:\s*((?:"[a-z-]+"\s*\|\s*)+"[a-z-]+")/);
   if (!m) {
-    console.error("[sitemap] ERROR: could not read the persona key union from PersonaRouter.tsx.");
+    console.error(
+      "[sitemap] ERROR: could not read the persona key union from PersonaRouter.tsx.",
+    );
     process.exit(1);
   }
   return [...m[1].matchAll(/"([a-z-]+)"/g)].map((x) => x[1]);
@@ -268,7 +287,12 @@ const PERSONA_KEYS = (() => {
 const FOR_PATHS = PERSONA_KEYS.map((k) => `/for/${k}`);
 
 // /industries/:slug — the canonical industry pages, from the data module IndustryTemplate reads.
-const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9-]+)"/gm, "/industries/");
+const INDUSTRY_PATHS = derived(
+  "industry",
+  INDUSTRIES_TS,
+  /^\s*slug:\s*"([a-z0-9-]+)"/gm,
+  "/industries/",
+);
 
 // /vs/:slug — one canonical page per named competitor. Compare.tsx's FOCUS map carries an
 // ALIAS ("credo" and "credo-ai" both resolve to Credo AI); listing both would put two URLs
@@ -276,7 +300,10 @@ const INDUSTRY_PATHS = derived("industry", INDUSTRIES_TS, /^\s*slug:\s*"([a-z0-9
 const VS_PATHS = ["/vs/vanta", "/vs/drata", "/vs/credo-ai", "/vs/onetrust"];
 
 for (const p of [...FOR_PATHS, ...INDUSTRY_PATHS, ...VS_PATHS]) {
-  if (!seen.has(p) && !isJunk(p)) { seen.add(p); paths.push(p); }
+  if (!seen.has(p) && !isJunk(p)) {
+    seen.add(p);
+    paths.push(p);
+  }
 }
 paths.sort((a, b) => (a === "/" ? -1 : b === "/" ? 1 : a.localeCompare(b)));
 
@@ -294,7 +321,10 @@ const MACHINE_PATHS = [
   ["/api/regulator-findings", "daily", "0.6"],
 ];
 for (const [mp, cf, pr] of MACHINE_PATHS) {
-  if (!seen.has(mp)) { seen.add(mp); paths.push(mp); }
+  if (!seen.has(mp)) {
+    seen.add(mp);
+    paths.push(mp);
+  }
 }
 
 // Every blog article that is actually BUILT. /blog/:slug is a :param route (skipped above),
@@ -315,22 +345,32 @@ const PRERENDER_MJS = join(ROOT, "scripts/prerender.mjs");
 let blogSlugs = [];
 try {
   const bsrc = readFileSync(BLOG_TS, "utf8");
-  blogSlugs = [...bsrc.matchAll(/^\s{4}"slug":\s*"([^"]+)"/gm)].map((m) => m[1]);
+  blogSlugs = [...bsrc.matchAll(/^\s{4}"slug":\s*"([^"]+)"/gm)].map(
+    (m) => m[1],
+  );
 } catch {
-  console.warn("[sitemap] blog-content.ts unreadable — no /blog/:slug entries emitted");
+  console.warn(
+    "[sitemap] blog-content.ts unreadable — no /blog/:slug entries emitted",
+  );
 }
 // The set of /blog/<slug> paths the prerender actually snapshots. If this comes back empty the
 // source shape changed and every blog URL would silently vanish — fail loud instead.
 let builtBlog = new Set();
 try {
   const psrc = readFileSync(PRERENDER_MJS, "utf8");
-  builtBlog = new Set([...psrc.matchAll(/["'`]\/blog\/([a-z0-9-]+)["'`]/g)].map((m) => m[1]));
+  builtBlog = new Set(
+    [...psrc.matchAll(/["'`]\/blog\/([a-z0-9-]+)["'`]/g)].map((m) => m[1]),
+  );
   if (blogSlugs.length && builtBlog.size === 0) {
-    console.error("[sitemap] ERROR: derived 0 built /blog/ slugs from prerender.mjs — the source shape changed.");
+    console.error(
+      "[sitemap] ERROR: derived 0 built /blog/ slugs from prerender.mjs — the source shape changed.",
+    );
     process.exit(1);
   }
 } catch {
-  console.error("[sitemap] ERROR: scripts/prerender.mjs unreadable — cannot tell which blog pages are built.");
+  console.error(
+    "[sitemap] ERROR: scripts/prerender.mjs unreadable — cannot tell which blog pages are built.",
+  );
   process.exit(1);
 }
 let blogSkipped = 0;
@@ -338,9 +378,18 @@ let blogUnbuilt = 0;
 for (const slug of blogSlugs) {
   const bp = `/blog/${slug}`;
   // Not snapshotted → the static host 404s it → it must not be in the sitemap.
-  if (!builtBlog.has(slug)) { blogUnbuilt++; continue; }
-  if (redirectRules.has(bp) || redirectRules.has(bp + "/")) { blogSkipped++; continue; }
-  if (!seen.has(bp)) { seen.add(bp); paths.push(bp); }
+  if (!builtBlog.has(slug)) {
+    blogUnbuilt++;
+    continue;
+  }
+  if (redirectRules.has(bp) || redirectRules.has(bp + "/")) {
+    blogSkipped++;
+    continue;
+  }
+  if (!seen.has(bp)) {
+    seen.add(bp);
+    paths.push(bp);
+  }
 }
 
 // The AEO answer explainers. /answers/:slug is a :param route (skipped above), so the 12
@@ -354,25 +403,36 @@ for (const slug of blogSlugs) {
 const ANSWERS_JSON = join(ROOT, "client/src/data/answers.json");
 let answerSlugs = [];
 try {
-  answerSlugs = JSON.parse(readFileSync(ANSWERS_JSON, "utf8")).map((a) => a && a.slug).filter(Boolean);
+  answerSlugs = JSON.parse(readFileSync(ANSWERS_JSON, "utf8"))
+    .map((a) => a && a.slug)
+    .filter(Boolean);
 } catch {
-  console.warn("[sitemap] answers.json unreadable — no /answers/:slug entries emitted");
+  console.warn(
+    "[sitemap] answers.json unreadable — no /answers/:slug entries emitted",
+  );
 }
 for (const slug of answerSlugs) {
   const ap = `/answers/${slug}`;
-  if (!seen.has(ap)) { seen.add(ap); paths.push(ap); }
+  if (!seen.has(ap)) {
+    seen.add(ap);
+    paths.push(ap);
+  }
 }
 
 // --- Emit XML ---------------------------------------------------------------
 const today = new Date().toISOString().slice(0, 10);
-const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const esc = (s) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const MACHINE = new Map(MACHINE_PATHS.map(([p, cf, pr]) => [p, { cf, pr }]));
 let rewritten = 0;
 let droppedRedirect = 0;
 const finalPaths = [];
 for (const p of paths) {
   const c = canonicalise(p);
-  if (c === null) { droppedRedirect++; continue; }
+  if (c === null) {
+    droppedRedirect++;
+    continue;
+  }
   if (c !== p) rewritten++;
   finalPaths.push(c);
 }
@@ -407,12 +467,12 @@ console.log(
     `${droppedRedirect} redirect-to-elsewhere, ${blogUnbuilt} unbuilt blog slugs (404), ` +
     `${blogSkipped} redirected blog slugs; ` +
     `${rewritten} rewritten to their trailing-slash canonical; ` +
-    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`
+    `${blogSlugs.length - blogUnbuilt - blogSkipped} blog articles; lastmod=${today})`,
 );
 
 // Flagship sanity check — these MUST be present.
 const REQUIRED = [
-  "/os",
+  "/dashboard",
   "/honesty",
   "/gspc-arena",
   "/gspc-verify",
@@ -430,6 +490,8 @@ const REQUIRED = [
 ];
 const missing = REQUIRED.filter((r) => !seen.has(r) || isJunk(r));
 if (missing.length) {
-  console.error(`[sitemap] ERROR: flagship routes missing from sitemap: ${missing.join(", ")}`);
+  console.error(
+    `[sitemap] ERROR: flagship routes missing from sitemap: ${missing.join(", ")}`,
+  );
   process.exit(1);
 }

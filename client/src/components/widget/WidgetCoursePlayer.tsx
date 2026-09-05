@@ -163,7 +163,7 @@ export default function WidgetCoursePlayer() {
                   You have successfully completed all modules and quizzes.
                 </p>
               </div>
-              <Badge className="bg-green-600 text-white">Certification Earned</Badge>
+              <Badge className="bg-green-600 text-white">Local completion recorded</Badge>
             </div>
           </Card>
         )}
