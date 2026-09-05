@@ -277,6 +277,10 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
     CSOAI_LID +
     ".";
 
+  // No measurable input means no deliverable. Reject it before either the x402 facilitator or
+  // invoice-reference path is entered; payment may never precede deliverability validation.
+  if (!m) return json({ schema: KIND, error: "bad_request", reason: "supply url=<https://…> or POST the bytes / a manifest to measure" }, 400);
+
   // FREE preview — the full measurement, unsigned. Nothing withheld but the signature.
   if (preview) {
     return json({

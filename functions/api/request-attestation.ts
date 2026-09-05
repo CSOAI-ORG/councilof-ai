@@ -82,6 +82,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   if (axis && !AXIS_RE.test(axis)) {
     return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "axis: lowercase slug" }, 400);
   }
+  // Validate the paid request before touching the facilitator. A missing subject used to reach
+  // /verify and /settle first, then return 400 below — charging for an undeliverable commission.
+  const hasPaymentHeader = !!(request.headers.get("x-payment") || request.headers.get("payment-signature"));
+  if (hasPaymentHeader && !subject) {
+    return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) before presenting payment", lid: CSOAI_LID }, 400);
+  }
   const knownAxis = axis ? AXES.some((a) => a.axis === axis) : null;
 
   const description =
@@ -147,10 +153,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return paymentRequiredResponse(paymentRequired);
   }
 
-  // Paid path — issue the commission receipt. Never a score.
-  if (!subject) {
-    return json({ schema: "csoai.request-attestation/0.2", error: "bad_request", reason: "pass subject=<id> (and optional axis=) with the payment", lid: CSOAI_LID }, 400);
-  }
+  // Paid path — issue the commission receipt. Never a score. `subject` was validated before
+  // verify/settle above, so this branch cannot charge and then discover an invalid request.
   const as_of = new Date().toISOString();
   const tx = payment.settlement?.transaction || null;
   const source_urls = [

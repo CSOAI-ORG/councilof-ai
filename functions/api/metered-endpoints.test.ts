@@ -63,6 +63,19 @@ describe("Tier 1 — /api/request-attestation", () => {
     expect((await ras(ctx("/api/request-attestation?subject=%3Cscript%3E"))).status).toBe(400);
   });
 
+  it("rejects a paid request with no subject before contacting verify or settle", async () => {
+    let facilitatorCalls = 0;
+    stubStatic(() => {
+      facilitatorCalls += 1;
+      return new Response(JSON.stringify({ isValid: true }));
+    });
+    const hdr = btoa(JSON.stringify({ x402Version: 1, scheme: "exact", network: "base", payload: {} }));
+    const r = await ras(ctx("/api/request-attestation", { X402_FACILITATOR_URL: "https://f.example" }, { "x-payment": hdr }));
+    expect(r.status).toBe(400);
+    expect(facilitatorCalls).toBe(0);
+    expect((await r.json()).reason).toMatch(/before presenting payment/);
+  });
+
   it("paid: issues ONE card-v0 (ras.commission) citing the settle tx, re-serving existing cards, unsigned-declared without a key", async () => {
     stubStatic((p) =>
       new Response(JSON.stringify(p.endsWith("/verify") ? { isValid: true } : { success: true, transaction: "0xtx", network: "base", payer: "0xp" })),

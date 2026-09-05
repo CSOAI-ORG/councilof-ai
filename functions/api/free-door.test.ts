@@ -41,4 +41,22 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     const b = (await (await call()).json()) as { accepts: { payTo: string }[] };
     expect(b.accepts[0].payTo).toMatch(/^0x[0-9a-fA-F]{40}$/);
   });
+  // THE FACILITATOR VALIDATES info.input AGAINST THIS SCHEMA, and the first version of this door
+  // failed its own declaration: info.input carried queryParams while the schema set
+  // additionalProperties:false over {type, method}. Probed 2026-09-05 — the EXTENSION-RESPONSES
+  // sidechannel answered "Bazaar extension validation failed: /input: must NOT have additional
+  // properties", which is why two settled seeds produced no listing. A blob that does not
+  // validate is not discovery metadata, however complete it looks.
+  it("info.input validates against the schema the same document declares", async () => {
+    const b = (await (await call()).json()) as {
+      extensions: { bazaar: { info: { input: Record<string, unknown> }; schema: any } };
+    };
+    const { info, schema } = b.extensions.bazaar;
+    const declared = schema.properties.input;
+    expect(declared.additionalProperties).toBe(false);
+    const allowed = new Set(Object.keys(declared.properties));
+    const extra = Object.keys(info.input).filter((k) => !allowed.has(k));
+    expect(extra, `info.input carries keys the schema forbids: ${extra.join(", ")}`).toEqual([]);
+    for (const r of declared.required) expect(info.input).toHaveProperty(r);
+  });
 });
