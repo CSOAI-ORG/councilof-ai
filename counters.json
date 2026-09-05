@@ -117,10 +117,10 @@
    "value": null,
    "status": "UNMEASURED",
    "phrasing": "signed measurement cards issued via the paid rail",
-   "evidence": "KV x402 replay store (keyed on issued sha256, paid vs free) — not yet provisioned",
+   "evidence": "KV x402 replay store (keyed on issued sha256, paid vs free) — REVENUE_KV is bound; /api/revenue reports provisioning.kv_bound true and reads its live count from it",
    "last_verified": null,
    "owner": "Revenue",
-   "note": "SKU-1. No live settle path (x402 is fail-closed, mode:mock). value is null, never 0 — 0 would assert a measured count. Instrumented by functions/api/revenue.ts; source of truth is settled receipts on-chain, not intent."
+   "note": "SKU-1. value is null, never 0 — 0 would assert a measured count. Instrumented by functions/api/revenue.ts; source of truth is settled receipts on-chain, not intent. CORRECTED 2026-09-05: this note said \"No live settle path (x402 is fail-closed, mode:mock)\". The facilitator was provisioned 2026-09-03, /.well-known/x402.json reports mode:live, and _x402.ts calls /verify THEN /settle. The settle path exists; nothing has settled through it, which is a different fact and the one worth publishing."
   },
   "revenue_proofs": {
    "value": null,
@@ -144,10 +144,10 @@
    "value": null,
    "status": "UNMEASURED",
    "phrasing": "USDC settled to the estate pay_to on Base (single-use receipts)",
-   "evidence": "sum of settled txhash in the KV replay store = actual cash — not yet provisioned",
+   "evidence": "sum of settled txhash in the KV replay store = actual cash — REVENUE_KV bound, no settled txhash in it yet",
    "last_verified": null,
    "owner": "Revenue",
-   "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Null until X402_PAY_TO + a facilitator are provisioned and a receipt settles. Fail-closed by design."
+   "note": "The north-of-truth revenue number: bytes/chain adjudicate, not the CRM. Fail-closed by design. CORRECTED 2026-09-05: this said \"Null until X402_PAY_TO + a facilitator are provisioned\". Both ARE provisioned — payTo 0x2126…ae31, facilitator since 2026-09-03 — and /api/request-attestation issues a complete Base/USDC 402 challenge. It is null because no payment has ever settled, not because the rail is unbuilt."
   }
  }
 }

@@ -241,6 +241,8 @@ capabilities/root-conflict-disclosure.test.mjs
 capabilities/axis-family-split.test.mjs
 capabilities/integration-endpoints.test.mjs
 client/src/data/intel/integrations.ts
+capabilities/revenue-rail-truth.test.mjs
+counters.json
 public/cards-bundle.json
 public/signed/HOW-TO-VERIFY-ROOT.md
 public/signed/index.html
@@ -268,12 +270,12 @@ before the build ran, and a reviewer would reasonably distrust everything else h
     npx vitest run client/src                                  643 passed at handoff
 
     # The capability guards need NO install and NO build. Verified from a bare
-    # `git archive HEAD` export with zero node_modules: 97 passed, offline and live.
+    # `git archive HEAD` export with zero node_modules: 101 passed, offline and live.
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 LIVE_NPM=1 LIVE_CARDS=1 \
       LIVE_ATTESTATION=1 LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
       LIVE_A2A=1 LIVE_X402=1 \
-      node --test capabilities/*.test.mjs                      97 passed at handoff, 0 failed
+      node --test capabilities/*.test.mjs                      101 passed at handoff, 0 failed
 
 Counts are stated **at handoff** deliberately. They move as master moves; a mismatch means drift
 to re-read, not an error. The claims that must hold regardless are asserted by
@@ -316,7 +318,7 @@ an instruction is only worth writing if it works for the person who did not writ
 |---|---|---|
 | 1 | `git rev-list --count HEAD..origin/master` | **0** — nothing to re-rebase |
 | 2 | every path in `git diff --name-only origin/master..HEAD` appears under Files | **61 of 61**, none unlisted |
-| 3 | capability guards, no install and no build, all `LIVE_*` set | **97 passed, 0 failed** |
+| 3 | capability guards, no install and no build, all `LIVE_*` set | **101 passed, 0 failed** |
 | 4 | `node scripts/one-door-guard.mjs` | **exit 0** |
 
 **And the ordering warning is not hypothetical.** Running `node scripts/brand-gate.mjs
@@ -903,6 +905,46 @@ imported by nothing; route `/evidence-package` is 404; it fetches the same dead 
 README notes `/evidence` is already taken by a different product. It is another lane's port, so
 this bundle records it and deletes nothing.
 
+## WP-6 — the funnel measured, and the sentence beside it that was false
+
+The number WP-6 exists to produce, read from runtime:
+
+    /api/revenue  one_number   all_time 0 · last_30d 0 · settlements 0    status MEASURED
+    /api/revenue  settled_usdc null                                       status UNMEASURED
+    /api/receipts/latest       UNPUBLISHED, 0 items
+
+**Zero real buyers, ever** — and the surface publishes it as a MEASURED zero rather than a blank,
+with `one_number` defined as distinct payer wallets *excluding* the ones we control. That is the
+correct construction and nothing here tries to improve the number.
+
+**The defect was the prose beside it.** `counters.json` told the public *"SKU-1. No live settle
+path (x402 is fail-closed, mode:mock)"* and *"Null until X402_PAY_TO + a facilitator are
+provisioned"*, and `/api/revenue` published both verbatim. Neither was true:
+
+    /.well-known/x402.json              mode "live"
+    /api/request-attestation            complete Base/USDC 402 challenge, real payTo 0x2126…ae31
+    functions/api/_x402.ts              calls /verify THEN /settle since 2026-09-02
+    /api/revenue provisioning.kv_bound  true
+
+The facilitator was provisioned 2026-09-03. **`contract.null_rule` in `revenue.ts` had already
+been corrected** to derive its wording from `railMode(env)`, carrying a comment that a stale
+comment about a money rail is worse than none — **and the SKU note one field below still said
+mock.** The fix was applied to the sentence someone was looking at; its neighbour went on telling
+buyers the rail was unbuilt.
+
+*"Null because nothing has settled"* and *"null because there is no rail"* are opposite facts
+about a business, and it was publishing the wrong one. Four strings corrected in `counters.json`,
+no count touched.
+
+`capabilities/revenue-rail-truth.test.mjs` fails whenever a revenue counter denies the rail while
+`/.well-known/x402.json` reports it live, and asserts `one_number` stays MEASURED rather than
+quietly going blank. It strips **quoted** spans before reading a note, so a correction may quote
+what it replaced — five guards in this lane matched their own documentation of a fix, and the
+false-positive case is tested explicitly, not assumed.
+
+**Ownership note:** the rail itself is TUI 1's. Nothing here changes a count, a payment path or
+any rail behaviour — only the descriptions that contradicted measured runtime.
+
 ## Open owner gates, in priority order
 
 1. **Deploy** — `brand-gate` was failing on master; this bundle fixes it. Nothing ships until
@@ -925,8 +967,8 @@ this bundle records it and deletes nothing.
 **The "bare worktree" claim is verified, not asserted.** `git archive HEAD` into an empty
 directory — **zero `node_modules`** — then `node --test capabilities/*.test.mjs`:
 
-    offline                     97 passed, 0 failed
-    every LIVE_* flag set       97 passed, 0 failed
+    offline                     101 passed, 0 failed
+    every LIVE_* flag set       101 passed, 0 failed
 
 Every capability guard imports `node:` builtins and relative paths only. That matters for a
 reviewer: you can check this bundle's evidence from a clean export, without trusting my
