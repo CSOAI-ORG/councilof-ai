@@ -25,6 +25,34 @@ Check this first: `git diff --stat origin/master..HEAD` must show ~55 files and 
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
+## ⚠⚠ LIVE ON PRODUCTION RIGHT NOW — verified 2026-09-05
+
+Not "could ship". **Is shipping.** Fetched from https://councilof.ai this morning:
+
+**1. The RETRACTED claim is live.** `https://councilof.ai/games-charter` serves:
+
+> "Charter is one of the 15 games wired to the 33-agent **BFT** council."
+
+BFT was retracted 2026-07-29 (n_eff ≈ 1.21/3). Another lane purged it from eight game pages;
+**this one escaped because `brand-gate` exempts any filename containing `charter`** — the
+filename hole documented below. The gate passed it, so it deployed. This is that hole with a
+live consequence, not a hypothetical.
+
+**2. The false signing claims are live on all eight game pages.** Each of `/tournament`,
+`/judge`, `/civic`, `/swarm`, `/council-town`, `/incident`, `/games-charter`,
+`/games-compliance` serves two of:
+
+> "Every turn emits a signed card."
+> "Every interaction emits a 3KB signed card."
+
+Each page is ~1.7KB of static HTML with **zero `<script>`, zero `<canvas>`, zero `<button>`**.
+There is no turn and nothing to sign. For an estate whose promise is that a signature is
+evidence, this is the claim it most cannot make — and it is on eight public pages today.
+
+**This bundle fixes both.** The page copy is corrected and
+`capabilities/game-page-claims.test.mjs` catches the class, with no filename allowlist, so it
+sees what brand-gate exempts.
+
 ## ⚠ READ THIS FIRST — master could not ship, and this bundle fixes it
 
 `node scripts/brand-gate.mjs dist/client` — **step 3 of the four-step deploy pipeline in
