@@ -32,3 +32,7 @@ stated, not advertised)
 3. A doc without a door = staged (marked STAGED-UNSIGNED/NOT-DELIVERABLE).
 4. Live prices only at the 402 — never in docs, pages or indexes.
 5. Any row added must name its proof (probe command) in the doc.
+
+## Live truth (16:55Z)
+- /pricing-free answers **200 but is WITHDRAWN under evidence review** (estate guard: 'This legacy page is temporarily withdrawn… until each claim has a source, scope, date, and evidence state'). Its wiring test remains the estate contract; the BUYER rail is /pricing (workspace, 'A grade is never sold') and /api/x402 (metered link in the governor's master, correct).
+- /pricing-free references inside this index are therefore flagged WITHDRAWN-UNDER-REVIEW, never 'advertised'.
