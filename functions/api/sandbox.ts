@@ -1,7 +1,6 @@
 /**
- * POST /api/sandbox — code execution sandbox.
- *
- * Every sandbox result is signed + attested.
+ * sandbox — retired until its response can be derived from current evidence.
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>
@@ -14,12 +13,24 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestPost: PagesFunction = async ({ request }) => {
-  const body = await request.json().catch(() => ({}));
+export const onRequestGet: PagesFunction = async () => {
   return json({
-    schema: "csoai.sandbox/0.1",
-    as_of: new Date().toISOString(),
-    received: body,
-    note: "Code execution sandbox. Every result is signed + attested.",
-  });
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/sandbox",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no sandbox runtime; a description is not execution",
+  }, 503);
+};
+
+export const onRequestPost: PagesFunction = async () => {
+  return json({
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/sandbox",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no sandbox runtime; a description is not execution",
+  }, 503);
 };
