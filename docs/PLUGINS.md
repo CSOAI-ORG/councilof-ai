@@ -19,8 +19,8 @@ The two things every platform surface must be able to show:
 
 | Surface | State | Where | Notes |
 |---|---|---|---|
-| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/` (7 tools: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion) | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
-| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`, tool catalogue `functions/mcp/gspc-tools.json` (same 7 names) | shares `functions/_lib/cardVerify.ts` |
+| MCP server, stdio (`npm csoai-gspc-mcp`) | REAL | `mcp/gspc-server/` (the 7 free reads: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion) | zero deps; `verify-card.mjs` pins card-attestation-1; 404 leaf = INVALID |
+| MCP server, HTTP (`POST https://councilof.ai/mcp`) | REAL | `functions/mcp/[[path]].ts`; free definitions in `functions/mcp/gspc-tools.json` (the same 7), paid ones in `functions/mcp/_paid.ts` | **`tools/list` serves 11**: the 7 free reads plus `commission_card` `art50_marking_evidence` `rwa_evidence` `receipts_batch` over the x402 rail. A 402 challenge is not settlement. `witness_hash` exists but is deliberately NOT advertised here — `/api/witness` returns 503 `QUARANTINED_PRE_RELEASE`. Shares `functions/_lib/cardVerify.ts`. |
 | Claude Code / Grok plugin | REAL (separate repo) | marketplace `CSOAI-ORG/council-of-ai-grok`: `plugin.json`, `.claude-plugin/marketplace.json`, skills `council` `gspc` `pack` `sign-artifact` `verify-card`, commands, agent `measurement-auditor`, `verifier/gspc-verify.mjs` | in this repo only the pointer: `plugins/gspc/{plugin.json,.mcp.json,README.md}` (→ `https://councilof.ai/mcp`) and `.grok-plugin/marketplace.json` |
 | Offline verifier package | REAL | `packages/gspc-card-verifier/` (37/37 under `node --test`), bundled to `public/verifier/gspc-verify.mjs` | profile-driven; refuses out-of-domain numbers |
 | Browser verify page | REAL | `/gspc-verify` → `client/src/lib/recordVerify.ts` → `functions/_lib/cardVerify.ts` | `client/src/lib/cardVerify.ts` is an older twin kept in step by `cardVerifyTwin.test.ts` |
