@@ -27,12 +27,20 @@ describe("mcp-directories states come from probing the directory, not our own fi
     }
   });
 
-  it("allows UNKNOWN and does not let it collapse into NOT_LISTED", () => {
+  it("allows UNKNOWN, and never lets a dead probe be published as absence", () => {
     const states = new Set(doc.directories.map((r) => r.state));
     for (const s of states) expect(["LISTED", "NOT_LISTED", "UNKNOWN"]).toContain(s);
-    // pulsemcp's documented API answers 410 — that is unknown, not absent
-    const pulse = doc.directories.find((r) => r.id === "pulsemcp");
-    expect(pulse?.state).toBe("UNKNOWN");
+    // The FIRST version of this case pinned pulsemcp to UNKNOWN. That froze a transient state as
+    // an invariant: UNKNOWN meant "their API answers 410 and we have not checked another way",
+    // and the moment their sitemap answered it (213 csoai server URLs) the row became LISTED and
+    // this test failed for being right. The rule is about the SHAPE of a claim, not a row's value.
+    for (const r of doc.directories) {
+      if (r.state !== "NOT_LISTED") continue;
+      expect(
+        /410|Gone|no longer exists|unreachable/i.test(r.evidence),
+        `${r.id}: NOT_LISTED must not rest on a dead endpoint — that is UNKNOWN`,
+      ).toBe(false);
+    }
   });
 
   it("records the two rows that were published wrong", () => {
