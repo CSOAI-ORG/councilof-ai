@@ -14,7 +14,7 @@ import os
 import sys
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -118,13 +118,32 @@ def load_only_ids(path: Path | None) -> set[str] | None:
     return {ln.strip() for ln in p.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")}
 
 
-def load_dead_slugs(path: Path | None) -> set[str]:
-    """Persistent dead-slug set (jsonl rows {id, reason, axis, as_of}). Missing file → empty."""
+def load_dead_slugs(path: Path | None, max_age_days: int | None = None) -> set[str]:
+    """Persistent dead-slug set (jsonl rows {id, reason, axis, as_of}). Missing file → empty.
+
+    A dead entry EXPIRES. "no live inference provider" is a fact about the day it was
+    written, not about the model: providers add models, and hf-coverage.json already
+    reports in_dead_slugs_but_reachable: 1 -- an id this file calls dead that answers
+    today. Without an expiry every wrong entry is coverage removed permanently, and it
+    gets worse as the file grows, because a skipped model is never re-probed and so can
+    never prove itself alive again.
+
+    So the FILE is an append-only log and the SKIP SET is time-filtered: an entry older
+    than max_age_days is dropped from the set and re-probed, while its row stays on disk
+    as history. A row with no readable as_of is treated as EXPIRED rather than eternal --
+    it costs one probe, and if it is still dead the next run writes it back with a real
+    stamp. Unbounded trust in an undated claim is how a stale list becomes permanent.
+
+    max_age_days=None keeps every entry, which is the old behaviour.
+    """
     if path is None:
         return set()
     p = Path(path)
     if not p.is_file():
         return set()
+    cutoff = None
+    if max_age_days is not None:
+        cutoff = datetime.now(timezone.utc) - timedelta(days=max_age_days)
     out: set[str] = set()
     for ln in p.read_text(encoding="utf-8").splitlines():
         if not ln.strip():
@@ -133,8 +152,19 @@ def load_dead_slugs(path: Path | None) -> set[str]:
             o = json.loads(ln)
         except Exception:
             continue
-        if o.get("id"):
-            out.add(str(o["id"]))
+        if not o.get("id"):
+            continue
+        if cutoff is not None:
+            raw = str(o.get("as_of") or "")
+            try:
+                seen = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+                if seen.tzinfo is None:
+                    seen = seen.replace(tzinfo=timezone.utc)
+            except ValueError:
+                continue  # undated → expired → re-probe
+            if seen < cutoff:
+                continue  # stale → re-probe
+        out.add(str(o["id"]))
     return out
 
 
@@ -756,13 +786,14 @@ def mill(
     generative_only: bool = True,
     only_ids: set[str] | None = None,
     dead_path: Path | None = None,
+    dead_max_age_days: int | None = None,
     probe_first: bool = False,
     probe_fetch=None,
     inflight_path: Path | None = None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
-    dead = load_dead_slugs(dead_path)
+    dead = load_dead_slugs(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
     picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -883,6 +914,7 @@ def main() -> int:
     ap.add_argument("--items", type=int, default=30, help="items per (model,axis); n<30 unquotable")
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
+    ap.add_argument("--dead-max-age-days", type=int, default=None, help="re-probe a dead slug older than this (default: never expire). An undated row counts as expired.")
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     args = ap.parse_args()
@@ -898,6 +930,7 @@ def main() -> int:
         items_cap=args.items,
         only_ids=only,
         dead_path=Path(args.dead) if args.dead else None,
+        dead_max_age_days=args.dead_max_age_days,
         probe_first=args.probe_first,
         inflight_path=Path(args.inflight) if args.inflight else None,
     )
