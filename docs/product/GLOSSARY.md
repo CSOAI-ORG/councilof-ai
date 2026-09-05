@@ -46,7 +46,6 @@ emitted families (top occurrences):
 | `csoai.white-label-findings-index/0.1` | 1 | (see source) |
 | `csoai.platforms-registered/0.1` | 1 | (see source) |
 | `csoai.x402-engine-skus-round2/0.1` | 1 | (see source) |
-| `csoai.hf-probe-results-1000/0.1` | 1 | (see source) |
 | `csoai.estate-crypto-inventory/0.1` | 1 | (see source) |
 | `csoai.financial-measure-run/0.1` | 1 | (see source) |
 | `csoai.coverage-register/0.1` | 1 | (see source) |
@@ -59,6 +58,7 @@ emitted families (top occurrences):
 | `csoai.x402-discovery-fact/0.1` | 1 | (see source) |
 | `csoai.x402/0.2` | 1 | the payment rail door (x402 v2; scheme exact; network Base) |
 | `csoai.white-label-risk-register/0.1` | 1 | (see source) |
+| `csoai.xrpl-two-way-check/0.1` | 1 | (see source) |
 
 ## 2. Measurement states (on cards, never invented)
 
