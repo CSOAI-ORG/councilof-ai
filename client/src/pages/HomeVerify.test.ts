@@ -89,7 +89,13 @@ describe("homepage is chat + GSPC list plus the estate", () => {
 describe("header restores master menu and Council OS", () => {
   it("keeps Verify · Get measured · Board · Council OS · Tools", () => {
     expect(header).toContain('name: "Verify"');
-    expect(header).toContain('name: "Get measured"');
+    // The PRIMARY_LINKS entry named "Get measured" was REMOVED on purpose: it rendered
+    // beside the green "Get measured" CTA, same label, both to /assess (duplicate #2 of 3,
+    // measured live at 1280x800 as "Get measured" x3). The destination is what this test
+    // means to pin, and the CTA carries it at every breakpoint including mobile — so assert
+    // the label and the href, not the nav-entry literal that encoded the duplicate.
+    expect(header).toContain('Get measured');
+    expect(header).toContain('/assess');
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
