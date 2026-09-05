@@ -54,6 +54,18 @@ const LEDGER = {
         "CORRECTED IN SOURCE — hub-cards under PR #1294, dashboard/stats and hf-spaces under PR #1297, recorded as issue #1295. The wrong figures were live until those deploy. Whether the hub-cards retry restores the two dark indexes is not yet established: it cannot be tested from outside the Worker, and if they stay dark the endpoint now reports that instead of a flattering subtotal.",
     },
     {
+      id: "C-2026-0905-04",
+      date: "2026-09-05",
+      what_was_wrong:
+        "Six public manifests under /interop advertised 36 endpoint references that do not exist: custom-gpt-bridge.json told Custom GPTs to POST /api/measure, /api/verify and /api/xrpl/evidence; chatgpt-features-finish.json listed 14 'features' (/api/voice, /api/vision, /api/calendar, /api/email, ...) each with an endpoint; deep-research-integration.json described a four-endpoint /api/research pipeline; persona-tests.json, chatgpt-skills.json and anchor.json cited /api/anchor, /api/insurance/attest, /api/xrpl/rlusd, /api/xrpl/usdc and /api/scheduler. Every one answered HTTP 404 to GET and POST on 2026-09-05. All six were written by two generators under scripts/badger/ that assemble manifests from a wish-list and never probe a route.",
+      how_caught:
+        "A top-down pass on 2026-09-05 found /api/verify returning 404 and followed the references: three files first, then every /api/ path in the six generated manifests, each probed live with GET and POST.",
+      fix:
+        "Each artifact now carries claims_audit_2026-09-05 naming the dead paths; every dead reference is marked NOT_IMPLEMENTED in place, and the three Custom GPT actions a client would actually call were removed and listed under actions_removed. Both generators now exit at main() with the reason and cannot regenerate the fiction. The rule (an endpoint advertised outward must answer non-404 live) is the one scripts/outward-claims-guard.mjs enforces post-deploy.",
+      status:
+        "CORRECTED IN ARTIFACT AND PRODUCER. Whether any Custom GPT or agent acted on the dead manifests is unknown; no request log is kept for those paths. Nothing was ever measured, signed or anchored through them.",
+    },
+    {
       id: "C-2026-0905-01",
       date: "2026-09-05",
       what_was_wrong:

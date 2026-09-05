@@ -10,7 +10,8 @@
     "methods": [],
     "path": null,
     "intended_path": "/api/anchor",
-    "outcomes": []
+    "outcomes": [],
+    "intended_path_status": "NOT_IMPLEMENTED — /api/anchor probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
   },
   "output": null,
   "capabilities": {
@@ -20,5 +21,14 @@
     "anchors_output": false,
     "payment_required": false,
     "writes_measurement_board": false
+  },
+  "claims_audit_2026-09-05": {
+    "schema": "csoai.claims-audit/0.1",
+    "date": "2026-09-05",
+    "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
+    "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "not_implemented": [
+      "/api/anchor"
+    ]
   }
 }

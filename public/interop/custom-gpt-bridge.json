@@ -1,7 +1,7 @@
 {
   "schema": "csoai.custom-gpt-bridge/0.1",
   "as_of": "20260905T045749Z",
-  "principle": "Every Custom GPT becomes a csoai:space \u2014 hosted, signed, x402-priced.",
+  "principle": "Every Custom GPT becomes a csoai:space — hosted, signed, x402-priced.",
   "format": "openai.custom-gpt.v1",
   "gpts": [
     {
@@ -14,20 +14,7 @@
         "Verify a card",
         "Anchor a card to OTS"
       ],
-      "actions": [
-        {
-          "name": "measure",
-          "description": "Run 22-axis measurement on a model",
-          "endpoint": "https://councilof.ai/api/measure",
-          "method": "POST"
-        },
-        {
-          "name": "verify",
-          "description": "Verify a signed card",
-          "endpoint": "https://councilof.ai/api/verify",
-          "method": "POST"
-        }
-      ]
+      "actions": []
     },
     {
       "name": "XRPL evidence card",
@@ -38,14 +25,7 @@
         "Show Ripple's reserves",
         "Verify a USDC card"
       ],
-      "actions": [
-        {
-          "name": "build_xrpl_card",
-          "description": "Build an evidence card for an XRPL issuer",
-          "endpoint": "https://councilof.ai/api/xrpl/evidence",
-          "method": "POST"
-        }
-      ]
+      "actions": []
     },
     {
       "name": "EU AI Act Art 50 attestation",
@@ -79,5 +59,29 @@
     "csoai:evidence",
     "csoai:inference",
     "csoai:bench"
-  ]
+  ],
+  "claims_audit_2026-09-05": {
+    "schema": "csoai.claims-audit/0.1",
+    "date": "2026-09-05",
+    "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
+    "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "not_implemented": [],
+    "actions_removed": [
+      {
+        "action": "measure",
+        "endpoint": "/api/measure",
+        "why": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
+      },
+      {
+        "action": "verify",
+        "endpoint": "/api/verify",
+        "why": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
+      },
+      {
+        "action": "build_xrpl_card",
+        "endpoint": "/api/xrpl/evidence",
+        "why": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
+      }
+    ]
+  }
 }

@@ -30,10 +30,10 @@
         "Verify the card offline"
       ],
       "endpoints_to_test": [
-        "/api/measure",
+        "/api/measure — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
         "/api/x402?sku=engine-gspc",
-        "/api/anchor",
-        "/api/verify"
+        "/api/anchor — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
+        "/api/verify — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
       ],
       "outcome": "Can measure + sign + anchor + verify any model in 1 minute"
     },
@@ -47,7 +47,7 @@
         "Pay for attestations via x402"
       ],
       "endpoints_to_test": [
-        "/api/insurance/attest",
+        "/api/insurance/attest — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
         "/api/x402?sku=insurance-pack",
         "/api/evidence-bundle"
       ],
@@ -63,10 +63,10 @@
         "Self-custody the verification key"
       ],
       "endpoints_to_test": [
-        "/api/xrpl/evidence",
-        "/api/xrpl/rlusd",
-        "/api/xrpl/usdc",
-        "/api/anchor"
+        "/api/xrpl/evidence — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
+        "/api/xrpl/rlusd — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
+        "/api/xrpl/usdc — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
+        "/api/anchor — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
       ],
       "outcome": "Can verify + anchor + self-custody XRPL attestation in 1 minute"
     },
@@ -82,17 +82,32 @@
       "endpoints_to_test": [
         "https://zenodo.org/records/21991104",
         "/axes-deep",
-        "/api/verify",
+        "/api/verify — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)",
         "/api/x402?sku=bench"
       ],
       "outcome": "Can cite + read + verify + buy measurement in 1 minute"
     }
   ],
   "test_runners": [
-    "test_1_regulator.py \u2014 EU AI Office",
-    "test_2_ai_lab.py \u2014 Anthropic",
-    "test_3_insurance.py \u2014 Munich Re",
-    "test_4_crypto_fund.py \u2014 Paradigm",
-    "test_5_wealth_fund.py \u2014 Norwegian Oil Fund"
-  ]
+    "test_1_regulator.py — EU AI Office",
+    "test_2_ai_lab.py — Anthropic",
+    "test_3_insurance.py — Munich Re",
+    "test_4_crypto_fund.py — Paradigm",
+    "test_5_wealth_fund.py — Norwegian Oil Fund"
+  ],
+  "claims_audit_2026-09-05": {
+    "schema": "csoai.claims-audit/0.1",
+    "date": "2026-09-05",
+    "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
+    "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "not_implemented": [
+      "/api/anchor",
+      "/api/insurance/attest",
+      "/api/measure",
+      "/api/verify",
+      "/api/xrpl/evidence",
+      "/api/xrpl/rlusd",
+      "/api/xrpl/usdc"
+    ]
+  }
 }

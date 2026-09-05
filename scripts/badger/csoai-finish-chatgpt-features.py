@@ -358,6 +358,13 @@ def build_finish_manifest() -> dict:
 
 
 def main() -> None:
+    raise SystemExit(
+        "RETIRED 2026-09-05: this generator emitted 36 endpoint references that answer 404 live "
+        "(/api/measure, /api/verify, /api/research, /api/xrpl/evidence, /api/voice, ...). It wrote claims "
+        "about routes nobody built into public/interop/*.json, which strangers and Custom GPTs read. "
+        "It must not run again until every endpoint it emits is probed live and non-404 before the write "
+        "(see scripts/outward-claims-guard.mjs for the rule). Corrections ledger C-2026-0905-04."
+    )
     print("=== FINISH WHAT CHATGPT HAS LIVE ===")
     print()
 
