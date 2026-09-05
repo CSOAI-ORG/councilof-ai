@@ -85,9 +85,39 @@
       "name": "Glama MCP",
       "url": "https://glama.ai/mcp",
       "state": "LISTED",
-      "evidence": "367 csoai connector URLs in Glama's OWN sitemap (198,105 URLs across 19 sections), of the form /mcp/connectors/io.github.CSOAI-ORG/<name> — the same names the official MCP registry carries, so Glama appears to mirror that registry. Sampled listings resolve 200 and their tool counts match the published source (iso-42001-ai-mcp 10 declared = 10 @mcp.tool; soc2-compliance-ai-mcp 6 = 6). Their API needs auth (401), so the sitemap is the authoritative public surface. Earlier evidence for this row cited '85 csoai links' from a rendered page; 63 of those were the query echoed back in facet URLs, and the rendered facet showed only 20.",
-      "probe": "curl -s https://glama.ai/sitemap.xml, follow every <loc> section, collect <loc> values matching /csoai/i -> 367; then per listing compare the rendered 'N tools' against @mcp.tool decorators in that package's PyPI sdist",
-      "surface": "sitemap"
+      "evidence": "368 csoai URLs across Glama's 19 sitemap sections, in TWO shapes: 317 under /mcp/servers/CSOAI-ORG/<name> and 51 under /mcp/connectors/io.github.CSOAI-ORG/<name>. All 51 connector pages return 200. 40 of them carry a Status field and every one reads Unhealthy, last tested 2026-09-05 19:11-19:18 UTC. The remaining 11 are not servers at all — they are per-TOOL pages under the Council of AI GSPC connector.",
+      "probe": "curl -sL https://glama.ai/sitemap.xml | grep -oE '<loc>[^<]+</loc>' | sed 's/<[^>]*>//g' | xargs -n1 curl -sL | grep -oiE '<loc>[^<]*CSOAI[^<]*</loc>' | sed 's/<[^>]*>//g'",
+      "surface": "sitemap",
+      "health": {
+        "verdict": "EVERY CONNECTOR GLAMA HEALTH-CHECKS IS UNHEALTHY",
+        "connector_pages": 51,
+        "showing_a_status": 40,
+        "unhealthy": 40,
+        "healthy": 0,
+        "last_tested_utc": "2026-09-05 19:11 to 19:18",
+        "detail": "40 is not a coincidence: exactly 40 of our 330 registry entries advertise a callable remote, and mcp-registry-resolution.json measures that none of the 40 can be reached (39 name api.meok.ai, which has no DNS record; the 40th is councilof.ai/mcp, which answers 405 to POST under B37). Glama reaches the same verdict from the outside, on its own schedule, and PUBLISHES it. This is a third-party surface agreeing with our own measurement — and it means the failure is not private: anyone browsing Glama sees 40 CSOAI connectors marked Unhealthy.",
+        "probe": "curl -sL https://glama.ai/mcp/connectors/io.github.CSOAI-ORG/a2a-governance-bridge-mcp | grep -o 'Unhealthy'"
+      },
+      "tool_counts": {
+        "verdict": "TRUE",
+        "declared": 11,
+        "served_by_the_door": 11,
+        "names": [
+          "art50_marking_evidence",
+          "board_totals",
+          "commission_card",
+          "get_axis",
+          "get_card",
+          "get_root",
+          "list_cards",
+          "receipts_batch",
+          "rwa_evidence",
+          "verify_card",
+          "verify_inclusion"
+        ],
+        "detail": "Glama publishes one page per tool under the Council of AI GSPC connector: 11 pages, and the 11 names are IDENTICAL to the set the door serves (7 free + 4 paid), with nothing extra and nothing missing. This is the only directory whose tool count is exactly right. It is also the only one that advertises the four x402-metered tools — Smithery's accurate listing (csoai/gspc-mcp) shows the free seven and hides the paid four, and its other listing (csoai/gspc) advertises four tools the door refuses by name.",
+        "probe": "compare the /mcp/connectors/ sitemap leaves that are tool pages against jq -r '.tools[].name' functions/mcp/{gspc,paid}-tools.json"
+      }
     },
     {
       "id": "pulsemcp",
@@ -153,7 +183,8 @@
     "2026-09-05: smithery was published NOT_LISTED on the evidence 'zero csoai mentions on a Playwright-RENDERED search page'. WRONG. Smithery's own registry API returns two servers in the csoai namespace. The rendered homepage search and the registry API are different surfaces, and the page not showing a result is not the registry lacking one. A rendered check is necessary where there is no API and is NOT sufficient where there is one — query the API.",
     "2026-09-05: mcp-so and pulsemcp both sat at UNKNOWN because their APIs were missing or dead (404 / 410). A SITEMAP IS A DIRECTORY'S OWN INDEX OF WHAT IT LISTS and answered both: mcp.so 0 of 27,929, pulsemcp 213 of 23,833. Reach for the sitemap before recording UNKNOWN — and note the rendered mcp.so search showed '2 csoai mentions' that the sitemap proves were query echo.",
     "2026-09-05: the smithery row's own probe went stale without the listing changing. `?q=csoai&pageSize=50` returned csoai/gspc and 49 unrelated servers but NOT csoai/gspc-mcp, which is alive and returns 200 with seven tools at its detail endpoint. A search index and a detail endpoint are different surfaces, and a row whose evidence says '2 servers' must be probed where both are visible. Had the row been re-derived from that search it would have recorded a delisting that never happened.",
-    "2026-09-05: csoai/gspc advertises four tools the door does not serve, two of which it explicitly refuses by name. A directory listing is not self-correcting — nothing on Smithery re-reads our tool definitions, so a tool dropped here stays advertised there until someone re-publishes. Dropping a tool is therefore a DISTRIBUTION change, not only a code change."
+    "2026-09-05: csoai/gspc advertises four tools the door does not serve, two of which it explicitly refuses by name. A directory listing is not self-correcting — nothing on Smithery re-reads our tool definitions, so a tool dropped here stays advertised there until someone re-publishes. Dropping a tool is therefore a DISTRIBUTION change, not only a code change.",
+    "2026-09-05: this row was published claiming '367 csoai connector URLs shaped /mcp/connectors/...'. The SHAPE was wrong. Glama carries 368 csoai URLs in two different shapes — 317 /mcp/servers/CSOAI-ORG/<name> and only 51 /mcp/connectors/io.github.CSOAI-ORG/<name> — and 11 of those 51 are per-tool pages, not servers. A count taken across a sitemap without reading the paths it counted collapsed three distinct kinds of page into one number. A guessed /mcp/servers/io.github.CSOAI-ORG/<name> URL 404s, which is a 404 on a path nobody publishes and proves nothing; the sitemap publishes both real shapes."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
