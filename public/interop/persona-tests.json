@@ -1,0 +1,98 @@
+{
+  "schema": "csoai.persona-tests/0.1",
+  "as_of": "20260905T044938Z",
+  "principle": "Test as 5 different end-users. Each has different needs.",
+  "personas": [
+    {
+      "name": "Regulator (EU AI Office)",
+      "needs": [
+        "Verify compliance with EU AI Act Art 50",
+        "Read the GSPC board",
+        "See the signed compliance card",
+        "Cite the DOI in a regulatory filing",
+        "Check the EU AI Act attestation in /signed/"
+      ],
+      "endpoints_to_test": [
+        "/api/eu-ai-act/art50",
+        "/api/gspc",
+        "/signed/",
+        "/.well-known/eu-ai-act.json"
+      ],
+      "outcome": "Can verify EU AI Act Art 50 compliance in 1 minute"
+    },
+    {
+      "name": "AI lab researcher (Anthropic)",
+      "needs": [
+        "Measure Claude on the 22 axes",
+        "Get a signed card for the measurement",
+        "Compare Claude vs GPT-4 vs Gemini",
+        "Anchor the measurement to OTS",
+        "Verify the card offline"
+      ],
+      "endpoints_to_test": [
+        "/api/measure",
+        "/api/x402?sku=engine-gspc",
+        "/api/anchor",
+        "/api/verify"
+      ],
+      "outcome": "Can measure + sign + anchor + verify any model in 1 minute"
+    },
+    {
+      "name": "Insurance company (Munich Re)",
+      "needs": [
+        "Attest AI risk for an underwriting decision",
+        "Get a 22-axis GSPC risk card",
+        "Use the card in an insurance policy",
+        "Cite the DOI in a regulatory filing",
+        "Pay for attestations via x402"
+      ],
+      "endpoints_to_test": [
+        "/api/insurance/attest",
+        "/api/x402?sku=insurance-pack",
+        "/api/evidence-bundle"
+      ],
+      "outcome": "Can attest + cite + pay for risk in 1 minute"
+    },
+    {
+      "name": "Crypto fund (Paradigm)",
+      "needs": [
+        "Verify XRPL issuer attestation",
+        "Read the issuer's 22-axis measurement",
+        "Anchor the attestation to OTS + Bitcoin",
+        "Verify the anchor offline",
+        "Self-custody the verification key"
+      ],
+      "endpoints_to_test": [
+        "/api/xrpl/evidence",
+        "/api/xrpl/rlusd",
+        "/api/xrpl/usdc",
+        "/api/anchor"
+      ],
+      "outcome": "Can verify + anchor + self-custody XRPL attestation in 1 minute"
+    },
+    {
+      "name": "Sovereign wealth fund (Norwegian Oil Fund)",
+      "needs": [
+        "Cite the DOI in a fund allocation",
+        "Read the methodology paper",
+        "Verify the methodology is reproducible",
+        "Trust the measurement (signed + attested + anchored)",
+        "Buy GSPC measurement for AI in their portfolio"
+      ],
+      "endpoints_to_test": [
+        "https://zenodo.org/records/21991104",
+        "/axes-deep",
+        "/api/verify",
+        "/api/x402?sku=bench"
+      ],
+      "outcome": "Can cite + read + verify + buy measurement in 1 minute"
+    }
+  ],
+  "test_runners": [
+    "test_1_regulator.py \u2014 EU AI Office",
+    "test_2_ai_lab.py \u2014 Anthropic",
+    "test_3_insurance.py \u2014 Munich Re",
+    "test_4_crypto_fund.py \u2014 Paradigm",
+    "test_5_wealth_fund.py \u2014 Norwegian Oil Fund"
+  ]
+}
