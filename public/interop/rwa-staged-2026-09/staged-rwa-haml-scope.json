@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.rwa-staged/0.1",
+  "as_of": "2026-09-05T13:18:50.513Z",
+  "mined_from": "os-production:harness/rwa-attest/cards/legacy-wt-22/haml_scope.json",
+  "source_sha256": "99d98647c654fe002a2ae145cd17ccd10af0a6afd6510726ad1dea92a26f991d",
+  "sig_ed25519": null,
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "The source card carried an Ed25519 signature from kid csoai-rwa-attest-8f516ea973, whose key bytes are NOT in https://councilof.ai/.well-known/did.json (no anchored key matches). An unanchored signer is UNCHECKABLE, so the signature is dropped rather than republished. The OIDC board-sign path is the only signer.",
+  "not_a_grade": true,
+  "not_measured": true,
+  "payload": {
+    "schema": "csoai.rwa-attest-card/0.1",
+    "target": "haml_scope",
+    "asset": "Hamilton Lane SCOPE (Senior Credit Opportunities)",
+    "chain": "evm",
+    "public_address": "pending",
+    "evm_contract": "0x",
+    "stated_aum": "$10K min",
+    "aum_source": "Securitize; Hamilton Lane strategic investor",
+    "prestige": "Hamilton Lane",
+    "tier": 2,
+    "governance_measurement": "UNMEASURED (no GSPC bank for this issuer yet; honest, never scored)",
+    "what_it_never_proves": "endorsement, issuer participation, credit rating, or investment advice",
+    "rails": [
+      "xrpl-memo",
+      "xrpl-credential",
+      "eas"
+    ],
+    "generated": "2026-08-25T15:53:48Z",
+    "measurement_not_certification": true,
+    "pod_attestation": "did:web:csoai.org#board-attestation-1"
+  }
+}

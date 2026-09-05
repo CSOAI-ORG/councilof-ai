@@ -1,0 +1,76 @@
+{
+  "schema": "csoai.games-status/0.3",
+  "as_of": "2026-09-05T192000Z",
+  "source": "https://councilof.ai/interop/games-live.json",
+  "n_games": 10,
+  "rows": [
+    {
+      "slug": "council-town",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "council-minds",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "hive-model",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "arena",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "playbooks",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "course-player",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "pdca-simulator",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "swarm",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "civic",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    },
+    {
+      "slug": "tournament",
+      "url": null,
+      "status": "no-200-page",
+      "evidence": "https://councilof.ai/interop/games-arcade.json"
+    }
+  ],
+  "principle": "Page reachability per catalogue slug at retrieval; catalogue says PRACTICE_ONLY / writes_board false.",
+  "arcade_json": {
+    "url": "https://councilof.ai/interop/games-arcade.json",
+    "status": 200,
+    "bytes": 3779,
+    "entries": 8
+  },
+  "conclusion": "Games are rendered by the dashboard arcade (SPA) from games-arcade.json; no static /games/<slug> pages exist. PRACTICE_ONLY + writes_board false per catalogue."
+}

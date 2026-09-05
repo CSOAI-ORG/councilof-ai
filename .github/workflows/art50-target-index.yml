@@ -1,0 +1,50 @@
+name: art50-target-index
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  regen:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - name: Derive art50-target-index from the live provider-diff feed
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request, hashlib
+          from datetime import datetime, timezone
+          req = urllib.request.Request("https://councilof.ai/api/feeds/provider-diff", headers={"User-Agent":"CSOAI-regen/0.1"})
+          d = json.loads(urllib.request.urlopen(req, timeout=30).read())
+          targets = d.get("targets", [])
+          art = sorted([t for t in targets if "art50" in (t.get("id") or "").lower() or "marking" in (t.get("surface") or "").lower()], key=lambda t: t.get("id") or "")
+          out = {
+            "schema": "csoai.art50-target-index/0.1",
+            "as_of": datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+            "source": "https://councilof.ai/api/feeds/provider-diff (derived)",
+            "n_targets": d.get("n_targets"),
+            "n_ok": sum(1 for t in targets if t.get("state") == "OK"),
+            "n_uncheckable": sum(1 for t in targets if t.get("state") == "UNCHECKABLE"),
+            "art50_marking_targets": [
+              {"id": t.get("id"), "provider": t.get("provider_name"), "url": t.get("url"),
+               "state": t.get("state"), "norm_sha256": (t.get("norm_sha256") or "")[:16]}
+              for t in art
+            ],
+            "principle": "Derived inputs for the Art 50 marking-evidence door (402 per doctor). Reachability + hashes only; no detection claim.",
+          }
+          open("public/interop/art50-target-index.json", "w").write(json.dumps(out, indent=2))
+          print("derived n_ok:", out["n_ok"], "art50 targets:", len(art))
+          PY
+      - name: Commit + push (Actions pattern — server-side publish)
+        run: |
+          git config user.name "CSOAI-Bot"
+          git config user.email "bot@csoai.org"
+          git add public/interop/art50-target-index.json
+          if git diff --cached --quiet; then echo "no change"; else
+            git commit -m "auto(art50-index): regenerate from live provider-diff"
+            git push origin master
+          fi

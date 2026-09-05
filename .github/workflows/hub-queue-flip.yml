@@ -48,15 +48,28 @@ jobs:
           mkdir -p flip-in flip-out
           curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o flip-in/queue.jsonl
           curl -fsSL -A "Mozilla/5.0 csoai-hub-queue-flip" https://councilof.ai/.well-known/did.json -o flip-in/did.json
+          # The PUBLISHED index, so the flip can tell whether the one it builds is new.
+          # -f is deliberately omitted: a missing index must leave the file absent (UNKNOWN,
+          # which uploads), never abort the run and never look like an empty index.
+          curl -sSL "https://huggingface.co/datasets/csoai/gspc-hub-cards/resolve/main/mill-cards/INDEX.jsonl" \
+            -o flip-in/PREV-INDEX.jsonl || rm -f flip-in/PREV-INDEX.jsonl
+          if [ -s flip-in/PREV-INDEX.jsonl ]; then
+            echo "published index rows: $(grep -c . flip-in/PREV-INDEX.jsonl)"
+          else
+            rm -f flip-in/PREV-INDEX.jsonl
+            echo "published index UNREADABLE — treating as UNKNOWN, which uploads"
+          fi
           wc -l flip-in/queue.jsonl
       - name: verify VALID + flip cells + build index (files only)
         id: flip
         run: |
           set -euo pipefail
-          python3 scripts/flip_hub_queue.py --queue flip-in/queue.jsonl --did flip-in/did.json --out flip-out
+          PREV=""; [ -f flip-in/PREV-INDEX.jsonl ] && PREV="--prev-index flip-in/PREV-INDEX.jsonl"
+          python3 scripts/flip_hub_queue.py --queue flip-in/queue.jsonl --did flip-in/did.json --out flip-out $PREV
           python3 -c 'import json;r=json.load(open("flip-out/flip-report.json"));print("changed=%s"%str(r["changed"]).lower())' >> "$GITHUB_OUTPUT"
+          python3 -c 'import json;r=json.load(open("flip-out/flip-report.json"));print("UPLOAD DECISION changed=%s (queue_changed=%s index_changed=%s prev_index_seen=%s index_rows=%s)"%(r["changed"],r["queue_changed"],r["index_changed"],r["prev_index_seen"],r["index_rows"]))'
           cat flip-out/SUMMARY.json
-      - name: write the census to the Hub (main, else PR) — only when a cell actually flipped
+      - name: write the census to the Hub (main, else PR) — when the queue OR the index changed
         if: env.DRY_RUN != 'true' && steps.flip.outputs.changed == 'true'
         run: |
           python3 - <<'PY'

@@ -56,6 +56,17 @@ Empty cells stay empty. Measurement, never certification.
 
 Scores and regulator rails are free forever. Crosswalk evidence packs are the sellable data layer. Determination stays with authorities.
 
+## Watch it change (no account, no identity)
+
+Four feeds, each DERIVED from the artifact rather than appended by hand, so none can go stale:
+
+- Corrections ledger (what we got wrong, how it was caught, the fix): https://councilof.ai/feeds/corrections.xml — Atom: https://councilof.ai/feeds/corrections.atom
+- Newly signed measurement cards, each individually verifiable: https://councilof.ai/feeds/cards.xml
+- The public root (guid is the merkle_root, so a poll that finds the same bytes is not a change): https://councilof.ai/feeds/roots.xml
+- Press, machine-readable — what changed in the window, with the command that proves each line, and a named list of what we are NOT announcing: https://councilof.ai/api/press.json (human: https://councilof.ai/press/)
+
+The older https://councilof.ai/feed.xml is a hand-maintained item list kept for its subscribers; its historical titles freeze counts that the live board has moved past. Quote the board, not a feed title.
+
 ## Verify and connect
 
 - Board: GET https://councilof.ai/api/gspc

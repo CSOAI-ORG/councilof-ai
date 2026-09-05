@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-05T12:39:29Z",
+  "as_of": "2026-09-05T16:02:38Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -353,7 +353,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 30,
+    "n_proofs": 27,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -361,51 +361,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 502002841,
-        "block_hash": "0xa81b3c0741e14a6fe58aefc51dddeb5f116e6d83184c0affbc2b71caf682563e",
-        "block_time": "2026-09-05T12:37:39Z"
+        "block": 502051174,
+        "block_hash": "0xda5d83bd9d20167947becda531a082bb0ed9d447c50fabd4b682776629ad903e",
+        "block_time": "2026-09-05T16:00:02Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 94529217,
-        "block_hash": "0x68a9e826ca6caa880bba84f0e1b5c064db5c3bf84518e90b1162edf94ed9469b",
-        "block_time": "2026-09-05T12:37:39Z"
+        "block": 94540558,
+        "block_hash": "0xb41b5b892601bda2bca5bea2675b972c1128715b6d37cbde9366567740668739",
+        "block_time": "2026-09-05T16:00:01Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 50911256,
-        "block_hash": "0x4418eace3baa55c395b99a4bab3f0ca53a40fdc3dadbf3211179647da05c5eb7",
-        "block_time": "2026-09-05T12:37:39Z"
+        "block": 50917328,
+        "block_hash": "0x650bfa2dbc4ea64e568c56bd45a725e0d0f7771cb5565c2ae8a311c0f96a659c",
+        "block_time": "2026-09-05T16:00:03Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 120111829,
-        "block_hash": "0xd2de2cc19f4439c5de59430783dda0331f02238b98f9082e5f23ca7cd3d2d768",
-        "block_time": "2026-09-05T12:37:40Z"
+        "block": 120138804,
+        "block_hash": "0xa1ca3610f60d866c922b7d47300348e2bbc327ada8691a3aaefe493e74ec48b4",
+        "block_time": "2026-09-05T16:00:03Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25911174,
-        "block_hash": "0xc3082eeb7846f7ef135afd7f4f9e7ab6df6c817063abd4469f03e0ac81248224",
-        "block_time": "2026-09-05T12:37:35Z"
+        "block": 25912185,
+        "block_hash": "0x93f227b4b620907cc5350c13054b749a38ff5c4855874db70a81b927489bcfa7",
+        "block_time": "2026-09-05T15:59:59Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100240774,
-        "block_hash": "0xbd595b1a19aaa85e3df2bdc3363f818c33b7c4df616af93309338f7683dd228d",
-        "block_time": "2026-09-05T12:37:40Z"
+        "block": 100246846,
+        "block_hash": "0xc5bc046f9d199f79bc1c57bb0edb2b87cc0ea5d0533dae1d12f8d21cf77393a8",
+        "block_time": "2026-09-05T16:00:04Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 156506542,
-        "block_hash": "0x4206e5c7e7483d92f8f61a04d0c4ba87ae43d20f6b6d9217f207ae1db22b0e55",
-        "block_time": "2026-09-05T12:37:41Z"
+        "block": 156512614,
+        "block_hash": "0x59dd4f3e78e84ddd1ca5a4e3f0e3c16ffe7e62dfa9a8531efac68ddb05b3a719",
+        "block_time": "2026-09-05T16:00:05Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93271220,
-        "block_hash": "0xeab2cbd19ce598a0d8a16baea3657901c22c71ff2900eb74937a0a481a793db8",
-        "block_time": "2026-09-05T12:37:43Z"
+        "block": 93279314,
+        "block_hash": "0xfb11de770a91b1dc220d532cefd95ea8fd277ec6a761e2cfa5d9af13a1a98e57",
+        "block_time": "2026-09-05T16:00:04Z"
       }
     },
     "failures": [
@@ -414,7 +414,19 @@
         "reason": "no endpoint answered eth_getProof"
       },
       {
+        "subject": "evm:TBILL:bsc",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
         "subject": "evm:VBILL:bsc",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
+        "subject": "evm:bIB01:base",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
+        "subject": "evm:bIB01:avalanche",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -422,55 +434,47 @@
   },
   "evm_permission_events": {
     "schema": "csoai.evm.permission-event/0.1",
-    "n_leaves": 5,
-    "n_contracts_scanned": 14,
+    "n_leaves": 6,
+    "n_contracts_scanned": 20,
     "n_roster": 32,
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 502002976,
+        "block": 502051317,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 94529250,
+        "block": 94540594,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 50911273,
+        "block": 50917345,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 120111904,
+        "block": 120138884,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 25911177,
+        "block": 25912188,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100240791,
+        "block": 100246864,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 156506559,
+        "block": 156512631,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 93271242,
+        "block": 93279338,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
     "failures": [
       {
-        "subject": "evm-events:USYC:ethereum",
-        "reason": "dark"
-      },
-      {
         "subject": "evm-events:USYC:bsc",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:USDY:ethereum",
         "reason": "dark"
       },
       {
@@ -478,32 +482,16 @@
         "reason": "dark"
       },
       {
-        "subject": "evm-events:OUSG:ethereum",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:TBILL:ethereum",
-        "reason": "dark"
-      },
-      {
         "subject": "evm-events:TBILL:bsc",
         "reason": "dark"
       },
       {
-        "subject": "evm-events:MONY:ethereum",
-        "reason": "error"
-      },
-      {
-        "subject": "evm-events:mTBILL:ethereum",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:mTBILL:base",
-        "reason": "budget"
+        "subject": "evm-events:USTBL:ethereum",
+        "reason": "dark"
       },
       {
         "subject": "evm-events:VBILL:ethereum",
-        "reason": "budget"
+        "reason": "error"
       },
       {
         "subject": "evm-events:VBILL:bsc",
@@ -536,7 +524,7 @@
     ],
     "note": "Permission events (pause, ownership, roles, proxy upgrades) indexed incrementally from keyless public eth_getLogs, range-capped and rate-limited. History before scanned_from is unmeasured. Leaves signed only by the public-root writer in GHA. Not a rate. Not a grade. Not MEASURED."
   },
-  "card_count": 167,
+  "card_count": 168,
   "xrpl_asset_state_count": 16,
   "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
 }
