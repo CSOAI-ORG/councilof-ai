@@ -78,12 +78,16 @@ def main() -> None:
     print(f"  ✓ PARTNERS-SHORTLIST.md ({len(banks)} banks / {len(aiprov)} providers / {len(issuers)} issuers)")
 
     # B08 — one-page offer per SKU derived from the live probe facts in docs/product/<sku>.md
-    sku_files = sorted(OUT.glob("*.md"))
-    for f in sku_files:
-        if f.name in ("_INDEX.json",) or f.name.startswith("OFFER-"):
+    SKUS = [
+        "commission-card", "evidence-bundle", "eu-ai-act-pack", "swift-bank-pack",
+        "xrpl-asset-evidence", "signed-data-feed", "provider-diff-feed", "receipts-batch",
+    ]
+    for sku in SKUS:
+        f = OUT / f"{sku}.md"
+        if not f.exists():
+            print(f"  ! {sku}.md missing — skip")
             continue
         text = f.read_text()
-        sku = f.stem
         # derived facts: status + bytes from the doc's preview line
         m = re.search(r"status \*\*(\d+)\*\*, \*\*(\d+) bytes\*\*", text)
         status, bytes_n = (m.group(1), m.group(2)) if m else ("?", "?")

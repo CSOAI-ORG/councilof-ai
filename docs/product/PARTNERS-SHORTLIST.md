@@ -1,6 +1,6 @@
 # PARTNERS-SHORTLIST — first 10 by evidence density (B07)
 
-> Derived by scripts/badger/generate-partner-offer-docs.py on 2026-09-05T13:20:09Z.
+> Derived by scripts/badger/generate-partner-offer-docs.py on 2026-09-05T13:20:42Z.
 > Query = the code below; rerun after any registry change. Owner sends; no mass-send.
 
 ## Banks (census evidence records — query: GET /api/bank-complete, sort by records desc, top 10)
