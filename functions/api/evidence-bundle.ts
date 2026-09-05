@@ -31,6 +31,7 @@ import {
 } from "./_x402";
 import { railMode } from "./_x402_config";
 import { OBLIGATIONS, resolveObligation, isRelevant, type CardLite, type Obligation } from "./_obligations";
+import { invoiceHandoff, INVOICE_CONTACT } from "./_invoice_handoff";
 import { signPayload, cardV0, sha256Hex } from "../_lib/cardSign";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
@@ -209,11 +210,17 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         artifact: "<bench>.json + <bench>.sig.json (detached Ed25519) + <bench>_oscal.json (OSCAL 1.1.0 assessment-results)",
       },
       next: [
-        "CSOAI LTD issues the invoice against this reference — no amount is quoted on this endpoint.",
+        // "CSOAI LTD issues the invoice against this reference" used to stand alone here, and a
+        // buyer reads that as "they know I asked". Nobody knows: this endpoint stores nothing,
+        // and /api/lead reports {"bound":false}, so there is no datastore on this deployment to
+        // store it in. The first line now says who has to act, because it is the buyer.
+        "NOTHING HERE HAS TOLD CSOAI THAT YOU ASKED — email the reference to nicholas@csoai.org, or no invoice can be raised.",
+        "CSOAI LTD issues the invoice against this reference once it receives it — no amount is quoted on this endpoint.",
         "The bundle is assembled and delivered once that invoice settles.",
         "Nothing is assembled or released by this request, and no agent can commit the owner to a deal.",
       ],
-      contact: "nicholas@csoai.org",
+      handoff: invoiceHandoff(reference, `evidence bundle for ${ob.id}${subject ? ` on ${subject}` : ""}`),
+      contact: INVOICE_CONTACT,
       entity: "CSOAI LTD (England & Wales, Companies House 16939677), 3rd Floor, 86–90 Paul Street, London EC2A 4NE",
       free_preview: `${origin}/api/evidence-bundle?obligation=${ob.id}${subject ? `&subject=${encodeURIComponent(subject)}` : ""}`,
       also: { agent_rail: resourceUrl, how: "GET the resource → 402 → pay accepts[] → retry with X-PAYMENT" },

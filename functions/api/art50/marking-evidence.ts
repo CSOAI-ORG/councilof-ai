@@ -34,6 +34,7 @@ import { railMode } from "../_x402_config";
 import { signPayload, cardV0 } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
 import { ART50_SOURCES, ART50_DATES, art50LawBlock, art50TextSha256 } from "../../_lib/art50Law";
+import { invoiceHandoff } from "../_invoice_handoff";
 
 type Env = X402Env & { BOARD_SIGN_KEY_PKCS8_B64?: string; REVENUE_KV?: KVNamespace };
 
@@ -392,7 +393,19 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
       bytes: leaf.bytes,
       payment,
       ...(payment.mode === "invoice-gbp"
-        ? { invoice: { issuer: "CSOAI LTD (Companies House 16939677), 3rd Floor 86-90 Paul Street, London EC2A 4NE", currency: "GBP", reference: payment.reference, amount: null, amount_note: "stated on the owner-issued invoice, never by this Function" } }
+        ? {
+            invoice: {
+              issuer: "CSOAI LTD (Companies House 16939677), 3rd Floor 86-90 Paul Street, London EC2A 4NE",
+              currency: "GBP",
+              reference: payment.reference,
+              amount: null,
+              amount_note: "stated on the owner-issued invoice, never by this Function",
+              // Nothing here records the request — see _invoice_handoff.ts. Naming the issuer
+              // without saying that reads as "an invoice is coming", and none is, because no one
+              // at CSOAI has been told this happened.
+              ...invoiceHandoff(String(payment.reference), "Article 50 marking evidence"),
+            },
+          }
         : {}),
       verify: `${origin}/gspc-verify`,
       note: "Independently signed, timestamped measurement of mark detection at fetched_at. Not a conformity opinion, not a guarantee, not a certificate. Root inclusion follows the public-root workflow.",
