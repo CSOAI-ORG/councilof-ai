@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""csoai-synthesis-master.py — the end-to-end audit + synthesis master (2026-09-05).
+
+Answers, with real audit data:
+1. What can we SYNTHESIZE       2. What can we HARVEST (already open)
+3. What loops into REVENUE      4. What can be X402'd
+5. What can be LAYER-0 CEREMONIED 6. What integrates PERMISSIONLESSLY
+7. Banks / COBOL / SWIFT / OTS / BENJI / XRPL-16 8. Regulators → ledgers/contracts/T-REX/OTEL
+9. SaaS/TaaS → RAS + x402 + A2A 10. P0 gaps found by the live probe
+"""
+
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+INTEROP = ROOT / "public" / "interop"
+
+
+def now() -> str:
+    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+
+def main() -> None:
+    doc = {
+        "schema": "csoai.strategy-synthesis-master/0.1",
+        "as_of": now(),
+        "audit_evidence": "public/interop/estate-audit-2026-09-05.json (26 live probes, 14/26 HTTP 200)",
+        "principle": "Measure → Sign → Anchor → Bitcoin OTS. Then sell the measurement. Never certify.",
+        "p0_gap": {
+            "finding": "Repo is AHEAD of live. 12/26 probed URLs 404/503 — new registries (swift/bank/xrpl/x402/a2a) not yet served; /api/synthesis, /api/growth-loops, /api/prod-readiness 503; /api/bank-complete + /api/eu-ai-act 404.",
+            "fix": "Deploy run 33948327539 pending — must land before anything is claimed live.",
+        },
+        "synthesize": [
+            {"id": "SYN-01", "name": "Corrections ledger feed",
+             "what": "The refutation/corrections count (ledger agrees, 9 refuted claims) is our highest-integrity asset.",
+             "how": "Emit signed corrections feed (per-correction card), publish /interop/corrections-feed.json, price at evidence-bundle.",
+             "status": "READY-MOSTLY — refinements happen in repo; deploy gates listing."},
+            {"id": "SYN-02", "name": "Obligations ledger (regulators→ledger)",
+             "what": "Every EU AI Act / US / UK obligation maps to evidence cards (already /api/evidence-bundle?obligation=).",
+             "how": "Publish signed obligations-ledger.json: article → obligation → evidence_card_id. Convert regulation INTO a ledger.",
+             "status": "BUILD-NEXT — 47 EU + US + UK obligations exist as axioms."},
+            {"id": "SYN-03", "name": "Oracle telemetry (OTEL) bridge",
+             "what": "Whiteboard: UNVEILED → MEASURED → SIGNED → TOKENIZED via OTEL.",
+             "how": "Emit OpenTelemetry-compatible traces (bank-complete, swift census, xrpl holdings) → each trace signed as a card.",
+             "status": "BUILD-NEXT — data already flowing in queue; no OTEL exporter yet."},
+            {"id": "SYN-04", "name": "Attestation contract (machine-readable)",
+             "what": "Whiteboard: CONTRACTS + WAIVED LEGAL. Measurement results as contract-grade evidence.",
+             "how": "W3C VC + EAS attestation template: compliance-pact.v1 (schema, obligation, evidence, signatures).",
+             "status": "STAGED — EAS schema operator-gated; VC template buildable."},
+            {"id": "SYN-05", "name": "T-REX receivable evidence",
+             "what": "ERC-3643 permissioned tokens (T-REX) are public on Base/ETH explorers.",
+             "how": "Permissionless harvest: token contracts → holder/transfer data → measured cards.",
+             "status": "BUILD-NEXT — rwa-trex door live."},
+            {"id": "SYN-06", "name": "Tokenized-deposit (BENJI-type) cards",
+             "what": "The 26-bank × stablecoin matrix already captures HSBC/StanChart tokenized deposits.",
+             "how": "Per-institution deposit-token card (signed), SWIFT-census style.",
+             "status": "DONE at matrix level (4,000 records); per-institution cards next."},
+            {"id": "SYN-07", "name": "16 XRPL instrument doors (board: XRPL 16)",
+             "what": "We cover 11 issuers; 16 visible on board incl. tokenized bonds/EBRL.",
+             "how": "Probe 5 more instruments (bond/EBRL-class tokens) → 16 doors.",
+             "status": "EXPANSION — 11/16 done."},
+            {"id": "SYN-08", "name": "COBOL legacy-modernisation evidence (COBOLBridge.ai)",
+             "what": "Board: COBOL / BANKS. Portfolio arm COBOLBridge.ai converts COBOL→modern.",
+             "how": "Signed conversion-attestation cards per migration; x402 per conversion review.",
+             "status": "NEW-OPPORTUNITY — ties banks+COBOL+SWIFT to measurement."},
+        ],
+        "harvest": {
+            "running": ["eat-more (264→well-known growth)", "deep-mining", "sign-wave (119/wave)",
+                        "bank-complete (4,000 records)", "swift census", "xrpl settlement (34 cards)",
+                        "uk-open-data", "hf-probe (204 cards staged)"],
+            "open_targets": [
+                {"target": "XRPL mainnet (public)", "yields": "issuer/holder/transfer evidence"},
+                {"target": "HF Hub API (public)", "yields": "model census + badge candidacy"},
+                {"target": "x402 facilitator (public)", "yields": "receipt records once burner funded"},
+                {"target": "OpenTelemetry endpoints (public)", "yields": "OTEL trace → signed cards"},
+            ],
+            "blocked_by_key": ["Firecrawl API key (news) — web_search/web_extract down",
+                               "HF token (badges public)", "burner $5 (x402 live)", "EAS schema"],
+        },
+        "revenue_loops": [
+            {"loop": "Evidence bundle", "sku": "evidence-bundle", "price": 0.50, "state": "PRICED"},
+            {"loop": "EU AI Act attestation", "sku": "eu-ai-act-pack", "price": 0.50, "state": "PRICED"},
+            {"loop": "SWIFT/bank census pack", "sku": "swift-bank-pack", "price": 0.25, "state": "PRICED"},
+            {"loop": "XRPL asset evidence", "sku": "xrpl-asset-evidence", "price": 0.05, "state": "PRICED"},
+            {"loop": "Signed data feed", "sku": "signed-data-feed", "price": 1.00, "state": "PRICED"},
+            {"loop": "Receipts batch", "sku": "receipts-batch", "price": 0.25, "state": "PRICED"},
+            {"loop": "Provider diff feed", "sku": "provider-diff-feed", "price": 1.00, "state": "PRICED"},
+            {"loop": "Commission card", "sku": "commission-card", "price": 0.02, "state": "PRICED"},
+            {"loop": "A2A settlement share (board: 1.5%)", "sku": "a2a-share", "price": "1.5% of settled value", "state": "CONCEPT — needs settlement design"},
+            {"loop": "Grants (operator)", "target": "£280K potential", "state": "STAGED — 4 bodies, 5-min clicks"},
+        ],
+        "x402_ready": [s["sku"] for s in [
+            {"sku": "commission-card"}, {"sku": "evidence-bundle"}, {"sku": "signed-data-feed"},
+            {"sku": "xrpl-asset-evidence"}, {"sku": "provider-diff-feed"}, {"sku": "receipts-batch"},
+            {"sku": "eu-ai-act-pack"}, {"sku": "swift-bank-pack"}]],
+        "layer0_ceremony": {
+            "live": "merkle_root 05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+            "ots_receipts": "684 bytes / 4 calendars (a.pool, b.pool, alice, bob) — REAL pending stamps",
+            "automation": "Next: root-churn cron — each new card wave → latest root → OTS stamp → publish root-history.json",
+            "guard": "root-leaf-union.check + refutation-lint + counter-lint all OK (repo-level)",
+        },
+        "permissionless_integration": {
+            "done": ["/.well-known (295 doors incl. xrpl-*, swift-*, rwa-*, eu-ai-act-*, bank-*)",
+                     "/interop (347 formats incl. registries, indices, a2a-engine-cards, x402-receipts-index)",
+                     "/api/router (discovery)", "/signed/card_index.json + chain.json (Ed25519, verifiable)",
+                     "did:web:csoai.org#board-attestation-1", "15 AI platform manifests"],
+            "next": ["A2A agent cards per engine (repo done; live pending deploy)",
+                     "Embed .well-known into ChatGPT/Claude/Gemini catalogs (manifest URLs ready)"],
+        },
+        "saaas_to_ras": {
+            "map": "SaaS (static pages) → TaaS (transparency reports, Art 50) → RAS (paid regulated attestation, x402/A2A)",
+            "status": "RAS primitives priced (8 SKUs); first live settlement = burner $5 (operator)",
+        },
+        "news": {"status": "BLOCKED — web_search/web_extract down (Firecrawl API key missing)",
+                 "workaround": "browser_exec for EC AI Act / XRPL / SWIFT pages; x_search for X signals"},
+    }
+
+    out = INTEROP / "strategy-synthesis-2026-09-05.json"
+    out.write_text(json.dumps(doc, indent=2))
+    print("=" * 60)
+    print("  SYNTHESIS MASTER")
+    print("=" * 60)
+    print(f"  synthesize items:   {len(doc['synthesize'])}")
+    print(f"  harvest targets:    {len(doc['harvest']['open_targets'])}")
+    print(f"  revenue loops:      {len(doc['revenue_loops'])}")
+    print(f"  x402-ready SKUs:    {len(doc['x402_ready'])}")
+    print(f"  saved: {out}")
+
+
+if __name__ == "__main__":
+    main()
