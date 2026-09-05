@@ -1,0 +1,126 @@
+name: gspc-spray
+
+# Publish the live GSPC board to every distribution surface we hold a credential for — daily, and on demand.
+#
+# One snapshot is built from LIVE truth (GET /api/gspc, root.json, the frozen banks on the Hub) by
+# scripts/spray/gspc-spray.py and pushed, unchanged, to each surface. Every number is derived at run time;
+# if /api/gspc cannot be read the script refuses (exit 2) and nothing is published. Idempotent: a surface
+# already carrying this as_of / content fingerprint is left alone, so a daily run that finds no change
+# writes nothing anywhere.
+#
+# Surfaces are chosen by which secret EXISTS in this repository. A missing secret is named in the log and
+# that surface is skipped — never invented, never faked. As of 5 Sep 2026 only HF_TOKEN exists here; the
+# others must be added by the owner (Settings → Secrets → Actions) under exactly these names:
+#   HF_TOKEN            Hugging Face, write on org csoai              → --hf        (present)
+#   KAGGLE_USERNAME + KAGGLE_KEY   from ~/.kaggle/kaggle.json          → --kaggle    (missing)
+#   GSPC_BOARD_TOKEN    fine-grained PAT, contents:write on CSOAI-ORG/gspc-board → --github (missing;
+#                       the default GITHUB_TOKEN cannot push to another repository)
+#   ZENODO_TOKEN        personal token, deposit:write + deposit:actions → --zenodo    (missing)
+#   PYPI_API_TOKEN      project-scoped token for csoai-gspc            → --pypi      (missing)
+#   NPM_TOKEN           granular token WITH "Bypass 2FA"               → (npm stays BLOCKED until then;
+#                       the account is WebAuthn, so --otp can never work)
+#
+# Measurement, not certification. No prices. A TIE is never a win.
+
+on:
+  schedule:
+    - cron: "40 9 * * *"   # after the 09:07 UTC public-root tick, clear of the 06:00-07:15 UTC pile-up
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Republish even when only the root's clock moved (same content fingerprint)"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Read live truth, build the snapshot, decide — push nothing"
+        type: boolean
+        default: false
+
+concurrency:
+  group: gspc-spray
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  spray:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts/spray
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: deps
+        run: pip install --quiet huggingface_hub kaggle build twine
+
+      - name: choose surfaces from the secrets that exist
+        id: choose
+        env:
+          HAS_HF: ${{ secrets.HF_TOKEN != '' }}
+          HAS_KAGGLE: ${{ secrets.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
+          HAS_GITHUB: ${{ secrets.GSPC_BOARD_TOKEN != '' }}
+          HAS_ZENODO: ${{ secrets.ZENODO_TOKEN != '' }}
+          HAS_PYPI: ${{ secrets.PYPI_API_TOKEN != '' }}
+          HAS_NPM: ${{ secrets.NPM_TOKEN != '' }}
+        run: |
+          set -euo pipefail
+          flags=""
+          note() { echo "::notice title=gspc-spray::$1"; }
+          if [ "$HAS_HF" = "true" ];     then flags="$flags --hf";     else note "HF_TOKEN missing — Hugging Face skipped"; fi
+          if [ "$HAS_KAGGLE" = "true" ]; then flags="$flags --kaggle"; else note "KAGGLE_USERNAME/KAGGLE_KEY missing — Kaggle skipped"; fi
+          if [ "$HAS_GITHUB" = "true" ]; then flags="$flags --github"; else note "GSPC_BOARD_TOKEN missing — GitHub mirror skipped (GITHUB_TOKEN cannot push to CSOAI-ORG/gspc-board)"; fi
+          if [ "$HAS_ZENODO" = "true" ]; then flags="$flags --zenodo"; else note "ZENODO_TOKEN missing — Zenodo skipped"; fi
+          if [ "$HAS_PYPI" = "true" ];   then flags="$flags --pypi";   else note "PYPI_API_TOKEN missing — PyPI skipped"; fi
+          if [ "$HAS_NPM" = "true" ];    then note "NPM_TOKEN present but npm publishing is not wired in this workflow yet — report only"; else note "NPM_TOKEN missing — npm BLOCKED (WebAuthn account needs a Bypass-2FA token)"; fi
+          flags="$flags --npm"   # always reports the npm blocker in the table
+          echo "flags=$flags" >> "$GITHUB_OUTPUT"
+          echo "surfaces:$flags"
+
+      - name: spray
+        env:
+          PYTHONUNBUFFERED: "1"
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          GSPC_BOARD_TOKEN: ${{ secrets.GSPC_BOARD_TOKEN }}
+          ZENODO_TOKEN: ${{ secrets.ZENODO_TOKEN }}
+          PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          FORCE: ${{ inputs.force == true && '--force' || '' }}
+          DRY: ${{ inputs.dry_run == true && '--dry-run' || '' }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/spray"
+          python3 scripts/spray/gspc-spray.py ${{ steps.choose.outputs.flags }} $FORCE $DRY \
+            --out "$RUNNER_TEMP/spray/snapshot" --report "$RUNNER_TEMP/spray/spray-report.json"
+
+      - name: report
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/spray/spray-report.json" ]; then
+            python3 - "$RUNNER_TEMP/spray/spray-report.json" >> "$GITHUB_STEP_SUMMARY" <<'PY'
+          import json, sys
+          r = json.load(open(sys.argv[1]))
+          print(f"## gspc-spray — as_of `{r['as_of']}`\n\n**{r['lid']}**\n\n| surface | status | url | as_of seen |\n|---|---|---|---|")
+          for x in r["results"]:
+              print(f"| {x['surface']} | {x['status']} | {x['url'] or '—'} | {x['as_of_seen'] or '—'} |")
+          print("\nfingerprint `" + r["fingerprint"] + "`")
+          PY
+          else
+            echo "## gspc-spray — no report written (the script refused or crashed before building the snapshot)" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gspc-spray-${{ github.run_id }}
+          path: ${{ runner.temp }}/spray
+          if-no-files-found: ignore
+          retention-days: 30
