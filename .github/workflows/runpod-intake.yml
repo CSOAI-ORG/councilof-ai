@@ -63,13 +63,18 @@ jobs:
           set -euo pipefail
           ok=0; bad=0
           for d in $(find intake/gspc-24x7 -name card-unsigned.json -exec dirname {} \;); do
-            if python3 scripts/verify_runpod_gspc_intake.py \
+            # The allowlist path MUST be absolute: the verifier refuses a relative one with
+            # "REJECT UNSAFE_PATH: bank allowlist must be an absolute path without '..'". The
+            # first run of this workflow passed a repo-relative path and rejected all 112 runs
+            # that had just verified locally -- the verifier was right and the caller was wrong.
+            # Keep the reason on failure; discarding stderr is what hid the cause for a whole run.
+            if out=$(python3 scripts/verify_runpod_gspc_intake.py \
                  --run-dir "$d" \
-                 --bank-allowlist scripts/runpod_gspc_bank_allowlist.current.json \
-                 --quarantine-root quarantine > /dev/null 2>&1; then
+                 --bank-allowlist "$GITHUB_WORKSPACE/scripts/runpod_gspc_bank_allowlist.current.json" \
+                 --quarantine-root "$GITHUB_WORKSPACE/quarantine" 2>&1); then
               ok=$((ok+1))
             else
-              bad=$((bad+1)); echo "REJECTED $d"
+              bad=$((bad+1)); echo "REJECTED $d :: $out"
             fi
           done
           echo "VERIFIED $ok · REJECTED $bad"
