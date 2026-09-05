@@ -1,40 +1,26 @@
 #!/usr/bin/env python3
-"""Derive the GSPC axis register for Hugging Face from the LIVE board — one true master.
+"""Derive the BOARD-SLOT register for Hugging Face from the live board.
 
-THE PROBLEM THIS SOLVES. csoai/gspc-board/axis-register.json on the Hub described itself as
-"Static from GSPC_AXIS_REGISTRY.json (ruled source of truth)" and published:
+SCOPE, because getting this wrong caused a real error. There are TWO legitimate registers and
+they count different things:
 
-    "gspc_registry_axes": 13, "of_14": true,
-    "counting_rule": "Say '13 GSPC axes (registry)' ... Never a bare '16 axes'."
-    axes: gov, prv, agi, asi, mcp, oss, mach, care, xr, det, art5, swarm, affect
+  /api/axis-register   14 canonical SCORED ROWS (13 board axes + jail). Its own note says
+                       "Slot counts live in GET /api/gspc totals... it does not type a board
+                       fraction", and ends "Canon lock: do not invent 22 axes." It is mirrored
+                       to the Hub as csoai/gspc-board/axis-register.json. NOT STALE.
+  /api/gspc            22 board SLOTS, 22 measured. The slot map, including the eight slots
+                       that carry no scored row.
 
-while https://councilof.ai/api/gspc (csoai.gspc-axes/0.5) serves 22 axes, 22 measured, 0
-unmeasured, under LONG ids — governance, provenance, cross-reality, detector-interop,
-art5-safeguard and so on. Two divergences at once, both material:
+On 2026-09-04 this script published its board-derived output OVER that mirror, under the same
+filename, and reported the mirror as DRIFTED — measuring a scored-row list against a slot list
+and calling the difference an error. It was not an error; it was a different question. The sync
+job that restored the mirror was right and this script was wrong.
 
-  1. A SUPERSEDED CANON. The board ruling moved to 22 axes; the Hub still published the
-     13-of-14 counting rule, and called itself the ruled source of truth while doing it.
-  2. A DIFFERENT ID VOCABULARY. `gov` vs `governance`, `xr` vs `cross-reality`, `det` vs
-     `detector-interop`. Anything joining Hub data to board data on the id silently misses.
+So the output is now board-axes.json, a distinct name for a distinct document, and --check
+compares against THAT. Nothing here touches axis-register.json.
 
-The register was evidently built from the DATASET-BACKED axes rather than from the board,
-which is exactly where "13 of 14" came from: 14 of the 22 axes carry an `axes[].dataset`,
-and 8 do not. That is a real and interesting fact — it says which axes have a public Hub
-corpus — but it is not the axis count, and publishing it as one made the Hub disagree with
-the board it claims to serve.
-
-So this script DERIVES the register instead of restating it. Counts come from the axis array,
-never typed — the same rule the board states about itself. Both divergences above are the kind
-that a human keeps re-introducing by editing a static file, and the only durable fix is to stop
-having a static file.
-
-  python3 scripts/hf_axis_register.py --out axis-register.json   # derive
-  python3 scripts/hf_axis_register.py --check <url|path>         # MATCH / DRIFTED / UNCHECKABLE
-
---check is the half that matters over time: it compares what the Hub PUBLISHES against what
-the board says right now, so drift is detected instead of discovered months later. Like the
-root witness pointer, UNCHECKABLE is a distinct third state — a failed fetch says nothing
-about drift and must never collapse into MATCH.
+  python3 scripts/hf_axis_register.py --out board-axes.json
+  python3 scripts/hf_axis_register.py --check <url|path>   # MATCH / DRIFTED / UNCHECKABLE
 """
 from __future__ import annotations
 import argparse, hashlib, json, sys, urllib.error, urllib.request
@@ -78,7 +64,7 @@ def derive() -> dict:
     with_ds = [e for e in entries if e["dataset"]]
 
     return {
-        "schema": "csoai.gspc-axis-register/0.2",
+        "schema": "csoai.gspc-board-axes/0.1",
         "as_of": now(),
         "issuer": "councilof.ai",
         # DERIVED, never typed — the board states this rule about itself and the Hub copy
@@ -93,11 +79,13 @@ def derive() -> dict:
             f"{len(entries) - len(with_ds)} do not — that is a statement about Hub coverage, "
             "never the axis count. Both numbers are derived from the axis array."
         ),
-        "supersedes": (
-            "csoai.gspc-axis-register/0.1, which published 'gspc_registry_axes: 13, of_14: true' "
-            "with short ids (gov, prv, agi, asi, mcp, oss, mach, care, xr, det, art5, swarm, "
-            "affect). That count was the DATASET-BACKED axes, not the board, and the short ids "
-            "never matched the board's. Do not join on them."
+        "supersedes": None,
+        "not_to_be_confused_with": (
+            "csoai.gspc-axis-register/0.1 at /api/axis-register, which lists the 14 canonical "
+            "SCORED ROWS (13 board axes + jail) under short ids. That register is correct and "
+            "current for what it counts. This document counts BOARD SLOTS, which is a different "
+            "question with a different answer. Neither supersedes the other; do not join them on "
+            "the id, and do not read a difference between them as drift."
         ),
         "id_vocabulary": "the board's long ids verbatim (governance, cross-reality, detector-interop, …); short aliases are retired",
         "provenance": {
