@@ -737,8 +737,13 @@ function modelLine(m){
 }
 
 /* ===================== QUESTS ===================== */
-function home(){
-  showRun(false);
+/* paintGrid — repaint the quest cards in place. Called by home() and by the board
+ * read below when it settles. It touches #grid ONLY. It must never hide or empty
+ * #run, because a player can already be inside a quest by the time /api/gspc
+ * answers: until 2026-09-05 the board callbacks called home(), whose showRun(false)
+ * wiped the running quest and dumped the player back to the grid without a word.
+ * The deploy gate's desktop lane lost that race twice the same morning. */
+function paintGrid(){
   const best = loadBest();
   $("grid").innerHTML = PACK.map((p,i)=>{
     const d = diffOf(p);
@@ -756,6 +761,9 @@ function home(){
         <span class="you">${yb?("you "+yb.macroF1.toFixed(3)):"no run yet"}</span></div>
     </button>`;}).join("");
 }
+/* home — the player's own way back to the grid (Leave / Back to quests / the Quests
+ * tab). This is the only place a run is discarded, and only on the player's click. */
+function home(){ showRun(false); paintGrid(); }
 $("questItems").textContent = PACK.reduce((s,p)=>s+p.n,0);
 $("questAxes").textContent  = PACK.length;
 
@@ -1090,13 +1098,13 @@ readBoard(GSPC_ENDPOINT)
     const map = {};
     for(const a of axes){ if(a && a.axis) map[a.axis] = a; }
     LIVE = { state:"ok", axes:map };
-    home(); // repaint cards with published historical references
+    paintGrid(); // repaint the cards with published historical references — never home(): a quest may be running
   })
   .catch(e => {
     $("boardCount").textContent = "not readable from here (" + String(e && e.message || e) + ") — cite /api/gspc for the live count";
     $("boardItems").textContent = "";
     LIVE = { state:"unreachable", axes:{} };
-    home();
+    paintGrid(); // same rule: repaint the cards, leave a running quest alone
   });
 
 home();
