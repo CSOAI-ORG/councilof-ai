@@ -574,6 +574,70 @@ async function checkInstallLines() {
   }
 }
 
+/**
+ * 9. THE HUGGING FACE ORG CARDS — 97 dataset cards, and what they point at.
+ *
+ * The cards are the estate's widest-read outward surface after the site itself: a researcher
+ * finds a dataset, reads its card, and follows the links. Measured 2026-09-05 across all 97
+ * `csoai/*` dataset cards — **31 distinct councilof.ai / csoai.org URLs claimed, 30 answer.**
+ *
+ * The one that does not is honest: `csoai/labour-economy-unmeasured` says
+ * "Live API (after master merge): GET https://councilof.ai/api/indices" — future tense, with the
+ * condition named. A 404 behind an explicitly pending claim is not a false claim, and flagging it
+ * would teach someone to delete the qualifier rather than keep it.
+ *
+ * So the cards are in good shape and this locks that in rather than fixing anything. It fails on
+ * a URL that stops answering AND is not marked pending — the case where a card quietly starts
+ * sending readers to a dead door.
+ *
+ * Offline by default: 97 cards plus ~31 probes. LIVE_HF=1.
+ */
+async function checkHfCards() {
+  if (!process.env.LIVE_HF) {
+    return skip("hf org cards", "LIVE_HF unset — 97 cards + ~31 probes, run it deliberately");
+  }
+  const list = await j("https://huggingface.co/api/datasets?author=csoai&limit=500");
+  if (!Array.isArray(list.body)) return skip("hf org cards", `dataset list unavailable (HTTP ${list.status})`);
+  const ids = list.body.map((x) => x.id).filter(Boolean);
+  if (!ids.length) return bad("hf org cards", "the csoai org lists no datasets");
+
+  const claims = new Map(); // url -> { cards:Set, pending:boolean }
+  for (const id of ids) {
+    const r = await fetch(`https://huggingface.co/datasets/${id}/resolve/main/README.md`, { headers: UA });
+    if (!r.ok) continue;
+    const txt = await r.text();
+    for (const m of txt.matchAll(/https:\/\/(?:councilof\.ai|app\.csoai\.org|csoai\.org)(?:\/[A-Za-z0-9._/-]*)?/g)) {
+      const u = m[0].replace(/[.,)]+$/, "");
+      const near = txt.slice(Math.max(0, m.index - 200), m.index + 120);
+      // "after master merge", "planned", "when published" — a dated future claim is not a lie.
+      const pending = /after .{0,30}merge|planned|not yet|pending|when published|upcoming/i.test(near);
+      const e = claims.get(u) ?? { cards: new Set(), pending: false };
+      e.cards.add(id);
+      e.pending = e.pending || pending;
+      claims.set(u, e);
+    }
+  }
+  if (!claims.size) return skip("hf org cards", "no csoai URLs claimed in any card");
+
+  const dead = [];
+  for (const [u, e] of claims) {
+    let code = 0;
+    try { code = (await fetch(u, { headers: UA, redirect: "follow" })).status; } catch { code = 0; }
+    if (code >= 200 && code < 400) continue;
+    if (e.pending) continue; // explicitly future-tense, with the condition named
+    dead.push(`${u} -> ${code || "unreachable"} (${e.cards.size} card${e.cards.size > 1 ? "s" : ""})`);
+  }
+  ok("hf org cards", `${ids.length} cards claim ${claims.size} distinct csoai URLs`);
+  assertLike(dead);
+
+  function assertLike(list) {
+    if (!list.length) return ok("hf card links", "every claimed URL answers, or says it is not live yet");
+    bad("hf card links",
+      `${list.length} URL(s) in the org's dataset cards do not answer and are not marked pending: ` +
+      `${list.join("; ")}. A researcher finds the dataset, reads the card, and follows the link.`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -637,6 +701,7 @@ async function main() {
   await checkSmithery();
   await checkProducers();
   await checkInstallLines();
+  await checkHfCards();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
