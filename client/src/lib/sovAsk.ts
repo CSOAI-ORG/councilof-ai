@@ -41,7 +41,12 @@ function isWrongPenalty(t: string): boolean {
   return PENALTY_CTX.test(t) && WRONG_FIG.test(t) && !/(35\s*(million|m\b)|7\s?%|15\s*(million|m\b)|3\s?%)/.test(t);
 }
 
-export type AskResult = { ok: boolean; text: string };
+export type AskResult = {
+  ok: boolean;
+  text: string;
+  state?: string;
+  provenance?: string;
+};
 
 /** Ask the CSOAI Sovereign. Returns cleaned text, or ok:false with a fallback string. */
 export async function askSovereign(userText: string, opts?: { fallback?: string; system?: string }): Promise<AskResult> {
@@ -54,13 +59,13 @@ export async function askSovereign(userText: string, opts?: { fallback?: string;
     const r = await fetch(GW + "/chat", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: sys + "\n\nUser question: " + q }) });
     if (r.ok) {
       const d = await r.json();
-      const t = String((d && d.response) || "").trim();
+      const t = String((d && (d.answer ?? d.reply ?? d.response)) || "").trim();
       if (t && d.model !== "idle" && t.length > 12) {
         const out = isWrongPenalty(t) ? PENALTY_TRUTH : (!BAD.test(t) ? t : null);
         if (out) {
           // Every AI call is a visible C-space card inside Sov Space.
           emitCard({ kind: "dock-ask", summary: q.slice(0, 120), detail: out.slice(0, 280), latencyMs: Date.now() - started, model: d.model || undefined, axis: "governance", source: "live" });
-          return { ok: true, text: out };
+          return { ok: true, text: out, state: d.state, provenance: d.provenance };
         }
       }
     }

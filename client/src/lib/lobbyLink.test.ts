@@ -25,9 +25,16 @@ describe("lobbyLink — demographic task registry", () => {
     expect(href).toContain("ctx=finance");
   });
 
-  it("defaults crawlable hrefs onto /os, not the marketing dump", () => {
-    expect(lobbyHref({ pane: "board" })).toMatch(/^\/os\?/);
+  it("defaults crawlable hrefs onto the Dashboard tab directly — no /os redirect hop, never the marketing dump", () => {
+    expect(lobbyHref({ pane: "board" })).toBe("/dashboard?tab=board");
     expect(lobbyHref({ pane: "board" })).not.toMatch(/^\/\?lobby=/);
+    expect(lobbyHref({ pane: "board" })).not.toMatch(/^\/os\?/);
+    // A seeded task still opens the chat overlay on that pane: tab for the shell, lobby+task for the overlay.
+    const withTask = lobbyTaskHref("verify-a-card", { ctx: "C-1" });
+    expect(withTask.startsWith("/dashboard?")).toBe(true);
+    expect(withTask).toContain("tab=verify");
+    expect(withTask).toContain("lobby=verify");
+    expect(withTask).toContain("task=verify-a-card");
   });
 
   it("keeps /os door query so CouncilLobby does not strip Assess task=", () => {

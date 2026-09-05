@@ -31,14 +31,14 @@
         "totals.quotable_axes"
       ],
       "observed": {
-        "value": "22 axes · 15 measured",
+        "value": "22 axes · 22 measured",
         "axes": 22,
-        "measured_axes": 15,
-        "unmeasured_axes": 7,
-        "quotable_axes": 15,
-        "observed_at": "2026-08-26",
+        "measured_axes": 22,
+        "unmeasured_axes": 0,
+        "quotable_axes": 22,
+        "observed_at": "2026-09-01",
         "binding": false,
-        "note": "Observation only, recorded so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale. Recorded after the ADR-001 sweep wired the 8 financial/domain axes into the signed board data and re-signed the payload."
+        "note": "Observation only, recorded so the gate can detect drift. If this disagrees with the endpoint, the ENDPOINT wins and this block is stale. Recorded after the measurement sweep measured every remaining slot, so all 22 axes now carry a run behind them."
       },
       "api_self_description": "Slot counts live in totals (public_count, axes, measured_axes, unmeasured_axes) and are derived from the axis array, never typed.",
       "numeric_field": "totals.axes",
@@ -46,40 +46,47 @@
       "gspc_family_axes": 14,
       "gspc_family_note": "The behavioural family's own size, 14, recorded so the gate can recognise the historical measurement stamp '13 canonical axes · jail' as a breakdown of THAT family rather than a competing claim about the 22-axis board. Not a public count — quote totals.public_count.",
       "field_note": "TWO fields, deliberately. totals.public_count is the SENTENCE a surface quotes; totals.axes is the INTEGER the gate compares against. They are not interchangeable: public_count is a string, and a numeric comparison against it is a type error waiting to be noticed. Until 2026-08-26 the gate read totals.axes while this file declared public_count as the authority — masked only because both happened to yield 14. Both are now named for what they are.",
-      "grammar_warning": "The two numbers mean different things and BOTH must travel. 22 counts SLOTS on the board; 15 counts slots with a measurement behind them. Claiming the larger number as measured would assert 7 measurements that do not exist. Quote the sentence, or quote the smaller number."
+      "grammar_warning": "The two numbers still mean different things — 22 counts SLOTS on the board and measured_axes counts slots with a run behind them — but they now coincide: every one of the 22 slots carries a measurement, so measured_axes is 22 and 0 slots are declared-but-unmeasured. Quoting '22 measured' asserts no measurement that does not exist. Quote totals.public_count, which still carries both numbers."
     },
     "twenty_two_figure": {
       "status": "live",
       "public_claim": true,
-      "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 after the sweep of 2026-08-26.",
-      "note": "'22' is a count of AXES ON THE BOARD — never a count of measurements. 14 GSPC behavioural axes + 8 financial/domain axes. 15 of the 22 carry a measurement; 7 are declared slots published so the gap is visible.",
+      "authority": "Owner ruling 2026-08-24, csoai-static-deploy2 commit 2bdbac34986333f6de992fcd76cb08aa3e19d1cf; recorded in council-os/ADR-001-axis-count.md. Backed on the wire by GET /api/gspc -> totals.axes == 22 and totals.measured_axes == 22 after the sweep of 2026-08-26 wired the axes in and the later measurement sweep measured every remaining slot.",
+      "note": "'22' is a count of AXES ON THE BOARD, and every one of them now carries a measurement. 14 GSPC behavioural axes + 8 financial/domain axes; 22 of the 22 carry a run and 0 remain declared-but-unmeasured.",
       "correct_forms": [
-        "22 axes · 15 measured",
-        "22 axes, 15 of them measured",
-        "15 measured axes of 22 on the board"
+        "22 axes · 22 measured",
+        "22 axes, 22 of them measured",
+        "22 measured axes of 22 on the board"
       ],
       "forbidden_forms": [
-        "22 measured axes",
-        "22 axes measured",
-        "all 22 axes are measured"
+        "22 axes · 15 measured",
+        "15 measured axes of 22 on the board",
+        "7 unmeasured axes"
       ],
-      "why_it_was_internal_until_now": "This block previously read status 'internal', public_claim false, and 'not corroborated by any live surface'. That was ACCURATE at the time and is exactly why the fix had to be a data task: the 8 financial axes were ruled in on 2026-08-24 but absent from the signed board payload, so no live surface could corroborate the number. The two 2026-08-26 00:xx commits that locked the public board at 14 (5477ef62, ebec824e) forbid TYPING 22 without data behind it — a guardrail against inventing the number, not a repeal of the ruling. The sweep wired the axes in and re-signed; the number is now corroborated by the artifact it summarises, which is the condition those guardrails were written for.",
-      "standing_caveat": "The ruling's own wording applied the word 'measured' to the full slot count. The evidence supports 22 axes and 15 measurements. The evidence wins, and no axis was marked MEASURED to close the gap. The exact phrase is listed under forbidden_forms for the gate to match on, and is deliberately not repeated in prose where a reader could mistake it for a claim."
+      "forbidden_forms_note": "These are the pre-sweep counts. 15-of-22 was accurate until the remaining slots were measured; quoting it now understates the board. Quote totals.public_count.",
+      "why_it_was_internal_until_now": "This block previously read status 'internal', public_claim false, and 'not corroborated by any live surface'. That was ACCURATE at the time: the 8 financial axes were ruled in on 2026-08-24 but absent from the signed board payload, so no live surface could corroborate the number. The 2026-08-26 sweep wired the axes into the signed board and re-signed; a later measurement sweep then measured every remaining slot, so the board now substantiates 22 axes AND 22 measurements — the condition the earlier guardrails were written for.",
+      "standing_caveat": "Earlier revisions applied the word 'measured' to the full slot count before the runs existed, which is why '22 measured' was once forbidden. The runs now exist: every slot carries a measurement, so the slot count and the measured count coincide at 22. No axis was marked MEASURED to close a gap — the gap was closed by measuring."
     },
     "namespaces": {
       "note": "Axis counts are per-instrument. A count is only a contradiction WITHIN one namespace. These are distinct instruments and legitimately carry their own counts. A namespace entry lists the surfaces that legitimately render ITS count; the gate exonerates those surfaces from comparison against the board number. An entry with no surfaces listed gets no exoneration — which is the mechanical reason 27 arena-derived counts were flagged against the board until 2026-08-26.",
       "gspc_board": {
         "authority": "GET /api/gspc totals.public_count",
         "status": "live",
-        "observed": "22 axes · 15 measured (14 GSPC behavioural + 8 financial/domain)",
-        "self_description_note": "The board is the count authority, so its own payload and signed snapshot are exonerated from being compared against themselves. The payload legitimately describes its own composition; flagging the authority against itself is a tautology, not a check.",
+        "observed": "22 axes · 22 measured (14 GSPC behavioural + 8 financial/domain)",
+        "self_description_note": "The live board API is the current count authority and legitimately describes its own composition. The preserved signed snapshot is not a current board surface while /signed/gspc-board.status.json says current=false; it is scoped separately below.",
         "surfaces": [
           "/api/gspc",
-          "/signed/gspc-board.signed.json",
           "/board"
         ],
         "board_navigator_note": "/board is the navigator ACROSS the sets: it renders every namespace's count on one page, each labelled with the set it belongs to. That is this estate's own rule — every count names its set — made true in the interface instead of only in this file. It is declared as a surface of each namespace it renders, so the gate exonerates a LABELLED count rather than the gate being loosened for an unlabelled one.",
         "surfaces_note": "/six-axes/gspc-axes.json was listed here until 2026-08-26 and has been moved to its own namespace below. It is a DATED SNAPSHOT from 2026-08-05, not the board: listing it as a board-count authority exonerated a smaller, older count from ever being checked against the board it claimed to describe. Moving it does not change a single number in it — it changes what the file is allowed to be cited as."
+      },
+      "gspc_board_signed_snapshot_2026_09_02": {
+        "authority": "none — this is preserved signed evidence, not the current board. GET /api/gspc is authoritative.",
+        "status": "superseded-known-claim-defect",
+        "observed": "a verified historical 22/22 MPC-signed snapshot whose separate status document forbids current reliance",
+        "note": "The original signature still verifies, but /signed/gspc-board.status.json records a financial-run signature overclaim and historical leader-note ambiguity. Integrity of the bytes does not make those claims current. The snapshot remains published for audit and is never a live fallback unless a replacement MPC ceremony makes its status CURRENT.",
+        "surface": "/signed/gspc-board.signed.json"
       },
       "gspc_board_snapshot_2026_08_05": {
         "authority": "none — this is a record, not an authority. The count authority is GET /api/gspc.",
@@ -135,17 +142,17 @@
         "selftest_case": "unsigned interop file: 4 axes is scoped (reproduces #841)"
       },
       "financial_axes_register": {
-        "authority": "/interop/financial-axes.json — the register for the 8 financial/domain axes",
+        "authority": "GET /api/gspc for board counts (axes/measured/unmeasured). /interop/financial-axes.json is a dated register of per-row rubric/evidence — not the board.",
         "status": "live",
-        "observed": "8 financial axes; measured_axes is derived from signed runs on GET /api/gspc",
-        "note": "These 8 are also carried on the GSPC board, where they count toward the axis count and NOT the measured count. This register is the per-axis detail behind those rows and legitimately states its own family's count of 8.",
+        "observed": "8 financial axes on the board; live board shows all 8 MEASURED as deterministic-facts (22·22·0 overall). Register as_of is a snapshot date, not a competing count.",
+        "note": "These 8 are carried on the GSPC board. Quote totals.public_count / totals.by_family.financial from GET /api/gspc for board counts. The register must not assert UNMEASURED board slots that conflict with the live board, and must not stamp MEASURED onto unsigned /interop/ financial measure artifacts.",
         "surfaces": [
           "/interop/financial-axes.json",
           "/interop/financial-4axis-unsigned.json",
           "/financial-axes",
           "/board"
         ],
-        "unsigned_runs_note": "Unsigned run artifacts (financial-4axis-unsigned.json) carry '4 unsigned financial slots' (NOT '4 axes') to avoid tripping the 22-axis board-count lock. The word 'unsigned' or 'slots' before 'axes/axis/slots' breaks the COUNT_RE pattern."
+        "unsigned_runs_note": "Unsigned run artifacts (financial-4axis-unsigned*.json) stay UNSIGNED — do not stamp MEASURED to close gaps. They are a different instrument from the public board."
       },
       "signed_card_set": {
         "authority": "/signed/card-matrix.json — derived at build time by scripts/build-card-matrix.mjs from public/signed/cards/*.json. Every count in it is an array length; nothing is typed.",
@@ -164,7 +171,7 @@
       "axis_engine_16": {
         "count": 16,
         "what": "A separate, harder fresh-benchmark set of 16 axes measured on the RunPod RTX 3090 engine.",
-        "not": "NOT the public GSPC board count. The public board is 22 axes, 15 measured, 7 unmeasured.",
+        "not": "NOT the public GSPC board count. The public board is 22 axes, 22 measured, 0 unmeasured.",
         "why_scoped": "facts-gate compares every hardcoded axis count against the live board and is right to: a typed integer that drifts from /api/gspc is this estate's signature defect. This file is a genuinely different set, so it is DECLARED as its own namespace rather than the gate being loosened. The count still cannot drift silently — it is now pinned here, and changing it means changing this declaration.",
         "surface": "/measurement/axis-engine-16.json",
         "surfaces": [
@@ -175,6 +182,16 @@
         "observed": "16 axes in the fresh-benchmark engine set",
         "status": "live"
       }
+    },
+    "live_anchors": {
+      "value": 3,
+      "names": [
+        "HuggingFace Hub",
+        "Sigstore Rekor",
+        "public corrections ledger"
+      ],
+      "excluded": "Bitcoin OpenTimestamps — stamped, not anchored. See rail ots_atom_anchor.",
+      "note": "The number of INDEPENDENT anchors the estate actually holds. Copy claiming more than this is an overclaim however it is phrased — 'the 4-anchor machine' asserts it as a noun with no verb the tense rule can see, which is exactly how it survived on proofs.councilof.ai in the JSON-LD a crawler quotes."
     }
   },
   "methods": [
@@ -226,9 +243,10 @@
     },
     {
       "id": "timestamp_authority",
-      "claim": "No independent time-stamping authority is claimed.",
+      "claim": "OpenTimestamps is used as the time-stamping authority for published roots. A stamp is not an anchor until a calendar commits it to Bitcoin.",
       "status": "live",
-      "evidence": "Records declare timestamp_authority: none. No RFC-3161, no OpenTimestamps."
+      "evidence": "Measured 2026-09-03 over every .ots in the repo: 6 carry a Bitcoin block attestation, 243 are valid stamps still pending a calendar commit, 12 parse as nothing. Anchored files: public/interop/layer0-ceremony-2026-09-03.json.ots (block 965268); public/interop/root-2026-09-02.json.ots (block 965121); public/interop/root-728e8c5e.json.ots (block 965138). Re-check with scripts/ots-upgrade.py and scripts/badger/ots_stamp.py.",
+      "note": "This replaced 'No RFC-3161, no OpenTimestamps', which had gone false: the OTS programme was running and unregistered here, so no gate could police a single anchoring claim about it."
     }
   ],
   "rails": [
@@ -249,7 +267,9 @@
     {
       "id": "xrpl_mainnet_carrier",
       "claim": "Publishing attestations onto XRPL mainnet",
-      "status": "planned"
+      "status": "planned",
+      "note": "PLANNED. Only describable in future tense. The DEVNET carrier is live and must never be described as mainnet; this rail is the mainnet one and nothing is published on it.",
+      "evidence": "Sibling rail xrpl_devnet_carrier is status devnet with the evidence card stating 'Network: XRPL DEVNET'. No mainnet carrier transaction exists."
     },
     {
       "id": "eas",
@@ -268,12 +288,16 @@
     {
       "id": "index_product",
       "claim": "Index product",
-      "status": "planned"
+      "status": "planned",
+      "note": "PLANNED as a PRODUCT. Component-fact objects exist (ai-adoption-components, labour-components); an index does not. C-2026-0826-05 already retracted MEASURED-INDEX-v0.1 as an over-claim — do not restore the sticker.",
+      "evidence": "counters.json and the corrections ledger carry C-2026-0826-05; the slots are component-fact objects, not indexes."
     },
     {
       "id": "data_business",
       "claim": "Data business",
-      "status": "planned"
+      "status": "planned",
+      "note": "PLANNED. No data is sold and no data product is published. Verification is free forever and a grade is never sold, so any copy implying a data business is live contradicts the standing boundary, not just this rail.",
+      "evidence": "No priced data surface exists. /api/revenue counts are null and the x402 catalog meters artefacts (issuance, assembly, cadence), never a dataset."
     },
     {
       "id": "rating_the_raters",
@@ -281,6 +305,20 @@
       "status": "planned",
       "note": "Still planned as a PRODUCT, and the status is deliberately not flipped. What exists is a programme with one result in it: RTR-001, an independent recomputation of the ARC Prize project's published ARC-AGI-2 human baseline from ARC's own MIT-licensed rows, on one criterion. One organisation measured is not a survey, a comparison or a product. Surface: /rating-the-raters. Artifact: /interop/rating-the-raters-001-arc.json.",
       "surface": "/rating-the-raters"
+    },
+    {
+      "id": "ots_root_anchor",
+      "claim": "Anchoring the published root to Bitcoin via OpenTimestamps",
+      "status": "live",
+      "note": "True only for the files under public/interop that have been upgraded past pending.",
+      "evidence": "Measured 2026-09-03: public/interop/layer0-ceremony-2026-09-03.json.ots at block 965268; public/interop/root-2026-09-02.json.ots at block 965121; public/interop/root-728e8c5e.json.ots at block 965138. Verify with `ots verify` or scripts/ots-upgrade.py."
+    },
+    {
+      "id": "ots_atom_anchor",
+      "claim": "Anchoring every queued atom, bridge card and press release to Bitcoin via OpenTimestamps",
+      "status": "planned",
+      "note": "Only describable in future tense. Stamping an atom is not anchoring it: a fresh stamp carries a PendingAttestation and becomes a proof only when a calendar commits it to a Bitcoin block, hours later, and the proof is then UPGRADED. Copy of the form 'N atoms OTS-anchored' is a violation while this rail is planned.",
+      "evidence": "Measured 2026-09-03 over 261 .ots files: only 6 carry a Bitcoin attestation and all are published roots, not atoms. 243 are pending; 12 are unreadable bytes from a writer with four faults, retained rather than deleted so the miscount stays visible. See scripts/badger/_queue/UNVERIFIABLE-OTS-README.md."
     }
   ],
   "canonical_phrasings": {

@@ -37,7 +37,11 @@ CORPUS = [
     ({"a": -0.0}, False),                      # negative zero -> 0
     ({"a": 1.5}, False),                       # non-integral float (shortest round-trip)
     ({"a": 3.141592653589793}, False),         # float precision
-    ({"a": 1e21}, False),                      # big float (JS uses exponent form)
+    ({"a": 1e-5}, False),                      # ES fixed: 0.00001 (Python repr is 1e-05)
+    ({"a": 1e-6}, False),                      # ES last-fixed: 0.000001 (Python repr is 1e-06)
+    ({"a": 1e-7}, False),                      # ES scientific: 1e-7 (Python repr is 1e-07)
+    ({"a": 1e20}, False),                      # ES still fixed (21 digits)
+    ({"a": 1e21}, False),                      # ES scientific 1e+21
     ({"a": 123456789012345678901234567890}, True),  # >2^53 int: JS loses precision (boundary)
     ({"s": "x"}, False),                       # simple string
     ({"s": 'quote" and \\backslash'}, False),  # escaped chars

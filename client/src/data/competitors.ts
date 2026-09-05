@@ -47,7 +47,7 @@ export const BATTLECARDS: Battlecard[] = [
       "Delivered as a hosted product; pricing is not published, and third-party figures for it are unverified and not repeated here.",
       "Founded as a security-compliance platform; AI governance was added later — see their own product history.",
     ],
-    wedge: "CSOAI is AI-governance-native and open-source: we cover the EU AI Act documentation/classification duties Vanta's infra-evidence model can't, the designed council reasons rather than checklists, and the open core + free tier reaches the SMBs Vanta's pricing excludes. Every verdict is Ed25519-signed, not just evidence-collected.",
+    wedge: "CSOAI is AI-governance-native and open-source: we map EU AI Act documentation and classification duties, expose deterministic measurements, and publish selected Ed25519-signed evidence cards. The Council remains a design rather than a live review service.",
     sources: [
       { label: "Vanta $150M Series D (BusinessWire, Jul 2025)", url: "https://www.businesswire.com/news/home/20250723901336/en/" },
       { label: "Vanta hits $300M ARR (Fortune, Apr 2026)", url: "https://fortune.com/2026/04/29/exclusive-vanta-arr-300-million-sequoia-shadow-ai-claude-cursor/" },
@@ -70,7 +70,7 @@ export const BATTLECARDS: Battlecard[] = [
       "US-headquartered / CLOUD Act exposure raised as a concern for EU-sovereignty buyers.",
       "Delivered as a hosted product. Council of AI publishes an open-source verifier and the card preimage rule, so a card can be recomputed with no vendor software at all.",
     ],
-    wedge: "CSOAI matches the framework depth (EU AI Act, NIST, ISO 42001 crosswalked in the Hive) but delivers it open-source, self-hostable, and sovereignty-first — plus the designed multi-provider council and Layer 0 signing. Free training + certification and a fair PAYG tier open it to the 99% Credo's price point can't serve.",
+    wedge: "CSOAI publishes crosswalks for the EU AI Act, NIST AI RMF and ISO 42001, with an open-source, self-hostable core, a designed multi-provider Council, and independently verifiable measurement cards. Crosswalks are mappings, not compliance determinations or certification.",
     sources: [
       { label: "Credo AI — Fast Company 2026 + product", url: "https://www.credo.ai/" },
       { label: "Credo AI EU / CLOUD Act sovereignty concern (sota.io, 2026)", url: "https://sota.io/blog/credo-ai-eu-alternative-gdpr-cloud-act-ai-governance-2026" },

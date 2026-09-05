@@ -109,7 +109,7 @@ export function paneCrumbs(tab: LobbyTab, panePath: string, override = false): C
  */
 export function dashboardCrumbs(location: string): Array<{ label: string; path?: string; current: boolean }> {
   const path = norm(location);
-  const root = { label: "Council software", path: "/dashboard", current: path === "/dashboard" };
+  const root = { label: "Council OS", path: "/dashboard", current: path === "/dashboard" };
   if (path === "/dashboard") return [{ ...root, path: undefined }];
   const rest = path.startsWith("/dashboard/") ? path.slice("/dashboard".length) : path;
   const segments = rest.split("/").filter(Boolean);

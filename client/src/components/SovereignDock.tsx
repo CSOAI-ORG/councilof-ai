@@ -10,17 +10,17 @@ import { useGeolibre, GEO_REGION_OPTIONS } from "../lib/geolibre";
 import { PERSONAS, type SovPersonaId, getPersonaId, setPersonaId, personaOf, personaSpeak, stopVoice, DOCTRINE_RE, DOCTRINE_REFUSAL } from "../lib/sovPersona";
 
 // SovereignDock - the persistent right-hand AI OS sidebar. Speak or type and it
-// acts: routes you to the right surface, answers from the framework knowledge
-// base, and now answers any question with live world data via the measurement API.
+// routes to public surfaces and, when the configured chat endpoint answers,
+// returns a model response. Route reachability is not Council review or measurement.
 
 type Msg = { role: "you" | "sov"; text: string };
 
 const ROUTES: { re: RegExp; href: string; label: string }[] = [
-  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/os?lobby=home", label: "the Governance Graph" },
-  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/os?lobby=home", label: "the Governance Graph" },
+  { re: /governance graph|knowledge graph|\bgraph\b/i, href: "/dashboard?tab=home", label: "the Governance Graph" },
+  { re: /regulation|legislation|\blaw\b|jurisdiction|comply|compliance/i, href: "/dashboard?tab=home", label: "the Governance Graph" },
   { re: /framework|crosswalk|\biso\b|\bnist\b|tc260|eu ai act/i, href: "/crosswalks", label: "Framework crosswalks" },
   { re: /sov ?space|simulate|simulation|experiment|run a (sim|scenario)/i, href: "/gspc-arena", label: "Council Space" },
-  { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns layer of Council Space" },
+  { re: /sovereign town|\btown\b|incident/i, href: "/gspc-arena?view=towns", label: "the Towns concept (under evidence review)" },
   { re: /arena|benchmark|head.?to.?head|model compar/i, href: "/gspc-arena?view=arena", label: "the Arena layer of Council Space" },
   { re: /distribution|\bmcp\b|pypi|npm|glama|mcpize|registry/i, href: "/distribution", label: "Distribution & Layer 0 coverage" },
   { re: /jsp ?936|defence assurance|defense assurance|system card|mod evidence|evidence pack|dependable ai/i, href: "/system-card", label: "the Signed System Card — JSP 936 assurance" },
@@ -30,7 +30,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /risk|heatmap/i, href: "/risk-heatmap", label: "Risk Heatmap" },
   { re: /oscal|fedramp/i, href: "/oscal", label: "OSCAL Studio" },
   { re: /model|bias|fairness/i, href: "/models", label: "Model Registry" },
-  { re: /price|pricing|plan|cost/i, href: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  { re: /price|pricing|plan|cost/i, href: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   { re: /media|image|photo|creative commons/i, href: "/commons", label: "Open Commons media" },
   { re: /status|health|uptime/i, href: "/status", label: "System Status" },
   { re: /watchdog|heat.?map|incident|signal|report a/i, href: "/watchdog-map", label: "the Global AI Watchdog" },
@@ -39,7 +39,7 @@ const ROUTES: { re: RegExp; href: string; label: string }[] = [
   { re: /council network|ecosystem|signed agents|agent card|our (agents|domains|companies)/i, href: "/network", label: "the Council network" },
   { re: /layer ?0|protocol|trust control/i, href: "/trust-center", label: "Layer 0" },
   { re: /command|dashboard|overview/i, href: "/command-center", label: "Command Center" },
-  { re: /\bos\b|launch|grid|everything/i, href: "/os?lobby=home", label: "the OS launcher" },
+  { re: /\bos\b|launch|grid|everything/i, href: "/dashboard?tab=home", label: "the OS launcher" },
 ];
 
 const KNOWLEDGE: { re: RegExp; a: string }[] = [
@@ -48,12 +48,12 @@ const KNOWLEDGE: { re: RegExp; a: string }[] = [
 ];
 
 const QUICK: { label: string; href: string }[] = [
-  { label: "Governance Graph", href: "/os?lobby=home" },
+  { label: "Governance Graph", href: "/dashboard?tab=home" },
   { label: "Council Space", href: "/gspc-arena" },
   { label: "Open Commons", href: "/commons" },
-  { label: "Free rail", href: "/os?lobby=assess&task=pricing-overview" },
+  { label: "Free rail", href: "/dashboard?task=pricing-overview&tab=measured" },
   { label: "Status", href: "/status" },
-  { label: "Full OS", href: "/os?lobby=home" },
+  { label: "Full OS", href: "/dashboard?tab=home" },
 ];
 
 const GW = "/api";
@@ -72,16 +72,16 @@ async function askGovern(q: string): Promise<any | null> {
   return null;
 }
 
-// SOV3 shared brain: /orchestrate returns {say, actions}. The Sovereign SEES the
-// page (getScreenContext), THINKS via the measurement API, then ACTS - opening OS surfaces.
+// Optional /orchestrate contract: if a deployment configures it, a response may
+// suggest navigation actions. The public deployment must fail closed when absent.
 const APP_ROUTES: Record<string, string> = {
-  revenue: "/os?lobby=assess&task=pricing-overview", pricing: "/os?lobby=assess&task=pricing-overview", plans: "/os?lobby=assess&task=pricing-overview", billing: "/os?lobby=assess&task=pricing-overview",
+  revenue: "/dashboard?task=pricing-overview&tab=measured", pricing: "/dashboard?task=pricing-overview&tab=measured", plans: "/dashboard?task=pricing-overview&tab=measured", billing: "/dashboard?task=pricing-overview&tab=measured",
   king: "/try", council: "/try", try: "/try", vote: "/try", bft: "/try",
   setup: "/start", onboard: "/start", start: "/start", welcome: "/start",
-  graph: "/os?lobby=home", knowledge: "/os?lobby=home", search: "/os?lobby=home",
+  graph: "/dashboard?tab=home", knowledge: "/dashboard?tab=home", search: "/dashboard?tab=home",
   space: "/gspc-arena", sim: "/gspc-arena", simulation: "/gspc-arena", experiment: "/gspc-arena", sovspace: "/gspc-arena",
   tools: "/tool-commons", mcp: "/tool-commons", commons: "/commons", media: "/commons",
-  status: "/status", system: "/status", os: "/os?lobby=home", home: "/os?lobby=home", grid: "/os?lobby=home",
+  status: "/status", system: "/status", os: "/dashboard?tab=home", home: "/dashboard?tab=home", grid: "/dashboard?tab=home",
   twin: "/me",
   certification: "/academy", cert: "/academy", academy: "/academy",
   evidence: "/evidence", oscal: "/oscal", models: "/models", policy: "/policy-generator",
@@ -98,7 +98,7 @@ function routeForAction(a: any): string | null {
   if (!a || !a.command) return null;
   if (a.command === "open_url" && a.args && a.args.url) return String(a.args.url);
   if (a.command === "open_app" && a.args && a.args.id) return APP_ROUTES[String(a.args.id).toLowerCase()] || null;
-  if (a.command === "govern") return "/os?lobby=home";
+  if (a.command === "govern") return "/dashboard?tab=home";
   return null;
 }
 async function orchestrate(message: string, context: any): Promise<{ say: string; actions: any[] } | null> {
@@ -134,13 +134,13 @@ export default function SovereignDock() {
   function onFiles(e: any) {
     const fs = Array.from((e.target.files || []) as FileList); if (!fs.length) return;
     setMsgs((m) => m.concat({ role: "you", text: "📎 " + fs.map((f) => f.name).join(", ") }));
-    setMsgs((m) => m.concat({ role: "sov", text: "Received " + fs.length + " file" + (fs.length > 1 ? "s" : "") + ". I'll review under Layer 0 — perception runs on my right brain (vision/VLM), reasoning on my left, and nothing leaves your governance boundary without a signed decision." }));
+    setMsgs((m) => m.concat({ role: "sov", text: "Selected " + fs.length + " file" + (fs.length > 1 ? "s" : "") + ". This preview records filenames only: the files were not uploaded, inspected, signed, or reviewed." }));
     chargeSovereign(4); try { e.target.value = ""; } catch (er) {}
   }
   const BRAIN: Record<string, string> = {
-    offline: "Offline brain — a local open-source model runs on your own hardware. Fully self-hosted, no data leaves you. I wrap it in multi-agent review + Layer 0 so it still stays compliant.",
-    hosted: "Hosted brain — premium models, governed. I route your request to the best model (MoE, world model or VLM), the Council of AI checks the answer, and every decision is signed.",
-    paygo: "Pay-as-you-go — you only pay per governed call. Same multi-agent review + Layer 0 floor; ideal for bursty or trial use.",
+    offline: "Offline is a configuration target. This selector does not start a local model or prove that data stays on-device.",
+    hosted: "Hosted is the current presentation mode. Availability depends on the configured chat endpoint; no live Council review or automatic signature is implied.",
+    paygo: "Pay-as-you-go is a product concept. This selector does not configure billing or a governed model route.",
   };
   function setBrain(mode: string) { setBrainMode(mode); try { localStorage.setItem("sov_brain_mode", mode); } catch (e) {} setMsgs((m) => m.concat({ role: "sov", text: BRAIN[mode] })); }
 
@@ -171,9 +171,10 @@ export default function SovereignDock() {
     if (!t) return;
     setMsgs((m) => m.concat({ role: "you", text: t }));
     setInput("");
-    // Doctrine hard-stop — enforced before any network call, in every persona.
+    // Local UI refusal check before this component makes a network call. It is
+    // not a platform-wide policy-enforcement guarantee.
     if (DOCTRINE_RE.test(t)) { setMsgs((m) => m.concat({ role: "sov", text: DOCTRINE_REFUSAL })); return; }
-    chargeSovereign(4); // every question teaches your Council assistant
+    chargeSovereign(4); // local presentation counter only; it does not train a model
     // Only treat input as a navigation command when it's an explicit nav verb or a
     // short topic phrase - never when the user is asking a question (answer those).
     const words = t.split(/\s+/).length;
@@ -188,8 +189,8 @@ export default function SovereignDock() {
       setTimeout(() => { go(hit.href); }, 650);
       return;
     }
-    // SOV3: the Council assistant is page-aware. For a command or an "explain this page"
-    // request, orchestrate over the live brain - it speaks and opens the right surface.
+    // For a navigation-style command, try the optional orchestrate endpoint and
+    // otherwise remain in the deterministic local routing/fallback path.
     const ctx = getScreenContext();
     const commandLike = navVerb || /\bexplain (this|the) page\b|\bwhat can i do here\b|\bwhere am i\b|\bhelp me (here|with this)\b|\bwhat is this page\b|\bwalk me through\b|\btake me\b|\bopen \b/i.test(t);
     if (commandLike) {
@@ -202,14 +203,14 @@ export default function SovereignDock() {
         return;
       }
     }
-    setMsgs((m) => m.concat({ role: "sov", text: "Reasoning over live governance data…" }));
-    // Reason via the live Council gateway; in parallel map the industry to its framework stack.
+    setMsgs((m) => m.concat({ role: "sov", text: "Checking the configured chat and catalogue endpoints…" }));
+    // Ask the configured chat endpoint; in parallel query a catalogue mapping.
     const ind = INDUSTRIES.find((w) => new RegExp("\\b" + w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i").test(t));
     const [answer, gov] = await Promise.all([askChat(t, persona.system), ind ? askGovern(ind) : Promise.resolve(null)]);
     let out = answer || "";
     if (gov) {
       const names = gov.frameworks.map((f: any) => f.name).join(", ");
-      out += (out ? "\n\n" : "") + "⚖️ Governance stack for " + gov.industry + ": " + names + "." + (gov.bridges && gov.bridges.length ? " Legacy bridge: " + gov.bridges.join(", ") + "." : "") + " Every governed action is Layer 0 signed.";
+      out += (out ? "\n\n" : "") + "⚖️ Candidate governance sources for " + gov.industry + ": " + names + "." + (gov.bridges && gov.bridges.length ? " Catalogued legacy bridge: " + gov.bridges.join(", ") + "." : "") + " Applicability and signature state require separate evidence.";
     }
     if (out) { setMsgs((m) => m.concat({ role: "sov", text: out })); return; }
     // Fallback: entity facts from the knowledge endpoint.
@@ -223,7 +224,7 @@ export default function SovereignDock() {
         if (ans) { setMsgs((m) => m.concat({ role: "sov", text: ans + " Want the governance view? Open the Governance Graph." })); return; }
       }
     } catch (e) {}
-    setMsgs((m) => m.concat({ role: "sov", text: "I could not reach live reasoning just now - try: regulations, crosswalks, evidence, certify, or open the Governance Graph." }));
+    setMsgs((m) => m.concat({ role: "sov", text: "The configured chat endpoint did not return an accepted response. You can still open regulations, crosswalks, evidence, training, or the Governance Graph." }));
   }
 
   function voice() {
@@ -286,13 +287,13 @@ export default function SovereignDock() {
             {(Object.keys(PERSONAS) as SovPersonaId[]).map((id) => (
               <button key={id} onClick={() => switchPersona(id)} title={id === "assurance" ? "Defence assurance voice — JSP 936, signed System Cards. Assurance, never weapons." : "Civil governance voice"} className={"rounded-full px-2.5 py-1 text-[11px] font-bold " + (personaId === id ? (id === "assurance" ? "border border-amber-400/60 bg-amber-500/25 text-amber-100" : "border border-emerald-400/60 bg-emerald-500/30 text-emerald-100") : "border border-white/15 bg-white/[0.03] text-white/50 hover:bg-white/10")}>{id === "assurance" ? "✦ Assurance" : "◉ Civil"}</button>
             ))}
-            <button onClick={() => go("/demo")} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Live demo</button>
+            <button onClick={() => go("/demo")} className="rounded-full border border-emerald-400/50 bg-emerald-500/25 px-2.5 py-1 text-[11px] font-bold text-emerald-100 hover:bg-emerald-500/35">▶ Guided demo</button>
             <button onClick={() => act("explain this page and what I can do here")} className="rounded-full border border-emerald-400/50 bg-emerald-500/20 px-2.5 py-1 text-[11px] font-semibold text-emerald-100 hover:bg-emerald-500/30">Explain this page</button>
             {QUICK.map((q) => (<button key={q.label} onClick={() => go(q.href)} className="rounded-full border border-emerald-400/25 bg-emerald-500/5 px-2.5 py-1 text-[11px] text-emerald-200/80 hover:bg-emerald-500/15">{q.label}</button>))}
           </div>
           <div className="px-4 pt-3">
-            {/* Art 50(1): the dock chats with a live model — disclosed at first interaction. */}
-            <AISystemNotice route="/sovereign-dock" />
+            {/* AI-interaction disclosure. Endpoint availability is reported separately. */}
+            <AISystemNotice route="/dashboard?tab=home" />
           </div>
           <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {msgs.map((m, i) => (<div key={i} className={m.role === "you" ? "ml-auto max-w-[85%] rounded-2xl rounded-br-sm bg-emerald-500/20 px-3 py-2 text-sm" : "mr-auto max-w-[90%] whitespace-pre-wrap rounded-2xl rounded-bl-sm border border-emerald-400/20 bg-white/[0.03] px-3 py-2 text-sm text-emerald-50/90"}>{m.text}</div>))}
@@ -302,7 +303,7 @@ export default function SovereignDock() {
             {brainOpen && (
               <div className="mb-2 rounded-xl border border-emerald-400/25 bg-[#04120c] p-3">
                 <div className="text-[11px] font-bold text-emerald-100">Your Council assistant brain</div>
-                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">A sandwich: a <b className="text-emerald-200">left brain</b> (reasoning, tools, multi-agent compliance) and a <b className="text-emerald-200">right brain</b> (perception, vision/VLM). Route any model underneath — MoE, mixture-of-models, a world model, a VLM — and the Council assistant wraps it in the Council's designed multi-provider oversight + Layer 0 so whatever you plug in stays compliant and signed.</p>
+                <p className="mt-1 text-[11px] leading-relaxed text-emerald-100/70">These are target deployment modes, not active model routes. The selector stores a local preference only; it does not start a local model, configure PAYG, convene the designed Council, establish compliance, or sign a response.</p>
                 <div className="mt-2 grid grid-cols-3 gap-1.5">
                   {[["offline", "Offline"], ["hosted", "Hosted"], ["paygo", "PAYG"]].map(([id, label]) => (
                     <button key={id} onClick={() => setBrain(id)} className={"rounded-lg px-2 py-1.5 text-[11px] font-bold " + (brainMode === id ? "bg-emerald-500 text-[#03110b]" : "border border-emerald-400/30 text-emerald-100 hover:bg-white/5")}>{label}</button>
@@ -318,7 +319,7 @@ export default function SovereignDock() {
               <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") act(input); }} placeholder="Ask me anything..." className="flex-1 bg-transparent text-sm text-emerald-50 placeholder-emerald-300/40 focus:outline-none" />
               <button onClick={() => act(input)} className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Send</button>
             </div>
-            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "assurance" ? "Assurance, never weapons \u00B7 provenance is not truth \u00B7 Layer 0 signed" : "You command \u00B7 the Council assistant acts \u00B7 Layer 0 signed"}</div>
+            <div className={"mt-2 text-center font-mono text-[9px] uppercase tracking-[2px] " + (personaId === "assurance" ? "text-amber-300/50" : "text-emerald-300/40")}>{personaId === "assurance" ? "Assurance, never weapons \u00B7 provenance is not truth" : "Assistant routes \u00B7 published cards verify"}</div>
           </div>
         </div>
       )}

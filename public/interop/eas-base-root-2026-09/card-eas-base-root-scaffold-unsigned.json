@@ -1,0 +1,102 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "EAS on Base — root attestation scaffold (UNCHECKABLE: no estate signer)",
+  "as_of": "2026-09-02T04:51:26Z",
+  "source_urls": [
+    "https://councilof.ai/interop/root-witness-2026-09-02.json",
+    "https://councilof.ai/root.json",
+    "https://base.easscan.org/",
+    "https://basescan.org/address/0x4200000000000000000000000000000000000020",
+    "https://basescan.org/address/0x4200000000000000000000000000000000000021",
+    "https://github.com/ethereum-attestation-service/eas-contracts"
+  ],
+  "payload": {
+    "kind": "csoai.eas-base-root-scaffold/0.1",
+    "status": "UNCHECKABLE",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "gspc_axis_projection_forbidden": true,
+    "honest_sentence": "EAS-on-Base attestation of the live root is UNCHECKABLE: no estate Base wallet/key/funding found; no keys invented; gas-only path documented but not executed. Intended body={sha256, as_of, did} over CURRENT root.json.",
+    "blocker": {
+      "code": "NO_ESTATE_SIGNER",
+      "detail": "Searched box env, M4 env, gh secrets (CSOAI-ORG/councilof-ai), estate-crypto-inventory, CDP wallet setup scripts, and .sovereign/keystore — no Base/EAS private key or funded signer present. Existing eas-attestation-batch.json already states submission is owner-gated. Did not create keys or ask Nick to pay."
+    },
+    "target_attestation": {
+      "chain": "base",
+      "chain_id": 8453,
+      "explorer": "https://base.easscan.org/",
+      "contracts": {
+        "SchemaRegistry": "0x4200000000000000000000000000000000000020",
+        "EAS": "0x4200000000000000000000000000000000000021",
+        "source": "https://github.com/ethereum-attestation-service/eas-contracts deployments/base"
+      },
+      "schema": {
+        "string": "bytes32 sha256,string as_of,string did",
+        "fields": [
+          {
+            "name": "sha256",
+            "type": "bytes32",
+            "note": "sha256 of root.json bytes"
+          },
+          {
+            "name": "as_of",
+            "type": "string",
+            "note": "ISO-8601 UTC of attested root envelope"
+          },
+          {
+            "name": "did",
+            "type": "string",
+            "note": "did:web signer id intended for the root"
+          }
+        ],
+        "resolverAddress": "0x0000000000000000000000000000000000000000",
+        "revocable": false
+      },
+      "intended_data": {
+        "sha256": "f372512f38e9e0acd72a64d994dc8aa9fabc18225e3c9508826ef3ebea8be67c",
+        "as_of": "2026-09-02T04:22:20Z",
+        "did": "did:web:csoai.org#board-attestation-1"
+      },
+      "gas_only_path": [
+        "1. Register schema once via SchemaRegistry.register(schema, resolverAddress=0x0, revocable=false) if no matching schema UID yet; record schemaUID.",
+        "2. Encode attestation data with SchemaEncoder for bytes32 sha256, string as_of, string did.",
+        "3. Call EAS.attest({schema: schemaUID, data: {recipient: 0x0 or CSOAI address, expirationTime: 0, revocable: false, refUID: 0x0, data: encoded}}).",
+        "4. Record attestation UID on https://base.easscan.org/attestation/view/<UID>.",
+        "Cost: Base gas only (permissionless; no protocol fee). Off-chain EAS attestations are gas-free but do not yield an on-chain UID a stranger can recompute from chain alone."
+      ],
+      "attestation_uid": null,
+      "schema_uid": null,
+      "tx_hash": null
+    },
+    "root_witness_cite": {
+      "url": "https://councilof.ai/interop/root-witness-2026-09-02.json",
+      "witnessed_artifact_sha256": "61a6d86db8d5dec9c63eaffb529438aa7631c0a12f5bfbb19ac75517c1c94bd6",
+      "live_root_sha256_at_scaffold": "f372512f38e9e0acd72a64d994dc8aa9fabc18225e3c9508826ef3ebea8be67c",
+      "live_matches_witness": false,
+      "merkle_root_live": "2a1db675c897822ad1e70a02d95d27e25d6dbdb47b273b3ce81e5f4b5578a39e",
+      "merkle_root_witnessed": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+      "card_count_live": 50,
+      "ots": "STAMPED (pending Bitcoin confirmation) on witnessed bytes",
+      "rekor": "INCLUDED",
+      "note": "Scaffold targets CURRENT live root.json. Witness remains the OTS/Rekor time-proof of the earlier artifact bytes; stranger must hash live bytes before submitting EAS."
+    },
+    "unmeasured": [
+      "eas_onchain_attestation_uid",
+      "schema_uid_registration",
+      "estate_base_signer"
+    ],
+    "as_of": "2026-09-02T04:51:26Z"
+  },
+  "sha256": "b95c6efa53a31e1d9c4bfa895fa7b7897435be8c0942a0d217620b35ecce2fc0",
+  "unmeasured": [
+    "eas_onchain_attestation_uid",
+    "schema_uid_registration",
+    "estate_base_signer"
+  ],
+  "did": "did:web:csoai.org#card-attestation-1",
+  "sig_ed25519": null,
+  "note": "NO_LAPTOP_SIGN — unsigned scaffold. On-chain EAS attestation blocked by NO_ESTATE_SIGNER. Do not invent keys. Do not wrangler.",
+  "writes_board": false
+}

@@ -1,0 +1,115 @@
+{
+  "card": {
+    "as_of": "2026-09-04T14:14:55Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USTBL:arbitrum",
+      "symbol": "USTBL",
+      "product": "Spiko US T-Bills Money Market Fund",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0x021289588cd81dc1ac87ea91e91607eef68303f5",
+      "block": 501689229,
+      "block_hash": "0x6f32ff36ca2014f950bbdce91268bdedbe33984c0ae760625939b74e8e62789b",
+      "block_time": "2026-09-04T14:14:55Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {
+        "name": "Spiko US T-Bills Money Market Fund",
+        "symbol": "USTBL",
+        "decimals": 5,
+        "totalSupply": 2505122742839,
+        "paused": false,
+        "owner": "0x0000000000000000000000000000000000000000",
+        "eip1967_implementation": "0xa0769f7a8fc65e47de93797b4e21c073c117fc80"
+      },
+      "absent": [
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "2d8ff08011f1736f654a8a672fb92c89a6c9596f3309456dfb4ee3d01e78f2e1",
+        "bytes": 11649,
+        "url": "/archive/proofs/eip1186/2d8ff08011f1736f.json",
+        "rpc": "arbitrum-one-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+          "storageHash": "0x683922d8f4032bf3a0185c7854f9446f180e49e85701728a336922cbd5983281",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xa0769f7a8fc65e47de93797b4e21c073c117fc80",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 501689229 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "1d71cd93c0c3fccfaa6f827d97323cea56dcf7abdf0d8302e66b4897ab4bda93",
+    "sig_ed25519": "656b2575fe2e1ed06b74c51e3f6ea1c6dbab7d1bc386339ef41aa0419a17f18ba9e1141fbbc68eb72dae7d6589d4c5adadc884c43fffa0296633fbbcb29cfe0d",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0x021289588cd81dC1AC87ea91e91607eEF68303F5"
+    ],
+    "subject": "evm:USTBL:arbitrum permission state at block 501689229",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:USTBL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "fe6c28520535dd65d81b73ea68b393a6571c9ecfb95cc05b490ac32b1883e090",
+    "2e633601480d905231187724d6306ba2e313b7e417ec0c29776e2b77c5e49f86",
+    "748241aebc89579e99cd19b55b47c5d181711726a8449258b493973241e8d499",
+    "2912dd8d326e4dbf967606ef8b3ac4df5b21d3f91537a08a86233d4cf711a0e6",
+    "d2f3b8d43f9ebc8e3e3c71bc1a4234e21adc3b7e51fea0d4238356a7a9b284c8",
+    "e82f35dc7b78c3fd2cd7c556c0617bf836b65f0b3a05251a9c7dcadec5c3c603",
+    "9fb2cec184db2ce5ff30121736b23bfb81e47cd66519f9d2c438b3299af8dd50",
+    "69918e1cfbbc0d6dd5ea9dd7a678083db6296d374c1a6000076a75d371b15b3b"
+  ]
+}

@@ -1,0 +1,136 @@
+{
+  "schema": "csoai.living-root-leaf-list/0.1",
+  "status": "UNSIGNED",
+  "signed": false,
+  "sig_ed25519": null,
+  "kind": "auto-eat-staged-surfaces-leaf-list",
+  "as_of": "2026-09-02T03:35:00Z",
+  "as_of_europe_london": "2026-09-02T04:35:00+01:00",
+  "role": "living root *leaf list* \u2014 promote staged unsigned auto-eat surfaces for inclusion consideration",
+  "honesty": {
+    "mutates_signed_root": false,
+    "invents_signatures": false,
+    "envelope": "honest unsigned only",
+    "note": "Lists staged unsigned surfaces under /interop/auto-eat/. Does NOT mutate public/root.json, does NOT invent sig_ed25519, does NOT claim MEASURED / SIGNED / board slots. Sign only when n\u226530 + 4way + keystone."
+  },
+  "cite": {
+    "signed_root": "https://councilof.ai/root.json",
+    "auto_eat_status": "/interop/auto-eat/status.json",
+    "board": "https://councilof.ai/api/gspc",
+    "board_count_rule": "Printers and chrome cite live GET totals.public_count only \u2014 never type a count here."
+  },
+  "auto_eat_status_snapshot": {
+    "as_of": "2026-09-01T13:08:24Z",
+    "atoms_staged": 8,
+    "surfaces_staged": [
+      "autoeat.erc8004.newagents",
+      "autoeat.hf.newmodels",
+      "autoeat.hf.spaces",
+      "autoeat.mcp.registry",
+      "autoeat.npm.registry",
+      "autoeat.swift.census",
+      "autoeat.xrpl.accounts",
+      "autoeat.xrpl.twoway"
+    ],
+    "invariant": "atoms carry sig_ed25519=null; nothing is MEASURED until a card signs green via GHA OIDC and verifies"
+  },
+  "leaf_count": 8,
+  "leaves": [
+    {
+      "path": "/interop/auto-eat/card-autoeat-erc8004-newagents-unsigned.json",
+      "surface": "autoeat.erc8004.newagents",
+      "subject": "auto-eat erc8004: 13 LIVE of 500 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T08:58:43Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "cda7777678782bdf7949d5081847f8e9d00d273ecf38556145d16ef4baee3798",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-hf-newmodels-unsigned.json",
+      "surface": "autoeat.hf.newmodels",
+      "subject": "auto-eat hf-model: 6 LIVE of 6 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T13:08:24Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "e87341db7961c576328a37b7beb9c15965a14e80ef2dbcff51a84b0283073231",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-hf-spaces-unsigned.json",
+      "surface": "autoeat.hf.spaces",
+      "subject": "auto-eat hf-space: 2 LIVE of 2 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T13:07:33Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "5a7717009455adc017e46393191574019513a6b9efccfa4343281dd967b64dd8",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-mcp-registry-unsigned.json",
+      "surface": "autoeat.mcp.registry",
+      "subject": "auto-eat mcp-server: 1 LIVE of 1 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T12:21:38Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "fdf1a94052fd5c4e8fd0a1eb8dacc1f03b2866c7c366ae6582203a83ec3e42e9",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-npm-registry-unsigned.json",
+      "surface": "autoeat.npm.registry",
+      "subject": "auto-eat npm-registry: 7 LIVE of 7 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T13:04:55Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "b5d7151baf80b1ddebbb24f915f887410b5a88d23f55adad0f8dc3ee0d8b79b1",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-swift-census-unsigned.json",
+      "surface": "autoeat.swift.census",
+      "subject": "auto-eat SWIFT census: 26 named / 3 LIVE / 0 MEASURED \u2014 not clients",
+      "as_of": "2026-09-01",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "ab4a3ad238a9f6bc9f9d22429d44a35472e8799bd37b9c758d86c72638c80a14",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-xrpl-accounts-unsigned.json",
+      "surface": "autoeat.xrpl.accounts",
+      "subject": "auto-eat xrpl-account: 2 LIVE of 2 probed (read-only, ungraded)",
+      "as_of": "2026-09-01T13:08:24Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "414eb06ff12549d599dfb58f36aff22a8144395a7436e0a6cae1f47bc76b14fd",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    },
+    {
+      "path": "/interop/auto-eat/card-autoeat-xrpl-twoway-unsigned.json",
+      "surface": "autoeat.xrpl.twoway",
+      "subject": "auto-eat xrpl two-way: 4 PASS of 16 (FAIL 9, UNCHECKABLE 3) \u2014 never 16/16",
+      "as_of": "2026-09-01T13:01:56Z",
+      "state": "queued",
+      "sig_ed25519": null,
+      "sha256": "96bb63902e7cc0592758f1452179aee6921dcef49711354cae2e4f99de497e40",
+      "inclusion": "listed_for_unsigned_inclusion_only",
+      "not_in_signed_root": true
+    }
+  ],
+  "do_not": [
+    "mutate signed root.json",
+    "invent sig_ed25519 / Rekor seal / Merkle seal",
+    "wrangler",
+    "certify",
+    "stamp MEASURED without n\u226530 + 4way + keystone",
+    "treat listed leaves as board slots"
+  ]
+}

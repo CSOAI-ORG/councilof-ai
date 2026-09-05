@@ -1,0 +1,28 @@
+{
+  "schema": "csoai.ccf-profile-data-hash-vector/0.1",
+  "purpose": "Show that 'the candidate Signed Statement' in the CCF Profile \u00a72.2 names two different byte sequences depending on whether the Receipt is present, so the specification must say which one data-hash is taken over.",
+  "not_a_transparency_service": "CSOAI does not operate a Transparency Service and does not mint Receipts. The receipt slot in (B) is an opaque placeholder and asserts nothing about any log. The demonstration is byte-level: any non-empty unprotected header changes the encoded bytes, so the conclusion does not depend on the placeholder's content.",
+  "reproduce": "python3 mint_data_hash_vector.py \u2014 deterministic (Ed25519, fixed seed)",
+  "test_key": {
+    "warning": "TEST ONLY. Seed is published. Protects nothing.",
+    "alg": "EdDSA (COSE alg -8)",
+    "seed_hex": "0000000000000000000000000000000000000000000000000000000000000001",
+    "public_key_hex": "4cb5abf6ad79fbf5abbccafcc269d85cd2651ed4b885b5869f241aedf0a5ba29"
+  },
+  "hash": "SHA-256 over the full encoded COSE_Sign1 INCLUDING the CBOR tag 18",
+  "signature_covers": "Sig_structure per RFC 9052 \u00a74.4 \u2014 protected header and payload only. The unprotected header is unsigned, which is why (B) verifies with the same signature as (A) while hashing differently.",
+  "A_signed_statement_as_registered": {
+    "unprotected_header": "empty map, per RFC 9943 \u00a76.3",
+    "bytes_hex": "d2845821a3012703706170706c69636174696f6e2f6a736f6e044a746573742d6b65792d31a0583b7b227375626a656374223a2263736f61693a696e7465726f703a646174612d686173682d766563746f72222c22636c61696d223a2274657374227d5840feca6d4a0e549e56f28ef8026a7b4fc34473cfcfed947d613a3a991fb49617781ee2af9ed45d97238f064e72db47ba2469ed4472d86f16b0688b196186525402",
+    "size_bytes": 165,
+    "data_hash_sha256": "8595e4a4c8b93e7b1b7b798dc302a2b7d2890021f7eff372d79b32f78867e4ac"
+  },
+  "B_same_statement_carrying_a_receipt": {
+    "unprotected_header": "{394: [<opaque placeholder>]}, per RFC 9943 \u00a77",
+    "bytes_hex": "d2845821a3012703706170706c69636174696f6e2f6a736f6e044a746573742d6b65792d31a119018a8158204f50415155452d504c414345484f4c4445522d4e4f542d412d52454345495054583b7b227375626a656374223a2263736f61693a696e7465726f703a646174612d686173682d766563746f72222c22636c61696d223a2274657374227d5840feca6d4a0e549e56f28ef8026a7b4fc34473cfcfed947d613a3a991fb49617781ee2af9ed45d97238f064e72db47ba2469ed4472d86f16b0688b196186525402",
+    "size_bytes": 203,
+    "data_hash_sha256": "063f8eb07510e6116ee5fc4308c63c8db6fb8fa33a2367ab79675b0fe3e89b3c"
+  },
+  "finding": "The two digests differ. A verifier holding a Transparent Statement and following \u00a72.2 as currently written cannot tell which of these it must reproduce. Naming (A) makes the check performable; naming (B) also makes it performable. Leaving it unstated does not.",
+  "position": "CSOAI supports Emek Can Dogru's candidate wording, which selects (A): data-hash is HASH over the bytes of the Signed Statement as registered, with the unprotected header set to the empty map as required by RFC 9943 \u00a76.3, and before any Receipt is added. We would equally support the other reading stated explicitly. Our only objection is to it remaining unstated."
+}

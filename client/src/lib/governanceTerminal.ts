@@ -34,8 +34,8 @@ export const TERMINAL_ROWS: TerminalRow[] = [
   {
     id: "moat-empty",
     kind: "moat",
-    title: "Empty slots published",
-    does: "Seven deferred systems on a 22-slot chart. Most GRC tools hide the gap.",
+    title: "Gaps published, not painted over",
+    does: "totals.unmeasured_axes from live GET /api/gspc — when a slot has no run, the gap stays visible. Most GRC tools hide it.",
   },
   {
     id: "moat-verify",

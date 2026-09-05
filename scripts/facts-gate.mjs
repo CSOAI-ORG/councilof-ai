@@ -143,6 +143,20 @@ const BREAKDOWN_BEFORE = /\b(?:\d+\s+of|the other|remaining|only|another)\s+$/i;
 // "13 axis signals", "5 axis lens" — the noun is qualified; not a board count.
 const QUALIFIED_AFTER = /^\s*(?:signals?|lens|families|groups?|pairs?)\b/i;
 
+// "3 axes carry an external public leader" — a SUBSET PREDICATE. The sentence says
+// how many axes have a property; it does not assert the board's total. Blocked the
+// whole deploy pipeline on 2026-09-03, and the sentence lives in
+// public/signed/gspc-board.signed.json — signed bytes, which are superseded, never
+// edited to satisfy a regex. So the gate learns the shape instead.
+//
+// Deliberately NARROW. Only transitive verbs that take an object ("carry a leader",
+// "report a run") are listed. "have", "has" and "are" are excluded on purpose: they
+// would exempt "14 axes have been measured", which is exactly the overclaim the
+// measured rule exists to catch and which neither MEASURED_RE (needs "N measured
+// axes") nor ALL_MEASURED_RE (needs a leading "all") would catch on its own.
+const SUBSET_PREDICATE_AFTER =
+  /^\s+(?:carry|carries|hold|holds|report|reports|expose|exposes|include|includes|list|lists)\b/i;
+
 function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
   if (liveCount == null) return;
 
@@ -191,6 +205,10 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
     if (BREAKDOWN_BEFORE.test(before)) continue;
     if (QUALIFIED_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
 
+    // A subset claim is only a subset if it is SMALLER than the whole. "23 axes
+    // carry X" against a 22-axis board is still a contradiction and still fails.
+    if (n < liveCount && SUBSET_PREDICATE_AFTER.test(text.slice(COUNT_RE.lastIndex))) continue;
+
     // A published correction quotes the wrong number on purpose.
     if (CORRECTION_CTX.test(ctx(text, m.index, COUNT_RE.lastIndex, 300))) continue;
 
@@ -236,15 +254,14 @@ function ruleAxisCount(facts, file, text, add, liveCount, rawContent = "") {
 // ---------------------------------------------------------------- measured-overclaim
 // THE FAILURE MODE THE 22-AXIS SWEEP CREATED, and the reason this rule exists.
 //
-// ruleAxisCount only compares an integer. Once the board carries 22 axes, the
-// sentence "22 measured axes" passes that check perfectly — the integer is right.
-// But it is the single most damaging thing the estate could publish: 22 is a count
-// of SLOTS, only 15 of which have a run behind them, so it silently claims seven
-// measurements that do not exist. An axis-count rule cannot catch it, because the
-// error is in the word "measured", not in the number.
-//
-// This rule reads the live MEASURED count and fails any surface asserting that more
-// axes are measured than are measured.
+// ruleAxisCount only compares against the SLOT count. A sentence like "N measured
+// axes" passes that check whenever N equals the slot total, even when fewer slots
+// actually carry a run — historically the estate's single most damaging class of
+// claim, because a published slot is not a measurement. The board now carries a run
+// on every slot (22 of 22), but the rule stays: it reads the live MEASURED count and
+// fails any surface asserting that MORE axes are measured than actually are. An
+// axis-count rule cannot catch that, because the error is in the word "measured",
+// not in the number.
 const MEASURED_RE = /\b(\d{1,3})\s+(?:of\s+\d{1,3}\s+)?measured\s+(?:axes|axis|slots)\b/gi;
 const ALL_MEASURED_RE = /\ball\s+(\d{1,3})\s+(?:axes|axis|slots)\s+(?:are|were|have\s+been)\s+measured\b/gi;
 
@@ -302,7 +319,78 @@ const RAIL_TERMS = {
   index_product: /\bindex product\b/i,
   data_business: /\bdata business\b/i,
   rating_the_raters: /rating[-\s]the[-\s]raters/i,
+  // A blanket "anchored to Bitcoin" is the claim to catch. Naming a specific
+  // block ("anchored at Bitcoin block 965268") is not in LIVE_TENSE and passes,
+  // which is the discipline we want: cite the block or speak in future tense.
+  ots_atom_anchor: /OpenTimestamps|\bOTS\b|\bBitcoin\b/i,
 };
+
+// ── rail SUBJECT scoping (2026-09-03) ────────────────────────────────────────
+// facts.json carries TWO Bitcoin/OTS rails with OPPOSITE statuses:
+//   ots_root_anchor   live      "Anchoring the published ROOT to Bitcoin via OpenTimestamps"
+//   ots_atom_anchor   planned   "Anchoring every queued ATOM, bridge card and press release"
+// RAIL_TERMS matches keywords only (Bitcoin|OTS|OpenTimestamps), and live rails are filtered
+// out of the tense rule entirely, so copy about the ROOT — the LIVE rail's subject — was being
+// attributed to the PLANNED atom rail and required to speak in future tense.
+//
+// That blocked every production deploy on 2026-09-03, and drove a lane to rewrite correct
+// indicative prose into "would be upgraded" / "would remain": the honesty gate manufacturing
+// evasive English about a file whose entire purpose is to say "this is a commitment, not an
+// anchor". A gate that forces a true statement to sound false has stopped measuring honesty.
+//
+// The exemption is deliberately narrow. It lifts ONLY inside the published-root artifacts, and
+// ONLY while the surrounding window is not talking about atoms — so "every queued atom is
+// anchored to Bitcoin" still fails INSIDE a root file, which is the claim the rail exists for.
+const RAIL_SUBJECT_EXEMPT = {
+  ots_atom_anchor: {
+    files: /^(root\.json|interop\/card-root-[^/]*\.json)$/,
+    unless: /\batoms?\b|\bqueued\b|\bpress release\b|\bbridge card\b/i,
+  },
+};
+
+// ── anchor-count: a CONCEPT rule, not a string match ──────────────────────────
+// Two passes of hand-grepping (mine and nicholas-48's) each missed what the other
+// caught, because the same claim appears in variant wordings: "the 4-anchor
+// machine", "signed, anchored measurement board", "4 anchors". The worst survivor
+// was in proofs.councilof.ai's schema.org JSON-LD — the copy crawlers and AI
+// assistants quote, so the version most likely to be repeated elsewhere as fact.
+//
+// A noun-form assertion carries no verb LIVE_TENSE can see, so capability-tense
+// could never catch it. This rule reads the number instead: facts.json declares
+// how many independent anchors actually exist, and any claim of MORE is flagged
+// however it is phrased. Understatement always passes.
+function ruleAnchorCount(facts, file, text, add) {
+  const declared = facts?.counts?.live_anchors?.value;
+  if (typeof declared !== "number") return;
+  const names = (facts.counts.live_anchors.names || []).join(", ");
+  const re = /\b(\d+|two|three|four|five|six)[-\s]anchor\b|\b(\d+|two|three|four|five|six)\s+(?:independent\s+)?anchors\b/gi;
+  const WORDS = { two: 2, three: 3, four: 4, five: 5, six: 6 };
+  let m;
+  while ((m = re.exec(text))) {
+    const raw = (m[1] || m[2] || "").toLowerCase();
+    const n = WORDS[raw] ?? parseInt(raw, 10);
+    if (!Number.isFinite(n) || n <= declared) continue;   // understatement is safe
+    const window = ctx(text, m.index, re.lastIndex, 130);
+    if (/\bplanned\b|\bwill\b|\bwould\b|\bonce\b|\bnot yet\b|\bfund(s|ing|ed)?\b|\boutcome\b/i.test(window)) {
+      continue;  // future/funded framing is honest — "OUTCOME: a 4-anchor machine"
+    }
+    // "anchor" has a second, unrelated sense in the 3D governance globe: map
+    // ANCHOR NODES, which are places, not cryptographic anchors. "6 Anchor nodes
+    // · 5 live" is a true statement about a map and must not be flagged. Match
+    // the noun that follows, not just the number.
+    if (/\banchor\s+nodes?\b/i.test(text.slice(m.index, re.lastIndex + 12))) continue;
+    add({
+      rule: "anchor-count",
+      file,
+      text: m[0],
+      why:
+        `claims ${n} anchors; facts.json counts.live_anchors declares ${declared} ` +
+        `(${names}). Bitcoin OpenTimestamps is stamped, not anchored — see rail ` +
+        `ots_atom_anchor. State it in future tense or name the live anchors.`,
+      ctx: window,
+    });
+  }
+}
 
 function ruleCapabilityTense(facts, file, text, add) {
   const rails = (facts.rails || []).filter(
@@ -310,7 +398,20 @@ function ruleCapabilityTense(facts, file, text, add) {
   );
   for (const rail of rails) {
     const term = RAIL_TERMS[rail.id];
-    if (!term) continue;
+    if (!term) {
+      // A rail declared in facts.json with no term here was SILENTLY UNENFORCED.
+      // That is how the OTS programme ran for a day with no gate over any of its
+      // anchoring claims. A fact nobody can check is not a fact; fail loudly.
+      add({
+        rule: "capability-tense",
+        file: "client/src/data/facts.json",
+        text: rail.id,
+        why: `rail "${rail.id}" is status "${rail.status}" but has no entry in RAIL_TERMS, ` +
+             `so no copy is ever checked against it. Add a term or the rail is decoration.`,
+        ctx: rail.claim,
+      });
+      continue;
+    }
     const re = new RegExp(term.source, "gi");
     let m;
     while ((m = re.exec(text))) {
@@ -318,6 +419,10 @@ function ruleCapabilityTense(facts, file, text, add) {
       const end = re.lastIndex;
       const window = ctx(text, start, end, 130);
       const lower = window.toLowerCase();
+
+      // Subject scoping: is this file the LIVE rail's subject rather than this rail's?
+      const scope = RAIL_SUBJECT_EXEMPT[rail.id];
+      if (scope && scope.files.test(file) && !scope.unless.test(window)) continue;
 
       // Exonerate: the copy already labels the honest status.
       if (/\bunmeasured\b|\bdevnet\b|\bplanned\b|\bnot yet\b|\bwill\b|\bwould\b|\bonce\b|\bcoming\b|\brefuses? to mint\b|\bnot attested\b|\bnot located\b/i.test(window)) {
@@ -413,6 +518,7 @@ function runRules(facts, files, rootDir, liveCount, liveMeasured) {
     ruleAxisCount(facts, rel, text, add, liveCount, raw);
     ruleMeasuredOverclaim(facts, rel, text, add, liveMeasured);
     ruleCapabilityTense(facts, rel, text, add);
+    ruleAnchorCount(facts, rel, text, add);
   }
   return violations;
 }
@@ -445,25 +551,47 @@ const SELFTEST_CASES = [
   ["VIOLATION: we certify", "<p>We certify that this model meets the standard.</p>", true],
   ["VIOLATION: our certification", "<p>Ask about our certification programme for vendors.</p>", true],
   ["VIOLATION: accredited by us", "<p>Labs accredited by us receive a badge.</p>", true],
-  // ── the 22-axis canon (ADR-001, swept into the signed data 2026-08-26) ────────
-  // These three cases were written when the board was 14 axes and "22" was a
-  // number nobody was allowed to say. The canon moved and the signed data now
-  // backs it, so the expectations move with it. What is forbidden changed shape
-  // rather than going away: the danger is no longer saying "22", it is saying
-  // "22 MEASURED" — which would claim seven measurements that do not exist.
+  // ── the 22-axis canon (ADR-001, swept into the signed data 2026-08-26; every
+  //    remaining slot measured in the later measurement sweep) ───────────────────
+  // These cases were first written when the board was 14 axes and "22" was a number
+  // nobody was allowed to say, then again when the board was "22 axes · 15 measured"
+  // and "22 MEASURED" was the forbidden overclaim. The canon has moved once more:
+  // every slot now carries a run, so the board is "22 axes · 22 measured" and
+  // "22 measured" is simply true. The overclaim rule still guards the line — it
+  // catches a claim of MORE measured axes than the board actually carries (now 22).
   ["prohibition form still passes", "<p>Cite live totals.public_count — do not invent 22 axes.</p>", false],
   ["22 axes is now the canon and matches the live board", "<p>The board carries 22 axes across both families.</p>", false],
   ["stale count: the pre-sweep 14", "<p>The board measures 14 axes across the fleet.</p>", true],
   ["board self-description: 13 canonical axes + jail (a GSPC-family stamp)", "<p>Measured on 2026-08-12 (13 canonical axes) · 2026-08-18 (jail).</p>", false],
-  ["honest swept grammar", "<p>22 axes · 15 measured — seven slots are declared with no run behind them.</p>", false],
-  ["VIOLATION: 22 measured axes (right integer, wrong word)", "<p>The board publishes 22 measured axes.</p>", true],
-  ["VIOLATION: all 22 axes are measured", "<p>All 22 axes are measured and signed.</p>", true],
-  ["honest: 15 measured axes", "<p>The board carries 15 measured axes today.</p>", false],
+  ["honest swept grammar", "<p>22 axes · 22 measured — every slot has a run behind it.</p>", false],
+  ["22 measured is now true, not an overclaim", "<p>The board publishes 22 measured axes.</p>", false],
+  ["all 22 axes are measured is now honest", "<p>All 22 axes are measured and signed.</p>", false],
+  ["VIOLATION: 30 measured axes (more than the board carries)", "<p>The board publishes 30 measured axes.</p>", true],
+  ["understatement passes (fewer than measured is safe)", "<p>The board carries 15 measured axes today.</p>", false],
   ["VIOLATION: EAS asserted live", "<p>Every attestation is anchored on EAS today.</p>", true],
   ["honest EAS label", "<p>EVM · EAS BlackRock BUIDL 0x7712c3420573… UNMEASURED</p>", false],
   ["VIOLATION: ERC-3643 asserted live", "<p>We issue ERC-3643 credentials; issuance runs on the trusted-issuer bridge.</p>", true],
   ["VIOLATION: XRPL mainnet carrier", "<p>Our attestations are published to XRPL mainnet in production.</p>", true],
   ["honest XRPL devnet", "<p>Network: XRPL DEVNET · evidence card 82994353b8f94337…</p>", false],
+  // ── OTS: a stamp is not an anchor (2026-09-03) ────────────────────────────────
+  // A card carrying a fresh OpenTimestamps stamp was described as "OTS-anchored to
+  // Bitcoin" while its proof held only a PendingAttestation. 245 of 261 .ots files
+  // in the repo were pending; the estate reported "42/45 OTS-anchored". The
+  // ots_atom_anchor rail is `planned` precisely so this copy cannot ship.
+  ["VIOLATION: atoms asserted OTS-anchored", "<p>Every queued atom is anchored to Bitcoin via OpenTimestamps.</p>", true],
+  ["VIOLATION: press releases asserted anchored", "<p>Every press release is signed and anchored on Bitcoin today.</p>", true],
+  ["honest pending label", "<p>Stamped, not yet anchored: the calendar has not committed this digest to Bitcoin.</p>", false],
+  ["honest future tense for atom anchoring", "<p>Each atom will be anchored to Bitcoin once a calendar commits it.</p>", false],
+  // ── anchor-count concept rule (2026-09-03) ───────────────────────────────────
+  // Each of these survived a hand-grep pass. The noun form carries no verb the
+  // tense rule can see; the JSON-LD one was live on proofs.councilof.ai.
+  ["VIOLATION: 4-anchor machine as a noun", "<p>The 4-anchor machine (HuggingFace + Rekor + corrections + Bitcoin OTS) made visible.</p>", true],
+  ["VIOLATION: four anchors spelled out", "<p>Our four anchors bind every measurement.</p>", true],
+  ["VIOLATION: anchor count in JSON-LD description", '{"@type":"WebSite","description":"A 4-anchor machine for AI measurement."}', true, "subdomains/proofs/index.html"],
+  ["honest: three live anchors named", "<p>Three independent live anchors — HuggingFace, Sigstore Rekor and a public corrections ledger.</p>", false],
+  ["honest: 4-anchor as a funded OUTCOME", "<p>OUTCOME: a 4-anchor machine that gives regulators a single verifiable surface.</p>", false],
+  ["honest: planned framing", "<p>A 4-anchor machine is planned once Bitcoin anchoring lands.</p>", false],
+  ["map anchor NODES are a different sense and must pass", "<p>6 Anchor nodes · 5 live on the governance globe.</p>", false],
   // ── unsigned interop scoping (#841 regression) ────────────────────────────────
   // An unsigned run artifact in /interop/ is a DIFFERENT INSTRUMENT from the board.
   // It legitimately says "4 axes" when measuring 4 axes on its own population.
@@ -475,6 +603,36 @@ const SELFTEST_CASES = [
     '{"signed": false, "status": "UNSIGNED", "board_write": "NOT WRITTEN. These 4 axes remain UNMEASURED."}',
     false,
     "interop/test-unsigned-run.json",
+  ],
+  // ── rail SUBJECT scoping: root vs atom (2026-09-03) ──────────────────────────
+  // The published root IS anchored (ots_root_anchor, status live). Individual atoms are
+  // NOT (ots_atom_anchor, status planned). Both mention Bitcoin, so a keyword-only match
+  // attributed root copy to the planned atom rail and blocked every deploy for a day.
+  // These four cases pin the boundary in both directions — the exemption must lift the
+  // false positive WITHOUT letting a real atom over-claim through.
+  [
+    "root artifact may state its own anchoring in the indicative",
+    '{"anchor_rule":"This root is anchored to Bitcoin via OpenTimestamps at block 965268."}',
+    false,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "root artifact explaining it is NOT yet an anchor still passes",
+    '{"anchor_rule":"This document is a commitment, not an anchor. It becomes anchored only when an OpenTimestamps proof over these bytes is upgraded into a Bitcoin block."}',
+    false,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "VIOLATION: atom over-claim INSIDE a root artifact is still caught",
+    '{"note":"Every queued atom is anchored to Bitcoin via OpenTimestamps."}',
+    true,
+    "interop/card-root-2026-09-03.json",
+  ],
+  [
+    "VIOLATION: the same root sentence outside a root artifact is not exempt",
+    '<p>Everything here is anchored to Bitcoin via OpenTimestamps.</p>',
+    true,
+    "subdomains/proofs/index.html",
   ],
 ];
 
@@ -494,6 +652,7 @@ async function selftest(facts) {
     ruleAxisCount(facts, file, text, add, liveCount, html);
     ruleMeasuredOverclaim(facts, file, text, add, liveMeasured);
     ruleCapabilityTense(facts, file, text, add);
+    ruleAnchorCount(facts, file, text, add);
     const didFail = violations.length > 0;
     const ok = didFail === shouldFail;
     if (ok) pass++;

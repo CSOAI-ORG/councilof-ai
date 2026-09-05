@@ -126,7 +126,10 @@ export default function EstateDoors() {
     {
       name: "cobolbridge.ai",
       href: "/cobolbridge",
-      state: { label: "in build · apex 522", detail: "not probed from your browser; Pages origin is live, custom domain is not attached; do not demo the 522", tone: "warn" },
+      // De-emphasised (was tone "warn" + a loud "apex 522 / do not demo"): the apex
+      // simply has no custom domain attached yet, which is an honest in-build gap, not
+      // a live broken door. Same facts, calmer reading.
+      state: { label: "in build", detail: "not probed from your browser — the Pages origin is live; the custom domain is not attached yet, so the apex is not a live door", tone: "gap" },
     },
     {
       name: "OpenTelemetry",

@@ -140,7 +140,7 @@ const STATE_STYLE: Record<State, { label: string; cls: string }> = {
 const RETRACTED = [
   { claim: "Governance-tuning our models makes them safer", was: "shipped", now: "WORSE than the base — refusal 0.419 → 0.097; 83.9% compliance leak on prohibited requests" },
   { claim: "The deterministic gate is our strongest component", was: "+34.84", now: "−20.00 [−65.26, +25.26], n=6" },
-  { claim: "3-leg quorum is multi-leg", was: "3 votes", now: "n_eff 1.21 of 3, φ̄ +0.743" },
+  { claim: "3-leg quorum is multi-leg", was: "3 votes", now: "latest published point test: rho=1, n_eff=1; historical DR-0007 number is unbound because its cited artifact is absent" },
   { claim: "Per-dimension expert routing beats one good model", was: "routing on", now: "+0.90 [−1.99, +3.79] — no effect" },
   { claim: "Statute retrieval helps (ungated)", was: "retrieval on", now: "−9.16 [−17.64, −0.69] — significant harm" },
   { claim: "…with a relevance gate", was: "—", now: "−5.26 [−12.66, +2.13] — no benefit" },
@@ -177,6 +177,7 @@ export default function Benchmarks() {
       <div className="bg-gradient-to-br from-white via-emerald-50 to-emerald-100 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950 py-20">
         <div className="container max-w-6xl">
           <img
+            data-pane-hide=""
             src="/images/detail/board_arena_detail.jpg"
             alt="The measurement estate — six surfaces, one signed foundation"
             className="mb-8 h-44 w-full rounded-2xl object-cover sm:h-56"

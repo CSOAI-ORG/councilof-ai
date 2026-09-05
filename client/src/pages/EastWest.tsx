@@ -11,8 +11,15 @@ type CrossBorderCard = {
   content_id?: string;
 };
 
+type LiveTotals = {
+  public_count?: string;
+  lid?: string;
+  public_leader_count?: number;
+};
+
 export default function EastWest() {
   const [card, setCard] = useState<CrossBorderCard | null>(null);
+  const [live, setLive] = useState<LiveTotals | null>(null);
   const [err, setErr] = useState("");
 
   useEffect(() => {
@@ -21,7 +28,33 @@ export default function EastWest() {
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then(setCard)
       .catch((e) => setErr(String(e.message || e)));
+    // Live counts overlay the signed card's frozen measured_axes paste.
+    // Do not rewrite the signed JSON (Ed25519); the UI path must not present
+    // "15 measured as of 2026-08-28" as current.
+    fetch("/api/gspc", { headers: { accept: "application/json" } })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
+      .then((d) => {
+        const t = d?.totals;
+        if (!t || typeof t !== "object") return;
+        setLive({
+          public_count: typeof t.public_count === "string" ? t.public_count : undefined,
+          lid: typeof t.lid === "string" ? t.lid : undefined,
+          public_leader_count:
+            typeof t.public_leader_count === "number" ? t.public_leader_count : undefined,
+        });
+      })
+      .catch(() => {
+        /* card still renders; live line falls back to pointing at the API */
+      });
   }, []);
+
+  const measuredLine = live?.lid
+    ? live.lid
+    : live?.public_count
+      ? live.public_leader_count != null
+        ? `${live.public_count} · ${live.public_leader_count} public leader scores`
+        : live.public_count
+      : null;
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -68,7 +101,26 @@ export default function EastWest() {
           {card && (
             <div className="mt-4 space-y-3 text-sm">
               <p><span className="text-emerald-300/70">Title:</span> {card.title}</p>
-              <p><span className="text-emerald-300/70">Measured:</span> {card.measured_axes}</p>
+              <p>
+                <span className="text-emerald-300/70">Measured (live):</span>{" "}
+                {measuredLine ?? (
+                  <>
+                    counts live on{" "}
+                    <a className="underline" href="/api/gspc">
+                      GET /api/gspc
+                    </a>
+                    {" "}— do not treat the signed card&apos;s dated measured_axes paste as current
+                  </>
+                )}
+              </p>
+              <p className="text-xs text-emerald-100/55">
+                Signed card may carry a historical dated measured_axes paste; live counts always
+                come from{" "}
+                <a className="underline" href="/api/gspc">
+                  GET /api/gspc
+                </a>
+                . The blob is not rewritten here (Ed25519).
+              </p>
               <p><span className="text-emerald-300/70">Board:</span> <a className="underline" href={card.measurement}>{card.measurement}</a></p>
               {card.content_id && (
                 <p className="font-mono text-[11px] text-emerald-300/60">content_id: {card.content_id.slice(0, 24)}…</p>

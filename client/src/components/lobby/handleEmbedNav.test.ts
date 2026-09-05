@@ -79,6 +79,15 @@ describe("handleEmbedNav", () => {
     expect(a.calls.setOverride).toEqual([[null]]);
   });
 
+  it("hands the legacy benchmarks route to native Results", () => {
+    const a = applyMock();
+    run(msg("/benchmarks"), a);
+    expect(a.calls.setFrameSrc).toEqual([[""]]);
+    expect(a.calls.setFramePath).toEqual([[""]]);
+    expect(a.calls.setTabId).toEqual([["results"]]);
+    expect(a.calls.setOverride).toEqual([[null]]);
+  });
+
   it("sets an override chip for Pricing inside Products", () => {
     const a = applyMock();
     run(msg("/pricing", { title: "Pricing — Council of AI" }), a);

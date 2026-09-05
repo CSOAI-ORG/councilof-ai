@@ -22,8 +22,8 @@ import { useBoardCount } from "@/lib/boardCount";
  * THE HONESTY RULES (same as LiveLeaderboard):
  *   1. No number is hardcoded. Per-axis rate, n, and model list come from the API.
  *   2. A thin-n axis is a DESIGNED state — "insufficient data to rank", not a ranking.
- *   3. Every score is a measurement; the signature proof is the point. A "verify this
- *      leaderboard" toggle recomputes the content_id and shows match:true|false.
+ *   3. The published board carries an Ed25519 signature. A "verify this leaderboard"
+ *      toggle checks both the content hash and that signature against the pinned key.
  *
  * Doctrine: measurement, not certification. We publish the verify path; neither
  * OpenRouter (usage rank, no provenance) nor LMArena (crowd Elo, no verify path) does.
@@ -58,7 +58,13 @@ export default function ArenaScoreboard() {
   const board = useBoardCount();
   const [data, setData] = useState<Payload | null>(null);
   const [err, setErr] = useState<string | null>(null);
-  const [verify, setVerify] = useState<{ content_id?: string; expected?: string; match?: boolean } | null>(null);
+  const [verify, setVerify] = useState<{
+    content_id?: string;
+    expected?: string;
+    hash_match?: boolean;
+    signature_valid?: boolean;
+    verified?: boolean;
+  } | null>(null);
   const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
@@ -80,9 +86,15 @@ export default function ArenaScoreboard() {
     try {
       const r = await fetch("/api/arena/scoreboard?verify=1", { headers: { accept: "application/json" } });
       const d = await r.json();
-      setVerify({ content_id: d.content_id, expected: d.expected, match: d.match });
+      setVerify({
+        content_id: d.content_id,
+        expected: d.expected,
+        hash_match: d.hash_match,
+        signature_valid: d.signature_valid,
+        verified: d.verified,
+      });
     } catch {
-      setVerify({ match: false, expected: "fetch failed" });
+      setVerify({ verified: false, expected: "fetch failed" });
     } finally {
       setVerifying(false);
     }
@@ -116,16 +128,16 @@ export default function ArenaScoreboard() {
           The signed <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">per-axis leaderboard.</span>
         </h1>
         <p className="mt-3 max-w-2xl text-emerald-100/80">
-          Every score is a deterministic measurement of the OOWM fleet on a frozen probe.
-          Every board is content-addressed and Ed25519-signed — you can recompute it and verify
-          it against the published key. That verify path is the point: it is what neither a
+          Scores on this published board are deterministic measurements of the named fleet on frozen probes.
+          This board is content-addressed and Ed25519-signed — you can recompute it and verify
+          it against the pinned published key. That verify path is the point: it is what neither a
           usage rank nor a crowd Elo can offer.
         </p>
         <p className="mt-3 max-w-2xl text-sm text-emerald-200/60">
           The arena measures a different thing over a different axis set from the GSPC board, so
           the two counts are not the same number and are not reconciled. The count on this page is
           the arena&apos;s own, read from <code>axis_pass_rates</code>. The board&apos;s count is{" "}
-          <Link to="/gspc-scoreboard" className="underline hover:text-emerald-200">
+          <Link to="/dashboard?tab=board" className="underline hover:text-emerald-200">
             {board.public_count}
           </Link>
           , derived from <code>GET /api/gspc</code>.
@@ -153,15 +165,21 @@ export default function ArenaScoreboard() {
       </div>
 
       {verify && (
-        <div className={`mb-6 rounded-2xl border p-4 text-sm ${verify.match ? "border-emerald-500/40 bg-emerald-500/10" : "border-amber-500/40 bg-amber-500/10"}`}>
+        <div className={`mb-6 rounded-2xl border p-4 text-sm ${verify.verified ? "border-emerald-500/40 bg-emerald-500/10" : "border-amber-500/40 bg-amber-500/10"}`}>
           <p className="font-bold">
-            {verify.match ? "✓ signature verified — the recomputed id matches." : "✗ signature check failed."}
+            {verify.verified
+              ? "✓ content hash and Ed25519 signature verified."
+              : verify.hash_match
+                ? "✗ content hash matches, but the Ed25519 signature did not verify."
+                : "✗ content hash mismatch; signature trust was not established."}
           </p>
           <p className="mt-1 font-mono text-xs text-emerald-200/70">
             content_id: {verify.content_id?.slice(0, 16)}
             {verify.expected ? ` · expected: ${verify.expected.slice(0, 16)}` : ""}
           </p>
-          <p className="mt-1 text-xs text-emerald-300/60">Recomputed on the edge, checked against the pod-signed content_id.</p>
+          <p className="mt-1 text-xs text-emerald-300/60">
+            Hash recomputed on the edge; signature checked over the content_id against did:web:csoai.org#card-attestation-1.
+          </p>
         </div>
       )}
 

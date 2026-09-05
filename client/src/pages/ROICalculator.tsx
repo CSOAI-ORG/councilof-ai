@@ -70,7 +70,7 @@ export default function ROICalculator() {
     },
     {
       icon: <Users className="w-8 h-8 text-blue-400" />,
-      title: "33-agent Council of AI",
+      title: "33-seat Council of AI",
       description: "Diverse expert agents ensuring robust governance decisions"
     },
     {
@@ -313,7 +313,7 @@ export default function ROICalculator() {
               Contact our advisory team for a personalized ROI assessment tailored to your organization's unique needs and AI governance challenges.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/os?lobby=assess&task=get-measured">
+              <Link href="/dashboard?task=get-measured&tab=measured">
                 <a className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
                   Get measured
                   <ArrowRight className="w-5 h-5" />

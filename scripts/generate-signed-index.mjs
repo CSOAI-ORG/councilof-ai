@@ -32,13 +32,20 @@ const sizeOf = (p) => { try { return statSync(p).size; } catch { return null; } 
 
 // One line each, describing what the FILE is — not what we would like it to prove.
 const BLURB = {
+  "card-matrix.json": "Unsigned index data assembled from published card metadata; not a signed card envelope.",
   "card_index.json": "Index of published measurement cards. Each row carries card id, axis, timestamp, signed flag and key id — the full payload (pubkey, signature, preimage) lives in the per-card file.",
-  "chain.json": "Append-only signature chain over the published record.",
-  "gspc-board.signed.json": "The signed board snapshot.",
-  "gspc-measurement.json": "Measurement output behind the board.",
-  "board_living.json": "The living board state.",
+  "chain-facts.json": "Derived source data about chain records; not a signature envelope.",
+  "chain.json": "Source-maintained chain document. Verify individual hashes and signatures; no append-only storage property is asserted by this index.",
+  "gspc-board.signed.json": "MPC-signed historical board freeze. Check gspc-board.status.json before relying on it as current.",
+  "gspc-board.status.json": "Fail-closed status for the preserved MPC board freeze; names known claim defects and the current authority.",
+  "gspc-measurement.json": "Measurement-data bundle behind the board; inspect its own signature fields and verification state rather than assuming the whole file is signed.",
+  "board_living.json": "Living-board data whose embedded historical stamp is explicitly UNVERIFIABLE; not a valid attestation.",
   "arena_scoreboard.json": "Arena scoreboard artifact.",
-  "eat_compliance_board.json": "Compliance board artifact.",
+  "eat_compliance_board.json": "Legacy board artifact; its filename is not a compliance determination.",
+  "findings_index.json": "Unsigned findings index; source data, not a signed card envelope.",
+  "hub-census-baseline.json": "Unsigned dated census source data.",
+  "hub-census-delta.json": "Unsigned dated census-delta source data.",
+  "public-root-leaf-union.json": "Derived union of candidate root leaves; verify against the authoritative public-root envelope before relying on membership.",
   "verify-card.mjs": "Standalone verifier. Runs on plain Node with no dependencies and no network beyond fetching the card and the DID document.",
   "HOW-TO-VERIFY.md": "Step-by-step verification, starting with pinning the key against /.well-known/did.json. Served as text/plain so it renders in a browser instead of downloading.",
 };
@@ -124,7 +131,7 @@ const rows = top.map((f) => {
 
 const indexBody = `
 <h1>Published evidence — <code>/signed/</code></h1>
-<p class="lede">Every artifact this directory serves, with its size and what it is. Nothing here asks you to trust us: the verification procedure runs against these bytes with a pinned key.</p>
+<p class="lede">Every artifact this directory serves, with its size and what it is. This tree mixes signed card envelopes, indexes, source data and legacy artifacts. A filename or directory does not make an artifact signed; use the family-specific procedure and inspect the artifact's own state.</p>
 
 <div class="note">
 <strong>Start here:</strong> <a href="/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a> — pin the signing key against
@@ -147,6 +154,7 @@ ${rows}
 </table>
 
 <h2>Verify one card, end to end</h2>
+<p>This procedure applies to the published measurement-card family in <code>cards/</code>. It does not verify every top-level JSON file listed above.</p>
 <pre><code># 1. pin the key
 curl -s https://councilof.ai/.well-known/did.json
 

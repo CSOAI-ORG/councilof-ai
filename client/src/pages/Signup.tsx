@@ -101,14 +101,14 @@ export default function Signup() {
           </h1>
 
           <p className="text-lg text-gray-600 mb-8">
-            CSOAI is the Council AI governance operating system — your own Council assistant, a live
-            governance graph, a signing council, and every framework crosswalked on one Layer 0 floor.
+            CSOAI brings an AI governance assistant, published maps, framework crosswalks and
+            verifiable measurement cards into one workspace. The multi-seat Council remains a design.
           </p>
 
           <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
             <p className="text-sm text-green-900 font-medium mb-2">
-              "Comply once and it crosswalks everywhere — EU AI Act, NIST, ISO 42001, PIPL. The Council
-              signs every decision to Layer 0, so it's provable, not promised."
+              "Map one control across the published EU AI Act, NIST AI RMF, ISO 42001 and PIPL
+              crosswalks, then verify the evidence for the specific measurement you rely on."
             </p>
             <p className="text-xs text-green-700">— Why teams pick the Council OS</p>
           </div>
@@ -129,7 +129,7 @@ export default function Signup() {
               <div>
                 <h3 className="font-semibold text-gray-900">Signed to Layer 0</h3>
                 <p className="text-sm text-gray-600">
-                  Every verdict Ed25519-signed and verifiable offline — EU AI Act Article 50 transparent.
+                  Published measurement cards are Ed25519-verifiable offline. A workspace answer is not automatically a signed verdict.
                 </p>
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function Signup() {
               <div className={"rounded-lg p-4 border " + (PLAN_INFO[plan].accent === 'amber' ? 'bg-amber-50 border-amber-300' : 'bg-emerald-50 border-emerald-300')}>
                 <div className="flex items-center justify-between">
                   <h3 className={"font-bold " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-900' : 'text-emerald-900')}>Selected plan: {PLAN_INFO[plan].label}</h3>
-                  <a href="/os?lobby=assess&task=pricing-overview" className="text-xs text-gray-500 hover:underline">how the free rail works</a>
+                  <a href="/dashboard?task=pricing-overview&tab=measured" className="text-xs text-gray-500 hover:underline">how the free rail works</a>
                 </div>
                 <p className={"mt-1 text-sm " + (PLAN_INFO[plan].accent === 'amber' ? 'text-amber-800' : 'text-emerald-800')}>{PLAN_INFO[plan].blurb}</p>
                 <p className="mt-2 text-xs text-gray-500">Create your account first — you'll confirm billing on the next step. No charge today.</p>

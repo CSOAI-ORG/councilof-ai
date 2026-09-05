@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.tlog-posix-scaffold/0.1",
+  "as_of": "20260905T043106Z",
+  "research_source": "docs/research/PQ-AND-TLOG-GAPS-2026-09-05.md",
+  "principle": "POSIX tlog-tiles layout for our own transparency log.",
+  "spec": {
+    "tile_size_hashes": 256,
+    "tile_size_bytes": 8192,
+    "entry_format": "tlog-tiles v1",
+    "checkpoint_format": "RFC 9162 Signed Certificate Transparency V2",
+    "immutability": "everything immutable except /checkpoint",
+    "witnessing": "run our own (two Workers in different accounts)"
+  },
+  "upstream": {
+    "name": "transparency-dev/tessera",
+    "license": "Apache-2.0",
+    "use": "POSIX driver writes tlog-tiles layout, checkpoint, entry bundles to FS",
+    "serving": "tree can be served read-only by nginx"
+  },
+  "deployment": {
+    "target": "Cloudflare R2 (object storage) or Pages (static)",
+    "rationale": "free tier, immutable, edge-cached, no daemon"
+  },
+  "witnessing": {
+    "caveat": "tlog-witness defines the protocol but no free public witness network exists",
+    "plan": "run our own \u2014 two Workers in different accounts is a legitimate 'two machines' answer"
+  },
+  "research_caveat": "tlog-witness defines the protocol but we could find no free public witness network. Assume we run our own \u2014 a second Worker in a different account is a legitimate 'two machines' answer."
+}

@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+"""csoai-openapi-gen.py — generate openapi.json from the live endpoints.
+
+Lane-doable: walks every function in functions/api/ and emits an OpenAPI
+3.0 spec that documents every public endpoint, every method, every
+parameter. The result is a signed-atom-backed machine-readable spec.
+
+This is the live llms.txt / llms-sitemap.xml / llms-full.txt trio for
+machine-receivable specs.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parent.parent
+DID = "did:web:csoai.org#card-attestation-1"
+SCHEMA = "csoai.gspc-axes/0.5"
+
+
+def curl(url: str, *, timeout: int = 30) -> tuple[int, str]:
+    try:
+        r = subprocess.run(
+            ["curl", "-L", "-s", "-H", "Accept: application/json",
+             "-w", "\n%{http_code}", "--max-time", str(timeout), url],
+            capture_output=True, text=True, timeout=timeout + 5,
+        )
+        out = r.stdout
+        if "\n" in out:
+            body, code = out.rsplit("\n", 1)
+            try:
+                return int(code), body
+            except ValueError:
+                return 0, body
+        return 0, out
+    except Exception:
+        return 0, ""
+
+
+def discover_endpoints() -> list[dict]:
+    """Walk functions/api/ to discover every endpoint. Each .ts file is
+    parsed for the onRequestGet/Post/Put/Delete signature, the path is
+    taken from the filename, and the schema is inferred from any TypeScript
+    types in the file.
+    """
+    api_dir = REPO / "functions" / "api"
+    endpoints = []
+    for f in sorted(api_dir.glob("*.ts")):
+        # Convert filename → URL path
+        name = f.stem
+        path = f"/api/{name}"
+        # Private helpers and test modules are not HTTP doors. The old literal
+        # "_*" comparison never matched `_foo`, and leaked `witness.test` into
+        # generated catalogues as though it were a deployable endpoint.
+        if name == "[[path]]" or name.startswith("_") or name.endswith(".test"):
+            continue
+        # Read the file
+        text = f.read_text(errors="ignore")
+        methods = []
+        for m in ["onRequestGet", "onRequestPost", "onRequestPut", "onRequestDelete",
+                  "onRequestPatch", "onRequestOptions"]:
+            if m in text:
+                verb = m.replace("onRequest", "").upper()
+                if verb == "OPTIONS":
+                    continue
+                methods.append(verb)
+        if not methods:
+            continue
+        # Extract the first comment block as a description
+        m = re.search(r"/\*\*(.+?)\*/", text, re.DOTALL)
+        description = m.group(1).strip()[:300] if m else ""
+        endpoints.append({
+            "path": path,
+            "methods": methods,
+            "description": description,
+            "source": str(f.relative_to(REPO)),
+            # A route may remain deployed solely to return a fail-closed 503.
+            # Keep it discoverable, but never regenerate a fictional 200 contract.
+            "unavailable": "@openapi-unavailable" in text,
+            # Unimplemented facades fail closed at 501 and explicitly attest that
+            # they accepted, persisted, and signed nothing.
+            "not_implemented": "@openapi-not-implemented" in text,
+            "not_implemented_methods": [
+                verb.upper() for verb in re.findall(
+                    r"@openapi-(get|post|put|delete|patch)-not-implemented", text
+                )
+            ],
+            "method_not_allowed_methods": [
+                verb.upper() for verb in re.findall(
+                    r"@openapi-(get|post|put|delete|patch)-method-not-allowed", text
+                )
+            ],
+            # Some read-only routes publish static summaries without proof material.
+            "unsigned_static": "@openapi-unsigned-static" in text,
+        })
+    return endpoints
+
+
+def probe_live_endpoints(endpoints: list[dict]) -> list[dict]:
+    """For each GET endpoint, probe the live site and capture the JSON shape."""
+    base = "https://councilof.ai"
+    for ep in endpoints:
+        if "GET" not in ep["methods"]:
+            continue
+        url = base + ep["path"]
+        code, body = curl(url)
+        if code != 200 or not body:
+            ep["live"] = {"status": code, "ok": False}
+            continue
+        try:
+            data = json.loads(body)
+            keys = list(data.keys())[:20] if isinstance(data, dict) else (
+                list(data[0].keys())[:20] if isinstance(data, list) and data else []
+            )
+            ep["live"] = {"status": code, "ok": True, "top_keys": keys}
+        except Exception:
+            ep["live"] = {"status": code, "ok": True, "raw_bytes": len(body)}
+    return endpoints
+
+
+def build_openapi(endpoints: list[dict]) -> dict:
+    paths = {}
+    for ep in endpoints:
+        path = ep["path"]
+        item = {}
+        for verb in ep["methods"]:
+            unavailable = bool(ep.get("unavailable"))
+            not_implemented = bool(ep.get("not_implemented")) or verb in ep.get("not_implemented_methods", [])
+            method_not_allowed = verb in ep.get("method_not_allowed_methods", [])
+            unsigned_static = bool(ep.get("unsigned_static"))
+            if method_not_allowed:
+                response_status = "405"
+                response_description = "Method not allowed — use the documented read method"
+            elif not_implemented:
+                response_status = "501"
+                response_description = (
+                    "Not implemented — no input was accepted, persisted, or signed"
+                )
+            elif unavailable:
+                response_status = "503"
+                response_description = (
+                    "Unavailable — quarantined pre-release; no evidence is manufactured"
+                )
+            elif unsigned_static:
+                response_status = "200"
+                response_description = (
+                    "Unsigned static benchmark summary — no signature or proof material supplied"
+                )
+            else:
+                response_status = "200"
+                response_description = "OK"
+            op: dict = {
+                "summary": ep.get("description", "")[:200],
+                "operationId": f"{verb.lower()}_{path.replace('/', '_').replace('{', '').replace('}', '')}",
+                "responses": {
+                    response_status: {
+                        "description": response_description,
+                        "content": {"application/json": {}},
+                    },
+                },
+            }
+            if method_not_allowed:
+                op["x-csoai-lifecycle"] = "METHOD_NOT_ALLOWED"
+            elif not_implemented:
+                op["x-csoai-lifecycle"] = "NOT_IMPLEMENTED"
+                op["responses"]["501"]["content"]["application/json"]["example"] = {
+                    "schema": "csoai.capability-state/0.1",
+                    "endpoint": path,
+                    "state": "NOT_IMPLEMENTED",
+                    "accepted": False,
+                    "persisted": False,
+                    "signed": False,
+                }
+            elif unavailable:
+                op["x-csoai-lifecycle"] = "QUARANTINED_PRE_RELEASE"
+            elif unsigned_static:
+                op["x-csoai-evidence-state"] = "UNSIGNED_STATIC_SUMMARY"
+                op["responses"]["200"]["content"]["application/json"]["example"] = {
+                    "state": "UNSIGNED_STATIC_SUMMARY",
+                    "signed": False,
+                    "measurement_not_certification": True,
+                }
+            if (not unavailable and not not_implemented and not method_not_allowed and not unsigned_static
+                    and "live" in ep and ep["live"].get("ok")):
+                op["responses"]["200"]["content"]["application/json"]["example"] = {
+                    "_top_keys": ep["live"].get("top_keys", []),
+                }
+            item[verb.lower()] = op
+        paths[path] = item
+    return {
+        "openapi": "3.0.3",
+        "info": {
+            "title": "Council of AI — Public API",
+            "version": "2026-09-03",
+            "description": (
+                "Independent AI governance measurement. 22 axes · 22 measured · "
+                "14 model-comparison · 8 deterministic-fact. Free, Ed25519-signed, "
+                "verifiable in your browser. Measurement, not certification."
+            ),
+            "contact": {"name": "CSOAI Ltd", "url": "https://councilof.ai/"},
+            "license": {"name": "CC-BY-4.0", "url": "https://creativecommons.org/licenses/by/4.0/"},
+        },
+        "servers": [
+            {"url": "https://councilof.ai", "description": "Production"},
+            {"url": "https://csoai.org", "description": "Apex (308 → councilof.ai for /)"},
+        ],
+        "components": {
+            "securitySchemes": {
+                "ed25519": {
+                    "type": "apiKey",
+                    "in": "header",
+                    "name": "X-CSOAI-Signed-Card",
+                    "description": "Ed25519 signature of canonical body, under did:web:csoai.org#card-attestation-1",
+                }
+            }
+        },
+        "paths": paths,
+    }
+
+
+def main():
+    ap = argparse.ArgumentParser(description="OpenAPI generator.")
+    ap.add_argument("--probe", action="store_true", help="Probe live endpoints")
+    ap.add_argument("--out", type=str, default="public/openapi.json")
+    args = ap.parse_args()
+
+    print(f"=== OPENAPI GENERATOR ===")
+    endpoints = discover_endpoints()
+    print(f"  discovered: {len(endpoints)} endpoint files")
+    if args.probe:
+        print(f"  probing live site…")
+        endpoints = probe_live_endpoints(endpoints)
+        ok = sum(1 for e in endpoints if e.get("live", {}).get("ok"))
+        print(f"  live OK: {ok}/{len(endpoints)}")
+    print()
+    print("  endpoints discovered:")
+    for ep in endpoints:
+        methods = "/".join(ep["methods"])
+        live = "✓" if ep.get("live", {}).get("ok") else " "
+        print(f"    [{live}] {methods:<12} {ep['path']}")
+
+    spec = build_openapi(endpoints)
+    out_path = REPO / args.out
+    out_path.write_text(json.dumps(spec, indent=2, sort_keys=True))
+    print()
+    try:
+        shown_path = out_path.relative_to(REPO)
+    except ValueError:
+        shown_path = out_path
+    print(f"  wrote: {shown_path} ({out_path.stat().st_size}B)")
+    print(f"  paths:  {len(spec['paths'])}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

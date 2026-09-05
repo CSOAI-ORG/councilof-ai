@@ -157,18 +157,19 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    Our platform incorporates artificial intelligence, including the designed 33-agent Council of AI (a design, not a measured live pipeline).
+                    Our platform incorporates artificial intelligence, including the designed 33-seat Council of AI (a design, not a measured live pipeline).
                     Users should understand:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
-                      <strong>AI systems can make mistakes.</strong> Despite our multi-agent consensus approach,
+                      <strong>AI systems can make mistakes.</strong> AI-assisted assessments,
                       AI-generated assessments, recommendations, and content may contain errors, omissions, or
                       inaccuracies.
                     </li>
                     <li>
-                      <strong>designed multi-agent review has limits.</strong> Our 22/33 consensus threshold
-                      reduces but does not eliminate the possibility of incorrect conclusions.
+                      <strong>the council is a design, not a live safeguard.</strong> The target is a
+                      23/33 threshold (strictly greater than two thirds), but no independent live voters,
+                      consensus property, or resilience under failed voters have been demonstrated.
                     </li>
                     <li>
                       <strong>AI cannot replace human judgment.</strong> All AI-generated outputs should be
@@ -203,7 +204,7 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    CSOAI LTD maintains professional indemnity insurance for its own operations. However:
+                    CSOAI LTD does not state professional indemnity cover on this page until the policy document is on file (corrections ledger C-2026-0902-06). In any case:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>

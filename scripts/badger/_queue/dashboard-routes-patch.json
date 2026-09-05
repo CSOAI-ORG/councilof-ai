@@ -1,0 +1,19 @@
+{
+  "file": "client/src/App.tsx",
+  "patch": {
+    "imports": [
+      "import DashboardMemoryPane from '@/components/DashboardMemoryPane';",
+      "import DashboardFilesPane from '@/components/DashboardFilesPane';",
+      "import DashboardSandboxPane from '@/components/DashboardSandboxPane';",
+      "import DashboardOperatorPane from '@/components/DashboardOperatorPane';",
+      "import DashboardAtlasPane from '@/components/DashboardAtlasPane';"
+    ],
+    "routes": [
+      "<Route path=\"/dashboard/memory\" component={DashboardMemoryPane} />",
+      "<Route path=\"/dashboard/files\" component={DashboardFilesPane} />",
+      "<Route path=\"/dashboard/sandbox\" component={DashboardSandboxPane} />",
+      "<Route path=\"/dashboard/operator\" component={DashboardOperatorPane} />",
+      "<Route path=\"/dashboard/atlas\" component={DashboardAtlasPane} />"
+    ]
+  }
+}

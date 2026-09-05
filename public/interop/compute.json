@@ -1,0 +1,36 @@
+{
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Compute bridge status probe",
+  "state": "UNCHECKABLE",
+  "description": "Read-only status probe quoting a committed census and, only when configured, probing an AG-UI health URL. It is not a compute attestation or grade.",
+  "as_of": "20260905T045748Z",
+  "transport": {
+    "handler": "functions/api/compute.ts",
+    "methods": [
+      "GET"
+    ],
+    "path": "/api/compute",
+    "outcomes": []
+  },
+  "output": {
+    "schema": "csoai.compute-bridge/1",
+    "census": "catalogued committed baseline",
+    "agui_states": [
+      "unconfigured",
+      "live",
+      "down",
+      "unreachable"
+    ],
+    "measurement_state": "UNMEASURED",
+    "writes_board": false
+  },
+  "capabilities": {
+    "accepts_writes": false,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
+  }
+}

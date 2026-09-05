@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof Portal — CSOAI</title>
+<meta name="description" content="Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation." />
+<link rel="canonical" href="https://proofs.councilof.ai" />
+<meta property="og:title" content="Proof Portal — CSOAI" />
+<meta property="og:description" content="Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://proofs.councilof.ai" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Proof Portal \u2014 CSOAI",
+  "description": "Verification material for published artefacts. The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation.",
+  "url": "https://proofs.councilof.ai",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  },
+  "inLanguage": "en",
+  "dateModified": "2026-09-04T04:40:22Z"
+}</script>
+<style>
+  :root { --accent: #2563eb; --bg: #0a0a0a; --fg: #fafafa; --muted: #a3a3a3; --card: #171717; --border: #262626; }
+  * { box-sizing: border-box; }
+  body { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; background: var(--bg); color: var(--fg); }
+  header { padding: 64px 24px 32px; max-width: 960px; margin: 0 auto; }
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 96px; }
+  h1 { font-size: 48px; line-height: 1.1; margin: 0 0 16px; font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: 28px; margin: 48px 0 16px; font-weight: 800; letter-spacing: -0.01em; }
+  p { font-size: 17px; line-height: 1.6; color: var(--muted); }
+  .lid { display: inline-block; background: var(--card); border: 1px solid var(--border); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 24px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .card-name { font-size: 12px; font-weight: 600; color: var(--accent); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .price { font-size: 18px; font-weight: 700; color: var(--fg); margin: 0; }
+  .card-desc { font-size: 13px; color: var(--muted); margin: 8px 0 0; line-height: 1.4; }
+  .cta { display: inline-block; background: var(--accent); color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; margin-top: 24px; }
+  .cta:hover { background: #1d4ed8; }
+  footer { padding: 48px 24px; max-width: 960px; margin: 0 auto; border-top: 1px solid var(--border); color: var(--muted); font-size: 13px; }
+  footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="lid">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</span>
+  <h1>Proof Portal</h1>
+  <p>Verification material for published artefacts. Coverage is scoped: a card is included only when its exact digest appears at the claimed index in the named root.</p>
+  <a href="https://councilof.ai/proofs.html" class="cta">Open the Proof Portal →</a>
+</header>
+
+<div class="container">
+<h2>Three things you can do here</h2>
+<ol style="color: var(--muted); line-height: 1.8;">
+  <li><strong>Verify a supported card</strong> — supply the exact card and inspect its signature result rather than assuming it is signed.</li>
+  <li><strong>Inspect the root</strong> — the current root lists 154 leaf digests. The separate 335-card index is a different corpus with zero identifier overlap.</li>
+  <li><strong>Check inclusion</strong> — require the claimed index to point to the card&rsquo;s exact digest before accepting its Merkle path.</li>
+</ol>
+<h2>Current exact-root state</h2>
+<p>The root shipped with this page has SHA-256 <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code>, 154 leaves, and Merkle root <code>2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745</code>. Its Ed25519 signature verifies under <code>did:web:csoai.org#board-attestation-1</code>. This does not bind every card or every measurement.</p>
+<ol style="color: var(--muted); line-height: 1.8;">
+  <li><strong>Sigstore Rekor</strong> — exact preimage witnessed at log index <code>2714574265</code>; receipt: <a href="/interop/rekor-root-9b426735.json" style="color: var(--accent);">rekor-root-9b426735.json</a>.</li>
+  <li><strong>OpenTimestamps</strong> — <strong>STAMPED_PENDING_BITCOIN</strong>. Proof SHA-256: <code>91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99</code>. It contains no Bitcoin block confirmation.</li>
+  <li><strong>Scope</strong> — the OTS proof covers the exact <code>root.json</code> bytes only, not the separate signed-card index or an entire measurement history.</li>
+  <li><strong>Machine-readable state</strong> — <a href="/interop/root-witness-latest.json" style="color: var(--accent);">root-witness-latest.json</a>.</li>
+</ol>
+</div>
+
+<footer>
+<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
+<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
+</footer>
+
+</body>
+</html>

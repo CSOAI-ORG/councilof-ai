@@ -5,8 +5,9 @@ import { SP, TYPE } from "./glass";
  * LobbyBoardPane — the Council OS dashboard centrepiece: the interactive GSPC
  * terminal, rendered in-process from the live board (no iframe, no second copy).
  *
- * One board, every surface a window onto it. Click an axis to drill into the
- * signed per-model ranking; search axes or models; verify every card. Empty
+ * One board, every surface a window onto it. Click an axis to inspect the
+ * evidence it actually carries: model comparisons may have signed cards and
+ * rankings; deterministic-facts rows carry their own run artifacts. Empty
  * cells stay empty. Nothing here writes the board.
  */
 export default function LobbyBoardPane() {
@@ -17,8 +18,9 @@ export default function LobbyBoardPane() {
         Interactive GSPC terminal
       </h2>
       <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-slate-700">
-        Every published axis, live from GET /api/gspc. Click a row to open the signed per-model
-        ranking; a TIE never crowns a winner. Play, verify and ask sit around this one board.
+        Every published axis, live from GET /api/gspc. Open a row to inspect the evidence it
+        actually carries: model-comparison axes may have signed cards and rankings;
+        deterministic-facts axes link their own run artifacts. A TIE never crowns a winner.
       </p>
       <div className="mt-6">
         <GspcTerminal />

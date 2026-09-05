@@ -4,8 +4,10 @@ import { STATE_LABEL, type LobbyChat } from "./useLobbyChat";
 import { AnswerText } from "./answerText";
 
 const STATE_TONE: Record<string, string> = {
-  live: TONE.ok,
+  model_response: TONE.running,
   grounded: TONE.ok,
+  runtime_observed: TONE.ok,
+  unchecked: TONE.running,
   ungrounded: TONE.running,
   unreachable: TONE.failed,
   deterministic: "border-sky-700/30 bg-sky-50 text-sky-900",
@@ -32,21 +34,28 @@ export default function LobbyThread({
       role="log"
       aria-live="polite"
       aria-relevant="additions text"
-      aria-label="Council OS conversation"
+      aria-label="Council of AI conversation"
       className="min-h-0 flex-1 space-y-4 overflow-y-auto px-5 py-4 sm:px-8"
     >
       {turns.map((t, i) => (
-        <div key={i} className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto max-w-[min(42rem,92%)]" : "max-w-[min(44rem,96%)]"}`}>
-          <p className="sr-only">{t.role === "user" ? "You asked:" : "The Council replied:"}</p>
-          <p className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}>
-            {t.role === "user" ? "You" : "Council"}
+        <div
+          key={i}
+          className={`${MEASURE_CHAT} ${t.role === "user" ? "ml-auto max-w-[min(42rem,92%)]" : "max-w-[min(44rem,96%)]"}`}
+        >
+          <p className="sr-only">
+            {t.role === "user" ? "You asked:" : t.state === "model_response" ? "An upstream model replied:" : "The Council replied:"}
+          </p>
+          <p
+            className={`mb-1 ${TYPE.section} ${t.role === "user" ? "text-right" : ""}`}
+          >
+            {t.role === "user" ? "You" : t.state === "model_response" ? "Upstream model" : "Council"}
           </p>
           <div
             className={
               "rounded-2xl px-5 py-3.5 text-[15.5px] leading-[1.65] " +
               (t.role === "user"
-                ? "whitespace-pre-wrap bg-emerald-700 text-white"
-                : "border border-slate-900/10 bg-white text-slate-900")
+                ? "whitespace-pre-wrap bg-primary text-primary-foreground"
+                : "border border-border bg-card text-foreground")
             }
           >
             {/* The user's own words are shown verbatim — never re-interpreted.
@@ -66,7 +75,9 @@ export default function LobbyThread({
                 </span>
               )}
               {t.signature && (
-                <span className="font-mono text-[10px] text-slate-600">{t.signature}</span>
+                <span className="font-mono text-[10px] text-slate-600">
+                  {t.signature}
+                </span>
               )}
             </div>
           )}

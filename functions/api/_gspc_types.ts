@@ -74,6 +74,10 @@ export interface AxisScore {
   dataset?: string;
   dataset_note?: string;
   evidence_url?: string;
+  // Signature state of the referenced deterministic-facts run artifact. This is
+  // explicit data, not inferred from a content_id: a hash is not a signature.
+  // Model-comparison axes use signed per-model cards instead and leave this absent.
+  run_attestation?: "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
 
   // How to read a null in per_model. null and 0.0 are different facts (undefined vs
   // measured-zero) and an axis that carries both states which is which.

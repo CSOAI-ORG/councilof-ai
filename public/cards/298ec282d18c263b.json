@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-03T09:06:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "regulatory-framework",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "is the governing regime declared and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "298ec282d18c263bebb87aed1da859bcf85da729533596c56eb469cc101e075b",
+    "sig_ed25519": "d639fa8f2d16c6498a0b8b1af58d51f581be5a6a5c69e690f80dadfdde6d94869063454cc5cbfaef5a8178640198954eca9e0e179423654da41cf392b2c6530a",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-regulatory-framework"
+    ],
+    "subject": "GSPC regulatory-framework UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "regulatory-framework",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "796d4fd90e2ba55cb9d75f99ba443d74f40600389c07c95341da9225ca619062",
+    "3f66a9e418f604eb325186e6711456266e514625e3013837096dfae7f494529e",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "56a6f31d5e9d831dbade03caa1d38cdc6c87487e261276db9db440af4e133e3f",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "fdb61524db1b0a3fa684f6b1b50c44b634ec7e9c6884add85ecef6ff5fe6d639",
+    "f89f14204720d5180d4a405d78c58c4a2795d5f40219f8700ba616d824416707"
+  ]
+}

@@ -1,7 +1,8 @@
 /**
  * Shared MCP tool handlers for Pages /mcp.
- * Definitions stay in ./gspc-tools.json (byte-for-byte with npm csoai-gspc-mcp).
- * npm csoai-gspc-mcp@0.1.0 is four tools; HTTP and source 0.1.1 are seven.
+ * Free definitions stay in ./gspc-tools.json. npm csoai-gspc-mcp@0.2.1 lists
+ * seven free + five x402 tools; HTTP lists seven free + four x402 because
+ * witness_hash is quarantined there.
  */
 import { verifyCard, anchorsFromDid, type Anchor } from "../_lib/cardVerify";
 import GSPC_TOOLS from "./gspc-tools.json";
@@ -104,7 +105,7 @@ export async function handleSharedTool(
               ? await getCardTool(origin, args)
               : name === "verify_inclusion"
                 ? await verifyInclusionTool(origin, args)
-          : await verifyCardThreeState(args, origin);
+              : await verifyCardThreeState(args, origin);
   return rpc(id, {
     content: [
       {

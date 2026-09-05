@@ -7,7 +7,7 @@ import {
   useGspcBoard,
   type GspcAxis,
 } from "./useGspcBoard";
-import StatusChip, { chipFor } from "./StatusChip";
+import StatusChip, { chipFor, figureChip } from "./StatusChip";
 import HumanVsAiPanel from "./HumanVsAiPanel";
 import { lobbyTaskHref, openLobby } from "@/lib/lobbyLink";
 
@@ -94,7 +94,7 @@ export default function LiveLeaderboard({
     <section className={`w-full ${className}`}>
       <div className="section-shell">
         <p className="t-kicker text-primary">
-          Live from GET /api/gspc — recompute anything, free
+          Live from GET /api/gspc — re-check published cards, free
         </p>
         <h2 className="t-section mt-4 text-foreground">
           {heading}
@@ -103,7 +103,10 @@ export default function LiveLeaderboard({
           {count ? <><strong className="font-bold text-foreground">{count}</strong> · </> : null}
           deterministic grading on frozen, published splits. A <strong>TIE</strong> means the
           leader&apos;s edge is statistically indistinguishable — ties are never counted as wins. A
-          slot with no measurement says so in words; it is never shown as a zero.
+          MEASURED axis with a withheld public leader is labelled as such — never as UNMEASURED.
+          A slot with no measurement says so in words; it is never shown as a zero. Carded records
+          carry a published verification path; uncarded fleet aggregates remain explicitly labelled.
+          This board is a switchboard over time, not a certificate.
         </p>
 
         {/* ── unreachable: say it plainly, render no figures at all ────── */}
@@ -182,15 +185,14 @@ export default function LiveLeaderboard({
               )}
 
               <a
-                href={lobbyTaskHref("read-the-board")}
-                onClick={(e) => { e.preventDefault(); openLobby({ task: "read-the-board" }); }}
+                href="/dashboard?tab=board&task=read-the-board"
                 className="rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-opacity hover:opacity-90"
               >
                 Open in the Council Lobby →
               </a>
 
               <a
-                href="/gspc-scoreboard"
+                href="/dashboard?tab=board"
                 className="text-sm font-semibold text-primary underline-offset-2 hover:underline"
               >
                 The full board, with intervals and harm tails
@@ -215,10 +217,21 @@ export default function LiveLeaderboard({
 function AxisResult({ a }: { a: GspcAxis }) {
   const measured = hasFigure(a);
   const kind = typeof a.kind === "string" ? a.kind : undefined;
-  const chip = chipFor(a.status, a.separation, kind);
+  const chip = measured
+    ? chipFor(a.status, a.separation, kind)
+    : figureChip({ status: a.status, kind, hasPublicFigure: false });
   const width = measured ? Math.max(2, Math.min(100, (a.accuracy as number) * 100)) : 0;
   const lo = Array.isArray(a.interval) ? a.interval[0] : null;
   const hi = Array.isArray(a.interval) ? a.interval[1] : null;
+  const fleetMean =
+    typeof a.fleet_mean === "number" && Number.isFinite(a.fleet_mean) ? a.fleet_mean : null;
+  const figureLabel = measured
+    ? `${a.accuracy_is ? "≥" : ""}${pct(a.accuracy as number)}`
+    : a.status === "MEASURED"
+      ? fleetMean != null
+        ? `no public leader · fleet mean ${pct(fleetMean)}`
+        : "MEASURED — no public leader"
+      : "no figure — empty stays empty";
   return (
     <aside
       id="board-result"
@@ -235,7 +248,7 @@ function AxisResult({ a }: { a: GspcAxis }) {
         <div className="flex items-baseline justify-between gap-3 text-sm">
           <span className="font-semibold text-slate-800">Measured figure</span>
           <span className="font-mono font-bold text-slate-900">
-            {measured ? `${a.accuracy_is ? "≥" : ""}${pct(a.accuracy as number)}` : "no figure — empty stays empty"}
+            {figureLabel}
           </span>
         </div>
         <div className="mt-2 h-3 overflow-hidden rounded-full bg-white ring-1 ring-emerald-200">
@@ -287,9 +300,13 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
   // measured but by deterministic facts, which have no leader and so no
   // accuracy. Without it, provenance-controls — a signed mainnet run over 6
   // issuer accounts — rendered as UNMEASURED on this table.
+  // Figure column: MEASURED ∧ ¬public accuracy is WITHHELD, never UNMEASURED.
   const kind = typeof a.kind === "string" ? a.kind : undefined;
   const chip = chipFor(a.status, a.separation, kind);
   const facts = kind === "deterministic-facts";
+  const figChip = figureChip({ status: a.status, kind, hasPublicFigure: measured });
+  const fleetMean =
+    typeof a.fleet_mean === "number" && Number.isFinite(a.fleet_mean) ? a.fleet_mean : null;
 
   return (
     <tr
@@ -327,6 +344,20 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
               <span className="mt-0.5 block text-[11px] text-gray-500">{a.coverage}</span>
             )}
           </span>
+        ) : figChip === "WITHHELD" ? (
+          // MEASURED model-comparison with withheld public leader (EXCLUDED_OWN_MODEL /
+          // NO_SIGNED_CARD). Fleet may have run; do not paint UNMEASURED.
+          <span className="inline-flex flex-col items-start gap-1">
+            <StatusChip kind="WITHHELD" />
+            {fleetMean != null && (
+              <span
+                className="font-mono text-[11px] tabular-nums text-muted-foreground"
+                title="Fleet mean when the public per-axis leader is withheld"
+              >
+                fleet mean {pct(fleetMean)}
+              </span>
+            )}
+          </span>
         ) : (
           // The designed unmeasured state: a label, never a blank and never a 0.
           <StatusChip kind="UNMEASURED" />
@@ -355,8 +386,7 @@ function Row({ a, active, onChoose }: { a: GspcAxis; active: boolean; onChoose: 
 
       <td className="p-4 text-right">
         <a
-          href={lobbyTaskHref("explain-axis", { ctx: a.axis })}
-          onClick={(e) => { e.preventDefault(); openLobby({ task: "explain-axis", ctx: a.axis }); }}
+          href={`/dashboard?tab=board&task=explain-axis&ctx=${encodeURIComponent(a.axis)}`}
           className="whitespace-nowrap rounded-full border border-primary/25 px-3 py-1.5 text-xs font-bold text-primary transition hover:bg-primary/10"
           aria-label={`Ask the Council Lobby about the ${a.axis} axis`}
         >

@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.cobol-evidence/0.1",
+  "as_of": "20260905T062637Z",
+  "principle": "Every COBOL modernization engagement emits signed conversion-attestation cards.",
+  "service": "COBOLBridge.ai (portfolio arm)",
+  "conversion_attestation": {
+    "schema": "csoai.cobol-conversion-attestation/v0.1",
+    "fields": [
+      "source_module_sha256",
+      "target_module_sha256",
+      "behavioral_equivalence_tests",
+      "conversion_method",
+      "signed_by",
+      "verified_at"
+    ],
+    "x402_sku": "cobol-conversion-attestation"
+  },
+  "market_size_note": "verify before quoting \u2014 commonly cited multi-billion-line COBOL installed base; no number asserted here.",
+  "ties": [
+    "banks (26 registered)",
+    "SWIFT MT rails (3 MT doors)",
+    "regulatory attestation (eu-ai-act-pack)"
+  ]
+}

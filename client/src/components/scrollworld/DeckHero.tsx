@@ -1,3 +1,4 @@
+import { fetchWithRetry } from "@/lib/fetchWithRetry";
 import { useEffect, useState } from "react";
 import { useParallax } from "./motion";
 
@@ -14,7 +15,7 @@ export function LiveBoardCount({ className = "" }: { className?: string }) {
   const [failed, setFailed] = useState(false);
   useEffect(() => {
     let alive = true;
-    fetch("/api/gspc")
+    fetchWithRetry("/api/gspc")
       .then((r) => r.json())
       .then((d) => { if (alive) setLive(d?.totals?.public_count ?? null); })
       .catch(() => { if (alive) setFailed(true); });

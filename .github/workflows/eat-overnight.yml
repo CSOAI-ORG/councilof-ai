@@ -1,7 +1,7 @@
 name: eat-overnight
 
 # Overnight auto batch: Grok + GitHub + Hugging Face + KEEP 3090 alignment.
-# Never writes GET /api/gspc. Never fills the 7 UNMEASURED slots.
+# Never writes GET /api/gspc. Never invents MEASURED. Live pin is 22·22·0 after #1077.
 # Never starts EXITED A100s. BOARD_SIGN_KEY stays on Pages/OIDC.
 
 on:
@@ -56,7 +56,7 @@ jobs:
           g = json.loads(b)
           pc = (g.get("totals") or {}).get("public_count")
           print("BOARD", pc)
-          if "22 axis" not in str(pc) or "15 measured" not in str(pc):
+          if "22 axis" not in str(pc) or "22 measured" not in str(pc):
               print("HALT: board drifted")
               sys.exit(3)
           FIN = ["reserve-attestation","regulatory-framework","distribution-integrity","custody-disclosure","ai-economy-index","human-labour-index","humanoid-labour-index"]

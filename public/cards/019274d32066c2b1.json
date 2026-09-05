@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "anthropic",
+      "surface": "art50_marking",
+      "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+      "prev_sha256": "4c7c01051006afd54492c2cba2af1751ab20d2381e2f547864681616a4adf631",
+      "new_sha256": "8e11309ca7e29440d30cd475a228c5f733b2e28608947b289f4a398b86e8d0f0",
+      "prev_bytes_sha256": "354cb80344565179562275b604ff74cfd034500824867a6a0bd560a3a5506060",
+      "new_bytes_sha256": "cc450eb7b031d07abfe436100fe51728c0947292ada387d9cc684cfb7e66b12d",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 353897,
+        "new": 353899
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": null,
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "019274d32066c2b134fe4bc0b0f9425a7762380b6204d5367908e544926b7ec6",
+    "sig_ed25519": "7a45a5d5a120d39215f1013fbf3f7f998591e60aa26d3f33e9dbc98bcf0c8d0640a703fb69d1f1737f37818240132fca0697ba368b704437902a731c96dddf02",
+    "source_urls": [
+      "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
+    ],
+    "subject": "Anthropic — art50_marking: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:anthropic",
+      "surface:art50_marking",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "32814a0ecc35e326c289688fbc727a036bf0fb857af2161072d2e3179da3f4f9",
+    "61a743af6c5c81dafcf08b0403105794f8e3c3edb37ba883458d2a7aa81f805e",
+    "f52f55c77e79a1a92452e95bb38eeca6bc5af1f64d65faa6ec3c58cf04051650",
+    "2614328d5c2408c64f5aedc6b1b4f593579ea6bce9db3b097de9cc6745c4c074",
+    "be0a421d4bf18e5debacc44861eb96efc40a3892f5d843227dcf83700eeda99e",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "dc95f2a53bf8178f51a8ac8e398c3b6ca8fea96bfc4e2f2474843e718ad53b4a",
+    "eda3c723a5ac3b23dca9cbae493c2927c1a116b8be9293f36951c28eccb9dee9"
+  ]
+}

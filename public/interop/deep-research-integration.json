@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.deep-research-integration/0.1",
+  "as_of": "20260905T045749Z",
+  "principle": "ChatGPT Deep Research + our measurement pipeline = the only deep research pipeline with measurement + signing + anchoring.",
+  "research_pipeline": [
+    "1. User asks a deep question via ChatGPT Deep Research",
+    "2. ChatGPT fetches sources (with measurement + signing at every fetch)",
+    "3. ChatGPT synthesizes the answer",
+    "4. Every claim in the answer gets a 22-axis GSPC measurement",
+    "5. Every measurement becomes a 3KB signed card",
+    "6. Every card is anchored to OTS pending + Rekor + EAS planned",
+    "7. The signed research report is published to /signed/",
+    "8. The user can verify every claim offline at /gspc-verify"
+  ],
+  "endpoints": {
+    "research_start": "POST /api/research",
+    "research_status": "GET /api/research/{id}",
+    "research_verify": "POST /api/research/{id}/verify",
+    "research_anchor": "POST /api/research/{id}/anchor",
+    "research_start_status": "NOT_IMPLEMENTED — /api/research probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "research_status_status": "NOT_IMPLEMENTED — /api/research/{id} probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "research_verify_status": "NOT_IMPLEMENTED — /api/research/{id}/verify probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "research_anchor_status": "NOT_IMPLEMENTED — /api/research/{id}/anchor probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
+  },
+  "agents": [
+    "Council OS deep research agent",
+    "33-agent council attestation (23/33 threshold)",
+    "XRPL evidence agent",
+    "EU AI Act Art 50 agent",
+    "x402 paid attestation agent"
+  ],
+  "take_over": "Every ChatGPT Deep Research query → signed research report with 22-axis measurement on every claim.",
+  "claims_audit_2026-09-05": {
+    "schema": "csoai.claims-audit/0.1",
+    "date": "2026-09-05",
+    "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
+    "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
+    "not_implemented": [
+      "/api/research",
+      "/api/research/{id}",
+      "/api/research/{id}/anchor",
+      "/api/research/{id}/verify"
+    ]
+  }
+}

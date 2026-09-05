@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-04T21:23:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "custody-disclosure",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "are a custodian and an auditor named and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "84836e4247cd0457cf087988175a362d539a22c8f24a8d0034cf7d652817b92f",
+    "sig_ed25519": "4c8963e49ef8befd19dc0b9a804385abd1313626195d9b3508fce324b432ea1aedb82e15a451cd741be01f613a5eaf927b8e256fbf1b1f4d53748276af2a0d01",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
+    ],
+    "subject": "GSPC custody-disclosure UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "custody-disclosure",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "c435a40bbeaaa801bb5332aa155024d223adbe38dd21ed88edd1f5a97661ec02",
+    "f3ed98b17df0936d37284039f86b60a1c30208a120bc2271240d6055eea3399d",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "85bada25806eb18ebf0c31deff1e1adf4a7e88184b072a26f7fe83c16f6c1440",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "69e9404b46212fbf66ac4122907292ba143b5c6b802f0a92b4baa13846d97554",
+    "48d03f9248eb1aa4e80d664aeb34661fc687b2dbfa39c331214a7e81d913fc1e"
+  ]
+}

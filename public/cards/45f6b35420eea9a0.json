@@ -1,0 +1,72 @@
+{
+  "card": {
+    "as_of": "2026-09-03T14:27:33Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:bsc",
+      "chain": "bsc",
+      "chain_id": 56,
+      "head": {
+        "block": 119742614,
+        "block_hash": "0x18edcb096c5180f33dab4cdd31d84400aed72426e9be8b84795b200cb401b3a6",
+        "block_time": "2026-09-03T14:27:33Z"
+      },
+      "n_contracts": 2,
+      "coverage": [
+        {
+          "subject": "evm-events:USYC:bsc",
+          "from": 119627582,
+          "to": 119639581,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 119627582,
+          "rpc": "bsc.drpc.org"
+        },
+        {
+          "subject": "evm-events:TBILL:bsc",
+          "from": 119576011,
+          "to": 119580010,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 119564011,
+          "rpc": "bsc.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on bsc that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "45f6b35420eea9a05091e33ef4330ef70ed3f527803ff00ab2abb3f6d0e054df",
+    "sig_ed25519": "39815a4bc6683ae2002362ae8591d6de6ceee2b13bcdf9b46f9d76e8b2b0ffef06902b2c3918ea0e0b208250965a7e093007b897a758b7b20c714154da5b740d",
+    "source_urls": [
+      "https://bsc.drpc.org"
+    ],
+    "subject": "evm-events:scan:bsc coverage at block 119742614",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "6001de7b88ff512f1153835e3edfac75ba873b24291da008e4a0283ab0eb6e51",
+    "eb9d1f2537be5759b636676ad845ba928741024851759cf8e5488f2eb8fe5eb3",
+    "7e10c3ec113602d30e27b1910c5aac457323391198e043dda60c4d5024171a05",
+    "18b11c74866833a07c0a63857143206dc49c6f5b30454f45e68c72a90e3d3c51",
+    "b79eebad014fdd799af799a04d40bb7f20b718541eda2e02bd5491ffda54fa71",
+    "92b40e7a700f54469771fc3c681167259c2fa9b5bf3bae3e036ca5ab6debc79b",
+    "47d3e4b911b62cc75d12857b946770bb1256404ed6d02846d53d951650843123",
+    "bfa064a39ac82eb954ad9b872300b8ee640270fd5e29fb0ec242b7e3329d33df"
+  ]
+}

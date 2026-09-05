@@ -16,17 +16,226 @@ const AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
 const round = (x: number, p = 4) => Math.round(x * 10 ** p) / 10 ** p;
 
+// ── neutral-body rule: our own models never lead the PUBLIC board ─────────────
+// CSOAI measures; it must not self-preference. Eight of the fourteen model-comparison
+// axes had our own tuned "council-*-v3-light (council specialist)" fine-tunes as the
+// point-leader. A measurement body cannot publish its own model as the winner over the
+// vendors it measures, so those models are pulled off the PUBLIC leaderboard here.
+//
+// This is a SERVING-LAYER exclusion, not a deletion: the axis modules and the signed
+// measurement cards are untouched (the measurement happened and stays on the record —
+// see /api/cards and /signed/). We simply do not name our own model as the public leader.
+const isOwnCouncilModel = (name?: string | null): boolean =>
+  typeof name === "string" && (/^council\b/i.test(name.trim()) || /\(council specialist\)/i.test(name));
+
+// Remove our own model from an axis's PUBLIC leader slot. Only touches model-comparison
+// axes our own model led; every external-led axis (and every fact axis) passes through
+// unchanged. The leader-specific numbers (the leader's accuracy, its Wilson interval, its
+// macro_f1 / unparsed_rate, and the council-vs-base separation determination) described OUR
+// model, so with it excluded they cannot stand as a public ranking. The external runner-up's
+// per-axis numbers are NOT carried in this payload (they lived on the measurement pod), so
+// they are dropped rather than reattributed — never fabricated. The axis stays MEASURED:
+// external models answered the same frozen bank (fleet_mean is over the whole fleet), so the
+// measurement is real; it simply carries no public leader until an external-only re-rank is
+// published. Fleet-level aggregates (fleet_mean, mean_harm, cvar05_harm) are NOT a
+// self-preference claim and are kept.
+type PublicAxis = AxisScore & {
+  excluded_leader?: string;
+  public_leader_state?: string;
+  excluded_note?: string;
+  historical_measurement_record?: {
+    state: "SUPERSEDED_FOR_PUBLIC_RANKING";
+    scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL" | "ORIGINAL_RUN_NAMED_UNCARDED_LEADER";
+    note?: string;
+    does_not_assert_current_public_fields: true;
+  };
+};
+const excludeOwnLeader = (a: AxisScore): PublicAxis => {
+  if (a.kind !== "model-comparison" || !isOwnCouncilModel(a.leader)) return a;
+  const {
+    accuracy: _acc,
+    accuracy_is: _accIs,
+    interval: _int,
+    macro_f1: _mf1,
+    unparsed_rate: _upr,
+    separation_p: _sp,
+    separation_basis: _sb,
+    leader: _ld,
+    note: _note,
+    ...rest
+  } = a;
+  return {
+    ...rest,
+    leader: undefined,
+    // No separation determination stands on the public board once the tested leader is
+    // removed. UNTESTED (not SEPARATED/TIE) keeps this axis out of the separated/tie/mean
+    // tallies below, which is the honest count of what the public board can still assert.
+    separation: "UNTESTED",
+    excluded_leader: a.leader,
+    public_leader_state: "EXCLUDED_OWN_MODEL",
+    // The primary note is neutral — the original note narrated our own model leading, which
+    // is exactly the self-preference being removed, so it must not be the public sentence.
+    note:
+      "No public leader: our own council specialist held the point lead and a neutral measurement " +
+      "body does not rank its own models against the vendors it measures. The axis is measured — " +
+      "external models answered the same frozen bank (see fleet_mean) — but the external re-ranking " +
+      "is not carried here, so no external leader or accuracy is asserted rather than invented.",
+    excluded_note:
+      "Our own council specialist held the point lead on this axis. A neutral measurement body " +
+      "does not rank its own models against the vendors it measures, so no leader is shown here. " +
+      "The measurement is real and the signed card still exists; the external re-ranking requires a " +
+      "per-model recompute not carried in this payload, so no external leader or accuracy is invented.",
+    // Preserve the original run narrative, but never under an unqualified
+    // `measurement_note`: that made historical "SEPARATED" language contradict
+    // the current public separation=UNTESTED field. The explicit superseded state
+    // keeps the evidence while failing closed for machine consumers.
+    historical_measurement_record: {
+      state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+      scope: "ORIGINAL_RUN_INCLUDED_EXCLUDED_OWN_MODEL",
+      ...(a.note ? { note: a.note } : {}),
+      does_not_assert_current_public_fields: true,
+    },
+  };
+};
+
+// ── carded-leader rule: never name a PUBLIC leader we cannot back with a signed card ─────────
+// The board's core promise is that every measured cell links to the Ed25519 card behind it —
+// a skeptic can fetch the per-model card and recompute the ranking (see /api/cards and
+// /signed/card_index.json). Three model-comparison axes named an EXTERNAL base model as the
+// point-leader (with an implied accuracy) but carry ZERO signed per-model cards in the public
+// card index, so that promise is broken on them: the ranking cannot be recomputed or linked to
+// a card. On any such axis we DROP the public leader rather than assert a number nothing backs.
+//
+// Carded-vs-uncarded is DERIVED from the published card index (/signed/card_index.json — 335
+// signed cards over 16 card-axis keys as of 2026-09-01). The card-axis keys are NOT the board
+// axis ids: the crosswalk is genuinely irregular (six prefixed, one direct, two suffixed), so
+// it is written out explicitly here rather than guessed by string munging that would silently
+// mis-map an axis. Each entry below resolved to >=1 signed:true card in that index:
+//
+//   board axis id   ->  signed card-index axis key (count)
+//   governance      ->  gspc-governance        (21)
+//   safety          ->  gspc-safety            (21)   [external leader gemma3:12b — CARDED]
+//   provenance      ->  gspc-provenance        (21)
+//   continuity      ->  gspc-continuity        (21)
+//   conformance     ->  gspc-conformance       (21)
+//   openness        ->  gspc-openness          (21)
+//   care            ->  care                   (23)
+//   swarm           ->  swarm-candidates       (7)    [external leader qwen2.5:7b — CARDED]
+//   jail            ->  jail-escape-detection  (8)    [external leader qwen2.5:0.5b — CARDED]
+//
+// The five model-comparison axes with NO card-index key are machinery-conformity, cross-reality,
+// detector-interop, art5-safeguard and affect. art5-safeguard and affect are own-council-led and
+// already have their leader removed by excludeOwnLeader above, so in practice this rule drops the
+// public leader on exactly the three confirmed uncarded EXTERNAL-leader axes: machinery-conformity,
+// cross-reality, detector-interop. It is written as a positive ALLOW-LIST (keep a leader only if
+// the axis is carded) so a future axis that ships an uncarded external leader is dropped by
+// default — the honest failure direction. This mirrors the own-model leader-drop above and, like
+// it, is a SERVING-LAYER change only: the axis modules and signed cards are untouched.
+const CARDED_MODEL_AXES = new Set<string>([
+  "governance", "safety", "provenance", "continuity", "conformance",
+  "openness", "care", "swarm", "jail",
+]);
+const axisHasSignedCard = (axisId: string): boolean => CARDED_MODEL_AXES.has(axisId);
+
+// Drop the PUBLIC leader from a model-comparison axis whose named leader is NOT backed by a
+// signed card. Runs AFTER excludeOwnLeader, so it only ever sees axes that still name a leader
+// (our own-model leaders were already removed). The leader-specific numbers (accuracy, its
+// Wilson interval, macro_f1 / unparsed_rate, and the separation determination) all describe the
+// unbacked leader, so with it removed they cannot stand as a public ranking and are dropped
+// rather than reattributed — never fabricated. The axis stays MEASURED: external models answered
+// the same frozen bank, so fleet_mean is a real aggregate and is kept, and measured_axes is
+// unchanged. Only the unverifiable per-model leader claim is removed.
+const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
+  if (a.kind !== "model-comparison" || typeof a.leader !== "string" || axisHasSignedCard(a.axis)) return a;
+  const {
+    accuracy: _acc,
+    accuracy_is: _accIs,
+    interval: _int,
+    macro_f1: _mf1,
+    unparsed_rate: _upr,
+    separation_p: _sp,
+    separation_basis: _sb,
+    leader: _ld,
+    note: _note,
+    ...rest
+  } = a;
+  return {
+    ...rest,
+    leader: undefined,
+    // No separation determination stands once the tested leader is removed — UNTESTED keeps this
+    // axis out of the separated/tie tallies, the honest count of what the public board can assert.
+    separation: "UNTESTED",
+    excluded_leader: a.leader,
+    public_leader_state: "NO_SIGNED_CARD",
+    note:
+      "No public leader: this axis is measured as a fleet aggregate against the frozen bank " +
+      "(see fleet_mean), but no signed per-model card is carried in this payload, so no leader " +
+      "or accuracy is asserted rather than invented — see /api/cards. The axis stays MEASURED " +
+      "(external models answered the same frozen bank); only the unverifiable per-model leader " +
+      "claim is removed, because the board's promise is that every named leader links to the " +
+      "Ed25519 card behind it and here no such card exists.",
+    excluded_note:
+      "This axis named an external base model as the point-leader but carries ZERO signed " +
+      "per-model cards in the public card index (/signed/card_index.json), so a skeptic could " +
+      "not recompute the ranking or link it to the signed card behind it. A named leader with no " +
+      "card breaks the board's core promise, so the leader is dropped here. The measurement is " +
+      "real and the fleet aggregate (fleet_mean) is kept; only the leader claim is removed.",
+    historical_measurement_record: {
+      state: "SUPERSEDED_FOR_PUBLIC_RANKING",
+      scope: "ORIGINAL_RUN_NAMED_UNCARDED_LEADER",
+      ...(a.note ? { note: a.note } : {}),
+      does_not_assert_current_public_fields: true,
+    },
+  };
+};
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
 
-  const selected = axis ? AXES.filter((a) => a.axis === axis) : AXES;
-  if (axis && selected.length === 0) {
+  // EDGE CACHE. This handler already declares `public, max-age=300`, but Pages Functions are
+  // not cached by that header alone — every response came back `cf-cache-status: DYNAMIC`, so
+  // every single request re-ran the whole build: importKey + exportKey, a recursive canonical
+  // serialisation of a 61 KB payload, an Ed25519 sign, and a pretty-printed stringify.
+  //
+  // That is what was exhausting the Worker's CPU budget. Measured 2026-09-04 over ten requests
+  // each: /api/gspc failed 2/10 and /api/evidence-bundle 8/10 with HTTP 503 "error code: 1102"
+  // (Worker exceeded resource limits), while the static /root.json failed 0/10. The board — the
+  // authority every published card points at — was refusing roughly one request in five.
+  //
+  // Serving from the edge for the 300 seconds the handler already asks for makes the expensive
+  // path run once per window instead of once per request. The freshness contract is unchanged:
+  // max-age=300 was always the declared intent; this makes it true.
+  const cache = (caches as unknown as { default: Cache }).default;
+  const cacheKey = new Request(url.toString(), { method: "GET" });
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
+  const selectedRaw = axis ? AXES.filter((a) => a.axis === axis) : AXES;
+  if (axis && selectedRaw.length === 0) {
     return new Response(
       JSON.stringify({ error: "unknown axis", known: AXES.map((a) => a.axis) }, null, 2),
       { status: 404, headers: { "content-type": "application/json; charset=utf-8" } },
     );
   }
+  // The PUBLIC view: our own models removed from every leader slot. Everything downstream
+  // (totals, separation stats, means, the axes array, the living stamp) derives from this,
+  // so a council model can never re-enter a public count.
+  const selected = selectedRaw.map(excludeOwnLeader).map(dropUncardedLeader);
+  const ownLedExcludedAxes = selectedRaw
+    .filter((a) => a.kind === "model-comparison" && isOwnCouncilModel(a.leader))
+    .map((a) => a.axis);
+  // Axes whose public leader was dropped because no signed card backs it. Derived from the
+  // served payload (public_leader_state), never typed, so it can never disagree with the axes.
+  const uncardedLeaderDroppedAxes = selected
+    .filter((a) => (a as PublicAxis).public_leader_state === "NO_SIGNED_CARD")
+    .map((a) => a.axis);
+  const externallyLedAxes = selected
+    .filter((a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string")
+    .map((a) => a.axis);
+  const factRuns = selected.filter((a) => a.kind === "deterministic-facts");
+  const signedFactRuns = factRuns.filter((a) => a.run_attestation === "ED25519_SIGNED");
+  const unsignedFactRuns = factRuns.filter((a) => a.run_attestation === "CONTENT_ADDRESSED_UNSIGNED");
 
   const items = selected.reduce((s, a) => s + a.n, 0);
   const measuredSlots = selected.filter((a) => a.status === "MEASURED");
@@ -36,7 +245,12 @@ export const onRequestGet: PagesFunction = async (context) => {
   // Scoping these three counters to kind === "model-comparison" is what stops a
   // financial axis silently entering a sentence about McNemar separation.
   const comparisonSlots = measuredSlots.filter((a) => a.kind === "model-comparison");
-  const measuredCount = comparisonSlots.filter((a) => a.separation !== "UNTESTED").length;
+  // NOT "measured": every comparison axis carries a measurement. This counts the ones that have
+  // additionally been TESTED for statistical separation. Naming it measuredCount made the public
+  // limitations line read "1 of the 3 measured model-comparison axis", which tells a reader either
+  // that only 3 comparisons exist (there are 14) or that the other 11 are unmeasured (they are not).
+  const separationTestedCount = comparisonSlots.filter((a) => a.separation !== "UNTESTED").length;
+  const untestedCount = comparisonSlots.filter((a) => a.separation === "UNTESTED").length;
   const separatedNames = comparisonSlots.filter((a) => a.separation === "SEPARATED").map((a) => a.axis);
   const tieCount = comparisonSlots.filter((a) => a.separation === "TIE").length;
   // Every bank is named by a bare slug (e.g. "csoai/gspc-gov"), which a stranger cannot
@@ -97,6 +311,16 @@ export const onRequestGet: PagesFunction = async (context) => {
       "unparsed_rate is the share of responses no label could be read from — reported " +
       "as UNMEASURED, never scored as a wrong answer. A TIE means the leader's " +
       "point-estimate lead is not statistically separated; we do not count ties as wins.",
+    // Playbook T2 (2 Sep 2026): serve the closed state vocabularies so no client hardcodes them.
+    state_enum: {
+      status: ["MEASURED", "UNMEASURED", "DRAFT", "SPEC", "PLANNED"],
+      separation: ["SEPARATED", "TIE", "UNTESTED"],
+      public_leader_state: ["EXCLUDED_OWN_MODEL", "NO_SIGNED_CARD"],
+      run_attestation: ["ED25519_SIGNED", "CONTENT_ADDRESSED_UNSIGNED"],
+      public_leader_state_absent: "the leader is shown (a public score)",
+      verification: ["VALID", "INVALID", "UNCHECKABLE"],
+      note: "Absence of a field means UNMEASURED. TIE is never a win. A withheld leader is a state, not a zero.",
+    },
     totals: (() => {
       const m = selected.filter((a) => a.status === "MEASURED");
       const cmp = m.filter((a) => a.kind === "model-comparison");
@@ -130,6 +354,8 @@ export const onRequestGet: PagesFunction = async (context) => {
         // what we measured, so quotable_axes == measured_axes by construction.
         quotable_axes: measured,
         public_count: `${selected.length} axis · ${measured} measured`,
+        model_fleets: selected.filter((a: any) => a.kind === "model-comparison").length,
+        fact_runs: factRuns.length,
         count_grammar:
           unmeasured === 0
             ? `${selected.length} axis are on the board and every one carries a measurement — no ` +
@@ -159,15 +385,29 @@ export const onRequestGet: PagesFunction = async (context) => {
         sweep_note:
           "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but " +
           "were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept " +
-          "state. All 8 now carry deterministic-facts runs, so every one of the 22 axis on the board " +
-          "has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes " +
-          "carry no accuracy and no leader — measured is not the same as scored — but each has a " +
-          "signed run, so the count and the evidence agree. No axis was marked MEASURED without one.",
+          "state. All 8 now carry published deterministic-facts run artifacts, so every one of the " +
+          "22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact " +
+          "axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. " +
+          `${signedFactRuns.length} run artifact${signedFactRuns.length === 1 ? "" : "s"} ` +
+          `${signedFactRuns.length === 1 ? "carries" : "carry"} an Ed25519 signature; ` +
+          `${unsignedFactRuns.length} ${unsignedFactRuns.length === 1 ? "is" : "are"} ` +
+          "content-addressed but unsigned. No signature is inferred from a content_id.",
+        financial_run_attestations: {
+          run_artifacts: factRuns.length,
+          ed25519_signed: signedFactRuns.length,
+          content_addressed_unsigned: unsignedFactRuns.length,
+          signed_axes: signedFactRuns.map((a) => a.axis),
+          unsigned_axes: unsignedFactRuns.map((a) => a.axis),
+          note:
+            "Derived from each deterministic-facts axis's run_attestation field. " +
+            "A content_id proves identity of bytes, not signer authorization.",
+        },
         license: "CC-BY-4.0",
         license_note: "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
         items,
-        items_note: "items sums each axis's n. The n of the one measured financial axis counts ISSUER " +
-          "ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. " +
+        items_note: "items sums each axis's n. Financial-axis n values count issuer accounts, public " +
+          "series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots " +
+          "contribute 0 because nothing was measured. " +
           "Read items as 'rows behind the board', not as a single comparable sample.",
         // Separation stats are over model-comparison axis ONLY — see comparison_axes.
         comparison_axes: cmp.length,
@@ -178,6 +418,44 @@ export const onRequestGet: PagesFunction = async (context) => {
           "Separation asks whether a leader's lead over a fleet is statistically real, so it applies " +
           "only to the model-comparison axes. The financial axes have no fleet and no leader: they are " +
           "not counted as untested, because no separation test is applicable to them.",
+        // ── neutral-body exclusion (2026-09-01) ──────────────────────────────
+        // Our own tuned council specialists are removed from the PUBLIC leader slots. These
+        // counts make the effect explicit and are DERIVED from the axis array, never typed.
+        externally_led_axes: externallyLedAxes.length,
+        // BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — public leaders ≠ measured axes.
+        // Same derivation as externally_led_axes (carded external leaders only).
+        // Keep measured_axes unchanged; do not invent leaders for withheld axes.
+        public_leader_count: externallyLedAxes.length,
+        lid:
+          `${measured} axes measured · ${cmp.length} model fleets · ${externallyLedAxes.length} public leader scores · ` +
+          `${bySelectedFamily("financial").measured} fact runs · TIE is TIE · not a certificate.`,
+        own_leaders_excluded: ownLedExcludedAxes.length,
+        own_leaders_excluded_axes: ownLedExcludedAxes,
+        own_model_exclusion_note:
+          `Own council-specialist models were removed from the public per-axis leaders on ` +
+          `${ownLedExcludedAxes.length} of the ${cmp.length} model-comparison axes (${ownLedExcludedAxes.join(", ") || "none"}); ` +
+          `${externallyLedAxes.length} axes carry an external public leader. A neutral measurement body ` +
+          `does not rank its own models against the vendors it measures. This changes leader attribution ` +
+          `and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: ` +
+          `every axis still carries a measurement, so the measured count is unchanged. The excluded models' ` +
+          `signed cards are untouched — measurement happened; it is simply not published as a public ranking ` +
+          `of our own model.`,
+        // ── uncarded-leader drop (2026-09-01) ────────────────────────────────
+        // External leaders with NO signed per-model card are removed from the public leader
+        // slots. A named leader that cannot be linked to the Ed25519 card behind it breaks the
+        // board's core promise, so it is dropped rather than asserted. Derived, never typed.
+        uncarded_leaders_dropped: uncardedLeaderDroppedAxes.length,
+        uncarded_leaders_dropped_axes: uncardedLeaderDroppedAxes,
+        uncarded_leader_note:
+          `The public per-axis leader was removed on ${uncardedLeaderDroppedAxes.length} of the ${cmp.length} ` +
+          `model-comparison axes (${uncardedLeaderDroppedAxes.join(", ") || "none"}) whose named leader was an ` +
+          `external model carrying NO signed per-model card in the public card index (/signed/card_index.json). ` +
+          `The board's promise is that every named leader links to the Ed25519 card behind it; where no such card ` +
+          `exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the ` +
+          `fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the ` +
+          `unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader ` +
+          `attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured ` +
+          `count.`,
         mean_macro_f1: avg((a) => a.macro_f1),
         mean_accuracy: avg((a) => a.accuracy),
         mean_fleet_mean: avg((a) => a.fleet_mean),
@@ -227,7 +505,7 @@ export const onRequestGet: PagesFunction = async (context) => {
       },
     ],
     limitations: [
-      `${separatedNames.length} of the ${measuredCount} measured model-comparison axis show a statistically separated leader (McNemar p<0.05 on discordant items): ${separatedNames.join(", ") || "none"}. ${tieCount} are statistical ties — a point-estimate lead is not a measured advantage. This fraction is over the behavioural axis only; the financial axis are not model comparisons and are not in its denominator.`,
+      `Of the ${comparisonSlots.length} model-comparison axis, ${separationTestedCount} have been tested for statistical separation: ${separatedNames.length} SEPARATED (McNemar p<0.05 on discordant items${separatedNames.length ? `: ${separatedNames.join(", ")}` : ""}) and ${tieCount} TIE. The remaining ${untestedCount} are UNTESTED for separation. All ${comparisonSlots.length} carry a measurement — separation is a further test that most have not had, and UNTESTED is not a tie. A point-estimate lead is not a measured advantage. The financial axis are not model comparisons and are not in this denominator.`,
       `${selected.length} axis are on the board and ${selected.filter((a) => a.status === "MEASURED").length} carry a measurement. See totals.count_grammar. The financial-fact axis are not model comparisons — they carry no accuracy and no leader, but each is a measured deterministic-facts run.`,
       "provenance-controls plus the four 2026-09-01 issuer-disclosure mills (reserve-attestation, regulatory-framework, distribution-integrity, custody-disclosure) measure FACTS on the same six instruments. Risk verdicts stay UNMEASURED and need counsel. Not a rating, not advice, not a ranking, not an endorsement.",
       "Rail honesty on provenance-controls: the issuer facts are read from MAINNET, but the attestations are carried on DEVNET. XRPL mainnet attestation is PLANNED, not live, and nothing is attested on any Ethereum chain — the EVM-side attestation backend is NOT BUILT. Coverage is 6 of the 16 instruments the registry names; the other 10 have no locatable public issuer address and were never attested. That gap is scope, not staleness: all 6 re-verified against live mainnet with zero flag drift.",
@@ -272,7 +550,11 @@ export const onRequestGet: PagesFunction = async (context) => {
         schema: "csoai.gspc-living/0.2",
         gold_run: "2026-08-18T03:22:16Z",
         source: "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
-        axes: AXES.map((a) => ({
+        // Own council leaders excluded here too, and uncarded external leaders dropped, so no
+        // public surface of this payload — the stamp included — names a leader (or its accuracy)
+        // that we cannot back: neither our own model on an axis it topped, nor an external model
+        // with no signed card.
+        axes: AXES.map(excludeOwnLeader).map(dropUncardedLeader).map((a) => ({
           axis: a.axis,
           family: a.family,
           kind: a.kind,
@@ -362,11 +644,14 @@ export const onRequestGet: PagesFunction = async (context) => {
     }
   }
 
-  return new Response(JSON.stringify(body, null, 2), {
+  const response = new Response(JSON.stringify(body, null, 2), {
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "public, max-age=300",
       "access-control-allow-origin": "*",
     },
   });
+  // Populate the edge cache without making the caller wait for it.
+  context.waitUntil(cache.put(cacheKey, response.clone()));
+  return response;
 };

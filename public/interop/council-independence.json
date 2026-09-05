@@ -1,0 +1,55 @@
+{
+  "schema": "councilof.ai/council-independence/1",
+  "as_of": "2026-09-04T05:21:59.790Z",
+  "legs": [
+    {
+      "id": "gptoss-via-groq",
+      "family": "GPT-OSS (OpenAI)",
+      "provider": "groq",
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "llama-via-hf",
+      "family": "Llama (Meta)",
+      "provider": "huggingface",
+      "model": "meta-llama/Llama-3.3-70B-Instruct"
+    },
+    {
+      "id": "gemma-via-hf",
+      "family": "Gemma (Google)",
+      "provider": "huggingface",
+      "model": "google/gemma-4-31B-it"
+    }
+  ],
+  "claims_sha256": "dd33499258539bed99db1f402e8209b9e52aee0155657724664e4f25cd776f92",
+  "comparable_items": 10,
+  "total_items": 12,
+  "assessment": {
+    "state": "MEASURED",
+    "n": 3,
+    "rho": 1,
+    "n_eff": 1,
+    "constantLegs": 0,
+    "pairs": 3,
+    "degeneratePairs": 0,
+    "quorum": 2,
+    "effectiveQuorum": 0.667,
+    "why": "3 nominal legs behave like 1.00 independent ones at mean pairwise rho 1.000"
+  },
+  "errors": {
+    "gptoss-via-groq": [
+      "c2: unparseable: I’m sorry, but I can’t c",
+      "c4: unparseable: "
+    ],
+    "llama-via-hf": [],
+    "gemma-via-hf": []
+  },
+  "establishes": [
+    "Over 10 binary claims answered by all 3 legs, mean pairwise verdict correlation was 1, giving n_eff 1."
+  ],
+  "does_not_establish": [
+    "That any leg is correct.",
+    "That this correlation holds on a different claim set.",
+    "Fault tolerance. n_eff is a measurement of independence, not a guarantee."
+  ]
+}

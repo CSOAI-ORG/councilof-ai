@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-04T18:19:27Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 119965441,
+      "block_hash": "0x78e3a6e9c9db85d9ca0acd152d94a91d732d8592a3013e3b74004ae5791728ff",
+      "block_time": "2026-09-04T18:19:27Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "174709844718215638878036908",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 119965441 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b36446e8452e25d2734065ce92dda4460e3edc92d2348a7a66a3ae3ed24c33b3",
+    "sig_ed25519": "99b982ea147c37027346fea67ae962dc47cb3c21842c4d3635b7eece5a1754e7f5d1d0966614533da330ad316ed9cab5b275c741335dce39f1a2b96b71b5b300",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 119965441",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "a80a31162d22fd6b178ab076018aabe8b6b6422733b98ce8406fbfd4079c862f",
+    "83fc7b88254d9dcd1c774fc406a2f3e660d11525d31e4ce59fb1cf5ee7f028c6",
+    "76f0e85850ce8b3a35aecc0718c91ef59808c10400e674f8921fb8a9beae2461",
+    "259c9b62cb668aac4c89c9e0c423fecd23541b2c27b388f4f73e94a921f1948d",
+    "136027d4462f5f234fbfa8f235c4bbc9e7b787f6f2a1fb00c2470b9223bbb788",
+    "3d45bd24c20b08561ab306e6b6412cdd707804c9eab47297196debd0df76ad29",
+    "36ced7b9d4f733ad2143df2099d578d7ebd39aa6a0cfbf5a51edda3f6ddab31e",
+    "6907a81d4c81e6262ea0d83c5c9cc34ea1a3474830b8fef79b554da56c237fc2"
+  ]
+}

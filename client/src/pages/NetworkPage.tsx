@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 // /network — the Council assistant Network directory. The public face of the ecosystem:
-// every signed agent domain, what it's for, and the one thing they share — each
-// action sealed to Layer 0 and answerable to a single council. Public-safe by
+// catalogued public domain, what it is intended for, and its current discovery
+// link. A domain listing is not evidence of a live agent or signed actions. Public-safe by
 // design: domain + role only. No keys, fingerprints, ports, or infrastructure.
 
 const GW = "/api";
@@ -43,9 +43,9 @@ function AgentCard({ a, crown }: { a: Agent; crown?: boolean }) {
 }
 
 export default function NetworkPage() {
-  const [live, setLive] = useState(false);
-  useEffect(() => { document.title = "The Council Network — every signed agent, one council | CSOAI"; }, []);
-  useEffect(() => { let ok = true; fetch(GW + "/health").then((r) => r.ok ? r.json() : null).then((d) => { if (ok && d) setLive(true); }).catch(() => {}); return () => { ok = false; }; }, []);
+  const [apiReachable, setApiReachable] = useState(false);
+  useEffect(() => { document.title = "The Council Network — catalogued public surfaces | CSOAI"; }, []);
+  useEffect(() => { let ok = true; fetch(GW + "/health").then((r) => r.ok ? r.json() : null).then((d) => { if (ok && d) setApiReachable(true); }).catch(() => {}); return () => { ok = false; }; }, []);
 
   return (
     <div className="min-h-screen bg-[#03110b] text-emerald-50">
@@ -56,8 +56,8 @@ export default function NetworkPage() {
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">One crown. <span className="bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-300 bg-clip-text text-transparent">Signed measurement surfaces.</span></h1>
           <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">The public Council of AI surfaces — what each one does, and where to find it. Personal and side-trade domains are not listed here.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
-            <span className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold " + (live ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" : "border-emerald-500/20 text-emerald-200/60")}>
-              <span className={"h-1.5 w-1.5 rounded-full " + (live ? "bg-emerald-400 animate-pulse" : "bg-emerald-500/40")} />{live ? "Council engine · LIVE" : "Council engine"}
+            <span className={"inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold " + (apiReachable ? "border-emerald-400/40 bg-emerald-500/10 text-emerald-200" : "border-emerald-500/20 text-emerald-200/60")}>
+              <span className={"h-1.5 w-1.5 rounded-full " + (apiReachable ? "bg-emerald-400" : "bg-emerald-500/40")} />{apiReachable ? "Public API reachable" : "Public API not confirmed"}
             </span>
             <a href="/globe3d.html" className="rounded-full border border-cyan-400/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-bold text-cyan-100 hover:bg-cyan-500/20">See it on the globe →</a>
             <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-1.5 text-xs font-bold text-amber-100 hover:bg-amber-400/20">How signing works →</a>
@@ -81,11 +81,11 @@ export default function NetworkPage() {
         })}
 
         <div className="mt-10 rounded-2xl border border-emerald-500/15 bg-white/[0.02] p-6 text-center">
-          <div className="text-sm font-bold text-emerald-100">Every agent, one guarantee.</div>
-          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/70">No agent acts alone. Each is answerable to the council, held to the care floor, and every decision is sealed to Layer 0 — provable, not promised. That's what makes it a network and not just a list of sites.</p>
+          <div className="text-sm font-bold text-emerald-100">Directory boundary</div>
+          <p className="mx-auto mt-1 max-w-2xl text-[13px] text-emerald-100/70">This is a catalogue of public surfaces. It does not prove that each domain operates an agent, that a Council reviewed an action, or that every decision was signed. Follow a published card to verify a specific claim.</p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Meet the council →</a>
-            <a href="/os?lobby=home" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
+            <a href="/dashboard?tab=home" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Govern anything →</a>
             <a href="/protect" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-white/5">Protect a person →</a>
           </div>
         </div>

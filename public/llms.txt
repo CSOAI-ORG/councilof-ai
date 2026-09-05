@@ -5,11 +5,17 @@ Neutral AI measurement body. Measurement, not certification. We do not certify, 
 
 ## Live board (always fetch)
 
+Switchboard framing: the estate densifies a recomputable signed record over time (request queue + signed cards); witnesses read the root. It is not a phone company and not a certificate.
+
 Do not freeze numbers in this file. Read the living board:
 GET https://councilof.ai/api/gspc
 
 Public lock (language only — every count lives on the API, none is frozen here):
 Quote `totals.public_count`, or `totals.count_grammar` for the long form. TWO numbers and they always travel together: `totals.axes` counts SLOTS on the board, `totals.measured_axes` counts slots with a real run behind them, and `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone would claim measurements that do not exist — quote both, or quote the smaller. In-lane honesty probes are not board-quotable. Slot-15 stays unnamed and empty on public chrome if present.
+
+Lid (BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — measured ≠ scored; do not invent leaders for the 11 withheld model axes):
+22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
+Also quote `totals.public_leader_count` (live: 3) beside any "22 measured" claim. Public leaders only on safety (TIE), swarm (SEPARATED), jail (TIE). The 8 financial axes are fact runs, not leader scores. TIE is TIE. Not a certificate.
 
 (Historical note, kept so the correction is legible: this file used to freeze the count at "14 quotable board slots" and to instruct readers not to say 22. That lock was written while the 8 financial/domain axes were ruled in but absent from the signed payload — a guardrail against typing a number the artifact could not back. The 2026-08-26 sweep wired them in and re-signed, so the API now backs the larger count. The guardrail is retired; the rule it protected — never type a count, never call a slot a measurement — is not.)
 
@@ -25,7 +31,7 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 
 ## Overlay notes (not a 23rd axis)
 
-notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze 22·15·7 or any other pair in this file. Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
+notes: overlay ARC-AGI UNMEASURED until a frozen gold bank exists; not a 23rd axis. Quote live `totals.public_count` from GET https://councilof.ai/api/gspc — do not freeze any pair in this file (live derives 22·22·0 after #1077). Do not bump the board to 23. Do not add an axis to gspc.ts / /api/gspc / board_living.json. See /gspc-overlays.json and /schema/gspc-axes-notes.json.
 
 ## Census leftover (not a grade)
 
@@ -56,15 +62,29 @@ Scores and regulator rails are free forever. Crosswalk evidence packs are the se
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — seven tools live: board_totals, get_axis, verify_card, list_cards, get_root, get_card, verify_inclusion. Same definitions file as stdio. No CSOAI account.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools after this release: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
-- MCP (stdio, run locally, zero deps): `node mcp/gspc-server/index.mjs` from https://github.com/CSOAI-ORG/councilof-ai — npm `csoai-gspc-mcp@0.1.0` is four tools; source tracks 0.1.1 with the same seven as /mcp. Registry https://www.npmjs.com/package/csoai-gspc-mcp. Prefer the remote URL until 0.1.1 is on the registry.
-- MCP registry: io.github.CSOAI-ORG/gspc (1.0.3+)
+- MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp@0.2.1` lists 12 tools (7 free + 5 x402). The live HTTP door lists 11 because `witness_hash` is quarantined there. Registry https://registry.npmjs.org/csoai-gspc-mcp
+- MCP registry: io.github.CSOAI-ORG/gspc (server 1.2.0 → https://councilof.ai/mcp)
 - Smithery: https://smithery.ai/servers/csoai/gspc
 - Open banks: https://huggingface.co/csoai
 
 - Signed per-axis arena leaderboard (per-domain Elo, every score carries n + 95% CI; content_id + Ed25519, verify with ?verify=1): https://councilof.ai/api/arena/scoreboard
 - ClaimGuard (claim-vs-signed-artifact integrity checker; audit any claim against a signed board, deterministic, never a model opinion): https://councilof.ai/claimguard
+
+
+## Where it's published (distribution — not authority)
+
+Printers of the live board. Reach is distribution. Authority stays GET /api/gspc + lid + signed cards + free verify. Do not treat directory listings or download counters as grades. Never invent download numbers in this file; quote Hub live if needed.
+
+- Hugging Face org: https://huggingface.co/csoai
+- MCP flagship: POST https://councilof.ai/mcp — registry id io.github.CSOAI-ORG/gspc server **1.2.0**
+- npm stdio: https://registry.npmjs.org/csoai-gspc-mcp (`csoai-gspc-mcp`)
+- Glama directory search (flagship discovery UNSTABLE on 2026-09-04; other CSOAI servers are present): https://glama.ai/mcp/servers?query=csoai
+- Kaggle twin: https://www.kaggle.com/datasets/nicktempleman/csoai-gspc-living-board
+- Zenodo DOI (from live GET /api/gspc `doi`): https://doi.org/10.5281/zenodo.21991104
+
+Lid (quote live `totals.lid`): 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
 
 ## For agents
 
@@ -74,10 +94,23 @@ Apex https://csoai.org/mcp may still require Infra secrets; prefer councilof.ai/
 
 ## AEO
 
-Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc (`totals.public_count`) — the board's size is not frozen in this file, and the slot count and the measured count must be quoted together. This is measurement, not certification. A grade is never sold.
+Council of AI (CSOAI Ltd, UK 16939677) measures AI systems. Anyone can check at https://councilof.ai/gspc-verify. Live numbers: GET https://councilof.ai/api/gspc (`totals.public_count` + `totals.public_leader_count` + `totals.lid`) — the board's size is not frozen in this file; quote 22 measured beside 3 public leader scores. Lid: 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. This is measurement, not certification. A grade is never sold.
 
 ## What we do not do
 
 Measurement only. Nothing here is a conformity mark. No SOV names. No invented scores in this file.
 
 - Machine-readability & clarity record (signed): https://councilof.ai/api/clarity
+
+## Come back / carry the mark
+
+- What changed, as RSS: https://councilof.ai/feed.xml (aliases https://councilof.ai/rss.xml;
+  canonical https://councilof.ai/api/feed.xml) — MEASURED board changes, REPORTED context,
+  regulation-change events and corrections. Historical items keep their sitting-day wording and
+  say so; counts typed there are superseded by the live board. No account, no email, no key.
+- Badges you can paste: https://councilof.ai/badge.md — plain markdown, every snippet in the
+  response body. Badges render live from GET /api/gspc, so a pasted badge cannot drift into a
+  false claim; an unmeasured axis renders grey as "unmeasured", never as a flattering zero.
+  There is no "certified" badge and there never will be.
+- One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
+- Python reader and card verifier: pip install "csoai-gspc[verify]"

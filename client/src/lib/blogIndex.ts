@@ -221,3 +221,15 @@ export function periodGradient(cards: BlogCard[], period: string): string {
   if (period === ALL_PERIODS) return "from-slate-700 to-slate-800";
   return cards.find((c) => c.period === period)?.gradient ?? "from-slate-700 to-slate-800";
 }
+
+/**
+ * Posts brand-gate or facts-gate reject (certification claims, the retracted BFT post).
+ * Not prerendered — a deep link would be a dead link — so the index does not list them.
+ * They stay in blogdata until rewritten; this set is the single source of that decision.
+ */
+export const UNLISTED_UNTIL_REWRITTEN = new Set<string>([
+  "ai-governance-legislation-2026",
+  "ai-governance-trends-2026",
+  "byzantine-consensus",
+  "iso-42001-nist-ai-rmf",
+]);

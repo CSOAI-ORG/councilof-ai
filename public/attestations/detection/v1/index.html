@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>in-toto predicate: detection/v1 — Council of AI</title>
+<meta name="description" content="in-toto predicate type https://councilof.ai/attestations/detection/v1 — a signed statement about one EU AI Act Article 50(2) detection run over a content manifest. Evidence of what was checked. Not a certification.">
+<link rel="canonical" href="https://councilof.ai/attestations/detection/v1">
+<style>
+ :root{color-scheme:light dark;--fg:#111;--bg:#fff;--mut:#555;--line:#e3e3e3;--acc:#0b5}
+ @media(prefers-color-scheme:dark){:root{--fg:#e8e8e8;--bg:#111;--mut:#a5a5a5;--line:#2b2b2b;--acc:#4c9}}
+ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+ main{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+ h1{font-size:1.5rem;margin:0 0 .25rem} .sub{color:var(--mut);margin:0 0 2rem}
+ h2{font-size:1.02rem;margin:2.2rem 0 .5rem}
+ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;background:color-mix(in srgb,var(--fg) 8%,transparent);padding:.12em .35em;border-radius:4px}
+ pre{overflow-x:auto;background:color-mix(in srgb,var(--fg) 6%,transparent);padding:1rem;border-radius:8px} pre code{background:none;padding:0}
+ dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem 1rem;margin:0} dt{color:var(--mut)}
+ blockquote{margin:1rem 0;padding:.75rem 1rem;border-left:3px solid var(--acc);background:color-mix(in srgb,var(--acc) 7%,transparent)}
+ a{color:inherit}
+</style>
+<main>
+<h1>in-toto predicate: <code>detection/v1</code></h1>
+<p class="sub">A signed statement about one Article 50(2) detection run over a content manifest, carried in an in-toto Statement v1 envelope.</p>
+
+<dl>
+ <dt>predicateType</dt><dd><code>https://councilof.ai/attestations/detection/v1</code></dd>
+ <dt>Statement</dt><dd><code>https://in-toto.io/Statement/v1</code></dd>
+ <dt>DSSE payloadType</dt><dd><code>application/vnd.in-toto+json</code></dd>
+ <dt>Signature</dt><dd>Ed25519, <code>did:web:csoai.org#board-attestation-1</code></dd>
+ <dt>Canonicalisation</dt><dd>Recursively sorted keys, no whitespace — byte-identical to RFC 8785 for ASCII/number payloads</dd>
+ <dt>Issuer</dt><dd>CSOAI Ltd (Council of AI), UK company 16939677</dd>
+</dl>
+
+<h2>Why this exists</h2>
+<p>EU AI Act Article 50(2) requires that synthetic content be marked in a machine-readable way.
+That obligation was <em>not</em> deferred by the Digital Omnibus: it is enforced, with the
+machine-readable marking deadline standing at 2 December 2026. A passport that asserts a mark is
+only as good as the check behind it. This predicate carries the result of that check, signed, so a
+reader can verify the detection rather than trust the assertion.</p>
+
+<h2>Scope — read this before relying on it</h2>
+<blockquote>Two layers are declared and only one is checked. The <strong>metadata layer</strong> is
+verified: Ed25519 over the canonical claim. The <strong>watermark layer</strong> is
+<strong>declared, not checked</strong>. An attestation under this predicate says nothing about
+whether a watermark is present or intact.</blockquote>
+<p>A manifest that cannot be resolved returns <code>UNVERIFIABLE</code> — never a pass, never a
+fabricated failure. The endpoint is free for everyone and unrestricted for authorities, media,
+fact-checkers, researchers and civil society.</p>
+
+<h2>What it establishes — and what it does not</h2>
+<blockquote>An attestation under this predicate is evidence of <strong>what was checked, and when, by the
+issuer</strong>. It is <strong>not</strong> a certification, an endorsement, or a conformity mark,
+and must not be presented as one. It is not a finding that content is or is not AI-generated.</blockquote>
+<p>Verifying the signature establishes that the named key produced these bytes and that the bytes
+have not changed. It says nothing about the state of that key <em>now</em>: offline verification is a
+computation over the parameters you hold, while revocation is a property of the present. A consumer
+must not treat a signature that verifies as evidence that the signing key is still valid. Where a
+decision depends on revocation state, the key-resolution path and the staleness you accept are
+operational parameters of your deployment and must be stated by it. Recorded against our own rule as
+correction <a href="https://councilof.ai/api/corrections">C-2026-0902-09</a>.</p>
+
+<h2>Shape</h2>
+<pre><code>{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [{ "name": "ai-content-detection", "digest": { "sha256": "&lt;hex&gt;" } }],
+  "predicateType": "https://councilof.ai/attestations/detection/v1",
+  "predicate": {
+    "verdict": "&lt;verdict | UNVERIFIABLE&gt;",
+    "article": "EU AI Act Article 50(2)",
+    "verifies": {
+      "metadata_layer": "Ed25519 over canonical claim",
+      "watermark_layer": "declared, not checked"
+    },
+    "as_of": "&lt;RFC 3339&gt;"
+  }
+}</code></pre>
+<p>Complements <code>/api/article50</code>, which issues a passport: this endpoint proves the mark
+that one otherwise trusts.</p>
+
+<h2>Verify one</h2>
+<p>POST a manifest to <a href="https://councilof.ai/api/detect">/api/detect</a>. Offline card
+verifier, zero dependencies, three states rather than two:
+<a href="https://councilof.ai/verifier/gspc-verify.mjs">gspc-verify.mjs</a> (Apache-2.0).
+Rule: <a href="https://councilof.ai/signed/HOW-TO-VERIFY.md">HOW-TO-VERIFY.md</a>.
+Live board: <a href="https://councilof.ai/api/gspc">GET /api/gspc</a>.</p>
+</main>

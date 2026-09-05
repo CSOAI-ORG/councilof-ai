@@ -1,22 +1,1601 @@
 {
-  "openapi": "3.0.3",
-  "info": {
-    "title": "Council of AI — public machine surfaces",
-    "version": "1.0.0",
-    "description": "Measurement, not certification. Every signed artifact verifies against did:web:csoai.org. Issuer: Council of AI (CSOAI LTD, UK #16939677).",
-    "x-canonical-dois": ["10.5281/zenodo.21991104", "10.5281/zenodo.21973002"]
+  "components": {
+    "securitySchemes": {
+      "ed25519": {
+        "description": "Ed25519 signature of canonical body, under did:web:csoai.org#card-attestation-1",
+        "in": "header",
+        "name": "X-CSOAI-Signed-Card",
+        "type": "apiKey"
+      }
+    }
   },
-  "servers": [{"url": "https://councilof.ai"}, {"url": "https://csoai.org"}],
+  "info": {
+    "contact": {
+      "name": "CSOAI Ltd",
+      "url": "https://councilof.ai/"
+    },
+    "description": "Independent AI governance measurement. 22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact. Free, Ed25519-signed, verifiable in your browser. Measurement, not certification.",
+    "license": {
+      "name": "CC-BY-4.0",
+      "url": "https://creativecommons.org/licenses/by/4.0/"
+    },
+    "title": "Council of AI \u2014 Public API",
+    "version": "2026-09-03"
+  },
+  "openapi": "3.0.3",
   "paths": {
-    "/.well-known/did.json": {"get": {"summary": "DID document — the trust root (Ed25519 public keys)", "responses": {"200": {"description": "DID document"}}}},
-    "/.well-known/agent-card.json": {"get": {"summary": "A2A agent card, signed", "responses": {"200": {"description": "signed agent card"}}}},
-    "/api/receipts/latest": {"get": {"summary": "Latest signed measurement receipt + offline verification steps", "responses": {"200": {"description": "receipt envelope"}}}},
-    "/api/arena/rounds.jsonl": {"get": {"summary": "Live measured arena rounds (NDJSON)", "responses": {"200": {"description": "NDJSON stream"}, "503": {"description": "honest no-data state"}}}},
-    "/api/leaderboard": {"get": {"summary": "Measured leaderboard (Wilson CIs; ties are ties)", "responses": {"200": {"description": "leaderboard JSON"}}}},
-    "/api/gspc": {"get": {"summary": "GSPC axis register — live totals.public_count (14 measured of 14 quotable)", "responses": {"200": {"description": "axis register"}}}},
-    "/api/feed.xml": {"get": {"summary": "RSS state-change feed (watch-subscription)", "responses": {"200": {"description": "RSS 2.0"}}}},
-    "/badge/axes.json": {"get": {"summary": "shields.io badge endpoint", "responses": {"200": {"description": "badge JSON"}}}},
-    "/verify": {"get": {"summary": "Free in-browser verification (humans)", "responses": {"200": {"description": "verifier page"}}}},
-    "/mcp": {"get": {"summary": "MCP manifest pointer; the measurement MCP server is at registry io.github.CSOAI-ORG/gspc 1.0.3", "responses": {"200": {"description": "manifest"}}}}
-  }
+    "/api/action-jobs": {
+      "get": {
+        "operationId": "get__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      },
+      "patch": {
+        "operationId": "patch__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      },
+      "post": {
+        "operationId": "post__api_action-jobs",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
+      }
+    },
+    "/api/agentic-fix": {
+      "get": {
+        "operationId": "get__api_agentic-fix",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_agentic-fix",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/article50": {
+      "get": {
+        "operationId": "get__api_article50",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
+      },
+      "post": {
+        "operationId": "post__api_article50",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
+      }
+    },
+    "/api/assess": {
+      "get": {
+        "operationId": "get__api_assess",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
+      },
+      "post": {
+        "operationId": "post__api_assess",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
+      }
+    },
+    "/api/axis-register": {
+      "get": {
+        "operationId": "get__api_axis-register",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).\n *\n * Slot counts live in GET /api/gspc totals (public_count, measured_axes,\n * quotable_axes). This register lists the bundl"
+      }
+    },
+    "/api/badge": {
+      "get": {
+        "operationId": "get__api_badge",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/benchmark-quality": {
+      "get": {
+        "operationId": "get__api_benchmark-quality",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "The day every artifact cited in this file was actually fetched."
+      }
+    },
+    "/api/board-sign": {
+      "post": {
+        "operationId": "post__api_board-sign",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/board-sign \u2014 GitHub OIDC only.\n * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.\n * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+      }
+    },
+    "/api/cards": {
+      "get": {
+        "operationId": "get__api_cards",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/cards \u2014 live signed-measurement surface (G4 fix).\n *\n * Serves the SIGNED living board + the index of signed measurement cards so the\n * public can verify the measurements the estate has ac"
+      }
+    },
+    "/api/challenge": {
+      "get": {
+        "operationId": "get__api_challenge",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      },
+      "post": {
+        "operationId": "post__api_challenge",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/chat": {
+      "post": {
+        "operationId": "post__api_chat",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/checkout": {
+      "post": {
+        "operationId": "post__api_checkout",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/checkout \u2014 public door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay empty."
+      }
+    },
+    "/api/clarity": {
+      "get": {
+        "operationId": "get__api_clarity",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/comparison": {
+      "get": {
+        "operationId": "get__api_comparison",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/compute": {
+      "get": {
+        "operationId": "get__api_compute",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/compute \u2014 probe surface for the two-machine wire.\n *\n * Quotes the committed Hub census digest. Probes the AG-UI wire when\n * AGUI_WIRE_URL is set. Never writes MEASURED. Never invents a po"
+      }
+    },
+    "/api/contact": {
+      "post": {
+        "operationId": "post__api_contact",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound;\n * honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded\n * to third parties."
+      }
+    },
+    "/api/corpus-watch": {
+      "get": {
+        "operationId": "get__api_corpus-watch",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/corpus-watch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      },
+      "post": {
+        "operationId": "post__api_corpus-watch",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/corpus-watch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/corrections": {
+      "get": {
+        "operationId": "get__api_corrections",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/counters": {
+      "get": {
+        "operationId": "get__api_counters",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHAT CHANGED (2026-08-26)"
+      }
+    },
+    "/api/cross": {
+      "get": {
+        "operationId": "get__api_cross",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/dashboard": {
+      "get": {
+        "operationId": "get__api_dashboard",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/dashboard",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      },
+      "post": {
+        "operationId": "post__api_dashboard",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/dashboard",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/decide": {
+      "get": {
+        "operationId": "get__api_decide",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/decide",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "* GET /api/decide \u2014 not implemented; no decision attestation is created.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/detect": {
+      "get": {
+        "operationId": "get__api_detect",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
+      },
+      "post": {
+        "operationId": "post__api_detect",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
+      }
+    },
+    "/api/detector-interop": {
+      "get": {
+        "operationId": "get__api_detector-interop",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/detector-interop \u2014 open, signed detector-interoperability matrix.\n *\n * EU AI Act Article 50 Code of Practice sets 2027-02-02 for interoperability\n * between detection mechanisms (\"does det"
+      }
+    },
+    "/api/east-west-bench": {
+      "get": {
+        "operationId": "get__api_east-west-bench",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/embed": {
+      "get": {
+        "operationId": "get__api_embed",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/embed \u2014 machine contract for the white-label kit.\n * Counts are not typed here. The badge and embed.js read GET /api/gspc."
+      }
+    },
+    "/api/eunomia-data": {
+      "get": {
+        "operationId": "get__api_eunomia-data",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/evidence-bundle": {
+      "get": {
+        "operationId": "get__api_evidence-bundle",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/evidence-bundle \u2014 Tier 2: an evidence bundle mapped to ONE regulatory obligation.\n *\n *   free   ?obligation=<id>[&subject=<s>]      \u2192 the obligation record, the counsel gate, how many\n *  "
+      }
+    },
+    "/api/evidence-intake": {
+      "post": {
+        "operationId": "post__api_evidence-intake",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/evidence-intake \u2014 explicit candidate measurement intake.\n *\n * This is deliberately not a measurement endpoint. It verifies the ephemeral\n * browser signature on one <=3KB candidate receip"
+      }
+    },
+    "/api/evidence-pack": {
+      "get": {
+        "operationId": "get__api_evidence-pack",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/fabric": {
+      "get": {
+        "operationId": "get__api_fabric",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/fabric -- normalized, read-only capability evidence.\n *\n * This is not an action registry. Every positive state is derived from a bounded\n * same-origin probe made for this request. Catalog"
+      }
+    },
+    "/api/feed.xml": {
+      "get": {
+        "operationId": "get__api_feed.xml",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/findings": {
+      "get": {
+        "operationId": "get__api_findings",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/fines": {
+      "get": {
+        "operationId": "get__api_fines",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record.\n *\n * R8 canon (load-bearing): regulators get signed streams free forever (verification free).\n * This endpoin"
+      }
+    },
+    "/api/fulfill": {
+      "get": {
+        "operationId": "get__api_fulfill",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay"
+      }
+    },
+    "/api/growth-loops": {
+      "get": {
+        "operationId": "get__api_growth-loops",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/growth-loops \u2014 retired until loop status is derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/gspc": {
+      "get": {
+        "operationId": "get__api_gspc",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/hf-spaces": {
+      "get": {
+        "operationId": "get__api_hf-spaces",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/hub-cards": {
+      "get": {
+        "operationId": "get__api_hub-cards",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/include": {
+      "get": {
+        "operationId": "get__api_include",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/include",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "* GET /api/include \u2014 not implemented; no Merkle inclusion proof is produced.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/interop-bulk": {
+      "get": {
+        "operationId": "get__api_interop-bulk",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces.\n *\n * Free tier (default): single-shard access to the live interop registry (read-only,\n * the trust engine \u2014 never gat"
+      }
+    },
+    "/api/lead": {
+      "get": {
+        "operationId": "get__api_lead",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
+      },
+      "post": {
+        "operationId": "post__api_lead",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
+      }
+    },
+    "/api/learn-loop": {
+      "get": {
+        "operationId": "get__api_learn-loop",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_learn-loop",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/learn-loop \u2014 quarantined pre-release surface.\n *\n * @openapi-unavailable\n *\n * The former implementation generated hash-shaped placeholders and labelled\n * them as Ed25519, OpenTimestamps, Reko",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/learning-scenarios": {
+      "get": {
+        "operationId": "get__api_learning-scenarios",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/locale": {
+      "get": {
+        "operationId": "get__api_locale",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/mcp": {
+      "get": {
+        "operationId": "get__api_mcp",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return a hardcoded array of 6 servers in which every entry set\n *   l"
+      }
+    },
+    "/api/methodology": {
+      "get": {
+        "operationId": "get__api_methodology",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/mint": {
+      "get": {
+        "operationId": "get__api_mint",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/mint",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/og": {
+      "get": {
+        "operationId": "get__api_og",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/openapi.json": {
+      "get": {
+        "operationId": "get__api_openapi.json",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that\n * already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.\n *\n * Honesty rules for this fi"
+      }
+    },
+    "/api/otel": {
+      "get": {
+        "operationId": "get__api_otel",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/otel \u2014 collector presence.\n * LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis."
+      }
+    },
+    "/api/pqc": {
+      "get": {
+        "operationId": "get__api_pqc",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/pqc \u2014 continuity mill vs estate signer.\n * Not a 23rd axis. Continuity MEASURED \u2260 we are PQC."
+      }
+    },
+    "/api/prod-readiness": {
+      "get": {
+        "operationId": "get__api_prod-readiness",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/prod-readiness \u2014 retired until readiness is derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/proof": {
+      "get": {
+        "operationId": "get__api_proof",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/proof \u2014 inclusion proofs for public-root leaves.\n *\n * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.\n * 402 without payment is OK. May trail the last published root (\u2264"
+      }
+    },
+    "/api/provider-canary": {
+      "get": {
+        "operationId": "get__api_provider-canary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+      },
+      "post": {
+        "operationId": "post__api_provider-canary",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+      }
+    },
+    "/api/registers": {
+      "get": {
+        "operationId": "get__api_registers",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "measurement_not_certification": true,
+                  "signed": false,
+                  "state": "UNSIGNED_STATIC_SUMMARY"
+                }
+              }
+            },
+            "description": "Unsigned static benchmark summary \u2014 no signature or proof material supplied"
+          }
+        },
+        "summary": "* GET /api/registers \u2014 unsigned static benchmark summaries.\n *\n * This handler publishes hard-coded summary values. It does not load or verify\n * source records, signatures, receipts, or cryptographic",
+        "x-csoai-evidence-state": "UNSIGNED_STATIC_SUMMARY"
+      }
+    },
+    "/api/regulation": {
+      "get": {
+        "operationId": "get__api_regulation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/regulation \u2014 source-cited regulation deadline feed.\n *\n * This endpoint deliberately serves a bounded, versioned register rather than\n * accepting generic writes. Dates are statements from "
+      }
+    },
+    "/api/regulator-findings": {
+      "get": {
+        "operationId": "get__api_regulator-findings",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/report": {
+      "get": {
+        "operationId": "get__api_report",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/report",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      },
+      "post": {
+        "operationId": "post__api_report",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/report",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/reported": {
+      "get": {
+        "operationId": "get__api_reported",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the"
+      },
+      "post": {
+        "operationId": "post__api_reported",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/reported",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/request-attestation": {
+      "get": {
+        "operationId": "get__api_request-attestation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/request-attestation \u2014 Tier 1: commission a signed card for a subject (\u00d7 optional axis).\n *\n * Sell path: pay-to-recompute / re-attest per request \u2014 never a rank, never a certificate,\n * nev"
+      }
+    },
+    "/api/revenue": {
+      "get": {
+        "operationId": "get__api_revenue",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).\n *\n * Reads the revenue counters straight out of counters.json (the counter canon) and, WHERE A\n * store is bound, th"
+      }
+    },
+    "/api/root": {
+      "get": {
+        "operationId": "get__api_root",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/root \u2014 alias of public/root.json.\n * Same bytes the static door serves. Never a second forest."
+      }
+    },
+    "/api/router": {
+      "get": {
+        "operationId": "get__api_router",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* /api/router \u2014 the bounded discovery + interop + packages router."
+      }
+    },
+    "/api/security": {
+      "get": {
+        "operationId": "get__api_security",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/specialists": {
+      "get": {
+        "operationId": "get__api_specialists",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.\n *\n * Honest PROXY of the estate's signed specialist-team feed\n * (https://csoai-sovereign.pages.dev/api/specialis"
+      }
+    },
+    "/api/state": {
+      "get": {
+        "operationId": "get__api_state",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHY THIS EXISTS\n * In one w"
+      }
+    },
+    "/api/subscribe": {
+      "get": {
+        "operationId": "get__api_subscribe",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/subscribe",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      },
+      "post": {
+        "operationId": "post__api_subscribe",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/subscribe",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/swift": {
+      "get": {
+        "operationId": "get__api_swift",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/swift \u2014 reader of public/interop/swift-census.json.\n * Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first,\n * not MEASURED. Not a SWIFT client feed. writes_board=fals"
+      }
+    },
+    "/api/synthesis": {
+      "get": {
+        "operationId": "get__api_synthesis",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/synthesis \u2014 retired until mappings are generated from verified records.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/tools": {
+      "get": {
+        "operationId": "get__api_tools",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return `const CATALOGUE_TOTAL = 378` \u2014 a hardcoded"
+      }
+    },
+    "/api/trace": {
+      "get": {
+        "operationId": "get__api_trace",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints."
+      },
+      "post": {
+        "operationId": "post__api_trace",
+        "responses": {
+          "405": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Method not allowed \u2014 use the documented read method"
+          }
+        },
+        "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
+        "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      }
+    },
+    "/api/verify-batch": {
+      "get": {
+        "operationId": "get__api_verify-batch",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/verify-batch",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "* GET /api/verify-batch \u2014 not implemented; no cards are verified.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/verify-card": {
+      "get": {
+        "operationId": "get__api_verify-card",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/verify-card",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "* GET /api/verify-card \u2014 not implemented; no card is verified.",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/verify-tally": {
+      "get": {
+        "operationId": "get__api_verify-tally",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      },
+      "post": {
+        "operationId": "post__api_verify-tally",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/wave-dashboard": {
+      "get": {
+        "operationId": "get__api_wave-dashboard",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": ""
+      }
+    },
+    "/api/webhooks": {
+      "delete": {
+        "operationId": "delete__api_webhooks",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+      },
+      "get": {
+        "operationId": "get__api_webhooks",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+      },
+      "post": {
+        "operationId": "post__api_webhooks",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
+      }
+    },
+    "/api/witness": {
+      "get": {
+        "operationId": "get__api_witness",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_witness",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* /api/witness \u2014 quarantined paid witness surface.\n *\n * @openapi-unavailable\n *\n * The implementation below is retained and tested as a fixture, but the public\n * handlers return 503 before parsing i",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      }
+    },
+    "/api/worker": {
+      "get": {
+        "operationId": "get__api_worker",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/worker",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      },
+      "post": {
+        "operationId": "post__api_worker",
+        "responses": {
+          "501": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepted": false,
+                  "endpoint": "/api/worker",
+                  "persisted": false,
+                  "schema": "csoai.capability-state/0.1",
+                  "signed": false,
+                  "state": "NOT_IMPLEMENTED"
+                }
+              }
+            },
+            "description": "Not implemented \u2014 no input was accepted, persisted, or signed"
+          }
+        },
+        "summary": "",
+        "x-csoai-lifecycle": "NOT_IMPLEMENTED"
+      }
+    },
+    "/api/x402": {
+      "get": {
+        "operationId": "get__api_x402",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.\n *\n * One tier per line, one resource per tier, each with a free preview and a 402 door. Amounts\n * surface only inside a 40"
+      }
+    },
+    "/api/xrpl": {
+      "get": {
+        "operationId": "get__api_xrpl",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "* GET /api/xrpl \u2014 reader of the committed public-root 16.\n *\n * 200 only when this deploy's /root.json plus /cards yield exactly the locked\n * 16 xrpl.asset.state leaves whose sha256 sit on that root."
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Production",
+      "url": "https://councilof.ai"
+    },
+    {
+      "description": "Apex (308 \u2192 councilof.ai for /)",
+      "url": "https://csoai.org"
+    }
+  ]
 }

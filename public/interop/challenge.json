@@ -1,0 +1,46 @@
+{
+  "schema": "csoai.api-capability-state/0.2",
+  "kind": "quarantined-api-capability",
+  "name": "Challenge intake (ephemeral only)",
+  "state": "NOT_CONFIGURED",
+  "description": "The redress door validates challenge input and can issue an ephemeral receipt, but no registry or durable store is bound.",
+  "as_of": "20260905T045748Z",
+  "transport": {
+    "handler": "functions/api/challenge.ts",
+    "methods": [
+      "GET",
+      "POST"
+    ],
+    "path": "/api/challenge",
+    "outcomes": [
+      {
+        "method": "POST",
+        "http_status": 202,
+        "output": "Ephemeral csoai.challenge-receipt/0.1"
+      },
+      {
+        "method": "POST",
+        "http_status": 400,
+        "output": "JSON validation error"
+      },
+      {
+        "method": "GET",
+        "output": "Door metadata with stored:false and optional id echo"
+      }
+    ]
+  },
+  "output": {
+    "stored": false,
+    "content_id": "24-hex-character HMAC-derived opaque identifier",
+    "publicly_verifiable_signature": false,
+    "resolution_written": false
+  },
+  "capabilities": {
+    "accepts_writes": true,
+    "persists_requests": false,
+    "signed_output": false,
+    "anchors_output": false,
+    "payment_required": false,
+    "writes_measurement_board": false
+  }
+}

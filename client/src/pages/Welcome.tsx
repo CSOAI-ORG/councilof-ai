@@ -40,7 +40,7 @@ export default function Welcome() {
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/15 text-2xl text-emerald-300">◉</div>
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS — you're in</p>
           <h1 className="mt-3 text-3xl sm:text-4xl font-black tracking-tight">Welcome to your Council assistant.</h1>
-          <p className="mt-3 text-emerald-100/75">Your account is live. Your data is yours to own and export, and every action is signed to Layer 0.</p>
+          <p className="mt-3 text-emerald-100/75">Your account is ready. Your data is yours to export. Published measurement cards can be verified offline; ordinary account actions are not automatically signed.</p>
         </div>
 
         {info ? (
@@ -57,7 +57,7 @@ export default function Welcome() {
             </ul>
             <div className="mt-4 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">The rail is free. Verification is free forever — explore the full OS now.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os?lobby=home")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
+              <button onClick={() => go("/dashboard?tab=home")} className={"flex-1 rounded-xl px-4 py-2.5 text-center text-sm font-bold " + (amber ? "bg-amber-400 text-[#1a1206] hover:bg-amber-300" : "bg-emerald-500 text-[#03110b] hover:bg-emerald-400")}>Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>
@@ -66,7 +66,7 @@ export default function Welcome() {
             {credits && <div className="mb-3 rounded-lg border border-emerald-500/15 bg-black/20 px-3 py-2 text-xs text-emerald-100/60">Your <b className="text-emerald-300">{credits}</b> pack is noted.</div>}
             <div className="text-sm text-emerald-100/80">You're on the free, open-source base — your own Council assistant, the governance graph, the council and Layer 0 signing, forever. The rail is free; verification is free forever.</div>
             <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-              <button onClick={() => go("/os?lobby=home")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
+              <button onClick={() => go("/dashboard?tab=home")} className="flex-1 rounded-xl bg-emerald-500 px-4 py-2.5 text-center text-sm font-bold text-[#03110b] hover:bg-emerald-400">Enter your OS →</button>
               <button onClick={() => go("/demo")} className="flex-1 rounded-xl border border-emerald-400/40 px-4 py-2.5 text-center text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Take the guided tour</button>
             </div>
           </div>

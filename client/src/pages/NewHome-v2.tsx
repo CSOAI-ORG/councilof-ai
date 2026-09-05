@@ -451,8 +451,9 @@ export default function NewHomeV2() {
             Many frameworks. One <span className="text-emerald-400">signed</span> proof.
           </h2>
           <p className="mt-3 max-w-2xl mx-auto text-gray-300">
-            Governance rules from every jurisdiction reach a fault-aware council consensus — and out comes one
-            Ed25519-signed record anyone can verify offline, without trusting a vendor dashboard.
+            Frozen instruments turn evidence into an Ed25519-signed measurement record anyone can
+            verify offline. The 33-seat council and 23/33 threshold remain a non-live design;
+            independence and fault tolerance are not demonstrated.
           </p>
           <ConsensusHero className="mt-8 w-full max-w-4xl mx-auto rounded-2xl" />
         </div>
@@ -570,10 +571,10 @@ export default function NewHomeV2() {
           <p className="mt-3 max-w-2xl text-emerald-50/85">Build your identity, connect your world, see governance on the globe, choose your consensus, and browse every regulation - all live.</p>
           <a data-tag="home-deadline-cta" href="/assess" className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-amber-300/40 bg-amber-400/10 px-5 py-3 text-sm font-bold text-amber-100 hover:bg-amber-400/20"><span className="rounded-md bg-amber-400 px-2 py-0.5 text-[10px] font-black text-slate-900">LIVE SINCE 2 AUG 2026</span>EU AI Act transparency + GPAI enforcement are live - run your free signed risk check -&gt;</a>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            <a href="/os" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Council assistant</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
+            <a href="/dashboard?tab=home" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Your Council assistant</div><p className="mt-1 text-xs text-white/90">One identity: voice, character, passport.</p></a>
             <a href="/connect" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">Connect socials</div><p className="mt-1 text-xs text-white/90">Give your AI character a face.</p></a>
             <a href="/globe" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council Globe</div><p className="mt-1 text-xs text-white/90">AI governance, layered on the world.</p></a>
-            <a href="/council" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council</div><p className="mt-1 text-xs text-white/90">How the designed 33-agent council votes.</p></a>
+            <a href="/council" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Council</div><p className="mt-1 text-xs text-white/90">How the designed 33-seat council votes.</p></a>
             <a href="/registry" className="rounded-2xl border border-white/15 bg-white/5 p-5 hover:bg-white/10 transition"><div className="text-sm font-black text-emerald-200">The Registry</div><p className="mt-1 text-xs text-white/90">Every regulation, standard, protocol.</p></a>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
@@ -721,7 +722,7 @@ export default function NewHomeV2() {
                     },
                     {
                       title: "24/7 AI Monitoring",
-                      desc: "33 measurement agents monitor systems continuously. Continuous measurement, not paper promises.",
+                      desc: "Dated measurements can be rerun when evidence changes. No live 33-seat monitoring council is claimed.",
                     },
                     {
                       title: "Signed evidence",

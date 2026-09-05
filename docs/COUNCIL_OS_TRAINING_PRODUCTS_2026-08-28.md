@@ -16,13 +16,12 @@ Free ship off `master` after #854 / #857 / #858. Does **not** reopen closed #819
 ## Honesty
 
 - Training attests **completion**, never certification / conformity.
-- Quests are **frozen** industry packs — not the living `22 axis · 15 measured` board.
+- Quests are **frozen** industry packs — not the living `22 axis · 22 measured` board.
 - Counts still come from `GET /api/gspc` / `totals.public_count` — never invented.
 - Council Town external deploy stays catalogued as broken leftover — not promoted as working play.
 
 ## Not in this PR (owner-gated / other lanes)
 
 - Overnight register timer spam (disable `ralph-overnight-until-4am`)
-- ADR-001 STRICT vs live 22/15 reconcile
+- ADR-001 STRICT vs live 22/22 (after #1077)
 - CF API token / Kaggle / HF Space restart / billing stub rebuild
-

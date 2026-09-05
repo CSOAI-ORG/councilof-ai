@@ -34,6 +34,11 @@
 # position and is exactly the one the site's copy describes.
 # ---------------------------------------------------------------------------
 
+# Feeds and paste-ready badges. The feed is the estate's only return path; it was
+# previously reachable only at /api/feed.xml, which nothing guesses.
+# Feed:   https://councilof.ai/feed.xml  (alias /rss.xml, canonical /api/feed.xml)
+# Badges: https://councilof.ai/badge.md  (plain markdown, every snippet in the body)
+
 User-agent: *
 Content-Signal: search=yes, ai-input=yes, ai-train=no, use=reference
 Disallow: /.backups/

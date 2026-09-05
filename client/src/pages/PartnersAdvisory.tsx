@@ -848,7 +848,7 @@ const PartnersAdvisory: React.FC = () => {
             Ready to Partner or Get Started?
           </h2>
           <p className="text-lg text-purple-100 mb-8 max-w-2xl mx-auto">
-            Partner with an independent measurement body. Every claim on this page is checkable; every measurement is signed.
+            Work with an independent measurement body. Published measurement cards are checkable and state their evidence status; not every tool response is signed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="/contact" className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-purple-600 rounded-lg hover:bg-purple-50 transition-colors font-semibold">

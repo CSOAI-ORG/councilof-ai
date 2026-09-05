@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "course-player",
+  "name": "Course Player",
+  "kind": "education",
+  "as_of": "20260904T064716Z",
+  "url": "https://councilof.ai/.well-known/mcp/course-player.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "play_course-player",
+      "description": "Play Course Player"
+    },
+    {
+      "name": "chat_course-player",
+      "description": "Chat with AI in Course Player"
+    },
+    {
+      "name": "join_room_course-player",
+      "description": "Join a multiplayer room in Course Player"
+    },
+    {
+      "name": "attest_course-player",
+      "description": "Get a signed turn card from Course Player"
+    },
+    {
+      "name": "verify_course-player",
+      "description": "Verify an attestation from Course Player"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "game://course-player/room",
+      "name": "Room",
+      "description": "Current room state"
+    },
+    {
+      "uri": "game://course-player/turn",
+      "name": "Turn",
+      "description": "Latest turn"
+    },
+    {
+      "uri": "game://course-player/card",
+      "name": "Card",
+      "description": "Latest signed card"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "play_course-player",
+      "description": "Play Course Player with AI"
+    },
+    {
+      "name": "chat_course-player",
+      "description": "Chat with AI in Course Player"
+    }
+  ]
+}

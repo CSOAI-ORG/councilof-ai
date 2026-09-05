@@ -81,7 +81,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
     id: "stale-13",
     claim: "The brief still says 13 measured axes and a 14-slot instrument.",
     verdict: "stale",
-    live: "Living board: 22 axis · 15 measured. Quote GET /api/gspc.",
+    live: "Living board: 22 axis · 22 measured. Quote GET /api/gspc.",
   },
   {
     id: "stale-300-mcp",
@@ -97,7 +97,7 @@ export const PLAYBOOK_CLAIMS: PlaybookClaim[] = [
   },
   {
     id: "false-bft",
-    claim: "A designed 33-agent council is a live harness layer.",
+    claim: "Incorrect assertion recorded for refutation: the 33-seat Council design operated as a harness layer.",
     verdict: "false",
     live: "DR-0007 retracted that claim. Do not revive it as AutoHarness drop-in.",
   },

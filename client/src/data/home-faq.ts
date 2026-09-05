@@ -27,7 +27,7 @@ export const FAQ_ITEMS: FaqItem[] = [
     url: "/about",
   },
   {
-    q: 'What is the GSPC board, and what does "22 axis · 15 measured" mean?',
+    q: 'What is the GSPC board, and what does "22 axis · 22 measured" mean?',
     a: "GSPC (Governance · Safety · Provenance · Continuity) is the living board of measurement slots. The count — read from GET /api/gspc, not typed here — states how many slots carry a measured result versus how many are honestly empty or described.",
     url: "/gspc-scoreboard",
   },
@@ -78,7 +78,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Is a measurement card legal advice, and what happens when the law changes?",
-    a: "A measurement card is not legal advice — it describes behaviour on tests on a stated date. When a provision changes we re-measure and issue a delta card; the old card stands. The regulation feed is at /api/regulation.",
+    a: "A measurement card is not legal advice — it describes behaviour on tests on a stated date. Automated re-measurement and delta-card issuance are not implemented. The regulation feed is at /api/regulation; a new scoped run must be completed and published before a result changes.",
     url: "/regulation-tracker",
   },
 ];

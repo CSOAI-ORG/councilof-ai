@@ -226,7 +226,7 @@ export default function GetListed() {
             Verify a card
           </Link>
           <Link
-            href="/gspc-scoreboard"
+            href="/dashboard?tab=board"
             className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold hover:bg-white/5"
           >
             Live board

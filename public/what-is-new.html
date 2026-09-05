@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What is new — Council of AI</title>
+<meta name="robots" content="index,follow" />
+<meta name="description" content="CSOAI — what is new on the AI measurement board. Measurement, not certification." />
+<link rel="canonical" href="https://councilof.ai/what-is-new" />
+<meta property="og:title" content="What is new — Council of AI" />
+<meta property="og:description" content="CSOAI — what is new on the AI measurement board. Measurement, not certification." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/what-is-new" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta property="og:site_name" content="CSOAI Ltd" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="What is new — Council of AI" />
+<meta name="twitter:description" content="CSOAI — what is new on the AI measurement board. Measurement, not certification." />
+<meta name="twitter:image" content="https://councilof.ai/og-default.png" />
+<meta name="theme-color" content="#16a34a" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CSOAI \u2014 Council of AI",
+  "url": "https://councilof.ai/what-is-new",
+  "description": "CSOAI \u2014 what is new on the AI measurement board. Measurement, not certification.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  }
+}
+</script>
+<style>
+  :root {
+    --accent: #16a34a;
+    --accent-hover: #15803d;
+    --accent-light: #dcfce7;
+    --bg: #ffffff;
+    --fg: #1f2937;
+    --muted: #6b7280;
+    --muted-light: #f3f4f6;
+    --card: #f9fafb;
+    --card-hover: #f3f4f6;
+    --border: #e5e7eb;
+    --border-strong: #d1d5db;
+    --code-bg: #f3f4f6;
+    --warning: #dc2626;
+    --success: #16a34a;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Header */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.95);
+  }
+  .site-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--fg);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .logo-text { color: var(--fg); }
+  .logo-text strong { color: var(--accent); }
+  .nav { display: flex; gap: 4px; align-items: center; }
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav a:hover { color: var(--fg); background: var(--card); }
+  .nav .nav-cta {
+    background: var(--accent);
+    color: white;
+    padding: 8px 16px;
+    margin-left: 8px;
+  }
+  .nav .nav-cta:hover { background: var(--accent-hover); color: white; }
+  /* Main */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  .lid {
+    display: inline-block;
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-hover);
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 48px;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  h2 {
+    font-size: 28px;
+    margin: 56px 0 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    border-top: 1px solid var(--border);
+    padding-top: 56px;
+  }
+  h3 {
+    font-size: 20px;
+    margin: 32px 0 12px;
+    font-weight: 700;
+    color: var(--fg);
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  p strong, p em { color: var(--fg); }
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+  }
+  a:hover { text-decoration-color: var(--accent); }
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--fg);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0;
+    color: var(--fg);
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  /* Components */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .card-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .price {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--fg);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 8px 0 0;
+  }
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .cta:hover { background: var(--accent-hover); color: white; }
+  .cta-secondary {
+    background: var(--bg);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .cta-secondary:hover { background: var(--accent-light); }
+  .meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 24px;
+    margin: 32px 0;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .meta-key { color: var(--muted); font-weight: 500; }
+  .meta-val { color: var(--fg); font-family: var(--font-mono); word-break: break-all; }
+  /* Footer */
+  footer.site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    padding: 48px 24px;
+    margin-top: 96px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+  }
+  @media (max-width: 768px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .site-header-inner { flex-direction: column; align-items: flex-start; }
+    h1 { font-size: 36px; }
+    main { padding: 32px 16px 64px; }
+  }
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--fg);
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .lid-phrase {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  /* Hero */
+  .hero { padding: 96px 0 64px; }
+  .hero h1 { font-size: 56px; max-width: 720px; }
+  .hero p { font-size: 19px; max-width: 640px; }
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--accent-light);
+    color: var(--accent-hover);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .badge-muted {
+    background: var(--muted-light);
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="logo">
+      <span class="logo-mark">C</span>
+      <span class="logo-text">CS<strong>O</strong>AI</span>
+    </a>
+    <nav class="nav">
+      <a href="/api/gspc">Board</a>
+      <a href="/.well-known/">Discover</a>
+      <a href="/gspc-verify">Verify</a>
+      <a href="/pay">Pay</a>
+      <a href="/pay" class="nav-cta">Use the board</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <header class="hero">
+    <h1>What is new</h1>
+    <p class="sub">Selected repository changes and corrections. Source state can lead production; verify the referenced artefact and current endpoint response.</p>
+    <p class="lid" id="lid">22-axis board · current response not yet checked</p>
+  </header>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.4rem;">The five capability pillars</h2>
+    <p style="color:var(--muted);margin:0 0 1rem;">Council of AI publishes scoped measurements, not certification. Entries below describe repository work; they are not proof that every surface is deployed or operational.</p>
+    <div class="pillars">
+      <div class="pillar">
+        <h3>GSPC board</h3>
+        <p>The board declares <strong>22 axes</strong>: 14 model-comparison and 8 deterministic-fact. Read the current <code>GET /api/gspc</code> response for its measured and unmeasured state. TIE is TIE; UNMEASURED stays empty.</p>
+      </div>
+      <div class="pillar">
+        <h3>Ed25519 + Rekor witness</h3>
+        <p>The current exact <code>root.json</code> is Ed25519-signed and Rekor-witnessed (SHA-256 <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code>, Rekor log index <code>2714574265</code>). Its OTS state is <strong>STAMPED_PENDING_BITCOIN</strong>, with no Bitcoin confirmation. It covers its 154 listed leaves only.</p>
+      </div>
+      <div class="pillar">
+        <h3>MCP server</h3>
+        <p>The public MCP route describes <code>board_totals</code>, <code>get_axis</code>, <code>verify_card</code>, and <code>list_cards</code>. Confirm the current route response and each returned artefact before relying on a tool.</p>
+      </div>
+      <div class="pillar">
+        <h3>Plugin + extension</h3>
+        <p>Council of AI Grok plugin source and a Chrome MV3 extension source tree are published for inspection. No browser-store installation is claimed here. <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">Grok source</a> · <a href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify">extension source</a>.</p>
+      </div>
+      <div class="pillar">
+        <h3>x402 + SWIFT + XRPL</h3>
+        <p>XRPL and SWIFT readers provide scoped public-data inputs. x402 pricing and end-to-end settlement are pending verification; no paid receipt or automatically signed output is claimed here.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline">
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem;">The upgrade timeline (last 14 days)</h2>
+
+    <article class="event">
+      <div class="when">2026-09-02<br/>(today)</div>
+      <div class="what">
+        <h2>Hub-cards index honesty — #1155 fixed</h2>
+        <span class="pill fix">fix</span> <span class="pill up">source</span>
+        <p>The HF <code>gspc-hub-cards</code> index used to claim <code>status: MEASURED</code> even when the signed card body said <code>status: UNMEASURED, unmeasured: [signed-pending-verify]</code>. The index now mirrors the card body. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1181">PR #1181</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>Dashboard shell panes — 9 wired, 1 duplicate pointer retired</h2>
+        <span class="pill fix">fix</span> <span class="pill live">source</span>
+        <p>9 Council OS rail tabs (matrix / tools / cards / state / evidence / embed / measured / claimguard / play) used to fall back to the board. Each pane is now real. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1182">PR #1182</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>/dashboard production bug — ALIASES ReferenceError</h2>
+        <span class="pill fix">fix</span> <span class="pill live">source</span>
+        <p><code>DashboardLayout</code> threw <code>ReferenceError: ALIASES is not defined</code> on every /dashboard render. <code>resolvePaneId</code> referenced a deleted alias map. Now returns the id directly. The 12-test e2e shell smoke is re-gated. <a href="https://github.com/CSOAI-ORG/councilof-ai/issues/1189">#1189</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-02</div>
+      <div class="what">
+        <h2>256 dead CTA links on 68 sector pages — fixed</h2>
+        <span class="pill fix">fix</span>
+        <p>Sector pages linked to <code>/certify</code>, <code>/asti</code>, and five <code>/frameworks/&lt;name&gt;</code> pages that 404. Each repointed to the canonical URL or removed. <a href="https://github.com/CSOAI-ORG/councilof-ai/pull/1183">PR #1183</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-01</div>
+      <div class="what">
+        <h2>22/22 freeze — corrections ledger entry C-2026-0902-09</h2>
+        <span class="pill up">source</span>
+        <p>The 15/7 freeze was superseded in repository state. Read the current board response and its own signature state. The <a href="/api/corrections">corrections ledger</a> records published corrections; it is not proof that it contains every change.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-09-01</div>
+      <div class="what">
+        <h2>Council of AI Grok plugin — 4 skills + 4 commands</h2>
+        <span class="pill up">source</span>
+        <p><code>/gspc</code>, <code>/verify</code>, <code>/sign</code>, <code>/council</code>. Doctrine-first: empty cells stay empty, TIE means TIE. Source in <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">council-of-ai-grok</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-30</div>
+      <div class="what">
+        <h2>Chrome extension (MV3) — badge + verify overlay</h2>
+        <span class="pill up">source</span>
+        <p>The repository contains a Chrome MV3 prototype for badge and verification overlays. It is source code, not a browser-store install. <a href="https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify">inspect the source</a>.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-29</div>
+      <div class="what">
+        <h2>x402 integration design — settlement not yet evidenced</h2>
+        <span class="pill up">pending</span>
+        <p>The <a href="/api/xrpl">XRPL state reader</a> and <a href="/api/swift">SWIFT census</a> expose scoped source data. A challenge is not a settlement: no current price, successful production payment, signed RWA pack, or receipt is claimed by this entry.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-29</div>
+      <div class="what">
+        <h2>Hermes skill — <code>council-of-ai</code> for Hermes Agent</h2>
+        <span class="pill up">source</span>
+        <p>Historical Hermes integration notes referenced scripts for board reads, card verification and byte signing. No public Hermes installation package is linked from this page.</p>
+      </div>
+    </article>
+
+    <article class="event">
+      <div class="when">2026-08-28</div>
+      <div class="what">
+        <h2>Legacy engine → Council rename — best-version consolidation</h2>
+        <span class="pill fix">fix</span>
+        <p>12 page files renamed, 3 dead stubs deleted (legacy sub-products). <a href="https://github.com/CSOAI-ORG/councilof-ai/commit/41f33277">commit</a>.</p>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2 style="font-size:1.4rem;margin-bottom:0.5rem;">Try it</h2>
+
+    <div class="try">
+      <strong>Inspect the current board response</strong>
+      <pre><code>curl -s https://councilof.ai/api/gspc | python3 -m json.tool | head -30</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>Verify a supported published card</strong>
+      <pre><code>curl -s https://councilof.ai/signed/cards/&lt;sha&gt;.json | bash &lt;(curl -s https://councilof.ai/visual-verify.html)</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>Drop into your agent</strong>
+      <pre><code>npm install -g @csoai/council-of-ai-grok
+# or
+npx csoai-gspc-mcp --url https://councilof.ai/mcp</code></pre>
+    </div>
+
+    <div class="try">
+      <strong>One line for Claude Code / Cursor / Kimi</strong>
+      <pre><code>{"mcpServers":{"gspc":{"url":"https://councilof.ai/mcp"}}}</code></pre>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>CSOAI Ltd</strong> · UK Companies House 16939677 · <a href="https://councilof.ai/">councilof.ai</a> · <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a> · <a href="https://github.com/CSOAI-ORG/council-of-ai-grok">Grok plugin</a></p>
+    <p style="margin-top:0.5rem;font-style:italic;">Measurement, not certification. Anyone can re-check at <a href="https://councilof.ai/verify">/verify</a>.</p>
+  </footer>
+</main>
+
+<script>
+// Current-response lid refresh from /api/gspc
+(async () => {
+  try {
+    const r = await fetch("https://councilof.ai/api/gspc");
+    if (!r.ok) return;
+    const b = await r.json();
+    const tot = b.totals || {};
+    const live = `${tot.axes ?? b.axes?.length ?? "?"} axes declared · ${tot.measured_axes ?? "?"} measured in current response`;
+    const el = document.getElementById("lid");
+    if (el) el.textContent = live;
+  } catch {}
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "Council of AI \u2014 What Is New",
+  "url": "https://councilof.ai/what-is-new.html",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://councilof.ai"
+  },
+  "datePublished": "2026-09-03",
+  "description": "Selected repository changes and corrections; verify current deployment and artefact state."
+}
+</script>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <a href="/" class="logo" style="margin-bottom: 16px;">
+        <span class="logo-mark">C</span>
+        <span class="logo-text">CS<strong>O</strong>AI</span>
+      </a>
+      <p style="font-size: 14px; line-height: 1.6;">
+        Independent AI-governance measurement body.<br>
+        The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation. See /api/state.
+      </p>
+      <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
+        22 axes · 22 measured
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/api/gspc">Board API</a>
+      <a href="/gspc-verify">Verifier</a>
+      <a href="/pay">x402 status</a>
+      <a href="/.well-known/">Discovery</a>
+      <a href="/workbench-paper">Workbench paper</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="https://csoai.org">csoai.org</a>
+      <a href="https://huggingface.co/csoai">HuggingFace</a>
+      <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a>
+      <a href="/.well-known/did.json">DID</a>
+      <a href="https://x.com/csoai_org">X / Twitter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
+    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+  </div>
+</footer>
+
+</body>
+</html>

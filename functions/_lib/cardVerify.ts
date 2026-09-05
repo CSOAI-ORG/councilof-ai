@@ -404,8 +404,27 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
   }
 
   /* ---- 1. does the body hash to the id it declares? ---- */
-  const computed = await sha256hex(preimage);
-  const idOk = computed === declaredId;
+  let computed = await sha256hex(preimage);
+  let idOk = computed === declaredId;
+  // Integral numbers are the one ambiguity JavaScript cannot resolve from the data
+  // (0 vs 0.0). GSPC_FLOAT_FIELDS is the schema's answer for the card factory. Cards
+  // signed by scripts/sign_mill_cards.py hold `accuracy` as a Python INT when it is 0 or
+  // 1, so their preimage renders "0", not "0.0". The id is a sha256 of the signed bytes,
+  // so a rendering that reproduces it IS the signed preimage — trying the other rendering
+  // is a search for the preimage, not a guess at a verdict; the signature must still
+  // verify over exactly those bytes below. Only attempted when the first rendering fails.
+  let integralAsInt = false;
+  if (!idOk && family === "gspc.measurement-card") {
+    const alt = utf8(pyCanonical(r.body, NO_FLOAT_FIELDS));
+    const altHex = await sha256hex(alt);
+    if (altHex === declaredId) {
+      preimage = alt;
+      sigOver = alt;
+      computed = altHex;
+      idOk = true;
+      integralAsInt = true;
+    }
+  }
   if (!idOk) fail("preimage_mismatch");
   checks.push({
     label: idLabel,
@@ -417,6 +436,16 @@ export async function verifyCard(rec: unknown, anchors: Anchor[]): Promise<CardV
         `${computed.slice(0, 16)}…. The body was altered, or it was serialised by a different rule. ` +
         `This says nothing about which key signed it.`,
   });
+  if (integralAsInt) {
+    checks.push({
+      label: "Preimage rendering",
+      ok: null,
+      code: "integral_numbers_as_int",
+      detail:
+        "The declared-float fields hold integral values that the signer rendered as integers (\"0\", not \"0.0\"). " +
+        "That rendering reproduces the id, so it is the signed preimage; the signature is checked over exactly those bytes.",
+    });
+  }
 
   /* ---- 2. is the signer a pinned published key? (decided WITHOUT the network) ---- */
   const keyBytes = keyRaw ? decodeKey(keyRaw) : null;

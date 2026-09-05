@@ -53,7 +53,7 @@ const FAQ = [
   { q: "What is an AI governance framework crosswalk?", a: "A crosswalk maps the overlapping requirements of different regulations and standards to a single set of controls, so that implementing one control satisfies the equivalent obligation in every framework it maps to — you map once and evidence everywhere. Determination stays with authorities; the crosswalk is a map, not a certificate." },
   { q: "Which frameworks does the CSOAI crosswalk cover?", a: "Published frameworks including the EU AI Act (Art. 9–15), UK DRCF alignment, Illinois SB 315, China GB/T (TC260 alignment — honest mapping, not equivalence claims), NIST AI RMF, ISO/IEC 42001, DORA, NIS2, GDPR, and more — mapped to a shared control set." },
   { q: "How does a crosswalk save time on EU AI Act compliance?", a: "Most EU AI Act obligations (risk management, data governance, transparency, oversight, documentation) already overlap with ISO 42001 and NIST AI RMF. Mapping them means existing controls can be reused as evidence rather than rebuilt, cutting duplicate work ahead of enforcement dates." },
-  { q: "Is the CSOAI crosswalk verifiable?", a: "Yes — the signed, article-level crosswalk runs as a governed MCP tool inside Council OS and every output can be sealed to Layer 0 (Ed25519) for an auditable, reproducible record. Machine-readable v1: /crosswalk/east-west-v1.json." },
+  { q: "Is the CSOAI crosswalk verifiable?", a: "The machine-readable v1 mapping is published at /crosswalk/east-west-v1.json. Inspect that exact artifact and any attached signature separately; a tool output is not automatically signed, and a crosswalk is not a compliance determination." },
 ];
 
 function JurisdictionTable({ title, subtitle, rows }: { title: string; subtitle?: string; rows: { ref: string; control: string; mapped: string; clock?: string }[] }) {
@@ -104,7 +104,7 @@ export default function Crosswalk() {
       <div className="mx-auto max-w-5xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">Open · crawlable · citable · East-West v1</p>
         <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The AI governance <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">framework crosswalk.</span></h1>
-        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How published AI-governance and adjacent compliance frameworks map to a shared control set. Map once, evidence everywhere. The signed, article-level version runs inside <a href="/os?lobby=home" className="text-emerald-300 underline">Council OS</a>.</p>
+        <p className="mt-4 max-w-3xl text-lg text-emerald-100/80">How published AI-governance and adjacent compliance frameworks map to a shared control set. Map once, evidence everywhere. The signed, article-level version runs inside <a href="/dashboard?tab=home" className="text-emerald-300 underline">Council OS</a>.</p>
 
         <div className="mt-5 rounded-xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-100">
           <strong>Determination stays with authorities.</strong> This crosswalk maps obligations across regimes; it is not a conformity opinion, certificate, or legal verdict. Measurement, not certification.

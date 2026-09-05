@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-05T08:59:23Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:ethereum",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "head": {
+        "block": 25910085,
+        "block_hash": "0xc357ed66b6cb75e069f4bb45177f0380e9b05019e567b309bca513aeb2448fa9",
+        "block_time": "2026-09-05T08:59:23Z"
+      },
+      "n_contracts": 4,
+      "coverage": [
+        {
+          "subject": "evm-events:USDY:ethereum",
+          "from": 25906612,
+          "to": 25910073,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:BENJI:ethereum",
+          "from": 25904492,
+          "to": 25908491,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:USTB:ethereum",
+          "from": 25905692,
+          "to": 25909691,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25887740,
+          "rpc": "eth.drpc.org"
+        },
+        {
+          "subject": "evm-events:MONY:ethereum",
+          "from": 25905692,
+          "to": 25909691,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 25888561,
+          "rpc": "eth.drpc.org"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on ethereum that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d4d0124f04888d65285b98157af4e5d65f72dbf944e271469c43a1f229442685",
+    "sig_ed25519": "c523f79c11a0a6ae9152bbb1b6c2b9617007acd3a29311cf1a49c45335a7537127bce8fe4297235d2c2ff05ff5b0a934bd374fe502085455a20e30bd4d62480a",
+    "source_urls": [
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm-events:scan:ethereum coverage at block 25910085",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "bd08d5bf4bd8373cfd360da652e71fbd8c8b9f62fc3b83e030bb3d4af40c6b29",
+    "253fae51db22cd448d046c5331f2174dee06b471fec29da2a8b8540d35ea43d9",
+    "14764c41875ee66bb501df29b1b7b8df632a5cbc32b303ef0f0889b9ce345245",
+    "863b390bf84cb9efb7582e46cd991765acd5e8149298c0e9f992eefb84e050a2",
+    "c66d307e4720bfd1c36aa9dcb869a9f5e5b79d5ad06624568b150eedfca79ce1",
+    "3153cba2d6ed7c76f9b3ceadc3a988fa6026fb9d362d1d0157e82cc7104fc925",
+    "49a28568b501b8850cd3946f215ce8864c26464d9b8854fd33d0310c23a5abe2",
+    "c775c0a60dbbcd15fd6c4aee9c9f23c7c0aa53d95d0fcd221a24bebed5cdf1d7"
+  ]
+}

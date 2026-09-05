@@ -28,9 +28,13 @@ import { useEffect, useState } from "react";
  *
  * `board.public_count` is quoted VERBATIM rather than recomposed from
  * `measured_axes` and `axis_slots`. The endpoint publishes it precisely because
- * it carries both numbers in one string ("22 axis · 15 measured"); rebuilding
+ * it carries both numbers in one string ("22 axis · 22 measured"); rebuilding
  * that sentence here would put the grammar of the count back in a component's
  * hands, which is exactly the failure /api/state exists to end.
+ *
+ * BLUEPRINT 02Sep2026 §2.3 / BLOCK A1: chrome that prints public_count MUST also
+ * carry the 3-public-leader-scores clause (or totals.lid from GET /api/gspc).
+ * Measured axes ≠ public leader scores. Do not invent leaders for withheld axes.
  */
 
 export type FactKind = "measured" | "probed" | "catalogued" | "declared" | "unmeasured";
@@ -114,7 +118,7 @@ export function provenance(f: StateFact | null): string {
 /** The slice of /api/state the header quotes. Nothing else is read. */
 export interface LiveState {
   board: {
-    /** "22 axis · 15 measured" — the endpoint's own sentence, carrying both numbers. */
+    /** "22 axis · 22 measured" — the endpoint's own sentence, carrying both numbers. */
     publicCount: StateFact | null;
     /** The long form, for the tooltip. */
     countGrammar: StateFact | null;

@@ -2,7 +2,7 @@
   "schema_version": "2024-11-05",
   "name": "csoai-gspc-mcp",
   "display_name": "Council of AI — GSPC Measurement Tools",
-  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc latest 1.1.0. Seven read tools on POST /mcp (four GSPC + three public-root three-state). mill-tool `measure` dropped.",
+  "description": "Independent AI-governance measurement body. Publishes the GSPC board (Governance · Safety · Provenance · Continuity). Quote totals.public_count from GET /api/gspc — do not type a count here. Frozen item banks, published scoring code, measurement board. Measurement only: not certification, not accreditation, no conformity assessment. MCP registry io.github.CSOAI-ORG/gspc server 1.2.0. POST /mcp lists seven free readers plus four x402-metered evidence tools; witness_hash is quarantined on HTTP. mill-tool `measure` dropped.",
   "icon_url": "https://councilof.ai/favicon.ico",
   "provider": {
     "name": "CSOAI Ltd",
@@ -15,8 +15,8 @@
       "primary": "https://councilof.ai/mcp",
       "fallback": "https://csoai.org/mcp",
       "current": "https://councilof.ai/mcp",
-      "stdio": "npx -y csoai-gspc-mcp@0.1.0",
-      "note": "Live door is https://councilof.ai/mcp (GET 200). npm stdio csoai-gspc-mcp@0.1.0. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Do not invent a new worker. Registry latest 1.1.0; HTTP tools/list is seven read tools. mill-tool `measure` dropped."
+      "stdio": "npx -y csoai-gspc-mcp@0.2.1",
+      "note": "Live door is https://councilof.ai/mcp (GET 200). HTTP tools/list is eleven: seven free readers plus four x402-metered evidence tools. npm stdio csoai-gspc-mcp@0.2.1 lists twelve because it also carries witness_hash, which is quarantined on HTTP. Worker https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp is 404; not a door. Registry server 1.2.0. mill-tool `measure` dropped."
     },
     "gspc_board": {
       "url": "https://councilof.ai/api/gspc",
@@ -32,9 +32,15 @@
       "list_cards",
       "get_root",
       "get_card",
-      "verify_inclusion"
+      "verify_inclusion",
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
     ],
-    "total_tools": 7,
+    "total_tools": 11,
+    "free_tools": 7,
+    "metered_tools": 4,
     "streaming": false,
     "auth_required": false
   },

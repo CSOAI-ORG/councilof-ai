@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-04T21:23:35Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 119989986,
+      "block_hash": "0x4a1226df01e7202adaca4f1bbd930e7550a52230dd3fa61b402d88b6b36f8ce2",
+      "block_time": "2026-09-04T21:23:35Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "174709844718215638878036908",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 119989986 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "4633344d2db44e76a27b9459887a10410e2ab461c8c72de36924c59783fee781",
+    "sig_ed25519": "2fd213dc28b668fd9d07fd38c5206c1e3b4ebd13c029589daea8364be4afb1206419a95d89ce81e80da8c770481de4af23999f6bf88c42e3fda2fea11fcd2e00",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 119989986",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "fa43a7ad28f88199f564c53d104a0ee7ce928dd9f6bdf6feafa2cb23b46b63b2",
+    "70da01965717fc5856c6f0dff92e78f53fed29b77c6a57d1158eccb590d21c07",
+    "62ec97518139366150c200fd163f4e627051f899260ab2974c99e7acf9b6aaec",
+    "71fc8aaeb3779522b16b2309938b731562decce6dcf20dccf6ad1033c5997e0f",
+    "519642a39f7c925f7136ac7831005b999d823890030d9298d5f893c9bad6ad74",
+    "800bc31741e4d3a8e0ccfb0241dfaab69e7e20a1a1e4300776bcbbe0d5597b66",
+    "d98e144102e08a494507d84f6acefc8d2f35d7d53a237b92ac0de5a2274e07c3",
+    "1a4b7c9b604ee1f3274b67a203eadabac654210c76926255325ffd5d9430958e"
+  ]
+}

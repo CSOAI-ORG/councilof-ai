@@ -1,0 +1,88 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/jws-2020/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:web:csoai.org",
+  "verificationMethod": [
+    {
+      "id": "did:web:csoai.org#site-release-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "03g9l-dVNGVEAVVWQrJU9aLtkYTN3uARd52P7DEq-8g",
+        "kid": "site-release-1",
+        "use": "sig"
+      }
+    },
+    {
+      "id": "did:web:csoai.org#estate-chain-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "M0cuAmhx2yDNvZnnbEdTLr_PhLN6vtWyYNrjWJ31aW0",
+        "kid": "estate-chain-1",
+        "use": "sig"
+      }
+    },
+    {
+      "id": "did:web:csoai.org#board-attestation-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
+        "kid": "csoai-board-attestation-1",
+        "use": "sig"
+      }
+    },
+    {
+      "id": "did:web:csoai.org#card-attestation-1",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "1MsOqhbV9Qv3Yzo2qjT-CaVeEkuTFt7Sq9sSK7nDfjg",
+        "kid": "csoai-card-attestation-1",
+        "use": "sig"
+      }
+    }
+  ],
+  "assertionMethod": [
+    "did:web:csoai.org#site-release-1",
+    "did:web:csoai.org#estate-chain-1",
+    "did:web:csoai.org#board-attestation-1",
+    "did:web:csoai.org#card-attestation-1"
+  ],
+  "authentication": [
+    "did:web:csoai.org#site-release-1"
+  ],
+  "service": [
+    {
+      "id": "did:web:csoai.org#verifier",
+      "type": "AttestationVerifier",
+      "serviceEndpoint": "https://councilof.ai/verify"
+    }
+  ],
+  "_serviceNote": "The MCP measurement-server endpoint was removed 2026-08-19: GET on the advertised worker returns 404 and a DID document must not advertise a dead service. It returns in the same commit that redeploys a live endpoint. This apex copy now matches that rule.",
+  "_keyContinuity": {
+    "note": "Three signing identities per KEY-CONTINUITY.md. #site-release-1 signs site artifacts (keystone-held). #estate-chain-1 signs fleet chains, measurement cards and boards (pod-held). #card-attestation-1 (THE BRICK, estate key d4cb0eaa, Mac-held) signs carded measurement receipts, the corrections ledger and MANIFEST cards; published 2026-08-20 after its signatures verified under the published canon (stranger-verifiable against did.json). Ed25519 today; ML-DSA-65 is roadmap, not present.",
+    "superseded": [
+      {
+        "x": "9LQnjdwhbC8GCyc6_P2e8AhWOZNzsjsJd5T-cvs2w0I",
+        "status": "superseded 2026-08-18",
+        "reason": "Published 2026-08-17 from a generation script, not from the production keystone; no estate artifact was ever validly signed with this key and its private half is not held. Superseded per KEY-CONTINUITY rule 4. Any artifact claiming this key and not verifiable against the two keys above is not ours."
+      }
+    ]
+  },
+  "_boardAttestationNote": "#board-attestation-1 signs the PUBLIC BOARD SNAPSHOT as served by the site (integrity of /api/gspc), distinct from #estate-chain-1 (pod measurement chains). Born and held in Cloudflare; private half never leaves.",
+  "_cardAttestationNote": "#card-attestation-1 (d4cb0eaa) signs the 3KB ed25519 h3k measurement cards, the corrections ledger and the MANIFEST card chain. Private half held on the estate Mac only; never in CI, never in this repo.",
+  "_pqcNote": "#board-pqc-1 ABSENT (UNMEASURED). No ML-DSA public key is published in this document. Do not generate one off-keystone. ML-DSA-65 signatures are ~3.3KB and cannot live inside the 3KB card atom. Hybrid is a second receipt on root/DID, never inside the card. Ed25519 is not replaced. PQCBench is the GSPC continuity arena (csoai/gspc-asi), not a PQC signature. Live Pages may still omit #board-attestation-1 on assertionMethod until this repo is promoted."
+}

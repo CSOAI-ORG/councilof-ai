@@ -1,0 +1,112 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Société Générale-FORGE EURCV on XRPL — public.notice: strict_two_way_toml FAIL (no on-ledger Domain)",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://councilof.ai/api/xrpl",
+    "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "https://www.sgforge.com/.well-known/xrp-ledger.toml",
+    "https://forge.societegenerale.com/.well-known/xrp-ledger.toml",
+    "https://api.xrpscan.com/api/v1/account/rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "strict_two_way_toml failed (FAIL): no on-ledger Domain on EURCV issuer; guessed sgforge.com toml 404 / forge.societegenerale.com TLS handshake failure — not a bidirectional domain match.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "provenance-controls"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "failed_check": "strict_two_way_toml",
+    "two_way_state": "FAIL",
+    "two_way_reason": "no on-ledger Domain field (one-way at best)",
+    "issuer": "Société Générale-FORGE",
+    "symbols": [
+      "EURCV"
+    ],
+    "issuer_addresses": {
+      "EURCV": "rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL"
+    },
+    "on_ledger_domain": null,
+    "reader_verified_via": "XRPScan well-known directory",
+    "reader_as_of": "2026-09-01T23:15:51Z",
+    "roster_source": "https://councilof.ai/api/xrpl",
+    "two_way_check_source": "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "artefacts": [
+      {
+        "id": "api-xrpl",
+        "role": "api-xrpl",
+        "source_url": "https://councilof.ai/api/xrpl",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 9039,
+        "sha256": "8097c2a815f42dda08d55a11e623b8004104514791104a140aad3956488ec1cf"
+      },
+      {
+        "id": "xrpl-two-way-check",
+        "role": "xrpl-two-way-check",
+        "source_url": "https://councilof.ai/interop/xrpl-two-way-check.json",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 7938,
+        "sha256": "85848181b51f74c610c27de5c3f98a599e994fd31577f21f7475b19bfccb095f"
+      },
+      {
+        "id": "sgforge-toml",
+        "role": "sgforge-toml",
+        "source_url": "https://www.sgforge.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 27759,
+        "sha256": "79e6b8ab081631fb6568006491c3c18c8cc8e6cc4edfaad5d52d8b9c988888b2",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "sgforge-alt-toml",
+        "role": "sgforge-alt-toml",
+        "source_url": "https://forge.societegenerale.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": null,
+        "bytes": 0,
+        "sha256": null,
+        "error": "<urlopen error [SSL: SSLV3_ALERT_HANDSHAKE_FAILURE] ssl/tls alert handshake failure (_ssl.c:1029)>"
+      },
+      {
+        "id": "xrpscan-eurcv",
+        "role": "xrpscan-eurcv",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rUNaS5sqRuxZz6V7rBGhoSaZiVYA3ut4UL",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1115,
+        "sha256": "61e998d546006524e719fdb36c2473cc455bf40511744e2532dff335d7fd2b47"
+      }
+    ],
+    "fetched_at": "2026-09-02T04:36:44Z",
+    "verified_via": "keyless HTTPS GET + sha256 of exact bytes; two-way check re-cited, not invented"
+  },
+  "sha256": "5d35b8a131881d7276a4600835703fe3f17d42382260c91e2a23674d324658b3",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "strict_two_way_toml",
+    "bidirectional domain match",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_score",
+    "sgforge-alt-toml TLS handshake failure (UNCHECKABLE fetch)"
+  ],
+  "tags": [
+    "public-notice",
+    "xrpl",
+    "strict_two_way_toml",
+    "unsigned",
+    "discovered",
+    "socgen-forge-eurcv"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim bidirectional domain match when strict_two_way_toml failed."
+}

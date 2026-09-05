@@ -1,0 +1,67 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "genius.reserve",
+  "subject": "GENIUS Act P.L. 119-27 + NPRM 91 FR 53368 cite — endorsement:false; host genius.reserve UNCHECKABLE (DNS)",
+  "as_of": "2026-09-02T03:32:11Z",
+  "source_urls": [
+    "https://www.congress.gov/119/plaws/publ27/PLAW-119publ27.pdf",
+    "https://www.govinfo.gov/content/pkg/FR-2026-08-18/pdf/2026-16796.pdf",
+    "https://www.federalregister.gov/documents/2026/08/18/2026-16796"
+  ],
+  "payload": {
+    "statute_cite": "P.L. 119-27",
+    "nprm_cite": "91 FR 53368",
+    "endorsement": false,
+    "not_a_certification": true,
+    "not_advice": true,
+    "writes_board": false,
+    "authorities": [
+      {
+        "name": "GENIUS Act P.L. 119-27",
+        "url": "https://www.congress.gov/119/plaws/publ27/PLAW-119publ27.pdf",
+        "http_status": 200,
+        "date": "2025-07-18"
+      },
+      {
+        "name": "Official Federal Register Section 3 NPRM",
+        "citation": "91 FR 53368",
+        "document_number": "2026-16796",
+        "publication_date": "2026-08-18",
+        "url": "https://www.govinfo.gov/content/pkg/FR-2026-08-18/pdf/2026-16796.pdf",
+        "federal_register_html": "https://www.federalregister.gov/documents/2026/08/18/2026-16796",
+        "http_status": 200
+      }
+    ],
+    "host_probe": {
+      "host": "genius.reserve",
+      "status": "UNCHECKABLE",
+      "reason": "DNS resolution failed (Could not resolve host)",
+      "probed_at": "2026-09-02T03:32:11Z"
+    },
+    "reserve": {
+      "issuer": null,
+      "as_of": null,
+      "source_urls": [],
+      "status": "UNCHECKABLE"
+    },
+    "note": "Statute + NPRM cite only. endorsement:false. No endorsement of issuer or Act implementation. Not board MEASURED. No fill-7."
+  },
+  "sha256": "49611c39e94f576fb7f19fb2723f15b1769e4f7d34901e90abad15904da8d0c0",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "host_genius.reserve",
+    "issuer_reserve_attestation",
+    "one_to_one_reserve_match",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "genius",
+    "pl-119-27",
+    "nprm-91-fr-53368",
+    "endorsement-false",
+    "unsigned"
+  ]
+}

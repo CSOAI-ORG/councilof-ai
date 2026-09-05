@@ -219,16 +219,14 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What do the four lenses actually run, and what stays out of the verdict path?",
   },
   "browse-system-card": {
-    pane: "home",
-    route: "/system-card",
-    label: "Open the system card",
+    pane: "cards",
+    label: "Open signed cards",
     prompt: () =>
       "What does the system card attest, and how do I verify it offline?",
   },
   "browse-fleet": {
-    pane: "home",
-    route: "/mcp-fleet",
-    label: "Open the MCP fleet",
+    pane: "tools",
+    label: "Open Tools",
     prompt: () =>
       "What does the published fleet manifest list, and how is that not a marketplace?",
   },
@@ -247,9 +245,8 @@ export const LOBBY_TASKS: Record<LobbyTaskId, LobbyTask> = {
       "What does this crosswalk map, and why is it not a signed score?",
   },
   "regulation-feed": {
-    pane: "home",
-    route: "/feed",
-    label: "Open the regulation feed",
+    pane: "standards",
+    label: "Open regulation data",
     prompt: () =>
       "What does the published regulation feed say moved, and what is its source?",
   },
@@ -315,11 +312,16 @@ const isPane = (v: unknown): v is LobbyTabId =>
 const isTask = (v: unknown): v is LobbyTaskId =>
   typeof v === "string" && Object.prototype.hasOwnProperty.call(LOBBY_TASKS, v);
 
+/**
+ * Council OS is the Dashboard (owner ruling 2 Sep). A crawlable lobby href therefore lands on
+ * `/dashboard?tab=<pane>` DIRECTLY — `/os?lobby=<pane>` still works, but only as a redirect hop
+ * through OsRoute, and a link that always hops is a link that is wrong.
+ */
+export const LOBBY_HOME_PATH = "/dashboard";
+export const TAB_PARAM = "tab";
+
 function currentPath(): string {
-  if (typeof window === "undefined") return "/os";
-  const p = window.location.pathname || "/";
-  if (p === "/os" || p.startsWith("/os/")) return p;
-  return "/os";
+  return LOBBY_HOME_PATH;
 }
 
 /** OsLauncher doors. ?lobby= / assess ?task= on /os are the product frame, not the overlay. */
@@ -333,6 +335,7 @@ export const OS_DOOR_LOBBIES = new Set([
   "ras",
   "assess",
   "harness",
+  "art50",
 ]);
 
 /** Native instrument ids a harness panel may open. */
@@ -394,15 +397,19 @@ export function lobbyHref(opts: LobbyLinkOptions = {}): string {
   const task = isTask(opts.task) ? opts.task : undefined;
   const pane = isPane(opts.pane) ? opts.pane : task ? LOBBY_TASKS[task].pane : undefined;
 
+  const path = opts.path ?? currentPath();
+  const onDashboard = path === LOBBY_HOME_PATH;
+  // On the Dashboard the pane is the shell's own `tab`; `lobby` rides along only when a
+  // seeded prompt or task needs the chat overlay to open on that pane as well.
+  if (onDashboard && pane) q.set(TAB_PARAM, pane);
   if (task) q.set(TASK_PARAM, task);
-  if (pane) q.set(LOBBY_PARAM, pane);
+  if (pane && (!onDashboard || task || opts.prompt)) q.set(LOBBY_PARAM, pane);
   if (opts.ctx) q.set(CTX_PARAM, opts.ctx);
   // An explicit prompt is written out; a task's prompt is left to the registry so
   // its wording can be corrected in one place without rewriting every link.
   if (opts.prompt) q.set(ASK_PARAM, opts.prompt);
 
   const s = q.toString();
-  const path = opts.path ?? currentPath();
   if (!s) return path;
   return `${path}${path.includes("?") ? "&" : "?"}${s}`;
 }

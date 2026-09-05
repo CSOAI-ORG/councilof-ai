@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.incident-index/0.1",
+  "incident": "openai-hf-sandbox-escape-2026-07",
+  "as_of": "2026-09-02T04:32:00Z",
+  "fetched_at": "2026-09-02T04:31:13Z",
+  "honest_sentence": "Public report hashed. Not independently recomputed.",
+  "writes_board": false,
+  "status": "DISCOVERED",
+  "cards": [
+    {
+      "org": "OpenAI",
+      "path": "card-openai-public-notice-unsigned.json",
+      "sha256": "e0aa5bebf598c7f8eda739ac5e8cbe040fb6db80b781949998f9a48c1ef99630",
+      "axes_cite": [
+        "swarm",
+        "jail",
+        "conformance"
+      ]
+    },
+    {
+      "org": "Hugging Face",
+      "path": "card-huggingface-public-notice-unsigned.json",
+      "sha256": "0349b5b514322058884f9533d748a3792f1cefb011e1334d83f8edcd36074536",
+      "axes_cite": [
+        "conformance"
+      ]
+    },
+    {
+      "org": "METR/Redwood",
+      "path": "card-metr-redwood-public-notice-unsigned.json",
+      "sha256": "cf51846dab6366518d3ecf3d85885c7ff5ea3cd1d6356c1aed39674b85252ca3",
+      "axes_cite": [
+        "swarm"
+      ]
+    }
+  ],
+  "manifest": "artefact-manifest.json",
+  "uncheckable": [
+    {
+      "item": "eas_base_attestation_of_root_sha",
+      "reason": "Estate EAS signer key is owner-gated; no new keys / no Nick funding this turn."
+    }
+  ],
+  "signed_note": "UNSIGNED only. SIGNED needs keystone. Do not stamp GSPC axis MEASURED from this."
+}

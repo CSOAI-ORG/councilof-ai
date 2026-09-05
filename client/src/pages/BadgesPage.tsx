@@ -12,7 +12,7 @@ const BADGES: Badge[] = [
   { id: "council-verified", label: "Council-Verified \u00B7 CSOAI", dot: "#10b981" },
   { id: "layer0-signed", label: "Layer 0 Signed \u00B7 Ed25519", dot: "#34d399" },
   { id: "eu-ai-act-ready", label: "EU AI Act Measured", dot: "#059669" },
-  { id: "council-governed", label: "Governed by the 33-Agent Council", dot: "#10b981" },
+  { id: "council-governed", label: "Council-designed (33-seat design; not a live guarantee — DR-0007)", dot: "#10b981" },
   { id: "meok-open", label: "MEOK Open \u00B7 MIT", dot: "#6ee7b7" },
 ];
 

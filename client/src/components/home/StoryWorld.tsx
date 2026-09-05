@@ -65,7 +65,7 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "Jail is a floor — measured; living-board separation is TIE, stated in plain sight" },
       { tag: "usp", text: "It caught our own fine-tune — and we published it" },
     ],
-    href: "/gspc-scoreboard",
+    href: "/dashboard?tab=board",
     cta: "Open the board",
     video: { src: "/videos/proving-ground.mp4", poster: "/videos/proving-ground.jpg", title: "The Proving Ground — how we test containment" },
   },
@@ -109,34 +109,34 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "A living grid, live from GET /api/gspc, with a sample size on every row" },
       { tag: "usp", text: "One signed source feeds people, agents and answer engines" },
     ],
-    href: "/gspc-scoreboard",
+    href: "/dashboard?tab=board",
     cta: "Read the scoreboard",
     video: { src: "/videos/csoai-architecture.mp4", poster: "/videos/csoai-architecture.jpg", title: "The architecture of measurement — how a signed card is made" },
   },
   {
     // 08 Council City — HONEST: City is a view over signed records, not a walkable world
     kicker: "Council City",
-    title: "A view over the measurements",
-    body: "Council City is a window on the same signed records the board is built from — a different view of the measurements, not a second source of them. Every tile links to a signed card.",
+    title: "A simulation view under evidence review",
+    body: "Council City is a retained visualization concept, not a live signed world. Its former counters and ledger claims are withdrawn until every rendered figure resolves to published evidence.",
     points: [
       { tag: "pain", text: "Governance sites are walls of text nobody reads" },
-      { tag: "benefit", text: "See the measurements as a map, not a table" },
-      { tag: "usp", text: "Every tile links to a signed card — nothing is decorative" },
+      { tag: "benefit", text: "The concept can later render verified measurements as a map" },
+      { tag: "usp", text: "Today it is marked review-only instead of presenting fallback data" },
     ],
     href: "/gspc-arena?view=towns",
-    cta: "Open City view",
+    cta: "Read the review notice",
     bg: { src: "/images/literacy_training_arena.jpg", alt: "People learning how AI behaves inside a training arena" },
   },
   {
     // 09 Always current — light split, liveness image + living-law video
-    kicker: "Always current",
-    title: "The day it’s stamped, a static certificate starts going stale",
-    body: "So we watch the law itself. Our corpus-watch tracks EUR-Lex and legislation.gov.uk by hash, day after day. When a provision actually changes, we re-measure and issue a fresh delta card — the old one stays, history is append-only, never quietly edited.",
+    kicker: "Change-aware design",
+    title: "A dated measurement can go stale",
+    body: "A dated corpus-watch baseline exists, but the public watcher, automatic dependency flagging, re-measurement, and delta-card issuance are not implemented. The intended path is detect, review, re-measure, and publish a new scoped card while preserving the prior artefact.",
     points: [
       { tag: "pain", text: "A one-time stamp goes stale the moment the law moves" },
-      { tag: "benefit", text: "We watch the law daily and re-measure when it changes" },
-      { tag: "benefit", text: "A fresh delta card each time — old cards preserved" },
-      { tag: "usp", text: "Append-only history, corrections published — never a silent edit" },
+      { tag: "benefit", text: "A dated watcher baseline makes the missing automation visible" },
+      { tag: "benefit", text: "Planned flow: detect, approve, re-measure, publish a scoped delta" },
+      { tag: "usp", text: "Current corrections are source-maintained; no append-only proof is claimed" },
     ],
     href: "/assess",
     cta: "Get measured",
@@ -154,7 +154,7 @@ export const STORY: Slide[] = [
       { tag: "usp", text: "Every judgement is a fixed rule a human can inspect — never a hidden model" },
       { tag: "usp", text: "AI is measured against a published human baseline — not just against other AI" },
     ],
-    href: "/gspc-scoreboard",
+    href: "/dashboard?tab=board",
     cta: "See how it’s judged",
     bg: { src: "/images/coliseum_humans_vs_humanoids.jpg", alt: "Humans directing AI figures with beams of light, keeping oversight" },
   },
@@ -168,7 +168,7 @@ export const STORY: Slide[] = [
       { tag: "benefit", text: "One signed result every side can rely on" },
       { tag: "usp", text: "Independent of all of them — we take no money from anything we rank" },
     ],
-    href: "/os?lobby=assess&task=get-measured",
+    href: "/dashboard?task=get-measured&tab=measured",
     cta: "Prove your AI",
     video: { src: "/videos/trust-ecosystem.mp4", poster: "/videos/trust-ecosystem.jpg", title: "The trust lobby — who the measurement is for" },
   },
@@ -188,18 +188,16 @@ export const STORY: Slide[] = [
   },
   {
     // 13 Public watchdog — heavy, report what looks wrong
-    kicker: "Open to everyone",
-    title: "See something wrong? Report it.",
-    body: "When an AI behaves badly in the real world, anyone can flag it. Reports feed the public watchdog, and what we act on is measured and signed like everything else — no closed inbox, no quiet dismissal.",
+    kicker: "Public evidence",
+    title: "See what the watchdog can prove.",
+    body: "Inspect the evidence and current service boundaries in public. Incident submission is not live, so this surface does not pretend a report has been filed or acknowledged.",
     points: [
-      { tag: "pain", text: "Harms get buried in a vendor’s private support queue" },
-      { tag: "benefit", text: "A public place to report AI behaviour that looks wrong" },
-      { tag: "usp", text: "What we act on is measured and signed — in the open" },
+      { tag: "pain", text: "Safety claims are often difficult to inspect independently" },
+      { tag: "benefit", text: "A public place to examine the evidence that exists" },
+      { tag: "usp", text: "Unknown and unavailable states remain visible" },
     ],
-    // Was /watchdog (the map). The real intake is the incident-report form at
-    // /report — the CTA said "report it" and landed on something you cannot report on.
-    href: "/report",
-    cta: "Report an incident",
+    href: "/watchdog-hub",
+    cta: "Inspect watchdog evidence",
     image: { src: "/images/public_watchdog_intake.jpg", alt: "The public watchdog reporting funnel, open to everyone" },
   },
 ];
@@ -210,7 +208,7 @@ const PERSONAS: { who: string; hook: string; href: string }[] = [
   // behind it. The hero door should open the audience page, not a sector leaf.
   { who: "Insurers", hook: "price AI risk on signed evidence", href: "/insurers" },
   { who: "Regulators", hook: "check behaviour against the law", href: "/regulators" },
-  { who: "Enterprises", hook: "prove your AI before you ship", href: "/os?lobby=assess&task=enterprise-start" },
+  { who: "Enterprises", hook: "prove your AI before you ship", href: "/dashboard?task=enterprise-start&tab=measured" },
   { who: "Developers", hook: "verify a signed card — free forever", href: "/gspc-verify" },
 ];
 
@@ -291,7 +289,7 @@ function HeroActions() {
       <LiveCoverage />
       <div className="mt-9 grid w-full max-w-md grid-cols-1 gap-3 sm:flex sm:max-w-none sm:flex-wrap sm:items-center sm:justify-center">
         <a
-          href="/os?lobby=assess&task=get-measured"
+          href="/dashboard?task=get-measured&tab=measured"
           className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-6 py-3.5 text-base font-extrabold text-white shadow-lg transition-colors hover:bg-emerald-400"
         >
           Get measured
@@ -303,7 +301,7 @@ function HeroActions() {
           Verify a card — free
         </a>
         <a
-          href="/gspc-scoreboard"
+          href="/dashboard?tab=board"
           className="inline-flex items-center justify-center rounded-xl border border-white/45 bg-white/10 px-6 py-3.5 text-base font-extrabold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
         >
           Open the live board

@@ -66,7 +66,7 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
         </div>
       )}
       <p className="mt-3 text-sm">
-        <a href="/gspc-scoreboard" className="font-medium text-emerald-800 hover:underline">
+        <a href="/dashboard?tab=board" className="font-medium text-emerald-800 hover:underline">
           Full board
         </a>
         {" · "}
@@ -80,7 +80,7 @@ export default function HomeBoard({ highlight }: { highlight?: string | null }) 
 
 function Row({ a, active }: { a: GspcAxis; active: boolean }) {
   const st = String(a.status || "UNMEASURED");
-  const href = `/gspc-scoreboard#${encodeURIComponent(a.axis)}`;
+  const href = `/dashboard?tab=board#${encodeURIComponent(a.axis)}`;
   return (
     <tr
       id={`axis-${a.axis}`}

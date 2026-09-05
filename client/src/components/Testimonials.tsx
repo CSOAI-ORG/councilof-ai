@@ -19,7 +19,7 @@ interface Persona {
 const personas: Persona[] = [
   {
     headline: "One platform, every framework",
-    body: "Instead of navigating seven regulatory frameworks separately, map each AI system once and get comprehensive, crosswalked coverage — sealed to Layer 0 for audit.",
+    body: "Start from one scoped system record, inspect the published framework mappings, and verify any measurement card separately. Crosswalk coverage is indicative, not a compliance determination.",
     role: "For compliance & risk teams",
     category: "enterprise",
   },
@@ -49,7 +49,7 @@ const personas: Persona[] = [
   },
   {
     headline: "Provable when auditors ask",
-    body: "Every decision is Ed25519-signed to Layer 0 and verifiable offline. Comply once, and it crosswalks everywhere.",
+    body: "A published measurement card is Ed25519-signed and verifiable offline against the published key. Framework crosswalks are mappings, not a blanket compliance decision.",
     role: "For teams under deadline",
     category: "enterprise",
   },

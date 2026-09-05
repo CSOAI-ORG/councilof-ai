@@ -5,10 +5,10 @@ import { useEffect, useState } from "react";
 type Track = { id: string; name: string; level: string; mins: number; blurb: string; steps: { t: string; href: string }[] };
 const TRACKS: Track[] = [
   { id: "board", name: "Read the living board", level: "Beginner", mins: 15, blurb: "What is measured, what is empty, how to check a card. Completion attests training, not conformity.", steps: [
-    { t: "Open Council OS", href: "/os?lobby=home" },
+    { t: "Open Council OS", href: "/dashboard?tab=home" },
     { t: "The living board — empty cells stay empty", href: "/gspc-scoreboard" },
     { t: "Verify a card in your browser", href: "/gspc-verify" },
-    { t: "Ask as the reader you are", href: "/os?lobby=home&ask=" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
+    { t: "Ask as the reader you are", href: "/dashboard?ask=&tab=home" + encodeURIComponent("In plain words, what does the Council of AI actually measure?") },
   ]},
   { id: "found", name: "Foundations of AI Governance", level: "Beginner", mins: 20, blurb: "Why governance, where it comes from, and how the OS decides.", steps: [
     { t: "Rediscovered, Not Invented - 4,000 years", href: "/lineage" },

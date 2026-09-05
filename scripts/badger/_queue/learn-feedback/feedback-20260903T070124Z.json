@@ -1,0 +1,70 @@
+{
+  "as_of": "2026-09-03T07:01:24Z",
+  "feedback": {
+    "eat-4": {
+      "diagnosis": "Rate-limited. OECD endpoint returns JS-rendered HTML, not JSON. GitHub advisories returns 20/4 queries. HIBP requires API key.",
+      "fixes": [
+        "Add: World Bank AI policy documents (PDF, free)",
+        "Add: ITU AI for Good summit papers (PDF, free)",
+        "Add: Stanford HAI policy briefs (PDF, free)",
+        "Add: UK AI Safety Institute evaluations (PDF, free)",
+        "Add: AI Index Report (Stanford HAI, PDF, free)",
+        "HIBP: emit UNCHECKABLE unless HIBP_API_KEY env var is set"
+      ],
+      "low_yield": 5
+    },
+    "layer0": {
+      "diagnosis": "The ceremony is run-once, not periodically. New atoms only come when the ceremony re-runs.",
+      "fixes": [
+        "Make the ceremony more comprehensive (probe 50+ rails, not 29)",
+        "Re-run every 6h via surface-builder cron",
+        "Add: per-rail diff vs previous ceremony (state the surface changed or didn't)",
+        "Add: signed manifest of every rail + status code + size"
+      ],
+      "low_yield": 3
+    },
+    "per-issuer": {
+      "diagnosis": "The XRPL+SWIFT harvester produces a lot. Worth doubling.",
+      "fixes": [
+        "Add: per-axis (not per-issuer) per-issuer \u00d7 per-axis = 16\u00d722 = 352 atoms/cycle",
+        "Add: EVM-side issuers (16 chains, 100+ protocols)",
+        "Add: stablecoin issuers (USDC, USDT, DAI, FRAX, MIM)"
+      ],
+      "high_yield": 2180,
+      "low_yield": null
+    },
+    "per-item": {
+      "diagnosis": "The per-item jail harvester is solid. Worth more items.",
+      "fixes": [
+        "Add: per-axis per-item (22 axes \u00d7 20 items = 440 more)",
+        "Add: per-language jail prompts (en, zh, es, fr, de, ja, ko, ar)",
+        "Add: per-domain jail prompts (medical, legal, financial, military)"
+      ],
+      "high_yield": 994,
+      "low_yield": null
+    },
+    "t2": {
+      "diagnosis": "Tier 2 (arxiv, OWASP, NIST, schema.org, ECA, github, openrouter) produces a lot. Worth more sources.",
+      "fixes": [
+        "Add: arxiv AI safety papers (cs.AI + cs.CY + cs.LG)",
+        "Add: Semantic Scholar API (free, 200 papers/req)",
+        "Add: Papers With Code (ML benchmarks + datasets)",
+        "Add: HuggingFace daily papers (RSS)",
+        "Add: LessWrong AI safety posts",
+        "Add: AI Alignment Forum"
+      ],
+      "high_yield": 1761,
+      "low_yield": null
+    }
+  },
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.feedback-report",
+  "n_harvesters_reviewed": 5,
+  "n_total_fixes": 22,
+  "next_actions": [
+    "Apply the HIGH YIELD fixes (doubling) to scale output",
+    "Apply the LOW YIELD fixes (add sources, fix rate limits)",
+    "Re-run csoai-optimize.py after one cycle to verify improvements",
+    "Add the new sources to the harvesters as new functions"
+  ]
+}

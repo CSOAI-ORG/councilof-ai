@@ -62,6 +62,7 @@
  */
 
 import boardSigned from "../../public/signed/gspc-board.signed.json";
+import boardStatus from "../../public/signed/gspc-board.status.json";
 import cardIndex from "../../public/signed/card_index.json";
 import chainFacts from "../../public/signed/chain-facts.json";
 import claimsRegister from "../../public/claims-register.json";
@@ -71,7 +72,7 @@ import councilMcpDoor from "../../evidence/council-mcp-door.json";
 import publicRoot from "../../public/root.json";
 import hubCensus from "../../public/signed/hub-census-baseline.json";
 
-import type { AxisScore } from "./_gspc_types";
+import { MEASURED_ON, type AxisScore } from "./_gspc_types";
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
@@ -120,6 +121,7 @@ const censusAsOf: string | null = (hubCensus as { as_of?: string }).as_of ?? nul
 const boardTotals = (boardSigned as any).totals ?? {};
 const boardMeasuredOn: string | null = (boardSigned as any).measured_on?.date ?? null;
 const boardCustody = (boardSigned as any).custody_attestation ?? {};
+const boardClaimState = (boardStatus as any).state ?? "UNCHECKABLE";
 
 // ── live derivation, so snapshot drift is visible rather than silent ─────────
 // /api/gspc computes its totals from these arrays at request time. The signed
@@ -131,14 +133,122 @@ const LIVE_AXES: AxisScore[] = [...AXES_A, ...AXES_B, ...AXES_FIN];
 const liveAxisSlots = LIVE_AXES.length;
 const liveMeasuredAxes = LIVE_AXES.filter((a) => a.status === "MEASURED").length;
 const liveUnmeasuredAxes = liveAxisSlots - liveMeasuredAxes;
-const boardAgrees =
+const livePublicCount = `${liveAxisSlots} axis · ${liveMeasuredAxes} measured`;
+const liveCountGrammar =
+  liveUnmeasuredAxes === 0
+    ? `${liveAxisSlots} axis are on the board and every one carries a measurement — no ` +
+      `declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a ` +
+      `future slot is added with no run behind it, this line separates the two again on its own.`
+    : `${liveAxisSlots} axis are on the board; ${liveMeasuredAxes} of them carry a measurement and ` +
+      `${liveUnmeasuredAxes} are declared slots with no run behind them. The larger number counts slots, ` +
+      `the smaller counts measurements — quote both or quote the smaller. A published slot exists ` +
+      `so the gap is visible; it is not evidence of anything having been measured.`;
+const liveByFamily = {
+  gspc: {
+    axes: LIVE_AXES.filter((a) => a.family === "gspc").length,
+    measured: LIVE_AXES.filter((a) => a.family === "gspc" && a.status === "MEASURED").length,
+    note: "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically.",
+  },
+  financial: {
+    axes: LIVE_AXES.filter((a) => a.family === "financial").length,
+    measured: LIVE_AXES.filter((a) => a.family === "financial" && a.status === "MEASURED").length,
+    note:
+      "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs. " +
+      "Measured is not scored. None has a leader, an accuracy or a separation determination.",
+  },
+};
+const liveMeasuredOn: string = MEASURED_ON.date;
+const boardCountsAgree =
   boardTotals.axes === liveAxisSlots && boardTotals.measured_axes === liveMeasuredAxes;
+// Matching counts are necessary but not sufficient. The preserved MPC freeze has
+// a known signed-run overclaim and ambiguous historical leader notes, so it fails
+// closed until an owner MPC ceremony replaces it and its status becomes CURRENT.
+const boardAgrees = boardCountsAgree && boardClaimState === "CURRENT";
+const SNAPSHOT_DISAGREEMENT =
+  "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the " +
+  "committed axis arrays. The preserved signed snapshot at public/signed/gspc-board.signed.json " +
+  "is not current while signed_snapshot_agrees is false: either its counts drift or its status " +
+  "records a known claim defect. Read /signed/gspc-board.status.json. Re-signing that file is an " +
+  "owner MPC ceremony, not a laptop sign and not the Pages 3KB card-sign path.";
 
 // ── cards: counted from the index, not read off a header ─────────────────────
-const cards: Array<{ signed?: boolean }> = (cardIndex as any).cards ?? [];
+const cards: Array<{ signed?: boolean; card?: string }> = (cardIndex as any).cards ?? [];
 const cardsCounted = cards.length;
 const cardsSigned = cards.filter((c) => c.signed === true).length;
 const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
+export interface CorpusRelation {
+  relationship: "SEPARATE_CORPORA" | "UNCHECKABLE";
+  public_root_leaves: number | null;
+  separately_indexed_signed_cards: number | null;
+  identifier_overlap: number | null;
+  duplicate_public_root_ids: number | null;
+  duplicate_signed_card_ids: number | null;
+  ots_scope: "PUBLIC_ROOT_BYTES_ONLY" | "UNCHECKABLE";
+  reason: string;
+}
+
+export function deriveCorpusRelation(rootDoc: unknown, indexDoc: unknown): CorpusRelation {
+  const rootRecord = rootDoc && typeof rootDoc === "object" && !Array.isArray(rootDoc)
+    ? rootDoc as Record<string, unknown>
+    : null;
+  const indexRecord = indexDoc && typeof indexDoc === "object" && !Array.isArray(indexDoc)
+    ? indexDoc as Record<string, unknown>
+    : null;
+  const leaves = Array.isArray(rootRecord?.card_sha256) ? rootRecord.card_sha256 : null;
+  const rows = Array.isArray(indexRecord?.cards) ? indexRecord.cards : null;
+  if (!rootRecord || !indexRecord || !leaves || !rows) {
+    return {
+      relationship: "UNCHECKABLE",
+      public_root_leaves: null,
+      separately_indexed_signed_cards: null,
+      identifier_overlap: null,
+      duplicate_public_root_ids: null,
+      duplicate_signed_card_ids: null,
+      ots_scope: "UNCHECKABLE",
+      reason: "Both root.card_sha256[] and card_index.cards[] are required.",
+    };
+  }
+  const leafIds = leaves.filter((value): value is string => typeof value === "string");
+  const signedIds = rows
+    .map((row) => row && typeof row === "object" && !Array.isArray(row) ? (row as Record<string, unknown>).card : null)
+    .filter((value): value is string => typeof value === "string");
+  const leafSet = new Set(leafIds);
+  const signedSet = new Set(signedIds);
+  const overlap = [...leafSet].filter((id) => signedSet.has(id)).length;
+  const duplicateRoot = leafIds.length - leafSet.size;
+  const duplicateSigned = signedIds.length - signedSet.size;
+  const validIds =
+    leafIds.length === leaves.length &&
+    signedIds.length === rows.length &&
+    leafIds.every((id) => /^[0-9a-f]{64}$/u.test(id)) &&
+    signedIds.every((id) => /^[0-9a-f]{64}$/u.test(id));
+  const countsAgree =
+    Number.isInteger(rootRecord.card_count) && rootRecord.card_count === leaves.length &&
+    Number.isInteger(indexRecord.n_cards) && indexRecord.n_cards === rows.length;
+  const valid = validIds && countsAgree && duplicateRoot === 0 && duplicateSigned === 0 && overlap === 0;
+  return {
+    relationship: valid ? "SEPARATE_CORPORA" : "UNCHECKABLE",
+    public_root_leaves: leaves.length,
+    separately_indexed_signed_cards: rows.length,
+    identifier_overlap: overlap,
+    duplicate_public_root_ids: duplicateRoot,
+    duplicate_signed_card_ids: duplicateSigned,
+    ots_scope: valid ? "PUBLIC_ROOT_BYTES_ONLY" : "UNCHECKABLE",
+    reason: valid
+      ? "Declared counts agree, identifiers are well formed and unique, and the two sets have no overlap."
+      : "Malformed identifiers, duplicate identifiers, declared-count drift, or corpus overlap prevents a separation claim.",
+  };
+}
+
+const publicRootSignature =
+  typeof (publicRoot as any).sig_ed25519 === "string" &&
+  /^[0-9a-f]{128}$/u.test((publicRoot as any).sig_ed25519)
+    ? (publicRoot as any).sig_ed25519 as string
+    : null;
+const publicRootSignatureState = publicRootSignature
+  ? "SIGNED_ENVELOPE_PRESENT"
+  : "UNSIGNED_OR_MALFORMED";
+const corpusRelation = deriveCorpusRelation(publicRoot, cardIndex);
 
 // ── claims register: rows tallied by status ──────────────────────────────────
 const claimRows: Array<{ status?: string }> = (claimsRegister as any).claims ?? [];
@@ -179,6 +289,22 @@ export const onRequestGet: PagesFunction = async () => {
     schema: "csoai.live-state/1",
     title: "CSOAI live state — the numbers a lane may quote",
 
+    // Top-level lid — same as /api/gspc totals.public_count, lifted here so
+    // a stranger reading /api/state does not have to know to look at
+    // `board.public_count.value` for the short sentence. Both paths carry
+    // the same derived fact. Note: public_leader_count is NOT lifted to the
+    // top level — it lives at board.public_leader_count because the per-axis
+    // attribution table is the honest way to read it (one number per metric,
+    // one file per number — see quoting doc).
+    public_count: fact(
+      livePublicCount,
+      "declared",
+      SRC_AXES + " → derived public_count (also published at board.public_count)",
+      liveMeasuredOn,
+      "MEASURED_ON.date",
+      "The short sentence. Safe to quote verbatim. Same grammar as GET /api/gspc.",
+    ),
+
     contract: {
       quote_this: "Every count a lane publishes must come from this endpoint, by field name.",
       not_here_not_established:
@@ -210,73 +336,87 @@ export const onRequestGet: PagesFunction = async () => {
 
     // ── THE BOARD ────────────────────────────────────────────────────────────
     board: {
-      authority: SRC_BOARD,
+      authority: SRC_AXES,
       live_endpoint: "/api/gspc",
       axis_slots: fact(
-        boardTotals.axes ?? null,
+        liveAxisSlots,
         "declared",
-        SRC_BOARD + " → totals.axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → length",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "A count of SLOTS on the board. A slot is published so a gap is visible; it is not " +
-          "evidence that anything was measured. Never quote this number alone.",
+          "evidence that anything was measured. Never quote this number alone. Same derivation as GET /api/gspc.",
       ),
       measured_axes: fact(
-        boardTotals.measured_axes ?? null,
+        liveMeasuredAxes,
         "measured",
-        SRC_BOARD + " → totals.measured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
-        "Slots with a real graded run behind them. This is the number to quote if you quote only one.",
+        SRC_AXES + " → filter(status === 'MEASURED').length",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "Slots with a real graded run behind them. This is the number to quote if you quote only one. " +
+          "Same derivation as GET /api/gspc totals.measured_axes. This is the number to file.",
       ),
       unmeasured_axes: fact(
-        boardTotals.unmeasured_axes ?? null,
+        liveUnmeasuredAxes,
         "declared",
-        SRC_BOARD + " → totals.unmeasured_axes",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → length - measured",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "Declared slots with no run behind them. Published so the gap is visible.",
       ),
       public_count: fact(
-        boardTotals.public_count ?? null,
+        livePublicCount,
         "declared",
-        SRC_BOARD + " → totals.public_count",
-        boardMeasuredOn,
-        "measured_on.date",
-        "The short sentence. Safe to quote verbatim because it carries both numbers.",
+        SRC_AXES + " → derived public_count",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "The short sentence. Safe to quote verbatim because it carries both numbers. Same grammar as GET /api/gspc.",
       ),
       count_grammar: fact(
-        boardTotals.count_grammar ?? null,
+        liveCountGrammar,
         "declared",
-        SRC_BOARD + " → totals.count_grammar",
-        boardMeasuredOn,
-        "measured_on.date",
-        "The long form, verbatim from the signed payload. Quote this when a report has room for it.",
+        SRC_AXES + " → derived count_grammar",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
+        "The long form, derived from the same axis arrays /api/gspc uses.",
       ),
       by_family: fact(
-        boardTotals.by_family ?? null,
+        liveByFamily,
         "declared",
-        SRC_BOARD + " → totals.by_family",
-        boardMeasuredOn,
-        "measured_on.date",
+        SRC_AXES + " → by family",
+        liveMeasuredOn,
+        "MEASURED_ON.date",
         "The two families are measured by two different instruments and their counts are not " +
           "interchangeable. A behavioural-family figure is not a board figure.",
       ),
       live_derivation_crosscheck: {
         note:
-          "The signed file is a snapshot of what /api/gspc computes from the axis arrays. Both are " +
-          "computed here so a drift between them is published rather than silently inherited by " +
-          "whichever surface a lane happened to read.",
+          "Live counts above are derived from the committed axis arrays — the same source GET " +
+          "/api/gspc uses. The signed file is an MPC freeze of that computation. Drift is " +
+          "published rather than silently inherited.",
         source: SRC_AXES,
         live_axis_slots: liveAxisSlots,
         live_measured_axes: liveMeasuredAxes,
         live_unmeasured_axes: liveUnmeasuredAxes,
+        signed_snapshot_counts_agree: boardCountsAgree,
         signed_snapshot_agrees: boardAgrees,
-        on_disagreement:
-          "If signed_snapshot_agrees is false, NEITHER number is quotable until the snapshot is " +
-          "re-derived and re-signed. Do not pick the one you prefer.",
+        signed_snapshot: {
+          source: SRC_BOARD,
+          axis_slots: boardTotals.axes ?? null,
+          measured_axes: boardTotals.measured_axes ?? null,
+          unmeasured_axes: boardTotals.unmeasured_axes ?? null,
+          public_count: boardTotals.public_count ?? null,
+          as_of: boardMeasuredOn,
+          claim_state: boardClaimState,
+          status_source: "public/signed/gspc-board.status.json",
+          status: boardAgrees
+            ? "current signed freeze agrees with live axis arrays"
+            : "superseded or drifted freeze — do not file",
+        },
+        on_disagreement: SNAPSHOT_DISAGREEMENT,
       },
       signature: {
+        artifact_state: boardClaimState,
         signer: boardCustody.signer ?? null,
         alg: boardCustody.alg ?? null,
         keyid: boardCustody.keyid ?? null,
@@ -459,6 +599,10 @@ export const onRequestGet: PagesFunction = async () => {
     signed_cards: {
       authority: SRC_CARDS,
       live_endpoint: "/api/cards",
+      corpus_relation: {
+        ...corpusRelation,
+        ots_scope_note: "A valid current public-root OTS proof covers root.json bytes only; it does not anchor this signed-card index.",
+      },
       count: fact(
         cardsCounted,
         "catalogued",
@@ -690,8 +834,11 @@ export const onRequestGet: PagesFunction = async () => {
         SRC_PUBLIC_ROOT + " → card_count",
         (publicRoot as any).as_of ?? null,
         "as_of",
-        "Leaves on the permissionless public-root. Separate from signed_cards.count and from GSPC.",
+        corpusRelation.relationship === "SEPARATE_CORPORA"
+          ? `Leaves on the permissionless public-root. The validated corpus relation records ${corpusRelation.public_root_leaves} root leaves, ${corpusRelation.separately_indexed_signed_cards} separately indexed signed cards and zero overlap. The root OTS proof covers root.json bytes only, not the signed-card index or GSPC.`
+          : "Leaves on the permissionless public-root. Corpus separation is UNCHECKABLE because identifiers, declared counts, uniqueness, or overlap did not satisfy the validator.",
       ),
+      corpus_relation: corpusRelation,
       xrpl_asset_count_attempted: fact(
         (publicRoot as any).xrpl_asset_count_attempted ?? null,
         "catalogued",
@@ -716,8 +863,18 @@ export const onRequestGet: PagesFunction = async () => {
         "as_of",
         "Frozen card-v0 schema URL.",
       ),
+      signature_state: fact(
+        publicRootSignatureState,
+        "catalogued",
+        SRC_PUBLIC_ROOT + " → sig_ed25519",
+        (publicRoot as any).as_of ?? null,
+        "as_of",
+        publicRootSignature
+          ? "A 64-byte Ed25519 envelope signature is present. The release gate verifies it against did_intended; this endpoint derives presence and shape from the committed artifact and does not turn that into a per-leaf signature claim."
+          : "No well-formed 64-byte Ed25519 envelope signature is present on this root.",
+      ),
       caveat:
-        "Card sig_ed25519 is null (NO_LAPTOP_SIGN). This is not GSPC. Hugging Face " +
+        "The root envelope signature authenticates the six-field public-root statement; it does not individually sign each leaf, admit queued candidates, or make this GSPC. Hugging Face " +
         "csoai/gspc-boards public-root/root.json is a mirror of these bytes, not a second board.",
     },
 

@@ -10,7 +10,7 @@ _Grounded in ${src}, not by a model._`;
 const GET_MEASURED =
   `Get measured starts at /assess. You describe the system - purpose, domain, or a URL recorded as text. The assess function is a deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench run.
 
-You get back a signed card: tier, gaps against the fixed Art 9-15/50 control set, and what we could not measure. Empty cells stay empty. The first measurement costs nothing. Re-measuring after the description or the law changes is the normal case, not an upsell.
+The booking flow is not live yet and the page currently labels measurement as paid / Coming — Paddle. When the endpoint is used, it returns a deterministic classification record; it is signed only when a valid signing key is configured and otherwise says UNSIGNED. Empty cells stay empty.
 
 The card is not a certificate, not a conformity mark, and not legal advice. We do not remediate. We measure, sign, and publish what we cannot measure.
 
@@ -20,9 +20,9 @@ Start at /assess, or open Get measured in Council OS.` +
   cite("the published FAQ and /assess");
 
 const VERIFY_CARD =
-  `Verification runs in your browser. Canonicalise the record (sorted keys, no whitespace), drop content_id and signature, take SHA-256 - that hash is the card's identity. Then check the Ed25519 signature against the public key at /.well-known/did.json (did:web:csoai.org). It matches or it does not.
+  `Verification runs in your browser using the declared card-family rule. Canonicalisation and signature preimages differ between legacy families, so do not apply one generic recipe to every record. The canonical verifier selects a supported family, recomputes its hash, and checks Ed25519 against a key pinned for that family.
 
-No account, no fee, nothing you check is sent to us. There is no RFC-3161 timestamp authority and no blockchain anchor; records say timestamp_authority: none.
+No account and no fee are required to verify. The current public root has an OpenTimestamps proof in STAMPED_PENDING_BITCOIN state; that is not a confirmed Bitcoin timestamp.
 
 Open /gspc-verify.` +
   cite("the published verify FAQ");
@@ -68,7 +68,7 @@ The live list is on that page. We do not treat a crosswalk row as a GSPC measure
   cite("/crosswalk");
 
 const TOOLS =
-  `Published tooling and MCP servers are listed at /tools. You can connect and run them inside Council OS. A tool is not a certificate: running one does not certify a system and does not fill an empty board cell.` +
+  `Published tooling and MCP descriptions are listed at /tools. Council OS shows the available surfaces, but a listing is not proof that a remote tool is connected or reachable. A tool is not a certificate: running one does not certify a system and does not fill an empty board cell.` +
   cite("the Tools pane");
 
 const RESULTS =
@@ -88,21 +88,21 @@ Counts and intervals live on the page and on GET /api/gspc; this answer does not
   cite("/instrument");
 
 const SYSTEM_CARD =
-  `A system card is a signed measurement record you can verify offline: recompute the hash and check Ed25519 against did:web:csoai.org. Demo or synthetic rows on /system-card say so when they are not a live subject measurement.
+  `The legacy /system-card page is withdrawn for evidence review. Supported signed measurement records can be inspected through the cards pane and checked with the canonical verifier.
 
-It attests what was run on a stated date. It is not a conformity mark. Verify at /gspc-verify.` +
-  cite("/system-card and /gspc-verify");
+They attest only the stated run and scope. They are not conformity marks. Verify at /gspc-verify.` +
+  cite("/gspc-verify");
 
 const FLEET =
-  `The published fleet manifest at /mcp-fleet lists servers by hive. It is a catalogue, not a marketplace: listing a server does not sell access, does not certify the server, and does not put a grade up for sale.
+  `The legacy /mcp-fleet catalogue is withdrawn for evidence review. Available tool descriptions live in the Council OS Tools pane; a listed capability is not proof that a remote runtime is reachable.
 
-Live registry, when the gateway answers, is GET /api/mcp.` +
-  cite("/mcp-fleet");
+The machine registry, when its endpoint answers, is GET /api/mcp.` +
+  cite("the Council OS Tools pane and GET /api/mcp");
 
 const REG_FEED =
   `GET /api/regulation is a dated deadline feed. Every entry cites its legal basis. Corrections are appended, never silently edited. The feed is statements of law as published, not a measurement score.
 
-Open /feed or GET /api/regulation for what moved and the verified_as_of stamp.` +
+Use GET /api/regulation for the current response and its verified_as_of stamp. The legacy /feed page is withdrawn for review.` +
   cite("GET /api/regulation");
 
 const METHOD =
@@ -116,7 +116,7 @@ const HIVE =
   cite("/hive");
 
 const FINANCE =
-  `Finance teams start the same way as anyone else: send the system, get a signed card, verify it yourself. The card is evidence for governance files, not a certificate that a control framework is satisfied.
+  `Finance teams use the same measurement intake as anyone else. The current booking flow is not live. A classification record is signed only when the configured signing key is valid; an unsigned result says so. A signed card is evidence for governance files, not a certificate that a control framework is satisfied.
 
 Do not treat an empty cell as a pass. Live counts: GET /api/gspc.` +
   cite("the published measurement FAQ");

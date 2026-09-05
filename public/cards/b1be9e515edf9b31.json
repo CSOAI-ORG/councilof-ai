@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-04T18:19:26Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "humanoid-labour-index",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "NOT_BUILT; no input bank"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b1be9e515edf9b31fbc251e7c1aeea3230a4f0f034143f7d6964af766eebc5a2",
+    "sig_ed25519": "0ca18b5b1f84a98c8f8a4302fcea22a4fa2f5d8d59d4f52e81fd1729fe5ed7ade112111c600de27066819bbb137470dff4d2ba5718a97468ef8acf6e441d8e0a",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-humanoid-labour-index"
+    ],
+    "subject": "GSPC humanoid-labour-index UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "humanoid-labour-index",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "5d19ebd0aac780ba39f27b8067781b88b2d5dbbfe442f5198c246bb22c3025fa",
+    "5f964eabd1980cefb7a9fd6ad97876b044e92e7485f1c96dcfd4f70f0041423a",
+    "d7bcb57f95309472589534d00a4f3b8b74400d27de811b130c72d9e26c12afa7",
+    "b019b7eb218221369eff4fdd6801094f91f2cabb72bc11fbce53ad858f3667ea",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "5506f7b4d9f14b58cf6f2b186adb09362123ee97c69840d2074978048c9372ac",
+    "67181466170341f4d6f772346672ee7302279bc648fca03b57a48f2ed8051926"
+  ]
+}

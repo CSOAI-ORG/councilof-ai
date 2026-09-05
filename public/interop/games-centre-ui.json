@@ -1,0 +1,132 @@
+{
+  "schema": "csoai.games-centre-ui/0.1",
+  "as_of": "20260905T052313Z",
+  "principle": "Every game is a first-class citizen in the dashboard centre pane. Loads inline. Chat works. All tools work.",
+  "centre_pane": {
+    "endpoint": "/dashboard/games",
+    "default_size": "full-bleed",
+    "loads_inline": true,
+    "chat_works": true,
+    "all_tools_work": true,
+    "instantiates": "iframe / web-component / React component"
+  },
+  "games": [
+    {
+      "slug": "council-town",
+      "name": "Council Town",
+      "icon": "agent-city",
+      "description": "Watch the council deliberate in real-time",
+      "centre_route": "/dashboard/games/council-town",
+      "chat_endpoint": "/api/games/council-town/chat",
+      "tools_endpoint": "/api/games/council-town/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "council-minds",
+      "name": "Council Minds",
+      "icon": "deliberation",
+      "description": "Multi-perspective AI deliberation",
+      "centre_route": "/dashboard/games/council-minds",
+      "chat_endpoint": "/api/games/council-minds/chat",
+      "tools_endpoint": "/api/games/council-minds/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "hive-model",
+      "name": "Hive Model",
+      "icon": "hive",
+      "description": "Many agents working together",
+      "centre_route": "/dashboard/games/hive-model",
+      "chat_endpoint": "/api/games/hive-model/chat",
+      "tools_endpoint": "/api/games/hive-model/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "arena",
+      "name": "Arena",
+      "icon": "arena",
+      "description": "Side-by-side model comparison",
+      "centre_route": "/dashboard/games/arena",
+      "chat_endpoint": "/api/games/arena/chat",
+      "tools_endpoint": "/api/games/arena/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "playbooks",
+      "name": "Playbooks",
+      "icon": "playbook",
+      "description": "Guided governance scenarios",
+      "centre_route": "/dashboard/games/playbooks",
+      "chat_endpoint": "/api/games/playbooks/chat",
+      "tools_endpoint": "/api/games/playbooks/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "course-player",
+      "name": "Course Player",
+      "icon": "course",
+      "description": "Learn AI governance",
+      "centre_route": "/dashboard/games/course-player",
+      "chat_endpoint": "/api/games/course-player/chat",
+      "tools_endpoint": "/api/games/course-player/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "pdca-simulator",
+      "name": "PDCA",
+      "icon": "pdca",
+      "description": "Plan-Do-Check-Act cycle",
+      "centre_route": "/dashboard/games/pdca-simulator",
+      "chat_endpoint": "/api/games/pdca-simulator/chat",
+      "tools_endpoint": "/api/games/pdca-simulator/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "swarm",
+      "name": "Swarm",
+      "icon": "swarm",
+      "description": "Many agents on shared task",
+      "centre_route": "/dashboard/games/swarm",
+      "chat_endpoint": "/api/games/swarm/chat",
+      "tools_endpoint": "/api/games/swarm/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "civic",
+      "name": "Civic",
+      "icon": "civic",
+      "description": "Civic-scale deliberation",
+      "centre_route": "/dashboard/games/civic",
+      "chat_endpoint": "/api/games/civic/chat",
+      "tools_endpoint": "/api/games/civic/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    },
+    {
+      "slug": "tournament",
+      "name": "Tournament",
+      "icon": "trophy",
+      "description": "Model tournaments + leaderboards",
+      "centre_route": "/dashboard/games/tournament",
+      "chat_endpoint": "/api/games/tournament/chat",
+      "tools_endpoint": "/api/games/tournament/tools",
+      "signed_each_turn": true,
+      "card_format": "3kb-signed-card-v0"
+    }
+  ],
+  "card_anchors": [
+    "ots",
+    "rekor",
+    "eas-base"
+  ],
+  "council_attests": true,
+  "bft_quorum": "23/33"
+}

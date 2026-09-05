@@ -53,13 +53,26 @@
         "kid": "csoai-card-attestation-1",
         "use": "sig"
       }
+    },
+    {
+      "id": "did:web:csoai.org#gspc-board-22axis-2026",
+      "type": "JsonWebKey2020",
+      "controller": "did:web:csoai.org",
+      "publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "1XOnIZwNZFCR6fZAy1u_5xQp1DrBaFaGZaeiYNAeDSw",
+        "kid": "gspc-board-22axis-2026",
+        "use": "sig"
+      }
     }
   ],
   "assertionMethod": [
     "did:web:csoai.org#site-release-1",
     "did:web:csoai.org#estate-chain-1",
     "did:web:csoai.org#board-attestation-1",
-    "did:web:csoai.org#card-attestation-1"
+    "did:web:csoai.org#card-attestation-1",
+    "did:web:csoai.org#gspc-board-22axis-2026"
   ],
   "authentication": [
     "did:web:csoai.org#site-release-1"
@@ -83,5 +96,6 @@
     ]
   },
   "_boardAttestationNote": "#board-attestation-1 signs the PUBLIC BOARD SNAPSHOT as served by the site (integrity of /api/gspc), distinct from #estate-chain-1 which signs pod measurement chains. Born and held in Cloudflare; the private half never leaves.",
+  "_gspcBoardKeyNote": "#gspc-board-22axis-2026 is the 3-party Coinbase cb-mpc Ed25519 additive key that signs public/signed/gspc-board.signed.json. The private scalar never exists as a whole number; three shares on the owner's Oracle tenancy produce a stock RFC 8032 signature. JWK x is the raw 32-byte public key d573a7219c0d645091e9f640cb5bbfe71429d43ac168568665a7a260d01e0d2c in base64url. Distinct from #board-attestation-1 (3KB living stamp / Pages card-sign). This fragment is published so a stranger can pin the freeze key independently of the file that carries the signature. did:web resolution of this id is https://csoai.org/.well-known/did.json — the same fragment must appear there for DID pin, not only on this councilof.ai copy.",
   "_pqcNote": "#board-pqc-1 ABSENT (UNMEASURED). No ML-DSA public key is published in this document. Do not generate one off-keystone. ML-DSA-65 signatures are ~3.3KB and cannot live inside the 3KB card atom. Hybrid is a second receipt on root/DID, never inside the card. Ed25519 is not replaced. PQCBench is the GSPC continuity arena (csoai/gspc-asi), not a PQC signature."
 }

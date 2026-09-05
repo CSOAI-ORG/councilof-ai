@@ -5,6 +5,7 @@ import {
   AXIS_SETS,
   BOARD_FALLBACK,
   CARD_AXIS_ALIASES,
+  fetchPublishedSet,
   type AxisRow,
   type AxisSet,
   type LoadedSet,
@@ -63,7 +64,7 @@ const GLOSSARY: TermDef[] = [
   {
     term: "measured",
     short:
-      "A real run happened: a fixed set of questions was asked, the answers were graded by a fixed rule, and the result was recorded and signed.",
+      "A real run happened: inputs were evaluated by the row's declared fixed rule and a run artifact was published. Signature state is separate: some artifacts are signed and some are content-addressed but unsigned.",
   },
   {
     term: "unmeasured",
@@ -197,38 +198,22 @@ function useAllSets(): Record<string, SetState> {
         }
         continue;
       }
-      const json = (u: string) =>
-        fetch(u).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))));
-
-      json(set.fetchUrl)
-        .then((d) => put(set.id, { phase: "ready", data: set.load(d) }))
-        .catch((liveErr) => {
-          // A declared fallback artifact is tried before the set is given up on.
-          // This is what makes the board render real rows in a prerendered page,
-          // where no function is running to answer /api/gspc — and the fallback
-          // is LABELLED as a snapshot rather than passed off as a live read.
-          if (!set.fallbackUrl) {
-            put(set.id, {
-              phase: "error",
-              message: String(liveErr?.message ?? liveErr),
-              data: set.id === "board" ? BOARD_FALLBACK() : EMPTY,
-            });
-            return;
-          }
-          json(set.fallbackUrl)
-            .then((d) =>
-              put(set.id, {
-                phase: "ready",
-                data: set.load(d, set.fallbackProvenance),
-              }),
-            )
-            .catch((snapErr) =>
-              put(set.id, {
-                phase: "error",
-                message: `${liveErr?.message ?? liveErr}; snapshot: ${snapErr?.message ?? snapErr}`,
-                data: set.id === "board" ? BOARD_FALLBACK() : EMPTY,
-              }),
-            );
+      fetchPublishedSet(set)
+        .then((data) => put(set.id, { phase: "ready", data }))
+        .catch((error) => {
+          const message = error instanceof Error ? error.message : String(error);
+          put(set.id, {
+            phase: "error",
+            message,
+            data:
+              set.id === "board"
+                ? BOARD_FALLBACK(
+                    "The live board endpoint did not answer and its signed fallback was not eligible " +
+                      `for current use (${message}). No rows are drawn. The dated figure below is only ` +
+                      "a recorded observation; GET /api/gspc remains the authority.",
+                  )
+                : EMPTY,
+          });
         });
     }
 
@@ -611,11 +596,11 @@ function CustodyPanel() {
         Where a number turns into something you can check
       </h2>
       <p className="mt-2 max-w-3xl text-sm text-gray-700">
-        Every measured row above is backed by a{" "}
-        <Term def={GLOSSARY.find((g) => g.term === "signed card")!.short}>signed card</Term>: a small
-        file recording one run, stamped so that anyone can confirm offline that it has not been
-        edited since. This is the part a commercial leaderboard cannot offer, and it is worth
-        stating only after the limits above have been stated.
+        Every measured row above names a published evidence or run artifact. Where a{" "}
+        <Term def={GLOSSARY.find((g) => g.term === "signed card")!.short}>signed card</Term> is
+        actually linked, a stranger can verify that card offline. Seven current financial rows
+        instead link to content-addressed but unsigned run artifacts; a content ID is not a
+        signature, and this page keeps that difference visible.
       </p>
 
       <dl className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -737,14 +722,14 @@ const NO_ROUTE_FROM_BOARD: OrphanEntry[] = [
     what:
       "The ledger attestation work: a record attached to a public ledger so that a third party can see a measurement existed at a point in time.",
     why:
-      "Reachable from the site header and footer, and from nothing on the board. The one financial row that has a measurement behind it points at this evidence in the board's own data, and that pointer was rendered nowhere.",
+      "Reachable from the site header and footer, and from nothing on the board. The provenance-controls row points at the signed ledger evidence; seven other financial rows point at separate content-addressed, unsigned run artifacts.",
     status: "Proven on a test network. Attaching to the main network is planned and is not done.",
   },
   {
     path: "/interop/financial-measure-run-v2.json",
-    what: "The signed run behind the one financial row that carries a measurement.",
+    what: "The signed run behind the provenance-controls financial row.",
     why:
-      "The board's own data names this file as that row's evidence, and no page fetched it. Three pages fetch the earlier unsigned version of the same run instead.",
+      "The board's own data names this file as the provenance-controls evidence. It is the only currently signed artifact among the eight financial run files; the other seven remain unsigned.",
     status: "Signed and published.",
   },
   {
@@ -918,7 +903,7 @@ export default function MeasurementBoard() {
   useEffect(() => {
     document.title = "The measurement board — every set, what it measures, what it does not";
     setMetaDescription(
-      "One navigable board across every axis set this estate publishes. Each set states what it measures, over what, when, what it establishes and what it does not — and every row links to the signed record behind it.",
+      "One navigable board across every axis set this estate publishes. Each set states what it measures, over what, when, what it establishes and what it does not; evidence links preserve their actual signed or unsigned state.",
     );
   }, []);
 

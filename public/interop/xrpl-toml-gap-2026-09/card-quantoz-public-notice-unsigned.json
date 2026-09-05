@@ -1,0 +1,114 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Quantoz EURQ/USDQ on XRPL — public.notice: strict_two_way_toml FAIL + reader still UNSIGNED",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://councilof.ai/api/xrpl",
+    "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "https://quantoz.com/.well-known/xrp-ledger.toml",
+    "https://www.quantoz.com/.well-known/xrp-ledger.toml",
+    "https://api.xrpscan.com/api/v1/account/rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "strict_two_way_toml failed (FAIL): no on-ledger Domain on Quantoz issuer; quantoz.com/.well-known/xrp-ledger.toml HTTP 404 — not a bidirectional domain match. Reader sig_ed25519 also still null (NO_LAPTOP_SIGN).",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "provenance-controls"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "failed_check": "strict_two_way_toml",
+    "two_way_state": "FAIL",
+    "two_way_reason": "no on-ledger Domain field (one-way at best)",
+    "issuer": "Quantoz",
+    "symbols": [
+      "EURQ",
+      "USDQ"
+    ],
+    "issuer_addresses": {
+      "EURQ": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+      "USDQ": "rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs"
+    },
+    "on_ledger_domain": null,
+    "reader_verified_via": "XRPScan well-known directory",
+    "reader_as_of": "2026-09-01T23:15:51Z",
+    "roster_source": "https://councilof.ai/api/xrpl",
+    "two_way_check_source": "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "artefacts": [
+      {
+        "id": "api-xrpl",
+        "role": "api-xrpl",
+        "source_url": "https://councilof.ai/api/xrpl",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 9039,
+        "sha256": "8097c2a815f42dda08d55a11e623b8004104514791104a140aad3956488ec1cf"
+      },
+      {
+        "id": "xrpl-two-way-check",
+        "role": "xrpl-two-way-check",
+        "source_url": "https://councilof.ai/interop/xrpl-two-way-check.json",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 7938,
+        "sha256": "85848181b51f74c610c27de5c3f98a599e994fd31577f21f7475b19bfccb095f"
+      },
+      {
+        "id": "quantoz-toml",
+        "role": "quantoz-toml",
+        "source_url": "https://quantoz.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 88,
+        "sha256": "62b6eec5bc825126a7b9734e03ff00c9dc7899f3f07111746bf583d193b44dd0",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "quantoz-www-toml",
+        "role": "quantoz-www-toml",
+        "source_url": "https://www.quantoz.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 88,
+        "sha256": "62b6eec5bc825126a7b9734e03ff00c9dc7899f3f07111746bf583d193b44dd0",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "xrpscan-quantoz",
+        "role": "xrpscan-quantoz",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rDk1xiArDMjDqnrR2yWypwQAKg4mKnQYvs",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1103,
+        "sha256": "6723e0f0d9008b602ff75904015a61cdc432dce293abf8bd56f2b2bf32401cbf"
+      }
+    ],
+    "fetched_at": "2026-09-02T04:36:44Z",
+    "verified_via": "keyless HTTPS GET + sha256 of exact bytes; two-way check re-cited, not invented"
+  },
+  "sha256": "bcb60e01fe783ea80bd796e6b36ff3d6aa90e859f8be734a9175a5a4dde37f40",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "strict_two_way_toml",
+    "bidirectional domain match",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_score",
+    "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
+  ],
+  "tags": [
+    "public-notice",
+    "xrpl",
+    "strict_two_way_toml",
+    "unsigned",
+    "discovered",
+    "quantoz"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim bidirectional domain match when strict_two_way_toml failed."
+}

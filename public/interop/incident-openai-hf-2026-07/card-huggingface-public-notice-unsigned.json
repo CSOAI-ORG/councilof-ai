@@ -1,0 +1,63 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Hugging Face Jul 2026 incident containment disclosure — public.notice (conformance)",
+  "as_of": "2026-09-02T04:32:00Z",
+  "source_urls": [
+    "https://huggingface.co/blog/security-incident-july-2026",
+    "https://huggingface.co/blog/agent-intrusion-technical-timeline"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "Public report hashed. Not independently recomputed.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "conformance"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "incident": "openai-hf-sandbox-escape-2026-07",
+    "publisher": "Hugging Face",
+    "artefacts": [
+      {
+        "role": "jul_containment_disclosure_html",
+        "published": "2026-07",
+        "source_url": "https://huggingface.co/blog/security-incident-july-2026",
+        "sha256": "b01793797b5bee364fd779cb6480f5dc865ce904824a0efd4aa97143fec28340",
+        "bytes": 574481
+      },
+      {
+        "role": "agent_intrusion_technical_timeline_html",
+        "source_url": "https://huggingface.co/blog/agent-intrusion-technical-timeline",
+        "sha256": "02a57bcd3ab6a956caf0b5f94629c5c7325a65b8c97c48fc325800f248c72ed2",
+        "bytes": 675324
+      }
+    ],
+    "fetched_at": "2026-09-02T04:31:13Z",
+    "verified_via": "keyless HTTPS GET; sha256 of exact bytes; no recompute of incident"
+  },
+  "sha256": "0349b5b514322058884f9533d748a3792f1cefb011e1334d83f8edcd36074536",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "worker-level artefacts",
+    "transcripts",
+    "kill-chain artefacts",
+    "agent count independent of OpenAI",
+    "independent recompute of containment",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "public-notice",
+    "huggingface",
+    "containment",
+    "conformance",
+    "unsigned",
+    "discovered"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim recomputation."
+}

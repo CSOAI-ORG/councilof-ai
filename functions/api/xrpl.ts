@@ -62,24 +62,34 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   }
 
   const hashes = Array.isArray(root.card_sha256) ? root.card_sha256 : [];
-  const wrapped = await Promise.all(
-    hashes.map(async (h) => {
-      const r = await fetch(u(`/cards/${String(h).slice(0, 16)}.json`));
-      if (!r.ok) return null;
-      try {
-        return await r.json();
-      } catch {
-        return null;
-      }
-    }),
-  );
-
-  const xrpl = wrapped
-    .filter((w) => w && w.card && (w.card as Card).surface === "xrpl.asset.state")
-    .map((w) => w.card as Card);
-
   const onRoot = new Set(hashes);
-  const same = xrpl.filter((c) => c.sha256 && onRoot.has(c.sha256));
+
+  // O(1) subrequests. This used to fetch /cards/<h>.json ONCE PER hash, so it issued
+  // 1 (root) + card_sha256.length (cards) subrequests. root.json now carries 50 hashes,
+  // so that was 51 fetches — past Cloudflare Pages Functions' hard cap of 50 subrequests
+  // per invocation — and the whole invocation threw, surfacing as a live HTTP 500. Every
+  // card body now lives in ONE build-time aggregate (/cards-bundle.json, written by
+  // scripts/generate-cards-bundle.mjs and shipped alongside this root), so the cost is a
+  // fixed 2 fetches (root + bundle) no matter how many cards the root grows to.
+  const bundleRes = await fetch(u("/cards-bundle.json"));
+  if (!bundleRes.ok) return four(`live /cards-bundle.json HTTP ${bundleRes.status}`, { unmeasured: ["cards-bundle.json"] });
+  let bundle: { cards?: Record<string, { card?: Card } | undefined> };
+  try {
+    bundle = (await bundleRes.json()) as { cards?: Record<string, { card?: Card } | undefined> };
+  } catch {
+    return four("cards-bundle.json is not JSON", { unmeasured: ["cards-bundle.json"] });
+  }
+  const bundleCards = bundle && bundle.cards ? bundle.cards : {};
+
+  // Resolve each hash the root lists against the aggregate, then keep the
+  // xrpl.asset.state leaves whose sha256 sit on the root — identical selection to the
+  // old per-fetch path, just sourced from one document.
+  const same = hashes
+    .map((h) => {
+      const w = bundleCards[h];
+      return w && w.card ? (w.card as Card) : null;
+    })
+    .filter((c): c is Card => !!c && c.surface === "xrpl.asset.state" && !!c.sha256 && onRoot.has(c.sha256));
   if (same.length !== 16) {
     return four(
       `committed xrpl.asset.state count is ${same.length}, not the locked 16 — keeping 404 honest`,

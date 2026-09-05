@@ -1,0 +1,57 @@
+{
+  "schema": "csoai.atom-exclude-filter/0.1",
+  "as_of": "20260905T043106Z",
+  "principle": "Default-deny with explicit allowlist. Exclude training pairs.",
+  "exclusions": {
+    "learn/": {
+      "reason": "Training pairs generated from the board, not records. subj_source: unknown, evidence: {}.",
+      "files": 7,
+      "atoms": 62100,
+      "since": "2026-09-04-learn-loop-placeholders quarantine",
+      "proposed": "EXCLUDE"
+    }
+  },
+  "admissions": {
+    "per-issuer/": {
+      "files": 59,
+      "atoms": 11870,
+      "proposed": "admit"
+    },
+    "badge-*": {
+      "files": 5,
+      "atoms": 20550,
+      "proposed": "admit as DISCOVERED-class"
+    },
+    "per-item/": {
+      "files": 55,
+      "atoms": 7810,
+      "proposed": "admit"
+    },
+    "bank-pack/": {
+      "files": 46,
+      "atoms": 5590,
+      "proposed": "admit"
+    },
+    "bank-complete/": {
+      "files": 6,
+      "atoms": 4680,
+      "proposed": "admit"
+    },
+    "t2/": {
+      "files": 551,
+      "atoms": 4702,
+      "proposed": "admit as DISCOVERED-class"
+    },
+    "regulatory/, corrections-diff/, public-data/, top-models/, mineral-4/": {
+      "files": 515,
+      "atoms": 6829,
+      "proposed": "admit"
+    }
+  },
+  "totals": {
+    "before_exclusion_atoms": 129051,
+    "after_exclusion_atoms": 66951,
+    "reduction_percent": 48
+  },
+  "doctrine": "Coverage is not admissibility. The 4 Sep root had a proof that covered its own bytes exactly, and was still correctly quarantined for what those bytes committed to. This filter is about the leaves; the coverage fix is about the binding. Both are necessary and neither substitutes for the other."
+}

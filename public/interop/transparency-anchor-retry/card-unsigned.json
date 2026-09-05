@@ -1,0 +1,83 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "councilof.ai/root.json transparency-anchor retry (Rekor v1/v2 + OTS)",
+  "as_of": "2026-09-02T03:34:35Z",
+  "source_urls": [
+    "https://councilof.ai/root.json",
+    "https://rekor.sigstore.dev/api/v1/log",
+    "https://rekor.sigstore.dev/api/v1/index/retrieve",
+    "https://rekor.sigstore.dev/api/v2/log",
+    "https://councilof.ai/interop/transparency-anchors.json"
+  ],
+  "payload": {
+    "kind": "csoai.transparency-anchor-retry/0.1",
+    "subject_url": "https://councilof.ai/root.json",
+    "subject_as_of": "2026-09-01T23:15:51Z",
+    "subject_merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+    "subject_card_count": 50,
+    "subject_sha256": "61a6d86db8d5dec9c63eaffb529438aa7631c0a12f5bfbb19ac75517c1c94bd6",
+    "attempted_at_europe_london": "2026-09-02T04:34:35+01:00",
+    "overall_outcome": "fail",
+    "overall_note": "Attempt recorded. Never fake a Rekor/OTS seal. Subject-hash lookup outcome=fail.",
+    "attempts": [
+      {
+        "rail": "rekor-v1-index-retrieve",
+        "endpoint": "https://rekor.sigstore.dev/api/v1/index/retrieve",
+        "method": "POST",
+        "http": 200,
+        "response": [],
+        "outcome": "fail",
+        "note": "Rekor v1 reachable; no entry for this root.json sha256. Not anchored. No seal invented."
+      },
+      {
+        "rail": "rekor-v1-log",
+        "endpoint": "https://rekor.sigstore.dev/api/v1/log",
+        "method": "GET",
+        "http": 200,
+        "outcome": "success",
+        "note": "Public log info reachable (infrastructure up). Does not prove this root is logged."
+      },
+      {
+        "rail": "rekor-v2",
+        "endpoint": "https://rekor.sigstore.dev/api/v2/log",
+        "method": "GET",
+        "http": 404,
+        "outcome": "UNCHECKABLE",
+        "note": "Rekor v2 path not available on public rekor.sigstore.dev as of attempt. Do not fake a v2 seal."
+      },
+      {
+        "rail": "opentimestamps",
+        "tool": "harness/arena/ots_anchor.py + opentimestamps",
+        "outcome": "UNCHECKABLE",
+        "note": "opentimestamps importable, but this script does not mint proofs (owner calendar run). Outcome left UNCHECKABLE until a real .ots exists."
+      }
+    ],
+    "seal": null,
+    "rekor_entry": null,
+    "ots_proof": null,
+    "flags": {
+      "fake_seal_forbidden": true,
+      "witness_not_certification": true,
+      "anchor_is_root_hash_only": true
+    }
+  },
+  "sha256": "db6fbf6583ee6bc3c349e378f418e37f767bbc9eb0c4cf6c6b783bf615353d70",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#board-attestation-1",
+  "unmeasured": [
+    "rekor_v1_inclusion",
+    "rekor_v2_api",
+    "ots_bitcoin_attestation",
+    "n>=30",
+    "4way",
+    "keystone"
+  ],
+  "tags": [
+    "transparency-anchor",
+    "rekor",
+    "ots",
+    "unsigned",
+    "no-fake-seal"
+  ]
+}

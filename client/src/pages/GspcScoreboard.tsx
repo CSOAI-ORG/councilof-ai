@@ -233,6 +233,9 @@ const AXIS_ALIAS: Record<string, string> = {
   gov: "governance", agi: "safety", prv: "provenance", asi: "continuity",
   mcp: "conformance", oss: "openness", mach: "machinery-conformity",
   xr: "cross-reality", det: "detector-interop", art5: "art5-safeguard",
+  // Former financial index slot ids → board component/disclosure ids (C-2026-0826-05).
+  "ai-economy-index": "ai-adoption-components",
+  "human-labour-index": "labour-components",
 };
 
 // The financial/domain axis IDS (a routing set, not a count — the count is
@@ -247,8 +250,8 @@ const AXIS_ALIAS: Record<string, string> = {
 // /gspc/<financial-axis> to the richer deep-dive from /interop/financial-axes.json.
 const FIN_AXIS_IDS = new Set([
   "provenance-controls", "reserve-attestation", "regulatory-framework",
-  "distribution-integrity", "custody-disclosure", "ai-economy-index",
-  "human-labour-index", "humanoid-labour-index",
+  "distribution-integrity", "custody-disclosure", "ai-adoption-components",
+  "labour-components", "humanoid-labour-index",
 ]);
 
 const FIN_CHIP: Record<string, string> = {
@@ -276,14 +279,22 @@ export default function GspcScoreboard() {
   const [finRun, setFinRun] = useState<any>(null);
   useEffect(() => {
     if (!isFinancialAxis) return;
+    // Register is rubric/evidence detail only. Board status/n come from live GET /api/gspc
+    // (same payload already loaded into `data`). Never invent MEASURED from this file alone.
     Promise.all([
       fetch("/interop/financial-axes.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
       fetch("/interop/financial-measure-run.json").then((r) => (r.ok ? r.json() : null)).catch(() => null),
     ]).then(([fa, mr]) => {
-      if (fa && Array.isArray(fa.axes)) setFinAxis(fa.axes.find((a: any) => a.id === wantAxis) ?? null);
+      if (fa && Array.isArray(fa.axes)) {
+        const row =
+          fa.axes.find((a: any) => a.id === wantAxis) ??
+          fa.axes.find((a: any) => a.former_id === rawAxis) ??
+          null;
+        setFinAxis(row);
+      }
       if (mr && Array.isArray(mr.measured)) setFinRun(mr);
     });
-  }, [isFinancialAxis, wantAxis]);
+  }, [isFinancialAxis, wantAxis, rawAxis]);
 
   useEffect(() => {
     document.title = "The GSPC board — live | Council of AI";
@@ -329,7 +340,10 @@ export default function GspcScoreboard() {
         </p>
         <h1 className="mt-3 text-4xl font-black text-gray-900">The GSPC board</h1>
         <p className="mt-3 max-w-3xl text-gray-600">
-          {board.public_count}
+          {board.lid ?? board.public_count}
+          {board.public_leader_count != null && !board.lid && (
+            <> · {board.public_leader_count} public leader scores</>
+          )}
           {board.gspc_family && board.financial_family && (
             <>
               {" "}({board.gspc_family.axes} model-comparison + {board.financial_family.axes} fact
@@ -340,7 +354,7 @@ export default function GspcScoreboard() {
           · deterministic grading on
           frozen, published splits · a <strong>TIE</strong> means the leader&apos;s edge is{" "}
           <strong>statistically indistinguishable</strong> (McNemar p≥0.05) — ties are never counted
-          as wins. Empty cells stay empty.
+          as wins. Empty cells stay empty. Measured axes are not the same as public leader scores.
         </p>
         <p className="mt-2 max-w-3xl text-sm text-gray-600" data-testid="board-count-grammar">
           {board.count_grammar}
@@ -356,7 +370,7 @@ export default function GspcScoreboard() {
           )}
         </p>
 
-        {/* Interactive terminal — the one board, drill into signed per-model rankings */}
+        {/* Interactive terminal — inspect each row's actual model-card or run evidence. */}
         <div className="mt-8">
           <GspcTerminal />
         </div>
@@ -375,32 +389,52 @@ export default function GspcScoreboard() {
             </p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{finAxis?.name ?? wantAxis}</h2>
             <p className="mt-1 font-mono text-xs text-gray-600">/gspc/{wantAxis}</p>
-            {finAxis ? (
+            {finAxis || focused ? (
               <>
                 <p className="mt-3">
-                  <span
-                    className={`inline-block rounded-full border px-3 py-0.5 text-xs font-bold ${FIN_CHIP[finAxis.status] || FIN_CHIP.UNMEASURED}`}
-                  >
-                    {finAxis.status}
-                  </span>
-                  {finAxis.candidate && (
+                  {(() => {
+                    const status = String(focused?.status || finAxis?.status || "UNMEASURED");
+                    return (
+                      <span
+                        className={`inline-block rounded-full border px-3 py-0.5 text-xs font-bold ${FIN_CHIP[status] || FIN_CHIP.UNMEASURED}`}
+                      >
+                        {status}
+                      </span>
+                    );
+                  })()}
+                  {finAxis?.candidate && (
                     <span className="ml-2 rounded-full border border-amber-300 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                       candidate slot
                     </span>
                   )}
+                  <span className="ml-2 text-[11px] text-gray-500">
+                    status from live GET /api/gspc{focused ? "" : " (register fallback)"}
+                  </span>
                 </p>
-                {finAxis.rubric && <p className="mt-3 text-sm text-gray-700"><strong>Rubric.</strong> {finAxis.rubric}</p>}
-                {finAxis.status === "MEASURED" && typeof finAxis.measured_count === "number" && (
+                {finAxis?.rubric && <p className="mt-3 text-sm text-gray-700"><strong>Rubric.</strong> {finAxis.rubric}</p>}
+                {typeof focused?.n === "number" && (
                   <p className="mt-2 text-sm text-emerald-800">
-                    {finAxis.measured_count} instruments measured · deterministic on-chain control facts.
+                    n={focused.n}
+                    {(focused as any).n_unit ? ` ${(focused as any).n_unit}` : ""} · from live board
                   </p>
                 )}
-                {finAxis.data && <p className="mt-2 text-xs text-gray-600"><strong>Data.</strong> {finAxis.data}</p>}
-                {finAxis.bank_status && <p className="mt-2 text-xs text-gray-600"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
-                {finAxis.declared_as && <p className="mt-2 text-xs text-gray-600">{finAxis.declared_as}</p>}
-                {finAxis.note && <p className="mt-2 text-xs italic text-gray-600">{finAxis.note}</p>}
+                {!focused && finAxis?.status === "MEASURED" && typeof finAxis.measured_count === "number" && (
+                  <p className="mt-2 text-sm text-emerald-800">
+                    {finAxis.measured_count} instruments measured · deterministic facts (register detail; board is authority).
+                  </p>
+                )}
+                {finAxis?.data && <p className="mt-2 text-xs text-gray-600"><strong>Data.</strong> {finAxis.data}</p>}
+                {finAxis?.bank_status && <p className="mt-2 text-xs text-gray-600"><strong>Input bank.</strong> {finAxis.bank_status}</p>}
+                {finAxis?.declared_as && <p className="mt-2 text-xs text-gray-600">{finAxis.declared_as}</p>}
+                {(finAxis?.note || (focused as any)?.note) && (
+                  <p className="mt-2 text-xs italic text-gray-600">{finAxis?.note || (focused as any)?.note}</p>
+                )}
+                <p className="mt-2 text-[11px] text-gray-500">
+                  Board counts: live <a className="underline" href="/api/gspc">GET /api/gspc</a>.{" "}
+                  <a className="underline" href="/interop/financial-axes.json">/interop/financial-axes.json</a> is a dated register, not the board.
+                </p>
 
-                {finAxis.id === "provenance-controls" && finRun && Array.isArray(finRun.measured) && (
+                {(finAxis?.id === "provenance-controls" || wantAxis === "provenance-controls") && finRun && Array.isArray(finRun.measured) && (
                   <div className="mt-4 overflow-x-auto rounded-lg border border-emerald-600/10 bg-white p-4">
                     <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
                       On-chain control facts — signed run
@@ -435,7 +469,7 @@ export default function GspcScoreboard() {
                 {board.financial_family ? `All ${board.financial_family.axes} financial axis` : "All financial axis"}
               </Link>
               <a className="font-semibold text-emerald-700 underline" href="/interop/financial-axes.json">Raw JSON</a>
-              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">The behavioural board</Link>
+              <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">The behavioural board</Link>
             </p>
           </div>
         )}
@@ -447,7 +481,7 @@ export default function GspcScoreboard() {
           </p>
         )}
 
-        {focused && (
+        {focused && !isFinancialAxis && (
           <div className="mt-8 rounded-xl border border-emerald-600/25 bg-emerald-50/50 p-6">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-700">Axis deep-dive</p>
             <h2 className="mt-1 text-2xl font-black text-gray-900">{focused.axis}</h2>
@@ -499,7 +533,7 @@ export default function GspcScoreboard() {
               )}
               <Link className="font-semibold text-emerald-700 underline" href="/gspc-verify">Verify the signed chain</Link>
               <a className="font-semibold text-emerald-700 underline" href="/api/gspc">Raw JSON (GET /api/gspc)</a>
-              <Link className="font-semibold text-emerald-700 underline" href="/gspc-scoreboard">Full board</Link>
+              <Link className="font-semibold text-emerald-700 underline" href="/dashboard?tab=board">Full board</Link>
             </p>
           </div>
         )}

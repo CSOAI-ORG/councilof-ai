@@ -8,7 +8,7 @@
  *
  * The signed measurement pack is 14 behavioural axes. Living board counts come
  * from GET /api/gspc (quote totals.public_count). Do not treat 14 as the living
- * slot count. Do not type a fake 22 MEASURED. Empty financial cells stay empty.
+ * slot count. Do not type a fake MEASURED count. Cite live GET /api/gspc totals.
  */
 
 interface CardIndexEntry {
@@ -46,7 +46,7 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
         measured_axes: gspc.totals.measured_axes ?? null,
         unmeasured_axes: gspc.totals.unmeasured_axes ?? null,
         note:
-          "14 behavioural + see GET /api/gspc for the living board. Do not treat 14 as the living slot count. Empty financial cells stay empty. Do not stamp MEASURED here.",
+          "14 behavioural + see GET /api/gspc for the living board. Do not treat 14 as the living slot count. Financial status is live from GET /api/gspc — do not stamp MEASURED here.",
       }
     : {
         see: "/api/gspc",
@@ -153,7 +153,11 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       "kid identifies the signing key; signed=true means the card carries a signature — it does NOT mean anyone " +
       "has checked it. Read board.signature.verification_state: the living board's stamp is UNVERIFIABLE (it does " +
       "not reproduce under any published rule and its signer is not in did.json). This index's measurement pack is " +
-      "14 behavioural + see GET /api/gspc for the living board. This index carries 313 cards; " +
-      "150 of those verify against did:web:csoai.org#card-attestation-1 (per board_living.json) — see /signed/HOW-TO-VERIFY.md.",
+      "14 behavioural + see GET /api/gspc for the living board. This index carries " +
+      `${count} signed measurement cards — DERIVED from card_index.json on every request, never typed. ` +
+      "Separately, board_living.json records that the 150-card subset it checked verifies 150/150 against " +
+      "did:web:csoai.org#card-attestation-1. That check has not been re-run across the whole index, so no " +
+      "verdict is stated here for the cards outside that subset: unchecked is not failed. " +
+      "See /signed/HOW-TO-VERIFY.md.",
   });
 };

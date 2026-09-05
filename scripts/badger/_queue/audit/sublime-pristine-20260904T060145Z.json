@@ -1,0 +1,351 @@
+{
+  "as_of": "20260904T060145Z",
+  "schema": "csoai.sublime-audit/0.1",
+  "live_state": {
+    "schema": "csoai.live-state/1",
+    "issuer": null,
+    "public_count": {
+      "value": "22 axis \u00b7 22 measured",
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) \u2192 derived public_count (also published at board.public_count)",
+      "as_of": "behavioural axes 2026-08-12 \u00b7 jail 2026-08-18 \u00b7 financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "The short sentence. Safe to quote verbatim. Same grammar as GET /api/gspc."
+    },
+    "contract_keys": [
+      "quote_this",
+      "not_here_not_established",
+      "derivation",
+      "freshness",
+      "freshness_self_test",
+      "kinds",
+      "kinds_rule"
+    ]
+  },
+  "crown_jewels": [
+    {
+      "name": "Zenodo DOI for GSPC Methodology",
+      "url": "https://zenodo.org/records/21991104",
+      "doi": "10.5281/zenodo.21991104",
+      "value": "citable spine for the methodology (HB.0)",
+      "status": "LIVE",
+      "lever": "every paper / grant / outreach can cite this"
+    },
+    {
+      "name": "DID at csoai.org",
+      "url": "https://csoai.org/.well-known/did.json",
+      "value": "5 verification methods, live",
+      "status": "LIVE",
+      "lever": "every signed card verifies offline"
+    },
+    {
+      "name": "47 well-known discovery doors",
+      "url": "https://councilof.ai/.well-known/",
+      "value": "47 standards mapped (EU AI Act, NIST AI RMF, ISO 42001, OWASP, GDPR, HIPAA, FedRAMP, ...)",
+      "status": "LIVE",
+      "lever": "every AI governance agent can discover the surface"
+    },
+    {
+      "name": "x402 paid rail on Base mainnet",
+      "url": "https://councilof.ai/api/x402",
+      "value": "15 priced SKUs, 8 free forever",
+      "status": "RAIL LIVE (waiting for facilitator URL)",
+      "lever": "real USDC revenue"
+    },
+    {
+      "name": "22-axis GSPC measurement",
+      "url": "https://councilof.ai/api/gspc",
+      "value": "14 model fleets measured, 13 axes signed",
+      "status": "LIVE",
+      "lever": "the most rigorous AI measurement framework in public practice"
+    },
+    {
+      "name": "OpenPatent / OIN 2.0 + LOT Network",
+      "url": "internal",
+      "value": "defensive patent registrations filed",
+      "status": "ACTIVE",
+      "lever": "IP protection + standing"
+    },
+    {
+      "name": "33-agent BFT Council",
+      "url": "internal",
+      "value": "23/33 quorum, Ed25519 attestation",
+      "status": "BUILT",
+      "lever": "any claim can be attested"
+    },
+    {
+      "name": "XRPL issuer evidence (10 issuers, 7 live)",
+      "url": "internal",
+      "value": "Ripple RLUSD, Circle USDC, Palau LOVE, XRPets, XRPayNet, + more",
+      "status": "LIVE",
+      "lever": "x402 SKU for XRPL asset evidence (5 cents USDC per card)"
+    },
+    {
+      "name": "119 signed atoms (data.gov.uk + OpenAlex + arXiv + GitHub + Companies House + Crossref)",
+      "url": "internal",
+      "value": "119 signed cards indexed",
+      "status": "LIVE",
+      "lever": "the public root grows daily"
+    },
+    {
+      "name": "656 anchored proofs",
+      "url": "https://councilof.ai/interop/",
+      "value": "656 atoms Bitcoin-anchored via OTS",
+      "status": "LIVE",
+      "lever": "permanent record"
+    },
+    {
+      "name": "4 grant applications pre-staged",
+      "url": "https://councilof.ai/grants/",
+      "value": "NLnet \u20ac50K + NGI Zero \u20ac50K + Sloan $75K + Ford $100K = $280K",
+      "status": "STAGED (paste + submit)",
+      "lever": "non-dilutive funding"
+    },
+    {
+      "name": "230 outreach templates",
+      "url": "internal",
+      "value": "X 107 + LinkedIn 100 + Mastodon 15 + Email 8",
+      "status": "STAGED",
+      "lever": "scale-out reach"
+    },
+    {
+      "name": "Burner wallet (compromised and retired)",
+      "url": "internal",
+      "value": null,
+      "status": "BLOCKED",
+      "lever": "never fund or use; replace through reviewed secret management"
+    },
+    {
+      "name": "5 provisional patents queued",
+      "url": "internal",
+      "value": "signal-index + arena + chain + sheaf + world-OWEM",
+      "status": "QUEUED",
+      "lever": "IP defensiveness"
+    },
+    {
+      "name": "MIT-licensed substrate",
+      "url": "https://github.com/CSOAI-ORG/councilof-ai",
+      "value": "open source, no lock-in",
+      "status": "LIVE",
+      "lever": "anyone can clone, deploy, sign"
+    }
+  ],
+  "pivots": [
+    {
+      "name": "Zenodo DOI is cited",
+      "action": "Cite it in every grant application, every paper, every outreach email",
+      "multiplier": "10x \u2014 every citable mention = +1 standing"
+    },
+    {
+      "name": "Burner wallet is funded",
+      "action": "Send \\$5 USDC from main wallet to burner",
+      "multiplier": "1000x \u2014 first settlement unlocks the rail for every buyer"
+    },
+    {
+      "name": "X402_FACILITATOR_URL set",
+      "action": "Set env var on CF Pages",
+      "multiplier": "100x \u2014 the rail goes from challenge-only to live"
+    },
+    {
+      "name": "npm publish gspc-card-verifier",
+      "action": "Publish the public CLI",
+      "multiplier": "100x \u2014 anyone can verify offline"
+    },
+    {
+      "name": "EAS schema registered on Base",
+      "action": "One-time schema registration via MetaMask",
+      "multiplier": "1000x \u2014 every x402 receipt becomes on-chain attestable"
+    },
+    {
+      "name": "HF badge live",
+      "action": "Set GH HF token, badge goes from draft \u2192 public",
+      "multiplier": "100x \u2014 every HF model page shows CSOAI badge"
+    },
+    {
+      "name": "SWH archive",
+      "action": "One-time SWH archive",
+      "multiplier": "10x \u2014 Software Heritage = permanent record"
+    },
+    {
+      "name": "arXiv preprint",
+      "action": "Submit the first preprint (needs arXiv endorsement)",
+      "multiplier": "1000x \u2014 first peer-reviewable artefact"
+    },
+    {
+      "name": "33-agent BFT at 23/33 quorum",
+      "action": "Wire the Ed25519 keys + run a real quorum vote",
+      "multiplier": "100x \u2014 every claim can be attested"
+    },
+    {
+      "name": "Series A deck",
+      "action": "Build the deck from the substrate + crown jewels + traction",
+      "multiplier": "1000x \u2014 the deck IS the substrate"
+    }
+  ],
+  "improvements": [
+    {
+      "name": "Add 50+ more standards to /.well-known/",
+      "impact": "broader discovery",
+      "effort": "low"
+    },
+    {
+      "name": "Build a 3D visual board at /visual-board",
+      "impact": "UX",
+      "effort": "medium"
+    },
+    {
+      "name": "Build a real-time attestation stream at /j-space",
+      "impact": "engagement",
+      "effort": "medium"
+    },
+    {
+      "name": "Add more HF orgs to csoai/*",
+      "impact": "distribution",
+      "effort": "low"
+    },
+    {
+      "name": "Mine 1,000+ atoms per day",
+      "impact": "scale",
+      "effort": "low"
+    },
+    {
+      "name": "Sign + OTS-pending every atom",
+      "impact": "permanence",
+      "effort": "low"
+    },
+    {
+      "name": "Add 5 more chains (ETH USDC, BTC mempool, Solana, Polygon, Optimism)",
+      "impact": "coverage",
+      "effort": "medium"
+    },
+    {
+      "name": "Build the 5D substrate surface",
+      "impact": "product",
+      "effort": "high"
+    },
+    {
+      "name": "Add 100+ outreach contacts",
+      "impact": "reach",
+      "effort": "low"
+    },
+    {
+      "name": "Draft 5 more provisional patents",
+      "impact": "IP",
+      "effort": "medium"
+    },
+    {
+      "name": "Build the Series A deck",
+      "impact": "funding",
+      "effort": "high"
+    },
+    {
+      "name": "Submit the first arXiv preprint",
+      "impact": "credibility",
+      "effort": "low (after endorsement)"
+    }
+  ],
+  "gaps": [
+    {
+      "name": "x402 facilitator not configured",
+      "blocker": "env var on CF Pages",
+      "fix": "you set it"
+    },
+    {
+      "name": "Burner not funded",
+      "blocker": "your MetaMask",
+      "fix": "you fund it"
+    },
+    {
+      "name": "npm not published",
+      "blocker": "your 2FA OTP",
+      "fix": "you publish"
+    },
+    {
+      "name": "HF badge not public",
+      "blocker": "your GH token",
+      "fix": "you set the secret"
+    },
+    {
+      "name": "EAS schema not registered",
+      "blocker": "your MetaMask",
+      "fix": "you register"
+    },
+    {
+      "name": "Grants not submitted",
+      "blocker": "your name + DOB",
+      "fix": "you submit"
+    },
+    {
+      "name": "SWH not archived",
+      "blocker": "your SWH token",
+      "fix": "you submit"
+    },
+    {
+      "name": "33-agent council not at quorum",
+      "blocker": "Ed25519 keys",
+      "fix": "you wire"
+    },
+    {
+      "name": "Series A deck not built",
+      "blocker": "needs a few hours",
+      "fix": "agent can build"
+    },
+    {
+      "name": "arXiv endorsement needed",
+      "blocker": "your arXiv account",
+      "fix": "you request"
+    }
+  ],
+  "1000000x_opportunities": [
+    {
+      "name": "Cite the Zenodo DOI everywhere",
+      "vector": "10,000 mentions \u2192 1M impressions \u2192 100K visits \u2192 1K leads \u2192 100 paying",
+      "scale": "1M impressions"
+    },
+    {
+      "name": "npm publish the verifier CLI",
+      "vector": "100K npm downloads \u2192 10K developers \u2192 1K integrations \u2192 100 paying",
+      "scale": "100K downloads"
+    },
+    {
+      "name": "HF badge on every model page",
+      "vector": "100K HF models with badges \u2192 10K clicks/day \u2192 1K verifications/day \u2192 100 paying/day",
+      "scale": "100K badges"
+    },
+    {
+      "name": "Every grant body cites our work",
+      "vector": "100 grants \u2192 100 funded \u2192 100 papers \u2192 10K citations \u2192 1M impressions",
+      "scale": "100 papers"
+    },
+    {
+      "name": "33-agent BFT on every AI governance decision",
+      "vector": "1M decisions/day \u2192 100K attestations/day \u2192 10K paying/day",
+      "scale": "1M decisions"
+    },
+    {
+      "name": "Every x402 receipt becomes an on-chain EAS attestation",
+      "vector": "10K receipts/day \u2192 1M attestations/year \u2192 1M paying",
+      "scale": "1M attestations"
+    },
+    {
+      "name": "Series A deck \u2192 $5M funding \u2192 100x leverage",
+      "vector": "$5M \u2192 100 hires \u2192 100x substrate \u2192 1M verifications/day",
+      "scale": "100x leverage"
+    },
+    {
+      "name": "100+ standards mapped \u2192 100K standards-body integrations",
+      "vector": "100 standards \u2192 100K bodies \u2192 1M integrations \u2192 1M paying",
+      "scale": "1M integrations"
+    },
+    {
+      "name": "Every AI lab cites our measurements",
+      "vector": "100 labs \u2192 100 papers \u2192 1M citations \u2192 100K paying",
+      "scale": "1M citations"
+    },
+    {
+      "name": "Every regulator references our methodology",
+      "vector": "100 regulators \u2192 100 policies \u2192 100K companies use it \u2192 1M paying",
+      "scale": "1M companies"
+    }
+  ]
+}

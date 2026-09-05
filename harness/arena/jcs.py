@@ -1,55 +1,90 @@
 #!/usr/bin/env python3
 """jcs.py — RFC 8785 (JSON Canonicalization Scheme, ECMA-262-number-aware) canonicalizer.
 
-Implements the JCS algorithm used as the estate's v2 preimage rule (per the 90-day roadmap,
-item 1 "canonicalization"). The estate's TWO existing canon forms (arena `cdn` cjson vs the
-interop signer's `json.dumps(sort_keys, separators, ensure_ascii=False)`) DIVERGE on
-integer-valued floats — e.g. `{"a": 0.0}` canonicalizes to `{"a":0}` under JCS but
-`{"a":0.0}` under the plain Python form. This module is the single source of truth for what
-JCS actually emits, and the harness (`jcs_conformance.py`) checks agreement against a JS
-reference over the edge-case corpus so the cutover precondition (100% cross-language
-agreement incl. the 0.0 float case) can be met and demonstrated — never asserted.
+Rule B for this estate. Numbers are spelled by ES6 `Number.prototype.toString`
+(ECMA-262 NumberToString, radix 10) — the algorithm RFC 8785 JCS names.
 
-Honesty: this is the reference implementation for a FUTURE v2 preimage. It does NOT re-sign
-any existing v1 card and is NOT wired into the live verify path yet; the verifier dispatches
-on a signed-in-body `canon` field ("jcs-rfc8785" for v2; absent = legacy v1). The fleet
-roadmap is explicit: do NOT cut over until the cross-language corpus hits 100% agreement.
+  0.0 → "0"     1.0 → "1"     1e-6 → "0.000001"     1e-7 → "1e-7"
+  1e20 → "100000000000000000000"     1e21 → "1e+21"     −0 → "0"
 
-RFC 8785 algorithm (collapsed to the cases the estate actually emits):
-  1. Object keys sorted by UTF-16 code unit (for the estate's ASCII-ish keys = codepoint sort).
-  2. No insignificant whitespace.
-  3. Strings: JSON.stringify escaping (escape `"` `\\` and control chars <0x20); non-ASCII NOT
-     escaped (JSON.stringify leaves unicode literal).
-  4. Numbers: ECMAScript Number::toString (shortest round-trip; integral floats WITHOUT a
-     decimal point, e.g. 1.0->"1", 0.0->"0"; non-integral keep shortest repr).
-  5. Arrays/objects recursed; duplicates impossible (dict).
+CPython `json.dumps` / `repr` are NOT this algorithm (`0.0`, `1e-06`, `1e-07`).
+Do not use them for catalog rows, board stamps, or `preimage_rule: "jcs-rfc8785"`.
+
+Rule A — published `/signed/cards/` — stays CPython `json.dumps` with `0.0` on
+the float fields HOW-TO-VERIFY names. Those ids are hashes of those bytes.
+Never "fix" a Rule A card to JCS.
+
+New catalog / JCS artefacts emit this module. Empty cells stay empty; joining
+the rail does not fill a financial slot.
 """
-import json
 import math
-import re
-import sys
 
-__all__ = ["canonicalize", "JCS"]
+__all__ = ["canonicalize", "JCS", "es6_number_to_string"]
+
+
+def _shortest_digits_and_scale(value: float) -> tuple[str, int]:
+    """Parse CPython's shortest round-trip repr into (digits, scale) so
+    value == int(digits) * 10**scale, digits has no leading/trailing zeros."""
+    r = repr(value)
+    if r[0] == "-":
+        r = r[1:]
+    if "e" in r:
+        mant, exp_s = r.split("e")
+        scale = int(exp_s)
+        if "." in mant:
+            a, b = mant.split(".")
+            digits = a + b
+            scale -= len(b)
+        else:
+            digits = mant
+    elif "." in r:
+        a, b = r.split(".")
+        digits = a + b
+        scale = -len(b)
+    else:
+        digits = r
+        scale = 0
+    digits = digits.lstrip("0") or "0"
+    while digits != "0" and digits.endswith("0"):
+        digits = digits[:-1]
+        scale += 1
+    return digits, scale
+
+
+def es6_number_to_string(value: float) -> str:
+    """ECMA-262 NumberToString (radix 10) for one IEEE-754 binary64.
+
+    Finite numbers only — JCS forbids NaN / ±Infinity. +0 and −0 both emit "0"
+    (ToString(−0) has no minus). This is a print algorithm, not a type system:
+    after JSON parse there is no memory that a field was a Python float.
+    """
+    if math.isnan(value) or math.isinf(value):
+        raise ValueError("JCS: non-finite number not canonicalizable")
+    if value == 0:
+        return "0"
+    if value < 0:
+        return "-" + es6_number_to_string(-value)
+
+    # ECMA-262: m = s × 10^(n−k) with s a k-digit integer, 10^(k−1) ≤ s < 10^k.
+    digits, scale = _shortest_digits_and_scale(value)
+    k = len(digits)
+    n = k + scale
+
+    if k <= n <= 21:
+        return digits + "0" * (n - k)
+    if 0 < n <= 21:
+        return digits[:n] + "." + digits[n:]
+    if -6 < n <= 0:
+        return "0." + "0" * (-n) + digits
+    exp = n - 1
+    exp_s = "+%d" % exp if exp >= 0 else "%d" % exp
+    if k == 1:
+        return digits + "e" + exp_s
+    return digits[0] + "." + digits[1:] + "e" + exp_s
 
 
 def _float_to_js(value: float) -> str:
-    """ECMAScript Number::toString for a finite float (the only case JCS serializes as a
-    number). Integral floats within JS's no-exponent window [10^-6, 10^21) emit as a decimal
-    integer (no '.0'); at or beyond 1e21 JS switches to exponent form. -0.0 -> "0".
-    repr() gives the shortest round-trip; JS Number::toString uses the same shortest form
-    with the same exponent threshold, so repr() is the correct cross-language match for the
-    finite range."""
-    if math.isnan(value) or math.isinf(value):
-        # JCS rejects non-finite numbers; RFC 8785 spec says such inputs are invalid.
-        raise ValueError("JCS: non-finite number not canonicalizable")
-    if value == 0:
-        return "0"  # covers -0.0 -> "0" (JCS normalizes negative zero)
-    if value.is_integer() and 1e-6 <= abs(value) < 1e21:
-        # JS emits integral floats in this window as decimal integers, no '.0'.
-        return str(int(value))
-    # >=1e21 or <1e-6: JS uses exponent form; repr() already emits shortest exponent form
-    # (e.g. repr(1e21) == '1e+21', matching JSON.stringify(1e21) == '1e+21').
-    return repr(value)
+    return es6_number_to_string(value)
 
 
 def _string_to_js(value: str) -> str:

@@ -113,19 +113,19 @@ export default function SOAIPDCAFramework() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 mb-4">
-                  The designed 33-agent AI Council is built to aggregate independent safety
-                  assessments across multiple AI providers (OpenAI, Anthropic, Google, Meta, and
-                  more). It is a designed council; its measured status is published openly on the
-                  public Refutation Ledger.
+                  The proposed Council has a designed 33-seat roster and a target threshold of
+                  23/33, strictly greater than two thirds. It is not live. The latest experiment
+                  measured rho=1 and n_eff=1, so independence and fault tolerance are not
+                  demonstrated; the evidence is published on the Refutation Ledger.
                 </p>
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>No single-vendor bias</span>
+                    <span>Vendor independence is a measurement target, not a current claim</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span>Democratic voting mechanism</span>
+                    <span>Proposed 23/33 review threshold</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
@@ -298,7 +298,7 @@ export default function SOAIPDCAFramework() {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">SOAI Integration:</h4>
                       <p className="text-gray-700 mb-3">
-                        The designed 33-agent Council assists in the PLAN phase by:
+                        A future 33-seat Council could assist in the PLAN phase by:
                       </p>
                       <ul className="space-y-2">
                         {[
@@ -383,7 +383,7 @@ export default function SOAIPDCAFramework() {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">SOAI Integration:</h4>
                       <p className="text-gray-700 mb-3">
-                        The designed 33-agent Council supports the DO phase by:
+                        A future 33-seat Council could support the DO phase by:
                       </p>
                       <ul className="space-y-2">
                         {[
@@ -468,7 +468,7 @@ export default function SOAIPDCAFramework() {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">SOAI Integration:</h4>
                       <p className="text-gray-700 mb-3">
-                        The designed 33-agent Council enhances the CHECK phase by:
+                        A future 33-seat Council could support the CHECK phase by:
                       </p>
                       <ul className="space-y-2">
                         {[
@@ -492,9 +492,9 @@ export default function SOAIPDCAFramework() {
                       </h4>
                       <p className="text-gray-700">
                         The CHECK phase is powered by the <strong>Watchdog Public Database</strong>,
-                        where anyone can report AI safety incidents. All reports are reviewed by
-                        the designed 33-agent Council and trained analysts, feeding directly into your
-                        PDCA cycle for continuous improvement.
+                        where anyone can report AI safety incidents. Reports are evidence inputs;
+                        no live 33-seat Council reviews them today. Any human review must be scoped
+                        and recorded before it is presented as an outcome.
                       </p>
                     </div>
                   </div>
@@ -566,7 +566,7 @@ export default function SOAIPDCAFramework() {
                     <div>
                       <h4 className="font-semibold text-gray-900 mb-3">SOAI Integration:</h4>
                       <p className="text-gray-700 mb-3">
-                        The designed 33-agent Council optimizes the ACT phase by:
+                        A future 33-seat Council could support the ACT phase by:
                       </p>
                       <ul className="space-y-2">
                         {[
@@ -627,7 +627,7 @@ export default function SOAIPDCAFramework() {
                 {
                   step: 2,
                   title: 'Complete Initial Assessment',
-                  description: 'Run your first compliance assessment with the designed 33-agent Council',
+                  description: 'Run a measurement and inspect the evidence; the 33-seat Council remains a design',
                   action: 'Run Assessment',
                   link: '/compliance',
                 },

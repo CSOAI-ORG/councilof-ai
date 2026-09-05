@@ -169,7 +169,7 @@ function IndustryPage({ industry }: { industry: Industry }) {
           )}
           <AxisProof
             axes={industry.axes}
-            why={`The board axis that bear on ${industry.name.toLowerCase()}. Bench, n, interval and separation verdict as the board serves them.`}
+            why={`The board axes that bear on ${industry.name.toLowerCase()}. Bench, n, interval and separation verdict as the board serves them.`}
             tone="light"
           />
         </section>
@@ -206,7 +206,7 @@ function IndustryPage({ industry }: { industry: Industry }) {
                 Measure free <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="/os?lobby=assess&task=enterprise-start"
+                href="/dashboard?task=enterprise-start&tab=measured"
                 className="inline-flex items-center justify-center gap-2 rounded-lg border border-emerald-600 px-6 py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-100"
               >
                 Enterprise lobby

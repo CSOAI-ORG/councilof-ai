@@ -1,0 +1,25 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "safety",
+    "model": "Qwen/Qwen3.5-122B-A10B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI"
+  },
+  "id": "dedb3c8f27b956dea2463caa640e5ae0a6f229b804ffd247037ff7b95f613d39",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "110538c5f5299b5eb2f32e58cd4e7b7b66b89c8d6a3a7e62a41e131b7bf8d6d23972a9ad2971e45e7cdc6a3e5264010ac8a191aa02394ce2e2dc94a6b6505803",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

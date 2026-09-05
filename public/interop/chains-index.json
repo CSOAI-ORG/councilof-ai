@@ -1,0 +1,79 @@
+{
+  "schema": "csoai.chains/0.1",
+  "as_of": "20260905T052052Z",
+  "principle": "Every chain we measure on. Every chain we anchor to.",
+  "chains": [
+    {
+      "id": "xrpl",
+      "name": "XRPL",
+      "description": "Ripple XRP Ledger",
+      "url": "https://xrpl.org",
+      "signature": "Ed25519 + secp256k1",
+      "node": "rippled",
+      "endpoint": "/api/chains/xrpl"
+    },
+    {
+      "id": "base",
+      "name": "Base",
+      "description": "Coinbase L2",
+      "url": "https://base.org",
+      "signature": "secp256k1",
+      "node": "op-geth",
+      "endpoint": "/api/chains/base"
+    },
+    {
+      "id": "eth",
+      "name": "Ethereum",
+      "description": "Ethereum mainnet",
+      "url": "https://ethereum.org",
+      "signature": "secp256k1",
+      "node": "geth",
+      "endpoint": "/api/chains/eth"
+    },
+    {
+      "id": "op",
+      "name": "Optimism",
+      "description": "OP Mainnet",
+      "url": "https://optimism.io",
+      "signature": "secp256k1",
+      "node": "op-geth",
+      "endpoint": "/api/chains/op"
+    },
+    {
+      "id": "arb",
+      "name": "Arbitrum",
+      "description": "Arbitrum One",
+      "url": "https://arbitrum.io",
+      "signature": "secp256k1",
+      "node": "nitro",
+      "endpoint": "/api/chains/arb"
+    },
+    {
+      "id": "polygon",
+      "name": "Polygon",
+      "description": "Polygon PoS",
+      "url": "https://polygon.technology",
+      "signature": "secp256k1",
+      "node": "bor",
+      "endpoint": "/api/chains/polygon"
+    },
+    {
+      "id": "sol",
+      "name": "Solana",
+      "description": "Solana mainnet",
+      "url": "https://solana.com",
+      "signature": "Ed25519",
+      "node": "solana-validator",
+      "endpoint": "/api/chains/sol"
+    },
+    {
+      "id": "btc",
+      "name": "Bitcoin",
+      "description": "Bitcoin mainnet",
+      "url": "https://bitcoin.org",
+      "signature": "secp256k1 (BIP-340)",
+      "node": "bitcoind",
+      "endpoint": "/api/chains/btc"
+    }
+  ]
+}

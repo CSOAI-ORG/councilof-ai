@@ -75,7 +75,7 @@ export default function AiTransparency() {
             {COUNTS.total} interactive surfaces on this site are classified: {COUNTS.rule_based}{" "}
             are rule-based instruments or deterministic displays that call no model;{" "}
             {COUNTS.ai_system} routes across {AI_SYSTEM_COMPONENTS} components are AI systems —
-            they send your input to the live Council chat endpoint, and they say so. Any
+            they send your input to the configured model chat endpoint, and they say so. Any
             surface not in the registry defaults to the strictest reading — treated as an AI
             system — until it is classified.
           </p>
@@ -112,7 +112,7 @@ export default function AiTransparency() {
             this site call a model. That was wrong, and the method was why: the scan walked
             imports of model-provider SDKs, but the surfaces that talk to a model do it with a
             plain fetch to our own gateway — no SDK involved. A manual audit of every fetch on
-            1 August 2026 found {AI_SYSTEM_COMPONENTS} components calling the live Council
+            1 August 2026 found {AI_SYSTEM_COMPONENTS} components calling the configured model
             chat endpoint. They are classified below, and the guard is being extended to cover
             gateway fetches so the next miss is caught by the machine, not by a deadline.
           </p>
@@ -137,7 +137,7 @@ export default function AiTransparency() {
               >
                 <div className="flex flex-wrap items-center gap-3">
                   <a
-                    href={s.route}
+                    href={s.route.includes(":") ? undefined : s.route}
                     className="font-mono text-[13px] font-bold text-emerald-50 underline decoration-dotted underline-offset-4"
                   >
                     {s.route}
@@ -201,7 +201,7 @@ export default function AiTransparency() {
                 >
                   <div className="flex flex-wrap items-center gap-3">
                     <a
-                      href={s.route}
+                      href={s.route.includes(":") ? undefined : s.route}
                       className="font-mono text-[12px] font-bold text-emerald-50 underline decoration-dotted underline-offset-4"
                     >
                       {s.route}

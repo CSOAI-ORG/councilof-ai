@@ -8,12 +8,14 @@
 // must be backed by the signed artifact it summarises.
 //
 // THE HONESTY POINT — READ BEFORE EDITING
-// Five financial slots carry deterministic-facts runs on the same six issuers
+// Five financial slots carry deterministic-facts runs on the issuer set
 // (provenance-controls + reserve-attestation + regulatory-framework +
 // distribution-integrity + custody-disclosure). Risk verdicts stay UNMEASURED.
 // The two index slots stay UNMEASURED under C-2026-0826-05 (do not restore
 // MEASURED-INDEX-v0.1). humanoid-labour-index has no bank. Public grammar is
-// derived in gspc.ts from this array (22 · 19 after the four-axis mill).
+// derived in gspc.ts from this array. Only financial-measure-run-v2 currently
+// has an Ed25519 signature; the other seven artifacts are content-addressed but
+// unsigned. A content_id must never be described as a signature.
 //
 // A declared-slot axis has NO accuracy, NO leader and NO separation field. Those are
 // absent, not zero. A zero would be a measurement.
@@ -23,6 +25,7 @@ import type { AxisScore } from "./_gspc_types";
 export const AXES_FIN: AxisScore[] = [
   {
     axis: "provenance-controls", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-provenance-controls",
     bench: "ChainFacts", task: "on-chain issuer control facts (allowlisting / freeze capability / identity domain)",
     n: 6, n_unit: "issuer accounts (not bank items)",
     n_note: "6 tokenised instruments read directly from their mainnet issuer accounts. This is an " +
@@ -31,6 +34,7 @@ export const AXES_FIN: AxisScore[] = [
     // No separation field: there is no fleet and no leader, so no separation test is
     // APPLICABLE. That is a different fact from a test not yet run (UNTESTED).
     evidence_url: "/interop/financial-measure-run-v2.json",
+    run_attestation: "ED25519_SIGNED",
     coverage: "6 of the 16 instruments named in the registry",
     coverage_note:
       "The registry NAMES 16 instruments and this axis COVERS 6. The other 10 have no locatable " +
@@ -55,11 +59,13 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "reserve-attestation", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-reserve-attestation",
     bench: "ReserveFacts", task: "is third-party reserve-attestation language on a retrieved issuer page? (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     n_note: "The live XRPL reader-16 (GET /api/xrpl, writes_board=false). Instrument count, not bank items.",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-reserve-attestation.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 over the live XRPL reader-16 (start set RLUSD/OUSG/USDB/BBRL bidirectional, " +
       "then the twelve well-known/registry rows). Three-state per fact: 1 PASS, 6 FAIL, 9 UNCHECKABLE " +
@@ -69,10 +75,12 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "regulatory-framework", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-regulatory-framework",
     bench: "RegimeFacts", task: "is the governing regime declared and confirmable (NYDFS / MiCA / BACEN / Reg D ...)? (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-regulatory-framework.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 for declaration presence on a retrieved URL, over the live XRPL reader-16. " +
       "3 PASS, 4 FAIL, 9 UNCHECKABLE (no on-chain Domain; UNREACHABLE is never FAIL). Never " +
@@ -80,10 +88,12 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "distribution-integrity", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-distribution-integrity",
     bench: "DistributionFacts", task: "reader classification + chain supply + holder count (PASS/FAIL/UNCHECKABLE)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-distribution-integrity.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 from GET /api/xrpl (writes_board=false) over all 16 reader rows: 16 PASS on " +
       "distributed classification. represented>>distributed stays UNCHECKABLE (no RWA.xyz key; no " +
@@ -92,10 +102,12 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "custody-disclosure", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-custody-disclosure",
     bench: "CustodyFacts", task: "are a custodian and an auditor named and confirmable? (PASS/FAIL/UNCHECKABLE each)",
     n: 16, n_unit: "issuer accounts (not bank items)",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-custody-disclosure.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED v0.3 for named-string presence on retrieved pages, over the live XRPL reader-16: " +
       "custodian 1 PASS / 6 FAIL / 9 UNCHECKABLE. Disclosure only — never custodian or auditor " +
@@ -103,30 +115,38 @@ export const AXES_FIN: AxisScore[] = [
   },
   {
     axis: "ai-adoption-components", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-ai-economy-index",
+    dataset_note: "The Hub slug keeps the retired name gspc-ai-economy-index so old links resolve; the live axis is ai-adoption-components and this is not an index (C-2026-0826-05). The card says so on its face.",
     bench: "Eurostat", task: "cited EU AI-adoption series (not an index)",
     n: 2, n_unit: "public series",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-ai-adoption-components.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as two Eurostat series (13.48% / 41.17% 2024). Not an index. No formula file. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id ai-economy-index.",
   },
   {
     axis: "labour-components", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-human-labour-index",
+    dataset_note: "The Hub slug keeps the retired name gspc-human-labour-index so old links resolve; the live axis is labour-components and this is not an index (C-2026-0826-05). The card says so on its face.",
     bench: "Eurostat", task: "cited EU labour series (not an index)",
     n: 2, n_unit: "public series",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-labour-components.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as two labour series (participation 57.58%, unemployment 5.92% 2024). Not an index. " +
       "C-2026-0826-05: do not restore MEASURED-INDEX-v0.1. Former slot id human-labour-index.",
   },
   {
     axis: "humanoid-labour-index", family: "financial", kind: "deterministic-facts",
+    dataset: "csoai/gspc-humanoid-labour-index",
     bench: "Disclosure", task: "named vendor publishes a dated deployment count on a stable URL? Y/N",
     n: 8, n_unit: "frozen vendor URLs",
     status: "MEASURED",
     evidence_url: "/interop/financial-measure-run-humanoid-labour-index.json",
+    run_attestation: "CONTENT_ADDRESSED_UNSIGNED",
     colour: "#fbbf24", hue: 43,
     note: "MEASURED as disclosure facts on 8 frozen URLs. Fleet size / hours / incidents stay UNMEASURED " +
       "inside the card. Vendor blogs are not a bank. Not an index.",

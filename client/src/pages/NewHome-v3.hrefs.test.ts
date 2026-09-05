@@ -29,13 +29,13 @@ describe("/home-v3 is not the live homepage", () => {
 
 describe("ToolStack hrefs are real pages, not /?lobby=", () => {
   it("maps the nine tools onto living doors", () => {
-    expect(hrefFor({ kind: "pane", pane: "home" })).toBe("/os?lobby=board");
-    expect(hrefFor({ kind: "pane", pane: "board" })).toBe("/os?lobby=board");
+    expect(hrefFor({ kind: "pane", pane: "home" })).toBe("/dashboard?tab=board");
+    expect(hrefFor({ kind: "pane", pane: "board" })).toBe("/dashboard?tab=board");
     expect(hrefFor({ kind: "pane", pane: "verify" })).toBe("/gspc-verify");
     expect(hrefFor({ kind: "pane", pane: "measured" })).toBe("/assess");
     expect(hrefFor({ kind: "pane", pane: "evidence" })).toBe("/gpai-evidence");
     expect(hrefFor({ kind: "pane", pane: "embed" })).toBe("/embed");
-    expect(hrefFor({ kind: "pane", pane: "watchdog" })).toBe("/report");
+    expect(hrefFor({ kind: "pane", pane: "watchdog" })).toBe("/watchdog-hub");
     expect(hrefFor({ kind: "task", task: "insurer-rail" })).toBe("/insurers");
     expect(hrefFor({ kind: "task", task: "specialist-registers" })).toBe("/registers");
     expect(hrefFor({ kind: "route", path: "/os?lobby=home" })).toBe("/os?lobby=home");

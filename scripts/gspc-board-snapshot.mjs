@@ -25,6 +25,16 @@ const out = process.argv[2] || ".gspc-work/gspc-board.snapshot.json";
 const dir = mkdtempSync(join(tmpdir(), "gspc-snap-"));
 const bundle = join(dir, "gspc.mjs");
 
+// Cloudflare injects CacheStorage at runtime. Snapshotting is deliberately a
+// fresh, offline execution, so provide a no-hit/no-op cache instead of letting
+// the signing pipeline crash before it can materialise the bytes.
+globalThis.caches = {
+  default: {
+    match: async () => undefined,
+    put: async () => undefined,
+  },
+};
+
 await build({
   entryPoints: [resolve("functions/api/gspc.ts")],
   bundle: true,
@@ -39,6 +49,7 @@ const { onRequestGet } = await import("file://" + bundle);
 const res = await onRequestGet({
   request: new Request("https://councilof.ai/api/gspc"),
   env: {}, // no signing key — site_attestation is intentionally absent
+  waitUntil: () => {}, // cache persistence is irrelevant to an offline snapshot
 });
 const text = await res.text();
 const body = JSON.parse(text);

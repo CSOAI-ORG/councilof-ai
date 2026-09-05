@@ -4,7 +4,7 @@
  * An outside brief (2026-08-30) mapped three commercial arms onto Council.
  * Keep the map. Do not keep its stale board counts, public seat prices,
  * fused investable index, Council-minted bonds, or “300+ MCP servers are
- * this product.” Living board: GET /api/gspc — 22 axis · 15 measured.
+ * this product.” Living board: GET /api/gspc — 22 axis · 22 measured.
  */
 
 export type AuditVerdict = "keep" | "stale" | "false" | "forbidden";
@@ -27,11 +27,12 @@ export const SOV_AUDIT_SOURCE = {
 
 export const LIVE_PIN = {
   board_schema: "csoai.gspc-axes/0.5",
-  public_count: "22 axis · 15 measured",
+  public_count: "22 axis · 22 measured",
   axes: 22,
-  measured_axes: 15,
-  items: 893,
-  corrections: 30,
+  measured_axes: 22,
+  items: 969,
+  corrections: 39,
+  as_at: "2 September 2026",
   index_schema: "csoai.sov-signal-index/1",
   index_rows: 15,
   index_not_certification: true,
@@ -75,7 +76,7 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "dr-0007",
     claim: "A retracted consensus claim is a credibility asset, not a product to revive.",
     verdict: "keep",
-    live: "Do not put the withdrawn 33-agent council back on a public door.",
+    live: "Do not put the withdrawn 33-seat council back on a public door.",
   },
   {
     id: "xrpl-devnet",
@@ -123,13 +124,13 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
     id: "stale-board-counts",
     claim: "13 measured axes, 14-slot instrument, 818 items, 7-model fleet.",
     verdict: "stale",
-    live: "GET /api/gspc: 22 axis · 15 measured · 893 items. Quote the living board.",
+    live: "GET /api/gspc is the living board — 22 axis · 22 measured. Quote the endpoint, not a number copied out of it.",
   },
   {
     id: "six-axis",
     claim: "Six-axis benchmarks are the published GSPC product.",
     verdict: "stale",
-    live: "15 measured instruments. Jail is the MEASURED floor, not a sixth-axis brand.",
+    live: "22 measured instruments. Jail is the MEASURED floor, not a sixth-axis brand.",
   },
   {
     id: "no-hf-org",
@@ -145,13 +146,13 @@ export const SOV_AUDIT_CLAIMS: AuditClaim[] = [
   },
   {
     id: "iso-42001",
-    claim: "ISO 42001 is a live Council conformity product.",
+    claim: "Incorrect assertion recorded for refutation: ISO 42001 conformity was a production Council product.",
     verdict: "false",
     live: "We measure. We are not a notified body and we do not sell ISO 42001.",
   },
   {
     id: "bft-product",
-    claim: "A designed 33-agent council is a live public product.",
+    claim: "Incorrect assertion recorded for refutation: the 33-seat Council design had production status.",
     verdict: "false",
     live: "Retracted. Do not rebuild it as a door or a grade.",
   },

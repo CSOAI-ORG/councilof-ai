@@ -1,5 +1,7 @@
 # csoai-gspc-mcp
 
+[![22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate. Three states only: VALID · INVALID · UNCHECKABLE.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/gspc-scoreboard)
+
 Stdio MCP server for the live GSPC board and the signed measurement cards at
 [councilof.ai](https://councilof.ai). Zero dependencies. Node >= 20.
 
@@ -22,16 +24,51 @@ are reported as two labelled numbers and never reconciled.
 | `get_card` | GET one card-v0 leaf by sha256. VALID / INVALID (not a leaf) / UNCHECKABLE (fetch failed). A 404 leaf is INVALID, not UNCHECKABLE. |
 | `verify_inclusion` | GET `/api/proof?sha=`. VALID (included) / INVALID (not a leaf) / UNCHECKABLE (proof endpoint unreachable). |
 
-The same seven tools, from the same definitions file
+Seven free tools above; five metered ones below. `tools/list` returns all twelve, and
+`wired-tools.test.mjs` fails if a listed tool does not run or a running tool is not listed.
+
+The same seven free tools, from the same definitions file
 (`functions/mcp/gspc-tools.json`), are served over HTTP at
 `https://councilof.ai/mcp` (streamable HTTP, JSON-RPC 2.0 POST). Use whichever
 transport your client speaks; the contracts are identical.
 
+### The five x402-metered tools — carried here since 0.2.0
+
+| tool | route | free path |
+|---|---|---|
+| `commission_card` | `/api/request-attestation` | — (a payment never mints a MEASURED cell) |
+| `art50_marking_evidence` | `/api/art50/marking-evidence` | `preview: true` |
+| `rwa_evidence` | `/api/rwa/evidence` | `preview: true` (unsigned state) |
+| `witness_hash` | `/api/witness` | — |
+| `receipts_batch` | `/api/receipts/batch` | `preview: true` (count, span, roots, batch sha256) |
+
+Payment travels as the **`x_payment` argument**, not as a transport header — so stdio carries these
+exactly as the HTTP door does. Up to 0.1.1 this README said the opposite ("stdio has no payment header to
+forward"); that was a statement about the transport, and it was wrong about the mechanism. The server
+forwards your `x_payment` verbatim as the `X-PAYMENT` header on one request to `councilof.ai` and never
+inspects, signs or invents a receipt. Settlement is the route's job, fail-closed.
+
+Four honest statuses, and no fifth:
+
+- **`PAYMENT_REQUIRED`** — the route answered 402. The full challenge (`accepts[]`, the `PAYMENT-REQUIRED`
+  header) comes back as `structuredContent`. Nothing was charged. A challenge is an answer, not a failure.
+- **`DELIVERED`** — the route answered 2xx, with the settle echo when the route sent one.
+- **`NOT_DEPLOYED`** — the route answered 404 on this origin. Said plainly, never a fabricated result.
+- **`UNREACHABLE`** / **`BAD_ARGUMENTS`** — the call could not be made. Nothing was charged.
+
+**Known limitation, stated rather than hidden (2026-09-04):** the free `preview` paths and the 402
+challenge work today, but **settlement on the live rail is failing** — a genuine signed EIP-3009
+authorization is rejected by the facilitator with HTTP 400 after the buyer signs, because the facilitator
+now advertises two x402 dialects for Base and the wrong one is being selected. The fix is written and
+tested but not merged. Until it is, treat the paid paths as: challenge yes, delivery no. This server
+reports what the route actually said and never converts a failed settlement into a result.
+
+Every paid deliverable is measurement, not certification; no tool on either transport carries a trust
+label; amounts appear only inside a 402 challenge.
+
 ## Install
 
-Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp) **0.1.0** (registry live); package.json tracks **0.1.1** for the next publish. No checkout required:
-
-Live check 2026-09-01: `npm view csoai-gspc-mcp version` → **0.1.0**. Source README must never again say unpublished.
+Published on npm as [`csoai-gspc-mcp`](https://www.npmjs.com/package/csoai-gspc-mcp). No checkout required:
 
 ```sh
 npx -y csoai-gspc-mcp

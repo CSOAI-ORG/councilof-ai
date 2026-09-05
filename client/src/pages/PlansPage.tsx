@@ -3,8 +3,8 @@ import { setMetaDescription } from "@/lib/utils";
 
 // Free-rail posture (owner decision): the rail is free, verification is free forever.
 // CSOAI is a MEASUREMENT body — never a certification body, never a SaaS access tier.
-// Every call and every account ends in the same 3KB Ed25519-signed, hash-chained
-// measurement card. Where evidence is sold, it is a signed artefact on its own page —
+// Published measurement cards use the same compact Ed25519-signed, hash-chained
+// format. Where evidence is sold, it must be a verifiable artefact on its own page —
 // never access to the rail.
 
 // What each usage level includes — no prices, the rail is free.
@@ -44,13 +44,13 @@ export default function PlansPage() {
           The rail is free. <span className="bg-gradient-to-r from-emerald-300 via-emerald-400 to-teal-300 bg-clip-text text-transparent">Verification is free forever.</span>
         </h1>
         <p className="relative mt-4 mx-auto max-w-3xl text-emerald-100/80">
-          The product is the evidence. Every measurement ends in a 3KB card — Ed25519-signed,
-          hash-chained, verifiable by anyone without asking us. Running it costs nothing;
-          verifying it costs nothing. Where we sell evidence, it is a signed artefact on its own
+          The product is the evidence. A published measurement card is compact, Ed25519-signed,
+          hash-chained and independently verifiable. A tool response is not automatically a card;
+          follow its artifact link and verify it. Where we sell evidence, it must be a verifiable artefact on its own
           page — never access to the rail.
         </p>
         <div className="relative mt-6 flex flex-wrap justify-center gap-3">
-          <a href="/os?lobby=assess&task=get-measured" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured →</a>
+          <a href="/dashboard?task=get-measured&tab=measured" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Get measured →</a>
           <a href="/gspc-verify" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Verify a card →</a>
           <a href="/products" className="rounded-xl border border-emerald-400/40 px-5 py-2.5 text-sm font-bold text-emerald-100 hover:bg-white/5">Four SKUs →</a>
         </div>
@@ -77,7 +77,7 @@ export default function PlansPage() {
           ))}
         </div>
         <p className="mt-4 rounded-xl border border-emerald-500/15 bg-black/20 px-4 py-3 text-sm text-emerald-100/70">
-          Every response IS the signed card — your auditor verifies independently of us.
+          A published card is the portable result — your auditor can verify it independently of us.
         </p>
       </section>
 
@@ -112,9 +112,9 @@ export default function PlansPage() {
               ))}
               <tr>
                 <td className="px-4 py-4"></td>
-                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
-                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=get-measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
-                <td className="px-4 py-4 text-center"><a href="/os?lobby=assess&task=enterprise-start" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/dashboard?task=get-measured&tab=measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/dashboard?task=get-measured&tab=measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
+                <td className="px-4 py-4 text-center"><a href="/dashboard?task=enterprise-start&tab=measured" className="rounded-lg bg-emerald-500 px-3 py-1.5 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Get measured</a></td>
                 <td className="px-4 py-4 text-center"><a href="/contact" className="rounded-lg border border-emerald-400/40 px-3 py-1.5 text-xs font-bold text-emerald-100 hover:bg-white/5">Talk to us</a></td>
               </tr>
             </tbody>

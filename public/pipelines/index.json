@@ -1,0 +1,49 @@
+{
+  "schema": "csoai.pipelines/0.1",
+  "as_of": "20260905T052052Z",
+  "principle": "Every pipeline is a typed chain of stages.",
+  "pipelines": [
+    {
+      "id": "learn-loop",
+      "name": "Learning loop",
+      "description": "Continuous measurement \u2192 training \u2192 deployment",
+      "endpoint": "/api/pipelines/learn-loop",
+      "trigger": "manual | cron | webhook"
+    },
+    {
+      "id": "sign-wave",
+      "name": "Sign wave",
+      "description": "Mine atoms \u2192 sign \u2192 anchor",
+      "endpoint": "/api/pipelines/sign-wave",
+      "trigger": "manual | cron | webhook"
+    },
+    {
+      "id": "eat-more",
+      "name": "Eat more",
+      "description": "Discover well-known + interop",
+      "endpoint": "/api/pipelines/eat-more",
+      "trigger": "manual | cron | webhook"
+    },
+    {
+      "id": "deep-mining",
+      "name": "Deep mining",
+      "description": "Recursive harvest across all chains",
+      "endpoint": "/api/pipelines/deep-mining",
+      "trigger": "manual | cron | webhook"
+    },
+    {
+      "id": "relentless",
+      "name": "Relentless",
+      "description": "Master loop: every lane every cycle",
+      "endpoint": "/api/pipelines/relentless",
+      "trigger": "manual | cron | webhook"
+    },
+    {
+      "id": "ship-mode",
+      "name": "Ship mode",
+      "description": "Build + test + commit + push + deploy",
+      "endpoint": "/api/pipelines/ship-mode",
+      "trigger": "manual | cron | webhook"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "kind": "csoai.root-witness/v0",
+  "as_of": "2026-09-02T04:26:59Z",
+  "note": "Measurement witnesses for the live signed public root. Proves existence/time of root.json bytes \u2014 not certification, not endorsement, not a rank sale. Never mint a token.",
+  "artifact": {
+    "url": "https://councilof.ai/root.json",
+    "also": "https://councilof.ai/api/root",
+    "sha256": "61a6d86db8d5dec9c63eaffb529438aa7631c0a12f5bfbb19ac75517c1c94bd6",
+    "bytes": 4948,
+    "card_count": 50,
+    "merkle_root": "8025ee10a54ca05d352d5a89f436d7666c1cefba0a8cbb9b76a3ac5562286909",
+    "signed": true,
+    "sig_field": "sig_ed25519",
+    "did_intended": "did:web:csoai.org#board-attestation-1",
+    "as_of_envelope": "2026-09-01T23:15:51Z"
+  },
+  "board_snapshot": {
+    "url": "https://councilof.ai/api/gspc",
+    "public_count": "22 axis \u00b7 22 measured",
+    "totals": {
+      "axes": 22,
+      "measured_axes": 22,
+      "unmeasured_axes": 0
+    }
+  },
+  "witnesses": {
+    "opentimestamps": {
+      "status": "STAMPED",
+      "proof_path": "public/interop/root-2026-09-02.json.ots",
+      "proof_sha256": "fc0f11fa68c38469f3bb311a8976c21f30213741fea16176546ebc81fad93466",
+      "calendars_pending": [
+        "https://alice.btc.calendar.opentimestamps.org",
+        "https://bob.btc.calendar.opentimestamps.org",
+        "https://btc.calendar.catallaxy.com"
+      ],
+      "note": "PendingAttestation until Bitcoin confirmation; upgrade with ots upgrade later."
+    },
+    "rekor": {
+      "status": "INCLUDED",
+      "server": "https://rekor.sigstore.dev",
+      "type": "rekord:0.0.1",
+      "pki_format": "ssh",
+      "uuid": "108e9186e8c5677aebb3ebde460b76fde571d1c0fdab0bbfd5524abcfa8fecacbc336690962e10fa",
+      "logIndex": 2683310457,
+      "integratedTime": 1788323209,
+      "integratedTime_utc": "2026-09-02T04:26:49Z",
+      "url": "https://rekor.sigstore.dev/api/v1/log/entries/108e9186e8c5677aebb3ebde460b76fde571d1c0fdab0bbfd5524abcfa8fecacbc336690962e10fa",
+      "artifact_sha256": "61a6d86db8d5dec9c63eaffb529438aa7631c0a12f5bfbb19ac75517c1c94bd6",
+      "witness_pubkey_ssh": "public/interop/csoai-root-witness-2026-09-02.pub",
+      "witness_pubkey_comment": "csoai-root-witness-2026-09-02@councilof.ai \u2014 existence witness key; NOT did:web:csoai.org#board-attestation-1",
+      "entry_snapshot": "public/interop/rekor-root-2026-09-02.json"
+    },
+    "xrpl_memo": {
+      "status": "UNCHECKABLE",
+      "reason": "No existing XRPL wallet/secret found in estate env on M4/keystone at run time. Do not ask operator to fund/buy XRP; do not mint a token."
+    }
+  },
+  "verify_hints": {
+    "rekor_cli": "rekor-cli get --uuid 108e9186e8c5677aebb3ebde460b76fde571d1c0fdab0bbfd5524abcfa8fecacbc336690962e10fa",
+    "rekor_search": "rekor-cli search --sha 61a6d86db8d5dec9c63eaffb529438aa7631c0a12f5bfbb19ac75517c1c94bd6",
+    "ots": "ots verify public/interop/root-2026-09-02.json.ots -f <root.json copy matching sha256 61a6\u2026>"
+  }
+}

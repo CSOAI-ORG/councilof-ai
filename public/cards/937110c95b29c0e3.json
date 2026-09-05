@@ -1,0 +1,89 @@
+{
+  "card": {
+    "as_of": "2026-09-03T23:59:19Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 119818835,
+      "block_hash": "0x0cd3eace8ba75dd05af7f158ccfbbf68a324a7c633bbb0db110feb1461bf7d10",
+      "block_time": "2026-09-03T23:59:19Z",
+      "rpc": "bsc-dataseed.bnbchain.org",
+      "checked": {},
+      "absent": [
+        "name()",
+        "symbol()",
+        "decimals()",
+        "totalSupply()",
+        "paused()",
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_implementation (slot zero)",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 119818835 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "937110c95b29c0e3ab62a804b72bc5f49062b208869393d7fcc3426281bfb923",
+    "sig_ed25519": "6d8489435803f83888a7174cab43fea797c4c211cf8fc8a1458936a27a158c7d314904aee55c163a6de7bb8f011a9628c9119a647d66c888bfde9ffaa4b3d809",
+    "source_urls": [
+      "https://bsc-dataseed.bnbchain.org",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 119818835",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "3def83f815bf27d3898d5ed51cc1a5498c8f2d33c1f706aad97c649b51d1a140",
+    "2c6af9ee046aa82591b5d28515d4ff36cc6baf1f93d02c72fa37b00912fcb23b",
+    "5baf90c1c7f7c491e9b3b6e7661f12076cc6edf7cde8255cd99e4f5de99b450e",
+    "dbf909ba7db4935cb6ebfe65b2c65ece9e3d78f38678d6b87de40203f95170c8",
+    "9658ce380a554db4d75c7c40029a7ef5db16250cf1a8b5742a06f6a54f6a9f31",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "a27e3c6b79e37847ddb72f6a25db1c74dec5c19571bfed55a3a967eec13d1f63",
+    "de5e493a93da701d9a46697cac7835edf7014fb7d4230b41fea923e8deb63c1d"
+  ]
+}

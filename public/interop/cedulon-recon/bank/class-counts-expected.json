@@ -1,0 +1,31 @@
+{
+  "schema": "csoai.bank-class-counts/cedulon.recon/0.1",
+  "profile": "abak-00-population",
+  "package_pin": "@cedulon/audit@0.8.0",
+  "probe_sha256": "031f84fda2054b1427a510baa45f880d379ea60dced408a4a74028da12b1fceb",
+  "part": 1,
+  "class_counts_schema": {
+    "instruction": "partitions |I| (Section 6.3)",
+    "record": "partitions |R| (Section 6.3)",
+    "excluded": "exclusion reported with its rule",
+    "either-side": "code alone does not fix which side the row is on",
+    "issuer-evidence": "issuer-side aggregate evidence in neither |I| nor |R|",
+    "not-a-disposition": "no per-instruction disposition on its own"
+  },
+  "class_counts": {
+    "instruction": 16,
+    "record": 1,
+    "excluded": 1,
+    "either-side": 2,
+    "issuer-evidence": 3,
+    "not-a-disposition": 26
+  },
+  "total_finding_codes": 49,
+  "observation": {
+    "as_of": "2026-09-02T02:59:00Z",
+    "method": "node population-probe.mjs against published 0.8.0",
+    "status": "probe_observed",
+    "note": "Not MEASURED. Not a GSPC axis value. Peer README warns prose counts go stale before the probe; freeze the probe observation, not the README paragraph."
+  },
+  "if_uncheckable": "When npm/git pin re-run fails, keep this schema and set observation.status=UNCHECKABLE until re-run."
+}

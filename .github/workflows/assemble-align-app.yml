@@ -1,9 +1,10 @@
 name: assemble-align-app
 on:
+  # DISABLED 2026-09-03. The push trigger overwrote client/src/App.tsx on master
+  # TWICE with a truncated 8,000-byte assembly (see the guard below). App.tsx is
+  # the app root — main.tsx does `import App from "./App"` — so a truncated write
+  # ships a blank site. Manual dispatch only, and only with the guard satisfied.
   workflow_dispatch:
-  push:
-    paths:
-      - '.align-staging/app/**'
 permissions:
   contents: write
 jobs:
@@ -21,6 +22,30 @@ jobs:
           data = b''.join(base64.b64decode(p.read_text().strip()) for p in parts)
           path = 'client/src/App.tsx'
           print('assembled', len(data), hashlib.sha1(data).hexdigest(), 'parts', len(parts))
+
+          # FAIL CLOSED. On 1 and 3 September this workflow assembled ONE stale
+          # part (8,000 bytes, ending mid-identifier at `const EUAIActClas`, no
+          # export default) and PUT it over App.tsx on master. Production only
+          # survived because the deploy queue was jammed.
+          #
+          # An assembly that cannot be the app is never written. These are
+          # properties of the real file (75,845 bytes, 497 routes), not style.
+          text = data.decode('utf-8', 'replace')
+          problems = []
+          if not parts:
+              problems.append('no part*.b64 staged')
+          if len(data) < 50_000:
+              problems.append(f'assembled only {len(data)} bytes; App.tsx is ~75KB')
+          if 'export default' not in text:
+              problems.append('no `export default` — main.tsx imports this as the app root')
+          if text.count('path=') < 300:
+              problems.append(f'only {text.count("path=")} routes; the route table has ~497')
+          if problems:
+              print('REFUSING TO WRITE App.tsx:')
+              for x in problems:
+                  print('  -', x)
+              print('Nothing was written. Re-stage the complete parts and dispatch again.')
+              raise SystemExit(1)
           token = os.environ['GH_TOKEN']
           api = f'https://api.github.com/repos/CSOAI-ORG/councilof-ai/contents/{path}'
           req = urllib.request.Request(api + '?ref=master', headers={

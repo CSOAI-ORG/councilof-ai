@@ -28,14 +28,14 @@ export default function DemoOS() {
   const [winTab, setWinTab] = useState(0);
   const [listening, setListening] = useState(false);
   const [paused, setPaused] = useState(false);
-  const [handsFree, setHandsFree] = useState(true);
+  const [handsFree, setHandsFree] = useState(false);
   const [geoCity, setGeoCity] = useState("");
   const [geoLabel, setGeoLabel] = useState("");
   const [title, setTitle] = useState("");
   const [ending, setEnding] = useState(false);
   const [booting, setBooting] = useState(true);
   const [bootN, setBootN] = useState(0);
-  const [gate, setGate] = useState(false);
+  const [gate, setGate] = useState(true);
   const [drawer, setDrawer] = useState(false);
   const [drawerQ, setDrawerQ] = useState("");
   const [winH, setWinH] = useState(52);
@@ -65,11 +65,34 @@ export default function DemoOS() {
     window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
   }
 
-  async function allowVoice() { try { await (navigator as any).mediaDevices.getUserMedia({ audio: true }); } catch (e) {} setGate(false); }
+  async function requestMicrophonePermission() {
+    let permitted = false;
+    try {
+      const stream = await (navigator as any).mediaDevices.getUserMedia({ audio: true });
+      stream?.getTracks?.().forEach((track: MediaStreamTrack) => track.stop());
+      permitted = true;
+    } catch (e) {}
+    return permitted;
+  }
+
+  async function allowVoice() {
+    const permitted = await requestMicrophonePermission();
+    voiceEnabled.current = permitted;
+    setHandsFree(permitted);
+    setGate(false);
+    start("demo", permitted);
+  }
+
+  function continueSilently() {
+    voiceEnabled.current = false;
+    setHandsFree(false);
+    setGate(false);
+    start("demo", false);
+  }
 
   useEffect(() => {
     const iv = setInterval(() => setBootN((n) => n + 1), 190);
-    const done = setTimeout(() => { clearInterval(iv); setBooting(false); setTimeout(() => { if (i === -1) start("demo"); }, 120); }, 190 * (BOOT.length + 1) + 200);
+    const done = setTimeout(() => { clearInterval(iv); setBooting(false); }, 190 * (BOOT.length + 1) + 200);
     return () => { clearInterval(iv); clearTimeout(done); };
   }, []);
 
@@ -81,6 +104,7 @@ export default function DemoOS() {
   const stepsRef = useRef<Step[]>([]);
   const speaking = useRef(false);
   const rec = useRef<any>(null);
+  const voiceEnabled = useRef(false);
   const modeRef = useRef<"demo" | "full">("demo");
   const idc = useRef(0);
   const typeT = useRef<any>(null);
@@ -99,7 +123,7 @@ export default function DemoOS() {
     const words = text.split(" "); let k = 0;
     if (typeT.current) clearInterval(typeT.current);
     typeT.current = setInterval(() => { k++; const done = k >= words.length; const part = words.slice(0, k).join(" ") + (done ? "" : " ▋"); setChat((c) => c.map((m) => (m.id === id ? { ...m, t: part } : m))); if (done && typeT.current) clearInterval(typeT.current); }, 85);
-    speak(text);
+    if (voiceEnabled.current) speak(text);
     scheduleBridge(text, words);
   }
   function scheduleBridge(text: string, words: string[]) {
@@ -113,24 +137,39 @@ export default function DemoOS() {
     });
   }
   function speak(t: string) {
+    if (!voiceEnabled.current) return;
     personaSpeak(t, {
       onstart: () => { speaking.current = true; },
       onend: () => { speaking.current = false; },
     });
   }
 
-  function startRec() {
-    const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition; if (!SR || !handsFree) return;
+  function startRec(enabled = voiceEnabled.current) {
+    const SR = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition; if (!SR || !enabled) return;
     try { const r = new SR(); r.lang = "en-US"; r.interimResults = false; r.continuous = true; r.maxAlternatives = 1;
       r.onresult = (e: any) => { const said = e.results[e.results.length - 1][0].transcript || ""; if (!speaking.current && !paused && said.trim().length > 3) onBargeIn(said.trim()); };
-      r.onend = () => { if (handsFree && modeRef.current) { try { r.start(); } catch (e) {} } };
+      r.onend = () => { if (voiceEnabled.current && modeRef.current) { try { r.start(); } catch (e) {} } };
       r.start(); rec.current = r;
     } catch (e) {}
   }
   function stopRec() { try { rec.current && rec.current.stop(); rec.current = null; } catch (e) {} }
 
-  async function start(m: "demo" | "full") {
-    setMode(m); modeRef.current = m; stepsRef.current = STEPS.filter((s) => (m === "full" ? true : !s.full)); setChat([]); setI(0); startRec();
+  async function toggleHandsFree() {
+    if (handsFree) {
+      voiceEnabled.current = false;
+      setHandsFree(false);
+      stopRec();
+      return;
+    }
+    const permitted = await requestMicrophonePermission();
+    voiceEnabled.current = permitted;
+    setHandsFree(permitted);
+    if (permitted) startRec(true);
+  }
+
+  async function start(m: "demo" | "full", voice = voiceEnabled.current) {
+    voiceEnabled.current = voice;
+    setMode(m); modeRef.current = m; stepsRef.current = STEPS.filter((s) => (m === "full" ? true : !s.full)); setChat([]); setI(0); startRec(voice);
     setGeoLabel("Global view — pick your region anytime");
     setTimeout(() => { post({ cmd: "home", duration: 2.6 }); }, 1200);
     setTimeout(() => setGeoLabel(""), 6000);
@@ -162,8 +201,8 @@ export default function DemoOS() {
   function advance(idx: number) { const n = idx + 1; setI(n); runStep(n); }
   function next() { if (timer.current) clearTimeout(timer.current); stopVoice(); advance(i); }
 
-  function finish() { if (timer.current) clearTimeout(timer.current); closeWins(); post({ cmd: "home", duration: 2.5 }); setPaused(false); setEnding(true); setTitle("Where would you like to start?"); narrate("So - where would you like to start? I can scan your area, run a live scenario, show you governance, or explore the globe. Just tap - or tell me."); }
-  function stop() { cleanup(); setMode(null); setI(-1); setWins([]); setWinsShow(false); setTitle(""); setGeoLabel(""); setEnding(false); post({ cmd: "home", duration: 2 }); }
+  function finish() { if (timer.current) clearTimeout(timer.current); closeWins(); post({ cmd: "home", duration: 2.5 }); setPaused(false); setEnding(true); setTitle("Where would you like to start?"); narrate("So - where would you like to start? I can show a catalogued area, explore a scenario demo, show published governance evidence, or explore the globe. Just tap - or tell me."); }
+  function stop() { cleanup(); voiceEnabled.current = false; setHandsFree(false); setMode(null); setI(-1); setWins([]); setWinsShow(false); setTitle(""); setGeoLabel(""); setEnding(false); setGate(true); post({ cmd: "home", duration: 2 }); }
 
   function onBargeIn(said: string) {
     if (timer.current) clearTimeout(timer.current); stopVoice();
@@ -179,7 +218,7 @@ export default function DemoOS() {
   }
   async function answer(q: string) {
     setListening(false); say("sov", "…");
-    const res = await askSovereign(q, { system: "You are the CSOAI Council assistant guiding a live tour of the CSOAI AI-governance Operating System. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete about AI governance, regulation, Fortune-100/500 compliance, cyber, or what's on the globe." });
+    const res = await askSovereign(q, { system: "You are the CSOAI Council assistant guiding an interactive tour of the CSOAI AI-governance interface. Answer only as that governance/cybersecurity assistant — never as a personal companion, never poetic, never mention other products. Be concise and concrete. Distinguish public measurements, catalogues, and design demos. Never claim a live Council, complete regulatory coverage, automatic signing, or a signature unless a linked artifact verifies it." });
     setChat((c) => c.slice(0, -1).concat({ id: ++idc.current, who: "sov", t: res.text }));
     speak(res.text);
   }
@@ -214,12 +253,12 @@ export default function DemoOS() {
             You are interacting with an AI system.
           </div>
           <h2 className="mt-4 text-2xl font-black text-emerald-100">Grant your Council assistant a voice</h2>
-          <p className="mt-2 max-w-md text-sm text-emerald-100/75">Allow the mic so you can just talk to me during the tour - interrupt any time and I'll listen. Nothing is recorded or sold; on-device, consent-first.</p>
+          <p className="mt-2 max-w-md text-sm text-emerald-100/75">Microphone access is optional. Your browser's speech-recognition service may process audio under its own terms; recognized text is sent to the configured Council gateway when you ask a question. Continue silently to avoid microphone use.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <button onClick={allowVoice} className="rounded-xl bg-emerald-500 px-6 py-3 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Allow &amp; continue</button>
-            <button onClick={() => setGate(false)} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Continue silently</button>
+            <button onClick={continueSilently} className="rounded-xl border border-emerald-400/40 px-6 py-3 text-sm font-semibold text-emerald-100 hover:bg-white/5">Continue silently</button>
           </div>
-          <div className="mt-3 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">No private cameras {"·"} no facial recognition {"·"} no tracking {"·"} no data selling</div>
+          <div className="mt-3 font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/50">Optional microphone {"·"} no camera requested {"·"} continue silently at any time</div>
         </div>
       )}
 
@@ -236,7 +275,7 @@ export default function DemoOS() {
           <span className="h-2 w-2 flex-shrink-0 rounded-full bg-emerald-400" style={{ boxShadow: "0 0 8px #34d399" }} />
           <span className="truncate text-sm font-semibold text-emerald-100">{title || "CSOAI Council OS"}</span>
           <span className="hidden flex-shrink-0 items-center gap-1 border-l border-white/10 pl-3 md:flex">{stepsRef.current.map((_, k) => (<span key={k} className={"h-1.5 rounded-full transition-all " + (k === i ? "w-4 bg-emerald-400" : k < i ? "w-1.5 bg-emerald-500/60" : "w-1.5 bg-white/15")} />))}</span>
-          {!paused && !ending && <button onClick={interrupt} title="Tap or speak to interrupt" className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[1px] text-emerald-200/80 hover:bg-white/5"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />tap / speak</button>}
+              {!paused && !ending && <button onClick={interrupt} title="Use the microphone to interrupt and ask" className="flex flex-shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/30 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[1px] text-emerald-200/80 hover:bg-white/5"><span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />use mic</button>}
           {mode === "demo" && !ending && <button onClick={() => { stepsRef.current = STEPS; setMode("full"); modeRef.current = "full"; }} title="Switch to the full tour" className="flex-shrink-0 rounded-full px-2 py-1 text-[10px] font-bold text-emerald-300/60 hover:bg-white/5">full tour</button>}
         </div>
       )}
@@ -284,7 +323,7 @@ export default function DemoOS() {
               </div>
               {(() => { const nd = NET_DOMAINS.filter((x) => !drawerQ.trim() || (x.n + " " + x.d).toLowerCase().includes(drawerQ.trim().toLowerCase())); if (!nd.length) return null; return (
               <div className="mb-4">
-                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Council network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} signed</span></div>
+                <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-emerald-700">Council network <span className="rounded-full border border-emerald-200 px-1.5 text-[9px] text-emerald-500">{NET_DOMAINS.length} listed</span></div>
                 <div className="flex flex-wrap gap-1.5">
                   {nd.map((x) => (
                     <a key={x.d} href={"https://" + x.d} target="_blank" rel="noreferrer" title={x.d} className="rounded-full border border-gray-200 px-2.5 py-1 text-[11px] font-semibold text-gray-700 hover:border-emerald-400 hover:bg-emerald-50">{x.n} <span className="text-gray-400">↗</span></a>
@@ -301,7 +340,7 @@ export default function DemoOS() {
                   ))}
                 </div>
               </div>
-              <a href="/os?lobby=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS →</a>
+              <a href="/dashboard?tab=home" className="mt-3 block rounded-xl bg-emerald-600 px-3 py-2.5 text-center text-sm font-bold text-white hover:bg-emerald-500">Enter Council OS →</a>
             </div>
           </div>
         </div>
@@ -351,7 +390,7 @@ export default function DemoOS() {
           <div className="flex items-center gap-1.5 border-b border-emerald-500/15 px-3 py-1.5">
             <div className="flex h-6 w-6 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-500/15 text-xs">{"◉"}</div>
             <div className="truncate text-[13px] font-bold text-emerald-100">Council {geoCity && <span className="font-mono text-[9px] font-normal text-emerald-300/50">near {geoCity}</span>}</div>
-            <button onClick={() => setHandsFree((h) => { const n = !h; if (n) startRec(); else stopRec(); return n; })} title={handsFree ? "Hands-free on" : "Hands-free off"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "⏺" : ""}</button>
+            <button onClick={toggleHandsFree} title={handsFree ? "Turn hands-free microphone off" : "Enable the hands-free microphone"} className={"ml-auto rounded-full px-1.5 py-0.5 text-[11px] " + (handsFree ? "bg-emerald-500/20 text-emerald-200" : "text-emerald-300/45 hover:bg-white/5")}>{handsFree ? "mic on" : "mic off"}</button>
             <button onClick={() => setChatMin(true)} title="Collapse chat" className="rounded px-1.5 py-0.5 text-[13px] text-emerald-300/60 hover:bg-white/5">»</button>
             <button onClick={stop} title="End tour" className="rounded px-1.5 py-0.5 text-[11px] text-emerald-300/60 hover:bg-white/5">End</button>
           </div>
@@ -363,12 +402,12 @@ export default function DemoOS() {
             {ending ? (
               <div className="grid grid-cols-2 gap-2">
                 <a href="/world" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Scan my area</a>
-                <a href="/gspc-arena" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Run a live scenario</a>
-                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
-                <a href="/os?lobby=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
+                <a href="/gspc-arena" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Explore a scenario demo</a>
+                <a href="/dashboard?tab=home" className="rounded-xl bg-emerald-500/15 px-3 py-2 text-center text-xs font-bold text-emerald-100 hover:bg-emerald-500/25">Show governance</a>
+                <a href="/dashboard?tab=home" className="rounded-xl bg-emerald-500 px-3 py-2 text-center text-xs font-bold text-[#03110b] hover:bg-emerald-400">Enter the OS ▶</a>
               </div>
             ) : !paused ? (
-              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "Just speak - I'm listening" : "Interrupt & ask")}</button>
+              <button onClick={interrupt} className={"flex w-full items-center justify-center rounded-xl px-3 py-2 text-sm font-bold " + (listening ? "bg-rose-500/30 text-rose-100 animate-pulse" : "bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/25")}>{listening ? "Listening…" : (handsFree ? "Just speak - microphone is on" : "Use microphone & ask")}</button>
             ) : (
               <button onClick={resume} className="w-full rounded-xl bg-emerald-500 px-3 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Resume tour ▶</button>
             )}

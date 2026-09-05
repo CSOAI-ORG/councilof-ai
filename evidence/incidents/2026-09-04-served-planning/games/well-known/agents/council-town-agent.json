@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "council-town",
+  "name": "Council Town",
+  "kind": "open-world-multi-agent",
+  "as_of": "20260904T064715Z",
+  "url": "https://councilof.ai/api/a2a/council-town",
+  "version": "1.0",
+  "capabilities": {
+    "play": "Play Council Town with AI opponents",
+    "chat": "Chat with AI via AG-UI / A2UI",
+    "multiplayer": "Join a multiplayer room",
+    "attestation": "none \u2014 this game emits no card and lands nothing in the signed root",
+    "verification": "Verify any signed card offline"
+  },
+  "skills": [
+    {
+      "id": "council-town.play",
+      "description": "Play Council Town"
+    },
+    {
+      "id": "council-town.chat",
+      "description": "Chat with AI in Council Town"
+    },
+    {
+      "id": "council-town.attest",
+      "description": "Get a signed turn card from Council Town"
+    },
+    {
+      "id": "council-town.verify",
+      "description": "Verify an attestation from Council Town"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "agui": "https://councilof.ai/council-town/ag-ui",
+    "a2ui": "https://councilof.ai/council-town/a2-ui"
+  }
+}

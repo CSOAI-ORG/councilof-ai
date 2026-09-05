@@ -80,7 +80,7 @@ export default function HomeComposer({
         const r = await fetch("/api/compute", { headers: { accept: "application/json" } });
         if (!r.ok) throw new Error("HTTP " + r.status);
         setNote(formatComputeReply(await r.json()));
-        setLoc("/os?lobby=harness");
+        setLoc("/dashboard?tab=harness");
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         setNote(`COMPUTE failed (${msg}). Cite GET /api/compute.`);

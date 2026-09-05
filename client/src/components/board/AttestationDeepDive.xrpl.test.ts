@@ -15,8 +15,7 @@ describe("XRPL panel is a reader of /root.json, live 16, not a 404 leftover", ()
     expect(panel).toContain('fetch("/api/xrpl")');
     expect(panel).toMatch(/reader/i);
     expect(panel).toContain("writes_board");
-    expect(panel).toContain("NO_LAPTOP_SIGN");
-    expect(panel).toContain("n === 16");
+    expect(tile).toContain("NO_LAPTOP_SIGN");
     expect(panel).not.toContain("/api/xrpl is 404");
     expect(panel).not.toMatch(/stays 404/);
     expect(panel).not.toMatch(/XRPL DEVNET pointer/);
@@ -29,23 +28,30 @@ describe("living root-as-index + N→N+1 drift honesty leftover", () => {
   it("publishes living-root-as-index-honesty.json with UNCHECKABLE drift and unsigned envelope", () => {
     const j = JSON.parse(honesty);
     expect(j.schema).toContain("living-root-as-index-honesty");
-    expect(j.live_roots.card_count).toBe(43);
-    expect(j.live_roots.merkle_root_prefix).toBe("4a9a5036");
     expect(j.live_roots.envelope).toMatch(/unsigned until keystone/i);
     expect(j.n_to_n_plus_1_drift.status).toBe("UNCHECKABLE");
-    expect(j.board.unmeasured_axes).toBe(7);
+    // Board counts are living from GET /api/gspc — honesty mirrors 22·22·0 after #1077.
+    expect(j.board.unmeasured_axes).toBe(0);
     expect(j.do_not).toEqual(
-      expect.arrayContaining(["fill the 7 empty", "fake Merkle seal", "new products"]),
+      expect.arrayContaining(["fake Merkle seal", "new products", "invent scores"]),
     );
     expect(j.sit).toBe("NAMED");
   });
 
-  it("BoardAttestation already cites /root.json as living catalogue (link follow-up tracked in honesty JSON)", () => {
+  it("BoardAttestation + ProgressPanel render N→N+1 UNCHECKABLE from honesty and link GET /root.json", () => {
     expect(tile).toMatch(/root\.json/);
+    expect(tile).toContain('href="/root.json"');
+    expect(tile).toMatch(/N→N\+1 drift/);
+    expect(tile).toContain("/interop/living-root-as-index-honesty.json");
     expect(panel).toContain('href="/root.json"');
-    // Chrome link/copy follow-up is named in honesty leftover; do not invent MEASURED.
+    expect(panel).toContain("/interop/living-root-as-index-honesty.json");
+    expect(panel).toMatch(/N→N\+1 drift/);
+    // Fail closed — never invent a delta or Merkle seal.
+    expect(tile).not.toMatch(/N→N\+1 delta\s*[:=]/);
+    expect(tile + panel).not.toMatch(/Merkle seal:\s*[0-9a-f]{16,}/i);
     const j = JSON.parse(honesty);
     expect(j.chrome_followup.BoardAttestation).toMatch(/living root-as-index/i);
     expect(j.chrome_followup["AttestationDeepDive.ProgressPanel"]).toMatch(/UNCHECKABLE/i);
+    expect(j.n_to_n_plus_1_drift.status).toBe("UNCHECKABLE");
   });
 });

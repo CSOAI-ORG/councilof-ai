@@ -1,0 +1,209 @@
+name: hub-queue-mill
+# The OSS spray: grade hub-queue models on the frozen banks via direct provider APIs
+# (keys as GHA secrets, by name). Stages UNSIGNED ≤3KB cards only; MEASURED happens
+# only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
+on:
+  schedule:
+    - cron: "41 * * * *"
+  workflow_dispatch:
+    inputs:
+      # Empty means "let the selector choose the emptiest axis", the same thing the
+      # schedule does. A default of "governance" made every dispatch grade governance
+      # and silently shadowed the selector, which is the bug this input was meant to
+      # let you work around in the first place.
+      axis: { description: "axis to grade this run (blank = the emptiest axis)", type: string, default: "" }
+      grade: { description: "how many probe-live models to grade", type: string, default: "12" }
+concurrency: { group: hub-queue-mill, cancel-in-progress: false }
+permissions: { contents: read, pull-requests: read }
+jobs:
+  mill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
+      XAI_API_KEY: ${{ secrets.XAI_API_KEY || secrets.GROK_TOKEN }}
+      # NOT secrets.GROK_TOKEN. Groq (api.groq.com, LPU inference) and Grok (api.x.ai,
+      # xAI's model) are different companies whose names differ by one letter. Neither
+      # GROQ_API_KEY nor GROQ_TOKEN is set, so that fallback handed xAI's key to Groq's
+      # endpoint — a guaranteed 401 — while the "keys present?" step below counted Groq
+      # as a live provider. A provider that cannot authenticate must count as absent.
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY || secrets.GROQ_TOKEN }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY || secrets.GEMINI_TOKEN || secrets.GOOGLE_API_KEY }}
+      NVIDIA_API_KEY: ${{ secrets.NVIDIA_API_KEY || secrets.NVIDIA_NIM_TOKEN }}
+      CEREBRAS_API_KEY: ${{ secrets.CEREBRAS_API_KEY || secrets.CEREBRAS_TOKEN }}
+      TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY || secrets.TOGETHER_TOKEN }}
+      MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY || secrets.MISTRAL_TOKEN }}
+      SAMBANOVA_API_KEY: ${{ secrets.SAMBANOVA_API_KEY || secrets.SAMBANOVA_TOKEN }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY || secrets.OPENROUTER_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      AXIS_INPUT: ${{ github.event.inputs.axis }}
+      GRADE: ${{ github.event.inputs.grade || '12' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: master }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: choose the axis (dispatch wins; otherwise the emptiest axis)
+        run: |
+          set -euo pipefail
+          # Coverage is counted from the SIGNED CARDS IN THIS CHECKOUT, not from the public
+          # hub-queue. The queue lives on HF main, which the flip cannot write (the GHA HF
+          # token has no csoai-org scope), so it has been frozen at 82 cells all day. A
+          # selector reading it re-picked 'care' on consecutive runs after care had already
+          # been carded and merged — the loop could not advance past one axis while its own
+          # progress was invisible to it. The merged cards are the thing that is always
+          # current, so count those. Superseded cards are skipped so a re-signed cell counts
+          # once. If the directory is missing, fall back to the queue, then to the clock.
+          ROTATION=(governance safety provenance continuity conformance openness \
+                    machinery-conformity care cross-reality detector-interop \
+                    art5-safeguard swarm affect)
+          if [ -n "${AXIS_INPUT:-}" ]; then
+            AXIS="$AXIS_INPUT"; WHY="workflow_dispatch input"
+          else
+            H=$(date -u +%-H)
+            curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o /tmp/queue-for-axis.jsonl || true
+            AXIS=$(H="$H" python3 - "${ROTATION[@]}" <<'PY'
+          import json, os, sys
+          from pathlib import Path
+
+          axes = sys.argv[1:]
+          counts = {a: 0 for a in axes}
+          source = "none"
+
+          signed = Path("public/interop/mill-cards-signed")
+          if signed.is_dir():
+              dead = set()
+              ledger = signed / "SUPERSEDED.jsonl"
+              if ledger.is_file():
+                  for line in ledger.read_text(encoding="utf-8").splitlines():
+                      line = line.strip()
+                      if line:
+                          try:
+                              dead.add(str(json.loads(line).get("superseded_id") or ""))
+                          except Exception:
+                              pass
+              for f in sorted(signed.glob("signed-*.json")):
+                  try:
+                      w = json.loads(f.read_text(encoding="utf-8"))
+                  except Exception:
+                      continue
+                  body = w.get("body") if isinstance(w.get("body"), dict) else {}
+                  ax = str(body.get("axis") or "")
+                  if ax in counts and w.get("signature") and str(w.get("id") or "") not in dead:
+                      counts[ax] += 1
+                      source = "merged signed cards"
+
+          if source == "none":
+              q = Path("/tmp/queue-for-axis.jsonl")
+              if q.is_file():
+                  for line in q.read_text(encoding="utf-8").splitlines():
+                      line = line.strip()
+                      if not line:
+                          continue
+                      try:
+                          row = json.loads(line)
+                      except Exception:
+                          continue
+                      for ax, cell in (row.get("measured_axes") or {}).items():
+                          if ax in counts and isinstance(cell, dict) and cell.get("card_id"):
+                              counts[ax] += 1
+                              source = "public hub-queue"
+
+          if source == "none":
+              sys.exit(1)
+          # Fewest cells first; the UTC hour breaks ties so a cold start still rotates.
+          h = int(os.environ.get("H") or 0)
+          order = sorted(axes, key=lambda a: (counts[a], (axes.index(a) - h) % len(axes)))
+          print(f"{order[0]}\t{source}\t{counts[order[0]]}")
+          PY
+            ) || AXIS=""
+            if [ -n "$AXIS" ]; then
+              WHY="emptiest axis per $(printf '%s' "$AXIS" | cut -f2) ($(printf '%s' "$AXIS" | cut -f3) cells)"
+              AXIS=$(printf '%s' "$AXIS" | cut -f1)
+            else
+              AXIS="${ROTATION[$((H % ${#ROTATION[@]}))]}"; WHY="no coverage data — clock fallback, slot $((H % ${#ROTATION[@]}))"
+            fi
+          fi
+          echo "AXIS=$AXIS" >> "$GITHUB_ENV"
+          echo "axis=$AXIS ($WHY)"
+      - name: fetch public inputs (hub-queue + frozen bank) — public HF, no token needed
+        id: inputs
+        run: |
+          set -euo pipefail
+          mkdir -p mill-in/banks mill-out
+          curl -fsSL "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/queue.jsonl" -o mill-in/queue.jsonl
+          # hub-queue uses the board's LONG axis ids; the frozen banks live at csoai/gspc-<short>/items.jsonl.
+          # The map must cover every axis in mill_hub_queue.MODEL_AXES: an unmapped long id fell through to
+          # csoai/gspc-<long-id>, which does not exist (401/404), so the axis printed "no public frozen bank"
+          # and stayed UNMEASURED for a reason that was a typo, not a fact. Verified live 2026-09-03.
+          case "$AXIS" in
+            governance) DS=gov ;;
+            safety) DS=agi ;;
+            provenance) DS=prv ;;
+            continuity) DS=asi ;;
+            conformance) DS=mcp ;;
+            openness) DS=oss ;;
+            machinery-conformity) DS=mach ;;
+            care) DS=care ;;
+            cross-reality) DS=xr ;;
+            detector-interop) DS=det ;;
+            art5-safeguard) DS=art5 ;;
+            swarm) DS=swarm ;;
+            affect) DS=affect ;;
+            # jail's bank is csoai/gspc-jail-goldbank/goldbank_jail.json — a code-execution bank
+            # (items[] with code/kind), not an items.jsonl prompt bank. The generic grader cannot
+            # read it, so jail fails closed below and is kept out of the rotation until it has a
+            # reader of its own. Naming it here beats an unmapped fall-through that looks like a typo.
+            jail) DS=jail-goldbank ;;
+            *) DS="$AXIS" ;;
+          esac
+          if curl -fsSL "https://huggingface.co/datasets/csoai/gspc-${DS}/resolve/main/items.jsonl" -o "mill-in/banks/${AXIS}.jsonl"; then
+            echo "bank csoai/gspc-${DS} → banks/${AXIS}.jsonl ($(wc -l < mill-in/banks/${AXIS}.jsonl) items)"; echo "inputs=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "no public frozen bank for ${AXIS} (tried csoai/gspc-${DS}) — stays UNMEASURED"; echo "inputs=0" >> "$GITHUB_OUTPUT"
+          fi
+          wc -l mill-in/queue.jsonl
+      - name: keys present? (fail closed, never fake)
+        id: keys
+        run: |
+          n=0; for k in GROQ_API_KEY GEMINI_API_KEY NVIDIA_API_KEY CEREBRAS_API_KEY TOGETHER_API_KEY MISTRAL_API_KEY SAMBANOVA_API_KEY OPENROUTER_API_KEY HF_INFERENCE_TOKEN; do [ -n "${!k:-}" ] && n=$((n+1)); done
+          echo "providers_with_keys=$n"; echo "n=$n" >> "$GITHUB_OUTPUT"
+          [ "$n" -gt 0 ] || echo "NO PROVIDER KEYS — staging nothing (add secrets by name; see issue #1102)"
+      - name: in-flight cells — never re-pick a cell already staged in an open landing PR
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Human merge is the only gate on landing PRs. Until one merges, its cells are still
+          # UNMEASURED on the public hub-queue and the picker grades them again (2026-09-05: five
+          # open PRs, 40 staged cards, 11 distinct). Read the open landing branches and hand the
+          # picker their (id, axis) cells to skip. Empty when nothing is waiting — that is fine.
+          BRS=$(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName|select(startswith("mill/land-"))' || true)
+          python3 harness/gspc-top100/inflight_cells.py --out mill-in/inflight.jsonl $BRS
+      - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        run: |
+          set -euo pipefail
+          # --probe-first asks the Hub which slugs a provider actually serves BEFORE spending
+          # a grade. Without it a run picks the 100 emptiest by rank, grades the first 8, and
+          # 7 of those 8 are gpt2/opt-125m/GGUF/tiny-test repos that nothing serves — one card
+          # per run, seven wasted grades (run 33703522343, run 33715973211: graded 8, staged 1).
+          # --dead carries the ids already proven to have no endpoint so they are never picked
+          # again. Deliberately NOT --only live_provider_slugs.txt: that list was built when HF
+          # Inference Providers answered, and today it does not (#1102) — it omits the one model
+          # currently staging cards through openrouter. Probe live routing, do not trust a
+          # snapshot of routing that has since changed.
+          python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out \
+            --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 \
+            --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
+            --inflight mill-in/inflight.jsonl 2>&1 | tail -40
+      - name: upload staged cards (not a board rewrite)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hub-queue-mill-${{ github.run_id }}
+          path: mill-out
+          if-no-files-found: warn

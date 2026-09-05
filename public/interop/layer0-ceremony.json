@@ -1,0 +1,61 @@
+{
+  "schema": "csoai.layer0-ceremony/0.1",
+  "status": "DISCOVERY_POINTER",
+  "claim_boundary": {
+    "is_a_receipt": false,
+    "is_an_ots_proof": false,
+    "is_a_bitcoin_anchor": false,
+    "is_a_measurement": false,
+    "is_a_certificate": false,
+    "what_it_is": "a pointer to where each anchor can be independently verified"
+  },
+  "as_of": "20260905T045750Z",
+  "merkle_root": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+  "cards_anchored": 335,
+  "anchors": {
+    "opentimestamps": {
+      "name": "OpenTimestamps \u2192 Bitcoin",
+      "kind": "pending-stamp",
+      "endpoint": "https://a.pool.opentimestamps.org",
+      "method": "POST /digest/<hex> \u2192 get .ots pending stamp \u2192 upgrade when BTC fees drop",
+      "status": "PENDING",
+      "as_of": "20260905T045750Z",
+      "receipts": [],
+      "merkle_root_anchored": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8"
+    },
+    "sigstore_rekor": {
+      "name": "Sigstore Rekor",
+      "kind": "transparency-log",
+      "endpoint": "https://rekor.sigstore.dev",
+      "method": "POST /api/v1/log with merkle_root + Ed25519 signature",
+      "status": "READY (no key required for hashedrekord)",
+      "as_of": "20260905T045750Z"
+    },
+    "eas_base": {
+      "name": "EAS on Base",
+      "kind": "on-chain-attestation",
+      "endpoint": "https://base.easscan.org",
+      "method": "POST schema attestation with merkle_root",
+      "status": "READY (needs MetaMask to register schema)",
+      "as_of": "20260905T045750Z"
+    }
+  },
+  "compute": {
+    "oracle": {
+      "status": "LIVE",
+      "host": "oracle-micro-2 (council-os-owem-micro2)",
+      "uptime": "32 days",
+      "role": "anchor-relay (the merkle_root is anchored via cron on Oracle)"
+    },
+    "runpod": {
+      "status": "DARK (paused \u2014 no API key)",
+      "host": "n/a",
+      "role": "GPU compute (when claimed)"
+    }
+  },
+  "pqc": {
+    "status": "PLANNED",
+    "transition": "Ed25519 \u2192 Ed25519 + ML-DSA-65 (dual-sign for crypto-agility)",
+    "lib": "liboqs (operator-gated to install)"
+  }
+}

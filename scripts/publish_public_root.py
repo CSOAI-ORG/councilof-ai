@@ -30,10 +30,26 @@ ROOT = HERE.parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 
-from adapters import benji, fin7_coverage, genai_mil_notices, hub_cite, swift_notices, xrpl  # noqa: E402
+from adapters import (  # noqa: E402
+    # NOTE 2026-09-03: `_coverage` and `fin` were listed here but no such modules
+    # exist and never have (no delete in git history). Neither name was used —
+    # only fin7_coverage.collect() is called. The dead names raised
+    # ImportError at module load, so this publisher could not run AT ALL.
+    benji,
+    evm_permission_events,
+    evm_permissions,
+    fin7_coverage,
+    genai_mil_notices,
+    hub_cite,
+    provider_diff,
+    staged_leaves,
+    swift_notices,
+    witness_queue,
+    xrpl,
+)
 
-CARD_SCHEMA = "https://councilof.ai/schema/card-v0.json"
-ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v0.json"
+CARD_SCHEMA = "https://councilof.ai/schema/card-v1.json"
+ENVELOPE_SCHEMA = "https://councilof.ai/schema/public-root-v1.json"
 DID = "did:web:csoai.org#board-attestation-1"
 SURFACES = {
     "xrpl.asset.state",
@@ -105,10 +121,67 @@ def sha256_hex(data: bytes) -> str:
 
 
 def payload_sha256(payload: dict) -> str:
+    """card-v0 leaf digest: the PAYLOAD ONLY.
+
+    Retained so v0 cards already in a published root stay checkable. Do not use
+    it for new cards — see card_sha256() and the note there.
+    """
     raw = canonical_bytes(payload)
     if len(raw) > PAYLOAD_CAP:
         raise ValueError(f"payload {len(raw)} bytes exceeds {PAYLOAD_CAP} cap")
     return sha256_hex(raw)
+
+
+# Fields that cannot be inside their own digest.
+DIGEST_EXCLUDES = ("sha256", "sig_ed25519")
+
+
+def card_sha256(card: dict) -> str:
+    """card-v1 leaf digest: THE WHOLE CARD except its own digest and signature.
+
+    Why this exists (2026-09-03). v0 hashed `payload` alone, so `subject`,
+    `source_urls`, `as_of`, `did`, `surface`, `tags` and `unmeasured` all sat
+    OUTSIDE the merkle tree. Demonstrated on the real code:
+
+        subject honest   : "Qwen/Qwen3-30B governance run"
+        subject tampered : "TOTALLY DIFFERENT CLAIM"
+        source  tampered : "https://evil.example/fake"
+        leaf digest      : e52f814957f02a0aef7de67ca93250f9…  (IDENTICAL)
+
+    A card's claim text and its evidence URL could both be rewritten and the
+    leaf, the merkle root and the inclusion proof would all still verify. For a
+    measurement body whose product is "follow the link and check", that is the
+    worst possible hole: the link was not covered.
+
+    v1 binds every field a relying party reads. The payload cap still applies to
+    the payload, not to the card.
+    """
+    raw = canonical_bytes(payload_of(card))
+    if len(canonical_bytes(card.get("payload") or {})) > PAYLOAD_CAP:
+        raise ValueError("payload exceeds cap")
+    return sha256_hex(raw)
+
+
+def payload_of(card: dict) -> dict:
+    return {k: v for k, v in card.items() if k not in DIGEST_EXCLUDES}
+
+
+def assert_count_binds(card_count: int, leaf_hexes: list[str]) -> None:
+    """card_count is the ONLY thing separating this tree from a CVE-2012-2459 twin.
+
+    With odd-node duplication a 142-leaf and a 144-leaf set share a root, so the
+    signed count is load-bearing, not decorative.
+
+    Do NOT call this at emit time with len(shas) on both sides — that compares a value
+    to itself and can never fail. It belongs where the two fields arrive independently:
+    reading a root.json back off disk or off the wire. See test_public_root.py.
+    """
+    if card_count != len(leaf_hexes):
+        raise SystemExit(
+            f"REFUSING TO PUBLISH: card_count={card_count} but {len(leaf_hexes)} leaves. "
+            "The signed count is what makes this root unambiguous; if it can drift, "
+            "the root admits a second leaf set."
+        )
 
 
 def merkle_root(leaf_hexes: list[str]) -> str:
@@ -243,23 +316,67 @@ def sign_payload(payload: dict, key) -> str:
     raise RuntimeError("no PKCS8 and OIDC board-sign unavailable")
 
 
-def make_card(leaf: dict, sig: str | None) -> dict:
+# Compact CARD envelope — same reason as ENVELOPE_PREIMAGE_KEYS above: board-sign
+# refuses anything over 3KB, and a whole card (payload + subject + source_urls +
+# tags + unmeasured) does not fit. Signing payload_of(card) directly returned
+# `400 payload exceeds 3KB cap` for 30 cards on 2026-09-03.
+#
+# card["sha256"] IS the whole-card digest, so signing this envelope transitively
+# binds subject, source_urls, tags, unmeasured and payload — the property the
+# payload-only signature lacked — while staying a couple of hundred bytes.
+CARD_ENVELOPE_KEYS = ("did", "schema", "surface", "as_of", "sha256")
+
+
+def card_envelope(card: dict) -> dict:
+    return {k: card[k] for k in CARD_ENVELOPE_KEYS}
+
+
+def sign_card(card: dict, key) -> str:
+    """Sign a compact envelope whose sha256 covers the whole card.
+
+    Signing leaf["payload"] (as this did before 2026-09-03) left `subject` and
+    `source_urls` outside the signature as well as outside the merkle tree — so
+    the claim text and the evidence link were attested by nothing.
+
+    The envelope carries card["sha256"], the v1 whole-card digest, so the
+    signature reaches every field through it. sig_ed25519 is excluded from that
+    digest, so attaching the signature afterwards disturbs neither the preimage
+    nor card["sha256"].
+    """
+    return sign_payload(card_envelope(card), key)
+
+
+def make_card(leaf: dict, sig: str | None, will_sign: bool | None = None) -> dict:
+    """Build a card. `will_sign` lets the caller state that a signature is coming.
+
+    The signature is produced OVER this card (see sign_card), so the card must be
+    finished before it can be signed. Passing will_sign=True keeps the
+    NO_LAPTOP_SIGN tag off a card we are about to sign, without ever claiming a
+    signature that does not arrive — the caller rebuilds with will_sign=False if
+    signing fails.
+    """
     surface = leaf["surface"]
     if surface not in SURFACES:
         raise ValueError(f"unknown surface {surface}")
     payload = leaf["payload"]
-    digest = payload_sha256(payload)
     missing = list(leaf.get("unmeasured") or [])
-    if sig is None:
+    signed = (sig is not None) if will_sign is None else will_sign
+    if not signed:
         tag = "sig_ed25519 against #board-attestation-1 (NO_LAPTOP_SIGN)"
         if not any("sig_ed25519" in x for x in missing):
             missing.append(tag)
     card = {
         "as_of": leaf["as_of"] or now_iso(),
         "did": DID,
+        "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+        "sig_covers": (
+            "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the "
+            "whole-card digest, so the signature binds subject, source_urls, tags, "
+            "unmeasured and payload through it"
+        ),
         "payload": payload,
         "schema": CARD_SCHEMA,
-        "sha256": digest,
+        "sha256": None,
         "sig_ed25519": sig,
         "source_urls": list(leaf["source_urls"]),
         "subject": leaf["subject"],
@@ -267,6 +384,8 @@ def make_card(leaf: dict, sig: str | None) -> dict:
         "tags": list(leaf.get("tags") or []),
         "unmeasured": missing,
     }
+    # digest LAST, over the finished card — so subject and source_urls are bound
+    card["sha256"] = card_sha256(card)
     return card
 
 
@@ -307,9 +426,10 @@ def validate_committed(committed: dict) -> None:
         card = wrapped.get("card") or wrapped
         if card.get("sha256") != sha:
             raise SystemExit(f"sha mismatch in {path}")
-        got = payload_sha256(card["payload"])
-        if got != sha:
-            raise SystemExit(f"payload sha256\u2260id in {path}: {got}")
+        # v1 leaves cover the whole card; v0 leaves already in a published root
+        # cover the payload only. Both must stay checkable.
+        if sha not in (card_sha256(card), payload_sha256(card["payload"])):
+            raise SystemExit(f"leaf digest\u2260id in {path}: {sha}")
         if len(canonical_bytes(card["payload"])) > PAYLOAD_CAP:
             raise SystemExit(f"payload cap in {path}")
     got_m = merkle_root(shas)
@@ -370,7 +490,7 @@ def write_halt_health(
 
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v0")
+    ap = argparse.ArgumentParser(description="One writer for csoai.public-root/v1")
     ap.add_argument("--dry-run", action="store_true", help="run adapters + halts; do not write")
     ap.add_argument(
         "--validate-committed",
@@ -400,7 +520,16 @@ def main() -> int:
     benji_out = benji.collect()
     fin7_out = fin7_coverage.collect()
     genai_mil_out = genai_mil_notices.collect()
+    staged_out = staged_leaves.collect(ROOT)
+    provider_diff_out = provider_diff.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
+    witness_out = witness_queue.collect(ROOT)
+    # EVM permission state (+ EIP-1186 proofs) and permission-event history for
+    # the tokenised-RWA roster. Public RPCs only; never raise; dark RPC = fewer
+    # leaves. See scripts/adapters/evm_permissions.py / evm_permission_events.py
+    # and docs/PROVABLE-ARCHIVE-METHOD.md.
+    evm_out = evm_permissions.collect()
+    evm_events_out = evm_permission_events.collect(ROOT)
 
     leaves: list[dict] = []
     leaves.extend(xrpl_out["leaves"])
@@ -411,6 +540,21 @@ def main() -> int:
     # claim-vs-card x4, NIST crosswalk). Facts, not measurements. New leaves stay
     # UNSIGNED until the GHA OIDC job signs them; deployments UNCHECKABLE.
     leaves.extend(genai_mil_out["leaves"])
+    # Staged UNSIGNED atoms from the XRPL/SWIFT eater (file reader, no network,
+    # never raises). public.notice only; PROBED/DISCOVERED/UNMEASURED on the
+    # payload; signed here or not at all. See scripts/adapters/staged_leaves.py.
+    leaves.extend(staged_out["leaves"])
+    # Witnessed digests from the x402 rail (/api/witness → WITNESS_KV, read over the
+    # Cloudflare KV REST API; mirrors under public/interop/witness/ keep a landed leaf
+    # landing). Hash only — never the bytes, never the URL. public.notice, PROBED,
+    # kind csoai.witness.hash/0.1. Absent config → no leaves, never a halt.
+    leaves.extend(witness_out["leaves"])
+    # Provider-diff leaves (hash-only document change notices + daily capture
+    # summary) staged by scripts/watch/provider_watch.py. File reader, no
+    # network, never raises. See scripts/adapters/provider_diff.py.
+    leaves.extend(provider_diff_out["leaves"])
+    leaves.extend(evm_out["leaves"])
+    leaves.extend(evm_events_out["leaves"])
 
     have_pkcs8 = key_present()
     have_key = signer_available()
@@ -422,25 +566,32 @@ def main() -> int:
 
     cards: list[dict] = []
     new_unsigned: list[str] = []
+    legacy_digests: list[str] = []
     for leaf in leaves:
-        digest = payload_sha256(leaf["payload"])
-        is_new = digest not in LAST_UNSIGNED_SET
+        # The 07:38Z unsigned snapshot is keyed by the v0 payload digest, so
+        # membership in it must still be tested with the v0 digest. It is an
+        # identity for that historical set only — never the leaf.
+        legacy_digest = payload_sha256(leaf["payload"])
+        legacy_digests.append(legacy_digest)
+        is_new = legacy_digest not in LAST_UNSIGNED_SET
+        will_sign = is_new and have_key
+
+        card = make_card(leaf, None, will_sign=will_sign)
         sig = None
-        if is_new:
-            if not have_key:
-                new_unsigned.append(digest)
-            else:
-                try:
-                    sig = sign_payload(leaf["payload"], key)
-                except Exception as e:
-                    print(f"sign failed: {type(e).__name__}", file=sys.stderr)
-                    new_unsigned.append(digest)
-        card = make_card(leaf, sig)
-        if card["sha256"] != digest:
+        if will_sign:
+            try:
+                sig = sign_card(card, key)
+            except Exception as e:
+                print(f"sign failed: {type(e).__name__}", file=sys.stderr)
+                # rebuild so the card declares NO_LAPTOP_SIGN rather than implying a sig
+                card = make_card(leaf, None, will_sign=False)
+        card["sig_ed25519"] = sig
+        # attaching the signature must not move the leaf: sig_ed25519 is excluded
+        if card["sha256"] != card_sha256(card):
             raise SystemExit("sha256=id invariant broken")
         if is_new and not card["sig_ed25519"]:
-            if digest not in new_unsigned:
-                new_unsigned.append(digest)
+            if card["sha256"] not in new_unsigned:
+                new_unsigned.append(card["sha256"])
         cards.append(card)
 
     asset_cards = [c for c in cards if c["surface"] == "xrpl.asset.state"]
@@ -468,13 +619,15 @@ def main() -> int:
                 "n": 16,
                 "merkle": basket_hex,
                 "leaf_sha256": [c["sha256"] for c in asset_cards],
-                "note": "Merkle over the locked 16 xrpl.asset.state payload ids. Represented TVL is separate. Not a grade.",
+                "note": "Merkle over the locked 16 xrpl.asset.state card ids (whole-card digests). Represented TVL is separate. Not a grade.",
             },
             "unmeasured": [],
             "tags": ["framework:xrpl", "coverage:locked-16"],
         }
-        sig = sign_payload(basket_leaf["payload"], key)
-        basket_card = make_card(basket_leaf, sig)
+        basket_card = make_card(basket_leaf, None, will_sign=True)
+        basket_card["sig_ed25519"] = sign_card(basket_card, key)
+        if basket_card["sha256"] != card_sha256(basket_card):
+            raise SystemExit("basket sha256=id invariant broken")
         cards = asset_cards + [basket_card] + [c for c in cards if c["surface"] != "xrpl.asset.state"]
 
     if new_unsigned:
@@ -494,6 +647,11 @@ def main() -> int:
                 "swift_notices": {"status": "halt-before-write", "note": "TARGETS not clients"},
                 "benji": {"status": "halt-before-write", "note": "GraphQL dark. Not issuer 7"},
                 "hub_cite": {"status": "cite-only", "note": "Health sidecar only. Not a card-v0 leaf."},
+                "staged_leaves": {"status": "halt-before-write", **staged_out["sidecar"]},
+                "witness_queue": {"status": "halt-before-write", **witness_out["sidecar"]},
+                "provider_diff": {"status": "halt-before-write", **provider_diff_out["sidecar"]},
+                "evm_permissions": {"status": "halt-before-write", **evm_out["sidecar"]},
+                "evm_permission_events": {"status": "halt-before-write", **evm_events_out["sidecar"]},
             },
         }
         if not have_key:
@@ -528,14 +686,47 @@ def main() -> int:
         "card_count": len(shas),
         "card_sha256": shas,
         "did_intended": DID,
-        "kind": "csoai.public-root/v0",
+        # v1 since 2026-09-03: the leaf is the WHOLE-CARD digest, not the payload
+        # digest. `kind` is inside ENVELOPE_PREIMAGE_KEYS, so this is a SIGNED
+        # declaration of which leaf rule applies. Publishing v1 leaves under a v0
+        # label would tell a stranger to apply the payload rule, fail to reproduce
+        # the leaf, and reasonably conclude the cards had been tampered with.
+        # Roots already published as v0 stay v0 and stay checkable.
+        "kind": "csoai.public-root/v1",
+        "leaf_definition": (
+            "sha256(canonical(card minus sha256 and sig_ed25519)) — binds subject, "
+            "source_urls, tags, as_of, did, surface, unmeasured and payload"
+        ),
+        # Added 2026-09-04. The leaf rule was published from the start; the NODE rule
+        # never was, so no stranger could reproduce merkle_root from these bytes — it
+        # had to be guessed. Publishing the leaf rule alone is not a reproducible root.
+        "node_definition": (
+            "parent = sha256(left || right) over RAW 32-byte digests, pairwise, "
+            "bottom-up. An odd node at any level is paired WITH ITSELF "
+            "(Bitcoin-style duplication), not promoted. No domain-separation prefix."
+        ),
+        "tree_caveat": (
+            "Odd-node duplication makes this tree shape collidable in the sense of "
+            "CVE-2012-2459: appending duplicates of the tail can yield a DIFFERENT "
+            "leaf set with an IDENTICAL merkle_root (the three-leaf set [A,B,C] and "
+            "four-leaf set [A,B,C,C] are the minimal deterministic example). The ambiguity is closed "
+            "ONLY because card_count is inside the signed preimage. Therefore a "
+            "verifier MUST reject any presentation where len(card_sha256) != "
+            "card_count, and MUST reject any inclusion proof with index >= card_count. "
+            "Checking the merkle_root alone is NOT sufficient. A future v2 should move "
+            "to RFC 6962 domain separation (0x00 leaf / 0x01 node), which removes the "
+            "collision by construction; that changes every root, so it is not a silent "
+            "upgrade."
+        ),
         "language": (
             "coverage of public XRPL instruments + public notices. "
             "No bank names as clients. Not a certification."
         ),
         "merkle_root": root_merkle,
         "note": (
-            "Envelope schema is public-root-v0, not card-v0. Leaves stay card-v0. "
+            "Envelope schema is public-root-v1, not card-v0. Leaves are card-v1: "
+            "the digest covers the whole card, so a card's subject and source_urls "
+            "cannot be rewritten without moving the root. "
             "Unsigned until GHA signs this envelope (sig_ed25519). "
             "did_intended names the intended leaf attestation identity only. "
             "Leaves MAY carry attestations — coverage harvest, not grades. "
@@ -567,7 +758,7 @@ def main() -> int:
             "PKCS8 stays on Pages (OIDC). Not a certificate."
         )
         root_body["note"] = (
-            "Envelope schema is public-root-v0, not card-v0. This root.json envelope "
+            "Envelope schema is public-root-v1, not a measurement card. This root.json envelope "
             "is Ed25519-signed over the compact preimage under "
             "did:web:csoai.org#board-attestation-1. Leaves MAY carry attestations "
             "— coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled."
@@ -598,6 +789,11 @@ def main() -> int:
         "cites": hub_out.get("sidecar") or {},
         "swift": notices_out.get("sidecar") or {},
         "benji": benji_out.get("sidecar") or {},
+        "staged_leaves": staged_out.get("sidecar") or {},
+        "witness_queue": witness_out.get("sidecar") or {},
+        "provider_diff": provider_diff_out.get("sidecar") or {},
+        "evm_permissions": evm_out.get("sidecar") or {},
+        "evm_permission_events": evm_events_out.get("sidecar") or {},
         "card_count": len(shas),
         "xrpl_asset_state_count": len(asset_cards),
         "note": (
@@ -615,7 +811,9 @@ def main() -> int:
                 "card_count": len(shas),
                 "merkle_root": root_merkle,
                 "xrpl_basket_merkle": basket_hex,
-                "new_vs_unsigned_set": sum(1 for s in shas if s not in LAST_UNSIGNED_SET),
+                "new_vs_unsigned_set": sum(
+                    1 for d in legacy_digests if d not in LAST_UNSIGNED_SET
+                ),
                 "surfaces": {
                     s: sum(1 for c in cards if c["surface"] == s)
                     for s in sorted({c["surface"] for c in cards})
@@ -640,7 +838,15 @@ def main() -> int:
         write_pretty(proofs_dir / f"{sha[:16]}.json", pr)
     write_pretty(ROOT / "public" / "root.json", root_body)
     write_pretty(ROOT / "public" / "publisher-health.json", health)
-    print("wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json")
+    # Provable-archive bytes that travel with this root: the full EIP-1186 proofs
+    # the leaves point at (content-addressed) and the event-indexer cursor, which
+    # advances ONLY once the root carrying its leaves is on disk.
+    n_proofs = len(evm_permissions.write_proof_blobs(ROOT, evm_out.get("proof_blobs") or {}))
+    state_path = evm_permission_events.save_state(ROOT, evm_events_out["state"]) if evm_events_out.get("state") else None
+    print(
+        "wrote public/root.json public/cards/ public/proofs/ public/publisher-health.json "
+        f"public/archive/proofs/eip1186/ (+{n_proofs}) {state_path or 'no evm-events state'}"
+    )
     return EXIT_OK
 
 

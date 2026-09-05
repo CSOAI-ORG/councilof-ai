@@ -36,7 +36,7 @@ type Item = { name: string; what: string; licence: string; href: string };
 
 const BUILT_ON: Item[] = [
   { name: "c2pa-rs / c2pa-python", what: "Article 50 manifest signing and verification", licence: "Apache-2.0 / MIT", href: "https://github.com/contentauth/c2pa-rs" },
-  { name: "OpenSSL", what: "Ed25519 signing; ML-DSA (FIPS 204) for the continuity axis", licence: "Apache-2.0", href: "https://openssl.org" },
+  { name: "OpenSSL", what: "Ed25519 signing; ML-DSA (FIPS 204) transition research for the continuity axis", licence: "Apache-2.0", href: "https://openssl.org" },
   { name: "Pillow", what: "the transform battery in the provenance survival matrix", licence: "MIT-CMU", href: "https://python-pillow.org" },
   { name: "SQLite / FTS5", what: "the frozen statute corpus", licence: "public domain", href: "https://sqlite.org" },
   { name: "MapLibre GL JS", what: "the keyless globe (planned render surface)", licence: "BSD-3-Clause", href: "https://maplibre.org" },

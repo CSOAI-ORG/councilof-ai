@@ -108,16 +108,23 @@ export default function XrplReaderRail({
           </p>
           <ul className="mt-3 grid gap-x-4 gap-y-1 text-[13px] sm:grid-cols-2" data-testid="xrpl-rail-names">
             {wire.doc.assets!.map((a) => (
-              <li key={`${a.symbol}-${a.issuer}`} className="flex items-baseline gap-1.5">
+              <li key={`${a.symbol}-${a.issuer}`} className="flex flex-wrap items-baseline gap-x-1.5">
                 <span className="font-mono font-semibold text-slate-900">{a.symbol}</span>
+                {/* real separator characters, not a CSS-only gap: the ticker and issuer
+                    ran together ("RLUSDRipple") in every text/accessibility/prerender
+                    read of this list, where a flex gap inserts no character. */}
+                <span className="text-slate-400">{" · "}</span>
                 <span className="truncate text-slate-600">{a.issuer}</span>
                 {a.sig_ed25519 == null && (
-                  <span
-                    className="shrink-0 rounded-full border border-amber-300 bg-amber-50 px-1.5 text-[10px] font-bold text-amber-800"
-                    title="sig_ed25519 is null on this leaf (NO_LAPTOP_SIGN) — an honest gap, not an error"
-                  >
-                    unsigned
-                  </span>
+                  <>
+                    <span className="text-amber-500">{" — "}</span>
+                    <span
+                      className="shrink-0 rounded-full border border-amber-300 bg-amber-50 px-1.5 text-[10px] font-bold text-amber-800"
+                      title="sig_ed25519 is null on this leaf (NO_LAPTOP_SIGN) — an honest gap, not an error"
+                    >
+                      unsigned
+                    </span>
+                  </>
                 )}
               </li>
             ))}

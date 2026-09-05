@@ -1,50 +1,98 @@
-# AGENT ONBOARDING — how this estate gets shit done
-**Read this before touching anything. Provisional until verified against origin — the probe wins, not the report. (2026-08-25)**
+# AGENT ONBOARDING — Council OS post-release work
 
-## The four lanes
+Read this before touching the estate. Resolve the latest `origin/master` at the
+start of each lane and record the commit in the handoff; a saved branch, SHA,
+transcript or status report is never the source of truth.
 
-| Lane | Runs on | Owns | Never touches |
-|---|---|---|---|
-| **Claude (main)** | Nick's Mac | councilof-ai repo, upstream PRs, GitHub org | csoai-site production deploys |
-| **Kimi (K3)** | Mac + pods | csoai-static-deploy2 tree, pod fleet, estate chain signing, Zenodo/Kaggle | councilof-ai |
-| **DeepSeek/harness** | pods | measurement runs only | any production deploy |
-| **Nick (owner)** | human | rulings, logins, spend, legal submits, merges | — |
+## The four bounded lanes
 
-## The coordination protocol
+| Lane | Owns | Never touches |
+| --- | --- | --- |
+| **TUI 1 — frontend/learning** | Dashboard UI components, lobby, learning/game data, and the assigned routed truth pages (`CouncilSpace`, `ArenaScoreboard`, `TrainingView`, `MeasurementBoard`, `Methodology`, `GSPCAnchors`, `GSPCVerify`) | Functions, workflows, generated public truth, merge or deploy |
+| **TUI 2 — backend/evidence** | Versioned lifecycle contracts, signing-script logic, bounded execution fixtures, admission/reducer tests and protocol projections | Frontend, workflows, generated signed public truth, live signing keys/authority or deploy |
+| **Claude Master — integration/release verification** | `App.tsx`, `Dashboard.tsx`, release gates, canonical generators, exact-path integration and local preview | Redesigning lane-owned UI/contracts; production writes without separate owner approval |
+| **Hermes — audit/coordination** | Claim/evidence ledger, path classification, revenue/growth/IP/GSPC audit artifacts under `docs/handoff/HERMES_*` | Product code, signing, publishing, email, spend, merge or deploy |
 
-1. **Read `LANE_COORDINATION.md` on the shared pod before any shared surface.** Append your state when you start and finish. One lane per surface.
-2. **Commit by name, never `git add -A`** on shared trees (lanes carry dirty files).
-3. **Claim provisional until verified against origin.** Lanes have reported unreproducible successes before. Verify with curl/git, then claim.
-4. **No live agent socket exists.** Handoffs: the coordination file, clear git commits, or Nick pasting between sessions. Write for a zero-context reader.
+Binding order: `docs/handoff/MASTER_EXECUTION_ORDER_2026-09-04.md`. Each lane
+must use its named document in `docs/handoff/`.
 
-## The credentials model (keystone)
+## Coordination protocol
 
-All secrets live in the macOS keychain (service `meok-keystone`) or on designated pods — **never** in repo files, remote URLs, or process command lines (`ps aux` leaks them; use env files chmod 600). If you can't reach a credential, ask Nick. **Never guess or fabricate access.** The estate signing keys never travel: site/release key = keystone; estate chain key = pods only.
+1. Fetch and resolve current `origin/master`; record it in the run evidence,
+   never in this durable instruction.
+2. One owner per path. Work only inside the lane boundary and return an exact
+   changed-path manifest.
+3. Never use `git add -A` in a shared tree. No lane commits, pushes, publishes,
+   emails, spends, merges or deploys under the post-release job order.
+4. A claim is provisional until current artifacts or a reproducible probe
+   verify it. Configuration, styling and HTTP 200 do not establish capability.
+5. Claude Master integrates only frozen manifests after Hermes confirms there
+   is no missing or duplicated owner.
 
-## The canon (CI reverts violations)
+## Credentials
 
-- Public count: cite live **`totals.public_count`** on GET https://councilof.ai/api/gspc — never a number typed here. TWO numbers travel together: `totals.axes` counts SLOTS, `totals.measured_axes` counts slots with a real run behind them, `totals.unmeasured_axes` is published so the gap is visible. Quoting the slot count alone claims measurements that do not exist; quote both, or quote the smaller. (This line used to read "14 measured of 14 quotable · do not invent 22 axes". That lock was correct while the 8 financial/domain axes were ruled in but absent from the signed payload; the 2026-08-26 sweep wired them in and re-signed, so the endpoint now backs the larger count. See council-os/ADR-001-axis-count.md.)
-- Jail: **MEASURED** (n=71); separation **TIE** on the living board — a TIE is not a separated leader.
-- DOI spine: HF board `10.57967/hf/10114` · bench `10.57967/hf/10116` (never remint).
-- Issuer: Council of AI (CSOAI LTD, UK #16939677). Register: **measurement, not certification**.
-- Kill-list in display copy: sovereign/SOV*/SOVOS/CEASAI/DEFONEOS/byzantine/BFT/33-agent · certification-as-product · SaaS pricing · "neutral referee".
-- Ties are ties. UNMEASURED stays UNMEASURED. Corrections are append-only, signed, in the same record as results.
+Secrets belong in the designated secret store, never repository files, URLs,
+logs, receipts or process arguments. Worker credentials must not include
+admission, signing, root, publishing or deployment authority. If a credential
+is unavailable, report the gate; never guess, copy or fabricate it.
 
-## The signature chain (verify anything in 3 lines)
+## Current truth checkpoint
 
-```
-canonical  = json.dumps(payload, sort_keys=True, separators=(",",":"), ensure_ascii=False)
-content_id = sha256(canonical utf-8) as hex
-signature  = Ed25519 over content_id.encode()   # pubkeys in did:web:csoai.org
-```
+These values identify one exact checkpoint and must be re-read before later use.
 
-Verify free: https://councilof.ai/gspc-verify · MCP registry `io.github.CSOAI-ORG/gspc` 1.0.3 · ClaimGuard `products/claimguard`.
+- Public root: **154 coverage leaves**; `root.json` SHA-256
+  `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`;
+  Merkle root
+  `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`.
+- Ed25519 and Rekor verify. OTS is `STAMPED_PENDING_BITCOIN`, not confirmed
+  Bitcoin. PQC is planned.
+- The **335-card signed-card catalogue is separate** from that root.
+- Historical root union: **25 roots / 937 entries**—**904** individually signed
+  wrappers and **33** unsigned wrappers.
+- The Council is a 33-member design with a 23-member quorum target, not a live
+  BFT runtime. Latest independence result: `rho=1`, `n_eff=1`.
+- Games, quests, training and Coliseum interactions are `PRACTICE_ONLY`.
+  They do not certify a person, update GSPC or prove compliance.
+- General repair, live two-model battle, independent runtime admission and PQC
+  proof remain unavailable unless fresh implementation evidence says otherwise.
+
+## Canon
+
+- Quote GSPC totals only from the current canonical API and keep axis slots,
+  measured rows and unmeasured rows distinct. Model-comparison and
+  deterministic-fact rows carry different units and denominator rules.
+- Issuer: Council of AI (CSOAI LTD, UK company 16939677). The product provides
+  measurement and evidence, not certification or regulator approval.
+- Ties remain ties. `UNMEASURED` remains `UNMEASURED`. A signature proves a
+  declared byte-level statement; it does not decide a grade or legal status.
+- Never claim a live 33-agent/BFT Council. The designed membership and measured
+  independence result may be shown only with their explicit non-live boundary.
+- Never call pending OTS “Bitcoin anchored,” planned PQC “operational,” or a
+  practice/game event a training attestation.
+
+## Signature verification is family-specific
+
+There is no universal three-line recipe for every historic estate record.
+Current card families declare different canonical forms and signature
+preimages. Some use CPython
+`json.dumps(..., sort_keys=True, separators=(",",":"), ensure_ascii=True)`
+and a raw canonical preimage; other supported families sign the ASCII content
+identifier. Neither may be silently substituted for the other, and this is not
+RFC 8785/JCS.
+
+Use the family-aware verifier. Require an explicit supported family, pinned key
+identifier, canonical-preimage rule, matching hash and valid Ed25519 signature.
+Unsupported or legacy families are `UNCHECKABLE`, never guessed.
 
 ## Machine surfaces
 
-- Living board: https://councilof.ai/api/gspc
-- Agent card: https://councilof.ai/.well-known/agent-card.json
-- RSS: https://councilof.ai/api/feed.xml
-- OpenAPI: https://councilof.ai/openapi.json
-- Badge: https://councilof.ai/badge/axes.json
-- Trust root: https://csoai.org/.well-known/did.json — never break this path.
+- Living board: `https://councilof.ai/api/gspc`
+- Agent card: `https://councilof.ai/.well-known/agent-card.json`
+- RSS: `https://councilof.ai/api/feed.xml`
+- OpenAPI: `https://councilof.ai/openapi.json`
+- Badge data: `https://councilof.ai/badge/axes.json`
+- Trust root: `https://csoai.org/.well-known/did.json`
+
+Reachability must be observed and timestamped. None of these URLs, by itself,
+proves that a capability, witness, customer, revenue event or compliance state
+exists.

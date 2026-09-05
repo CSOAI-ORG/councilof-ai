@@ -1,0 +1,60 @@
+{
+  "schema": "csoai.otel-bridge/0.1",
+  "as_of": "20260905T062637Z",
+  "principle": "OpenTelemetry-compatible spans: unveiled -> measured -> signed -> tokenized.",
+  "trace_id": "077010b0201710a1f153eb6b813c6877",
+  "spans": [
+    {
+      "name": "bank-census.probe",
+      "trace_id": "077010b0201710a1f153eb6b813c6877",
+      "span_id": "2cc59e7d34e2501a",
+      "attributes": {
+        "source.queue": "bank-complete",
+        "files": 10,
+        "records": 7800,
+        "measured": true,
+        "signed": "candidate"
+      },
+      "status": "OK"
+    },
+    {
+      "name": "bank-pack.probe",
+      "trace_id": "077010b0201710a1f153eb6b813c6877",
+      "span_id": "cc4fe7e10e09b62b",
+      "attributes": {
+        "source.queue": "bank-pack",
+        "files": 46,
+        "records": 5590,
+        "measured": true,
+        "signed": "candidate"
+      },
+      "status": "OK"
+    },
+    {
+      "name": "xrpl-settlement.probe",
+      "trace_id": "077010b0201710a1f153eb6b813c6877",
+      "span_id": "792f9d6a2260cc20",
+      "attributes": {
+        "source.queue": "xrpl-settlement",
+        "files": 18,
+        "records": 68,
+        "measured": true,
+        "signed": "candidate"
+      },
+      "status": "OK"
+    },
+    {
+      "name": "swift.probe",
+      "trace_id": "077010b0201710a1f153eb6b813c6877",
+      "span_id": "1e45068cd222575f",
+      "attributes": {
+        "source.queue": "swift",
+        "files": 0,
+        "records": 0,
+        "measured": true,
+        "signed": "candidate"
+      },
+      "status": "EMPTY"
+    }
+  ]
+}

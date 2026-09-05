@@ -190,7 +190,7 @@ function discover() {
     // route-manifest paths). Council OS layer URLs carry ?view= query strings that
     // heuristic discovery never sees; snapshot each so the static host serves them
     // exactly as it does for arena/towns (query-string-named snapshot dirs).
-    "/products", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
+    "/products", "/pricing-free", "/catalog", "/gpai-evidence", "/cra-readiness", "/cobolbridge",
     "/benchmark-quality", "/benchmark-index", "/benchmarks", "/compare", "/leaderboard",
     "/gspc-arena?view=benchmarks",
     "/gspc-arena?view=training",
@@ -202,6 +202,21 @@ function discover() {
     // Absent from heuristic discovery (blog deep links are only reachable via /blog/:slug),
     // so each needs an explicit snapshot or the static host serves an honest-404.
     "/blog/ai-insurance-verified-measurement",
+    "/blog/ai-audit-best-practices", // listed on /blog but 404 live (Pages serves 404.html for non-prerendered paths); brand-gate-checked
+    "/blog/ai-risk-register",
+    "/blog/algorithmic-accountability",
+    "/blog/casa-certification-launch",
+    "/blog/casa-certification-levels",
+    "/blog/cmmc-for-ai",
+    "/blog/eu-ai-act-compliance",
+    "/blog/global-ai-governance-harmonization",
+    "/blog/proof-of-ai",
+    "/blog/red-teaming-adversarial-testing",
+    "/blog/rd-tax-credits-uk-ai-startups",
+    "/blog/sovereign-governance-layer",
+    "/blog/why-we-publish-our-refutations",
+    "/blog/eu-ai-act-article-50-plain-english",
+    "/blog/eunomia-first-fine-watch",
     "/blog/ai-procurement-insurance-measured-risk",
     "/blog/bsi-art1-ai-testing-framework",
     "/blog/council-of-europe-ai-framework-convention",
@@ -254,6 +269,26 @@ function discover() {
   } catch (e) {
     // Loud, not silent: a parse failure here means Hive deep links ship as 404s.
     console.error(`hive: could not derive /hive/:slug routes — ${e.message}`);
+    process.exitCode = 1;
+  }
+  // ── /answers/:slug — every AEO answer page, derived from answers.json ─────────
+  // App.tsx routes /answers/:slug to AnswerPage (deep answer from answers.json) and
+  // /answers to its index. Heuristic discovery never sees the :slug values, so each
+  // answer cold-loaded as an honest-404 on the static host. Derive the slugs from
+  // the data — as /hive does — so an answer added later is snapshotted without anyone
+  // remembering to edit this file.
+  found.add("/answers");
+  try {
+    const answers = JSON.parse(readFileSync("client/src/data/answers.json", "utf8"));
+    const slugs = (Array.isArray(answers) ? answers : [])
+      .map((a) => a && a.slug)
+      .filter((s) => typeof s === "string" && s);
+    if (slugs.length === 0) throw new Error("no slugs parsed from answers.json");
+    for (const s of slugs) found.add(`/answers/${s}`);
+    console.log(`answers: queued ${slugs.length} /answers/:slug deep links from answers.json`);
+  } catch (e) {
+    // Loud, not silent: a parse failure here means answer deep links ship as 404s.
+    console.error(`answers: could not derive /answers/:slug routes — ${e.message}`);
     process.exitCode = 1;
   }
   // /api/* are data endpoints served by Pages Functions — snapshotting them writes an
@@ -475,6 +510,13 @@ async function worker(id) {
     pg.on("pageerror", e => errs.push(e.message.slice(0, 100)));
     return pg;
   };
+  const readSnapshotInfo = (pg) => pg.evaluate(() => {
+    const root = document.getElementById("root");
+    return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
+             rootEmpty: !root || root.children.length === 0,
+             title: document.title,
+             desc: document.querySelector('meta[name="description"]')?.content || "" };
+  });
   let page = await openPage();
   while (queue.length) {
     const route = queue.shift();
@@ -494,13 +536,29 @@ async function worker(id) {
         await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "load", timeout: 90000 });
       }
       await page.waitForTimeout(rec.slow ? WAIT * 3 : WAIT);
-      const info = await page.evaluate(() => {
-        const root = document.getElementById("root");
-        return { text: (document.body.innerText || "").replace(/\s+/g, " ").trim(),
-                 rootEmpty: !root || root.children.length === 0,
-                 title: document.title,
-                 desc: document.querySelector('meta[name="description"]')?.content || "" };
-      });
+      let info = await readSnapshotInfo(page);
+
+      // Four workers share one browser during the 595-route sweep. Under load, React can
+      // occasionally paint just after the fixed 900 ms wait: /heatmap and
+      // /watchdog-heatmap each produced a zero-character, empty-root snapshot once, then
+      // passed unchanged on the next full run. Re-running the entire deployment hides the
+      // race and wastes ten minutes. If the first read is thin, wait for the actual release
+      // invariant (a non-empty root with enough visible text) and read once more. A route
+      // that never reaches the invariant still remains THIN and still blocks deployment.
+      if (info.rootEmpty || info.text.length < MIN) {
+        rec.paintRetry = true;
+        try {
+          await page.waitForFunction((min) => {
+            const root = document.getElementById("root");
+            const text = (document.body.innerText || "").replace(/\s+/g, " ").trim();
+            return !!root && root.children.length > 0 && text.length >= min;
+          }, MIN, { timeout: Math.max(5000, WAIT * 5), polling: 100 });
+        } catch {
+          // The report below owns the verdict. Re-read the page and preserve THIN if the
+          // condition did not settle; timeout is not converted into a pass.
+        }
+        info = await readSnapshotInfo(page);
+      }
       rec.chars = info.text.length;
       rec.title = info.title;
       rec.hasDesc = !!info.desc;
@@ -616,6 +674,10 @@ if (skipped404.length) {
 const slow = results.filter((r) => r.slow);
 if (slow.length) {
   console.log(`  ${slow.length} SLOW — needed a retry at the longer timeout: ${slow.map((r) => r.route).join(", ")}`);
+}
+const latePaint = results.filter((r) => r.paintRetry && r.ok);
+if (latePaint.length) {
+  console.log(`  ${latePaint.length} LATE-PAINT — first read was thin, then met the same release invariant: ${latePaint.map((r) => r.route).join(", ")}`);
 }
 if (thin.length) {
   console.log(`\nTHIN routes need a longer wait or real SSR — they are NOT fixed:`);

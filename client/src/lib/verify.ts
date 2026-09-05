@@ -203,8 +203,7 @@ export async function verifyChain(records: JRecord[]): Promise<VerifyResult> {
       "Mismatch on any row would mean the record was edited after signing.",
     what_was_NOT_verified:
       "WHO wrote the record. That requires a signature. Today the chain is sha256-linked only; " +
-      "the Ed25519 / ML-DSA hybrid signer is built (see Master Playbook Part E1) and the label will " +
-      "upgrade in the same commit as that capability — never ahead of it.",
+      "post-quantum signing is planned and scaffolded only; no ML-DSA signer/runtime is built or published.",
     lines,
   };
 }

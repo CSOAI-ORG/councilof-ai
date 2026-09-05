@@ -1,5 +1,5 @@
 /**
- * POST /api/assess — the deterministic risk check, finally attached to its button.
+ * POST /api/assess — a deterministic, text-only EU AI Act screening helper.
  *
  * THE BRIDGE THIS CLOSES
  * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at
@@ -9,11 +9,10 @@
  * served same-origin, so the button and the backend finally share a URL.
  *
  * WHAT THIS IS AND IS NOT
- * A decision table. Domain classification is keyword matching against Annex III categories;
- * the tier is the most severe match; gaps are the fixed control set minus what the caller
- * claims. No model is consulted — the same input always produces the same output, which is why
- * the verdict can be signed at all. It identifies the route; it is not a conformity assessment
- * and not legal advice.
+ * Keyword matches identify provisions a human should inspect. They do not establish legal tier,
+ * applicability, exceptions, facts, or compliance. Control coverage is calculated only from
+ * unverified caller assertions. No model is consulted; a signature preserves this scoped output
+ * but does not validate the input or turn the screen into legal advice.
  *
  * SIGNING — three outcomes, never two
  *   signed     ASSESS_SIGNING_KEY_PKCS8_B64 is provisioned; Ed25519 over canonical JSON.
@@ -87,9 +86,8 @@ export const onRequestGet: PagesFunction<Env> = async () => {
       endpoint: "/api/assess",
       method: "POST",
       description:
-        "Deterministic EU AI Act risk classification. POST a system description; " +
-        "receive a signed tier verdict (PROHIBITED / HIGH_RISK / LIMITED_OR_MINIMAL / UNMEASURED). " +
-        "No model in the verdict path — the same input always produces the same output.",
+        "Deterministic, text-only EU AI Act screening. POST a system description to receive " +
+        "possible provision matches and unverified claimed-control coverage. This is not a legal tier verdict.",
       input_fields: [
         "system", "purpose", "domain", "description", "scenario", "text",
         "use_case", "endpoint", "url", "system_url",
@@ -103,18 +101,18 @@ export const onRequestGet: PagesFunction<Env> = async () => {
         claimed_controls: "string[] — explicit control identifiers (e.g. art9_risk_management)",
       },
       output: {
-        tier: "PROHIBITED | HIGH_RISK | LIMITED_OR_MINIMAL | UNMEASURED",
-        verdict: "Human-readable classification rationale",
-        compliance_score: "0-100 based on claimed controls",
-        gaps: "string[] — unclaimed controls from the fixed Art 9–15/50 set",
+        screening_state: "POSSIBLE_PROHIBITED_TEXT_MATCH | POSSIBLE_ANNEX_III_TEXT_MATCH | NO_MATCH_IN_LIMITED_KEYWORD_SET | UNMEASURED",
+        explanation: "Human-readable scope and match rationale",
+        claimed_control_coverage: "Caller-asserted controls divided by the fixed Art 9–15/50 list; not verified and not a compliance score",
+        unclaimed_controls: "string[] — controls the caller did not claim; not established deficiencies",
         sig: "Ed25519 hex signature (or empty if UNSIGNED)",
         alg: "Ed25519 | UNSIGNED",
       },
       verify_key: "/api/assess/key",
       note:
-        "This is a keyword-based classifier against frozen Annex III category sets. " +
-        "It identifies the route; it is not a conformity assessment, not a GSPC bench run, " +
-        "and not legal advice. No score is invented — UNMEASURED is the honest empty state.",
+        "This is a limited keyword screen. It does not fetch evidence or decide applicability, " +
+        "exceptions, legal tier, lawfulness, conformity, certification, or compliance. A signature " +
+        "only preserves the returned bytes. UNMEASURED is the honest empty state.",
       related: ["/api/mcp", "/api/gspc", "/gspc-verify"],
     }),
     {
@@ -151,7 +149,8 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   if (text.trim().length < 8) {
     return Response.json(
       {
-        tier: "UNMEASURED",
+        screening_state: "UNMEASURED",
+        legal_determination: false,
         error: "no assessable description supplied",
         detail:
           "Provide the system description in one of: system, purpose, domain, description, " +
@@ -171,38 +170,51 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   for (const c of Array.isArray(body.claimed_controls) ? body.claimed_controls : [])
     claimed.add(String(c));
 
-  const gaps = CONTROLS.filter(([id]) => !claimed.has(id)).map(([, label]) => label);
-  const score = Math.round(((CONTROLS.length - gaps.length) / CONTROLS.length) * 100);
+  const unclaimedControls = CONTROLS.filter(([id]) => !claimed.has(id)).map(([, label]) => label);
+  const claimedPercent = Math.round(((CONTROLS.length - unclaimedControls.length) / CONTROLS.length) * 100);
 
-  let tier: string, verdict: string, basis: string;
+  let screeningState: string, explanation: string, basis: string;
   if (prohibited.length) {
-    tier = "PROHIBITED";
-    verdict = `Matches a prohibited practice: ${prohibited.join("; ")}. No conformity route exists — controls cannot remediate an Art 5 practice.`;
-    basis = "EU AI Act Art 5";
+    screeningState = "POSSIBLE_PROHIBITED_TEXT_MATCH";
+    explanation = `The submitted text matched phrases associated with possible Article 5 practices: ${prohibited.join("; ")}. Applicability, exceptions, context, and facts were not tested.`;
+    basis = "Keyword pointers to EU AI Act Article 5; qualified review required";
   } else if (cats.length) {
-    tier = "HIGH_RISK";
-    verdict = `High-risk on this description (Annex III: ${cats.join(", ")}). ${gaps.length} of ${CONTROLS.length} controls unclaimed. This is a measurement of the submitted text, not a conformity assessment.`;
-    basis = "EU AI Act Art 6, Annex III";
+    screeningState = "POSSIBLE_ANNEX_III_TEXT_MATCH";
+    explanation = `The submitted text matched possible Annex III categories: ${cats.join(", ")}. ${unclaimedControls.length} of ${CONTROLS.length} listed controls were not claimed by the caller. Neither legal tier nor control effectiveness was established.`;
+    basis = "Keyword pointers to EU AI Act Article 6 and Annex III; qualified review required";
   } else {
-    tier = "LIMITED_OR_MINIMAL";
-    verdict = `No prohibited practice or Annex III category matched this description. Article 50 transparency duties may still apply.`;
-    basis = "EU AI Act Art 6, Art 50";
+    screeningState = "NO_MATCH_IN_LIMITED_KEYWORD_SET";
+    explanation = "The limited keyword set found no Article 5 or Annex III phrase match. This is not evidence of low risk, lawfulness, or non-applicability; Article 50 and other duties may still apply.";
+    basis = "Limited keyword set only; no legal conclusion";
   }
 
   const payload = {
-    report_id: crypto.randomUUID(),
-    assessed_at: new Date().toISOString(),
+    result_id: crypto.randomUUID(),
+    screened_at: new Date().toISOString(),
     input_digest: hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text))),
-    tier,
-    verdict,
-    compliance_score: score,
-    gaps,
+    screening_state: screeningState,
+    explanation,
+    possible_text_matches: {
+      article_5: prohibited,
+      annex_iii: cats,
+    },
+    claimed_control_coverage: {
+      claimed: CONTROLS.length - unclaimedControls.length,
+      total: CONTROLS.length,
+      percent: claimedPercent,
+      evidence_state: "CALLER_ASSERTED_UNVERIFIED",
+      note: "This percentage is not a compliance score and does not test control design or operation.",
+    },
+    unclaimed_controls: unclaimedControls,
+    legal_determination: false,
+    facts_checked: false,
+    urls_fetched: false,
     rationale:
-      "Deterministic keyword classification against frozen Annex III category sets; gap list is the fixed Art 9–15/50 control set minus claimed controls. No model in the verdict path. The endpoint field is recorded as text — this function does not fetch or probe a URL, and it is not a GSPC bench run.",
+      "Deterministic keyword screening against frozen phrase sets. The unclaimed list is the fixed Art 9–15/50 list minus caller-asserted controls. No model is in the path. Endpoint fields are recorded as text; this function fetches no URL and runs no GSPC benchmark.",
     basis,
-    engine: "csoai-assess/2.1 pages-function",
-    measurement_kind: "eu_ai_act_keyword_v2",
-    disclaimer: "Text-only classifier. Not a certificate. We do not remediate. Empty cells stay empty.",
+    engine: "csoai-assess/3.0 pages-function",
+    measurement_kind: "eu_ai_act_keyword_screen_v3",
+    disclaimer: "Text-only screening output. Not legal advice, a legal tier, compliance finding, conformity assessment, attestation, or certificate. No remediation occurred.",
   };
 
   const signed_payload = canonical(payload);

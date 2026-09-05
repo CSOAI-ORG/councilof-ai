@@ -1,0 +1,25 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "detector-interop",
+    "model": "deepseek-ai/DeepSeek-V4-Flash",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.9333,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI"
+  },
+  "id": "bddb3cf400042341266cd81d0566f8f900b0a1c34ef28ae91d41bf4e743299b5",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "c74e7e28dca398ce4ef582a52cd364f1460ca63b4ff6b1850386fcd65e693b17df5785f7091eb1a88fac05ed160c6424ff6875d71479fecdcaccebddfb058b07",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

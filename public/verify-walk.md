@@ -16,17 +16,23 @@ You get the GSPC board — its slot count and measured count come from `totals.p
 curl -s https://csoai.org/.well-known/did.json
 ```
 
-The did:web trust root. Two Ed25519 verification methods: `#site-release-1` (site releases and cards) and `#estate-chain-1` (measurement chains). Ed25519 today; anything else will be named in the same commit that ships it.
+The did:web trust root currently publishes five verification methods. A verifier must pin the
+key id declared for the artifact family; the presence of a key in the DID does not make it the
+right key for every record. Ed25519 is live. Post-quantum signing is planned, not live.
 
 ## Step 3 — verify a record in your browser (40s)
 
-Open **https://councilof.ai/gspc-verify** and paste any estate record (a ~3KB measurement card or receipt). Your browser recomputes the `content_id` (sha256 over canonical JSON) and checks the Ed25519 signature against the keys from step 2. A tampered record fails visibly. Nothing you paste leaves your machine.
+Open **https://councilof.ai/gspc-verify** and paste a record from a supported, declared family.
+The verifier applies that family's exact canonicalisation and signature-preimage rule, then
+checks the Ed25519 signature against its pinned key id. Historic families differ; an unsupported
+or ambiguous record must return UNCHECKABLE rather than borrowing another family's rule.
 
 Or replay the public chain on the same page — one button, client-side, including a deliberate-tamper demonstration.
 
 ## What this proves — and what it doesn't
 
-- **Proves:** the number you read is the number that was signed; the signer holds the published key; history can't be silently rewritten (corrections are appended, never edited).
+- **Proves (for a supported valid record):** the verified bytes bind to the stated signer and hash under the declared family rule.
+- **Corrections:** corrections are recorded, but the public corrections ledger may explicitly be STALE while an owner re-sign is pending. Do not describe that state as an append-only signed history.
 - **Does not prove:** that any model is "safe" or "compliant". Those words are not in the instrument's vocabulary, on purpose. We measure against published, frozen predicates; you recompute.
 
 ## If something fails

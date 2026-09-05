@@ -310,7 +310,7 @@ export default function PersonaRouter({ persona }: { persona: string }) {
       <PersonaEvidence lead={p.evidence.lead} axes={p.evidence.axes} />
 
       <section className="max-w-6xl mx-auto px-6 py-10">
-        <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&_.text-emerald-50\\/60]:!text-emerald-600/70 [&_div]:!border-emerald-200" />
+        <TrustStrip className="[&_div]:!bg-emerald-50/60 [&_.text-emerald-300]:!text-emerald-700 [&>div>div:last-child]:!text-emerald-600/70 [&_div]:!border-emerald-200" />
       </section>
 
       <section className="max-w-6xl mx-auto px-6 pb-8">

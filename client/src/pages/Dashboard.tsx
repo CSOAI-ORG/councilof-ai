@@ -13,7 +13,6 @@ import {
   Users,
   FileCheck,
   TrendingUp,
-  Activity,
   ArrowUpRight,
   ArrowDownRight,
   Eye,
@@ -24,7 +23,6 @@ import {
   CheckCircle,
   CircleDot,
   Circle,
-  Target,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -50,7 +48,7 @@ interface DashboardStats {
     phaseDistribution: { plan: number; do: number; check: number; act: number };
   };
   loi: { total: number; count: number };
-  gspc?: { measured_axes: number; quotable_axes: number; public_count?: string };
+  gspc?: { measured_axes: number; quotable_axes: number; public_count?: string; separated_leads?: number | null };
   cards?: { count: number; signed: number };
 }
 
@@ -69,11 +67,11 @@ const frameworkCompliance: { name: string }[] = [
 ];
 
 const quickActions = [
-  { label: "My Progress", href: "/dashboard/progress", icon: Target },
-  { label: "Register AI System", href: "/ai-systems", icon: Shield },
-  { label: "Run Assessment", href: "/compliance", icon: FileCheck },
-  { label: "View Council", href: "/agent-council", icon: Users },
-  { label: "Check Watchdog", href: "/watchdog", icon: Eye },
+  { label: "Open GSPC board", href: "/dashboard?tab=board", icon: Shield },
+  { label: "Verify a card", href: "/gspc-verify", icon: FileCheck },
+  { label: "Request measurement", href: "/assess", icon: FileCheck },
+  { label: "Open Council chat", href: "/dashboard?tab=home", icon: Users },
+  { label: "Check Watchdog", href: "/dashboard?tab=watchdog", icon: Eye },
 ];
 
 export default function Dashboard() {
@@ -89,31 +87,30 @@ export default function Dashboard() {
   const councilStats = stats?.council;
   const watchdogReports = stats?.watchdog?.reports ?? [];
   const pdcaStats = stats?.pdca;
-  const loiData = stats?.loi;
+  const gspcStats = stats?.gspc;
+  const cardStats = stats?.cards;
 
   // Calculate real metrics
   const metrics = [
     {
-      title: "Compliance Score",
-      // Honesty: no fabricated fallback. No real stats → an honest empty state,
-      // never an invented percentage with an invented trend.
-      value: dashboardStats?.complianceScore != null ? `${dashboardStats.complianceScore}%` : "—",
-      change: dashboardStats?.complianceScore != null ? "from your measured systems" : "no systems measured yet",
-      changeType: dashboardStats?.complianceScore != null ? "positive" : "neutral",
+      title: "Measured GSPC axes",
+      value: gspcStats?.measured_axes?.toString() ?? "—",
+      change: gspcStats ? `${gspcStats.quotable_axes} quotable axes` : "board unavailable",
+      changeType: gspcStats ? "positive" : "neutral",
       icon: Shield,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
-      description: "Overall compliance across frameworks",
+      description: "Named measurements on the public GSPC board",
     },
     {
-      title: "Active AI Systems",
-      value: dashboardStats?.totalSystems?.toString() || "0",
-      change: `${dashboardStats?.pendingReviews || 0} pending review`,
-      changeType: "neutral",
-      icon: Activity,
+      title: "Published signed cards",
+      value: cardStats?.signed?.toString() ?? "—",
+      change: cardStats ? `${cardStats.count} indexed cards` : "card index unavailable",
+      changeType: cardStats ? "positive" : "neutral",
+      icon: FileCheck,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
-      description: "Registered systems in your organization",
+      description: "Cards reported signed by the card index",
     },
     {
       title: "Watchdog Reports",
@@ -126,14 +123,14 @@ export default function Dashboard() {
       description: "Public AI safety incidents",
     },
     {
-      title: "Council Sessions",
-      value: councilStats?.totalSessions?.toString() || "0",
-      change: `${councilStats?.pendingReview || 0} pending votes`,
-      changeType: "positive",
+      title: "Council runtime",
+      value: "NOT LIVE",
+      change: "33 seats designed · target 23/33",
+      changeType: "neutral",
       icon: Users,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
-      description: "Designed 33-Agent Council decisions",
+      description: "0 sessions and 0 votes; independence is not demonstrated",
     },
   ];
 
@@ -146,30 +143,28 @@ export default function Dashboard() {
       status: report.status === "resolved" ? "success" : (report.status as any) === "dismissed" ? "error" : "warning",
       icon: Eye,
     })) || []),
-    {
-      action: "System initialized",
-      system: "CSOAI Platform",
-      time: "Today",
-      status: "success",
-      icon: CheckCircle2,
-    },
   ];
 
   return (
     <DashboardLayout>
       <div className="p-6 space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-semibold font-primary">Dashboard</h1>
+            {/* h2, not h1: this page renders inside DashboardWorkspace, which owns the page's
+                single <h1> ("What are you working on?" on the home surface). Two <h1>s in one
+                document is an accessibility fault, and it broke the shell smoke's strict-mode
+                locator on 2026-09-04, blocking every deploy. */}
+            <h2 className="text-2xl font-semibold font-primary">Dashboard</h2>
             <p className="text-muted-foreground text-sm">
-              Your Council OS — governance across every framework, signed to Layer 0
+              Account activity and measured evidence. Empty values remain UNMEASURED.
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="outline"
               size="sm"
+              aria-label="Refresh dashboard"
               onClick={() => refetch()}
               disabled={isLoading}
             >
@@ -248,8 +243,8 @@ export default function Dashboard() {
           })}
         </div>
 
-        {/* SOAI-PDCA Loop - Enhanced Visualization */}
-        <motion.div
+        {/* PDCA is account data, not a relabel of public GSPC/card/fleet counts. */}
+        {pdcaStats && pdcaStats.totalCycles > 0 ? <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
@@ -306,7 +301,7 @@ export default function Dashboard() {
                       phase: "CHECK", 
                       fullName: "Evaluation Phase",
                       status: pdcaStats?.phaseDistribution?.check ? "active" : (watchdogReports?.length ? "active" : "pending"),
-                      description: "Monitor via Watchdog reports and designed 33-agent council",
+                      description: "Monitor via Watchdog reports and designed 33-seat council",
                       items: [
                         `${watchdogReports?.length || 0} Watchdog reports`,
                         `${councilStats?.totalSessions || 0} Council sessions`,
@@ -414,7 +409,16 @@ export default function Dashboard() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </motion.div> : (
+          <Card className="bg-card border-border">
+            <CardContent className="p-6">
+              <p className="font-semibold">Account PDCA cycles — UNMEASURED</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                No account cycle is recorded. Public GSPC axes, signed cards, and fleet nodes are separate facts and are not converted into a cycle.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Compliance Charts — rendered only with real trend data.
             The chart components carry mock DEFAULT_DATA for Storybook/demo;
@@ -460,8 +464,8 @@ export default function Dashboard() {
               Charts appear once your AI systems have real measurements behind them —
               we don&apos;t plot example data as if it were yours.
             </p>
-            <a href="/ai-systems" className="mt-4 inline-block text-sm font-medium text-emerald-600 hover:text-emerald-700">
-              Register your first AI system →
+            <a href="/assess" className="mt-4 inline-block text-sm font-medium text-emerald-600 hover:text-emerald-700">
+              Request a measurement →
             </a>
           </div>
         )}
@@ -496,9 +500,10 @@ export default function Dashboard() {
                   </div>
                 ))}
                 <p className="text-xs text-muted-foreground pt-1">
-                  No compliance score is invented here. Your framework posture is UNMEASURED
-                  until an assessment runs — start one at /assess, or read the live measured
-                  board at /gspc-scoreboard.
+                  No compliance score is invented here. Your framework posture stays UNMEASURED
+                  until a completed measurement publishes scoped evidence. /assess currently
+                  opens the request path; it does not itself create a measurement. Read the
+                  published board at /gspc-scoreboard.
                 </p>
                 <button
                   type="button"
@@ -542,6 +547,9 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-1">
+                  {recentActivity.length === 0 && (
+                    <p className="p-3 text-sm text-muted-foreground">No account activity is recorded.</p>
+                  )}
                   {recentActivity.map((activity, idx) => {
                     const Icon = activity.icon;
                     return (
@@ -641,17 +649,16 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground">
-                      Join the AI Safety Movement
+                      Public watchdog intake
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      <span className="font-bold text-primary">{loiData?.total || (loiData as any)?.count || 0}+</span> people have signed up to become Watchdog Analysts.
-                      Work from home, earn money, protect humanity.
+                      Submit a report for evidence review. This path does not promise employment, payment, or a regulatory determination.
                     </p>
                   </div>
                 </div>
-                <Link href="/watchdog-signup">
+                <Link href="/public-watchdog">
                   <Button>
-                    Sign Up Now
+                    Open watchdog
                     <ArrowUpRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>

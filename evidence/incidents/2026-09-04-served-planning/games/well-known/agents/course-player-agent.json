@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "course-player",
+  "name": "Course Player",
+  "kind": "education",
+  "as_of": "20260904T064716Z",
+  "url": "https://councilof.ai/api/a2a/course-player",
+  "version": "1.0",
+  "capabilities": {
+    "play": "Play Course Player with AI opponents",
+    "chat": "Chat with AI via AG-UI / A2UI",
+    "multiplayer": "Single-player",
+    "attestation": "none \u2014 this game emits no card and lands nothing in the signed root",
+    "verification": "Verify any signed card offline"
+  },
+  "skills": [
+    {
+      "id": "course-player.play",
+      "description": "Play Course Player"
+    },
+    {
+      "id": "course-player.chat",
+      "description": "Chat with AI in Course Player"
+    },
+    {
+      "id": "course-player.attest",
+      "description": "Get a signed turn card from Course Player"
+    },
+    {
+      "id": "course-player.verify",
+      "description": "Verify an attestation from Course Player"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "agui": "https://councilof.ai/course-player/ag-ui",
+    "a2ui": "https://councilof.ai/course-player/a2-ui"
+  }
+}

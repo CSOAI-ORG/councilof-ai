@@ -83,11 +83,11 @@ export const CANON = {
    *  (the NewHome-v2 FAQ does) and point at /refutation-ledger for measured status. */
   councilAgents: {
     value: 33,
-    source: "33-agent council design (AGENTS.md: 33-seat council, 12 Generals) — DESIGN, not a live count",
+    source: "33-seat council design (AGENTS.md: 33-seat council, 12 Generals) — DESIGN, not a live count",
     measuredAt: "2026-08-01",
     note: "DESIGN figure — never render as measured. Measured status lives on /refutation-ledger.",
   },
-  /** Council quorum — 23/33 ≈ 70%, by DESIGN only. The fault-tolerance guarantee was retracted (DR-0007, n_eff 1.21 vs 3 nominal legs); never render as a measured property. */
+  /** Council quorum — 23/33 ≈ 70%, by DESIGN only. The fault-tolerance guarantee was retracted under DR-0007; its historical numeric result is unbound because the cited artifact is absent. Never render the design as a measured property. */
   councilConsensus: {
     value: 23,
     source: "council quorum, design figure only (23/33 = 70%) — guarantee retracted per DR-0007",

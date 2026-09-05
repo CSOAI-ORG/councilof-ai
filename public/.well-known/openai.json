@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.openai-integration/0.1",
+  "slug": "openai",
+  "name": "OpenAI",
+  "description": "GPT family + o-series reasoning models",
+  "as_of": "20260905T045749Z",
+  "links": {
+    "self": "https://councilof.ai/.well-known/openai",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "x402_catalog": "https://councilof.ai/api/x402"
+  },
+  "principle": "Online inference via OpenAI's API. Every response gets a 22-axis GSPC measurement.",
+  "endpoints": {
+    "chat": "POST https://api.openai.com/v1/chat/completions",
+    "responses": "POST https://api.openai.com/v1/responses",
+    "embeddings": "POST https://api.openai.com/v1/embeddings"
+  },
+  "models": [
+    "gpt-4o",
+    "gpt-4-turbo",
+    "gpt-4",
+    "gpt-3.5-turbo",
+    "o1",
+    "o1-mini",
+    "o1-preview",
+    "o3",
+    "o3-mini",
+    "o3-pro",
+    "o4",
+    "o4-mini"
+  ],
+  "measurement": {
+    "every_call": "22-axis GSPC measurement + signed card",
+    "latency": "logged to /api/state",
+    "cost": "logged to /api/revenue (x402 SKU: engine-openai)"
+  },
+  "agent_card": {
+    "name": "OpenAI",
+    "kind": "engine",
+    "url": "https://councilof.ai/.well-known/openai.json",
+    "protocols": [
+      "a2a",
+      "mcp",
+      "x402",
+      "ag-ui"
+    ]
+  },
+  "take_over": "Every GPT model call \u2192 signed card \u2192 22-axis measurement \u2192 csoai:model card"
+}

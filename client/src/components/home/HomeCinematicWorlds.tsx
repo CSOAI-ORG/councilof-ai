@@ -41,7 +41,7 @@ const WORLDS: World[] = [
       "The target does not move after you sit.",
       "Jail is measured. A TIE is never dressed up as a pass.",
     ],
-    primary: { href: "/gspc-scoreboard", label: "Open the scoreboard" },
+    primary: { href: "/dashboard?tab=board", label: "Open the scoreboard" },
     secondary: { href: "/gspc-verify", label: "Verify a card" },
   },
   {
@@ -71,8 +71,8 @@ const WORLDS: World[] = [
       "Nine products. Each tile opens a page that exists today.",
       "We measure. We do not certify.",
     ],
-    primary: { href: "/os", label: "Open Council OS" },
-    secondary: { href: "/gspc-scoreboard", label: "Read the board" },
+    primary: { href: "/dashboard", label: "Open Council OS" },
+    secondary: { href: "/dashboard?tab=board", label: "Read the board" },
   },
 ];
 

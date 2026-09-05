@@ -22,31 +22,29 @@ the method, the gold labels and the graded rows — published separately, and th
 actually argue with. A perfectly valid signature over a badly-run measurement is a perfectly
 valid signature over a badly-run measurement.
 
-**It does not prove the published set is complete — and the gap is smaller than it was, but
-it is not zero.** The chain manifest at `/signed/chain.json` lists every position, head to
-genesis, including the ones whose body is not published. That is a real improvement on
-publishing a subset: a withheld card becomes a counted, ordered tombstone instead of an
-absence indistinguishable from a card that never existed. As of this build:
+**It does not prove the published set is the only set the issuer could have chosen.** The
+card-shaped envelope at `/signed/chain.json` is now signed and verifies under the pinned key.
+Its body lists every declared position, head to genesis. The verifier authenticates that
+outer envelope before it trusts or walks the inner manifest. As of this build:
 
 | | |
 |---|---|
 | positions declared | 335 |
-| bodies published, each verifying | 313 |
-| bodies withheld | 22 |
-| withheld positions **a signature commits to** | **1** |
-| withheld positions asserted **only by the unsigned manifest** | **21** |
+| bodies now held, each verifying | 335 |
+| bodies still unavailable | 0 |
+| historical `body_published:false` flags in the signed snapshot | 22 |
+| those historically withheld bodies now held and verified | 22 |
 
-That last row is the part to read twice. A published card's `prev` sits *inside* the signed
-body, so when a published card names a predecessor, that predecessor's id and place in the
-order are committed to by a signature — whether or not its body is published. But the manifest
-file itself carries no signature. In a run of consecutive withheld positions, only the one
-adjoining a published successor is attested that way; the rest of the run exists because an
-unsigned file says so. Nor can a withheld position's signature be checked at all: Ed25519 signs
-the message, and the message is the body you were not given.
+The third row is historical, not current availability. It records what was published when the
+envelope was signed. Releasing a body later does not rewrite that signed statement. The CLI
+therefore reports both the declaration at signing and what is actually supplied now; it never
+turns a stale flag into a claim that an available body is missing.
 
-So: the walk from head to genesis resolves with no gaps, every published body verifies, and 21
-of the 335 positions rest on trust rather than on cryptography. `gspc-verify --chain` reports
-exactly that split and **exits 3**, not 0.
+So: the envelope signature verifies, the walk reaches genesis, and all 335 bodies currently
+verify. That authenticates the issuer's published ordering and makes this particular set
+non-repudiable. It still does not prove the measurements are correct or that the issuer never
+considered and omitted another candidate set. Signatures authenticate statements; they do not
+make those statements exhaustive or true.
 
 **The index is not signed either.** `card_index.json` carries no signature. Adding, altering or
 omitting entries breaks nothing cryptographic. Treat it as a convenience listing for fetching
@@ -100,9 +98,16 @@ for e in json.load(open('card_index.json'))['cards']: print(e['card'])
 node gspc-verify.mjs cards/ --index card_index.json --chain chain.json --did-document did.json
 ```
 
-Expect `VALID 313 · INVALID 0 · UNCHECKABLE 0`, a manifest walk of 335 positions reaching
-genesis, and **exit 3** — because 21 withheld positions are asserted rather than signed for.
-That is the correct answer for the currently published set, for the reasons given above.
+Expect `VALID 335 · INVALID 0 · UNCHECKABLE 0`, `chain envelope: VALID OK`, a manifest walk of
+335 positions reaching genesis, and **exit 0** for the complete current set. The output also
+states that 22 positions were declared withheld when the envelope was signed and all 22 bodies
+are held now.
+
+The verifier treats key roles as separate authorities. A card that names both `pubkey` and
+`did` is ambiguous and therefore UNCHECKABLE; a chain envelope signed by some other key that
+happens to be present in a broad profile is INVALID. In a signed chain, every link must also
+declare `alg: Ed25519`, its 64-hex primary public key and its 128-hex signature. Missing metadata,
+a secondary role key, or disagreement with the held card blocks exit 0.
 
 Everything after step 3 works with the network unplugged. That is the point: **evidence you hold
 must be checkable by you, with the records and nothing else.** If verification needed our server
@@ -117,8 +122,9 @@ to answer, we could stop answering, and the proof would evaporate. It does not n
 | `2` | at least one card **UNCHECKABLE**, or the command could not run |
 | `3` | every card valid, but the **set** is incomplete or disagrees with its index |
 
-A positive result is never returned on a path that did not complete. Against the currently
-published set the honest answer is **3**, and you should expect to see it.
+A positive result is never returned on a path that did not complete. Against the complete
+currently published set the answer is **0**. A subset, an unsigned chain, or an envelope that
+cannot be checked must not return that result.
 
 ---
 
@@ -154,14 +160,18 @@ About the cards you hold and the index: `CHAIN_INCOMPLETE`, `CHAIN_FORKED`, `CHA
 `INDEX_ENTRY_MISSING`, `CARD_NOT_INDEXED`, `INDEX_COUNT_MISMATCH`, `INDEX_HEAD_MISSING`,
 `INDEX_UNSIGNED`.
 
-About a chain manifest given with `--chain`: `CHAIN_WALK_BROKEN`, `CHAIN_ORPHAN_LINK`,
-`CHAIN_DUPLICATE_POSITION`, `CHAIN_LENGTH_MISMATCH`, `CHAIN_SIG_DIFFERS`, `CARD_NOT_IN_CHAIN`,
-`CHAIN_MANIFEST_MALFORMED`, `WITHHELD_BODY`, `WITHHELD_UNATTESTED`, `CHAIN_UNSIGNED`,
-`BODY_NOT_HELD`.
+About a chain document given with `--chain`: `CHAIN_ENVELOPE_UNSIGNED`,
+`CHAIN_MANIFEST_MALFORMED`, `CHAIN_TOPOLOGY_MALFORMED`, `CHAIN_WALK_BROKEN`, `CHAIN_ORPHAN_LINK`,
+`CHAIN_DUPLICATE_POSITION`, `CHAIN_LENGTH_MALFORMED`, `CHAIN_LENGTH_MISMATCH`,
+`CHAIN_PUBLISH_STATE_MALFORMED`, `CHAIN_PUBLISH_COUNT_MALFORMED`,
+`CHAIN_PUBLISH_COUNT_MISMATCH`, `CHAIN_SIG_DIFFERS`, `CHAIN_PREV_DIFFERS`, `CARD_NOT_IN_CHAIN`,
+`WITHHELD_BODY`, `WITHHELD_UNATTESTED`, `WITHHELD_ENVELOPE_ONLY`, `CHAIN_SIGNED`,
+`CHAIN_UNSIGNED`, `BODY_NOT_HELD`.
 
-Three of those describe your own copy rather than the evidence — `INDEX_UNSIGNED`,
-`CHAIN_UNSIGNED` and `BODY_NOT_HELD` — and do not change the exit code. Holding a subset is
-not a defect in what was published.
+These findings are informational on their own — `INDEX_UNSIGNED`,
+`CHAIN_SIGNED`, `CHAIN_UNSIGNED` and `WITHHELD_ENVELOPE_ONLY` — and do not change the exit code
+on their own. `BODY_NOT_HELD` exits 3: that describes the incompleteness of your local copy,
+not an invalid signature or an accusation against the publisher.
 
 ### Out of profile domain: it stops, it does not guess
 
@@ -191,9 +201,9 @@ signature == Ed25519(preimage) under the pinned key
 ```
 
 CPython renders a float of integral value as `0.0`. ECMAScript `JSON.stringify`, Go's
-`encoding/json` and JCS all render the same value as `0`. **116 of the 313 published cards
-contain such a value**, so a naive JavaScript or Go verifier computes different bytes and
-reports a *false failure* on roughly a third of the set. This package handles it, once, in
+`encoding/json` and JCS all render the same value as `0`. Many published cards contain such a
+value, so a naive JavaScript or Go verifier computes different bytes and reports a *false
+failure*. This package handles it, once, in
 `src/canonical.mjs`, where you can read it.
 
 We cannot fix this by re-canonicalising: every card id is the SHA-256 of these exact bytes, so
@@ -246,19 +256,28 @@ The schemas describe shape. Only the verifier speaks to authenticity.
 ## As a library
 
 ```js
-import { verifyCard, analyseSet, defaultProfile } from "gspc-card-verifier";
+import { verifyCard, verifyChainEnvelope, analyseSet, analyseChain, defaultProfile } from "gspc-card-verifier";
 
 const profile = defaultProfile();            // or your own object
 const result = await verifyCard(card, profile);
 // { state: "VALID" | "INVALID" | "UNCHECKABLE", code, reason?, id?, axis?, model? }
 
-const set = analyseSet(validCards, index, profile, chain);
+const chainEnvelope = await verifyChainEnvelope(chainDocument, profile);
+if (chainEnvelope.state !== "VALID") throw new Error(`chain ${chainEnvelope.state}: ${chainEnvelope.code}`);
+
+const set = analyseSet(validCards, index, profile, chainEnvelope.manifest);
 // { nCards, tips, danglingPrev, chainComplete, findings }
 
-const chainReport = analyseChain(validCards, chain, profile);
-// { ok, positions, walkLength, reachesGenesis, bodiesHeld, bodiesDeclaredPublished,
-//   withheld: { total, attestedBySignedPrev, assertedOnly }, findings }
+const chainReport = analyseChain(validCards, chainEnvelope.manifest, profile, { manifestSigned: true });
+// { ok, manifestSigned, positions, walkLength, reachesGenesis, bodiesHeld,
+//   bodiesDeclaredPublished, bodiesDeclaredWithheld, bodiesDeclaredWithheldNowHeld,
+//   withheld: { total, declaredAtSigning, releasedAndHeldSince, attestedBySignedPrev,
+//               envelopeOnly, assertedOnly }, blockingFindings, findings }
 ```
+
+`chainReport.ok` is true only when there are no blocking structural findings. Signature status
+alone is not enough: duplicate positions, contradictory counts or flags, order conflicts, missing
+bodies and broken walks all make it false. `chainReport.blockingFindings` contains that exact set.
 
 `verifyCard` never throws on bad input and never fetches anything.
 
@@ -275,9 +294,10 @@ node --test test/*.test.mjs
 The suite asserts the exact state **and** the exact code for a tampered body, a card signed
 with a foreign key, a malformed card, a non-card, unparseable bytes, out-of-domain numbers, an
 out-of-domain preimage rule, and a card whose id was recomputed to match its altered body. It
-also rejects broken chain manifests: a walk that misses genesis, a cycle, an orphan link, a
-declared length that disagrees with the listing, a manifest signature that differs from the
-card file, and — the one that matters — a withheld position that no signed body names.
+also rejects broken chain documents: a tampered outer envelope, an unsigned or malformed
+envelope, a walk that misses genesis, a cycle, an orphan link, a declared length that disagrees
+with the listing, a per-card signature that differs from the card file, and a withheld position
+that neither the envelope nor a signed predecessor can authenticate.
 
 Two fixtures carry a companion assertion showing what a weaker verifier would have concluded:
 
@@ -314,3 +334,28 @@ without us. See `NOTICE`.
 ## Licence
 
 Apache-2.0. See `LICENSE` and `NOTICE`.
+
+## `EvaluationResult` — an in-toto predicate for AI evaluation results
+
+in-toto carries predicates for build provenance, SBOMs, test results and vulnerability scans. It
+carries **none for the result of evaluating an AI system**. Model signing signs model *weights*, not
+outcomes; the evaluation-reporting literature standardises the *form* of a report and adds no
+cryptographic layer, so nothing binds a report to the run it describes.
+
+- **predicateType** `https://councilof.ai/attestations/evaluation-result/v1`
+- **Specification** [`spec/EVALUATION-RESULT.md`](spec/EVALUATION-RESULT.md)
+- **Schema** [`schema/evaluation-result.schema.json`](schema/evaluation-result.schema.json)
+- **Conformance corpus** [`test/vectors/`](test/vectors/) — 33 vectors: 9 VALID, 17 INVALID, 7 UNCHECKABLE
+
+```js
+import { verifyEvaluationResult } from "gspc-card-verifier";
+const { state, why } = await verifyEvaluationResult(envelope, resolveKey);
+// state is VALID | INVALID | UNCHECKABLE — never a boolean
+```
+
+The seven `UNCHECKABLE` vectors are the point of the corpus: an unresolvable key or an unsupported
+algorithm must never be reported as `INVALID`. "I could not check this" and "this is forged" are
+different facts about the world.
+
+Regenerate the corpus with `npm run vectors:eval`. It is deterministic — a changed
+`corpus_sha256` in `test/vectors/manifest.json` means a case changed, and that is a signal.

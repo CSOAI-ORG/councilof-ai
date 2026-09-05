@@ -1,0 +1,25 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "art5-safeguard",
+    "model": "google/gemma-3-4b-it",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.8667,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI"
+  },
+  "id": "5a89d3618e2e98c5a4cc4f72e15ed21b699651b2d1b814555a25b76dae26cd9b",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "325e41c88f5ed7ababd5f8ef0eb6021053e9d59470b5af01113a4a18bf13d2705dc3b9280396091a865987b8dd0571c2973dfbc5eac856376443bf12fca82603",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

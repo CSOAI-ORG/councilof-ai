@@ -5,15 +5,15 @@ import { Button } from "@/components/ui/button";
 const ENTERPRISE_HOWTO_SCHEMA = {
   "@context": "https://schema.org",
   "@type": "HowTo",
-  name: "How to deploy CSOAI in your enterprise",
-  description: "The CSOAI enterprise implementation timeline: consultation, assessment, integration planning, implementation, training, and go-live.",
+  name: "How to evaluate CSOAI for an enterprise",
+  description: "A proposed enterprise evaluation sequence. It is not a live deployment or support commitment.",
   step: [
     { "@type": "HowToStep", position: 1, name: "Consultation", text: "Meet with our enterprise team to understand your AI systems and compliance needs." },
-    { "@type": "HowToStep", position: 2, name: "Assessment", text: "Conduct comprehensive assessment of your current compliance status." },
-    { "@type": "HowToStep", position: 3, name: "Integration Planning", text: "Design API integration and compliance framework customization." },
-    { "@type": "HowToStep", position: 4, name: "Implementation", text: "Deploy CSOAI's tools, integrate APIs, and configure compliance rules." },
-    { "@type": "HowToStep", position: 5, name: "Training", text: "Train your teams on CSOAI platform, compliance framework, and best practices." },
-    { "@type": "HowToStep", position: 6, name: "Go Live", text: "Launch monitoring, begin compliance tracking, and start Council reviews." },
+    { "@type": "HowToStep", position: 2, name: "Scoping", text: "Identify a subject, jurisdiction, method, evidence owner, and accountable reviewer." },
+    { "@type": "HowToStep", position: 3, name: "Interface review", text: "Compare published APIs and schemas with the enterprise stack." },
+    { "@type": "HowToStep", position: 4, name: "Pilot", text: "Run a bounded pilot before any production integration." },
+    { "@type": "HowToStep", position: 5, name: "Training review", text: "Evaluate the available practice material; no accredited programme is implied." },
+    { "@type": "HowToStep", position: 6, name: "Review", text: "Review published measurement evidence and record future monitoring requirements." },
   ],
 };
 
@@ -28,45 +28,45 @@ const ENTERPRISE_BREADCRUMB_SCHEMA = {
 };
 
 export default function EnterpriseHowItWorks() {
-  useEffect(() => { document.title = "CSOAI for Enterprise — AI Compliance Implementation"; }, []);
+  useEffect(() => { document.title = "CSOAI for Enterprise — evaluation preview"; }, []);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   const enterpriseFeatures = [
     {
       title: "API Integration",
-      description: "Integrate CSOAI's compliance assessment API directly into your AI development pipeline",
+      description: "Inspect the published measurement and incident interfaces before designing a pilot",
       icon: Code,
-      details: "Real-time compliance scoring, automated incident detection, continuous monitoring"
+      details: "Published measurement APIs and incident intake; continuous monitoring is a target, not a live service"
     },
     {
       title: "Council Review",
-      description: "Submit your AI systems for independent review by the designed 33-agent Council of AI",
+      description: "Explore the designed 33-seat Council workflow for future scoped review",
       icon: Shield,
-      details: "Impartial assessment, no vendor bias, detailed compliance report, public transparency"
+      details: "Design target only: multi-provider review with retained evidence and human accountability"
     },
     {
       title: "Custom Compliance Framework",
-      description: "Define custom compliance requirements tailored to your industry and regulations",
+      description: "Model candidate requirements for a scoped pilot",
       icon: Zap,
-      details: "Flexible framework configuration, role-based access, audit trails, compliance dashboards"
+      details: "Design target; custom framework enforcement and enterprise RBAC are not verified live"
     },
     {
       title: "Team Management",
-      description: "Manage multiple teams and projects with granular permission controls",
+      description: "Proposed multi-team and project workspace",
       icon: Users,
-      details: "User roles, project isolation, activity logs, compliance reporting"
+      details: "Design target; project isolation and granular enterprise permissions are not verified here"
     },
     {
       title: "Incident Management",
-      description: "Centralized incident reporting and tracking with Council analysis",
+      description: "Public incident intake plus a proposed triage workflow",
       icon: CheckCircle,
-      details: "Incident triage, severity assessment, root cause analysis, remediation tracking"
+      details: "Council analysis, case management and remediation tracking are not live services"
     },
     {
-      title: "Continuous Monitoring",
-      description: "24/7 monitoring of your AI systems with automated alerts and reporting",
+      title: "Monitoring Design",
+      description: "Target architecture for scheduled re-measurement, alerts and reporting; not a live 24/7 service",
       icon: TrendingUp,
-      details: "Real-time dashboards, anomaly detection, compliance score tracking, trend analysis"
+      details: "Available today: published GSPC evidence and service status. Automated alerts and anomaly detection remain targets"
     }
   ];
 
@@ -78,27 +78,27 @@ export default function EnterpriseHowItWorks() {
     },
     {
       step: "2. Assessment",
-      description: "Conduct comprehensive assessment of your current compliance status",
+      description: "Scope a specific system and candidate obligations; this does not produce a legal compliance verdict",
       timeline: "2-4 weeks"
     },
     {
       step: "3. Integration Planning",
-      description: "Design API integration and compliance framework customization",
+      description: "Compare the published interfaces with your architecture and record missing adapters",
       timeline: "1-2 weeks"
     },
     {
       step: "4. Implementation",
-      description: "Deploy CSOAI's tools, integrate APIs, and configure compliance rules",
+      description: "Run a bounded non-production pilot; production deployment remains subject to separate engineering and review",
       timeline: "4-8 weeks"
     },
     {
       step: "5. Training",
-      description: "Train your teams on CSOAI platform, compliance framework, and best practices",
+      description: "Review available practice modules; no accredited training service is promised",
       timeline: "1-2 weeks"
     },
     {
-      step: "6. Go Live",
-      description: "Launch monitoring, begin compliance tracking, and start Council reviews",
+      step: "6. Review",
+      description: "Review published measurement evidence and record future monitoring requirements",
       timeline: "Ongoing"
     }
   ];
@@ -110,10 +110,10 @@ export default function EnterpriseHowItWorks() {
       price: "Free",
       features: [
         "Up to 5 AI systems",
-        "API integration",
-        "Monthly Council review",
+        "Public API documentation",
+        "Published GSPC evidence",
         "Unlimited team members",
-        "Community support"
+        "No support SLA"
       ]
     },
     {
@@ -122,11 +122,11 @@ export default function EnterpriseHowItWorks() {
       price: "Free",
       features: [
         "Up to 20 AI systems",
-        "Full API integration",
-        "Weekly Council review",
+        "Integration design review",
+        "Council review design documentation",
         "Unlimited team members",
-        "Priority support",
-        "Custom compliance framework"
+        "No support SLA",
+        "Custom framework prototype"
       ]
     },
     {
@@ -135,12 +135,12 @@ export default function EnterpriseHowItWorks() {
       price: "Free",
       features: [
         "Unlimited AI systems",
-        "Full API integration",
-        "Daily Council review",
+        "Enterprise pilot design",
+        "Council review design documentation",
         "Unlimited team members",
-        "24/7 dedicated support",
-        "Custom compliance framework",
-        "On-premise deployment option"
+        "No 24/7 support commitment",
+        "Custom framework prototype",
+        "On-premise architecture review"
       ]
     }
   ];
@@ -148,43 +148,43 @@ export default function EnterpriseHowItWorks() {
   const faqs = [
     {
       question: "How does the CSOAI API work?",
-      answer: "Our REST API allows you to submit AI systems for assessment, retrieve compliance scores, report incidents, and access Council decisions. Full documentation and SDKs available for Python, Node.js, and Go."
+      answer: "Public endpoints expose specific measurement, verification and incident-intake functions. They do not currently promise compliance scores, live Council decisions, or supported SDKs in Python, Node.js and Go. Inspect the API documentation and endpoint status before integrating."
     },
     {
       question: "Can we use CSOAI on-premise?",
-      answer: "Yes! Enterprise customers can deploy CSOAI on their own infrastructure. This includes the compliance assessment engine, incident management system, and access to the Council via secure API."
+      answer: "A production on-premise enterprise package is not currently verified or generally available. The repository contains components and interface designs that would require a scoped deployment review."
     },
     {
       question: "How does the Council review work?",
-      answer: "You submit your AI system details, training data samples, and decision logs. The Council's 33 agents independently analyze your system using 12 different AI providers. It is a designed council; its measured performance is published openly on our public Refutation Ledger."
+      answer: "The Council is a proposed 33-seat, multi-provider review architecture, not a live service. The latest three-leg experiment was fully correlated, so independent analysis, vendor neutrality and resilience under independent failures are not claimed. Current users can inspect the published evidence and methods while the operating workflow remains a target."
     },
     {
       question: "What compliance frameworks can we customize?",
-      answer: "You can customize any framework or create entirely new ones. Define your own risk categories, assessment criteria, remediation requirements, and approval workflows. Our team helps you design the framework."
+      answer: "The catalogue can inform a scoped mapping exercise. Custom runtime rules, approval workflows and enforcement require a separately tested implementation and accountable review."
     },
     {
       question: "How often should we run Council reviews?",
-      answer: "Recommended frequency depends on your risk profile: Startup tier = monthly, Growth tier = weekly, Enterprise tier = daily. You can also request ad-hoc reviews for critical systems."
+      answer: "There is no live scheduled Council review service today. Re-measurement cadence should be set by system risk, applicable obligations and accountable human owners; current published records state their own scope and date."
     },
     {
       question: "What if we disagree with a Council decision?",
-      answer: "You can submit additional evidence and request a re-review. The Council will reconsider with new information. All dissenting opinions and appeals are documented and published for transparency."
+      answer: "There is no live Council appeal service. A production service would need an explicit evidence-submission, human review, correction, revocation and appeal contract."
     },
     {
       question: "How is our data protected?",
-      answer: "Enterprise deployments include: end-to-end encryption, SOC 2 Type II compliance, regular security audits, data residency options, and strict access controls. Your data never leaves your infrastructure in on-premise deployments."
+      answer: "Do not assume SOC 2 Type II status, an on-premise data boundary, residency controls, or an audit programme from this preview. Those claims require deployment-specific evidence and contracts."
     },
     {
       question: "Can we integrate with our existing tools?",
-      answer: "Yes! CSOAI integrates with popular platforms: Jira for incident tracking, Slack for notifications, GitHub for code compliance, and any system via our REST API and webhooks."
+      answer: "No supported Jira, Slack, GitHub-compliance, universal REST, or webhook integration is claimed here. The published interfaces can be evaluated as building blocks for a scoped adapter."
     },
     {
       question: "What support do we get?",
-      answer: "All tiers include documentation and community forums. Growth tier adds email support. Enterprise tier includes 24/7 phone/email support, dedicated account manager, and quarterly business reviews."
+      answer: "No tier-specific support SLA, 24/7 line, dedicated account manager, or quarterly review programme is currently committed by this page."
     },
     {
       question: "How do we measure ROI?",
-      answer: "CSOAI provides detailed dashboards showing: compliance score improvements, incident reduction, time saved on audits, regulatory risk mitigation, and customer trust metrics. Most enterprises see ROI within 6 months."
+      answer: "No six-month ROI claim is supported. A pilot should define its own baseline, cost, evidence coverage, error rate and time-to-review, then publish what was actually observed."
     }
   ];
 
@@ -196,7 +196,7 @@ export default function EnterpriseHowItWorks() {
         <div className="max-w-6xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Enterprise Solutions</h1>
           <p className="text-xl text-emerald-100">
-            Integrate CSOAI's compliance framework and Council oversight into your enterprise AI operations
+            Evaluate published measurement interfaces and a proposed Council workflow without assuming a live enterprise service
           </p>
         </div>
       </div>
@@ -289,19 +289,19 @@ export default function EnterpriseHowItWorks() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🏛️ Council</h4>
-              <p className="text-gray-700">Independent review by 33 AI + human experts using 12 different AI providers. No vendor bias, no conflicts of interest. Decisions published publicly for full transparency.</p>
+              <p className="text-gray-700">The 33-seat, multi-provider Council is a design target, not a live review service. Current experiments do not establish independent providers, absence of vendor bias or resilience under independent failures.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🌍 Global Standards</h4>
-              <p className="text-gray-700">Support for EU AI Act, NIST AI RMF, TC260, UK AI Bill, Canada AI Act, Australia AI Governance, and ISO 42001. One platform for all your compliance needs.</p>
+              <p className="text-gray-700">The catalogue references multiple laws, standards and guidance sources. A mapping is not a conformity verdict and coverage must be checked per subject and version.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">📊 Continuous Improvement</h4>
-              <p className="text-gray-700">SOAI-PDCA methodology ensures your compliance keeps improving. Quarterly cycles, automated monitoring, and actionable insights drive continuous enhancement.</p>
+              <p className="text-gray-700">SOAI-PDCA is a proposed re-measurement loop. Automated monitoring is not live; accountable teams must decide cadence, review findings and approve any action.</p>
             </div>
             <div>
               <h4 className="text-xl font-bold text-emerald-900 mb-3">🔒 Security & Privacy</h4>
-              <p className="text-gray-700">SOC 2 Type II compliant, end-to-end encryption, data residency options, and on-premise deployment available. Your data stays secure and under your control.</p>
+              <p className="text-gray-700">Security, privacy, residency and deployment boundaries require system-specific evidence. This preview does not assert SOC 2 Type II status or general on-premise availability.</p>
             </div>
           </div>
         </div>
@@ -335,7 +335,7 @@ export default function EnterpriseHowItWorks() {
 
         {/* CTA Section */}
         <div className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white p-12 rounded-lg text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your AI Compliance?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to scope an evidence pilot?</h2>
           <p className="text-lg mb-8 text-emerald-100">
             Schedule a consultation with our enterprise team to discuss your needs
           </p>

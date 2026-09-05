@@ -2,10 +2,12 @@
 *The sequence, published, so the actions read as a larger picture rather than random moves.*
 
 ## The architecture (one sentence)
-A running AI system emits a live signal; Council of AI canonicalizes it (SHA-256 content
-addressing), signs it (Ed25519, one key), anchors it (EAS on EVM; OpenTimestamps/Bitcoin
-for neutrality; XRPL settling), and publishes a **three-state verdict** — measured /
-unmeasured / refused — that anyone can verify with no CSOAI code.
+Current: published artifacts are content-addressed and supported families can be verified
+with Ed25519 under their declared key and preimage rules. The exact public root carries an
+OpenTimestamps proof in **STAMPED_PENDING_BITCOIN** state, which is not a confirmed Bitcoin
+timestamp. EAS/EVM anchoring and XRPL settlement are planned rails, not current architecture.
+The public vocabulary is **MEASURED / UNMEASURED / REPORTED / REFUSED** with scope attached;
+it is not a legal or conformity verdict.
 
 ## The doctrine line (public, load-bearing)
 > We measure, we sign, we re-attest — we do not certify, accredit, enforce,
@@ -23,7 +25,8 @@ is not.
   relationships): **gated — incorporated once a grant lands or operating revenue supports it.**
 
 ## The product/rail map (free forever vs metered)
-Trust engine (verification, offline verifier, corrections ledger) **free forever**.
+Supported-family verification is free. The corrections ledger can explicitly report STALE
+while an owner re-sign is pending; do not rely on an unsigned or stale state as final history.
 Metered work is quoted privately. No public prices. A grade is never sold.
 
 ## Sequence (fast → durable → decades)

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 
-// Dragonfly - the 4-Wing Model. Four independent wings (Governance, Intelligence,
-// Safety, Cybersecurity) must all agree for a major decision: Byzantine Fault
-// Tolerance applied to AI governance, rediscovered from 4,000 years of history.
+// Dragonfly - a 4-Wing design model. The named wings are conceptual groupings;
+// they are not four independently operating subsystems or a BFT implementation.
 
 type Wing = { id: string; n: string; letter: string; color: string; purpose: string; components: string[]; agents: string; quote: string; who: string };
 const WINGS: Wing[] = [
-  { id: "g", n: "Governance", letter: "G", color: "#059669", purpose: "Ensure AI systems comply with every applicable regulation.", components: ["framework catalog", "47-industry classifier", "Council Score"], agents: "Barnaby, Mei-Lin, Carlos, Amara, Ravi, Fatima", quote: "Every number tells a story. My job is to ensure it's a true one.", who: "Barnaby" },
+  { id: "g", n: "Governance", letter: "G", color: "#059669", purpose: "Design goal: map a scoped AI system to potentially applicable governance sources.", components: ["framework catalogue", "industry classifier demo", "measurement design"], agents: "Illustrative roles: Barnaby, Mei-Lin, Carlos, Amara, Ravi, Fatima", quote: "Every number tells a story. My job is to ensure it's a true one.", who: "Barnaby" },
   { id: "i", n: "Intelligence", letter: "I", color: "#2563eb", purpose: "Analyse, predict, and optimise AI system behaviour.", components: ["MARFT engine", "Predictive modeling", "Anomaly detection"], agents: "Oracle, Sage, Cipher, Scout, Navigator", quote: "I see patterns others miss. I predict what others can't.", who: "Oracle" },
   { id: "s", n: "Safety", letter: "S", color: "#dc2626", purpose: "Prevent harm to humans, society, and the environment.", components: ["Safety evaluation engine", "Red team (Augustus)", "Sandbox (forkd)"], agents: "Vex, Shadow, Blaze, Shield, Warden, Sentinel", quote: "I am the wall between civilization and catastrophe.", who: "Vex" },
   { id: "c", n: "Cybersecurity", letter: "C", color: "#7c3aed", purpose: "Protect AI systems from attack, intrusion, and manipulation.", components: ["Rainbow Stack (7-layer defense)", "Worm Hive mesh", "Signed attestation"], agents: "Phantom, Guardian, Cipher", quote: "You cannot see me. That is why you are safe.", who: "Phantom" },
@@ -20,12 +19,12 @@ const COUNCIL: Member[] = [
   { name: "Council Speaker", wing: "Neutral", style: "Balanced, facilitation-focused" },
 ];
 const PROTOCOL = [
-  "Any agent can propose a decision",
-  "All five debate for a minimum of three rounds",
-  "Each casts a vote: APPROVE / REJECT / ABSTAIN",
-  "Passes if >=3 approve AND <=1 rejects",
-  "If no consensus, escalate to the human operator",
-  "Every decision is Ed25519-signed and permanently logged",
+  "Design: a participant can propose a decision",
+  "Design: five named roles deliberate for three rounds",
+  "Design: each role can return APPROVE / REJECT / ABSTAIN",
+  "Design: the five-role illustration passes at >=3 approve and <=1 reject",
+  "Design: unresolved cases escalate to an accountable human",
+  "Target: admitted decisions may be signed and retained; this is not live",
 ];
 
 export default function Dragonfly() {
@@ -43,8 +42,8 @@ export default function Dragonfly() {
         <div className="relative max-w-6xl mx-auto px-6">
           <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - the architecture</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">The Dragonfly - 4-Wing Model</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly has four wings; so does CSOAI — by design. Four independent subsystems - Governance, Intelligence, Safety, Cybersecurity - are designed so all must agree for any major decision. Council cross-checking applied to AI.</p>
-          <p className="mt-3 max-w-2xl text-sm text-amber-200/90">Design model — not yet a live system. Measured status is published on the <a href="/refutation-ledger" className="underline">Refutation Ledger</a> (DR-0007).</p>
+          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">The dragonfly is a design metaphor for four governance concerns: Governance, Intelligence, Safety and Cybersecurity. They are not demonstrated as independent runtime subsystems.</p>
+          <p className="mt-3 max-w-2xl text-sm text-amber-200/90">Design model — not a live Council or BFT system. The <a href="/interop/council-independence.json" className="underline">latest published point experiment measured rho=1 and n_eff=1</a>, so independent review and fault tolerance are not demonstrated.</p>
           <p className="mt-3 max-w-2xl text-emerald-100/75 text-sm">360-degree vision, reacts in milliseconds, 300 million years of survival. The metaphor is the architecture.</p>
         </div>
       </section>
@@ -92,7 +91,7 @@ export default function Dragonfly() {
       </section>
       <section className="max-w-6xl mx-auto px-6 pb-14">
         <h2 className="text-xl font-bold text-gray-900">The Council of AI - five agents, multi-agent council <span className="ml-2 align-middle rounded-full border border-amber-400/50 bg-amber-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-amber-700">Designed — not yet live</span></h2>
-        <p className="mt-1 text-sm text-gray-500">Five independent legs is the design target; measured effective independence is published on /benchmarks and the Refutation Ledger (DR-0007) rather than assumed</p>
+        <p className="mt-1 text-sm text-gray-500">Five roles are shown for the design demo. They are not five independent model executions; the latest published point experiment measured rho=1 and n_eff=1.</p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {COUNCIL.map((m) => (
             <div key={m.name} className="rounded-2xl border border-gray-200 p-4 text-center">
@@ -103,7 +102,7 @@ export default function Dragonfly() {
             </div>
           ))}
         </div>
-        <h2 className="mt-12 text-xl font-bold text-gray-900">How consensus flows</h2>
+        <h2 className="mt-12 text-xl font-bold text-gray-900">Proposed review flow</h2>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {PROTOCOL.map((s, i) => (
             <div key={i} className="flex items-start gap-3 rounded-xl border border-gray-200 p-4">

@@ -245,7 +245,7 @@ export default function TrustCenter() {
       id: "sub-processors",
       title: "Who are your sub-processors?",
       content:
-        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Stripe (payments), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party measurement gateway the measurement API, and our email provider. We notify customers before adding any new processor.",
+        "The named register is published on this page — see the Subprocessors section above. It covers Cloudflare (hosting/edge), Vercel (legacy hosting, being retired), GitHub (code), Hugging Face (public dataset hosting), our first-party measurement gateway the measurement API, and our email provider. Card payments are retired — Stripe checkout is gone (410) and a grade is never sold — so no payment processor sits in the live register. We notify customers before adding any new processor.",
       icon: <Users className="h-5 w-5" />,
     },
     {
@@ -290,13 +290,6 @@ export default function TrustCenter() {
       data: "Site traffic logs, IP addresses, cached page content",
       location: "Global edge network (US/EU)",
       safeguard: "Cloudflare DPA; SCCs / UK IDTA for international transfers",
-    },
-    {
-      vendor: "Stripe",
-      purpose: "Payment processing",
-      data: "Billing name, email and payment metadata — card numbers never touch our servers",
-      location: "United States / Ireland",
-      safeguard: "Stripe DPA; SCCs / UK IDTA",
     },
     {
       vendor: "Vercel",

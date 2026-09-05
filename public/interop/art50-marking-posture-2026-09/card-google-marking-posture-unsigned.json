@@ -1,0 +1,82 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Google — Art 50(2) marking posture 2026-09",
+  "as_of": "2026-09-02T05:51:28Z",
+  "source_urls": [
+    "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
+    "https://deepmind.google/technologies/synthid/"
+  ],
+  "payload": {
+    "kind": "csoai.art50-marking-posture/0.1",
+    "status": "STATED_POSTURE_LOCATED",
+    "honest_sentence": "Stated marking posture from vendor public pages. Detectable UNMEASURED (no probe). Not a certificate.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "provider": "Google",
+    "obligation": {
+      "article": "Art 50(2) Reg (EU) 2024/1689",
+      "verbatim": "Providers of AI systems, including general-purpose AI systems, generating synthetic audio, image, video or text content, shall ensure that the outputs of the AI system are marked in a machine-readable format and detectable as artificially generated or manipulated. Providers shall ensure their technical solutions are effective, interoperable, robust and reliable as far as this is technically feasible, taking into account the specificities and limitations of various types of content, the costs of implementation and the generally acknowledged state of the art, as may be reflected in relevant technical standards. This obligation shall not apply to the extent the AI systems perform an assistive function for standard editing or do not substantially alter the input data provided by the deployer or the semantics thereof, or where authorised by law to detect, prevent, investigate or prosecute criminal offences.",
+      "binds": "provider",
+      "fine_ceiling": {
+        "article": "Art 99(4) Reg (EU) 2024/1689",
+        "ceiling": "EUR 15M or 3% worldwide turnover (whichever higher)",
+        "not": "not Art 99(3) EUR 35M/7%"
+      },
+      "enforcer": "national MSA",
+      "enforcement_start": "2026-08-02",
+      "grace_pre_existing_systems_to": "2026-12-02"
+    },
+    "stated_posture": {
+      "synthid_media": "STATED",
+      "c2pa": "STATED",
+      "synthid_text": "STATED_OPEN_SOURCE_TECH",
+      "verify_surfaces": "STATED"
+    },
+    "stated_sources": [
+      {
+        "url": "https://blog.google/innovation-and-ai/products/identifying-ai-generated-media-online/",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "sha256": "554d713e19ec77e9634283ced33ccaac775da3b87cff2e55bb03ecafd503805c",
+        "quote": "SynthID… C2PA Content Credentials… SynthID verification for image, video and audio to the Gemini app… open-sourcing our SynthID text watermarking technology"
+      },
+      {
+        "url": "https://deepmind.google/technologies/synthid/",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "sha256": "d856e19a68f57b4cbcbb2ab04c19f060aed5772e0aa8ecd2f21328e3e35d9736"
+      }
+    ],
+    "detectable": {
+      "c2pa": "UNMEASURED",
+      "text_watermark": "UNMEASURED",
+      "synthid": "UNMEASURED"
+    },
+    "measured_fact": "Google blog + SynthID page retrieved 2026-09-02 stating SynthID + C2PA; no detector run.",
+    "fetched_at": "2026-09-02T05:51:28Z"
+  },
+  "sha256": "fc0abcf70fcdde502b19d40408f66b5bd7d7bf636f39fc36ef7ec685d49a4bd7",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "C2PA probe on samples",
+    "text watermark detector run",
+    "SynthID detector run",
+    "marking survival",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED",
+    "Art 50 compliance determination"
+  ],
+  "tags": [
+    "public-notice",
+    "art50",
+    "marking-posture",
+    "google",
+    "unsigned"
+  ],
+  "note": "UNSIGNED. Fine band Art 99(4) €15M/3%."
+}

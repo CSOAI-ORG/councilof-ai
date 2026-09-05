@@ -22,7 +22,10 @@
   "chain_rpc": "https://s1.ripple.com:51234/",
   "fetched_at": "2026-08-28T05:06:35Z",
   "as_of": "2026-08-28",
-  "still_dark": ["SBI START", "Kyobo Life"],
+  "still_dark": [
+    "SBI START",
+    "Kyobo Life"
+  ],
   "axes": [
     {
       "id": "reserve-attestation",
@@ -34,7 +37,12 @@
         "NO": "No current attestation, or attestation as_of < 2026-07-13",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 30, "yes": 1, "no": 29, "uncheckable": 0 }
+      "counts": {
+        "n": 30,
+        "yes": 1,
+        "no": 29,
+        "uncheckable": 0
+      }
     },
     {
       "id": "regulatory-framework",
@@ -46,7 +54,12 @@
         "NO": "No declared regime or not confirmable",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 30, "yes": 27, "no": 3, "uncheckable": 0 }
+      "counts": {
+        "n": 30,
+        "yes": 27,
+        "no": 3,
+        "uncheckable": 0
+      }
     },
     {
       "id": "distribution-integrity",
@@ -58,7 +71,12 @@
         "NO": "Missing classification or JMWH pattern flagged",
         "UNCHECKABLE": "RWA API 401 or missing input"
       },
-      "counts": { "n": 30, "yes": 16, "no": 12, "uncheckable": 2 }
+      "counts": {
+        "n": 30,
+        "yes": 16,
+        "no": 12,
+        "uncheckable": 2
+      }
     },
     {
       "id": "custody-disclosure",
@@ -70,7 +88,12 @@
         "NO": "Custodian or auditor missing",
         "UNCHECKABLE": "Missing input — never invent YES"
       },
-      "counts": { "n": 30, "yes": 10, "no": 20, "uncheckable": 0 }
+      "counts": {
+        "n": 30,
+        "yes": 10,
+        "no": 20,
+        "uncheckable": 0
+      }
     }
   ],
   "issuers": [
@@ -464,5 +487,8 @@
     "not_certification": "Council of AI measures; it never certifies. No conformity marks. This run is UNSIGNED.",
     "signed_requirements": "SIGNED status requires n≥30 + 4-way review + keystone signature. This run does not meet those requirements.",
     "stranger_recompute": "Strangers can recompute by re-fetching sources and applying grading_rules. Grading is deterministic."
-  }
+  },
+  "superseded_note": "SUPERSEDED 2026-09-02. Statements in this file that describe the live board as '22 axis · 15 measured · 7 empty/unmeasured' were true on the date this record was written and are FALSE NOW. Live GET https://councilof.ai/api/gspc reports 22 axis · 22 measured · 0 unmeasured (items 969); the signed freeze at https://councilof.ai/signed/gspc-board.signed.json agrees and verifies under did:web:csoai.org#gspc-board-22axis-2026. The historical sentences are left UNEDITED on purpose — this estate supersedes records, it does not rewrite them. The decision this file records (not stamping those slots MEASURED on that date) still stands as a description of that date.",
+  "superseded_on": "2026-09-02",
+  "live_authority": "https://councilof.ai/api/gspc"
 }

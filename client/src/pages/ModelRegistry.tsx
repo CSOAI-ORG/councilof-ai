@@ -3,26 +3,27 @@
 // Falls back to the bundled AXES snapshot if the API is unreachable — honest about which.
 
 import { useEffect, useState } from "react";
-import { AXES, MEASURED_ON, type Axis } from "@/lib/gspcAxes";
+import { AXES, MEASURED_ON } from "@/lib/gspcAxes";
 import { isEmbedded } from "@/lib/embed";
 
-interface GspcAxis {
+export interface GspcAxis {
   axis: string;
   bench: string;
   task: string;
   n: number;
-  accuracy: number;
-  leader: string;
-  separation: string | null;
-  separation_p: number | null;
-  interval: [number, number] | null;
-  fleet_mean: number | null;
-  macro_f1: number | null;
-  unparsed_rate: number;
+  accuracy?: number | null;
+  leader?: string;
+  separation?: string | null;
+  separation_p?: number | null;
+  interval?: [number, number] | null;
+  fleet_mean?: number | null;
+  macro_f1?: number | null;
+  unparsed_rate?: number;
   status: string;
-  dataset: string | null;
+  dataset?: string | null;
   colour: string;
-  note: string;
+  note?: string;
+  kind?: string;
 }
 interface GspcResponse {
   schema: string;
@@ -32,16 +33,9 @@ interface GspcResponse {
   totals: { public_count?: string; measured_axes?: number; unmeasured_axes?: number; axes?: number };
   limitations: string[];
 }
-interface AxesState {
-  axes: Axis[];
-  source: "snapshot";
-  measuredOn: string;
-  loading: true;
-}
-
-function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: string; publicCount: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
+function useGspc(): { axes: GspcAxis[]; source: string; measuredOn: string; publicCount: string; loading: boolean; error: string | null; limitations: string[]; issuer: string } {
   const [state, setState] = useState<{
-    axes: (GspcAxis | Axis)[];
+    axes: GspcAxis[];
     source: string;
     measuredOn: string;
     publicCount: string;
@@ -49,7 +43,16 @@ function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: str
     error: string | null;
     limitations: string[];
     issuer: string;
-  }>({ axes: AXES, source: "snapshot", measuredOn: MEASURED_ON.date, publicCount: "", loading: true, error: null, limitations: [], issuer: "" });
+  }>({
+    axes: AXES.map((axis) => ({ ...axis, kind: axis.kind || "model-comparison" })),
+    source: "snapshot",
+    measuredOn: MEASURED_ON.date,
+    publicCount: "",
+    loading: true,
+    error: null,
+    limitations: [],
+    issuer: "",
+  });
 
   useEffect(() => {
     const ac = new AbortController();
@@ -77,8 +80,18 @@ function useGspc(): { axes: (GspcAxis | Axis)[]; source: string; measuredOn: str
   return state;
 }
 
-function fmtPct(v: number) { return (v * 100).toFixed(1) + "%"; }
 function fmtCI(lo: number, hi: number) { return `[${lo.toFixed(3)}, ${hi.toFixed(3)}]`; }
+
+export function partitionModelRegistryAxes(axes: GspcAxis[]) {
+  return {
+    modelComparison: axes.filter((axis) => axis.kind === "model-comparison"),
+    deterministicFacts: axes.filter((axis) => axis.kind === "deterministic-facts"),
+    unclassified: axes.filter(
+      (axis) =>
+        axis.kind !== "model-comparison" && axis.kind !== "deterministic-facts",
+    ),
+  };
+}
 
 const AXIS_LABEL: Record<string, string> = {
   governance: "EU AI Act",
@@ -97,7 +110,7 @@ const AXIS_LABEL: Record<string, string> = {
 };
 
 export default function ModelRegistry() {
-  const { axes, source, measuredOn, publicCount, loading, error, limitations, issuer } = useGspc();
+  const { axes, source, measuredOn, publicCount, loading, limitations, issuer } = useGspc();
   const framed = typeof window !== "undefined" && isEmbedded();
 
   if (loading) {
@@ -111,12 +124,14 @@ export default function ModelRegistry() {
     );
   }
 
-  const wireAxes = axes.filter((a) => "leader" in a) as GspcAxis[];
-  const measuredCount = wireAxes.filter((a) => a.status === "MEASURED").length;
-  // The board carries two families: model-comparison axes (they carry a leader)
-  // and deterministic-fact axes (they do not). Both are derived from the live
-  // array, never typed, so the split always sums to the whole board.
-  const factCount = axes.length - wireAxes.length;
+  const { modelComparison, deterministicFacts, unclassified } =
+    partitionModelRegistryAxes(axes);
+  const measuredCount = modelComparison.filter(
+    (axis) => axis.status === "MEASURED",
+  ).length;
+  const factMeasuredCount = deterministicFacts.filter(
+    (axis) => axis.status === "MEASURED",
+  ).length;
 
   return (
     <div className="min-h-screen bg-[#04070d] text-slate-200">
@@ -124,20 +139,21 @@ export default function ModelRegistry() {
       <header className="border-b border-white/8 bg-[#080c14]">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {!framed && (
-            <a href="/os?lobby=home" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
+            <a href="/dashboard?tab=home" className="text-[11px] uppercase tracking-[0.2em] text-emerald-400 hover:text-emerald-300">
               ← Open in Council OS
             </a>
           )}
           <h1 className={`${framed ? "" : "mt-2 "}text-3xl font-bold tracking-tight text-white`}>Model Registry</h1>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-400">
-            Measured performance of AI models on the living GSPC board. Counts live in
-            GET /api/gspc — this page does not type a slot number. Every cell is a
-            deterministic score — no model judges another. Unmeasured cells stay empty.
+            Model-comparison runs from the living GSPC board. Counts and axis
+            families come from GET /api/gspc; the presence or absence of a
+            public leader never reclassifies an axis. Grading is deterministic,
+            and unmeasured cells stay empty.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500">
             <span>
               {source === "wire"
-                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${measuredCount} measured`}${factCount > 0 ? ` · ${wireAxes.length} model-comparison + ${factCount} fact` : ""}`
+                ? `live · /api/gspc · ${measuredOn} · ${publicCount || `${axes.length} axis · ${measuredCount + factMeasuredCount} measured`} · ${modelComparison.length} model-comparison + ${deterministicFacts.length} deterministic-fact${unclassified.length ? ` · ${unclassified.length} unclassified` : ""}`
                 : `bundled snapshot (${measuredOn}) · /api/gspc unreachable`}
             </span>
             {issuer && <span className="text-slate-600">issuer {issuer}</span>}
@@ -161,10 +177,18 @@ export default function ModelRegistry() {
 
       {/* Axis grid */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        {modelComparison.length === 0 && (
+          <div className="rounded-xl border border-white/8 bg-white/[0.02] p-6 text-center text-sm text-slate-400">
+            The live board could not be read and the bundled snapshot carries no per-axis
+            leaders. Read the board directly at <a className="text-emerald-400 hover:underline" href="/api/gspc">/api/gspc</a>.
+          </div>
+        )}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {wireAxes.map((a) => {
+          {modelComparison.map((a) => {
             const isMeasured = a.status === "MEASURED";
             const hasInterval = a.interval && a.interval.length === 2;
+            const hasLeaderAccuracy =
+              typeof a.accuracy === "number" && Number.isFinite(a.accuracy);
             return (
               <div
                 key={a.axis}
@@ -184,11 +208,11 @@ export default function ModelRegistry() {
                   </span>
                 </div>
                 <div className="mt-2 text-[11px] text-slate-500">{a.bench} · n={a.n}</div>
-                {isMeasured ? (
+                {isMeasured && hasLeaderAccuracy ? (
                   <div className="mt-3 space-y-1.5">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy?.toFixed(3) ?? "—"}</span>
-                      <span className="text-[11px] text-slate-500">accuracy</span>
+                      <span className="text-2xl font-bold tabular-nums text-slate-100">{a.accuracy!.toFixed(3)}</span>
+                      <span className="text-[11px] text-slate-500">public leader accuracy</span>
                     </div>
                     {hasInterval && (
                       <div className="text-[11px] tabular-nums text-slate-500">
@@ -211,6 +235,18 @@ export default function ModelRegistry() {
                       </div>
                     )}
                   </div>
+                ) : isMeasured ? (
+                  <div className="mt-3 text-[12px] leading-relaxed text-slate-500">
+                    <strong className="not-italic text-slate-300">
+                      Measured fleet; no public leader or leader accuracy asserted.
+                    </strong>
+                    {typeof a.fleet_mean === "number" && Number.isFinite(a.fleet_mean) ? (
+                      <span className="mt-1 block font-mono text-[10px] text-slate-600">
+                        fleet mean {a.fleet_mean.toFixed(3)}
+                      </span>
+                    ) : null}
+                    {a.note ? <span className="mt-1 block">{a.note.substring(0, 160)}</span> : null}
+                  </div>
                 ) : (
                   <div className="mt-3 text-[12px] text-slate-600 italic">
                     {a.note?.substring(0, 120) ?? "No score earned — measurement board not yet clean."}
@@ -230,6 +266,17 @@ export default function ModelRegistry() {
             );
           })}
         </div>
+
+        {deterministicFacts.length > 0 && (
+          <div className="mt-6 rounded-xl border border-sky-400/20 bg-sky-400/[0.05] p-4 text-xs leading-relaxed text-slate-400">
+            <strong className="text-sky-300">
+              {deterministicFacts.length} deterministic-fact axes ({factMeasuredCount} measured)
+            </strong>{" "}
+            are part of the canonical board but not this model registry. They
+            have no model fleet, leader, accuracy or separation test. Open the
+            living board to inspect their evidence rows.
+          </div>
+        )}
 
         {/* Scoreboard link footnote */}
         <div className="mt-8 border-t border-white/8 pt-4 text-center text-[11px] text-slate-600">

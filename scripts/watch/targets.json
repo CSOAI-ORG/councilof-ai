@@ -1,0 +1,126 @@
+{
+  "schema": "csoai.provider-diff.targets/0.1",
+  "note": "Curated public URLs only. Each is fetched with the declared UA after a robots.txt check. Nothing here is a claim that a URL is the provider's authoritative document — the first run records each URL's HTTP status; a 404 or a redirect is recorded, never hidden. Add, never silently replace: a URL change is itself a target-list change and lands by PR.",
+  "user_agent": "csoai-provider-watch/0.1 (+https://councilof.ai/feeds/provider-diff; hash-only change watcher; nicholas@csoai.org)",
+  "surfaces": {
+    "terms": "terms of service / licence that binds a customer",
+    "usage_policy": "usage / acceptable-use policy",
+    "model_cards": "model-card or system-card index",
+    "pricing": "pricing page",
+    "safety_policy": "safety / responsible-AI policy",
+    "art50_marking": "EU AI Act Article 50 marking / watermark statement"
+  },
+  "providers": [
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "targets": {
+        "terms": "https://openai.com/policies/terms-of-use/",
+        "usage_policy": "https://openai.com/policies/usage-policies/",
+        "model_cards": "https://openai.com/safety/evaluations-hub/",
+        "pricing": "https://openai.com/api/pricing/",
+        "safety_policy": "https://openai.com/safety/",
+        "art50_marking": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content"
+      }
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "targets": {
+        "terms": "https://www.anthropic.com/legal/commercial-terms",
+        "usage_policy": "https://www.anthropic.com/legal/aup",
+        "model_cards": "https://www.anthropic.com/transparency",
+        "pricing": "https://www.anthropic.com/pricing",
+        "safety_policy": "https://www.anthropic.com/responsible-scaling-policy",
+        "art50_marking": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content"
+      }
+    },
+    {
+      "id": "google",
+      "name": "Google",
+      "targets": {
+        "terms": "https://ai.google.dev/gemini-api/terms",
+        "usage_policy": "https://policies.google.com/terms/generative-ai/use-policy",
+        "model_cards": "https://modelcards.withgoogle.com/model-cards",
+        "pricing": "https://ai.google.dev/gemini-api/docs/pricing",
+        "safety_policy": "https://ai.google/responsibility/principles/",
+        "art50_marking": "https://deepmind.google/technologies/synthid/"
+      }
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "targets": {
+        "terms": "https://www.llama.com/llama4/license/",
+        "usage_policy": "https://www.llama.com/llama4/use-policy/",
+        "model_cards": "https://www.llama.com/docs/model-cards-and-prompt-formats/",
+        "safety_policy": "https://ai.meta.com/responsible-ai/",
+        "art50_marking": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/"
+      }
+    },
+    {
+      "id": "mistral",
+      "name": "Mistral AI",
+      "targets": {
+        "terms": "https://mistral.ai/terms",
+        "usage_policy": "https://mistral.ai/terms",
+        "model_cards": "https://docs.mistral.ai/getting-started/models/models_overview/",
+        "pricing": "https://mistral.ai/pricing",
+        "safety_policy": "https://docs.mistral.ai/capabilities/guardrailing/"
+      }
+    },
+    {
+      "id": "xai",
+      "name": "xAI",
+      "targets": {
+        "terms": "https://x.ai/legal/terms-of-service",
+        "usage_policy": "https://x.ai/legal/acceptable-use-policy",
+        "model_cards": "https://docs.x.ai/docs/models",
+        "pricing": "https://x.ai/api",
+        "safety_policy": "https://x.ai/safety"
+      }
+    },
+    {
+      "id": "cohere",
+      "name": "Cohere",
+      "targets": {
+        "terms": "https://cohere.com/terms-of-use",
+        "usage_policy": "https://docs.cohere.com/docs/usage-policy",
+        "model_cards": "https://docs.cohere.com/docs/models",
+        "pricing": "https://cohere.com/pricing",
+        "safety_policy": "https://cohere.com/responsibility"
+      }
+    },
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "targets": {
+        "terms": "https://cdn.deepseek.com/policies/en-US/deepseek-terms-of-use.html",
+        "usage_policy": "https://cdn.deepseek.com/policies/en-US/deepseek-open-platform-terms-of-service.html",
+        "model_cards": "https://huggingface.co/deepseek-ai",
+        "pricing": "https://api-docs.deepseek.com/quick_start/pricing"
+      }
+    },
+    {
+      "id": "alibaba-qwen",
+      "name": "Alibaba Cloud / Qwen",
+      "targets": {
+        "terms": "https://www.alibabacloud.com/help/en/legal/latest/alibaba-cloud-international-website-product-terms-of-service",
+        "model_cards": "https://huggingface.co/Qwen",
+        "pricing": "https://www.alibabacloud.com/help/en/model-studio/billing-for-model-studio",
+        "usage_policy": "https://www.alibabacloud.com/help/en/model-studio/getting-started/models"
+      }
+    },
+    {
+      "id": "amazon",
+      "name": "Amazon (AWS Bedrock / Nova)",
+      "targets": {
+        "terms": "https://aws.amazon.com/service-terms/",
+        "usage_policy": "https://aws.amazon.com/ai/responsible-ai/policy/",
+        "model_cards": "https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html",
+        "pricing": "https://aws.amazon.com/bedrock/pricing/",
+        "safety_policy": "https://aws.amazon.com/ai/responsible-ai/"
+      }
+    }
+  ]
+}

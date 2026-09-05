@@ -1,0 +1,65 @@
+# The four gates that block a deploy, run on the PR instead of after the merge.
+#
+# WHY. build:client, brand-gate and signed-json-guard lived only in deploy.yml,
+# which fires on push to master. Every PR check was green before them, so a PR
+# could pass 5/5 and still break the deploy once merged — and a brand-gate
+# failure blocks the deploy for the WHOLE estate, not just the lane that caused
+# it. The gates were effectively enforced by whoever remembered to run them on a
+# laptop, which is not enforcement, and made a local machine a dependency.
+#
+# This does not replace deploy.yml. That still runs the full gated build on
+# master, including prerender, shell smoke and the price/witness gates. This is
+# the subset that can be decided from a PR alone, moved to where it is cheap to
+# fix instead of expensive.
+
+name: pr-gates
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'client/**'
+      - 'public/**'
+      - 'functions/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'wrangler.jsonc'
+      - '.github/workflows/pr-gates.yml'
+  workflow_dispatch: {}
+
+# Supersede a lane's own older run; never cancel another lane's.
+concurrency:
+  group: pr-gates-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - name: Install deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Unit tests — client and functions
+        run: npx vitest run client/src functions
+
+      - name: Build client
+        run: npm run build:client
+
+      # --selftest first: a gate that has never been seen failing is decoration,
+      # so it proves it can go red on every run before it is trusted on our bytes.
+      - name: Brand gate — selftest, then the real dist
+        run: |
+          node scripts/brand-gate.mjs --selftest
+          node scripts/brand-gate.mjs dist/client
+
+      - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
+        run: node scripts/signed-json-guard.mjs dist/client

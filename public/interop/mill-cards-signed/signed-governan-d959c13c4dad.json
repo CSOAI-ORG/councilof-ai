@@ -1,0 +1,26 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "governance",
+    "model": "Qwen/Qwen3-8B",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.5,
+    "status": "UNMEASURED",
+    "unmeasured": [
+      "signed-pending-verify"
+    ],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "openrouter:qwen/qwen3-8b"
+  },
+  "id": "d959c13c4dad476150d9091c7b93ee320fed54f6013c5d1a2d082112ada43061",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "74e1b2602ffed3e5ce2da71f3c063d8f6c1eb24f9f0612156a2918f0ec50e2992d5f6e71ecd2162309273f50710c7e0a7194051f2e16a39db7ed0dc699058101",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

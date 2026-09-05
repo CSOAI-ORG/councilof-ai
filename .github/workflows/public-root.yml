@@ -1,6 +1,7 @@
 name: public-root
 
-# One writer. Commits public/root.json + cards + proofs + publisher-health.
+# One writer. Commits public/root.json + cards + proofs + publisher-health + public/archive (provable-archive index,
+# EIP-1186 proof bytes, evm-events cursor).
 # Does NOT prerender the site. Does NOT add a fourth overlapping full-site deploy.
 # Existing Pages deploy on master picks up the JSON. GHA on master only.
 # If BOARD_SIGN_KEY_PKCS8_B64 is missing, fail closed (exit 3). Never publish unsigned NEW leaves.
@@ -23,6 +24,7 @@ concurrency:
   cancel-in-progress: false
 
 permissions:
+  actions: write   # to dispatch deploy.yml — see "trigger site deploy"
   contents: write
   id-token: write
 
@@ -49,6 +51,11 @@ jobs:
           HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
           HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
           HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_TOKEN }}
+          # Witness queue (/api/witness → WITNESS_KV) read over the KV REST API. All three
+          # absent/empty → the adapter yields no KV leaves and never halts the root.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WITNESS_KV_NAMESPACE_ID: ${{ vars.WITNESS_KV_NAMESPACE_ID }}
         run: |
           set -euo pipefail
           # GHA on master only: this workflow is not registered on pull_request.
@@ -58,19 +65,136 @@ jobs:
           else
             python scripts/publish_public_root.py
           fi
+      - name: witness the ONE root (Rekor rekord + OpenTimestamps; public bytes only, no key)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          pip install -q opentimestamps-client
+          python scripts/witness_public_root.py
+      - name: EAS on Base — attest the ONE root (fails closed without EAS_ATTESTER_PRIVATE_KEY)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        env:
+          EAS_ATTESTER_PRIVATE_KEY: ${{ secrets.EAS_ATTESTER_PRIVATE_KEY }}
+          BASE_RPC_URL: ${{ secrets.BASE_RPC_URL }}
+        run: |
+          set -euo pipefail
+          if [ -z "${EAS_ATTESTER_PRIVATE_KEY:-}" ]; then
+            echo "EAS key absent: record NOT_YET without loading wallet dependencies"
+            node scripts/eas_attest_root.mjs
+          else
+            echo "EAS key present: dependency install and attestation are essential and fail closed"
+            npm install --no-save --silent ethers@6 @ethereum-attestation-service/eas-sdk@2
+            node scripts/eas_attest_root.mjs
+          fi
+      - name: Refresh exact-root EAS witness metadata after the chain write
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/witness_public_root.py --refresh-eas
+      - name: mark witnessed digests (KV entries in this root → witnessed; public mirrors; idempotent, never fails the publish)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WITNESS_KV_NAMESPACE_ID: ${{ vars.WITNESS_KV_NAMESPACE_ID }}
+        run: python scripts/adapters/witness_queue.py --mark
+      - name: provable archive index (append-only; bytes from this tree + witnesses; no key, no network)
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/build_archive_index.py
+      # Re-evaluate drift against the LIVE root, and do it even when the steps above were
+      # skipped or failed. The witness step only rewrites the pointer when it succeeds, so
+      # between successful runs nothing was re-examining whether the pointer's claim still
+      # held — and it stopped holding: on 2026-09-04 the published pointer read MATCH while
+      # naming a sha256 and byte-count that had not been live for a day. This step is what
+      # makes the pointer self-correct rather than sit on a stale all-clear.
+      #
+      # continue-on-error deliberately: --recheck exits 1 on DRIFTED, and DRIFTED is the
+      # NORMAL state for the minutes between committing a new root and Pages serving it.
+      # Failing the workflow on that would be a gate that cries wolf, which gets switched off
+      # and then protects nothing. The honest status lands in the artefact either way, and the
+      # commit step below already stages the pointer.
+      - name: recheck drift against the live root (self-corrects a stale pointer)
+        if: always() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        continue-on-error: true
+        run: python scripts/witness_public_root.py --recheck
+
+      - name: release integrity — root, sidecar, Rekor and every public OTS file
+        if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
+        run: |
+          set -euo pipefail
+          python scripts/root-witness-release-gate.py --selftest
+          # The candidate is not live yet, so DRIFTED is valid when it is a real,
+          # internally consistent comparison with the old apex root.
+          python scripts/root-witness-release-gate.py --phase candidate
       - name: commit published tree
+        id: commit_tree
         if: success() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')
         run: |
           set -euo pipefail
           git config user.name "csoai-public-root"
           git config user.email "board@csoai.org"
           git add public/root.json public/cards public/proofs public/publisher-health.json
+          git add public/archive
+          mapfile -d '' witness_files < <(find public/interop -maxdepth 1 -type f \
+            \( -name 'root-witness-*.json' -o -name 'rekor-root-*.json' -o -name '*.ots' \) -print0)
+          if [ "${#witness_files[@]}" -eq 0 ]; then
+            echo "HALT: witness step produced no stageable witness files" >&2
+            exit 1
+          fi
+          git add -- "${witness_files[@]}"
+          git add -- public/interop/root-witness-pointer.json
+          if [ -f public/interop/eas-root-attestations.json ]; then
+            git add -- public/interop/eas-root-attestations.json
+          fi
+          if [ -d public/interop/witness ]; then
+            mapfile -d '' digest_files < <(find public/interop/witness -maxdepth 1 -type f -name '*.json' -print0)
+            if [ "${#digest_files[@]}" -gt 0 ]; then
+              git add -- "${digest_files[@]}"
+            fi
+          fi
           if git diff --cached --quiet; then
             echo "no tree change"
             exit 0
           fi
           git commit -m "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))"
-          git push origin HEAD:master
+          # Rebase-and-retry. Building + signing the tree takes ~3 minutes, and other
+          # lanes push to master more often than that, so a bare push loses the race
+          # every time: on 2026-09-03 two consecutive runs signed a complete tree and
+          # then threw it away on "failed to push some refs". The publisher only ever
+          # adds its own generated paths, so replaying them onto whatever landed
+          # meanwhile is safe — and losing a signed tree to a race is not.
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:master; then
+              echo "pushed on attempt $attempt"
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "push race on attempt $attempt — rebasing onto origin/master"
+            git fetch origin master
+            # --autostash: the run leaves other generated files dirty (adapter
+            # sidecars, health variants) and plain `git rebase` refuses with
+            # "cannot rebase: You have unstaged changes", which is exactly how
+            # attempt 1 died the first time this retry loop ran.
+            git rebase --autostash origin/master || { git rebase --abort || true; exit 1; }
+            sleep $((attempt * 5))
+          done
+          echo "HALT: could not push the published tree after 5 attempts" >&2
+          exit 1
+      # A push made with GITHUB_TOKEN does NOT trigger other workflows — GitHub's
+      # loop-prevention. So the published tree never deployed itself: checked on
+      # 2026-09-03, every "public-root: adapters → cards → merkle" commit had ZERO
+      # deploy runs, and a signed tree only reached production hours later when the
+      # 3-hourly catch-up cron happened to pick it up, or when an unrelated human
+      # push dragged it along. workflow_dispatch is an explicit exception to that
+      # rule, so dispatching deploy.yml here does start a run.
+      - name: trigger site deploy
+        if: success() && steps.commit_tree.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref master
+
       # Halt is still fail-closed (publish step failed). Persist health only — never the unsigned tree.
       - name: commit halt health
         if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true')

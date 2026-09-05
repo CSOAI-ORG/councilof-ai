@@ -7,7 +7,7 @@ Consolidated work products + brand directives so you can push them live, branded
 - Typeface: Avenir Next (Demi Bold headers, Regular body). Font: `/System/Library/Fonts/Supplemental/Avenir Next.ttc` (index 3 = Demi Bold).
 - Cards: `#0e1118` panel, `rgba(16,185,129,.25)` border, radius 16, subtle emerald radial glow, `border-emerald-500/20 bg-white/5` glassmorphism.
 - Grammar (binding): cite live `GET /api/gspc` → `totals.public_count` —
-  **22 axis · 15 measured · 7 UNMEASURED** (jail MEASURED · separation TIE).
+  **22 axis · 22 measured · 0 UNMEASURED** (jail MEASURED · separation TIE).
   Measurement ≠ certification. Card chain after #876 = **335/335 VALID**; the
   150-row board is a subset of that chain, not a second set. Do not restore
   14-of-14. Do not clamp the index. Do not invent a number.

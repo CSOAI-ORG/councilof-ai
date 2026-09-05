@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>GSPC — live board · verify a card</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <h1>GSPC — Council of AI</h1>
+    <p class="sub">Measurement, not certification. Verify is free. A rank is never sold.</p>
+  </header>
+
+  <section id="board" aria-labelledby="board-h">
+    <h2 id="board-h">Live board</h2>
+    <p class="muted">Authority: <a href="https://councilof.ai/api/gspc" target="_blank" rel="noopener">GET councilof.ai/api/gspc</a> — every count below is printed from that payload, never typed here.</p>
+    <p id="lid" class="lid">Loading the board…</p>
+    <p id="public_count" class="muted"></p>
+    <div class="tablewrap">
+      <table id="axes" hidden>
+        <thead><tr><th>axis</th><th>family</th><th>state</th><th>public leader</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p id="board-note" class="muted"></p>
+    <button id="reload" type="button">Reload board</button>
+  </section>
+
+  <section id="verify" aria-labelledby="verify-h">
+    <h2 id="verify-h">Verify a card</h2>
+    <p class="muted">Paste a signed card (JSON). The signature check runs here, offline, against keys pinned in this extension — nothing is sent anywhere. Only the root-inclusion row asks <code>councilof.ai/api/proof</code>.</p>
+    <textarea id="card" rows="8" spellcheck="false" placeholder='{"alg":"Ed25519","body":{…},"id":"…","pubkey":"…","signature":"…"}'></textarea>
+    <div class="row">
+      <button id="check" type="button">Verify</button>
+      <label class="muted"><input id="inclusion" type="checkbox" checked /> also check root inclusion (network)</label>
+    </div>
+    <div id="verdict" class="verdict" hidden>
+      <p class="state"><span id="v-state"></span> <span id="v-meta" class="muted"></span></p>
+      <p id="v-reason"></p>
+      <ul id="v-notes" class="muted"></ul>
+      <p id="v-inclusion" class="muted"></p>
+      <details><summary>every check, in order</summary><ul id="v-checks"></ul></details>
+    </div>
+  </section>
+
+  <footer class="muted">
+    Three outcomes, never two: VALID · INVALID · UNCHECKABLE. "Could not check" is not "forged".
+    Recipe: <a href="https://councilof.ai/signed/HOW-TO-VERIFY.md" target="_blank" rel="noopener">HOW-TO-VERIFY.md</a> ·
+    root: <a href="https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md" target="_blank" rel="noopener">HOW-TO-VERIFY-ROOT.md</a> ·
+    <a href="https://councilof.ai/gspc-verify" target="_blank" rel="noopener">verify on the site</a>
+  </footer>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

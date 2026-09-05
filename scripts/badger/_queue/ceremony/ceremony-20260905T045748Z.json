@@ -1,0 +1,78 @@
+{
+  "schema": "csoai.layer0-ceremony/0.1",
+  "as_of": "20260905T045748Z",
+  "merkle_root": "9743ee0de5c99589f72861dacac1ea8fdbb3bc559acd36e4d0bfd0879677c274",
+  "cards_anchored": 335,
+  "anchors": {
+    "opentimestamps": {
+      "name": "OpenTimestamps \u2192 Bitcoin",
+      "kind": "witness-plan",
+      "endpoint": "https://opentimestamps.org",
+      "method": "Create a detached timestamp with an OpenTimestamps client, then upgrade and verify it against Bitcoin",
+      "status": "NOT_STAMPED",
+      "as_of": "20260905T045748Z",
+      "receipt": {
+        "digest": "9743ee0de5c99589f72861dacac1ea8fdbb3bc559acd36e4d0bfd0879677c274",
+        "status": "NOT_STAMPED",
+        "proof_path": null,
+        "reason": "This ceremony is a dry-run. Use the authorised root witness workflow to create a parseable detached OpenTimestamps proof."
+      }
+    },
+    "sigstore_rekor": {
+      "name": "Sigstore Rekor",
+      "kind": "witness-plan",
+      "endpoint": "https://rekor.sigstore.dev",
+      "method": "POST /api/v1/log with the merkle_root + Ed25519 signature",
+      "status": "NOT_SUBMITTED",
+      "as_of": "20260905T045748Z",
+      "receipt": {
+        "digest": "9743ee0de5c99589f72861dacac1ea8fdbb3bc559acd36e4d0bfd0879677c274",
+        "entry": null,
+        "reason": "This dry-run did not submit a signed entry to Rekor."
+      }
+    },
+    "eas_base": {
+      "name": "EAS on Base",
+      "kind": "witness-plan",
+      "endpoint": "https://base.easscan.org",
+      "method": "POST schema attestation with the merkle_root as the data field",
+      "status": "NOT_SUBMITTED",
+      "as_of": "20260905T045748Z",
+      "receipt": {
+        "digest": "9743ee0de5c99589f72861dacac1ea8fdbb3bc559acd36e4d0bfd0879677c274",
+        "uid": null,
+        "reason": "This dry-run did not submit an EAS attestation."
+      }
+    }
+  },
+  "compute": {
+    "as_of": "20260905T045748Z",
+    "compute": {
+      "oracle": {
+        "status": "UNCHECKED_IN_THIS_RUN",
+        "host": null,
+        "uptime": null,
+        "role": "candidate witness relay; no relay receipt was collected",
+        "capabilities": [
+          "x86_64",
+          "1 vCPU",
+          "956 MB RAM"
+        ]
+      },
+      "runpod": {
+        "status": "DARK (paused \u2014 no API key)",
+        "host": "n/a",
+        "role": "GPU compute (3090, A100, RTX PRO 4500, RTX 5090) \u2014 when claimed",
+        "capabilities": [
+          "NVIDIA RTX 3090",
+          "NVIDIA RTX 4090",
+          "NVIDIA A100",
+          "NVIDIA RTX PRO 4500 Blackwell",
+          "NVIDIA RTX PRO 6000 Blackwell",
+          "NVIDIA H200"
+        ]
+      }
+    }
+  },
+  "doctrine": "A witness rail counts only after its real receipt verifies against these exact bytes. This dry-run creates no anchor."
+}

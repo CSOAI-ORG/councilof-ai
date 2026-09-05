@@ -73,9 +73,9 @@ const STATUS_NOTE: Record<NodeStatus, string> = {
 };
 
 const L0_LEVELS = [
-  { id: "L0-1", name: "Identity", body: "Every tool call carries a checked identity — no anonymous calls through the gate." },
-  { id: "L0-2", name: "Policy-gated", body: "Every call passes the Council Gate policy check before it reaches the tool." },
-  { id: "L0-3", name: "Signed", body: "Every call is Ed25519-attestable — a record another governed agent can verify offline." },
+  { id: "L0-1", name: "Identity", body: "Design requirement: a governed tool call carries a checked identity before admission." },
+  { id: "L0-2", name: "Policy-gated", body: "Design requirement: policy is evaluated before a governed call reaches the tool." },
+  { id: "L0-3", name: "Signed", body: "Published Ed25519-signed cards can be verified offline. Ordinary tool calls are not automatically signed." },
 ];
 
 export default function Layer0() {
@@ -108,10 +108,15 @@ export default function Layer0() {
               Ed25519 signing, the care-floor gate, and offline verification
             </strong>{" "}
             — plus a <strong className="text-emerald-50">designed</strong> 33-seat council, which is
-            a design figure only: when we measured how independent those seats actually were, the
-            effective number came out at n_eff 1.21 of 3, so we retracted the guarantee (DR-0007)
-            rather than reword it. Every claim made on this floor carries either a measurement or an
-            honest status. Nothing here asks to be believed; everything here asks to be checked.
+            a design figure only. DR-0007 records the retraction; its historical numeric result is
+            unbound because the cited result artifact is absent from this repository. The{" "}
+            <Link href="/interop/council-independence.json" className="underline underline-offset-2">
+              latest point experiment
+            </Link>{" "}
+            measured rho=1 and n_eff=1 across three nominal legs. Neither experiment demonstrates
+            independent review or fault tolerance; the 33-seat council remains a design, not a live
+            property. Every claim made on this floor carries either a measurement or an honest status.
+            Nothing here asks to be believed; everything here asks to be checked.
           </p>
           <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-emerald-100/60">
             {LAYER0_DISAMBIGUATION}

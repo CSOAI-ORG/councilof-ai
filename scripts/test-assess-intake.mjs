@@ -1,16 +1,16 @@
 #!/usr/bin/env node
-/** Live / local regression for POST /api/assess — keyword measurement, not a bench. */
+/** Live / local regression for POST /api/assess — scoped keyword screening, not a legal tier. */
 const host = (process.argv.find((a) => a.startsWith("--host="))?.slice(7) || "https://councilof.ai").replace(/\/$/, "");
 
 const CASES = [
   {
     body: { system: "hiring screener for job applicants", purpose: "rank CVs", domain: "employment" },
-    want: "HIGH_RISK",
+    want: "POSSIBLE_ANNEX_III_TEXT_MATCH",
     not: "I could not ground",
   },
   {
     body: { endpoint: "https://example.com/hire", purpose: "rank job applicants" },
-    want: "HIGH_RISK",
+    want: "POSSIBLE_ANNEX_III_TEXT_MATCH",
   },
   {
     body: { system: "x" },
@@ -28,12 +28,12 @@ for (const c of CASES) {
     body: JSON.stringify(c.body),
   });
   const j = await r.json();
-  const tier = String(j.tier || "");
-  const okTier = tier === c.want;
+  const state = String(j.screening_state || "");
+  const okTier = state === c.want;
   const okStatus = c.status ? r.status === c.status : r.status === 200;
   const okNot = c.not ? !JSON.stringify(j).includes(c.not) : true;
   const ok = okTier && okStatus && okNot;
-  console.log(ok ? "  ok" : "  FAIL", JSON.stringify(c.body).slice(0, 70), "→", tier, r.status);
+  console.log(ok ? "  ok" : "  FAIL", JSON.stringify(c.body).slice(0, 70), "→", state, r.status);
   if (!ok) fail++;
 }
 console.log(fail ? `\nFAIL ${fail}` : "\nPASS");

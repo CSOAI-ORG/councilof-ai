@@ -87,6 +87,6 @@ describe("100/100 A+++ permissionless gate", () => {
       A_PLUS_PLUS_PLUS,
     });
     expect(blob).not.toMatch(/£79|£499|rank for sale|22\/22|dorado|cibola|sovos/i);
-    expect(tools).toContain("HundredGate");
+    expect(tools).not.toContain("HundredGate"); // internal planning envelope — never on a public page
   });
 });

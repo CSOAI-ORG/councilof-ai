@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "anthropic",
+      "surface": "pricing",
+      "url": "https://www.anthropic.com/pricing",
+      "prev_sha256": "ea926e1ad47c19063a40f64be3ad8262d699a667dca29e2adf2771000a91fadf",
+      "new_sha256": "5950e611729eaaa2ec5f2f5d6458f66527057394f3fe27c2592372bb92d866f9",
+      "prev_bytes_sha256": "406c3b1860c154ef8fd36fe67b1bce7540ff09b4f11beaa911542691c678ba0a",
+      "new_bytes_sha256": "c8ea2fa3468b00dd453f63904d125884a9c02700fe26496829e15194f5af4b18",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 1491918,
+        "new": 1143141
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Wed, 02 Sep 2026 21:15:33 GMT",
+        "new": null
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3f9c64f4f2692287996140a55f9fda1ccc9dfc7128b554c5fb5d01f3c7c27bfd",
+    "sig_ed25519": "2d18532851ee13e3013d67e15798bf8c13c7f2e42f8a74a57fc8b8251ea04723df2598a298f71d8b462eb76133f8fea50757d46e294c35389659b91319cdf50f",
+    "source_urls": [
+      "https://www.anthropic.com/pricing"
+    ],
+    "subject": "Anthropic — pricing: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:anthropic",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "7bdd10f82970b3e48270dfa9c25dfbe66afdcad11b7e8a63373e69135da85fa4",
+    "68e5ce1824e46c85b763469846c0eb565e39f13b4e8387f68465eeb93ad99969",
+    "f52f55c77e79a1a92452e95bb38eeca6bc5af1f64d65faa6ec3c58cf04051650",
+    "2614328d5c2408c64f5aedc6b1b4f593579ea6bce9db3b097de9cc6745c4c074",
+    "be0a421d4bf18e5debacc44861eb96efc40a3892f5d843227dcf83700eeda99e",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "dc95f2a53bf8178f51a8ac8e398c3b6ca8fea96bfc4e2f2474843e718ad53b4a",
+    "eda3c723a5ac3b23dca9cbae493c2927c1a116b8be9293f36951c28eccb9dee9"
+  ]
+}

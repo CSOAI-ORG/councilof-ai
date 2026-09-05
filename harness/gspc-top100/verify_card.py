@@ -15,15 +15,23 @@ def canonical_body_bytes(body: dict[str, Any]) -> bytes:
     return json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode("utf-8")
 
 
-def did_card_pubkey_bytes(did_doc: dict[str, Any]) -> bytes:
+def did_pubkey_bytes(did_doc: dict[str, Any], did: str = "did:web:csoai.org#card-attestation-1") -> bytes:
+    """Resolve Ed25519 JWK x for a DID fragment. Default mill pin is #card-attestation-1."""
+    frag = did.split("#", 1)[-1] if "#" in did else "card-attestation-1"
+    suffix = "#" + frag
     for vm in did_doc.get("verificationMethod") or []:
-        if str(vm.get("id") or "").endswith("#card-attestation-1"):
+        vid = str(vm.get("id") or "")
+        if vid.endswith(suffix) or vid == did:
             x = (vm.get("publicKeyJwk") or {}).get("x")
             if not x:
-                raise ValueError("card-attestation-1 missing JWK x")
+                raise ValueError(f"{frag} missing JWK x")
             pad = "=" * ((4 - len(x) % 4) % 4)
             return base64.urlsafe_b64decode(x + pad)
-    raise ValueError("did document has no #card-attestation-1")
+    raise ValueError(f"did document has no {suffix}")
+
+
+def did_card_pubkey_bytes(did_doc: dict[str, Any]) -> bytes:
+    return did_pubkey_bytes(did_doc, "did:web:csoai.org#card-attestation-1")
 
 
 def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
@@ -50,6 +58,21 @@ def verify_signed_card(blob: bytes, did_pubkey: bytes) -> tuple[str, str]:
         from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
 
         Ed25519PublicKey.from_public_bytes(did_pubkey).verify(sigb, pre)
-        return "VALID", "did:web:csoai.org#card-attestation-1"
+        kid = wrap.get("did") or wrap.get("did_intended") or "did:web:csoai.org#card-attestation-1"
+        return "VALID", str(kid)
     except Exception as e:
         return "INVALID", type(e).__name__
+
+
+def verify_signed_card_with_did_doc(blob: bytes, did_doc: dict[str, Any]) -> tuple[str, str]:
+    """VALID only under the DID recorded on the card (or #card-attestation-1 if omitted)."""
+    try:
+        wrap = json.loads(blob)
+    except Exception as e:
+        return "INVALID", f"json {e}"
+    did = str(wrap.get("did") or wrap.get("did_intended") or "did:web:csoai.org#card-attestation-1")
+    try:
+        pub = did_pubkey_bytes(did_doc, did)
+    except Exception as e:
+        return "UNCHECKABLE", f"did {e}"
+    return verify_signed_card(blob, pub)

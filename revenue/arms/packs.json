@@ -1,0 +1,48 @@
+{
+  "arm": "packs",
+  "manifest": {
+    "eu-ai-act-pack": {
+      "contents": [
+        "22-axis signed board snapshot (as_of date)",
+        "per-axis signed cards (22)",
+        "corrections ledger full history (39+ entries)",
+        "Article 50 evidence bundle (C2PA, in-toto)",
+        "Rekor witness receipt",
+        "Bitcoin OTS anchor proof"
+      ],
+      "deliverable": "1 portable signed card pack + quarterly updates",
+      "lane": "owner-gated (invoice)",
+      "price_gbp": 15000,
+      "price_term": "12-month licence",
+      "schema": "csoai.eu-ai-act-pack/0.1"
+    },
+    "insurer-pack": {
+      "contents": [
+        "AI-covered-loss risk attestation per model",
+        "Wilson intervals per axis (n>=30 frozen bank)",
+        "per-claim corrections ledger",
+        "witness receipts on every claim card",
+        "regulator evidence (UK FCA + Lloyd's market)"
+      ],
+      "deliverable": "1 portfolio evidence pack + per-incident cards",
+      "lane": "owner-gated (invoice)",
+      "price_gbp": 50000,
+      "price_term": "12-month licence",
+      "schema": "csoai.insurer-pack/0.1"
+    },
+    "swift-bank-pack": {
+      "contents": [
+        "XRPL-16 + SWIFT-26 census mirror",
+        "per-bank signed RWA evidence cards",
+        "per-bank corrections ledger entries",
+        "regulator pack (cross-walk: UK FCA, US Fed, EU EIOPA)"
+      ],
+      "deliverable": "1 bank-by-bank evidence pack + monthly updates",
+      "lane": "owner-gated (invoice)",
+      "price_gbp": 25000,
+      "price_term": "6-month licence",
+      "schema": "csoai.swift-bank-pack/0.1"
+    }
+  },
+  "year1_floor": "\u00a320K-\u00a3100K at 5 closed deals"
+}

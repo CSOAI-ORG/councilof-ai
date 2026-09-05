@@ -44,7 +44,7 @@ export default function ArchivedBanner() {
             <>
               A reference page, kept for the record.{" "}
               <span className="text-amber-800/70">No current version supersedes it.</span>{" "}
-              <Link href="/gspc-scoreboard" className="font-semibold underline hover:text-amber-950">
+              <Link href="/dashboard?tab=board" className="font-semibold underline hover:text-amber-950">
                 See the measurement board →
               </Link>
             </>

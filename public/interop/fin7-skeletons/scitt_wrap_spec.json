@@ -1,5 +1,5 @@
 {
-  "adapter": "card-v0 canonical JSON bytes become COSE_Sign1 payload. Same sha256. Ed25519 kid unchanged this week.",
+  "adapter": "Historical design sketch only. A card signature cannot be reused as a COSE_Sign1 signature because COSE signs a distinct RFC 9052 Sig_structure.",
   "as_of_mined": "2026-08-31",
   "companies_house": "16939677",
   "did": "did:web:csoai.org",
@@ -10,5 +10,7 @@
   "receipts": "9942",
   "rfc": "9943",
   "rule": "UNMEASURED-first. A skeleton is not a score. Board GET /api/gspc is authority.",
+  "status": "QUARANTINED_DESIGN_SKETCH",
+  "replacement_required": "Encode and sign the complete COSE_Sign1 Sig_structure with a maintained COSE library, verify it independently, then register it with a named transparency service before claiming a SCITT receipt.",
   "we_operate_a_ts": false
 }

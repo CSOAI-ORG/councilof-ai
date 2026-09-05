@@ -1,0 +1,93 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Meta — GPAI CoP signatory appearance (does not appear)",
+  "as_of": "2026-09-02T05:44:40Z",
+  "source_urls": [
+    "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai",
+    "https://techcrunch.com/2025/07/18/meta-refuses-to-sign-eus-ai-code-of-practice/",
+    "https://www.theregister.com/software/2025/07/18/meta-declines-to-abide-by-voluntary-eu-ai-safety-guidelines/"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "Signatory appearance: does not appear per Commission GPAI CoP list retrieved 2026-09-02T05:44:40Z. Dated public fact still accurate vs live list: Meta declined 2025-07-18 (Kaplan/TechCrunch/The Register). Voluntary code. Unsigned public.notice.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "gspc_axis_projection_forbidden": true,
+    "n_measured": 0,
+    "pack": "gpai-signatory-2026-09",
+    "wedge": "Regulatory Gold Part 5.1 — GPAI CoP signatory cross-reference",
+    "regulatory_exposure": {
+      "schema": "csoai.regulatory-exposure/0.1",
+      "obligation": {
+        "instrument": "EU GPAI Code of Practice",
+        "nature": "voluntary",
+        "finalised": "2025-07-10",
+        "chapters": [
+          "Transparency",
+          "Copyright",
+          "Safety and Security"
+        ],
+        "primary_url": "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai"
+      },
+      "binds": "GPAI providers who voluntarily sign (signature not mandatory)",
+      "fine_ceiling": "N/A (voluntary code)",
+      "enforcer": "N/A for the code itself",
+      "measured_fact": {
+        "what": "Provider 'Meta' does not appear on EC GPAI CoP signatory list retrieved 2026-09-02T05:44:40Z",
+        "when": "2026-09-02T05:44:40Z",
+        "how": "HTTPS GET Commission page; parse Signatories ul + xAI partial note; name match",
+        "url": "https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai",
+        "sha256": "e3169b25d9bbe9c6d85ce58ad60eb132ac890dfd1c0d4e16f0c4653eada80908",
+        "bytes": 60490
+      },
+      "provider": "Meta",
+      "appearance_on_ec_list": "does not appear",
+      "list_name_as_printed": null,
+      "qualification": "Absent from live EC list. Public decline 2025-07-18 (Kaplan/TechCrunch/The Register) still accurate vs list. Cites sidecar: meta-decline-cites-2025-07-18.json. Separate from Transparency CoP.",
+      "no_conclusion_field": true,
+      "public_decline_date": "2025-07-18",
+      "public_decline_cites_path": "meta-decline-cites-2025-07-18.json",
+      "public_decline_still_accurate_vs_live_list": true
+    },
+    "UNMEASURED": [
+      "AI Act Art 53/55 compliance posture",
+      "training-data summary publication",
+      "copyright policy adequacy",
+      "Safety and Security chapter implementation",
+      "alternate legal-entity name on list",
+      "Transparency of AI-generated Content CoP status (separate)",
+      "keystone / Ed25519 SIGNED",
+      "MEASURED-as-compliance"
+    ],
+    "separate_from_transparency_cop": true,
+    "fetched_at": "2026-09-02T05:44:40Z",
+    "verified_via": "HTTPS GET EC GPAI CoP page; sha256; list parse; no compliance assessment"
+  },
+  "sha256": "736e5ddb2ddf28020ed82c1696dad069c10d66582aa30f82b40b8bc487736864",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "AI Act Art 53/55 compliance posture",
+    "training-data summary publication",
+    "copyright policy adequacy",
+    "Safety and Security chapter implementation",
+    "alternate legal-entity name on list",
+    "Transparency of AI-generated Content CoP status (separate)",
+    "keystone / Ed25519 SIGNED",
+    "MEASURED-as-compliance"
+  ],
+  "tags": [
+    "public-notice",
+    "gpai-code-of-practice",
+    "signatory-cross-reference",
+    "does-not-appear",
+    "unsigned",
+    "n-measured-0",
+    "regulatory-gold-5.1",
+    "meta"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Voluntary-list appearance only — never MEASURED-as-compliance; never certify; never invent signatures."
+}

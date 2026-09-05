@@ -36,16 +36,15 @@ export interface ChainStatus {
   verification_timestamp: string;
 }
 
-/** Verbatim copy of the donor's public/api/chain.json (2026-07-31). */
+/** UI snapshot derived from the donor's public/api/chain.json (2026-07-31). */
 export const CHAIN_STATUS: ChainStatus = {
   chain_valid: true,
   chain_length: 11,
   hash_algorithm: "sha256",
   signature_algorithm: "Ed25519 + SHA-256 hash-chain",
   note: "Records are sha256 hash-linked for tamper-evidence. " + ANCHORING_CLAIM +
-    " OpenTimestamps anchoring is roadmap, not yet wired. " +
-    "The post-quantum ML-DSA-65 (FIPS-204) signer is " +
-    "built, not shipped; the label will name it in the same commit it ships.",
+    "Post-quantum ML-DSA-65 (FIPS-204) is planned and scaffolded only; " +
+    "no PQC signer/runtime is built or published.",
   last_record: {
     id: "DR-0034",
     published_at: "2026-07-31",

@@ -99,7 +99,7 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'charter', title: 'Partnership Charter', description: '52 Articles defining AI safety governance framework', category: 'pages', href: '/charter', icon: FileText, keywords: ['articles', 'governance', 'constitution'], highlight: true },
   { id: 'maternal-covenant', title: 'The Maternal Covenant', description: 'Care-based AI safety paradigm - Article 1', category: 'pages', href: '/maternal-covenant', icon: Heart, keywords: ['hinton', 'care', 'mother', 'protection'] },
   { id: 'prosperity', title: 'Prosperity Fund', description: 'AI wealth redistribution & Universal Basic Income', category: 'pages', href: '/prosperity', icon: DollarSign, keywords: ['ubi', 'wealth', 'income', 'redistribution'] },
-  { id: 'byzantine', title: 'Measurement Council', description: 'Multi-provider AI-to-AI cross-checking — designed; measured n_eff 1.21 of 3', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
+  { id: 'byzantine', title: 'Measurement Council', description: 'Multi-provider AI-to-AI cross-checking — designed; latest point experiment measured rho=1 and n_eff=1', category: 'pages', href: '/byzantine', icon: Shield, keywords: ['council', 'agents', 'monitoring', '33'] },
   { id: 'founding-members', title: 'Founding Members', description: 'Join the first 100 founding members', category: 'pages', href: '/founding-members', icon: Users, keywords: ['members', 'founders', 'join'] },
 
   // Training & Certification
@@ -115,12 +115,12 @@ const SEARCH_INDEX: SearchResult[] = [
   // SOAI-PDCA Framework
   { id: 'soai-pdca', title: 'SOAI-PDCA Framework', description: 'Plan-Do-Check-Act methodology for AI safety', category: 'pages', href: '/soai-pdca', icon: Scale, keywords: ['methodology', 'pdca', 'framework'] },
   { id: 'pdca-simulator', title: 'PDCA Simulator', description: 'Interactive PDCA walkthrough and simulation', category: 'pages', href: '/pdca-simulator', icon: Play, keywords: ['interactive', 'demo', 'practice'] },
-  { id: 'agent-council', title: 'Measurement Council', description: 'Multi-provider scoring — architecture designed, cross-checking measured at n_eff 1.21 of 3', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
+  { id: 'agent-council', title: 'Measurement Council', description: 'Multi-provider scoring — architecture designed; latest point experiment measured rho=1 and n_eff=1', category: 'pages', href: '/agent-council', icon: Brain, keywords: ['agents', 'consensus', 'monitoring'] },
   { id: 'pdca-cycles', title: 'PDCA Cycles', description: 'Manage your PDCA improvement cycles', category: 'pages', href: '/pdca', icon: Scale, keywords: ['cycles', 'improvement', 'management'] },
 
   // Watchdog & Jobs
   { id: 'public-watchdog', title: 'Public Watchdog', description: 'Crowdsourced AI incident monitoring', category: 'pages', href: '/public-watchdog', icon: Eye, keywords: ['incidents', 'monitoring', 'crowdsourced'] },
-  { id: 'watchdog', title: 'Report Incident', description: 'Submit an AI safety incident report', category: 'pages', href: '/report', icon: AlertTriangle, keywords: ['report', 'incident', 'safety'] },
+  { id: 'watchdog', title: 'Watchdog Evidence', description: 'Inspect public watchdog evidence and current service boundaries', category: 'pages', href: '/watchdog-hub', icon: AlertTriangle, keywords: ['watchdog', 'incident', 'evidence', 'safety'] },
   { id: 'jobs', title: 'Analyst Jobs', description: 'Browse AI safety analyst job opportunities', category: 'pages', href: '/jobs', icon: Briefcase, keywords: ['careers', 'work', 'opportunities'] },
   { id: 'my-applications', title: 'My Applications', description: 'Track your job applications', category: 'pages', href: '/my-applications', icon: FileText, keywords: ['applications', 'status', 'tracking'] },
   { id: 'leaderboard', title: 'Watchdog Leaderboard', description: 'Top performing AI safety analysts', category: 'pages', href: '/leaderboard', icon: Award, keywords: ['ranking', 'top', 'performers'] },
@@ -128,7 +128,7 @@ const SEARCH_INDEX: SearchResult[] = [
   // Enterprise
   { id: 'enterprise', title: 'Enterprise Solutions', description: 'AI compliance solutions for organizations', category: 'pages', href: '/for/enterprise', icon: Building2, keywords: ['business', 'organization', 'corporate'] },
   { id: 'enterprise-dashboard', title: 'Enterprise Dashboard', description: 'CISO compliance hub for enterprises', category: 'pages', href: '/enterprise-dashboard', icon: BarChart3, keywords: ['ciso', 'compliance', 'hub'] },
-  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=assess&task=pricing-overview', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
+  { id: 'pricing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/dashboard?task=pricing-overview&tab=measured', icon: DollarSign, keywords: ['plans', 'cost', 'subscription', 'pricing'] },
   { id: 'enterprise-onboarding', title: 'Enterprise Onboarding', description: 'Get started with enterprise features', category: 'pages', href: '/enterprise-onboarding', icon: Zap, keywords: ['setup', 'onboard', 'start'] },
 
   // Government & Regulator
@@ -156,7 +156,7 @@ const SEARCH_INDEX: SearchResult[] = [
 
   // Settings & Account
   { id: 'settings', title: 'Settings', description: 'Account and application settings', category: 'pages', href: '/settings', icon: Settings, keywords: ['preferences', 'account', 'config'] },
-  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/os?lobby=assess&task=pricing-overview', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
+  { id: 'billing', title: 'How the free rail works', description: 'Verify is free. A grade is never sold. No public prices.', category: 'pages', href: '/dashboard?task=pricing-overview&tab=measured', icon: DollarSign, keywords: ['payment', 'subscription', 'invoice', 'pricing'] },
   { id: 'notifications', title: 'Notification Settings', description: 'Configure notification preferences', category: 'pages', href: '/settings/notifications', icon: Settings, keywords: ['alerts', 'email', 'notifications'] },
 
   // Feature Pages
@@ -284,9 +284,9 @@ const SEARCH_INDEX: SearchResult[] = [
   { id: 'faq-2', title: 'How do I get measured?', description: 'Describe the system at /assess. We measure and sign. We do not certify.', category: 'faq', href: '/assess', icon: HelpCircle, keywords: ['certification', 'how', 'exam', 'measure'] },
   { id: 'faq-3', title: 'What is the Maternal Covenant?', description: 'A care-based paradigm for AI safety inspired by Geoffrey Hinton', category: 'faq', href: '/maternal-covenant', icon: HelpCircle, keywords: ['maternal', 'covenant', 'what'] },
   { id: 'faq-4', title: 'How does the Prosperity Fund work?', description: 'AI companies contribute 1-3% revenue to fund UBI for all', category: 'faq', href: '/prosperity', icon: HelpCircle, keywords: ['prosperity', 'fund', 'ubi'] },
-  { id: 'faq-5', title: 'What is the Council\'s designed multi-provider oversight?', description: 'A multi-provider oversight system for continuous safety oversight', category: 'faq', href: '/byzantine', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
+  { id: 'faq-5', title: 'What is the Council\'s designed multi-provider oversight?', description: 'A proposed 33-seat design with a 23/33 target; it is not live and independence or fault tolerance are not demonstrated', category: 'faq', href: '/council', icon: HelpCircle, keywords: ['byzantine', '33', 'council'] },
   { id: 'faq-6', title: 'How do I register my AI system?', description: 'Use the AI Systems Registry to register and classify your AI', category: 'faq', href: '/ai-systems', icon: HelpCircle, keywords: ['register', 'ai system', 'how'] },
-  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/os?lobby=assess&task=pricing-overview', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
+  { id: 'faq-7', title: 'Is verify free?', description: 'Verify is free forever. A grade is never sold. No public prices.', category: 'faq', href: '/dashboard?task=pricing-overview&tab=measured', icon: HelpCircle, keywords: ['pricing', 'plans', 'cost'] },
   { id: 'faq-8', title: 'How do I become a Watchdog analyst?', description: 'Complete Watchdog training and apply for analyst positions', category: 'faq', href: '/watchdog-signup', icon: HelpCircle, keywords: ['watchdog', 'analyst', 'become'] },
   { id: 'faq-9', title: 'When does the Charter take effect?', description: 'The Partnership Charter launches January 15, 2026 at 09:00 GMT', category: 'faq', href: '/charter', icon: HelpCircle, keywords: ['charter', 'effective', 'date'] },
   { id: 'faq-10', title: 'How do I join as a Founding Member?', description: 'Apply to be one of the first 100 founding members', category: 'faq', href: '/founding-members', icon: HelpCircle, keywords: ['founding', 'member', 'join'] },
@@ -311,7 +311,7 @@ const QUICK_ACTIONS: QuickAction[] = [
   { id: 'action-start-training', title: 'Start Training', description: 'Begin your AI safety training', href: '/courses', icon: GraduationCap, color: 'bg-emerald-500' },
   { id: 'action-register-ai', title: 'Register AI System', description: 'Add a new AI system to the registry', href: '/ai-systems', icon: Plus, color: 'bg-blue-500' },
   { id: 'action-take-exam', title: 'Get measured', description: 'Start at /assess — a signed card, not a certificate', href: '/assess', icon: FileCheck, color: 'bg-purple-500' },
-  { id: 'action-report-incident', title: 'Report AI Incident', description: 'Submit a safety incident report', href: '/report', icon: AlertTriangle, color: 'bg-red-500' },
+  { id: 'action-watchdog-evidence', title: 'Watchdog Evidence', description: 'Inspect the public evidence surface', href: '/watchdog-hub', icon: AlertTriangle, color: 'bg-red-500' },
   { id: 'action-apply-job', title: 'Browse Analyst Jobs', description: 'Find Watchdog analyst opportunities', href: '/jobs', icon: Briefcase, color: 'bg-amber-500' },
   { id: 'action-view-charter', title: 'View Partnership Charter', description: 'Read the 52 Articles', href: '/charter', icon: FileText, color: 'bg-slate-700' },
 ];

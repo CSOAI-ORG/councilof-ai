@@ -1,0 +1,255 @@
+{
+  "as_of": "2026-09-03T07:51:54Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.operator-runbook",
+  "n_steps": 16,
+  "steps": [
+    {
+      "expected_cost": "~$0.001 (Base gas for schema registration)",
+      "id": "eas-01",
+      "lane_doable_after": "csoai-eas-mirror.py \u2014 re-emits every CSOAI card as an off-chain EAS attestation",
+      "name": "EAS Schema Registration on Base (via MetaMask)",
+      "outcome": "Schema UID registered; off-chain EAS attestations can now reference this UID",
+      "sequence": [
+        "1. Open MetaMask \u2192 switch to Base Mainnet",
+        "2. Open https://base.easscan.org/ \u2192 click 'Schema' tab",
+        "3. Click 'Register Schema'",
+        "4. Schema name: 'CSOAI Measurement Attestation'",
+        "5. Schema fields (raw):",
+        "   string subject",
+        "   string axis",
+        "   string measurement",
+        "   string sha256",
+        "   uint256 timestamp",
+        "   string source_url",
+        "6. Resolver: (none \u2014 schema is irrevocable)",
+        "7. Click 'Sign with MetaMask' \u2192 approve transaction",
+        "8. Wait ~15 sec for the transaction to settle",
+        "9. Copy the new schema UID from the explorer",
+        "10. Paste it into docs/EAS_SCHEMA_UID.md"
+      ],
+      "url": "https://base.easscan.org/"
+    },
+    {
+      "expected_cost": "free",
+      "id": "x402-01",
+      "lane_doable_after": "/api/x402 rail.mode flips from 'challenge-only' to 'live'; /api/revenue settled_usdc starts counting",
+      "name": "Set X402_FACILITATOR_URL on Cloudflare Pages",
+      "outcome": "x402 facilitator is live; every priced request settles on Base",
+      "sequence": [
+        "1. Open Cloudflare dashboard",
+        "2. Workers & Pages \u2192 councilof-ai \u2192 Settings \u2192 Environment variables \u2192 Production",
+        "3. Click 'Add variable'",
+        "4. Variable name: X402_FACILITATOR_URL",
+        "5. Value: https://facilitator.payai.network",
+        "6. (Optional) Add X402_PAY_TO if wallet ever rotates",
+        "7. Click 'Save'",
+        "8. Redeploy (push to master, or run GHA)"
+      ],
+      "url": "https://dash.cloudflare.com/?to=/:account/pages/view/councilof-ai/settings/environment-variables"
+    },
+    {
+      "expected_cost": "free",
+      "id": "x402-02",
+      "lane_doable_after": "Paid cards ship signed under did:web:csoai.org#board-attestation-1",
+      "name": "Confirm BOARD_SIGN_KEY_PKCS8_B64 on Pages",
+      "outcome": "Signed paid cards (no more 'sig_ed25519: null')",
+      "sequence": [
+        "1. Same env variables screen",
+        "2. Confirm BOARD_SIGN_KEY_PKCS8_B64 is present",
+        "3. If absent: export from local keychain \u2192 paste"
+      ],
+      "url": "https://dash.cloudflare.com/?to=/:account/pages/view/councilof-ai/settings/environment-variables"
+    },
+    {
+      "expected_cost": "free",
+      "id": "x402-03",
+      "lane_doable_after": "/api/revenue settled_usdc count moves from null to real",
+      "name": "Bind REVENUE_KV (Cloudflare KV namespace)",
+      "outcome": "Revenue counts work",
+      "sequence": [
+        "1. Cloudflare \u2192 Storage & Databases \u2192 KV \u2192 Create namespace",
+        "2. Name: revenue",
+        "3. Edit wrangler.jsonc \u2192 add kv_namespaces:",
+        "   { 'binding': 'REVENUE_KV', 'id': '<new-id>' }",
+        "4. Commit + push to master",
+        "5. Redeploy"
+      ],
+      "url": "https://dash.cloudflare.com/?to=/:account/workers/kv"
+    },
+    {
+      "expected_cost": "free",
+      "id": "npm-01",
+      "lane_doable_after": "Third parties can `npm install gspc-card-verifier` to verify cards offline",
+      "name": "npm publish gspc-card-verifier",
+      "outcome": "Verifier is on npm",
+      "sequence": [
+        "1. cd packages/gspc-card-verifier",
+        "2. npm login (use csoai npm account)",
+        "3. npm publish --access public",
+        "4. Verify: https://www.npmjs.com/package/gspc-card-verifier"
+      ],
+      "url": "file:///Users/nicholas/clawd/councilof-ai/packages/gspc-card-verifier"
+    },
+    {
+      "expected_cost": "free",
+      "id": "npm-02",
+      "lane_doable_after": "npmjs.com shows a green check on csoai-gspc-mcp linking to source commit + workflow",
+      "name": "npm provenance for csoai-gspc-mcp",
+      "outcome": "Provenance attestation shipped",
+      "sequence": [
+        "1. GH Actions workflow already exists",
+        "2. Add to publish step: NPM_CONFIG_PROVENANCE=true",
+        "3. Push to trigger Trusted Publishing",
+        "4. Verify: npm audit signatures shows green check on npmjs.com"
+      ],
+      "url": "https://www.npmjs.com/package/csoai-gspc-mcp"
+    },
+    {
+      "expected_cost": "free (DOI is free on HF)",
+      "id": "hf-01",
+      "lane_doable_after": "Every csoai/* dataset has a current DOI",
+      "name": "Re-mint stale HF DOI on current commit",
+      "outcome": "Citation-friendly DOIs that pin the current revision",
+      "sequence": [
+        "1. For each csoai/* dataset: Settings \u2192 Generate DOI",
+        "2. Click 'Generate new DOI' (the old DOI stays as a pointer)",
+        "3. Record the pinned commit SHA",
+        "4. Add to public/interop/hf-dois.json"
+      ],
+      "url": "https://huggingface.co/csoai"
+    },
+    {
+      "expected_cost": "free",
+      "id": "swh-01",
+      "lane_doable_after": "Every measurement card can cite the SWHID as intrinsic code identifier",
+      "name": "SWH archive eval harness",
+      "outcome": "Harness has a permanent content ID independent of GitHub",
+      "sequence": [
+        "1. Open https://archive.softwareheritage.org/save/",
+        "2. URL: https://github.com/CSOAI-ORG/councilof-ai.git",
+        "3. Branch: master",
+        "4. Click 'Save'",
+        "5. Wait ~1-2 hours for the archive to complete",
+        "6. Record the swh:1:rev: SWHID"
+      ],
+      "url": "https://archive.softwareheritage.org/save/"
+    },
+    {
+      "expected_cost": "free",
+      "id": "grants-01",
+      "lane_doable_after": "NLnet receives CSOAI's application",
+      "name": "Send NLnet Privacy & Trust application (\u20ac50K, deadline 2026-09-03)",
+      "outcome": "\u20ac50K grant application submitted",
+      "sequence": [
+        "1. Open drafts/nlnet-privacy-and-trust.txt",
+        "2. Open https://nlnet.nl/privacy/",
+        "3. Find 'How to apply' / 'Submit a proposal'",
+        "4. Paste + personalise the draft",
+        "5. Submit"
+      ],
+      "url": "file:///Users/nicholas/Downloads/CSOAI_OWNER_CHECKLIST_02Sep2026.md"
+    },
+    {
+      "expected_cost": "free",
+      "id": "grants-02",
+      "lane_doable_after": "NGI Zero receives CSOAI's application",
+      "name": "Send NGI Zero Discovery application (\u20ac50K, rolling)",
+      "outcome": "\u20ac50K grant application submitted",
+      "sequence": [
+        "1. Open drafts/ngi-zero-discovery.txt",
+        "2. Open https://nlnet.nl/NGI0/",
+        "3. Submit via the NGI0 form",
+        "4. Paste + personalise the draft"
+      ],
+      "url": "https://nlnet.nl/NGI0/"
+    },
+    {
+      "expected_cost": "free",
+      "id": "grants-03",
+      "lane_doable_after": "Sloan receives CSOAI's application",
+      "name": "Send Sloan Foundation application ($75K, rolling)",
+      "outcome": "$75K grant application submitted",
+      "sequence": [
+        "1. Open drafts/sloan-foundation-digital-technology.txt",
+        "2. Open https://sloan.org/programs/digital-technology",
+        "3. Submit via the Sloan portal",
+        "4. Paste + personalise the draft"
+      ],
+      "url": "https://sloan.org/programs/digital-technology"
+    },
+    {
+      "expected_cost": "free",
+      "id": "grants-04",
+      "lane_doable_after": "Ford receives CSOAI's application",
+      "name": "Send Ford Foundation application ($100K, rolling)",
+      "outcome": "$100K grant application submitted",
+      "sequence": [
+        "1. Open drafts/ford-foundation-public-interest-tech.txt",
+        "2. Open the Ford Foundation application form",
+        "3. Paste + personalise the draft"
+      ],
+      "url": "https://www.fordfoundation.org/work/our-grants/building-public-interest-tech/"
+    },
+    {
+      "expected_cost": "free",
+      "id": "outreach-01",
+      "lane_doable_after": "10 vendor conversations opened",
+      "name": "Send 10 vendor CTO outreach emails",
+      "outcome": "Pipeline of vendor leads",
+      "sequence": [
+        "1. Read \u00a72 of REVENUE-RESEARCH (10 demand-side targets)",
+        "2. For each target: research the CTO / VP name, find their email",
+        "3. Personalise the cold email template",
+        "4. Send via email"
+      ],
+      "url": "file:///Users/nicholas/clawd/councilof-ai/docs/REVENUE-RESEARCH-2026-09-02.md"
+    },
+    {
+      "expected_cost": "free",
+      "id": "outreach-02",
+      "lane_doable_after": "5 regulator conversations opened",
+      "name": "Send 5 regulator outreach emails",
+      "outcome": "Regulator visibility",
+      "sequence": [
+        "1. Read \u00a72 (regulators: EU AI Office, CNIL, ICO, etc.)",
+        "2. For each: personalise + send"
+      ],
+      "url": "file:///Users/nicholas/clawd/councilof-ai/docs/REVENUE-RESEARCH-2026-09-02.md"
+    },
+    {
+      "expected_cost": "\u00a3660 (rising to \u00a3795 from 1 April 2026)",
+      "id": "tm-01",
+      "lane_doable_after": "Trademarks filed, publication in TM Journal",
+      "name": "UK IPO trademark filing for Council of AI, CSOAI, GSPC",
+      "outcome": "Brand protection",
+      "sequence": [
+        "1. Open https://www.gov.uk/apply-register-trademark",
+        "2. For each mark (Council of AI, CSOAI, GSPC):",
+        "   - Class 9 (software)",
+        "   - Class 42 (SaaS / tech services)",
+        "3. Pay \u00a3170 first class + \u00a350 per additional class",
+        "4. Total budget: 3 \u00d7 (1 \u00d7 170 + 1 \u00d7 50) = \u00a3660"
+      ],
+      "url": "https://www.gov.uk/apply-register-trademark"
+    },
+    {
+      "expected_cost": "free",
+      "id": "dns-01",
+      "lane_doable_after": "7 subdomains resolve + serve their CF Pages project",
+      "name": "Add 7 subdomain DNS records (proofs, issuance, verifier, marketplace, blog, press, dashboards)",
+      "outcome": "7 subdomain landing pages live on public URLs",
+      "sequence": [
+        "1. Cloudflare \u2192 csoai.org \u2192 DNS \u2192 Records",
+        "2. For each subdomain:",
+        "   - Type: CNAME",
+        "   - Name: <slug>",
+        "   - Target: csoai-site.pages.dev",
+        "3. Save",
+        "4. Workers & Pages \u2192 csoai-site \u2192 Custom domains \u2192 Add the 7 subdomains"
+      ],
+      "url": "https://dash.cloudflare.com/?to=/:account/csoai.org/dns"
+    }
+  ],
+  "total_cost": "\u00a3660 trademarks + ~$0.001 EAS + everything else free"
+}

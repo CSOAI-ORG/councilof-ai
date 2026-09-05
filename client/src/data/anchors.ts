@@ -17,7 +17,8 @@ export interface Anchor {
   name: string;
   /** ISO timestamp of the last successful fetch, as recorded by the watcher. */
   last_passed: string;
-  status: AnchorStatus;
+  /** Watcher verdict recorded with last_passed; never display as current state. */
+  recorded_status: AnchorStatus;
   source_uri: string;
   licence: string;
   description: string;
@@ -29,12 +30,12 @@ export const ANCHORS: Anchor[] = [
   {
     id: "UK-legislation",
     name: "UK legislation.gov.uk",
-    last_passed: "2026-07-30T05:17:00Z",
-    status: "live",
-    source_uri: "https://www.legislation.gov.uk/data.xml",
+    last_passed: "2026-09-03T02:45:00Z",
+    recorded_status: "live",
+    source_uri: "https://www.legislation.gov.uk/new/data.feed",
     licence: "OGL v3.0",
     description:
-      "UK primary and secondary legislation. Data XML feed for automated ingestion.",
+      "UK primary and secondary legislation. Atom data feed of new items, for automated ingestion.",
     jurisdiction: "UK",
     kind: "statute",
   },
@@ -42,7 +43,7 @@ export const ANCHORS: Anchor[] = [
     id: "EU-CELLAR",
     name: "EUR-Lex CELLAR (AI Act)",
     last_passed: "2026-07-29T17:06:00Z",
-    status: "degraded",
+    recorded_status: "degraded",
     source_uri: "https://eur-lex.europa.eu/",
     licence: "EU reuse notice",
     description:
@@ -54,7 +55,7 @@ export const ANCHORS: Anchor[] = [
     id: "C2PA-spec",
     name: "C2PA 2.4 specification",
     last_passed: "2026-07-30T03:00:00Z",
-    status: "live",
+    recorded_status: "live",
     source_uri: "https://github.com/c2pa-org/specifications",
     licence: "CC BY 4.0",
     description:
@@ -66,7 +67,7 @@ export const ANCHORS: Anchor[] = [
     id: "RFC-9964",
     name: "RFC 9964 (PQC for IETF)",
     last_passed: "2026-07-30T03:00:00Z",
-    status: "live",
+    recorded_status: "live",
     source_uri: "https://www.rfc-editor.org/rfc/rfc9964",
     licence: "IETF Trust Licence",
     description:
@@ -77,11 +78,13 @@ export const ANCHORS: Anchor[] = [
   {
     id: "NIST-IR8547",
     name: "NIST IR 8547 (PQC transition)",
-    last_passed: "2026-07-29T21:00:00Z",
-    status: "live",
-    source_uri: "https://csrc.nist.gov/pubs/ir/8547",
+    last_passed: "2026-09-03T02:45:00Z",
+    recorded_status: "live",
+    source_uri: "https://csrc.nist.gov/pubs/ir/8547/ipd",
     licence: "NIST publication",
-    description: "NIST guidance on post-quantum cryptography transition timeline.",
+    description:
+      "NIST IR 8547, INITIAL PUBLIC DRAFT — transition to post-quantum cryptography standards. " +
+      "A draft, not final guidance; cited as a draft and never as a settled requirement.",
     jurisdiction: "US",
     kind: "standard",
   },
@@ -89,8 +92,8 @@ export const ANCHORS: Anchor[] = [
     id: "Crosswalk-registry",
     name: "Crosswalk registry",
     last_passed: "2026-07-30T06:00:00Z",
-    status: "live",
-    source_uri: "local",
+    recorded_status: "live",
+    source_uri: "/crosswalk",
     licence: "self-hosted",
     description:
       "Local meta-watcher for cross-referencing provisions across jurisdictions.",
@@ -107,4 +110,12 @@ export const ANCHORS: Anchor[] = [
 export function hoursSinceLastPass(isoDate: string, now: Date = new Date()): number {
   const then = new Date(isoDate);
   return Math.round(((now.getTime() - then.getTime()) / (1000 * 60 * 60)) * 10) / 10;
+}
+
+/** Current freshness derived from the clock, not the recorded watcher label. */
+export function effectiveAnchorStatus(anchor: Anchor, now: Date = new Date()): AnchorStatus {
+  const hours = hoursSinceLastPass(anchor.last_passed, now);
+  if (!Number.isFinite(hours) || hours < 0 || hours > 72) return "unreachable";
+  if (hours > 24) return "degraded";
+  return "live";
 }

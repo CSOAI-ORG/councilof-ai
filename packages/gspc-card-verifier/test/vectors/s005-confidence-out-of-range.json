@@ -1,0 +1,16 @@
+{
+  "id": "s005-confidence-out-of-range",
+  "expect": "INVALID",
+  "why": "confidence is a probability, not a percentage",
+  "note": "schema violation; signature itself verifies",
+  "envelope": {
+    "payloadType": "application/vnd.in-toto+json",
+    "payload": "eyJfdHlwZSI6Imh0dHBzOi8vaW4tdG90by5pby9TdGF0ZW1lbnQvdjEiLCJwcmVkaWNhdGUiOnsiY29udGFtaW5hdGlvbiI6eyJjaGVja2VkIjp0cnVlLCJmb3VuZCI6ZmFsc2UsIm1ldGhvZCI6Im4tZ3JhbSBvdmVybGFwIHZzIHRyYWluaW5nIGluZGV4In0sImRvZXNOb3RFc3RhYmxpc2giOlsiVGhhdCB0aGUgc3lzdGVtIHNjb3JlcyAwLjYxMiBvbiBhbnkgb3RoZXIgaXRlbSBzZXQuIl0sImVzdGFibGlzaGVzIjpbIlRoaXMgaGFybmVzcyBhdCB0aGlzIGNvbW1pdCwgb3ZlciB0aGVzZSA1MDAgaGVsZC1vdXQgaXRlbXMsIHNjb3JlZCAwLjYxMi4iXSwiZXZhbHVhdGVkQXQiOiIyMDI2LTA5LTA0VDAwOjAwOjAwWiIsImhhcm5lc3MiOnsiY29tbWl0IjoiYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYSIsIm5hbWUiOiJsbS1ldmFsdWF0aW9uLWhhcm5lc3MiLCJ2ZXJzaW9uIjoiMC40LjkifSwiaXRlbXMiOnsiZGlnZXN0IjoiNWYzYzRmODU4MGQzOTJlNDIyZTdjMmY2ODAyNjc0YWMyNzk2NmM5OGQ5NWMzOTY5NmU0YjI0OTAxNjhlNTQ4OCIsImhlbGRPdXQiOnRydWUsIm4iOjUwMH0sInJlc3VsdCI6eyJhZ2dyZWdhdGlvbiI6Im1lYW4iLCJpbnRlcnZhbCI6eyJjb25maWRlbmNlIjo5NSwiaGlnaCI6MC42LCJraW5kIjoid2lsc29uIiwibG93IjowLjR9LCJtZXRyaWMiOiJhY2MiLCJ2YWx1ZSI6MC41fSwic2NoZW1hVmVyc2lvbiI6ImNvdW5jaWxvZi5haS9ldmFsdWF0aW9uLXJlc3VsdC8xIn0sInByZWRpY2F0ZVR5cGUiOiJodHRwczovL2NvdW5jaWxvZi5haS9hdHRlc3RhdGlvbnMvZXZhbHVhdGlvbi1yZXN1bHQvdjEiLCJzdWJqZWN0IjpbeyJkaWdlc3QiOnsic2hhMjU2IjoiMmEyMDYzNDM1MTE1MTIxYmE4MDdjZjI5MjE1NDE3MGZkMzA2Nzg4YjZkMzQyZmIzMzZlYjkyYWJlYTBmMTM5NSJ9LCJuYW1lIjoic3lzdGVtLXVuZGVyLXRlc3QifV19",
+    "signatures": [
+      {
+        "keyid": "did:web:councilof.ai#eval-1",
+        "sig": "CQhvZ55K9HdFnHWVg1Xa9XF38rI7f2DY8u4XND74kN0drmDMPiRc8DSkFFh43mMha/vLEB6Sc4zJ/7g/R3lVBg=="
+      }
+    ]
+  }
+}

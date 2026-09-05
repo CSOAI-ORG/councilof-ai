@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "Anthropic — pricing: bytes changed 2026-09-05",
+ "as_of": "2026-09-05T09:06:18Z",
+ "source_urls": [
+  "https://www.anthropic.com/pricing"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "anthropic",
+  "surface": "pricing",
+  "url": "https://www.anthropic.com/pricing",
+  "prev_sha256": "5950e611729eaaa2ec5f2f5d6458f66527057394f3fe27c2592372bb92d866f9",
+  "new_sha256": "e84279929ba9fe41a1fee6358bb1e86d43e7399693c7248c4583a3e5846082d4",
+  "prev_bytes_sha256": "c8ea2fa3468b00dd453f63904d125884a9c02700fe26496829e15194f5af4b18",
+  "new_bytes_sha256": "1067d33568f6c1712ff0f6d62b386ddfcd31f9540fd219bbccd0ddb0cdf937ac",
+  "prev_fetched_at": "2026-09-04T09:40:57Z",
+  "fetched_at": "2026-09-05T09:06:18Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 1143141,
+   "new": 1138060
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "8ffa6f54c3481ae73ff22500c5ab90b090b8bf17bdc575f2d79037ca93c1186e",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:anthropic",
+  "surface:pricing",
+  "hash-only"
+ ]
+}

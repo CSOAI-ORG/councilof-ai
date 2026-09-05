@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.axis-slug-reconciliation/1",
+  "note": "Cards were being signed under slugs the board does not use, so 335 signed cards covered exactly ONE of the 22 board axes. This maps every historical card slug to its board axis, or records that it is deliberately not one. Verified 2026-09-04 against GET /api/gspc and /signed/card_index.json.",
+  "board_axes": [
+    "governance","safety","provenance","continuity","conformance","openness",
+    "machinery-conformity","care","cross-reality","detector-interop","art5-safeguard",
+    "swarm","affect","jail","provenance-controls","reserve-attestation",
+    "regulatory-framework","distribution-integrity","custody-disclosure",
+    "ai-adoption-components","labour-components","humanoid-labour-index"
+  ],
+  "alias_to_axis": {
+    "gspc-governance": "governance",
+    "gspc-safety": "safety",
+    "gspc-provenance": "provenance",
+    "gspc-continuity": "continuity",
+    "gspc-conformance": "conformance",
+    "gspc-openness": "openness",
+    "gov": "governance",
+    "care-refusal-protect": "care",
+    "care-refusal-help": "care",
+    "jail-escape-detection": "jail",
+    "swarm-candidates": "swarm"
+  },
+  "not_board_axes": {
+    "mmlu-30": "public benchmark run, not a board axis",
+    "arc-30": "public benchmark run, not a board axis",
+    "gsm8k-30": "public benchmark run, not a board axis",
+    "swag-30": "public benchmark run, not a board axis"
+  },
+  "deterministic_fact_axes": [
+    "reserve-attestation","custody-disclosure","distribution-integrity","regulatory-framework",
+    "provenance-controls","ai-adoption-components","labour-components","humanoid-labour-index"
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Google/Gemini 3 Pro family — Art 53(1)(d) summary locate 2026-09",
+  "as_of": "2026-09-02T05:51:28Z",
+  "source_urls": [
+    "https://transparencyreport.google.com/",
+    "https://storage.googleapis.com/transparencyreport/report-downloads/pdf-report-ii_2026-7-2_2026-7-2_en_v1.pdf"
+  ],
+  "payload": {
+    "kind": "csoai.art53-training-summary/0.1",
+    "status": "LOCATED",
+    "honest_sentence": "Training-content summary located/not located/uncheckable vs AI Office template (24 Jul 2025). Prior art DOI only. No compliance language.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "provider": "Google",
+    "model_or_family": "Gemini 3 Pro family",
+    "open_weight": false,
+    "obligation_focus": "Art 53(1)(d)",
+    "template_ref": {
+      "title": "AI Office Template — Public Summary of Training Content",
+      "date": "2025-07-24",
+      "url": "https://digital-strategy.ec.europa.eu/en/library/explanatory-notice-and-template-public-summary-training-content-general-purpose-ai-models",
+      "implements": "Art 53(1)(d)"
+    },
+    "prior_art_only": {
+      "doi": "10.1145/3805689.3806755",
+      "url": "https://doi.org/10.1145/3805689.3806755",
+      "observatory": "https://aial.ie/research/gpai-training-transparency/",
+      "role": "prior art only"
+    },
+    "location": {
+      "summary_pdf": "https://storage.googleapis.com/transparencyreport/report-downloads/pdf-report-ii_2026-7-2_2026-7-2_en_v1.pdf",
+      "hub": "https://transparencyreport.google.com/"
+    },
+    "reason": "Public PDF retrieved; title sniff: Public Summary of Training Content (v1, 2 Jul 2026) — Gemini 3 Pro family.",
+    "sources": [
+      {
+        "url": "https://transparencyreport.google.com/",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "role": "hub"
+      },
+      {
+        "url": "https://storage.googleapis.com/transparencyreport/report-downloads/pdf-report-ii_2026-7-2_2026-7-2_en_v1.pdf",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "sha256": "1513fea5261d75056fa3d0bcce5df65d9fd484e5d87454cb1213a4b885b89b73",
+        "bytes": 95225,
+        "role": "summary_pdf"
+      }
+    ],
+    "measured_fact": "Google Gemini 3 Pro family summary PDF located 2026-09-02.",
+    "fetched_at": "2026-09-02T05:51:28Z"
+  },
+  "sha256": "3126c126e263e0f6093f1746e26e80090c6ac0227ee19dc828c07054d489b058",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "template-section completeness grade",
+    "Art 53(1)(c) copyright-policy locate",
+    "AI Office enforcement outcome",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED"
+  ],
+  "tags": [
+    "public-notice",
+    "art53",
+    "training-summary",
+    "google-gemini-3-pro",
+    "unsigned"
+  ],
+  "note": "UNSIGNED. Located/not located/uncheckable only. DOI prior art only."
+}

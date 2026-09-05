@@ -1,0 +1,179 @@
+{
+  "finished": "2026-09-04T06:35:21Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.1000x-orchestrator",
+  "n_fail": 0,
+  "n_jobs": 15,
+  "n_ok": 15,
+  "results": {
+    "a2a-findings": {
+      "args": [
+        "scripts/badger/harvest-a2a-findings.py"
+      ],
+      "elapsed_s": 0.28,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 8,
+      "stdout_tail": "  oversized: 0\n  unreachable: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/a2a-findings/a2a-findings-20260904T063321Z.jsonl"
+    },
+    "archive-deep": {
+      "args": [
+        "scripts/badger/csoai-archive-deep.py"
+      ],
+      "elapsed_s": 0.42,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "stdout_tail": "\n  total written: 35\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/archive-deep"
+    },
+    "bank-classify": {
+      "args": [
+        "scripts/badger/csoai-bank-classify.py",
+        "--dry-run"
+      ],
+      "elapsed_s": 0.38,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 11,
+      "stdout_tail": "    EVM-treasury            3 banks\n\n  (dry-run) would emit 26 classification cards"
+    },
+    "bank-pack": {
+      "args": [
+        "scripts/badger/csoai-bank-pack.py",
+        "--no-ots"
+      ],
+      "elapsed_s": 120.57,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 45,
+      "stdout_tail": "\nNext step: the mill (functions/_lib/cardSign.ts) signs each card\nunder #card-attestation-1 (public key x=1MsOqhbV9Qv3Yzo2qjT-CaVe\u2026)."
+    },
+    "corrections-diff": {
+      "args": [
+        "scripts/badger/harvest-corrections-diff-cards.py"
+      ],
+      "elapsed_s": 0.22,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 5,
+      "stdout_tail": "  written:   41\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/corrections-diff/corrections-20260904T063321Z.jsonl"
+    },
+    "layer0": {
+      "args": [
+        "scripts/badger/csoai-layer0-ceremony.py",
+        "--no-ots"
+      ],
+      "elapsed_s": 0.38,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 25,
+      "stdout_tail": "  ceremony:     scripts/badger/_queue/ceremony/ceremony-20260904T063321Z.json\n  layer0:       public/interop/layer0-ceremony.json\n  ots pending:  public/interop/layer0-root-20260904T063321Z.ots"
+    },
+    "mineral-4": {
+      "args": [
+        "scripts/badger/csoai-mineral-4.py"
+      ],
+      "elapsed_s": 2.35,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 7,
+      "stdout_tail": "  openalex-ai-safety       20 records  \u2192  20 written, 0 oversized\n\n  total written: 20"
+    },
+    "per-issuer": {
+      "args": [
+        "scripts/badger/harvest-per-issuer-cards.py"
+      ],
+      "elapsed_s": 0.33,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 10,
+      "stdout_tail": "  written:   210\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/per-issuer"
+    },
+    "per-item": {
+      "args": [
+        "scripts/badger/harvest-per-item-cards.py"
+      ],
+      "elapsed_s": 0.1,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "stdout_tail": "  written:   142\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/per-item"
+    },
+    "per-model": {
+      "args": [
+        "scripts/badger/harvest-per-model-cards.py"
+      ],
+      "elapsed_s": 0.16,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 15,
+      "stdout_tail": "  queue dir  : /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/per-model\n\n(not uploading \u2014 pass --upload to plan an upload step)"
+    },
+    "public-data": {
+      "args": [
+        "scripts/badger/csoai-public-data-mine.py"
+      ],
+      "elapsed_s": 8.8,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 12,
+      "stdout_tail": "\n  total written: 28\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/public-data"
+    },
+    "regulatory": {
+      "args": [
+        "scripts/badger/csoai-regulatory-mine.py"
+      ],
+      "elapsed_s": 0.2,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 9,
+      "stdout_tail": "\n  total written: 168\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/regulatory"
+    },
+    "tie-attestations": {
+      "args": [
+        "scripts/badger/harvest-tie-attestations.py"
+      ],
+      "elapsed_s": 0.22,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 5,
+      "stdout_tail": "  written:   2\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/tie-attestations/ties-20260904T063321Z.jsonl"
+    },
+    "uk-open-data": {
+      "args": [
+        "scripts/badger/csoai-uk-open-data.py"
+      ],
+      "elapsed_s": 0.7,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 8,
+      "stdout_tail": "\n  total written: 34\n  queue:         /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/uk-open-data"
+    },
+    "witness-receipts": {
+      "args": [
+        "scripts/badger/harvest-witness-receipts.py"
+      ],
+      "elapsed_s": 0.81,
+      "exit_code": 0,
+      "stderr_lines": 0,
+      "stderr_tail": "",
+      "stdout_lines": 5,
+      "stdout_tail": "  written:   8\n  oversized: 0\n  queue:     /Users/nicholas/clawd/councilof-ai/scripts/badger/_queue/witness-receipts/witness-20260904T063321Z.jsonl"
+    }
+  },
+  "started": "2026-09-04T06:33:20Z"
+}

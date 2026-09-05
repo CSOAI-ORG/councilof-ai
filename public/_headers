@@ -50,6 +50,15 @@
   Content-Type: text/plain; charset=utf-8
   Cache-Control: no-cache, must-revalidate
 
+# The original MPC bytes remain verifiable but are not current: their signed
+# summary overstates financial-run signatures and preserves unscoped historical
+# leader notes. Keep the bytes untouched and make the relying-party state visible
+# at the HTTP boundary as well as in the adjacent status document.
+/signed/gspc-board.signed.json
+  X-CSOAI-Artifact-State: SUPERSEDED_KNOWN_CLAIM_DEFECT
+  Link: </signed/gspc-board.status.json>; rel="status", </api/gspc>; rel="current"
+  Cache-Control: no-cache, must-revalidate
+
 # The generated human indexes for the evidence tree (scripts/generate-signed-index.mjs).
 # Must revalidate: a stale index that lists artifacts the tree no longer serves is worse
 # than no index, because it reads as evidence.
@@ -58,3 +67,18 @@
 
 /signed/cards/index.html
   Cache-Control: no-cache, must-revalidate
+
+# Interop evidence must be READABLE in a browser, not downloaded.
+# Cloudflare Pages serves .py as application/octet-stream, and the global
+# `X-Content-Type-Options: nosniff` above means a browser will not second-guess it: the tab
+# renders blank while the bytes arrive intact. Reported 2026-09-03 after a reviewer opened
+# /interop/scrapi-ccf/mint_data_hash_vector.py and saw an apparently empty file — 7818 bytes
+# had in fact been served. These files are cited in IETF Last Call mail so that reviewers can
+# read the minter and recompute the digests themselves; one that downloads instead of
+# rendering reads as an empty publication, which is worse than no citation at all.
+# One rule only. Listing both a splat and the exact path made Cloudflare Pages apply BOTH,
+# and the header shipped as `text/plain; charset=utf-8, text/plain; charset=utf-8` — a
+# duplicated value that a strict parser is entitled to reject. The splat matches nested
+# directories on its own, so the exact-path line was redundant as well as harmful.
+/interop/*.py
+  Content-Type: text/plain; charset=utf-8

@@ -1,0 +1,53 @@
+{
+  "actions_taken": [
+    {
+      "action": "re-run with longer waits",
+      "harvester": "eat-4"
+    },
+    {
+      "action": "re-run ceremony",
+      "harvester": "layer0"
+    },
+    {
+      "elapsed_s": 0.3,
+      "exit_code": 0,
+      "harvester": "per-issuer",
+      "script": "harvest-per-issuer-cards.py"
+    },
+    {
+      "elapsed_s": 0.0,
+      "exit_code": 0,
+      "harvester": "per-item",
+      "script": "harvest-per-item-cards.py"
+    },
+    {
+      "elapsed_s": 0.0,
+      "exit_code": 2,
+      "harvester": "bank-pack",
+      "script": "csoai-bank-pack.py --no-ots"
+    },
+    {
+      "elapsed_s": 4.9,
+      "exit_code": 0,
+      "harvester": "eat-4",
+      "retry": true,
+      "script": "csoai-eat-4.py"
+    },
+    {
+      "elapsed_s": 0.0,
+      "exit_code": 2,
+      "harvester": "layer0",
+      "retry": true,
+      "script": "csoai-layer0-ceremony.py --no-ots"
+    }
+  ],
+  "as_of": "2026-09-03T06:18:09Z",
+  "input_optimizer_report": "2026-09-03T06:17:37Z",
+  "issuer": "did:web:csoai.org#card-attestation-1",
+  "kind": "csoai.improve-report",
+  "next_actions": [
+    "Run the optimizer again to see if the harvesters improved",
+    "Add new sources to the still-zero harvesters",
+    "Mine more from the top yield harvesters"
+  ]
+}

@@ -30,7 +30,7 @@ try {
   let m;
   while ((m = reRender.exec(src)) !== null) {
     const [, p, comp] = m;
-    if (!p.startsWith("/") || p.includes(":") || seen.has(p)) continue;
+    if (!p.startsWith("/") || p.includes(":") || seen.has(p) || comp === "ContentReviewNotice") continue;
     seen.add(p);
     const title = (p.slice(1) || comp)
       .split(/[\/-]/).filter(Boolean)
@@ -39,7 +39,7 @@ try {
   }
   while ((m = re.exec(src)) !== null) {
     const [, p, comp] = m;
-    if (!p.startsWith("/") || p.includes(":") || seen.has(p)) continue;
+    if (!p.startsWith("/") || p.includes(":") || seen.has(p) || comp === "ContentReviewNotice") continue;
     seen.add(p);
     const title = comp
       .replace(/([a-z0-9])([A-Z])/g, "$1 $2")

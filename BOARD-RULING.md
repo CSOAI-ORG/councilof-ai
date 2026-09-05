@@ -1,5 +1,10 @@
 # Board card-index ruling — OWNER 2026-08-28: the chain is 335
 
+> **Scope.** This ruling is about the **signed card index** (`public/signed/card_index.json`) — one of THREE non-overlapping card corpora in this
+> estate. It is not the public-root leaf count and not the on-disk wrapper count.
+> Read [`council-os/CARD-CORPORA.md`](council-os/CARD-CORPORA.md) before quoting any
+> card number. The ruling below is unchanged.
+
 **OWNER RULING 2026-08-28** (supersedes the 313 snapshot and the 150 floor):
 The mine chain is **335 verifying GSPC cards**. The 150-row board was a **subset of
 that chain**, not a second measurement and not a verifying-only elite. Bytes:
@@ -16,7 +21,7 @@ The cross-border card is a SEPARATE schema, never folded into the GSPC count.
 No agent may clamp the index to 150, 313, or any other constant.
 
 Live state (cite by field, not by number):
-- **GET /api/gspc** → 22 axis · 15 measured. `totals.public_count` is the live sentence.
+- **GET /api/gspc** → 22 axis · 22 measured · 0 unmeasured. `totals.public_count` is the live sentence.
 - **public/signed/card_index.json** → n_cards and cards[].length (the verifying set)
 - **living_stamp verification_state** = UNVERIFIABLE (do not call it a signed freeze)
 - Measurement credential, never certification. Verification is free and loginless.

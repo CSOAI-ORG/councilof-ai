@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""22/22 READY: schema + rubric + signed UNMEASURED coverage for 7 + live 15 MEASURED stay."""
+"""22/22 READY: schema + rubric + signed coverage skeletons + LIVE board 22 measured / 0 unmeasured."""
 from __future__ import annotations
 
 import json
@@ -83,14 +83,16 @@ def test_live_board_not_rewritten() -> None:
     with urllib.request.urlopen(req, timeout=25) as r:
         g = json.loads(r.read())
     axes = {(a.get("axis") or a.get("id")): a for a in (g.get("axes") or [])}
-    assert (g.get("totals") or {}).get("axes") == 22
-    assert (g.get("totals") or {}).get("measured_axes") >= 15
-    assert (g.get("totals") or {}).get("unmeasured_axes") == 22 - (g.get("totals") or {}).get("measured_axes")
+    totals = g.get("totals") or {}
+    assert totals.get("axes") == 22
+    assert totals.get("measured_axes") == 22
+    assert totals.get("unmeasured_axes") == 0
+    assert totals.get("public_count") == "22 axis · 22 measured"
     for axis in MEASURED15:
         assert axes[axis]["status"] == "MEASURED", axis
-    for axis in FIN7:
-        assert axes[axis]["status"] == "UNMEASURED", axis
-        assert axes[axis].get("n") in (0, None)
+    for axis in MEASURED_FIN:
+        assert axes[axis]["status"] == "MEASURED", axis
+        assert (axes[axis].get("n") or 0) > 0, axis
     assert "art5-safeguard" in axes
     assert axes["art5-safeguard"]["status"] == "MEASURED"
 
@@ -99,4 +101,4 @@ if __name__ == "__main__":
     test_eval_yaml_22_ready()
     test_seven_signed_unmeasured_coverage()
     test_live_board_not_rewritten()
-    print("PASS gspc 22 READY (7 UNMEASURED signed coverage; 15 MEASURED stay; Art.5 not collapsed)")
+    print("PASS gspc 22 READY (LIVE 22·22·0; fin7 skeletons stay UNMEASURED coverage; Art.5 not collapsed)")

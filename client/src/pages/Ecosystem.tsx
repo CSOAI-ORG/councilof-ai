@@ -71,11 +71,11 @@ export default function Ecosystem() {
         <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">CSOAI OS · the ecosystem</p>
           <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">One safe space for <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">all AI governance.</span></h1>
-          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">Every framework, every standard, every lab's safety work, and the open-source commons — collected on one signed Layer 0 floor. Not to own them: to crosswalk them, credit them, and let you test, simulate and prove compliance in one place.</p>
+          <p className="mx-auto mt-4 max-w-2xl text-emerald-100/80">A catalogue of selected frameworks, standards, safety work and open-source tools. Use it to inspect mappings and simulations; it does not establish complete coverage, endorsement, or legal compliance.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <a href="/hive" className="rounded-full bg-emerald-500 px-4 py-2 text-sm font-bold text-[#03110b] hover:bg-emerald-400">Open the framework hive →</a>
             <a href="/gspc-arena" className="rounded-full border border-emerald-400/40 px-4 py-2 text-sm font-bold text-emerald-100 hover:bg-white/5">▶ Run a simulation</a>
-            <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-100 hover:bg-amber-400/20">Get a signed proof</a>
+            <a href="/system-card" className="rounded-full border border-amber-400/40 bg-amber-400/10 px-4 py-2 text-sm font-bold text-amber-100 hover:bg-amber-400/20">Open System Card workflow</a>
           </div>
         </div>
       </section>

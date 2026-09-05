@@ -20,8 +20,9 @@ import { toast } from "sonner";
  * There is one public, keyless endpoint: councilof.ai/api/gspc. It returns the
  * living GSPC board (schema csoai.gspc-axes/0.5) — the exact shape served by
  * functions/api/gspc.ts. Slot counts live in totals.public_count. No accounts,
- * no API keys, no /v1/* SaaS surface, no tiers. Everything here is recomputable
- * from the published harness.
+ * no API keys, no /v1/* SaaS surface, no tiers. Published measurement cards
+ * carry their own verification/recomputation rules. The board also exposes
+ * explicitly labelled aggregates for axes without public per-model cards.
  */
 
 const BASE = "https://councilof.ai/api/gspc";
@@ -58,22 +59,31 @@ print(board["totals"]["axes"], "axes")
 print(board["totals"]["separated_leads"], "separated,",
       board["totals"]["ties"], "ties")
 
-# A separated lead is a real, statistically distinguished result;
-# a TIE is a point-estimate lead only. Ties are not wins.
-for a in board["axes"]:
-    if a["separation"] == "SEPARATED":
-        print(a["axis"], a["accuracy"], "p=", a["separation_p"])`;
+# separation is optional: deterministic-fact axes have no fleet comparison.
+# A separated row may publish either a paired p-value or another stated basis.
+for a in board.get("axes", []):
+    if a.get("separation") != "SEPARATED":
+        continue
+    p = a.get("separation_p")
+    basis = a.get("separation_basis")
+    evidence = f"p={p}" if p is not None else (basis or "basis not published")
+    print(a.get("axis"), a.get("accuracy"), evidence)`;
 
   const javascriptExample = `// Browser or Node — no key, CORS is open.
 const board = await fetch("https://councilof.ai/api/gspc").then((r) => r.json());
 
 console.log(board.schema);        // "csoai.gspc-axes/0.5"
-console.log(board.totals);        // { axis, measured_axes, items, separated_leads, ties, ... }
+console.log(board.totals);        // { axes, measured_axes, items, separated_leads, ties, ... }
 
 // One axis:
 const gov = await fetch("https://councilof.ai/api/gspc?axis=governance")
   .then((r) => r.json());
-console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
+const firstAxis = gov.axes?.[0];
+console.log({
+  separation: firstAxis?.separation ?? "NOT_APPLICABLE",
+  separation_p: firstAxis?.separation_p ?? null,
+  separation_basis: firstAxis?.separation_basis ?? null,
+});`;
 
   const responseExample = `{
   "schema": "csoai.gspc-axes/0.5",
@@ -85,7 +95,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     "grading": "deterministic grading; item count lives on the payload"
   },
   "totals": {
-    "public_count": "<derived: N measured of M quotable>",
+    "public_count": "<derived: N axis · M measured>",
     "measured_axes": "<derived>",
     "quotable_axes": "<derived>",
     "items": "<sum of per-axis n>",
@@ -93,42 +103,61 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
     "ties": "<derived>",
     "untested_separations": "<derived>"
   },
-  "axis": [
+  "axes": [
     {
-      "axis": "governance",
-      "bench": "GovBench",
-      "task": "EU AI Act risk-tier classification",
-      "n": 237,
-      "accuracy": 0.700,
-      "leader": "council specialist:governance-v3",
-      "separation": "SEPARATED",
-      "separation_p": 0.0086,
-      "interval": [0.639, 0.755],
-      "fleet_mean": 0.490,
-      "macro_f1": 0.705,
-      "unparsed_rate": 0.0386,
+      "axis": "safety",
+      "family": "gspc",
+      "kind": "model-comparison",
+      "bench": "DefBench",
+      "task": "calibrated refusal on paired requests",
+      "n": 36,
+      "accuracy": 0.944,
+      "leader": "gemma3:12b (base model)",
+      "separation": "TIE",
+      "separation_p": 0.6875,
+      "interval": [0.819, 0.985],
+      "fleet_mean": 0.732,
+      "macro_f1": 0.944,
+      "unparsed_rate": 0.0541,
       "status": "MEASURED",
-      "dataset": "csoai/gspc-gov"
+      "dataset": "csoai/gspc-agi"
+    },
+    {
+      "axis": "reserve-attestation",
+      "family": "financial",
+      "kind": "deterministic-facts",
+      "n": 16,
+      "status": "MEASURED",
+      "evidence_url": "/interop/financial-measure-run-reserve-attestation.json"
+      // no leader, accuracy or separation: no fleet comparison applies
     }
-    // ... remaining axis
+    // ... remaining axes
   ],
   "measured_in_lane": [ /* in-lane instrument-honesty, human-vs-ai — not the board */ ],
-  "limitations": [ "N of the measured axis show a statistically separated leader ...", "..." ]
+  "site_attestation": {
+    "attests": "integrity of this board snapshot as published by the site (NOT a re-measurement)",
+    "signer": "did:web:csoai.org#board-attestation-1",
+    "alg": "Ed25519",
+    "sig": "<present only when the board signing key is healthy>"
+  },
+  "limitations": [ "Read the live, derived limitations supplied with the board.", "..." ]
 }`;
 
   const FIELDS = [
     { f: "schema", d: "Always csoai.gspc-axes/0.5 — the payload contract version." },
     { f: "issuer", d: "CSOAI Ltd (GB, Companies House 16939677)." },
     { f: "doi", d: "10.5281/zenodo.21991104 — the citable dataset record. Axis counts live in the payload." },
-    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from the payload (MEASURED axis with a completed separation test, vs all quotable MEASURED rows). Jail is MEASURED; living-board separation is TIE (not a separated leader). Read the live numbers — do not type them here." },
-    { f: "totals.separated_leads / ties", d: "Separated (McNemar p<0.05 on discordant items), ties, and untested. A TIE is not a win. These counts move — read them from the live payload, not from this page." },
+    { f: "totals.public_count / measured_axes / quotable_axes", d: "Derived from axes[]: published slots, rows whose status is MEASURED, and quotable MEASURED rows. A measurement does not imply a public leader or a completed separation test. Read the live numbers — do not type them here." },
+    { f: "totals.separated_leads / ties / untested_separations", d: "Derived only over measured model-comparison axes. A TIE is not a win; a deterministic-fact axis has no applicable separation test. These counts move — read them from the live payload." },
     { f: "totals.items", d: "Sum of per-axis n across the selection. Read the live number from the payload." },
-    { f: "axes[].n / accuracy / interval", d: "Per-axis item count, the LEADER's accuracy, and its Wilson 95% CI where n is honestly independent." },
-    { f: "axes[].separation / separation_p", d: "SEPARATED, TIE or UNTESTED, with the McNemar exact p on discordant pairs vs the best base model where the test has run." },
-    { f: "axes[].fleet_mean / mean_harm", d: "The axis's measured-fleet mean, and (canonical axis only) the severity-weighted failure mass the accuracy hides." },
-    { f: "axes[].per_model", d: "Jail only: the verbatim per-model rows from the signed living board (TP/FP/TN/FN, precision, recall)." },
+    { f: "axes[].n / accuracy / interval", d: "n is the per-axis measurement size. accuracy and interval are optional leader fields on model-comparison rows; withheld-leader and deterministic-fact rows omit them rather than inventing zeroes." },
+    { f: "axes[].separation / separation_p / separation_basis", d: "Optional. Model-comparison axes may publish SEPARATED, TIE or UNTESTED. A tested row may carry a McNemar exact p or a stated alternative basis. Deterministic-fact axes have no applicable separation field." },
+    { f: "axes[].fleet_mean / mean_harm", d: "Optional fleet aggregates. They describe the published aggregate run; they are not presented as a per-model card or public-leader score when public_leader_state is set." },
+    { f: "axes[].per_model", d: "Jail only: verbatim per-model rows associated with the living-board source (TP/FP/TN/FN, precision, recall). Check measured_on.living_stamp.verification_state before relying on its attestation." },
     { f: "measured_in_lane", d: "In-lane instrument-honesty and human-vs-ai — served for honesty; NOT board-quotable and never counted in totals." },
-    { f: "measured_on.living_stamp", d: "The living-board stamp for jail and the in-lane measurements. MARKED UNVERIFIABLE 2026-08-26: it carries an Ed25519 signature, but no published bytes reproduce it (58,184 readings attempted, 0 verified), two different signatures exist for the same stamp, and its signer is not among the keys in did.json. It publishes verification_state UNVERIFIABLE and must not be treated as a valid attestation. The attestations that DO verify are site_attestation on this payload (#board-attestation-1) and the 150 cards (#card-attestation-1)." },
+    { f: "axes[].public_leader_state", d: "When present, explains why a measured fleet aggregate has no public leader: EXCLUDED_OWN_MODEL or NO_SIGNED_CARD. Such an aggregate is not presented as a card-backed ranking." },
+    { f: "measured_on.living_stamp", d: "Read verification_state from the response. The historical stamp remains explicitly UNVERIFIABLE; a replacement stamp is emitted only when the board signing key is healthy." },
+    { f: "site_attestation", d: "Optional. When present and valid, it attests integrity of the board snapshot bytes under #board-attestation-1. It does not re-run a measurement or turn uncarded aggregates into card-backed records." },
     { f: "axes[].unparsed_rate", d: "Share of responses no label could be read from — reported, never scored as a wrong answer." },
     { f: "axes[].status", d: "MEASURED / UNMEASURED / DRAFT / SPEC / PLANNED. UNMEASURED is reported with its n, never hidden." },
   ];
@@ -168,8 +197,8 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               One public endpoint returns the GSPC (Governance · Safety · Provenance · Continuity)
               living board as JSON. Slot counts live in totals.public_count.
-              No account, no API key, no tiers. Every number is recomputable from the
-              published harness.
+              No account, no API key, no tiers. Published carded predicates carry a
+              verification path; uncarded fleet aggregates are labelled and do not claim one.
             </p>
           </div>
 
@@ -214,7 +243,10 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
                 <p>
                   <strong className="text-foreground">Axes:</strong> governance, safety, provenance,
                   continuity, conformance, openness, machinery-conformity, care, cross-reality,
-                  detector-interop, art5-safeguard, swarm, affect, jail.
+                  detector-interop, art5-safeguard, swarm, affect, jail, provenance-controls,
+                  reserve-attestation, regulatory-framework, distribution-integrity,
+                  custody-disclosure, ai-adoption-components, labour-components,
+                  humanoid-labour-index.
                 </p>
               </div>
             </CardContent>
@@ -308,18 +340,21 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
               <p>
                 <strong className="text-foreground">There is no /v1/* SaaS API, no SDK to install,
                 and no API key to request.</strong> This is a measurement body, not a platform:
-                the public interface is a static, signed JSON board anyone can recompute.
+                the public interface is a keyless JSON board. A valid optional site attestation
+                proves snapshot integrity; it does not prove that every aggregate is independently
+                recomputable.
               </p>
               <p>
-                <strong className="text-foreground">Measurement, not certification.</strong> Every
-                score is a deterministic grade of recorded model outputs on a frozen, published
-                split. A TIE means the leader's point-estimate lead is not statistically separated —
-                ties are not wins, and we do not publish a typed win-count.
+                <strong className="text-foreground">Measurement, not certification.</strong> A
+                carded score is a deterministic grade of recorded model outputs on its published
+                split and carries a card verification path. Uncarded fleet aggregates remain
+                explicitly labelled and publish no leader. A TIE means the leader's point-estimate
+                lead is not statistically separated — ties are not wins.
               </p>
               <p>
                 Machine consumers should prefer the registries over crawls: the MCP Registry entry
-                and the A2A agent card are the authoritative machine interfaces, and this endpoint
-                is keyless and verifiable offline.
+                and the A2A agent card are the authoritative machine interfaces. This endpoint is
+                keyless; the published card formats and inclusion proofs can be checked offline.
               </p>
             </CardContent>
           </Card>
@@ -328,7 +363,7 @@ console.log(gov.axes[0].separation, gov.axes[0].separation_p);`;
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-4">See the board it powers</h2>
             <div className="flex items-center justify-center gap-4">
-              <Link href="/leaderboard">
+              <Link href="/dashboard?tab=leaderboard">
                 <Button size="lg" className="gap-2">
                   GSPC board v2 <ArrowRight className="w-4 h-4" />
                 </Button>

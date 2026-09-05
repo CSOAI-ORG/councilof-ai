@@ -1,0 +1,55 @@
+{
+  "schema": "https://councilof.ai/interop/regulatory-exposure-card.schema.json",
+  "id": "stablecoin-attestation-rlusd-ripple",
+  "pack": "stablecoin-attestation-2026-09",
+  "as_of": "2026-09-02T05:44:00Z",
+  "obligation": {
+    "cite": "P.L. 119-27 (GENIUS Act) §4(a)(3) / 12 U.S.C. §5903 monthly certification & examination",
+    "text": "A permitted payment stablecoin issuer shall, each month, have the information disclosed in the previous month-end report required under paragraph (1)(D) examined by a registered public accounting firm. Each month, the Chief Executive Officer and Chief Financial Officer of a permitted payment stablecoin issuer shall submit a certification as to the accuracy of the monthly report to, as applicable, the primary Federal payment stablecoin regulator of the permitted payment stablecoin issuer; or the State payment stablecoin regulator of the permitted payment stablecoin issuer."
+  },
+  "binds": "permitted payment stablecoin issuers (GENIUS); e-money token issuers (MiCA Art 54)",
+  "fine_ceiling": {
+    "cite": "see regime-specific statutes; this card densifies cadence facts only",
+    "text": "Fine ceiling not asserted on this densify leaf; obligation texts are quoted for side-by-side reading only.",
+    "short": "UNMEASURED_on_this_leaf"
+  },
+  "enforcer": "GENIUS: primary Federal / State payment stablecoin regulator; MiCA EMT: national competent authorities / EBA for significant tokens",
+  "enforcement_start": "GENIUS effective earlier of 2027-01-18 or 120 days after final regs; MiCA EMT regime in force (cite Art 54 text beside measured fact)",
+  "measured_fact": {
+    "issuer": "Ripple / Standard Custody (RLUSD)",
+    "tokens": [
+      "RLUSD"
+    ],
+    "product_page_url": "https://docs.ripple.com/products/stablecoin/overview/rlusd",
+    "retrieval_iso_date": "2026-09-02",
+    "http_status": 200,
+    "stated_cadence": "monthly",
+    "stated_examiner": "Deloitte (independent third-party accounting firm / US CPA per docs)",
+    "verbatim_quote": "Ripple is committed to full transparency of the reserves supporting RLUSD. We provide monthly reserve reports conducted by the independent third-party accounting firm, Deloitte. These attestations validate the circulating supply and assets backing RLUSD. Attestations are performed by an independent Certified Public Accountant (CPA) licensed in the United States. The CPA issues monthly attestation reports pertaining to management’s assertions regarding the amount of RLUSD in circulation, along with information pertaining to the composition of the RLUSD Reserve fund.",
+    "factual_limitation_noted": "Attestation reports are retrospective and point-in-time (as of named Report Dates), not a continuous real-time reserve feed and not described on the product page as a full financial-statement audit.",
+    "additional_public_page": {
+      "url": "https://ripple.com/products/stablecoin/transparency/",
+      "retrieval_iso_date": "2026-09-02",
+      "verbatim_quote": null
+    }
+  },
+  "UNMEASURED": [
+    "one_to_one_reserve_match_recompute",
+    "under_reserved_never_asserted",
+    "non_compliant_never_asserted",
+    "keystone_signature",
+    "board_MEASURED"
+  ],
+  "status": "PROBED",
+  "witness": {
+    "retrieved_at": "2026-09-02T05:44:00Z",
+    "method": "HTTPS GET of public transparency/product page; quote verbatim or UNCHECKABLE reason",
+    "writes_board": false,
+    "sig_ed25519": null,
+    "regimes_cited": [
+      "GENIUS"
+    ]
+  },
+  "honest_sentence": "Last public attestation/cadence language as retrieved (quoted) beside GENIUS monthly attestation text and/or MiCA Art 54 text. Never under-reserved / non-compliant. Reader concludes.",
+  "forbidden_note": "NEVER: under-reserved / non-compliant / violated / fined / absent-as-verdict."
+}

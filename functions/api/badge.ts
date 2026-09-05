@@ -21,9 +21,9 @@
 // SEPARATED leads render green; a TIE (still a measured axis, but the point-estimate
 // lead is not a measured advantage) renders lime — a visible, honest distinction.
 //
-// ?card=<hash> reflects one signed card's real state from /signed/card_index.json:
-// "<axis> · signed" (green) when that card carries a signature, else grey. It never
-// asserts the card verifies — that is the embed verify widget's job (real crypto).
+// ?card=<hash>&subject=<owner/model@immutable-revision> verifies the indexed card
+// cryptographically and requires its signed body to bind that exact subject. An index
+// flag alone is never enough. Missing, mutable or mismatched subject bindings fail grey.
 //
 // Formats:
 //   (default)        → SVG (image/svg+xml), embeddable directly in a README or <img>
@@ -37,6 +37,7 @@
 import { AXES_A } from "./_gspc_axes_a";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
+import { verifyCard } from "../_lib/cardVerify";
 
 // WHAT WAS WRONG (found by operating the endpoint, 2026-08-26)
 //
@@ -61,6 +62,12 @@ import { AXES_FIN } from "./_gspc_axes_fin";
 // the badge is wrong, not the board.
 const AXES = [...AXES_A, ...AXES_B, ...AXES_FIN];
 
+// BLUEPRINT 02Sep2026 §2.3 / BLOCK A1 — badge alt must carry the 3-leader clause
+// beside 22 measured. Visible message stays short; aria-label/title carry the full lid.
+// Numbers match live GET /api/gspc (22·22·0, public_leader_count=3). Do not invent leaders.
+const BOARD_LID =
+  "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.";
+
 const boardCounts = () => {
   const m = AXES.filter((a) => a.status === "MEASURED");
   const measured = m.length;                  // a slot with a real run behind it
@@ -70,11 +77,13 @@ const boardCounts = () => {
   // grammar functions/api/gspc.ts serves as totals.public_count — so a README
   // badge and GET /api/gspc can never drift apart by wording.
   const publicCount = `${quotable} axis · ${measured} measured`;
+  // Bare "22 measured" without the 3-leader clause is retired (A1).
+  const withLeaders = `${publicCount} · 3 public leader scores`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
-    ? `${publicCount}; jail floor untested`
-    : publicCount;
-  return { measured, quotable, unmeasured, publicCount, defaultMessage };
+    ? `${withLeaders}; jail floor untested`
+    : withLeaders;
+  return { measured, quotable, unmeasured, publicCount, defaultMessage, lid: BOARD_LID };
 };
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
@@ -129,7 +138,7 @@ const textWidth = (s: string): number =>
 const esc = (s: string): string =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
-const svgBadge = (label: string, message: string, colour: string): string => {
+const svgBadge = (label: string, message: string, colour: string, alt?: string): string => {
   const padH = 6;
   const lw = Math.ceil(textWidth(label)) + padH * 2;
   const mw = Math.ceil(textWidth(message)) + padH * 2;
@@ -138,8 +147,9 @@ const svgBadge = (label: string, message: string, colour: string): string => {
   const mx = (lw + mw / 2) * 10;
   const lt = (textWidth(label)) * 10;
   const mt = (textWidth(message)) * 10;
-  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="20" role="img" aria-label="${esc(label)}: ${esc(message)}">
-  <title>${esc(label)}: ${esc(message)}</title>
+  const a11y = alt && alt.trim() ? alt.trim() : `${label}: ${message}`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="20" role="img" aria-label="${esc(a11y)}">
+  <title>${esc(a11y)}</title>
   <linearGradient id="s" x2="0" y2="100%"><stop offset="0" stop-color="#bbb" stop-opacity=".1"/><stop offset="1" stop-opacity=".1"/></linearGradient>
   <clipPath id="r"><rect width="${w}" height="20" rx="3" fill="#fff"/></clipPath>
   <g clip-path="url(#r)">
@@ -156,23 +166,85 @@ const svgBadge = (label: string, message: string, colour: string): string => {
 </svg>`;
 };
 
-// One signed card's real state, read from the published card index. Never asserts
-// the card verifies (the embed verify widget does that with real crypto) — only
-// whether the index says a signature is attached.
-const cardBadge = async (origin: string, hash: string): Promise<AxisBadge> => {
-  const h = hash.toLowerCase().replace(/[^0-9a-f]/g, "").slice(0, 64);
+type CardIndexEntry = {
+  card?: unknown;
+  card_url?: unknown;
+  axis?: unknown;
+  signed?: unknown;
+};
+
+const boundSubject = (card: unknown): string | null => {
+  if (!card || typeof card !== "object") return null;
+  const body = (card as { body?: unknown }).body;
+  if (!body || typeof body !== "object") return null;
+  const record = body as Record<string, unknown>;
+  if (typeof record.subject === "string") return record.subject;
+  if (record.subject && typeof record.subject === "object") {
+    const subject = record.subject as Record<string, unknown>;
+    const slug = typeof subject.slug === "string" ? subject.slug : null;
+    const revision = typeof subject.revision === "string" ? subject.revision : null;
+    if (slug && revision) return `${slug}@${revision}`;
+  }
+  return typeof record.model === "string" ? record.model : null;
+};
+
+// Hugging Face commits are immutable 40- or 64-hex revisions. Branches and tags can
+// move, so `main`, `latest`, release tags and bare model names cannot wear a model badge.
+const isPinnedHfSubject = (subject: string): boolean =>
+  /^[^\s/@]+\/[^\s@]+@[0-9a-f]{40}(?:[0-9a-f]{24})?$/i.test(subject);
+
+// A model-specific badge is a cryptographic verdict, not an index decoration. It
+// fetches the exact indexed file, verifies it under the pinned CSOAI trust anchor,
+// and checks the immutable subject supplied by the model card against the signed body.
+const cardBadge = async (
+  origin: string,
+  hash: string,
+  expectedSubject: string | null,
+): Promise<AxisBadge> => {
+  const h = hash.toLowerCase();
   const label = "card";
-  if (h.length < 6) return { label, message: "invalid ref", colour: GREY, state: "invalid" };
+  if (!/^[0-9a-f]{64}$/.test(h)) {
+    return { label, message: "invalid ref", colour: GREY, state: "invalid" };
+  }
+  if (!expectedSubject || !isPinnedHfSubject(expectedSubject)) {
+    return { label, message: "pinned subject required", colour: GREY, state: "subject-required" };
+  }
   try {
     const res = await fetch(new URL("/signed/card_index.json", origin).toString());
     if (!res.ok) return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
-    const idx = (await res.json()) as { cards?: { card: string; axis?: string; signed?: boolean }[] };
-    const entry = (idx.cards || []).find((c) => typeof c.card === "string" && c.card.toLowerCase().startsWith(h));
+    const idx = (await res.json()) as { cards?: CardIndexEntry[] };
+    const entry = (idx.cards || []).find(
+      (candidate) => typeof candidate.card === "string" && candidate.card.toLowerCase() === h,
+    );
     if (!entry) return { label, message: "not in index", colour: GREY, state: "not-found" };
-    const axis = (entry.axis || "card").slice(0, 40);
-    return entry.signed
-      ? { label: axis, message: "signed", colour: GREEN, state: "signed" }
-      : { label: axis, message: "unsigned", colour: GREY, state: "unsigned" };
+    if (entry.signed !== true) {
+      return { label, message: "unsigned", colour: GREY, state: "unsigned" };
+    }
+
+    const expectedPath = `/signed/cards/${h}.json`;
+    if (entry.card_url !== expectedPath) {
+      return { label, message: "invalid card path", colour: GREY, state: "invalid" };
+    }
+    const cardRes = await fetch(new URL(expectedPath, origin).toString());
+    if (!cardRes.ok) {
+      return { label, message: "card unavailable", colour: GREY, state: "unavailable" };
+    }
+    const card = await cardRes.json();
+    const verdict = await verifyCard(card, []);
+    if (!verdict.valid || verdict.id !== h) {
+      return { label, message: "invalid signature", colour: GREY, state: "invalid" };
+    }
+    if (boundSubject(card) !== expectedSubject) {
+      return { label, message: "subject mismatch", colour: GREY, state: "subject-mismatch" };
+    }
+
+    const axis = typeof entry.axis === "string" ? entry.axis.slice(0, 40) : "card";
+    return {
+      label: axis,
+      message: "valid · subject-bound",
+      colour: GREEN,
+      state: "valid",
+    };
   } catch {
     return { label, message: "index unavailable", colour: GREY, state: "unavailable" };
   }
@@ -190,7 +262,9 @@ export const onRequestGet: PagesFunction = async (context) => {
   const axisParam = url.searchParams.get("axis");
   const cardParam = url.searchParams.get("card");
   if (axisParam || cardParam) {
-    const b = axisParam ? axisBadge(axisParam) : await cardBadge(url.origin, cardParam as string);
+    const b = axisParam
+      ? axisBadge(axisParam)
+      : await cardBadge(url.origin, cardParam as string, url.searchParams.get("subject"));
     if (format === "shields") {
       return new Response(
         JSON.stringify({ schemaVersion: 1, label: b.label, message: b.message, color: b.colour }),
@@ -241,21 +315,24 @@ export const onRequestGet: PagesFunction = async (context) => {
         color: colour,
         verify: VERIFY_URL,
         public_count: board.publicCount,
+        public_leader_count: 3,
+        lid: board.lid,
         // Says what this handler actually does. It reads the same axis arrays
         // functions/api/gspc.ts reads and applies the same rule; it does not call the
         // endpoint. The previous wording claimed a derivation that never happened.
         unmeasured: board.unmeasured,
         ruling:
-          `${board.publicCount} — computed here from the same axis arrays GET /api/gspc ` +
+          `${board.publicCount} · 3 public leader scores — computed here from the same axis arrays GET /api/gspc ` +
           `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
           `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
-          `declared slots with no run behind them and are never quoted as measured.`,
+          `declared slots with no run behind them and are never quoted as measured. ` +
+          `Lid (BLUEPRINT 02Sep2026 §2.3): ${board.lid}`,
       }, null, 2),
       { headers: { ...headers, "content-type": "application/json; charset=utf-8" } },
     );
   }
 
-  return new Response(svgBadge(label, message, colour), {
+  return new Response(svgBadge(label, message, colour, isDefaultBoard ? board.lid : undefined), {
     headers: { ...headers, "content-type": "image/svg+xml; charset=utf-8" },
   });
 };

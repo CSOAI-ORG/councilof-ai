@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-04T14:00:34.909Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Commodities",
+      "holders": 581,
+      "issuer": "GateHub",
+      "issuer_address": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4132.852267201553,
+      "symbol": "XAU.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "f58d2e8188ec086913b56b46e9650f4c5dacd473ed96274b2b4285ac3dd266e9",
+    "sig_ed25519": "c7f397f56e926f70500ea4c3f494c9d51129b001230e9f8f8b39ec54c8df0e9b8131494fe224b024bafa79fc0290bd2d86dfcad5dcdd8479e8da95646733bc03",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL XAU.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "b1d392bca549a73044bcd0f5f83a273d7710cfa9fed0ade7adb14a9e2a4278a6",
+    "b9f3266def49d62f3e158b115ca4908c61113493e323604712e78d516927ef38",
+    "54fbfb37a5041fc18a233c539b7146c4994c696db6644f79356df7cf477eb30b",
+    "ec23d8c70dbdf9cbe4ad25acf8c8a037a3e2549034f9f8b8bff984a493eb1bc1",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "efecf2837711e4b60493f81397472f1d133552852d399632074a9fec1cc251ca",
+    "e0f2b0fdf4fc418732d8836000de3cda2bdf03b9d73a6331b1b391f03b712fff",
+    "a0d372fa0b7eac2404c1f28dabf11fb002e12ee42d0f18e6582c96e672c28195"
+  ]
+}

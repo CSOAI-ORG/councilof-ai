@@ -67,7 +67,7 @@ export default function EuActClassifier() {
       <div className="mx-auto max-w-2xl px-6 py-12">
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">EU AI Act · risk classifier</p>
         <h1 className="mt-3 text-4xl font-black tracking-tight">Is your AI <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">high-risk?</span></h1>
-        <p className="mt-3 text-emerald-100/75">Describe any AI system. The Council assistant classifies its EU AI Act risk tier, tells you why, and lists the obligations that follow — plus every other framework that applies.</p>
+        <p className="mt-3 text-emerald-100/75">Describe an AI system to receive an indicative EU AI Act risk-tier draft and possible obligations to investigate. It is not legal advice and does not establish every applicable framework.</p>
 
         {/* Article 50(1) AI-interaction disclosure — registry-driven wording. */}
         <div className="mt-6">
@@ -85,14 +85,14 @@ export default function EuActClassifier() {
             {tier && <div className={"mb-3 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm font-black " + tier.color}>● {tier.label}</div>}
             <p className="whitespace-pre-wrap text-sm leading-relaxed text-emerald-50/90">{out.text}</p>
             <div className="mt-4 flex flex-wrap gap-2 border-t border-emerald-500/15 pt-4 text-xs">
-              <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-[#03110b] hover:bg-emerald-400">Get your full signed assessment →</a>
+              <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-[#03110b] hover:bg-emerald-400">Open the assessment workflow →</a>
               <a href="/high-risk-ai-systems" className="rounded-lg border border-emerald-500/25 px-3 py-1.5 font-semibold text-emerald-200/80 hover:bg-white/5">Annex III high-risk list →</a>
               <a href="/readiness" className="rounded-lg border border-emerald-500/25 px-3 py-1.5 font-semibold text-emerald-200/80 hover:bg-white/5">Deadline readiness →</a>
               <a href="/try" className="rounded-lg bg-emerald-500 px-3 py-1.5 font-bold text-[#03110b] hover:bg-emerald-400">Take it to the Council →</a>
             </div>
           </div>
         )}
-        <p className="mt-6 text-[11px] text-emerald-300/70">Indicative classification to guide you — not legal advice. For a signed, council-reviewed determination, run it through the Workbench.</p>
+        <p className="mt-6 text-[11px] text-emerald-300/70">Indicative classification only — not legal advice, a compliance determination, or Council review. The Workbench prepares drafts and reports their evidence state; it does not issue a live Council verdict.</p>
       </div>
     </div>
   );

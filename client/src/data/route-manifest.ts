@@ -34,8 +34,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/academy",
-  "comp": "SovereignAcademy",
-  "title": "Sovereign Academy"
+  "comp": "CouncilAcademy",
+  "title": "Council Academy"
  },
  {
   "path": "/accessibility",
@@ -58,11 +58,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Admin"
  },
  {
-  "path": "/advisory",
-  "comp": "PartnersAdvisory",
-  "title": "Partners Advisory"
- },
- {
   "path": "/ag-ui",
   "comp": "AgUiBridge",
   "title": "Ag Ui Bridge"
@@ -76,11 +71,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/agent-governance",
   "comp": "AgentGovernance",
   "title": "Agent Governance"
- },
- {
-  "path": "/agent-registry",
-  "comp": "AgentRegistry",
-  "title": "Agent Registry"
  },
  {
   "path": "/agents",
@@ -133,24 +123,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Ai Governance Hub"
  },
  {
-  "path": "/ai-systems",
-  "comp": "AISystems",
-  "title": "AISystems"
- },
- {
   "path": "/ai-transparency",
   "comp": "AiTransparency",
   "title": "Ai Transparency"
- },
- {
-  "path": "/all",
-  "comp": "RegistryAll",
-  "title": "Registry All"
- },
- {
-  "path": "/analytics",
-  "comp": "AnalyticsDashboard",
-  "title": "Analytics Dashboard"
  },
  {
   "path": "/answers",
@@ -166,11 +141,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/api-keys",
   "comp": "RequireAuth",
   "title": "Api Keys"
- },
- {
-  "path": "/architecture",
-  "comp": "Technology",
-  "title": "Technology"
  },
  {
   "path": "/arena-scoreboard",
@@ -191,11 +161,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/assessment",
   "comp": "ReadinessAssessment",
   "title": "Readiness Assessment"
- },
- {
-  "path": "/assurance",
-  "comp": "SystemCard",
-  "title": "System Card"
  },
  {
   "path": "/aug-2026",
@@ -243,11 +208,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Bft"
  },
  {
-  "path": "/blog",
-  "comp": "Blog",
-  "title": "Blog"
- },
- {
   "path": "/board",
   "comp": "MeasurementBoard",
   "title": "Measurement Board"
@@ -293,11 +253,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Careers"
  },
  {
-  "path": "/case-studies",
-  "comp": "CaseStudies",
-  "title": "Case Studies"
- },
- {
   "path": "/catalog",
   "comp": "Redirect",
   "title": "Catalog"
@@ -306,36 +261,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/ceasai-training",
   "comp": "Redirect",
   "title": "Ceasai Training"
- },
- {
-  "path": "/certificate-verification",
-  "comp": "CertificateVerification",
-  "title": "Certificate Verification"
- },
- {
-  "path": "/certificates",
-  "comp": "MyCertificates",
-  "title": "My Certificates"
- },
- {
-  "path": "/certification",
-  "comp": "CertificationV2",
-  "title": "Certification"
- },
- {
-  "path": "/certification/exam",
-  "comp": "CertificationExam",
-  "title": "Certification Exam"
- },
- {
-  "path": "/certification/results",
-  "comp": "CertificationResults",
-  "title": "Certification Results"
- },
- {
-  "path": "/certification/review",
-  "comp": "ExamReview",
-  "title": "Exam Review"
  },
  {
   "path": "/challenge",
@@ -373,11 +298,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eu Act Classifier"
  },
  {
-  "path": "/cobol",
-  "comp": "LegacyBridge",
-  "title": "Legacy Bridge"
- },
- {
   "path": "/cobolbridge",
   "comp": "CobolBridge",
   "title": "Cobol Bridge"
@@ -391,11 +311,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/colorado-ai-act",
   "comp": "UsStateAct",
   "title": "Colorado Ai Act"
- },
- {
-  "path": "/command-center",
-  "comp": "ComplianceCommandCenter",
-  "title": "Compliance Command Center"
  },
  {
   "path": "/commons",
@@ -423,11 +338,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Compliance"
  },
  {
-  "path": "/compliance-monitoring",
-  "comp": "ComplianceMonitoring",
-  "title": "Compliance Monitoring"
- },
- {
   "path": "/compliance/australia-ai-governance",
   "comp": "AustraliaAIGovernanceCompliance",
   "title": "Australia AIGovernance Compliance"
@@ -436,16 +346,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/compliance/canada-ai-act",
   "comp": "CanadaAIActCompliance",
   "title": "Canada AIAct Compliance"
- },
- {
-  "path": "/compliance/eu-ai-act",
-  "comp": "EUAIActCompliance",
-  "title": "EUAIAct Compliance"
- },
- {
-  "path": "/compliance/nist-ai-rmf",
-  "comp": "NISTAIRMFCompliance",
-  "title": "NISTAIRMFCompliance"
  },
  {
   "path": "/compliance/tc260",
@@ -468,9 +368,14 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Conformity Route"
  },
  {
-  "path": "/connect",
-  "comp": "SocialConnect",
-  "title": "Social Connect"
+  "path": "/connect-ai",
+  "comp": "ConnectGSPC",
+  "title": "Connect GSPC"
+ },
+ {
+  "path": "/connect-gspc",
+  "comp": "ConnectGSPC",
+  "title": "Connect GSPC"
  },
  {
   "path": "/consensus",
@@ -528,11 +433,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Agents"
  },
  {
-  "path": "/courses",
-  "comp": "Courses",
-  "title": "Courses"
- },
- {
   "path": "/covenant",
   "comp": "MaternalCovenant",
   "title": "Maternal Covenant"
@@ -546,11 +446,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/cra-readiness",
   "comp": "CraReadinessKit",
   "title": "Cra Readiness Kit"
- },
- {
-  "path": "/credential-training",
-  "comp": "CEASAITraining",
-  "title": "CEASAITraining"
  },
  {
   "path": "/credo-ai-alternative",
@@ -578,24 +473,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Meok Law"
  },
  {
-  "path": "/cyber-scan",
-  "comp": "CyberScan",
-  "title": "Cyber Scan"
- },
- {
   "path": "/dashboard",
   "comp": "Dashboard",
   "title": "Dashboard"
- },
- {
-  "path": "/dashboard/progress",
-  "comp": "StudentProgress",
-  "title": "Student Progress"
- },
- {
-  "path": "/data-processing-agreement",
-  "comp": "DataProcessingAgreement",
-  "title": "Data Processing Agreement"
  },
  {
   "path": "/deepfake-protection",
@@ -623,19 +503,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Dispute"
  },
  {
-  "path": "/distribution",
-  "comp": "Distribution",
-  "title": "Distribution"
- },
- {
   "path": "/distribution-integrity",
   "comp": "DistributionIntegrity",
   "title": "Distribution Integrity"
- },
- {
-  "path": "/docs",
-  "comp": "Documentation",
-  "title": "Documentation"
  },
  {
   "path": "/doctrine",
@@ -646,11 +516,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/dora",
   "comp": "Dora",
   "title": "Dora"
- },
- {
-  "path": "/dpa",
-  "comp": "DataProcessingAgreement",
-  "title": "Data Processing Agreement"
  },
  {
   "path": "/dragonfly",
@@ -753,11 +618,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Act Timeline"
  },
  {
-  "path": "/eu-ai-act-urgency",
-  "comp": "EUAIActUrgency",
-  "title": "EUAIAct Urgency"
- },
- {
   "path": "/eu-ai-act-vs-gdpr",
   "comp": "EuActVsGdpr",
   "title": "Eu Act Vs Gdpr"
@@ -788,11 +648,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eunomia Indices"
  },
  {
-  "path": "/evidence",
-  "comp": "EvidenceHub",
-  "title": "Evidence Hub"
- },
- {
   "path": "/evidence-rail",
   "comp": "EvidenceRail",
   "title": "Evidence Rail"
@@ -813,11 +668,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "PDCAFramework Feature"
  },
  {
-  "path": "/features/training-certification",
-  "comp": "TrainingCertificationFeature",
-  "title": "Training Certification Feature"
- },
- {
   "path": "/features/watchdog-jobs",
   "comp": "WatchdogJobsFeature",
   "title": "Watchdog Jobs Feature"
@@ -828,11 +678,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Fedramp"
  },
  {
-  "path": "/feed",
-  "comp": "RegulationFeed",
-  "title": "Regulation Feed"
- },
- {
   "path": "/finance-ai-act",
   "comp": "SectorAct",
   "title": "Finance Ai Act"
@@ -841,6 +686,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/financial-axes",
   "comp": "FinancialAxes",
   "title": "Financial Axes"
+ },
+ {
+  "path": "/findings",
+  "comp": "FindingsExplorer",
+  "title": "Findings Explorer"
  },
  {
   "path": "/fines",
@@ -866,11 +716,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/founding-council-agreement",
   "comp": "FoundingCouncilAgreement",
   "title": "Founding Council Agreement"
- },
- {
-  "path": "/founding-members",
-  "comp": "FoundingMembers",
-  "title": "Founding Members"
  },
  {
   "path": "/four-wings",
@@ -938,11 +783,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Get Listed"
  },
  {
-  "path": "/global-ai-regulation",
-  "comp": "GlobalAIRegulation",
-  "title": "Global AIRegulation"
- },
- {
   "path": "/global-ai-safety-initiative",
   "comp": "GlobalAISafetyInitiative",
   "title": "Global AISafety Initiative"
@@ -961,11 +801,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/glossary",
   "comp": "Glossary",
   "title": "Glossary"
- },
- {
-  "path": "/gods-eye",
-  "comp": "CyberScan",
-  "title": "Cyber Scan"
  },
  {
   "path": "/gone-space",
@@ -1008,16 +843,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Government Dashboard"
  },
  {
-  "path": "/government-links",
-  "comp": "GovernmentLinks",
-  "title": "Government Links"
- },
- {
-  "path": "/government-portal",
-  "comp": "GovernmentPortal",
-  "title": "Government Portal"
- },
- {
   "path": "/gpai",
   "comp": "GpaiObligations",
   "title": "Gpai Obligations"
@@ -1049,7 +874,7 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/gspc-scoreboard",
-  "comp": "GspcScoreboard",
+  "comp": "Redirect",
   "title": "Gspc Scoreboard"
  },
  {
@@ -1128,16 +953,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Hive Model"
  },
  {
-  "path": "/hives",
-  "comp": "SovereignHives",
-  "title": "Sovereign Hives"
- },
- {
-  "path": "/home-v2",
-  "comp": "NewHomeV2",
-  "title": "New Home"
- },
- {
   "path": "/home-v3",
   "comp": "NewHomeV3",
   "title": "New Home"
@@ -1163,11 +978,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "How It Works"
  },
  {
-  "path": "/how-it-works/certification",
-  "comp": "CertificationHowItWorks",
-  "title": "Certification How It Works"
- },
- {
   "path": "/how-it-works/compliance",
   "comp": "ComplianceHowItWorks",
   "title": "Compliance How It Works"
@@ -1181,11 +991,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/how-it-works/enterprise",
   "comp": "EnterpriseHowItWorks",
   "title": "Enterprise How It Works"
- },
- {
-  "path": "/how-it-works/training",
-  "comp": "TrainingHowItWorks",
-  "title": "Training How It Works"
  },
  {
   "path": "/hr-ai-act",
@@ -1259,8 +1064,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/join",
-  "comp": "SovereignRegistry",
-  "title": "Sovereign Registry"
+  "comp": "CouncilRegistry",
+  "title": "Council Registry"
  },
  {
   "path": "/knowledge-base",
@@ -1289,18 +1094,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/leaderboard",
-  "comp": "Leaderboard",
+  "comp": "Redirect",
   "title": "Leaderboard"
  },
  {
   "path": "/learn",
   "comp": "Academy",
   "title": "Academy"
- },
- {
-  "path": "/legacy",
-  "comp": "LegacyBridge",
-  "title": "Legacy Bridge"
  },
  {
   "path": "/legal/cookies",
@@ -1311,11 +1111,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/legal/disclaimers",
   "comp": "Disclaimers",
   "title": "Disclaimers"
- },
- {
-  "path": "/legal/dpa",
-  "comp": "DataProcessingAgreement",
-  "title": "Data Processing Agreement"
  },
  {
   "path": "/legal/founding-council",
@@ -1331,16 +1126,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/legal/membership",
   "comp": "MembershipAgreement",
   "title": "Membership Agreement"
- },
- {
-  "path": "/legal/privacy",
-  "comp": "PrivacyPolicy",
-  "title": "Privacy Policy"
- },
- {
-  "path": "/legal/sla",
-  "comp": "ServiceLevelAgreement",
-  "title": "Service Level Agreement"
  },
  {
   "path": "/legal/terms",
@@ -1366,11 +1151,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/lineage",
   "comp": "Lineage",
   "title": "Lineage"
- },
- {
-  "path": "/live-ledger",
-  "comp": "LiveLedger",
-  "title": "Live Ledger"
  },
  {
   "path": "/login",
@@ -1403,11 +1183,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "MCPRegistry"
  },
  {
-  "path": "/mcp-fleet",
-  "comp": "McpFleet",
-  "title": "Mcp Fleet"
- },
- {
   "path": "/mcp-tools",
   "comp": "ToolCommons",
   "title": "Tool Commons"
@@ -1419,8 +1194,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/me",
-  "comp": "SovereignHub",
-  "title": "Sovereign Hub"
+  "comp": "CouncilHub",
+  "title": "Council Hub"
  },
  {
   "path": "/membership-agreement",
@@ -1444,8 +1219,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/minds",
-  "comp": "SovereignMinds",
-  "title": "Sovereign Minds"
+  "comp": "CouncilMinds",
+  "title": "Council Minds"
  },
  {
   "path": "/models",
@@ -1461,11 +1236,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/my-applications",
   "comp": "RequireAuth",
   "title": "My Applications"
- },
- {
-  "path": "/my-courses",
-  "comp": "RequireAuth",
-  "title": "My Courses"
  },
  {
   "path": "/network",
@@ -1491,11 +1261,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/nist-vs-eu-ai-act",
   "comp": "NistVsEuAct",
   "title": "Nist Vs Eu Act"
- },
- {
-  "path": "/old-home",
-  "comp": "Home",
-  "title": "Home"
  },
  {
   "path": "/onboard",
@@ -1534,18 +1299,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/os",
-  "comp": "OsLauncher",
-  "title": "Os Launcher"
+  "comp": "OsRoute",
+  "title": "Os Route"
  },
  {
   "path": "/os-demo",
   "comp": "DemoOS",
   "title": "Demo OS"
- },
- {
-  "path": "/oscal",
-  "comp": "OscalStudio",
-  "title": "Oscal Studio"
  },
  {
   "path": "/oscal-readiness",
@@ -1566,11 +1326,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/packs/eu-article-50",
   "comp": "Article50Pack",
   "title": "Article50 Pack"
- },
- {
-  "path": "/partners",
-  "comp": "PartnersAdvisory",
-  "title": "Partners Advisory"
  },
  {
   "path": "/payg",
@@ -1628,16 +1383,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Policy Generator"
  },
  {
-  "path": "/press",
-  "comp": "Pressroom",
-  "title": "Pressroom"
- },
- {
-  "path": "/pressroom",
-  "comp": "Pressroom",
-  "title": "Pressroom"
- },
- {
   "path": "/pricing",
   "comp": "PlansPage",
   "title": "Plans Page"
@@ -1646,16 +1391,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/pricing-legacy",
   "comp": "Pricing",
   "title": "Pricing"
- },
- {
-  "path": "/privacy",
-  "comp": "PrivacyPolicy",
-  "title": "Privacy Policy"
- },
- {
-  "path": "/privacy-policy",
-  "comp": "PrivacyPolicy",
-  "title": "Privacy Policy"
  },
  {
   "path": "/products",
@@ -1686,11 +1421,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/provenance-finding",
   "comp": "ProvenanceFinding",
   "title": "Provenance Finding"
- },
- {
-  "path": "/public",
-  "comp": "PublicHome",
-  "title": "Public Home"
  },
  {
   "path": "/public-dashboard",
@@ -1769,18 +1499,13 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/register",
-  "comp": "SovereignRegistry",
-  "title": "Sovereign Registry"
+  "comp": "CouncilRegistry",
+  "title": "Council Registry"
  },
  {
   "path": "/registers",
   "comp": "Registers",
   "title": "Registers"
- },
- {
-  "path": "/registry",
-  "comp": "RegistryAll",
-  "title": "Registry All"
  },
  {
   "path": "/regulation-tracker",
@@ -1798,11 +1523,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulator Atlas"
  },
  {
-  "path": "/regulator-findings",
-  "comp": "RegulatorFindings",
-  "title": "Regulator Findings"
- },
- {
   "path": "/regulators",
   "comp": "RegulatorAtlas",
   "title": "Regulator Atlas"
@@ -1813,11 +1533,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Regulatory Authority"
  },
  {
-  "path": "/regulatory-compliance",
-  "comp": "RegulatoryCompliance",
-  "title": "Regulatory Compliance"
- },
- {
   "path": "/relevance-map",
   "comp": "RelevanceMap",
   "title": "Relevance Map"
@@ -1826,11 +1541,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/remediation-partners",
   "comp": "RemediationPartners",
   "title": "Remediation Partners"
- },
- {
-  "path": "/report",
-  "comp": "IncidentReport",
-  "title": "Incident Report"
  },
  {
   "path": "/reports",
@@ -1878,21 +1588,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Ecosystem"
  },
  {
-  "path": "/scan",
-  "comp": "CyberScan",
-  "title": "Cyber Scan"
- },
- {
-  "path": "/sec-ai-disclosure",
-  "comp": "SECDisclosure",
-  "title": "Sec Ai Disclosure"
- },
- {
-  "path": "/sec-disclosure",
-  "comp": "SECDisclosure",
-  "title": "Sec Disclosure"
- },
- {
   "path": "/sector-atlas",
   "comp": "SectorsAtlas",
   "title": "Sectors Atlas"
@@ -1901,16 +1596,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/sectors",
   "comp": "SectorsAtlas",
   "title": "Sectors Atlas"
- },
- {
-  "path": "/security",
-  "comp": "TrustCenter",
-  "title": "Trust Center"
- },
- {
-  "path": "/service-level-agreement",
-  "comp": "ServiceLevelAgreement",
-  "title": "Service Level Agreement"
  },
  {
   "path": "/services",
@@ -1938,11 +1623,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Signals"
  },
  {
-  "path": "/signup",
-  "comp": "Signup",
-  "title": "Signup"
- },
- {
   "path": "/simulate",
   "comp": "Redirect",
   "title": "Simulate"
@@ -1953,19 +1633,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Singapore Ai Governance"
  },
  {
-  "path": "/sla",
-  "comp": "ServiceLevelAgreement",
-  "title": "Service Level Agreement"
- },
- {
   "path": "/soai-pdca",
   "comp": "SOAIPDCAFramework",
   "title": "SOAIPDCAFramework"
- },
- {
-  "path": "/soai-pdca/government",
-  "comp": "GovernmentPortal",
-  "title": "Government Portal"
  },
  {
   "path": "/social",
@@ -2033,11 +1703,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Sovereign Space"
  },
  {
-  "path": "/sovereign-town",
-  "comp": "Redirect",
-  "title": "Sovereign Town"
- },
- {
   "path": "/sovereign-twin",
   "comp": "Redirect",
   "title": "Sovereign Twin"
@@ -2053,11 +1718,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Onboard OS"
  },
  {
-  "path": "/status",
-  "comp": "StatusPage",
-  "title": "Status Page"
- },
- {
   "path": "/statute-to-predicate",
   "comp": "StatuteToPredicate",
   "title": "Statute To Predicate"
@@ -2068,39 +1728,9 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Gone"
  },
  {
-  "path": "/support",
-  "comp": "Support",
-  "title": "Support"
- },
- {
-  "path": "/system",
-  "comp": "StatusPage",
-  "title": "Status Page"
- },
- {
-  "path": "/system-card",
-  "comp": "SystemCard",
-  "title": "System Card"
- },
- {
-  "path": "/system-status",
-  "comp": "Status",
-  "title": "Status"
- },
- {
-  "path": "/systemcard",
-  "comp": "SystemCard",
-  "title": "System Card"
- },
- {
   "path": "/tc260",
   "comp": "TC260Guide",
   "title": "TC260 Guide"
- },
- {
-  "path": "/technology",
-  "comp": "Technology",
-  "title": "Technology"
  },
  {
   "path": "/temples",
@@ -2134,8 +1764,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/tour",
-  "comp": "SovereignTour",
-  "title": "Sovereign Tour"
+  "comp": "CouncilTour",
+  "title": "Council Tour"
  },
  {
   "path": "/towns",
@@ -2153,16 +1783,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Traction"
  },
  {
-  "path": "/training",
-  "comp": "TrainingV2",
-  "title": "Training"
- },
- {
-  "path": "/training-hub",
-  "comp": "TrainingHub",
-  "title": "Training Hub"
- },
- {
   "path": "/transparency",
   "comp": "PublicDashboard",
   "title": "Public Dashboard"
@@ -2171,11 +1791,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/transparency-cop",
   "comp": "TransparencyCop",
   "title": "Transparency Cop"
- },
- {
-  "path": "/trust-center",
-  "comp": "TrustCenter",
-  "title": "Trust Center"
  },
  {
   "path": "/try",
@@ -2219,8 +1834,8 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
  },
  {
   "path": "/voice",
-  "comp": "SovereignMinds",
-  "title": "Sovereign Minds"
+  "comp": "CouncilMinds",
+  "title": "Council Minds"
  },
  {
   "path": "/vs",
@@ -2283,16 +1898,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Public Watchdog Hub"
  },
  {
-  "path": "/webhooks",
-  "comp": "Webhooks",
-  "title": "Webhooks"
- },
- {
-  "path": "/welcome",
-  "comp": "Welcome",
-  "title": "Welcome"
- },
- {
   "path": "/where-the-record-lives",
   "comp": "WhereTheRecordLives",
   "title": "Where The Record Lives"
@@ -2311,11 +1916,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/why-csoai",
   "comp": "WhyCSOAI",
   "title": "Why CSOAI"
- },
- {
-  "path": "/widget",
-  "comp": "WidgetCourses",
-  "title": "Widget Courses"
  },
  {
   "path": "/workbench",

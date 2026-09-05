@@ -6,5 +6,5 @@ import { Redirect } from "wouter";
  * Do not type public prices here.
  */
 export default function Pricing() {
-  return <Redirect to="/os?lobby=assess&task=pricing-overview" />;
+  return <Redirect to="/dashboard?task=pricing-overview&tab=measured" />;
 }

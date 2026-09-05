@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 // CouncilVote — a DESIGN SIMULATION of the 33-seat council's supermajority quorum.
 // This is an illustration of the architecture, not a live vote: the measured
-// cross-checking value today is n_eff 1.21 of 3 (see /refutation-ledger).
+// latest cross-checking value is n_eff 1.00 of 3 nominal legs (see
+// /interop/council-independence.json). DR-0007's historical numeric result is
+// unbound because its cited result artifact is absent from this repository.
 // 33 nodes in a ring vote toward a supermajority quorum; a care-floor gauge holds at
-// 0.95. Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
+// Pure SVG + rAF, zero deps. Re-runs when `trigger` changes.
 const N = 33;
-const QUORUM = Math.ceil((2 * N) / 3); // 22 — 2/3 supermajority
+const QUORUM = Math.floor((2 * N) / 3) + 1; // 23 — strictly greater than 2/3
 const R = 120, CX = 150, CY = 150;
 
 export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number; verdict?: string }) {
@@ -22,7 +24,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
     const step = () => {
       if (i >= N) { setPhase("done"); return; }
       const idx = order[i];
-      // ~85% agree, a few honest dissenters (the vote tolerates them)
+      // Illustrative random inputs only; these are not model responses.
       const v = Math.random() < 0.85 ? 1 : -1;
       setVotes((prev) => { const next = prev.slice(); next[idx] = v; return next; });
       i++;
@@ -40,7 +42,7 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
     <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-4">
       <div className="flex items-center justify-between">
         <div className="text-sm font-black text-emerald-100">33-seat Council <span className="text-[10px] font-bold text-emerald-300/60">design simulation</span></div>
-        <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (reached ? "bg-emerald-500/20 text-emerald-300" : "bg-white/5 text-emerald-300/60")}>{phase === "done" ? (reached ? "consensus reached" : "no quorum") : "voting…"}</span>
+        <span className={"rounded-full px-2 py-0.5 text-[10px] font-bold " + (reached ? "bg-emerald-500/20 text-emerald-300" : "bg-white/5 text-emerald-300/60")}>{phase === "done" ? (reached ? "illustrative threshold reached" : "illustrative threshold missed") : "simulating…"}</span>
       </div>
       <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row">
         <svg viewBox="0 0 300 300" className="h-56 w-56 shrink-0">
@@ -66,20 +68,16 @@ export default function CouncilVote({ trigger = 0, verdict }: { trigger?: number
         </svg>
         <div className="w-full space-y-2 text-sm">
           <Row label="Agree" val={agree} tot={N} color="#34d399" />
-          <Row label="Honest dissent (tolerated)" val={dissent} tot={N} color="#f59e0b" />
-          <div className="mt-1 border-t border-emerald-500/15 pt-2">
-            <div className="flex items-center justify-between text-[13px]"><span className="text-emerald-100/70">Care-floor</span><span className="font-mono font-bold text-emerald-300">0.95 ✓</span></div>
-            <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-emerald-400" style={{ width: "95%" }} /></div>
-          </div>
+          <Row label="Illustrative dissent" val={dissent} tot={N} color="#f59e0b" />
           {phase === "done" && (
             <div className={"mt-2 rounded-lg border px-3 py-2 text-[12px] " + (reached ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-100" : "border-amber-400/30 bg-amber-500/10 text-amber-100")}>
-              {reached ? "▲ Supermajority reached in this design simulation — in the target architecture the verdict seals to Layer 0." : "No quorum in this round — the council design withholds a verdict rather than forcing one."}
+              {reached ? "Illustrative 23-of-33 threshold reached. No model vote, signature, or release action occurred." : "Illustrative threshold missed. No model vote, signature, or release action occurred."}
               {verdict && reached && <div className="mt-1 font-semibold text-emerald-200">{verdict}</div>}
             </div>
           )}
         </div>
       </div>
-      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation of the 33-seat architecture: no single agent decides — a supermajority does, so the council can't be captured. Honest dissent is tolerated by design (Charter Art. 11). Measured cross-checking today: n_eff 1.21 of 3 — see the <a href="/refutation-ledger" className="underline">Refutation Ledger</a>.</p>
+      <p className="mt-2 text-[10px] text-emerald-300/40">Design simulation only. It does not establish independent voters, capture resistance, fault tolerance, or a live council. <a href="/interop/council-independence.json" className="underline">Latest published point experiment: n_eff=1 across 3 nominal legs (rho=1)</a>. DR-0007's historical number is unbound because its cited artifact is absent.</p>
     </div>
   );
 }

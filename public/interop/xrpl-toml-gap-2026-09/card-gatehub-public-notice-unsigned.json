@@ -1,0 +1,147 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "GateHub USD/EUR/XAU/GBP on XRPL — public.notice: strict_two_way_toml FAIL (no on-ledger Domain)",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://councilof.ai/api/xrpl",
+    "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "https://gatehub.net/.well-known/xrp-ledger.toml",
+    "https://www.gatehub.net/.well-known/xrp-ledger.toml",
+    "https://api.xrpscan.com/api/v1/account/rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+    "https://api.xrpscan.com/api/v1/account/rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+    "https://api.xrpscan.com/api/v1/account/r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+    "https://s1.xrplmeta.org/tokens"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "strict_two_way_toml failed (FAIL): no on-ledger Domain on GateHub issuer accounts; guessed gatehub.net toml URL returns HTML — not a bidirectional domain match.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "provenance-controls"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "failed_check": "strict_two_way_toml",
+    "two_way_state": "FAIL",
+    "two_way_reason": "no on-ledger Domain field (one-way at best); gatehub.net/.well-known/xrp-ledger.toml returns HTML not toml",
+    "issuer": "GateHub",
+    "symbols": [
+      "USD.gh",
+      "EUR.gh",
+      "XAU.gh",
+      "GBP.gh"
+    ],
+    "issuer_addresses": {
+      "USD.gh": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "EUR.gh": "rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+      "XAU.gh": "rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+      "GBP.gh": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g"
+    },
+    "on_ledger_domain": null,
+    "reader_verified_via": "XRPLMeta registry / XRPScan well-known directory",
+    "reader_as_of": "2026-09-01T23:15:51Z",
+    "roster_source": "https://councilof.ai/api/xrpl",
+    "two_way_check_source": "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "artefacts": [
+      {
+        "id": "api-xrpl",
+        "role": "api-xrpl",
+        "source_url": "https://councilof.ai/api/xrpl",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 9039,
+        "sha256": "8097c2a815f42dda08d55a11e623b8004104514791104a140aad3956488ec1cf"
+      },
+      {
+        "id": "xrpl-two-way-check",
+        "role": "xrpl-two-way-check",
+        "source_url": "https://councilof.ai/interop/xrpl-two-way-check.json",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 7938,
+        "sha256": "85848181b51f74c610c27de5c3f98a599e994fd31577f21f7475b19bfccb095f"
+      },
+      {
+        "id": "gatehub-toml",
+        "role": "gatehub-toml",
+        "source_url": "https://gatehub.net/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 8898,
+        "sha256": "09c1ef6d58f8ff3cea54ec0b76d6c3e1ea23c609826e3ef3b2acc10444871dc3",
+        "looks_like_html": true
+      },
+      {
+        "id": "gatehub-www-toml",
+        "role": "gatehub-www-toml",
+        "source_url": "https://www.gatehub.net/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 8898,
+        "sha256": "09c1ef6d58f8ff3cea54ec0b76d6c3e1ea23c609826e3ef3b2acc10444871dc3",
+        "looks_like_html": true
+      },
+      {
+        "id": "xrpscan-gatehub-usd",
+        "role": "xrpscan-gatehub-usd",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rhub8VRN55s94qWKDv6jmDy1pUykJzF3wq",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1410,
+        "sha256": "6620d80ec492f4e0396b8190a6ee60eb441b72fdc10c821edbc5cabb42712c6b"
+      },
+      {
+        "id": "xrpscan-gatehub-xau",
+        "role": "xrpscan-gatehub-xau",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rcoef87SYMJ58NAFx7fNM5frVknmvHsvJ",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1467,
+        "sha256": "8a34ac4cc1a20ec7e2a24c47175dabb4ab6aa735711610c0e30051055393685f"
+      },
+      {
+        "id": "xrpscan-gatehub-gbp",
+        "role": "xrpscan-gatehub-gbp",
+        "source_url": "https://api.xrpscan.com/api/v1/account/r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1438,
+        "sha256": "681ca38eacf63c3562d5e38f2ae05fe989a9299f5c393b79083d121736cdd47d"
+      },
+      {
+        "id": "xrplmeta-tokens",
+        "role": "xrplmeta-tokens",
+        "source_url": "https://s1.xrplmeta.org/tokens",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 94705,
+        "sha256": "d17280398d9eb7d289786a72b611211fd6c167febb94169486c11dec1f1cbe8a"
+      }
+    ],
+    "fetched_at": "2026-09-02T04:36:44Z",
+    "verified_via": "keyless HTTPS GET + sha256 of exact bytes; two-way check re-cited, not invented"
+  },
+  "sha256": "84b3c4c3e4437f58eced75740ea32e94c13f9e9cea236eca30ff633590b1e99b",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "strict_two_way_toml",
+    "bidirectional domain match",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_score"
+  ],
+  "tags": [
+    "public-notice",
+    "xrpl",
+    "strict_two_way_toml",
+    "unsigned",
+    "discovered",
+    "gatehub"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim bidirectional domain match when strict_two_way_toml failed."
+}

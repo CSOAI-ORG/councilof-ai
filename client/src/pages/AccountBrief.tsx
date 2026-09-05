@@ -13,10 +13,10 @@ function globeRegionFor(a: Account): string {
   return a.region === "APAC" ? "GLOBAL" : a.region;
 }
 const PITCH: Record<string, string> = {
-  align: "CSOAI implements your regime — you set the rules, we make them provable.",
-  absorb: "No AI-governance tooling yet? CSOAI is your platform from zero — OS, tools, signed attestations.",
-  integrate: "You have a stack — CSOAI is the signed governance layer under it (the MCP, Layer 0, the crosswalk). We prove, we don't replace.",
-  displace: "Side-by-side against your current tool on the axis it's weak: agentic-native, verifiable Ed25519 proof, one-command integration.",
+  align: "Hypothesis: map this authority's published regime to candidate measurement predicates; authority and applicability remain with the source body.",
+  absorb: "Hypothesis: start with the public OS, catalogued tools and published cards; no deployment or signed result is implied.",
+  integrate: "Hypothesis: compare the public MCP, evidence and crosswalk contracts with the existing stack before claiming an integration.",
+  displace: "Hypothesis: run a scoped side-by-side measurement against an identified weakness; no one-command integration is assumed.",
 };
 
 export default function AccountBrief() {
@@ -58,12 +58,12 @@ export default function AccountBrief() {
           <iframe ref={globeRef} src={`/globe3d.html?region=${gr}`} title="globe" className="h-full w-full" style={{ border: 0 }} />
         </div>
         <p className="mt-1.5 text-[11px] text-emerald-300/75">Globe flown to {a.name}'s HQ ({a.country}). Toggle “Hive coverage” to see the play + gap; “fly to worst gap” / “next opportunity” to tour the market.</p>
-        <button onClick={() => flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 })} className="mt-2 rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-100 hover:bg-white/5">▶ Convene the 33-agent council over {a.country}</button>
+        <button onClick={() => flyAndConvene(globeRef.current?.contentWindow, a.hq[0], a.hq[1], { spiral: true, height: 1200000, duration: 3.0 })} className="mt-2 rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-100 hover:bg-white/5">▶ Visualize the Council design over {a.country}</button>
 
         <div className="mt-8 grid gap-4 md:grid-cols-2">
           {/* what governs them */}
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/75">What governs {a.name}</p>
+            <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/75">Candidate frameworks for {a.name}</p>
             <div className="mt-2 flex flex-wrap gap-1.5">{a.frameworks.map((f) => <span key={f} className="rounded bg-black/40 px-2.5 py-1 font-mono text-[11px] text-emerald-300/80">{f}</span>)}</div>
             <a href={`/crosswalk?fw=${fw}`} className="mt-4 inline-block rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Crosswalk their {a.frameworks.length} frameworks → one control set</a>
           </div>
@@ -71,7 +71,7 @@ export default function AccountBrief() {
           <div className="rounded-2xl border border-emerald-500/20 bg-[#05140d] p-5">
             <p className="font-mono text-[10px] uppercase tracking-[2px] text-emerald-300/75">{s.confidence === "authority" ? "Alignment" : "Where CSOAI closes the gap"}</p>
             {s.confidence === "authority" ? (
-              <p className="mt-2 text-sm text-emerald-100/80">Rule-setting authority — CSOAI implements this regime across the crosswalk and proves it with signed attestations.</p>
+              <p className="mt-2 text-sm text-emerald-100/80">Rule-setting authority — the crosswalk is a research aid. It does not implement the authority's regime or prove conformity.</p>
             ) : (<>
               <div className="mt-2 space-y-1">
                 {s.perAxis.filter((x) => x.gap > 0).sort((x, y) => y.gap - x.gap).slice(0, 4).map((x) => (
@@ -88,13 +88,13 @@ export default function AccountBrief() {
 
         {/* tailored demo CTAs */}
         <div className="mt-6 flex flex-wrap gap-2">
-          <a href={`/classifier?q=${clsQ}`} className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Classify their AI live →</a>
-          <a href="/try" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Convene the council →</a>
-          <a href="/tool-commons" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Install the governance MCP →</a>
-          <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Free assessment for {a.name} →</a>
+          <a href={`/classifier?q=${clsQ}`} className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Run the local classifier demo →</a>
+          <a href="/try" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect the Council design →</a>
+          <a href="/tool-commons" className="rounded-lg border border-emerald-500/30 px-3 py-2 text-xs font-semibold text-emerald-100 hover:bg-white/5">Inspect the MCP catalogue →</a>
+          <a href="/assess" className="rounded-lg bg-emerald-500 px-3 py-2 text-xs font-bold text-[#03110b] hover:bg-emerald-400">Open measurement intake →</a>
         </div>
 
-        <p className="mt-8 text-[11px] text-emerald-300/75">Org-level public data. {s.confidence === "modeled" ? "Vendor/posture modeled — confirm by recon before outreach. " : ""}Play is a {s.confidence === "modeled" ? "pre-recon hypothesis" : "scored position"}. Source: {a.source}.</p>
+        <p className="mt-8 text-[11px] text-emerald-300/75">Research preview using org-level public data. Framework applicability, posture, product fit and every suggested action require human verification. {s.confidence === "modeled" ? "Vendor/posture modeled — confirm before use. " : ""}The play is a {s.confidence === "modeled" ? "pre-research hypothesis" : "catalogue-derived hypothesis"}. Source: {a.source}.</p>
       </div>
     </div>
   );

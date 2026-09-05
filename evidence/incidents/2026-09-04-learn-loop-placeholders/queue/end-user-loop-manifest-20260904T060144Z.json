@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.end-user-learning-loop/0.1",
+  "as_of": "20260904T060144Z",
+  "principle": "Every end-user interaction is a 3KB signed card that anchors to OTS + Rekor + EAS. The card is attested by the 33-agent BFT council. The card becomes a training pair for the council's next iteration.",
+  "flow": [
+    "1. User interacts (chat / game / measure / verify / attest)",
+    "2. AI council responds",
+    "3. Emit 3KB signed card (Ed25519, max 3072 bytes)",
+    "4. Anchor to OTS (pending stamp \u2192 Bitcoin when fees drop)",
+    "5. Anchor to Sigstore Rekor (transparency log)",
+    "6. Anchor to EAS on Base (on-chain attestation)",
+    "7. 33-agent BFT council votes (23/33 quorum)",
+    "8. Add to training corpus",
+    "9. Update the public root",
+    "10. Feed the next council iteration"
+  ],
+  "stats": {
+    "interactions_this_batch": 20,
+    "cards_built": 20,
+    "training_pairs": 20,
+    "anchors": 3,
+    "council_size": 33,
+    "quorum": 23
+  },
+  "what_end_users_see": [
+    "A 3KB signed card with their interaction",
+    "Anchored to 3 chains (OTS + Rekor + EAS)",
+    "Attested by 33 agents (23/33 quorum)",
+    "Verifiable offline at /gspc-verify",
+    "Feeds the council's learning"
+  ],
+  "what_the_council_learns": [
+    "Every user question = a prompt in the training corpus",
+    "Every grounded answer = a response in the training corpus",
+    "Every game move = a strategy in the training corpus",
+    "Every measurement = a calibration in the training corpus",
+    "Every verification = a self-check in the training corpus"
+  ],
+  "files": {
+    "cards": "scripts/badger/_queue/learn-loop/end-user-cards-20260904T060144Z.jsonl",
+    "pairs": "scripts/badger/_queue/learn-loop/end-user-pairs-20260904T060144Z.jsonl",
+    "anchors": "scripts/badger/_queue/learn-loop/end-user-anchors-20260904T060144Z.json",
+    "votes": "scripts/badger/_queue/learn-loop/end-user-votes-20260904T060144Z.jsonl"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "microsoft",
+  "name": "Microsoft Azure AI",
+  "kind": "engine",
+  "as_of": "20260904T115117Z",
+  "url": "https://councilof.ai/api/a2a/microsoft",
+  "version": "1.0",
+  "capabilities": {
+    "measurement": "Run GSPC axes on this engine",
+    "attestation": "Get a signed card for any measurement",
+    "verification": "Verify any signed card offline",
+    "discovery": "Find every standard this engine maps to"
+  },
+  "skills": [
+    {
+      "id": "microsoft.measure",
+      "description": "Measure a claim against Microsoft Azure AI"
+    },
+    {
+      "id": "microsoft.attest",
+      "description": "Attest a measurement on Microsoft Azure AI"
+    },
+    {
+      "id": "microsoft.verify",
+      "description": "Verify an attestation from Microsoft Azure AI"
+    },
+    {
+      "id": "microsoft.discover",
+      "description": "Discover what standards Microsoft Azure AI maps to"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  }
+}

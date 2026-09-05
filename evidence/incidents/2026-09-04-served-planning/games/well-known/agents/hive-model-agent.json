@@ -1,0 +1,47 @@
+{
+  "schema": "csoai.a2a-agent-card/0.1",
+  "slug": "hive-model",
+  "name": "Hive Model",
+  "kind": "multi-agent-hive",
+  "as_of": "20260904T064715Z",
+  "url": "https://councilof.ai/api/a2a/hive-model",
+  "version": "1.0",
+  "capabilities": {
+    "play": "Play Hive Model with AI opponents",
+    "chat": "Chat with AI via AG-UI / A2UI",
+    "multiplayer": "Join a multiplayer room",
+    "attestation": "none \u2014 this game emits no card and lands nothing in the signed root",
+    "verification": "Verify any signed card offline"
+  },
+  "skills": [
+    {
+      "id": "hive-model.play",
+      "description": "Play Hive Model"
+    },
+    {
+      "id": "hive-model.chat",
+      "description": "Chat with AI in Hive Model"
+    },
+    {
+      "id": "hive-model.attest",
+      "description": "Get a signed turn card from Hive Model"
+    },
+    {
+      "id": "hive-model.verify",
+      "description": "Verify an attestation from Hive Model"
+    }
+  ],
+  "protocols": [
+    "a2a",
+    "mcp",
+    "x402",
+    "ag-ui",
+    "a2-ui"
+  ],
+  "links": {
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "agui": "https://councilof.ai/hive-model/ag-ui",
+    "a2ui": "https://councilof.ai/hive-model/a2-ui"
+  }
+}

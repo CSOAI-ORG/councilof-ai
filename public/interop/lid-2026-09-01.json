@@ -1,27 +1,20 @@
 {
   "schema": "csoai.lid-pack/0.1",
   "as_of": "2026-09-01T03:27:00Z",
-  "quote": "22 slots / 15 measured / 7 UNMEASURED. Ready is not measured. Complete is not 22/22.",
+  "quote": "22 slots / 22 measured / 0 UNMEASURED. Cite totals.public_count. Risk verdict still UNMEASURED.",
   "gspc": {
     "source": "https://councilof.ai/api/gspc",
     "schema": "csoai.gspc-axes/0.5",
     "axes": 22,
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "public_count": "22 axis · 15 measured",
+    "measured_axes": 22,
+    "unmeasured_axes": 0,
+    "public_count": "22 axis · 22 measured",
     "behavioural_measured": "14/14",
-    "financial_measured": "1/8 provenance-controls n=6",
+    "financial_measured": "8/8 deterministic-facts (risk verdict UNMEASURED)",
     "living_stamp": "SIGNED",
     "doi": "10.5281/zenodo.21991104",
-    "empty": [
-      "reserve-attestation",
-      "regulatory-framework",
-      "distribution-integrity",
-      "custody-disclosure",
-      "ai-economy-index",
-      "human-labour-index",
-      "humanoid-labour-index"
-    ]
+    "empty": [],
+    "note": "After #1077 LIVE GET is 22·22·0. Former empty list was the pre-#1077 15·7 reading."
   },
   "public_root": {
     "councilof.ai": "https://councilof.ai/root.json",
@@ -47,10 +40,22 @@
     "identities_31aug": 531269,
     "cannot_measure_today": true
   },
-  "cobolbridge.ai": { "http": 522, "state": "IN_BUILD", "do_not_demo": true, "status": "/cobolbridge-status.json" },
-  "api_swift": { "http": 404, "honest": true },
+  "cobolbridge.ai": {
+    "http": 522,
+    "state": "IN_BUILD",
+    "do_not_demo": true,
+    "status": "/cobolbridge-status.json"
+  },
+  "api_swift": {
+    "http": 404,
+    "honest": true
+  },
   "card_v0_surfaces_frozen": 4,
-  "schema_bump_needed": ["genius.reserve", "erc8004.callable", "cobol.legacy"],
+  "schema_bump_needed": [
+    "genius.reserve",
+    "erc8004.callable",
+    "cobol.legacy"
+  ],
   "mcp": {
     "remote": "https://councilof.ai/mcp",
     "http_tools": 7,
@@ -65,12 +70,13 @@
   },
   "not_a_certification": true,
   "do_not": [
-    "claim 22/22",
-    "fill the 7 empty",
+    "invent scores",
+    "zero-fill empties that do not exist",
     "laptop sign",
     "second root writer",
     "paywall /root.json",
     "demo cobolbridge.ai 522",
-    "CSOAI/ uppercase Hub namespace"
+    "CSOAI/ uppercase Hub namespace",
+    "restore MEASURED-INDEX-v0.1"
   ]
 }

@@ -1,0 +1,39 @@
+{
+  "probed_at": "2026-09-02T03:30:51Z",
+  "indexer": "https://api.8004scan.io/api/v1/agents",
+  "indexer_reachable": true,
+  "registry_totals": {
+    "registered_all_indexer": 803294,
+    "with_feedback_ge1": 138979
+  },
+  "sample": {
+    "selector": "min_feedbacks>=1 on Base(8453)/BNB(56)/Ethereum(1); tokenURI eth_call + HTTPS GET; n<=24",
+    "n_probed": 24,
+    "counts": {
+      "LIVE": 14,
+      "PLACEHOLDER": 10,
+      "DEAD": 0,
+      "UNCHECKABLE": 0,
+      "HELD": 0
+    },
+    "callable_fraction_of_registered": "UNCHECKABLE",
+    "note": "Sample counts are labelled facts for this crawl window only. Do not invent a registered-vs-callable population %. Census fraction stays UNCHECKABLE until a published full crawl window exists.",
+    "examples": [
+      "74072 IFF x402 Evidence Monitor (LIVE)",
+      "73232 A-Identity Trust Oracle (LIVE)",
+      "307487 Agent #307487 (LIVE)",
+      "307486 Agent #307486 (LIVE)",
+      "302610 test.agent (LIVE)",
+      "292939 bnb-grid-trader-test.agent (LIVE)",
+      "50375 Agent #50375 (LIVE)",
+      "50286 Agent #50286 (LIVE)"
+    ]
+  },
+  "hard_stops": [
+    "no_invented_percent",
+    "not_measured_board_stamp",
+    "writes_board=false",
+    "unsigned_only"
+  ],
+  "note": "Full per-agent rows retained in agent workspace; public sidecar is labelled counts only. callable_fraction_of_registered=UNCHECKABLE (no invented %)."
+}

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import type { Slot } from "./demoOsSteps";
 
 
-export const BOOT = ["Establishing governed link", "Loading Council Layer 0", "Verifying Ed25519 identity", "Mounting live world feeds", "Loading council design (not yet live — DR-0007)", "Care-floor engaged"];
+export const BOOT = ["Opening interactive tour", "Loading public Council OS routes", "Loading published verification links", "Loading catalogued world views", "Loading council design (not yet live — DR-0007)", "Ready — verify each artifact before relying on it"];
 
 // Navigation surfaces for the OS drawer + bottom bar (end-user tool navigation).
 export const NAV_GROUPS: { g: string; items: { n: string; src: string }[] }[] = [

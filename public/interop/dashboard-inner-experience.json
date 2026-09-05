@@ -1,0 +1,112 @@
+{
+  "schema": "csoai.dashboard-inner-experience/0.1",
+  "as_of": "20260905T051359Z",
+  "principle": "Make the dashboard feel as smooth as ChatGPT, with signed provenance.",
+  "improvements": [
+    {
+      "id": "empty-states",
+      "name": "Empty states",
+      "scope": "Every pane shows what to do when there's no data yet",
+      "deliverable": "client/src/components/lobby/EmptyState.tsx",
+      "status": "live"
+    },
+    {
+      "id": "onboarding-tour",
+      "name": "Onboarding tour",
+      "scope": "First-time user gets a guided tour of all panes",
+      "deliverable": "client/src/components/lobby/OnboardingTour.tsx",
+      "status": "live"
+    },
+    {
+      "id": "tooltips-keyboard-shortcuts",
+      "name": "Tooltips + keyboard shortcuts",
+      "scope": "Every action has a tooltip + keyboard shortcut",
+      "deliverable": "client/src/components/lobby/Tooltips.tsx",
+      "status": "live"
+    },
+    {
+      "id": "loading-skeletons",
+      "name": "Loading skeletons",
+      "scope": "Every pane has skeletons while data loads",
+      "deliverable": "client/src/components/lobby/Skeletons.tsx",
+      "status": "live"
+    },
+    {
+      "id": "error-states",
+      "name": "Error states",
+      "scope": "Graceful failures. Every error has a signed receipt.",
+      "deliverable": "client/src/components/lobby/ErrorBoundary.tsx",
+      "status": "live"
+    },
+    {
+      "id": "toast-notifications",
+      "name": "Toast notifications",
+      "scope": "Real-time feedback. Every toast emits a signed event card.",
+      "deliverable": "client/src/components/lobby/Toaster.tsx",
+      "status": "live"
+    },
+    {
+      "id": "dark-mode",
+      "name": "Dark mode toggle",
+      "scope": "Theme switch with persistence (localStorage).",
+      "deliverable": "client/src/components/lobby/ThemeToggle.tsx",
+      "status": "live"
+    },
+    {
+      "id": "accessibility-audit",
+      "name": "Accessibility audit (WCAG 2.1 AA)",
+      "scope": "Every pane meets WCAG 2.1 AA (color contrast, ARIA, keyboard nav)",
+      "deliverable": "scripts/accessibility-audit.mjs",
+      "status": "live"
+    },
+    {
+      "id": "performance-audit",
+      "name": "Performance audit",
+      "scope": "Every pane FCP < 1s on 4G. Bundle size < 500KB gzipped.",
+      "deliverable": "scripts/performance-audit.mjs",
+      "status": "live"
+    },
+    {
+      "id": "search-filter",
+      "name": "Search + filtering",
+      "scope": "Search across all panes. Filter by date, kind, model, axis.",
+      "deliverable": "client/src/components/lobby/CommandK.tsx",
+      "status": "live"
+    },
+    {
+      "id": "bulk-operations",
+      "name": "Bulk operations",
+      "scope": "Multi-select. Bulk sign, bulk export, bulk share.",
+      "deliverable": "client/src/components/lobby/BulkActions.tsx",
+      "status": "live"
+    },
+    {
+      "id": "drag-and-drop",
+      "name": "Drag and drop",
+      "scope": "Reorder panes. Drag files into panes. Drag URLs into chat.",
+      "deliverable": "client/src/components/lobby/DragDrop.tsx",
+      "status": "live"
+    },
+    {
+      "id": "inline-editing",
+      "name": "Inline editing",
+      "scope": "Edit anything inline. Every edit emits a signed event.",
+      "deliverable": "client/src/components/lobby/InlineEdit.tsx",
+      "status": "live"
+    },
+    {
+      "id": "undo-redo",
+      "name": "Undo / redo",
+      "scope": "Every action has undo (signed). Every redo emits a new signed event.",
+      "deliverable": "client/src/components/lobby/UndoRedo.tsx",
+      "status": "live"
+    },
+    {
+      "id": "export-pdf-csv",
+      "name": "Export to PDF / CSV",
+      "scope": "Every pane exports to PDF or CSV. The export itself is signed.",
+      "deliverable": "client/src/components/lobby/Exporter.tsx",
+      "status": "live"
+    }
+  ]
+}

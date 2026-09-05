@@ -1,0 +1,110 @@
+{
+  "schema": "csoai.games-interop/0.1",
+  "as_of": "20260905T052052Z",
+  "principle": "Every game has a typed input + output schema. Every event signed.",
+  "games": {
+    "council-town": {
+      "kind": "open-world-deliberation",
+      "input_schema": "csoai.game.council-town.input/0.1",
+      "output_schema": "csoai.game.council-town.output/0.1",
+      "events": [
+        "agent.move",
+        "agent.speak",
+        "agent.vote",
+        "world.tick"
+      ]
+    },
+    "council-minds": {
+      "kind": "deliberation",
+      "input_schema": "csoai.game.council-minds.input/0.1",
+      "output_schema": "csoai.game.council-minds.output/0.1",
+      "events": [
+        "agent.propose",
+        "agent.deliberate",
+        "agent.resolve"
+      ]
+    },
+    "hive-model": {
+      "kind": "collaboration",
+      "input_schema": "csoai.game.hive-model.input/0.1",
+      "output_schema": "csoai.game.hive-model.output/0.1",
+      "events": [
+        "agent.connect",
+        "agent.share",
+        "agent.solve"
+      ]
+    },
+    "arena": {
+      "kind": "comparison",
+      "input_schema": "csoai.game.arena.input/0.1",
+      "output_schema": "csoai.game.arena.output/0.1",
+      "events": [
+        "round.start",
+        "round.score",
+        "round.end"
+      ]
+    },
+    "playbooks": {
+      "kind": "scenario",
+      "input_schema": "csoai.game.playbooks.input/0.1",
+      "output_schema": "csoai.game.playbooks.output/0.1",
+      "events": [
+        "scenario.start",
+        "step.complete",
+        "scenario.end"
+      ]
+    },
+    "course-player": {
+      "kind": "education",
+      "input_schema": "csoai.game.course-player.input/0.1",
+      "output_schema": "csoai.game.course-player.output/0.1",
+      "events": [
+        "lesson.start",
+        "quiz.submit",
+        "lesson.complete"
+      ]
+    },
+    "pdca-simulator": {
+      "kind": "improvement",
+      "input_schema": "csoai.game.pdca-simulator.input/0.1",
+      "output_schema": "csoai.game.pdca-simulator.output/0.1",
+      "events": [
+        "plan.start",
+        "do.execute",
+        "check.measure",
+        "act.adjust"
+      ]
+    },
+    "swarm": {
+      "kind": "agent-swarm",
+      "input_schema": "csoai.game.swarm.input/0.1",
+      "output_schema": "csoai.game.swarm.output/0.1",
+      "events": [
+        "agent.spawn",
+        "agent.communicate",
+        "agent.consensus"
+      ]
+    },
+    "civic": {
+      "kind": "deliberation",
+      "input_schema": "csoai.game.civic.input/0.1",
+      "output_schema": "csoai.game.civic.output/0.1",
+      "events": [
+        "citizen.speak",
+        "citizen.vote",
+        "decision.execute"
+      ]
+    },
+    "tournament": {
+      "kind": "competition",
+      "input_schema": "csoai.game.tournament.input/0.1",
+      "output_schema": "csoai.game.tournament.output/0.1",
+      "events": [
+        "match.start",
+        "match.score",
+        "match.end",
+        "leaderboard.update"
+      ]
+    }
+  }
+}

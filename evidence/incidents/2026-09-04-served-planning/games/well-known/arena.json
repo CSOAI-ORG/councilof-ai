@@ -1,0 +1,29 @@
+{
+  "schema": "csoai.game-discovery/0.1",
+  "slug": "arena",
+  "name": "Arena",
+  "kind": "model-arena",
+  "engine": "React + model APIs",
+  "description": "Two AI models compete on a benchmark.",
+  "status": "LIVE",
+  "as_of": "20260904T064715Z",
+  "axes_related": [],
+  "multiplayer": true,
+  "players": "spectator + challenger",
+  "agui": true,
+  "a2ui": true,
+  "links": {
+    "self": "https://councilof.ai/.well-known/arena.json",
+    "agent_card": "https://councilof.ai/.well-known/agents/arena-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/arena.json",
+    "agui": "https://councilof.ai/arena/ag-ui",
+    "a2ui": "https://councilof.ai/arena/a2-ui",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify"
+  },
+  "notes": [
+    "AG-UI + A2UI chat enabled",
+    "Multiplayer rooms via WebSocket",
+    "Targeted for the 3-anchor rail: OTS pending stamps + Sigstore Rekor + EAS schema (rails planned)"
+  ]
+}

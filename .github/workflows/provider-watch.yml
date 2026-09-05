@@ -1,0 +1,77 @@
+name: provider-watch — hash-only provider document change watcher
+
+# Daily capture of the curated AI-provider public documents in scripts/watch/targets.json
+# (terms, usage policy, model cards, pricing, safety policy, Article 50 marking statements).
+# Stores hashes only — never content. Honours robots.txt; never bypasses a login, paywall or
+# anti-bot challenge (recorded UNCHECKABLE). A fetch that fails is UNKNOWN, never "unchanged".
+# Diff leaves are staged UNSIGNED under public/feeds/provider-diff/leaves/ and signed by the
+# hourly public-root.yml writer (GHA key) or not at all. No secrets needed here. No backfill:
+# the first run of a target is FIRST_CAPTURE, not a diff.
+#
+# NOTE (2 Sep 2026): Actions are currently limited on this account (support ticket #4720908).
+# The first capture happens on the first run after reinstatement — nothing is captured
+# retrospectively.
+
+on:
+  schedule:
+    - cron: "20 5 * * *"   # daily 05:20 UTC (before the 06:45 reg-watch and the 07-past public-root)
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Fetch + classify without writing state or leaves"
+        type: boolean
+        default: false
+      only:
+        description: "Substring filter on target id (e.g. openai/ or /art50_marking)"
+        type: string
+        default: ""
+
+concurrency:
+  group: provider-watch
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: self-test (fixtures only, no network)
+        run: python3 scripts/watch/test_provider_watch.py
+      - name: capture
+        id: watch
+        continue-on-error: true   # exit 2 = fail-closed (no target OK); the honest state is still committed below
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -uo pipefail
+          ARGS=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ -n "${{ github.event.inputs.only }}" ]; then ARGS="$ARGS --only ${{ github.event.inputs.only }}"; fi
+          python3 scripts/watch/provider_watch.py $ARGS
+      - name: commit state + index + staged leaves (never signs; public-root.yml signs)
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.dry_run != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-provider-watch"
+          git config user.email "nicholas@csoai.org"
+          git add public/feeds/provider-diff/state.json public/feeds/provider-diff/index.json public/feeds/provider-diff/leaves/
+          if git diff --cached --quiet; then
+            echo "no state change"
+            exit 0
+          fi
+          git commit -m "provider-watch: daily capture $(date -u +%Y-%m-%dT%H:%MZ) (hash-only; unsigned leaves staged)"
+          git push origin HEAD:master
+      - name: fail closed when no target was OK
+        if: steps.watch.outcome == 'failure'
+        run: |
+          echo "provider-watch: the capture step exited non-zero (no target OK, or a crash). State was committed if it changed; this run is NOT an all-clear." >&2
+          exit 1

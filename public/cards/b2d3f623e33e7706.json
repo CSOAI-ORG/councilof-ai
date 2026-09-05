@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "pricing",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "prev_sha256": "f69c5186dba41f305f13cb9631dda47cd303cd2ee9d3565afc06e433c76bb40d",
+      "new_sha256": "aefcf7243d8c452b4df3b8f411b7ab92a173061af8dd2c959a1f898f789239d8",
+      "prev_bytes_sha256": "ef7e5a8f7b698211357635772358b8a27f548e87daeb44ea060e6f58ce7f5f84",
+      "new_bytes_sha256": "bd8aa6c29956a637c73e10c5e804b8c7be9707d7ab8b10239c8e173de3a9fd92",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 247264,
+        "new": 248207
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Wed, 02 Sep 2026 15:04:03 GMT",
+        "new": "Fri, 04 Sep 2026 09:14:05 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b2d3f623e33e7706a440f9c7850dd7954c740ccae5f9049f63e04756b847e36c",
+    "sig_ed25519": "203402c62e884eb264bab322b2407f5160f7307dea73e04f355dc8a7a8ac9374b5ea9eb6c7d0365001755c5a4887d32b34bcb9053a0301635c2f00c01e6f0d04",
+    "source_urls": [
+      "https://ai.google.dev/gemini-api/docs/pricing"
+    ],
+    "subject": "Google — pricing: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:pricing",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "0c65c9e1e39c85ac58d686305ffc32bb110049280824d7a4bf3bcb66cd0dc20a",
+    "4cff3ee11c8776993ee09854508385753b0076b79d169b100d87d284152e3caf",
+    "ce799a09a040a282406e3c5f27ea8ba3596b7eaf7167711d3fd71085dfa14dd7",
+    "b8577c4e68bf2cbf015b5f4c0fbabdc7fbc73045a68173a77bf949111d11bf66",
+    "97e08849f4c4a1160d6502c04fecd3a67c08c96d881e376174f5ca90c6a6f5ca",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "dc95f2a53bf8178f51a8ac8e398c3b6ca8fea96bfc4e2f2474843e718ad53b4a",
+    "eda3c723a5ac3b23dca9cbae493c2927c1a116b8be9293f36951c28eccb9dee9"
+  ]
+}

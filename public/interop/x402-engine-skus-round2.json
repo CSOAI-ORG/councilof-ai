@@ -1,0 +1,32 @@
+{
+  "schema": "csoai.x402-engine-skus-round2/0.1",
+  "as_of": "20260905T052052Z",
+  "principle": "Every engine that can be measured gets its own x402 SKU.",
+  "skus": [
+    {
+      "id": "engine-perplexity",
+      "name": "Perplexity sonar measurement",
+      "endpoint": "/api/x402?sku=engine-perplexity"
+    },
+    {
+      "id": "engine-cohere",
+      "name": "Cohere Rerank/Embed measurement",
+      "endpoint": "/api/x402?sku=engine-cohere"
+    },
+    {
+      "id": "engine-groq",
+      "name": "Groq LPU measurement",
+      "endpoint": "/api/x402?sku=engine-groq"
+    },
+    {
+      "id": "engine-together",
+      "name": "Together AI measurement",
+      "endpoint": "/api/x402?sku=engine-together"
+    },
+    {
+      "id": "engine-fireworks",
+      "name": "Fireworks AI measurement",
+      "endpoint": "/api/x402?sku=engine-fireworks"
+    }
+  ]
+}

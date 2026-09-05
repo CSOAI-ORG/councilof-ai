@@ -3,6 +3,15 @@
   "version": "1.0.0",
   "description": "Offline, zero-dependency verifier for GSPC measurement cards. Three states, never two.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSOAI-ORG/councilof-ai.git",
+    "directory": "packages/gspc-card-verifier"
+  },
+  "homepage": "https://github.com/CSOAI-ORG/councilof-ai/tree/master/packages/gspc-card-verifier",
+  "bugs": {
+    "url": "https://github.com/CSOAI-ORG/councilof-ai/issues"
+  },
   "type": "module",
   "main": "./src/index.mjs",
   "exports": {
@@ -22,7 +31,9 @@
     "profile",
     "README.md",
     "LICENSE",
-    "NOTICE"
+    "NOTICE",
+    "spec",
+    "test/vectors"
   ],
   "engines": {
     "node": ">=19"
@@ -31,7 +42,8 @@
   "scripts": {
     "test": "node --test test/*.test.mjs",
     "fixtures": "node test/make-fixtures.mjs",
-    "bundle": "node scripts/bundle.mjs ../../public/verifier/gspc-verify.mjs"
+    "bundle": "node scripts/bundle.mjs ../../public/verifier/gspc-verify.mjs",
+    "vectors:eval": "node test/make-eval-vectors.mjs"
   },
   "keywords": [
     "ed25519",

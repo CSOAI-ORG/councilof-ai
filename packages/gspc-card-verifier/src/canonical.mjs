@@ -101,8 +101,17 @@ function canonicalNumber(value, key, path, profile) {
   );
 }
 
-/** JSON string escaping matching CPython json.dumps(ensure_ascii=True). */
-export function canonicalString(s) {
+/**
+ * JSON string escaping matching CPython json.dumps.
+ *
+ * `asciiOnly` selects the ensure_ascii setting the SIGNER used, and the two disagree the
+ * moment a body carries one non-ASCII character. The mill signer uses ensure_ascii=False
+ * (scripts/sign_financial_runs.py: canonical_bytes), so a profile that only implements
+ * True would call a perfectly good card INVALID as soon as a model name or a framing
+ * string contains an accent or an em dash. Every card published so far is pure ASCII, so
+ * the two are byte-identical today — which is exactly why this was invisible.
+ */
+export function canonicalString(s, asciiOnly = true) {
   let out = '"';
   for (const ch of s) {
     const c = ch.codePointAt(0);
@@ -114,6 +123,7 @@ export function canonicalString(s) {
     else if (ch === "\r") out += "\\r";
     else if (ch === "\t") out += "\\t";
     else if (c >= 0x20 && c <= 0x7e) out += ch;
+    else if (!asciiOnly && c >= 0x20) out += ch;   // ensure_ascii=False: emit the character
     else if (c <= 0xffff) out += "\\u" + c.toString(16).padStart(4, "0");
     else {
       // Above the BMP CPython emits a surrogate pair, so we must too.
@@ -133,7 +143,7 @@ export function canonicalise(value, profile, key = null, path = "$") {
   if (value === null) return "null";
   if (typeof value === "boolean") return value ? "true" : "false";
   if (typeof value === "number") return canonicalNumber(value, key, path, profile);
-  if (typeof value === "string") return canonicalString(value);
+  if (typeof value === "string") return canonicalString(value, profile?.ensureAscii !== false);
   if (Array.isArray(value))
     // CPython renders a list's items with no key context; the enclosing key is what the
     // profile classifies, so it is carried down deliberately.
@@ -143,7 +153,7 @@ export function canonicalise(value, profile, key = null, path = "$") {
     return (
       "{" +
       keys
-        .map((k) => canonicalString(k) + ":" + canonicalise(value[k], profile, k, `${path}.${k}`))
+        .map((k) => canonicalString(k, profile?.ensureAscii !== false) + ":" + canonicalise(value[k], profile, k, `${path}.${k}`))
         .join(",") +
       "}"
     );

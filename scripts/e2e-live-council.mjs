@@ -23,10 +23,10 @@ const SKIP_LIVE = process.env.E2E_SKIP_LIVE === "1";
 
 const ALIASES = [
   ["/vulnerability", "/vulnerability-disclosure"],
-  ["/sov-os", "/os?lobby=home"],
-  ["/ag-ui", "/os?lobby=home"],
-  ["/agui", "/os?lobby=home"],
-  ["/chat", "/os?lobby=home"],
+  ["/sov-os", "/dashboard?tab=home"],
+  ["/ag-ui", "/dashboard?tab=home"],
+  ["/agui", "/dashboard?tab=home"],
+  ["/chat", "/dashboard?tab=home"],
 ];
 // Aliases that MUST resolve for a stranger (308 or a real 200 page — never the
 // honest-404 catch-all). /gspc and /console 404'd on production 2026-08-22.
@@ -69,12 +69,12 @@ const PAGES = [
 
 // Functions-first leftover hops (not necessarily in public/_redirects).
 const LIVE_HOPS = [
-  ["/pricing", "/os?lobby=assess&task=pricing-overview"],
+  ["/pricing", "/dashboard/?tab=measured&task=pricing-overview"],
   ["/plans", "/os?lobby=assess&task=pricing-overview"],
   ["/enterprise-plans", "/os?lobby=assess&task=pricing-overview"],
   ["/enterprise", "/os?lobby=assess&task=enterprise-start"],
   ["/get-measured", "/os?lobby=assess&task=get-measured"],
-  ["/overlay", "/os?lobby=home"],
+  ["/overlay", "/dashboard?tab=home"],
   ["/certification", "/honesty/"],
   ["/claimguard", "/honesty/"],
 ];

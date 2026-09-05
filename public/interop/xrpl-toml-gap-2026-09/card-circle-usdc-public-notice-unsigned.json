@@ -1,0 +1,111 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Circle USDC on XRPL — public.notice: strict_two_way_toml UNCHECKABLE (toml HTTP 404)",
+  "as_of": "2026-09-02T04:40:00Z",
+  "source_urls": [
+    "https://councilof.ai/api/xrpl",
+    "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "https://circle.com/.well-known/xrp-ledger.toml",
+    "https://www.circle.com/.well-known/xrp-ledger.toml",
+    "https://api.xrpscan.com/api/v1/account/rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE"
+  ],
+  "payload": {
+    "kind": "csoai.public-notice/0.1",
+    "status": "DISCOVERED",
+    "honest_sentence": "strict_two_way_toml failed (UNCHECKABLE): on-ledger Domain present (circle.com) but https://circle.com/.well-known/xrp-ledger.toml returned HTTP 404 — not a bidirectional domain match.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "axes_cite": [
+      "provenance-controls"
+    ],
+    "gspc_axis_projection_forbidden": true,
+    "failed_check": "strict_two_way_toml",
+    "two_way_state": "UNCHECKABLE",
+    "two_way_reason": ".well-known/xrp-ledger.toml HTTP 404 (unreachable, never FAIL)",
+    "issuer": "Circle",
+    "symbols": [
+      "USDC"
+    ],
+    "issuer_addresses": {
+      "USDC": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE"
+    },
+    "on_ledger_domain": "https://circle.com",
+    "reader_verified_via": "XRPScan well-known directory",
+    "reader_as_of": "2026-09-01T23:15:51Z",
+    "roster_source": "https://councilof.ai/api/xrpl",
+    "two_way_check_source": "https://councilof.ai/interop/xrpl-two-way-check.json",
+    "artefacts": [
+      {
+        "id": "api-xrpl",
+        "role": "api-xrpl",
+        "source_url": "https://councilof.ai/api/xrpl",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 9039,
+        "sha256": "8097c2a815f42dda08d55a11e623b8004104514791104a140aad3956488ec1cf"
+      },
+      {
+        "id": "xrpl-two-way-check",
+        "role": "xrpl-two-way-check",
+        "source_url": "https://councilof.ai/interop/xrpl-two-way-check.json",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 7938,
+        "sha256": "85848181b51f74c610c27de5c3f98a599e994fd31577f21f7475b19bfccb095f"
+      },
+      {
+        "id": "circle-toml",
+        "role": "circle-toml",
+        "source_url": "https://circle.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 88,
+        "sha256": "62b6eec5bc825126a7b9734e03ff00c9dc7899f3f07111746bf583d193b44dd0",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "circle-www-toml",
+        "role": "circle-www-toml",
+        "source_url": "https://www.circle.com/.well-known/xrp-ledger.toml",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 404,
+        "bytes": 88,
+        "sha256": "62b6eec5bc825126a7b9734e03ff00c9dc7899f3f07111746bf583d193b44dd0",
+        "error": "HTTP Error 404: Not Found"
+      },
+      {
+        "id": "xrpscan-circle",
+        "role": "xrpscan-circle",
+        "source_url": "https://api.xrpscan.com/api/v1/account/rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+        "fetched_at": "2026-09-02T04:36:44Z",
+        "http": 200,
+        "bytes": 1608,
+        "sha256": "a3f8d17391371ba10d2f4939cb0c99a45df949d961e4806e371cc91930f8ee5e"
+      }
+    ],
+    "fetched_at": "2026-09-02T04:36:44Z",
+    "verified_via": "keyless HTTPS GET + sha256 of exact bytes; two-way check re-cited, not invented"
+  },
+  "sha256": "dde95d4af9b6e4101939022378fffc8a37304c718ab0c4b1c26f774cbc747e40",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "strict_two_way_toml",
+    "bidirectional domain match",
+    "n>=30",
+    "4way",
+    "keystone",
+    "gspc_score"
+  ],
+  "tags": [
+    "public-notice",
+    "xrpl",
+    "strict_two_way_toml",
+    "unsigned",
+    "discovered",
+    "circle-usdc"
+  ],
+  "note": "UNSIGNED card-v0. SIGNED needs keystone. Never MEASURED. Never claim bidirectional domain match when strict_two_way_toml failed."
+}

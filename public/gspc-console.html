@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Gspc console — Council of AI</title>
+<meta name="robots" content="index,follow" />
+<meta name="description" content="CSOAI — gspc console on the AI measurement board. Measurement, not certification." />
+<link rel="canonical" href="https://councilof.ai/gspc-console" />
+<meta property="og:title" content="Gspc console — Council of AI" />
+<meta property="og:description" content="CSOAI — gspc console on the AI measurement board. Measurement, not certification." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://councilof.ai/gspc-console" />
+<meta property="og:image" content="https://councilof.ai/og-default.png" />
+<meta property="og:site_name" content="CSOAI Ltd" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Gspc console — Council of AI" />
+<meta name="twitter:description" content="CSOAI — gspc console on the AI measurement board. Measurement, not certification." />
+<meta name="twitter:image" content="https://councilof.ai/og-default.png" />
+<meta name="theme-color" content="#16a34a" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CSOAI \u2014 Council of AI",
+  "url": "https://councilof.ai/gspc-console",
+  "description": "CSOAI \u2014 gspc console on the AI measurement board. Measurement, not certification.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "CSOAI Ltd",
+    "url": "https://csoai.org"
+  }
+}
+</script>
+<style>
+  :root {
+    --accent: #16a34a;
+    --accent-hover: #15803d;
+    --accent-light: #dcfce7;
+    --bg: #ffffff;
+    --fg: #1f2937;
+    --muted: #6b7280;
+    --muted-light: #f3f4f6;
+    --card: #f9fafb;
+    --card-hover: #f3f4f6;
+    --border: #e5e7eb;
+    --border-strong: #d1d5db;
+    --code-bg: #f3f4f6;
+    --warning: #dc2626;
+    --success: #16a34a;
+    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* Header */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.95);
+  }
+  .site-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--fg);
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .logo-text { color: var(--fg); }
+  .logo-text strong { color: var(--accent); }
+  .nav { display: flex; gap: 4px; align-items: center; }
+  .nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav a:hover { color: var(--fg); background: var(--card); }
+  .nav .nav-cta {
+    background: var(--accent);
+    color: white;
+    padding: 8px 16px;
+    margin-left: 8px;
+  }
+  .nav .nav-cta:hover { background: var(--accent-hover); color: white; }
+  /* Main */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 64px 24px 96px;
+  }
+  .lid {
+    display: inline-block;
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-hover);
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-size: 48px;
+    line-height: 1.1;
+    margin: 0 0 16px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+  h2 {
+    font-size: 28px;
+    margin: 56px 0 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    border-top: 1px solid var(--border);
+    padding-top: 56px;
+  }
+  h3 {
+    font-size: 20px;
+    margin: 32px 0 12px;
+    font-weight: 700;
+    color: var(--fg);
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--muted);
+    margin: 0 0 16px;
+  }
+  p strong, p em { color: var(--fg); }
+  a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: var(--border-strong);
+    text-underline-offset: 3px;
+  }
+  a:hover { text-decoration-color: var(--accent); }
+  code {
+    background: var(--code-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--fg);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 16px 0;
+    color: var(--fg);
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  /* Components */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .card:hover { border-color: var(--border-strong); }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .card-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .price {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--fg);
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+  }
+  .card-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 8px 0 0;
+  }
+  .cta {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .cta:hover { background: var(--accent-hover); color: white; }
+  .cta-secondary {
+    background: var(--bg);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+  .cta-secondary:hover { background: var(--accent-light); }
+  .meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px 24px;
+    margin: 32px 0;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  .meta-key { color: var(--muted); font-weight: 500; }
+  .meta-val { color: var(--fg); font-family: var(--font-mono); word-break: break-all; }
+  /* Footer */
+  footer.site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--card);
+    padding: 48px 24px;
+    margin-top: 96px;
+  }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+  }
+  @media (max-width: 768px) {
+    .footer-inner { grid-template-columns: 1fr; }
+    .site-header-inner { flex-direction: column; align-items: flex-start; }
+    h1 { font-size: 36px; }
+    main { padding: 32px 16px 64px; }
+  }
+  .footer-col h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--fg);
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+  .footer-col a:hover { color: var(--accent); }
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .lid-phrase {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  /* Hero */
+  .hero { padding: 96px 0 64px; }
+  .hero h1 { font-size: 56px; max-width: 720px; }
+  .hero p { font-size: 19px; max-width: 640px; }
+  /* Badges */
+  .badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: var(--accent-light);
+    color: var(--accent-hover);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .badge-muted {
+    background: var(--muted-light);
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="logo">
+      <span class="logo-mark">C</span>
+      <span class="logo-text">CS<strong>O</strong>AI</span>
+    </a>
+    <nav class="nav">
+      <a href="/api/gspc">Board</a>
+      <a href="/.well-known/">Discover</a>
+      <a href="/gspc-verify">Verify</a>
+      <a href="/pay">Pay</a>
+      <a href="/pay" class="nav-cta">Use the board</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+  <header>
+    <h1>GSPC Console</h1>
+    <span class="lid" id="lid">loading…</span>
+    <p class="sub">Every published measured model-axis cell in this findings index, fetched from <code>/api/gspc</code> + <code>/api/findings</code>. Missing cells remain UNMEASURED.</p>
+  </header>
+
+  <div class="bar">
+    <input type="search" id="q" placeholder="filter models…" autocomplete="off" />
+    <span class="sub" id="shown"></span>
+    <span class="legend">
+      <span><span class="sw" style="background:var(--measured)"></span>MEASURED</span>
+      <span><span class="sw" style="background:var(--tie)"></span>TIE</span>
+      <span><span class="sw" style="background:var(--empty)"></span>UNMEASURED — empty is not a zero</span>
+    </span>
+  </div>
+
+  <noscript>
+    <!-- A crawler with no JS saw only a shell here before: the table is fetched.
+         This gives it the substance without typing a count into the page —
+         facts-gate rejects hardcoded totals, and rightly: a typed number goes
+         stale the moment the board moves. Counts stay pointers. -->
+    <div class="scroll"><div class="state" style="text-align:left;padding:1.4rem 1.6rem;line-height:1.6">
+      <p><strong>This page renders the GSPC model &times; axis matrix live.</strong>
+      It needs JavaScript because it fetches two endpoints at load, and neither is
+      baked into these bytes.</p>
+      <p>The same data, without JavaScript:</p>
+      <ul style="margin:.6rem 0 .6rem 1.1rem">
+        <li><a href="https://councilof.ai/api/findings">/api/findings</a> &mdash; one row per
+          (model, axis) cell: accuracy, status, the signed card id and its verify URL.</li>
+        <li><a href="https://councilof.ai/api/gspc">/api/gspc</a> &mdash; the axis roster and
+          the lid. Quote <code>totals.public_count</code>; never a number typed into a page.</li>
+      </ul>
+      <p>A cell is filled only where a signed card verifies. An empty cell means no run
+      exists for that pair &mdash; it is never a zero and never a failure. Verify any card
+      free at <a href="https://councilof.ai/gspc-verify">/gspc-verify</a>, no account.</p>
+      <p>Measurement, not certification.</p>
+    </div></div>
+  </noscript>
+  <h2 style="font-size:1rem;margin:.2rem 0 .4rem">The CSOAI fleet</h2>
+  <p class="sub" style="margin:0 0 .5rem">Our own models, measured against the frozen banks. Third-party models are a separate table below.</p>
+  <div class="scroll" id="scroll"><div class="state" id="state">Fetching the live board…</div></div>
+
+  <div id="hub" style="margin-top:2rem"><p class="sub">Loading third-party cells…</p></div>
+
+  <p class="foot" id="foot">
+    A cell is filled only where a signed card verifies. An empty cell means no run exists —
+    it is never a zero and never a failure.
+    <a href="https://councilof.ai/gspc-verify">Verify any card free</a> ·
+    <a href="https://councilof.ai/api/gspc">/api/gspc</a> ·
+    Measurement, not certification.
+  </p>
+</div>
+
+<script>
+// ONE console, three homes. This same file is served from councilof.ai, from the
+// csoai/gspc-board HF Space, and inside the Council OS pane as an iframe — so the
+// board cannot disagree with itself across surfaces. That is the whole point:
+// there is one data source and one renderer.
+//
+// Absolute origin, because on the HF Space this page is cross-origin to the API.
+// /api/* answers `access-control-allow-origin: *`, verified 2026-09-03.
+const ORIGIN = "https://councilof.ai";
+
+const el = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+// Three states, never more. An unreachable fetch is UNCHECKABLE — never a guessed number.
+function fail(msg) {
+  el("scroll").innerHTML = '<div class="state">UNCHECKABLE — ' + esc(msg) +
+    "<br />The console reports what it could not reach rather than inventing a figure.</div>";
+}
+
+async function getJSON(path) {
+  const r = await fetch(ORIGIN + path, { headers: { accept: "application/json" } });
+  if (!r.ok) throw new Error(path + " → HTTP " + r.status);
+  return r.json();
+}
+
+function cell(f) {
+  if (!f) return '<td class="e">—</td>';
+  const m = f.measurement || {};
+  const acc = m.accuracy;
+  // A measured 0 is a RESULT, not an absent measurement. Only null/undefined is empty.
+  if (acc === null || acc === undefined) return '<td class="e">—</td>';
+  const txt = (typeof acc === "number") ? acc.toFixed(3).replace(/^0\./, ".") : esc(acc);
+  // Separation (TIE / SEPARATED) is a property of the AXIS on /api/gspc, never of a
+  // single cell — so it is shown on the column header, not coloured in here.
+  const cls = "m";
+  const url = m.card_url ? ORIGIN + m.card_url : null;
+  const title = esc(f.model + " · " + f.axis + " · " + (m.status || "") + (m.card ? " · card " + String(m.card).slice(0, 12) : ""));
+  const inner = url ? '<a href="' + esc(url) + '" title="' + title + '">' + txt + "</a>" : txt;
+  return '<td class="' + cls + '" title="' + title + '">' + inner + "</td>";
+}
+
+let AXES = [], MODELS = [], BY = new Map(), SEP = new Map();
+
+function render(filter) {
+  const q = (filter || "").trim().toLowerCase();
+  const rows = MODELS.filter((m) => !q || m.toLowerCase().includes(q));
+  el("shown").textContent = rows.length + " of " + MODELS.length + " models · " + AXES.length + " axis";
+  if (!rows.length) { el("scroll").innerHTML = '<div class="state">No model matches that filter.</div>'; return; }
+
+  let h = "<table><thead><tr><th>Model</th>";
+  for (const a of AXES) {
+    const sep = SEP.get(a);
+    const mark = sep === "TIE" ? " · TIE" : sep === "SEPARATED" ? " · SEP" : "";
+    h += '<th class="rot"><div>' + esc(a) + esc(mark) + "</div></th>";
+  }
+  h += "</tr></thead><tbody>";
+  for (const m of rows) {
+    h += "<tr><th title=" + JSON.stringify(m) + ">" + esc(m) + "</th>";
+    for (const a of AXES) h += cell(BY.get(m + "\u0000" + a));
+    h += "</tr>";
+  }
+  el("scroll").innerHTML = h + "</tbody></table>";
+}
+
+(async function () {
+  try {
+    const [board, find, hub] = await Promise.all([
+      getJSON("/api/gspc"),
+      getJSON("/api/findings"),
+      // Third-party models. They are a SEPARATE population and are shown as one:
+      // /api/findings carries the CSOAI fleet only, so a console that showed just
+      // that would be us grading ourselves and calling it a board.
+      getJSON("/api/hub-cards").catch(() => null),
+    ]);
+
+    // The lid is quoted VERBATIM. Never a count typed into this page — a typed
+    // integer goes stale the moment the board moves.
+    el("lid").textContent = board?.totals?.public_count || "UNCHECKABLE";
+
+    // axis-level separation, straight from the board
+    for (const a of (board.axes || [])) SEP.set(a.axis, String(a.separation || "").toUpperCase());
+
+    const findings = find.findings || [];
+    for (const f of findings) BY.set(f.model + "\u0000" + f.axis, f);
+
+    AXES = [...new Set(findings.map((f) => f.axis))].sort();
+    // Densest rows first: a model with more measured cells is more useful at the top.
+    const density = new Map();
+    for (const f of findings) density.set(f.model, (density.get(f.model) || 0) + 1);
+    MODELS = [...new Set(findings.map((f) => f.model))]
+      .sort((a, b) => (density.get(b) - density.get(a)) || a.localeCompare(b));
+
+    const c = find.counts || {};
+    el("foot").insertAdjacentHTML("afterbegin",
+      "<strong>" + (c.findings ?? findings.length) + " measured cells of " +
+      (c.possible_cells ?? MODELS.length * AXES.length) + " possible · " +
+      (c.unmeasured_cells ?? "—") + " empty.</strong> ");
+
+    render("");
+    el("q").addEventListener("input", (e) => render(e.target.value));
+
+    // ---- third-party population, kept visibly separate ----
+    const hubWrap = el("hub");
+    if (!hub || !Array.isArray(hub.cells) || !hub.cells.length) {
+      hubWrap.innerHTML =
+        '<p class="sub">Third-party cells: <strong>UNCHECKABLE</strong> — /api/hub-cards did not answer. ' +
+        'Unreachable is not empty.</p>';
+    } else {
+      const c = hub.counts || {};
+      const byModel = new Map();
+      for (const cell of hub.cells) {
+        if (!byModel.has(cell.model)) byModel.set(cell.model, []);
+        byModel.get(cell.model).push(cell);
+      }
+      let h =
+        '<h2>Third-party models on the Hub</h2>' +
+        '<p class="sub">A <strong>different population</strong> from the table above, which is the ' +
+        'CSOAI fleet. Status is passed through exactly as published — this page never upgrades a cell. ' +
+        '<strong>' + (c.measured ?? 0) + ' MEASURED · ' + (c.unmeasured ?? 0) + ' UNMEASURED</strong> ' +
+        'of ' + (c.cells ?? 0) + ' cells.</p>' +
+        '<div class="scroll"><table><thead><tr><th>Model</th><th>Axis</th><th>Status</th>' +
+        '<th>Why empty</th><th>Card</th></tr></thead><tbody>';
+      for (const [model, cells] of byModel) {
+        for (const cell of cells) {
+          const st = String(cell.status || "UNCHECKABLE").toUpperCase();
+          const cls = st === "MEASURED" ? "m" : "e";
+          const why = (cell.unmeasured || []).join(", ") || "—";
+          const card = cell.card_url
+            ? '<a href="' + esc(cell.card_url) + '">' + esc(String(cell.card_sha256 || "").slice(0, 10)) + "…</a>"
+            : "—";
+          h += "<tr><th>" + esc(model) + "</th><td style='text-align:left'>" + esc(cell.axis) +
+               '</td><td class="' + cls + '" style="text-align:left">' + esc(st) +
+               "</td><td style='text-align:left'>" + esc(why) + "</td><td>" + card + "</td></tr>";
+        }
+      }
+      hubWrap.innerHTML = h + "</tbody></table></div>";
+    }
+  } catch (e) {
+    fail(e.message);
+  }
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://csoai.org/#organization",
+      "name": "CSOAI Ltd",
+      "url": "https://csoai.org",
+      "logo": "https://councilof.ai/favicon.ico",
+      "description": "Independent AI-governance measurement body. The lid phrase: 22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact. Measurement, not certification.",
+      "foundingDate": "2025",
+      "areaServed": "Worldwide",
+      "sameAs": [
+        "https://huggingface.co/csoai",
+        "https://github.com/CSOAI-ORG/councilof-ai"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://councilof.ai/#website",
+      "url": "https://councilof.ai/",
+      "name": "GSPC Console \u2014 published cells in the current index",
+      "description": "The GSPC console renders published measured model-axis cells returned by GET /api/findings and keeps missing cells empty. It does not claim every model or axis.",
+      "publisher": {
+        "@id": "https://csoai.org/#organization"
+      }
+    }
+  ]
+}
+</script>
+
+<!-- 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. -->
+<noscript><p style="text-align:center;font-size:12px;color:#666;padding:8px">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact.</p></noscript>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <a href="/" class="logo" style="margin-bottom: 16px;">
+        <span class="logo-mark">C</span>
+        <span class="logo-text">CS<strong>O</strong>AI</span>
+      </a>
+      <p style="font-size: 14px; line-height: 1.6;">
+        Independent AI-governance measurement body.<br>
+        Signed. Anchored. Anyone can re-check.
+      </p>
+      <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
+        22 axes · 22 measured
+      </p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <a href="/api/gspc">Live board</a>
+      <a href="/gspc-verify">Verifier</a>
+      <a href="/pay">Pay with MetaMask</a>
+      <a href="/.well-known/">Discovery</a>
+      <a href="/workbench-paper">Workbench paper</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="https://csoai.org">csoai.org</a>
+      <a href="https://huggingface.co/csoai">HuggingFace</a>
+      <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a>
+      <a href="/.well-known/did.json">DID</a>
+      <a href="https://x.com/csoai_org">X / Twitter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
+    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
+  </div>
+</footer>
+
+</body>
+</html>

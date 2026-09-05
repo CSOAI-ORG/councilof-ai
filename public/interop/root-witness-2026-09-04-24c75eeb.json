@@ -1,0 +1,60 @@
+{
+ "kind": "csoai.root-witness/v1",
+ "as_of": "2026-09-04T14:17:37Z",
+ "note": "Witnesses for the live signed public root — existence/time of these exact bytes. Not certification, not endorsement, not a rank sale. Never mint a token. ONE root anchor, never N leaves.",
+ "artifact": {
+  "url": "https://councilof.ai/root.json",
+  "also": "https://councilof.ai/api/root",
+  "sha256": "24c75eebb2c6473c29cc0afb1273d28da917ea4e3f3dfc2a9020b076719eeff0",
+  "bytes": 13582,
+  "merkle_root": "01a32a57d3c22d20877601dfc03b37f02ee748f757385195fcf84a8cdd14106b",
+  "card_count": 154,
+  "as_of": "2026-09-04T14:17:29Z"
+ },
+ "signature": {
+  "did": "did:web:csoai.org#board-attestation-1",
+  "field": "sig_ed25519",
+  "preimage_fields": [
+   "kind",
+   "schema",
+   "as_of",
+   "merkle_root",
+   "card_count",
+   "did_intended"
+  ],
+  "preimage_canonical": "JSON sorted keys, separators (',',':'), ensure_ascii=false, UTF-8",
+  "preimage_sha256": "9e5331c80c92e6fb2c1668e4a8b8f0925c75a87e9f08df84ab5005c2209977a2",
+  "preimage_bytes": 274,
+  "verified_against_did_json": true
+ },
+ "witnesses": {
+  "rekor": {
+   "status": "WITNESSED",
+   "uuid": "108e9186e8c5677aa563733bc503038f1b7792d72f097014682d83f7512ff35510533a9e18ec7466",
+   "logIndex": 2712209891,
+   "integratedTime": 1788531454,
+   "logID": "c0d23d6ad406973f9559f3ba2d1ca01f84147d8ffc5b8445c224f98b9591801d",
+   "new": true,
+   "url": "https://rekor.sigstore.dev/api/v1/log/entries?logIndex=2712209891",
+   "type": "rekord/x509 over the preimage bytes with the board signature",
+   "entry_file": "https://councilof.ai/interop/rekor-root-24c75eeb.json"
+  },
+  "ots": {
+   "status": "STAMPED_PENDING_BITCOIN",
+   "path": "public/interop/root-24c75eeb.json.ots",
+   "url": "https://councilof.ai/interop/root-24c75eeb.json.ots",
+   "note": "run `ots upgrade` after a Bitcoin block; `ots verify` then names the block"
+  },
+  "eas_base": {
+   "status": "NOT_YET",
+   "reason": "no attester key in GitHub secrets (EAS_ATTESTER_PRIVATE_KEY); schema bytes32 sha256,string as_of,string did"
+  },
+  "xrpl_memo": {
+   "status": "NOT_YET",
+   "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"
+  }
+ },
+ "verify_hints": [
+  "https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md"
+ ]
+}

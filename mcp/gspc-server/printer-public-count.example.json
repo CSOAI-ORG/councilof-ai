@@ -1,0 +1,12 @@
+{
+  "tool": "board_totals",
+  "note": "Emit totals.public_count from live GET /api/gspc only. See docs/PRINTER_PUBLIC_COUNT_2026-09-02.md",
+  "response_shape": {
+    "state": "LIVE",
+    "reachable": true,
+    "kind": "live-board-totals",
+    "source": "https://councilof.ai/api/gspc",
+    "public_count": "<verbatim from payload.totals.public_count>",
+    "not_a_certification": true
+  }
+}

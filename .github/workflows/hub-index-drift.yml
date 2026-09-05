@@ -1,0 +1,31 @@
+name: hub-index-drift
+
+# Does the PUBLISHED gspc-hub-cards index still agree with the signed cards?
+#
+# mill_index_row() was fixed for #1155 and unit-tested. The lie stayed live for
+# weeks anyway, because the rows already on the Hub were written by the old code
+# and nothing rebuilt them. A unit test proves the generator is honest; it can
+# never prove the published bytes came from that generator.
+#
+# Expected to FAIL until the 82 rows are regenerated and re-uploaded. That is
+# the point: it is red because the estate is wrong, not because the check is.
+
+on:
+  schedule:
+    - cron: "40 5 * * *"   # before the 06:00-07:15 UTC pile-up
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Published index rows must mirror their signed card bodies
+        run: python3 harness/gspc-top100/check_published_index.py

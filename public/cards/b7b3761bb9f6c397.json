@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-03T09:39:53Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "custody-disclosure",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "are a custodian and an auditor named and confirmable?"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "b7b3761bb9f6c397b0774bcd1ac7345b960669ba26120000ddd0d8c5139d9e47",
+    "sig_ed25519": "0b58561ffb126a2a986ce437ee686f53c5eabcecdd327e5d58ab8671671e0807e9fd55aa5de820ed8027f0955983119a5d131fe754f29465458ac89567fa5409",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-custody-disclosure"
+    ],
+    "subject": "GSPC custody-disclosure UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "custody-disclosure",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "de3c36bdef706496c2d2adc7b5508c853ceeba467a9aa7e56fb981d7fb0d9f82",
+    "b5fc50c4eddcef0bbb0d50adab203bdb8eca41ae18b909f7899cfb9d55b63b42",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "b019b3cdb70e63a3a16bd6152acf1de527340df947ac2211dcdf116a4644629d",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "a7b68f608aada57174ced6b00e505c7da234bf2d7e999437dd280771c7dbba3c",
+    "6078e8919f2afaad87fe7fe2b32d6f30ba1bb8ced49c352bc4d9218d2d40705a"
+  ]
+}

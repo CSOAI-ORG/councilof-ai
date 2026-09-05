@@ -1,0 +1,15 @@
+{
+  "id": "c003-reserialised-differently",
+  "expect": "INVALID",
+  "why": "re-serialising with different key order breaks the signature — canonical form is normative",
+  "envelope": {
+    "payloadType": "application/vnd.in-toto+json",
+    "payload": "eyJzdWJqZWN0Ijpbe31dLCJwcmVkaWNhdGVUeXBlIjoiaHR0cHM6Ly9jb3VuY2lsb2YuYWkvYXR0ZXN0YXRpb25zL2V2YWx1YXRpb24tcmVzdWx0L3YxIiwicHJlZGljYXRlIjp7fSwiX3R5cGUiOiJodHRwczovL2luLXRvdG8uaW8vU3RhdGVtZW50L3YxIn0=",
+    "signatures": [
+      {
+        "keyid": "did:web:councilof.ai#eval-1",
+        "sig": "5LW66E2+axAPj3H/snPKvWsUiJBx7azfqeRCOiUdRI1zKfVFFRIlvpuDTcZsQzTia3ZJhJYE0KW3oRhcgvQ8Ag=="
+      }
+    ]
+  }
+}

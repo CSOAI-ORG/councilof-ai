@@ -9,7 +9,7 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, mkdtempSync } from "node:fs";
+import { readFileSync, readdirSync, mkdtempSync, symlinkSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -52,4 +52,18 @@ test("the bundle agrees with the library on every fixture, failures included", (
   // Agreement is worthless if every fixture passes. Assert the comparison covered failures.
   assert.ok(sawInvalid >= 3, `expected at least 3 INVALID fixtures, saw ${sawInvalid}`);
   assert.ok(sawUncheckable >= 4, `expected at least 4 UNCHECKABLE fixtures, saw ${sawUncheckable}`);
+});
+
+test("the bundle runs as a CLI when invoked through a symlink", () => {
+  const dir = mkdtempSync(join(tmpdir(), "gspc-bundle-symlink-"));
+  const linked = join(dir, "gspc-verify.mjs");
+  symlinkSync(PUBLISHED, linked);
+
+  const out = execFileSync(process.execPath, [
+    linked,
+    join(here, "fixtures", "01-genuine.json"),
+    "--quiet",
+  ], { encoding: "utf8" });
+
+  assert.equal(out, "VALID 1 · INVALID 0 · UNCHECKABLE 0\n");
 });

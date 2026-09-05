@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "huggingface",
+  "name": "HuggingFace",
+  "kind": "platform",
+  "as_of": "20260904T115117Z",
+  "url": "https://councilof.ai/.well-known/mcp/huggingface.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_huggingface",
+      "description": "Measure a claim against HuggingFace"
+    },
+    {
+      "name": "attest_huggingface",
+      "description": "Get a signed attestation from HuggingFace"
+    },
+    {
+      "name": "verify_huggingface",
+      "description": "Verify an attestation from HuggingFace"
+    },
+    {
+      "name": "discover_huggingface",
+      "description": "Discover what HuggingFace maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://huggingface/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://huggingface/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://huggingface/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_huggingface",
+      "description": "Measure a claim with HuggingFace"
+    }
+  ]
+}

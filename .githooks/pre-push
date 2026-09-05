@@ -1,0 +1,41 @@
+#!/bin/sh
+# pre-push — run the content gates here, not 12 minutes into a deploy.
+#
+# WHY THIS FILE EXISTS AT ALL. scripts/pre-push-gates.sh was installed the
+# documented way, `ln -sf ../../scripts/pre-push-gates.sh .git/hooks/pre-push`,
+# and that symlink is still there. It stopped running on 2026-09-05 at 03:10,
+# when core.hooksPath was set to .githooks to share pre-commit/post-* across
+# lanes. core.hooksPath does not ADD a directory — it REPLACES .git/hooks
+# outright, so every hook that lived there went silent with no warning.
+#
+# The cost was measured, not guessed. In the 2h35m after 03:54Z the deploy
+# workflow ran 60 times: 2 success, 27 failure, 29 cancelled. Five of the last
+# eight failures were brand-gate — the exact gate this hook runs in one second.
+# Production went ~18h stale on content faults that never reach a build here.
+#
+# Bypass for a genuine emergency:  git push --no-verify
+set -u
+ROOT="$(git rev-parse --show-toplevel)" || exit 1
+
+# MASTER IS PR-ONLY FOR HUMANS AND LOCAL AGENTS. GitHub Actions publishes to master
+# server-side (public-root, hub-queue-land, census-delta, …) and never runs this hook, so
+# it is untouched. Everything that pushes from a checkout on this machine — a person, a
+# desktop agent, a Cursor lane — goes through a PR and the deploy gates, or does not go.
+# Measured 2026-09-05: ~40 direct pushes to master in 90 min from one local agent, each
+# cancelling the pending deploy; four gates red in sequence; the same cadence got this
+# account's Actions disabled on 2 Sep. A server ruleset was tried first and refused
+# (the Actions app is not a registrable bypass actor on this org), so the gate lives here.
+# Genuine emergency:  CSOAI_ALLOW_MASTER_PUSH=1 git push   (and say why in the ledger).
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "${remote_ref:-}" ] && continue
+  if [ "$remote_ref" = "refs/heads/master" ] && [ "${CSOAI_ALLOW_MASTER_PUSH:-0}" != "1" ]; then
+    echo "pre-push: refusing a direct push to master." >&2
+    echo "  master is PR-only for humans and local agents. Push your branch and open a PR:" >&2
+    echo "    git push -u origin <branch> && gh pr create --base master" >&2
+    echo "  Actions workflows publish to master server-side and are not affected." >&2
+    echo "  Emergency override: CSOAI_ALLOW_MASTER_PUSH=1 git push  (record why in the ledger)." >&2
+    exit 1
+  fi
+done
+[ -x "$ROOT/scripts/pre-push-gates.sh" ] || exit 0
+"$ROOT/scripts/pre-push-gates.sh" "$@"

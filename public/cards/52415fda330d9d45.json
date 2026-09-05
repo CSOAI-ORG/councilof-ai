@@ -1,0 +1,44 @@
+{
+  "card": {
+    "as_of": "2026-09-04T14:00:34.909Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 129,
+      "issuer": "Braza Bank",
+      "issuer_address": "rH5CJsqvNqZGxrMyGaqLEoMWRYcVTAPZMt",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 109832516.7763902,
+      "symbol": "BBRL",
+      "verified_domain": "tokens.brazacripto.com.br",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "52415fda330d9d4540330b340a5bd5190f5d7e4be1bcdda4f7db424b72c89760",
+    "sig_ed25519": "8c1b329f63257e5c15b357af31f978c5fcb8b12f699e15085c00eacfea6d63bd330953d8def2b6cfbdade7336ab0fe392880e39f315048834a1217656848cb0d",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL BBRL public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "ed2e4960abd748767abcf1b9a0387b9fa2f9948a125f814879c0b2a5dab45caa",
+    "80896db5125750112875d7b76e4dde635f14bb37367692cf78969d3feb05a31e",
+    "66527ff6f89615ea4161eaa0b7a48e22069b788def202213569ea0ae5d5dc5d1",
+    "499ba7627f8ca6778c16351006e98b2ecdd8086cf3614e824ac80029916471cc",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "efecf2837711e4b60493f81397472f1d133552852d399632074a9fec1cc251ca",
+    "e0f2b0fdf4fc418732d8836000de3cda2bdf03b9d73a6331b1b391f03b712fff",
+    "a0d372fa0b7eac2404c1f28dabf11fb002e12ee42d0f18e6582c96e672c28195"
+  ]
+}

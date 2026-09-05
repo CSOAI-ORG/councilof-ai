@@ -1,0 +1,67 @@
+{
+ "schema": "csoai.corrections/0.1",
+ "policy": "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on.",
+ "license": "CC-BY-4.0",
+ "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+ "corrections": [
+  {
+   "id": "C-2026-0902-07",
+   "date": "2026-09-02",
+   "what_was_wrong": "On 2026-08-28 a commit edited the text of a signed card in place (public/signals/cross-border-card.signed.json, field measured_axes: the 18 Aug count was replaced with a pointer to the live count) without re-signing. The content_id no longer derived and the Ed25519 signature no longer verified \u2014 a silent edit of a signed artefact, which this ledger's own policy forbids.",
+   "how_caught": "The unit suite (cardVerify: content_id derives and signature verifies) failed on master; found during the 2 Sep test-truth pass.",
+   "fix": "The original signed bytes are restored so the card verifies again. The caveat lives here instead: the card's measured_axes text quotes the 18 Aug 2026 count; the live count is only ever GET https://councilof.ai/api/gspc totals. Signed bytes are never edited \u2014 they are superseded by a new signed card or annotated in this ledger.",
+   "status": "CORRECTED \u2014 signed bytes restored; caveat carried by this entry"
+  },
+  {
+   "id": "C-2026-0902-01",
+   "date": "2026-09-02",
+   "what_was_wrong": "The Switchboard research brief recorded OUSG's XRPL domain check as unverified (directory only) while GET /api/xrpl showed it bidirectional with a signature.",
+   "how_caught": "Owner reconciliation of the 2 Sep research briefs against the live API.",
+   "fix": "GET wins. /api/xrpl is the authority: OUSG verified_via 'Bidirectional domain match'. The brief's cell is superseded; no data change.",
+   "status": "RECONCILED \u2014 live API authoritative"
+  },
+  {
+   "id": "C-2026-0902-02",
+   "date": "2026-09-02",
+   "what_was_wrong": "A secondary planning state file attributed USDB to Bitstamp. USDB is issued by Braza Bank (issuer address rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc).",
+   "how_caught": "Owner reconciliation; the Switchboard brief confirms Braza.",
+   "fix": "GET /api/xrpl already carries issuer 'Braza Bank'; the mis-attribution lived only in a planning file and is corrected there.",
+   "status": "CORRECTED"
+  },
+  {
+   "id": "C-2026-0902-03",
+   "date": "2026-09-02",
+   "what_was_wrong": "The OpenAI incident post-mortem was cited as 37 pages by one source and 38 by an internal state file.",
+   "how_caught": "Owner reconciliation of the incident-card inputs.",
+   "fix": "No incident card hashes that artefact until the primary PDF is fetched, hashed and its page count read from the file itself.",
+   "status": "PENDING VERIFICATION \u2014 card withheld until the primary PDF is hashed"
+  },
+  {
+   "id": "C-2026-0902-04",
+   "date": "2026-09-02",
+   "what_was_wrong": "GPAI Code of Practice signatory counts differed: 26 per the Commission's 1 Aug 2025 list versus '28 frozen' in secondary sources.",
+   "how_caught": "Owner reconciliation.",
+   "fix": "Only the live, dated Commission page is carded (interop/gpai-signatory-2026-09). Secondary counts are not quoted.",
+   "status": "CORRECTED \u2014 primary source only, dated"
+  },
+  {
+   "id": "C-2026-0902-05",
+   "date": "2026-09-02",
+   "what_was_wrong": "One playbook stated 2 Feb 2027 as the Article 50 detector-interoperability date as fact; a market-map brief records it as unsettled.",
+   "how_caught": "Owner reconciliation.",
+   "fix": "The date is not published anywhere until verified against Regulation (EU) 2026/1744 in the Official Journal.",
+   "status": "UNVERIFIED \u2014 withheld"
+  }
+ ],
+ "signature": {
+  "id": "aa7a8211d3671330e0dcacf1a719125f9cb09dd4ba80272fc1fac617e652f367",
+  "signer": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+  "signature": "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
+  "sig_input": "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) \u2014 ensure_ascii escapes non-ASCII as \\uXXXX)",
+  "key_source": "did:web:csoai.org (estate signing key d4cb0eaa)",
+  "note": "SIGNED 2026-08-22 (re-issue: 15th entry \u2014 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit."
+ },
+ "signature_state": "STALE",
+ "note": "Signature is stale because the ledger was appended after signing. Re-issue the signature (gen-reg-feed.mjs) - a stale signature is a published defect, never a silent edit.",
+ "_fixture_note": "First 6 entries of GET https://councilof.ai/api/corrections as fetched 2026-09-02; meta fields verbatim."
+}

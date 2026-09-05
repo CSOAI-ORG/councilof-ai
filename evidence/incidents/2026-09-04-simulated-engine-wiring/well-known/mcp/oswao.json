@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "oswao",
+  "name": "OSWAO",
+  "kind": "agent-ontology",
+  "as_of": "20260904T115117Z",
+  "url": "https://councilof.ai/.well-known/mcp/oswao.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_oswao",
+      "description": "Measure a claim against OSWAO"
+    },
+    {
+      "name": "attest_oswao",
+      "description": "Get a signed attestation from OSWAO"
+    },
+    {
+      "name": "verify_oswao",
+      "description": "Verify an attestation from OSWAO"
+    },
+    {
+      "name": "discover_oswao",
+      "description": "Discover what OSWAO maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://oswao/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://oswao/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://oswao/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_oswao",
+      "description": "Measure a claim with OSWAO"
+    }
+  ]
+}

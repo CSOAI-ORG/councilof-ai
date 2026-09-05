@@ -72,7 +72,7 @@ export default function PublicHome() {
             
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
               The first open-source AI safety governance platform for the West. 
-              Multi-framework measurement, a designed 33-agent Council of AI, 
+              Multi-framework measurement, a designed 33-seat Council of AI, 
               and public accountability through The Watchdog program.
             </p>
 
@@ -103,7 +103,7 @@ export default function PublicHome() {
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="w-5 h-5 text-primary" />
-                <span><strong className="text-foreground">33</strong> Agent Council</span>
+                <span><strong className="text-foreground">33</strong> Designed Seats</span>
               </div>
             </div>
           </div>
@@ -224,10 +224,10 @@ export default function PublicHome() {
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
                   <Shield className="w-6 h-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Designed 33-agent council</h3>
+                <h3 className="font-semibold text-lg mb-2">Designed 33-seat council</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  designed multi-agent review with 11 Guardian, 11 Arbiter, and 11 Scribe agents. 
-                  Requires 22/33 consensus for decisions.
+                  The target roster has 11 Guardian, 11 Arbiter, and 11 Scribe seats, with a
+                  23/33 threshold. It is not a live council; independent operation and resilience under failed voters are not demonstrated.
                 </p>
                 <Link href="/agent-council" className="text-sm text-primary flex items-center gap-1 hover:underline">
                   Learn more <ChevronRight className="w-4 h-4" />
@@ -290,7 +290,7 @@ export default function PublicHome() {
                 </div>
                 <h3 className="font-semibold text-lg mb-2">Real-Time Dashboard</h3>
                 <p className="text-sm text-muted-foreground mb-4">
-                  Monitor compliance scores, track assessments, view council decisions, 
+                  Inspect measured results, track assessments, review signed evidence,
                   and manage your AI portfolio.
                 </p>
                 <Link href="/dashboard" className="text-sm text-primary flex items-center gap-1 hover:underline">
@@ -433,7 +433,7 @@ export default function PublicHome() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span><strong className="text-foreground">Transparent Governance</strong> - All council votes are public</span>
+                    <span><strong className="text-foreground">Transparent Governance</strong> - Any future live council vote must publish its evidence; none operates today</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
@@ -497,7 +497,7 @@ export default function PublicHome() {
               <h3 className="font-semibold text-lg mb-2">Regulators (B2G)</h3>
               <p className="text-sm text-muted-foreground mb-4">
                 Monitor AI systems in your jurisdiction. Access public Watchdog reports 
-                and council decisions for oversight.
+                and signed measurement records for oversight.
               </p>
               <Link href="/watchdog">
                 <Button variant="outline" size="sm">View Reports</Button>
@@ -527,7 +527,7 @@ export default function PublicHome() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
               <p className="text-4xl font-bold text-primary mb-2">33</p>
-              <p className="text-sm text-muted-foreground">AI Agents</p>
+              <p className="text-sm text-muted-foreground">Designed Council Seats</p>
             </div>
             <div>
               <p className="text-4xl font-bold text-primary mb-2">3</p>
@@ -567,7 +567,7 @@ export default function PublicHome() {
                 <li><Link href="/dashboard" className="hover:text-foreground">Dashboard</Link></li>
                 <li><Link href="/ai-systems" className="hover:text-foreground">AI Systems</Link></li>
                 <li><Link href="/compliance" className="hover:text-foreground">Compliance</Link></li>
-                <li><Link href="/agent-council" className="hover:text-foreground">Designed 33-agent council</Link></li>
+                <li><Link href="/agent-council" className="hover:text-foreground">Designed 33-seat council</Link></li>
               </ul>
             </div>
 

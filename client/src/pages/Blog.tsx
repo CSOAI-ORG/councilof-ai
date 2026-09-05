@@ -33,6 +33,7 @@ import {
   buildBlogIndex,
   filterByPeriod,
   periodGradient,
+  UNLISTED_UNTIL_REWRITTEN,
 } from "@/lib/blogIndex";
 
 export default function Blog() {
@@ -46,7 +47,9 @@ export default function Blog() {
   const [errMsg, setErrMsg] = useState<string>("");
   const [selectedPeriod, setSelectedPeriod] = useState(ALL_PERIODS);
 
-  const allPosts = useMemo(() => buildBlogIndex(), []);
+  // Three posts are rejected by brand-gate (certification claims / the retracted BFT post) and are
+  // not prerendered, so linking them is a dead link. Unlisted until rewritten; the entries stay in the data.
+  const allPosts = useMemo(() => buildBlogIndex().filter((p) => !UNLISTED_UNTIL_REWRITTEN.has(p.slug)), []);
   const periods = useMemo(() => blogPeriodFilters(allPosts), [allPosts]);
   const filteredPosts = useMemo(
     () => filterByPeriod(allPosts, selectedPeriod),

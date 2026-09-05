@@ -1,16 +1,16 @@
 // /api/corrections — the public corrections ledger.
 //
-// The estate's doctrine is "corrections appended, never edited". This is that
-// doctrine made a machine-readable surface: every entry is something the estate
+// This is a source-maintained machine-readable record: every entry is something the estate
 // got wrong, how it was caught (usually by the estate's own instrument), and
-// the fix — dated, never deleted. Publishing your own corrections is the
+// the fix — dated. The source is version-controlled, but this endpoint does not
+// provide append-only storage proof. Publishing your own corrections is the
 // credibility engine: it is what lets a relying party trust the /api/regulation
 // feed and the signed board, because the same body that publishes the number
 // also publishes when the number was wrong.
 //
 // GRAMMAR: an entry here is a FACT about our own history, not a MEASURED figure
-// and not a claim about anyone else. New entries are appended in place; the
-// array is never reordered or trimmed.
+// and not a claim about anyone else. Signed artifacts should be superseded rather
+// than silently edited; this record itself remains ordinary version-controlled source.
 //
 // REDACTION RULE: this ledger is itself a machine surface, so it obeys the
 // no-banned-vocabulary invariant the machine-contract guard enforces on every
@@ -26,10 +26,170 @@
 
 const LEDGER = {
   schema: "csoai.corrections/0.1",
-  policy: "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on.",
+  policy: "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
   license: "CC-BY-4.0",
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
+    {
+      id: "C-2026-0905-02",
+      date: "2026-09-05",
+      what_was_wrong:
+        "26 SWIFT rail cards were published under public/interop/swift-signed-2026-09/ as signed-swift-<bank>.json with a populated sig_ed25519 field and signed_at timestamp. The field held base64(sha256(card)), not a signature; sig_algo said SHA256-placeholder and the index said the same. A relying party reading the field name, the file name or the directory name was told these were Ed25519-signed. They were not. Nothing verifies.",
+      how_caught:
+        "Outside review of the estate on 2026-09-05 named the 26 placeholder cards as the single most damaging thing an inspector could find. Confirmed against master: 26 of 26 files, sig_algo SHA256-placeholder, producer scripts/badger/csoai-swift-aware.py writing a digest when no key was present.",
+      fix:
+        "Producer changed: with no key it now writes sig_ed25519 null, sig_algo UNSIGNED, signed_at null, a signature_note, into swift-staged-2026-09/ as staged-swift-*.json; the OIDC board-sign path is the only signer. The 26 artifacts were rewritten the same way and moved; swift-signed-index.json is superseded by swift-staged-index.json (total_signed 0, total_staged_unsigned 26). No card here is signed or MEASURED.",
+      status: "CORRECTED — 0 signed, 26 staged and labelled; placeholder producer removed",
+    },
+    {
+      id: "C-2026-0905-03",
+      date: "2026-09-05",
+      what_was_wrong:
+        "Three public endpoints turned a source they could not read into a number, and two of them published a figure that was wrong while they did it. (1) /api/hub-cards fans out to four Hub index files and totalled whatever came back. Two of the four were answering nothing to the Worker, and both held ONLY UNMEASURED rows, so the endpoint served 682 cells / 647 MEASURED / 35 UNMEASURED when the published population was 717 / 647 / 70. It understated the unmeasured count by exactly half, and the error therefore ran in the flattering direction — the one direction a measurement body may never round. The endpoint did disclose the partial read, but it did so in an honesty field while counts kept publishing quotable integers beside it; a disclosure next to a wrong number does not repair the number, and downstream quotes the number. (2) /api/dashboard/stats derived fleet.online from `.online ?? .nodes?.length ?? 0`. /api/oracle-fleet emits neither field — it answers 200 with a single host's health — so the dashboard published online: 0, meaning no nodes online, against a fleet that was up and answering with 26.9 days of uptime. That is a claim the fleet endpoint never made, invented from two absent keys. The same file coalesced every other aggregate with `?? 0`, so an unreadable /api/gspc would have published measured_axes: 0 while the board carries 22, under a header that claimed honest empty states — but zero is a measurement, not an empty state. (3) /api/hf-spaces returned an empty list on any non-OK response and counted the survivors, so one upstream throttle would publish models: 0, indistinguishable from the org having no models. That one was latent: it agreed with the Hub on the day it was found.",
+      how_caught:
+        "A top-down alignment pass on 2026-09-05 re-ran the estate brief's own verification commands instead of trusting the brief, and /api/hub-cards disagreed with it. Reading all four Hub index files directly showed all four answering 200 and non-empty to a plain client at dataset commit c52587b, while the endpoint's own indexes_read field said 2 of 4. A sweep for the same shape — any endpoint that fans out to N sources and reports whatever came back — found the other two. The dashboard defect had a passing test over it: the fixture mocked /api/oracle-fleet as an object carrying online and nodes, a shape the real endpoint does not return, so a test that invented the upstream could not catch a misread of the real one.",
+      fix:
+        "Every one of the three now distinguishes an unread source from an empty one. A total is published only when all of its sources answered; otherwise the totals are null, what was actually read is offered under a separate name documented as a floor, and each missing source is named with its reason. An index or listing that answers with zero rows counts as READ — the previous code treated any empty result as unreachable, which would have let a legitimately empty source suppress the totals forever. hub-cards additionally retries a failed index once outside the Cloudflare cache, because the fetch carried cacheEverything and a cached non-OK response keeps a source dark for the whole ten-minute window. dashboard/stats gained a sources block naming each upstream's state and a note stating that a null is an unread value and never a measured zero; its fleet.online carries its own note explaining why it is null, so a bare null cannot be re-read as zero. The dashboard UI already rendered a missing value as an em dash, so the honest empty state was available all along and was simply not being sent. Tests were watched failing against the unpatched handlers before being accepted.",
+      status:
+        "CORRECTED IN SOURCE — hub-cards under PR #1294, dashboard/stats and hf-spaces under PR #1297, recorded as issue #1295. The wrong figures were live until those deploy. Whether the hub-cards retry restores the two dark indexes is not yet established: it cannot be tested from outside the Worker, and if they stay dark the endpoint now reports that instead of a flattering subtotal.",
+    },
+    {
+      id: "C-2026-0905-04",
+      date: "2026-09-05",
+      what_was_wrong:
+        "Six public manifests under /interop advertised 36 endpoint references that do not exist: custom-gpt-bridge.json told Custom GPTs to POST /api/measure, /api/verify and /api/xrpl/evidence; chatgpt-features-finish.json listed 14 'features' (/api/voice, /api/vision, /api/calendar, /api/email, ...) each with an endpoint; deep-research-integration.json described a four-endpoint /api/research pipeline; persona-tests.json, chatgpt-skills.json and anchor.json cited /api/anchor, /api/insurance/attest, /api/xrpl/rlusd, /api/xrpl/usdc and /api/scheduler. Every one answered HTTP 404 to GET and POST on 2026-09-05. All six were written by two generators under scripts/badger/ that assemble manifests from a wish-list and never probe a route.",
+      how_caught:
+        "A top-down pass on 2026-09-05 found /api/verify returning 404 and followed the references: three files first, then every /api/ path in the six generated manifests, each probed live with GET and POST.",
+      fix:
+        "Each artifact now carries claims_audit_2026-09-05 naming the dead paths; every dead reference is marked NOT_IMPLEMENTED in place, and the three Custom GPT actions a client would actually call were removed and listed under actions_removed. Both generators now exit at main() with the reason and cannot regenerate the fiction. The rule (an endpoint advertised outward must answer non-404 live) is the one scripts/outward-claims-guard.mjs enforces post-deploy.",
+      status:
+        "CORRECTED IN ARTIFACT AND PRODUCER. Whether any Custom GPT or agent acted on the dead manifests is unknown; no request log is kept for those paths. Nothing was ever measured, signed or anchored through them.",
+    },
+    {
+      id: "C-2026-0905-01",
+      date: "2026-09-05",
+      what_was_wrong:
+        "The ONE root (public/root.json) is documented as republished hourly. Between 2026-09-02T04:14Z (last successful public-root run) and 2026-09-03T06:20Z (first successful run after GitHub reinstated Actions on the CSOAI-ORG account) it was not republished at all: the hourly runs from 05:14Z to 19:58Z on 2 Sep never started (Actions disabled for the account, Support ticket #4720908), and the eight runs from 2026-09-02T20:58Z to 2026-09-03T06:16Z failed at runner start. Cards signed in that window were not in any root a reader could fetch, and the witness pointer kept reporting the 04:14Z root as current, which it was — but nothing said the cadence had stopped.",
+      how_caught:
+        "Run history of .github/workflows/public-root.yml read back on 2026-09-05 after reinstatement: one success at 04:14Z, a gap with no runs at all, eight failures, then success at 06:20Z on 3 Sep. The gap is visible only in the run list; the root, the pointer and the site all looked normal during it.",
+      fix:
+        "This entry records the window. No root bytes were edited (none existed to edit). The as_of field on the root and the checked_at field on the pointer are the only honest freshness signals; HOW-TO-VERIFY-ROOT.md already tells a reader to re-fetch and compare rather than trust a MATCH observation. Structural fix, same day: the witness now also reports a CONFLICT state when two witnessed roots carry the same as_of and different merkle_root values, so a stalled or forked cadence is named rather than inferred.",
+      status: "RECORDED — a 26-hour publication gap, 2026-09-02T04:14Z to 2026-09-03T06:20Z; no bytes changed, cadence documented as not guaranteed",
+    },
+    {
+      id: "C-2026-0903-01",
+      date: "2026-09-03",
+      what_was_wrong:
+        "The Layer-0 ceremony artifact (/interop/layer0-ceremony-2026-09-03.json, v0.2) listed /api/intoto as one of 15 machine rails, recorded it as returning 404, and explained the 404 as 'the handler exists in master but is inside an undeployed window'. There is no handler. functions/api/intoto.ts exports only helpers (subjectDigest, toInTotoStatement, toDsse) and is imported by functions/api/detect.ts and functions/api/detector-interop.ts, both of which serve 200. No deploy would ever have turned it into a route. A ceremony whose purpose is to attest our own machine surface had invented a door and then explained away its absence.",
+      how_caught:
+        "Live sweep of 25 published surfaces on 2026-09-03: exactly one non-200, /api/intoto. Tracing it showed the file has no onRequest export, and that the ONLY thing on the estate advertising /api/intoto as an endpoint was the ceremony artifact itself.",
+      fix:
+        "Ceremony superseded at v0.3: the rail is removed and the correction is stated in the artifact's own what_this_does_not_claim, first line. The count becomes 14 of 14 serving rather than 14 of 15. in-toto capability is real and reachable through /api/detect and /api/detector-interop. v0.2 was superseded in place rather than kept, because it had no external reference and its OpenTimestamps stamp was still PENDING with no Bitcoin attestation to preserve; had the stamp been upgraded, the bytes would have been kept and a new file issued.",
+      status: "CORRECTED — 14 of 14 rails; the invented door is gone",
+    },
+    {
+      id: "C-2026-0902-09",
+      date: "2026-09-02",
+      what_was_wrong:
+        "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis · 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
+      how_caught:
+        "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      fix:
+        "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots · 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used — it is a 3KB card-sign and cannot carry this snapshot.",
+      status: "CORRECTED — signed freeze is 22/22 and agrees with the live axis arrays",
+    },
+    {
+      id: "C-2026-0902-08",
+      date: "2026-09-02",
+      what_was_wrong:
+        "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots · 15 measured · 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis · 22 measured · 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
+      how_caught:
+        "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
+      fix:
+        "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled do-not-file. Re-signing that 38KB file is an owner MPC ceremony — the Pages /api/board-sign path is a 3KB card-sign and cannot carry the snapshot.",
+      status: "CORRECTED — live 22/22 is the quotable count; snapshot 15/7 is historical pending owner MPC re-sign",
+    },
+    {
+      id: "C-2026-0902-10",
+      date: "2026-09-02",
+      what_was_wrong:
+        "The published verification rule (/signed/HOW-TO-VERIFY.md and HOW-TO-VERIFY-ROOT.md) did not state that a verifying signature says nothing about whether the signing key is still valid. A reader verifying with yesterday's trust anchor would get the same VALID verdict after a revocation this morning, and nothing in the text said so.",
+      how_caught: "IETF agentproto list, 31 Aug–2 Sep 2026: an objection to the offline-verification sentence in a proposed charter amendment (offline verification is a computation over the past; revocation is a fact about the present). CSOAI committed on the list to add the sentence and note the correction.",
+      fix:
+        "Both rules now carry a section stating what a verifying signature does not establish, that no revocation mechanism or key-freshness requirement is defined here, that a consumer must not treat a verifying signature as evidence the key is still valid, and that key-resolution path and accepted staleness are deployment parameters the card does not carry.",
+      status: "CORRECTED — rule amended; second unstated property caught by that thread (the first was a signed flag with no signature bytes behind it)",
+    },
+    {
+      id: "C-2026-0902-07",
+      date: "2026-09-02",
+      what_was_wrong:
+        "On 2026-08-28 a commit edited the text of a signed card in place (public/signals/cross-border-card.signed.json, field measured_axes: the 18 Aug count was replaced with a pointer to the live count) without re-signing. The content_id no longer derived and the Ed25519 signature no longer verified — a silent edit of a signed artefact, which this ledger's own policy forbids.",
+      how_caught: "The unit suite (cardVerify: content_id derives and signature verifies) failed on master; found during the 2 Sep test-truth pass.",
+      fix:
+        "The original signed bytes are restored so the card verifies again. The caveat lives here instead: the card's measured_axes text quotes the 18 Aug 2026 count; the live count is only ever GET https://councilof.ai/api/gspc totals. Signed bytes are never edited — they are superseded by a new signed card or annotated in this ledger.",
+      status: "CORRECTED — signed bytes restored; caveat carried by this entry",
+    },
+    // ── 2026-09-02: six contradictions named in the owner's "what governs" ruling ──
+    {
+      id: "C-2026-0902-01",
+      date: "2026-09-02",
+      what_was_wrong:
+        "The Switchboard research brief recorded OUSG's XRPL domain check as unverified (directory only) while GET /api/xrpl showed it bidirectional with a signature.",
+      how_caught: "Owner reconciliation of the 2 Sep research briefs against the live API.",
+      fix:
+        "GET wins. /api/xrpl is the authority: OUSG verified_via 'Bidirectional domain match'. The brief's cell is superseded; no data change.",
+      status: "RECONCILED — live API authoritative",
+    },
+    {
+      id: "C-2026-0902-02",
+      date: "2026-09-02",
+      what_was_wrong:
+        "A secondary planning state file attributed USDB to Bitstamp. USDB is issued by Braza Bank (issuer address rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc).",
+      how_caught: "Owner reconciliation; the Switchboard brief confirms Braza.",
+      fix:
+        "GET /api/xrpl already carries issuer 'Braza Bank'; the mis-attribution lived only in a planning file and is corrected there.",
+      status: "CORRECTED",
+    },
+    {
+      id: "C-2026-0902-03",
+      date: "2026-09-02",
+      what_was_wrong:
+        "The OpenAI incident post-mortem was cited as 37 pages by one source and 38 by an internal state file.",
+      how_caught: "Owner reconciliation of the incident-card inputs.",
+      fix:
+        "No incident card hashes that artefact until the primary PDF is fetched, hashed and its page count read from the file itself.",
+      status: "PENDING VERIFICATION — card withheld until the primary PDF is hashed",
+    },
+    {
+      id: "C-2026-0902-04",
+      date: "2026-09-02",
+      what_was_wrong:
+        "GPAI Code of Practice signatory counts differed: 26 per the Commission's 1 Aug 2025 list versus '28 frozen' in secondary sources.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "Only the live, dated Commission page is carded (interop/gpai-signatory-2026-09). Secondary counts are not quoted.",
+      status: "CORRECTED — primary source only, dated",
+    },
+    {
+      id: "C-2026-0902-05",
+      date: "2026-09-02",
+      what_was_wrong:
+        "One playbook stated 2 Feb 2027 as the Article 50 detector-interoperability date as fact; a market-map brief records it as unsettled.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "The date is not published anywhere until verified against Regulation (EU) 2026/1744 in the Official Journal.",
+      status: "UNVERIFIED — withheld",
+    },
+    {
+      id: "C-2026-0902-06",
+      date: "2026-09-02",
+      what_was_wrong:
+        "councilof.ai states a £5M professional-indemnity policy while the Series A pack's infrastructure-gaps sheet says insurance is unknown. One of them is wrong in a data room.",
+      how_caught: "Owner reconciliation.",
+      fix:
+        "Owner to confirm the policy document; the losing statement is corrected in place and this entry updated. 2026-09-05: no policy document, certificate or insurer correspondence was found in the business mailbox or the repository, so the public assertion (About: 'operates with full professional indemnity insurance'; Disclaimers: 'maintains professional indemnity insurance') was withdrawn to the evidenced state — both pages now say cover is not stated until the policy document is on file. The assertion is restored, with insurer, limit and dates, the day the document is filed.",
+      status: "CORRECTED — public assertion withdrawn pending the policy document; restore on receipt",
+    },
     // ── 2026-08-26: six entries from an outside SCITT/COSE audit ───────────────
     // Not self-caught. A working SCITT implementer with no CSOAI code, no CSOAI
     // credentials and no prior knowledge of the estate ran the published recipe
@@ -81,7 +241,7 @@ const LEDGER = {
       status: "FIXED ON THE LIVE BOARD; FROZEN SIGNED SNAPSHOT AWAITS RE-SIGN (owner)",
     },
     {
-      id: "C-2026-0826-08",
+      id: "C-2026-0826-08b",
       date: "2026-08-26",
       what_was_wrong:
         "The living_stamp was presented as a valid attestation and cannot be checked by anyone. It shipped signed: true and a sig_input recipe, rendering exactly like the two attestations on this site that do verify. It does not verify. Three faults compound: TWO different signatures are published for one stamp, with the same signer and the same `updated` — one in /signed/board_living.json, a different one in /api/gspc measured_on.living_stamp, and at most one can be over the bytes the other is over; the signer is in NONE of the four verification methods in our own did.json, so even a reproducing preimage would prove only self-consistency, the unfalsifiable shape our own HOW-TO-VERIFY tells strangers to refuse; and board_living.json states in its own note that its axes were re-snapshotted from the live board at package time, six days after the signature date, so the signed bytes are not the published bytes.",
@@ -92,7 +252,7 @@ const LEDGER = {
       status: "MARKED UNVERIFIABLE; REPRODUCIBLE SIGNATURE PENDING (owner)",
     },
     {
-      id: "C-2026-0826-07",
+      id: "C-2026-0826-07b",
       date: "2026-08-26",
       what_was_wrong:
         "The claims register described bytes that do not exist. CR-002 gave as its evidence \"Cards declare timestamp_authority: 'none'\". Zero of the 150 published cards contain that field; the string \"timestamp\" appears in no card, not in card_index.json and not in the cross-border card. The substance was honest — there genuinely is no timestamp authority behind any card — but the register asserted a positive declaration as its evidence for an absence, and the claims register is the one page whose entire purpose is claim-to-evidence fidelity. A correction that misdescribes the thing it corrects is worse than the original gap.",
@@ -318,7 +478,7 @@ const LEDGER = {
     signature: "dff4ab2c4e1c8d80c9022330343f43145af4673a0a214cf24c9e2964d204f917aa8bdcbf6bc76fec8db0ff828524f057078e087fa53d4281b448bbce44e5ac00",
     sig_input: "sha256(Python json.dumps(canonical LEDGER minus signature fields, sort_keys=True, separators=(',',':')) — ensure_ascii escapes non-ASCII as \\uXXXX)",
     key_source: "did:web:csoai.org (estate signing key d4cb0eaa)",
-    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append re-issues the signature; a stale signature is a published defect, never a silent edit.",
+    note: "SIGNED 2026-08-22 (re-issue: 15th entry — 15-slot canon fix) - verify by recomputing canonical JSON and checking Ed25519 against did.json. Every append MUST re-issue the signature over the new bytes; a stale signature is a published defect, never a silent edit, and never a bare id bump.",
   },
 };
 
@@ -361,7 +521,20 @@ export const onRequestGet: PagesFunction = async () => {
   const signatureState = embeddedId && cid === embeddedId ? "VALID" : "STALE";
   const out = signatureState === "VALID"
     ? LEDGER
-    : { ...LEDGER, signature_state: "STALE", note: "Signature is stale because the ledger was appended after signing. Re-issue the signature (gen-reg-feed.mjs) - a stale signature is a published defect, never a silent edit." };
+    : {
+        ...LEDGER,
+        signature_state: "STALE",
+        note:
+          "Signature is stale because the ledger was appended after signing. A stale signature is a " +
+          "published defect, never a silent edit. TO CLEAR IT: re-sign the ledger with the estate key " +
+          "(did:web:csoai.org, signer d4cb0eaa) over the canonical form named in signature.sig_input — " +
+          "Python json.dumps(body minus signature, sort_keys=True, separators=(',',':'), ensure_ascii=True) " +
+          "— then update BOTH signature.id and signature.signature together. Updating id alone would make " +
+          "this field read VALID while the Ed25519 bytes still cover the older content, which is a worse " +
+          "defect than the stale flag it hides. The key is not in this repository, so this is an " +
+          "owner-supervised re-sign.",
+        fix_requires: "estate signing key (not in repo)",
+      };
   return new Response(JSON.stringify(out, null, 2), {
     headers: {
       "content-type": "application/json",

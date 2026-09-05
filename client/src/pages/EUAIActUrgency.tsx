@@ -94,7 +94,9 @@ const comparisonRows = [
   {
     approach: "CSOAI measurement credential",
     time: "20 weeks",
-    cost: "£3.5K-£7.5K",
+    // No public price. Doctrine: a rank is never sold and amounts appear only
+    // in an x402 402 `accepts[]`, never in prose. Verification is free forever.
+    cost: "Not priced in prose",
     risk: "Low",
     result: "Signed measurement",
     highlight: true,
@@ -110,7 +112,7 @@ const faqs = [
   {
     question: "How long does the measurement credential take?",
     answer:
-      "The standard measurement credential program runs 20 weeks: 8 weeks of structured coursework, 8 weeks of guided implementation, and 4 weeks of final assessment and Council review. Accelerated tracks are available for teams with existing compliance infrastructure.",
+      "The standard measurement credential program runs 20 weeks: 8 weeks of structured coursework, 8 weeks of guided implementation, and 4 weeks of final assessment and human evidence review. Accelerated tracks are available for teams with existing compliance infrastructure.",
   },
   {
     question: "Does the measurement credential cover EU AI Act specifically?",
@@ -409,12 +411,12 @@ export default function EUAIActUrgency() {
                   <Shield className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
-                  33-agent Council of AI
+                  33-seat Council of AI
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  After certification, your AI systems receive continuous
-                  oversight from a designed council of 33 independent
-                  agents. Bias-resistant, manipulation-proof, always on.
+                  The proposed council has 33 designed seats and a target
+                  threshold of 23/33. It is not live; independent voters,
+                  fault tolerance, and continuous oversight are not demonstrated.
                 </p>
               </CardContent>
             </Card>

@@ -285,7 +285,7 @@ export default function WorldGlobe() {
           ))}
           <span className="hidden text-emerald-100/40 md:inline">{COUNTS.live} LIVE · {COUNTS.unknown} UNKNOWN · {COUNTS.candidate} candidate</span>
           <a href="/instrument" className="rounded-full bg-emerald-500/20 px-3 py-1 text-emerald-200 hover:bg-emerald-500/30">Instrument</a>
-          <a href="/os?lobby=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
+          <a href="/dashboard?tab=home" className="rounded-full px-3 py-1 text-emerald-100/70 hover:bg-white/10">AI OS</a>
         </div>
       </div>
       <section className="max-w-6xl mx-auto px-6 pt-12 pb-4">
@@ -422,7 +422,7 @@ export default function WorldGlobe() {
             <p className="mt-1 text-[11px] text-white/40">Agentic — the Council assistant flies the globe, toggles layers, and responds to threats as it answers.</p>
             {acted && <div className="mt-2 inline-block rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-[11px] font-semibold text-emerald-200">◉ {acted}</div>}
             {ans && <div className="mt-3 max-h-52 overflow-y-auto whitespace-pre-wrap rounded-lg bg-black/30 px-3 py-2 text-sm leading-relaxed text-white/85">{ans}</div>}
-            {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the full 33-agent simulation →</Link>}
+            {ans && <Link href={"/simulate?q=" + encodeURIComponent(ask)} className="mt-3 inline-block rounded-lg border border-emerald-400/40 px-3 py-1.5 text-[12px] font-bold text-emerald-200 hover:bg-white/5">Run this through the full 33-seat simulation →</Link>}
           </div>
         </div>
       </section>

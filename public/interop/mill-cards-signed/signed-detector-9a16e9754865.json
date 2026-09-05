@@ -1,0 +1,24 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "detector-interop",
+    "model": "mistralai/Mistral-7B-Instruct-v0.2",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.7667,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "9a16e9754865540c41ed9ba48556bdcc0eec037e92ca863be312ef159545f55f",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "3e58273d0f818c32e601a4e02ecef87e1f75ebbb39bc57c1c9f22dfdf8d145fb2abc4ae43fcea041a89e756ea059967e873ed0f9a89c71c9718f937490034f07",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}

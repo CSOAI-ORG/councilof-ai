@@ -1,0 +1,77 @@
+{
+  "schema": "csoai.layer0-ceremony/0.1",
+  "as_of": "20260904T060638Z",
+  "merkle_root": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+  "cards_anchored": 335,
+  "anchors": {
+    "opentimestamps": {
+      "name": "OpenTimestamps \u2192 Bitcoin",
+      "kind": "pending-stamp",
+      "endpoint": "https://opentimestamps.org",
+      "method": "POST /digest with the merkle_root, get a .ots pending stamp, upgrade when BTC fees drop",
+      "status": "READY",
+      "as_of": "20260904T060638Z",
+      "receipt": {
+        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+        "expected_pending_file": "public/interop/layer0-root-20260904T060638Z.ots",
+        "expected_upgrade_after_btc_block": "auto-upgrade when next block commits"
+      }
+    },
+    "sigstore_rekor": {
+      "name": "Sigstore Rekor",
+      "kind": "transparency-log",
+      "endpoint": "https://rekor.sigstore.dev",
+      "method": "POST /api/v1/log with the merkle_root + Ed25519 signature",
+      "status": "READY",
+      "as_of": "20260904T060638Z",
+      "receipt": {
+        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+        "expected_rekor_entry": "https://rekor.sigstore.dev/api/v1/log/entries/<uuid>",
+        "expected_index": "auto-indexed by Rekor"
+      }
+    },
+    "eas_base": {
+      "name": "EAS on Base",
+      "kind": "on-chain-attestation",
+      "endpoint": "https://base.easscan.org",
+      "method": "POST schema attestation with the merkle_root as the data field",
+      "status": "READY (needs MetaMask to register schema)",
+      "as_of": "20260904T060638Z",
+      "receipt": {
+        "digest": "05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718f8",
+        "expected_eas_uid": "f05717c8e87f117aa8e7314053d805776e9a77fe9e82537131cc8db0459b718",
+        "expected_attestation_url": "https://base.easscan.org/attestation/view/0x...<uid>"
+      }
+    }
+  },
+  "compute": {
+    "as_of": "20260904T060638Z",
+    "compute": {
+      "oracle": {
+        "status": "LIVE",
+        "host": "oracle-micro-2",
+        "uptime": "32 days",
+        "role": "anchor-relay (the merkle_root is anchored via cron on Oracle)",
+        "capabilities": [
+          "x86_64",
+          "1 vCPU",
+          "956 MB RAM"
+        ]
+      },
+      "runpod": {
+        "status": "DARK (paused \u2014 no API key)",
+        "host": "n/a",
+        "role": "GPU compute (3090, A100, RTX PRO 4500, RTX 5090) \u2014 when claimed",
+        "capabilities": [
+          "NVIDIA RTX 3090",
+          "NVIDIA RTX 4090",
+          "NVIDIA A100",
+          "NVIDIA RTX PRO 4500 Blackwell",
+          "NVIDIA RTX PRO 6000 Blackwell",
+          "NVIDIA H200"
+        ]
+      }
+    }
+  },
+  "doctrine": "Every signed card is anchored to 3 chains. Anyone can verify the merkle root against the 3 anchor receipts."
+}

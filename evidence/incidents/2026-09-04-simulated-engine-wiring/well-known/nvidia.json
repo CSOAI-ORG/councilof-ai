@@ -1,0 +1,23 @@
+{
+  "schema": "csoai.engine-discovery/0.1",
+  "slug": "nvidia",
+  "name": "NVIDIA",
+  "full_name": "NVIDIA NIM / NeMo / Triton Inference Server",
+  "kind": "engine",
+  "description": "NVIDIA NIM (inference microservices), NeMo (training), Triton (serving). Connect to GSPC measurement.",
+  "as_of": "20260904T115117Z",
+  "discovery_url": "https://councilof.ai/.well-known/nvidia.json",
+  "links": {
+    "agent_card": "https://councilof.ai/.well-known/agents/nvidia-agent.json",
+    "mcp": "https://councilof.ai/.well-known/mcp/nvidia.json",
+    "a2a": "https://councilof.ai/api/a2a/nvidia",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "x402_catalog": "https://councilof.ai/api/x402"
+  },
+  "notes": [
+    "NVIDIA wired to the 33-agent BFT council",
+    "Verification free at /gspc-verify",
+    "Measurement, not certification"
+  ]
+}

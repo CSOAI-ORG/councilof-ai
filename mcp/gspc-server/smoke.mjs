@@ -72,12 +72,24 @@ const init = await rpc("initialize", {
 });
 notify("notifications/initialized");
 const list = await rpc("tools/list");
-console.log(`tools: ${list.result.tools.map((t) => t.name).join(", ")}`);
+const names = list.result.tools.map((t) => t.name);
+console.log(`tools: ${names.join(", ")}`);
+const seven = ["board_totals", "get_axis", "verify_card", "list_cards", "get_root", "get_card", "verify_inclusion"];
+expect("tools/list is seven wired names", names.join(","), seven.join(","));
 
 // ---- live tools ----
 const totals = await rpc("tools/call", { name: "board_totals", arguments: {} });
 const axis = await rpc("tools/call", { name: "get_axis", arguments: { axis: "jail" } });
 const cards = await rpc("tools/call", { name: "list_cards", arguments: { limit: 2 } });
+const root = await rpc("tools/call", { name: "get_root", arguments: {} });
+expect("get_root not unknown-tool", root.error ? "error" : "ok", "ok");
+expect("get_root state", root.result?.structuredContent?.state, "VALID");
+const missing = await rpc("tools/call", { name: "verify_inclusion", arguments: { sha256: "0".repeat(64) } });
+expect("verify_inclusion not unknown-tool", missing.error ? "error" : "ok", "ok");
+const missState = missing.result?.structuredContent?.state;
+const missOk = missState === "INVALID" || missState === "UNCHECKABLE";
+console.log(`${missOk ? "PASS" : "FAIL"}  verify_inclusion missing-sha state=${missState} (INVALID|UNCHECKABLE)`);
+if (!missOk) process.exitCode = 1;
 
 // ---- verify_card: three inputs, three verdicts ----
 const idx = await (await fetch(`${ORIGIN}/signed/card_index.json`)).json();

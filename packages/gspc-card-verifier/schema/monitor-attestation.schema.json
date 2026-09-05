@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/attestations/monitor-attestation/v1/schema.json",
+  "title": "MonitorAttestation in-toto predicate v1",
+  "description": "A monitor's signed statement binding its identity, a signing time, and its last-processed stream position. Wire format for the attestation whose semantics are defined by Attested Staged Release v0.1 (David S. Rose, CC BY 4.0), which specifies the construct but leaves the encoding, canonicalisation and signature scheme to the deployment.",
+  "type": "object",
+  "required": ["schemaVersion", "monitor", "signedAt", "lastProcessed"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "const": "councilof.ai/monitor-attestation/1" },
+
+    "monitor": {
+      "type": "object",
+      "required": ["id"],
+      "additionalProperties": false,
+      "description": "Identity is the whole point: a false position must be a signed falsehood attributable to a signer.",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "description": "Stable monitor identity, e.g. a did:web URL." },
+        "lineage": { "type": "string", "description": "Model lineage where the monitor is an AI system. Required by ASR v0.1 §2 for cognition-independence — but see `independence`: lineage alone has been measured insufficient." },
+        "verificationSources": { "type": "array", "items": { "type": "string" }, "description": "ASR §2 source-independence: a differently-built monitor re-verifying against the same store inherits the same poison." }
+      }
+    },
+
+    "signedAt": { "type": "string", "format": "date-time", "description": "RFC 3339. ASR §2 coverage leg one: MUST be at or after the window close it claims to cover." },
+
+    "lastProcessed": {
+      "type": "object",
+      "required": ["position"],
+      "additionalProperties": false,
+      "description": "Attested CONSUMPTION, not presence. A heartbeat detached from the evaluating mind cannot truthfully advance this.",
+      "properties": {
+        "position": { "type": "integer", "minimum": 0, "description": "Monotonic stream index actually consumed. Totally ordered, so 'at or beyond' and 'lagging' are well defined." },
+        "streamId": { "type": "string" },
+        "recordDigest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    },
+
+    "consumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Optional, and the reason the batch-reader question in ASR §3.3 is answerable from the record rather than by inference.",
+      "properties": {
+        "mode": { "enum": ["streaming", "batch"] },
+        "firstProcessedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "independence": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Measured decorrelation against the proposing agent. ASR §2 requires a different model lineage; measurement on 2026-09-04 across three distinct lineages and two providers returned rho 1.000 and n_eff 1.00 of 3, so lineage is necessary and NOT sufficient. This carries the quantity so a floor can be enforced instead of assumed.",
+      "properties": {
+        "rhoVsProposer": { "type": "number", "minimum": -1, "maximum": 1 },
+        "nEff": { "type": "number", "exclusiveMinimum": 0 },
+        "nLegs": { "type": "integer", "minimum": 1 },
+        "measuredOver": { "type": "integer", "minimum": 1, "description": "Comparable items behind the estimate. Absent or small means the figure is fragile and must be read as such." },
+        "method": { "type": "string" }
+      }
+    },
+
+    "interventions": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "ASR §4 dysfunction alert: attested consumption never accompanied by any intervention, over a rolling window, is the signature of a consuming-but-not-evaluating monitor.",
+      "properties": {
+        "windowSeconds": { "type": "integer", "minimum": 1 },
+        "count": { "type": "integer", "minimum": 0 },
+        "drillsSeen": { "type": "integer", "minimum": 0 },
+        "drillsFlagged": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

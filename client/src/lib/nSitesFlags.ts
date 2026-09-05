@@ -69,7 +69,7 @@ export const PLUGIN_HARVEST = {
 } as const;
 
 export const HF_BADGE_SNIPPET =
-  "[![CSOAI-GSPC — measurement, not certification](https://councilof.ai/api/badge?style=hf&size=md)](https://councilof.ai/gspc-verify)";
+  "[![GSPC signed cell](https://councilof.ai/api/badge?card=<SIGNED_CARD_SHA256>&subject=<URL_ENCODED_OWNER%2FMODEL%40COMMIT_SHA>)](https://councilof.ai/gspc-verify)";
 
 export const EMBED_SNIPPET = `<script src="https://councilof.ai/embed.js"
         data-org="Council of AI" data-brand="#059669"
@@ -199,7 +199,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://www.npmjs.com/package/csoai-gspc-mcp",
     plant: "claude mcp add gspc -- npx -y csoai-gspc-mcp",
-    note: "npm 0.1.0 is four tools (stdio). HTTP /mcp is seven. Teach the live list.",
+    note: "Published npm 0.2.1 lists 12 tools (7 free + 5 x402). HTTP /mcp lists 11 because witness_hash is quarantined there.",
     snippet: NPM_SNIPPET,
   },
   {
@@ -239,7 +239,7 @@ export const NSITES_FLAGS: NSiteFlag[] = [
     kind: "receipt",
     href: "https://councilof.ai/api/gspc",
     plant: "Every machine that needs the dated public count.",
-    note: "Quote totals.public_count. 22 axis · 15 measured. Empty stays empty.",
+    note: "Quote totals.public_count. 22 axis · 22 measured.",
     snippet: "https://councilof.ai/api/gspc",
   },
   {

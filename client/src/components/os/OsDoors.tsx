@@ -284,7 +284,7 @@ function HarnessDoor() {
           </a>
           {" "}
           — Nick joins. Measurement credential, never certification. No endorsement, affiliation, or
-          “we conform” claim.
+          conformance claim.
         </p>
         <div className="mt-3 space-y-1.5 font-mono text-xs">
           <div className="rounded bg-slate-100 px-2 py-1 text-slate-700">{osPanelHref("board")}</div>

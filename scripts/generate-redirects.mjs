@@ -22,7 +22,7 @@
  * scripts/redirects-guard.mjs re-implements the parser and fails the build if the
  * catch-all ever falls outside the cap again.
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -30,7 +30,7 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const APP = join(ROOT, "client/src/App.tsx");
 const OUT = join(ROOT, "public/_redirects");
 
-const STATIC_DIRS = ["/arena", "/benchmarks", "/vendor", "/assets",
+const STATIC_DIRS = ["/benchmarks", "/vendor", "/assets",
                      "/.well-known", "/corpus-watch", "/flywheel", "/packs",
                      "/datasets",
                      // /signed is the evidence tree IETF implementers are pointed at.
@@ -48,6 +48,20 @@ const routes = [...src.matchAll(/<Route\s+path=["']([^"']+)["']/g)]
   .sort();
 
 const EXISTING = [
+  // The hand-authored /arena tree was a second, stale product surface. Keep
+  // historical machine evidence in public/arena/*.json{,l}, but route every
+  // former human page into the one Council OS play surface. Exact rules are
+  // deliberate: a broad /arena/* redirect would also hide signed evidence.
+  "/arena                 /dashboard?tab=play  308",
+  "/arena/                /dashboard?tab=play  308",
+  "/arena.html            /dashboard?tab=play  308",
+  "/arena/index.html      /dashboard?tab=play  308",
+  ...["governance", "safety", "conformance", "continuity", "openness", "provenance"]
+    .flatMap((axis) => [
+      `/arena/${axis}       /dashboard?tab=play  308`,
+      `/arena/${axis}/      /dashboard?tab=play  308`,
+      `/arena/${axis}.html  /dashboard?tab=play  308`,
+    ]),
   "/sov-space      /gspc-arena             308",
   "/sov-space/     /gspc-arena             308",
   "/sov-space/*    /gspc-arena             308",
@@ -64,8 +78,8 @@ const EXISTING = [
   "/crown-jewels         /          308",
   // Pricing lives in Council OS Assess (functions/pricing.ts). Do not chain
   // through /pricing — that is itself a 308 door hop.
-  "/plans                /os?lobby=assess&task=pricing-overview   308",
-  "/enterprise-plans     /os?lobby=assess&task=pricing-overview   308",
+  "/plans                /dashboard?tab=measured&task=pricing-overview   308",
+  "/enterprise-plans     /dashboard?tab=measured&task=pricing-overview   308",
   "/council-space  /gspc-arena             308",
   "/city           /gspc-arena?view=towns  308",
   // Living-measurement / product short doors. Destinations already exist.
@@ -77,8 +91,8 @@ const EXISTING = [
   "/insurance/     /insurers/              308",
   "/article50      /article-50/            308",
   "/article50/     /article-50/            308",
-  "/overlay        /os?lobby=home          308",
-  "/overlay/       /os?lobby=home          308",
+  "/overlay        /dashboard?tab=home          308",
+  "/overlay/       /dashboard?tab=home          308",
   "/rwa            /distribution-integrity/ 308",
   "/rwa/           /distribution-integrity/ 308",
   "/financial-axis /financial-axes/        308",
@@ -109,31 +123,47 @@ const EXISTING = [
   "/containment/   /blog/what-is-monitored-containment/  308",
   "/legal                  /disclaimers                 308",
   "/vulnerability          /vulnerability-disclosure    308",
-  "/gspc                   /gspc-scoreboard             308",
+  "/gspc                   /dashboard?tab=board         308",
   // TUI/plugin help used to 404. Help lives at /tools (seven MCP tools).
   "/plugin                 /tools                       301",
   "/plugin/                /tools                       301",
   "/gspc/ai-economy-index     /gspc-scoreboard#ai-adoption-components  308",
   "/gspc/human-labour-index   /gspc-scoreboard#labour-components       308",
-  "/scoreboard             /gspc-scoreboard             308",
-  "/scorecard              /gspc-scoreboard             308",
-  "/scorecard/             /gspc-scoreboard             308",
-  "/lobby                  /os?lobby=home               308",
-  "/console                /os?lobby=home               308",
-  "/council-os             /os                          308",
-  "/council-os/            /os                          308",
-  "/sov-os                 /os?lobby=home               308",
-  "/sov-os/                /os?lobby=home               308",
-  "/ag-ui                  /os?lobby=home               308",
-  "/ag-ui/                 /os?lobby=home               308",
-  "/agui                   /os?lobby=home               308",
-  "/agui/                  /os?lobby=home               308",
-  "/chat                   /os?lobby=home               308",
-  "/chat/                  /os?lobby=home               308",
-  "/rankings               /os?lobby=board              308",
-  "/rankings/              /os?lobby=board              308",
-  "/benchmarkers           /os?lobby=verify             308",
-  "/benchmarkers/          /os?lobby=verify             308",
+  "/scoreboard             /dashboard?tab=board         308",
+  "/scorecard              /dashboard?tab=board         308",
+  "/scorecard/             /dashboard?tab=board         308",
+  "/lobby                  /dashboard?tab=home          308",
+  "/console                /dashboard?tab=home          308",
+  "/council-os             /dashboard?tab=home          308",
+  "/council-os/            /dashboard?tab=home          308",
+  "/sov-os                 /dashboard?tab=home          308",
+  "/sov-os/                /dashboard?tab=home          308",
+  "/ag-ui                  /dashboard?tab=home          308",
+  "/ag-ui/                 /dashboard?tab=home          308",
+  "/agui                   /dashboard?tab=home          308",
+  "/agui/                  /dashboard?tab=home          308",
+  "/chat                   /dashboard?tab=home          308",
+  "/chat/                  /dashboard?tab=home          308",
+  // Retired static GovBench/ProvBench files used to own the slashless clean URL
+  // and silently displaced these maintained React routes. Keep one canonical
+  // human surface; raw ProvBench evidence remains under /packs/eu-article-50/.
+  "/govbench              /govbench/                  308",
+  "/govbench.html         /govbench/                  308",
+  "/provbench             /provbench/                 308",
+  "/provbench.html        /provbench/                 308",
+  // Retired second shells. /public duplicated navigation/footer and contradicted
+  // the current measurement-not-certification boundary; /widget awarded a
+  // localStorage-only "Certification Earned" badge. Human journeys converge on
+  // the canonical Council OS panes. Source artifacts remain in git for audit.
+  "/public                 /dashboard?tab=home          308",
+  "/public/                /dashboard?tab=home          308",
+  "/widget                 /dashboard?tab=learn         308",
+  "/widget/                /dashboard?tab=learn         308",
+  "/widget/*               /dashboard?tab=learn         308",
+  "/rankings               /dashboard?tab=board         308",
+  "/rankings/              /dashboard?tab=board         308",
+  "/benchmarkers           /dashboard?tab=verify        308",
+  "/benchmarkers/          /dashboard?tab=verify        308",
   "/mcp-registry           /mcps/                       308",
   "/mcp-registry/          /mcps/                       308",
   "/library/measurement    /library/axes                308",
@@ -149,9 +179,9 @@ const EXISTING = [
   "/badges/                /badge                       308",
   "/verify-certificate     /gspc-verify/                308",
   "/verify-certificate/    /gspc-verify/                308",
-  "/enterprise             /os?lobby=assess&task=enterprise-start  308",
-  "/enterprise/            /os?lobby=assess&task=enterprise-start  308",
-  "/enterprises            /os?lobby=assess&task=enterprise-start  308",
+  "/enterprise             /dashboard?tab=measured&task=enterprise-start  308",
+  "/enterprise/            /dashboard?tab=measured&task=enterprise-start  308",
+  "/enterprises            /dashboard?tab=measured&task=enterprise-start  308",
   "/developers             /gspc-verify/                308",
   "/colosseum              /coliseum/                   308",
   // /for is an index with no page of its own — send it to the default audience. The
@@ -256,6 +286,100 @@ const IS_DYNAMIC = (line) => {
   return from.includes("*") || /:[A-Za-z]\w*/.test(from);
 };
 
+// ── bare → trailing-slash 308 for EVERY prerendered app route ───────────────
+// The SPA catch-all below is inert (Cloudflare rejects `/*  →  /index.html`) and this
+// build ships a 404.html, so Cloudflare does NOT auto-canonicalise a bare path to its
+// prerendered `/route/index.html`: an unlisted bare path gets the honest-404. That is
+// why `/leaderboard` 404'd while `/leaderboard/` served 200, and only the handful of
+// paths hand-listed in PERSONA_SLASH got a bare→slash 308 (the Will investor email
+// links to councilof.ai/leaderboard — a bare 404 there is a live regression). Derive
+// the rule from every concrete <Route> in App.tsx instead, so no prerendered surface
+// is a bare 404 and nobody has to remember to add each new page here.
+//
+// The exclusions stop this from hijacking a path already served/redirected another way
+// — which is also what prevents a redirect LOOP against a slash→slashless rule:
+//   · anything already used as a `from` in the hand-written rules above (normalised),
+//   · a path public/ serves directly (a real file at /p.html or /p/index.html),
+//   · a path owned by a Pages Function (functions/<p>.ts), e.g. /pricing,
+//   · retired internal-codename stubs owned by 308 functions.
+const normFrom = (p) => (String(p).replace(/\/+$/, "") || "/");
+const CLAIMED_FROM = new Set();
+for (const line of [...EXISTING, ...STOREFRONT]) {
+  const t = String(line).trim();
+  if (!t || t.startsWith("#")) continue;
+  CLAIMED_FROM.add(normFrom(t.split(/\s+/)[0]));
+}
+for (const p of PERSONA_SLASH) CLAIMED_FROM.add(normFrom(`/${p}`));
+for (const p of PERSONA_FOR_SLASH) CLAIMED_FROM.add(normFrom(`/for/${p}`));
+for (const d of STATIC_DIRS) CLAIMED_FROM.add(normFrom(d));
+const RETIRED_CODENAME = /^\/(sov3|sovos|ceasai|about-ceasai)\b/i;
+const publicOwnsPath = (p) => {
+  const rel = normFrom(p).replace(/^\//, "");
+  if (!rel) return false;
+  return (
+    existsSync(join(ROOT, "public", rel, "index.html")) ||
+    existsSync(join(ROOT, "public", rel + ".html"))
+  );
+};
+
+// A physical public/<route>.html (or public/<route>/index.html) can win the
+// hosting platform's clean-URL resolution before the maintained React route is
+// reached. That is safe only for the small set reviewed below. Everything else
+// is a release-blocking collision: fail here rather than silently dropping the
+// route's bare -> slash redirect, which is how stale GovBench and ProvBench
+// became canonical again.
+const REVIEWED_PUBLIC_HTML_APP_ROUTES = new Set([
+  "/404",        // hosting fallback; intentionally exists outside the SPA
+  "/advisory",   // reviewed legacy hand-off page
+  "/benchmarks", // static-first benchmark registry
+  "/globe",      // exact /globe -> /globe3d.html redirect owns this door
+]);
+const publicHtmlRouteCollisions = routes
+  .map(normFrom)
+  .filter((p) => p !== "/" && publicOwnsPath(p));
+const unreviewedPublicHtmlRouteCollisions = publicHtmlRouteCollisions.filter(
+  (p) => !REVIEWED_PUBLIC_HTML_APP_ROUTES.has(p),
+);
+if (unreviewedPublicHtmlRouteCollisions.length) {
+  throw new Error(
+    "Public HTML shadows maintained App route(s): " +
+      unreviewedPublicHtmlRouteCollisions.join(", ") +
+      ". Remove/quarantine the static human page or explicitly review the ownership.",
+  );
+}
+const funcOwnsPath = (p) => {
+  const rel = normFrom(p).replace(/^\//, "");
+  return !!rel && existsSync(join(ROOT, "functions", rel + ".ts"));
+};
+const ROUTE_SLASH = routes
+  .map(normFrom)
+  .filter((p) => p !== "/")
+  .filter((p) => !CLAIMED_FROM.has(p))
+  .filter((p) => !RETIRED_CODENAME.test(p))
+  .filter((p) => !publicOwnsPath(p))
+  .filter((p) => !funcOwnsPath(p))
+  .filter((p, i, a) => a.indexOf(p) === i)
+  .map((p) => `${p}  ${p}/  308`);
+
+// /answers/:slug is a :param route (never a concrete <Route>), so the 12 AEO explainer
+// detail pages the prerenderer now snapshots at /answers/<slug>/index.html had no
+// bare→slash rule either — a link to councilof.ai/answers/<slug> (the no-slash form the
+// pages self-canonicalise to) would 404. Derive one rule per slug from the same data the
+// page and the prerenderer read; this also lets generate-sitemap.mjs emit the 200
+// trailing-slash form for each explainer instead of a bare 404.
+let ANSWER_SLASH = [];
+try {
+  const answerSlugs = JSON.parse(readFileSync(join(ROOT, "client/src/data/answers.json"), "utf8"))
+    .map((a) => a && a.slug)
+    .filter(Boolean);
+  ANSWER_SLASH = answerSlugs
+    .map((s) => `/answers/${s}`)
+    .filter((p) => !CLAIMED_FROM.has(normFrom(p)))
+    .map((p) => `${p}  ${p}/  308`);
+} catch {
+  console.warn("[redirects] answers.json unreadable — no /answers/:slug bare→slash rules emitted");
+}
+
 // Everything with an exact `from`. These land on the 2000-rule STATIC budget.
 const STATIC_RULES = [
   "# --- hand-written consolidation redirects (preserved) ---",
@@ -264,6 +388,12 @@ const STATIC_RULES = [
   "# --- persona bare paths → prerendered trailing-slash (gauntlet cold loads) ---",
   ...PERSONA_SLASH.flatMap((p) => [`/${p}  /${p}/  308`]),
   ...PERSONA_FOR_SLASH.map((p) => `/for/${p}  /for/${p}/  308`),
+  "",
+  `# --- every other concrete <Route> bare path → its prerendered trailing-slash (${ROUTE_SLASH.length}) ---`,
+  ...ROUTE_SLASH,
+  "",
+  `# --- /answers/:slug explainer bare paths → prerendered trailing-slash (${ANSWER_SLASH.length}) ---`,
+  ...ANSWER_SLASH,
   "",
   "# --- storefront static pages: served directly, trailing slash 308→slashless ---",
   ...STOREFRONT,

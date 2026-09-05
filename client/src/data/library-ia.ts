@@ -24,8 +24,9 @@ import { ROUTE_MANIFEST, type RouteEntry } from "./route-manifest";
 // Audit 2026-08-26 found EIGHT such paths already live in the header and shipping
 // the archive banner: /models /tools /sectors /registers /eunomia /eunomia-data
 // /first-fine-watch /xrpl-attest. They are registered below, along with the
-// surfaces this front-door pass promotes (/report, /workbench, /start).
+// surfaces this front-door pass promotes (/watchdog-hub, /workbench, /start).
 export const PRIMARY_PATHS = new Set<string>([
+  "/compliance-training-world/catalog.html", // games-catalog entry; a catalogued path ships primary, never archived
   "/",
   // Measure
   // /board is the navigator ACROSS every axis set — the one route that is allowed
@@ -39,7 +40,7 @@ export const PRIMARY_PATHS = new Set<string>([
   "/leaderboard",
   "/gspc-scoreboard", "/benchmarks", "/benchmark-index", "/gspc-arena", "/gspc-verify", "/assess",
   "/methodology", "/instrument", "/harness", "/statute-to-predicate", "/accountability-loop", "/where-the-record-lives",
-  "/models", "/tools", "/plugin", "/report",
+  "/models", "/tools", "/plugin", "/watchdog-hub",
   // Connect GSPC to your AI — the per-platform install matrix + registry funnel.
   // A promoted self-serve destination (footer + /tools + /mcp cross-link); unregistered
   // it would ship the ArchivedBanner under a link we actively promote. /connect-ai is
@@ -55,8 +56,12 @@ export const PRIMARY_PATHS = new Set<string>([
   // Regulation
   "/eu-ai-act", "/article-50", "/ai-act-timeline", "/gpai", "/checklist",
   "/regulation-tracker", "/regulators", "/regulator-atlas", "/crosswalk", "/ai-act-faq",
+  // Regulation findings — the signed (model × axis) findings joined to regulator + fine tier.
+  // /findings is the hub; /model/:id and /regulator/:id detail views are covered by
+  // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
+  "/findings", "/regulator-findings",
   // Products — the family, and who it is for
-  "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
+  "/products", "/pricing-free", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
@@ -69,7 +74,7 @@ export const PRIMARY_PATHS = new Set<string>([
   // "Reference / archive" banner while being the pages a buyer is sent to.
   "/compare", "/competitors", "/vs", "/for",
   // Council OS — the product frame and its hops
-  "/os", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
+  "/dashboard?tab=home", "/dashboard?tab=attestations", "/ag-ui", "/chat", "/console", "/sov-os", "/workbench", "/start",
   // Council OS Games catalog — every game path must be here (enforced by test).
   // /gspc-arena is already above in Measure; /os is already above. Add only new paths.
   "/coliseum",
@@ -96,9 +101,8 @@ export const PRIMARY_PATHS = new Set<string>([
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
   "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
-  // Promoted to a first-class Council OS destination (the Report-an-incident pane) —
-  // registered here so it can never ship flagged "archived".
-  "/report",
+  // Promoted to a first-class Council OS read-only Watchdog destination.
+  "/watchdog-hub",
   // Evidence
   "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
   "/system-card", "/xrpl-attest", "/claims-register",
@@ -125,7 +129,7 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/", "/model/", "/regulator/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));
@@ -188,11 +192,11 @@ export const REPLACEMENTS: Record<string, { path: string; label: string }> = {
   "/ai-act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/act-summary": { path: "/eu-ai-act", label: "the EU AI Act guide" },
   "/how-it-works": { path: "/methodology", label: "Methodology" },
-  "/roi-calculator": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  "/roi-calculator": { path: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   "/our-difference": { path: "/about", label: "About" },
   // Added by the site-alignment pass 2026-08-20 — each of these had a current
   // equivalent in the new six-group nav but no forward link.
-  "/pricing": { path: "/os?lobby=assess&task=pricing-overview", label: "How the free rail works" },
+  "/pricing": { path: "/dashboard?task=pricing-overview&tab=measured", label: "How the free rail works" },
   "/global-ai-regulation": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/global-regulations": { path: "/regulation-tracker", label: "the regulation tracker" },
   "/training-hub": { path: "/academy", label: "Council Academy" },
@@ -227,7 +231,7 @@ const ACRONYMS: [RegExp, string][] = [
   [/\bVs\b/g, "vs"],
 ];
 // Killed display strings (mirror scripts/brand-gate.mjs RULES). Manifest titles are derived from
-// stale component names (SovereignTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
+// stale component names (CouncilTour → "Sovereign Tour", AboutCEASAI → "About CEASAI"), so the
 // archive must SCRUB them before display or the Library page ships a forbidden brand string and
 // the deploy gate blocks. The pages' own rendered copy is already de-branded; only these derived
 // titles are stale. Removing the killed word yields a clean label ("Sovereign Tour" → "Tour").

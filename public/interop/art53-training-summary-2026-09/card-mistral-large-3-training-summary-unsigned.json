@@ -1,0 +1,78 @@
+{
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "surface": "public.notice",
+  "subject": "Mistral AI/Mistral Large 3 — Art 53(1)(d) summary locate 2026-09",
+  "as_of": "2026-09-02T05:51:28Z",
+  "source_urls": [
+    "https://legal.mistral.ai/ai-governance/models/mistral-large-3",
+    "https://legal.cms.mistral.ai/assets/591fbf77-10ba-4aa8-bfe4-ef299c1f024b"
+  ],
+  "payload": {
+    "kind": "csoai.art53-training-summary/0.1",
+    "status": "LOCATED",
+    "honest_sentence": "Training-content summary located/not located/uncheckable vs AI Office template (24 Jul 2025). Prior art DOI only. No compliance language.",
+    "writes_board": false,
+    "not_a_grade": true,
+    "not_certification": true,
+    "provider": "Mistral AI",
+    "model_or_family": "Mistral Large 3",
+    "open_weight": true,
+    "obligation_focus": "Art 53(1)(d)",
+    "template_ref": {
+      "title": "AI Office Template — Public Summary of Training Content",
+      "date": "2025-07-24",
+      "url": "https://digital-strategy.ec.europa.eu/en/library/explanatory-notice-and-template-public-summary-training-content-general-purpose-ai-models",
+      "implements": "Art 53(1)(d)"
+    },
+    "prior_art_only": {
+      "doi": "10.1145/3805689.3806755",
+      "url": "https://doi.org/10.1145/3805689.3806755",
+      "observatory": "https://aial.ie/research/gpai-training-transparency/",
+      "role": "prior art only"
+    },
+    "location": {
+      "summary_pdf": "https://legal.cms.mistral.ai/assets/591fbf77-10ba-4aa8-bfe4-ef299c1f024b",
+      "hub": "https://legal.mistral.ai/ai-governance/models/mistral-large-3"
+    },
+    "reason": "Open-weight exemplar. PDF retrieved from AI Governance hub; title sniff Public Summary of Training Content (v.1, 31/07/2025). Art 53(2) does not exempt (1)(d).",
+    "sources": [
+      {
+        "url": "https://legal.mistral.ai/ai-governance/models/mistral-large-3",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "role": "hub"
+      },
+      {
+        "url": "https://legal.cms.mistral.ai/assets/591fbf77-10ba-4aa8-bfe4-ef299c1f024b",
+        "retrieval_date": "2026-09-02",
+        "http_ok": true,
+        "sha256": "22c6cae662df2b80486a79eeb30c8f99959bd0cf78d52950290141ec52c824bc",
+        "bytes": 218727,
+        "role": "summary_pdf"
+      }
+    ],
+    "measured_fact": "Mistral Large 3 summary PDF located 2026-09-02.",
+    "fetched_at": "2026-09-02T05:51:28Z",
+    "art53_2_open_weight_note": "Art 53(2) open-weight exemption covers (1)(a)/(b) only — (1)(c)/(d) still apply."
+  },
+  "sha256": "b990badd874885b348926287cec928b300b1614fe7f8fad67e18e426f9a27176",
+  "sig_ed25519": null,
+  "did": "did:web:csoai.org#card-attestation-1",
+  "unmeasured": [
+    "template-section completeness grade",
+    "Art 53(1)(c) copyright-policy locate",
+    "AI Office enforcement outcome",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED"
+  ],
+  "tags": [
+    "public-notice",
+    "art53",
+    "training-summary",
+    "mistral-large-3",
+    "unsigned"
+  ],
+  "note": "UNSIGNED. Located/not located/uncheckable only. DOI prior art only."
+}

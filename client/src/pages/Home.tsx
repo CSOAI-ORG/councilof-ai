@@ -56,10 +56,10 @@ const suggestionPrompts = [
   },
   {
     title: "View agent council",
-    subtitle: "33-agent voting status",
+    subtitle: "33-seat voting status",
     icon: Users,
     action: "/agent-council",
-    prompt: "Explain how the 33-Agent Council multi-leg voting system works."
+    prompt: "Explain how the designed 33-seat council voting works, and why the latest point experiment measured rho=1 and n_eff=1 rather than fault tolerance."
   },
   {
     title: "Check Watchdog reports",

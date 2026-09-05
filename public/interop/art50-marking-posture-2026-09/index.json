@@ -1,0 +1,85 @@
+{
+  "schema": "csoai.art50-marking-posture-index/0.1",
+  "pack": "art50-marking-posture-2026-09",
+  "as_of": "2026-09-02T05:51:28Z",
+  "fetched_at": "2026-09-02T05:51:28Z",
+  "writes_board": false,
+  "sig_ed25519": null,
+  "honest_sentence": "Stated vs detectable Art 50(2) marking posture for Anthropic/OpenAI/Google. Others probe-needed. Detectable UNMEASURED. Fine Art 99(4) \u20ac15M/3%.",
+  "obligation": {
+    "article": "Art 50(2)",
+    "binds": "provider",
+    "fine_ceiling": {
+      "article": "Art 99(4) Reg (EU) 2024/1689",
+      "ceiling": "EUR 15M or 3% worldwide turnover (whichever higher)",
+      "not": "not Art 99(3) EUR 35M/7%"
+    },
+    "enforcer": "national MSA",
+    "enforcement_start": "2026-08-02",
+    "grace_pre_existing_systems_to": "2026-12-02"
+  },
+  "cards": [
+    {
+      "id": "anthropic",
+      "provider": "Anthropic",
+      "path": "card-anthropic-marking-posture-unsigned.json",
+      "sha256": "fd70766a8635d2967439bb4317eb64c1a2945076cce4384c18d85d7f5984e3f5",
+      "status": "STATED_POSTURE_LOCATED"
+    },
+    {
+      "id": "openai",
+      "provider": "OpenAI",
+      "path": "card-openai-marking-posture-unsigned.json",
+      "sha256": "3f60b3ab0f8a00e7c1e88d906ebb48049a4412d40874ab2f8995e7d7687f147d",
+      "status": "STATED_POSTURE_LOCATED"
+    },
+    {
+      "id": "google",
+      "provider": "Google",
+      "path": "card-google-marking-posture-unsigned.json",
+      "sha256": "fc0abcf70fcdde502b19d40408f66b5bd7d7bf636f39fc36ef7ec685d49a4bd7",
+      "status": "STATED_POSTURE_LOCATED"
+    }
+  ],
+  "probe_needed": [
+    {
+      "provider": "Meta",
+      "note": "Marking posture probe-needed"
+    },
+    {
+      "provider": "Mistral AI",
+      "note": "Marking posture probe-needed"
+    },
+    {
+      "provider": "xAI",
+      "note": "Marking posture probe-needed"
+    },
+    {
+      "provider": "Amazon",
+      "note": "Marking posture probe-needed"
+    },
+    {
+      "provider": "Microsoft",
+      "note": "Marking posture probe-needed"
+    },
+    {
+      "provider": "Cohere",
+      "note": "Marking posture probe-needed"
+    }
+  ],
+  "doctrine": {
+    "language": "not detected / not located",
+    "fine_band": "Art 99(4) EUR 15M/3% (not EUR 35M)"
+  },
+  "unmeasured_common": [
+    "C2PA probe on samples",
+    "text watermark detector run",
+    "SynthID detector run",
+    "marking survival",
+    "n>=30",
+    "4way",
+    "keystone",
+    "MEASURED",
+    "Art 50 compliance determination"
+  ]
+}

@@ -11,18 +11,23 @@ const src = [
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/HfLivingRecord.tsx"), "utf8"),
   readFileSync(resolve(here, "../lib/hfLivingRecord.ts"), "utf8"),
+  readFileSync(resolve(here, "../components/ReachStrip.tsx"), "utf8"),
+  readFileSync(resolve(here, "../lib/reachStrip.ts"), "utf8"),
 ]
   .join("\n")
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/^\s*\/\/.*$/gm, "");
 const app = readFileSync(resolve(here, "../App.tsx"), "utf8");
-const header = readFileSync(resolve(here, "../components/Header.tsx"), "utf8");
+// The menu data moved to HeaderNav.tsx; the header behaviour stays in Header.tsx. Pin both.
+const header =
+  readFileSync(resolve(here, "../components/Header.tsx"), "utf8") +
+  readFileSync(resolve(here, "../components/HeaderNav.tsx"), "utf8");
 const tools = readFileSync(resolve(here, "ToolsPage.tsx"), "utf8");
 const stack = readFileSync(resolve(here, "../components/home/ToolStack.tsx"), "utf8");
 
 describe("homepage is chat + GSPC list plus the estate", () => {
   it("is OpenRouter desk plus slides, nine products, and Council OS", () => {
-    expect(src).toMatch(/Check a claim\. Measure a system\./);
+    expect(src).toMatch(/Check a claim\. Request a measurement\./);
     expect(src).toContain('href="/gspc-verify"');
     expect(src).toContain('href="/assess"');
     expect(src).toContain('id="os-chat"');
@@ -40,6 +45,12 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).not.toContain("HomeDemoLoop");
     expect(src).not.toContain("PluginBlock");
     expect(src).toContain("HfLivingRecord");
+    expect(src).toContain("ReachStrip");
+    expect(src).toContain("Printers of the live board");
+    expect(src).not.toContain("glama.ai/mcp/connectors/io.github.CSOAI-ORG/gspc");
+    expect(src).not.toContain("glama.ai/mcp/servers/CSOAI-ORG/councilof-ai");
+    expect(src).toContain("10.5281/zenodo.21991104");
+    expect(src).toMatch(/not a certificate/i);
     expect(src).toContain("huggingface.co/datasets/csoai/gspc-board");
     expect(src).not.toContain("OsShell");
     expect(src).not.toMatch(/certified organization|buy a rank|rank for sale/i);
@@ -55,7 +66,7 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(stack).toContain("Embed and white-label kit");
     expect(stack).toContain("Insurance evidence rail");
     expect(stack).toContain("Specialist registers");
-    expect(stack).toContain("Report an incident");
+    expect(stack).toContain("Watchdog evidence");
     expect(stack).toContain("/images/");
     expect(stack).toContain("ticks:");
     expect(stack).toContain("Why these nine, and not a catalogue");
@@ -79,7 +90,7 @@ describe("header restores master menu and Council OS", () => {
     expect(header).toContain('name: "Board"');
     expect(header).toContain('name: "Council OS"');
     expect(header).toContain('name: "Tools"');
-    expect(header).toContain("href: '/report'");
+    expect(header).toContain("href: '/watchdog-hub'");
     expect(header).toContain("href: '/for/enterprise'");
     expect(header).not.toContain("href: '/watchdog'");
     expect(header).not.toContain("Chat is Council OS");
@@ -104,8 +115,10 @@ describe("/tools is the plugin snippet", () => {
     expect(tools).toContain("https://councilof.ai/mcp");
     expect(tools).toContain("mcpServers");
     expect(tools).toMatch(/Ask: board totals/);
-    expect(tools).toContain("board_totals · get_axis · verify_card · list_cards · get_root · get_card · verify_inclusion");
-    expect(tools).toContain("HundredGate");
+    expect(tools).toMatch(
+      /board_totals · get_axis · verify_card · list_cards ·\s*get_root · get_card · verify_inclusion/,
+    );
+    expect(tools).not.toContain("HundredGate"); // internal planning envelope — never on a public page
     expect(tools).toContain("WatchlistPane");
     expect(tools).not.toMatch(/lifestyle/i);
   });
@@ -116,8 +129,9 @@ describe("home lock — later merges must not restore the desk video", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
     expect(home).toContain("LiveLeaderboard");
     expect(home).toContain("HfLivingRecord");
+    expect(home).toContain("ReachStrip");
     expect(home).toContain("The living board");
-    expect(home).toMatch(/Check a claim\. Measure a system\./);
+    expect(home).toMatch(/Check a claim\. Request a measurement\./);
     expect(home).not.toContain("HomeDemoLoop");
     expect(home).not.toContain("csoai-demo.mp4");
     expect(home).not.toContain("HomeBoard");

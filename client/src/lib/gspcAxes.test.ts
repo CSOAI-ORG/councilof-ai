@@ -40,7 +40,7 @@ describe("fetchAxes", () => {
       ok: true,
       headers: { get: () => "application/json" },
       json: async () => ({
-        totals: { public_count: "22 axes · 15 measured" },
+        totals: { public_count: "22 axes · 22 measured" },
         measured_on: { date: "2026-08-25" },
         axes: [
           { axis: "governance", bench: "GovBench", n: 237, accuracy: 0.7, status: "MEASURED" },
@@ -54,7 +54,7 @@ describe("fetchAxes", () => {
 
     const r = await fetchAxes();
     expect(r.source).toBe("wire");
-    expect(r.publicCount).toBe("22 axes · 15 measured");
+    expect(r.publicCount).toBe("22 axes · 22 measured");
     expect(r.axes.map((a) => a.axis)).toEqual(["governance", "jail"]);
     expect(r.axes.every((a) => a.axis !== "slot15")).toBe(true);
     expect(r.inLane.map((a) => a.axis)).toEqual(["slot15"]);
@@ -67,7 +67,7 @@ describe("fetchAxes", () => {
       headers: { get: () => "application/json" },
       json: async () => ({
         totals: {
-          public_count: "22 axis · 15 measured",
+          public_count: "22 axis · 22 measured",
           separated_leads: 4,
           ties: 10,
           untested_separations: 0,
@@ -157,6 +157,52 @@ describe("fetchAxes", () => {
     expect(tallyFromTotals({ public_count: "x" })).toBeUndefined();
   });
 
+  it("survives three consecutive 1102s and still reads the board", async () => {
+    // The exact prerender failure of 2026-09-04. /api/gspc returns Cloudflare error 1102 —
+    // HTTP 503 with an HTML body — and the old single retry gave up on the second miss,
+    // baking "HTML instead of JSON" into /insurers and blocking the deploy. Four attempts.
+    const cf1102 = {
+      ok: false,
+      status: 503,
+      headers: { get: () => "text/html" },
+      json: async () => { throw new Error("not json"); },
+    };
+    const wire = {
+      ok: true,
+      headers: { get: () => "application/json" },
+      json: async () => ({
+        totals: { public_count: "live from GET /api/gspc" },
+        measured_on: { date: "2026-08-18" },
+        axes: [{ axis: "governance", bench: "GovBench", n: 237, accuracy: 0.7, status: "MEASURED" }],
+      }),
+    };
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(cf1102)
+      .mockResolvedValueOnce(cf1102)
+      .mockResolvedValueOnce(cf1102)
+      .mockResolvedValueOnce(wire);
+    vi.stubGlobal("fetch", fetchMock);
+
+    const r = await fetchAxes();
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(r.source).toBe("wire");
+    expect(r.axes.map((a) => a.axis)).toEqual(["governance"]);
+  });
+
+  it("gives up after four attempts rather than retrying forever", async () => {
+    const cf1102 = {
+      ok: false, status: 503,
+      headers: { get: () => "text/html" },
+      json: async () => { throw new Error("not json"); },
+    };
+    const fetchMock = vi.fn().mockResolvedValue(cf1102);
+    vi.stubGlobal("fetch", fetchMock);
+
+    const r = await fetchAxes();
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+    expect(r.error).toBeTruthy();   // reported honestly, never faked into a success
+  });
+
   it("retries once when the first response is HTML instead of JSON", async () => {
     const html = {
       ok: true,
@@ -203,7 +249,7 @@ describe("no fabricated zero — the 2026-08-26 regression", () => {
     ok: true,
     headers: { get: () => "application/json" },
     json: async () => ({
-      totals: { public_count: "22 axes · 15 measured" },
+      totals: { public_count: "22 axes · 22 measured" },
       measured_on: { date: "2026-08-12" },
       axes,
       measured_in_lane: [

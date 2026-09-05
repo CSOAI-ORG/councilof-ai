@@ -1,0 +1,50 @@
+{
+  "schema": "csoai.mcp-server/0.1",
+  "slug": "asi-evolve",
+  "name": "ASI:Evolve",
+  "kind": "engine",
+  "as_of": "20260904T115117Z",
+  "url": "https://councilof.ai/.well-known/mcp/asi-evolve.json",
+  "version": "1.0",
+  "tools": [
+    {
+      "name": "measure_asi-evolve",
+      "description": "Measure a claim against ASI:Evolve"
+    },
+    {
+      "name": "attest_asi-evolve",
+      "description": "Get a signed attestation from ASI:Evolve"
+    },
+    {
+      "name": "verify_asi-evolve",
+      "description": "Verify an attestation from ASI:Evolve"
+    },
+    {
+      "name": "discover_asi-evolve",
+      "description": "Discover what ASI:Evolve maps to"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "gspc://asi-evolve/board",
+      "name": "Board",
+      "description": "Live GSPC board"
+    },
+    {
+      "uri": "gspc://asi-evolve/axis",
+      "name": "Axis",
+      "description": "GSPC axis definitions"
+    },
+    {
+      "uri": "gspc://asi-evolve/card",
+      "name": "Card",
+      "description": "Signed card format"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "measure_with_asi-evolve",
+      "description": "Measure a claim with ASI:Evolve"
+    }
+  ]
+}

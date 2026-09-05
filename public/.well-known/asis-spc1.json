@@ -1,0 +1,48 @@
+{
+  "door": {
+    "canonical_form": "CPython json.dumps(sort_keys=True, separators=(',',':'), ensure_ascii=True) profile \u2014 explicitly not RFC 8785/JCS",
+    "endpoints": {
+      "corrections": "https://councilof.ai/api/corrections",
+      "discover": "https://councilof.ai/.well-known/asis-spc1.json",
+      "root": "https://councilof.ai/root.json",
+      "verify": "https://councilof.ai/gspc-verify"
+    },
+    "evidence_pack": null,
+    "evidence_pack_status": "UNMAPPED \u2014 no evidence-bundle resolver for this standard",
+    "publisher": "Council of AI (CSOAI Ltd)"
+  },
+  "measurement": {
+    "axes_covered": 0,
+    "lid": "Discovery document only; no standard-specific GSPC coverage is claimed.",
+    "schema": "csoai.gspc-axes/0.5",
+    "status": "UNMAPPED"
+  },
+  "notes": [
+    "Discovery doc for ASIS SPC.1",
+    "Description: ASIS SPC.1-2009 Organizational Resilience",
+    "No measurement is asserted by this discovery document. Verify only a specifically published card at /gspc-verify.",
+    "This doc is the first layer (Layer 0) \u2014 the unsealed first layer."
+  ],
+  "publisher": "CSOAI Ltd (UK 16939677)",
+  "schema": "csoai.door/asis-spc1/0.1",
+  "standard": {
+    "description": "ASIS SPC.1-2009 Organizational Resilience",
+    "kind": "resilience",
+    "name": "ASIS SPC.1",
+    "url": "https://www.asisonline.org/"
+  },
+  "trust_anchor": {
+    "did": "did:web:csoai.org",
+    "did_document": "https://csoai.org/.well-known/did.json",
+    "signing_keys": [
+      {
+        "id": "did:web:csoai.org#card-attestation-1",
+        "purpose": "3KB measurement cards"
+      },
+      {
+        "id": "did:web:csoai.org#board-attestation-1",
+        "purpose": "22-axis board snapshot"
+      }
+    ]
+  }
+}

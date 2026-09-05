@@ -18,7 +18,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DIST = path.resolve(REPO, process.argv[2] || "dist/client");
+const SELFTEST = process.argv.includes("--selftest");
+const DIST = path.resolve(REPO, (process.argv[2] && !process.argv[2].startsWith("--")) ? process.argv[2] : "dist/client");
+
 
 // Each rule: a forbidden DISPLAY pattern + WHY. `allowOn` (optional) is a path regex for pages
 // that legitimately QUOTE the term to retract/document it (the "refutation-ledger historical
@@ -42,6 +44,10 @@ const RULES = [
   {
     id: "sovereign_brand",
     pattern: /\bsovereign\b/i,
+    // "Sovereign wealth fund" is a financial instrument, not our brand. The financial axes
+    // name real funds (persona-tests.json carries the Norwegian Oil Fund); a gate that
+    // forced those to be renamed would falsify domain vocabulary to satisfy a branding rule.
+    nearAllow: /wealth\s+fund|oil\s+fund|\bSWF\b/i,
     why: 'De-branded surface: "Sovereign" is not the product name. Use Council / Council Signal / the measurement engine.',
   },
   {
@@ -163,6 +169,90 @@ const RULES = [
     why: "Infra hostname / staging origin must not ship. Use the public API councilof.ai/api/gspc.",
   },
 ];
+
+const DISPLAY_KEYS = /^(name|title|label|headline|criteria|tagline|cta|heading|display_name|badge_name)$/i;
+function jsonDisplayHits(obj, rel) {
+  const hits = [];
+  (function rec(node, at, key) {
+    if (typeof node === "string") {
+      if (!DISPLAY_KEYS.test(key || "")) return;
+      for (const rule of RULES) {
+        if (rule.allowOn && rule.allowOn.test(rel)) continue;
+        const re = new RegExp(rule.pattern.source, "gi");
+        let m;
+        while ((m = re.exec(node)) !== null) {
+          const w = node.slice(Math.max(0, m.index - 90), m.index + m[0].length + 90);
+          if (rule.nearAllow && rule.nearAllow.test(w)) continue; // disclosure, not assertion
+          hits.push({ at, rule: rule.id, why: rule.why, hit: m[0], ctx: node.slice(0, 120) });
+          break;
+        }
+      }
+    } else if (Array.isArray(node)) {
+      node.forEach((v, i) => rec(v, at + "[" + i + "]", key));
+    } else if (node && typeof node === "object") {
+      for (const [k, v] of Object.entries(node)) rec(v, at ? at + "." + k : k, k);
+    }
+  })(obj, "", null);
+  return hits;
+}
+
+// A guard that cannot fail enforces nothing. This proves every rule still matches the string it
+// exists to catch, and still permits the context it is meant to allow — without needing a built
+// tree, so it can run before the prerender and in any checkout.
+//   node scripts/brand-gate.mjs --selftest
+if (SELFTEST) {
+  const CASES = [
+    // [rule id, text that MUST be caught, text that MUST be allowed]
+    ["retracted_fault_tolerance", "the 33-agent BFT council", "the retraction of the BFT claim is in the refutation ledger"],
+    ["sovereign_brand", "Project: Sovereign Signed-Card Anchor", null],
+    ["internal_codenames", "PixiJS + SOV3 substrate", null],
+  ];
+  let bad = 0;
+  for (const [id, mustCatch, mustAllow] of CASES) {
+    const rule = RULES.find((r) => r.id === id);
+    if (!rule) { console.error(`\u2716 selftest: rule "${id}" no longer exists`); bad++; continue; }
+    if (!rule.pattern.test(mustCatch)) {
+      console.error(`\u2716 selftest: rule "${id}" no longer catches ${JSON.stringify(mustCatch)}`); bad++;
+    }
+    if (mustAllow && rule.allowOn && !rule.allowOn.test(mustAllow)) {
+      console.error(`\u2716 selftest: rule "${id}" no longer allows its documented exemption`); bad++;
+    }
+  }
+  // The JSON display sweep is a gate in its own right, so it proves itself the same way:
+  // it must CATCH the badge copy that actually shipped, and must PASS the negation keys,
+  // the retraction register, the domain vocabulary and the identifiers that must keep
+  // shipping. A sweep that only caught things would push honest copy toward silence.
+  const SWEEP_CATCH = [
+    ["/interop/hf-badges-index.json", { badges: [{ name: "CSOAI 23/33 BFT attested" }] }],
+    ["/interop/hf-badges-index.json", { badges: [{ criteria: "Attested by 23 of 33 sovereign council agents" }] }],
+  ];
+  const SWEEP_PASS = [
+    // semantic negation keys — these DENY the claim, which is the copy we want to keep
+    ["/interop/axes-v2-web3.json", { claim_boundary: "Design proposal only. No deployment, signature, chain inclusion, BFT independence, universal coverage, legal compliance, or certification is established by this record." }],
+    ["/interop/council-independence.json", { does_not_establish: "Fault tolerance. n_eff is a measurement of independence, not a guarantee." }],
+    // domain vocabulary, not our brand
+    ["/interop/persona-tests.json", { name: "Sovereign wealth fund (Norwegian Oil Fund)" }],
+    // identifiers and published URLs are not display copy
+    ["/interop/hf-badges-index.json", { badges: [{ id: "csoai-bft-23", image: "https://councilof.ai/badge/csoai-bft-23.svg" }] }],
+    // the corrected copy now in the tree
+    ["/interop/hf-badges-index.json", { badges: [{ name: "CSOAI 23/33 council threshold", criteria: "Attested by 23 of 33 council agents (designed threshold)" }] }],
+  ];
+  for (const [rel, obj] of SWEEP_CATCH) {
+    if (jsonDisplayHits(obj, rel).length === 0) {
+      console.error(`\u2716 selftest: json display sweep no longer catches ${JSON.stringify(obj)}`); bad++;
+    }
+  }
+  for (const [rel, obj] of SWEEP_PASS) {
+    const h = jsonDisplayHits(obj, rel);
+    if (h.length) {
+      console.error(`\u2716 selftest: json display sweep now FAILS copy that must ship: ${JSON.stringify(obj)} -> [${h[0].rule}]`); bad++;
+    }
+  }
+  if (bad) { console.error(`\u2716 brand-gate selftest FAILED (${bad})`); process.exit(1); }
+  console.log(`\u2713 brand-gate selftest: ${CASES.length}/${CASES.length} rules still catch what they exist to catch`);
+  process.exit(0);
+}
+
 
 function visibleText(html) {
   return html
@@ -300,6 +390,32 @@ for (const file of walk(DIST)) {
   }
 }
 
+// PUBLIC-JSON *DISPLAY FIELD* SWEEP (added 2026-09-05).
+// The page walk above is .html/.txt only, so the DISPLAY rules never reached a JSON body —
+// while the path/JSON sweep above checks a different, narrower list (internal codenames).
+// A badge asserting the RETRACTED fault-tolerance claim therefore shipped in
+// public/interop/hf-badges-index.json ("CSOAI 23/33 BFT attested", status active,
+// qualifying_models 104) while this gate reported clean. HuggingFace renders that name: a
+// served JSON string that a consumer displays is display copy.
+//
+// Scoped to keys that RENDER, deliberately. A whole-body scan was tried first and produced
+// 28 false positives out of 30 — this estate's JSON says the honest thing in semantic
+// negation keys (`claim_boundary`, `does_not_establish`), quotes retracted claims in a
+// register (`claim`/`notes`/`why`), and carries third-party model ids and filesystem paths
+// in free text. Failing those would push honest copy toward silence, which is the opposite
+// of the point. Identifiers and URLs (`id`, `image`) are excluded too: renaming a published
+// badge URL breaks consumers and is the retirement-redirect question, not a display one.
+for (const jf of walkAll(DIST)) {
+  if (!jf.endsWith(".json")) continue;
+  const jrel = "/" + path.relative(DIST, jf);
+  if (/^\/signed\//.test(jrel)) continue; // signed evidence carries the real model id — same carve-out
+  let parsed;
+  try { parsed = JSON.parse(fs.readFileSync(jf, "utf8")); } catch { continue; }
+  for (const h of jsonDisplayHits(parsed, jrel)) {
+    failures.push({ rel: jrel + " -> " + h.at, rule: h.rule, why: h.why, hit: h.hit, ctx: h.ctx });
+  }
+}
+
 if (failures.length) {
   console.error(`\n✖ brand-gate: ${failures.length} forbidden DISPLAY string(s) in rendered output:\n`);
   for (const f of failures) {
@@ -309,4 +425,5 @@ if (failures.length) {
   }
   process.exit(1);
 }
-console.log(`✓ brand-gate: no forbidden display strings in ${path.relative(REPO, DIST)} (${walk(DIST).length} pages/txt scanned)`);
+const jsonScanned = walkAll(DIST).filter((f) => f.endsWith(".json") && !/^\/signed\//.test("/" + path.relative(DIST, f))).length;
+console.log(`✓ brand-gate: no forbidden display strings in ${path.relative(REPO, DIST)} (${walk(DIST).length} pages/txt + ${jsonScanned} public JSON display-field scanned)`);

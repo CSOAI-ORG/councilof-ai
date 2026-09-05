@@ -1,0 +1,51 @@
+{
+  "schema": "csoai.huggingface-marketplace/0.1",
+  "as_of": "20260905T052313Z",
+  "principle": "CSOAI is the official 22-axis measurement badge provider for HuggingFace.",
+  "vendor": {
+    "name": "Council of AI",
+    "vendor_id": "csoai",
+    "url": "https://councilof.ai",
+    "logo": "https://councilof.ai/csoai-icon.svg",
+    "contact": "nicholas@csoai.org"
+  },
+  "badges": [
+    {
+      "id": "csoai-22axis",
+      "name": "CSOAI 22-axis measured",
+      "criteria": "Model scored on all 22 axes with valid signatures"
+    },
+    {
+      "id": "csoai-card-validated",
+      "name": "CSOAI card validated",
+      "criteria": "Model has a valid 3KB signed card on the chain"
+    },
+    {
+      "id": "csoai-ots-anchored",
+      "name": "CSOAI OTS-anchored",
+      "criteria": "Model card is Bitcoin-anchored via OTS"
+    },
+    {
+      "id": "csoai-rekor-anchored",
+      "name": "CSOAI Rekor-anchored",
+      "criteria": "Model card is Sigstore Rekor-signed"
+    },
+    {
+      "id": "csoai-eas-anchored",
+      "name": "CSOAI EAS-anchored",
+      "criteria": "Model card will be EAS-attested on Base once the EAS rail issues (planned)",
+      "status": "planned"
+    },
+    {
+      "id": "csoai-bft-23",
+      "name": "CSOAI 23/33 council threshold",
+      "criteria": "Attested by 23 of 33 council agents (designed threshold)"
+    }
+  ],
+  "registration": {
+    "hf_organization": "csoai-org",
+    "apply_url": "https://huggingface.co/organizations/csoai-org/new-badge",
+    "status": "applied"
+  },
+  "doctrine": "We bring measurement to the model hub. Not certification. Measurement anyone can re-check."
+}

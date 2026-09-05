@@ -1,5 +1,5 @@
 {
- "as_of": "2026-09-01T08:40:01Z",
+ "as_of": "2026-09-01T13:08:24Z",
  "did": "did:web:csoai.org#board-attestation-1",
  "payload": {
   "kind": "csoai.auto-eat-probe/0.1",
@@ -13,25 +13,25 @@
   },
   "method": "keyless HTTPS GET huggingface.co/api/models/{id}; three-state LIVE/HELD/DEAD",
   "sample": {
-   "n_probed": 1287,
-   "live": 498,
+   "n_probed": 6,
+   "live": 6,
    "placeholder": 0,
    "held": 0,
    "dead": 0,
-   "uncheckable": 789,
-   "live_fraction_of_probed": 0.3869,
+   "uncheckable": 0,
+   "live_fraction_of_probed": 1.0,
    "live_examples": [
-    "vsuhas9/LFM2-VL-450M-r32-a16 (200)",
-    "ShinyUser/mt92-r1238-uid24-balanced (200)",
-    "ASD1232132/MyAwesomeModel-TestRepo (200)",
-    "ShinyUser/mt92-r1238-uid191-quality (200)",
-    "yunjae-won/T14bsolution_14b_S1.7b_klreg1.0_stage0_checkpoint50 (200)",
-    "vishwa1711/my-agentic-rag-ai (200)"
+    "mrthor102/gun04 (200)",
+    "mrthor102/gun05 (200)",
+    "clear-blue-sky/cto10 (200)",
+    "mrthor102/gun02 (200)",
+    "Adeyemo260/Qwen3.8-Max (200)",
+    "mrthor102/gun01 (200)"
    ]
   },
   "story": "auto-eat probed newly-DISCOVERED ids read-only; LIVE = reachable/resolvable only, NOT graded",
   "verified_via": "keyless three-state probe; DISCOVERED->LIVE means reachable, never MEASURED",
-  "as_of": "2026-09-01T08:40:01Z",
+  "as_of": "2026-09-01T13:08:24Z",
   "unmeasured": [
    "gspc_score",
    "weights_integrity",
@@ -40,10 +40,10 @@
   ]
  },
  "schema": "https://councilof.ai/schema/card-v0.json",
- "sha256": "c8fc2099a427ccb1028640f3a9a58ef4bbe0362264c83308dce10a2f722759b6",
- "sig_ed25519": "e7cfafb2dd3608a0552f7e08bb2a193008f01f7005b8d595d93f292137612c653c712640aa5b77ce199e625d9bdde6fd7e1cc4abe06fa885df8112ed080a260f",
+ "sha256": "4b3b9c542e27c21c34d804d53b69d5bef4cd8b6b7991db04cd605c20a4662fa1",
+ "sig_ed25519": "5d4e12c19152005de30272b9c4f1d8d9ca2a5ff51f19501a4eb60403e4677e3312b01af6232dc30817d9ad7b840713da09401b31be9fa08686801c9e8464490d",
  "surface": "autoeat.hf.newmodels",
- "subject": "auto-eat hf-model: 498 LIVE of 1287 probed (read-only, ungraded)",
+ "subject": "auto-eat hf-model: 6 LIVE of 6 probed (read-only, ungraded)",
  "source_urls": [
   "https://huggingface.co/api/models"
  ],

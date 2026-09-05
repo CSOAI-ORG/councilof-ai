@@ -78,7 +78,7 @@ const TOOLS: Tool[] = [
     ],
     image: "/images/band/hardened.png",
     alt: "A field of pale solids joined by a lattice of green light",
-    door: { kind: "route", path: "/os?lobby=home" },
+    door: { kind: "route", path: "/dashboard?tab=home" },
   },
   {
     id: "tool-board",
@@ -209,17 +209,17 @@ const TOOLS: Tool[] = [
   {
     id: "tool-report",
     family: "Open to everyone",
-    name: "Report an incident",
+    name: "Watchdog evidence",
     what:
-      "A public form for AI behaviour that looks wrong. The intake hands you a signed acknowledgement of exactly what you filed, and whatever we act on is measured and signed like everything else here.",
+      "Read the public Watchdog material and current evidence state. Durable incident submission, storage, and signed acknowledgements are not implemented in this release.",
     pain:
       "Otherwise a harm disappears into a supplier's private support queue and nobody outside it ever learns it happened.",
     ticks: [
-      "A public form for AI behaviour that looks wrong.",
-      "You get a signed acknowledgement of exactly what you filed.",
-      "Whatever we act on is measured and signed like everything else here.",
+      "Public Watchdog material remains readable without an account.",
+      "No report is represented as filed unless a durable intake confirms persistence.",
+      "Any future finding must pass the same measurement and evidence gates as the board.",
     ],
-    note: "Anyone can file one. No account, and no charge.",
+    note: "Read-only today. The report intake is explicitly unavailable rather than pretending to file.",
     image: "/images/loop/outcry.png",
     objectPosition: "left center",
     alt: "A raw jagged signal trace behind a glass panel labelled “unstructured outcry”",
@@ -234,11 +234,11 @@ export function hrefFor(door: Door): string {
     if (door.pane === "measured" || door.pane === "ras" || door.pane === "assess") return "/assess";
     if (door.pane === "evidence") return "/gpai-evidence";
     if (door.pane === "embed") return "/embed";
-    if (door.pane === "watchdog") return "/report";
+    if (door.pane === "watchdog") return "/watchdog-hub";
     if (door.pane === "cards" || door.pane === "harness" || door.pane === "space") {
-      return `/os?lobby=${door.pane}`;
+      return `/dashboard?tab=${door.pane}`;
     }
-    return "/os?lobby=board";
+    return "/dashboard?tab=board";
   }
   if (door.task === "insurer-rail") return "/insurers";
   if (door.task === "specialist-registers") return "/registers";
@@ -249,7 +249,7 @@ export function hrefFor(door: Door): string {
   ) {
     return "/assess";
   }
-  return "/os?lobby=board";
+  return "/dashboard?tab=board";
 }
 
 /** The live figure a tile is entitled to show, or null when it has none. */

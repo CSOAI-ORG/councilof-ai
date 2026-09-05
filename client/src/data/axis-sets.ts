@@ -32,6 +32,7 @@ import facts from "./facts.json";
 import { EUNOMIA_AXES, EUNOMIA_MEASURED_ON } from "./eunomia";
 
 export type AxisStatus = "MEASURED" | "UNMEASURED" | "DRAFT" | "SPEC" | "PLANNED";
+export type RunAttestation = "ED25519_SIGNED" | "CONTENT_ADDRESSED_UNSIGNED";
 
 export interface EvidenceLink {
   label: string;
@@ -70,6 +71,9 @@ export interface AxisRow {
   /** Whether a lead over the field is statistically real. Only applies where
    *  there IS a field to lead. */
   separation: "SEPARATED" | "TIE" | "UNTESTED" | null;
+  /** How the row's run artifact is authenticated. null means the source did not
+   *  declare an attestation state; it must never be inferred from a content ID. */
+  runAttestation: RunAttestation | null;
   /** Present only on an unmeasured row. Says WHY, because an unmeasured slot is
    *  content, not absence. */
   whyUnmeasured: string | null;
@@ -130,9 +134,75 @@ export interface AxisSet {
    *  endpoint does not answer — including at prerender time, when no function is
    *  running. It is loaded by the same loader and labelled as a snapshot. */
   fallbackUrl?: string;
+  /** A fallback with a status sidecar is eligible only when that sidecar says
+   *  both state=CURRENT and current=true. Non-current signed bytes are evidence,
+   *  not a current board. The status is fetched before the fallback artifact. */
+  fallbackStatusUrl?: string;
   fallbackProvenance?: string;
   /** Marked when the set is a dated record rather than a live instrument. */
   retired?: string;
+}
+
+const errText = (error: unknown): string =>
+  error instanceof Error ? error.message : String(error);
+
+const readJson = async (fetchImpl: typeof fetch, url: string): Promise<unknown> => {
+  const response = await fetchImpl(url);
+  if (!response.ok) throw new Error(`HTTP ${response.status} from ${url}`);
+  return response.json();
+};
+
+/** Fetch one live set and, only after a CURRENT status sidecar, its fallback.
+ *  Exported so the fail-closed transition is unit-tested without mounting React. */
+export async function fetchPublishedSet(
+  set: AxisSet,
+  fetchImpl: typeof fetch = fetch,
+): Promise<LoadedSet> {
+  if (!set.fetchUrl) throw new Error(`${set.id} has no published fetch URL`);
+
+  let liveError: unknown;
+  try {
+    return set.load(await readJson(fetchImpl, set.fetchUrl));
+  } catch (error) {
+    liveError = error;
+  }
+
+  if (!set.fallbackUrl) throw liveError;
+
+  if (set.fallbackStatusUrl) {
+    let rawStatus: unknown;
+    try {
+      // Status is deliberately fetched BEFORE the artifact: known-defect bytes
+      // must never be loaded and then accidentally treated as current.
+      rawStatus = await readJson(fetchImpl, set.fallbackStatusUrl);
+    } catch (statusError) {
+      throw new Error(
+        `${errText(liveError)}; fallback status unavailable: ${errText(statusError)}`,
+      );
+    }
+    const status = rawStatus as { current?: unknown; state?: unknown } | null;
+    if (status?.current !== true || status?.state !== "CURRENT") {
+      throw new Error(
+        `${errText(liveError)}; fallback refused: ${set.fallbackStatusUrl} reports ` +
+          `${String(status?.state ?? "UNCHECKABLE")} (current=${String(status?.current ?? false)})`,
+      );
+    }
+  }
+
+  let rawFallback: unknown;
+  try {
+    rawFallback = await readJson(fetchImpl, set.fallbackUrl);
+  } catch (fallbackError) {
+    throw new Error(`${errText(liveError)}; fallback unavailable: ${errText(fallbackError)}`);
+  }
+  const loaded = set.load(rawFallback, set.fallbackProvenance);
+  return {
+    ...loaded,
+    // A current snapshot is still a snapshot. Never let a loader infer liveness
+    // from row count and thereby hide the fallback provenance banner.
+    live: false,
+    provenance: set.fallbackProvenance ?? loaded.provenance,
+  };
 }
 
 // ─────────────────────────────────────────────────────────────── helpers
@@ -146,6 +216,9 @@ const interval = (v: unknown): [number, number] | null =>
   Array.isArray(v) && v.length === 2 && typeof v[0] === "number" && typeof v[1] === "number"
     ? [v[0], v[1]]
     : null;
+
+const runAttestation = (value: unknown): RunAttestation | null =>
+  value === "ED25519_SIGNED" || value === "CONTENT_ADDRESSED_UNSIGNED" ? value : null;
 
 /** card_index axis slugs are not board axis ids — the index predates the board's
  *  naming. This maps the ones that genuinely refer to the same axis, so a reader
@@ -174,7 +247,7 @@ const BOARD_OBSERVED = (facts as any).counts?.axis_count?.observed ?? {};
 
 const BANK_HOST = "https://huggingface.co/datasets/";
 
-function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): LoadedSet {
+export function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): LoadedSet {
   const d = (raw ?? {}) as any;
   const axes: any[] = Array.isArray(d.axes) ? d.axes : [];
   const measuredOnDate =
@@ -182,6 +255,7 @@ function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): 
 
   const rows: AxisRow[] = axes.map((a) => {
     const measured = a.status === "MEASURED";
+    const attestation = runAttestation(a.run_attestation);
     const ev: EvidenceLink[] = [];
     // The endpoint resolves a bank slug to a fetchable URL when it serves; the
     // committed snapshot carries only the slug. Resolve it here so the fallback
@@ -196,10 +270,20 @@ function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): 
       });
     if (a.evidence_url)
       ev.push({
-        label: "the signed run",
+        label:
+          attestation === "ED25519_SIGNED"
+            ? "the signed run"
+            : attestation === "CONTENT_ADDRESSED_UNSIGNED"
+              ? "the content-addressed unsigned run"
+              : "the run artifact",
         href: a.evidence_url,
         kind: "run",
-        what: "the recorded run this row summarises",
+        what:
+          attestation === "ED25519_SIGNED"
+            ? "the recorded run this row summarises, with its Ed25519 signature"
+            : attestation === "CONTENT_ADDRESSED_UNSIGNED"
+              ? "the recorded run this row summarises; its content ID identifies bytes but is not a signature"
+              : "the recorded run this row summarises; no run-attestation state was declared",
       });
     ev.push({
       label: "this axis on the board API",
@@ -221,6 +305,7 @@ function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): 
       interval: interval(a.interval),
       measuredOn: a.leader ?? (measured ? a.fleet ?? null : null),
       separation: a.separation ?? null,
+      runAttestation: attestation,
       whyUnmeasured: measured
         ? null
         : a.note ??
@@ -242,7 +327,7 @@ function loadBoard(raw: unknown, provenance = "Live from the board endpoint."): 
 
 /** The board's shape when the live endpoint has not answered. Rows are absent —
  *  the page says so rather than drawing an empty table that looks like a finding. */
-function boardFallback(): LoadedSet {
+function boardFallback(provenance?: string): LoadedSet {
   return {
     rows: [],
     asOf: BOARD_OBSERVED.observed_at ?? null,
@@ -255,9 +340,10 @@ function boardFallback(): LoadedSet {
     ],
     live: false,
     provenance:
-      "Neither the live board endpoint nor its signed snapshot answered here, so no rows are drawn. " +
-      "The figure below is a RECORDED OBSERVATION of the endpoint, carrying its own date — not a reading of it. " +
-      "If it ever disagrees with the endpoint, the endpoint wins.",
+      provenance ??
+      ("Neither the live board endpoint nor an eligible current snapshot answered here, so no rows are drawn. " +
+        "The figure below is a RECORDED OBSERVATION of the endpoint, carrying its own date — not a reading of it. " +
+        "If it ever disagrees with the endpoint, the endpoint wins."),
   };
 }
 
@@ -286,6 +372,7 @@ function loadEngine16(raw: unknown): LoadedSet {
     interval: null,
     measuredOn: m.model,
     separation: null,
+    runAttestation: null,
     whyUnmeasured: null,
     evidence: [
       {
@@ -352,6 +439,7 @@ function loadArena(raw: unknown): LoadedSet {
       interval: top ? interval(top.ci) : null,
       measuredOn: top?.model ?? null,
       separation: null,
+      runAttestation: null,
       whyUnmeasured:
         table && table.length
           ? null
@@ -406,6 +494,7 @@ function loadEunomia(): LoadedSet {
     interval: a.strong ? a.strong.ci : null,
     measuredOn: a.strong ? EUNOMIA_MEASURED_ON.models[1] ?? null : null,
     separation: null,
+    runAttestation: null,
     whyUnmeasured:
       a.status === "MEASURED"
         ? null
@@ -463,6 +552,7 @@ function loadFinancialRegister(raw: unknown): LoadedSet {
       interval: null,
       measuredOn: measured ? "public ledger records" : null,
       separation: null,
+      runAttestation: null,
       whyUnmeasured: measured
         ? null
         : `${a.data ? `Would need: ${a.data}. ` : ""}${a.bank_status ? `Item set: ${a.bank_status}` : "No run behind this slot yet."}`,
@@ -471,13 +561,23 @@ function loadFinancialRegister(raw: unknown): LoadedSet {
     };
   });
 
+  const asOf = typeof d.as_of === "string" && d.as_of.trim() ? String(d.as_of).trim() : null;
+  const boardNote =
+    typeof d.board_authority_note === "string"
+      ? String(d.board_authority_note)
+      : "Board counts (axes/measured/unmeasured) authority is live GET /api/gspc. This register is not the board.";
+  const aside = [
+    { label: "Board authority", value: boardNote },
+    ...(d.honesty ? [{ label: "The register's own caveat", value: String(d.honesty) }] : []),
+  ];
   return {
     rows,
-    asOf: null,
-    asOfField: null,
-    aside: d.honesty ? [{ label: "The register's own caveat", value: String(d.honesty) }] : [],
+    asOf,
+    asOfField: asOf ? "as_of" : null,
+    aside,
     live: rows.length > 0,
-    provenance: "Read from the published register file.",
+    provenance:
+      "Read from the published register file. Board counts defer to live GET /api/gspc — this file is dated detail, not the board.",
   };
 }
 
@@ -506,6 +606,7 @@ function loadGapMap(raw: unknown): LoadedSet {
       interval: null,
       measuredOn: "published benchmarks surveyed across the field",
       separation: null,
+      runAttestation: null,
       whyUnmeasured:
         v.evidenced > 0
           ? null
@@ -546,6 +647,7 @@ function loadSnapshot(raw: unknown): LoadedSet {
     interval: null,
     measuredOn: null,
     separation: null,
+    runAttestation: null,
     whyUnmeasured: a.status === "MEASURED" ? null : "Not measured as at the snapshot date.",
     evidence: [
       { label: "the snapshot file", href: "/six-axes/gspc-axes.json", kind: "run", what: "the dated record, exactly as it was frozen" },
@@ -590,6 +692,7 @@ function loadCardSet(raw: unknown): LoadedSet {
     interval: null,
     measuredOn: `${a.models} models`,
     separation: null,
+    runAttestation: null,
     whyUnmeasured: a.cards > 0 ? null : "No card records this axis.",
     evidence: [
       {
@@ -660,19 +763,19 @@ export const AXIS_SETS: AxisSet[] = [
       "This is the set every other count on this page should be compared against, and the only one whose number belongs in a sentence about 'the board'. The other six measure different things over different populations, so they carry their own numbers by design, not by drift.",
     countAuthority: "GET /api/gspc → totals.public_count",
     artifact: { href: "/api/gspc", label: "/api/gspc" },
-    detailPage: { href: "/gspc-scoreboard", label: "the full board, axis by axis" },
+    detailPage: { href: "/dashboard?tab=board", label: "the full board, axis by axis" },
     freshness:
-      "The date is the measurement stamp carried inside the signed board payload — when the runs happened. It is not the time this page was rendered or deployed, so it moves only when new runs are measured and signed.",
+      "The date is the measurement stamp carried by the current board response — when the runs happened. It is not render or deploy time, and signing state is reported separately rather than inferred from the date.",
     fetchUrl: "/api/gspc",
-    // The committed signed snapshot of the same payload. Used when the endpoint
-    // does not answer — including during prerender, when no function is running —
-    // so a crawler and a reader with a cold cache still get the real rows, and
-    // are told plainly that they are reading a snapshot.
+    // The signed snapshot is eligible only when its separate status document is
+    // CURRENT. Status is read first; SUPERSEDED/unknown status fails closed with
+    // no rows. Even a current fallback renders with live=false and visible
+    // provenance because signed bytes are not a live endpoint read.
     fallbackUrl: "/signed/gspc-board.signed.json",
+    fallbackStatusUrl: "/signed/gspc-board.status.json",
     fallbackProvenance:
-      "The board endpoint did not answer, so these rows come from the SIGNED SNAPSHOT of the same payload — " +
-      "the artifact the endpoint's numbers are derived from. It is real and it is signed; it is simply not a " +
-      "live read, and it can lag the endpoint.",
+      "The board endpoint did not answer, so these rows come from a signed snapshot whose status document " +
+      "marks it CURRENT. This is not a live read and can lag the endpoint.",
     load: loadBoard,
   },
   {
@@ -758,26 +861,26 @@ export const AXIS_SETS: AxisSet[] = [
     id: "financial-register",
     name: "The financial register",
     headline:
-      "The per-row detail behind the financial half of the public board: what each row would check, and which single row has anything behind it so far.",
+      "The per-row rubric/evidence detail behind the financial half of the public board. Board counts (axes/measured/unmeasured) come from live GET /api/gspc — this register is not the board.",
     measures:
-      "Deterministic facts about financial instruments — which flags an issuing account carries on a public ledger. No model is asked anything.",
-    subject: "issuing accounts of named financial instruments",
+      "Deterministic facts about financial instruments and public series — issuer-account flags, disclosure presence, and cited component series. No model is asked anything.",
+    subject: "issuing accounts of named financial instruments, and cited public series for component/disclosure rows",
     establishes: [
       "Which control flags a named account carried, read directly off a public ledger, for the accounts we could locate.",
-      "Exactly what each unmeasured row would need before it could carry a number — the data source is named for every one of them.",
+      "Which financial/domain rows have a signed deterministic-facts run behind them, and which evidence surface to open.",
     ],
     doesNotEstablish: [
       "Any view on risk, solvency or creditworthiness. What a control flag implies is explicitly unmeasured and would need legal advice, not a benchmark.",
-      "Coverage of the instruments the register names. Only the accounts we could locate publicly were read; the rest were never attested, and that is a gap in scope, not a stale number.",
-      "A rating, a ranking, or an endorsement of any named instrument.",
+      "Board totals. Quote GET /api/gspc totals.public_count for axes/measured/unmeasured — never invent board counts from this file.",
+      "A rating, a ranking, an index formula, or an endorsement of any named instrument. C-2026-0826-05: do not restore MEASURED-INDEX-v0.1.",
     ],
     relation:
-      "These rows are also carried on the public board, where they count toward its slot count and NOT toward its measured count. This register is the detail behind those same rows, so its number is a breakdown of the board's, not a competing claim.",
-    countAuthority: "/interop/financial-axes.json → axes[]",
+      "These rows are also carried on the public board. Board slot and measured counts are derived live from GET /api/gspc. This register is dated per-row detail behind those same rows — not a competing board claim, and not a place to stamp MEASURED onto unsigned runs.",
+    countAuthority: "GET /api/gspc → totals.by_family.financial / axes[] (family=financial). /interop/financial-axes.json is dated register detail only.",
     artifact: { href: "/interop/financial-axes.json", label: "/interop/financial-axes.json" },
     detailPage: { href: "/financial-axes", label: "the financial axes page" },
     freshness:
-      "This artifact carries no timestamp of any kind, so no date is shown for it. Borrowing a neighbouring file's date would assert a freshness nobody established — unknown is left unknown.",
+      "as_of on the register file when present. Board counts always re-fetch from GET /api/gspc; the register date is not the board's measured_on.",
     fetchUrl: "/interop/financial-axes.json",
     load: loadFinancialRegister,
   },

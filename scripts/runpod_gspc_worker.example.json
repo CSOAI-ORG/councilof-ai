@@ -1,0 +1,24 @@
+{
+  "schema": "csoai.runpod-gspc-worker/0.1",
+  "workspace_root": "/workspace",
+  "axis": "governance",
+  "model": "qwen3:4b",
+  "bank": "/workspace/banks-all/gspc-gov.jsonl",
+  "expected_bank_sha256": "REPLACE_WITH_64_LOWERCASE_HEX",
+  "output_dir": "/workspace/gspc-24x7",
+  "ollama_url": "http://127.0.0.1:11434",
+  "expected_model_manifest_digest": "sha256:REPLACE_WITH_64_LOWERCASE_HEX",
+  "model_manifest_path": "/workspace/ollama-models/manifests/registry.ollama.ai/library/qwen3/4b",
+  "allowed_labels": [
+    "PROHIBITED",
+    "HIGH_RISK",
+    "LIMITED_RISK",
+    "MINIMAL_RISK"
+  ],
+  "interval_seconds": 900,
+  "disk_low_water_bytes": 5368709120,
+  "request_timeout_seconds": 180,
+  "max_tokens": 128,
+  "seed": 0,
+  "temperature": 0
+}

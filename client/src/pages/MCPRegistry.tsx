@@ -63,9 +63,9 @@ export default function MCPRegistry() {
             The <span className="text-emerald-600">{registry.total}-MCP</span> Governance Fleet
           </h1>
           <p className="text-xl text-gray-700 leading-relaxed max-w-3xl mb-8">
-            Every CSOAI tool is powered by Model Context Protocol servers — production compliance, safety and
-            agent-infrastructure tools that any AI agent or human can call. Each one emits signed, auditable evidence
-            mapped to the major global frameworks.
+            This registry catalogues Model Context Protocol servers for governance, safety and agent infrastructure.
+            A catalogue row does not prove a server is reachable or that each call emits signed evidence; verify the
+            named endpoint and any returned artifact before relying on it.
           </p>
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2 bg-white rounded-lg px-4 py-3 shadow-sm border border-emerald-100">
@@ -236,14 +236,14 @@ export default function MCPRegistry() {
         <div className="container max-w-4xl text-center">
           <h2 className="text-4xl font-bold mb-6">Put the full fleet to work</h2>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Connect your AI agents and compliance teams to all {registry.total} MCP tools through one gated endpoint
-            (<code className="text-emerald-300">api.meok.ai</code>) — with bearer-token auth, per-user audit trails and
-            signed, framework-mapped evidence on every call.
+            Use the registry to discover {registry.total} entries. Availability, authentication, audit trails and
+            signed outputs are capabilities to verify per endpoint; the catalogue does not imply one live gateway or
+            uniform behavior across every entry.
           </p>
           <div className="grid sm:grid-cols-2 gap-4 max-w-xl mx-auto mb-8 text-left">
             <div className="bg-white/10 rounded-xl p-5 border border-white/10">
               <p className="text-sm text-emerald-300 font-semibold">Full MCP suite</p>
-              <p className="text-sm text-gray-300 mt-1">Every governance tool + EU AI Act tracking, signed evidence on every call</p>
+              <p className="text-sm text-gray-300 mt-1">Governance-tool catalogue with per-endpoint status and framework metadata</p>
             </div>
             <div className="bg-white/10 rounded-xl p-5 border border-white/10">
               <p className="text-sm text-emerald-300 font-semibold">Enterprise</p>
@@ -256,12 +256,12 @@ export default function MCPRegistry() {
                 Book a free 15-min EU AI Act diagnostic <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </a>
-            <Link href="/os?lobby=assess&task=pricing-overview">
+            <Link href="/dashboard?task=pricing-overview&tab=measured">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 How the free rail works
               </Button>
             </Link>
-            <Link href="/os?lobby=assess&task=enterprise-start">
+            <Link href="/dashboard?task=enterprise-start&tab=measured">
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Enterprise lobby
               </Button>

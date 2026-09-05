@@ -4,41 +4,98 @@
  * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.
  * 402 without payment is OK. May trail the last published root (≤24h).
  */
-const json = (body: unknown, status = 200) =>
+import {
+  verifyX402Payment,
+  x402Accepts,
+  buildPaymentRequiredV2,
+  declareBazaarHttpGet,
+  paymentRequiredResponse,
+  CSOAI_LID,
+  type X402Env,
+} from "./_x402";
+
+const json = (body: unknown, status = 200, extraHeaders: Record<string, string> = {}) =>
   new Response(JSON.stringify(body, null, 2), {
     status,
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
       "access-control-allow-origin": "*",
+      ...extraHeaders,
     },
   });
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
+export const onRequestGet: PagesFunction = async ({ request, env }) => {
   const url = new URL(request.url);
   const origin = url.origin;
   const u = (p: string) => new URL(p, origin).toString();
   const sha = (url.searchParams.get("sha") || "").trim().toLowerCase();
   const bundle = url.searchParams.get("bundle") === "1";
-  const paid = request.headers.get("x-payment") != null;
+  // Payment is VERIFIED, not assumed from header presence. Only evaluated for the paid
+  // (bundle) branch; the free ?sha= inclusion never needs it.
+  const resourceUrl = u("/api/proof?bundle=1");
+  const description =
+    "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. " +
+    CSOAI_LID +
+    ".";
+  // The SAME accepts entry is advertised in the 402 and handed to the facilitator, so what the
+  // client signed against is what gets verified and settled.
+  const accepts = bundle
+    ? x402Accepts(env as X402Env, resourceUrl, { skuId: "issuance", tier: "reserve", description })
+    : [];
+  const payment = bundle
+    ? await verifyX402Payment(request, env as X402Env, resourceUrl, accepts[0])
+    : { ok: false, reason: "not a bundle request" };
+  const paid = payment.ok;
 
   if (bundle) {
     if (!paid) {
-      return json(
-        {
-          schema: "csoai.public-root-proof/0.1",
-          payment_required: {
-            kind: "x402",
-            amount: 0.02,
-            per: "proof-bundle",
-            instruction:
-              "One inclusion is free (?sha=). The full bundle is x402. Settle via the estate x402 receipt MCP, then retry with the x-payment header.",
-            settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+      // x402 v2 + Bazaar: declare extensions.bazaar (discoverable via CDP after settle).
+      // Do not emit invalid `discoverable: true` inside bazaar (x402 #2112 / #2207).
+      const paymentRequired = buildPaymentRequiredV2({
+        resourceUrl,
+        description,
+        serviceName: "CSOAI Proof Bundle",
+        tags: ["proof", "merkle", "measurement", "attestation"],
+        accepts,
+        bazaar: declareBazaarHttpGet({
+          method: "GET",
+          queryParams: { bundle: "1" },
+          queryParamsSchema: {
+            properties: {
+              bundle: {
+                type: "string",
+                const: "1",
+                description: "Must be 1 to request the paid proof bundle",
+              },
+            },
+            required: ["bundle"],
           },
+          outputExample: {
+            schema: "csoai.public-root-proof/0.1",
+            kind: "bundle",
+            merkle_root: "<hex>",
+            n: 0,
+            proofs: [],
+            note: "Paid bundle of inclusion proofs. Not a grade.",
+          },
+        }),
+        csoai: {
+          schema: "csoai.public-root-proof/0.1",
+          per: "proof-bundle",
+          lid: CSOAI_LID,
+          never: ["grade", "rank", "certificate"],
           free: { one_inclusion: "/api/proof?sha=<64-hex>" },
+          settle_mcp: "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+          verification:
+            "x402 facilitator /verify (fail-closed; unverified receipts are refused)",
+          not_paid_reason: payment.reason,
+          bazaar_note:
+            "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+          catalog: u("/api/x402"),
         },
-        402,
-      );
+      });
+      return paymentRequiredResponse(paymentRequired);
     }
   }
 
@@ -58,39 +115,81 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
   const root = (await rootRes.json()) as {
     merkle_root?: string;
     card_sha256?: string[];
+    card_count?: number;
     as_of?: string;
   };
   const hashes = Array.isArray(root.card_sha256) ? root.card_sha256 : [];
 
+  // The signed count must bind the leaves we are about to index into. If they disagree,
+  // the root admits a second leaf set (see tree_caveat in root.json) and no proof cut
+  // from it means anything. Fail closed rather than issue a proof we cannot bound.
+  if (typeof root.card_count === "number" && root.card_count !== hashes.length) {
+    return json(
+      {
+        schema: "csoai.public-root-proof/0.1",
+        error: "root_count_mismatch",
+        path: "/api/proof",
+        card_count: root.card_count,
+        leaves: hashes.length,
+        reason:
+          `The published root declares ${root.card_count} cards but ships ${hashes.length} leaves. ` +
+          "The signed count is what makes this tree unambiguous, so no inclusion proof is issued.",
+      },
+      503,
+    );
+  }
+
   if (bundle && paid) {
+    // O(1) subrequests. This used to fetch /proofs/<h>.json AND fall back to /cards/<h>.json
+    // ONCE PER hash — up to 1 (root) + 2 x card_sha256.length subrequests. With 50 hashes that
+    // is ~101 fetches, far past Cloudflare Pages Functions' 50-subrequest cap, so the invocation
+    // threw and the endpoint 500'd. Every inclusion proof already lives inside its card wrapper,
+    // which the build-time aggregate carries, so ONE fetch of /cards-bundle.json resolves them
+    // all regardless of card count.
+    const bundleRes = await fetch(u("/cards-bundle.json"));
+    if (!bundleRes.ok) {
+      return json(
+        {
+          schema: "csoai.public-root-proof/0.1",
+          error: "not_found",
+          path: "/api/proof",
+          unmeasured: ["cards-bundle.json"],
+          reason: `static /cards-bundle.json HTTP ${bundleRes.status}`,
+        },
+        404,
+      );
+    }
+    const cbundle = (await bundleRes.json()) as {
+      cards?: Record<string, { proof?: unknown[] } | undefined>;
+    };
+    const bundleCards = cbundle && cbundle.cards ? cbundle.cards : {};
     const items = [];
     for (let i = 0; i < hashes.length; i++) {
       const h = hashes[i];
-      const r = await fetch(u(`/proofs/${h.slice(0, 16)}.json`));
-      if (r.ok) {
-        items.push(await r.json());
-        continue;
-      }
-      const c = await fetch(u(`/cards/${h.slice(0, 16)}.json`));
-      if (c.ok) {
-        const w = await c.json();
-        items.push({
-          sha256: h,
-          index: i,
-          proof: w.proof || [],
-          merkle_root: root.merkle_root,
-        });
-      }
+      const w = bundleCards[h];
+      if (!w) continue;
+      items.push({
+        sha256: h,
+        index: i,
+        proof: Array.isArray(w.proof) ? w.proof : [],
+        merkle_root: root.merkle_root,
+        card_count: root.card_count ?? null,
+      });
     }
-    return json({
-      schema: "csoai.public-root-proof/0.1",
-      kind: "bundle",
-      as_of: root.as_of || null,
-      merkle_root: root.merkle_root || null,
-      n: items.length,
-      proofs: items,
-      note: "Paid bundle of inclusion proofs for the last published root. Not a grade.",
-    });
+    return json(
+      {
+        schema: "csoai.public-root-proof/0.1",
+        kind: "bundle",
+        as_of: root.as_of || null,
+        merkle_root: root.merkle_root || null,
+        n: items.length,
+        proofs: items,
+        note: "Paid bundle of inclusion proofs for the last published root. Not a grade.",
+      },
+      200,
+      // Echo settlement back per x402 when the facilitator returned one; omitted otherwise.
+      payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {},
+    );
   }
 
   if (!/^[0-9a-f]{64}$/.test(sha)) {
@@ -124,6 +223,14 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     );
   }
 
+// card_count travels with every proof from 2026-09-04.
+// The public root's tree pairs an odd node WITH ITSELF rather than promoting it
+// (Bitcoin-style). That makes it collidable in the CVE-2012-2459 sense: appending
+// duplicates of the tail yields a different leaf set with an identical merkle_root —
+// demonstrated on the live 140-leaf root, which collides at 144. Recomputing a path
+// therefore proves nothing on its own; the SIGNED card_count is what bounds the tree,
+// and a client cannot apply that bound unless we send it. A proof whose index is at or
+// past card_count points into the duplicated region and was never signed.
   const proofRes = await fetch(u(`/proofs/${sha.slice(0, 16)}.json`));
   if (proofRes.ok) {
     const body = await proofRes.json();
@@ -133,6 +240,13 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
       free: true,
       as_of: root.as_of || null,
       ...body,
+      // After the spread on purpose: card_count must come from the root we just read,
+      // never from a stored proof file that may predate the current publish. A stale
+      // bound is worse than none — it would authorise leaves the root never signed.
+      card_count: root.card_count ?? null,
+      tree_bound:
+        "Reject this proof if index >= card_count: the tree duplicates an odd node, so a " +
+        "path into the duplicated tail recomputes to the same root without having been signed.",
     });
   }
 
@@ -160,6 +274,10 @@ export const onRequestGet: PagesFunction = async ({ request }) => {
     index,
     proof: wrapped.proof || [],
     merkle_root: root.merkle_root || null,
+    card_count: root.card_count ?? null,
+    tree_bound:
+      "Reject this proof if index >= card_count: the tree duplicates an odd node, so a " +
+      "path into the duplicated tail recomputes to the same root without having been signed.",
     note: "Inclusion from the card wrapper. public/proofs/ may trail up to the last publish.",
   });
 };

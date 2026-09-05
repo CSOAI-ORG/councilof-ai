@@ -1,0 +1,32 @@
+{
+  "id": "nlnet-ngi0-entrust",
+  "name": "NLnet NGI0 Entrust",
+  "amount_eur": 50000,
+  "amount_usd": 52000,
+  "url": "https://nlnet.nl/NGI0/",
+  "deadline_iso": "2026-11-03T12:00:00+01:00",
+  "deadline_human": "Tue 3 Nov 2026, 12:00 CET",
+  "days_until": 61,
+  "fit": "Permissionless attestation + signed-card public root aligns with NGI0's trust infrastructure goals.",
+  "approach": "Fund the OTS relayer + signed-card merkle root + public verification CLI.",
+  "applicant": {
+    "name": "Nicholas Templeman",
+    "company": "CSOAI LTD",
+    "company_number": "UK 16939677",
+    "country": "United Kingdom",
+    "address": "England, UK",
+    "email": "nicholas@csoai.org",
+    "url": "https://councilof.ai/"
+  },
+  "project_name": "Sovereign Signed-Card Anchor",
+  "summary": "Fund the OTS relayer + signed-card merkle root + public verification CLI.",
+  "budget_eur": 50000,
+  "deliverables": [
+    "6-month run of the daily OTS anchor relayer (zero human input)",
+    "Public verification CLI on PyPI + npm",
+    "Documentation in 3 languages",
+    "Live status page at /api/state"
+  ],
+  "why_us": "We already have 119 signed atoms, 36 audited pages, 47 well-known doors, 103 API endpoints, and 22-axis GSPC measurement. The signed cards verify offline against a public root; the OTS upgrade path is the only thing missing.",
+  "application_body": "\nNLnet NGI0 Entrust \u2014 Project: Sovereign Signed-Card Anchor\n\nPROBLEM\nAI governance today is centralised in vendor reports that nobody can verify.\nWhen a frontier lab publishes a system card, the public has no way to re-check\nany number in it. When a regulator publishes an attestation, the public has\nno way to re-check the underlying evidence.\n\nSOLUTION\nCouncil of AI (CSOAI) signs every card with Ed25519, builds a merkle root\nover the cards, and anchors that root on Bitcoin via OpenTimestamps. The\npublic root is published; the public key is in the repo; the verification\nCLI ships on PyPI + npm.\n\nThe substrate is already live:\n  - 119 signed atoms harvested this week (data.gov.uk + OpenAlex + arXiv\n    + GitHub + Companies House + Crossref + HuggingFace + OpenCorporates)\n  - 47 well-known discovery doors (EU AI Act, NIST AI RMF, ISO 42001,\n    OWASP, GDPR, HIPAA, FedRAMP, ...)\n  - 103 API endpoints, every route signed\n  - 22-axis GSPC board, 14 model families measured\n  - 951 / 1126 tests pass (this is increasing as we go)\n  - 36 / 36 public pages audited clean\n  - x402 paid attestations live on Base mainnet via PayAI Network\n\nWHAT WE NEED \u20ac50,000 FOR\n  - 6 months of daily OTS anchor relayer operation (zero human input)\n  - Public verification CLI on PyPI + npm (cross-language parity)\n  - Documentation in 3 languages (English, German, French)\n  - Live status page at /api/state\n\nThe substrate is already built. \u20ac50K makes the missing rail shippable.\n\nDELIVERABLES (6 months)\n  - 180 days of daily OTS anchor upgrades to Bitcoin\n  - gspc-card-verifier on PyPI + npm (public, signed)\n  - docs.csoai.org in 3 languages\n  - 1,000,000+ signed atoms anchored\n  - 3 academic partnerships for methodology peer-review\n\nWHY US\nWe measure; we don't certify. We sign; we don't sell a rank. Empty cells\nstay empty. Anyone can re-check any card offline against the public root.\nThe doctrine is the only thing different about us, and it's the only thing\nthat matters.\n\nCONTACT\n  - Nicholas Templeman, CSOAI LTD (UK 16939677)\n  - nicholas@csoai.org\n  - https://councilof.ai/\n  - https://huggingface.co/csoai\n  - https://github.com/CSOAI-ORG/councilof-ai\n"
+}

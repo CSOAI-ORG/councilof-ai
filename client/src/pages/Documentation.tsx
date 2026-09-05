@@ -10,7 +10,7 @@ const DOCS_ARTICLE_SCHEMA = {
   '@type': 'TechArticle',
   headline: 'CSOAI Technical Documentation',
   description:
-    'Architecture, API references and integration guides for the CSOAI platform — the designed 33-agent Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
+    'Architecture, API references and integration guides for the CSOAI platform — the designed 33-seat Council of AI, SOAI-PDCA framework and Watchdog incident reporting.',
   author: { '@type': 'Organization', name: 'CSOAI' },
   publisher: { '@type': 'Organization', name: 'CSOAI', url: 'https://csoai.org' },
   url: 'https://csoai.org/docs',
@@ -196,38 +196,40 @@ export default function Documentation() {
             <motion.div {...fadeInUp} className="min-w-0">
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-2xl">33-agent Council of AI</CardTitle>
+                  <CardTitle className="text-2xl">33-seat Council design</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-700 mb-4">
-                    A distributed consensus system that ensures impartial, vendor-independent AI safety decisions through a combination of AI agents and human experts.
+                    A proposed 33-seat review roster with a target threshold of 23/33, strictly greater
+                    than two thirds. It is not a live council: the latest point experiment measured
+                    rho=1 and n_eff=1, so independence and fault tolerance are not demonstrated.
                   </p>
                   <div className="grid md:grid-cols-3 gap-4 text-sm">
                     <div>
                       <h5 className="font-semibold text-gray-900 mb-2">Architecture</h5>
                       <ul className="space-y-1 text-gray-700">
-                        <li>• multi-leg council review</li>
-                        <li>• Distributed voting mechanism</li>
-                        <li>• Quorum-based consensus</li>
-                        <li>• Weighted voting by expertise</li>
+                        <li>• 33 designed seats</li>
+                        <li>• Target threshold: 23/33</li>
+                        <li>• Raw-response retention planned</li>
+                        <li>• Human escalation required</li>
                       </ul>
                     </div>
                     <div>
                       <h5 className="font-semibold text-gray-900 mb-2">Participants</h5>
                       <ul className="space-y-1 text-gray-700">
-                        <li>• 33 AI safety agents</li>
-                        <li>• Trained human analysts</li>
-                        <li>• Independent reviewers</li>
-                        <li>• Domain experts</li>
+                        <li>• No live 33-seat roster</li>
+                        <li>• Two providers in the latest test</li>
+                        <li>• Three nominal model legs</li>
+                        <li>• One effective independent leg</li>
                       </ul>
                     </div>
                     <div>
                       <h5 className="font-semibold text-gray-900 mb-2">Outcomes</h5>
                       <ul className="space-y-1 text-gray-700">
-                        <li>• Risk level classification</li>
-                        <li>• Compliance recommendations</li>
-                        <li>• Incident severity ratings</li>
-                        <li>• Remediation guidance</li>
+                        <li>• Current status: design only</li>
+                        <li>• No Council compliance verdicts</li>
+                        <li>• No fault-tolerance claim</li>
+                        <li>• Evidence remains human-reviewable</li>
                       </ul>
                     </div>
                   </div>

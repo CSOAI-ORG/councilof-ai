@@ -1,0 +1,70 @@
+{
+  "card": {
+    "as_of": "2026-09-04T09:40:57Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "kind": "csoai.diff.provider-terms/0.1",
+      "state": "PROBED",
+      "provider": "google",
+      "surface": "terms",
+      "url": "https://ai.google.dev/gemini-api/terms",
+      "prev_sha256": "affc2319f01152720b2dd8d50a293001828a141fb24211946674968dd8c81eac",
+      "new_sha256": "31c5ca95a90809c526687985e1a020c3df914a4fb1009edd89bba20bdd9ef4b6",
+      "prev_bytes_sha256": "a73660f7791b40dec4543e97cfea4ef103380ec49dabb58bb7df84c5c9f4b634",
+      "new_bytes_sha256": "0111fd65d9d3a8944378dd414fdf18aa1d55a61a72226900dc4e83cb478862f9",
+      "prev_fetched_at": "2026-09-03T09:51:48Z",
+      "fetched_at": "2026-09-04T09:40:57Z",
+      "http_status": 200,
+      "robots": "allow",
+      "normaliser": "csoai-norm-v1",
+      "byte_length": {
+        "prev": 113823,
+        "new": 113863
+      },
+      "etag": {
+        "prev": null,
+        "new": null
+      },
+      "last_modified": {
+        "prev": "Tue, 28 Apr 2026 03:23:11 GMT",
+        "new": "Tue, 28 Apr 2026 03:23:11 GMT"
+      },
+      "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+      "not_a_grade": true,
+      "writes_board": false,
+      "content_stored": false
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "0c65c9e1e39c85ac58d686305ffc32bb110049280824d7a4bf3bcb66cd0dc20a",
+    "sig_ed25519": "c937a5933a2512d2e045e044aba4ab4bbd0c83a74bd016f7d2d41be1494fb125a2e20c4b5f29c195fde661a4987a183acd7256349ae5ad120d000f365d06ba01",
+    "source_urls": [
+      "https://ai.google.dev/gemini-api/terms"
+    ],
+    "subject": "Google — terms: bytes changed 2026-09-04",
+    "surface": "public.notice",
+    "tags": [
+      "provider-diff",
+      "provider:google",
+      "surface:terms",
+      "hash-only"
+    ],
+    "unmeasured": [
+      "what changed (content is never stored)",
+      "why it changed",
+      "whether the change is material to anyone",
+      "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+    ]
+  },
+  "proof": [
+    "b2d3f623e33e7706a440f9c7850dd7954c740ccae5f9049f63e04756b847e36c",
+    "4cff3ee11c8776993ee09854508385753b0076b79d169b100d87d284152e3caf",
+    "ce799a09a040a282406e3c5f27ea8ba3596b7eaf7167711d3fd71085dfa14dd7",
+    "b8577c4e68bf2cbf015b5f4c0fbabdc7fbc73045a68173a77bf949111d11bf66",
+    "97e08849f4c4a1160d6502c04fecd3a67c08c96d881e376174f5ca90c6a6f5ca",
+    "cce14c97c5e99a952fa36353444a4a42d391c02b1ea9fbb60997b7b59385fc82",
+    "dc95f2a53bf8178f51a8ac8e398c3b6ca8fea96bfc4e2f2474843e718ad53b4a",
+    "eda3c723a5ac3b23dca9cbae493c2927c1a116b8be9293f36951c28eccb9dee9"
+  ]
+}

@@ -1,7 +1,7 @@
 /**
  * Interactive PDCA Cycle Simulator
  * Walk through a sample PDCA cycle with a fictional AI system
- * and see 33-Agent Council recommendations at each phase
+ * and see 33-Seat Council recommendations at each phase
  */
 
 import { useState } from 'react';
@@ -66,7 +66,7 @@ const PHASES: PhaseData[] = [
       'Establish baseline compliance requirements',
     ],
     councilRecommendations: [
-      '🤖 33-Agent Council Analysis: "High-risk medical AI system requires enhanced oversight under EU AI Act Article 6"',
+      '🤖 Designed council (simulation, not a live vote) — analysis: "High-risk medical AI system requires enhanced oversight under EU AI Act Article 6"',
       '🔍 Bias Detection: "Recommend demographic fairness audit across age, gender, ethnicity, and socioeconomic factors"',
       '📊 Risk Priority: "Focus on diagnostic accuracy disparities (Critical), data privacy (High), and explainability (High)"',
       '✅ Compliance Gap: "HIPAA compliance verified. EU AI Act conformity assessment required before deployment in EU"',
@@ -228,7 +228,7 @@ export default function PDCASimulator() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Interactive PDCA Cycle Simulator</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Walk through a complete SOAI-PDCA cycle with a fictional AI system and see how the
-            designed 33-Agent Council provides recommendations at each phase.
+            proposed 33-seat Council workflow could structure review at each phase.
           </p>
           <p className="mt-3 inline-block rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-900 max-w-3xl">
             Everything on this page — the system, the figures, and every &ldquo;council
@@ -352,16 +352,16 @@ export default function PDCASimulator() {
             </CardContent>
           </Card>
 
-          {/* 33-Agent Council Recommendations */}
+          {/* 33-Seat Council Recommendations */}
           <Card className="border-2 border-green-200 bg-gradient-to-r from-green-50 to-emerald-50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-6 w-6 text-green-600" />
-                33-Agent AI Council Recommendations
+                Designed council recommendations (simulation)
               </CardTitle>
               <p className="text-sm text-gray-600 mt-2">
-                Democratic consensus from 33 AI agents across multiple providers (OpenAI, Anthropic,
-                Google, Meta, and more)
+                Scripted examples of a proposed 33-seat workflow with a target threshold of 23/33.
+                No live voters operate here; independence and fault tolerance are not demonstrated.
               </p>
             </CardHeader>
             <CardContent>
