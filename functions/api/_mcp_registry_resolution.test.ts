@@ -69,6 +69,12 @@ describe("the coverage measurement keeps its weak number quarantined", () => {
     const u = c.unpublished;
     expect(u.registry_today + u.total).toBe(u.available_if_published);
     expect(u.total).toBeLessThanOrEqual(u.repos_declaring_an_mcp_sdk);
+    // a repo being IN this account is not the same as it being OURS: mirrors of third-party
+    // projects must stay excluded from a number that reads "publish these".
+    expect(Array.isArray(u.excluded_as_third_party_mirrors)).toBe(true);
+    for (const m of u.excluded_as_third_party_mirrors) {
+      expect(u.examples, `${m} is a mirror and must not be offered as publishable`).not.toContain(m);
+    }
     expect(c.published_in_registry).toBeLessThanOrEqual(c.mcp_named);
   });
 

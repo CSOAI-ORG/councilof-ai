@@ -54,7 +54,7 @@
     "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
   },
   "coverage": {
-    "verdict": "142 BUILT SERVERS ARE UNPUBLISHED",
+    "verdict": "141 BUILT SERVERS ARE UNPUBLISHED",
     "question": "The first clause of the mandate is 'we are listed'. This asks it the other way round: what exists here that the registry does not carry?",
     "repos_public": 639,
     "mcp_named": 372,
@@ -74,18 +74,18 @@
       "overcounted": 153,
       "undercounted_again": 108,
       "now": 142,
-      "why_wrong": "Five passes at one question in one evening: 64, 142, 153, 108, 142. 64 filtered on the repo NAME and a name is not a detector. The first 142 matched the quoted string mcp but not mcp>=1.0.0, so it UNDERCOUNTED. 153 loosened that to match anywhere in the file and OVERCOUNTED: three of eight sampled hits were a keywords list or the word FastMCP in a description. 108 read only inside a dependencies array, but extracted that array with a non-greedy match to the FIRST closing bracket -- which in mcp[cli]>=1.3.0 sits inside the dependency itself, truncating the array to nothing and silently dropping every repo that pins the CLI extra. Sampling ten EXCLUDED repos found three of exactly that. The current pass walks the brackets and balances them. The final number equals the second one by coincidence of two unrelated errors, not by agreement."
+      "why_wrong": "Five passes at one question in one evening: 64, 142, 153, 108, 142. 64 filtered on the repo NAME and a name is not a detector. The first 142 matched the quoted string mcp but not mcp>=1.0.0, so it UNDERCOUNTED. 153 loosened that to match anywhere in the file and OVERCOUNTED: three of eight sampled hits were a keywords list or the word FastMCP in a description. 108 read only inside a dependencies array, but extracted that array with a non-greedy match to the FIRST closing bracket -- which in mcp[cli]>=1.3.0 sits inside the dependency itself, truncating the array to nothing and silently dropping every repo that pins the CLI extra. Sampling ten EXCLUDED repos found three of exactly that. The current pass walks the brackets and balances them. The final number equals the second one by coincidence of two unrelated errors, not by agreement.",
+      "then_142_included_a_mirror": "142 counted CSOAI-ORG/OpenHands, whose own description reads 'Mirrors OpenHands/OpenHands into the CSOAI-ORG account for estate experimentation'. GitHub reports fork=false, so the fork flag did not catch it; it is a 221MB copy of someone else's project living under our account. The count was framed as work we could publish, and publishing that one would put another project's software into a public registry under our name. A repo being IN our account is not the same as it being OURS, and no field in the repo listing distinguishes the two — only the description did. Found by reading the example list in a checkpoint reconciliation, after the number had already merged."
     },
     "detector": "package.json is parsed as JSON and its dependencies/devDependencies keys inspected for @modelcontextprotocol/*, mcp or fastmcp. pyproject.toml is read only inside a dependencies array whose brackets are BALANCED, or a tool.poetry.dependencies table, so mcp[cli]>=1.3.0 is read whole and a keywords list is never read at all. 417 of 628 unarchived public repos declare such a dependency; 142 of those are absent from the registry.",
     "unpublished": {
-      "total": 142,
+      "total": 141,
       "registry_today": 330,
-      "available_if_published": 472,
+      "available_if_published": 471,
       "repos_declaring_an_mcp_sdk": 417,
       "unarchived_public_scanned": 628,
       "examples": [
         "OPENMOE",
-        "OpenHands",
         "agriculture-ai",
         "ai-economy-infra",
         "ai-economy-infrastructure",
@@ -93,7 +93,11 @@
         "autonomous-vehicles",
         "autonomous-vehicles-ai",
         "aws-cloud",
-        "biometrics-ai"
+        "biometrics-ai",
+        "blizzard-wow-mcp"
+      ],
+      "excluded_as_third_party_mirrors": [
+        "OpenHands"
       ]
     },
     "instrument_disagreement": {
@@ -108,7 +112,8 @@
       "false_positives": 3,
       "excluded_sampled": 10,
       "false_negatives": 3,
-      "note": "Both directions, and both by hand. Sampling what a filter KEEPS finds what it wrongly let in; sampling what it EXCLUDES finds what it wrongly dropped, and only the second sample exists because the first one had already proved the instrument was fallible. Three in eight, then three in ten. Nothing in the pipeline caught any of it."
+      "note": "Both directions, and both by hand. Sampling what a filter KEEPS finds what it wrongly let in; sampling what it EXCLUDES finds what it wrongly dropped, and only the second sample exists because the first one had already proved the instrument was fallible. Three in eight, then three in ten. Nothing in the pipeline caught any of it.",
+      "third_pass": "A third reading, of the merged artifact's own examples array, found the mirror. Each of the three looks at this number found a different class of defect: what the filter wrongly let in, what it wrongly dropped, and what it counted correctly but should never have been asked to count."
     }
   }
 }
