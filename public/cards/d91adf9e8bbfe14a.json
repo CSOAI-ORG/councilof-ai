@@ -1,0 +1,49 @@
+{
+  "card": {
+    "as_of": "2026-09-05T16:00:02Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "axis": "distribution-integrity",
+      "cite": "https://councilof.ai/api/gspc",
+      "compute_composite": false,
+      "do_not_invent_percentage": true,
+      "kind": "gspc.coverage-card/0.1",
+      "metamask_is_signer": false,
+      "n": 0,
+      "not_a_grade": true,
+      "schema": "csoai.gspc-axes/0.5",
+      "status": "UNMEASURED",
+      "task": "represented vs distributed never mixed"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "d91adf9e8bbfe14ac802a4a1c3a7192acb267ed4ac1d4eeb25cc1348aa97c265",
+    "sig_ed25519": "37a2fc024849b7f87eff4a63fa2ce7e1f8735033ab1ad4750caac66dc99173c41767bec4e9e69c888f3de7b23fb66cb8472eb0f8f04377b83a22eaf76ed77902",
+    "source_urls": [
+      "https://councilof.ai/api/gspc",
+      "https://huggingface.co/datasets/csoai/gspc-distribution-integrity"
+    ],
+    "subject": "GSPC distribution-integrity UNMEASURED coverage",
+    "surface": "public.notice",
+    "tags": [
+      "coverage:UNMEASURED",
+      "not-a-grade",
+      "no-composite"
+    ],
+    "unmeasured": [
+      "distribution-integrity",
+      "n=0"
+    ]
+  },
+  "proof": [
+    "8d23c33056e8081e925ffa9ab4ed8fbc2da3e8594eaadf941b8e623cfd850833",
+    "5cf8e32fe82b8dafb8ff34f9b77963cabf3f64b42261842d459ab717b3d6b92b",
+    "bbeeda4e15c932a8bc3a244d2bdfb5bbd17ec53dff6fb3e02ac3c8aa1f6bf962",
+    "1103d4a6b60a42a1344e910c4146dced89daade3c5e7d556955291c2182ce1a6",
+    "675c27aa5a78a482a05ea8646e2bb85fbfde57f0a7fbc2af3d48e933863c1181",
+    "d20b90ad0f93a28ad9728f54c44738cecda2e0e1d5113cea82f65a5b9564f177",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "29e2b6b3efd0f8f7f4392281b69db13c6a4a71022ce99271831473d359e957b7"
+  ]
+}
