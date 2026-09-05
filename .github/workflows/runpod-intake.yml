@@ -1,0 +1,91 @@
+name: RunPod GSPC intake — pull, verify, stage
+
+# The pod computes GSPC runs --forever and, until this workflow, nothing ingested them.
+# Measured 2026-09-05: 112 run directories over 70 (model, axis) cells on pod fpowppss5ngtkw,
+# failed_runs 0, sitting on one machine at 96% disk. This runs four times a day and does three
+# things in order: pull the durable HF copy, verify each run independently, and stage the
+# verified ones in the only shape sign_mill_cards.py reads.
+#
+# It does NOT sign, does not decide MEASURED, does not touch the pod, and deletes nothing.
+# Signing stays with sign_mill_cards.py, which sets status from n (>=30 MEASURED, else
+# UNMEASURED). Two places deciding that is issue #1155.
+
+on:
+  schedule:
+    - cron: "17 1,7,13,19 * * *"   # 4x/day, off the hour to miss the cron pile-up
+  workflow_dispatch:
+
+concurrency: { group: runpod-intake, cancel-in-progress: false }
+
+permissions:
+  contents: read
+
+jobs:
+  intake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install the hub client only
+        run: pip install --quiet "huggingface_hub>=0.25"
+
+      - name: Selftest before trusting either script
+        run: |
+          python3 scripts/runpod_gspc_bridge_to_mill.py --selftest
+          python3 scripts/verify_runpod_gspc_intake.py --help > /dev/null
+
+      - name: Pull the durable intake
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "${HF_TOKEN}" ]; then
+            echo "HF_TOKEN absent — the intake dataset is PRIVATE, so this cannot read it."
+            echo "That is UNCHECKABLE, not zero runs. Failing rather than staging nothing quietly."
+            exit 1
+          fi
+          python3 - <<'PY'
+          import os, pathlib
+          from huggingface_hub import snapshot_download
+          p = snapshot_download("csoai/runpod-gspc-intake", repo_type="dataset",
+                                token=os.environ["HF_TOKEN"], local_dir="intake")
+          n = len(list(pathlib.Path(p).rglob("card-unsigned.json")))
+          print(f"pulled {n} run cards")
+          if n == 0:
+              raise SystemExit("intake pulled 0 cards — refusing to proceed on an empty read")
+          PY
+
+      - name: Verify every run independently
+        run: |
+          set -euo pipefail
+          ok=0; bad=0
+          for d in $(find intake/gspc-24x7 -name card-unsigned.json -exec dirname {} \;); do
+            if python3 scripts/verify_runpod_gspc_intake.py \
+                 --run-dir "$d" \
+                 --bank-allowlist scripts/runpod_gspc_bank_allowlist.current.json \
+                 --quarantine-root quarantine > /dev/null 2>&1; then
+              ok=$((ok+1))
+            else
+              bad=$((bad+1)); echo "REJECTED $d"
+            fi
+          done
+          echo "VERIFIED $ok · REJECTED $bad"
+          echo "verified=$ok" >> "$GITHUB_OUTPUT"
+          [ "$bad" -eq 0 ] || { echo "a run failed intake verification"; exit 1; }
+
+      - name: Stage the verified runs for the signer
+        run: |
+          python3 scripts/runpod_gspc_bridge_to_mill.py \
+            --intake intake/gspc-24x7 \
+            --out public/interop/mill-cards-unsigned
+
+      - name: Publish the staged cards as an artifact for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: mill-cards-unsigned-${{ github.run_id }}
+          path: public/interop/mill-cards-unsigned/
+          if-no-files-found: error
+          retention-days: 14
