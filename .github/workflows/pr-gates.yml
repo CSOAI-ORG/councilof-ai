@@ -64,6 +64,16 @@ jobs:
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
+      # A door that serves 200 but is absent from /.well-known/index.json is live and
+      # UNDISCOVERABLE through the canonical route — a door a buyer cannot find. Until
+      # 2026-09-05 the index was append-only: ad-hoc scripts pushed their own doors onto
+      # the array and recomputed total_doors = doors.length, and nothing ever scanned the
+      # directory. Measured that day: 300 door files on disk, 292 entries in the index,
+      # 9 doors live at 200 and listed nowhere, plus `index` listing itself as a door.
+      # The generator derives the list from the directory; this gate stops it drifting again.
+      - name: Well-known index gate — the index must describe the directory
+        run: node scripts/wellknown-index-gen.mjs --check
+
       # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
       # GET /api/gspc and the three card corpora files. Both files used to tell their
       # readers "do not freeze numbers in this file" while freezing the lid three times
