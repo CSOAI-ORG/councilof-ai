@@ -597,8 +597,19 @@ wrote to test it.
 ## Dependencies
 
 - **None on TUI 1 or TUI 2.** Nothing here touches RAS internals, payment, discovery or adapters.
-- Runtime only: `/api/gspc`, `/mcp`, `/api/witness`. No new packages. `node:test` was used for the
-  capability guards so they run in a bare worktree with no install.
+- Runtime only: `/api/gspc`, `/mcp`, `/api/witness`. No new packages.
+
+**The "bare worktree" claim is verified, not asserted.** `git archive HEAD` into an empty
+directory — **zero `node_modules`** — then `node --test capabilities/*.test.mjs`:
+
+    offline                     77 passed, 0 failed
+    every LIVE_* flag set       77 passed, 0 failed
+
+Every capability guard imports `node:` builtins and relative paths only. That matters for a
+reviewer: you can check this bundle's evidence from a clean export, without trusting my
+`node_modules`, and without running an install that could itself change what the tests see.
+The client suite (`npx vitest run client/src`, 643 passed) does need the install; the
+capability guards deliberately do not.
 
 ## Rollback
 
