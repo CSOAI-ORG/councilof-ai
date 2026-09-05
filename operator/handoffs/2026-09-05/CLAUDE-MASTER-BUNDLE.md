@@ -614,18 +614,43 @@ capability guards deliberately do not.
 ## Rollback
 
 Every commit is independently revertible; nothing is sequenced. SHAs move on every rebase — take
-them from `git log origin/master..HEAD` at the moment you apply, not from this list.
+them from `git log origin/master..HEAD` at the moment you apply, not from any list here.
 
-Only TWO commits have user-visible effect, and both touch one component:
+**This section was wrong until now, and the correction is the point of reading it.** It was
+written when the branch was 11 commits and said "only TWO commits have user-visible effect …
+everything else cannot change what a user sees". That is false at 53 commits. Anyone reverting
+on that basis would have been misled by my own handoff — the same stale-description defect this
+lane spent the day finding elsewhere.
 
-- **the cohort disclosure** — adds a collapsed `<details>` under one row of `AxisProof`. Reverting
-  removes the cohort table and changes nothing else; the board, the axis row and every other
-  component are untouched.
-- **the caption** — adds one `sr-only` `<caption>`. No visual effect at all.
+**22 non-test files can change what someone sees.** Grouped by what reverting actually costs:
 
-Everything else is tests, a data file no runtime reads (`capabilities/registry.json`), and one
-documentation correction (`docs/PLUGINS.md`). Reverting any of them cannot change what a user
-sees.
+**Reverting these RESTORES AN UNTRUE CLAIM — do not revert without replacing the fix**
+
+| file | reverting brings back |
+|---|---|
+| `public/{tournament,judge,civic,swarm,council-town,incident,games-charter,games-compliance}.html`, `public/dashboard/games.html` | "Every turn emits a signed card" on pages with no game, and the RETRACTED BFT claim on games-charter |
+| `client/src/components/DashboardFilesPane.tsx` | every uploaded file rendered green "SIGNED" regardless of what the endpoint said, plus the stuck-spinner path |
+| `client/src/components/DashboardMemoryPane.tsx` | a failed read rendered as "No memory entries yet." |
+| `client/src/components/board/BoardAttestation.tsx` | a header stating the board signature "verifies" when it does not |
+
+**Reverting these REMOVES TRUE INFORMATION — safe, but the reader loses something**
+
+| file | reverting removes |
+|---|---|
+| `client/src/components/hub/HubResultsPane.tsx` + `useHubCards.ts` + `DashboardPane.tsx` | the published Hub results view; the `results` tab falls back to a second copy of the board |
+| `client/src/components/home/HomeGspcBoard.tsx` | OBSERVED / INSTRUMENT / GRADING — the board stops saying it is three weeks old |
+| `client/src/components/JourneyStages.tsx` + `DashboardFabricPane.tsx` | the case model and the exact unavailable endpoints |
+| `client/src/components/AxisProof.tsx` + `board/useGspcBoard.ts` | the per-model cohort disclosure |
+| `client/src/components/lobby/tabs.ts` | the results tab's corrected blurb |
+
+**Reverting these is invisible**
+
+`client/src/App.tsx` — two unreachable `<Route>` declarations. They never rendered; putting them
+back changes nothing a visitor sees, only the duplicate.
+
+**Everything else in the branch is tests, `capabilities/registry.json` (which no runtime reads),
+`scripts/one-door-guard.mjs` (a guard that now fails on a missing input rather than passing), and
+this document.** Those genuinely cannot change what a user sees.
 
 ## Growth metrics this lane can now support
 
