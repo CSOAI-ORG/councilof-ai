@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DESCRIPTION, onRequestGet } from "./free-door";
 
 const call = async () =>
@@ -83,5 +83,77 @@ describe("/api/free-door — a real 402 door whose true price is zero", () => {
     const surviving = DESCRIPTION.slice(0, lastStop + 1);
     expect(surviving).toMatch(/free/i);
     expect(surviving).not.toMatch(/certif/i);
+  });
+
+  // THE INDEXED CONTRACT. The live Bazaar record advertises an outputSchema, and that record is
+  // permanent — the index writes a resource once and never refreshes it. So the keys the door
+  // actually serves must be the keys the listing promised. Until 2026-09-05 the handler returned
+  // 402 unconditionally with no payment path, so a paying agent got another 402 and never these.
+  //
+  // THIS TEST MOCKS THE VERIFIER ON PURPOSE. The first version simply sent an x-payment header
+  // with env {}, which cannot verify without a facilitator, so it took the 402 branch and passed
+  // against the very handler that had no fulfilment path at all — it asserted nothing. Reaching
+  // the 200 branch requires verifyX402Payment to succeed, so it is stubbed here and only here.
+  it("serves the exact keys its published outputSchema promises, once payment verifies", async () => {
+    // Read the published contract from the UNMOCKED challenge first — once the verifier is stubbed
+    // every call fulfils, and there is no 402 body left to read the promised keys out of.
+    const chal = (await (await call()).json()) as {
+      extensions: { bazaar: { info: { output: { example: Record<string, unknown> } } } };
+    };
+    const promised = Object.keys(chal.extensions.bazaar.info.output.example).sort();
+    expect(promised).toEqual(["board", "price_usdc", "root", "schema", "verify"]);
+
+    const x402 = await import("./_x402");
+    const spy = vi.spyOn(x402, "verifyX402Payment").mockResolvedValue({
+      ok: true,
+      paymentResponse: undefined,
+    } as unknown as Awaited<ReturnType<typeof x402.verifyX402Payment>>);
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ totals: { public_count: 22, measured: 22, unmeasured: 0 } }), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    try {
+      const { onRequestGet: handler } = await import("./free-door");
+      const paid = (await (handler as unknown as (c: unknown) => Promise<Response>)({
+        request: new Request("https://councilof.ai/api/free-door", {
+          headers: { "x-payment": "e30=" },
+        }),
+        env: {},
+      })) as Response;
+
+      expect(paid.status).toBe(200); // the whole point — a 402 here is the bug this test exists for
+      const body = (await paid.json()) as Record<string, unknown>;
+      for (const k of promised) expect(body).toHaveProperty(k);
+      expect(body.price_usdc).toBe(0);
+      // the totals are READ, never restated: the stubbed board is what comes back
+      expect(body.totals).toEqual({ public_count: 22, measured: 22, unmeasured: 0 });
+    } finally {
+      spy.mockRestore();
+      fetchSpy.mockRestore();
+    }
+  });
+
+  // A failed board read must be reported as a failure, never rendered as a plausible number.
+  it("says so when the live board cannot be read, instead of inventing totals", async () => {
+    const x402 = await import("./_x402");
+    const spy = vi.spyOn(x402, "verifyX402Payment").mockResolvedValue({
+      ok: true,
+    } as unknown as Awaited<ReturnType<typeof x402.verifyX402Payment>>);
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
+    try {
+      const { onRequestGet: handler } = await import("./free-door");
+      const paid = (await (handler as unknown as (c: unknown) => Promise<Response>)({
+        request: new Request("https://councilof.ai/api/free-door", { headers: { "x-payment": "e30=" } }),
+        env: {},
+      })) as Response;
+      expect(paid.status).toBe(200);
+      const body = (await paid.json()) as Record<string, unknown>;
+      expect(body.totals).toBeNull();
+      expect(String(body.totals_note)).toMatch(/could not read/i);
+    } finally {
+      spy.mockRestore();
+      fetchSpy.mockRestore();
+    }
   });
 });
