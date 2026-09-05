@@ -134,6 +134,16 @@ jobs:
       - name: Check prerender report against the filesystem
         run: node scripts/check-prerender.mjs dist/client
 
+      # Structured data lives ONLY in prerendered output — PageSchema injects it from a mount
+      # effect, so a plain `vite build` tree has none of it. This ran in pr-gates first and
+      # failed exactly that way ("no Dataset node", "/honesty/ not present"): it was checking a
+      # tree that never contains the thing. It belongs here, after the prerender, where the
+      # bytes it asserts about are the bytes that ship.
+      - name: Structured data — Organization + Dataset on /, FAQPage reported on /honesty/
+        run: |
+          node scripts/structured-data-gate.mjs --selftest
+          node scripts/structured-data-gate.mjs dist/client
+
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
           # Living board owns /gspc-scoreboard. A leftover gspc-scoreboard.html
