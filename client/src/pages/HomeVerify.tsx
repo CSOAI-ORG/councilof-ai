@@ -11,7 +11,7 @@ import ToolStack from "@/components/home/ToolStack";
 import LivingStages from "@/components/home/LivingStages";
 import HomeFilms from "@/components/home/HomeFilms";
 import HomeCinematicWorlds from "@/components/home/HomeCinematicWorlds";
-import LiveLeaderboard from "@/components/board/LiveLeaderboard";
+import HomeGspcTable from "@/components/home/HomeGspcTable";
 import HomeUnderstand from "@/components/home/HomeUnderstand";
 import HfLivingRecord from "@/components/HfLivingRecord";
 import ReachStrip from "@/components/ReachStrip";
@@ -80,7 +80,7 @@ export default function HomeVerify() {
             className="mt-6 max-w-2xl"
             title="What this desk does"
             items={[
-              "Click a row. The figure, n and status open underneath — living GET /api/gspc.",
+              "Click a row. Its bench, n, interval and note open underneath — living GET /api/gspc.",
               "Paste a signed card. Your browser checks the hash and the signature. Nothing is sent.",
               "Say what you use AI for. We route you to the paid measurement waitlist; booking is not live yet.",
               { kind: "usp", text: "Verification is free forever. A rank is never sold." },
@@ -120,14 +120,10 @@ export default function HomeVerify() {
           </div>
         </section>
 
+        {/* The board table: every row, every word, every number off GET /api/gspc at render
+            time; the models block under it lists only the leaders the board publishes. */}
         <div className="mt-20 sm:mt-24">
-          <LiveLeaderboard
-            heading="The living board"
-            defaultExpanded
-            showHumanPanel={false}
-            highlight={axis}
-            onSelect={setAxis}
-          />
+          <HomeGspcTable heading="The living board" highlight={axis} onSelect={setAxis} />
         </div>
 
         <HfLivingRecord />
