@@ -1,14 +1,39 @@
 {
-  "as_of": "2026-09-05T182000Z",
-  "source": "huggingface.co/api (public)",
-  "principle": "Census of the observed window; UNMEASURED until graded. Counts + distributions only.",
-  "schema": "csoai.hf-spaces-census/0.2",
-  "n_spaces": 1000,
+  "schema": "csoai.hf-spaces-census/0.1",
+  "as_of": "2026-09-05T174500Z",
+  "source": "https://huggingface.co/api/spaces?sort=downloads",
+  "n_spaces_window": 100,
+  "top_by_downloads": [
+    {
+      "id": "52Hz/CMFNet_deblurring",
+      "downloads": 0
+    },
+    {
+      "id": "52Hz/CMFNet_dehazing",
+      "downloads": 0
+    },
+    {
+      "id": "52Hz/CMFNet_deraindrop",
+      "downloads": 0
+    },
+    {
+      "id": "52Hz/HWMNet_lowlight_enhancement",
+      "downloads": 0
+    },
+    {
+      "id": "52Hz/SRMNet_AWGN_denoising",
+      "downloads": 0
+    },
+    {
+      "id": "52Hz/SRMNet_real_world_denoising",
+      "downloads": 0
+    }
+  ],
   "sdk_distribution": {
-    "gradio": 648,
-    "streamlit": 311,
-    "static": 33,
-    "?": 5,
-    "docker": 3
-  }
+    "gradio": 51,
+    "streamlit": 41,
+    "static": 6,
+    "?": 2
+  },
+  "principle": "Census of observable HF Spaces (measurement candidates, UNMEASURED until graded). No quality claims."
 }
