@@ -15,7 +15,7 @@ const local = !process.env.BASE_URL;
 
 export default defineConfig({
   testDir: "./tests",
-  testMatch: /(mobile-journey|contrast-aa)\.spec\.ts/,
+  testMatch: /(mobile-journey|contrast-aa|case-scope)\.spec\.ts/,
   fullyParallel: false,
   workers: 1,
   reporter: "list",

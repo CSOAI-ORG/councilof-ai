@@ -242,6 +242,11 @@ capabilities/axis-family-split.test.mjs
 capabilities/integration-endpoints.test.mjs
 client/src/data/intel/integrations.ts
 capabilities/revenue-rail-truth.test.mjs
+client/src/components/CaseScope.tsx
+client/src/components/CaseScope.test.tsx
+client/src/components/DashboardFabricPane.tsx
+e2e/tests/case-scope.spec.ts
+operator/handoffs/2026-09-05/mobile-7-case-scope.jpg
 counters.json
 public/cards-bundle.json
 public/signed/HOW-TO-VERIFY-ROOT.md
@@ -944,6 +949,60 @@ false-positive case is tested explicitly, not assumed.
 
 **Ownership note:** the rail itself is TUI 1's. Nothing here changes a count, a payment path or
 any rail behaviour — only the descriptions that contradicted measured runtime.
+
+## WP-3 — the half that was never blocked, built
+
+WP-3 asks the product to "ask for role, subject/version, jurisdiction, purpose and consent" and
+to "label guides versus executable tools". **Nothing in the estate asked for all five.** The
+blocked half of the case model (propose → approve → fix → retest → receipt → monitor) waits on a
+remediation runtime another lane owns — but scoping never did. It is a question the product asks
+a person, and the answer changes which live surfaces are the right ones.
+
+`client/src/components/CaseScope.tsx`, mounted above `JourneyStages` in the fabric pane so ask →
+scope sits with the case model it feeds.
+
+**It does not submit, and does not pretend to.** There is no queue behind it. A form that said
+"request received" when nothing received it is the faked completed fix WP-3 forbids, wearing the
+politest possible costume — so there is no `<form>`, no `<button>`, no `fetch`, and the copy says
+the scope is held in this browser. Asserted, not intended: the test fails if a submit control,
+a form element or submit vocabulary ever appears.
+
+**Consent is three things, kept apart.** WP-3: *"Separate learning participation from legal
+compliance and certification."* One tick-box conflating them would be this estate's own doctrine
+failing in miniature. Consent to be measured and willingness to have a result published as a
+learning contribution are separate boxes, **neither pre-ticked**, and the panel states in words
+that neither is a compliance step and neither produces a certificate. A mutation that makes
+learning a precondition for a complete scope fails the suite.
+
+**What it produces is a link that lands.** A scope makes three doors that answer *today* specific
+to the subject — published measurements, the free inclusion proof, and the paid commission rail —
+each labelled an executable tool and each naming its endpoint. **The commission link was wrong
+first:** it pointed at `/dashboard?tab=request`, which renders *"No tool is named 'request'"*; the
+pane map keys that surface under `measured`. Caught by loading it, not by reading the tab list —
+the second time in this lane a plausible tab id turned out to be an alias.
+
+Verified on production, because the local static server has no `/api/*` and so the tool list
+never loads — an absence that reads exactly like "the subject is dropped":
+
+    /dashboard?tab=measured&subject=acme-llm   ->  subject input = "acme-llm"
+    /dashboard?tab=measured                    ->  subject input = ""
+
+A first pass asserted that prefill on `name || placeholder`, matched the *placeholder* "subject",
+and reported a pass for a mechanism it had not located. The input carries no `name` at all; it is
+`#mcp-commission_card-subject`. The test asserts the id.
+
+    operator/handoffs/2026-09-05/mobile-7-case-scope.jpg    390x844, no sideways scroll
+
+    npx vitest run client/src/components/CaseScope.test.tsx        15 passed
+    npx playwright test --config e2e/playwright.mobile.config.ts   15 passed
+    PROD_CASE_SCOPE=1 …                                            includes the live prefill check
+
+Four mutations proven: a submit button, a pre-ticked consent, learning made a precondition, and
+an audience silently dropped from the seven WP-3 names.
+
+**Still blocked, and still named on screen:** everything after Explain needs `/api/ras`,
+`/api/remediation` and `/api/jobs`, all 404. The scope cannot become a proposed change, an
+approval or a receipt, and `JourneyStages` says which endpoint each stage waits on.
 
 ## Open owner gates, in priority order
 

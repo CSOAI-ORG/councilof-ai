@@ -9,6 +9,7 @@ import {
 import { Link } from "wouter";
 import EvidenceLifecycleView from "@/components/EvidenceLifecycleView";
 import JourneyStages from "@/components/JourneyStages";
+import CaseScope from "@/components/CaseScope";
 import {
   fabricCounts,
   fetchCapabilityFabric,
@@ -255,6 +256,7 @@ export default function DashboardFabricPane() {
           that has no runtime. Sits beside the fabric because this pane's own remit is
           "missing adapters kept explicit". */}
       <div className="mt-8">
+        <CaseScope />
         <JourneyStages />
       </div>
 
