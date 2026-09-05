@@ -1,0 +1,158 @@
+{
+  "schema": "csoai.chatgpt-skills/0.1",
+  "as_of": "20260905T042017Z",
+  "principle": "Every ChatGPT skill maps to a csoai: primitive. We take over by being the governance + measurement layer underneath.",
+  "skills_mapping": {
+    "chatgpt_web_app": {
+      "csoai_equivalent": "councilof.ai (Council OS)",
+      "description": "Web chat with the AI council. Every chat is a 3KB signed card.",
+      "card_kind": "chat",
+      "endpoints": [
+        "/ag-ui",
+        "/api/chat",
+        "/api/learn-loop"
+      ]
+    },
+    "chatgpt_ios_android_mac": {
+      "csoai_equivalent": "Council OS mobile (planned)",
+      "description": "Mobile chat with the AI council. 22-axis measurement on every response.",
+      "card_kind": "chat",
+      "endpoints": [
+        "/ag-ui"
+      ]
+    },
+    "chatgpt_enterprise": {
+      "csoai_equivalent": "Council OS Enterprise (planned)",
+      "description": "Enterprise version with SOC 2 / ISO 42001 / HIPAA compliance.",
+      "card_kind": "evidence",
+      "endpoints": [
+        "/api/evidence-bundle"
+      ]
+    },
+    "chatgpt_api": {
+      "csoai_equivalent": "/api/x402",
+      "description": "x402 paid attestation API. $0.02 per card, $0.50 per benchmark, $5 per full 22-axis run.",
+      "card_kind": "attestation",
+      "endpoints": [
+        "/api/x402",
+        "/api/board-sign"
+      ]
+    },
+    "chatgpt_plugins": {
+      "csoai_equivalent": "csoai:agent cards + MCP servers",
+      "description": "Every ChatGPT plugin becomes a csoai:agent with A2A card + MCP server.",
+      "card_kind": "agent",
+      "endpoints": [
+        "/.well-known/agents/",
+        "/.well-known/mcp/"
+      ]
+    },
+    "chatgpt_custom_gpts": {
+      "csoai_equivalent": "csoai:space",
+      "description": "Every Custom GPT becomes a csoai:space \u2014 hosted, signed, x402-priced.",
+      "card_kind": "space",
+      "endpoints": [
+        "/games/",
+        "/csoai/space/"
+      ]
+    },
+    "chatgpt_memory": {
+      "csoai_equivalent": "card_index.json + chain.json",
+      "description": "Every interaction is a signed card on the chain. Memory is verifiable.",
+      "card_kind": "memory",
+      "endpoints": [
+        "/signed/card_index.json",
+        "/signed/chain.json"
+      ]
+    },
+    "chatgpt_search": {
+      "csoai_equivalent": "/.well-known/ discovery",
+      "description": "Discovery via well-known doors. 207 standards + 289 formats discoverable.",
+      "card_kind": "discovery",
+      "endpoints": [
+        "/.well-known/",
+        "/.well-known/index.json"
+      ]
+    },
+    "chatgpt_voice": {
+      "csoai_equivalent": "Council OS voice (planned)",
+      "description": "Voice interface. Every utterance is signed.",
+      "card_kind": "voice",
+      "endpoints": [
+        "/ag-ui/voice"
+      ]
+    },
+    "chatgpt_vision": {
+      "csoai_equivalent": "Council OS vision (planned)",
+      "description": "Vision interface. Every image gets a provenance card.",
+      "card_kind": "vision",
+      "endpoints": [
+        "/ag-ui/vision"
+      ]
+    },
+    "chatgpt_advanced_voice_mode": {
+      "csoai_equivalent": "Council OS realtime (planned)",
+      "description": "Realtime voice. Every utterance is signed + attested.",
+      "card_kind": "realtime",
+      "endpoints": [
+        "/ag-ui/realtime"
+      ]
+    },
+    "chatgpt_tasks": {
+      "csoai_equivalent": "Council OS scheduler",
+      "description": "Scheduled tasks. Every task emits a signed result.",
+      "card_kind": "task",
+      "endpoints": [
+        "/api/scheduler"
+      ]
+    },
+    "chatgpt_canvas": {
+      "csoai_equivalent": "Council OS editor",
+      "description": "Canvas-style editor. Every edit emits a signed diff.",
+      "card_kind": "editor",
+      "endpoints": [
+        "/ag-ui/canvas"
+      ]
+    },
+    "chatgpt_code_interpreter": {
+      "csoai_equivalent": "Council OS sandbox",
+      "description": "Code execution sandbox. Every result is signed.",
+      "card_kind": "sandbox",
+      "endpoints": [
+        "/api/sandbox"
+      ]
+    },
+    "chatgpt_operator": {
+      "csoai_equivalent": "Council OS browser agent",
+      "description": "Browser agent. Every action is signed + attested.",
+      "card_kind": "operator",
+      "endpoints": [
+        "/ag-ui/operator"
+      ]
+    },
+    "chatgpt_deep_research": {
+      "csoai_equivalent": "Council OS deep research",
+      "description": "Deep research pipeline. Every finding is signed + anchored.",
+      "card_kind": "research",
+      "endpoints": [
+        "/api/research"
+      ]
+    },
+    "chatgpt_atlas": {
+      "csoai_equivalent": "Council OS browser",
+      "description": "Browser with built-in measurement. Every page visit is signed.",
+      "card_kind": "browser",
+      "endpoints": [
+        "/ag-ui/atlas"
+      ]
+    }
+  },
+  "take_over_strategy": {
+    "step_1": "Every ChatGPT user becomes a csoai:model user via the OpenAI inference integration",
+    "step_2": "Every ChatGPT plugin becomes a csoai:agent (A2A card + MCP server)",
+    "step_3": "Every Custom GPT becomes a csoai:space (hosted, signed, x402-priced)",
+    "step_4": "Every ChatGPT API call becomes a csoai:benchmark (22-axis measurement)",
+    "step_5": "Every ChatGPT prompt becomes a csoai:dataset (signed + attested)",
+    "step_6": "ChatGPT Deep Research + our research pipeline = the only deep research pipeline with measurement + signing + anchoring"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "csoai.custom-gpt-bridge/0.1",
+  "as_of": "20260905T042017Z",
+  "principle": "Every Custom GPT becomes a csoai:space \u2014 hosted, signed, x402-priced.",
+  "format": "openai.custom-gpt.v1",
+  "gpts": [
+    {
+      "name": "GSPC 22-axis measurement",
+      "description": "Measure any AI model on 22 axes. Returns signed card.",
+      "instructions": "You measure AI models on 22 governance axes. Every measurement is signed + anchored. Use POST /api/x402 with sku=engine-gspc to emit a card. The card is 3KB max, signed Ed25519, anchored to OTS pending + Rekor + EAS planned.",
+      "conversation_starters": [
+        "Measure gpt-4o on the governance axis",
+        "Sign a measurement card",
+        "Verify a card",
+        "Anchor a card to OTS"
+      ],
+      "actions": [
+        {
+          "name": "measure",
+          "description": "Run 22-axis measurement on a model",
+          "endpoint": "https://councilof.ai/api/measure",
+          "method": "POST"
+        },
+        {
+          "name": "verify",
+          "description": "Verify a signed card",
+          "endpoint": "https://councilof.ai/api/verify",
+          "method": "POST"
+        }
+      ]
+    },
+    {
+      "name": "XRPL evidence card",
+      "description": "Build an evidence card for any XRPL issuer (RLUSD, USDC, USD.bs, ...).",
+      "instructions": "You build evidence cards for XRPL issuers. Every card is signed + anchored. Use POST /api/x402 with sku=xrpl-asset-evidence.",
+      "conversation_starters": [
+        "Build an evidence card for RLUSD",
+        "Show Ripple's reserves",
+        "Verify a USDC card"
+      ],
+      "actions": [
+        {
+          "name": "build_xrpl_card",
+          "description": "Build an evidence card for an XRPL issuer",
+          "endpoint": "https://councilof.ai/api/xrpl/evidence",
+          "method": "POST"
+        }
+      ]
+    },
+    {
+      "name": "EU AI Act Art 50 attestation",
+      "description": "Attest EU AI Act Article 50 compliance. Every attestation is signed + anchored.",
+      "instructions": "You attest EU AI Act Article 50 compliance. Every attestation is signed + anchored. Use POST /api/x402 with sku=art50.",
+      "conversation_starters": [
+        "Attest Article 50 compliance",
+        "Build the EU AI Act charter",
+        "Sign the attestation"
+      ],
+      "actions": [
+        {
+          "name": "attest_art50",
+          "description": "Attest EU AI Act Article 50",
+          "endpoint": "https://councilof.ai/api/eu-ai-act/art50",
+          "method": "POST"
+        }
+      ]
+    }
+  ],
+  "imports": [
+    "csoai:model",
+    "csoai:agent",
+    "csoai:dataset",
+    "csoai:space",
+    "csoai:regulator",
+    "csoai:issuer",
+    "csoai:standard",
+    "csoai:game",
+    "csoai:court",
+    "csoai:evidence",
+    "csoai:inference",
+    "csoai:bench"
+  ]
+}
