@@ -258,6 +258,47 @@ def refresh_eas_metadata(public_dir: Path = PUB) -> int:
     return 0
 
 
+def find_root_conflicts(interop_dir: Path, as_of: str | None, merkle_root: str | None, sha256: str | None) -> dict:
+    """Two witnessed roots for the same issuer and epoch (equal as_of, unequal merkle_root) = CONFLICT.
+
+    Inclusion in Rekor proves a root existed at a time; it does not prove it was the only root
+    for that epoch. This scans every dated witness sidecar this publisher has committed
+    (public/interop/root-witness-YYYY-MM-DD*.json) and names the case instead of leaving a reader
+    to infer it. Limit, stated honestly: it only sees roots THIS publisher witnessed and kept. A
+    publisher that hid one of two roots would not be caught here — that is what an independent
+    witness run is for (asked for by a SCITT peer on 2026-09-05; ledger C-2026-0905-01).
+    Same merkle_root with different bytes is reported separately as byte_variants: same tree,
+    re-serialised, not a conflict of content."""
+    if not as_of or not merkle_root:
+        return {"status": "UNCHECKABLE", "reason": "root carries no as_of/merkle_root to compare"}
+    conflicts: list[dict] = []
+    byte_variants: list[dict] = []
+    scanned = 0
+    try:
+        files = sorted(interop_dir.glob("root-witness-????-??-??*.json"))
+    except Exception as exc:
+        return {"status": "UNCHECKABLE", "reason": f"cannot list witness sidecars ({type(exc).__name__})"}
+    for f in files:
+        try:
+            art = (json.loads(f.read_text()).get("artifact") or {})
+        except Exception:
+            continue
+        scanned += 1
+        if art.get("as_of") != as_of:
+            continue
+        if art.get("merkle_root") != merkle_root:
+            conflicts.append({"file": f.name, "merkle_root": art.get("merkle_root"), "sha256": art.get("sha256")})
+        elif sha256 and art.get("sha256") and art.get("sha256") != sha256:
+            byte_variants.append({"file": f.name, "sha256": art.get("sha256")})
+    return {
+        "status": "CONFLICT" if conflicts else "NONE",
+        "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
+        "as_of": as_of, "merkle_root": merkle_root, "sidecars_scanned": scanned,
+        "conflicts": conflicts, "byte_variants": byte_variants,
+        "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case",
+    }
+
+
 LIVE_ROOT_URL = "https://councilof.ai/root.json"
 # Cloudflare 403s the default Python-urllib UA on this zone (Error 1010), which would make every
 # drift check come back UNCHECKABLE for a reason that has nothing to do with drift.
@@ -366,8 +407,12 @@ def recheck(
         if attempt < attempts:
             time.sleep(retry_delay_seconds)
 
+    live_root = ptr.get("live_root") or {}
+    conflict = find_root_conflicts(ptr_path.parent, live_root.get("as_of"), merkle, witnessed)
+    print(f"conflict: {conflict['status']}  sidecars={conflict.get('sidecars_scanned', 0)}")
     if not check_only:
         ptr["drift"] = drift
+        ptr["conflict"] = conflict
         ptr_path.write_text(json.dumps(ptr, indent=1, ensure_ascii=False) + "\n")
     if output is not None:
         output.parent.mkdir(parents=True, exist_ok=True)
@@ -376,8 +421,19 @@ def recheck(
 
 
 def selftest() -> int:
-    """Prove DRIFTED and UNCHECKABLE are reachable. The block this replaced could reach neither."""
+    """Prove DRIFTED, UNCHECKABLE and CONFLICT are reachable. The block this replaced could reach none."""
     import tempfile, http.server, threading, functools
+    cdir = Path(tempfile.mkdtemp())
+    (cdir / "root-witness-2026-09-01-aaaa.json").write_text(json.dumps({"artifact": {"as_of": "E1", "merkle_root": "aa" * 32, "sha256": "11" * 32}}))
+    (cdir / "root-witness-2026-09-01-bbbb.json").write_text(json.dumps({"artifact": {"as_of": "E1", "merkle_root": "aa" * 32, "sha256": "22" * 32}}))
+    (cdir / "root-witness-2026-09-02-cccc.json").write_text(json.dumps({"artifact": {"as_of": "E2", "merkle_root": "cc" * 32, "sha256": "33" * 32}}))
+    none = find_root_conflicts(cdir, "E1", "aa" * 32, "11" * 32)
+    fork = find_root_conflicts(cdir, "E1", "bb" * 32, "44" * 32)
+    unk = find_root_conflicts(cdir, None, None, None)
+    assert none["status"] == "NONE" and len(none["byte_variants"]) == 1, none
+    assert fork["status"] == "CONFLICT" and len(fork["conflicts"]) == 2, fork
+    assert unk["status"] == "UNCHECKABLE", unk
+    print("selftest: conflict NONE / CONFLICT / UNCHECKABLE all reachable")
     body = json.dumps({"merkle_root": "aa" * 32}).encode()
     d = tempfile.mkdtemp(); Path(d, "root.json").write_bytes(body)
     h = functools.partial(http.server.SimpleHTTPRequestHandler, directory=d)
@@ -547,6 +603,9 @@ def main() -> int:
             "xrpl_memo": {"status": "NOT_YET", "reason": "needs a funded XRPL account (owner); one memo tx carrying sha256(root.json)"},
         },
         "verify_hints": ["https://councilof.ai/signed/HOW-TO-VERIFY-ROOT.md"],
+        # Same issuer, same epoch, different tree → named, not inferred. Computed BEFORE this
+        # run's dated copy is written, so a root only conflicts with roots that preceded it.
+        "conflict": find_root_conflicts(INTEROP, root.get("as_of"), root["merkle_root"], sha),
     }
     latest = INTEROP / "root-witness-latest.json"; dated = INTEROP / f"root-witness-{now()[:10]}-{short}.json"
     for p in (latest, dated): p.write_text(json.dumps(side, indent=1, ensure_ascii=False) + "\n")
@@ -561,6 +620,7 @@ def main() -> int:
                 # candidate is deployed this may legitimately read DRIFTED. checked_at makes this
                 # a timestamped observation; it is never published as a standing live verdict.
                 "drift": compute_drift(sha, root["merkle_root"]),
+                "conflict": side["conflict"],
                 "corpus_scope": corpus_scope,
                 # Proof observation exists before Bitcoin confirmation.  A
                 # pending proof has no bitcoin_header by definition, so its own

@@ -14,7 +14,7 @@ on:
       axis: { description: "axis to grade this run (blank = the emptiest axis)", type: string, default: "" }
       grade: { description: "how many probe-live models to grade", type: string, default: "12" }
 concurrency: { group: hub-queue-mill, cancel-in-progress: false }
-permissions: { contents: read }
+permissions: { contents: read, pull-requests: read }
 jobs:
   mill:
     runs-on: ubuntu-latest
@@ -171,6 +171,18 @@ jobs:
           n=0; for k in GROQ_API_KEY GEMINI_API_KEY NVIDIA_API_KEY CEREBRAS_API_KEY TOGETHER_API_KEY MISTRAL_API_KEY SAMBANOVA_API_KEY OPENROUTER_API_KEY HF_INFERENCE_TOKEN; do [ -n "${!k:-}" ] && n=$((n+1)); done
           echo "providers_with_keys=$n"; echo "n=$n" >> "$GITHUB_OUTPUT"
           [ "$n" -gt 0 ] || echo "NO PROVIDER KEYS — staging nothing (add secrets by name; see issue #1102)"
+      - name: in-flight cells — never re-pick a cell already staged in an open landing PR
+        if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # Human merge is the only gate on landing PRs. Until one merges, its cells are still
+          # UNMEASURED on the public hub-queue and the picker grades them again (2026-09-05: five
+          # open PRs, 40 staged cards, 11 distinct). Read the open landing branches and hand the
+          # picker their (id, axis) cells to skip. Empty when nothing is waiting — that is fine.
+          BRS=$(gh pr list --state open --limit 100 --json headRefName --jq '.[].headRefName|select(startswith("mill/land-"))' || true)
+          python3 harness/gspc-top100/inflight_cells.py --out mill-in/inflight.jsonl $BRS
       - name: mill (stage unsigned cards; MEASURED only after OIDC sign + VALID)
         if: steps.keys.outputs.n != '0' && steps.inputs.outputs.inputs == '1'
         run: |
@@ -186,7 +198,8 @@ jobs:
           # snapshot of routing that has since changed.
           python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out \
             --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 \
-            --probe-first --dead harness/gspc-top100/dead_slugs.jsonl 2>&1 | tail -40
+            --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
+            --inflight mill-in/inflight.jsonl 2>&1 | tail -40
       - name: upload staged cards (not a board rewrite)
         if: always()
         uses: actions/upload-artifact@v4

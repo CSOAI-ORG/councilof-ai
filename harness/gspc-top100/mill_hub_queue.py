@@ -138,6 +138,28 @@ def load_dead_slugs(path: Path | None) -> set[str]:
     return out
 
 
+def load_inflight_cells(path: Path | None) -> set[tuple[str, str]]:
+    """(id, axis) cells already staged in an open landing PR — signed or not, they are waiting on
+    a human merge. Picking them again re-grades the same cell and stages a byte-identical card
+    (observed 2026-09-05: 5 landing PRs, 11 distinct cards between them). jsonl rows {id, axis}.
+    Missing file → empty; a cell is in-flight only for the axis named on its row."""
+    out: set[tuple[str, str]] = set()
+    if not path or not path.exists():
+        return out
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            row = json.loads(line)
+        except Exception:
+            continue
+        mid, ax = str(row.get("id") or ""), str(row.get("axis") or "")
+        if mid and ax:
+            out.add((mid, ax))
+    return out
+
+
 def is_dead_reason(reason: str) -> bool:
     """True only for model-side 'no endpoint' outcomes — never for token (401/403) or rate (429) states."""
     r = reason or ""
@@ -215,9 +237,11 @@ def pick_emptiest(
     axis: str | None = None,
     only_ids: set[str] | None = None,
     dead: set[str] | None = None,
+    inflight: set[tuple[str, str]] | None = None,
 ) -> list[dict]:
     """Emptiest (id, axis) cells by rank. generative_only keeps SERVABLE_TAGS only (no fallback to
-    non-generative repos); dead ids are never picked; only_ids is an allowlist."""
+    non-generative repos); dead ids are never picked; only_ids is an allowlist; inflight (id, axis)
+    cells are already staged in an open landing PR and are skipped until that PR merges or closes."""
 
     def is_empty(r: dict) -> bool:
         if axis:
@@ -230,6 +254,8 @@ def pick_emptiest(
     empty = [r for r in rows if is_empty(r)]
     if dead:
         empty = [r for r in empty if str(r.get("id") or "") not in dead]
+    if inflight and axis:
+        empty = [r for r in empty if (str(r.get("id") or ""), axis) not in inflight]
     if only_ids:
         empty = [r for r in empty if str(r.get("id") or "") in only_ids]
     if generative_only:
@@ -732,11 +758,13 @@ def mill(
     dead_path: Path | None = None,
     probe_first: bool = False,
     probe_fetch=None,
+    inflight_path: Path | None = None,
 ) -> dict:
     rows = load_queue(queue_path)
     ax = axis if axis in MODEL_AXES else "governance"
     dead = load_dead_slugs(dead_path)
-    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead)
+    inflight = load_inflight_cells(inflight_path)
+    picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
@@ -831,6 +859,8 @@ def mill(
         "axis": axis,
         "only_ids_n": len(only_ids) if only_ids is not None else 0,
         "dead_known": len(dead),
+        "inflight_known": len(inflight),
+        "inflight_skipped_this_axis": sum(1 for (_m, a) in inflight if a == ax),
         "dead_new": len(dead_new),
         "dead_appended": dead_appended,
         "probe_first": bool(probe_first),
@@ -854,6 +884,7 @@ def main() -> int:
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
+    ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     args = ap.parse_args()
     only = load_only_ids(Path(args.only)) if args.only else None
     rep = mill(
@@ -868,8 +899,9 @@ def main() -> int:
         only_ids=only,
         dead_path=Path(args.dead) if args.dead else None,
         probe_first=args.probe_first,
+        inflight_path=Path(args.inflight) if args.inflight else None,
     )
-    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "probe_first") if k in rep}, default=str))
+    print(json.dumps({k: rep[k] for k in ("queue_n", "picked", "graded", "staged_unsigned", "measured_flips", "dead_known", "dead_new", "dead_appended", "inflight_known", "inflight_skipped_this_axis", "probe_first") if k in rep}, default=str))
     print("skips", len(rep["skips"]))
     return 0
 
