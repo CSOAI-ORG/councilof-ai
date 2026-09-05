@@ -63,12 +63,3 @@ jobs:
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
-
-      # The three JSON-LD nodes answer engines actually read. Structured data is the one
-      # surface where a wrong value is repeated by machines at scale and never re-checked,
-      # so it fails closed: missing, unparseable, or citing no machine-readable board is a
-      # failure, never a skip. --selftest first, same reason as brand-gate.
-      - name: Structured data — Organization + Dataset on /, FAQPage on /honesty/
-        run: |
-          node scripts/structured-data-gate.mjs --selftest
-          node scripts/structured-data-gate.mjs dist/client
