@@ -59,7 +59,11 @@ jobs:
           python-version: "3.12"
 
       - name: deps
-        run: pip install --quiet huggingface_hub kaggle build twine
+        # kaggle 2.2.x in a fresh runner refuses kaggle.json and asks for `kaggle auth login`
+        # (an interactive OAuth flow; runs 33971286898 and 33972298729 both FAILED there while
+        # the Mac, which holds a cached OAuth access_token, publishes fine). 1.7.x reads
+        # ~/.kaggle/kaggle.json (username + key), which is exactly what the secrets carry.
+        run: pip install --quiet huggingface_hub "kaggle<2" build twine
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
