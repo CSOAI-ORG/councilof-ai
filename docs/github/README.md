@@ -44,3 +44,9 @@ So the generated profile is written to **two** places — `CSOAI-ORG/.github/pro
 4. **Six pinned READMEs:** the MEOK MCP READMEs above still carry prices and "Compliant"
    badges; this lane changed only their one-line descriptions. Rewriting those READMEs is a
    separate, owner-scoped lane (they are MEOK-branded products, see `csoai-vs-meok-boundary`).
+
+## Before / after
+
+- [`ORG-INVENTORY-2026-09-05.md`](ORG-INVENTORY-2026-09-05.md) — the state **before** this lane (flags as found).
+- [`ORG-INVENTORY-2026-09-05-after.md`](ORG-INVENTORY-2026-09-05-after.md) — re-derived **after** `repo-metadata.py` was applied (descriptions, topics, licences).
+- [`REPO-METADATA-PLAN-2026-09-05.json`](REPO-METADATA-PLAN-2026-09-05.json) — the exact plan that was applied; `--diff` renders it as a table.
