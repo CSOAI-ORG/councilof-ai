@@ -49,6 +49,37 @@ export default function PageSchema() {
         added.push(sc);
       };
 
+      // /honesty is the page whose whole job is to state what we have NOT measured, and it
+      // shipped with no FAQPage node — so answer engines had no structured handle on the one
+      // page written to be quoted against us. The questions and answers are read from the
+      // page's OWN rendered sections at prerender time, never authored here: a hand-written
+      // FAQ would drift from the page the day the page changed, and phrasing a heading into a
+      // question would be putting words in the page's mouth. Heading verbatim (minus its
+      // "1." ordinal), answer = that section's first paragraph. If the page renders no
+      // sections, NO node is emitted — an empty FAQ is worse than none.
+      if (path === "/honesty" && !pageLd.includes('"FAQPage"')) {
+        const qa = Array.from(document.querySelectorAll("h2"))
+          .map((h) => {
+            const name = (h.textContent || "").replace(/^\s*\d+\.\s*/, "").trim();
+            let el: Element | null = h.nextElementSibling;
+            while (el && !/^(P|UL|OL)$/.test(el.tagName)) el = el.nextElementSibling;
+            const text = (el?.textContent || "").trim();
+            return { name, text };
+          })
+          .filter((x) => x.name && x.text.length > 40)
+          .slice(0, 10);
+        if (qa.length) {
+          inject("faq", {
+            "@type": "FAQPage",
+            mainEntity: qa.map((x) => ({
+              "@type": "Question",
+              name: x.name,
+              acceptedAnswer: { "@type": "Answer", text: x.text.slice(0, 1200) },
+            })),
+          });
+        }
+      }
+
       const libraried = isLibraried(path);
       const sector = libraried ? classify(path) : null;
       const title = titleFor(path);
