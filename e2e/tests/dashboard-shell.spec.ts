@@ -449,6 +449,28 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
   await expect(playPane.getByText(/currently admitted ranking/i)).toBeVisible();
   await expect(playPane.getByText(/models are measured on/i)).toHaveCount(0);
 
+  // The page's board read (/api/gspc, falling back to the live councilof.ai read when
+  // the static server answers with the SPA's HTML) settles AFTER the quest buttons are
+  // clickable, and its callback repaints the grid. Until 2026-09-05 that callback was
+  // home(), whose showRun(false) hid and emptied #run — a quest already in progress was
+  // wiped and the player dumped back to the grid. In CI the desktop lane lost that race
+  // twice in one morning (element(s) not found at :479 and :483 — a different assertion
+  // each time, because the wipe landed at a different moment); mobile happened to win it,
+  // and locally it failed 2 of 3. Hold the board read open until AFTER the click so the
+  // race is deterministic here, then release it and require the run to survive.
+  let releaseBoard: () => void = () => undefined;
+  const boardHeld = new Promise<void>((resolve) => {
+    releaseBoard = resolve;
+  });
+  await page.route(/\/api\/gspc(\?|$)/, async (route) => {
+    await boardHeld;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ totals: {}, axes: [] }),
+    });
+  });
+
   await page.goto("/gspc-quests.html?embed=1", {
     waitUntil: "domcontentloaded",
   });
@@ -468,19 +490,29 @@ test("GSPC quests are a styled in-workspace game and never promote play into mea
   expect(tabRadius).toBeGreaterThan(0);
 
   // The quest buttons are painted before the page's script has finished defining
-  // window.start. A click that lands in that gap throws silently and #run never
-  // renders — CI's mobile lane hit exactly that twice on 2026-09-05 (element(s) not
-  // found, 5s) while the same journey passed against production locally. Wait for
-  // the handler, and give #run the same budget as every other pane in this file.
+  // window.start; wait for the handler so the click cannot throw into the void.
   await page.waitForFunction(() => typeof (window as any).start === "function", null, {
     timeout: 15_000,
   });
+  await expect(page.locator("#boardCount")).toHaveText(/reading \/api\/gspc/i);
   await page.locator("#grid .q").first().click();
   await expect(page.locator("#run .item")).toBeVisible({ timeout: 15_000 });
+
+  // Now let the board read land while the quest is open. The cards repaint (the
+  // count line leaves its "reading…" state); the run must still be there.
+  releaseBoard();
+  await expect(page.locator("#boardCount")).not.toHaveText(/reading \/api\/gspc/i, {
+    timeout: 15_000,
+  });
+  await expect(
+    page.locator("#run .item"),
+    "a settled board read repaints the cards and never wipes a quest in progress",
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Next" })).toBeVisible();
   await expect(
     page.locator("#run").getByText(/this is local play, not a measurement/i),
   ).toBeVisible();
+  await expect(page.locator("#grid .q").first()).toBeHidden();
 });
 
 test("the 22-axis learning arena keeps coaching, practice and human review in one workspace", async ({
