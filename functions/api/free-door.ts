@@ -26,7 +26,7 @@
  * NEVER: a grade, a rank, a certificate, or a paid artefact served free. Verification is free
  * forever, which is exactly why a zero price here is honest rather than promotional.
  */
-import { x402Accepts, buildPaymentRequiredV2, type X402Env } from "./_x402";
+import { x402Accepts, buildPaymentRequiredV2, verifyX402Payment, type X402Env } from "./_x402";
 
 type Env = X402Env;
 
@@ -102,8 +102,65 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     },
   });
 
+  // FULFILMENT. Until 2026-09-05 this handler returned 402 unconditionally and had no payment
+  // path at all, which stopped being a private defect the moment the door was indexed: the Bazaar
+  // record advertises an outputSchema, so an agent that settles the (zero) price and retries with
+  // X-PAYMENT is entitled to that JSON, and would instead have been handed another 402 forever.
+  //
+  // The five keys below are not a free choice. They are the exact keys of the outputSchema example
+  // in the live listing, and that record is permanent — the index writes a resource once and never
+  // refreshes it (probed across a further successful settle; `lastUpdated` never moved). Renaming
+  // one would break the contract a stranger reads from the index. Extra keys are safe to add; the
+  // promised five are not safe to remove.
+  const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
+  if (payment.ok) {
+    const links = {
+      schema: "csoai.free-door/0.1",
+      price_usdc: 0,
+      board: `${url.origin}/api/gspc`,
+      root: `${url.origin}/root.json`,
+      verify: `${url.origin}/gspc-verify`,
+    };
+    // The live totals the docstring promises. Fetched, never restated from memory — a hardcoded
+    // count here would be a number invented at deploy time and stale by the next measurement.
+    // A failed fetch is reported as such; it must never silently become a plausible-looking figure.
+    let totals: unknown;
+    try {
+      const r = await fetch(links.board, { headers: { accept: "application/json" } });
+      totals = r.ok ? ((await r.json()) as Record<string, unknown>)?.totals ?? null : null;
+    } catch {
+      totals = null;
+    }
+    return new Response(
+      JSON.stringify(
+        {
+          ...links,
+          totals,
+          totals_note:
+            totals === null
+              ? `could not read ${links.board} at request time — read it directly; nothing here is restated from memory`
+              : "read live from the board at request time",
+          paid: { amount_usdc: 0, note: "the true price of this resource; nothing was charged" },
+        },
+        null,
+        2,
+      ),
+      {
+        status: 200,
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "cache-control": "no-store",
+          "access-control-allow-origin": "*",
+          ...(payment.paymentResponse ? { "x-payment-response": payment.paymentResponse } : {}),
+        },
+      },
+    );
+  }
+
   // 402 with amount 0. A client that pays it settles a zero-value transfer and is charged
-  // nothing; a client that simply reads the body already has every free link it needs.
+  // nothing; a client that simply reads the body already has every free link it needs — the
+  // content behind this door is published free at the links above, so the handshake gates
+  // discovery, never access.
   return new Response(JSON.stringify(body, null, 2), {
     status: 402,
     headers: {
