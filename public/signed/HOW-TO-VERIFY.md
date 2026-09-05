@@ -34,26 +34,80 @@ Every published card MUST carry that exact `pubkey`. If one does not, stop.
 The preimage was produced by CPython's `json.dumps`, which renders a float of integral value
 as **`0.0`**. ECMAScript `JSON.stringify`, Go's `encoding/json`, and RFC 8785 (JCS) all render
 the same value as **`0`**. Integral-float cards in this set do the same, so a
-naive JavaScript or Go verifier computes a different preimage and reports a **false failure**
-on roughly a third of the set.
+naive JavaScript or Go verifier computes a different preimage and reports a **false failure**.
+Measured on this chain 2026-09-05: **117 of 335 cards (34.9%)** carry an `accuracy` that is a
+whole-number float, so a plain `JSON.stringify` verifier fails a third of an intact chain.
 
 This is a property of the bytes that were signed; we cannot change it without re-signing every
 card and breaking every id, which are hashes of these exact bytes. So it is specified here
-instead. In JavaScript, serialise integral floats with a trailing `.0`:
+instead, and a correct JavaScript implementation is given below.
 
 ```js
-const canon = (v) => Array.isArray(v) ? "[" + v.map(canon).join(",") + "]"
-  : v && typeof v === "object" ? "{" + Object.keys(v).sort()
-      .map(k => JSON.stringify(k) + ":" + canon(v[k])).join(",") + "}"
-  : typeof v === "number" && Number.isInteger(v) && !Number.isInteger(Math.fround(v * 1.0000001))
-      ? v.toFixed(1) : JSON.stringify(v);
+// REFERENCE IMPLEMENTATION: scripts/verify-estate.mjs — 335/335 in Node, no dependencies.
+//   node scripts/verify-estate.mjs
+//
+// Do NOT try to detect integral floats at runtime. An earlier revision of this file
+// published a heuristic that did, and it was MEASURED WRONG on 2026-09-05:
+//
+//   published heuristic, all 335 cards : 85 MISMATCH  (25.4%)
+//   every failure was a card with        accuracy === 0
+//
+// The reason is in the heuristic itself: for v === 0, `Math.fround(0 * 1.0000001)` is 0 and
+// `Number.isInteger(0)` is true, so the guard falls through to JSON.stringify(0) -> "0" while
+// CPython emits "0.0". It happened to handle 1.0 and fail 0.0, which is the worst kind of bug:
+// right often enough to look correct.
+//
+// The fix is to never let a number reach a JavaScript number at all. Parse the RAW card bytes
+// with a tokeniser that keeps every numeric literal as the exact text the server sent, then
+// re-emit that text. Ordering and ensure_ascii escaping then match CPython byte-for-byte, and
+// no schema, no field list and no float-detection heuristic is needed.
+
+const RAW = Symbol("raw");
+function parsePreservingNumbers(text) {          // returns numbers as { [RAW]: "0.0" }
+  let i = 0;
+  const ws = () => { while (i < text.length && " \t\n\r".includes(text[i])) i++; };
+  const str = () => { const s = i; i++; while (text[i] !== '"') { if (text[i] === "\\") i++; i++; }
+                      i++; return JSON.parse(text.slice(s, i)); };
+  const val = () => {
+    ws(); const c = text[i];
+    if (c === "{") { i++; const o = {}; ws(); if (text[i] === "}") { i++; return o; }
+      for (;;) { ws(); const k = str(); ws(); i++; o[k] = val(); ws();
+                 if (text[i] === ",") { i++; continue; } i++; return o; } }
+    if (c === "[") { i++; const a = []; ws(); if (text[i] === "]") { i++; return a; }
+      for (;;) { a.push(val()); ws(); if (text[i] === ",") { i++; continue; } i++; return a; } }
+    if (c === '"') return str();
+    for (const [lit, v] of [["true", true], ["false", false], ["null", null]])
+      if (text.startsWith(lit, i)) { i += lit.length; return v; }
+    const s = i; while (i < text.length && "-+.eE0123456789".includes(text[i])) i++;
+    return { [RAW]: text.slice(s, i) };
+  };
+  return val();
+}
+const asciiEscape = (s) =>                        // ensure_ascii=True
+  s.replace(/[\u0080-\uffff]/g, (ch) => "\\u" + ch.charCodeAt(0).toString(16).padStart(4, "0"));
+const emit = (v) =>
+  v && typeof v === "object" && RAW in v ? v[RAW]
+  : Array.isArray(v) ? "[" + v.map(emit).join(",") + "]"
+  : v && typeof v === "object"
+    ? "{" + Object.keys(v).sort().map((k) => JSON.stringify(k) + ":" + emit(v[k])).join(",") + "}"
+    : JSON.stringify(v);
+
+// preimage = Buffer.from(asciiEscape(emit(parsePreservingNumbers(rawBodyText))), "latin1")
 ```
 
-**Known limitation, stated rather than hidden:** JavaScript cannot distinguish `0` from `0.0`
-at runtime — both are the same IEEE-754 double. A JS verifier therefore needs the schema to
-tell it which fields are floats. The fields that are floats in our cards are `accuracy` and
-any field ending `_ci_low` / `_ci_high`. A future card format should use JCS so this note is
-unnecessary; these cards cannot be migrated without invalidating their ids. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement.
+**A limitation this file used to state, now removed.** An earlier revision said: *"JavaScript
+cannot distinguish `0` from `0.0` at runtime — a JS verifier therefore needs the schema to tell
+it which fields are floats."* The first sentence is true and the conclusion does not follow. A
+verifier that never parses the number into a JavaScript number needs no schema, no field list,
+and no knowledge of which fields are floats — the distinction survives in the bytes, and reading
+the bytes preserves it. `scripts/verify-estate.mjs` does this and verifies 335/335.
+
+Keeping the old advice would have been worse than having none: it named `accuracy`,
+`_ci_low` and `_ci_high` as the float fields to special-case, so a reimplementer would have
+carried a hand-maintained field list that silently rots as the card schema grows.
+
+The 150-row floor previously published is a subset of this 335-card chain, not a second
+measurement.
 
 ### Two number spellings — do not mix them
 
