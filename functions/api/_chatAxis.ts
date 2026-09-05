@@ -39,7 +39,7 @@ export function formatAxisHit(hit: AxisLike): string {
       `**${axis}** (${bench}) is **MEASURED** at n=${n}.\n\n` +
       `No public leader accuracy is published (${publicState}).` +
       (fleetMean === null ? "" : ` The measured fleet mean is **${fleetMean.toFixed(3)}**.`) +
-      ` No missing score is converted to zero or UNMEASURED.` +
+      ` No missing score is converted to zero or used to change the measured state.` +
       `\n\n_Grounded in GET /api/gspc, not by a model._`
     );
   }
