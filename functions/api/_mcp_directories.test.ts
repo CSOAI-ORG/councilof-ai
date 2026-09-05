@@ -47,3 +47,31 @@ describe("mcp-directories states come from probing the directory, not our own fi
     expect(JSON.stringify(doc)).toMatch(/glama and docker-mcp were published as NOT_LISTED/i);
   });
 });
+
+describe("every directory row names the surface its state came from", () => {
+  const doc2 = JSON.parse(
+    readFileSync(new URL("../../public/interop/mcp-directories.json", import.meta.url), "utf8"),
+  ) as { directories: { id: string; state: string; surface?: string }[] };
+
+  it("gives every row a surface", () => {
+    for (const r of doc2.directories) {
+      expect(["api", "sitemap", "rendered", "ours"], `${r.id}`).toContain(r.surface);
+    }
+  });
+
+  it("never lets `ours` be evidence about a third party", () => {
+    // Six of these seven rows once carried the probe "slug scan" — they reported OUR filesystem
+    // and published LISTED/NOT_LISTED about someone else's directory. Two were flatly wrong.
+    const bad = doc2.directories.filter((r) => r.surface === "ours");
+    expect(bad.map((b) => b.id), "a scan of our own files says nothing about a directory").toEqual([]);
+  });
+
+  it("does not rest a state on `rendered` alone where an authoritative surface was available", () => {
+    // A rendered search echoes the query. On 2026-09-05 that produced a false LISTED (glama's
+    // link count) and a false NOT_LISTED (smithery) on the same day.
+    const rendered = doc2.directories.filter((r) => r.surface === "rendered");
+    for (const r of rendered) {
+      expect(["UNKNOWN", "NOT_LISTED"], `${r.id}: rendered may not assert LISTED`).toContain(r.state);
+    }
+  });
+});
