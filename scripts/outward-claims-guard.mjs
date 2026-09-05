@@ -408,6 +408,236 @@ async function checkSmithery() {
   }
 }
 
+/**
+ * 7. THE PRODUCERS THAT WOULD REGENERATE A DEAD CLAIM.
+ *
+ * #1312 marked every dead endpoint reference in six /interop manifests, and did it well: they
+ * carry `intended_path` / `*_status: "NOT_IMPLEMENTED — probed ... HTTP 404"` and a
+ * `claims_audit` block. Checked 2026-09-05, ALL SIX are honest and none of them advertises a
+ * 404 as if it worked.
+ *
+ * The manifests are generated. Four generators still emit those paths bare:
+ *
+ *   scripts/badger/csoai-take-over-chatgpt.py:132                "endpoints": ["/api/research"]
+ *   scripts/badger/csoai-finish-chatgpt-features.py:255-258      /api/measure /api/anchor /api/verify
+ *   scripts/badger/csoai-product-wave.py:31                      a SKU priced against /api/verify
+ *   scripts/badger/csoai-finish-chatgpt-and-improve-dashboard.py:146   "endpoint": "/api/research"
+ *
+ * All four 404. None carries the marking. Re-run any of them and #1312's work is silently
+ * overwritten — the claim lives in the artifact AND the generator, and only the artifact was
+ * fixed. That is the estate's most repeated defect, and this is a guard for exactly it.
+ *
+ * scripts/badger/ belongs to another lane, so this REPORTS and does not edit. The fix is to
+ * carry the same `*_status` marking through the generator, or drop the path from it.
+ *
+ * MATCH EXACTLY, NEVER BY PREFIX. A first pass grepped `/api/verify` and flagged
+ * public/interop/verify-card.json and verify-batch.json — which describe `/api/verify-card` and
+ * `/api/verify-batch`, return 501 by design, and are among the most honest documents in the
+ * tree. Substring matching on a path turns two exemplary files into defects.
+ */
+const PRODUCER_DIRS = ["scripts/badger"];
+
+async function checkProducers() {
+  const { readdirSync, readFileSync, statSync, existsSync } = await import("node:fs");
+  const path = await import("node:path");
+
+  // Paths this estate is known to serve 404 for. Probed live so the list cannot go stale into
+  // flagging something that has since been implemented.
+  const CANDIDATES = ["/api/verify", "/api/measure", "/api/anchor", "/api/research"];
+  const dead = [];
+  for (const c of CANDIDATES) {
+    const r = await j(`${SITE}${c}`);
+    if (r.status === 404) dead.push(c);
+  }
+  if (dead.length === 0) return ok("producers", "none of the recorded dead paths is 404 any more");
+
+  const files = [];
+  const walk = (d) => {
+    if (!existsSync(d)) return;
+    for (const e of readdirSync(d)) {
+      const f = path.join(d, e);
+      if (statSync(f).isDirectory()) walk(f);
+      else if (/\.(py|mjs|js|ts)$/.test(e)) files.push(f);
+    }
+  };
+  for (const d of PRODUCER_DIRS) walk(d);
+  if (files.length === 0) {
+    return skip("producers", `${PRODUCER_DIRS.join(", ")} not present in this checkout — nothing scanned`);
+  }
+
+  const offenders = [];
+  for (const f of files) {
+    const src = readFileSync(f, "utf8");
+    // A generator that ALSO emits the honest marking is doing the right thing.
+    if (/NOT_IMPLEMENTED|intended_path_status|claims_audit/.test(src)) continue;
+    for (const d of dead) {
+      // Exact, quoted, and not a prefix of a longer path.
+      const re = new RegExp(`["']${d.replace(/\//g, "\\/")}["']`);
+      if (re.test(src)) offenders.push(`${f} emits ${d}`);
+    }
+  }
+  if (offenders.length) {
+    bad("producers regenerate dead claims",
+      `${offenders.length} generator reference(s) would re-emit a 404 path with no NOT_IMPLEMENTED ` +
+      `marking, overwriting the fix in the artifact: ${offenders.slice(0, 6).join("; ")}` +
+      `${offenders.length > 6 ? ` (+${offenders.length - 6} more)` : ""}. The claim lives in the ` +
+      `artifact AND the generator; only the artifact was fixed.`);
+  } else {
+    ok("producers", `no generator re-emits ${dead.join(", ")} unmarked`);
+  }
+}
+
+/**
+ * 8. "npm i <thing>" — does <thing> exist?
+ *
+ * An install line is the most literal outward claim an estate makes: a stranger copies it and
+ * either gets software or an error. Probed 2026-09-05 across every install instruction in the
+ * tree, and 2 of 3 are for packages that do not exist:
+ *
+ *   npx csoai-gspc-mcp                        200, 0.2.1        <- real
+ *   npm i @csoai/layer0                       404               packages/layer0-js/README.md
+ *   npm install -g @csoai/council-of-ai-grok  404               public/what-is-new.html:501, LIVE
+ *
+ * The layer0 README also exported `CSOAI_API_BASE=https://api.csoai.org`, which is NXDOMAIN — no
+ * DNS record at all. So it asked a reader to install a package that is not there and point it at
+ * a host that does not exist. It now says so; the design is untouched.
+ *
+ * `public/what-is-new.html` is served at https://councilof.ai/what-is-new (HTTP 200) and belongs
+ * to another lane's file area, so it is REPORTED here and not edited.
+ *
+ * NINE of the eleven package names in this repo are unpublished, which this deliberately does NOT
+ * flag: a package.json `name` for an unreleased package is not a claim to anybody. Only an
+ * INSTRUCTION to install is. The difference is the whole reason this check reads install lines
+ * rather than package manifests.
+ */
+async function checkInstallLines() {
+  const { readdirSync, readFileSync, statSync, existsSync } = await import("node:fs");
+  const path = await import("node:path");
+  const ROOTS = ["public", "packages", "mcp", "docs"];
+  const files = [];
+  const walk = (d, depth = 0) => {
+    if (!existsSync(d) || depth > 6) return;
+    for (const e of readdirSync(d)) {
+      if (e === "node_modules" || e.startsWith(".")) continue;
+      const f = path.join(d, e);
+      let st; try { st = statSync(f); } catch { continue; }
+      if (st.isDirectory()) walk(f, depth + 1);
+      else if (/\.(md|html)$/.test(e)) files.push(f);
+    }
+  };
+  for (const r of ROOTS) walk(r);
+  if (!files.length) return skip("install lines", "no md/html files in this checkout to scan");
+
+  // Record WHERE in the file, not just which file. The marking has to sit beside the install
+  // line to be read with it — a first cut searched the whole file for "404" and passed
+  // public/what-is-new.html, a 100 KB page that happens to contain that string somewhere far from
+  // the instruction. That is an escape hatch, not a check.
+  const wanted = new Map(); // package -> [{file, index}]
+  for (const f of files) {
+    const src = readFileSync(f, "utf8");
+    for (const m of src.matchAll(/\b(?:npm\s+(?:i|install)|npx)\s+(?:-g\s+)?(@[a-z0-9-]+\/[a-z0-9._-]+|[a-z][a-z0-9._-]{2,})/gi)) {
+      const pkg = m[1];
+      if (/^(?:run|test|start|ci|audit|init|create|exec|--|\.)/i.test(pkg)) continue;
+      if (!/csoai/i.test(pkg)) continue; // only OUR claims; a third-party install line is not ours to police
+      if (!wanted.has(pkg)) wanted.set(pkg, []);
+      wanted.get(pkg).push({ file: f, index: m.index ?? 0 });
+    }
+  }
+  if (!wanted.size) return skip("install lines", "no csoai install instructions found to check");
+
+  const missing = [];
+  for (const [pkg, where] of wanted) {
+    const r = await j(`https://registry.npmjs.org/${pkg.replace("/", "%2f")}`);
+    if (r.status === 200) continue;
+    // A marking counts only if it is NEXT TO the instruction — 600 characters either side,
+    // which is a paragraph, not a page.
+    const WINDOW = 600;
+    const unmarked = where.filter(({ file, index }) => {
+      const src = readFileSync(file, "utf8");
+      const near = src.slice(Math.max(0, index - WINDOW), index + WINDOW);
+      return !/\b404\b|NOT PUBLISHED|not published|unpublished/i.test(near);
+    });
+    if (unmarked.length) {
+      const at = unmarked.map(({ file, index }) => {
+        const line = readFileSync(file, "utf8").slice(0, index).split("\n").length;
+        return `${file}:${line}`;
+      });
+      missing.push(`${pkg} (${r.status}) at ${at.join(", ")}`);
+    }
+  }
+  if (missing.length) {
+    bad("install lines",
+      `${missing.length} install instruction(s) name a package that is not on npm, with nothing ` +
+      `saying so: ${missing.join("; ")}. A stranger copies the line and gets an error.`);
+  } else {
+    ok("install lines", `${wanted.size} csoai install instruction(s); every unpublished one says so`);
+  }
+}
+
+/**
+ * 9. THE HUGGING FACE ORG CARDS — 97 dataset cards, and what they point at.
+ *
+ * The cards are the estate's widest-read outward surface after the site itself: a researcher
+ * finds a dataset, reads its card, and follows the links. Measured 2026-09-05 across all 97
+ * `csoai/*` dataset cards — **31 distinct councilof.ai / csoai.org URLs claimed, 30 answer.**
+ *
+ * The one that does not is honest: `csoai/labour-economy-unmeasured` says
+ * "Live API (after master merge): GET https://councilof.ai/api/indices" — future tense, with the
+ * condition named. A 404 behind an explicitly pending claim is not a false claim, and flagging it
+ * would teach someone to delete the qualifier rather than keep it.
+ *
+ * So the cards are in good shape and this locks that in rather than fixing anything. It fails on
+ * a URL that stops answering AND is not marked pending — the case where a card quietly starts
+ * sending readers to a dead door.
+ *
+ * Offline by default: 97 cards plus ~31 probes. LIVE_HF=1.
+ */
+async function checkHfCards() {
+  if (!process.env.LIVE_HF) {
+    return skip("hf org cards", "LIVE_HF unset — 97 cards + ~31 probes, run it deliberately");
+  }
+  const list = await j("https://huggingface.co/api/datasets?author=csoai&limit=500");
+  if (!Array.isArray(list.body)) return skip("hf org cards", `dataset list unavailable (HTTP ${list.status})`);
+  const ids = list.body.map((x) => x.id).filter(Boolean);
+  if (!ids.length) return bad("hf org cards", "the csoai org lists no datasets");
+
+  const claims = new Map(); // url -> { cards:Set, pending:boolean }
+  for (const id of ids) {
+    const r = await fetch(`https://huggingface.co/datasets/${id}/resolve/main/README.md`, { headers: UA });
+    if (!r.ok) continue;
+    const txt = await r.text();
+    for (const m of txt.matchAll(/https:\/\/(?:councilof\.ai|app\.csoai\.org|csoai\.org)(?:\/[A-Za-z0-9._/-]*)?/g)) {
+      const u = m[0].replace(/[.,)]+$/, "");
+      const near = txt.slice(Math.max(0, m.index - 200), m.index + 120);
+      // "after master merge", "planned", "when published" — a dated future claim is not a lie.
+      const pending = /after .{0,30}merge|planned|not yet|pending|when published|upcoming/i.test(near);
+      const e = claims.get(u) ?? { cards: new Set(), pending: false };
+      e.cards.add(id);
+      e.pending = e.pending || pending;
+      claims.set(u, e);
+    }
+  }
+  if (!claims.size) return skip("hf org cards", "no csoai URLs claimed in any card");
+
+  const dead = [];
+  for (const [u, e] of claims) {
+    let code = 0;
+    try { code = (await fetch(u, { headers: UA, redirect: "follow" })).status; } catch { code = 0; }
+    if (code >= 200 && code < 400) continue;
+    if (e.pending) continue; // explicitly future-tense, with the condition named
+    dead.push(`${u} -> ${code || "unreachable"} (${e.cards.size} card${e.cards.size > 1 ? "s" : ""})`);
+  }
+  ok("hf org cards", `${ids.length} cards claim ${claims.size} distinct csoai URLs`);
+  assertLike(dead);
+
+  function assertLike(list) {
+    if (!list.length) return ok("hf card links", "every claimed URL answers, or says it is not live yet");
+    bad("hf card links",
+      `${list.length} URL(s) in the org's dataset cards do not answer and are not marked pending: ` +
+      `${list.join("; ")}. A researcher finds the dataset, reads the card, and follows the link.`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -469,6 +699,9 @@ async function main() {
   await checkRegistry();
   await checkPublishedToolCounts();
   await checkSmithery();
+  await checkProducers();
+  await checkInstallLines();
+  await checkHfCards();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";

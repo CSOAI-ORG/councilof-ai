@@ -1,0 +1,76 @@
+{
+  "schema": "csoai.x402-ref-audit/0.1",
+  "as_of": "2026-09-05T182500Z",
+  "source": "https://councilof.ai/.well-known/x402.json",
+  "n_refs": 16,
+  "rows": [
+    {
+      "ref": "https://councilof.ai/api/art50/marking-evidence",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/eunomia-data",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/api/evidence-bundle",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/feeds/provider-diff",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/api/free-door",
+      "status": 402
+    },
+    {
+      "ref": "https://councilof.ai/api/gspc",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/api/proof",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/receipts/batch",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/request-attestation",
+      "status": 402
+    },
+    {
+      "ref": "https://councilof.ai/api/rwa/evidence",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/witness",
+      "status": 503
+    },
+    {
+      "ref": "https://councilof.ai/api/witness/status",
+      "status": 400
+    },
+    {
+      "ref": "https://councilof.ai/api/x402",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/gspc-verify",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/mcp",
+      "status": 200
+    },
+    {
+      "ref": "https://councilof.ai/pricing-free",
+      "status": 200
+    }
+  ],
+  "notes": {
+    "/api/witness": "503 UNAVAILABLE is INTENTIONAL (lifecycle=QUARANTINED_PRE_RELEASE) with published reason: paid witness disabled until a release gate verifies leaf\u2192root\u2192sidecar\u2192Rekor\u2192OTS. Honest door, not fiction."
+  },
+  "principle": "Every endpoint the x402 door advertises answers; when one is intentionally unavailable it says so with a lifecycle + reason."
+}

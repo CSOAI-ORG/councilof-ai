@@ -34,6 +34,7 @@ Never a rank sale. Lid: **22 axes · 14 fleets · 3 public leaders · 8 fact run
 **UNCHECKABLE** until:
 
 1. Owner provisions `X402_PAY_TO` + `X402_FACILITATOR_URL` (rail is still fail-closed / mock).
+   *Superseded 2026-09-03: both were provisioned on production. The current mode is derived from env by `railMode(env)` and served at `/api/x402` — read that, never this line.*
 2. At least one successful CDP Facilitator settle carries the echoed `bazaar` extension.
 3. CDP `EXTENSION-RESPONSES` / catalog lag is accounted for (known issue #2112).
 

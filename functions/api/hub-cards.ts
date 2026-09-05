@@ -31,7 +31,13 @@
 /// <reference types="@cloudflare/workers-types" />
 
 const HUB = "https://huggingface.co/datasets/csoai/gspc-hub-cards/resolve/main/mill-cards";
-const INDEXES = ["INDEX", "INDEX-safety", "INDEX-art5-affect", "INDEX-empty3"];
+// The four this endpoint has always read. From 2026-09-05 they are a FALLBACK, not
+// the population: `indexes_total: 4` was a literal, and reporting `complete: true`
+// against a list the code chose is a completeness claim about our own source file
+// rather than about the dataset. If a fifth index is ever published, the old code
+// could not see it and would still have said "all published indexes were read".
+const KNOWN_INDEXES = ["INDEX", "INDEX-safety", "INDEX-art5-affect", "INDEX-empty3"];
+const TREE = "https://huggingface.co/api/datasets/csoai/gspc-hub-cards/tree/main/mill-cards";
 const TTL = 600; // 10 min — the mill writes far less often than that
 
 interface Cell {
@@ -110,11 +116,124 @@ async function readIndex(name: string): Promise<IndexRead> {
   return attempt(name, false);
 }
 
-export const onRequestGet: PagesFunction = async () => {
-  const reads = await Promise.all(INDEXES.map(readIndex));
-  const cells = reads.flatMap((r) => (r.ok ? r.cells : []));
+/**
+ * The index files the dataset actually holds, so the population is what is
+ * published rather than what this file remembers. Returns null when the listing
+ * cannot be read — the caller then falls back to KNOWN_INDEXES and SAYS SO,
+ * because "these are the indexes" and "these are the indexes I know about" are
+ * different claims and only one of them supports `complete: true`.
+ */
+async function discoverIndexes(): Promise<string[] | null> {
+  try {
+    const r = await fetch(TREE, {
+      headers: { Accept: "application/json" },
+      cf: { cacheTtl: TTL, cacheEverything: true },
+    } as RequestInit);
+    if (!r.ok) return null;
+    const tree = (await r.json()) as Array<{ type?: string; path?: string }>;
+    if (!Array.isArray(tree)) return null;
+    const names = tree
+      .filter((f) => f?.type === "file" && typeof f.path === "string")
+      .map((f) => (f.path as string).split("/").pop() ?? "")
+      .filter((n) => n.startsWith("INDEX") && n.endsWith(".jsonl"))
+      .map((n) => n.slice(0, -".jsonl".length));
+    // An empty listing is not "no indexes" — it is a listing that told us nothing
+    // useful, and treating it as the population would publish cells: 0 as a fact.
+    return names.length ? [...new Set(names)].sort() : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Card ids the estate's own ledger says are NO LONGER the live card for their
+ * (model, axis). `sign_mill_cards.py` writes a corrected body to a new
+ * content-addressed path and records the replacement here; `flip_hub_queue.py`
+ * already skips these when it rebuilds INDEX.jsonl.
+ *
+ * This endpoint did not, and only INDEX.jsonl is ever rebuilt. The three static
+ * indexes were written once and still list the pre-correction cards, so on
+ * 2026-09-05 all 70 cells reported UNMEASURED with ["signed-pending-verify"]
+ * were cards the ledger had already superseded — every one of them had a
+ * MEASURED replacement in INDEX.jsonl for the same (model, axis). The endpoint
+ * was serving 826 cells for 753 distinct pairs and calling 70 of them
+ * unmeasured when the live figure was zero. Reading the ledger is what makes
+ * "status is passed through" true of the LIVE card rather than of any card that
+ * was ever signed.
+ */
+async function readSupersededIds(origin: string): Promise<Set<string> | null> {
+  const url = `${origin}/interop/mill-cards-signed/SUPERSEDED.jsonl`;
+  for (const cached of [true, false]) {
+    const init: RequestInit = { headers: { Accept: "application/jsonl, text/plain" } };
+    if (cached) {
+      (init as RequestInit & { cf?: unknown }).cf = { cacheTtl: TTL, cacheEverything: true };
+    }
+    try {
+      const r = await fetch(url, init);
+      if (!r.ok) continue;
+      const ids = new Set<string>();
+      for (const line of (await r.text()).split("\n")) {
+        const t = line.trim();
+        if (!t) continue;
+        try {
+          const o = JSON.parse(t) as Record<string, unknown>;
+          if (o.superseded_id) ids.add(String(o.superseded_id));
+        } catch {
+          /* one bad ledger line must not lose the rest */
+        }
+      }
+      return ids;
+    } catch {
+      /* fall through to the uncached attempt */
+    }
+  }
+  // NOT an empty set. "I could not read the ledger" and "nothing is superseded"
+  // are different facts, and returning the empty set would silently assert the
+  // second one and quietly overstate the census.
+  return null;
+}
+
+export const onRequestGet: PagesFunction = async (ctx) => {
+  // The site answers on more than one host, so the ledger is read from whichever
+  // origin served this request. Falls back rather than throwing: a handler that
+  // dies because it could not name its own host would turn a stale-row fix into
+  // an outage.
+  let origin = "https://councilof.ai";
+  try {
+    const u = (ctx as { request?: { url?: string } } | undefined)?.request?.url;
+    if (u) origin = new URL(u).origin;
+  } catch {
+    /* keep the default */
+  }
+  const discovered = await discoverIndexes();
+  const indexes = discovered ?? KNOWN_INDEXES;
+  const [reads, supersededIds] = await Promise.all([
+    Promise.all(indexes.map(readIndex)),
+    readSupersededIds(origin),
+  ]);
+  const rawCells = reads.flatMap((r) => (r.ok ? r.cells : []));
+
+  // Drop cards the ledger has replaced, then collapse the remaining duplicates so
+  // one (model, axis) is one cell. Index order decides which row survives, and
+  // INDEX.jsonl — the only one that is rebuilt — is first.
+  const afterLedger = supersededIds
+    ? rawCells.filter((c) => !(c.card_sha256 && supersededIds.has(c.card_sha256)))
+    : rawCells;
+  const supersededExcluded = supersededIds ? rawCells.length - afterLedger.length : null;
+  const byPair = new Map<string, Cell>();
+  for (const c of afterLedger) {
+    const key = `${c.model}\u0000${c.axis}`;
+    if (!byPair.has(key)) byPair.set(key, c);
+  }
+  const cells = [...byPair.values()];
+  const duplicatesCollapsed = afterLedger.length - cells.length;
   const unread = reads.filter((r): r is Extract<IndexRead, { ok: false }> => !r.ok);
   const reached = reads.length - unread.length;
+  // `complete` keeps meaning "every index we read answered". It is deliberately NOT
+  // tied to discovery: if the dataset listing hiccups, all four indexes still read
+  // fine, and nulling the census over that would take a working number off the air
+  // for a failure that did not touch it. The uncertainty is stated instead —
+  // `indexes_discovered` and the honesty line — exactly as the ledger read is.
   const complete = unread.length === 0;
 
   const seen = { measured: 0, unmeasured: 0, other: 0, cells: cells.length };
@@ -141,9 +260,17 @@ export const onRequestGet: PagesFunction = async () => {
         "GET /api/findings carries the CSOAI fleet, which is a different population and is measured against the same frozen banks.",
       unreachable_is_not_empty: complete
         ? "All published indexes were read."
-        : `Only ${reached} of ${INDEXES.length} indexes answered (unread: ${unreadList
+        : `Only ${reached} of ${indexes.length} indexes answered (unread: ${unreadList
             .map((u) => u.index)
             .join(", ")}). Missing rows are UNCHECKABLE, not absent.`,
+      index_list_is: discovered
+        ? `Discovered from the dataset: ${indexes.length} index file(s) published under mill-cards/.`
+        : "UNCHECKABLE — the dataset listing did not answer, so this fell back to the four indexes this endpoint knows about. There may be others, so counts are not claimed complete.",
+      one_cell_per_pair:
+        "A (model, axis) appears once. Cards the SUPERSEDED.jsonl ledger has replaced are dropped, then duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl. Before this the same pair could be counted twice with two different statuses.",
+      superseded_ledger: supersededIds
+        ? `Read. ${supersededExcluded} served row(s) referenced a card the ledger has replaced and were dropped; the replacement carries the live status.`
+        : "UNREADABLE. Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.",
       partial_read_has_no_total: complete
         ? "Every index answered, so counts are the whole published population."
         : "An index did not answer, so measured/unmeasured/cells are null. A subtotal is not a total, and the rows behind an unread index are disproportionately UNMEASURED — publishing the subtotal would understate what is unmeasured. Read counts.read_so_far instead, and treat it as a floor, never as the population.",
@@ -156,8 +283,13 @@ export const onRequestGet: PagesFunction = async () => {
       other: complete ? seen.other : null,
       cells: complete ? seen.cells : null,
       read_so_far: seen,
+      // null means the ledger did not answer — NOT that nothing was superseded.
+      superseded_excluded: supersededExcluded,
+      duplicates_collapsed: duplicatesCollapsed,
+      rows_served_by_indexes: rawCells.length,
       indexes_read: reached,
-      indexes_total: INDEXES.length,
+      indexes_total: indexes.length,
+      indexes_discovered: discovered !== null,
       indexes_unread: unreadList,
     },
     cells,

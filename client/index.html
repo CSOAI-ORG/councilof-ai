@@ -17,6 +17,14 @@
     <!-- The feed is the estate's only return path. Without this tag it was reachable only at
          /api/feed.xml, which no reader or crawler guesses. -->
     <link rel="alternate" type="application/rss+xml" title="Council of AI — state changes" href="https://councilof.ai/feed.xml" />
+    <!-- The DERIVED feeds. /feed.xml above is a hand-maintained item list; these three are
+         computed from the artifacts, so they cannot go stale between someone remembering to
+         append. A feed nothing links to is the same as no feed — that was true of /api/feed.xml
+         before it got its conventional aliases, and it was true of these until this line. -->
+    <link rel="alternate" type="application/rss+xml" title="Council of AI — corrections ledger" href="https://councilof.ai/feeds/corrections.xml" />
+    <link rel="alternate" type="application/atom+xml" title="Council of AI — corrections ledger (Atom)" href="https://councilof.ai/feeds/corrections.atom" />
+    <link rel="alternate" type="application/rss+xml" title="Council of AI — newly signed measurement cards" href="https://councilof.ai/feeds/cards.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Council of AI — public root" href="https://councilof.ai/feeds/roots.xml" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />

@@ -1,0 +1,40 @@
+{
+  "schema": "csoai.hf-observation-staged/0.1",
+  "as_of": "2026-09-05T13:29:56.615Z",
+  "mined_from": "codex/readiness-100:evidence/hf-reference-loop/",
+  "state": "STAGED_UNANCHORED",
+  "writes_board": false,
+  "not_a_certification": true,
+  "not_a_grade": true,
+  "subject": {
+    "hub_model": "Qwen/Qwen3-0.6B",
+    "hub_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "weight_manifest_sha256": "b6aa29c4b05f0d90c92a87d111cb90b1a52f3ea2cf0b5642fecf37a58a81338b",
+    "tokenizer_manifest_sha256": "14ce5ec0801fa31994437d74bc8b3b97eb33ef0680ca44acc98c50dce3731cf5",
+    "pinned_by": "content digests, not by name — the revision and manifest hashes fix the exact bytes measured"
+  },
+  "measurement": {
+    "axis": "governance",
+    "n": 30,
+    "hits": 7,
+    "accuracy": 0.233333,
+    "measured_at": "2026-09-02T02:53:05Z",
+    "reproduced": true,
+    "reproduced_at": "2026-09-02T02:53:32Z",
+    "reproduction_state": "REPRODUCED",
+    "what_it_is": "7 of 30 on the governance bank. n=30 meets the estate's n>=30 floor, so the figure is quotable as an observation of THIS revision's behaviour on THIS bank.",
+    "what_it_never_proves": "the model's quality, fitness, safety, or compliance. One axis, one bank, one revision, one fleet of one."
+  },
+  "seal": {
+    "alg": "Ed25519",
+    "artifact": "reproduction.seal-input.txt",
+    "artifact_sha256": "3fd37e7a8c04fb8d9b51daba39e1e398ebc4ed61c2621cde8b1bde68d572205d",
+    "computed_sha256": "3fd37e7a8c04fb8d9b51daba39e1e398ebc4ed61c2621cde8b1bde68d572205d",
+    "digest_matches": true,
+    "signature_verifies": true,
+    "public_key_raw": "48d8c4ea5f79e4d558242f325d0d5c9b799448ed6c34fc2f96e9c6185cba6aa0",
+    "signer_anchored_in_did": null,
+    "verdict": "VALID_BUT_UNANCHORED_SIGNER",
+    "note": "The signature was re-verified here, not trusted from the seal's own `verification` field. A valid signature from a key that is not published in did.json proves the bytes were signed by SOMEONE; it does not make this an estate attestation. Internally-valid and trusted-signer are different properties and are never collapsed."
+  }
+}
