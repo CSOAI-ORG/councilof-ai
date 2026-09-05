@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `623d679844579ab600cd0a1211fc2653e147aea5` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `71c2c6db4299ff4d8de3dc007271ce852cc2abe1` — 23 commits, 38 files changed
+**Rebased onto:** `cd56fed9fc976eecf4fdd124680bc7f8e76f4c4b` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `428786963f61ab58b0eb9f4258327bbaec7d9c3f` — 25 commits, 39 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~38 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~39 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -162,6 +162,39 @@ the page shows it.
 | Other 72 HTTP/A2A capabilities UNASSESSED | only MCP can be checked against a live `tools/list` |
 | SDK/plugin (npm) — **now assessed, and clean** | `csoai-gspc-mcp@0.2.1` published; tarball **byte-identical** to `mcp/gspc-server` on all four behaviour files. Guarded, because publishing needs the owner's Bypass-2FA token, so drift is the default failure |
 | Cohort exists only on `jail` | every other axis carries no `per_model` |
+
+## WP-1: "every public launcher opens this shell" — measured, and the answer is a decision
+
+Audited across `client/src/pages` on 2026-09-05: **82 public job-launchers. 7 point at
+`/dashboard`. 75 do not.** The single most common destination is `/assess` — **seventeen**
+public pages send "Get measured" there (OnboardOS, MarketingHome, WhyCSOAI, HowItWorks,
+SystemCard, EUAIActGuide, ISO42001Guide, NISTAIRMFGuide, TC260Guide, ConformityAssessment,
+ReadinessAssessment, EuActClassifier, GlobalRegulationTracker, HorusIntel, AccountBrief,
+AiGovernanceHub, Dashboard).
+
+**The blocker is not the links.** Two things in the shell already decide this:
+
+1. `PANES.measured` is `DashboardRequestPane` (the x402 request pane), and `DashboardPane`
+   resolves `PANES[id]` before `tab.path` — so the `measured` tab's declared `path: "/assess"`
+   is never framed.
+2. `normalizeLobbyTabId` maps **`assess` → `measured`**. So `?tab=assess` cannot reach
+   `AssessTool` even if a pane existed for it.
+
+Together those are a decision someone already made: **in the shell, "get measured" means the
+Requests pane, not the screening tool.** Standalone `/assess` means the screening tool.
+
+I tried adding an `assess` pane and reverted it — the alias made it unreachable, so it would
+have shipped as dead code. My own test caught that.
+
+**The open question, which is genuinely the owner's:** should the 17 "Get measured" CTAs keep
+going to the standalone screening tool, or should the shell be the destination? Repointing
+them changes the estate's primary conversion path on every public page. If the answer is the
+shell, the alias and the `measured` pane both have to move first, and `AssessTool` needs a
+real in-shell home.
+
+Worth knowing before deciding: `/api/assess` is **live and executable** — a POST returns a
+real screening (`result_id`, `input_digest`, `screening_state`), verified against production
+2026-09-05. It is the executable half of the case model, not a guide.
 
 ## WP-1: both duplicate routes resolved
 
