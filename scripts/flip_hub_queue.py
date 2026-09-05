@@ -103,6 +103,16 @@ def summary(rows: list[dict], flipped_new: int) -> dict:
         "n_measured_axes": cells,
         "as_of": now_iso(),
         "org": "csoai",
+        # An artefact should name the job that rewrites it. Four published things in this
+        # estate had no owning process and each drifted silently: the three hub-cards
+        # satellite indexes (no producer, 70 stale rows citing retired cards), the Kaggle
+        # mirrors of the frozen banks (7 days behind their HF source), dead_slugs.jsonl
+        # (rewritten every mill run, committed never), and mill-jobs-staging (written by
+        # the HF-Jobs mill, read by nothing). Every one was created deliberately and then
+        # orphaned. A reader who can see WHICH job rewrites a file can ask when it last
+        # ran; a reader who cannot has no way to tell fresh from abandoned.
+        "produced_by": "scripts/flip_hub_queue.py (.github/workflows/hub-queue-flip.yml)",
+        "rewritten_when": "hub-queue-flip runs: on push to master touching public/interop/mill-cards-signed/**, or by dispatch",
         "board_truth": "GET https://councilof.ai/api/gspc",
         "columns": ["rank", "id", "downloads", "pipeline_tag", "status", "card_id", "as_of", "measured_axes"],
         "flipped_this_run": flipped_new,
@@ -198,6 +208,7 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index:
 
     report = {
         "kind": "csoai.hub-queue-flip/0.1",
+        "produced_by": "scripts/flip_hub_queue.py (.github/workflows/hub-queue-flip.yml)",
         "as_of": summ["as_of"],
         "cards": len(wraps),
         "verdicts": dict(Counter(v["verdict"] for v in verdicts)),
