@@ -47,6 +47,18 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   }
 
   if (
+    /\b(?:what (?:does|do) measured mean|define measured|meaning of measured)\b/i.test(q)
+  ) {
+    return (
+      `**MEASURED** means an admitted measurement cell exists for a named subject lineage, instrument version and captured run, with evidence behind that state. ` +
+      `It does not mean safe, compliant, approved or certified, and it does not imply every row has an accuracy score: deterministic-facts rows can be MEASURED with no accuracy.\n\n` +
+      `Signing and anchoring are separate evidence states. A result is **SIGNED** only when it is bound to a verifiable Council card; any OpenTimestamps state must be reported from its actual proof rather than inferred from MEASURED. ` +
+      `The current board reports ${canon.publicCount}.\n\n` +
+      `_Grounded in the published board and Council evidence-state grammar, not by a model._`
+    );
+  }
+
+  if (
     /\b(in plain words|actually measure|what (do|does) (the )?(council|csoai)|difference between measur|one-paragraph summary)\b/i.test(q) ||
     (/\bcertif/i.test(q) && /\bmeasur/i.test(q))
   ) {
