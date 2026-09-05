@@ -61,6 +61,26 @@ jobs:
       - name: deps
         run: pip install --quiet huggingface_hub kaggle build twine
 
+      # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
+      # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
+      # while HF, GitHub and Zenodo published). It reads ~/.kaggle/kaggle.json, so write that
+      # file from the same two secrets, 0600, only when both exist. Nothing is printed.
+      - name: kaggle.json from secrets (the CLI ignores the env vars)
+        if: ${{ secrets.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.kaggle
+          python3 - <<'PY'
+          import json, os, pathlib
+          p = pathlib.Path.home() / ".kaggle" / "kaggle.json"
+          p.write_text(json.dumps({"username": os.environ["KAGGLE_USERNAME"], "key": os.environ["KAGGLE_KEY"]}))
+          p.chmod(0o600)
+          print("kaggle.json written")
+          PY
+
       - name: choose surfaces from the secrets that exist
         id: choose
         env:
