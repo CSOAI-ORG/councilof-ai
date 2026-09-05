@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `42b121b2a5de8f7659aaa0945eabfe810b76feac` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `1a9c0975dfd3521d6f9d9404b0eae2726821903b` — 47 commits, 60 files changed
+**Rebased onto:** `843692251c0210515d69162db97307a0ebc0bfba` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `35c21146b70b7844e113a7316f2f58f9c0562228` — 51 commits, 64 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,9 +21,41 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~60 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~64 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
+
+---
+
+## HOW TO READ THIS — the whole bundle in one screen
+
+**Act on these, in this order.** Everything below the index is the evidence for them.
+
+| # | do this | why now | where |
+|---|---|---|---|
+| 1 | **Apply this bundle** | `brand-gate` was failing on master; nothing ships until it lands, and two untrue claims are LIVE | *LIVE ON PRODUCTION*, *READ THIS FIRST* |
+| 2 | **Delete `brand-gate.mjs` line 36** | one line, tested against both trees; it is how the retracted claim reached production | *OWNER ACTION 3* |
+| 3 | **Re-sign the board** | `site_attestation` does not verify under 12 readings; needs the estate key | *OWNER ACTION 2* |
+| 4 | **Publish `csoai-governance-mcp@0.1.1`** | an unpublished truth fix; every install today still serves a stale "377 tools" count | *OWNER ACTION 1* |
+| 5 | **Decide `/gspc-verify` + `/assess` routing** | 46 launchers bypass a shell that could host them; verify is the free public promise | *WP-1 launchers* |
+| 6 | **Wire or delete `functions-guard.mjs`** | it runs nowhere at all | *Guard integrity* |
+
+**What is delivered:** WP-1 (duplicates removed, launchers measured), WP-2 (three
+served-and-never-rendered defects closed, with screenshots), WP-4 (all nine surfaces tested
+against runtime), WP-5 (game honesty verified, SIGNED-without-evidence fixed), WP-3's honest
+half (`JourneyStages`).
+
+**What is not, and why:** WP-3's execute half and WP-6's counts need `/api/ras`,
+`/api/remediation` and `/api/jobs`, which return **404** today. TUI 1 owns that runtime.
+`capabilities/journey-backends.test.mjs` goes **red the moment it lands** — that is the signal,
+not a regression.
+
+**Things I got wrong, corrected in place:** `BadgesPage` called dead (it serves `/authority`);
+the SDK surface called assessed on one of eleven packages; the launcher gap reported as 75 when
+46 is the real number; `/tournament.html` read as 404 when it is live. Each is recorded where it
+was claimed, not only here.
+
+---
 
 ## ⚠⚠ LIVE ON PRODUCTION RIGHT NOW — verified 2026-09-05
 
@@ -124,6 +156,8 @@ scripts/one-door-guard.mjs
 capabilities/brand-gate-exclusions.test.mjs
 capabilities/ai-crawler-access.test.mjs
 capabilities/openapi-runtime-parity.test.mjs
+capabilities/agent-card-truth.test.mjs
+capabilities/x402-offer-truth.test.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
@@ -160,7 +194,8 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
       LIVE_HUB=1 LIVE_JOURNEY=1 \
       LIVE_NPM=1 LIVE_CARDS=1 LIVE_ATTESTATION=1 \
       LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
-      node --test capabilities/*.test.mjs                      68 passed, 0 failed
+      LIVE_A2A=1 LIVE_X402=1 \
+      node --test capabilities/*.test.mjs                      77 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -327,6 +362,8 @@ scripts/one-door-guard.mjs
 capabilities/brand-gate-exclusions.test.mjs
 capabilities/ai-crawler-access.test.mjs
 capabilities/openapi-runtime-parity.test.mjs
+capabilities/agent-card-truth.test.mjs
+capabilities/x402-offer-truth.test.mjs
 CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
@@ -557,7 +594,7 @@ wrote to test it.
 6. **Delete `brand-gate.mjs` line 36** — the filename escape above. One line, tested against
    both trees, closes a hole that let a retracted claim ship silently.
 
-## Dependencies## Dependencies
+## Dependencies
 
 - **None on TUI 1 or TUI 2.** Nothing here touches RAS internals, payment, discovery or adapters.
 - Runtime only: `/api/gspc`, `/mcp`, `/api/witness`. No new packages. `node:test` was used for the
