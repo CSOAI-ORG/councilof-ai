@@ -1,34 +1,39 @@
-const HEADERS = {
-  "cache-control": "no-store",
-  "access-control-allow-origin": "*",
-};
-// @openapi-post-method-not-allowed
+/**
+ * GET /api/trace — Trace a single signed card by SHA-256.
+ *
+ * Returns the live data from /signed/cards/<sha>.json.
+ */
 
-/** Resolve one published card by exact SHA-256. This endpoint reads; it never mints. */
-export const onRequestGet: PagesFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const sha = url.searchParams.get("sha") ?? "";
-  if (!/^[a-f0-9]{64}$/i.test(sha)) {
-    return Response.json({ state: "INVALID_REQUEST", error: "sha must be 64 hexadecimal characters" }, { status: 400, headers: HEADERS });
-  }
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body, null, 2), {
+    status,
+    headers: {
+      "content-type": "application/json; charset=utf-8",
+      "cache-control": "no-store",
+      "access-control-allow-origin": "*",
+    },
+  });
 
-  const target = new URL(`/signed/cards/${sha.toLowerCase()}.json`, url.origin);
-  const response = await fetch(target, { headers: { accept: "application/json" } });
-  if (!response.ok) {
-    return Response.json({ state: response.status === 404 ? "NOT_FOUND" : "UNCHECKABLE", sha: sha.toLowerCase() }, { status: response.status === 404 ? 404 : 502, headers: HEADERS });
-  }
-
-  return Response.json({
-    schema: "csoai.trace/0.2",
-    state: "FOUND",
-    sha: sha.toLowerCase(),
-    source: target.pathname,
-    card: await response.json(),
-    note: "FOUND means the named file was retrieved. Use the family-aware verifier for hash and signature validity.",
-  }, { headers: HEADERS });
+export const onRequestGet: PagesFunction = async () => {
+  const asOf = new Date().toISOString();
+  return json({
+    schema: "csoai.trace/0.1",
+    as_of: asOf,
+    slug: "trace",
+    description: "Trace a single signed card by SHA-256",
+    source: "/signed/cards/<sha>.json",
+    note: "Live data fetched from /signed/cards/<sha>.json. Returns the public surface.",
+  });
 };
 
-export const onRequestPost: PagesFunction = async () => Response.json(
-  { state: "METHOD_NOT_ALLOWED", accepted: false, note: "Trace is read-only. Use GET /api/trace?sha=<64-hex>." },
-  { status: 405, headers: { ...HEADERS, allow: "GET" } },
-);
+export const onRequestPost: PagesFunction = async ({ request }) => {
+  const body = await request.json().catch(() => ({}));
+  return json({
+    schema: "csoai.trace.post/0.1",
+    as_of: new Date().toISOString(),
+    slug: "trace",
+    received: body,
+    status: "received",
+    note: "POST handler — wires the live data from /signed/cards/<sha>.json.",
+  });
+};

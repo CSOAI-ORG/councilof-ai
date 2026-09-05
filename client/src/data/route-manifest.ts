@@ -1423,11 +1423,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Provenance Finding"
  },
  {
-  "path": "/public",
-  "comp": "PublicHome",
-  "title": "Public Home"
- },
- {
   "path": "/public-dashboard",
   "comp": "Redirect",
   "title": "Public Dashboard"
@@ -1921,11 +1916,6 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/why-csoai",
   "comp": "WhyCSOAI",
   "title": "Why CSOAI"
- },
- {
-  "path": "/widget",
-  "comp": "WidgetCourses",
-  "title": "Widget Courses"
  },
  {
   "path": "/workbench",

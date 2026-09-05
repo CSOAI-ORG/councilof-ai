@@ -1,7 +1,7 @@
 {
   "schema": "csoai.interop-index/0.1",
-  "as_of": "20260904T124759Z",
-  "total_formats": 213,
+  "as_of": "20260905T043105Z",
+  "total_formats": 237,
   "formats": [
     {
       "slug": "HARNESS",
@@ -35,8 +35,8 @@
     },
     {
       "slug": "anchor",
-      "name": "anchor",
-      "kind": "format",
+      "name": "OTS anchor API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/anchor.json"
     },
     {
@@ -89,20 +89,32 @@
     },
     {
       "slug": "challenge",
-      "name": "challenge",
-      "kind": "format",
+      "name": "Challenge intake (ephemeral only)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/challenge.json"
     },
     {
-      "slug": "checkout",
-      "name": "checkout",
+      "slug": "chatgpt-plugin",
+      "name": "chatgpt-plugin",
       "kind": "format",
+      "url": "https://councilof.ai/interop/chatgpt-plugin.json"
+    },
+    {
+      "slug": "chatgpt-skills",
+      "name": "chatgpt-skills",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/chatgpt-skills.json"
+    },
+    {
+      "slug": "checkout",
+      "name": "Public checkout (closed)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/checkout.json"
     },
     {
       "slug": "compute",
-      "name": "compute",
-      "kind": "format",
+      "name": "Compute bridge status probe",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/compute.json"
     },
     {
@@ -136,10 +148,22 @@
       "url": "https://councilof.ai/interop/csoai-root-witness-2026-09-02.pub"
     },
     {
-      "slug": "decide",
-      "name": "decide",
+      "slug": "custom-gpt-bridge",
+      "name": "custom-gpt-bridge",
       "kind": "format",
+      "url": "https://councilof.ai/interop/custom-gpt-bridge.json"
+    },
+    {
+      "slug": "decide",
+      "name": "Decision attestation API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/decide.json"
+    },
+    {
+      "slug": "deep-research-integration",
+      "name": "deep-research-integration",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/deep-research-integration.json"
     },
     {
       "slug": "deterministic-axis-atoms",
@@ -152,6 +176,12 @@
       "name": "eas-attestation-batch",
       "kind": "format",
       "url": "https://councilof.ai/interop/eas-attestation-batch.json"
+    },
+    {
+      "slug": "eas-root-attestations",
+      "name": "eas-root-attestations",
+      "kind": "csoai.eas-root-attestations/v0",
+      "url": "https://councilof.ai/interop/eas-root-attestations.json"
     },
     {
       "slug": "emilia-identity-independent-2026-08-29.README",
@@ -179,8 +209,8 @@
     },
     {
       "slug": "feed",
-      "name": "feed",
-      "kind": "format",
+      "name": "State-change RSS feed",
+      "kind": "api-contract",
       "url": "https://councilof.ai/interop/feed.json"
     },
     {
@@ -396,7 +426,7 @@
     {
       "slug": "gsr-cose-evidence",
       "name": "COSE Evidence Placeholder (Quarantined)",
-      "kind": "placeholder",
+      "kind": "format",
       "url": "https://councilof.ai/interop/gsr-cose-evidence.json"
     },
     {
@@ -522,7 +552,7 @@
     {
       "slug": "gsr-scitt-statement",
       "name": "SCITT Statement Placeholder (Quarantined)",
-      "kind": "placeholder",
+      "kind": "format",
       "url": "https://councilof.ai/interop/gsr-scitt-statement.json"
     },
     {
@@ -581,8 +611,8 @@
     },
     {
       "slug": "include",
-      "name": "include",
-      "kind": "format",
+      "name": "Merkle inclusion proof API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/include.json"
     },
     {
@@ -893,8 +923,8 @@
     },
     {
       "slug": "otel",
-      "name": "otel",
-      "kind": "format",
+      "name": "OpenTelemetry collector status",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/otel.json"
     },
     {
@@ -946,10 +976,40 @@
       "url": "https://councilof.ai/interop/rekor-root-2026-09-02.json"
     },
     {
+      "slug": "rekor-root-24c75eeb",
+      "name": "rekor-root-24c75eeb",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-24c75eeb.json"
+    },
+    {
       "slug": "rekor-root-728e8c5e",
       "name": "rekor-root-728e8c5e",
       "kind": "format",
       "url": "https://councilof.ai/interop/rekor-root-728e8c5e.json"
+    },
+    {
+      "slug": "rekor-root-9b426735",
+      "name": "rekor-root-9b426735",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-9b426735.json"
+    },
+    {
+      "slug": "rekor-root-a44af078",
+      "name": "rekor-root-a44af078",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-a44af078.json"
+    },
+    {
+      "slug": "rekor-root-b94cacbc",
+      "name": "rekor-root-b94cacbc",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-b94cacbc.json"
+    },
+    {
+      "slug": "rekor-root-e342c2bc",
+      "name": "rekor-root-e342c2bc",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-e342c2bc.json"
     },
     {
       "slug": "rekor-root-f372512f",
@@ -958,33 +1018,39 @@
       "url": "https://councilof.ai/interop/rekor-root-f372512f.json"
     },
     {
-      "slug": "report",
-      "name": "report",
+      "slug": "rekor-root-fe3a9e24",
+      "name": "rekor-root-fe3a9e24",
       "kind": "format",
+      "url": "https://councilof.ai/interop/rekor-root-fe3a9e24.json"
+    },
+    {
+      "slug": "report",
+      "name": "Correction report intake (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/report.json"
     },
     {
       "slug": "revenue-all",
-      "name": "revenue-all",
-      "kind": "format",
+      "name": "All-time revenue API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/revenue-all.json"
     },
     {
       "slug": "revenue-month",
-      "name": "revenue-month",
-      "kind": "format",
+      "name": "Monthly revenue API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/revenue-month.json"
     },
     {
       "slug": "revenue-today",
-      "name": "revenue-today",
-      "kind": "format",
+      "name": "Daily revenue API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/revenue-today.json"
     },
     {
       "slug": "revenue-week",
-      "name": "revenue-week",
-      "kind": "format",
+      "name": "Weekly revenue API (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/revenue-week.json"
     },
     {
@@ -1036,16 +1102,58 @@
       "url": "https://councilof.ai/interop/root-2026-09-02.json.ots"
     },
     {
+      "slug": "root-24c75eeb.json",
+      "name": "root-24c75eeb.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-24c75eeb.json.ots"
+    },
+    {
       "slug": "root-728e8c5e.json",
       "name": "root-728e8c5e.json",
       "kind": "format",
       "url": "https://councilof.ai/interop/root-728e8c5e.json.ots"
     },
     {
+      "slug": "root-9b426735.json",
+      "name": "root-9b426735.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-9b426735.json.ots"
+    },
+    {
+      "slug": "root-a44af078.json",
+      "name": "root-a44af078.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-a44af078.json.ots"
+    },
+    {
+      "slug": "root-b94cacbc.json",
+      "name": "root-b94cacbc.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-b94cacbc.json.ots"
+    },
+    {
+      "slug": "root-e342c2bc.json",
+      "name": "root-e342c2bc.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-e342c2bc.json.ots"
+    },
+    {
+      "slug": "root-f0d8f22f",
+      "name": "root-f0d8f22f",
+      "kind": "csoai.public-root/v1",
+      "url": "https://councilof.ai/interop/root-f0d8f22f.json"
+    },
+    {
       "slug": "root-f0d8f22f.json",
       "name": "root-f0d8f22f.json",
       "kind": "format",
       "url": "https://councilof.ai/interop/root-f0d8f22f.json.ots"
+    },
+    {
+      "slug": "root-fe3a9e24.json",
+      "name": "root-fe3a9e24.json",
+      "kind": "format",
+      "url": "https://councilof.ai/interop/root-fe3a9e24.json.ots"
     },
     {
       "slug": "root-witness-2026-09-02-728e8c5e",
@@ -1064,6 +1172,42 @@
       "name": "root-witness-2026-09-02",
       "kind": "csoai.root-witness/v0",
       "url": "https://councilof.ai/interop/root-witness-2026-09-02.json"
+    },
+    {
+      "slug": "root-witness-2026-09-04-24c75eeb",
+      "name": "root-witness-2026-09-04-24c75eeb",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-04-24c75eeb.json"
+    },
+    {
+      "slug": "root-witness-2026-09-04-9b426735",
+      "name": "root-witness-2026-09-04-9b426735",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-04-9b426735.json"
+    },
+    {
+      "slug": "root-witness-2026-09-04-a44af078",
+      "name": "root-witness-2026-09-04-a44af078",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-04-a44af078.json"
+    },
+    {
+      "slug": "root-witness-2026-09-04-fe3a9e24",
+      "name": "root-witness-2026-09-04-fe3a9e24",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-04-fe3a9e24.json"
+    },
+    {
+      "slug": "root-witness-2026-09-05-b94cacbc",
+      "name": "root-witness-2026-09-05-b94cacbc",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-05-b94cacbc.json"
+    },
+    {
+      "slug": "root-witness-2026-09-05-e342c2bc",
+      "name": "root-witness-2026-09-05-e342c2bc",
+      "kind": "csoai.root-witness/v1",
+      "url": "https://councilof.ai/interop/root-witness-2026-09-05-e342c2bc.json"
     },
     {
       "slug": "root-witness-latest",
@@ -1163,14 +1307,14 @@
     },
     {
       "slug": "verify-batch",
-      "name": "verify-batch",
-      "kind": "format",
+      "name": "Batch card verification (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/verify-batch.json"
     },
     {
       "slug": "verify-card",
-      "name": "verify-card",
-      "kind": "format",
+      "name": "Single-card verification (unavailable)",
+      "kind": "quarantined-api-capability",
       "url": "https://councilof.ai/interop/verify-card.json"
     },
     {

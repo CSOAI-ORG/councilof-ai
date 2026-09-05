@@ -1,5 +1,5 @@
 /**
- * /api/synthesis — retired until mappings are generated from verified records.
+ * /api/synthesis — retired until mappings is derived from current evidence.
  * @openapi-unavailable
  */
 
@@ -14,15 +14,11 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const onRequestGet: PagesFunction = async () => {
-  return json(
-    {
-      schema: "csoai.retired-endpoint/0.1",
-      status: "UNAVAILABLE",
-      code: "RETIRED",
-      endpoint: "/api/synthesis",
-      message:
-        "Synthesis mappings are not published without verified source records.",
-    },
-    503,
-  );
+  return json({
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/synthesis",
+    message: "Synthesis mappings are not published without verified source records.",
+  }, 503);
 };

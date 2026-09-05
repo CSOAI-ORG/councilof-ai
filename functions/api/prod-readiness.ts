@@ -14,15 +14,11 @@ const json = (body: unknown, status = 200) =>
   });
 
 export const onRequestGet: PagesFunction = async () => {
-  return json(
-    {
-      schema: "csoai.retired-endpoint/0.1",
-      status: "UNAVAILABLE",
-      code: "RETIRED",
-      endpoint: "/api/prod-readiness",
-      message:
-        "Production readiness is not published without a current evidence-derived report.",
-    },
-    503,
-  );
+  return json({
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/prod-readiness",
+    message: "Production readiness is not published without a current evidence-derived report.",
+  }, 503);
 };
