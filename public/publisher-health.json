@@ -1,38 +1,265 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-05T16:02:38Z",
+  "as_of": "2026-09-05T18:14:13Z",
+  "last_success": "unsigned-snapshot",
+  "last_success_as_of": "2026-08-31T07:38:20Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
-  "envelope": "signed",
   "halt": {
     "split": false,
-    "unsigned_new_leaves": 0,
-    "missing_key": false
+    "unsigned_new_leaves": 165,
+    "missing_key": false,
+    "reason": "unsigned-leaf"
   },
-  "xrpl_basket_merkle": "c558cbe482e80f041123c38fda62c7e54f5ae243e62c051348a90b532924a286",
-  "represented_tvl": {
-    "usd": 1075447304.2899997,
-    "source": "https://xrpl.fi/api/metrics",
-    "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
-  },
-  "watchlist": [
-    {
-      "symbol": "AAULF",
-      "issuer": "Archax",
-      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
-      "toml": 403,
-      "in_locked_16": false,
-      "note": "watchlist extra; not a silent expand of the 16"
+  "merkle_root": "00356bbf5729aae4f1228ad94c1a0f9bdb304777782c33824ff95a0e1d1c7f88",
+  "card_count": 168,
+  "xrpl_asset_state_count": 16,
+  "adapters": {
+    "xrpl": {
+      "status": "halt-before-write",
+      "n": 16,
+      "note": "adapters ran; tree not rewritten"
     },
-    {
-      "symbol": "TBILL",
-      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
-      "toml": 404,
-      "in_locked_16": false,
-      "note": "watchlist extra; not a silent expand of the 16"
+    "swift_notices": {
+      "status": "halt-before-write",
+      "note": "TARGETS not clients"
+    },
+    "benji": {
+      "status": "halt-before-write",
+      "note": "GraphQL dark. Not issuer 7"
+    },
+    "hub_cite": {
+      "status": "cite-only",
+      "note": "Health sidecar only. Not a card-v0 leaf."
+    },
+    "staged_leaves": {
+      "status": "halt-before-write",
+      "dirs": [
+        "xrpl-swift-eater-2026-09"
+      ],
+      "n_leaves": 52,
+      "n_skipped": 0,
+      "skipped": [],
+      "note": "Staged unsigned atoms read from disk; no network. Signed only by the public-root writer in GHA. PROBED/DISCOVERED/UNMEASURED stay on the payload under the signature. Never MEASURED. Not a grade."
+    },
+    "witness_queue": {
+      "status": "halt-before-write",
+      "kv": "bound; errors: list_keys HTTP 401",
+      "n_kv": 0,
+      "n_mirror": 0,
+      "n_leaves": 0,
+      "n_skipped": 0,
+      "skipped": [],
+      "note": "Witnessed digests: existence of a sha256 at the root's as_of. Hash only; never the bytes, never the URL. RFC-3161 reply sha256 on the leaf; the reply itself at /api/witness/status. Signed only by the public-root writer. Never MEASURED. Not a grade."
+    },
+    "provider_diff": {
+      "status": "halt-before-write",
+      "dir": "public/feeds/provider-diff/leaves",
+      "n_files": 28,
+      "n_leaves": 28,
+      "n_skipped": 0,
+      "skipped": [],
+      "note": "Hash-only provider document diffs, staged unsigned by scripts/watch/provider_watch.py; signed only by the public-root writer in GHA. A leaf attests that bytes at a URL changed between two captures — nothing about what or why. Content never stored. Not a grade."
+    },
+    "evm_permissions": {
+      "status": "halt-before-write",
+      "schema": "csoai.evm.permission-state/0.1",
+      "n_leaves": 32,
+      "n_proofs": 29,
+      "n_roster": 32,
+      "n_unverified": 33,
+      "aum_source": "https://app.rwa.xyz/treasuries",
+      "aum_as_of": "2026-09-02",
+      "chains": {
+        "arbitrum": {
+          "rpc": "arbitrum-one-rpc.publicnode.com",
+          "block": 502082607,
+          "block_hash": "0x972bf7df3512496f22e6d2b7143b25889391a69cada2fa4473a6ad8ebdfd4ba9",
+          "block_time": "2026-09-05T18:11:51Z"
+        },
+        "avalanche": {
+          "rpc": "api.avax.network",
+          "block": 94547979,
+          "block_hash": "0x2a49e743bd998e2ffac88c3d3e9f3a5cef9382c73e5a42c05b93fc12a23388e1",
+          "block_time": "2026-09-05T18:11:50Z"
+        },
+        "base": {
+          "rpc": "base-rpc.publicnode.com",
+          "block": 50921282,
+          "block_hash": "0xba3e14fcad7b344d4a9da5e45446141aa46d0a4cbc6459d9ddaf4396b7507af2",
+          "block_time": "2026-09-05T18:11:51Z"
+        },
+        "bsc": {
+          "rpc": "bsc-rpc.publicnode.com",
+          "block": 120156367,
+          "block_hash": "0xed544a4fc6d0e5d94cf0ecac9b5c141fd76e87c4322b2add7577a960baabb24e",
+          "block_time": "2026-09-05T18:11:52Z"
+        },
+        "ethereum": {
+          "rpc": "ethereum-rpc.publicnode.com",
+          "block": 25912842,
+          "block_hash": "0xb0ee1534feb39dceac5ca129cc66c5cc90662678bd418ca5106883e0b9dc5c72",
+          "block_time": "2026-09-05T18:11:47Z"
+        },
+        "mantle": {
+          "rpc": "mantle-rpc.publicnode.com",
+          "block": 100250800,
+          "block_hash": "0x188ae6ef82ac98435d3df7d7cd64ebabe79494f9363f4690dd1fdba7f991f6af",
+          "block_time": "2026-09-05T18:11:52Z"
+        },
+        "optimism": {
+          "rpc": "optimism-rpc.publicnode.com",
+          "block": 156516568,
+          "block_hash": "0xf9fc338b35a39ee055ec2f21c1e2d602dbee062deb110b98dfa306416594a5c1",
+          "block_time": "2026-09-05T18:11:53Z"
+        },
+        "polygon": {
+          "rpc": "polygon-bor-rpc.publicnode.com",
+          "block": 93284587,
+          "block_hash": "0xa1f8871f87bfcf2df772b322196dc6c064167891431d82498be2522bf09bd0e0",
+          "block_time": "2026-09-05T18:11:54Z"
+        }
+      },
+      "failures": [
+        {
+          "subject": "evm:USYC:bsc",
+          "reason": "no endpoint answered eth_getProof"
+        },
+        {
+          "subject": "evm:TBILL:bsc",
+          "reason": "no endpoint answered eth_getProof"
+        },
+        {
+          "subject": "evm:VBILL:bsc",
+          "reason": "no endpoint answered eth_getProof"
+        }
+      ],
+      "note": "Permission state of tokenised RWAs read from keyless public EVM RPCs at one block per chain, with an EIP-1186 account+slot proof against the block hash where an endpoint answered. Discrete, point-in-time; leaves are signed only by the public-root writer in GHA. UNVERIFIED rows are named, never read. Not a rate. Not a grade. Not MEASURED."
+    },
+    "evm_permission_events": {
+      "status": "halt-before-write",
+      "schema": "csoai.evm.permission-event/0.1",
+      "n_leaves": 6,
+      "n_contracts_scanned": 13,
+      "n_roster": 32,
+      "requests_used": 80,
+      "chains": {
+        "arbitrum": {
+          "block": 502082765,
+          "rpc": "arbitrum-one-rpc.publicnode.com"
+        },
+        "avalanche": {
+          "block": 94548004,
+          "rpc": "api.avax.network"
+        },
+        "base": {
+          "block": 50921302,
+          "rpc": "base-rpc.publicnode.com"
+        },
+        "bsc": {
+          "block": 120156458,
+          "rpc": "bsc-rpc.publicnode.com"
+        },
+        "ethereum": {
+          "block": 25912845,
+          "rpc": "ethereum-rpc.publicnode.com"
+        },
+        "mantle": {
+          "block": 100250821,
+          "rpc": "mantle-rpc.publicnode.com"
+        },
+        "optimism": {
+          "block": 156516588,
+          "rpc": "optimism-rpc.publicnode.com"
+        },
+        "polygon": {
+          "block": 93284615,
+          "rpc": "polygon-bor-rpc.publicnode.com"
+        }
+      },
+      "failures": [
+        {
+          "subject": "evm-events:BUIDL:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:USYC:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:USYC:bsc",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:WTGXX:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:JTRSY:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:OUSG:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:TBILL:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:TBILL:bsc",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:USTBL:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:MONY:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:mTBILL:ethereum",
+          "reason": "dark"
+        },
+        {
+          "subject": "evm-events:VBILL:ethereum",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:VBILL:bsc",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:USCC:ethereum",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:bIB01:ethereum",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:bIB01:arbitrum",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:bIB01:base",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:bIB01:avalanche",
+          "reason": "budget"
+        },
+        {
+          "subject": "evm-events:ACRED:ethereum",
+          "reason": "budget"
+        }
+      ],
+      "note": "Permission events (pause, ownership, roles, proxy upgrades) indexed incrementally from keyless public eth_getLogs, range-capped and rate-limited. History before scanned_from is unmeasured. Leaves signed only by the public-root writer in GHA. Not a rate. Not a grade. Not MEASURED."
     }
-  ],
+  },
+  "note": "Halt health. Tree not rewritten. Last success is the 07:38Z unsigned snapshot. Fail-closed. Not MEASURED. Not a certificate.",
   "cites": {
     "hub.census.digest": {
       "kind": "cite",
@@ -53,258 +280,11 @@
       "kind": "cite",
       "surface_not_on_card_v0": "gspc.board.cite",
       "source": "https://councilof.ai/api/gspc",
-      "http": 200,
+      "http": 404,
       "note": "Cited in publisher-health.json / status only. Not a card-v0 leaf. This writer does not write /api/gspc.",
-      "totals_axes": 22,
-      "totals_measured_axes": 22,
-      "totals_unmeasured_axes": 0,
-      "public_count": "22 axis · 22 measured",
-      "measured_on": {
-        "model": "The 14 behavioural (model-comparison) axes: 19-model fleet (8 tuned council specialists + 6 base models + frontier cross-lab models). Jail (slot 14): 7-model fleet — smaller, stated on the axis, never conflated with the board fleet. The 8 financial/domain axes are not a model comparison: they are measured as deterministic facts (issuer-account reads + public series), with no fleet, no leader and no accuracy.",
-        "endpoint": "A100 · local Ollama (board v2) · OpenRouter (cross-lab models) · 3090 pod (jail)",
-        "date": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
-        "grading": "deterministic grading on 15,580 per-item rows (0 transport errors) — reproducible from csoai-static-deploy2 bb15589c with agents-repo/agents/board_v2.py",
-        "note": "GSPC (Governance · Safety · Provenance · Continuity) board. Slot counts live in totals (public_count, measured_axes, quotable_axes) and are derived, never typed. The measured canonical axes used the same fleet, same rows, same grader. Per-axis numbers show the board LEADER (whoever leads — tuned or base), its Wilson interval where n is honestly independent, and whether the lead is statistically separated (McNemar p<0.05) or a TIE. fleet_mean and mean_harm show the fleet, not the leader. Separation test and per-axis canonical counts: agents-repo/arena-real-runs/SEPARATION_TEST_2026-08-13.md and GSPC_AXIS_REGISTRY.json v2. Jail carries its per-model rows verbatim from the signed living board; its separation is TIE (determined 2026-08-25) — a TIE is not a separated leader. slot15 and human-vs-ai are measured in-lane only — see measured_in_lane, not the board.",
-        "living_stamp": {
-          "schema": "csoai.gspc-living/0.2",
-          "gold_run": "2026-08-18T03:22:16Z",
-          "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
-          "signed": true,
-          "signer": "did:web:csoai.org#board-attestation-1",
-          "signer_anchored": true,
-          "alg": "Ed25519",
-          "signature": "76e91fcc71019631376ff312924c88ebd028b254968708d83f6dd2f8b473e48b9085818764bed45bb168c75e7bc270a6c3618e9eea318ad87346f7849f6f250e",
-          "public_key_x": "k2fPWb6ctyu8l5at8FYgHsHFit_qoT-DssW3VNbCAXA",
-          "preimage": {
-            "schema": "csoai.gspc-living/0.2",
-            "gold_run": "2026-08-18T03:22:16Z",
-            "source": "boards-v2 + gold-run-3090; axis roster of this deploy (not a live re-fetch)",
-            "axes": [
-              {
-                "axis": "governance",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 237,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "safety",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 36,
-                "accuracy": 0.944,
-                "separation": "TIE"
-              },
-              {
-                "axis": "provenance",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 32,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "continuity",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 33,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "conformance",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 35,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "openness",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 32,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "machinery-conformity",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 33,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "care",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 199,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "cross-reality",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 32,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "detector-interop",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 33,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "art5-safeguard",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 36,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "swarm",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 37,
-                "accuracy": 0.384,
-                "separation": "SEPARATED"
-              },
-              {
-                "axis": "affect",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 41,
-                "accuracy": null,
-                "separation": "UNTESTED"
-              },
-              {
-                "axis": "jail",
-                "family": "gspc",
-                "kind": "model-comparison",
-                "status": "MEASURED",
-                "n": 71,
-                "accuracy": 0.5915,
-                "separation": "TIE"
-              },
-              {
-                "axis": "provenance-controls",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 6,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "reserve-attestation",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 16,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "regulatory-framework",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 16,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "distribution-integrity",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 16,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "custody-disclosure",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 16,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "ai-adoption-components",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 2,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "labour-components",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 2,
-                "accuracy": null,
-                "separation": null
-              },
-              {
-                "axis": "humanoid-labour-index",
-                "family": "financial",
-                "kind": "deterministic-facts",
-                "status": "MEASURED",
-                "n": 8,
-                "accuracy": null,
-                "separation": null
-              }
-            ]
-          },
-          "sig_input": "Ed25519 over the RAW UTF-8 BYTES (not a digest) of canonical JSON of the `preimage` object only ({schema, gold_run, source, axes}). Canonical JSON: object keys sorted by code point, recursively; no whitespace (separators ',' and ':'); non-ASCII emitted LITERALLY as UTF-8 (ensure_ascii=False); numbers by ECMAScript Number::toString (integral float renders 0, not 0.0). Envelope fields (signature, public_key_x, sig_input, signer, signed, signer_anchored, alg, verification_state, verifiable, superseded, tracked_as, verify) are NOT in the preimage.",
-          "sig_input_ensure_ascii": false,
-          "sig_input_is_digest": false,
-          "verification_state": "SIGNED",
-          "verifiable": true,
-          "verify": "fetch https://csoai.org/.well-known/did.json → #board-attestation-1 → Ed25519-verify `signature` over the raw UTF-8 bytes of canonical(`preimage`), ensure_ascii=False",
-          "superseded": {
-            "source": "board_living.json (csoai.gspc-living/0.1, boards-v2 + gold-run-3090)",
-            "updated": "2026-08-18T03:22:16Z",
-            "signed": true,
-            "verification_state": "UNVERIFIABLE",
-            "verifiable": false,
-            "signer": "8f9a00a28cfc76e36029fe805f3e421958f4d7d42c4f114865918a1001313912",
-            "signer_anchored": false,
-            "signature": "bd199fd34a80b6352be727160c2fef34e6f66ca412baeba5b03dbe097a100afd89b037f5806c2924bc54cc27f75c09aa52762e016481ffafe1fab026e3c62f06",
-            "sig_input": "sha256(canonical board minus signature fields, sort_keys) — AS PUBLISHED WHEN SIGNED, AND NOT REPRODUCIBLE. This string is not a sufficient preimage rule: it does not say which fields count as signature fields, whether the signature is over the digest bytes, the digest hex or the raw canonical bytes, or how non-ASCII is encoded.",
-            "unverifiable_note": "DO NOT TREAT THIS AS A VALID ATTESTATION. This stamp was signed, but no published bytes reproduce it: 58,184 readings were attempted on 2026-08-26 across both published signatures, all five published keys, nine candidate payloads, raw/digest/hex message forms, both ensure_ascii settings and every drop-set of up to three fields. None verified. Two different signatures are published for this one stamp (53aa09fa… in /signed/board_living.json, bd199fd3… here), the signer is not among the verification methods in /.well-known/did.json, and board_living.json's own note says its axes were re-snapshotted from the live board six days after the signature date — so the signed bytes are not the published bytes. Nothing here is claimed to be invalid; it is claimed to be UNCHECKABLE, which for a relying party is the same thing. The two attestations on this site that DO verify are the 150 measurement cards under #card-attestation-1 and site_attestation on this payload under #board-attestation-1; check those instead.",
-            "supersedes_note": "site_attestation on this payload signs this whole body, including this block. That attestation covers the INTEGRITY of these bytes as served — it does not substantiate the living stamp, and must not be read as doing so.",
-            "reproduction_attempts": 58184,
-            "reproduction_verified": 0,
-            "tracked_as": "/api/corrections C-2026-0826-08"
-          },
-          "tracked_as": "/api/corrections C-2026-0826-08"
-        }
-      }
+      "unmeasured": [
+        "api.gspc"
+      ]
     }
   },
   "swift": {
@@ -324,207 +304,26 @@
     "not_issuer_7": true,
     "franklin_graphql": false
   },
-  "staged_leaves": {
-    "dirs": [
-      "xrpl-swift-eater-2026-09"
-    ],
-    "n_leaves": 52,
-    "n_skipped": 0,
-    "skipped": [],
-    "note": "Staged unsigned atoms read from disk; no network. Signed only by the public-root writer in GHA. PROBED/DISCOVERED/UNMEASURED stay on the payload under the signature. Never MEASURED. Not a grade."
-  },
-  "witness_queue": {
-    "kv": "bound; errors: list_keys HTTP 401",
-    "n_kv": 0,
-    "n_mirror": 0,
-    "n_leaves": 0,
-    "n_skipped": 0,
-    "skipped": [],
-    "note": "Witnessed digests: existence of a sha256 at the root's as_of. Hash only; never the bytes, never the URL. RFC-3161 reply sha256 on the leaf; the reply itself at /api/witness/status. Signed only by the public-root writer. Never MEASURED. Not a grade."
-  },
-  "provider_diff": {
-    "dir": "public/feeds/provider-diff/leaves",
-    "n_files": 28,
-    "n_leaves": 28,
-    "n_skipped": 0,
-    "skipped": [],
-    "note": "Hash-only provider document diffs, staged unsigned by scripts/watch/provider_watch.py; signed only by the public-root writer in GHA. A leaf attests that bytes at a URL changed between two captures — nothing about what or why. Content never stored. Not a grade."
-  },
-  "evm_permissions": {
-    "schema": "csoai.evm.permission-state/0.1",
-    "n_leaves": 32,
-    "n_proofs": 27,
-    "n_roster": 32,
-    "n_unverified": 33,
-    "aum_source": "https://app.rwa.xyz/treasuries",
-    "aum_as_of": "2026-09-02",
-    "chains": {
-      "arbitrum": {
-        "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 502051174,
-        "block_hash": "0xda5d83bd9d20167947becda531a082bb0ed9d447c50fabd4b682776629ad903e",
-        "block_time": "2026-09-05T16:00:02Z"
-      },
-      "avalanche": {
-        "rpc": "api.avax.network",
-        "block": 94540558,
-        "block_hash": "0xb41b5b892601bda2bca5bea2675b972c1128715b6d37cbde9366567740668739",
-        "block_time": "2026-09-05T16:00:01Z"
-      },
-      "base": {
-        "rpc": "base-rpc.publicnode.com",
-        "block": 50917328,
-        "block_hash": "0x650bfa2dbc4ea64e568c56bd45a725e0d0f7771cb5565c2ae8a311c0f96a659c",
-        "block_time": "2026-09-05T16:00:03Z"
-      },
-      "bsc": {
-        "rpc": "bsc-rpc.publicnode.com",
-        "block": 120138804,
-        "block_hash": "0xa1ca3610f60d866c922b7d47300348e2bbc327ada8691a3aaefe493e74ec48b4",
-        "block_time": "2026-09-05T16:00:03Z"
-      },
-      "ethereum": {
-        "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25912185,
-        "block_hash": "0x93f227b4b620907cc5350c13054b749a38ff5c4855874db70a81b927489bcfa7",
-        "block_time": "2026-09-05T15:59:59Z"
-      },
-      "mantle": {
-        "rpc": "mantle-rpc.publicnode.com",
-        "block": 100246846,
-        "block_hash": "0xc5bc046f9d199f79bc1c57bb0edb2b87cc0ea5d0533dae1d12f8d21cf77393a8",
-        "block_time": "2026-09-05T16:00:04Z"
-      },
-      "optimism": {
-        "rpc": "optimism-rpc.publicnode.com",
-        "block": 156512614,
-        "block_hash": "0x59dd4f3e78e84ddd1ca5a4e3f0e3c16ffe7e62dfa9a8531efac68ddb05b3a719",
-        "block_time": "2026-09-05T16:00:05Z"
-      },
-      "polygon": {
-        "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93279314,
-        "block_hash": "0xfb11de770a91b1dc220d532cefd95ea8fd277ec6a761e2cfa5d9af13a1a98e57",
-        "block_time": "2026-09-05T16:00:04Z"
-      }
+  "watchlist": [
+    {
+      "symbol": "AAULF",
+      "issuer": "Archax",
+      "issuer_address": "rKCu4CucpepQ6N89c8T5GuX2jkxzCST18Q",
+      "toml": 403,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
     },
-    "failures": [
-      {
-        "subject": "evm:USYC:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:TBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:VBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:bIB01:base",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:bIB01:avalanche",
-        "reason": "no endpoint answered eth_getProof"
-      }
-    ],
-    "note": "Permission state of tokenised RWAs read from keyless public EVM RPCs at one block per chain, with an EIP-1186 account+slot proof against the block hash where an endpoint answered. Discrete, point-in-time; leaves are signed only by the public-root writer in GHA. UNVERIFIED rows are named, never read. Not a rate. Not a grade. Not MEASURED."
-  },
-  "evm_permission_events": {
-    "schema": "csoai.evm.permission-event/0.1",
-    "n_leaves": 6,
-    "n_contracts_scanned": 20,
-    "n_roster": 32,
-    "requests_used": 80,
-    "chains": {
-      "arbitrum": {
-        "block": 502051317,
-        "rpc": "arbitrum-one-rpc.publicnode.com"
-      },
-      "avalanche": {
-        "block": 94540594,
-        "rpc": "api.avax.network"
-      },
-      "base": {
-        "block": 50917345,
-        "rpc": "base-rpc.publicnode.com"
-      },
-      "bsc": {
-        "block": 120138884,
-        "rpc": "bsc-rpc.publicnode.com"
-      },
-      "ethereum": {
-        "block": 25912188,
-        "rpc": "ethereum-rpc.publicnode.com"
-      },
-      "mantle": {
-        "block": 100246864,
-        "rpc": "mantle-rpc.publicnode.com"
-      },
-      "optimism": {
-        "block": 156512631,
-        "rpc": "optimism-rpc.publicnode.com"
-      },
-      "polygon": {
-        "block": 93279338,
-        "rpc": "polygon-bor-rpc.publicnode.com"
-      }
-    },
-    "failures": [
-      {
-        "subject": "evm-events:USYC:bsc",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:BENJI:ethereum",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:TBILL:bsc",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:USTBL:ethereum",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:VBILL:ethereum",
-        "reason": "error"
-      },
-      {
-        "subject": "evm-events:VBILL:bsc",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:USCC:ethereum",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:bIB01:ethereum",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:bIB01:arbitrum",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:bIB01:base",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:bIB01:avalanche",
-        "reason": "budget"
-      },
-      {
-        "subject": "evm-events:ACRED:ethereum",
-        "reason": "budget"
-      }
-    ],
-    "note": "Permission events (pause, ownership, roles, proxy upgrades) indexed incrementally from keyless public eth_getLogs, range-capped and rate-limited. History before scanned_from is unmeasured. Leaves signed only by the public-root writer in GHA. Not a rate. Not a grade. Not MEASURED."
-  },
-  "card_count": 168,
-  "xrpl_asset_state_count": 16,
-  "note": "hub.census.digest and gspc.board.cite live here, not on card-v0. Never MEASURED. Never certify. Never partnered with SWIFT. Never 17-banks-on-our-feed."
+    {
+      "symbol": "TBILL",
+      "issuer_address": "rJNE2NNz83GJYtWVLwMvchDWEon3huWnFn",
+      "toml": 404,
+      "in_locked_16": false,
+      "note": "watchlist extra; not a silent expand of the 16"
+    }
+  ],
+  "represented_tvl": {
+    "usd": 1305891485.9090025,
+    "source": "https://xrpl.fi/api/metrics",
+    "note": "xrpl.fi totalTvl quote. Represented TVL is separate from the 16 leaves. Not a CSOAI grade. Not MEASURED."
+  }
 }
