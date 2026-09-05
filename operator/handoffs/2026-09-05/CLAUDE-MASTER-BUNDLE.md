@@ -225,6 +225,12 @@ commit). None of it was rendered before; all of it was being served.
 filtered to UNMEASURED. 70 cells, each signed and each carrying an accuracy, every Accuracy
 cell reading "not a measurement" beside the producer's reason.
 
+`operator/handoffs/2026-09-05/journey-stages-unavailable-named.jpg` — `/dashboard?tab=fabric`,
+the case model with six blocked stages each naming its exact endpoint and status: `/api/ras` 404
+for Propose and Approve, `/api/remediation` 404 for Fix and Retest, `/api/receipts/latest`
+OWNER_GATED for Receipt, `/api/jobs` 404 for Monitor. No buttons, no spinners — a stage with no
+runtime is described, never offered.
+
 `operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg` — `/for/startup`, exact branch
 build, served from `dist/client`, reading the live board. Shows the jail row (n 71, 59.2%,
 47.5–69.8%, TIE) with the cohort expanded: seven models, TP/FP/TN/FN, sorted by accuracy.
@@ -243,7 +249,7 @@ the page shows it.
 | MCP drops **ties** and **cohort** | `get_axis` has no `separation`, `per_model`, `quotable_models` |
 | HTTP drops **observation date** at axis level | present at response top level; absent per axis |
 | `witness_hash` declared, not served | `/api/witness` 503 `QUARANTINED_PRE_RELEASE` — deliberate |
-| Other 72 HTTP/A2A capabilities UNASSESSED | only MCP can be checked against a live `tools/list` |
+| HTTP/A2A capabilities — **no longer unassessed** | this row said "only MCP can be checked against a live `tools/list`". Since then: **76 OpenAPI GET paths probed** (7 spec/runtime divergences recorded), the **agent card's 2 interfaces and its skill endpoints** probed, the **x402 offer** read and its board figures confirmed derived, the **extension's 10 hardcoded URLs** resolved, and **AI-crawler access** verified at the edge |
 | SDK/plugin (npm) — **all 11 packages now checked** | `csoai-gspc-mcp@0.2.1` byte-identical. **`csoai-governance-mcp` HAS DRIFTED** (repo 0.1.1, npm 0.1.0). `gspc-card-verifier@1.0.0` never published. 8 others never published |
 | Cohort exists only on `jail` | every other axis carries no `per_model` |
 
