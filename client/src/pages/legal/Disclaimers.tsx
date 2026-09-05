@@ -204,7 +204,7 @@ export default function Disclaimers() {
                 </p>
                 <div className="space-y-3 text-gray-700">
                   <p>
-                    CSOAI LTD maintains professional indemnity insurance for its own operations. However:
+                    CSOAI LTD does not state professional indemnity cover on this page until the policy document is on file (corrections ledger C-2026-0902-06). In any case:
                   </p>
                   <ul className="list-disc pl-6 space-y-2">
                     <li>
