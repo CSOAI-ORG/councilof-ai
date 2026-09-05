@@ -113,7 +113,16 @@ export type CardLite = {
 export function isRelevant(card: CardLite, subject: string, ob: Obligation): boolean {
   const subj = (subject || "").trim().toLowerCase();
   const hay = `${card.subject} ${card.surface} ${card.tags.join(" ")}`.toLowerCase();
-  const subjectMatch = subj ? hay.includes(subj) : false;
+  // An ABSENT subject is no constraint, not a constraint nothing satisfies. This read `: false`
+  // and was &&-ed, so a request naming an obligation but no subject rejected every card in the
+  // corpus — measured 2026-09-05: /api/evidence-bundle?obligation=article-50 returned
+  // relevant_signed_cards 0 against a corpus of 1039, while adding the single letter "a" as a
+  // subject returned 29. The keywords ("article 50", "c2pa", "watermark", "synthetic",
+  // "marking", ...) were matching all along; they were being ANDed against a false.
+  //
+  // That emptiness was the free preview of the estate's largest SKU. Anyone evaluating the
+  // evidence bundle saw a pack with no cards in it and had no reason to look further.
+  const subjectMatch = subj ? hay.includes(subj) : true;
   const regMatch = ob.keywords.some((k) => hay.includes(k));
   return subjectMatch && regMatch;
 }
