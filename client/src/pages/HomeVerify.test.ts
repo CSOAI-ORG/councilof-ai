@@ -7,7 +7,8 @@ const here = resolve(__dirname);
 const src = [
   readFileSync(resolve(here, "HomeVerify.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeComposer.tsx"), "utf8"),
-  readFileSync(resolve(here, "../components/board/LiveLeaderboard.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/HomeGspcTable.tsx"), "utf8"),
+  readFileSync(resolve(here, "../components/home/homeGspcTableReaders.ts"), "utf8"),
   readFileSync(resolve(here, "../components/home/HomeFilms.tsx"), "utf8"),
   readFileSync(resolve(here, "../components/HfLivingRecord.tsx"), "utf8"),
   readFileSync(resolve(here, "../lib/hfLivingRecord.ts"), "utf8"),
@@ -41,7 +42,9 @@ describe("homepage is chat + GSPC list plus the estate", () => {
     expect(src).toContain("Empty means not measured");
     expect(src).toContain("What this desk does");
     expect(src).toContain("What this film is saying");
-    expect(src).toContain("defaultExpanded");
+    expect(src).toContain("HomeGspcTable");
+    expect(src).toMatch(/totals\?\.lid/);
+    expect(src).toContain("home-models-ranked");
     expect(src).not.toContain("HomeDemoLoop");
     expect(src).not.toContain("PluginBlock");
     expect(src).toContain("HfLivingRecord");
@@ -127,7 +130,7 @@ describe("/tools is the plugin snippet", () => {
 describe("home lock — later merges must not restore the desk video", () => {
   it("HomeVerify.tsx stays living-board first with no HomeDemoLoop", () => {
     const home = readFileSync(resolve(here, "HomeVerify.tsx"), "utf8");
-    expect(home).toContain("LiveLeaderboard");
+    expect(home).toContain("HomeGspcTable");
     expect(home).toContain("HfLivingRecord");
     expect(home).toContain("ReachStrip");
     expect(home).toContain("The living board");
