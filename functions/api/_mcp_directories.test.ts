@@ -173,3 +173,28 @@ describe("Glama's recorded tool truth is derived, not asserted", () => {
     if (h.verdict.startsWith("EVERY")) expect(h.healthy).toBe(0);
   });
 });
+
+describe("the Glama tool-count audit reports what it measured", () => {
+  const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+  const a = J("../../public/interop/mcp-directories.json").directories.find(
+    (r: { id: string }) => r.id === "glama",
+  ).tool_count_audit;
+
+  it("match + mismatch accounts for everything checked", () => {
+    expect(a.match + a.mismatch).toBe(a.checked);
+    expect(a.mismatches.length).toBe(a.mismatch);
+  });
+
+  it("every mismatch names both numbers and the tools actually registered", () => {
+    for (const m of a.mismatches) {
+      expect(m.declared).not.toBe(m.registered);
+      expect(m.tools.length, `${m.package}: registered ${m.registered} but lists ${m.tools.length} names`)
+        .toBe(m.registered);
+    }
+  });
+
+  it("keeps saying what the method could NOT establish", () => {
+    // Declared-vs-registered is not declared-vs-tools/list. No server was started.
+    expect(a.method).toMatch(/not declared-vs-tools\/list|no tool was called/i);
+  });
+});
