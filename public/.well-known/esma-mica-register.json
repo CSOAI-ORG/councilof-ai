@@ -1,0 +1,52 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "esma-mica-register",
+  "name": "ESMA MiCA register — CASP / EMT / ART lists",
+  "description": "Harvest target. ESMA's register of crypto-asset service providers and related lists, published under MiCA Articles 109-110.",
+  "as_of": "20260905T133000Z",
+  "state": "UNMEASURED",
+  "upstream": {
+    "operator": "European Securities and Markets Authority (ESMA)",
+    "access": "keyless",
+    "legal_basis": "MiCA Articles 109-110",
+    "cadence": "weekly",
+    "files": ["CASPS.csv", "NCASP (non-compliant) list", "EMT list", "ART list"]
+  },
+  "dated_observations": [
+    {
+      "observation": "331 authorised CASPs",
+      "as_of": "2026-09-02",
+      "attributed_to": "casptracker.eu",
+      "note": "Quoted with its date and NOT restated as current. A register count moves weekly; an undated count is a claim with a decaying truth value."
+    }
+  ],
+  "niche_occupancy": {
+    "state": "OCCUPIED",
+    "existing_normalisers": [
+      { "name": "Digital Euro Association MiCAR Tracker", "note": "normalises the register" },
+      { "name": "CASP-Tracker", "note": "normalises to JSON with SHA-256 verification" }
+    ],
+    "consequence": "A census here would be a third copy of an existing artefact. Recorded so the build decision is made with the competitor in view, not after."
+  },
+  "handling_of_non_compliant_lists": {
+    "rule": "ESMA's NCASP determinations are ESMA's. They are quoted verbatim with attribution and are NEVER re-graded, re-scored, or restated as a Council of AI finding.",
+    "why": "Republishing an enforcement listing as our own finding would convert someone else's regulatory action into our accusation."
+  },
+  "measurement_plan": {
+    "unit": "one register entry",
+    "verdicts": ["MEASURED", "UNMEASURED", "INVALID"],
+    "checks": [
+      "entry_retrievable — present in the published CSV at retrieved_at",
+      "status_quoted — ESMA's own status field, verbatim",
+      "home_member_state_declared"
+    ],
+    "grading": "none"
+  },
+  "what_this_does_not_establish": [
+    "No CASP named in the ESMA register is a client of the Council of AI.",
+    "Authorisation is ESMA's determination, not ours, and appearing on a non-compliant list is ESMA's finding, not ours.",
+    "No count on this door is asserted as current; each carries its own as_of."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/esma-mica-register.json", "live_board": "https://councilof.ai/api/gspc" },
+  "doctrine": "We measure; we do not certify. Someone else's enforcement action is never restated as our finding."
+}
