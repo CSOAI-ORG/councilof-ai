@@ -143,4 +143,34 @@ describe("the handoff bundle's own claims", () => {
         `there; an unlisted path makes that instruction fail on a sound branch.`,
     );
   });
+
+  it("its Tests section builds before it reads the build", () => {
+    // The previous version listed `npm run build:client` AFTER brand-gate and
+    // signed-json-guard, both of which read dist/client. In a fresh clone those fail before the
+    // build has run, and a reviewer who hits that reasonably distrusts the rest of the bundle.
+    const block = text.slice(text.indexOf("## Tests"), text.indexOf("## Screenshot"));
+    // ONLY the indented command lines. The prose above them explains this very fix and so
+    // MENTIONS `npm run build:client`; an indexOf over the whole block found that sentence
+    // instead of the command and passed vacuously — the guard was checking its own
+    // explanation. Fifth time in this session; see the comment on the Rollback assertion.
+    const cmds = block
+      .split("\n")
+      .filter((l) => /^ {4}\S/.test(l))
+      .map((l) => l.trim());
+    const at = (needle) => cmds.findIndex((l) => l.startsWith(needle));
+    const build = at("npm run build:client");
+    const brand = at("node scripts/brand-gate.mjs dist/client");
+    const signed = at("node scripts/signed-json-guard.mjs dist/client");
+    assert.ok(
+      build >= 0 && brand >= 0 && signed >= 0,
+      `the Tests block's COMMAND lines did not parse (build=${build} brand=${brand} signed=${signed}). ` +
+        `If the formatting changed, fix the parse — do not let it match prose again.`,
+    );
+    assert.ok(
+      build < brand && build < signed,
+      "the Tests section tells root to run a gate over dist/client before building it. In a " +
+        "fresh clone that fails on an absent directory, and the reproduction steps stop " +
+        "reproducing anything.",
+    );
+  });
 });

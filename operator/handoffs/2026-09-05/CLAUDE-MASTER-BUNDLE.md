@@ -207,32 +207,55 @@ public/tournament.html
 
 ## Tests
 
-    npx vitest run client/src                                  643 passed
-    node scripts/brand-gate.mjs dist/client                    EXIT 0 (was EXIT 1 on master)
-    node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
+**Run them in this order.** The previous version of this section listed `npm run build:client`
+*after* the two commands that read `dist/client` — in a fresh clone those would have failed
+before the build ran, and a reviewer would reasonably distrust everything else here.
+
+    npm install                                                once, for the client suite only
     npm run build:client                                       clean; route-truth-guard PASS
+    node scripts/brand-gate.mjs dist/client                    EXIT 0  (EXIT 1 on master today)
+    node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
+    node scripts/one-door-guard.mjs                            EXIT 0  (now fails on a missing input)
+    npx vitest run client/src                                  643 passed at handoff
+
+    # The capability guards need NO install and NO build. Verified from a bare
+    # `git archive HEAD` export with zero node_modules: 82 passed, offline and live.
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
-      LIVE_HUB=1 LIVE_JOURNEY=1 \
-      LIVE_NPM=1 LIVE_CARDS=1 LIVE_ATTESTATION=1 \
-      LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
+      LIVE_HUB=1 LIVE_JOURNEY=1 LIVE_NPM=1 LIVE_CARDS=1 \
+      LIVE_ATTESTATION=1 LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
       LIVE_A2A=1 LIVE_X402=1 \
-      node --test capabilities/*.test.mjs                      77 passed, 0 failed
+      node --test capabilities/*.test.mjs                      82 passed at handoff, 0 failed
 
-Every guard was proven to fail before being trusted:
+Counts are stated **at handoff** deliberately. They move as master moves; a mismatch means drift
+to re-read, not an error. The claims that must hold regardless are asserted by
+`capabilities/handoff-bundle-truth.test.mjs`.
 
-- registry — marking `witness_hash` VERIFIED while runtime 503s → "declared, not served, not gated"
-- routes — injecting a third duplicate → fails naming `/dashboard`
-- cohort render — adding a file referencing `per_model` → fails naming the file
-- parity — both recorded gap lists were WRONG on first run and the live test corrected them
-- hub results — deleting the `status !== "MEASURED"` check in `displayAccuracy` fails three
-  tests, one naming the consequence: an UNMEASURED cell's number rendered as a result
-- journey backends — recording `ras` as VERIFIED fails two tests, one offline on the record
-  and one live against the 404, each naming the consequence
-- observation date — dropping `measured_on.date` from the board fails three tests, one
-  asserting the multi-date prose survives rather than being flattened to one timestamp
-- game-page claims — restoring the old lede fails, naming the page and the pattern. brand-gate
-  catches a banned WORD; this catches a true-sounding SENTENCE that happens to be false
-- npm parity — appending one comment line to `index.mjs` fails it with both digests named
+**Every guard was proven to fail before being trusted.** Not a claim about diligence — each was
+mutated, watched go red with a message naming the consequence, and restored:
+
+| guard | the mutation that proved it |
+|---|---|
+| registry | marking `witness_hash` VERIFIED while runtime 503s |
+| routes | injecting a third duplicate → fails naming `/dashboard` |
+| cohort render | adding a file referencing `per_model` |
+| hub results | deleting the `status !== "MEASURED"` check → 3 tests fail, one naming the consequence |
+| journey backends | recording `ras` as VERIFIED → fails offline on the record AND live against the 404 |
+| observation date | dropping `measured_on.date` → 3 fail, one asserting the multi-date prose survives |
+| game-page claims | restoring the old lede → fails naming the page and the pattern |
+| npm parity | one comment line appended to `index.mjs` → fails with both digests named |
+| card counts | reinstating CLAUDE.md's "matches neither" → fails quoting the owner ruling back |
+| board attestation | restoring the "verifies" header → fails, 12 readings tried |
+| verify privacy | adding a telemetry POST → fails quoting the on-page promise back |
+| brand-gate coverage | renaming `certify_claim` → fails quoting the doctrine |
+| brand-gate exclusions | silently excluding `pricing` → fails by name |
+| crawler access | pointed at a host that challenges → all five report 403 |
+| OpenAPI parity | dropping the x402 entry from KNOWN → fails |
+| agent card | giving the skills a dead endpoint → fails naming each skill |
+| x402 offer | requiring a phrase the derived description cannot contain → fails with the board's lid |
+| files pane | restoring `signed: true` → fails |
+| launchers | adding one bypassing launcher → fails at 47, naming both directions |
+| one-door-guard | deleting `public/_redirects` → **was PASS exit 0, now FAIL exit 1** |
+| handoff truth | unreferencing the WP-3 screenshot → fails by name |
 
 ## Screenshot
 
