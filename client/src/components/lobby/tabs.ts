@@ -770,17 +770,24 @@ const DASHBOARD_NAV_DEFINITION: {
       { id: "watchdog", label: "Watchdog" },
     ],
   },
-  {
-    id: "tools",
-    label: "Tools",
-    tabs: [
-      { id: "memory", label: "Memory" },
-      { id: "files", label: "Files" },
-      { id: "sandbox", label: "Sandbox" },
-      { id: "operator", label: "Operator" },
-      { id: "atlas", label: "Atlas" },
-    ],
-  },
+  // A "Tools" group naming memory / files / sandbox / operator / atlas was added here on
+  // 2026-09-05 and removed the same day, because none of those five ids exists in LOBBY_TABS.
+  // DASHBOARD_NAV_GROUPS resolves each id through LOBBY_TABS.find(...) and .filter(Boolean), so
+  // every one of them resolved to null: the group rendered EMPTY and the five panes were
+  // unreachable. The type errors it raised ("memory" is not assignable to LobbyTabId, and four
+  // more) were TypeScript correctly reporting a dangling reference, not noise to be widened away
+  // — adding the ids to the union would have silenced the checker and left the group just as
+  // empty at runtime.
+  //
+  // THE COMPONENTS ARE NOT DELETED. client/src/components/Dashboard{Memory,Files,Sandbox,
+  // Operator,Atlas}Pane.tsx all exist and are intact — they are simply referenced by nothing
+  // (checked: zero imports across client/src). To land the feature, each pane needs, in order:
+  //   1. a LOBBY_TABS entry — id, label, blurb, path, cues, like every other tab above;
+  //   2. the id added to LobbyTabId (and "tools" to DashboardNavGroupId) — after step 1, not
+  //      instead of it;
+  //   3. a route so the path resolves, and the pane component actually imported;
+  //   4. the path in PRIMARY_PATHS, or the page ships flagged as archived.
+  // Restoring this group before those four exist reproduces exactly the state removed here.
   {
     id: "govern",
     label: "Govern",
