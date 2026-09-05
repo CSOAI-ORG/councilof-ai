@@ -148,3 +148,79 @@ describe("/api/hub-cards", () => {
     expect(counts.cells).toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// A card the ledger has replaced is not the live card.
+//
+// On 2026-09-05 this endpoint served 826 cells for 753 distinct (model, axis)
+// pairs and reported 70 UNMEASURED. Every one of those 70 was a card
+// SUPERSEDED.jsonl had already replaced — each had a MEASURED replacement in
+// INDEX.jsonl for the same pair — so the live unmeasured count was ZERO. Only
+// INDEX.jsonl is ever rebuilt; the three satellite indexes were written once and
+// still list the pre-#1155 bodies. Passing a status through verbatim is only
+// honest when it is the LIVE card's status.
+// ---------------------------------------------------------------------------
+
+const LEDGER = "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl";
+
+const carded = (model: string, axis: string, status: string, sha: string) =>
+  JSON.stringify({ model, axis, status, accuracy: 0.5, n: 30, signed: true, card_sha256: sha });
+
+/** INDEX carries the live MEASURED card; a satellite still lists the superseded one. */
+const STALE: Record<string, string> = {
+  INDEX: carded("a/one", "safety", "MEASURED", "newsha"),
+  "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+  "INDEX-art5-affect": "",
+  "INDEX-empty3": "",
+};
+
+const installStale = (ledgerBody: string | null) => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === LEDGER) {
+        return ledgerBody === null
+          ? new Response("no", { status: 500 })
+          : new Response(ledgerBody, { status: 200 });
+      }
+      const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
+      return new Response(STALE[name] ?? "", { status: 200 });
+    }),
+  );
+};
+
+describe("/api/hub-cards — the live card, not every card ever signed", () => {
+  it("drops a card the ledger has replaced and keeps its replacement's status", async () => {
+    installStale(JSON.stringify({ superseded_id: "oldsha", by_id: "newsha" }));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    // Without the ledger read this is {cells: 2, measured: 1, unmeasured: 1}.
+    expect(counts.cells).toBe(1);
+    expect(counts.measured).toBe(1);
+    expect(counts.unmeasured).toBe(0);
+    expect(counts.superseded_excluded).toBe(1);
+    expect(counts.rows_served_by_indexes).toBe(2);
+  });
+
+  it("collapses a duplicate pair so one (model, axis) is one cell", async () => {
+    // Nothing superseded: the two rows are both live, and they are the same pair.
+    installStale("");
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.rows_served_by_indexes).toBe(2);
+    expect(counts.cells).toBe(1);
+    expect(counts.duplicates_collapsed).toBe(1);
+  });
+
+  it("an unreadable ledger is UNCHECKABLE, never an empty ledger", async () => {
+    installStale(null);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+    // null, not 0 — "I could not check" is not "nothing was superseded".
+    expect(counts.superseded_excluded).toBeNull();
+    expect(honesty.superseded_ledger).toMatch(/UNREADABLE/);
+    expect(honesty.superseded_ledger).toMatch(/UPPER BOUND/);
+  });
+});
