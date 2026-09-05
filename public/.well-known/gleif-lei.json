@@ -1,0 +1,45 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "gleif-lei",
+  "name": "GLEIF LEI — Legal Entity Identifier reference data",
+  "description": "Harvest target. Authoritative, keyless, machine-readable legal-entity reference data (Level 1 identity + Level 2 'Who Owns Whom' relationships), cross-linking to BIC, ISIN and MIC.",
+  "as_of": "20260905T133000Z",
+  "state": "UNMEASURED",
+  "what_this_is": "A declaration that this registry is a named harvest target and a statement of what would be measured against it. It is not a measurement. No LEI record has been measured, signed or attested by the Council of AI at this as_of.",
+  "what_this_does_not_establish": [
+    "No coverage claim. The Council of AI has measured no LEI record.",
+    "No relationship with GLEIF, and no endorsement by GLEIF, is asserted or implied.",
+    "No entity named in GLEIF is a client of the Council of AI."
+  ],
+  "upstream": {
+    "operator": "Global Legal Entity Identifier Foundation (GLEIF)",
+    "access": "keyless",
+    "terms_note": "GLEIF states the complete LEI data pool is searchable and accessible free of charge without registration. Redistribution terms are GLEIF's; this door restates no term and grants none.",
+    "api": "https://api.gleif.org/api/v1",
+    "bulk": "Golden Copy and Delta files, daily cadence",
+    "formats": ["CDF/XML", "JSON", "CSV"],
+    "levels": {
+      "level_1": "entity identity — who is who",
+      "level_2": "direct and ultimate parent relationships — who owns whom"
+    },
+    "cross_links": ["BIC", "ISIN", "MIC", "OpenCorporates"]
+  },
+  "measurement_plan": {
+    "unit": "one LEI record, or one Level 2 relationship edge",
+    "verdicts": ["MEASURED", "UNMEASURED", "INVALID"],
+    "checks": [
+      "lei_resolves — the LEI is retrievable from the GLEIF API at retrieved_at",
+      "registration_status — GLEIF's own status field, quoted verbatim, never re-graded",
+      "level2_parent_declared — a direct or ultimate parent relationship is published",
+      "cross_link_consistent — a declared BIC/ISIN/MIC resolves to the same entity"
+    ],
+    "grading": "none. This door records whether a reference binding resolves. It issues no score, no rank and no conformity mark."
+  },
+  "links": {
+    "self": "https://councilof.ai/.well-known/gleif-lei.json",
+    "live_board": "https://councilof.ai/api/gspc",
+    "verify": "https://councilof.ai/gspc-verify",
+    "doors_index": "https://councilof.ai/.well-known/index.json"
+  },
+  "doctrine": "We measure; we do not certify. Verification is free forever. UNMEASURED is first-class and is stated here rather than hidden."
+}
