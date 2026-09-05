@@ -5,8 +5,8 @@
     "axes": [
       "swift-rails"
     ],
-    "bank": "Lloyds Bank",
-    "bank_id": "lloyds",
+    "bank": "Mashreq",
+    "bank_id": "mashreq",
     "census_as_of": "2026-09-01",
     "census_status": "DISCOVERED",
     "event_date": null,
@@ -52,14 +52,14 @@
     "writes_board": false
   },
   "schema": "https://councilof.ai/schema/card-v0.json",
-  "sha256": "01d6572dcf329112e79950117610a6b8f719dd007a74e1f16be96db2cc02d1fc",
-  "sig_ed25519": "pSWyaPujfC5ixp6jTBPbnktWTP71u4T03yREkqJxVBw=",
+  "sha256": "14b6dff7646295b2e592e8aeeadbc8bf79fe72493a0cedb793fa297964149ad3",
+  "sig_ed25519": null,
   "source_urls": [
     "https://councilof.ai/api/swift",
     "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
     "https://gfmag.com/technology/swift-blockchain-ledger/"
   ],
-  "subject": "Swift shared-ledger census: Lloyds Bank \u2014 DISCOVERED; named in 1/2 fetched notice bodies",
+  "subject": "Swift shared-ledger census: Mashreq \u2014 DISCOVERED; named in 1/2 fetched notice bodies",
   "surface": "public.notice",
   "tags": [
     "eater:xrpl-swift",
@@ -74,6 +74,7 @@
     "on_ledger_object",
     "transaction_recompute"
   ],
-  "sig_algo": "SHA256-placeholder",
-  "signed_at": "20260905T054628Z"
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "UNSIGNED \u2014 the value previously here was base64(sha256(card)), not a signature; removed 2026-09-05 (ledger C-2026-0905-02). sha256 covers the bytes, nothing attests them."
 }

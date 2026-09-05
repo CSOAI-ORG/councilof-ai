@@ -31,6 +31,17 @@ const LEDGER = {
   publisher: "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
   corrections: [
     {
+      id: "C-2026-0905-02",
+      date: "2026-09-05",
+      what_was_wrong:
+        "26 SWIFT rail cards were published under public/interop/swift-signed-2026-09/ as signed-swift-<bank>.json with a populated sig_ed25519 field and signed_at timestamp. The field held base64(sha256(card)), not a signature; sig_algo said SHA256-placeholder and the index said the same. A relying party reading the field name, the file name or the directory name was told these were Ed25519-signed. They were not. Nothing verifies.",
+      how_caught:
+        "Outside review of the estate on 2026-09-05 named the 26 placeholder cards as the single most damaging thing an inspector could find. Confirmed against master: 26 of 26 files, sig_algo SHA256-placeholder, producer scripts/badger/csoai-swift-aware.py writing a digest when no key was present.",
+      fix:
+        "Producer changed: with no key it now writes sig_ed25519 null, sig_algo UNSIGNED, signed_at null, a signature_note, into swift-staged-2026-09/ as staged-swift-*.json; the OIDC board-sign path is the only signer. The 26 artifacts were rewritten the same way and moved; swift-signed-index.json is superseded by swift-staged-index.json (total_signed 0, total_staged_unsigned 26). No card here is signed or MEASURED.",
+      status: "CORRECTED — 0 signed, 26 staged and labelled; placeholder producer removed",
+    },
+    {
       id: "C-2026-0905-01",
       date: "2026-09-05",
       what_was_wrong:

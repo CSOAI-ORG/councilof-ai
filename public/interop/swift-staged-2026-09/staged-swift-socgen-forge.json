@@ -5,8 +5,8 @@
     "axes": [
       "swift-rails"
     ],
-    "bank": "Royal Bank of Canada",
-    "bank_id": "rbc",
+    "bank": "Societe Generale-FORGE",
+    "bank_id": "socgen-forge",
     "census_as_of": "2026-09-01",
     "census_status": "COMMITTED",
     "event_date": null,
@@ -41,13 +41,13 @@
     "writes_board": false
   },
   "schema": "https://councilof.ai/schema/card-v0.json",
-  "sha256": "0e876e0d7e902170a57caced494b347fc0d604390b92c34738c1064e21336da6",
-  "sig_ed25519": "WI/Eoe2kkxJE0KArAU9SnqUujmc0bNCyCVfi8zzATK0=",
+  "sha256": "cd429992ba8e5a2c5191dda78934f2560518c86fdce9ac9f04d8e59fabe2fd36",
+  "sig_ed25519": null,
   "source_urls": [
     "https://councilof.ai/api/swift",
     "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
   ],
-  "subject": "Swift shared-ledger census: Royal Bank of Canada \u2014 COMMITTED; named in 1/1 fetched notice bodies",
+  "subject": "Swift shared-ledger census: Societe Generale-FORGE \u2014 COMMITTED; named in 1/1 fetched notice bodies",
   "surface": "public.notice",
   "tags": [
     "eater:xrpl-swift",
@@ -62,6 +62,7 @@
     "on_ledger_object",
     "transaction_recompute"
   ],
-  "sig_algo": "SHA256-placeholder",
-  "signed_at": "20260905T054628Z"
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "UNSIGNED \u2014 the value previously here was base64(sha256(card)), not a signature; removed 2026-09-05 (ledger C-2026-0905-02). sha256 covers the bytes, nothing attests them."
 }

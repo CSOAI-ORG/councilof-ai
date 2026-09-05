@@ -42,7 +42,7 @@
   },
   "schema": "https://councilof.ai/schema/card-v0.json",
   "sha256": "1a2926f4294be6c27e0a566e67978016039169b2d65eb37ac024300bb16330b4",
-  "sig_ed25519": "vzEFgyy3Ws+iJPEQRNghF0xs1Qv6HSD3BjK6gaJK9VU=",
+  "sig_ed25519": null,
   "source_urls": [
     "https://councilof.ai/api/swift",
     "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
@@ -62,6 +62,7 @@
     "on_ledger_object",
     "transaction_recompute"
   ],
-  "sig_algo": "SHA256-placeholder",
-  "signed_at": "20260905T054628Z"
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "UNSIGNED \u2014 the value previously here was base64(sha256(card)), not a signature; removed 2026-09-05 (ledger C-2026-0905-02). sha256 covers the bytes, nothing attests them."
 }

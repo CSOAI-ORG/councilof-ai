@@ -5,21 +5,42 @@
     "axes": [
       "swift-rails"
     ],
-    "bank": "Societe Generale-FORGE",
-    "bank_id": "socgen-forge",
+    "bank": "OCBC",
+    "bank_id": "ocbc",
     "census_as_of": "2026-09-01",
-    "census_status": "COMMITTED",
+    "census_status": "DISCOVERED",
     "event_date": null,
     "fetched_at": "2026-09-02T07:56:44Z",
-    "inputs_sha256": "47f4c73f1e25f0af1d67e14e5ecdc144b945fb9c539b1f6e0b28fba02d674b5e",
+    "inputs_sha256": "14597250eab045bd799dcd54355db12a8a3694e7f20731a1490d4a3b6d819837",
     "kind": "csoai.eater.swift-rail/0.1",
     "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
     "method_id": "csoai.eater.xrpl-swift/0.1",
-    "named_in_fetched_body_n": 1,
+    "named_in_fetched_body_n": 2,
     "not_a_client": true,
     "not_a_grade": true,
     "settlement_still_off_chain": true,
     "sources": [
+      {
+        "error": "TimeoutError: The read operation timed out",
+        "fetched_at": "2026-09-02T07:56:02Z",
+        "http": 0,
+        "id": "swift_pilot_9jul",
+        "n_bytes": null,
+        "named_in_body": "UNCHECKABLE",
+        "published": "2026-07-09",
+        "sha256": null,
+        "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure"
+      },
+      {
+        "fetched_at": "2026-09-02T07:56:40Z",
+        "http": 200,
+        "id": "gfmag_pilot_10jul",
+        "n_bytes": 109323,
+        "named_in_body": "PASS",
+        "published": "2026-07-10",
+        "sha256": "491411ebe38687ccf771265e27ec607e532255569550a351cec4359e78ae27da",
+        "url": "https://gfmag.com/technology/swift-blockchain-ledger/"
+      },
       {
         "fetched_at": "2026-09-02T07:56:44Z",
         "http": 200,
@@ -41,18 +62,20 @@
     "writes_board": false
   },
   "schema": "https://councilof.ai/schema/card-v0.json",
-  "sha256": "cd429992ba8e5a2c5191dda78934f2560518c86fdce9ac9f04d8e59fabe2fd36",
-  "sig_ed25519": "TpZLNLLuUdZ1yeuwnuIX5cM+99eZ4Aa/qf7hGmihOgU=",
+  "sha256": "5b5253a5156d0020c7ad83554f37fdd453a21f99f42a5f80e218b9f904ea7f32",
+  "sig_ed25519": null,
   "source_urls": [
     "https://councilof.ai/api/swift",
+    "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+    "https://gfmag.com/technology/swift-blockchain-ledger/",
     "https://ethers.news/articles/swifts-blockchain-shared-ledger-reaches-mvp-40-global-banks-enter-construction-phase-real-tokenized-deposit-payments-across-200-countries-live-in-2026"
   ],
-  "subject": "Swift shared-ledger census: Societe Generale-FORGE \u2014 COMMITTED; named in 1/1 fetched notice bodies",
+  "subject": "Swift shared-ledger census: OCBC \u2014 DISCOVERED; named in 2/3 fetched notice bodies",
   "surface": "public.notice",
   "tags": [
     "eater:xrpl-swift",
     "axis:swift-rails",
-    "census:committed",
+    "census:discovered",
     "not-a-client",
     "unsigned"
   ],
@@ -62,6 +85,7 @@
     "on_ledger_object",
     "transaction_recompute"
   ],
-  "sig_algo": "SHA256-placeholder",
-  "signed_at": "20260905T054628Z"
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "UNSIGNED \u2014 the value previously here was base64(sha256(card)), not a signature; removed 2026-09-05 (ledger C-2026-0905-02). sha256 covers the bytes, nothing attests them."
 }
