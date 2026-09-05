@@ -6,7 +6,7 @@
  * registry of ten integrations, seven of which name a live endpoint, rendered by
  * `/opengridworks` (HTTP 200). Nothing compared any of them to runtime.
  *
- * Probed 2026-09-05. THREE OF SEVEN DO NOT ANSWER:
+ * Probed 2026-09-05. THREE OF SEVEN DID NOT ANSWER, and all three are now fixed:
  *
  *   https://app.csoai.org/mcp                          200
  *   https://app.csoai.org/.well-known/mcp.json         200
@@ -29,8 +29,14 @@
  * a live defect: the entry ships the moment anyone renders the full list, and the estate has
  * already shipped a retracted claim exactly that way.
  *
+ * FIXED, not excused: agent.json now points at `/.well-known/agent-card.json` (served); the
+ * attestation entry points at `/api/proof`, which returns a real free inclusion proof for
+ * `?sha=<64-hex>` and correctly 400s a bare GET; and the deltas entry lost its endpoint and
+ * gained an `unavailable` reason, because no deltas file exists at any host and `/feed` is a
+ * page titled "Evidence review in progress" rather than a feed.
+ *
  * `client/src/components/evidence/EvidencePackage.tsx` — 323 lines, imported by nothing, route
- * `/evidence-package` 404 — fetches the same dead host. Its own README says `/evidence` is taken
+ * `/evidence-package` 404 — still fetches the dead host. Its own README says `/evidence` is taken
  * by a different product. OWNER CALL: it is another lane's port, so this file records it and
  * deletes nothing.
  *
@@ -45,17 +51,46 @@ import { fileURLToPath } from "node:url";
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REGISTRY = path.join(repo, "client/src/data/intel/integrations.ts");
 
-/** Measured 2026-09-05. A fourth dead endpoint is a regression; one revived is progress. */
-const KNOWN_DEAD = {
-  "https://app.csoai.org/agent.json": "404",
-  "https://app.csoai.org/data/regulation-deltas.json": "404",
-  "https://meok-attestation-api.vercel.app": "402",
-};
+/**
+ * Measured 2026-09-05, and now EMPTY, because all three were fixed rather than excused:
+ *
+ *   https://app.csoai.org/agent.json                   404  -> repointed to the served
+ *                                                            /.well-known/agent-card.json
+ *   https://meok-attestation-api.vercel.app            402  -> repointed to /api/proof, the
+ *                                                            free inclusion proof that exists
+ *   https://app.csoai.org/data/regulation-deltas.json  404  -> endpoint removed; the entry now
+ *                                                            carries an `unavailable` reason
+ *
+ * A known-failures list that only grows stops meaning anything. This one is kept at zero on
+ * purpose: an entry here is a decision to ship a dead endpoint, and needs the reason written next
+ * to it.
+ */
+const KNOWN_DEAD = {};
+
+function registry() {
+  const src = readFileSync(REGISTRY, "utf8");
+  return src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+}
 
 function advertised() {
-  const src = readFileSync(REGISTRY, "utf8");
-  const code = src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
-  return [...new Set([...code.matchAll(/endpoint:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]))];
+  return [...new Set([...registry().matchAll(/endpoint:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]))];
+}
+
+/**
+ * Endpoints whose entry DOCUMENTS a required query parameter. A bare GET to one of these is
+ * correctly rejected with 400 — the path is served, the call was incomplete. /api/proof is the
+ * case: it answers 400 to a bare GET and returns a real free inclusion proof for ?sha=<64-hex>.
+ *
+ * This allowance is deliberately tied to the `connect` line rather than to a URL list. An
+ * endpoint may only be excused a 400 while the registry actually tells a caller which parameter
+ * to pass — otherwise "needs parameters" becomes the excuse that hides a broken path, which is
+ * the same shape as the filename allowlist that let a retracted claim ship past brand-gate.
+ */
+function documentsParameters(url) {
+  const entry = registry().split(/\{\s*\n/).find((b) => b.includes(url));
+  if (!entry) return false;
+  const connect = entry.match(/connect:\s*['"]([^'"]*)['"]/);
+  return !!connect && /[?&]\w+=/.test(connect[1]);
 }
 
 async function status(url) {
@@ -99,6 +134,7 @@ describe("every endpoint the integrations registry advertises", () => {
       const code = await status(url);
       const n = Number(code);
       if (Number.isFinite(n) && n >= 200 && n < 400) continue;
+      if (code === "400" && documentsParameters(url)) continue; // served; the bare GET was incomplete
       if (KNOWN_DEAD[url] === code) continue;
       broken.push(`${url} -> ${code}`);
     }
@@ -106,8 +142,9 @@ describe("every endpoint the integrations registry advertises", () => {
       broken,
       [],
       `these advertised integration endpoints do not answer: ${broken.join("; ")}. The sidebar ` +
-        `tells a visitor how to call them ("POST /sign to issue an attestation"). Fix the host, ` +
-        `remove the entry, or record it in KNOWN_DEAD with the reason.`,
+        `tells a visitor how to call each one. Fix the host, drop the endpoint and give the ` +
+        `entry an \`unavailable\` reason, or record it in KNOWN_DEAD. A 400 is excused only ` +
+        `while the entry's \`connect\` line names the parameter it needs.`,
     );
   });
 

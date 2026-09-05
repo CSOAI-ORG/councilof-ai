@@ -240,6 +240,7 @@ operator/handoffs/2026-09-05/journey-stages-unavailable-named.jpg
 capabilities/root-conflict-disclosure.test.mjs
 capabilities/axis-family-split.test.mjs
 capabilities/integration-endpoints.test.mjs
+client/src/data/intel/integrations.ts
 public/cards-bundle.json
 public/signed/HOW-TO-VERIFY-ROOT.md
 public/signed/index.html
@@ -870,10 +871,32 @@ phone-only probe, which proved nothing about desktop; the desktop probe was run 
 conclusion was kept. So this is a LATENT trap, not a live defect — and this estate has already
 shipped a retracted claim exactly that way.
 
-`capabilities/integration-endpoints.test.mjs` records the three, fails on a fourth, fails on any
-NEW `vercel.app` endpoint entering the registry (statically, so it bites with no network), and
-fails when a KNOWN_DEAD endpoint revives — so the excuse list cannot only grow. Three mutations,
-all caught.
+**All three are now fixed rather than recorded.** The registry's own header promises "endpoints
+reflect what's actually served … where an exact URL is uncertain the integration is described
+without a fabricated endpoint" — three entries broke the file's own rule, which is what made this
+a correction rather than a judgement call:
+
+    agent.json          -> https://councilof.ai/.well-known/agent-card.json   (served, 200)
+    Ed25519 attestation -> https://councilof.ai/api/proof                     (free inclusion proof)
+    Regulation deltas   -> endpoint REMOVED; `unavailable` reason instead
+
+The attestation entry's old `connect` line — *"POST /sign to issue an attestation"* — was wrong
+twice over: the host was dead, and nothing in this estate issues an attestation on request.
+Verification is free (`GET /api/proof?sha=<64-hex>`, verified returning a real 8-node inclusion
+proof); commissioning is the x402 rail, which answers a 402 challenge, not a signature. The
+deltas entry described a *"live output … refreshed daily"* that **has never existed in any form**:
+404 at both hosts, absent from the repository, and `/feed` is a page titled "Evidence review in
+progress". It now says so, via a new `unavailable` field that an entry may carry only when it
+carries no `endpoint`.
+
+`capabilities/integration-endpoints.test.mjs` keeps it that way. **KNOWN_DEAD is now empty on
+purpose** — a known-failures list that only grows stops meaning anything, so an entry there is a
+deliberate decision to ship a dead endpoint with the reason written beside it. It fails on any
+dead endpoint, on any NEW `vercel.app` URL entering the registry (statically, so it bites with no
+network), and when a recorded-dead endpoint revives. A 400 is excused **only while the entry's
+own `connect` line names the parameter it needs** — tied to the documented contract rather than
+to a URL allowlist, because a URL allowlist is exactly the shape of the filename exemption that
+let a retracted claim ship past brand-gate. Five mutations, all caught.
 
 **OWNER CALL, not taken here.** `client/src/components/evidence/EvidencePackage.tsx` is 323 lines
 imported by nothing; route `/evidence-package` is 404; it fetches the same dead 402 host. Its own
