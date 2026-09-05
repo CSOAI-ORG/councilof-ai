@@ -1,7 +1,8 @@
 import { FOCUS, MEASURE, SP, TYPE } from "./glass";
 import { PLAY_CARDS, PLAY_NOTICE } from "./play";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import { dashboardViewHref } from "@/lib/dashboardView";
+import BossChairPractice from "./BossChairPractice";
 
 /**
  * LobbyPlay — the gold "Council OS — local play" section of the centre pane.
@@ -19,6 +20,41 @@ import { dashboardViewHref } from "@/lib/dashboardView";
  */
 
 export default function LobbyPlay() {
+  const search = useSearch();
+  const selectedGame = new URLSearchParams(
+    search.startsWith("?") ? search.slice(1) : search,
+  ).get("game");
+
+  if (selectedGame === "boss-chair") {
+    return (
+      <section
+        aria-labelledby="coai-lobby-play-h"
+        className={`${SP.panel} h-full overflow-y-auto`}
+      >
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1
+              id="coai-lobby-play-h"
+              className="text-[17px] font-semibold tracking-tight text-amber-900"
+            >
+              Council OS — local play
+            </h1>
+            <p className={`mt-1 ${TYPE.fine}`}>
+              Fixed scenarios in this browser; your choices are not submitted.
+            </p>
+          </div>
+          <Link
+            href="/dashboard?tab=play"
+            className={`inline-flex min-h-11 items-center rounded-xl border border-amber-700/30 bg-white px-4 py-2 text-[12.5px] font-semibold text-amber-900 transition hover:bg-amber-50 motion-reduce:transition-none ${FOCUS}`}
+          >
+            Back to all games
+          </Link>
+        </div>
+        <BossChairPractice />
+      </section>
+    );
+  }
+
   return (
     <section
       aria-labelledby="coai-lobby-play-h"
@@ -37,6 +73,38 @@ export default function LobbyPlay() {
       </div>
 
       <p className={`mt-3 ${MEASURE} ${TYPE.body}`}>{PLAY_NOTICE}</p>
+
+      <section className="mt-5 overflow-hidden rounded-2xl border border-amber-700/30 bg-slate-950 text-white shadow-sm">
+        <div className="grid sm:grid-cols-[0.8fr_1.2fr]">
+          <img
+            src="/images/coliseum_logic_duel.jpg"
+            alt="A human and an AI facing each other across a chessboard in the arena"
+            className="h-full min-h-44 w-full object-cover opacity-75"
+          />
+          <div className="p-5 sm:p-6">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-200">
+              Playable now · deterministic simulation
+            </p>
+            <h3 className="mt-2 text-xl font-semibold tracking-tight">
+              The Boss&apos;s Chair
+            </h3>
+            <p className="mt-2 text-[13px] leading-relaxed text-slate-200">
+              Decide which requests stay autonomous and which stop for human
+              approval. Every answer gets a plain-language explanation.
+            </p>
+            <Link
+              href="/dashboard?tab=play&game=boss-chair"
+              className={`mt-4 inline-flex min-h-11 items-center rounded-xl bg-amber-500 px-4 py-2.5 text-[12.5px] font-semibold text-slate-950 transition hover:bg-amber-400 motion-reduce:transition-none ${FOCUS}`}
+            >
+              Take the chair
+            </Link>
+            <p className="mt-3 text-[11px] leading-relaxed text-slate-300">
+              Local practice only — the game does not call a model or submit
+              your answers, and creates no measurement, signature or timestamp.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="mt-5 rounded-2xl border border-amber-700/25 bg-gradient-to-br from-amber-50 via-white to-emerald-50 p-5 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">

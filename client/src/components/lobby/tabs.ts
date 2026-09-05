@@ -848,6 +848,7 @@ export function normalizeLobbyTabId(id: string): string {
     scoreboard: "board",
     chat: "home",
     "ag-ui": "home",
+    games: "play",
   };
   return aliases[value] || value || "home";
 }
