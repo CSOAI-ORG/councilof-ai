@@ -63,3 +63,13 @@ jobs:
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
+
+      # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
+      # GET /api/gspc and the three card corpora files. Both files used to tell their
+      # readers "do not freeze numbers in this file" while freezing the lid three times
+      # over, and llms-full.txt's embedded board snapshot had drifted from live — it was
+      # missing financial_run_attestations entirely. This check fails the PR when the
+      # committed bytes no longer match what they derive from. A network failure reports
+      # UNCHECKABLE and does not go red; it also does not report a pass.
+      - name: llms.txt / llms-full.txt match the live board
+        run: node scripts/llms-txt.mjs --check
