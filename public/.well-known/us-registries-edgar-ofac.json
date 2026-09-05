@@ -1,0 +1,44 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "us-registries-edgar-ofac",
+  "name": "US keyless registries — SEC EDGAR and OFAC SDN",
+  "description": "Two free, keyless, machine-readable US registries named as harvest targets. Documented together because they require opposite handling.",
+  "as_of": "20260905T133000Z",
+  "state": "UNMEASURED",
+  "registries": [
+    {
+      "id": "sec-edgar",
+      "name": "SEC EDGAR",
+      "access": "keyless",
+      "formats": ["XBRL", "JSON", "full-text search"],
+      "kind": "disclosure",
+      "handling": "A filing exists or it does not. A company that has not filed a given form may simply not be required to file it. Absence is NOT a finding.",
+      "checks": ["filing_retrievable", "form_type_quoted_verbatim", "period_of_report_present"]
+    },
+    {
+      "id": "ofac-sdn",
+      "name": "OFAC Specially Designated Nationals list",
+      "access": "keyless",
+      "formats": ["XML", "CSV"],
+      "kind": "sanctions designation",
+      "handling": "Highest care of any registry in this mine. An SDN entry is a US government designation with legal consequences for the designated party.",
+      "rules": [
+        "Quoted verbatim with attribution to OFAC.",
+        "Never re-scored, re-graded or normalised into a Council of AI verdict.",
+        "Never merged into any composite, index or aggregate.",
+        "Never used to characterise a party the Council of AI has separately measured on any axis."
+      ],
+      "matching_caveat": "Name matching against the SDN list is inherently ambiguous. Transliteration variants and common names produce false positives, which is why real screening uses fuzzy matching with human adjudication. This door asserts no automated match and никогда presents one as clean.",
+      "checks": ["entry_retrievable", "designation_program_quoted_verbatim", "listing_date_present"]
+    }
+  ],
+  "grading": "none for either registry",
+  "what_this_does_not_establish": [
+    "Nothing has been harvested from EDGAR or OFAC by the Council of AI at this as_of.",
+    "No entity appearing in either registry is a client.",
+    "No sanctions determination is made, implied, or restated as a Council of AI finding. Designation is OFAC's act, not ours.",
+    "Absence from EDGAR is not evidence of a failure to file."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/us-registries-edgar-ofac.json", "live_board": "https://councilof.ai/api/gspc" },
+  "doctrine": "Quote the register; never re-grade it. A government designation is never restated as our finding."
+}
