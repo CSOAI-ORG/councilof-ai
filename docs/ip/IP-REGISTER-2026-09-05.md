@@ -9,15 +9,43 @@
 
 | Asset | What it is | How protected | Status |
 |---|---|---|---|
-| **csoai-core signed-measurement spine** | the measurement engine (PyPI published) | Apache-2.0 code + the measurement, not certification doctrine; audit-grade signatures make the METHOD the moat, not the code | PUBLISHED (PyPI) |
-| **Signed measurement-card format** | compact card (Ed25519 + OTS anchoring), paired signed/unsigned J-Space records | Method + know-how (secret) — not patented (OIN 2.0 + LOT Network run on defensive, not blocking, posture) | SECRET + OIN/LOT active |
+| **`csoai` signed-measurement spine** | the measurement engine | Apache-2.0 code + the measurement, not certification doctrine; audit-grade signatures make the METHOD the moat, not the code | **PUBLISHED (PyPI) as `csoai`.** This row said `csoai-core` until 2026-09-05; `pypi.org/pypi/csoai-core/json` returns **404** and never resolved. `csoai` returns 200. The Inngot profile MLKX-CDVI carries the same wrong name and needs the same correction. |
+| **Signed measurement-card format** | compact card (Ed25519; **OTS is planned, NOT anchoring** — see note below), paired signed/unsigned J-Space records | Method + know-how (secret) — not patented (OIN 2.0 + LOT Network run on defensive, not blocking, posture) | SECRET + OIN/LOT active |
 | **GSPC axis harness + Wilson-interval issuance stats** | the 22-axis measurement methodology (profile says 14-axis; live estate is 22 — the register notes growth; neither should be quoted as the other) | Journal-style methodology (Zenodo DOI `10.5281/zenodo.21991104`) + published refutations (9) | PUBLIC + citable |
 | **Data assets** | board_v2 (~15,580 rows), GovBench item bank, corpus-watch drift corpus, honey dataset (2,693 signed rows) | UK/EU database right (substantial-selection assertions already on file; facts quotable with attribution, substantial extraction licensed) | DATABASE RIGHT asserted |
 | **Trade secrets** | held-out evaluation item banks (anti-overfit) — contents never disclosed | Private catalogue policy (`.gitignore`d) — the crown-jewel inventory is never committed to public repos | SECRET (policy enforced by repo guard) |
 | **Trade marks** | COUNCIL OF AI (4 classes), MEOK (2 classes) | UK TM applications in preparation | ⚠ **CRITICAL DATE: TM3 filing — 21 Sep 2026** (owner action NOW) |
-| **Research** | 3 DOI-registered Zenodo papers (over-refusal C1, WMH hyperbolic memory, ProvBench credential survival) | DOI + public records | PUBLISHED |
+| **Research** | **44 Zenodo records** under `creators.name:"Templeman"` (a `q=csoai` keyword search returns 54; `q=GSPC` returns 147 and is too broad to quote). This row said **3** until 2026-09-05. | DOI + public records | PUBLISHED |
 | **Domains** | csoai.org, councilof.ai | DNS ownership + records | HELD |
 | **Registry** | CSOAI LTD, GB, Companies House 16939677 | Companies House filings | HELD |
+
+## Corrections applied 2026-09-05 — three claims in this register did not survive a probe
+
+Each was checked against a live URL, not against the Inngot profile that supplied it.
+
+| Claim as written | Probe | Now |
+|---|---|---|
+| `csoai-core` … **PUBLISHED (PyPI)** | `curl -o /dev/null -w '%{http_code}' https://pypi.org/pypi/csoai-core/json` → **404** (`csoai` → **200**) | renamed to `csoai` |
+| card format is **"Ed25519 + OTS anchoring"** | `curl -s https://councilof.ai/root.json \| grep -ci 'ots\|opentimestamps\|rekor\|anchor'` → **0** | **OTS marked planned, not anchoring** |
+| **3** DOI-registered Zenodo papers | `curl -s 'https://zenodo.org/api/records?q=creators.name%3A%22Templeman%22&size=1' \| jq .hits.total` → **44** | corrected to 44 |
+
+**The OTS row is the one that mattered.** This register is an input to
+`docs/company/VALUATION-2026-09-05.md` and to the Inngot IP valuation, and both are shown to
+funders. Asserting an anchoring rail that has issued nothing is a different class of error from
+the same words on a marketing page.
+
+It was also already contradicted by our own published surfaces: `client/src/data/facts.json`
+lists **3** live anchors and names Bitcoin OpenTimestamps in its `excluded` field as *"stamped,
+not anchored"*, and `/.well-known/anchor-posture.json` publishes the root as
+`SIGNED_NOT_ANCHORED`. The register was the last place still saying otherwise.
+
+**Two ways to close it, and one is free:** anchor the root — OTS calendars cost nothing and the
+sentence becomes true — or strike the words. It must not stay asserted.
+
+**Not corrected here, flagged upstream:** the Inngot profile MLKX-CDVI (15/08/2026) carries all
+three errors at source, and its page 3 *Registered Rights* section prints *"You have selected
+that you have statutory rights but haven't inserted the necessary data."* — it asserts statutory
+rights and records none. Only the owner can edit that profile.
 
 ## Gaps (what is NOT protected yet)
 
