@@ -3,7 +3,7 @@
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
 **Rebased onto:** `9611abdd1221f48e95a906e98109b5df48ce4290` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `b54979f2d3c4d3cbe277119af95fe752bb323b99` — 27 commits, 39 files changed
+**Head:** `b254f959eeeef39f89bb831f9cb081569b5e6668` — 30 commits, 43 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~39 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~43 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -78,6 +78,11 @@ capabilities/hub-results.test.mjs
 capabilities/journey-backends.test.mjs
 capabilities/game-page-claims.test.mjs
 capabilities/npm-package-parity.test.mjs
+capabilities/card-counts.test.mjs
+capabilities/board-attestation.test.mjs
+client/src/components/board/BoardAttestation.tsx
+client/src/components/lobby/tabs.paneWins.test.ts
+CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html
 capabilities/gspc-parity.test.mjs
 capabilities/install-truth.test.mjs
@@ -111,7 +116,8 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
-      LIVE_NPM=1 node --test capabilities/*.test.mjs           42 passed, 0 failed
+      LIVE_NPM=1 LIVE_CARDS=1 LIVE_ATTESTATION=1 \
+      node --test capabilities/*.test.mjs                      51 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -241,6 +247,11 @@ the faked completed fix WP-3 forbids.
 `capabilities/journey-backends.test.mjs
 capabilities/game-page-claims.test.mjs
 capabilities/npm-package-parity.test.mjs
+capabilities/card-counts.test.mjs
+capabilities/board-attestation.test.mjs
+client/src/components/board/BoardAttestation.tsx
+client/src/components/lobby/tabs.paneWins.test.ts
+CLAUDE.md
 public/*.html (8 game pages) + public/dashboard/games.html` **fails when the backend lands**: when TUI 1 ships
 the RAS loop, `/api/ras` stops 404ing and the suite goes red. That is the handoff signal, and
 the failure message says so, so nobody relaxes the assertion to make it pass.
@@ -291,7 +302,48 @@ nowhere in history at all. The other TUI files in `operator/handoffs/2026-09-05/
 paste-in **briefs** for those lanes, not delivered handoffs — there is no TUI 1 or TUI 2
 result to integrate against yet.
 
-## Dependencies
+## ⚠ OWNER ACTION 2 — the board's signature does not verify
+
+CLAUDE.md records "Stamp SIGNED (`did:web:csoai.org#board-attestation-1`)" and
+`BoardAttestation.tsx` stated it "verifies". **Nothing in the estate was checking it.**
+
+Verified 2026-09-05. The parts that hold: the DID resolves on both hosts and carries
+`#board-attestation-1`; the payload's `public_key_x` **equals** the DID's `publicKeyJwk.x`
+exactly; the sig is a well-formed 64 bytes; and the payload is **stable** — two fetches give
+byte-identical canonical bodies and the same signature.
+
+The part that does not: it does not verify over the payload its own `sig_input` documents.
+**Twelve readings tried**, including the documented one (sorted keys, `,`/`:`,
+`ensure_ascii=False`, ECMAScript number rendering — checked explicitly, no integral floats
+here), plus ASCII, unsorted, spaced, body-with-attestation-minus-sig, and each as a SHA-256
+digest and a hex digest string. None verified.
+
+Likely cause, a pattern the estate already documents: `/api/corrections` says of its own
+ledger *"Signature is stale because the ledger was appended after signing. A stale signature
+is a published defect, never a silent edit."* The board's own `totals.sweep_note` records 8
+financial axes added on 2026-08-26. Bytes changed after signing produce exactly this.
+
+**No user is misled.** `BoardAttestation` renders the signature bytes and the algorithm and
+tells the reader how to check; it never asserts a verdict. The false claim lived only in the
+source header, now corrected to what was measured.
+
+**Owner gate:** re-signing needs the estate key. Nothing here attempts it and no signed byte
+was touched. `capabilities/board-attestation.test.mjs` fails either way — if a re-sign lands
+and it verifies, the message says the expectation is stale and names which reading worked.
+
+## Open owner gates, in priority order
+
+1. **Deploy** — `brand-gate` was failing on master; this bundle fixes it. Nothing ships until
+   it is applied.
+2. **Re-sign the board** — the stamp above. Estate key.
+3. **Publish `csoai-governance-mcp@0.1.1`** — an unpublished truth fix; every install today
+   still receives the stale "377 governed tools" count. Bypass-2FA token.
+4. **`/assess` routing** — 17 public pages send "Get measured" outside the shell. Changing it
+   moves the estate's primary conversion path; the alias and the `measured` pane move first.
+5. **`gspc-card-verifier@1.0.0`** — exists with a `gspc-verify` bin, never published. Nothing
+   may describe it as installable until it is.
+
+## Dependencies## Dependencies
 
 - **None on TUI 1 or TUI 2.** Nothing here touches RAS internals, payment, discovery or adapters.
 - Runtime only: `/api/gspc`, `/mcp`, `/api/witness`. No new packages. `node:test` was used for the
