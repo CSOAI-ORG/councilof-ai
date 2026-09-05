@@ -1,0 +1,56 @@
+{
+  "name": "MCP registry listing resolution",
+  "slug": "mcp-registry-resolution",
+  "schema": "csoai.interop-listing-state/0.1",
+  "principle": "A listing that resolves is the second clause of the directory mandate, after being listed and before the tool count being true. This file asks it of all 330 entries the official MCP registry carries for CSOAI-ORG, on BOTH surfaces each entry advertises: the package a client would install, and the remote a client would call. The two answers are not the same.",
+  "as_of": "20260905T191656Z",
+  "packages": {
+    "verdict": "ALL RESOLVE",
+    "checked": 330,
+    "resolved": 330,
+    "exact_version_present": 330,
+    "by_registry": {
+      "pypi": 329,
+      "npm": 1
+    },
+    "detail": "Every one of the 330 packages exists on its registry AND publishes the exact version the listing names. Not one dangling identifier and not one dangling version. This is the surface 290 of the 330 entries rely on exclusively, and it is sound.",
+    "probe": "for each entry: GET https://pypi.org/pypi/<identifier>/json (or registry.npmjs.org) and check the named version is a key of releases"
+  },
+  "remotes": {
+    "verdict": "NONE USABLE",
+    "entries_advertising_a_remote": 40,
+    "remote_rows": 40,
+    "usable": 0,
+    "by_host": {
+      "api.meok.ai": 39,
+      "councilof.ai": 1
+    },
+    "failures": [
+      {
+        "host": "api.meok.ai",
+        "rows": 39,
+        "reason": "NO DNS RECORD",
+        "detail": "socket.gethostbyname raises gaierror. The meok.ai apex resolves; the api subdomain does not. All 39 carry a PyPI stdio package as well, so discovery by package still works for every one of them and only discovery by remote fails.",
+        "probe": "dig +short api.meok.ai  (empty)  vs  dig +short meok.ai  (resolves)"
+      },
+      {
+        "host": "councilof.ai",
+        "rows": 1,
+        "reason": "RESOLVES, ANSWERS 405 TO POST",
+        "detail": "io.github.CSOAI-ORG/gspc advertises https://councilof.ai/mcp as streamable-http. DNS resolves and GET 308s to /mcp/ which serves 200 — as a STATIC PAGE. A prerendered /mcp route is winning over the Pages Function at functions/mcp/[[path]].ts, so POST tools/list returns 405 and no MCP client can complete a handshake. This is B37, and it is ours to fix.",
+        "probe": "curl -sL -X POST https://councilof.ai/mcp -H 'Content-Type: application/json' -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/list\"}' -o /dev/null -w '%{http_code}'"
+      }
+    ],
+    "detail": "40 of 330 entries advertise a callable remote and ZERO of them can be called. 39 name a host with no DNS record; the 40th names our own door and it refuses POST. An agent that discovers us by remote reaches nothing, on every entry that offers one."
+  },
+  "what_this_does_not_establish": [
+    "That a resolving package is a working server. Existence and the named version were checked; the package was not installed and no tool was called.",
+    "That the 290 entries without a remote are deficient. A stdio package is a complete distribution and is the surface the registry is built around.",
+    "Any download or adoption figure. Package-registry download totals are dominated by mirror traffic and none is claimed here."
+  ],
+  "links": {
+    "self": "https://councilof.ai/interop/mcp-registry-resolution.json",
+    "sibling": "https://councilof.ai/interop/mcp-directories.json",
+    "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
+  }
+}
