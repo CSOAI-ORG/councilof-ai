@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "eu-ai-act-art71-database",
+  "name": "EU AI Act Article 71 — high-risk registration database",
+  "description": "Harvest target. Art 71(4) of Regulation (EU) 2024/1689 requires this registry to be publicly accessible, easily navigable and machine-readable.",
+  "as_of": "20260905T133000Z",
+  "state": "UNVERIFIED",
+  "state_definition": "UNVERIFIED means the upstream endpoint has NOT been established as live and well-formed by the Council of AI. It is weaker than UNMEASURED, which would mean we looked and found nothing measured. Promoting this to available before probing would invent the fact this door exists to record.",
+  "legal_basis": {
+    "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
+    "article": "Article 71",
+    "requirement_quoted": "publicly accessible, easily navigable and machine-readable",
+    "operational_by": "before the application date of 2 August 2026"
+  },
+  "restricted_subsets": {
+    "annex_iii_points": [1, 6, 7],
+    "meaning": "law enforcement, migration and border control entries are restricted rather than public under Art 71(4)",
+    "consequence": "Any coverage figure derived from this registry is partial BY LAW. Partial coverage must never be reported as partial compliance by a registrant."
+  },
+  "measurement_plan": {
+    "unit": "one registration entry",
+    "verdicts": ["MEASURED", "UNMEASURED", "INVALID"],
+    "checks": [
+      "entry_retrievable — the entry is machine-readable at retrieved_at",
+      "fields_present — the Annex VIII fields the Regulation requires are present",
+      "provider_declared — the entry names a provider or authorised representative"
+    ],
+    "grading": "none. Presence in a statutory register is a fact, not a score, and absence is not a finding against anyone."
+  },
+  "what_this_does_not_establish": [
+    "No claim that the Article 71 database is live, populated, or machine-readable today. That is precisely what UNVERIFIED records.",
+    "No entity registered in that database is a client of the Council of AI.",
+    "Registration is a legal obligation, not a grade, and this door issues no conformity mark."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/eu-ai-act-art71-database.json", "eu_ai_act_door": "https://councilof.ai/.well-known/eu-ai-act.json", "live_board": "https://councilof.ai/api/gspc" },
+  "doctrine": "We measure; we do not certify. UNVERIFIED is stated, not hidden."
+}
