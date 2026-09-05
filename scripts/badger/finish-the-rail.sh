@@ -31,8 +31,16 @@ fi
 echo "     402 — live, and it is a real x402 door priced at zero."
 
 say "2/5  seed it into the Bazaar (zero value, no funds needed)"
+# WHY V2 AND NOT V1. This stage used to send the v1 envelope with no `extensions` field at all.
+# It settled every time and indexed NOTHING, which is exactly the observed history: two successful
+# zero-value settles on Base mainnet (blocks 50,874,723 and 50,893,755) and no listing. The Bazaar
+# is a FACILITATOR EXTENSION, and extensions ride on v2 only — a v1 settle carries no extension for
+# the facilitator to process, so it can never produce a listing however often it succeeds.
+# The v2 envelope below is the one that worked (2026-09-05, tx 0x50b8aad2…): per x402 v2 §7.1 the
+# paymentPayload carries `resource` and `accepted` ALONGSIDE `payload`, and `extensions.bazaar`
+# is sent in the request body — which is where the facilitator reads it from.
 python3 - "$DOOR" <<'PY'
-import json,secrets,sys,time,urllib.request,urllib.error
+import json,base64,secrets,sys,time,urllib.request,urllib.error
 from eth_account import Account
 from eth_account.messages import encode_typed_data
 door=sys.argv[1]
@@ -43,6 +51,23 @@ acc=ch["accepts"][0]
 amt=acc.get("amount") or acc["maxAmountRequired"]
 if str(amt)!="0":
     print(f"     REFUSING: the door advertises {amt}, not 0. A seed must cost nothing."); sys.exit(1)
+bz=(ch.get("extensions") or {}).get("bazaar")
+if not bz:
+    print("     REFUSING: the 402 carries no extensions.bazaar block. Without it a settle cannot")
+    print("     index, and seeding anyway would spend a settle to learn nothing."); sys.exit(1)
+
+# Forward the door's OWN resource fields verbatim. An earlier version of this script truncated the
+# description with [:120] and dropped serviceName; the result was a live listing reading
+# "...free forever - this", cut mid-sentence. The door already caps description at 500 in
+# buildPaymentRequiredV2, so any further limit is the indexer's to impose and to be observed, not
+# ours to guess.
+res_in=ch.get("resource") or {}
+resource={"url":door.split("?")[0],
+          "description":res_in.get("description",""),
+          "mimeType":res_in.get("mimeType","application/json")}
+if res_in.get("serviceName"): resource["serviceName"]=res_in["serviceName"]
+if res_in.get("tags"): resource["tags"]=res_in["tags"]
+
 a=Account.create(); now=int(time.time())
 auth={"from":a.address,"to":acc["payTo"],"value":0,"validAfter":0,
       "validBefore":now+900,"nonce":"0x"+secrets.token_hex(32)}
@@ -56,49 +81,71 @@ t={"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","t
             "chainId":8453,"verifyingContract":acc["asset"]},"message":auth}
 sg=Account.sign_message(encode_typed_data(full_message=t),a.key).signature.hex()
 if not sg.startswith("0x"): sg="0x"+sg
-reqs={"scheme":"exact","network":"base","maxAmountRequired":"0","resource":door.split("?")[0],
-      "description":ch["resource"].get("description","")[:120],"mimeType":"application/json",
-      "payTo":acc["payTo"],"maxTimeoutSeconds":900,"asset":acc["asset"],
-      "extra":{k:v for k,v in acc["extra"].items() if k in ("name","version")}}
-body={"x402Version":1,"paymentPayload":{"x402Version":1,"scheme":"exact","network":"base",
-      "payload":{"signature":sg,"authorization":{k:(str(v) if isinstance(v,int) else v)
-                                                 for k,v in auth.items()}}},
-      "paymentRequirements":reqs}
+accepted={"scheme":"exact","network":"eip155:8453","amount":"0","asset":acc["asset"],
+          "payTo":acc["payTo"],"maxTimeoutSeconds":900,
+          "extra":{k:v for k,v in acc["extra"].items() if k in ("name","version")}}
+body={"x402Version":2,
+      "paymentPayload":{"x402Version":2,"resource":resource,"accepted":accepted,
+                        "extensions":{"bazaar":bz},
+                        "payload":{"signature":sg,
+                                   "authorization":{k:(str(v) if isinstance(v,int) else v)
+                                                    for k,v in auth.items()}}},
+      "paymentRequirements":accepted,
+      "extensions":{"bazaar":bz}}
 def post(p):
     r=urllib.request.Request("https://facilitator.payai.network"+p,data=json.dumps(body).encode(),
       headers={"Content-Type":"application/json","User-Agent":"csoai-finish/1.0"})
     try:
-        x=urllib.request.urlopen(r,timeout=90); return x.status,json.loads(x.read() or b"{}")
+        x=urllib.request.urlopen(r,timeout=90); return x.status,json.loads(x.read() or b"{}"),dict(x.headers)
     except urllib.error.HTTPError as e:
         raw=e.read()
-        try: return e.code,json.loads(raw or b"{}")
-        except Exception: return e.code,{"raw":raw.decode()[:200]}
-c,v=post("/verify")
+        try: return e.code,json.loads(raw or b"{}"),dict(e.headers)
+        except Exception: return e.code,{"raw":raw.decode()[:200]},dict(e.headers)
+c,v,_=post("/verify")
 if c!=200 or not v.get("isValid"):
     print(f"     verify failed: HTTP {c} {v.get('invalidReason') or v}"); sys.exit(1)
-c,s=post("/settle")
+c,s,h=post("/settle")
 print(f"     settle: HTTP {c} success={s.get('success')} tx={s.get('transaction')}")
+
+# THE EXTENSION VERDICT IS THE POINT OF THIS STAGE, not the settle. A settle can succeed while the
+# extension is rejected -- that is precisely how two earlier seeds "worked" and indexed nothing.
+# Absence of the sidechannel is reported as UNREPORTED and never read as success.
+ext=[k for k in h if "extension" in k.lower()]
+if not ext:
+    print("     bazaar: UNREPORTED (no EXTENSION-RESPONSES header) - the extension was not processed")
+else:
+    try: print("     bazaar:",base64.b64decode(h[ext[0]]).decode()[:400])
+    except Exception as e: print(f"     bazaar: UNREADABLE sidechannel ({e})")
 sys.exit(0 if s.get("success") else 1)
 PY
-[ $? -ne 0 ] && { echo "     seed did not settle — stopping."; exit 1; }
+[ $? -ne 0 ] && { echo "     seed did not settle - stopping."; exit 1; }
 
 say "3/5  did the index pick us up? (may lag; re-run later if not)"
+# This used to scan offsets 0..3000 and break on a missing pagination.total -- against a corpus of
+# 28,192 that read at most 4,000 rows and usually only the first page, so it reported "not yet" for
+# a listing that could already have been present. It now pages until the corpus is exhausted.
 python3 - "$BAZAAR" "$ESTATE" <<'PY'
 import json,sys,urllib.request
 base,ours=sys.argv[1],sys.argv[2].lower()
-found=0
-for off in (0,1000,2000,3000):
-    try:
-        r=urllib.request.Request(f"{base}?limit=1000&offset={off}",headers={"User-Agent":"csoai-finish/1.0"})
-        d=json.load(urllib.request.urlopen(r,timeout=60))
-    except Exception: break
-    for it in d.get("items",[]):
+found=[];off=0;total=None
+while True:
+    r=urllib.request.Request(f"{base}?limit=1000&offset={off}",headers={"User-Agent":"csoai-finish/1.0"})
+    try: d=json.load(urllib.request.urlopen(r,timeout=90))
+    except Exception as e:
+        print(f"     scan stopped at offset {off}: {e}"); break
+    items=d.get("items") or []
+    if total is None: total=(d.get("pagination") or {}).get("total")
+    for it in items:
         for a in (it.get("accepts") or []):
             if (a.get("payTo") or "").lower()==ours:
-                res=it.get("resource") or {}
-                print("     INDEXED:", res.get("url") if isinstance(res,dict) else res); found+=1
-    if off+1000>=(d.get("pagination") or {}).get("total",0): break
-print(f"     listings under the estate payTo: {found}" + ("" if found else "  (not yet — indexing can lag)"))
+                res=it.get("resource")
+                url=res.get("url") if isinstance(res,dict) else res
+                found.append((url,a.get("amount") or a.get("maxAmountRequired")))
+    if len(items)<1000: break
+    off+=1000
+for u,amt in found: print(f"     INDEXED: {u}  amount={amt}")
+print(f"     scanned {off+len(items)} of {total} | listings under the estate payTo: {len(found)}"
+      + ("" if found else "  (not yet - indexing can lag)"))
 PY
 
 say "4/5  is the payer wallet funded?"
