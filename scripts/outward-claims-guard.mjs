@@ -487,6 +487,93 @@ async function checkProducers() {
   }
 }
 
+/**
+ * 8. "npm i <thing>" — does <thing> exist?
+ *
+ * An install line is the most literal outward claim an estate makes: a stranger copies it and
+ * either gets software or an error. Probed 2026-09-05 across every install instruction in the
+ * tree, and 2 of 3 are for packages that do not exist:
+ *
+ *   npx csoai-gspc-mcp                        200, 0.2.1        <- real
+ *   npm i @csoai/layer0                       404               packages/layer0-js/README.md
+ *   npm install -g @csoai/council-of-ai-grok  404               public/what-is-new.html:501, LIVE
+ *
+ * The layer0 README also exported `CSOAI_API_BASE=https://api.csoai.org`, which is NXDOMAIN — no
+ * DNS record at all. So it asked a reader to install a package that is not there and point it at
+ * a host that does not exist. It now says so; the design is untouched.
+ *
+ * `public/what-is-new.html` is served at https://councilof.ai/what-is-new (HTTP 200) and belongs
+ * to another lane's file area, so it is REPORTED here and not edited.
+ *
+ * NINE of the eleven package names in this repo are unpublished, which this deliberately does NOT
+ * flag: a package.json `name` for an unreleased package is not a claim to anybody. Only an
+ * INSTRUCTION to install is. The difference is the whole reason this check reads install lines
+ * rather than package manifests.
+ */
+async function checkInstallLines() {
+  const { readdirSync, readFileSync, statSync, existsSync } = await import("node:fs");
+  const path = await import("node:path");
+  const ROOTS = ["public", "packages", "mcp", "docs"];
+  const files = [];
+  const walk = (d, depth = 0) => {
+    if (!existsSync(d) || depth > 6) return;
+    for (const e of readdirSync(d)) {
+      if (e === "node_modules" || e.startsWith(".")) continue;
+      const f = path.join(d, e);
+      let st; try { st = statSync(f); } catch { continue; }
+      if (st.isDirectory()) walk(f, depth + 1);
+      else if (/\.(md|html)$/.test(e)) files.push(f);
+    }
+  };
+  for (const r of ROOTS) walk(r);
+  if (!files.length) return skip("install lines", "no md/html files in this checkout to scan");
+
+  // Record WHERE in the file, not just which file. The marking has to sit beside the install
+  // line to be read with it — a first cut searched the whole file for "404" and passed
+  // public/what-is-new.html, a 100 KB page that happens to contain that string somewhere far from
+  // the instruction. That is an escape hatch, not a check.
+  const wanted = new Map(); // package -> [{file, index}]
+  for (const f of files) {
+    const src = readFileSync(f, "utf8");
+    for (const m of src.matchAll(/\b(?:npm\s+(?:i|install)|npx)\s+(?:-g\s+)?(@[a-z0-9-]+\/[a-z0-9._-]+|[a-z][a-z0-9._-]{2,})/gi)) {
+      const pkg = m[1];
+      if (/^(?:run|test|start|ci|audit|init|create|exec|--|\.)/i.test(pkg)) continue;
+      if (!/csoai/i.test(pkg)) continue; // only OUR claims; a third-party install line is not ours to police
+      if (!wanted.has(pkg)) wanted.set(pkg, []);
+      wanted.get(pkg).push({ file: f, index: m.index ?? 0 });
+    }
+  }
+  if (!wanted.size) return skip("install lines", "no csoai install instructions found to check");
+
+  const missing = [];
+  for (const [pkg, where] of wanted) {
+    const r = await j(`https://registry.npmjs.org/${pkg.replace("/", "%2f")}`);
+    if (r.status === 200) continue;
+    // A marking counts only if it is NEXT TO the instruction — 600 characters either side,
+    // which is a paragraph, not a page.
+    const WINDOW = 600;
+    const unmarked = where.filter(({ file, index }) => {
+      const src = readFileSync(file, "utf8");
+      const near = src.slice(Math.max(0, index - WINDOW), index + WINDOW);
+      return !/\b404\b|NOT PUBLISHED|not published|unpublished/i.test(near);
+    });
+    if (unmarked.length) {
+      const at = unmarked.map(({ file, index }) => {
+        const line = readFileSync(file, "utf8").slice(0, index).split("\n").length;
+        return `${file}:${line}`;
+      });
+      missing.push(`${pkg} (${r.status}) at ${at.join(", ")}`);
+    }
+  }
+  if (missing.length) {
+    bad("install lines",
+      `${missing.length} install instruction(s) name a package that is not on npm, with nothing ` +
+      `saying so: ${missing.join("; ")}. A stranger copies the line and gets an error.`);
+  } else {
+    ok("install lines", `${wanted.size} csoai install instruction(s); every unpublished one says so`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -549,6 +636,7 @@ async function main() {
   await checkPublishedToolCounts();
   await checkSmithery();
   await checkProducers();
+  await checkInstallLines();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
