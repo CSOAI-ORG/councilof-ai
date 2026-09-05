@@ -12,5 +12,20 @@
     "is_a_measurement": false,
     "is_a_certificate": false
   },
-  "note": "Discovery only. Read the current root witness sidecar for exact-byte signature, Rekor and OpenTimestamps states. A pending OTS stamp is not a Bitcoin anchor. Missing or unverifiable rails remain unmeasured."
+  "note": "Discovery only. Read the current root witness sidecar for exact-byte signature, Rekor and OpenTimestamps states. A pending OTS stamp is not a Bitcoin anchor. Missing or unverifiable rails remain unmeasured.",
+  "pqc": {
+    "status": "PLANNED (per research 2026-09-05)",
+    "transition": "Ed25519 stays inline in 3KB card. ML-DSA-65 produced alongside, stored at sibling URL.",
+    "card_size": "Ed25519 unchanged (~3KB). ML-DSA sig at sibling URL.",
+    "library": "@noble/post-quantum (v0.7.1, MIT, pure JS, Workers-compatible, self-audited)",
+    "research": "docs/research/PQ-AND-TLOG-GAPS-2026-09-05.md",
+    "designs_considered": {
+      "detached": "PQ sig lives at sibling URL. Card carries SHA-256.",
+      "dual_sign": "Ed25519 stays inline, ML-DSA produced alongside.",
+      "raise_budget": "Changes every consumer. Not recommended.",
+      "ml_dsa_in_card": "Won't fit (215% of budget). Abandoned.",
+      "slh_dsa_in_card": "Even worse. Abandoned."
+    },
+    "caveat": "@noble/post-quantum is self-audited, NOT independently audited. Benchmark before committing."
+  }
 }

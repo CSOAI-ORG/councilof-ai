@@ -1,40 +1,79 @@
 {
-  "schema": "csoai.pqc-scaffold/0.1",
-  "as_of": "20260904T064514Z",
-  "note": "PQC scaffold \u2014 operator needs to install liboqs for real Kyber/Dilithium",
-  "algorithms": {
-    "kem": {
-      "name": "ML-KEM-768",
-      "alias": "Kyber768",
-      "status": "planned",
-      "lib": "liboqs or pqcrypto",
-      "use": "post-quantum key exchange for future signing keys"
+  "schema": "csoai.pqc-scaffold/0.2",
+  "as_of": "20260905T041846Z",
+  "principle": "ML-DSA signatures are too large for 3KB cards. Use detached or dual-sign design.",
+  "research_source": "docs/research/PQ-AND-TLOG-GAPS-2026-09-05.md",
+  "designs": {
+    "detached": {
+      "description": "PQ sig lives at sibling URL. Card carries only its SHA-256.",
+      "card_size": "unchanged (~3KB)",
+      "verifier_action": "fetch one more object",
+      "status": "RECOMMENDED"
     },
-    "sig": {
-      "name": "ML-DSA-65",
-      "alias": "Dilithium3",
-      "status": "planned",
-      "lib": "liboqs or pqcrypto",
-      "use": "post-quantum signatures (Ed25519 \u2192 ML-DSA-65 transition)"
+    "dual_sign": {
+      "description": "Ed25519 stays inline. ML-DSA produced alongside, fetched on demand.",
+      "card_size": "Ed25519 inline (~64 bytes)",
+      "verifier_action": "fetch the ML-DSA sig separately",
+      "status": "RECOMMENDED"
     },
-    "stateful_hash": {
-      "name": "SLH-DSA-SHAKE-256s",
-      "alias": "SPHINCS+-SHAKE-256s",
-      "status": "planned",
-      "lib": "liboqs",
-      "use": "long-term archival signatures (no quantum vulnerability)"
+    "raise_budget": {
+      "description": "Raise the 3KB budget. Changes every consumer.",
+      "card_size": "new budget (4KB+ recommended)",
+      "verifier_action": "all consumers need to upgrade",
+      "status": "NOT RECOMMENDED"
     }
   },
-  "hybrid": {
-    "name": "Ed25519 + ML-DSA-65",
-    "status": "planned",
-    "use": "dual-sign every card (Ed25519 + Dilithium) for crypto-agility"
+  "algorithms": {
+    "ml_dsa_44": {
+      "name": "ML-DSA-44",
+      "cose_alg_id": -48,
+      "raw_signature_bytes": 2420,
+      "fits_in_3kb": false,
+      "use": "fastest PQC sig"
+    },
+    "ml_dsa_65": {
+      "name": "ML-DSA-65",
+      "cose_alg_id": -49,
+      "raw_signature_bytes": 3309,
+      "fits_in_3kb": false,
+      "use": "balanced PQC sig (RECOMMENDED)"
+    },
+    "ml_dsa_87": {
+      "name": "ML-DSA-87",
+      "cose_alg_id": -50,
+      "raw_signature_bytes": 4627,
+      "fits_in_3kb": false,
+      "use": "highest security PQC sig"
+    },
+    "slh_dsa_sha2_256s": {
+      "name": "SLH-DSA-SHA2-256s",
+      "cose_alg_id": "PLACEHOLDER (-51/-52 per IETF draft-ietf-cose-sphincs-plus-10)",
+      "fits_in_3kb": false,
+      "use": "stateless hash-based, archival",
+      "note": "COSE algorithm IDs NOT YET ASSIGNED \u2014 do not hard-code"
+    }
+  },
+  "library": {
+    "name": "@noble/post-quantum",
+    "version": "0.7.1",
+    "license": "MIT",
+    "platform": "pure JS, no Node built-ins, Workers-compatible",
+    "audited": "self-audited (NOT independently audited)",
+    "caveat": "Benchmark before committing \u2014 verify cost against Workers CPU budget"
   },
   "transition_plan": [
     "1. Generate dual keypairs (Ed25519 + ML-DSA-65)",
-    "2. Dual-sign every card going forward",
-    "3. Migrate historical cards to dual-signed (re-signed in bulk)",
-    "4. Update the public root to advertise both signatures",
-    "5. Maintain Ed25519 as fallback for 5+ years"
-  ]
+    "2. Ed25519 stays inline in the card (current 3KB budget)",
+    "3. ML-DSA signature produced alongside, stored at sibling URL",
+    "4. Card carries the SHA-256 of the ML-DSA sig",
+    "5. Dual-sign every card going forward",
+    "6. Migrate historical cards to dual-signed (re-signed in bulk)",
+    "7. Update the public root to advertise both signatures",
+    "8. Maintain Ed25519 as fallback for 5+ years"
+  ],
+  "abandoned_approaches": {
+    "ml_dsa_in_card": "Won't fit (215% of card budget)",
+    "slh_dsa_in_card": "Even worse (~10KB sigs)",
+    "hex_to_base64url": "Only 1.1% saving, breaks every existing signature"
+  }
 }
