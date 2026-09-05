@@ -59,7 +59,7 @@ def main() -> None:
     )
     print(f"  well-known doors: {len(doors)}")
 
-    formats = []
+    formats_by_url = {}
     for file_path in sorted(INTEROP.iterdir()):
         if not file_path.is_file() or file_path.name in RETIRED_INTEROP_FILES:
             continue
@@ -69,21 +69,21 @@ def main() -> None:
                 if file_path.suffix == ".json"
                 else {"name": file_path.stem, "description": ""}
             )
-            formats.append(
-                {
-                    "slug": file_path.stem,
-                    "name": document.get("name", file_path.stem),
-                    "kind": document.get("kind", "format"),
-                    "url": f"https://councilof.ai/interop/{file_path.name}",
-                }
-            )
+            entry = {
+                "slug": file_path.stem,
+                "name": document.get("name", file_path.stem),
+                "kind": document.get("kind", "format"),
+                "url": f"https://councilof.ai/interop/{file_path.name}",
+            }
         except Exception:
-            formats.append(
-                {
-                    "slug": file_path.stem,
-                    "url": f"https://councilof.ai/interop/{file_path.name}",
-                }
-            )
+            entry = {
+                "slug": file_path.stem,
+                "url": f"https://councilof.ai/interop/{file_path.name}",
+            }
+        # dedup by URL (same-stem files with different extensions share a slug;
+        # URLs are the identity — one row per URL keeps the index probe-clean)
+        formats_by_url[entry["url"]] = entry
+    formats = [formats_by_url[u] for u in sorted(formats_by_url)]
 
     (INTEROP / "index.json").write_text(
         json.dumps(
