@@ -1,0 +1,67 @@
+{
+  "schema": "csoai.anchor-posture/0.1",
+  "slug": "anchor-posture",
+  "name": "Anchor posture — what is signed, what is anchored, what is neither",
+  "as_of": "20260905T133000Z",
+  "principle": "A measurement body that asks others to show their provenance must publish its own. This door states the posture including the parts that are absent.",
+  "signed": {
+    "root_json": {
+      "url": "https://councilof.ai/root.json",
+      "signature": "sig_ed25519 present",
+      "did_intended": "did:web:csoai.org#board-attestation-1",
+      "leaf_definition": "sha256(canonical(card minus sha256 and sig_ed25519))",
+      "probe": "curl -s https://councilof.ai/root.json | python3 -c \"import json,sys; d=json.load(sys.stdin); print('sig_ed25519' in d)\""
+    }
+  },
+  "anchored": {
+    "live_anchor_count": 3,
+    "names": ["HuggingFace Hub", "Sigstore Rekor", "public corrections ledger"],
+    "source_of_truth": "client/src/data/facts.json -> counts.live_anchors",
+    "note": "This is the number of INDEPENDENT anchors the estate holds. Copy claiming more than this is an overclaim however it is phrased."
+  },
+  "not_anchored": {
+    "root_json": {
+      "state": "SIGNED_NOT_ANCHORED",
+      "detail": "The deployed root.json carries no ots, opentimestamps, anchor or rekor field of any kind. It is signed and it is not anchored.",
+      "probe": "curl -s https://councilof.ai/root.json | grep -ci 'ots\\|opentimestamps\\|rekor\\|anchor'",
+      "closes_when": "an OpenTimestamps proof over the single Merkle root is published and UPGRADED by a calendar"
+    }
+  },
+  "rails": [
+    {
+      "id": "ots",
+      "name": "Bitcoin OpenTimestamps",
+      "status": "planned",
+      "excluded_from_live_anchors": true,
+      "why": "Stamped is not anchored. A fresh stamp carries a PendingAttestation and becomes a proof only once a calendar commits it to a Bitcoin block and the proof is UPGRADED. Until then it proves submission, not inclusion.",
+      "forbidden_copy": "N atoms OTS-anchored"
+    },
+    {
+      "id": "rekor",
+      "name": "Sigstore Rekor",
+      "status": "live",
+      "excluded_from_live_anchors": false,
+      "why": "Counted in live_anchors. This is the one of the three that is genuinely live today."
+    },
+    {
+      "id": "eas",
+      "name": "Ethereum Attestation Service on Base",
+      "status": "planned",
+      "excluded_from_live_anchors": true,
+      "why": "Code exists and refuses to mint. Nothing has been issued. EAS is valid only as a chain LABEL on rows explicitly marked UNMEASURED."
+    }
+  ],
+  "what_this_does_not_establish": [
+    "No claim that the root is anchored. It is not.",
+    "No claim that OTS stamping has occurred, or that a stamp would constitute an anchor before a calendar upgrade.",
+    "No claim that any EAS attestation exists. The rail has issued nothing.",
+    "Three live anchors is the ceiling. Any copy asserting a fourth is an overclaim."
+  ],
+  "links": {
+    "self": "https://councilof.ai/.well-known/anchor-posture.json",
+    "root": "https://councilof.ai/root.json",
+    "verify": "https://councilof.ai/gspc-verify",
+    "live_board": "https://councilof.ai/api/gspc"
+  },
+  "doctrine": "UNMEASURED is first-class. So is UNANCHORED. Stating the absence is the point of this door."
+}
