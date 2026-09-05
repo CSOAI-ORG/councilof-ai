@@ -935,5 +935,40 @@
       }
     },
     "note": "HTTP is authoritative. MCP exposes tools. AG-UI streams presentation events and cannot advance evidence state. A2A carries discovery today and no task identity. A2UI has no renderer. Nothing here may be described as live beyond its state."
+  },
+  "journey_backends": {
+    "observed_at": "2026-09-05T06:20:00Z",
+    "why": "WP-3 asks for the case-model journey ask -> scope -> inspect -> explain -> propose -> approve -> fix -> retest -> receipt -> monitor, and says a missing backend must show the EXACT unavailable capability rather than a faked completed fix. These are the endpoints that journey needs. They are recorded here as measured runtime state so the gap is a fact with a date on it, not an assumption carried between handoffs.",
+    "method": "Unauthenticated GET against https://councilof.ai, 2026-09-05.",
+    "client_reference_count": 0,
+    "client_reference_note": "Zero files under client/ reference /api/ras, /api/remediation, /api/jobs or /api/receipts. The product does not fake these: it does not offer them at all. That is the honest state while the backend is absent, and it is asserted so a future surface cannot quietly promise an execute path that still 404s.",
+    "backends": {
+      "ras": {
+        "availability": "UNAVAILABLE",
+        "reason": "GET /api/ras and /api/ras/status both return 404 not_found. There is no remediation-and-scoping runtime behind the journey, so no approve -> fix -> retest cycle can be completed or shown.",
+        "endpoint": "/api/ras"
+      },
+      "remediation": {
+        "availability": "UNAVAILABLE",
+        "reason": "GET /api/remediation returns 404 not_found. Nothing can execute a proposed change, so any UI offering to apply a fix would be describing an action the estate cannot take.",
+        "endpoint": "/api/remediation"
+      },
+      "jobs": {
+        "availability": "UNAVAILABLE",
+        "reason": "GET /api/jobs returns 404 not_found. There is no job record, so completed-job counts for WP-6 growth cannot be measured from runtime and must not be estimated.",
+        "endpoint": "/api/jobs"
+      },
+      "receipts": {
+        "availability": "OWNER_GATED",
+        "reason": "GET /api/receipts/latest returns 200 with status UNPUBLISHED, items [] and count 0, and its own note points at csoai-x402-receipt-mcp for the signed receipt lane. The surface answers; it publishes nothing. A journey cannot end in a receipt here.",
+        "endpoint": "/api/receipts/latest"
+      },
+      "findings": {
+        "availability": "VERIFIED",
+        "reason": "GET /api/findings returns 200 and carries the CSOAI fleet population with its own schema, honesty block and as_of. This is the one journey input that IS live — inspect and explain can be served from it; propose, fix, retest and receipt cannot.",
+        "endpoint": "/api/findings"
+      }
+    },
+    "consequence_for_wp3_and_wp6": "Four of the five backends the journey needs are absent or publish nothing. The reachable part of the case model today is ask -> scope -> inspect -> explain, from /api/findings and /api/gspc. Everything from propose onward has no runtime. Building approve/fix/retest/receipt UI over this would be the faked completed fix WP-3 forbids, so it is not built; this block records why and will fail loudly the moment TUI 1 lands the backend."
   }
 }
