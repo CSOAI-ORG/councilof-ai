@@ -66,12 +66,14 @@ jobs:
       # while HF, GitHub and Zenodo published). It reads ~/.kaggle/kaggle.json, so write that
       # file from the same two secrets, 0600, only when both exist. Nothing is printed.
       - name: kaggle.json from secrets (the CLI ignores the env vars)
-        if: ${{ secrets.KAGGLE_USERNAME != '' && secrets.KAGGLE_KEY != '' }}
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
           set -euo pipefail
+          # `secrets` is not a valid context in a step `if:` (the previous revision made the whole
+          # workflow unparseable: HTTP 422 on dispatch). Decide inside the step instead.
+          if [ -z "${KAGGLE_USERNAME:-}" ] || [ -z "${KAGGLE_KEY:-}" ]; then echo "no Kaggle secrets — skipped"; exit 0; fi
           mkdir -p ~/.kaggle
           python3 - <<'PY'
           import json, os, pathlib
