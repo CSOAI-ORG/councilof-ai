@@ -654,16 +654,23 @@ this document.** Those genuinely cannot change what a user sees.
 
 ## Growth metrics this lane can now support
 
-Not proposed — these are countable from what exists today:
+Countable from what exists today, with the value AT HANDOFF so a later reading can tell whether
+it moved. Two numbers in the earlier version of this section had already gone stale — a growth
+metric that is not re-read is just a sentence.
 
-- **cohort disclosure opens per axis view** — the first measure of whether readers want evidence
-  or just the headline. Currently unmeasured; the `<details>` is the hook.
-- **capability drift incidents caught before deploy** — registry test failures per week. Baseline 1
-  (`witness_hash`, found on the first run).
-- **unreachable routes** — currently 2. A number that should only go down.
-- **transports answering all six WP-2 requirements** — currently 0 of 2.
+| metric | at handoff | direction |
+|---|---|---|
+| unreachable routes | **0** (was 2; both removed in this branch) | must stay 0 |
+| capability guards | **77**, every one proven to fail before being trusted | up |
+| real defects a guard caught before deploy | **6** — `witness_hash` overclaim, `csoai-governance-mcp` drift, retracted BFT on `games-charter`, vacuous `one-door-guard`, hardcoded `signed:true`, OpenAPI/runtime divergence | up, and each one is a deploy that did not ship something untrue |
+| spec/runtime divergences on `/openapi.json` | **7 of 76** GET paths, all recorded | down |
+| npm packages published and byte-matched | **1 of 2** (`csoai-gspc-mcp` matches; `csoai-governance-mcp` drifted) | to 2 |
+| cohort disclosure opens per axis view | unmeasured — the `<details>` is the hook | first read needed |
 
-Deliberately NOT proposed: page views, "compliance conversion", or anything counting promises.
+**Deliberately NOT proposed:** page views, "compliance conversion", completed-job counts, or
+anything counting promises. WP-6 asks for completed jobs, conversion, retention and verified
+receipts — none of those can be measured while `/api/jobs` 404s and `/api/receipts/latest`
+publishes zero items. Estimating them would be the faked number this estate exists to refuse.
 
 ## What I got wrong, recorded so root does not inherit it as fact
 
@@ -682,3 +689,23 @@ Deliberately NOT proposed: page views, "compliance conversion", or anything coun
 5. **The three `operator/` docs the goal names are not in `origin/master`.** They exist only on
    unmerged commits `d0efe80ea` and `233d763c4`. Read from there. The handoff's canonical snapshot
    `2bf948504` is stale by several commits.
+6. **I called `BadgesPage` dead code, twice, including in this bundle.** It is not — the line
+   immediately after the duplicate serves it at `/authority`. Reading one line further would have
+   shown it, and it is why removing the `/badges` duplicate cost nothing.
+7. **I said the SDK surface was assessed after checking ONE npm package.** There are eleven.
+   Widening the check is what found the `csoai-governance-mcp` drift; the single-package version
+   could never have seen it.
+8. **I reported "75 launchers outside the shell".** That counted `/contact`, `/globe` and `/try`,
+   which the shell has no pane for and never should. The real gap is **46**, and the dominant
+   destination is `/gspc-verify` (25 pages), not `/assess` (16).
+9. **I read `/tournament.html` as 404 and inferred production was behind.** It is live via a
+   `.html`-stripping 308; I tested the wrong path shape. Some drift is real (`/enterprise` takes
+   an older three-hop route) but the game pages had deployed, claims and all.
+10. **I nearly reported `one-door-guard` as cosmetic** — "FAIL but exit 0". That was a pipe
+    artifact: `$?` after `| tail` reports tail. Re-measured without the pipe: exit 1.
+11. **Three of my own guards tripped on their own parsing**, not on the thing they guarded — a
+    `signed: true` scan matching its own doc comment, an exclusion parser splitting a regex on
+    `|` and yielding "html", and a route guard matching a path written in prose. All three now
+    strip comments or match identifier shapes.
+12. **This bundle's own Rollback section was stale and would have misled a reverter** — it claimed
+    only two commits had user-visible effect when 22 files do. Corrected in place.
