@@ -1,0 +1,34 @@
+{
+  "schema": "csoai.body-report/0.1",
+  "as_of": "2026-09-05T12:34:35Z",
+  "metrics": {
+    "axes_measured": 22,
+    "cells_measured": 22,
+    "cards_published": 335,
+    "root_witnessed_leaves": 153,
+    "corrections_published": 9,
+    "settlements_one_number": {
+      "id": "distinct_nonself_payers",
+      "definition": "Count of distinct payer wallets, excluding payTo and X402_SELF_WALLETS, across facilitator-confirmed settlements. A wallet we control paying us is recorded but is neither revenue nor a buyer.",
+      "status": "MEASURED",
+      "all_time": 1,
+      "last_30d": 1,
+      "settlements": 1,
+      "self_settlements": 0,
+      "records_unreadable": 0,
+      "source": "REVENUE_KV settled:tx:* records",
+      "gates": {
+        "0 for 30 days": "shape or price is wrong; do not add doors",
+        "\u22651 repeat": "open the next door",
+        "\u22655 distinct in 30d": "it is a product"
+      }
+    }
+  },
+  "sources": {
+    "gspc": "https://councilof.ai/api/gspc",
+    "cards": "https://councilof.ai/signed/card_index.json",
+    "root": "https://councilof.ai/root.json",
+    "corrections": "https://councilof.ai/interop/corrections-feed.json",
+    "revenue": "https://councilof.ai/api/revenue"
+  }
+}
