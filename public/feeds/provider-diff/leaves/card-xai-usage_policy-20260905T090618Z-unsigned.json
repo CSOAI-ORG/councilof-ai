@@ -1,0 +1,55 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "public.notice",
+ "subject": "xAI — usage_policy: bytes changed 2026-09-05",
+ "as_of": "2026-09-05T09:06:18Z",
+ "source_urls": [
+  "https://x.ai/legal/acceptable-use-policy"
+ ],
+ "payload": {
+  "kind": "csoai.diff.provider-terms/0.1",
+  "state": "PROBED",
+  "provider": "xai",
+  "surface": "usage_policy",
+  "url": "https://x.ai/legal/acceptable-use-policy",
+  "prev_sha256": "676fbbf229a8764ff1bbe983f3934fe8b4a3dad9387cd5dacaaf2bad8e07978b",
+  "new_sha256": "0235ce19119e48f4b27d92f8d39fe761e306f66cc1af6d37d5071897a756498e",
+  "prev_bytes_sha256": "fd6204cbc09cb5fe30aaef69443d49fc1e674201ddda3f5777785c9b8ae0cf18",
+  "new_bytes_sha256": "29c892bd20da763c0e5af0402d68fc16ec017c0b7ab259cc84f4d7e8936edbe9",
+  "prev_fetched_at": "2026-09-04T09:40:57Z",
+  "fetched_at": "2026-09-05T09:06:18Z",
+  "http_status": 200,
+  "robots": "allow",
+  "normaliser": "csoai-norm-v1",
+  "byte_length": {
+   "prev": 128432,
+   "new": 129059
+  },
+  "etag": {
+   "prev": null,
+   "new": null
+  },
+  "last_modified": {
+   "prev": null,
+   "new": null
+  },
+  "attests": "the bytes at this URL changed between the two times shown — nothing about what changed or why",
+  "not_a_grade": true,
+  "writes_board": false,
+  "content_stored": false
+ },
+ "sha256": "2c846dd6153f094dd1bb7841648946ce39f09e7e9f540470608e471e847f8e87",
+ "sig_ed25519": null,
+ "unmeasured": [
+  "what changed (content is never stored)",
+  "why it changed",
+  "whether the change is material to anyone",
+  "sig_ed25519 against #board-attestation-1 (signed in GHA public-root or not at all)"
+ ],
+ "tags": [
+  "provider-diff",
+  "provider:xai",
+  "surface:usage_policy",
+  "hash-only"
+ ]
+}
