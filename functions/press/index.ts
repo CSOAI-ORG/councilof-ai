@@ -27,11 +27,21 @@ export const onRequestGet: PagesFunction = async () => {
       <p><b>Fix.</b> ${esc(i.fix)}</p>${pre(i.proof)}</article>`).join("\n")
     : `<p class="n">No correction was issued in this window. That is a fact about the window, not a claim that nothing was wrong.</p>`;
 
+  // FAQ, and the FAQPage node built from THE SAME answers. Two copies — one for the reader and
+  // one for the crawler — is how a page and its structured data come to say different things.
+  const faqHtml = d.faq.map((f) => `<article><h3>${esc(f.q)}</h3><p>${esc(f.a)}</p></article>`).join("\n");
+  const faqLd = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: d.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  });
+
   const notAnnounced = d.not_announced.map((n) => `<article><h3>${esc(n.subject)} — <span class="u">${esc(n.state)}</span></h3><p>${esc(n.why)}</p>${pre(n.proof)}</article>`).join("\n");
 
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Press — Council of AI</title>
+<script type="application/ld+json">${faqLd}</script>
 <meta name="description" content="What changed at the Council of AI, with the command that proves each line. Derived from the corrections ledger, the public root and the signed card index. Measurement, not certification.">
 <link rel="canonical" href="https://councilof.ai/press/">
 <link rel="alternate" type="application/rss+xml" title="Corrections" href="https://councilof.ai/feeds/corrections.xml">
@@ -77,6 +87,10 @@ ${pre(s.verify_one)}
 
 <h2>Distribution surfaces</h2>
 <p>${esc(d.distribution_surfaces.note)}</p>${pre(d.distribution_surfaces.proof)}
+
+<h2>Questions we are actually asked</h2>
+<p class="n">The questions are ours. Every answer is computed from the ledger, the board or the root at request time, so an answer cannot be edited into something the artifacts do not support.</p>
+${faqHtml}
 
 <h2>What we are NOT announcing</h2>
 <p class="n">A press page that silently drops the things that did not happen is marketing. These are named with the command that shows their state.</p>
