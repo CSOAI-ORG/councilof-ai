@@ -81,6 +81,15 @@ const CONC = Number(arg("conc", 4));
 // localhost:PORT staging origin the snapshot runs on). Override with --prod-origin if the
 // canonical host ever changes.
 const PROD_ORIGIN = arg("prod-origin", "https://councilof.ai");
+// The origin the /api/ and /signed/ PROXY reads from, which is NOT the same question as the
+// canonical host above. Until 2026-09-05 one flag answered both, and that coupling is what made
+// the outage of that day unfixable from here: every /api/* Function was 404ing in production,
+// so every /gspc page baked a fetch error and check-prerender correctly refused the build — but
+// the only lever for pointing the proxy somewhere healthy was --prod-origin, and moving it would
+// have rewritten the canonical, og:url and twitter:url of every static page to that origin too.
+// The remedy filed against that outage ("--prod-origin at a known-good origin") would therefore
+// have traded a dead board for sitewide wrong canonicals. Two questions, two flags.
+const DATA_ORIGIN = arg("data-origin", PROD_ORIGIN);
 
 // Delete any previous report BEFORE doing anything. A tracked prerender-report.json
 // survived a crashed run on 2026-08-26 — Playwright's chromium had been updated away, the
@@ -382,6 +391,9 @@ const MIME = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
   ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png",
   ".jpg": "image/jpeg", ".ico": "image/x-icon", ".woff2": "font/woff2", ".txt": "text/plain" };
 const shell = readFileSync(join(DIST, "index.html"), "utf8");
+// Every non-2xx or unreachable response the data proxy saw, so a failed run can name its cause
+// instead of leaving 19 identical BAKED-FETCH-FAILURE lines and no explanation.
+const dataMiss = [];
 const srv = http.createServer((q, r) => {
   const p = decodeURIComponent(q.url.split("?")[0]);
   const f = join(DIST, p);
@@ -398,11 +410,17 @@ const srv = http.createServer((q, r) => {
   // 2026-08-25 /gspc-scoreboard defect). Proxy them to production so snapshots capture
   // the real board state.
   if (p.startsWith("/api/") || p.startsWith("/signed/")) {
-    fetch(PROD_ORIGIN + p).then(async res => {
+    fetch(DATA_ORIGIN + p).then(async res => {
       const body = Buffer.from(await res.arrayBuffer());
+      if (!res.ok) dataMiss.push(`${res.status} ${p}`);
       r.writeHead(res.status, { "content-type": res.headers.get("content-type") || "application/json" });
       r.end(body);
-    }).catch(() => { r.writeHead(502); r.end(); });
+    }).catch(err => {
+      // A silent 502 here is how the 2026-09-05 deadlock hid: the pages failed, the build
+      // refused them, and nothing anywhere named the data origin as the cause. Say it.
+      dataMiss.push(`unreachable ${p} (${err?.message || "fetch failed"})`);
+      r.writeHead(502); r.end();
+    });
     return;
   }
   // the same catch-all the host uses, so the snapshot sees what production serves
@@ -662,6 +680,22 @@ console.log(`\n═══ ${results.length} routes`);
 console.log(`  ${ok.length} prerendered with ≥${MIN} visible characters`);
 console.log(`  ${thin.length} THIN — rendered but under threshold, or root still empty`);
 console.log(`  ${err.length} errored`);
+// THE DATA ORIGIN, NAMED. On 2026-09-05 nineteen routes failed with BAKED-FETCH-FAILURE and
+// the log said nothing about why: every /api/* Function was 404ing at the origin this proxy
+// reads, so every page that fetches the board baked "fetch failed" and was correctly refused.
+// Diagnosing that took a repository-wide read of the deploy path. It should take one line.
+if (dataMiss.length) {
+  const byStatus = {};
+  for (const m of dataMiss) (byStatus[m.split(" ")[0]] ||= []).push(m.slice(m.indexOf(" ") + 1));
+  console.log(`\n  ⚠ DATA ORIGIN ${DATA_ORIGIN} failed ${dataMiss.length} of the proxied requests:`);
+  for (const [status, paths] of Object.entries(byStatus)) {
+    const uniq = [...new Set(paths)];
+    console.log(`      ${status} × ${paths.length}: ${uniq.slice(0, 6).join(", ")}${uniq.length > 6 ? ` (+${uniq.length - 6} more)` : ""}`);
+  }
+  console.log(`    Every route that fetches one of these bakes a fetch error and is refused above.`);
+  console.log(`    This is NOT a fault in the routes. Point the proxy at a healthy origin with`);
+  console.log(`    --data-origin <origin>; it does not touch the canonical host (--prod-origin).`);
+}
 if (skipped404.length) {
   console.log(`  ${skipped404.length} SKIPPED — no route, renders the honest-404; nothing written:`);
   console.log(`     ${skipped404.map(r => r.route).join(", ")}`);
