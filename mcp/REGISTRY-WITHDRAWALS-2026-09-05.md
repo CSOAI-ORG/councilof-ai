@@ -78,6 +78,34 @@ budgets for a twelfth tool and a fifth paid tool that are not there.
 
     mcp-publisher publish        # from mcp/gspc-server, with the owner's token
 
+## 4 — Smithery: the prose is right and the machine surface is wrong
+
+`csoai/gspc` IS listed on Smithery (so `public/interop/platforms-registered.json` calling it
+"submitted" understates it). Its **description is correct**: "Remote HTTP (7 tools, no auth)",
+naming exactly the seven tools the live server serves free — `board_totals`, `get_axis`,
+`verify_card`, `list_cards`, `get_root`, `get_card`, `verify_inclusion`. Live is 11 tools, 4 of
+them x402-paid, so 7 free is right.
+
+Everything a MACHINE reads is wrong:
+
+    connections[0].deploymentUrl   https://gspc--csoai.run.tools   -> 401
+    tools[] (8 entries)            measure, verify, jail-probe, enter-arena,
+                                   board_totals, get_axis, verify_card, list_cards
+
+Four of those tools — `measure`, `verify`, `jail-probe`, `enter-arena` — **do not exist on the
+live server**, and three that do (`get_root`, `get_card`, `verify_inclusion`) are missing. The
+deploymentUrl is Smithery's own hosted proxy behind auth rather than the public
+`https://councilof.ai/mcp` the description names, which is the likely reason the cached tool scan
+is stale.
+
+A client reading the description gets the truth; a client reading the connection gets a locked
+door and four tools that are not there.
+
+**Owner action:** update the Smithery listing's connection to the public HTTP endpoint and let it
+re-scan. Needs the Smithery account.
+
+    curl -s https://registry.smithery.ai/servers/csoai/gspc | python3 -m json.tool
+
 ## Why this is not fixed in this PR
 
 The 330 entries are published from 330 separate server repositories, not from this one. Their
