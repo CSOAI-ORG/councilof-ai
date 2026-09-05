@@ -4,7 +4,12 @@ name: hub-queue-mill
 # only after GHA OIDC sign + verify VALID (existing sign path). writes_board=false.
 on:
   schedule:
+    # Two chances an hour, not one. The hourly line alone EXECUTED 7 times on 2026-09-04 and
+    # 3 times by 12:30Z on 2026-09-05 (`gh run list --workflow=hub-queue-mill.yml`): GitHub
+    # delays and drops schedule events in a repo that runs ~350 workflow runs a day, so the
+    # cron is a ceiling, not a rate. The concurrency group below still serialises runs.
     - cron: "41 * * * *"
+    - cron: "11 * * * *"
   workflow_dispatch:
     inputs:
       # Empty means "let the selector choose the emptiest axis", the same thing the
@@ -12,13 +17,25 @@ on:
       # and silently shadowed the selector, which is the bug this input was meant to
       # let you work around in the first place.
       axis: { description: "axis to grade this run (blank = the emptiest axis)", type: string, default: "" }
-      grade: { description: "how many probe-live models to grade", type: string, default: "12" }
+      # 36, not 12. Measured 2026-09-05 (runs 33935896384, 33949383969, 33961839561): the mill
+      # step took 636-903 s for 12 graded models (53-75 s per model: 1 PING + 30 items,
+      # sequential, plus the probe-first walk), staging 8 of 12. At ~7 executed runs a day that
+      # is ~56 cells/day. 36 graded ≈ 32-45 min, inside the 60-minute job below, and triples
+      # cells per executed run without a second door, a matrix, or any parallel burst
+      # (featherless-ai's edge answers bursts with a 403 page; the mill must stay sequential).
+      # The arithmetic it does NOT close (public/interop/hf-coverage.json, 2026-09-05): 470
+      # queue rows answer the router today × 13 rotation axes = 6,110 cells, 620 measured,
+      # 5,490 open (771 of them on the 107 rows that pre-date the 2026-09-05 expansion). 36
+      # graded × ~2/3 staged × 7 runs ≈ 170 cells/day; if the second cron line doubles the
+      # executed runs, ≈ 340/day. 48 h therefore covers ≈ 340-680 cells, not 5,490 — that
+      # ceiling is GitHub's schedule starvation and one sequential door, not the grade count.
+      grade: { description: "how many probe-live models to grade", type: string, default: "36" }
 concurrency: { group: hub-queue-mill, cancel-in-progress: false }
 permissions: { contents: read, pull-requests: read }
 jobs:
   mill:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_TOKEN || secrets.HUGGINGFACE_TOKEN }}
@@ -39,7 +56,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       AXIS_INPUT: ${{ github.event.inputs.axis }}
-      GRADE: ${{ github.event.inputs.grade || '12' }}
+      GRADE: ${{ github.event.inputs.grade || '36' }}
     steps:
       - uses: actions/checkout@v4
         with: { ref: master }
@@ -196,8 +213,14 @@ jobs:
           # Inference Providers answered, and today it does not (#1102) — it omits the one model
           # currently staging cards through openrouter. Probe live routing, do not trust a
           # snapshot of routing that has since changed.
+          # --pick 1000, not the default 100. The pick is the emptiest cells by rank; 454 of the
+          # queue's 584 chat-servable rows have NO live inference provider (public/interop/
+          # hf-coverage.json, 2026-09-05), so a 100-row window is mostly rows probe-first will
+          # skip, and the 35 reachable rows with zero measured axes at ranks 285-2400 were never
+          # inside it. 1000 covers every servable row (947 after the 2026-09-05 expansion); the
+          # walk still stops at GRADE live models, and a skipped row costs one Hub API call.
           python3 harness/gspc-top100/mill_hub_queue.py --queue mill-in/queue.jsonl --out mill-out \
-            --axis "$AXIS" --grade "$GRADE" --banks mill-in/banks --items 30 \
+            --axis "$AXIS" --grade "$GRADE" --pick 1000 --banks mill-in/banks --items 30 \
             --probe-first --dead harness/gspc-top100/dead_slugs.jsonl \
             --inflight mill-in/inflight.jsonl 2>&1 | tail -40
       - name: upload staged cards (not a board rewrite)

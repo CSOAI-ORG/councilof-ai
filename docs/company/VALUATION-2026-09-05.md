@@ -40,6 +40,7 @@ live — a facilitator is provisioned"*, which agrees with `/api/x402` (`mode: l
 `skus.issuance.note` on the same payload reads *"No live settle path (x402 is fail-closed,
 mode:mock)"*. One of the two is stale, and it is the SKU note. Filed as a backlog row with its
 probe. It does not change any figure below, because **both readings give the same One Number: null.**
+*Fixed in <https://github.com/CSOAI-ORG/councilof-ai/pull/1409> (2026-09-05, pending merge): the producer was a typed string in `counters.json`; the note now reads `railMode(env)`.*
 
 ---
 

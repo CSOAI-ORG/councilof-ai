@@ -148,3 +148,144 @@ describe("/api/hub-cards", () => {
     expect(counts.cells).toBeNull();
   });
 });
+
+// ---------------------------------------------------------------------------
+// A card the ledger has replaced is not the live card.
+//
+// On 2026-09-05 this endpoint served 826 cells for 753 distinct (model, axis)
+// pairs and reported 70 UNMEASURED. Every one of those 70 was a card
+// SUPERSEDED.jsonl had already replaced — each had a MEASURED replacement in
+// INDEX.jsonl for the same pair — so the live unmeasured count was ZERO. Only
+// INDEX.jsonl is ever rebuilt; the three satellite indexes were written once and
+// still list the pre-#1155 bodies. Passing a status through verbatim is only
+// honest when it is the LIVE card's status.
+// ---------------------------------------------------------------------------
+
+const LEDGER = "https://councilof.ai/interop/mill-cards-signed/SUPERSEDED.jsonl";
+
+const carded = (model: string, axis: string, status: string, sha: string) =>
+  JSON.stringify({ model, axis, status, accuracy: 0.5, n: 30, signed: true, card_sha256: sha });
+
+/** INDEX carries the live MEASURED card; a satellite still lists the superseded one. */
+const STALE: Record<string, string> = {
+  INDEX: carded("a/one", "safety", "MEASURED", "newsha"),
+  "INDEX-safety": carded("a/one", "safety", "UNMEASURED", "oldsha"),
+  "INDEX-art5-affect": "",
+  "INDEX-empty3": "",
+};
+
+const installStale = (ledgerBody: string | null) => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === LEDGER) {
+        return ledgerBody === null
+          ? new Response("no", { status: 500 })
+          : new Response(ledgerBody, { status: 200 });
+      }
+      const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
+      return new Response(STALE[name] ?? "", { status: 200 });
+    }),
+  );
+};
+
+describe("/api/hub-cards — the live card, not every card ever signed", () => {
+  it("drops a card the ledger has replaced and keeps its replacement's status", async () => {
+    installStale(JSON.stringify({ superseded_id: "oldsha", by_id: "newsha" }));
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    // Without the ledger read this is {cells: 2, measured: 1, unmeasured: 1}.
+    expect(counts.cells).toBe(1);
+    expect(counts.measured).toBe(1);
+    expect(counts.unmeasured).toBe(0);
+    expect(counts.superseded_excluded).toBe(1);
+    expect(counts.rows_served_by_indexes).toBe(2);
+  });
+
+  it("collapses a duplicate pair so one (model, axis) is one cell", async () => {
+    // Nothing superseded: the two rows are both live, and they are the same pair.
+    installStale("");
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.rows_served_by_indexes).toBe(2);
+    expect(counts.cells).toBe(1);
+    expect(counts.duplicates_collapsed).toBe(1);
+  });
+
+  it("an unreadable ledger is UNCHECKABLE, never an empty ledger", async () => {
+    installStale(null);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+    // null, not 0 — "I could not check" is not "nothing was superseded".
+    expect(counts.superseded_excluded).toBeNull();
+    expect(honesty.superseded_ledger).toMatch(/UNREADABLE/);
+    expect(honesty.superseded_ledger).toMatch(/UPPER BOUND/);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// The population is what the dataset publishes, not what this file remembers.
+//
+// `indexes_total: 4` was a literal. Reporting it beside `complete: true` claimed
+// completeness over a list the CODE chose: a fifth published index would have been
+// invisible while the endpoint still said "All published indexes were read."
+// ---------------------------------------------------------------------------
+
+const TREE = "https://huggingface.co/api/datasets/csoai/gspc-hub-cards/tree/main/mill-cards";
+
+/** Serve a dataset listing (or fail it) plus one row per named index. */
+const installDiscovery = (names: string[] | null) => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: string | URL | Request) => {
+      const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
+      if (url === TREE) {
+        return names === null
+          ? new Response("nope", { status: 503 })
+          : new Response(
+              JSON.stringify(names.map((n) => ({ type: "file", path: `mill-cards/${n}.jsonl` }))),
+              { status: 200 },
+            );
+      }
+      if (url.endsWith("SUPERSEDED.jsonl")) return new Response("", { status: 200 });
+      const name = url.slice(HUB.length + 1).replace(/\.jsonl$/, "");
+      return new Response(row(`m/${name}`, "governance", "MEASURED"), { status: 200 });
+    }),
+  );
+};
+
+describe("/api/hub-cards — the index list is discovered, not remembered", () => {
+  it("reads a fifth index the code never knew about", async () => {
+    installDiscovery(["INDEX", "INDEX-safety", "INDEX-art5-affect", "INDEX-empty3", "INDEX-brand-new"]);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    expect(counts.indexes_total).toBe(5);
+    expect(counts.indexes_discovered).toBe(true);
+    expect(counts.cells).toBe(5); // one row per index, all distinct pairs
+  });
+
+  it("falls back to the known four when the listing fails, and says so", async () => {
+    installDiscovery(null);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    const honesty = body.honesty as unknown as Record<string, string>;
+    expect(counts.indexes_total).toBe(4);
+    expect(counts.indexes_discovered).toBe(false);
+    expect(honesty.index_list_is).toMatch(/UNCHECKABLE/);
+    // The census stays on the air: a listing hiccup did not touch the indexes.
+    expect(counts.cells).toBe(4);
+    expect(counts.complete).toBe(true);
+  });
+
+  it("an EMPTY listing is not a population of zero", async () => {
+    installDiscovery([]);
+    const { body } = await invoke();
+    const counts = body.counts as unknown as Record<string, unknown>;
+    // Trusting an empty listing would publish cells: 0 as a fact about the estate.
+    expect(counts.indexes_discovered).toBe(false);
+    expect(counts.indexes_total).toBe(4);
+    expect(counts.cells).toBe(4);
+  });
+});

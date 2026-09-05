@@ -5,9 +5,21 @@ Every governed action passes the CSOAI **Sovereign Gate** (policy/identity/human
 emits an **Ed25519‑signed attestation** you (or any auditor) can verify offline — and a signed
 **A2A envelope** other governed agents can trust.
 
+> **NOT PUBLISHED, AND THE DEFAULT HOST DOES NOT RESOLVE.** Probed 2026-09-05:
+> `@csoai/layer0` returns **HTTP 404** on the npm registry, and `api.csoai.org` is **NXDOMAIN** —
+> no DNS record at all. The install line below cannot work today and the default `CSOAI_API_BASE`
+> points at nothing. The design below is real and unchanged; what is not real is that you can run
+> it. Set `CSOAI_API_BASE` to a gateway that exists, and expect the install to fail until this
+> package is published.
+>
+> ```
+> curl -s -o /dev/null -w '%{http_code}\n' https://registry.npmjs.org/@csoai%2flayer0   # 404
+> host api.csoai.org                                                                    # NXDOMAIN
+> ```
+
 ```bash
-npm i @csoai/layer0
-export CSOAI_API_BASE=https://api.csoai.org   # your CSOAI gateway
+npm i @csoai/layer0                            # 404 today — see the note above
+export CSOAI_API_BASE=https://your-gateway     # api.csoai.org does not resolve
 ```
 
 ```js

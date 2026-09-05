@@ -24,7 +24,10 @@
 //
 // CC-BY-4.0. Council of AI (CSOAI Ltd, UK Companies House 16939677).
 
-const LEDGER = {
+// Exported so the corrections FEED derives from this exact object. Two surfaces generating
+// their own copy of the ledger would drift, and then the estate would have to reconcile them —
+// the same reason /feed.xml is an alias of one handler rather than a second engine.
+export const LEDGER = {
   schema: "csoai.corrections/0.1",
   policy: "Public, source-maintained corrections record. Each entry states what was wrong, how it was caught, and the fix. No append-only storage property is claimed.",
   license: "CC-BY-4.0",

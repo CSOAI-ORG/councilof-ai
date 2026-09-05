@@ -1,0 +1,39 @@
+{
+  "schema": "csoai.art50-target-index/0.1",
+  "as_of": "20260905T165246Z",
+  "source": "https://councilof.ai/api/feeds/provider-diff (derived)",
+  "n_targets": 51,
+  "n_ok": 45,
+  "n_uncheckable": 6,
+  "art50_marking_targets": [
+    {
+      "id": "anthropic/art50_marking",
+      "provider": "Anthropic",
+      "url": "https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content",
+      "state": "OK",
+      "norm_sha256": "ae3948fcf3017c2d"
+    },
+    {
+      "id": "google/art50_marking",
+      "provider": "Google",
+      "url": "https://deepmind.google/technologies/synthid/",
+      "state": "OK",
+      "norm_sha256": "9c4d81ad937037dc"
+    },
+    {
+      "id": "meta/art50_marking",
+      "provider": "Meta",
+      "url": "https://about.fb.com/news/2024/02/labeling-ai-generated-images-on-facebook-instagram-and-threads/",
+      "state": "OK",
+      "norm_sha256": "a6e09a18f925e001"
+    },
+    {
+      "id": "openai/art50_marking",
+      "provider": "OpenAI",
+      "url": "https://help.openai.com/en/articles/8912793-provenance-signals-content-credentials-synthid-in-openai-generated-content",
+      "state": "UNCHECKABLE",
+      "norm_sha256": ""
+    }
+  ],
+  "principle": "Derived inputs for the Art 50 marking-evidence door (402 per doctor). Reachability + hashes only; no detection claim."
+}

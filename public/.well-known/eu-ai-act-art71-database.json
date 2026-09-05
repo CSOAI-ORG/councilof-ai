@@ -4,8 +4,8 @@
   "name": "EU AI Act Article 71 — high-risk registration database",
   "description": "Harvest target. Art 71(4) of Regulation (EU) 2024/1689 requires this registry to be publicly accessible, easily navigable and machine-readable.",
   "as_of": "20260905T133000Z",
-  "state": "UNVERIFIED",
-  "state_definition": "UNVERIFIED means the upstream endpoint has NOT been established as live and well-formed by the Council of AI. It is weaker than UNMEASURED, which would mean we looked and found nothing measured. Promoting this to available before probing would invent the fact this door exists to record.",
+  "state": "UNVERIFIED_PROBED_NOT_FOUND",
+  "state_definition": "UNVERIFIED_PROBED_NOT_FOUND means the Council of AI looked for the upstream endpoint on 2026-09-05 and could not locate it. This is stronger than the previous UNVERIFIED, which only meant we had not looked. It is still weaker than UNMEASURED, which would mean we reached the source and found nothing measured. Absent is not zero, and not-found is not absent.",
   "legal_basis": {
     "instrument": "Regulation (EU) 2024/1689 (EU AI Act)",
     "article": "Article 71",
@@ -13,13 +13,21 @@
     "operational_by": "before the application date of 2 August 2026"
   },
   "restricted_subsets": {
-    "annex_iii_points": [1, 6, 7],
+    "annex_iii_points": [
+      1,
+      6,
+      7
+    ],
     "meaning": "law enforcement, migration and border control entries are restricted rather than public under Art 71(4)",
     "consequence": "Any coverage figure derived from this registry is partial BY LAW. Partial coverage must never be reported as partial compliance by a registrant."
   },
   "measurement_plan": {
     "unit": "one registration entry",
-    "verdicts": ["MEASURED", "UNMEASURED", "INVALID"],
+    "verdicts": [
+      "MEASURED",
+      "UNMEASURED",
+      "INVALID"
+    ],
     "checks": [
       "entry_retrievable — the entry is machine-readable at retrieved_at",
       "fields_present — the Annex VIII fields the Regulation requires are present",
@@ -32,6 +40,27 @@
     "No entity registered in that database is a client of the Council of AI.",
     "Registration is a legal obligation, not a grade, and this door issues no conformity mark."
   ],
-  "links": { "self": "https://councilof.ai/.well-known/eu-ai-act-art71-database.json", "eu_ai_act_door": "https://councilof.ai/.well-known/eu-ai-act.json", "live_board": "https://councilof.ai/api/gspc" },
-  "doctrine": "We measure; we do not certify. UNVERIFIED is stated, not hidden."
+  "links": {
+    "self": "https://councilof.ai/.well-known/eu-ai-act-art71-database.json",
+    "eu_ai_act_door": "https://councilof.ai/.well-known/eu-ai-act.json",
+    "live_board": "https://councilof.ai/api/gspc"
+  },
+  "doctrine": "We measure; we do not certify. UNVERIFIED is stated, not hidden.",
+  "probe_2026_09_05": {
+    "method": "Direct HTTP probe of candidate official endpoints, plus a web search for a published URL.",
+    "resolved": {
+      "https://ai-act-service-desk.ec.europa.eu/en/ai-act/article-71": 200,
+      "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai": 200,
+      "https://artificialintelligenceact.eu/article/71/": 200
+    },
+    "not_found": {
+      "https://webgate.ec.europa.eu/ai-database/": 404,
+      "https://ec.europa.eu/digital-building-blocks/sites/display/EUAIACT/EU+AI+Act+Database": 404,
+      "https://artificialintelligenceact.eu/high-risk-database/": 404
+    },
+    "finding": "The legal-text pages for Article 71 resolve. No public, machine-readable database endpoint could be located at any candidate official URL, and a web search returned no published URL for the live database.",
+    "significance": "Article 71(4) requires the database to be publicly accessible, easily navigable and machine-readable, and operational before the application date of 2 August 2026. This probe is a month after that date. We are NOT asserting the database does not exist or that the Commission is in breach - we are recording that a diligent search on this date could not find it, which is a fact about our search as much as about the database.",
+    "reproduce": "curl -s -o /dev/null -w '%{http_code}' -L https://webgate.ec.europa.eu/ai-database/"
+  },
+  "promote_when": "A public machine-readable endpoint is located and returns structured data. Then this door moves to UNMEASURED (reachable, nothing measured yet) and the measurement_plan applies."
 }

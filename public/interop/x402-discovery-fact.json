@@ -30,8 +30,17 @@
  "live_now": {
   "url": "https://councilof.ai/.well-known/x402.json",
   "schema": "csoai.x402/0.2",
-  "mode": "challenge-only",
-  "note": "challenge-only means a complete 402 is emitted but no facilitator is provisioned, so nothing can settle and nothing is charged."
+  "mode": null,
+  "mode_rule": "NOT TYPED HERE. mode is derived from env by railMode(env) (functions/api/_x402_config.ts) and served by /api/x402 and /.well-known/x402.json. GET the url. A typed value in this block went stale within two days of being written.",
+  "typed_values_superseded": [
+   {
+    "as_of": "2026-09-03",
+    "mode": "challenge-only",
+    "note": "challenge-only means a complete 402 is emitted but no facilitator is provisioned, so nothing can settle and nothing is charged.",
+    "superseded_on": "2026-09-05",
+    "why": "the facilitator was provisioned on 2026-09-03 and the apex has reported mode live since; this block asserted the opposite."
+   }
+  ]
  },
  "leftover": {
   "host": "pack.councilof.ai",

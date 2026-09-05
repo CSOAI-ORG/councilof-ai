@@ -18,7 +18,14 @@
   "capabilities": {
     "streaming": false,
     "pushNotifications": false,
-    "extendedAgentCard": false
+    "extendedAgentCard": false,
+    "extensions": [
+      {
+        "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
+        "description": "Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim.",
+        "required": false
+      }
+    ]
   },
   "defaultInputModes": [
     "text/plain",
