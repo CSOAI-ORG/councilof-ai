@@ -18,11 +18,15 @@ describe("obligation map — SKU-2 assembles against real obligations, never det
     }
   });
 
-  it("relevance needs BOTH the subject and an obligation keyword — never subject alone", () => {
+  it("relevance always needs an obligation keyword; a given subject must also match, an absent one constrains nothing", () => {
     const card = { sha256: "a".repeat(64), subject: "gpt-4o system-card behaviour", surface: "gspc.behavioural", tags: ["framework:eu-ai-act"], did: null, as_of: null, proof_len: 3 };
     expect(isRelevant(card, "gpt-4o", OBLIGATIONS["article-53"])).toBe(true);
     expect(isRelevant(card, "gpt-4o", OBLIGATIONS["article-50"])).toBe(false); // no transparency/marking keyword
-    expect(isRelevant(card, "", OBLIGATIONS["article-53"])).toBe(false); // an empty subject matches nothing
+    // An ABSENT subject is no constraint (PR #1310, measured 2026-09-05: the free preview of the
+    // largest SKU returned 0 cards against 1039 because "" was ANDed as false). The keyword is
+    // still required, so an obligation-wide request is bounded by the obligation, never by nothing.
+    expect(isRelevant(card, "", OBLIGATIONS["article-53"])).toBe(true); // keyword match, obligation-wide
+    expect(isRelevant(card, "", OBLIGATIONS["article-50"])).toBe(false); // no keyword: absent subject does not rescue it
     expect(isRelevant(card, "claude", OBLIGATIONS["article-53"])).toBe(false);
   });
 });
