@@ -128,7 +128,7 @@ def serialize_queue(rows: list[dict]) -> str:
     return "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows)
 
 
-def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path) -> dict:
+def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path, prev_index: Path | None = None) -> dict:
     rows = load_queue(queue_path)
     before = measured_cells(rows)
     # `changed` is about the census BYTES, not the MEASURED count. Now that a cell
@@ -158,6 +158,42 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path) -> dict:
         clean = {k: v for k, v in w.items() if not k.startswith("_")}
         (cards_out / name).write_text(json.dumps(clean, indent=2) + "\n", encoding="utf-8")
     (cards_out / "INDEX.jsonl").write_text("".join(index_lines), encoding="utf-8")
+
+    # `changed` decides whether the workflow uploads. Deriving it from the QUEUE blob alone
+    # skipped the upload for any run that adds only INDEX rows -- which is exactly what a card
+    # for a model the queue does not list does. On 2026-09-05 the flip built 756 index rows
+    # including the pod's 65 MEASURED cells, reported changed=false because no queue row moved,
+    # and the Hub kept serving a 691-row index: the cells were signed, VALID, indexed, and
+    # invisible. The index is a published artifact in its own right, so a change to it is a
+    # change. An absent prior index means UNKNOWN, and UNKNOWN must upload rather than assume
+    # equality -- absent is not "same".
+    def comparable(text: str) -> str:
+        """The index minus what changes every run regardless of content.
+
+        Every row carries `indexed`, a fresh as_of stamp, so a raw text compare is TRUE on
+        every run -- a check that cannot fail, which is no check at all. Comparing the rows
+        with that one field dropped is what actually answers "did the census change". A row
+        that will not parse is kept verbatim rather than dropped, so a malformed line still
+        counts as a difference instead of silently matching.
+        """
+        out = []
+        for line in text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                row = json.loads(line)
+                row.pop("indexed", None)
+                out.append(json.dumps(row, sort_keys=True, ensure_ascii=False))
+            except Exception:
+                out.append(line)
+        return "\n".join(sorted(out))
+
+    index_blob = "".join(index_lines)
+    prev_blob = None
+    if prev_index is not None and prev_index.is_file():
+        prev_blob = prev_index.read_text(encoding="utf-8")
+    index_changed = True if prev_blob is None else (comparable(index_blob) != comparable(prev_blob))
     from collections import Counter
 
     report = {
@@ -172,7 +208,10 @@ def run(cards_dir: Path, queue_path: Path, did_doc: dict, out: Path) -> dict:
         "index_rows": len(index_lines),
         "parquet_written": parquet_ok,
         "cells_written": flipped,
-        "changed": after_blob != before_blob,
+        "queue_changed": after_blob != before_blob,
+        "index_changed": index_changed,
+        "prev_index_seen": prev_blob is not None,
+        "changed": (after_blob != before_blob) or index_changed,
         "writes_board": False,
         "signed_here": False,
         "rows": verdicts,
@@ -191,10 +230,11 @@ def main() -> int:
     ap.add_argument("--queue", required=True, help="queue.jsonl fetched from csoai/hub-queue")
     ap.add_argument("--did", required=True, help="did.json fetched from https://councilof.ai/.well-known/did.json")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--prev-index", default=None, help="the currently PUBLISHED mill-cards/INDEX.jsonl; absent means UNKNOWN, which uploads")
     args = ap.parse_args()
     did_doc = json.loads(Path(args.did).read_text(encoding="utf-8"))
-    rep = run(Path(args.cards), Path(args.queue), did_doc, Path(args.out))
-    print(json.dumps({k: rep[k] for k in ("cards", "verdicts", "cells_before", "cells_after", "flipped_this_run", "index_rows", "parquet_written", "changed")}))
+    rep = run(Path(args.cards), Path(args.queue), did_doc, Path(args.out), Path(args.prev_index) if args.prev_index else None)
+    print(json.dumps({k: rep[k] for k in ("cards", "verdicts", "cells_before", "cells_after", "flipped_this_run", "index_rows", "parquet_written", "queue_changed", "index_changed", "prev_index_seen", "changed")}))
     if not rep["parquet_written"]:
         print("HALT parquet missing — the Hub viewer reads parquet only; not publishable", file=sys.stderr)
         return 3
