@@ -54,45 +54,55 @@
     "registry": "https://registry.modelcontextprotocol.io/v0/servers?search=CSOAI-ORG&limit=100"
   },
   "coverage": {
-    "verdict": "64 BUILT SERVERS ARE UNPUBLISHED",
+    "verdict": "142 BUILT SERVERS ARE UNPUBLISHED",
     "question": "The first clause of the mandate is 'we are listed'. This asks it the other way round: what exists here that the registry does not carry?",
     "repos_public": 639,
     "mcp_named": 372,
     "mcp_named_unarchived": 363,
     "published_in_registry": 330,
     "mcp_repos_absent_from_registry": 88,
-    "of_those_server_shaped": 64,
-    "of_those_not_a_server": 24,
-    "server_shaped_examples": [
-      "blizzard-wow-mcp",
-      "credential-manager-mcp",
-      "csoai-aaif-agent-card-mcp",
-      "csoai-abci-bridge-mcp",
-      "csoai-agents-md-lint-mcp",
-      "csoai-ap2-mandate-mcp",
-      "csoai-c2pa-durable-mcp",
-      "csoai-coinbase-x402-receipt-mcp",
-      "csoai-cra-annex-iv-classifier-mcp",
-      "csoai-cra-art14-reporter-mcp",
-      "csoai-eu-ai-act-art-13-ifu-mcp",
-      "csoai-eu-ai-act-art-26-fria-mcp"
-    ],
-    "not_a_server_examples": [
-      "awesome-mcp-security",
-      "awesome-mcp-servers-csoai",
-      "awesome-remote-mcp-servers",
-      "best-of-mcp-servers",
-      "csoai-ai-psych-vuln-audit-mcp",
-      "csoai-dora-tlpt-planner-mcp",
-      "csoai-eu-code-of-practice-mcp",
-      "csoai-fria-generator-mcp"
-    ],
-    "detail": "64 unarchived, public, MCP-named repositories carry both a package manifest (pyproject.toml or package.json) and a server entry point (server.py, main.py or src/), and none of them appears in the registry. Publishing them would take the estate from 330 to 394, a 19% increase, using code that already exists. The other 24 are correctly absent: awesome-* lists, best-of-* collections and docs repos are not servers and should never be published as servers.",
-    "method": "Repos enumerated through gh api --paginate users/CSOAI-ORG/repos (CSOAI-ORG is a USER account, not an org — orgs/CSOAI-ORG/repos 404s), which is why an earlier --limit sweep returned an incomplete list. Server-shape is a FILE-SHAPE heuristic, not a working server: no repo was cloned, installed or run.",
-    "probe": "gh api --paginate 'users/CSOAI-ORG/repos?per_page=100&type=all' --jq '.[]|[.name,.archived]|@tsv' then diff mcp-named unarchived against the registry's isLatest names",
+    "detail": "142 unarchived public repositories declare an MCP SDK dependency and are absent from the registry: 61 carry 'mcp' in the name and 81 do not. Publishing them would take the estate from 330 to 472. The work exists; only the publishing step is missing.",
+    "method": "Repos enumerated through gh api --paginate users/CSOAI-ORG/repos (CSOAI-ORG is a USER account, not an org — orgs/CSOAI-ORG/repos 404s). A declared SDK dependency is evidence of intent, NOT of a working server: no repo was cloned, installed or run, and no tools/list was called.",
+    "probe": "gh api --paginate 'users/CSOAI-ORG/repos?per_page=100&type=all' then for each unarchived repo fetch package.json / pyproject.toml and grep for modelcontextprotocol|fastmcp|mcp[ ; diff against the registry's isLatest names",
     "a_number_deliberately_not_published": {
       "value": 51,
       "why_not": "The same diff run the other way says 51 registry entries name no public repo of that name. It is NOT reported as a finding and must not be quoted. Two independent reasons it overcounts: this account exposes 639 public repos against 678 total, so private repos read as missing; and a registry entry's name need not equal its repository's name (`csoai` and `gspc` are both in that 51 and both have repositories). The authoritative figure for dead repository links is 25, established per-repo with gh repo view and published in csoai/mcp-registry-self-audit. A set difference is a cheaper instrument than the one that already answered this question, and cheaper is not better."
+    },
+    "superseded_figure": {
+      "value": 64,
+      "why_wrong": "Published earlier today in this same file and WRONG BY MORE THAN HALF. It counted only repositories with 'mcp' in the NAME, and a name is not a detector. digital-human-library depends on @modelcontextprotocol/sdk and ships a binary called digital-human-library-mcp; Glama lists it as one of our servers; the name filter never saw it. Eighty-one more are in the same position. The filter was inherited from CLAUDE.md's headline '372 MCP-named repos', which understates the MCP surface for exactly the same reason."
+    },
+    "detector": "ONE test applied to every unarchived public repository: does package.json or pyproject.toml declare an MCP SDK dependency (modelcontextprotocol, fastmcp, or an mcp extra)? The superseded 64 used a different, weaker test (file shape) on a name-filtered subset, so it was neither the same question nor the same population. Applying the SDK detector to that same mcp-named subset gives 61, not 64 — the three it drops had the file shape without declaring the dependency.",
+    "unpublished": {
+      "total": 142,
+      "mcp_named": 61,
+      "not_mcp_named": 81,
+      "registry_today": 330,
+      "available_if_published": 472,
+      "examples_not_mcp_named": [
+        "OPENMOE",
+        "OpenHands",
+        "agriculture-ai",
+        "ai-economy-infra",
+        "ai-economy-infrastructure",
+        "ai-governance",
+        "ai-sdk",
+        "autonomous-vehicles",
+        "autonomous-vehicles-ai",
+        "aws-cloud"
+      ],
+      "examples_mcp_named": [
+        "blizzard-wow-mcp",
+        "credential-manager-mcp",
+        "csoai-aaif-agent-card-mcp",
+        "csoai-abci-bridge-mcp",
+        "csoai-agents-md-lint-mcp",
+        "csoai-ap2-mandate-mcp",
+        "csoai-c2pa-durable-mcp",
+        "csoai-coinbase-x402-receipt-mcp",
+        "csoai-cra-annex-iv-classifier-mcp",
+        "csoai-cra-art14-reporter-mcp"
+      ]
     }
   }
 }
