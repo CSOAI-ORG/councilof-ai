@@ -16,6 +16,27 @@ const BRAIN = process.env.BRAIN || "https://os.meok.ai/api";
 const R = [];
 const pass = (c, d) => R.push(`✅ ${c} — ${d}`);
 const fail = (c, d) => R.push(`❌ ${c} — ${d}`);
+// Three states, not two — the same rule the estate applies to every card. A dependency that is
+// GONE did not fail a check; the check never ran. Reporting that as ❌ says the signing is broken
+// when the truth is that nothing was measured, and four identical "Unexpected end of JSON input"
+// lines say neither.
+const unchecked = (c, d) => R.push(`⚠️  ${c} — UNCHECKABLE: ${d}`);
+
+// Is there an API at BRAIN at all? os.meok.ai answers HTTP 200 on EVERY path — /api/health,
+// /api/mcp, /api/sign and / all return the same SPA index.html — so a status-code check passes
+// against a host that has no API deployed. Content-type is what distinguishes them.
+async function brainState() {
+  try {
+    const r = await fetch(BRAIN + "/health", { headers: { accept: "application/json" } });
+    const ct = (r.headers.get("content-type") || "").toLowerCase();
+    if (ct.includes("html")) {
+      return { up: false, why: `${BRAIN} answers HTTP ${r.status} with ${ct} on /health — the SPA catch-all, not an API. No brain is deployed at this host.` };
+    }
+    return { up: true, why: `content-type ${ct}` };
+  } catch (e) {
+    return { up: false, why: `${BRAIN} unreachable: ${e.message}` };
+  }
+}
 
 async function rpc(method, params) {
   const r = await fetch(BRAIN + "/mcp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }) });
@@ -44,14 +65,46 @@ async function apiTruth() {
     const okShape = typeof d.total === "number" && Array.isArray(d.tools) &&
       typeof d.server_count === "number" && typeof d.catalogue_total === "number";
     const derived = okShape && d.total === d.tools.length;
+    // The pass condition deliberately does NOT require d.total > 0: "governance" matches none of
+    // the eight tools (measure, verify, jail-probe, enter-arena, board_totals, get_axis,
+    // verify_card, list_cards), and a query matching nothing is a result, not a fault. I tried
+    // requiring it and it fails against a correct system.
+    //
+    // What the check genuinely lacked is any proof that search FILTERS at all — with `q` ignored
+    // entirely, shape and derivation both still hold and this goes green. So the filter is now
+    // exercised with a term taken from the catalogue itself rather than a hard-coded guess: a
+    // real tool name must match, and a string no tool can contain must not.
     (okShape && derived && d.catalogue_total > 0)
       ? pass('CLAIM "MCP tool catalogue"', `/api/tools total=${d.total} matched of catalogue_total=${d.catalogue_total}, ${d.server_count} probed server(s) (derived, not asserted)`)
       : fail('CLAIM "MCP tool catalogue"', `shape=${okShape} derived=${derived} catalogue_total=${d.catalogue_total}`);
+
+    // Search actually filters — proven from the catalogue, not from a guess about its contents.
+    const all = await (await fetch(SITE + "/api/tools")).json();
+    const sample = (all.tools || [])[0]?.name;
+    if (!sample) {
+      fail("MCP tool search", "catalogue is empty, so the filter cannot be exercised");
+    } else {
+      const hit = await (await fetch(SITE + "/api/tools?q=" + encodeURIComponent(sample))).json();
+      const miss = await (await fetch(SITE + "/api/tools?q=zzzz-no-tool-can-match-this")).json();
+      (hit.total > 0 && miss.total === 0)
+        ? pass("MCP tool search filters", `q="${sample}" → ${hit.total}, q="zzzz…" → ${miss.total}`)
+        : fail("MCP tool search filters", `q="${sample}" → ${hit.total} (expected >0), q="zzzz…" → ${miss.total} (expected 0) — the q parameter is not filtering`);
+    }
   } catch (e) { fail("MCP tool catalogue", e.message); }
-  try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
-  try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
-  try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }
-  try { const d = await (await fetch(BRAIN + "/health")).json(); d.ok ? pass("Brain health", d.service) : fail("Brain health", "not ok"); } catch (e) { fail("health", e.message); }
+  const brain = await brainState();
+  if (!brain.up) {
+    // One clear sentence instead of four "Unexpected end of JSON input" lines that named the
+    // symptom and hid the cause. These claims are not refuted; they are unmeasured.
+    unchecked("Brain host", brain.why);
+    for (const c of ["Live MCP tools", "meok_govern executes", 'CLAIM "Ed25519 signing"', "Brain health"]) {
+      unchecked(c, "depends on the brain host above; not probed");
+    }
+  } else {
+    try { const d = await rpc("tools/list"); const n = (d.result?.tools || []).length; n >= 5 ? pass("Live MCP tools", `${n} execute server-side`) : fail("Live MCP tools", `only ${n}`); } catch (e) { fail("tools/list", e.message); }
+    try { const d = await rpc("tools/call", { name: "meok_govern", arguments: { industry: "a bank" } }); const t = d.result?.content?.map((c) => c.text).join(" ") || ""; /EU AI Act|DORA|GDPR/.test(t) ? pass("meok_govern executes", t.slice(0, 55)) : fail("meok_govern", "no framework output"); } catch (e) { fail("meok_govern", e.message); }
+    try { const r = await fetch(BRAIN + "/sign", { method: "POST", headers: { "content-type": "text/plain" }, body: JSON.stringify({ message: "claims-test" }) }); const d = await r.json(); (d.signature && d.publicKey) ? pass('CLAIM "Ed25519 signing"', `real sig len=${String(d.signature).length}, alg=${d.alg || "?"}`) : fail("Ed25519 signing", "no signature — the signed claim would be FALSE"); } catch (e) { fail("Ed25519 signing", e.message); }
+    try { const d = await (await fetch(BRAIN + "/health")).json(); d.ok ? pass("Brain health", d.service) : fail("Brain health", "not ok"); } catch (e) { fail("health", e.message); }
+  }
   try { const r = await fetch(SITE + "/api/og?title=Test"); (r.status === 200 && (r.headers.get("content-type") || "").includes("image")) ? pass("Dynamic OG", "image/png 200") : fail("Dynamic OG", r.status + ""); } catch (e) { fail("OG", e.message); }
 }
 
@@ -119,7 +172,15 @@ await interactive(b);
 await sov3Pages(b);
 await b.close();
 const passes = R.filter((x) => x[0] === "✅").length, fails = R.filter((x) => x[0] === "❌").length;
+const unknowns = R.filter((x) => x.startsWith("⚠️")).length;
 console.log("# CSOAI Claims-Verification E2E — " + SITE + "\n");
 console.log(R.join("\n"));
-console.log(`\nRESULT: ${passes} pass · ${fails} FAIL`);
-process.exit(fails > 0 ? 1 : 0);
+console.log(`\nRESULT: ${passes} pass · ${fails} FAIL · ${unknowns} UNCHECKABLE`);
+// An UNCHECKABLE headline claim still fails the run. A claim the site makes that nobody can
+// verify is not in better standing than one that failed — it is in worse standing, because the
+// failure is at least legible. What changes is that the report now says which of the two it is,
+// instead of printing four JSON parse errors that named the symptom and hid the cause.
+if (unknowns > 0 && fails === 0) {
+  console.log("\nNothing was refuted. Something could not be measured — treat it as unshipped, not as working.");
+}
+process.exit(fails > 0 || unknowns > 0 ? 1 : 0);
