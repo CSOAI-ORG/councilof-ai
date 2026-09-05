@@ -1,0 +1,37 @@
+{
+  "schema": "csoai.scitt-signed-statement/0.1",
+  "what_this_is": "The unsigned construction of a SCITT signed statement over https://councilof.ai/root.json. It is NOT a receipt: a receipt is issued by a transparency service on registration, and this estate neither runs one nor is registered with one.",
+  "what_this_is_not": [
+    "Not a SCITT receipt.",
+    "Not a registration, and not evidence that any transparency service has seen this statement.",
+    "Not a signature: signature is null because this process does not hold the signing key.",
+    "Not a claim that the measurement inside root.json is correct — a signature is an integrity claim, not a truth claim."
+  ],
+  "subject": "https://councilof.ai/root.json",
+  "protected_header": {
+    "alg_intended": "EdDSA",
+    "content-type": "application/json",
+    "cwt_iss_intended": "did:web:csoai.org",
+    "cwt_sub": "https://councilof.ai/root.json"
+  },
+  "payload": {
+    "digest_alg": "sha-256",
+    "digest_hex": "8c6a27eae08cb7570d5b3e570fbecc4f7f3220942cc158c893565aab814b80c2",
+    "length_bytes": 14518,
+    "note": "Digest is over the exact committed bytes of public/root.json, not over a re-serialisation. Re-serialising JSON changes the bytes and therefore the digest."
+  },
+  "artifact": {
+    "merkle_root": "6347384aa686920feca2f6cd875664c4719b1cd8224c0021dd7a38347f872353",
+    "card_count": 167,
+    "as_of": "2026-09-05T12:39:29Z",
+    "envelope_signature_state": "SIGNED"
+  },
+  "scope": "A proof over these bytes covers these bytes. root.json commits to its own leaf list and nothing else: it does not anchor the signed-card index, and it does not anchor GSPC.",
+  "signature": null,
+  "registration": null,
+  "receipt": null,
+  "verify_yourself": [
+    "curl -s https://councilof.ai/root.json | shasum -a 256    # must equal payload.digest_hex",
+    "curl -s https://councilof.ai/interop/scitt-root-signed-statement.json | jq '{subject,payload,signature,receipt}'"
+  ]
+}
