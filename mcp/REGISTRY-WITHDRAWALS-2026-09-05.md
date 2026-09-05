@@ -106,6 +106,34 @@ re-scan. Needs the Smithery account.
 
     curl -s https://registry.smithery.ai/servers/csoai/gspc | python3 -m json.tool
 
+## 5 — Glama: 7 of our repos listed, 6 with nothing installable
+
+`glama.ai/mcp/servers?query=csoai` surfaces seven `csoai-*-mcp` servers. All seven are ours —
+public repos under `CSOAI-ORG`, confirmed with an authenticated call. **Six have no published
+package:**
+
+    csoai-cra-annex-iv-classifier-mcp    github public · pypi 404
+    csoai-dora-tlpt-planner-mcp          github public · pypi 404
+    csoai-fria-generator-mcp             github public · pypi 404
+    csoai-governance-engine-mcp          github public · pypi 404
+    csoai-mcp-hardening-mcp              github public · pypi 404
+    csoai-mcp-injection-scan-mcp         github public · pypi 404
+    csoai-governance-crosswalk-mcp       github public · pypi 200   <- the only installable one
+
+Only that last one also appears in the 330 we publish to the official MCP registry.
+
+**What is NOT claimed here.** Glama lists GitHub repositories, and a repo without a package is
+normal there — it shows source. This is only a false claim if Glama surfaces an *install command*
+for the six. Its API answers **401** without a key, and the listing page is client-rendered, so
+that cannot be settled from outside the account. Stated as a measurement, not a verdict.
+
+**Owner action:** sign in to Glama and check whether the six show an install instruction. If they
+do, publish the packages or delist. Needs the Glama account.
+
+    curl -s "https://glama.ai/mcp/servers?query=csoai" | grep -oE 'csoai-[a-z0-9-]+-mcp' | sort -u
+    gh api repos/CSOAI-ORG/csoai-fria-generator-mcp --jq .private
+    curl -s -o /dev/null -w '%{http_code}\n' https://pypi.org/pypi/csoai-fria-generator-mcp/json
+
 ## Why this is not fixed in this PR
 
 The 330 entries are published from 330 separate server repositories, not from this one. Their
