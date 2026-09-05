@@ -43,7 +43,19 @@ function ruleIds() {
 }
 
 function caseIds() {
-  const block = src.slice(src.indexOf("const CASES ="));
+  // SCOPED TO THE `CASES` ARRAY ONLY. This used to slice from `const CASES =` to end of file
+  // and take every `["...",` it found. On 2026-09-05 master added a second, unrelated selftest
+  // below it — SWEEP_CATCH / SWEEP_PASS for the JSON display sweep — whose entries are
+  // [relativePath, jsonObject] pairs. The loose parse read "/interop/hf-badges-index.json" as a
+  // RULE ID and reported five healthy cases as rules that had gone missing.
+  //
+  // That is a false positive, which is the more dangerous failure for a guard: it reported
+  // another lane's correct work as broken. Bounded to the array it is actually about.
+  const start = src.indexOf("const CASES =");
+  if (start < 0) return [];
+  const rest = src.slice(start);
+  const end = rest.search(/\n\s*(?:const|function|\/\/ ---)/);
+  const block = end > 0 ? rest.slice(0, end) : rest;
   return [...block.matchAll(/^\s*\["([^"]+)",/gm)].map((m) => m[1]);
 }
 
