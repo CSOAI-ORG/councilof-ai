@@ -195,7 +195,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       bazaar: declareBazaarHttpGet({
         method: "GET",
         queryParams: { history: "1" },
-        queryParamsSchema: { properties: { history: { type: "string", const: "1" } }, required: ["history"] },
+        // `since` is declared here because the blob must match the door. An undeclared parameter
+        // is exactly the mismatch that stopped /api/free-door indexing on 2026-09-05, where
+        // info.input carried a key the schema's additionalProperties:false refused.
+        queryParamsSchema: {
+          properties: {
+            history: { type: "string", const: "1" },
+            since: { type: "string", description: "ISO-8601 instant; return only diffs newer than this" },
+          },
+          required: ["history"],
+        },
         outputExample: { schema: "csoai.feeds.provider-diff/0.1", kind: "history", diffs: [], leaves: {}, root: {} },
       }),
       csoai: {
@@ -218,10 +227,43 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     getJson<Record<string, unknown>>(`${origin}${STATE_PATH}`),
     getJson<Record<string, unknown>>(`${origin}/root.json`),
   ]);
-  const allDiffs = (index.recent_diffs || []) as Array<Record<string, unknown> & { leaf?: string | null }>;
+  const allDiffs = (index.recent_diffs || []) as Array<
+    Record<string, unknown> & { leaf?: string | null; fetched_at?: string | null }
+  >;
+
+  // DELTA SINCE THE LAST RECEIPT. Without this the paid batch was identical on every call —
+  // index, state, every leaf, root — so a subscriber who paid twice received the same bytes
+  // twice and had no reason to buy again. `since` is an ISO-8601 instant, matched against each
+  // diff's own fetched_at, which is the only time this feed records.
+  //
+  // Absent `since` returns the full batch, exactly as before. A malformed `since` is a 400 and
+  // never a silent full batch: quietly ignoring a cursor would bill for a delta and deliver
+  // everything, which is the failure a buyer cannot see.
+  const sinceRaw = (url.searchParams.get("since") || "").trim();
+  let since: number | null = null;
+  if (sinceRaw) {
+    const t = Date.parse(sinceRaw);
+    if (Number.isNaN(t)) {
+      return json(
+        { schema: "csoai.feeds.provider-diff/0.1", error: "bad_request",
+          reason: "since must be an ISO-8601 instant, e.g. since=2026-09-01T00:00:00Z" },
+        400,
+      );
+    }
+    since = t;
+  }
+  const selected = since === null
+    ? allDiffs
+    : allDiffs.filter((d) => {
+        const f = d.fetched_at ? Date.parse(String(d.fetched_at)) : NaN;
+        // A diff with no readable fetched_at is INCLUDED: dropping it would silently withhold a
+        // paid row on the strength of a missing field. Absent is not "older than the cursor".
+        return Number.isNaN(f) ? true : f > since!;
+      });
+
   const leaves: Record<string, unknown> = {};
   await Promise.all(
-    allDiffs.map(async (d) => {
+    selected.map(async (d) => {
       if (!d.leaf) return;
       const r = await getJson<Record<string, unknown>>(`${origin}${d.leaf}`);
       leaves[String(d.leaf)] = r.ok ? r.body : { unreadable: r.reason };
@@ -243,6 +285,16 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       kind: "history",
       note: "Assembled from the published bytes: the index, the append-only state, every diff leaf the index lists, and the current signed root. Signed copies of each leaf live at /cards/<sha256>.json with a proof to root.json. Nothing here is a verdict on any change.",
       as_of: index.as_of ?? null,
+      // What the buyer actually received, and against what cursor — so a delta can be checked
+      // rather than trusted. total_available is the full set the index lists at this moment.
+      delta: {
+        since: sinceRaw || null,
+        returned: selected.length,
+        total_available: allDiffs.length,
+        note: sinceRaw
+          ? "Only diffs whose fetched_at is later than `since`. A diff with no readable fetched_at is included rather than withheld."
+          : "No `since` given, so this is the full batch. Pass since=<ISO-8601> to receive only what is new to you.",
+      },
       index: idx.ok ? index : { unreadable: idx.reason },
       state: state.ok ? state.body : { unreadable: state.reason },
       leaves,
