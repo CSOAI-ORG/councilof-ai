@@ -8,17 +8,22 @@ Shared working agreement for ALL agents on this repo. Read this first.
   **deleted 31 Aug 2026**. Do not `vercel deploy`. Do not wait for Vercel GitHub checks.
   Merge gate = GHA `deploy.yml` + `curl -I https://councilof.ai`.
 - Live board: `GET https://councilof.ai/api/gspc` → **22 slots · 22 measured · 0 UNMEASURED**.
-  Cards: **two numbers, and they measure different things** — quote the one you mean.
-  `cards-bundle.json` emits both, and `scripts/generate-cards-bundle.mjs` says why:
-  · `card_count` = every `public/cards/*.json` wrapper on disk (**1072**). The generator's
-    own note: "Copies bytes that already exist under /cards/ and /proofs/; **signs nothing,
-    measures nothing**." It is a build-time aggregate, not an attestation.
-  · `root_card_count` = the `card_sha256` hashes committed to the SIGNED Merkle root
-    (**152** in the committed bundle, **153** in the deployed `root.json` — the two drift by
-    build timing, not by disagreement). This is the attested set.
-  This line previously read "Cards 335/335", which matches neither and was handed to every
-  agent that loaded this file. Naming both is not clamping the index — the index is
-  untouched; only the description of what it counts is corrected.
+  Cards: **THREE numbers, over three different artifacts** — quote the one you mean, and say
+  which file it came from. All three re-fetched live 2026-09-05:
+  · `/signed/card_index.json` → `n_cards` == `n_cells` == **335**. This is the BOARD's card
+    chain, and it is what `BOARD-RULING.md` and the CARDS-335 lock in
+    `_alignment/OUTSTANDING-MOVES-2026-08-31.md` both name ("Do not clamp 150/313").
+  · `cards-bundle.json` → `card_count` = **1072**, every `public/cards/*.json` wrapper on
+    disk. The generator's own note: "Copies bytes that already exist under /cards/ and
+    /proofs/; **signs nothing, measures nothing**." A build-time aggregate, not an attestation.
+  · `root.json` → `card_count` = **152**, the `card_sha256` leaves committed to the SIGNED
+    Merkle root. This is the attested set. (`cards-bundle.json` also mirrors it as
+    `root_card_count`; the two can drift by a build, not by disagreement.)
+  CORRECTION 2026-09-05: an earlier version of this line said "Cards 335/335 matches neither
+  number". It does match — `card_index.json` returns exactly 335/335 live. That edit compared
+  a true statement against two figures from a DIFFERENT artifact and told every agent loading
+  this file that a live, locked number was bogus, which is precisely what the CARDS-335 lock
+  exists to prevent. Three artifacts, three counts, all correct for what they count.
   Stamp SIGNED (`did:web:csoai.org#board-attestation-1`).
 - csoai.org = Cloudflare Pages `csoai-site` (DID apex). `os`/`app`.csoai.org CNAME there.
 - Mailbox is **nicholas@csoai.org** on Namecheap Private Email (https://privateemail.com). GitHub sudo codes go there. **Do not use Gmail.**
