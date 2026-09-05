@@ -171,12 +171,31 @@ the page shows it.
 
 ## WP-1: "every public launcher opens this shell" — measured, and the answer is a decision
 
-Audited across `client/src/pages` on 2026-09-05: **82 public job-launchers. 7 point at
-`/dashboard`. 75 do not.** The single most common destination is `/assess` — **seventeen**
-public pages send "Get measured" there (OnboardOS, MarketingHome, WhyCSOAI, HowItWorks,
-SystemCard, EUAIActGuide, ISO42001Guide, NISTAIRMFGuide, TC260Guide, ConformityAssessment,
-ReadinessAssessment, EuActClassifier, GlobalRegulationTracker, HorusIntel, AccountBrief,
-AiGovernanceHub, Dashboard).
+Audited across `client/src/pages` on 2026-09-05, then **re-audited because the first count was
+misleading**. 82 CTAs matched a launcher verb, and 7 open the shell — but the raw "75 outside"
+figure swept in `/contact`, `/globe` and `/try`, which the shell has no pane for and never
+should. Split against the paths the shell can actually host:
+
+| | count |
+|---|---|
+| already open the shell | 7 |
+| **point at a path the shell CAN host — the real WP-1 gap** | **46** |
+| point where the shell has no pane (correctly outside) | 29 |
+
+And the dominant destination is not the one I first reported:
+
+| destination | pages | shell equivalent |
+|---|---|---|
+| **`/gspc-verify`** | **25** | `verify` tab — tabs.ts documents the framed route and the native pane as **"the same thing"** |
+| `/assess` | 16 | **none** — `assess` aliases to `measured`, which renders the request pane, a different tool |
+| `/hive` | 3 | tab exists |
+| `/gspc-arena` | 2 | `space` tab |
+
+That distinction is the whole decision. For **`/gspc-verify`** the shell has a documented
+equivalent, so repointing loses nothing functionally — but verify is the estate's free,
+loginless, shareable public promise, and pushing 25 entry points into the shell is a product
+call about that promise, not a refactor. For **`/assess`** repointing would land users on the
+wrong tool until the alias and the `measured` pane move first.
 
 **The blocker is not the links.** Two things in the shell already decide this:
 
