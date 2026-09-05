@@ -67,8 +67,8 @@ describe("the coverage measurement keeps its weak number quarantined", () => {
 
   it("the unpublished split adds up and the arithmetic to 'available' holds", () => {
     const u = c.unpublished;
-    expect(u.mcp_named + u.not_mcp_named).toBe(u.total);
     expect(u.registry_today + u.total).toBe(u.available_if_published);
+    expect(u.total).toBeLessThanOrEqual(u.repos_declaring_an_mcp_sdk);
     expect(c.published_in_registry).toBeLessThanOrEqual(c.mcp_named);
   });
 
@@ -82,7 +82,14 @@ describe("the coverage measurement keeps its weak number quarantined", () => {
     // same name-based instinct with nothing to warn them.
     expect(c.superseded_figure.value).toBe(64);
     expect(c.superseded_figure.why_wrong).toMatch(/name is not a detector/i);
-    expect(c.detector).toMatch(/61, not 64/);
+    // and the second wrong answer keeps its own reason too
+    expect(c.superseded_figure.then).toBe(142);
+    expect(c.superseded_figure.why_wrong).toMatch(/mcp>=1\.0\.0/);
+    // the net was published as if it were the disagreement; both numbers must stay
+    expect(c.instrument_disagreement.actual_disagreement).toBe(
+      c.instrument_disagreement.file_shape_only + c.instrument_disagreement.dependency_only,
+    );
+    expect(c.instrument_disagreement.net).not.toBe(c.instrument_disagreement.actual_disagreement);
   });
 
   it("the 51 stays quarantined and never becomes a top-level claim", () => {
