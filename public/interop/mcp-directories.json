@@ -2,7 +2,7 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260905T174855Z",
+  "as_of": "20260905T180144Z",
   "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
@@ -33,8 +33,8 @@
       "name": "Glama MCP",
       "url": "https://glama.ai/mcp",
       "state": "LISTED",
-      "evidence": "27 csoai mentions and 85 csoai links on a Playwright-RENDERED search. The previous NOT_LISTED was produced by scanning our OWN slug files, which cannot see a third-party directory",
-      "probe": "playwright: goto https://glama.ai/mcp/servers?query=csoai, networkidle, count anchors whose text or href matches /csoai/i"
+      "evidence": "LISTED, and the listings are true: 20 distinct /mcp/servers/CSOAI-ORG/<slug> entries on page 1 of the author facet, each resolving 200; sampled tool counts match the published source exactly (iso-42001-ai-mcp 10 declared = 10 @mcp.tool; soc2-compliance-ai-mcp 6 = 6). Glama's page header reads '82,409 servers' \u2014 that is Glama's WHOLE corpus, not ours.",
+      "probe": "playwright: goto https://glama.ai/mcp/servers?query=author%3ACSOAI-ORG, networkidle, collect distinct a[href^='/mcp/servers/CSOAI-ORG/']; then per listing compare the rendered 'N tools' against @mcp.tool decorators in that package's PyPI sdist"
     },
     {
       "id": "pulsemcp",
@@ -91,7 +91,8 @@
       "probe": "curl -o /dev/null -w '%{http_code}' https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
     },
     "2026-09-05: glama and docker-mcp were published as NOT_LISTED and were LISTED. Cause: state derived from a scan of our own slug files, not from the directory. Corrected with rendered/API probes, each row now carries the command that produced it.",
-    "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0."
+    "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0.",
+    "2026-09-05: the first correction of this file cited '27 csoai mentions and 85 csoai links' as the evidence for glama=LISTED. 63 of those 85 were HREF-ONLY \u2014 Glama's own facet links carrying query=csoai in the URL, i.e. our search term echoed back. The state was right; the evidence was mostly an artefact. This is the same query-echo trap recorded one entry above for cline, fallen into in the same session. Count links whose TEXT names us, or listings under the author facet."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
