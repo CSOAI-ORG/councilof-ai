@@ -1,0 +1,53 @@
+{
+  "schema": "csoai.regulator-census/0.1",
+  "as_of": "2026-09-05T170000Z",
+  "principle": "Measures which public regulator data surfaces answer; where they do not, the reason is recorded, not hidden. Nothing here describes an unmeasured register. Browser-verified rows carry a note; failures carry the reason.",
+  "rows": [
+    {
+      "target": "E01 EU AI Act official",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
+      "status": 200,
+      "bytes": 92358
+    },
+    {
+      "target": "E01b Art71 register",
+      "url": "https://ai-act-register.ec.europa.eu/",
+      "status": "ERR",
+      "bytes": 0
+    },
+    {
+      "target": "E04 OFAC sdn",
+      "url": "https://www.treasury.gov/ofac/downloads/sdn.xml",
+      "status": "ERR",
+      "bytes": 0,
+      "note": "SSL CERT issue from python; reaches over https in browser (treasury.gov) \u2014 re-probe with system trust / browser"
+    },
+    {
+      "target": "E03 GLEIF access page",
+      "url": "https://www.gleif.org/en/lei-data",
+      "status": 200,
+      "bytes": 0,
+      "note": "browser-verified (harness python 404 = path variant; official data page live)"
+    },
+    {
+      "target": "E05 ICO fee-payers",
+      "url": "https://ico.org.uk/about-the-ico/what-we-do/register-of-fee-payers/",
+      "status": 200,
+      "bytes": 36506
+    },
+    {
+      "target": "E02 ESMA MICA",
+      "url": "https://www.esma.europa.eu/esmas_activities/digital-finance-and-innovation",
+      "status": 404,
+      "bytes": 0,
+      "note": "ESMA restructured; MiCA register = 429 rate-limited in probe; find correct path via search"
+    },
+    {
+      "target": "E02b MiCA register page",
+      "url": "https://www.esma.europa.eu/mica-register",
+      "status": 429,
+      "bytes": 0,
+      "note": "ESMA restructured; MiCA register = 429 rate-limited in probe; find correct path via search"
+    }
+  ]
+}
