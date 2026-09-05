@@ -201,7 +201,16 @@ export default function AxisProof({ axes, why, tone = "light", className = "" }:
                             <span className="hidden group-open:inline">Hide the cohort ▾</span>
                           </summary>
                           <div className="mt-3 overflow-x-auto">
+                            {/* The outer table already has an accessible name from the
+                                section's aria-labelledby. This nested one had none: a screen
+                                reader announcing "table, 8 columns" inside a disclosure gives
+                                no clue which axis it belongs to. A caption names it, and
+                                sr-only keeps the visual design unchanged. */}
                             <table className="w-full min-w-[520px] text-[12px]">
+                              <caption className="sr-only">
+                                Per-model results for the {a.axis} axis: {cohort.length} models,
+                                each with its own sample size and confusion matrix.
+                              </caption>
                               <thead>
                                 <tr className={`text-left ${t.sub}`}>
                                   <th className="whitespace-nowrap py-1 pr-4 font-semibold">Model</th>

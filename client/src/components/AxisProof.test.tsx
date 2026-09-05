@@ -81,6 +81,16 @@ describe("AxisProof renders the cohort behind the number", () => {
     expect(out).toMatch(/not a share of the axis n/i);
   });
 
+  it("the cohort table has an accessible name naming its axis", () => {
+    // The outer table inherits a name from the section's aria-labelledby. The nested one had
+    // none, so a screen reader announced "table" inside a disclosure with no clue which axis
+    // it belonged to. sr-only is a real Tailwind utility here — verified present in the built
+    // CSS with clip-path/absolute — so this costs nothing visually.
+    const out = html();
+    expect(out).toMatch(/<caption class="sr-only">/);
+    expect(out).toMatch(/Per-model results for the jail axis/);
+  });
+
   it("renders nothing extra for an axis with no cohort", async () => {
     vi.resetModules();
     vi.doMock("./board/useGspcBoard", () => ({
