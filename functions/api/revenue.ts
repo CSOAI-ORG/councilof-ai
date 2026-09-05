@@ -7,8 +7,8 @@
  *   · No new Date() — nothing here follows the clock.
  *   · A count is null, NEVER 0, when there is no source. 0 asserts a measured zero; there is no
  *     live settle path until a facilitator is provisioned; the rail state is READ from
- *     railMode(env) rather than asserted here, so every SKU count
- *     is honestly null until a receipt actually settles.
+ *     railMode(env) rather than asserted here — in contract.null_rule AND in every SKU note —
+ *     so every SKU count is honestly null until a receipt actually settles.
  *   · The north-of-truth number is settled_usdc — USDC that cleared to the estate pay_to on Base.
  *     Bytes/chain adjudicate revenue, not intent and not a CRM.
  *   · NO PRICES. This surface never imports _skus price atoms — doctrine forbids a public price,
@@ -36,7 +36,24 @@ type Env = {
   REVENUE_KV?: KVNamespace;
   // Optional gate. When set, the caller must present ?key= or an x-revenue-key header that matches.
   REVENUE_KEY?: string;
+  // Read by railMode(env) — the ONLY way this surface learns the rail state. Never typed here.
+  X402_PAY_TO?: string;
+  X402_FACILITATOR_URL?: string;
 };
+
+// The rail clause of every SKU note is DERIVED from env, never copied from counters.json.
+// The canon note for SKU-1 used to carry "No live settle path (x402 is fail-closed, mode:mock)"
+// as typed text. contract.null_rule below was already reading railMode(env) — so after the
+// facilitator was provisioned (2026-09-03) this endpoint said "live" in one field and "mock" in
+// another, on the same payload, about money. Same defect, second field. A note about the rail
+// reads itself off railMode(env); counters.json keeps the doctrine and nothing about the env.
+function withRailState(env: Env, canonNote: string | undefined): string {
+  const r = railMode(env);
+  const rail = r.facilitator_configured
+    ? `x402 rail: ${r.mode} — a facilitator is provisioned, so a settled receipt can be counted; this count stays null until one settles.`
+    : `x402 rail: ${r.mode} — no facilitator is provisioned, so no receipt can settle and this count is honestly null.`;
+  return [(canonNote || "").trim(), rail].filter(Boolean).join(" ");
+}
 
 const canon = (countersDoc as { counters: Record<string, CanonCounter> }).counters;
 
@@ -77,7 +94,7 @@ async function metric(
     status: count != null ? status : "UNMEASURED",
     source,
     owner: c.owner || "Revenue",
-    note: c.note || "",
+    note: withRailState(env, c.note),
   };
 }
 
