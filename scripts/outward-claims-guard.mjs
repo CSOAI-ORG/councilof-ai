@@ -650,6 +650,65 @@ async function checkHfCards() {
   }
 }
 
+/**
+ * 10. "WE ARE REGISTERED ON X" — is there a URL that shows it?
+ *
+ * public/interop/platforms-registered.json is a list of places this estate says it is listed.
+ * Probed 2026-09-05 and the shape of the claim was the problem, not any single row: 22 of 25
+ * entries read `status: "submitted"` with the PLATFORM'S HOMEPAGE as their url. A homepage is
+ * not evidence of a listing, and 10 of the 25 urls did not even answer (8x404, 2x403).
+ *
+ * "Submitted" records an intention and reads as a result. Retired. An entry is now `live` only
+ * when it carries a `proof_url` that shows the entry, and `planned` otherwise — three qualified:
+ *
+ *   MCP Registry  registry.modelcontextprotocol.io/v0/servers?search=csoai   330 servers
+ *   Smithery      smithery.ai/server/csoai/gspc                              csoai/gspc
+ *   Glama         glama.ai/mcp/servers?query=csoai                           7 servers
+ *
+ * mcp.so was checked and does NOT list us — its search page only echoes the query back — which
+ * is exactly the kind of row "submitted" was hiding.
+ *
+ * Offline by default. LIVE_PLATFORMS=1 probes every proof_url.
+ */
+async function checkPlatformProofs() {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const FILE = "public/interop/platforms-registered.json";
+  if (!existsSync(FILE)) return skip("platform registrations", `${FILE} not in this checkout`);
+  let regs;
+  try { regs = JSON.parse(readFileSync(FILE, "utf8")).registrations; } catch { regs = null; }
+  if (!Array.isArray(regs) || !regs.length) return bad("platform registrations", "no registrations array");
+
+  // STATIC, so it bites with no network: a status this file no longer defines, or a `live` row
+  // with nothing to click.
+  const ALLOWED = new Set(["live", "planned"]);
+  const badStatus = regs.filter((r) => !ALLOWED.has(r.status)).map((r) => `${r.platform}: ${r.status}`);
+  assertNo(badStatus, "platform status vocabulary",
+    `these rows use a status outside {live, planned}: ${badStatus.join("; ")}. "submitted" was ` +
+    `retired on 2026-09-05 because it recorded an intention and read as a result.`);
+
+  const unproven = regs.filter((r) => r.status === "live" && !r.proof_url).map((r) => r.platform);
+  assertNo(unproven, "platform proof urls",
+    `these are marked live with no proof_url: ${unproven.join(", ")}. live means a URL shows the ` +
+    `entry; without one the honest status is planned.`);
+
+  if (!process.env.LIVE_PLATFORMS) {
+    return skip("platform proof urls (live)", "LIVE_PLATFORMS unset — proof URLs NOT probed");
+  }
+  const dead = [];
+  for (const r of regs.filter((x) => x.status === "live" && x.proof_url)) {
+    let code = 0;
+    try { code = (await fetch(r.proof_url, { headers: UA, redirect: "follow" })).status; } catch { code = 0; }
+    if (code < 200 || code >= 400) dead.push(`${r.platform}: ${r.proof_url} -> ${code || "unreachable"}`);
+  }
+  assertNo(dead, "platform proof urls (live)",
+    `these proof URLs do not answer: ${dead.join("; ")}. A proof that 404s is not a proof.`);
+
+  function assertNo(list, okClaim, failDetail) {
+    if (list.length) bad(okClaim, failDetail);
+    else ok(okClaim, `${regs.length} rows; ${regs.filter((r) => r.status === "live").length} live with a proof URL`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -714,6 +773,7 @@ async function main() {
   await checkProducers();
   await checkInstallLines();
   await checkHfCards();
+  await checkPlatformProofs();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
