@@ -67,6 +67,8 @@ const FREE_RAIL = [
   { name: "The API", href: "/api/gspc", what: "The same board, machine-readable. Agents welcome.", external: true },
   { name: "The method", href: "/methodology", what: "The frozen rules every number above is computed under." },
   { name: "Metered for agents", href: "/pricing-free", what: "Three artefacts an agent can buy over HTTP 402 (USDC on Base) — issuance, assembly, cadence. Never a grade." },
+  { name: "Live board badge", href: "/badge/board.svg", what: "One SVG that re-renders from the live board — embed it anywhere, it never types a number." },
+  
 ];
 
 const MODULES = [
