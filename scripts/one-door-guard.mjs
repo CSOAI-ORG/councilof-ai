@@ -74,8 +74,11 @@ if (sovContent) {
   fail("SovOS.tsx must be retired (SOV naming off the public surface per Blueprint §2.2)");
 } else if (sovMissing) {
   // SovOS retired: ensure the /sov-os redirect still exists in App.tsx
-  const app = read("client/src/App.tsx").content;
-  if (app) {
+  const appRead = read("client/src/App.tsx");
+  const app = appRead.content;
+  if (!app) {
+    fail("client/src/App.tsx is missing or empty — the /sov-os convergence check cannot run");
+  } else {
     if (/['"]\/sov-os['"]/.test(app) && /DashboardDoor defaultTab="home"/.test(app)) {
       pass("/sov-os still converges on /dashboard?tab=home (via App.tsx)");
     } else {
@@ -86,7 +89,13 @@ if (sovContent) {
 
 for (const rel of ["scripts/generate-redirects.mjs", "public/_redirects"]) {
   const src = read(rel).content;
-  if (!src) continue;
+  if (!src) {
+    // `continue` here skipped ALL FOUR redirect checks below when the file was absent, and
+    // public/_redirects is what actually implements the one door. An input that is missing is
+    // not an input that passes.
+    fail(`${rel} is missing or empty — the four one-door redirect checks cannot run against it`);
+    continue;
+  }
   const badAg = /\/ag-ui\s+\/ag-ui\s+308/.test(src) || /\/agui\s+\/ag-ui\s+308/.test(src);
   const goodAg = /\/ag-ui\s+\/dashboard\?tab=home\s+308/.test(src) && /\/agui\s+\/dashboard\?tab=home\s+308/.test(src);
   if (badAg || !goodAg) fail(`${rel} must 308 /ag-ui and /agui to /dashboard?tab=home`);
