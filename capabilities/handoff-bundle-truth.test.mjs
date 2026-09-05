@@ -100,6 +100,32 @@ describe("the handoff bundle's own claims", () => {
     );
   });
 
+  it("the client-suite count agrees with itself wherever it is quoted", () => {
+    // A SEVENTH STALENESS, and the one my own failure message warned about: "Update every
+    // occurrence, not the first one found." The client count was corrected from 643 to 658 in
+    // the Tests block and left at 643 in the Dependencies prose 760 lines below.
+    //
+    // This guard cannot know the true number without running vitest, so it asserts the weaker
+    // thing that still catches the fault: every figure quoted for `npx vitest run client/src`
+    // must be the SAME figure. Two different numbers for one command is a contradiction on its
+    // face, whichever is right.
+    const quoted = [...text.matchAll(/vitest run client\/src`?[^0-9\n]{0,40}(\d{3,4}) passed/g)].map(
+      (m) => Number(m[1]),
+    );
+    assert.ok(
+      quoted.length >= 2,
+      `expected the client-suite count to appear at least twice, found ${quoted.length}. If the ` +
+        `wording changed, fix this parse — do not let it match nothing and pass.`,
+    );
+    assert.equal(
+      new Set(quoted).size,
+      1,
+      `the bundle quotes ${[...new Set(quoted)].join(" and ")} for \`npx vitest run client/src\`. ` +
+        `Two numbers for one command is a contradiction on its face, and root is told to run it ` +
+        `and compare.`,
+    );
+  });
+
   it("every file it lists under Files is actually in the branch", () => {
     const block = text.slice(text.indexOf("## Files"), text.indexOf("## Tests"));
     const listed = [...block.matchAll(/^([a-z][\w./*-]+\.\w+)$/gim)].map((m) => m[1]);

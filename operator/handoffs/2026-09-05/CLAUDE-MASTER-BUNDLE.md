@@ -272,15 +272,15 @@ before the build ran, and a reviewer would reasonably distrust everything else h
     node scripts/brand-gate.mjs dist/client                    EXIT 0  (EXIT 1 on master today)
     node scripts/signed-json-guard.mjs dist/client             EXIT 0, 16 signed files valid
     node scripts/one-door-guard.mjs                            EXIT 0  (now fails on a missing input)
-    npx vitest run client/src                                  643 passed at handoff
+    npx vitest run client/src                                  658 passed at handoff
 
     # The capability guards need NO install and NO build. Verified from a bare
-    # `git archive HEAD` export with zero node_modules: 101 passed, offline and live.
+    # `git archive HEAD` export with zero node_modules: 102 passed, offline and live.
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 LIVE_NPM=1 LIVE_CARDS=1 \
       LIVE_ATTESTATION=1 LIVE_CRAWLER=1 LIVE_OPENAPI=1 \
       LIVE_A2A=1 LIVE_X402=1 \
-      node --test capabilities/*.test.mjs                      101 passed at handoff, 0 failed
+      node --test capabilities/*.test.mjs                      102 passed at handoff, 0 failed
 
 Counts are stated **at handoff** deliberately. They move as master moves; a mismatch means drift
 to re-read, not an error. The claims that must hold regardless are asserted by
@@ -323,7 +323,7 @@ an instruction is only worth writing if it works for the person who did not writ
 |---|---|---|
 | 1 | `git rev-list --count HEAD..origin/master` | **0** — nothing to re-rebase |
 | 2 | every path in `git diff --name-only origin/master..HEAD` appears under Files | **61 of 61**, none unlisted |
-| 3 | capability guards, no install and no build, all `LIVE_*` set | **101 passed, 0 failed** |
+| 3 | capability guards, no install and no build, all `LIVE_*` set | **102 passed, 0 failed** |
 | 4 | `node scripts/one-door-guard.mjs` | **exit 0** |
 
 **And the ordering warning is not hypothetical.** Running `node scripts/brand-gate.mjs
@@ -1004,6 +1004,39 @@ an audience silently dropped from the seven WP-3 names.
 `/api/remediation` and `/api/jobs`, all 404. The scope cannot become a proposed change, an
 approval or a receipt, and `JourneyStages` says which endpoint each stage waits on.
 
+## Reviewed as root would, from a clean export — 2026-09-05 12:3x
+
+The handoff's own instructions, run against a `git archive HEAD` export with nothing carried
+over from this worktree except a symlinked `node_modules` (the machine has ~3 GB free and a
+fresh `npm install` plus a 217 MB `dist` does not fit; that is the one deviation):
+
+    node --test capabilities/*.test.mjs            102 passed, 0 failed   (zero node_modules)
+    …with every LIVE_* flag set                    102 passed, 0 failed
+    npx vitest run client/src                      118 files, 658 passed
+    npm run build:client                           exit 0, route-truth-guard PASS
+    node scripts/brand-gate.mjs dist/client        EXIT 0
+    node scripts/signed-json-guard.mjs dist/client EXIT 0
+    node scripts/one-door-guard.mjs                EXIT 0
+    node scripts/counter-lint.mjs                  EXIT 0
+
+**A first attempt at this reported `72 failed | 46 passed` and a rollup crash.** Both were the
+machine filling up mid-run — the export plus its build took the disk to 100%, far enough that the
+tool could not write its own output file. Re-run with space free: 118 files, 658 tests, zero
+failures. **Reporting that first result would have told root the bundle does not reproduce.**
+
+It also produced the exit-code artifact this lane has now hit twice: `npm run build:client 2>&1 |
+tail -2` reported `$?` of **0** while the build had crashed, because `$?` after a pipe is the exit
+status of `tail`. The build was re-run without the pipe before anything was concluded from it.
+
+**Blockers re-probed at 12:30Z, not inherited from an earlier note:**
+
+    /api/ras           404        /api/findings          200
+    /api/remediation   404        /api/hub-cards         200
+    /api/jobs          404        /api/receipts/latest   200
+
+    /games-charter     BFT x1, "signed card" x2      still live
+    /tournament        "signed card" x2              still live
+
 ## Open owner gates, in priority order
 
 1. **Deploy** — `brand-gate` was failing on master; this bundle fixes it. Nothing ships until
@@ -1026,13 +1059,13 @@ approval or a receipt, and `JourneyStages` says which endpoint each stage waits 
 **The "bare worktree" claim is verified, not asserted.** `git archive HEAD` into an empty
 directory — **zero `node_modules`** — then `node --test capabilities/*.test.mjs`:
 
-    offline                     101 passed, 0 failed
-    every LIVE_* flag set       101 passed, 0 failed
+    offline                     102 passed, 0 failed
+    every LIVE_* flag set       102 passed, 0 failed
 
 Every capability guard imports `node:` builtins and relative paths only. That matters for a
 reviewer: you can check this bundle's evidence from a clean export, without trusting my
 `node_modules`, and without running an install that could itself change what the tests see.
-The client suite (`npx vitest run client/src`, 643 passed) does need the install; the
+The client suite (`npx vitest run client/src`, 658 passed) does need the install; the
 capability guards deliberately do not.
 
 ## Rollback
