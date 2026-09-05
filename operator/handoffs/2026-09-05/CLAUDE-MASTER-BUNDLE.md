@@ -2,8 +2,8 @@
 
 **Lane:** Claude Master (product integration)
 **Branch:** `product/council-os-integration`
-**Rebased onto:** `e96da8250c4e76ec029e15fd293d9b12711093fb` (origin/master, 2026-09-05 — the THIRD move)
-**Head:** `1f81f1d99b193c5134e1280d4668256a4210746e` — 17 commits, 26 files changed
+**Rebased onto:** `ba9c9f21c3d6ea7d6c899664ac06a94b3efab712` (origin/master, 2026-09-05 — the THIRD move)
+**Head:** `62a63506c1af6a92c528bce070816c8d7bbf6a67` — 19 commits, 27 files changed
 **Status:** NOT integrated, NOT pushed to master, NOT deployed. Root owns all of that.
 
 **RE-REBASE BEFORE APPLYING.** master moved THREE times during this lane. Each time
@@ -21,7 +21,7 @@ time you read it. Re-rebasing is not a precaution here, it is the only way to ge
 that means anything. Verify with `git rev-list --count HEAD..origin/master` — it must be 0
 before you judge the diffstat.
 
-Check this first: `git diff --stat origin/master..HEAD` must show ~26 files and only the paths
+Check this first: `git diff --stat origin/master..HEAD` must show ~27 files and only the paths
 listed under Files. If it shows hundreds, or any file this bundle does not name, DO NOT APPLY —
 re-rebase.
 
@@ -70,6 +70,7 @@ client/src/components/lobby/tabs.ts
 client/src/components/AxisProof.tsx
 client/src/components/board/useGspcBoard.ts
 client/src/routes.duplicate.test.ts
+client/src/App.tsx
 docs/PLUGINS.md
 operator/handoffs/2026-09-05/CLAUDE-MASTER-BUNDLE.md
 operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
@@ -77,7 +78,7 @@ operator/handoffs/2026-09-05/cohort-rendering-for-startup.jpg
 
 ## Tests
 
-    npx vitest run client/src                                  112 files, 612 passed
+    npx vitest run client/src                                  112 files, 614 passed
     npm run build:client                                       clean; route-truth-guard PASS
     LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
       LIVE_HUB=1 LIVE_JOURNEY=1 \
@@ -129,14 +130,31 @@ the page shows it.
 | Other 72 HTTP/A2A capabilities UNASSESSED | only MCP can be checked against a live `tools/list` |
 | Cohort exists only on `jail` | every other axis carries no `per_model` |
 
-## Owner decisions (2) — blocking nothing, but both hide a page
+## WP-1: both duplicate routes resolved
 
-1. **`/badges`** — line 709 redirects to `/badge`; line 1061 declares `BadgesPage`. First wins, so
-   `BadgesPage` is dead. It is also the newest file (2 Sep). Serve it, or delete it?
-2. **`/challenge`** — `Challenge` (150 lines) wins; `ChallengeDoor` (88 lines) is dead. Which?
+`/badges` and `/challenge` were each declared twice in App.tsx. wouter matches the first
+`<Route>`, so the second component could never render. Both second declarations are deleted.
+**Nothing a visitor sees changes** — an unreachable route renders for nobody.
 
-Both are listed as `KNOWN_DUPLICATES` in `routes.duplicate.test.ts`, and a third test asserts they
-are STILL duplicated — so the exception list cannot rot into permanent permission.
+| path | kept | removed |
+|---|---|---|
+| `/badges` | line 709, `Redirect -> /badge` (already won) | line 1061, `BadgesPage` |
+| `/challenge` | line 674, `Challenge` (already won) | line 711, `ChallengeDoor` |
+
+**A correction to what this bundle previously said.** It recorded `BadgesPage` as dead code.
+It is not — the line immediately after the duplicate serves it at `/authority`, which is
+exactly why removing the `/badges` duplicate cost nothing. A test now asserts `/authority`
+still serves it, so the page cannot vanish quietly if that route is ever touched.
+
+`ChallengeDoor` genuinely had no other route; its lazy import is removed so the bundle stops
+shipping an unreachable chunk, and the file stays on disk. `Challenge` (150 lines, live)
+already covers the same redress ground.
+
+`KNOWN_DUPLICATES` is now empty and a new test asserts there are no duplicate routes at all.
+
+**Still genuinely the owner's call, and now a smaller question:** whether `/badges` should
+serve `BadgesPage` rather than redirect, and whether the `ChallengeDoor` redress form should
+be wired anywhere. Both are questions about ADDING a page, not about an invisible collision.
 
 ## WP-3 and WP-6: the gap, now measured rather than asserted
 
