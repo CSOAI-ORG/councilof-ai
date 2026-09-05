@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { toolSummary } from "@/lib/mcpTools";
 import EmptySlots from "@/components/EmptySlots";
 import GovernanceTerminal from "@/components/GovernanceTerminal";
 import HealthInventory from "@/components/HealthInventory";
@@ -151,7 +152,7 @@ export default function Products() {
       <section aria-label="Five access surfaces" className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/mcp">
           <p className="font-mono text-sm text-emerald-100">MCP</p>
-          <p className="mt-1 text-xs text-emerald-200/80">board_totals · get_axis · verify_card · list_cards</p>
+          <p className="mt-1 text-xs text-emerald-200/80">{toolSummary()}</p>
           <p className="mt-1 text-[11px] text-emerald-300/60">POST /mcp</p>
         </a>
         <a className="rounded-xl border border-emerald-400/25 bg-emerald-950/40 p-4 hover:border-emerald-300/60" href="/extension/">
