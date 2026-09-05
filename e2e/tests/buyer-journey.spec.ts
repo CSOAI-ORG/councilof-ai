@@ -93,3 +93,32 @@ for (const [w, h, label] of [[1280, 800, 'desktop'], [390, 844, 'mobile']] as co
     expect(text).toMatch(/SKU/i);
   });
 }
+
+/**
+ * THE PUBLIC MCP ENDPOINT DOES NOT ANSWER THE PROTOCOL IT ADVERTISES.
+ *
+ * Smithery lists csoai/gspc as "Remote HTTP (7 tools, no auth): POST https://councilof.ai/mcp",
+ * and the MCP registry's evidence line says "remote https://councilof.ai/mcp returns 200". That
+ * 200 is a marketing page answering GET. POST — the only method MCP uses — answers 405.
+ *
+ * functions/mcp/[[path]].ts is healthy and handles POST. It is never reached: client/src/App.tsx
+ * declares <Route path="/mcp">, prerender bakes a static page there, and on Cloudflare Pages a
+ * static asset beats a Function. There is no public/_routes.json to override it.
+ *
+ * This is test.fail() ON PURPOSE. The fix — drop the SPA route, or add a _routes.json include —
+ * changes a client route this lane does not own, so it is an OWNER-ASK. But an ask with no guard
+ * rots. Written this way the suite stays green while the defect is known, and turns RED the
+ * moment someone fixes the endpoint, which is the signal to delete this annotation and keep the
+ * assertion. A defect nobody can see fixed is a defect that comes back.
+ */
+test.fail('KNOWN BROKEN: POST /mcp answers the JSON-RPC the directories advertise', async () => {
+  const api = await request.newContext({ baseURL: 'https://councilof.ai' });
+  const r = await api.post('/mcp/', {
+    headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream' },
+    data: { jsonrpc: '2.0', id: 1, method: 'tools/list', params: {} },
+  });
+  expect(r.status(), 'POST is the only method MCP uses').toBe(200);
+  const body = await r.json();
+  expect(Array.isArray(body?.result?.tools), 'tools/list must return a tools array').toBe(true);
+  await api.dispose();
+});
