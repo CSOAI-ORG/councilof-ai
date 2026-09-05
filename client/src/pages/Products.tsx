@@ -175,7 +175,12 @@ export default function Products() {
       </section>
 
       <section aria-labelledby="sku-h" className="mt-12">
-        <h2 id="sku-h" className="text-xl font-bold text-emerald-300">The four SKUs</h2>
+        <h2 id="sku-h" className="text-xl font-bold text-emerald-300">
+          {/* DERIVED, because this page's own ENGINE block says "No page types a count" and this
+              heading typed one. Four is right today; it is right because SKUS has four entries,
+              not because the word was typed. Add a fifth and the heading follows instead of lying. */}
+          The {SKUS.length} SKUs
+        </h2>
         <ul className="mt-4 grid gap-4 sm:grid-cols-2">
           {SKUS.map((p) => (
             <li key={p.id}>
