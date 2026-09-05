@@ -263,12 +263,16 @@ export type SettlementRecord = {
  * Never throws and never affects the grant: a lost record is a gap to notice, not a reason to
  * refuse a paid artefact.
  */
+export type RecordOutcome =
+  | { stored: true; record: SettlementRecord }
+  | { stored: false; reason: string; record: SettlementRecord | null };
+
 export async function recordSettlement(
   env: X402Env,
   rec: Omit<SettlementRecord, "schema" | "self" | "settled_at">,
-): Promise<SettlementRecord | null> {
+): Promise<RecordOutcome> {
   const kv = env.REVENUE_KV;
-  if (!kv) return null;
+  if (!kv) return { stored: false, reason: "no REVENUE_KV bound", record: null };
   const self = !!rec.payer && selfWallets(env).has(rec.payer.toLowerCase());
   const record: SettlementRecord = { schema: "csoai.x402.settlement/0.1", ...rec, self, settled_at: new Date().toISOString() };
   try {
@@ -281,10 +285,18 @@ export async function recordSettlement(
       const base = prev && /^\d+$/.test(prev) ? BigInt(prev) : 0n;
       await kv.put(tallyKey, (base + amt).toString());
     }
-  } catch {
-    // Recording is observation, not gating. Say nothing to the payer; the gap shows on /api/revenue.
+    return { stored: true, record };
+  } catch (e) {
+    // RECORDING IS OBSERVATION, NOT GATING — the grant above still stands, and the payer is told
+    // nothing. But the previous version swallowed the error into an empty catch and returned the
+    // record anyway, which made a failed write indistinguishable from no settlement at all:
+    // /api/revenue would report `settlements: 0, status: MEASURED` whether nothing had settled or
+    // every single write had failed. Measured on 2026-09-05: a confirmed settle through
+    // /api/free-door (facilitator tx 0xb7ec8a79…, payer 0x620e8d6c…) left settlements at 0 with
+    // records_unreadable 0 and kv_bound true — a real payment that the one number never saw.
+    // The outcome is returned now so a caller can surface the gap instead of inferring silence.
+    return { stored: false, reason: `kv write failed: ${(e as Error).message}`, record };
   }
-  return record;
 }
 
 /**
@@ -488,16 +500,24 @@ export async function verifyX402Payment(
     // it also broke the echo outright, because btoa() is Latin-1 only and the note text contains
     // an em dash — a silent "facilitator error: Invalid character" on every settled payment,
     // which is the worst possible place to learn that lesson.
-    const { bazaar: _bazaarSidechannel, ...buyerFacing } = settlement;
+    const { bazaar: _bazaarSidechannel, recording_gap: _recordingGap, ...buyerFacing } =
+      settlement as typeof settlement & { recording_gap?: string };
     const paymentResponse = btoa(JSON.stringify({ success: true, ...buyerFacing }));
     // Write it down. The grant above does not depend on this line.
-    await recordSettlement(env, {
+    // Write it down. The grant above does not depend on this line, but whether it SUCCEEDED is
+    // now carried on the result so an operator can tell "nothing settled" from "nothing recorded".
+    const recorded = await recordSettlement(env, {
       transaction: settlement.transaction,
       network: settlement.network,
       payer: settlement.payer,
       resource: resourceUrl,
       amount_atomic: accept?.amount || accept?.maxAmountRequired || null,
     });
+    if (!recorded.stored) {
+      // Server-internal, exactly like the bazaar sidechannel: it is our bookkeeping gap, not a
+      // settlement fact the payer is owed, so it must never reach the X-PAYMENT-RESPONSE echo.
+      (settlement as Record<string, unknown>).recording_gap = recorded.reason;
+    }
     return { ok: true, reason: "facilitator verified and settled receipt", paymentResponse, settlement };
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
