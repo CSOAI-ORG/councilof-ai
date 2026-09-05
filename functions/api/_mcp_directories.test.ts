@@ -129,3 +129,47 @@ describe("the recorded tool counts are derived from the door, not typed", () => 
     }
   });
 });
+
+// ---------------------------------------------------------------------------
+// Glama is the only directory whose tool count is exactly right, and the only
+// one advertising the four x402-metered tools. That correctness is a fact about
+// TODAY that nothing keeps true: Glama re-inspects on its own schedule and this
+// repo can add or drop a tool at any time. Derive the comparison from the
+// canonical files so the claim cannot outlive the code it describes.
+// ---------------------------------------------------------------------------
+describe("Glama's recorded tool truth is derived, not asserted", () => {
+  const J = (rel: string) => JSON.parse(readFileSync(new URL(rel, import.meta.url), "utf8"));
+  const free: string[] = J("../mcp/gspc-tools.json").tools.map((t: { name: string }) => t.name);
+  const paid: string[] = J("../mcp/paid-tools.json").tools.map((t: { name: string }) => t.name);
+  const served = [...free, ...paid].sort();
+  const row = J("../../public/interop/mcp-directories.json").directories.find(
+    (r: { id: string }) => r.id === "glama",
+  );
+
+  it("the names recorded as Glama's are exactly the names the door serves", () => {
+    expect(row.tool_counts.names).toEqual(served);
+    expect(row.tool_counts.served_by_the_door).toBe(served.length);
+  });
+
+  it("TRUE is only claimed when declared equals served", () => {
+    if (row.tool_counts.verdict === "TRUE") {
+      expect(row.tool_counts.declared).toBe(row.tool_counts.served_by_the_door);
+    }
+  });
+
+  it("the paid tools are part of what makes Glama's listing complete", () => {
+    // The distinguishing claim in the row's own text. If the paid tools ever stop being
+    // part of the served set, that sentence stops being true and must be rewritten.
+    for (const p of paid) {
+      expect(row.tool_counts.names, `${p} is cited as advertised by Glama but is no longer served`)
+        .toContain(p);
+    }
+  });
+
+  it("the health verdict accounts for every connector page it counted", () => {
+    const h = row.health;
+    expect(h.unhealthy + h.healthy).toBe(h.showing_a_status);
+    expect(h.showing_a_status).toBeLessThanOrEqual(h.connector_pages);
+    if (h.verdict.startsWith("EVERY")) expect(h.healthy).toBe(0);
+  });
+});
