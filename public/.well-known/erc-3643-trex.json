@@ -1,0 +1,32 @@
+{
+  "schema": "csoai.well-known/0.1",
+  "slug": "erc-3643-trex",
+  "name": "ERC-3643 / T-REX — permissioned token compliance surface",
+  "description": "Harvest target. ERC-3643 gates transfers behind an on-chain identity registry and a compliance contract; this door records what would be measured about that machinery.",
+  "as_of": "20260905T133000Z",
+  "state": "UNMEASURED",
+  "upstream": { "standard": "ERC-3643 (T-REX)", "access": "keyless — public chain reads", "relationship": "none; no endorsement by the T-REX association or any issuer is implied" },
+  "measurement_plan": {
+    "unit": "one deployed token contract, not one token holding",
+    "why_not_balances": "Balances are already visible on any block explorer. The non-obvious fact about a permissioned token is whether the compliance machinery it claims is present and callable.",
+    "verdicts": ["MEASURED", "UNMEASURED", "INVALID"],
+    "checks": [
+      "identity_registry_resolves — the token names an identity registry and that address returns code",
+      "compliance_contract_resolves — the token names a compliance contract and that address returns code",
+      "modules_enumerable — the compliance modules bound to the token can be listed",
+      "transfer_gated — a transfer path that is refused for a non-verified identity is observable"
+    ],
+    "grading": "none"
+  },
+  "handling_of_negative_readings": {
+    "rule": "A compliance contract that does not resolve is recorded UNMEASURED, never as a finding that the issuer is non-compliant.",
+    "why": "We can observe whether a contract answers. We cannot observe whether an issuer has met a legal obligation. Conflating the two turns a reader into a regulator."
+  },
+  "what_this_does_not_establish": [
+    "No T-REX deployment has been read by the Council of AI at this as_of.",
+    "No issuer of an ERC-3643 token is a client.",
+    "A resolving compliance contract is not evidence of regulatory compliance, and a non-resolving one is not evidence of its absence."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/erc-3643-trex.json", "live_board": "https://councilof.ai/api/gspc" },
+  "doctrine": "Measure the machinery, not the obligation. UNMEASURED is first-class."
+}

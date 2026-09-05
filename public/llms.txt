@@ -86,6 +86,29 @@ Printers of the live board. Reach is distribution. Authority stays GET /api/gspc
 
 Lid (quote live `totals.lid`): 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.
 
+## Card corpora (THREE, and they share no members)
+
+Three artifacts here carry a "card count". They are about different bytes and their identifier
+overlap is zero, so never add them, never reconcile them, and never let one stand in for another.
+
+The counts are deliberately NOT printed here. They move with each build -- the public root's
+card_count read 152 and 153 within one day of 2026-09-05, which is build timing and not
+disagreement -- and a number frozen into a file is a number nothing retires. Quote them by FIELD
+PATH from the live artifact instead:
+
+- Wrappers on disk, a build aggregate that signs nothing and measures nothing:
+  public/cards-bundle.json -> card_count
+- Public-root Merkle leaves, kind "catalogued": https://councilof.ai/root.json -> card_count
+  (read merkle_root and as_of from that same fetch, and say which host you fetched)
+- Signed card index, kind "catalogued": https://councilof.ai/signed/card_index.json -> n_cards,
+  which MUST equal n_cells and cards[].length; if they disagree, neither number is quotable
+- ...of those, VERIFIED: https://councilof.ai/api/state -> card_chain.bodies_verified_valid,
+  kind "measured" -- the only one of the three behind which a check was actually run
+- The relation itself: https://councilof.ai/api/state -> signed_cards.corpus_relation
+
+The root's OpenTimestamps proof covers root.json bytes only. It does not anchor the signed-card
+index and it does not anchor GSPC.
+
 ## For agents
 
 Prefer the keyless board API and verify.

@@ -1,0 +1,58 @@
+{
+  "schema": "csoai.interop-listing-state/0.1",
+  "slug": "mcp-directories",
+  "name": "MCP directory listing state",
+  "as_of": "20260905T133000Z",
+  "principle": "Where the fleet is listed, and where it is not. Every row is a probe result taken at as_of, never an assumption. NOT_LISTED is stated rather than omitted.",
+  "totals": {
+    "servers_in_official_registry": 330,
+    "registry_version_entries": 1272,
+    "packages_pypi": 329,
+    "packages_npm": 1,
+    "note": "Counts are DERIVED by paginating the registry search and counting entries flagged isLatest. They are not typed."
+  },
+  "directories": [
+    {
+      "id": "mcp-registry",
+      "name": "Official Model Context Protocol registry",
+      "url": "https://registry.modelcontextprotocol.io",
+      "state": "LISTED",
+      "evidence": "io.github.CSOAI-ORG/gspc isLatest v1.2.0; remote https://councilof.ai/mcp returns 200",
+      "probe": "curl -s 'https://registry.modelcontextprotocol.io/v0/servers?search=gspc'"
+    },
+    { "id": "smithery", "name": "Smithery", "url": "https://smithery.ai", "state": "NOT_LISTED", "evidence": "no estate slug records a Smithery listing", "probe": "slug scan of /.well-known/index.json and /interop/index.json" },
+    { "id": "glama", "name": "Glama MCP", "url": "https://glama.ai/mcp", "state": "NOT_LISTED", "evidence": "no estate slug records a Glama listing", "probe": "slug scan" },
+    { "id": "pulsemcp", "name": "PulseMCP", "url": "https://pulsemcp.com", "state": "NOT_LISTED", "evidence": "no estate slug records a PulseMCP listing", "probe": "slug scan" },
+    { "id": "mcp-so", "name": "mcp.so", "url": "https://mcp.so", "state": "NOT_LISTED", "evidence": "no estate slug records an mcp.so listing", "probe": "slug scan" },
+    { "id": "cline", "name": "Cline MCP marketplace", "url": "https://github.com/cline/mcp-marketplace", "state": "NOT_LISTED", "evidence": "no estate slug records a Cline listing", "probe": "slug scan" },
+    { "id": "docker-mcp", "name": "Docker MCP catalog", "url": "https://hub.docker.com/mcp", "state": "NOT_LISTED", "evidence": "no estate slug records a Docker MCP listing", "probe": "slug scan" }
+  ],
+  "known_defects": [
+    {
+      "id": "meok-remote-unresolvable",
+      "severity": "degraded-not-dead",
+      "detail": "39 of the 330 latest registry entries advertise a remote at https://api.meok.ai/ . The host api.meok.ai has no DNS record; the meok.ai apex resolves. All 39 carry a PyPI stdio fallback, so discovery by package still works and only discovery by remote fails.",
+      "probe": "dig +short api.meok.ai  (empty)  vs  dig +short meok.ai  (resolves)",
+      "owner_action": "re-publish those entries to repoint or drop the remotes block"
+    },
+    {
+      "id": "npm-provenance-absent",
+      "severity": "missing",
+      "detail": "csoai-gspc-mcp@0.2.1 has no attestations key under dist. npm publish --provenance is free from a GitHub-hosted runner.",
+      "probe": "curl -s https://registry.npmjs.org/csoai-gspc-mcp/latest",
+      "owner_action": "enable provenance on the next publish"
+    },
+    {
+      "id": "stale-advice-v1.0.0",
+      "severity": "informational",
+      "detail": "A 2026-09-02 brief advises keeping gspc v1.0.0. That version advertises csoai-gspc-mcp.nicholastempleman.workers.dev/mcp, which returns 404. isLatest is v1.2.0 and points at councilof.ai/mcp, which returns 200.",
+      "probe": "curl -o /dev/null -w '%{http_code}' https://csoai-gspc-mcp.nicholastempleman.workers.dev/mcp"
+    }
+  ],
+  "what_this_does_not_establish": [
+    "No directory named here endorses the Council of AI.",
+    "NOT_LISTED means no listing was found at as_of, not that a submission was refused.",
+    "No download or install count is claimed. Package-registry download totals are dominated by mirror traffic and are not adoption."
+  ],
+  "links": { "self": "https://councilof.ai/interop/mcp-directories.json", "mcp_door": "https://councilof.ai/mcp", "live_board": "https://councilof.ai/api/gspc" }
+}

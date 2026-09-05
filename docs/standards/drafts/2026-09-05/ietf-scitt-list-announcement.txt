@@ -1,0 +1,13 @@
+Subject: New I-D: draft-templeman-scitt-framing-space-00
+
+I have posted draft-templeman-scitt-framing-space-00, "Measuring the CBOR Framing Space of
+COSE_Sign1 Data-Hash Pre-images" (Informational).
+A COSE_Sign1 statement can be serialized into many distinct byte sequences that all decode to the
+same data item, so a data-hash over the wire octets is sensitive to that framing while the
+signature over the statement is not: two parties can hold the same signed statement and compute
+different identifiers for it. The draft measures the size and shape of that framing space rather
+than proposing a change, and I would value review of the enumeration and of whether the registry
+implications are stated correctly.
+
+https://datatracker.ietf.org/doc/draft-templeman-scitt-framing-space/
+https://www.ietf.org/archive/id/draft-templeman-scitt-framing-space-00.txt

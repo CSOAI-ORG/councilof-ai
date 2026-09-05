@@ -1,0 +1,298 @@
+# Council of AI — llms-full.txt (AI-agent discovery companion to llms.txt)
+
+## 1. THE LID
+
+The GSPC board: **{{PUBLIC_COUNT}}** = {{MODEL_FLEETS}} model-comparison + {{FACT_RUNS}} deterministic-fact.
+Measurement, not certification. Anyone can re-check.
+
+## 2. CURRENT BOARD SNAPSHOT
+
+```json
+{{BOARD_SNAPSHOT_JSON}}
+```
+
+## 3. THE 22 AXES — deep reference
+
+### governance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 237
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/governance.html
+
+### safety
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 36
+- accuracy: 0.944
+- separation: `TIE`
+- page: https://councilof.ai/axis/safety.html
+
+### provenance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/provenance.html
+
+### continuity
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/continuity.html
+
+### conformance
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 35
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/conformance.html
+
+### openness
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/openness.html
+
+### machinery-conformity
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/machinery-conformity.html
+
+### care
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 199
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/care.html
+
+### cross-reality
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 32
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/cross-reality.html
+
+### detector-interop
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 33
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/detector-interop.html
+
+### art5-safeguard
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 36
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/art5-safeguard.html
+
+### swarm
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 37
+- accuracy: 0.384
+- separation: `SEPARATED`
+- page: https://councilof.ai/axis/swarm.html
+
+### affect
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 41
+- separation: `UNTESTED`
+- page: https://councilof.ai/axis/affect.html
+
+### jail
+- family: `gspc`
+- kind: `model-comparison`
+- status: `MEASURED`
+- n: 71
+- accuracy: 0.5915
+- separation: `TIE`
+- page: https://councilof.ai/axis/jail.html
+
+### provenance-controls
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 6
+- separation: `None`
+- page: https://councilof.ai/axis/provenance-controls.html
+
+### reserve-attestation
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/reserve-attestation.html
+
+### regulatory-framework
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/regulatory-framework.html
+
+### distribution-integrity
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/distribution-integrity.html
+
+### custody-disclosure
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 16
+- separation: `None`
+- page: https://councilof.ai/axis/custody-disclosure.html
+
+### ai-adoption-components
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 2
+- separation: `None`
+- page: https://councilof.ai/axis/ai-adoption-components.html
+
+### labour-components
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 2
+- separation: `None`
+- page: https://councilof.ai/axis/labour-components.html
+
+### humanoid-labour-index
+- family: `financial`
+- kind: `deterministic-facts`
+- status: `MEASURED`
+- n: 8
+- separation: `None`
+- page: https://councilof.ai/axis/humanoid-labour-index.html
+
+## 4. THE CORRECTIONS LEDGER
+
+```json
+{
+  "schema": "csoai.corrections/0.1",
+  "policy": "Appended, never edited or deleted. Each entry: what was wrong, how it was caught, the fix. The instrument that catches its own owner is the instrument you can rely on.",
+  "license": "CC-BY-4.0",
+  "publisher": "Council of AI (CSOAI Ltd, UK Companies House 16939677)",
+  "corrections": [
+    {
+      "id": "C-2026-0902-09",
+      "date": "2026-09-02",
+      "what_was_wrong": "After C-2026-0902-08, live GET /api/gspc and /api/state headlines were 22 axis \u00b7 22 measured, but public/signed/gspc-board.signed.json was still the earlier 22/15/7 freeze, so signed_snapshot_agrees stayed false and the snapshot was labelled do-not-file.",
+      "how_caught": "Owner MPC ceremony on the Oracle custody host: live /api/gspc snapshot (site_attestation stripped) signed with did:web:csoai.org#gspc-board-22axis-2026 (3-party Coinbase cb-mpc Ed25519 additive). Offline verify (scripts/gspc-board-verify.mjs) returned VERIFIED; content_id 72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10.",
+      "fix": "The verified 22/22 freeze replaced public/signed/gspc-board.signed.json. /api/state now reports signed_snapshot_agrees from the count match (22 slots \u00b7 22 measured). The 15/7 file is superseded, not edited. The Pages /api/board-sign path was not used \u2014 it is a 3KB card-sign and cannot carry this snapshot.",
+      "status": "CORRECTED IN THAT SNAPSHOT \u2014 re-check the current axis arrays and signature state"
+    },
+    {
+      "id": "C-2026-0902-08",
+      "date": "2026-09-02",
+      "what_was_wrong": "/api/state quoted public/signed/gspc-board.signed.json totals (22 slots \u00b7 15 measured \u00b7 7 empty) as the number to file, and said that when that snapshot disagreed with live /api/gspc neither figure was quotable. Live GET /api/gspc (and the committed axis arrays it derives from) is 22 axis \u00b7 22 measured \u00b7 0 empty. A VRO map mailed 1 Sep used the 15/7 freeze; the correction that actually transited SMTP is Sent 82 (2 Sep 14:50Z) pointing at /api/gspc.",
+      "how_caught": "Recipient audit of the VRO table: /api/gspc and the homepage said 22/22; /signed/gspc-board.signed.json and /api/state still said 15/7 with signed_snapshot_agrees false.",
+      "fix": "/api/state board headlines now derive from the same axis arrays as GET /api/gspc. The signed snapshot stays on disk as a historical freeze (MPC key did:web:csoai.org#gspc-board-22axis-2026, three shares, not re-derived here) and is labelled 
+```
+
+## 5. THE SWIFT CENSUS (26 banks)
+
+```json
+{
+  "schema": "csoai.swift-census/0.1",
+  "kind": "reader",
+  "writes_board": false,
+  "supersedes": "csoai.swift-17/0.1",
+  "n": 26,
+  "n_measured": 0,
+  "n_live": 3,
+  "n_committed": 9,
+  "n_discovered": 14,
+  "status_all": "THREE_STATE",
+  "as_of": "2026-09-01",
+  "universe_note": "Swift cites 40+ financial institutions in the MVP construction phase, up from 30 named at Sibos Frankfurt Sept 2025. Only 26 could be sourced to a real, reachable, dated press URL and named here. The remaining ~14+ are NOT enumerated \u2014 no name is invented to reach 50.",
+  "honesty": "This is a sourced census of 26 named banks (3 LIVE, 9 COMMITTED, 14 DISCOVERED), not a '50'. Every row cites a real press URL with a date. No bank is a Council client. Not a Swift relationship. Not MEASURED \u2014 no ISO 20022 / copybook / MT artifact fetched. cobolbridge.ai HTTP 522 is infra, not this tape.",
+  "sources": {
+    "swift_pilot_9jul": {
+      "url": "https://www.swift.com/news-events/press-releases/swifts-blockchain-ledger-ready-use-17-banks-set-pioneer-tokenised-cross-border-payments-trusted-global-infrastructure",
+      "date": "2026-07-09",
+      "url_sha256": "215626e6c3a947b1d4cef4de1e169ae36c7351786aeb3d434b815f34f98d637f",
+      "note": "Swift press release, 17-bank pilot cohort. HTML body UNREACHABLE from this vantage; URL hashed."
+    },
+    "gfmag_pilot_10jul": {
+      "url": "https://gfmag.com/technology/swift-blockchain-ledger/",
+      "date": "2026-07-10",
+      "url_sha256": "8cf59cca452637b9827ec53586a5e151560554ffadf26e26070a4dce8b6ebb1a",
+      "note": "Reachable secondary source confirming the same 17 pilot banks."
+    },
+    "sc_live_19aug": {
+      "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/",
+      "date": "2026-08-19",
+      "url_sha256": "1870ceb4dbd25dd87e8c80505dc06a061cf2197a8a1e7e9d4be10e264a7f9d70",
+      "quote": "Swift's blockchain-based ledger acted as a secure orchestration layer, enabling the obligations to be matched and netted between the two banks prior to final settlement through existing systems.",
+      "note": "Standard Chartered primary press release: first live tokenised deposit transaction with HSBC, 19 Aug 2026. Settlement still through existing systems."
+    },
+    "fintechnews_uob_28aug": {
+      "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/",
+      "date": "2026-08-28",
+      "url_sha256
+```
+
+## 6. CURRENT EXACT-ROOT WITNESS STATE
+
+The root shipped with this file is scoped to its own exact bytes and 154 listed leaves:
+- root SHA-256: `9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd`
+- Merkle root: `2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745`
+- Ed25519: VERIFIED under `did:web:csoai.org#board-attestation-1`
+- Rekor: WITNESSED at log index `2714574265`
+- OTS proof SHA-256: `91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99`
+- OTS state: `STAMPED_PENDING_BITCOIN` — no Bitcoin block confirmation
+
+This exact-root witness does not bind the separate 335-card index, an entire
+measurement history, Hugging Face, or the corrections ledger. The two card corpora
+have zero identifier overlap. Machine-readable state: `/interop/root-witness-latest.json`.
+
+## 7. THE MCP DOOR
+
+`POST https://councilof.ai/mcp` with the 4 free tools:
+- `board_totals` — the 22 axis summary
+- `get_axis` — one axis row
+- `verify_card` — verify a supported card and inspect the returned result
+- `list_cards` — the signed card index
+Additional x402 tool names may be advertised by discovery. Pricing and successful
+production settlement are pending verification; a 402 challenge is not a payment receipt.
+
+## 8. THE 5 ACCESS SURFACES
+
+1. MCP — `POST https://councilof.ai/mcp`
+2. Chrome MV3 extension source — `https://github.com/CSOAI-ORG/council-of-ai/tree/master/extensions/chrome-gspc-verify` (source; no store install claimed)
+3. Grok plugin — github.com/CSOAI-ORG/council-of-ai-grok
+4. Hermes integration — no public install package is currently advertised
+5. REST + curl — `curl https://councilof.ai/api/gspc`
+
+---
+# Repository snapshot generated 2026-09-03; verify freshness against current endpoints.
+# Published route: https://councilof.ai/llms-full.txt
+# A signature claim applies only when the returned artefact contains verifiable signature material.

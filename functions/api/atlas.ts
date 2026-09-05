@@ -1,7 +1,6 @@
 /**
- * GET /api/atlas — browser with built-in measurement.
- *
- * Every page visit is signed.
+ * atlas — retired until its response can be derived from current evidence.
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>
@@ -16,8 +15,22 @@ const json = (body: unknown, status = 200) =>
 
 export const onRequestGet: PagesFunction = async () => {
   return json({
-    schema: "csoai.atlas/0.1",
-    as_of: new Date().toISOString(),
-    description: "Browser with built-in measurement. Every page visit is signed.",
-  });
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/atlas",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no browsing runtime; a description is not a page measurement",
+  }, 503);
+};
+
+export const onRequestPost: PagesFunction = async () => {
+  return json({
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/atlas",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no browsing runtime; a description is not a page measurement",
+  }, 503);
 };

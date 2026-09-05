@@ -2,7 +2,7 @@
 
 ## 1. THE LID
 
-The 22-axis GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
+The GSPC board: **22 axis · 22 measured** = 14 model-comparison + 8 deterministic-fact.
 Measurement, not certification. Anyone can re-check.
 
 ## 2. CURRENT BOARD SNAPSHOT
@@ -16,10 +16,10 @@ Measurement, not certification. Anyone can re-check.
     "measured_axes": 22,
     "unmeasured_axes": 0,
     "quotable_axes": 22,
-    "public_count": "22 axis \u00b7 22 measured",
+    "public_count": "22 axis · 22 measured",
     "model_fleets": 14,
     "fact_runs": 8,
-    "count_grammar": "This snapshot declares 22 axes. Read each axis entry for its scoped measurement state; do not infer universal evidence coverage. Slot and measured counts are derived from the axis array rather than typed independently.",
+    "count_grammar": "22 axis are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
     "by_family": {
       "gspc": {
         "axes": 14,
@@ -29,14 +29,32 @@ Measurement, not certification. Anyone can re-check.
       "financial": {
         "axes": 8,
         "measured": 8,
-        "note": "The 8 financial/domain axis entries (ADR-001) describe deterministic-fact runs: issuer-account flags from the referenced XRPL reader (financial n=16; provenance-controls n=6) and public statistical series, graded by rule with no model, fleet or judgement. None is a model comparison or contributes to the mean below. Measured is not the same as scored; inspect each cited run and current endpoint response."
+        "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs — issuer-account flags read off the public ledger (financial n=16 on the live XRPL reader; provenance-controls n=6) and public statistical series, graded by rule with no model, no fleet and no judgement. None of the eight is a model comparison, so none has a leader, an accuracy or a separation determination, and none contributes to any mean below — measured is not the same as scored. The two former index slots are measured as component facts (ai-adoption-components, labour-components), never restored to the retired MEASURED-INDEX-v0.1 sticker (C-2026-0826-05)."
       }
     },
-    "sweep_note": "Swept 2026-08-26 under ADR-001. The snapshot contains 14 model-comparison axis entries and 8 deterministic-fact axis entries. Fact axes carry no accuracy or leader; measured is not the same as scored. Inspect each referenced run and its own signature state rather than treating the board count as universal evidence.",
+    "sweep_note": "Swept 2026-08-26 under ADR-001. The 8 financial/domain axis were ruled in on 2026-08-24 but were absent from this payload until the sweep, so this endpoint reported 14 — the un-swept state. All 8 now carry published deterministic-facts run artifacts, so every one of the 22 axis on the board has a run behind it: 14 model-comparison axes and 8 deterministic-fact axes. The fact axes carry no accuracy and no leader — measured is not the same as scored. 1 run artifact carries an Ed25519 signature; 7 are content-addressed but unsigned. No signature is inferred from a content_id.",
+    "financial_run_attestations": {
+      "run_artifacts": 8,
+      "ed25519_signed": 1,
+      "content_addressed_unsigned": 7,
+      "signed_axes": [
+        "provenance-controls"
+      ],
+      "unsigned_axes": [
+        "reserve-attestation",
+        "regulatory-framework",
+        "distribution-integrity",
+        "custody-disclosure",
+        "ai-adoption-components",
+        "labour-components",
+        "humanoid-labour-index"
+      ],
+      "note": "Derived from each deterministic-facts axis's run_attestation field. A content_id proves identity of bytes, not signer authorization."
+    },
     "license": "CC-BY-4.0",
-    "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field \u2014 fixed same day.",
+    "license_note": "Board data is CC-BY-4.0 (attribute: Council of AI, CSOAI Ltd 16939677, councilof.ai). Our own valve-2 bench-card flagged the payload's missing licence field — fixed same day.",
     "items": 969,
-    "items_note": "items sums each axis's n. The n of the one measured financial axis counts ISSUER ACCOUNTS, not bank items, and declared slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
+    "items_note": "items sums each axis's n. Financial-axis n values count issuer accounts, public series, or frozen vendor URLs as declared on each row — not bank items. Unmeasured slots contribute 0 because nothing was measured. Read items as 'rows behind the board', not as a single comparable sample.",
     "comparison_axes": 14,
     "separated_leads": 1,
     "ties": 2,
@@ -44,7 +62,7 @@ Measurement, not certification. Anyone can re-check.
     "separation_scope_note": "Separation asks whether a leader's lead over a fleet is statistically real, so it applies only to the model-comparison axes. The financial axes have no fleet and no leader: they are not counted as untested, because no separation test is applicable to them.",
     "externally_led_axes": 3,
     "public_leader_count": 3,
-    "lid": "22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
     "own_leaders_excluded": 8,
     "own_leaders_excluded_axes": [
       "governance",
@@ -56,20 +74,20 @@ Measurement, not certification. Anyone can re-check.
       "art5-safeguard",
       "affect"
     ],
-    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes; 3 axes carry an external public leader. This changes leader attribution and externally-led tallies, not the snapshot's measured_axes field. Excluded model records retain their own published states and must be checked individually.",
+    "own_model_exclusion_note": "Own council-specialist models were removed from the public per-axis leaders on 8 of the 14 model-comparison axes (governance, provenance, continuity, conformance, openness, care, art5-safeguard, affect); 3 axes carry an external public leader. A neutral measurement body does not rank its own models against the vendors it measures. This changes leader attribution and the separation/mean tallies (which are over externally-led axes only), NOT measured_axes: every axis still carries a measurement, so the measured count is unchanged. The excluded models' signed cards are untouched — measurement happened; it is simply not published as a public ranking of our own model.",
     "uncarded_leaders_dropped": 3,
     "uncarded_leaders_dropped_axes": [
       "machinery-conformity",
       "cross-reality",
       "detector-interop"
     ],
-    "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes because no signed per-model card was found in /signed/card_index.json. A named leader requires an independently verifiable supporting card; absent that, no leader or accuracy is asserted. The affected axis entries retain their scoped fleet-aggregate state, and public_leader_state=NO_SIGNED_CARD.",
+    "uncarded_leader_note": "The public per-axis leader was removed on 3 of the 14 model-comparison axes (machinery-conformity, cross-reality, detector-interop) whose named leader was an external model carrying NO signed per-model card in the public card index (/signed/card_index.json). The board's promise is that every named leader links to the Ed25519 card behind it; where no such card exists, no leader or accuracy is asserted rather than invented. Each of these axes stays MEASURED — the fleet aggregate (fleet_mean) is a real measurement — so measured_axes is unchanged; only the unverifiable leader claim is dropped. public_leader_state=NO_SIGNED_CARD on each. This changes leader attribution and the separation/mean tallies (over carded, externally-led axes only), NOT the measured count.",
     "mean_macro_f1": 0.944,
     "mean_accuracy": 0.6398,
     "mean_fleet_mean": 0.5447,
     "mean_harm": 0.4877,
     "mean_unparsed_rate": 0.0541,
-    "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet \u2014 the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
+    "mean_note": "Means are over MEASURED MODEL-COMPARISON axes that carry the field. mean_accuracy averages the per-axis LEADERS; mean_fleet_mean averages each axis's measured fleet — the difference is selection, not skill. mean_harm is the severity-weighted failure mass the mean accuracy hides; it exists only for the measured board-v2 axes. No financial axis enters any of these means: an axis with no accuracy contributes nothing rather than a zero."
   },
   "axes_count": 22,
   "axes": [
