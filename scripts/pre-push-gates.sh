@@ -28,9 +28,13 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
 fail=0
 echo "pre-push: content gates (the ones that fail deploys) …"
 
-node scripts/wallet-credential-gate.mjs --selftest >/dev/null 2>&1 \
-  && node scripts/wallet-credential-gate.mjs >/dev/null 2>&1 \
-  || { echo "  ✖ wallet-credential-gate: wallet credential material is tracked"; fail=1; }
+# Keep the gate's own words. With its output discarded, a gate that CRASHED
+# (ENOENT in a sparse worktree, 2026-09-05) was announced here as "wallet
+# credential material is tracked" — a finding it never made. A crash and a
+# finding are different verdicts; print what the gate actually said.
+wallet_out=$(node scripts/wallet-credential-gate.mjs --selftest 2>&1 \
+  && node scripts/wallet-credential-gate.mjs 2>&1) \
+  || { echo "  ✖ wallet-credential-gate failed — its verdict:"; printf '%s\n' "$wallet_out" | tail -8 | sed 's/^/      /'; fail=1; }
 
 # The gate must be provably working before its verdict means anything — a gate
 # that has never gone red proves nothing about the tree it just passed.
