@@ -78,3 +78,11 @@ the wrong problem.
   `/workspace/gspc-24x7` is only 12 MB, so look at the model blobs. **Nothing was deleted.**
 - `HF_TOKEN` must be set as an Actions secret or `runpod-intake.yml` fails closed by design:
   the intake dataset is private, and an unreadable intake is UNCHECKABLE, not zero runs.
+
+## What the pod should grade next
+
+See **[RUNPOD-GSPC-PLAYLIST.md](RUNPOD-GSPC-PLAYLIST.md)**. Short version: of the 70 UNMEASURED
+`/api/hub-cards` cells, **0** are gradeable by this pod's 5 models, and none of them is short of
+data — all 70 are `n=30, signed=true, ["signed-pending-verify"]`, which is #1155 and wants a
+verification pass rather than GPU hours. The pod's own 5 models x 14 axes remain the right target
+because those cells exist nowhere else.
