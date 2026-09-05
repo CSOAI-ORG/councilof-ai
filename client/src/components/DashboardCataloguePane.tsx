@@ -3,12 +3,10 @@ import { Link, useSearch } from "wouter";
 import {
   Archive,
   ArrowRight,
-  Building2,
   Compass,
   Search,
   Wrench,
 } from "lucide-react";
-import { industriesForGrid } from "@/data/industries";
 import { ROUTE_MANIFEST } from "@/data/route-manifest";
 import {
   classify,
@@ -31,7 +29,7 @@ import {
   normalizeDashboardView,
 } from "@/lib/dashboardView";
 
-type CatalogueKind = "workflow" | "surface" | "industry" | "library";
+type CatalogueKind = "workflow" | "surface" | "library";
 
 export type DashboardCatalogueEntry = {
   id: string;
@@ -118,19 +116,6 @@ export function buildDashboardCatalogue(): DashboardCatalogueEntry[] {
     });
   }
 
-  for (const industry of industriesForGrid) {
-    const path = `/industries/${industry.slug}`;
-    add({
-      id: `industry:${industry.slug}`,
-      label: industry.name,
-      description: `${industry.short}. ${industry.bench}.`,
-      group: "Industries",
-      kind: "industry",
-      href: dashboardViewHref(path, industry.name),
-      path,
-    });
-  }
-
   // Primary pages not already owned by a workflow remain searchable without
   // becoming permanent sidebar clutter.
   for (const route of ROUTE_MANIFEST) {
@@ -186,7 +171,6 @@ const KIND_FILTERS: { id: "all" | CatalogueKind; label: string }[] = [
   { id: "all", label: "All" },
   { id: "workflow", label: "Workflows" },
   { id: "surface", label: "Current pages" },
-  { id: "industry", label: "Industries" },
   { id: "library", label: "Library" },
 ];
 
@@ -255,7 +239,7 @@ export default function DashboardCataloguePane() {
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         </div>
-        <dl className="mt-6 grid grid-cols-2 gap-2 text-center sm:max-w-2xl sm:grid-cols-4">
+        <dl className="mt-6 grid grid-cols-2 gap-2 text-center sm:max-w-2xl sm:grid-cols-3">
           {counts.map(({ id, label, count }) => (
             <div
               key={id}
@@ -331,9 +315,7 @@ export default function DashboardCataloguePane() {
                     className="group flex min-h-28 items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-emerald-700/35 hover:shadow-sm"
                   >
                     <span className="mt-0.5 rounded-lg bg-emerald-50 p-2 text-emerald-800">
-                      {entry.kind === "industry" ? (
-                        <Building2 className="h-4 w-4" />
-                      ) : entry.kind === "workflow" ? (
+                      {entry.kind === "workflow" ? (
                         <Wrench className="h-4 w-4" />
                       ) : entry.kind === "library" ? (
                         <Archive className="h-4 w-4" />
@@ -358,11 +340,9 @@ export default function DashboardCataloguePane() {
                         <span>
                           {entry.kind === "workflow"
                             ? "Workspace"
-                            : entry.kind === "industry"
-                              ? "Sector view"
-                              : entry.kind === "library"
-                                ? "Reference"
-                                : "In-frame page"}
+                            : entry.kind === "library"
+                              ? "Reference"
+                              : "In-frame page"}
                         </span>
                         {entry.auth ? (
                           <span className="text-amber-800">
