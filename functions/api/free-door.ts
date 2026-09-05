@@ -54,7 +54,13 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     accepts,
     bazaar: {
       info: {
-        input: { type: "http", method: "GET", queryParams: {} },
+        // NO queryParams. The facilitator validates info.input against the schema below, which
+        // sets additionalProperties:false on {type, method}. Sending queryParams therefore failed
+        // its own declaration — probed 2026-09-05, the EXTENSION-RESPONSES sidechannel answered
+        // {"bazaar":{"status":"rejected","rejectedReason":"Bazaar extension validation failed:
+        // /input: must NOT have additional properties"}}. This door takes no parameters, so the
+        // honest fix is to stop declaring one rather than widen the schema to admit an empty object.
+        input: { type: "http", method: "GET" },
         output: {
           type: "json",
           example: {
