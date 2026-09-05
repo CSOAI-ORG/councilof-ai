@@ -426,10 +426,9 @@ REPLACE_BODY = {
 }
 
 
-def hubcard(repo: str, d: dict, push: bool, out: Path) -> None:
+def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") -> None:
     from huggingface_hub import HfApi
     api = HfApi()
-    kind = "dataset"
     as_of = d["as_of"]
     dest = out / "hubcard" / repo.split("/")[1]
     dest.mkdir(parents=True, exist_ok=True)
@@ -450,8 +449,6 @@ def hubcard(repo: str, d: dict, push: bool, out: Path) -> None:
 
     # Front matter — fill only what is absent; never overwrite an owner's choice.
     fm.setdefault("license", "cc-by-4.0")
-    fm.setdefault("language", ["en"])
-    fm.setdefault("pretty_name", repo.split("/")[1])
     tags = list(fm.get("tags") or [])
     for t in FILLER_TAGS:
         if len(tags) >= 6:
@@ -459,11 +456,24 @@ def hubcard(repo: str, d: dict, push: bool, out: Path) -> None:
         if t not in tags:
             tags.append(t)
     fm["tags"] = tags
+    rows: dict[str, int] = {}
+    if kind == "space":
+        # A Space card has a title, no viewer, no manifest: only the block and the tags apply.
+        fm.setdefault("title", repo.split("/")[1])
+        block = hubcard_block(repo, kind, d, tree, rows, as_of)
+        new = join_front_matter(fm, splice(body, block, HUB_OPEN, HUB_CLOSE, before=None))
+        (dest / "README.md").write_text(new, encoding="utf-8")
+        p, n, fails = score_card(kind, new, sorted(have), None)
+        print(f"{repo}: {round(100 * p / n)}/100 locally{'  FAIL: ' + ', '.join(fails) if fails else ''} -> {dest / 'README.md'}")
+        if push:
+            hf_upload(dest / "README.md", repo, kind, "README.md", f"card v2: derive the block from the repo tree and GET /api/gspc at {as_of}")
+        return
+    fm.setdefault("language", ["en"])
+    fm.setdefault("pretty_name", repo.split("/")[1])
     fm.setdefault("task_categories", ["other"])
     fm.pop("dataset_info", None)  # a typed features/splits block is the stale-count carrier; the viewer infers from configs
 
     # Configs: ONE format. Prefer parquet; else the largest jsonl; else csv. Empty file -> viewer: false.
-    rows: dict[str, int] = {}
     if repo in REPLACE_BODY and repo == "csoai/gspc-leaderboard-results":
         fm.pop("configs", None)
         fm["viewer"] = False
@@ -583,6 +593,7 @@ def main() -> int:
     ap.add_argument("--public", action="store_true", help="with --check: public repos only")
     ap.add_argument("--dataset-board", action="store_true", help="regenerate datasets/csoai/gspc-board (parquet only)")
     ap.add_argument("--hubcard", nargs="*", default=None, metavar="REPO", help="refresh the 16-point block (+ front matter, manifest) on these datasets")
+    ap.add_argument("--space-hubcard", nargs="*", default=None, metavar="SPACE", help="refresh the 16-point block on these Spaces")
     ap.add_argument("--no-spaces", action="store_true", help="skip the two Space READMEs")
     ap.add_argument("--out", default=str(Path(tempfile.gettempdir()) / "csoai-hf-org-card"), help="where derived files are written")
     args = ap.parse_args()
@@ -615,6 +626,8 @@ def main() -> int:
         dataset_board(d, args.push, out / "dataset-gspc-board")
     for repo in args.hubcard or []:
         hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out)
+    for repo in args.space_hubcard or []:
+        hubcard(repo if "/" in repo else f"{ORG}/{repo}", d, args.push, out, kind="space")
     return 0 if d["state"] == "DERIVED" else 2
 
 
