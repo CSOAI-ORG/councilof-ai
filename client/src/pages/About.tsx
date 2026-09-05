@@ -578,7 +578,7 @@ export default function About() {
             <Badge className="mb-4 bg-blue-50 text-blue-600 border-blue-200">Trust & Protection</Badge>
             <h2 className="text-4xl font-bold mb-6">Professionally Insured & Regulated</h2>
             <p className="text-xl text-gray-600 leading-relaxed">
-              CSOAI LTD operates with full professional indemnity insurance, protecting our clients and partners.
+              Professional indemnity cover for CSOAI LTD is not stated here until the policy document is on file; the corrections ledger (C-2026-0902-06) records the open item.
             </p>
           </div>
 

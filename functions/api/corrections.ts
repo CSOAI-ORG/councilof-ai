@@ -163,8 +163,8 @@ const LEDGER = {
         "councilof.ai states a £5M professional-indemnity policy while the Series A pack's infrastructure-gaps sheet says insurance is unknown. One of them is wrong in a data room.",
       how_caught: "Owner reconciliation.",
       fix:
-        "Owner to confirm the policy document; the losing statement is corrected in place and this entry updated.",
-      status: "OPEN — owner confirmation pending",
+        "Owner to confirm the policy document; the losing statement is corrected in place and this entry updated. 2026-09-05: no policy document, certificate or insurer correspondence was found in the business mailbox or the repository, so the public assertion (About: 'operates with full professional indemnity insurance'; Disclaimers: 'maintains professional indemnity insurance') was withdrawn to the evidenced state — both pages now say cover is not stated until the policy document is on file. The assertion is restored, with insurer, limit and dates, the day the document is filed.",
+      status: "CORRECTED — public assertion withdrawn pending the policy document; restore on receipt",
     },
     // ── 2026-08-26: six entries from an outside SCITT/COSE audit ───────────────
     // Not self-caught. A working SCITT implementer with no CSOAI code, no CSOAI
