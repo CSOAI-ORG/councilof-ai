@@ -2,7 +2,7 @@
   "schema": "csoai.interop-listing-state/0.1",
   "slug": "mcp-directories",
   "name": "MCP directory listing state",
-  "as_of": "20260905T180144Z",
+  "as_of": "20260905T181237Z",
   "principle": "Where the fleet is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. A slug scan answers 'do we hold a note saying we are listed', which is a different question and was answering it wrongly: on 2026-09-05 six of these seven rows were produced that way and two of them (glama, docker-mcp) said NOT_LISTED while we were listed. UNKNOWN is a permitted state and is not NOT_LISTED.",
   "totals": {
     "servers_in_official_registry": 330,
@@ -24,9 +24,9 @@
       "id": "smithery",
       "name": "Smithery",
       "url": "https://smithery.ai",
-      "state": "NOT_LISTED",
-      "evidence": "zero csoai mentions on a Playwright-RENDERED search page; smithery.ai/api/servers?q= answers 404 so the rendered page is the only honest check",
-      "probe": "playwright: goto https://smithery.ai/?q=csoai, networkidle, count /csoai/i in document.body.innerText"
+      "state": "LISTED",
+      "evidence": "2 servers in the csoai namespace \u2014 csoai/gspc and csoai/gspc-mcp, both isDeployed=true \u2014 returned by Smithery's own registry API. A THIRD server, csgaglobal/csoai-compliance-council, carries our name in a namespace that is NOT ours; it is recorded here as a fact about the registry, not claimed as ours. Smithery is now part of Arcade.dev and /docs/build/deployments 404s.",
+      "probe": "curl -s 'https://api.smithery.ai/servers?q=csoai&pageSize=50' | python3 -c \"import sys,json;print([s['qualifiedName'] for s in json.load(sys.stdin)['servers'] if s.get('namespace')=='csoai'])\""
     },
     {
       "id": "glama",
@@ -92,7 +92,8 @@
     },
     "2026-09-05: glama and docker-mcp were published as NOT_LISTED and were LISTED. Cause: state derived from a scan of our own slug files, not from the directory. Corrected with rendered/API probes, each row now carries the command that produced it.",
     "2026-09-05: a rendered directory search echoes the query text, so counting mentions can read as presence. cline showed 9 'mentions' and is genuinely absent; confirmed with GitHub code search total_count=0.",
-    "2026-09-05: the first correction of this file cited '27 csoai mentions and 85 csoai links' as the evidence for glama=LISTED. 63 of those 85 were HREF-ONLY \u2014 Glama's own facet links carrying query=csoai in the URL, i.e. our search term echoed back. The state was right; the evidence was mostly an artefact. This is the same query-echo trap recorded one entry above for cline, fallen into in the same session. Count links whose TEXT names us, or listings under the author facet."
+    "2026-09-05: the first correction of this file cited '27 csoai mentions and 85 csoai links' as the evidence for glama=LISTED. 63 of those 85 were HREF-ONLY \u2014 Glama's own facet links carrying query=csoai in the URL, i.e. our search term echoed back. The state was right; the evidence was mostly an artefact. This is the same query-echo trap recorded one entry above for cline, fallen into in the same session. Count links whose TEXT names us, or listings under the author facet.",
+    "2026-09-05: smithery was published NOT_LISTED on the evidence 'zero csoai mentions on a Playwright-RENDERED search page'. WRONG. Smithery's own registry API returns two servers in the csoai namespace. The rendered homepage search and the registry API are different surfaces, and the page not showing a result is not the registry lacking one. A rendered check is necessary where there is no API and is NOT sufficient where there is one \u2014 query the API."
   ],
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
