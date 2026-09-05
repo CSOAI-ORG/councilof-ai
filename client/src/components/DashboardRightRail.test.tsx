@@ -31,6 +31,7 @@ function chatFixture(): LobbyChat {
     send: async () => {},
     startThread: () => {},
     selectThread: () => {},
+    clearHistory: () => {},
     turnCount: thread.turns.length,
   };
 }
@@ -45,8 +46,8 @@ describe("dashboard chat rail", () => {
     expect(html).toContain("The care axis is");
     expect(html).toContain("Current conversation");
     expect(html).toContain("History 1");
-    expect(html).toContain("browser tab only");
-    expect(html).not.toContain("stored on a server");
+    expect(html).toContain("Reloading restores it");
+    expect(html).toContain("Clear history removes it");
   });
 
   it("does not invent a transcript when no thread is active", () => {

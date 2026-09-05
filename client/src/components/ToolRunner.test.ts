@@ -6,6 +6,7 @@ import {
   isPaidTool,
   prefillToolDraft,
   resultOutcome,
+  summarizeToolResult,
   type RunnerTool,
   type RunnerToolResult,
 } from "./ToolRunner";
@@ -143,5 +144,46 @@ describe("MCP tool form model", () => {
       structuredContent: { status: "PAYMENT_REQUIRED" },
     };
     expect(resultOutcome(observed)).toBe("PAYMENT_REQUIRED");
+  });
+
+  it("summarises board totals without promoting the runtime read", () => {
+    const result: RunnerToolResult = {
+      ok: true,
+      state: "runtime_observed",
+      text: "very large raw board response",
+      structuredContent: {
+        state: "LIVE",
+        kind: "live-board-totals",
+        public_count: "22 axis · 22 measured",
+        source: "https://councilof.ai/api/gspc",
+        counts: [
+          { name: "axis_slots", value: 22 },
+          { name: "measured", value: 22 },
+          { name: "unmeasured", value: 0 },
+        ],
+      },
+    };
+
+    expect(summarizeToolResult("board_totals", result)).toEqual({
+      headline: "22 axis · 22 measured",
+      detail:
+        "LIVE board read. Slots and measurements are different counts; this result is not a certification.",
+      metrics: [
+        { label: "Axis slots", value: "22" },
+        { label: "Measured", value: "22" },
+        { label: "Unmeasured", value: "0" },
+      ],
+      source: "https://councilof.ai/api/gspc",
+    });
+  });
+
+  it("leaves unknown payloads raw rather than inventing a summary", () => {
+    const result: RunnerToolResult = {
+      ok: true,
+      state: "runtime_observed",
+      text: "raw",
+      structuredContent: { unexpected: true },
+    };
+    expect(summarizeToolResult("unknown_tool", result)).toBeNull();
   });
 });

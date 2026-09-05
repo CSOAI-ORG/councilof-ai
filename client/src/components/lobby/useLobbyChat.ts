@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   isExplicitNavigationCommand,
   LOBBY_TABS,
@@ -33,10 +33,10 @@ const CHAT_ENDPOINT =
  * session's threads. Lifting it also means MINIMISING THE LOBBY CANNOT LOSE THE
  * THREAD — the overlay stays mounted while docked, so the state simply survives.
  *
- * IN MEMORY ONLY, AND THE UI SAYS SO. Threads live for this page session. There
- * is no server-side history, no localStorage of message text, nothing to
- * retrieve after a reload. The Chats section states that plainly rather than
- * implying a transcript exists somewhere.
+ * LOCAL PAGE SESSION, AND THE UI SAYS SO. Threads are kept in sessionStorage so
+ * a deployment refresh or accidental reload does not erase the work. Nothing
+ * is sent to a transcript service or written to localStorage; the browser owns
+ * the session lifetime and the Chats section exposes a clear-history control.
  *
  * DETERMINISTIC FIRST. Two lanes, and the pill on every answer says which one
  * produced it:
@@ -66,6 +66,132 @@ export type Thread = {
   startedAt: string;
   turns: Turn[];
 };
+
+export const CHAT_SESSION_KEY = "coai.lobby.chat-session.v1";
+const MAX_STORED_THREADS = 12;
+const MAX_STORED_TURNS = 40;
+const MAX_STORED_TEXT = 4_000;
+
+type ChatSessionSnapshot = {
+  threads: Thread[];
+  activeId: string | null;
+};
+
+type SessionStore = Pick<Storage, "getItem" | "setItem" | "removeItem">;
+
+function browserSessionStore(): SessionStore | null {
+  try {
+    return typeof sessionStorage === "undefined" ? null : sessionStorage;
+  } catch {
+    return null;
+  }
+}
+
+function optionalString(value: unknown): string | undefined {
+  return typeof value === "string" && value ? value : undefined;
+}
+
+function parseStoredTurn(value: unknown): Turn | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const candidate = value as Record<string, unknown>;
+  if (
+    (candidate.role !== "user" && candidate.role !== "council") ||
+    typeof candidate.text !== "string" ||
+    typeof candidate.at !== "string"
+  ) {
+    return null;
+  }
+  return {
+    role: candidate.role,
+    text: candidate.text.slice(0, MAX_STORED_TEXT),
+    at: candidate.at,
+    state: optionalString(candidate.state),
+    signature: optionalString(candidate.signature),
+    provenance: optionalString(candidate.provenance),
+  };
+}
+
+function parseStoredThread(value: unknown): Thread | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const candidate = value as Record<string, unknown>;
+  if (
+    typeof candidate.id !== "string" ||
+    typeof candidate.title !== "string" ||
+    typeof candidate.startedAt !== "string" ||
+    !Array.isArray(candidate.turns)
+  ) {
+    return null;
+  }
+  const turns = candidate.turns
+    .map(parseStoredTurn)
+    .filter((turn): turn is Turn => turn !== null)
+    .slice(-MAX_STORED_TURNS);
+  if (!turns.length) return null;
+  return {
+    id: candidate.id.slice(0, 120),
+    title: candidate.title.slice(0, 64),
+    startedAt: candidate.startedAt,
+    turns,
+  };
+}
+
+/** Read a bounded, schema-checked browser-session transcript. */
+export function readChatSession(
+  store: Pick<SessionStore, "getItem"> | null = browserSessionStore(),
+): ChatSessionSnapshot {
+  if (!store) return { threads: [], activeId: null };
+  try {
+    const raw = store.getItem(CHAT_SESSION_KEY);
+    if (!raw) return { threads: [], activeId: null };
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+    const threads = (Array.isArray(parsed.threads) ? parsed.threads : [])
+      .map(parseStoredThread)
+      .filter((thread): thread is Thread => thread !== null)
+      .slice(-MAX_STORED_THREADS);
+    const activeId =
+      typeof parsed.activeId === "string" &&
+      threads.some((thread) => thread.id === parsed.activeId)
+        ? parsed.activeId
+        : null;
+    return { threads, activeId };
+  } catch {
+    return { threads: [], activeId: null };
+  }
+}
+
+/** Persist only the bounded local page session; failure never blocks chat. */
+export function writeChatSession(
+  snapshot: ChatSessionSnapshot,
+  store: Pick<SessionStore, "setItem"> | null = browserSessionStore(),
+): void {
+  if (!store) return;
+  try {
+    const threads = snapshot.threads.slice(-MAX_STORED_THREADS).map((thread) => ({
+      ...thread,
+      title: thread.title.slice(0, 64),
+      turns: thread.turns.slice(-MAX_STORED_TURNS).map((turn) => ({
+        ...turn,
+        text: turn.text.slice(0, MAX_STORED_TEXT),
+      })),
+    }));
+    const activeId = threads.some((thread) => thread.id === snapshot.activeId)
+      ? snapshot.activeId
+      : null;
+    store.setItem(CHAT_SESSION_KEY, JSON.stringify({ threads, activeId }));
+  } catch {
+    // Storage may be disabled or full; the in-memory conversation still works.
+  }
+}
+
+export function clearChatSession(
+  store: Pick<SessionStore, "removeItem"> | null = browserSessionStore(),
+): void {
+  try {
+    store?.removeItem(CHAT_SESSION_KEY);
+  } catch {
+    // Clearing is best effort when browser storage is disabled.
+  }
+}
 
 /** Estate-wide state labels for council replies. */
 export const STATE_LABEL: Record<string, string> = {
@@ -330,14 +456,22 @@ export interface LobbyChat {
   ) => Promise<void>;
   startThread: () => void;
   selectThread: (id: string) => void;
+  clearHistory: () => void;
   /** Total turns this session — quoted by the docked bar, computed never typed. */
   turnCount: number;
 }
 
 export function useLobbyChat(): LobbyChat {
-  const [threads, setThreads] = useState<Thread[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [initialSession] = useState(readChatSession);
+  const [threads, setThreads] = useState<Thread[]>(initialSession.threads);
+  const [activeId, setActiveId] = useState<string | null>(
+    initialSession.activeId,
+  );
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    writeChatSession({ threads, activeId });
+  }, [activeId, threads]);
 
   const active = useMemo(
     () => threads.find((t) => t.id === activeId) ?? null,
@@ -351,6 +485,11 @@ export function useLobbyChat(): LobbyChat {
 
   const startThread = useCallback(() => setActiveId(null), []);
   const selectThread = useCallback((id: string) => setActiveId(id), []);
+  const clearHistory = useCallback(() => {
+    clearChatSession();
+    setThreads([]);
+    setActiveId(null);
+  }, []);
 
   const send = useCallback(
     async (
@@ -612,6 +751,7 @@ export function useLobbyChat(): LobbyChat {
     send,
     startThread,
     selectThread,
+    clearHistory,
     turnCount,
   };
 }

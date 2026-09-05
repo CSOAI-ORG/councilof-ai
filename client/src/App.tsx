@@ -44,7 +44,6 @@ import { Footer } from "./components/Footer";
 import { SkipNavigation } from "./components/SkipNavigation";
 const Landing = lazy(() => import("./pages/Landing"));
 const CouncilLobby = lazy(() => import("./components/lobby/CouncilLobby"));
-const AgUiBridge = lazy(() => import("./pages/AgUiBridge"));
 const EUActChecklist = lazy(() => import("./pages/EUActChecklist"));
 const GpaiObligations = lazy(() => import("./pages/GpaiObligations"));
 const Penalties = lazy(() => import("./pages/Penalties"));
@@ -204,7 +203,6 @@ const Accreditation = lazy(() => import("./pages/Accreditation"));
 const SOAIPDCAFramework = lazy(() => import("./pages/SOAIPDCAFramework"));
 const PDCASimulator = lazy(() => import("./pages/PDCASimulator"));
 const EnterpriseDashboard = lazy(() => import("./pages/EnterpriseDashboard"));
-const Enterprise = lazy(() => import("./pages/Enterprise"));
 const ProsperityFund = lazy(() => import("./pages/ProsperityFund"));
 const Charter = lazy(() => import("./pages/Charter"));
 const PublicWatchdog = lazy(() => import("./pages/PublicWatchdog"));
@@ -302,7 +300,6 @@ const OpenMedia = lazy(() => import("./pages/OpenMedia"));
 const DistributionIntegrity = lazy(() => import("./pages/DistributionIntegrity"));
 const Gone = lazy(() => import("./pages/Gone"));
 const ArenaScoreboard = lazy(() => import("./pages/ArenaScoreboard"));
-const ChallengeDoor = lazy(() => import("./pages/ChallengeDoor"));
 const FindingsExplorer = lazy(() => import("./pages/FindingsExplorer"));
 const ModelFindings = lazy(() => import("./pages/ModelFindings"));
 import { AnalyticsProvider } from "./components/Analytics";
@@ -621,7 +618,7 @@ function App() {
                   <Route path="/docs" component={ContentReviewNotice} />
                   <Route path="/early-access" component={EarlyAccessLanding} />
                   <Route path="/ei3" component={EI3} />
-                  <Route path="/enterprise-plans">{() => <Redirect to="/pricing" />}</Route>
+                  <Route path="/enterprise-plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/eu-ai-act-classifier" component={EUAIActClassifier} />
                   <Route path="/eu-ai-act-urgency" component={ContentReviewNotice} />
                   <Route path="/feed" component={ContentReviewNotice} />
@@ -708,16 +705,13 @@ function App() {
                   <Route path="/get-listed" component={GetListed} />
                   <Route path="/badges">{() => <Redirect to="/badge" />}</Route>
                   <Route path="/verify-certificate">{() => <Redirect to="/gspc-verify" />}</Route>
-                  <Route path="/challenge" component={ChallengeDoor} />
                   <Route path="/regulator-findings" component={ContentReviewNotice} />
                   <Route path="/findings" component={FindingsExplorer} />
                   <Route path="/model/:id" component={ModelFindings} />
                   <Route path="/regulator/:id" component={ContentReviewNotice} />
                   <Route path="/arena-scoreboard" component={ArenaScoreboard} />
-                  <Route path="/ag-ui" component={AgUiBridge} />
-                  <Route path="/chat" component={AgUiBridge} />
                   {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
-                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
+                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
@@ -781,9 +775,6 @@ function App() {
                   <Route path="/policy-generator" component={PolicyGenerator} />
                   <Route path="/mcp-fleet" component={ContentReviewNotice} />
                   <Route path="/os" component={OsRoute} />
-                  {/* Same destination as the 308 in public/_redirects, so an in-app
-                      navigation and a cold load of /council-os land in the same place. */}
-                  <Route path="/council-os">{() => <Redirect to="/os" />}</Route>
                   <Route path="/sov3">{() => <Redirect to="/workbench" />}</Route>
                   <Route path="/demo" component={DemoOS} />
                   <Route path="/os-demo" component={DemoOS} />
@@ -819,8 +810,8 @@ function App() {
                   <Route path="/registers" component={Registers} />
                   <Route path="/signals" component={Signals} />
                   <Route path="/regions" component={RegionsMap} />
-                  {/* 2026-08-01 unification: the globe lives INSIDE Sov Space as a layer */}
-                  <Route path="/globe">{() => <Redirect to="/gspc-arena?view=globe" />}</Route>
+                  {/* The exact /globe door is owned by the published 3D surface. */}
+                  <Route path="/globe">{() => <Redirect to="/globe3d.html" />}</Route>
                   <Route path="/registry" component={ContentReviewNotice} />
                   <Route path="/eu-ai-act-checklist" component={EUActChecklist} />
                   <Route path="/checklist" component={EUActChecklist} />
@@ -981,7 +972,7 @@ function App() {
                   <Route path="/accreditation" component={Accreditation} />
                   <Route path="/soai-pdca" component={SOAIPDCAFramework} />
                   <Route path="/pdca-simulator" component={PDCASimulator} />
-                  <Route path="/enterprise" component={Enterprise} />
+                  <Route path="/enterprise">{() => <Redirect to="/dashboard?tab=measured&task=enterprise-start" />}</Route>
                   <Route path="/enterprise-dashboard" component={EnterpriseDashboard} />
                   <Route path="/compliance-monitoring" component={ContentReviewNotice} />
                   <Route path="/bulk-import" component={BulkAISystemImport} />
@@ -1054,15 +1045,13 @@ function App() {
                   <Route path="/charter/article/:id" component={ContentReviewNotice} />
                   <Route path="/404" component={NotFound} />
                   <Route path="/gone-space" component={Gone} />
-                  <Route path="/sov-space">{() => <Redirect to="/gone-space" />}</Route>
-                  <Route path="/sovereign-space">{() => <Redirect to="/gone-space" />}</Route>
+                  <Route path="/sov-space">{() => <Redirect to="/gspc-arena" />}</Route>
+                  <Route path="/sovereign-space">{() => <Redirect to="/gspc-arena" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
-                  <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  <Route path="/badges" component={BadgesPage} />
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
-                  <Route path="/plans">{() => <Redirect to="/pricing" />}</Route>
+                  <Route path="/plans">{() => <Redirect to="/dashboard?tab=measured&task=pricing-overview" />}</Route>
                   <Route path="/sovereign-pricing">{() => <Redirect to="/pricing" />}</Route>
                   <Route path="/start" component={OnboardOS} />
                   <Route path="/onboard" component={OnboardOS} />
@@ -1074,7 +1063,7 @@ function App() {
                   <Route path="/governance-graph" component={GovGraph} />
                   <Route path="/world-data" component={GovGraph} />
                   <Route path="/tools" component={ToolsPage} />
-                  <Route path="/plugin" component={ToolsPage} />
+                  <Route path="/plugin">{() => <Redirect to="/tools" />}</Route>
                   <Route path="/tool-commons" component={ToolCommons} />
                   <Route path="/mcp-tools" component={ToolCommons} />
                   <Route path="/sovereign-twin">{() => <Redirect to="/me" />}</Route>

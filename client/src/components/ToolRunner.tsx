@@ -48,9 +48,16 @@ export type RunnerTool = Omit<SovTool, "inputSchema"> & {
   };
 };
 
-export type RunnerToolResult = ToolResult & {
+export type RunnerToolResult = Omit<ToolResult, "state"> & {
   state: "runtime_observed" | "unreachable" | "unchecked";
   structuredContent?: unknown;
+};
+
+export type ToolResultSummary = {
+  headline: string;
+  detail: string;
+  metrics: Array<{ label: string; value: string }>;
+  source?: string;
 };
 
 // Keep this runner aligned with the current-master bridge, which calls /mcp.
@@ -240,6 +247,73 @@ export function resultOutcome(result: RunnerToolResult): string | null {
   return typeof status === "string" && status.trim() ? status.trim() : null;
 }
 
+function record(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function countMetric(
+  counts: unknown,
+  name: string,
+  label: string,
+): { label: string; value: string } | null {
+  if (!Array.isArray(counts)) return null;
+  const row = counts
+    .map(record)
+    .find((candidate) => candidate?.name === name);
+  const value = row?.value;
+  return typeof value === "number" || typeof value === "string"
+    ? { label, value: String(value) }
+    : null;
+}
+
+/**
+ * Turn known structured MCP payloads into a small human-readable result.
+ * The raw reply remains available below this summary: presentation never
+ * replaces evidence, changes its state, or claims more than the tool returned.
+ */
+export function summarizeToolResult(
+  toolName: string,
+  result: RunnerToolResult,
+): ToolResultSummary | null {
+  if (!result.ok) return null;
+  const payload = record(result.structuredContent);
+  if (!payload) return null;
+
+  if (toolName === "board_totals" || payload.kind === "live-board-totals") {
+    const publicCount =
+      typeof payload.public_count === "string"
+        ? payload.public_count
+        : "Board totals returned";
+    const state =
+      typeof payload.state === "string" ? payload.state : "RUNTIME_OBSERVED";
+    const metrics = [
+      countMetric(payload.counts, "axis_slots", "Axis slots"),
+      countMetric(payload.counts, "measured", "Measured"),
+      countMetric(payload.counts, "unmeasured", "Unmeasured"),
+    ].filter(
+      (metric): metric is { label: string; value: string } => metric !== null,
+    );
+    return {
+      headline: publicCount,
+      detail: `${state} board read. Slots and measurements are different counts; this result is not a certification.`,
+      metrics,
+      source:
+        typeof payload.source === "string" ? payload.source : undefined,
+    };
+  }
+
+  const outcome = resultOutcome(result);
+  if (!outcome) return null;
+  return {
+    headline: outcome,
+    detail:
+      "Endpoint outcome from this runtime call. Inspect the raw response for its evidence scope and limitations.",
+    metrics: [],
+  };
+}
+
 function fieldPlaceholder(name: string, kind: FieldKind): string {
   if (kind === "object") return '{\n  "key": "value"\n}';
   if (kind === "array") return '[\n  "value"\n]';
@@ -340,6 +414,13 @@ export default function ToolRunner({
 
   const properties = active?.inputSchema?.properties || {};
   const required = new Set(active?.inputSchema?.required || []);
+  const outputSummary = useMemo(
+    () =>
+      active && output
+        ? summarizeToolResult(active.name, output.result)
+        : null,
+    [active, output],
+  );
 
   function pick(tool: RunnerTool) {
     setActive(tool);
@@ -806,9 +887,60 @@ export default function ToolRunner({
                       </button>
                     </div>
                   </header>
-                  <pre className="max-h-[30rem] overflow-auto bg-[#04120c] p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
-                    <code>{output.result.text}</code>
-                  </pre>
+                  {outputSummary ? (
+                    <div
+                      className="border-t border-emerald-900/10 bg-white px-4 py-4"
+                      aria-label="Tool result summary"
+                    >
+                      <p className="text-base font-semibold text-slate-950">
+                        {outputSummary.headline}
+                      </p>
+                      <p className="mt-1 max-w-3xl text-xs leading-relaxed text-slate-600">
+                        {outputSummary.detail}
+                      </p>
+                      {outputSummary.metrics.length ? (
+                        <dl className="mt-3 grid gap-2 sm:grid-cols-3">
+                          {outputSummary.metrics.map((metric) => (
+                            <div
+                              key={metric.label}
+                              className="rounded-lg border border-slate-900/10 bg-slate-50 px-3 py-2.5"
+                            >
+                              <dt className="text-[10px] font-bold uppercase tracking-[0.1em] text-slate-500">
+                                {metric.label}
+                              </dt>
+                              <dd className="mt-0.5 text-lg font-semibold text-slate-950">
+                                {metric.value}
+                              </dd>
+                            </div>
+                          ))}
+                        </dl>
+                      ) : null}
+                      {outputSummary.source ? (
+                        <p className="mt-3 break-all text-[10px] text-slate-500">
+                          Payload source: {outputSummary.source}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
+                  <details
+                    className="group border-t border-slate-900/10 bg-[#04120c]"
+                    open={
+                      !outputSummary &&
+                      output.result.text.length < 4000
+                    }
+                  >
+                    <summary className="cursor-pointer list-none px-4 py-3 text-[11px] font-semibold text-emerald-50 marker:hidden hover:bg-white/5">
+                      <span className="group-open:hidden">
+                        Show complete raw MCP response
+                      </span>
+                      <span className="hidden group-open:inline">
+                        Hide complete raw MCP response
+                      </span>
+                    </summary>
+                    <pre className="max-h-[30rem] overflow-auto border-t border-white/10 p-4 font-mono text-[11.5px] leading-relaxed text-emerald-50">
+                      <code>{output.result.text}</code>
+                    </pre>
+                  </details>
                   <footer className="border-t border-slate-900/10 bg-slate-50 px-4 py-2.5 text-[10px] leading-relaxed text-slate-600">
                     Source:{" "}
                     <code className="font-mono">POST {MCP_RPC_ENDPOINT}</code> ·

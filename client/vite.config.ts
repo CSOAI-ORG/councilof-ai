@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const devUpstream = process.env.VITE_DEV_UPSTREAM || 'http://localhost:3001';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
@@ -25,7 +26,10 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
-    proxy: { '^/api/': { target: 'http://localhost:3001', changeOrigin: true } },
+    proxy: {
+      '^/api/': { target: devUpstream, changeOrigin: true },
+      '^/mcp$': { target: devUpstream, changeOrigin: true },
+    },
     watch: { usePolling: true, interval: 1000 },
   },
   build: {

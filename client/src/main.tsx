@@ -11,6 +11,7 @@ import { trpc, createTRPCClient } from './lib/trpc';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import './styles/index.css';
+import { registerCouncilServiceWorker } from './lib/pwa';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -38,3 +39,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </trpc.Provider>
   </React.StrictMode>
 );
+
+void registerCouncilServiceWorker(import.meta.env.PROD);

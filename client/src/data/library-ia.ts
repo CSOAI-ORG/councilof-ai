@@ -59,9 +59,9 @@ export const PRIMARY_PATHS = new Set<string>([
   // Regulation findings — the signed (model × axis) findings joined to regulator + fine tier.
   // /findings is the hub; /model/:id and /regulator/:id detail views are covered by
   // PRIMARY_PREFIXES below (a param path can never be an exact-Set member).
-  "/findings", "/regulator-findings",
+  "/findings",
   // Products — the family, and who it is for
-  "/products", "/pricing-free", "/gpai-evidence", "/cra-readiness", "/financial-axes",
+  "/products", "/gpai-evidence", "/cra-readiness", "/financial-axes",
   "/distribution-integrity", "/embed", "/white-label", "/badge", "/cobolbridge",
   "/council-licensing", "/licensing-agreement",
   "/enterprise", "/insurers", "/government", "/industries", "/sectors", "/payg", "/integrations",
@@ -100,16 +100,16 @@ export const PRIMARY_PATHS = new Set<string>([
   // path and every LOBBY_ROUTES path, so the next tab someone adds cannot reintroduce
   // the trap silently.
   "/readiness-assessment", "/dashboard", "/layer0", "/network", "/hive", "/intel",
-  "/benchmark-quality", "/mcp-fleet", "/mcps", "/feed",
+  "/benchmark-quality", "/mcps",
   // Promoted to a first-class Council OS read-only Watchdog destination.
   "/watchdog-hub",
   // Evidence
-  "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/status", "/rating-the-raters",
-  "/system-card", "/xrpl-attest", "/claims-register",
-  // Academy (folded into Company in the nav; the pages are still current)
-  "/academy", "/courses", "/training", "/verify-certificate", "/accreditation",
+  "/honesty", "/refutation-ledger", "/firewall-charter", "/doctrine", "/api-docs", "/rating-the-raters",
+  "/xrpl-attest", "/claims-register",
+  // Academy (folded into Company in the nav)
+  "/academy", "/verify-certificate", "/accreditation",
   // Company
-  "/about", "/library", "/blog", "/trust-center", "/contact", "/disclaimers",
+  "/about", "/library", "/contact", "/disclaimers",
   "/faq",
   // Who it is for — the six /for/:persona audience pages (PersonaRouter).
   // These are DYNAMIC routes, so they never appear in ROUTE_MANIFEST and cannot be
@@ -129,7 +129,7 @@ export const PRIMARY_PATHS = new Set<string>([
  * A prefix here means "this whole family is primary" — it is the same decision
  * PRIMARY_PATHS records, expressed for a route that has no single path.
  */
-export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/industries/", "/vs/", "/model/", "/regulator/"];
+export const PRIMARY_PREFIXES: readonly string[] = ["/for/", "/vs/", "/model/"];
 
 export function isPrimaryPath(p: string): boolean {
   return PRIMARY_PATHS.has(p) || PRIMARY_PREFIXES.some((pre) => p.startsWith(pre));

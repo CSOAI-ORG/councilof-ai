@@ -7,14 +7,13 @@ import type { LobbyChat } from "./useLobbyChat";
  * The threads opened in THIS page session, newest last, with the first question
  * as the title. Selecting one puts it back in the chat bar.
  *
- * IN MEMORY, AND IT SAYS SO. There is no server-side history and nothing is
- * written to storage: reload the page and this list is empty. The note at the
- * foot states that rather than letting the presence of a list imply a
- * transcript exists somewhere to retrieve.
+ * LOCAL SESSION, AND IT SAYS SO. There is no server-side history. The bounded
+ * transcript lives in this tab's sessionStorage so a reload can restore it;
+ * the user can clear it here and the browser controls when the tab session ends.
  */
 
 export default function LobbyChats({ chat }: { chat: LobbyChat }) {
-  const { threads, activeId, selectThread, startThread } = chat;
+  const { threads, activeId, selectThread, startThread, clearHistory } = chat;
 
   return (
     <div className="flex h-full flex-col">
@@ -27,6 +26,15 @@ export default function LobbyChats({ chat }: { chat: LobbyChat }) {
         >
           New thread
         </button>
+        {threads.length ? (
+          <button
+            type="button"
+            onClick={clearHistory}
+            className={`rounded-lg border border-rose-900/15 bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-rose-800 transition hover:bg-rose-50 motion-reduce:transition-none ${FOCUS}`}
+          >
+            Clear history
+          </button>
+        ) : null}
       </div>
 
       {threads.length === 0 ? (
@@ -71,9 +79,9 @@ export default function LobbyChats({ chat }: { chat: LobbyChat }) {
       )}
 
       <p className={`mt-auto pt-4 ${TYPE.fine}`}>
-        These threads live in this browser tab for as long as it is open. Nothing is stored on a
-        server and nothing is written to disk — close or reload the page and this list is gone.
-        Minimising the lobby keeps it.
+        These threads are stored only in this browser tab&apos;s bounded session
+        storage. They survive a reload, are not sent to a transcript server, and
+        can be removed with Clear history.
       </p>
     </div>
   );

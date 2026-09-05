@@ -79,7 +79,7 @@ export function DashboardChatRail({ chat }: { chat: LobbyChat }) {
             </p>
             <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
               Ask from the composer below the centre canvas, or choose a thread
-              from this session&apos;s history.
+              from this browser session&apos;s history.
             </p>
             {chat.threads.length > 0 && (
               <button
@@ -100,8 +100,8 @@ export function DashboardChatRail({ chat }: { chat: LobbyChat }) {
 
       {view === "conversation" && (
         <p className="shrink-0 border-t border-border px-3 py-2 text-[10px] leading-relaxed text-muted-foreground">
-          This conversation exists in this browser tab only. Reloading or
-          closing it clears the thread.
+          Stored only in this browser tab&apos;s session. Reloading restores it;
+          Clear history removes it.
         </p>
       )}
     </div>
@@ -170,8 +170,8 @@ export default function DashboardRightRail({
               </p>
               <p className="mt-1 font-semibold">{readWorkspaceName()}</p>
               <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                Local to this browser. Conversation and activity are retained
-                only for this workspace.
+                Local to this browser. Conversation is retained in this tab&apos;s
+                bounded session storage; activity remains session-only.
               </p>
             </div>
             <div>

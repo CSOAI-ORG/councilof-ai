@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#04624a" />
+    <title>Council OS — offline</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fafaf7; color: #10231d; }
+      main { width: min(34rem, calc(100% - 2rem)); padding: 2rem; border: 1px solid #d8e2dd; border-radius: 1rem; background: #fff; box-shadow: 0 1.25rem 4rem rgba(4, 98, 74, .08); }
+      img { width: 2.5rem; height: 2.5rem; }
+      h1 { margin: 1rem 0 .5rem; font-size: 1.5rem; }
+      p { margin: 0; color: #53645e; line-height: 1.6; }
+      button { margin-top: 1.25rem; border: 0; border-radius: .7rem; padding: .75rem 1rem; background: #04624a; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+      small { display: block; margin-top: 1rem; color: #71817b; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/csoai-icon.svg" alt="" />
+      <h1>Council OS is offline</h1>
+      <p>The workspace needs a connection for current regulation, board totals, and MCP results. Those live responses are intentionally never served from an offline cache.</p>
+      <button type="button" onclick="location.reload()">Try again</button>
+      <small>Previously downloaded static assets may remain available; runtime evidence does not.</small>
+    </main>
+  </body>
+</html>

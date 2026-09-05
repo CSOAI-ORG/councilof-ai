@@ -1,9 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  CHAT_SESSION_KEY,
+  clearChatSession,
   matchAxisFactQuestion,
   matchGuardedActionIntent,
   matchSafeMcpReadIntent,
+  readChatSession,
   runSafeMcpRead,
+  writeChatSession,
 } from "./useLobbyChat";
 
 describe("lobby chat axis evidence intent", () => {
@@ -111,5 +115,74 @@ describe("lobby chat MCP read routing", () => {
     expect(reply.state).toBe("unreachable");
     expect(reply.text).toMatch(/no cached value was substituted/i);
     expect(reply.text).toMatch(/no write, payment, signature/i);
+  });
+});
+
+describe("lobby chat browser-session history", () => {
+  function memoryStore(seed?: string) {
+    const values = new Map<string, string>();
+    if (seed !== undefined) values.set(CHAT_SESSION_KEY, seed);
+    return {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    };
+  }
+
+  it("restores a valid local session and rejects a broken active id", () => {
+    const store = memoryStore(
+      JSON.stringify({
+        activeId: "missing",
+        threads: [
+          {
+            id: "t1",
+            title: "Show the board",
+            startedAt: "2026-09-05T00:00:00.000Z",
+            turns: [
+              {
+                role: "user",
+                text: "Show the board",
+                at: "2026-09-05T00:00:00.000Z",
+              },
+            ],
+          },
+        ],
+      }),
+    );
+    const restored = readChatSession(store);
+    expect(restored.threads).toHaveLength(1);
+    expect(restored.activeId).toBeNull();
+  });
+
+  it("persists and clears the bounded session without a server", () => {
+    const store = memoryStore();
+    const snapshot = {
+      activeId: "t1",
+      threads: [
+        {
+          id: "t1",
+          title: "Show the board",
+          startedAt: "2026-09-05T00:00:00.000Z",
+          turns: [
+            {
+              role: "user" as const,
+              text: "Show the board",
+              at: "2026-09-05T00:00:00.000Z",
+            },
+          ],
+        },
+      ],
+    };
+    writeChatSession(snapshot, store);
+    expect(readChatSession(store)).toEqual(snapshot);
+    clearChatSession(store);
+    expect(readChatSession(store)).toEqual({ threads: [], activeId: null });
+  });
+
+  it("fails closed on malformed stored content", () => {
+    expect(readChatSession(memoryStore("not json"))).toEqual({
+      threads: [],
+      activeId: null,
+    });
   });
 });

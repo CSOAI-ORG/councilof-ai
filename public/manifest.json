@@ -1,13 +1,46 @@
 {
+  "id": "/dashboard",
   "name": "Council OS",
-  "short_name": "CSOAI",
-  "description": "AI-governance measurement workspace: current GSPC board, family-aware verification, evidence records and clearly labelled simulations. The 33-seat council is a design, not a live quorum.",
-  "start_url": "/",
+  "short_name": "Council OS",
+  "description": "A workspace for inspecting AI-governance evidence, running published tools, and verifying signed measurement cards. Measurement, not certification.",
+  "start_url": "/dashboard?source=installed-app",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#03110b",
-  "theme_color": "#059669",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "background_color": "#fafaf7",
+  "theme_color": "#04624a",
+  "categories": ["business", "productivity", "utilities"],
   "icons": [
-    { "src": "/csoai-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
-  ]
+    {
+      "src": "/csoai-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Verify a signed card",
+      "short_name": "Verify",
+      "url": "/dashboard?tab=verify"
+    },
+    {
+      "name": "Open the GSPC board",
+      "short_name": "Board",
+      "url": "/dashboard?tab=board"
+    },
+    {
+      "name": "Open published tools",
+      "short_name": "Tools",
+      "url": "/dashboard?tab=tools"
+    }
+  ],
+  "prefer_related_applications": false
 }
