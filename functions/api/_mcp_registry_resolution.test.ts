@@ -65,14 +65,24 @@ describe("the resolution measurement is internally consistent", () => {
 describe("the coverage measurement keeps its weak number quarantined", () => {
   const c = doc.coverage;
 
-  it("the classification accounts for every absent repo", () => {
-    expect(c.of_those_server_shaped + c.of_those_not_a_server).toBe(c.mcp_repos_absent_from_registry);
-    expect(c.mcp_repos_absent_from_registry).toBeLessThanOrEqual(c.mcp_named_unarchived);
+  it("the unpublished split adds up and the arithmetic to 'available' holds", () => {
+    const u = c.unpublished;
+    expect(u.mcp_named + u.not_mcp_named).toBe(u.total);
+    expect(u.registry_today + u.total).toBe(u.available_if_published);
     expect(c.published_in_registry).toBeLessThanOrEqual(c.mcp_named);
   });
 
-  it("says out loud that server-shape is a file heuristic, not a running server", () => {
+  it("says out loud that a declared dependency is not a running server", () => {
     expect(c.method).toMatch(/no repo was cloned, installed or run/i);
+  });
+
+  it("keeps the superseded 64 next to the reason it was wrong", () => {
+    // It was published in this same file and understated the answer by more than half, because it
+    // filtered on the repo NAME. If a later edit deletes the record, the next reader inherits the
+    // same name-based instinct with nothing to warn them.
+    expect(c.superseded_figure.value).toBe(64);
+    expect(c.superseded_figure.why_wrong).toMatch(/name is not a detector/i);
+    expect(c.detector).toMatch(/61, not 64/);
   });
 
   it("the 51 stays quarantined and never becomes a top-level claim", () => {
