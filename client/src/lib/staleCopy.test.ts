@@ -49,10 +49,14 @@ describe("stale copy honesty", () => {
     expect(JSON.parse(mcpCard).endpoints.mcp.stdio).toBe(
       "npx -y csoai-gspc-mcp@0.2.1",
     );
-    const agentMcp = JSON.parse(agentCard).supportedInterfaces.find(
+    // The agent card no longer lists /mcp as an A2A interface (it does not speak A2A;
+    // spec v1.0.1 §8.3.1). The npm-tools copy it used to carry lives in mcp.json, asserted
+    // above. What the card's JSONRPC interface must now say is that it is the real A2A door.
+    const agentA2a = JSON.parse(agentCard).supportedInterfaces.find(
       (entry: { protocolBinding?: string }) => entry.protocolBinding === "JSONRPC",
     );
-    expect(agentMcp.note).toMatch(/csoai-gspc-mcp@0\.2\.1 lists twelve/i);
+    expect(agentA2a.url).toBe("https://councilof.ai/api/a2a");
+    expect(agentA2a.protocolVersion).toMatch(/^\d+\.\d+$/);
     expect(tools).toContain("WatchlistPane");
     expect(tools).toMatch(
       /board_totals · get_axis · verify_card · list_cards ·\s*get_root · get_card · verify_inclusion/,
