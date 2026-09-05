@@ -20,7 +20,7 @@
 
 Independent AI-governance measurement. This repository is the live site, API and signing pipeline behind [councilof.ai](https://councilof.ai): the 22-axis GSPC board, Ed25519-signed measurement cards, the signed Merkle public root and its transparency-log witness, the corrections ledger, the A2A agent card, the x402 manifest, and the PyPI / npm readers. **Measurement, not certification.**
 
-_derived 2026-09-05T14:15:55Z by `scripts/github/org-readme.py` — quote the API, not this file; if they disagree, the API is right._
+_derived 2026-09-05T14:19:57Z by `scripts/github/org-readme.py` — quote the API, not this file; if they disagree, the API is right._
 
 ## The board today
 

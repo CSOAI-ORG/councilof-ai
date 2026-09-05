@@ -4,7 +4,7 @@
 >
 > We run AI systems against frozen, published instruments; grade deterministically; sign every result with Ed25519; publish a Merkle root and witness it in a public transparency log; and keep a public corrections ledger. **Measurement, not certification.** Verification is free and loginless. Nothing ranked pays us; we exclude our own models from public leader positions.
 
-_derived 2026-09-05T14:15:48Z — every number on this page is read live from the URLs in [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py); if this file and the API disagree, the API is right._
+_derived 2026-09-05T14:19:51Z — every number on this page is read live from the URLs in [`scripts/github/org-readme.py`](https://github.com/CSOAI-ORG/councilof-ai/blob/master/scripts/github/org-readme.py); if this file and the API disagree, the API is right._
 
 [![GSPC board — 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.](https://councilof.ai/badge/gspc.svg)](https://councilof.ai/api/gspc)
 
@@ -123,8 +123,8 @@ _8 SKUs read from `docs/product/_INDEX.json` (as_of 2026-09-05T12:20:02Z). A **4
 - **Challenge a measurement:** open a [measurement challenge](https://github.com/CSOAI-ORG/.github/issues/new?template=measurement-challenge.yml) — cite the card id and the frozen bank row.
 - **Report a defect:** [defect template](https://github.com/CSOAI-ORG/.github/issues/new?template=defect.yml). Accepted defects land in the public [corrections ledger](https://councilof.ai/api/corrections), never in a silent edit.
 - **Code:** PRs into [`councilof-ai`](https://github.com/CSOAI-ORG/councilof-ai) run the same gates as a deploy (`pr-gates.yml`). Read [CONTRIBUTING](https://github.com/CSOAI-ORG/.github/blob/main/CONTRIBUTING.md) and [SECURITY](https://github.com/CSOAI-ORG/.github/blob/main/SECURITY.md).
-- **What we never do:** certify, sell a rank or early sight of a grade, remediate for a fee, or take money from anything we rank.
+- **What we never do:** certify; sell ratings, ranking position or early sight of a grade; remediate for a fee; or take money from anything we rank.
 
 ---
 
-<sub>CSOAI Ltd · UK Companies House 16939677 · 3rd Floor 86-90 Paul Street, London EC2A 4NE · nicholas@csoai.org · derived 2026-09-05T14:15:48Z</sub>
+<sub>CSOAI Ltd · UK Companies House 16939677 · 3rd Floor 86-90 Paul Street, London EC2A 4NE · nicholas@csoai.org · derived 2026-09-05T14:19:51Z</sub>

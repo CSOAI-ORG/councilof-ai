@@ -35,8 +35,8 @@ So the generated profile is written to **two** places — `CSOAI-ORG/.github/pro
 2. **Pins (browser only — github.com/CSOAI-ORG → Customize your pins):** replace the six
    MEOK MCP repos currently pinned (`dora-compliance-mcp`, `eu-ai-act-compliance-mcp`,
    `csoai-cra-annex-iv-classifier-mcp`, `csoai-governance-engine-mcp`,
-   `csoai-mcp-injection-scan-mcp`, `csoai-watermark-attest-mcp` — their READMEs carry
-   "Pro (£199/mo)", Stripe badges and "EU AI Act Compliant" badges, all against doctrine) with:
+   `csoai-mcp-injection-scan-mcp`, `csoai-watermark-attest-mcp` — their READMEs carry a
+   monthly subscription price, Stripe badges and "EU AI Act Compliant" badges, all against doctrine) with:
    `councilof-ai` · `gspc-board` · `a2a-signed-receipts` · `inspect-receipts` · `corpus-watch` · `carder`.
 3. **Social preview (browser only — repo → Settings → Social preview → Upload):** upload
    [`social-preview.png`](social-preview.png) (1280×640, white + green, the live lid, stamped

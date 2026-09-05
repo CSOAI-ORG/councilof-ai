@@ -454,7 +454,7 @@ def profile_md(f: dict, product_index: Path | None) -> str:
         "- **Challenge a measurement:** open a [measurement challenge](https://github.com/CSOAI-ORG/.github/issues/new?template=measurement-challenge.yml) — cite the card id and the frozen bank row.",
         "- **Report a defect:** [defect template](https://github.com/CSOAI-ORG/.github/issues/new?template=defect.yml). Accepted defects land in the public [corrections ledger](https://councilof.ai/api/corrections), never in a silent edit.",
         "- **Code:** PRs into [`councilof-ai`](https://github.com/CSOAI-ORG/councilof-ai) run the same gates as a deploy (`pr-gates.yml`). Read [CONTRIBUTING](https://github.com/CSOAI-ORG/.github/blob/main/CONTRIBUTING.md) and [SECURITY](https://github.com/CSOAI-ORG/.github/blob/main/SECURITY.md).",
-        "- **What we never do:** certify, sell a rank or early sight of a grade, remediate for a fee, or take money from anything we rank.",
+        "- **What we never do:** certify; sell ratings, ranking position or early sight of a grade; remediate for a fee; or take money from anything we rank.",
         "",
         "---",
         "",
