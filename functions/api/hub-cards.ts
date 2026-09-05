@@ -110,9 +110,86 @@ async function readIndex(name: string): Promise<IndexRead> {
   return attempt(name, false);
 }
 
-export const onRequestGet: PagesFunction = async () => {
-  const reads = await Promise.all(INDEXES.map(readIndex));
-  const cells = reads.flatMap((r) => (r.ok ? r.cells : []));
+/**
+ * Card ids the estate's own ledger says are NO LONGER the live card for their
+ * (model, axis). `sign_mill_cards.py` writes a corrected body to a new
+ * content-addressed path and records the replacement here; `flip_hub_queue.py`
+ * already skips these when it rebuilds INDEX.jsonl.
+ *
+ * This endpoint did not, and only INDEX.jsonl is ever rebuilt. The three static
+ * indexes were written once and still list the pre-correction cards, so on
+ * 2026-09-05 all 70 cells reported UNMEASURED with ["signed-pending-verify"]
+ * were cards the ledger had already superseded — every one of them had a
+ * MEASURED replacement in INDEX.jsonl for the same (model, axis). The endpoint
+ * was serving 826 cells for 753 distinct pairs and calling 70 of them
+ * unmeasured when the live figure was zero. Reading the ledger is what makes
+ * "status is passed through" true of the LIVE card rather than of any card that
+ * was ever signed.
+ */
+async function readSupersededIds(origin: string): Promise<Set<string> | null> {
+  const url = `${origin}/interop/mill-cards-signed/SUPERSEDED.jsonl`;
+  for (const cached of [true, false]) {
+    const init: RequestInit = { headers: { Accept: "application/jsonl, text/plain" } };
+    if (cached) {
+      (init as RequestInit & { cf?: unknown }).cf = { cacheTtl: TTL, cacheEverything: true };
+    }
+    try {
+      const r = await fetch(url, init);
+      if (!r.ok) continue;
+      const ids = new Set<string>();
+      for (const line of (await r.text()).split("\n")) {
+        const t = line.trim();
+        if (!t) continue;
+        try {
+          const o = JSON.parse(t) as Record<string, unknown>;
+          if (o.superseded_id) ids.add(String(o.superseded_id));
+        } catch {
+          /* one bad ledger line must not lose the rest */
+        }
+      }
+      return ids;
+    } catch {
+      /* fall through to the uncached attempt */
+    }
+  }
+  // NOT an empty set. "I could not read the ledger" and "nothing is superseded"
+  // are different facts, and returning the empty set would silently assert the
+  // second one and quietly overstate the census.
+  return null;
+}
+
+export const onRequestGet: PagesFunction = async (ctx) => {
+  // The site answers on more than one host, so the ledger is read from whichever
+  // origin served this request. Falls back rather than throwing: a handler that
+  // dies because it could not name its own host would turn a stale-row fix into
+  // an outage.
+  let origin = "https://councilof.ai";
+  try {
+    const u = (ctx as { request?: { url?: string } } | undefined)?.request?.url;
+    if (u) origin = new URL(u).origin;
+  } catch {
+    /* keep the default */
+  }
+  const [reads, supersededIds] = await Promise.all([
+    Promise.all(INDEXES.map(readIndex)),
+    readSupersededIds(origin),
+  ]);
+  const rawCells = reads.flatMap((r) => (r.ok ? r.cells : []));
+
+  // Drop cards the ledger has replaced, then collapse the remaining duplicates so
+  // one (model, axis) is one cell. INDEXES order decides which row survives, and
+  // INDEX.jsonl — the only one that is rebuilt — is first.
+  const afterLedger = supersededIds
+    ? rawCells.filter((c) => !(c.card_sha256 && supersededIds.has(c.card_sha256)))
+    : rawCells;
+  const supersededExcluded = supersededIds ? rawCells.length - afterLedger.length : null;
+  const byPair = new Map<string, Cell>();
+  for (const c of afterLedger) {
+    const key = `${c.model}\u0000${c.axis}`;
+    if (!byPair.has(key)) byPair.set(key, c);
+  }
+  const cells = [...byPair.values()];
+  const duplicatesCollapsed = afterLedger.length - cells.length;
   const unread = reads.filter((r): r is Extract<IndexRead, { ok: false }> => !r.ok);
   const reached = reads.length - unread.length;
   const complete = unread.length === 0;
@@ -144,6 +221,11 @@ export const onRequestGet: PagesFunction = async () => {
         : `Only ${reached} of ${INDEXES.length} indexes answered (unread: ${unreadList
             .map((u) => u.index)
             .join(", ")}). Missing rows are UNCHECKABLE, not absent.`,
+      one_cell_per_pair:
+        "A (model, axis) appears once. Cards the SUPERSEDED.jsonl ledger has replaced are dropped, then duplicates are collapsed keeping the row from the rebuilt INDEX.jsonl. Before this the same pair could be counted twice with two different statuses.",
+      superseded_ledger: supersededIds
+        ? `Read. ${supersededExcluded} served row(s) referenced a card the ledger has replaced and were dropped; the replacement carries the live status.`
+        : "UNREADABLE. Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.",
       partial_read_has_no_total: complete
         ? "Every index answered, so counts are the whole published population."
         : "An index did not answer, so measured/unmeasured/cells are null. A subtotal is not a total, and the rows behind an unread index are disproportionately UNMEASURED — publishing the subtotal would understate what is unmeasured. Read counts.read_so_far instead, and treat it as a floor, never as the population.",
@@ -156,6 +238,10 @@ export const onRequestGet: PagesFunction = async () => {
       other: complete ? seen.other : null,
       cells: complete ? seen.cells : null,
       read_so_far: seen,
+      // null means the ledger did not answer — NOT that nothing was superseded.
+      superseded_excluded: supersededExcluded,
+      duplicates_collapsed: duplicatesCollapsed,
+      rows_served_by_indexes: rawCells.length,
       indexes_read: reached,
       indexes_total: INDEXES.length,
       indexes_unread: unreadList,
