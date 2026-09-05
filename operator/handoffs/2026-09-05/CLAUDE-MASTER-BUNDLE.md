@@ -13,13 +13,20 @@ those files in the bundle, do not apply it — re-rebase first.**
 
 ## Exact commits
 
+**Head:** `6fae5360e25dab328f7f7dd6fc0b2d475a2c167b`
+
 | SHA | change |
 |---|---|
-| `09862f32d` | capability registry can express declared-and-gated vs declared-and-broken |
-| `c5216709c` | duplicate-route guard; two pages are currently unreachable |
-| `5b3b6c8e2` | GSPC parity across HTTP and MCP |
-| `ab7a1ce9e` | cohort integrity assertions |
-| `1da8fb2fc` | AxisProof renders the per-model cohort |
+| `45b3c65ef` | capabilities: the registry can now say "declared and deliberately gated" |
+| `0595526ec` | routes: fail on duplicate paths — two pages are currently unreachable |
+| `854e8ed2a` | gspc: one board, two transports — no contradiction, but each drops half of WP-2 |
+| `996faa06a` | gspc: the per-model cohort is served and the product never shows it |
+| `8fc01b6d6` | AxisProof: show the cohort behind the number |
+| `0709b7af2` | handoff: the reviewed bundle for root, and what I got wrong |
+| `f4b95101c` | tools: docs said HTTP carried the same seven — it serves eleven |
+| `922cd27e1` | capabilities: AG-UI, A2A and A2UI now carry the state their endpoint actually returns |
+| `68032672e` | install: the surfaces are honest, and the probe that said otherwise was wrong |
+| `6fae5360e` | AxisProof: name the cohort table for screen readers |
 
 ## Files
 
@@ -34,11 +41,10 @@ those files in the bundle, do not apply it — re-rebase first.**
 
 ## Tests
 
-    npx vitest run client/src                                  110 files, 594 passed
+    npx vitest run client/src                                  110 files, 595 passed
     npm run build:client                                       clean; route-truth-guard PASS
-    LIVE_MCP=1 node --test capabilities/registry.test.mjs      4 passed (live /mcp)
-    LIVE_GSPC=1 node --test capabilities/gspc-parity.test.mjs  3 passed (live board)
-    LIVE_GSPC=1 node --test capabilities/cohort-provenance.test.mjs  3 passed
+    LIVE_MCP=1 LIVE_GSPC=1 LIVE_TRANSPORTS=1 LIVE_INSTALL=1 \
+      node --test capabilities/*.test.mjs                      25 passed, 0 failed
 
 Every guard was proven to fail before being trusted:
 
@@ -59,6 +65,11 @@ the page shows it.
 
 | gap | evidence |
 |---|---|
+| AG-UI general provider wire | `/api/agui/wire` 503 `agui_wire_unconfigured` — needs `AGUI_WIRE_URL` |
+| A2A task runtime | `/api/a2a/key` and `/api/a2a` both 404 — the card is discovery only |
+| A2UI renderer | `/api/a2ui` 404 — no round trip, nothing offered |
+| Web app install prompt | manifest served and linked on every route; **no browser prompt observed**, so LOCAL_CANDIDATE, not installable |
+| Chrome extension | no `key` field → load-unpacked; hosts limited to councilof.ai + huggingface.co |
 | MCP drops **ties** and **cohort** | `get_axis` has no `separation`, `per_model`, `quotable_models` |
 | HTTP drops **observation date** at axis level | present at response top level; absent per axis |
 | `witness_hash` declared, not served | `/api/witness` 503 `QUARANTINED_PRE_RELEASE` — deliberate |
@@ -115,6 +126,10 @@ Deliberately NOT proposed: page views, "compliance conversion", or anything coun
    than the response. ApiDocs is accurate.
 3. **I expected the UI to conflate SIGNED with verified.** It does not — `BoardAttestation` renders
    `verification_state || "UNVERIFIABLE"`, `osChat` falls back to `"UNSTATED"`.
-4. **The three `operator/` docs the goal names are not in `origin/master`.** They exist only on
+4. **I nearly reported a manifest-link defect on `/dashboard` and `/gspc-verify`.** They return
+   308 to their trailing-slash form; a probe that does not follow redirects reads an empty body
+   and counts zero. `curl -sL` finds the link. The routes were fine; the measurement was not.
+   `install-truth.test.mjs` now asserts a non-empty body BEFORE asserting the tag.
+5. **The three `operator/` docs the goal names are not in `origin/master`.** They exist only on
    unmerged commits `d0efe80ea` and `233d763c4`. Read from there. The handoff's canonical snapshot
    `2bf948504` is stale by several commits.
