@@ -1,10 +1,6 @@
 /**
- * POST /api/files — file upload + analysis.
- *
- * Every uploaded file gets:
- *  - SHA-256 hash
- *  - 22-axis GSPC analysis (if AI-generated)
- *  - Signed card on the chain
+ * files — retired until its response can be derived from current evidence.
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>
@@ -17,12 +13,24 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestPost: PagesFunction = async ({ request }) => {
-  const body = await request.json().catch(() => ({}));
+export const onRequestGet: PagesFunction = async () => {
   return json({
-    schema: "csoai.files/0.1",
-    as_of: new Date().toISOString(),
-    received: body,
-    note: "File upload + analysis. Every file gets a 22-axis GSPC analysis + signed card.",
-  });
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/files",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no file-analysis runtime; a description is not a measurement",
+  }, 503);
+};
+
+export const onRequestPost: PagesFunction = async () => {
+  return json({
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/files",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no file-analysis runtime; a description is not a measurement",
+  }, 503);
 };

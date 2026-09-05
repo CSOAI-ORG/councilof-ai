@@ -1,8 +1,6 @@
 /**
- * POST /api/memory — cross-session chat memory via signed cards.
- *
- * Memory = every chat becomes a signed card on the chain.
- * Same user across sessions = same memory (cards chain).
+ * memory — retired until its response can be derived from current evidence.
+ * @openapi-unavailable
  */
 
 const json = (body: unknown, status = 200) =>
@@ -15,28 +13,24 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-export const onRequestGet: PagesFunction = async ({ request }) => {
-  const url = new URL(request.url);
-  const userId = url.searchParams.get("user_id");
-
+export const onRequestGet: PagesFunction = async () => {
   return json({
-    schema: "csoai.memory/0.1",
-    user_id: userId,
-    as_of: new Date().toISOString(),
-    note: "Memory = every chat is a signed card on the chain. Cross-session = same memory.",
-    memory_endpoint: "/api/memory",
-    read_endpoint: "/api/memory?user_id=" + userId,
-    write_endpoint: "/api/chat (every response is a card)",
-  });
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/memory",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no per-user card-emitting runtime; every response must be a signed card",
+  }, 503);
 };
 
-export const onRequestPost: PagesFunction = async ({ request }) => {
-  const body = await request.json().catch(() => ({}));
+export const onRequestPost: PagesFunction = async () => {
   return json({
-    schema: "csoai.memory.post/0.1",
-    user_id: body.user_id,
-    as_of: new Date().toISOString(),
-    received: body,
-    note: "Memory write: every chat becomes a signed card on the chain.",
-  });
+    schema: "csoai.retired-endpoint/0.1",
+    status: "UNAVAILABLE",
+    code: "RETIRED",
+    endpoint: "/api/memory",
+    message: "This route is retired until its response can be derived from current evidence.",
+    reason: "no per-user card-emitting runtime; every response must be a signed card",
+  }, 503);
 };
