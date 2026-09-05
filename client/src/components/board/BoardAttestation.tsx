@@ -9,7 +9,15 @@
  * render as UNMEASURED with an honest reason.
  *
  * ── LOCKS ────────────────────────────────────────────────────────────────────
- * - site_attestation (Ed25519, did:web:csoai.org#board-attestation-1) verifies.
+ * - site_attestation (Ed25519, did:web:csoai.org#board-attestation-1) is PRESENT and its
+ *   key matches the DID exactly — but as of 2026-09-05 it does NOT verify over the payload
+ *   its own `sig_input` documents. Twelve readings were tried, including the documented one.
+ *   The board has been swept since it was signed (totals.sweep_note, 2026-08-26), and bytes
+ *   changed after signing produce exactly this. See capabilities/board-attestation.test.mjs.
+ *
+ *   This component is unaffected and stays as it is: it renders the signature bytes and the
+ *   algorithm and tells the reader how to check. It never asserts a verdict, so nothing here
+ *   tells a user the board verifies. Re-signing needs the estate key — an owner action.
  * - living_stamp is UNVERIFIABLE (explicitly stated in the payload).
  * - XRPL public-root: GET /root.json (unsigned leaves, NO_LAPTOP_SIGN).
  *   /api/xrpl is a reader of that root (writes_board false). Live locked 16.
