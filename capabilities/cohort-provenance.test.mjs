@@ -5,10 +5,10 @@
  * ties, and states that a signed result is not automatically verified. Measured against runtime
  * on 2026-09-05 for axis "jail", the only axis carrying per-model rows.
  *
- * THE FINDING. /api/gspc?axis=jail serves per_model — seven complete confusion matrices — plus
- * quotable_models. Neither string appears anywhere in client/ except one line of ApiDocs prose
- * describing them. The evidence a reader needs to judge the headline number is served by the API
- * and dropped by the product.
+ * THE FINDING, NOW CLOSED. /api/gspc?axis=jail serves per_model — seven complete confusion
+ * matrices — plus quotable_models, and until 1da8fb2f nothing in client/ rendered them. AxisProof
+ * now shows the cohort, so the assertion that recorded the gap has been removed rather than left
+ * to pass vacuously. What remains here is the data integrity the renderer depends on.
  *
  * TWO THINGS I EXPECTED TO FIND AND DID NOT, recorded because a test that only keeps its
  * confirmed suspicions is not evidence:
@@ -27,12 +27,6 @@
  */
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { execSync } from "node:child_process";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const here = path.dirname(fileURLToPath(import.meta.url));
-const repo = path.resolve(here, "..");
 const AXIS = "jail";
 
 async function axis() {
@@ -85,22 +79,4 @@ describe("cohort provenance", () => {
     );
   });
 
-  it("the cohort the API serves is not rendered anywhere in the client", () => {
-    // Not a live check — the gap is in the product, so it is checked against the source.
-    const client = execSync(
-      "grep -rl 'quotable_models\\|per_model' client/src --include=*.tsx || true",
-      { cwd: repo, encoding: "utf8" },
-    )
-      .split("\n")
-      .filter(Boolean)
-      .filter((f) => !f.includes("ApiDocs")); // documentation prose, not a rendering
-
-    assert.deepEqual(
-      client,
-      [],
-      `per_model / quotable_models are now referenced in ${client.join(", ")}. If the cohort is ` +
-        `finally being rendered, delete this test — it exists only to record that it was not. ` +
-        `When rendering it, show per-model n separately from axis n and never sum them.`,
-    );
-  });
 });
