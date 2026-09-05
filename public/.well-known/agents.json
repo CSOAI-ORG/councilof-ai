@@ -1,0 +1,41 @@
+{
+  "schema": "csoai.agents-discovery/0.1",
+  "name": "Council of AI",
+  "description": "Independent AI-governance measurement. Publishes a living 22-axis GSPC board, Ed25519-signed measurement cards, and a signed Merkle root. Measurement, not certification.",
+  "as_of": "20260905T133000Z",
+  "free_forever": {
+    "principle": "Reading the board and verifying a card are free and always will be. Nothing in this block returns a payment challenge.",
+    "doors": [
+      { "id": "board", "url": "https://councilof.ai/api/gspc", "what": "the living 22-axis board with derived totals" },
+      { "id": "verify", "url": "https://councilof.ai/gspc-verify", "what": "verify a signed card — VALID, INVALID or UNCHECKABLE" },
+      { "id": "card-index", "url": "https://councilof.ai/signed/card_index.json", "what": "the signed card index" },
+      { "id": "root", "url": "https://councilof.ai/root.json", "what": "the signed Merkle root" },
+      { "id": "doors", "url": "https://councilof.ai/.well-known/index.json", "what": "every published door" },
+      { "id": "interop", "url": "https://councilof.ai/interop/index.json", "what": "every published interchange format" },
+      { "id": "anchor-posture", "url": "https://councilof.ai/.well-known/anchor-posture.json", "what": "what is signed, what is anchored, what is neither" }
+    ]
+  },
+  "mcp": {
+    "canonical_remote": "https://councilof.ai/mcp",
+    "transport": "streamable-http",
+    "registry_entry": "io.github.CSOAI-ORG/gspc",
+    "warning": "Superseded registry versions advertise csoai-gspc-mcp.nicholastempleman.workers.dev/mcp, which returns 404. Use the canonical remote above."
+  },
+  "paid": {
+    "rail": "x402",
+    "principle": "Assembly and attestation may be priced. A grade is never sold, and no amount is published as static bytes. The price is quoted in the live 402 challenge at request time.",
+    "catalogue": "https://councilof.ai/api/x402",
+    "skus": ["evidence-bundle", "eu-ai-act-pack", "swift-bank-pack", "xrpl-asset-evidence", "signed-data-feed", "provider-diff-feed", "receipts-batch", "commission-card"]
+  },
+  "identity": {
+    "did": "did:web:csoai.org",
+    "attestation_key": "did:web:csoai.org#board-attestation-1",
+    "did_document": "https://csoai.org/.well-known/did.json"
+  },
+  "what_this_does_not_establish": [
+    "The Council of AI measures and does not certify. It is not a notified body and issues no conformity mark.",
+    "Appearing on the board is not an endorsement, and absence from it is not a finding.",
+    "UNMEASURED is a first-class state and is published rather than hidden."
+  ],
+  "links": { "self": "https://councilof.ai/.well-known/agents.json", "agent_card": "https://councilof.ai/.well-known/agent-card.json", "llms_txt": "https://councilof.ai/llms.txt" }
+}
