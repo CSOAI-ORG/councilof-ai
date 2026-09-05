@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WK = ROOT / "public" / ".well-known"
 INTEROP = ROOT / "public" / "interop"
 SWIFT_DIR = INTEROP / "xrpl-swift-eater-2026-09"
-OUT_DIR = INTEROP / "swift-signed-2026-09"
+OUT_DIR = INTEROP / "swift-staged-2026-09"  # staged, not signed: no key on this host (C-2026-0905-02)
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -39,10 +39,16 @@ def load_key():
         return None
 
 
-def sign(priv, data: bytes) -> tuple[str, str]:
+def sign(priv, data: bytes) -> tuple[str | None, str]:
+    """No key → no signature. Never a digest in a field named sig_ed25519.
+
+    Until 2026-09-05 this wrote base64(sha256(card)) into sig_ed25519 with sig_algo
+    "SHA256-placeholder": a hash wearing a signature's name, in a directory called
+    swift-signed. Ledger C-2026-0905-02. A relying party reads the field name, not
+    the algo hint. The only signer for public cards is the OIDC board-sign path;
+    this host has no key, so cards leave here UNSIGNED and say so."""
     if priv is None:
-        digest = hashlib.sha256(data).digest()
-        return base64.b64encode(digest).decode(), "SHA256-placeholder"
+        return None, "UNSIGNED"
     sig = priv.sign(data)
     return base64.b64encode(sig).decode(), "Ed25519"
 
@@ -75,7 +81,7 @@ def main() -> None:
     print()
 
     priv = load_key()
-    algo_hint = "Ed25519" if priv else "SHA256-placeholder (no key at ~/.ssh/csoai_signing_key)"
+    algo_hint = "Ed25519" if priv else "UNSIGNED (no key on this host; OIDC board-sign is the only signer)"
     print(f"[0] key: {algo_hint}")
     print()
 
@@ -147,8 +153,11 @@ def main() -> None:
         sig, algo = sign(priv, blob)
         card["sig_ed25519"] = sig
         card["sig_algo"] = algo
-        card["signed_at"] = now()
-        out_file = OUT_DIR / card_file.name.replace("card-swift-", "signed-swift-").replace("-unsigned.json", ".json")
+        card["signed_at"] = now() if sig else None
+        if sig is None:
+            card["signature_note"] = "UNSIGNED — no key on this host; sha256 covers the bytes, nothing attests them (C-2026-0905-02)"
+        prefix = "signed-swift-" if sig else "staged-swift-"
+        out_file = OUT_DIR / card_file.name.replace("card-swift-", prefix).replace("-unsigned.json", ".json")
         out_file.write_text(json.dumps(card, indent=2, default=str))
         signed_count += 1
     print(f"  newly signed: {signed_count} (already signed: {already})")
@@ -156,12 +165,13 @@ def main() -> None:
     index = {
         "schema": "csoai.swift-signed-index/0.1",
         "as_of": now(),
-        "total": signed_count,
+        "total_signed": len(list(OUT_DIR.glob("signed-swift-*.json"))),
+        "total_staged_unsigned": len(list(OUT_DIR.glob("staged-swift-*.json"))),
         "algo": algo_hint,
-        "files": [f.name for f in sorted(OUT_DIR.glob("signed-swift-*.json"))],
+        "files": [f.name for f in sorted(OUT_DIR.glob("*-swift-*.json"))],
     }
-    (INTEROP / "swift-signed-index.json").write_text(json.dumps(index, indent=2))
-    print(f"  ✓ interop/swift-signed-index.json")
+    (INTEROP / "swift-staged-index.json").write_text(json.dumps(index, indent=2))
+    print(f"  ✓ interop/swift-staged-index.json")
 
     print()
     print("=" * 60)

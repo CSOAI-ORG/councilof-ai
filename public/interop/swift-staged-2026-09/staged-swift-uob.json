@@ -1,17 +1,17 @@
 {
-  "as_of": "2026-09-02T07:56:42Z",
+  "as_of": "2026-09-02T07:56:43Z",
   "did_intended": "did:web:csoai.org#board-attestation-1",
   "payload": {
     "axes": [
       "swift-rails"
     ],
-    "bank": "Standard Chartered",
-    "bank_id": "standard-chartered",
+    "bank": "UOB",
+    "bank_id": "uob",
     "census_as_of": "2026-09-01",
     "census_status": "LIVE",
-    "event_date": "2026-08-19",
-    "fetched_at": "2026-09-02T07:56:42Z",
-    "inputs_sha256": "b8a30e0a452d1d4e94fa99dff9047865b73d1183d0b44848449f9375a0fbc206",
+    "event_date": "2026-08-28",
+    "fetched_at": "2026-09-02T07:56:43Z",
+    "inputs_sha256": "52ece288581d5c977d9ea759301fbae53ec838de079ad8f6185b3d9e21e6bae1",
     "kind": "csoai.eater.swift-rail/0.1",
     "match_pattern": "case-insensitive whole-word match of the census bank name in tag-stripped HTML",
     "method_id": "csoai.eater.xrpl-swift/0.1",
@@ -21,14 +21,14 @@
     "settlement_still_off_chain": true,
     "sources": [
       {
-        "fetched_at": "2026-09-02T07:56:42Z",
+        "fetched_at": "2026-09-02T07:56:43Z",
         "http": 200,
-        "id": "sc_live_19aug",
-        "n_bytes": 131983,
+        "id": "fintechnews_uob_28aug",
+        "n_bytes": 958207,
         "named_in_body": "PASS",
-        "published": "2026-08-19",
-        "sha256": "fa6400a99c4d89a438a0ae7f03f34c3c6f799a8a60d36786a7c457f83542b8f8",
-        "url": "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+        "published": "2026-08-28",
+        "sha256": "f6487997bd12f44392c20149ac0895d2309ecbdf2a92f0d0bab3a60329fa4d9b",
+        "url": "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
       }
     ],
     "state": "PROBED",
@@ -41,13 +41,13 @@
     "writes_board": false
   },
   "schema": "https://councilof.ai/schema/card-v0.json",
-  "sha256": "f4829456504f78e704dfbd923b290a6081e52efe8c79e3805077cfca4b5a23ee",
-  "sig_ed25519": "DUUIzyV1a5kcnoPuK4ClSxs2iyJts6jCZAU1Big0SUE=",
+  "sha256": "e21a9f9647cc16f3543b2f506ebc804ec714bacc40149c4affa96e27a9b0b911",
+  "sig_ed25519": null,
   "source_urls": [
     "https://councilof.ai/api/swift",
-    "https://www.sc.com/en/press-release/standard-chartered-and-hsbc-execute-first-live-tokenised-deposit-transaction-on-swifts-blockchain-based-ledger/"
+    "https://fintechnews.sg/136424/digitalassets/uob-hsbc-tokenised-deposits/"
   ],
-  "subject": "Swift shared-ledger census: Standard Chartered \u2014 LIVE; named in 1/1 fetched notice bodies",
+  "subject": "Swift shared-ledger census: UOB \u2014 LIVE; named in 1/1 fetched notice bodies",
   "surface": "public.notice",
   "tags": [
     "eater:xrpl-swift",
@@ -62,6 +62,7 @@
     "on_ledger_object",
     "transaction_recompute"
   ],
-  "sig_algo": "SHA256-placeholder",
-  "signed_at": "20260905T054628Z"
+  "sig_algo": "UNSIGNED",
+  "signed_at": null,
+  "signature_note": "UNSIGNED \u2014 the value previously here was base64(sha256(card)), not a signature; removed 2026-09-05 (ledger C-2026-0905-02). sha256 covers the bytes, nothing attests them."
 }
