@@ -62,7 +62,10 @@ jobs:
         run: |
           set -euo pipefail
           ok=0; bad=0
-          for d in $(find intake/gspc-24x7 -name card-unsigned.json -exec dirname {} \;); do
+          # EVERY path handed to the verifier must be absolute -- it refuses a relative one
+          # for --run-dir exactly as it does for --bank-allowlist. Search from the absolute root
+          # so `find` emits absolute paths rather than post-fixing them.
+          for d in $(find "$GITHUB_WORKSPACE/intake/gspc-24x7" -name card-unsigned.json -exec dirname {} \;); do
             # The allowlist path MUST be absolute: the verifier refuses a relative one with
             # "REJECT UNSAFE_PATH: bank allowlist must be an absolute path without '..'". The
             # first run of this workflow passed a repo-relative path and rejected all 112 runs
