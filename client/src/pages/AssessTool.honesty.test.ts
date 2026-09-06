@@ -10,7 +10,7 @@ describe("/assess aligns to /measure — paid, booking not live, Coming — Padd
     expect(page).not.toContain("Run signed measurement");
     expect(page).toContain("Paid measurement");
     expect(page).toContain("Booking is not live");
-    expect(page).toContain("Coming — Paddle");
+    expect(page).toContain("Pay-as-you-go x402 (not live yet)");
     expect(page).toContain("public verifies free");
     expect(page).toContain("Never a bought rank");
     expect(page).toContain('disabled={true}');
