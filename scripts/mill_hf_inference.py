@@ -151,8 +151,25 @@ def main() -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     slugs = [m["slug"] for m in lock["models"]]
     limit = int(os.environ.get("MILL_LIMIT", "8"))
+    # ROTATE. This was `slugs[:limit]`, which takes the SAME first `limit` models every
+    # run. On an hourly cron that is the whole fleet's budget spent on eight slugs for
+    # ever: the Inference Providers usage page shows Qwen3-8B on 1,980 requests and
+    # Qwen2.5-7B on 1,640, while hundreds of other models sit at 1. Breadth is the point
+    # of a fleet measurement -- re-measuring the same eight adds no coverage at all.
+    #
+    # Deterministic rotation by hour needs no cursor file and no state: nothing is
+    # committed to public/fleet/hf-inference (0 files on master), so there is nothing to
+    # dedup against. offset advances one window per hour and wraps, so 40 slugs at 8 per
+    # hour are fully covered every 5 hours and every model is measured equally often.
+    # MILL_OFFSET overrides it for a targeted re-run.
+    if os.environ.get("MILL_OFFSET"):
+        offset = int(os.environ["MILL_OFFSET"]) % max(len(slugs), 1)
+    else:
+        offset = (int(time.time()) // 3600 * limit) % max(len(slugs), 1)
+    window = [slugs[(offset + i) % len(slugs)] for i in range(min(limit, len(slugs)))]
+    print(f"fleet={len(slugs)} limit={limit} offset={offset} window={window}", flush=True)
     rows = []
-    for slug in slugs[:limit]:
+    for slug in window:
         rec = {
             "slug": slug,
             "provider": "huggingface-router",
