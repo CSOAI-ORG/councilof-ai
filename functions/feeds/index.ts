@@ -45,6 +45,9 @@ function feeds() {
     { path: "/feeds/roots.xml", type: "application/rss+xml", title: "The public root",
       n: r?.length ?? null, newest: r?.[0]?.iso ?? null,
       what: "One item by design: there is no root-history artifact, and a back-history invented from one snapshot would be fabricated dates. The guid is the merkle_root, so a poll that finds the same bytes is not a change." },
+    { path: "/feeds/receipts.xml", type: "application/atom+xml", title: "Settled receipts",
+      n: null, newest: null,
+      what: "One entry per settled receipt, derived from the same REVENUE_KV records /api/revenue counts, each carrying its transaction so the chain is the check rather than our arithmetic. A self-settlement — our own wallet paying our own door — is labelled as one in the title: it proves the rail settles and it is never a buyer. n is null here because the count lives at the edge, not in this index." },
   ];
 }
 
