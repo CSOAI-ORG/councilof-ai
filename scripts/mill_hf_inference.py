@@ -296,7 +296,9 @@ def main() -> int:
         flush=True,
     )
     if not window:
-        rc = mill_exit_for_window(len(lock.get("models") or []), len(slugs), 0)
+        rc = mill_exit_for_window(
+            len(lock.get("models") or []), len(slugs), 0, start=offset
+        )
         if rc == 0:
             print(
                 "MILL_EXHAUSTED no millable slugs left — already tried, "

@@ -279,11 +279,12 @@ def millable_slugs(models: list[dict]) -> list[str]:
                     continue
                 out.append(slug)
                 continue
-            # Chat policy/nebius: one retry without DEFAULT spray. After
-            # route_kind=chat the retry has run; do not mill every hour.
+            # Chat-bare already ran. The new reason is "model not supported",
+            # not nebius — that must not re-open millable.
+            if tag in CHAT_TAGS and last_kind in ("chat", "chat-bare"):
+                continue
+            # Chat policy/nebius: one retry without DEFAULT spray.
             if tag in CHAT_TAGS and ("provider or policy" in reason or "nebius" in reason):
-                if last_kind in ("chat", "chat-bare"):
-                    continue
                 out.append(slug)
                 continue
             if "provider or policy" in reason or "nebius" in reason:
@@ -320,11 +321,17 @@ def select_window(
     return start, window
 
 
-def mill_exit_for_window(n_lock_models: int, n_millable: int, n_window: int) -> int:
+def mill_exit_for_window(
+    n_lock_models: int, n_millable: int, n_window: int, start: int = 0
+) -> int:
     """Empty window is not coverage success. Exhausted millable must not
-    fail the cron (GitHub disables scheduled workflows after repeated red)."""
+    fail the cron (GitHub disables scheduled workflows after repeated red).
+    A remainder shard whose start is past millable is also not MILL_EMPTY —
+    34058589553 mill (19) went red on start=285 of 285."""
     if n_window > 0:
         return 0
     if n_lock_models > 0 and n_millable == 0:
+        return 0
+    if n_millable > 0 and start >= n_millable:
         return 0
     return 1

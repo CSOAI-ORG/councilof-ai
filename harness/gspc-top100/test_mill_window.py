@@ -234,6 +234,11 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
     # hf-inference miss on a non-chat tag is the embed route already run.
     assert "nomic-ai/nomic-embed-text-v1.5" not in got
+    # After chat-bare the reason is no longer nebius. That must not re-open millable.
+    models[0]["route_kind"] = "chat-bare"
+    models[0]["reason"] = "HTTP 400 {\"error\":{\"message\":\"The requested model 'facebook/opt-125m' is not supported.\"}}"
+    got = millable_slugs(models)
+    assert "facebook/opt-125m" not in got
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
@@ -411,6 +416,10 @@ def test_exhausted_millable_is_not_a_cron_killing_fail() -> None:
     assert mill_exit_for_window(0, 0, 0) == 1
     assert mill_exit_for_window(2200, 10, 0) == 1
     assert mill_exit_for_window(2200, 10, 8) == 0
+    # 34058589553 mill (19): millable=285, start=285, empty remainder.
+    # That is not MILL_EMPTY. What would make this fail: exit 1 on the last shard.
+    assert mill_exit_for_window(2200, 285, 0, start=285) == 0
+    assert mill_exit_for_window(2200, 285, 0, start=0) == 1
 
 
 if __name__ == "__main__":
