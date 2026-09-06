@@ -1,8 +1,8 @@
 /**
  * GET /feeds — the index of every feed this estate publishes.
  *
- * WHY. /feeds was a 404. Four derived feeds live underneath it — corrections, cards, the public
- * root, and an Atom mirror of corrections — and the only way to find any of them was to already
+ * WHY. /feeds was a 404. Five derived feeds live underneath it — corrections, cards, the public
+ * root, an Atom mirror of corrections, and the x402 settlement census — and the only way to find any of them was to already
  * know the path. That is the same defect functions/feed.xml.ts records about its own predecessor:
  * "a return path that cannot be discovered is the same as no return path."
  *
@@ -13,13 +13,14 @@
  *
  * The descriptor is produced by scripts/badger/csoai-monorepo-fill.py and describes only the
  * legacy /api/feed.xml handler. It is rendered as-is and NOT edited here — it belongs to that
- * producer. Where it is silent about the four derived feeds, this page says so rather than
+ * producer. Where it is silent about the derived feeds, this page says so rather than
  * quietly filling the gap.
  */
 import descriptor from "../../public/interop/feed.json";
 import { entries as corrections } from "./corrections.xml";
 import { entries as cards } from "./cards.xml";
 import { entries as roots } from "./roots.xml";
+import { entries as census } from "./x402-census.xml";
 
 const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -27,7 +28,7 @@ interface Desc { name?: string; state?: string; description?: string; as_of?: st
 
 function feeds() {
   const safe = (f: () => { iso: string }[]) => { try { return f(); } catch { return null; } };
-  const c = safe(corrections), k = safe(cards), r = safe(roots);
+  const c = safe(corrections), k = safe(cards), r = safe(roots), x = safe(census);
   return [
     { path: "/feeds/corrections.xml", type: "application/rss+xml", title: "Corrections ledger",
       n: c?.length ?? null, newest: c?.[0]?.iso ?? null,
@@ -38,6 +39,9 @@ function feeds() {
     { path: "/feeds/cards.xml", type: "application/rss+xml", title: "Newly signed measurement cards",
       n: k?.length ?? null, newest: k?.[0]?.iso ?? null,
       what: "The newest entries in the SIGNED CARD INDEX, each with the id a stranger can verify. Not the public-root leaf set and not the on-disk wrapper count — three corpora, zero overlap." },
+    { path: "/feeds/x402-census.xml", type: "application/rss+xml", title: "x402 settlement census — what hosts deliver",
+      n: x?.length ?? null, newest: x?.[0]?.iso ?? null,
+      what: "A fixed population of conformant x402 hosts, each paid once per round from a wallet we control, and the rounds diffed. The indexes list who exists; a listing does not move when a host stops answering paid requests, and this is where that shows up. Measurement, not certification: no host is ranked, recommended or accused, and REFUSED is not proof of bad faith." },
     { path: "/feeds/roots.xml", type: "application/rss+xml", title: "The public root",
       n: r?.length ?? null, newest: r?.[0]?.iso ?? null,
       what: "One item by design: there is no root-history artifact, and a back-history invented from one snapshot would be fabricated dates. The guid is the merkle_root, so a poll that finds the same bytes is not a change." },
@@ -58,7 +62,7 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       legacy_feed: { path: d.transport?.path ?? "/api/feed.xml", aliases: ["/feed.xml", "/rss.xml"],
         note: "Hand-maintained item list. Its historical titles freeze counts the live board has moved past — quote the board, not a feed title." },
       descriptor: descriptor,
-      descriptor_note: "public/interop/feed.json is produced by scripts/badger/csoai-monorepo-fill.py and describes only the legacy handler. It is rendered here unchanged; it does not yet describe the four derived feeds.",
+      descriptor_note: "public/interop/feed.json is produced by scripts/badger/csoai-monorepo-fill.py and describes only the legacy handler. It is rendered here unchanged; it does not yet describe the derived feeds.",
     }, null, 2), { headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" } });
   }
 
@@ -100,7 +104,7 @@ ${cards_}
 <p class="mut">It is a hand-maintained item list: its historical titles freeze counts the live board has moved past. Quote the board, not a feed title.</p></article>
 
 <h2>What this page is rendering</h2>
-<p class="mut">The capability descriptor at <a href="/interop/feed.json">/interop/feed.json</a> is produced by another lane and describes only the legacy handler — it does not yet describe the four derived feeds. It is rendered here unchanged rather than edited.</p>
+<p class="mut">The capability descriptor at <a href="/interop/feed.json">/interop/feed.json</a> is produced by another lane and describes only the legacy handler — it does not yet describe the derived feeds. It is rendered here unchanged rather than edited.</p>
 <pre><code>curl -s https://councilof.ai/feeds -H 'accept: application/json' | jq .
 curl -sI https://councilof.ai/feeds/corrections.xml</code></pre>
 

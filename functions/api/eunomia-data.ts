@@ -18,7 +18,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -98,7 +98,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         deliverable: "the assembled signed data feed for this lane — data only, never a score and never a rank",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   if (env.REVENUE_KV) {

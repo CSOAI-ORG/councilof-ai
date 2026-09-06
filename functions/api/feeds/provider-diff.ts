@@ -21,7 +21,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -222,7 +222,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         catalog: `${origin}/api/x402`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid: assemble from the published bytes. Every block is what is already served; nothing invented.

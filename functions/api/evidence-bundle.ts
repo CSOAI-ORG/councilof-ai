@@ -25,7 +25,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -263,7 +263,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",
         rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid path — assemble. Empty stays empty (and the preview already said so).

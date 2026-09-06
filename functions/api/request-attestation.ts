@@ -26,7 +26,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -151,7 +151,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         explainer: `${origin}/pricing`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid path — issue the commission receipt. Never a score. `subject` was validated before

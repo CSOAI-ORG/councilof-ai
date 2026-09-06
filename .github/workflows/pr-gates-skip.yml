@@ -1,7 +1,11 @@
 # The twin of pr-gates.yml for PRs that touch NONE of its gated paths (docs, harness, register,
 # workflows other than pr-gates). It reports the same check name, `gates`, as a pass, so master
 # branch protection can REQUIRE `gates` without blocking docs-only and data-only PRs forever.
-# Keep the paths-ignore list byte-identical to pr-gates.yml's paths list.
+# Keep the paths-ignore list byte-identical to pr-gates.yml's paths list. NOTE, 2026-09-06: when the
+# two lists drift, a PR touching a path that is gated but not ignored fires BOTH workflows, both
+# report the check name `gates`, and this two-second pass can be the one a reader sees while the
+# real suite is red. Widening pr-gates.yml's paths without widening this list here is therefore a
+# way to mask a failing gate, not just a duplicate run. Change the two together, always.
 name: pr-gates
 
 on:
@@ -12,6 +16,8 @@ on:
       - 'public/**'
       - 'functions/**'
       - 'scripts/**'
+      - 'harness/x402-census/**'
+      - 'docs/operations/PRODUCERS.json'
       - 'package.json'
       - 'package-lock.json'
       - 'wrangler.jsonc'

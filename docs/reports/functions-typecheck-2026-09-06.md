@@ -74,3 +74,49 @@ too. Land the checker and the number first; fix in batches; wire the gate when t
     npm i -D @cloudflare/workers-types    # removes 181 of 233; own PR, lockfile included
     # then set "types": ["@cloudflare/workers-types"] in tsconfig.functions.json
     npm run check:functions               # then 52
+
+---
+
+## RE-MEASURED after installing the types — and the number did not fall the way this report said
+
+This report predicted `npm i -D @cloudflare/workers-types` would remove "181 of 233". The types
+are now a real devDependency and the config names them. Measured:
+
+```
+                    before   after    delta
+TS2304  missing globals  183       0     -183
+TS2339  property         28      59      +31
+TS2322                    8       7       -1
+TS2345                    5       6       +1
+TS2769                    3       4       +1
+TS2352                    1       3       +2
+TS2688                    3       0       -3
+TOTAL                   236      84     -152
+```
+
+(236, not the 233 first recorded — master moved by three between the two runs.)
+
+**Installing types does not only subtract. It reveals.** With `PagesFunction`, `Request`,
+`KVNamespace` and the rest undefined, TypeScript could not check property access *through* them,
+so 31 real errors sat underneath the 183 that hid them. "Removes 181 of 233" was arithmetic on
+one error code presented as arithmetic on the total, and it was wrong. The honest sentence is:
+**183 missing-global errors resolved, 31 real ones revealed, 152 net.**
+
+**And the revealed ones are the defect this report already named.** The first of them:
+
+```
+functions/api/_x402.ts(539,72): error TS2339:
+  Property 'reason' does not exist on type 'RecordOutcome'.
+
+      if (!recorded.stored) {
+        (settlement as Record<string, unknown>).recording_gap = recorded.reason;
+```
+
+`RecordOutcome` is a discriminated union on a boolean literal. `!recorded.stored` does **not**
+narrow it; `recorded.stored === false` does. That is the same idiom counted at 16 instances
+earlier in this report, and the real figure is higher — several of the 31 newly visible TS2339s
+are more of it, in `action-jobs.ts` (`BodyRead.status`, `BodyRead.error`) among others.
+
+**84 is the number to work from.** `npm run check:functions` reproduces it. It is not wired to a
+gate: wire the gate when the count reaches zero, not before, or every unrelated PR inherits a red
+check it did not cause.

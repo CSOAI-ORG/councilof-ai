@@ -28,7 +28,12 @@
       {
         "uri": "https://councilof.ai/.well-known/x402.json",
         "required": false,
-        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement is PROVEN on Base mainnet — settled receipts are published at /feeds/receipts.xml, each carrying its transaction. Measurement credential, never a grade."
+        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement is PROVEN on Base mainnet: transaction hashes are published in docs/product/SETTLED-DOORS and verifiable on chain by anyone, independently of this server. Measurement credential, never a grade."
+      },
+      {
+        "uri": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+        "required": false,
+        "description": "x402 Offer & Receipt extension (v0.6), JWS profile. Every HTTP 402 this agent's doors emit carries a server-signed offer committing to the terms in each accepts[] entry; every settled response carries a signed receipt. Format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at https://csoai.org/.well-known/did.json (an authorization mechanism the extension names in section 4.5.1). eip712 is NOT emitted: the edge holds one Ed25519 key and no secp256k1 signer, and a format we cannot produce is better declared missing than faked. A receipt proves this server signed those bytes; it is not by itself proof that money moved, and the transaction field, when present, is a claim to check against the chain."
       }
     ]
   },
@@ -127,7 +132,7 @@
     {
       "id": "x402-discovery",
       "name": "x402 discovery + free door",
-      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification.",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification. Signed offers and receipts: every 402 carries extensions['offer-receipt'].info.offers[] (one server-signed offer per accepts[] entry) and every settled 200 returns a signed receipt in the X-PAYMENT-RESPONSE SettlementResponse — x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1. Verify either without trusting us: POST it to /api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json. Your own receipts: GET /api/receipts?payer=0x... (status UNRECORDED means no store is bound on that deployment, never that you did not pay). We emit jws only and no eip712 — the edge holds one Ed25519 key and no secp256k1 signer.",
       "tags": [
         "x402",
         "discovery",
@@ -138,7 +143,10 @@
         "GET https://councilof.ai/.well-known/x402.json",
         "GET https://councilof.ai/api/free-door",
         "GET https://councilof.ai/api/gspc",
-        "GET https://councilof.ai/gspc-verify"
+        "GET https://councilof.ai/gspc-verify",
+        "GET https://councilof.ai/api/free-door  # read extensions['offer-receipt'].info.offers[0].signature",
+        "POST https://councilof.ai/api/receipts/verify -d '{\"receipt\":\"eyJ...\"}'",
+        "GET https://councilof.ai/api/receipts?payer=0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
       ]
     }
   ],

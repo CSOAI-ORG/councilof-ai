@@ -26,7 +26,7 @@
  * NEVER: a grade, a rank, a certificate, or a paid artefact served free. Verification is free
  * forever, which is exactly why a zero price here is honest rather than promotional.
  */
-import { x402Accepts, buildPaymentRequiredV2, paymentRequiredResponse, verifyX402Payment, type X402Env } from "./_x402";
+import { x402Accepts, buildPaymentRequiredV2, paymentRequiredResponseSigned, verifyX402Payment, type X402Env } from "./_x402";
 
 type Env = X402Env;
 
@@ -205,5 +205,5 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // the Bazaar indexer look — so a door built specifically to be indexed was advertising a price
   // that nothing machine-readable could find. Measured 2026-09-05: free-door header=False, while
   // /api/proof, /api/eunomia-data and /api/rwa/evidence all answered header=True.
-  return paymentRequiredResponse(answer);
+  return paymentRequiredResponseSigned(answer, env);
 };

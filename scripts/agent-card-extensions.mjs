@@ -62,10 +62,37 @@ const EXTENSIONS = [
     required: false,
     lead: () => "x402 discovery index for the agent pay rail (also GET /api/x402).",
     tail:
+      // /feeds/receipts.xml was named here while it existed only on an unmerged branch. An agent
+      // card is read by strangers, and a URL on it that 404s is a worse claim than a missing one:
+      // it is the deployed-vs-written gap, published. What IS checkable is the chain — the
+      // settlements are on Base with transaction hashes, and anyone can verify those without us.
       "Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. "
-      + "Self-settle is not revenue. Settlement is PROVEN on Base mainnet — settled receipts are "
-      + "published at /feeds/receipts.xml, each carrying its transaction. Measurement credential, "
-      + "never a grade.",
+      + "Self-settle is not revenue. Settlement is PROVEN on Base mainnet: transaction hashes are "
+      + "published in docs/product/SETTLED-DOORS and verifiable on chain by anyone, independently "
+      + "of this server. Measurement credential, never a grade.",
+  },
+  {
+    // ADDED TO THE PRODUCER, 2026-09-06, because it was added to the ARTEFACT by #1663 and this
+    // script rewrites capabilities.extensions WHOLESALE. The next regeneration would have deleted
+    // a landed extension declaration with nothing reporting it — the artefact-and-producer rule
+    // biting in the direction that removes work rather than the one that duplicates it.
+    //
+    // Text is #1663's own, unchanged: it was reviewed and merged, and it is careful about exactly
+    // the thing that matters — a receipt proves this server signed those bytes, never that money
+    // moved.
+    slug: "offer-and-receipt",
+    uri: "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+    required: false,
+    lead: () => "x402 Offer & Receipt extension (v0.6), JWS profile.",
+    tail:
+      "Every HTTP 402 this agent's doors emit carries a server-signed offer committing to the "
+      + "terms in each accepts[] entry; every settled response carries a signed receipt. Format "
+      + "jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1, resolvable at "
+      + "https://csoai.org/.well-known/did.json (an authorization mechanism the extension names "
+      + "in section 4.5.1). eip712 is NOT emitted: the edge holds one Ed25519 key and no secp256k1 "
+      + "signer, and a format we cannot produce is better declared missing than faked. A receipt "
+      + "proves this server signed those bytes; it is not by itself proof that money moved, and "
+      + "the transaction field, when present, is a claim to check against the chain.",
   },
 ];
 

@@ -222,15 +222,26 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     expect(body.csoai?.not_paid_reason).toBeTruthy();
     // and a caller who presented nothing gets the plain challenge, with no verdict invented.
     //
-    // This used to read `expect(plain.csoai).toBeUndefined()`, because not_paid_reason was the
-    // ONLY thing the csoai block ever carried. Phase E then made every 402 body advertise its
-    // free preview and its deliverable in that same block, so absence-of-block stopped being
-    // able to express the rule. The rule was never "no block" — it was "no invented verdict".
-    // Both halves are now named, so neither can be lost by the other changing.
+    // TWO CHANGES LANDED ON THIS ASSERTION AT ONCE, and they agree about the rule while
+    // disagreeing about how to say it.
+    //
+    // It used to read `expect(plain.csoai).toBeUndefined()`, because not_paid_reason was the ONLY
+    // thing the block ever carried, so "no block" and "no invented verdict" were one sentence.
+    // Then Phase E made every 402 advertise its free preview and its deliverable in that block,
+    // and the offer-receipt extension (#1663) added `offer_receipt` through the shared responder
+    // (_x402_offer.ts:217 spreads the existing csoai and appends it). Neither is a statement
+    // about a caller: one says where to look for free and what settling buys, the other is
+    // provenance about our own signature.
+    //
+    // So the rule is stated as what it always meant — nothing here speaks about a payment that
+    // was never presented — and every key that IS allowed is named, so a fourth key cannot arrive
+    // unnoticed the way these two did.
     const plain = (await (await call()).json()) as {
       csoai?: { not_paid_reason?: string; free_preview?: string; deliverable?: string };
     };
     expect(plain.csoai?.not_paid_reason).toBeUndefined();
+    expect(Object.keys(plain.csoai ?? {}).sort())
+      .toEqual(["deliverable", "free_preview", "offer_receipt"]);
     expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/free-door");
     expect(plain.csoai?.deliverable).toBeTruthy();
   });

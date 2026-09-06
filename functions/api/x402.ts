@@ -30,6 +30,7 @@
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
 import { CSOAI_LID } from "./_x402";
+import { OFFER_RECEIPT_SPEC_SHA, X402_SIGNER_KID } from "./_x402_offer";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
@@ -45,6 +46,19 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       pay_to: resolvePayTo(env),
       amounts: "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
       well_known: u("/.well-known/x402.json"),
+      // Signed offers on every 402, signed receipts on every settle — the x402 Offer & Receipt
+      // extension, JWS/EdDSA under a key in our DID document. The full declaration, with the
+      // spec commit and the reason we emit no eip712, is on /.well-known/x402.json.
+      offer_receipt: {
+        offers: "in every 402 body and PAYMENT-REQUIRED header, at extensions['offer-receipt'].info.offers[]",
+        receipts: "in every settled X-PAYMENT-RESPONSE, at extensions['offer-receipt'].info.receipt",
+        format: "jws (EdDSA)",
+        kid: X402_SIGNER_KID,
+        spec_commit: OFFER_RECEIPT_SPEC_SHA,
+        verify_free: u("/api/receipts/verify"),
+        verify_without_us: "scripts/verify_receipt.py — reads /.well-known/did.json and nothing else",
+        by_payer: u("/api/receipts?payer=0x…"),
+      },
     },
     resources: [
       {

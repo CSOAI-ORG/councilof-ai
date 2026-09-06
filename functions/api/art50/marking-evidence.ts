@@ -29,7 +29,7 @@
  * list bundled), SynthID and every keyed watermark (no public key-free detector), and the
  * open-source DWT-DCT detector (public, but not implemented in this Function).
  */
-import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponse, CSOAI_LID, type X402Env } from "../_x402";
+import { verifyX402Payment, x402Accepts, buildPaymentRequiredV2, declareBazaarHttpGet, paymentRequiredResponseSigned, CSOAI_LID, type X402Env } from "../_x402";
 import { railMode } from "../_x402_config";
 import { signPayload, cardV0 } from "../../_lib/cardSign";
 import { inspectC2pa, sha256, xmpDigitalSourceType, type C2paInspection } from "../../_lib/c2pa";
@@ -346,7 +346,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
           catalog: `${origin}/api/x402`,
         },
       });
-      return paymentRequiredResponse(paymentRequired);
+      return paymentRequiredResponseSigned(paymentRequired, env);
     }
     payment = { mode: "x402", network: paid.settlement?.network || null, transaction: paid.settlement?.transaction || null, payer: paid.settlement?.payer || null };
     paymentResponseHeader = paid.paymentResponse;
