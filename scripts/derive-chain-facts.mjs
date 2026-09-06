@@ -68,6 +68,15 @@ const fileIds = new Set(files.map((f) => f.replace(/\.json$/, "")));
 // envelope. Files, not the stale boolean, are the measurement.
 const withheld = links.filter((l) => !fileIds.has(l.id)).map((l) => l.id);
 const published = links.filter((l) => fileIds.has(l.id)).length;
+// What the SIGNATURE attests, kept separately from what the directory holds today.
+// The two disagree, and reporting only the second put "335 published" in the OS header
+// one click from a Verify pane reading 313 off the signed body -- with nothing on either
+// surface saying why. Measured 2026-09-06: all 22 ids the signed manifest marks withheld
+// now return 200 on the live site. The flag cannot be corrected without re-signing the
+// envelope, so BOTH are published and the rule that reconciles them is published with them.
+const signedPublished = links.filter((l) => l.body_published !== false).length;
+const signedWithheldIds = links.filter((l) => l.body_published === false).map((l) => l.id);
+const signedWithheldNowOnDisk = signedWithheldIds.filter((id) => fileIds.has(id)).length;
 const withheldAttested = withheld.filter((id) => signedParents.has(id));
 
 // A signature over the manifest is what makes the ORDER itself attested. Since
@@ -127,6 +136,17 @@ const out = {
     header_agrees: chain.length === links.length,
     bodies_published: published,
     bodies_withheld: withheld.length,
+    // The signed pair. A signed number is not refreshed by a file appearing beside it.
+    bodies_published_signed: signedPublished,
+    bodies_withheld_signed: signedWithheldIds.length,
+    signed_withheld_now_on_disk: signedWithheldNowOnDisk,
+    signed_vs_disk_rule:
+      `The signed manifest attests ${signedPublished} bodies published and ` +
+      `${signedWithheldIds.length} withheld across ${links.length} positions. ` +
+      `${signedWithheldNowOnDisk} of those ${signedWithheldIds.length} now have a body on disk, ` +
+      `so the directory holds ${published}. Both are true of different moments: the first is ` +
+      `what the signature covers, the second is what is served today. They are never added, ` +
+      `and the signed figure is not edited to match the directory -- that would need a re-sign.`,
     manifest_signed: manifestSigned,
     manifest_signature_state: manifestSigState,
     manifest_signed_note: manifestSigned

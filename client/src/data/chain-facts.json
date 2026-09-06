@@ -24,6 +24,10 @@
     "header_agrees": true,
     "bodies_published": 335,
     "bodies_withheld": 0,
+    "bodies_published_signed": 313,
+    "bodies_withheld_signed": 22,
+    "signed_withheld_now_on_disk": 22,
+    "signed_vs_disk_rule": "The signed manifest attests 313 bodies published and 22 withheld across 335 positions. 22 of those 22 now have a body on disk, so the directory holds 335. Both are true of different moments: the first is what the signature covers, the second is what is served today. They are never added, and the signed figure is not edited to match the directory -- that would need a re-sign.",
     "manifest_signed": true,
     "manifest_signature_state": "VALID",
     "manifest_signed_note": "true means the card-shaped envelope of /signed/chain.json was VERIFIED here by the shipped verifier (public/signed/verify-card.mjs) under the pinned card-attestation key — the ordering and the no-silent-drop claim are now signature-attested. This makes the published set non-repudiable; it still does not prove the set was not chosen."

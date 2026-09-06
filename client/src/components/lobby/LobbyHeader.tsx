@@ -519,20 +519,31 @@ function LiveStateBar({
         }
         onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
       />
+      {/* This chip read the DIRECTORY count and called it published: "335 published",
+          one click from a Verify pane reading 313 off the signed body of chain.json,
+          with neither surface saying why they differ. The signed manifest attests 313
+          published and 22 withheld across 335 positions; all 22 now have a body on
+          disk, so the directory holds 335. Neither number is wrong — they are true of
+          different moments, and only one of them is covered by a signature. The chip
+          now leads with the SIGNED figure and prints the rule that reconciles it. */}
       <Readout
         label="Chain"
         value={
-          quotable(chain.verified) || quotable(chain.positions)
-            ? `${quote(chain.verified)} verified · ${quote(chain.positions)} positions`
+          quotable(chain.bodiesPublishedSigned) || quotable(chain.positions)
+            ? `${quote(chain.bodiesPublishedSigned)} signed-published · ${quote(chain.positions)} positions`
             : UNMEASURED
         }
-        ok={quotable(chain.verified)}
+        ok={quotable(chain.bodiesPublishedSigned)}
         title={
-          "Verified: card bodies whose bytes reproduce their id and whose signature checks out. " +
-          "Positions: every link in the chain, including the ones whose body is withheld — " +
+          "Signed-published: bodies the SIGNED chain manifest attests as published. " +
+          "Positions: every link, including any whose body the manifest withholds — " +
           "listed so an absence is never invisible. Different kinds; never added together.\n\n" +
+          (chain.signedVsDiskRule ? `${chain.signedVsDiskRule}\n\n` : "") +
+          `signed-published — ${provenance(chain.bodiesPublishedSigned)}\n` +
+          `signed-withheld — ${provenance(chain.bodiesWithheldSigned)}\n` +
+          `of those, now on disk — ${provenance(chain.signedWithheldNowOnDisk)}\n` +
           `verified — ${provenance(chain.verified)}\n` +
-          `published — ${provenance(chain.bodiesPublished)}\n` +
+          `on disk — ${provenance(chain.bodiesPublished)}\n` +
           `positions — ${provenance(chain.positions)}\n\nOpens the verifier.`
         }
         onClick={() => onOpenHit({ tab: tabOf("verify"), label: "Verify a card" })}
