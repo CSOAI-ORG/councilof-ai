@@ -1,0 +1,71 @@
+# Weekly x402 conformance census + the diff against last week.
+#
+# WHY A CRON. Move B bought 316 hosts once and learned that two in three refuse a correctly-signed
+# payment. One round cannot tell a rate-limit from a posture — only the second can. The diff is the
+# product, so the schedule is what makes the product exist.
+#
+# THIS JOB NEVER SPENDS. It runs the census in DRY mode: challenges are read, terms recorded,
+# nothing signed and no payment sent. SETTLE=1 is a deliberate human act with the payer key, and a
+# cron that could spend is a cron that will spend on the day someone edits it carelessly.
+name: x402 census (weekly, DRY)
+
+on:
+  schedule:
+    # Saturday 07:11 UTC — after the Friday deploys have settled, off the top of the hour so it does
+    # not queue behind every other cron in the estate.
+    - cron: "11 7 * * 6"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: x402-census-weekly
+  cancel-in-progress: false
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Census, DRY — read every eligible host's challenge, send nothing
+        run: |
+          set -euo pipefail
+          OUT="docs/product/x402-settlement-census-dry-$(date -u +%Y-%m-%d).jsonl"
+          python3 scripts/grants/x402-settlement-census.py --max-hosts 400 --out "$OUT"
+          echo "OUT=$OUT" >> "$GITHUB_ENV"
+          test -s "$OUT"
+
+      - name: Prove nothing was spent
+        run: |
+          set -euo pipefail
+          # DRY writes status DRY or NO_CHALLENGE and never a settle_tx. A settlement here would
+          # mean the mode flag failed, and that is worth failing the job over.
+          if grep -q '"settle_tx": *"0x' "$OUT"; then
+            echo "FAIL: a settlement transaction appears in a DRY run" >&2; exit 1
+          fi
+          echo "no settle_tx in $(wc -l < "$OUT") rows — DRY held"
+
+      - name: Diff against the newest previous census
+        run: |
+          set -euo pipefail
+          PREV="$(ls -1 docs/product/x402-settlement-census-dry-*.jsonl 2>/dev/null | grep -v "$OUT" | tail -1 || true)"
+          if [ -z "$PREV" ]; then
+            echo "no previous census on disk — nothing to diff, which is the honest state in week one"
+            exit 0
+          fi
+          node scripts/conformance-census-diff.mjs --from "$PREV" --to "$OUT" \
+            --out "docs/product/x402-census-diff-$(date -u +%Y-%m-%d).json"
+
+      - name: Upload, do not commit
+        # The job reads; a human lands it. A cron that writes to master turns a measurement into an
+        # unreviewed publication.
+        uses: actions/upload-artifact@v4
+        with:
+          name: x402-census-${{ github.run_id }}
+          path: |
+            docs/product/x402-settlement-census-dry-*.jsonl
+            docs/product/x402-census-diff-*.json
+          if-no-files-found: error
