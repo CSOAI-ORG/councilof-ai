@@ -1,8 +1,8 @@
 {
   "schema": "csoai.producers/0.1",
-  "as_of": "2026-09-06T07:20:00Z",
+  "as_of": "2026-09-06T10:20:00Z",
   "why": "On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served. Its producer was correct; nothing re-ran it. The whole gates job was red for every lane until someone noticed. This manifest names source -> producer -> output so CI can notice instead.",
-  "how_to_read": "Each entry names what a producer WRITES and how to prove the committed bytes still match. `gated: true` entries are enforced by scripts/producers-check.mjs in CI. `gated: false` entries record WHY they cannot be, which is the more useful half.",
+  "how_to_read": "Each entry names what a producer WRITES and how to prove the committed bytes still match. `gated: true` entries are enforced by scripts/producers-check.mjs in CI. `gated: false` entries record WHY they cannot be, which is the more useful half. Two of the three x402-census entries carry `becomes_gated_when` instead of `gated: true`: their --check has nothing to compare until a second round exists, and a check that cannot fail is not a gate. Their `selftest` command runs on every PR instead, and that is the half that can go red today.",
   "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
   "producers": [
     {
@@ -149,6 +149,56 @@
       "mode": "never-in-ci",
       "gated": false,
       "reason": "These SIGN. Re-running them needs private keys that are deliberately not in CI, and a signature over freshly serialised bytes differs from the published one even when the content is identical. Signed bytes are superseded or ledgered, never regenerated to make a gate pass."
+    },
+    {
+      "id": "x402-census-round",
+      "command": "python3 scripts/grants/x402_census_round.py",
+      "check": "python3 scripts/grants/x402_census_round.py --check",
+      "selftest": "python3 scripts/grants/x402_census_round.py --selftest",
+      "outputs": [
+        "docs/product/x402-census/rounds/<round_id>/round.json",
+        "docs/product/x402-census/rounds/<round_id>/analysis.json",
+        "docs/product/x402-census/rounds/<round_id>/analysis.md",
+        "public/interop/x402-census/rounds/<round_id>.json",
+        "public/interop/x402-census/index.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 5 round artefacts for round 2026-09-06 (316 rows) recompute byte-identically and validate against public/schema/x402-census-round-v1.json",
+      "note": "Reads only the round's committed settle.jsonl/dry.jsonl. No clock (as_of is the last observed_at in the rows), no network, no key. --selftest renders twice, then plants one byte in the rows and asserts --check goes red; it also asserts that a manifest missing a required field fails schema validation, so the published schema is load-bearing rather than decorative."
+    },
+    {
+      "id": "x402-census-delta",
+      "command": "python3 scripts/grants/x402_census_delta.py --all",
+      "check": "python3 scripts/grants/x402_census_delta.py --check",
+      "selftest": "python3 scripts/grants/x402_census_delta.py --selftest",
+      "outputs": [
+        "docs/product/x402-census/deltas/<from>-vs-<to>.json",
+        "docs/product/x402-census/deltas/<from>-vs-<to>.jsonl",
+        "docs/product/x402-census/deltas/<from>-vs-<to>.md",
+        "public/interop/x402-census/deltas/<from>-vs-<to>.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "ONE round exists (2026-09-06). A delta needs two, so --check today compares nothing and exits 0 having proved nothing. A gate that cannot fail is decoration, and a vacuous check reported as green is a defect this estate has shipped before — so this is recorded ungated WITH the reason rather than counted among the passes.",
+      "becomes_gated_when": "round 2026-09-13 lands: flip gated to true in the same PR that commits the second round's rows, and paste the observed CHECK OK line into verified_<date>.",
+      "meanwhile": "the selftest runs on every PR (pr-gates step 'x402 census producers'), and it does go red on a planted byte — that is the half actually enforced today.",
+      "observed_2026_09_06": "0 pair(s): prints '1 round(s) on disk (2026-09-06): a delta needs two. Nothing written' and exits 0"
+    },
+    {
+      "id": "x402-census-leaves",
+      "command": "python3 harness/x402-census/build_cards.py --round-id <round_id>",
+      "check": "python3 harness/x402-census/build_cards.py --check",
+      "selftest": "python3 harness/x402-census/build_cards.py --selftest",
+      "outputs": [
+        "public/interop/x402-census/leaves/<round_id>/card-<sha256>-unsigned.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "No leaves are committed for round 2026-09-06. The same 316 purchases are already published as the 104 legacy cards under public/interop/x402-census-cards/, and staging a second set of 314 leaves for the same event would fork one corpus into two — the exact defect council-os/CARD-CORPORA.md exists to prevent. With nothing on disk the check has nothing to compare.",
+      "becomes_gated_when": "round 2026-09-13's leaves are committed — the first round whose leaves are the only cards for that round.",
+      "meanwhile": "the selftest runs on every PR and proves the property that actually matters: a leaf written for round 1 still reads observations=1 after round 2 exists. If it did not, every signature over an earlier leaf would break on the next round.",
+      "observed_2026_09_06": "generated to a temp dir: 314 leaves (PAID rows only — the 2 NO_CHALLENGE rows correctly produce none), largest 2,714 B against the 3,072 B cap, --check OK"
     }
   ],
   "not_yet_classified": {

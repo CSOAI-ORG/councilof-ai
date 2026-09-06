@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/x402-census-delta-v1.json",
+  "title": "x402 settlement census — one DELTA between two rounds",
+  "description": "What changed between two buyer's-eye rounds of the same population (x402-census-round-v1.json): which hosts returned a different outcome, what the doors asked, who they named as payee, and which hosts took a settlement and refused anyway. This is the artefact the round exists to produce — a listing does not move when a host stops answering paid requests, and this document is where that shows up. Produced only by scripts/grants/x402_census_delta.py from the two rounds' committed rows; `--check` recomputes it and fails on a single changed byte. It ranks nothing, recommends nothing and accuses nobody: REFUSED is indistinguishable from rate-limiting, an account requirement or changed terms when observed from outside. Every host row carries `observations` against `observations_required`, and `state` is UNMEASURED on every one of them until that threshold is met — a flip is an observation, never a verdict.",
+  "type": "object",
+  "required": [
+    "schema",
+    "delta_id",
+    "what_this_is",
+    "from",
+    "to",
+    "days_between",
+    "population_identical",
+    "hosts",
+    "flipped",
+    "price_drift",
+    "pay_to_changed",
+    "take_and_refuse",
+    "ladder",
+    "caveats",
+    "what_this_is_not",
+    "rows_path",
+    "reproduce"
+  ],
+  "properties": {
+    "schema": { "const": "csoai.x402-census.delta/0.1" },
+    "delta_id": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}-vs-\\d{4}-\\d{2}-\\d{2}$" },
+    "what_this_is": { "type": "string" },
+    "from": {
+      "type": "object",
+      "required": ["round_id", "as_of", "probed", "hosts_sha256", "rows_sha256"],
+      "description": "The earlier round. rows_sha256 pins the exact bytes compared, so a delta cannot silently be re-derived from different rows."
+    },
+    "to": {
+      "type": "object",
+      "required": ["round_id", "as_of", "probed", "hosts_sha256", "rows_sha256"]
+    },
+    "days_between": {
+      "type": ["number", "null"],
+      "description": "Derived from the two as_of stamps. A delta over an irregular gap is still a delta, but the gap is stated rather than assumed to be a week."
+    },
+    "population_identical": {
+      "type": "boolean",
+      "description": "True when both rounds carry the same population digest. When false, `hosts.added` and `hosts.dropped` say by how much — and a dropped host is NEVER counted as a flip: leaving the population is not a change of behaviour."
+    },
+    "hosts": {
+      "type": "object",
+      "required": ["common", "added", "dropped"],
+      "properties": {
+        "common": { "type": "integer", "minimum": 0 },
+        "added": { "type": "array", "items": { "type": "string" } },
+        "dropped": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "flipped": {
+      "type": "object",
+      "required": ["count", "share_of_common_pct", "delivered_to_refused", "refused_to_delivered", "other", "transitions"],
+      "description": "The headline. Only hosts present in BOTH rounds can flip. `transitions` is the full FROM->TO histogram, so the two named directions can never be mistaken for the whole picture."
+    },
+    "held": {
+      "type": "object",
+      "description": "Hosts whose outcome did not move. Published because a delta that lists only changes hides its own denominator."
+    },
+    "price_drift": {
+      "type": "object",
+      "required": ["hosts_changed", "up", "down", "rows", "unit_note"],
+      "description": "Change in the units the challenge asked for. Asset units exactly as the door stated them — never a currency figure of ours, never a tier, never a price this estate charges."
+    },
+    "pay_to_changed": {
+      "type": "array",
+      "items": { "type": "object", "required": ["host", "from_pay_to", "to_pay_to"] },
+      "description": "Hosts whose challenge names a different payee than it did last round. A fact about the door; not an allegation about anyone."
+    },
+    "take_and_refuse": {
+      "type": "object",
+      "required": ["definition", "persisted", "new", "cleared"],
+      "description": "persisted / new / cleared across the pair. Persistence over rounds is the only thing that distinguishes a bad moment from a pattern, and even then the state stays UNMEASURED until n>=30."
+    },
+    "receipts": { "type": "object", "description": "Whether hosts returned a parseable settlement reference, each side of the pair." },
+    "ladder": {
+      "type": "object",
+      "required": ["n_required", "hosts_by_observations", "hosts_at_or_above_n_required", "state_of_every_host", "note"],
+      "description": "The visible climb toward a publishable per-host state. Observations accrue one per round per host, so at a weekly cadence n=30 is roughly thirty weeks away — and this block says so numerically rather than letting a reader assume a flip means something settled.",
+      "properties": {
+        "n_required": { "const": 30 },
+        "hosts_at_or_above_n_required": { "type": "integer", "minimum": 0 },
+        "state_of_every_host": { "enum": ["UNMEASURED", "mixed"] }
+      }
+    },
+    "caveats": { "type": "array", "minItems": 2, "items": { "type": "string" } },
+    "what_this_is_not": { "type": "array", "minItems": 4, "items": { "type": "string" } },
+    "rows_path": { "type": "string", "description": "The per-host JSONL every count above was folded from." },
+    "reproduce": { "type": "string" }
+  }
+}

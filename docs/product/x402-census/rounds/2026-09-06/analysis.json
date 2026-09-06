@@ -1,0 +1,628 @@
+{
+  "schema": "csoai.x402-settlement-census-analysis/0.1",
+  "census_date": "2026-09-06",
+  "inputs": {
+    "settle_jsonl": {
+      "path": "docs/product/x402-census/rounds/2026-09-06/settle.jsonl",
+      "sha256": "5c6b991d99ee7a80cc14a3c72e94ac6dbeda42348ea87916f4576520cbe2ac0b",
+      "rows": 316
+    },
+    "dry_jsonl": {
+      "path": "docs/product/x402-census/rounds/2026-09-06/dry.jsonl",
+      "sha256": "39726b120bcab150f65acabadcea4b7c64e2684fee8ae01cb5219094af673b3c",
+      "rows": 316
+    }
+  },
+  "population": {
+    "probed": 316,
+    "challenged": 314,
+    "distinct_hosts": 316,
+    "duplicate_hosts": 0
+  },
+  "caveats": [
+    "REFUSED is not proof of bad faith: a host may rate-limit, require an account, or have changed terms between the challenge and the retry.",
+    "One purchase per host, one moment. A single refusal is not a pattern; the second round next week is what makes it one."
+  ],
+  "what_this_is": "Measurement of one buyer's-eye purchase per host at one moment, derived entirely from the committed census rows. It is not a certification, ranking or recommendation of any host.",
+  "outcomes": {
+    "DELIVERED": {
+      "hosts": 100,
+      "share_pct": 31.6
+    },
+    "REFUSED": {
+      "hosts": 213,
+      "share_pct": 67.4
+    },
+    "MISMATCH": {
+      "hosts": 1,
+      "share_pct": 0.3
+    },
+    "NO_CHALLENGE": {
+      "hosts": 2,
+      "share_pct": 0.6
+    }
+  },
+  "refused": {
+    "hosts": 213,
+    "by_paid_status": {
+      "402": {
+        "hosts": 103,
+        "share_of_refused_pct": 48.4
+      },
+      "400": {
+        "hosts": 56,
+        "share_of_refused_pct": 26.3
+      },
+      "405": {
+        "hosts": 30,
+        "share_of_refused_pct": 14.1
+      },
+      "404": {
+        "hosts": 10,
+        "share_of_refused_pct": 4.7
+      },
+      "422": {
+        "hosts": 6,
+        "share_of_refused_pct": 2.8
+      },
+      "502": {
+        "hosts": 3,
+        "share_of_refused_pct": 1.4
+      },
+      "401": {
+        "hosts": 2,
+        "share_of_refused_pct": 0.9
+      },
+      "500": {
+        "hosts": 2,
+        "share_of_refused_pct": 0.9
+      },
+      "403": {
+        "hosts": 1,
+        "share_of_refused_pct": 0.5
+      }
+    },
+    "by_class": {
+      "again_402": {
+        "hosts": 103,
+        "share_of_refused_pct": 48.4
+      },
+      "other_4xx": {
+        "hosts": 105,
+        "share_of_refused_pct": 49.3
+      },
+      "five_xx": {
+        "hosts": 5,
+        "share_of_refused_pct": 2.3
+      }
+    },
+    "by_response_shape": {
+      "empty_body": {
+        "hosts": 1,
+        "share_of_refused_pct": 0.5
+      },
+      "json_error": {
+        "hosts": 208,
+        "share_of_refused_pct": 97.7
+      },
+      "html": {
+        "hosts": 1,
+        "share_of_refused_pct": 0.5
+      },
+      "other": {
+        "hosts": 3,
+        "share_of_refused_pct": 1.4
+      }
+    },
+    "paid_status_x_shape": {
+      "402/json_error": 103,
+      "400/json_error": 55,
+      "405/json_error": 27,
+      "404/json_error": 10,
+      "422/json_error": 6,
+      "502/json_error": 3,
+      "401/json_error": 2,
+      "400/other": 1,
+      "403/json_error": 1,
+      "405/empty_body": 1,
+      "405/html": 1,
+      "405/other": 1,
+      "500/json_error": 1,
+      "500/other": 1
+    },
+    "by_content_type": {
+      "application/json": 108,
+      "application/json; charset=utf-8": 99,
+      "text/plain; charset=utf-8": 2,
+      "(none)": 1,
+      "application/problem+json": 1,
+      "text/html": 1,
+      "text/plain;charset=utf-8": 1
+    },
+    "refused_bytes": {
+      "median": 280.0,
+      "p90": 4891.0
+    },
+    "error_strings": {
+      "available": false,
+      "top10": [],
+      "reason": "The census tool records body_json as a boolean and does not retain response bodies; no error text exists in the jsonl and hosts were not re-probed for it"
+    }
+  },
+  "latency": {
+    "all": {
+      "probe_s": {
+        "n": 316,
+        "median": 0.27,
+        "p90": 0.76,
+        "p95": 0.905,
+        "max": 6.29
+      },
+      "paid_s": {
+        "n": 314,
+        "median": 0.64,
+        "p90": 2.565,
+        "p95": 3.577,
+        "max": 27.64
+      }
+    },
+    "DELIVERED": {
+      "probe_s": {
+        "n": 100,
+        "median": 0.38,
+        "p90": 0.932,
+        "p95": 1.193,
+        "max": 6.29
+      },
+      "paid_s": {
+        "n": 100,
+        "median": 1.71,
+        "p90": 3.598,
+        "p95": 4.853,
+        "max": 8.02
+      }
+    },
+    "REFUSED": {
+      "probe_s": {
+        "n": 213,
+        "median": 0.24,
+        "p90": 0.606,
+        "p95": 0.818,
+        "max": 2.29
+      },
+      "paid_s": {
+        "n": 213,
+        "median": 0.28,
+        "p90": 1.39,
+        "p95": 1.886,
+        "max": 27.64
+      }
+    },
+    "MISMATCH": {
+      "probe_s": {
+        "n": 1,
+        "median": 0.2,
+        "p90": 0.2,
+        "p95": 0.2,
+        "max": 0.2
+      },
+      "paid_s": {
+        "n": 1,
+        "median": 1.22,
+        "p90": 1.22,
+        "p95": 1.22,
+        "max": 1.22
+      }
+    },
+    "NO_CHALLENGE": {
+      "probe_s": {
+        "n": 2,
+        "median": 0.18,
+        "p90": 0.252,
+        "p95": 0.261,
+        "max": 0.27
+      },
+      "paid_s": {
+        "n": 0,
+        "median": null,
+        "p90": null,
+        "p95": null,
+        "max": null
+      }
+    },
+    "_method": "linear interpolation between closest ranks; seconds; paid_s absent for NO_CHALLENGE (nothing was sent)"
+  },
+  "concentration": {
+    "delivered": {
+      "population": "DELIVERED hosts",
+      "rows": 100,
+      "rows_with_pay_to": 100,
+      "distinct_pay_to": 82,
+      "distinct_pay_to_case_sensitive": 83,
+      "top3": [
+        {
+          "pay_to": "0xf444abC53f5e1E73CAec7df64D147DDB119514A0",
+          "hosts": 5,
+          "share_pct": 5.0
+        },
+        {
+          "pay_to": "0x0ebA5d314F4f5Dcb7A094953Fa9311a45172dd1B",
+          "hosts": 2,
+          "share_pct": 2.0
+        },
+        {
+          "pay_to": "0x239DE97929b20F27aa503B236d33420670Bf5Ad1",
+          "hosts": 2,
+          "share_pct": 2.0
+        }
+      ],
+      "top3_share_pct": 9.0,
+      "top1_share_pct": 5.0,
+      "single_host_payees": 67,
+      "gini": 0.1522,
+      "hhi": 148.0
+    },
+    "all_probed": {
+      "population": "all probed hosts (NO_CHALLENGE rows carry no payTo)",
+      "rows": 316,
+      "rows_with_pay_to": 314,
+      "distinct_pay_to": 173,
+      "distinct_pay_to_case_sensitive": 174,
+      "top3": [
+        {
+          "pay_to": "0x2880EdfFF13100677Bf97A3CBdF3Bc34771C4E5E",
+          "hosts": 62,
+          "share_pct": 19.7
+        },
+        {
+          "pay_to": "0xFFc458dB291b4ABcE020fE3de4f91F2770E537b1",
+          "hosts": 18,
+          "share_pct": 5.7
+        },
+        {
+          "pay_to": "0xEf879BFD6C4AccB8F795136de90246e1EC245e06",
+          "hosts": 11,
+          "share_pct": 3.5
+        }
+      ],
+      "top3_share_pct": 29.0,
+      "top1_share_pct": 19.7,
+      "single_host_payees": 143,
+      "gini": 0.4242,
+      "hhi": 482.6
+    }
+  },
+  "take_and_refuse": {
+    "definition": "status REFUSED and settle_tx is a 0x-prefixed 32-byte hash reported in the host's own PAYMENT-RESPONSE",
+    "hosts": 13,
+    "units_total": 193000,
+    "usdc_total": 0.193,
+    "share_of_refused_pct": 6.1,
+    "rows": [
+      {
+        "host": "api.vibe.airforce",
+        "settle_tx": "0xe9bba7f8d3e52b5f53b346e566173a896382f047596eb8150c76fa49f389bc15",
+        "units": 1000,
+        "usdc": 0.001,
+        "paid_status": 422,
+        "bytes": 91,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "5108-x402.community.iamstarchild.com",
+        "settle_tx": "0x00aa4923b82a19d1447f07c10e284c02e7c3ef36508ed1b6e8b7bc3dc8a4e08a",
+        "units": 2000,
+        "usdc": 0.002,
+        "paid_status": 422,
+        "bytes": 43,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "agent.api.0x.org",
+        "settle_tx": "0xddf564dbe6cfb93d0b8aee0f88e5a7c28d559d3a14a08e1c1157ae369592c793",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 400,
+        "bytes": 295,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "agents.bytemine.ai",
+        "settle_tx": "0x9b143a686a7265f42dbedb509906deef0f6cd0fed4e08ca2ab0383ae7506560e",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 404,
+        "bytes": 66,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "linklens-sand.vercel.app",
+        "settle_tx": "0xb6e0cc06928e709d183306a6b28222466277ac0562f64057c84d84d578b65eb2",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 400,
+        "bytes": 70,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "rentcast.x402.paysponge.com",
+        "settle_tx": "0x05adb3a1be357a1e09488d64fa9f99fc20e2b816dc279809e5116554607f4330",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 400,
+        "bytes": 113,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "tripadvisor.x402.paysponge.com",
+        "settle_tx": "0x66cfef13db6641a6e8d74a04c70c6eec04b0108a988d5bdc290b9f76cf6a6877",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 403,
+        "bytes": 110,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "url-extractor.x402.paysponge.com",
+        "settle_tx": "0xe8c860ce72c6ef82952202584ae6eebcf5702321216aa557a0dcc5bd0e83d788",
+        "units": 10000,
+        "usdc": 0.01,
+        "paid_status": 400,
+        "bytes": 23,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "agent-proxy.alchemy.com",
+        "settle_tx": "0x452d1ba528cbc7ff2e684451bdcb7de9fe94c98cacb7e6727a3949ce090c0685",
+        "units": 20000,
+        "usdc": 0.02,
+        "paid_status": 405,
+        "bytes": 1116,
+        "response_shape": "html"
+      },
+      {
+        "host": "agents.x402stock.xyz",
+        "settle_tx": "0x4a577262638e4316cc86cb280b10c551c1109a72d2c4a887cc5c3ec5aafe3986",
+        "units": 20000,
+        "usdc": 0.02,
+        "paid_status": 400,
+        "bytes": 179,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "screenshotone.x402.paysponge.com",
+        "settle_tx": "0x97e33e1d05380a9ed2eea8e7c950d1eae1db68f3046713c968783c02c28437fb",
+        "units": 20000,
+        "usdc": 0.02,
+        "paid_status": 400,
+        "bytes": 161,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "wolframalpha.x402.paysponge.com",
+        "settle_tx": "0xce4b39d1831455267fb55216613d362157703ed06bf715934cdc482d0658a2c1",
+        "units": 20000,
+        "usdc": 0.02,
+        "paid_status": 400,
+        "bytes": 120,
+        "response_shape": "json_error"
+      },
+      {
+        "host": "formo.x402.paysponge.com",
+        "settle_tx": "0xaec93dcc900b7e5cee0fc8d515cd02ed56690624518be0b894944614be03856f",
+        "units": 50000,
+        "usdc": 0.05,
+        "paid_status": 400,
+        "bytes": 139,
+        "response_shape": "json_error"
+      }
+    ],
+    "claimed_settlement_unparseable": {
+      "note": "PAYMENT-RESPONSE header present but not decodable, so the settlement claim cannot be checked on chain from this row; the census tool still counted the amount as spent",
+      "hosts": 1,
+      "units_total": 1000,
+      "usdc_total": 0.001,
+      "rows": [
+        {
+          "host": "api.loyalspark.online",
+          "settle_tx": "unparseable",
+          "units": 1000,
+          "paid_status": 401,
+          "bytes": 117
+        }
+      ]
+    },
+    "settlement_receipt_by_outcome": {
+      "DELIVERED": {
+        "tx_hash": 86,
+        "unparseable": 3,
+        "none": 11
+      },
+      "REFUSED": {
+        "tx_hash": 13,
+        "unparseable": 1,
+        "none": 199
+      },
+      "MISMATCH": {
+        "tx_hash": 1,
+        "unparseable": 0,
+        "none": 0
+      },
+      "NO_CHALLENGE": {
+        "tx_hash": 0,
+        "unparseable": 0,
+        "none": 2
+      }
+    },
+    "delivered_without_receipt": {
+      "note": "2xx with a body but no PAYMENT-RESPONSE header; delivery observed, settlement not evidenced by the host",
+      "hosts": 11,
+      "units_total": 53656,
+      "usdc_total": 0.053656,
+      "hosts_list": [
+        "api.getsly.ai",
+        "hypernatt.com",
+        "squeezeos-api.onrender.com",
+        "api.jarvisclaw.ai",
+        "ledger-api.novadyne.ai",
+        "vulnfeed-api.novadyne.ai",
+        "x402.asterpay.io",
+        "api.commodities.sh",
+        "api.phoneagent.xyz",
+        "api.premiumrewards.vip",
+        "vps.phoneagent.xyz"
+      ]
+    }
+  },
+  "mismatch": [
+    {
+      "host": "keyronne.com",
+      "url": "https://keyronne.com/api/json-repair",
+      "advertised_mime": "application/json",
+      "served_content_type": "text/html; charset=utf-8",
+      "body_json": false,
+      "paid_status": 200,
+      "bytes": 6153,
+      "paid_s": 1.22,
+      "units": 1000,
+      "settle_receipt": "tx_hash",
+      "settle_tx": "0x8d6d5a458ccb5d934c7411245526be462d8638aee1d237e8af4867eb36237a5c"
+    }
+  ],
+  "dry_vs_settle": {
+    "dry_hosts": 316,
+    "settle_hosts": 316,
+    "common_hosts": 316,
+    "dropped_between_passes": [],
+    "added_between_passes": [],
+    "no_challenge_dry": [
+      "api.utilia.ink",
+      "x402-paid-service.iholt.workers.dev"
+    ],
+    "no_challenge_settle": [
+      "api.utilia.ink",
+      "x402-paid-service.iholt.workers.dev"
+    ],
+    "challenge_units_changed": [
+      {
+        "host": "api.babyblueviper.com",
+        "advertised_units": 23904,
+        "dry_challenge_units": 23994,
+        "settle_challenge_units": 23938,
+        "delta_units": -56,
+        "settle_status": "DELIVERED"
+      }
+    ],
+    "other_terms_changed": {
+      "counts": {},
+      "rows": []
+    },
+    "price_drift_vs_advertised": {
+      "dry": [
+        {
+          "host": "api.babyblueviper.com",
+          "advertised_units": 23904,
+          "challenge_units": 23994,
+          "delta_units": 90
+        }
+      ],
+      "settle": [
+        {
+          "host": "api.babyblueviper.com",
+          "advertised_units": 23904,
+          "challenge_units": 23938,
+          "delta_units": 34
+        }
+      ]
+    },
+    "status_transitions": {
+      "DRY->REFUSED": 213,
+      "DRY->DELIVERED": 100,
+      "NO_CHALLENGE->NO_CHALLENGE": 2,
+      "DRY->MISMATCH": 1
+    },
+    "probe_s_median": {
+      "dry": 0.275,
+      "settle": 0.27
+    }
+  },
+  "x402_version": {
+    "split": {
+      "2": {
+        "hosts": 314,
+        "share_pct": 99.4
+      },
+      "None": {
+        "hosts": 2,
+        "share_pct": 0.6
+      }
+    },
+    "by_outcome": {
+      "DELIVERED": {
+        "2": 100
+      },
+      "REFUSED": {
+        "2": 213
+      },
+      "MISMATCH": {
+        "2": 1
+      },
+      "NO_CHALLENGE": {
+        "None": 2
+      }
+    }
+  },
+  "delivered": {
+    "hosts": 100,
+    "bytes": {
+      "min": 25,
+      "median": 2110.5,
+      "p90": 32441.0,
+      "max": 1739103,
+      "total": 3180474
+    },
+    "bytes_buckets": {
+      "<=100": 4,
+      "101-1000": 37,
+      "1001-10000": 33,
+      "10001-100000": 22,
+      ">100000": 4
+    },
+    "body_json_share_pct": 99.0,
+    "by_content_type": {
+      "application/json": 61,
+      "application/json; charset=utf-8": 37,
+      "application/ld+json": 1,
+      "text/plain; charset=utf-8": 1
+    },
+    "advertised_mime": {
+      "None": 9,
+      "application/json": 89,
+      "application/ld+json": 1,
+      "text/plain": 1
+    },
+    "units": {
+      "total": 1144794,
+      "usdc": 1.144794,
+      "median": 8500.0
+    }
+  },
+  "spend": {
+    "spent_units_running_final": 1339794,
+    "usdc_running_final": 1.339794,
+    "recomputed_units": 1339794,
+    "usdc_recomputed": 1.339794,
+    "reconciles": true,
+    "rule": "tool counts a row as spent when status is DELIVERED/MISMATCH or any settle_tx value is present",
+    "breakdown_units": {
+      "delivered": 1144794,
+      "mismatch": 1000,
+      "refused_with_tx_hash": 193000,
+      "refused_with_unparseable_receipt": 1000
+    },
+    "payers": [
+      "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
+    ],
+    "self_hosts_present": []
+  }
+}
