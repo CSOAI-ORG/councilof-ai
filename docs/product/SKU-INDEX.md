@@ -22,18 +22,13 @@ signed-data-feed · provider-diff-feed · receipts-batch · commission-card
 evidence-bundle ✅ derivable · eu-ai-act-pack ✅ · swift-bank-pack ✅ ·
 xrpl-asset-evidence ✅ · signed-data-feed ✅ · provider-diff-feed ✅ ·
 receipts-batch ⚠️ needs the owner's PayAI/Rekor key (honestly staged) ·
-commission-card ✅ DELIVERABLE, ⚠️ NOT ADVERTISED — corrected 2026-09-06. Two axes, not one:
-the door is live and delivers on settlement; it is not advertised because its free preview is the
-402 challenge rather than sampleable content, which is a standing marketing rule in
-scripts/badger/generate-h1-product-docs.py and it stands. What was wrong was writing the second as
-the first. This line read
-"⚠️ NOT DELIVERABLE (no signed-card commissions on demand)" and was wrong. The
-verdict came from probing /api/request-attestation with NO subject, while the
-door's own bazaar extension declares `subject` a REQUIRED input. With a subject
-that has cards the FREE preview returns the signed cards, their hashes, their
-URLs and corpus_as_of; the door states its own deliverable as "one card-v0 leaf,
-surface ras.commission". It re-serves existing signed cards and never invents a
-score — which is a description of the product, not a reason it cannot be served.
+commission-card ✅ DELIVERABLE AND ADVERTISED — governor ruling 06 Sep 2026. The door answers
+402 and delivers its FREE preview inside the challenge body: signed cards, their hashes and
+corpus_as_of. The old rule keyed on HTTP 200, which this door can never return, so the SKU was
+structurally unadvertisable no matter how good its preview became — while the published offer
+column maps 95 of the 394 conformant Bazaar hosts to exactly it. The rule now keys on "issues a
+parseable 402 with accepts[]". Only a 402 that does not parse into payment options is withheld,
+because a buyer cannot act on that.
 art50-marking-evidence ✅ DELIVERABLE and advertised — free preview 200 (6128 B), paid door 402.
 Added to the source producer on 2026-09-06; it had been absent from generate-h1-product-docs.py
 entirely, which is why 8 mapped Bazaar hosts had no offer page to read.

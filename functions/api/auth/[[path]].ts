@@ -88,7 +88,8 @@ export const onRequest: PagesFunction<AuthEnv> = async (ctx) => {
     const password = String(body.password || "");
     if (!email || !password) return json({ error: "email and password required" }, 400);
 
-    if (email === DEMO_USER.email && password === DEMO_USER.password) {
+    // The fixed demo account is a working production login unless explicitly enabled (found 06 Sep audit).
+    if ((ctx.env as { DEMO_LOGIN_ENABLED?: string }).DEMO_LOGIN_ENABLED === "1" && email === DEMO_USER.email && password === DEMO_USER.password) {
       const user = { email: DEMO_USER.email, name: DEMO_USER.name };
       return authenticatedSession(ctx.env, user);
     }

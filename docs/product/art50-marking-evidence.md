@@ -1,6 +1,6 @@
 # Article 50 transparency marking evidence (per asset)
 
-`art50-marking-evidence` — derived from live endpoints on 2026-09-06T05:00:05Z.
+`art50-marking-evidence` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,17 +11,17 @@
 (8180 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/&preview=1` — status **200**, **6128 bytes**, `sha256 ab3b0d4a69148616…`
+`https://councilof.ai/api/art50/marking-evidence?url=https://councilof.ai/&preview=1` — status **200**, **6128 bytes**, `sha256 8a2b8bfa289671ee…`
 
 ```json
 {
   "schema": "csoai.art50.marking-evidence/0.1",
   "mode": "preview",
   "signed": false,
-  "fetched_at": "2026-09-06T05:00:04.278Z",
+  "fetched_at": "2026-09-06T06:00:16.690Z",
   "measurement": {
     "subject": {
-      "sha256": "6f4248c9d8b51152b075114e6229c9e09e92b15a1333c50ce1a161f6865bdb13",
+      "sha256": "3c3db07b4c23e488de6bfaa90818e17d4db008c525974417777fdea77b53dda1",
       "bytes": 228404,
       "container": "unknown",
       "source": "url",

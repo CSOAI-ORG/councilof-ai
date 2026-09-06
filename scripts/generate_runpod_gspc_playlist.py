@@ -302,7 +302,19 @@ def parser() -> argparse.ArgumentParser:
     result.add_argument("--interval-seconds", type=int, default=86_400)
     result.add_argument("--disk-low-water-bytes", type=int, default=4 * 1024**3)
     result.add_argument("--request-timeout-seconds", type=int, default=180)
-    result.add_argument("--max-tokens", type=int, default=16)
+    # 16 was too small to admit a label from a model that says anything first. Ollama
+    # is already asked for "think": False, so this is not a reasoning block -- it is
+    # ordinary conversational preamble ("Okay, the user is asking for a response in the
+    # format \"COMPLY |") that consumed the whole budget before the answer. Measured
+    # 2026-09-06: four of twelve local-mill runs returned 36 of 36 items with
+    # parsed_label null and done_reason "length".
+    #
+    # This buys COVERAGE, not correctness. An item that still returns no label is
+    # excluded from n rather than scored wrong (see the intake counts), so the budget
+    # decides how many items get answered, not whether the answer is graded honestly.
+    # `decode` is pinned in every card, so runs at 16 and at 64 stay distinguishable
+    # and are not silently pooled.
+    result.add_argument("--max-tokens", type=int, default=64)
     return result
 
 

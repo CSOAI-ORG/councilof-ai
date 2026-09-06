@@ -94,26 +94,44 @@ def main():
     ap.add_argument("--total-cap", type=float, default=4.0, help="USDC")
     ap.add_argument("--network", default="eip155:8453")
     ap.add_argument("--out", default="docs/product/x402-settlement-census.jsonl")
+    ap.add_argument("--url", action="append", default=[],
+                    help="pay this exact resource instead of the census (repeatable); Move A = our own 8 doors")
+    ap.add_argument("--allow-self", action="store_true",
+                    help="permit councilof.ai targets (self-settlement: recorded by the edge, never revenue; "
+                         "the payer MUST be in X402_SELF_WALLETS first or /api/revenue counts it as a buyer)")
     a = ap.parse_args()
     settle = os.environ.get("SETTLE") == "1"
-    key = os.environ.get("X402_PAYER_KEY")
-    if settle and not key:
+    # NAMED payer_key, not key. It used to be `key`, and forty lines below the candidate loop
+    # rebound the SAME NAME to a hostname (`key = r["probe_url"] if a.url else r["host"]`). By the
+    # time sign_payload was called the private key had become "some-host.com", and eth_account
+    # raised "Non-hexadecimal digit found" on the very first host. The DRY path returns before that
+    # call, so a full 316-host dry run passed clean while every SETTLE run died instantly — the bug
+    # was invisible to exactly the rehearsal meant to catch it.
+    payer_key = os.environ.get("X402_PAYER_KEY")
+    if settle and not payer_key:
         sys.exit("SETTLE=1 needs X402_PAYER_KEY (a THROWAWAY key; scripts/badger/make-payer-wallet.sh)")
 
-    raw = (urllib.request.urlopen(urllib.request.Request(a.census, headers={"User-Agent": UA})).read().decode()
-           if a.census.startswith("http") else open(a.census).read())
-    rows = [json.loads(l) for l in raw.splitlines() if l.strip()]
+    if a.url:
+        from urllib.parse import urlparse
+        rows = [{"host": urlparse(u).netloc, "probe_url": u, "conformant": True, "network": a.network,
+                 "scheme": "exact", "amount": str(a.per_host_cap), "indexes": ["explicit"]} for u in a.url]
+    else:
+        raw = (urllib.request.urlopen(urllib.request.Request(a.census, headers={"User-Agent": UA})).read().decode()
+               if a.census.startswith("http") else open(a.census).read())
+        rows = [json.loads(l) for l in raw.splitlines() if l.strip()]
+    self_hosts = set() if a.allow_self else SELF_HOSTS
     cand = {}
     for r in rows:
         if not r.get("conformant") or r.get("network") != a.network or r.get("scheme") != "exact":
             continue
-        if r["host"] in SELF_HOSTS or not str(r.get("amount", "")).isdigit():
+        if r["host"] in self_hosts or not str(r.get("amount", "")).isdigit():
             continue
         amt = int(r["amount"])
         if amt <= 0 or amt > a.per_host_cap:
             continue
-        if r["host"] not in cand or amt < int(cand[r["host"]]["amount"]):
-            cand[r["host"]] = r
+        dedup_key = r["probe_url"] if a.url else r["host"]
+        if dedup_key not in cand or amt < int(cand[dedup_key]["amount"]):
+            cand[dedup_key] = r
     targets = sorted(cand.values(), key=lambda r: (int(r["amount"]), r["host"]))[: a.max_hosts]
     print(f"census rows {len(rows)} -> eligible hosts {len(cand)} -> targets {len(targets)} "
           f"(cap {a.per_host_cap} units/host, {a.total_cap} USDC total, mode {'SETTLE' if settle else 'DRY'})", file=sys.stderr)
@@ -142,7 +160,7 @@ def main():
                 out.write(json.dumps(rec) + "\n"); out.flush(); continue
             if spent + units > a.total_cap * 1e6:
                 print(f"total cap reached at {spent/1e6:.4f} USDC; stopping", file=sys.stderr); break
-            v, b64, payer, amount = sign_payload(ch, url, key)
+            v, b64, payer, amount = sign_payload(ch, url, payer_key)
             hdr = {"PAYMENT-SIGNATURE": b64} if v >= 2 else {"X-PAYMENT": b64}
             st2, hd2, body2, dt2 = http(url, hdr, timeout=90)
             h2 = {k.lower(): v for k, v in hd2.items()}
