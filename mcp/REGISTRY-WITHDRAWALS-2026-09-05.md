@@ -141,3 +141,67 @@ producer is out of reach here, and publishing is an owner-token action. What thi
 is make the disagreement impossible to lose: the guard counts it, the post-deploy job puts the
 count in one refreshed issue, and the count is a baseline that fails when it rises **and** when it
 falls without being lowered deliberately.
+
+---
+
+# RE-MEASURED 2026-09-06 — the count improved and the problem got newer
+
+Walk to cursor exhaustion: **14 pages · 354 distinct servers** (was 330) · 326 declare a
+repository · 28 declare none, which the 2026-09-05 ruling makes the correct state.
+
+    2026-09-05   37 unfollowable
+    2026-09-06   19 unfollowable
+
+**All 19 are new.** The 2026-09-05 set was genuinely fixed: the "no public repository" entries
+were republished with the repository field removed (`agent-incident-reporter-mcp` v1.0.4,
+`care-home-scheduling-mcp` v1.0.6, `cqc-compliance-mcp` v1.0.6, `meok-bft-governance-mcp` v1.0.8,
+`meok-uk-fhi-mcp` v1.0.6 — all `repository: null` now), and the repointable ones were repointed
+(`acord-bridge-mcp` v0.1.3 and `as400-bridge-mcp` v0.1.3 now name the real, existing repo).
+
+So 37 → 19 is not one problem shrinking. It is one problem solved and a different one arriving,
+and **the count said "improvement" while 19 fresh defects landed.** That is why the baseline is
+now a list of names in `scripts/mcp-registry-baseline.json` rather than a number in an
+environment variable that defaulted to 0.
+
+## What the 19 are
+
+**Sixteen are one bad batch, all at v1.0.1, all with UNDERSCORE server names.** Fourteen are
+`io.github.CSOAI-ORG/meek_*`, plus `councilof_mcp` and `csoai_defoneos_mcp`. Each advertises a
+hyphenated repository that does not exist.
+
+*The brand is MEOK, not "meek".* That looked like a typo worth repointing — so it was tested:
+**the `meok-` spelling does not exist either.** `CSOAI-ORG/meok-3d-print-toolchain-mcp`,
+`meok-daily-plan-mcp`, `meok-antenna-triangle-mcp` and the rest all 404. The repositories were
+never created under either spelling; this is not a repoint.
+
+**Three name owners that are not GitHub accounts at all:**
+
+| server | advertised repository | owner |
+|---|---|---|
+| `meok-ai-psych-vuln-audit-mcp` | `meok-ai-labs/meok-ai-psych-vuln-audit-mcp` | `meok-ai-labs` → **404, no such user or org** |
+| `meok-annex-iii-impact-mcp` | `meok-ai-labs/meok-annex-iii-impact-mcp` | `meok-ai-labs` → **404** |
+| `meok-compliance-passport-mcp` | `meok-ai/meok-compliance-passport-mcp` | `meok-ai` → **404** |
+
+## Absent, not private — checked the way the 2026-09-05 section demanded
+
+A GitHub 404 also means *private*, so every verdict was taken with an authenticated token, and
+the token was first proven able to see private repositories (**43** via
+`/user/repos?visibility=private`). All 19 are genuinely absent.
+
+**One instrument failed here and is worth recording.** `gh api users/CSOAI-ORG/repos?type=all`
+returned 640 names, and treating that list as the population marked 40 entries absent — including
+`meok-watermark-attest-mcp` and `self-healing-infrastructure-mcp`, which a per-repo
+`gh api repos/CSOAI-ORG/<name>` answers **200, public**. The listing endpoint is incomplete, which
+is the same defect CLAUDE.md already records against `gh repo list`. Per-repo lookup is the
+instrument; a list endpoint is not a census.
+
+## Owner action (unchanged in kind, new in content)
+
+Publishing is an owner-token action and these entries come from separate repositories, so:
+
+    # for each of the 19, either
+    mcp-publisher publish     # with repository removed — the ruled-correct state for no public source
+    # or withdraw the entry
+
+**Done when:** `CHECK_REGISTRY=1 node scripts/outward-claims-guard.mjs` prints
+`ok mcp registry repository claims`, and `scripts/mcp-registry-baseline.json` has shrunk to match.
