@@ -258,7 +258,10 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         },
         outputExample: { schema: "csoai.evidence-bundle/0.1", kind: "bundle", oscal: { "assessment-results": {} }, cards: {}, manifest_card: { surface: "evidence.bundle" } },
       }),
-      csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview, rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
+      csoai: { schema: "csoai.evidence-bundle/0.1", per: "bundle", lid: CSOAI_LID, never: ["conformity determination", "certificate", "score", "rank"], preview,
+        free_preview: `${origin}/api/evidence-bundle?obligation=${encodeURIComponent(ob.id)}`,
+        deliverable: "one pack for this subject and obligation: the bench JSON, its detached Ed25519 signature, and the OSCAL assessment-results wrapper — assembled from already-signed cards, never a conformity determination",
+        rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402`, invoice: { how: `${resourceUrl}&invoice=gbp&commissioned_by=<legal entity>`, note: "a buyer who cannot pay USDC can ask for a CSOAI LTD invoice — the reference is issued here, the amount only on the invoice" } },
     });
     return paymentRequiredResponse(paymentRequired);
   }
