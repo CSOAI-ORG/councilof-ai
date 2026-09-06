@@ -100,6 +100,40 @@ for (const p of gated) {
       }
       if (moved.length) run(`git checkout -- ${moved.map((f) => `'${f}'`).join(" ")}`);
       else console.log(`  ✓ ${p.id.padEnd(28)} re-ran the producer, tree unchanged`);
+    } else if (p.mode === "rerun-and-compare-keys") {
+      // For a producer whose bytes CANNOT be stable — sbom stamps a fresh timestamp and a random
+      // serialNumber every run — byte-diffing is impossible but the thing worth protecting is not
+      // the bytes. It is the SET of components. Compare that projection and restore the file.
+      //
+      // This is not a weaker gate, it is a gate on the right property. The drift it was written
+      // for: the SBOM listed six packages that #1273 had DELETED for carrying five high-severity
+      // advisories, so our own supply-chain artefact still advertised them.
+      const keyset = (txt) => {
+        const doc = JSON.parse(txt);
+        const [arr, field] = p.compare_key.split("[].");
+        return new Set((doc[arr] ?? []).map((x) => x[field]).filter(Boolean));
+      };
+      const file = p.outputs[0];
+      const original = readFileSync(join(REPO, file), "utf8");
+      let fresh;
+      try {
+        run(p.command);
+        fresh = readFileSync(join(REPO, file), "utf8");
+      } finally {
+        run(`git checkout -- '${file}'`);
+      }
+      const was = keyset(original), now = keyset(fresh);
+      const lost = [...was].filter((x) => !now.has(x));
+      const gained = [...now].filter((x) => !was.has(x));
+      if (lost.length || gained.length) {
+        failures++;
+        console.error(`  ✗ ${p.id.padEnd(28)} STALE — committed ${p.compare_key} disagrees with a fresh run:`);
+        for (const x of lost) console.error(`      committed lists, fresh does not:  ${x}`);
+        for (const x of gained) console.error(`      fresh lists, committed does not:  ${x}`);
+        console.error(`      fix: ${p.command}`);
+      } else {
+        console.log(`  ✓ ${p.id.padEnd(28)} ${was.size} ${p.compare_key} match a fresh run`);
+      }
     } else {
       failures++;
       console.error(`  ✗ ${p.id}: unknown mode ${p.mode}`);

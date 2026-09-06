@@ -91,11 +91,11 @@
       "outputs": [
         "public/interop/sbom-councilof-ai.json"
       ],
-      "mode": "manual",
-      "gated": false,
-      "reason": "NOT byte-diffable: the producer stamps a fresh `metadata.timestamp` and a RANDOM `serialNumber` (urn:uuid:<random>-councilof-ai) on every run, so a re-run-and-diff gate would be permanently red.",
-      "drift_found_2026_09_06": "The committed SBOM is dated 2026-08-25T13:20:09Z and lists 126 components; a fresh run emits 120. The published supply-chain artefact overstates the dependency set by 6 and is 12 days stale. A count/name-set comparison ignoring timestamp and serialNumber WOULD be gateable and is the recommended follow-up.",
-      "owner": "unclaimed"
+      "mode": "rerun-and-compare-keys",
+      "gated": true,
+      "reason": "Bytes are NOT diffable — the producer stamps a fresh metadata.timestamp and a RANDOM serialNumber every run, so a byte gate would be permanently red. The component NAME-SET is stable, and it is the property actually worth protecting.",
+      "compare_key": "components[].name",
+      "drift_fixed_2026_09_06": "The committed SBOM was dated 2026-08-25 with 126 components and still listed @types/nodemailer, drizzle-kit, drizzle-orm, mysql2, nodemailer and xlsx — the exact six that 3ef395fcd (#1273) DELETED for carrying five high-severity advisories. Our published supply-chain artefact advertised packages we had removed for security. Regenerated: 120."
     },
     {
       "id": "llms-txt",
