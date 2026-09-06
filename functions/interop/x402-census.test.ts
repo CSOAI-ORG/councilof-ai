@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { headline } from "./x402-census/index";
 import { entries } from "../feeds/x402-census.xml";
@@ -122,34 +122,57 @@ describe("no per-host verdict is published below the threshold", () => {
   });
 });
 
-describe("the gate that runs the census selftests cannot be masked by its own skip twin", () => {
-  // pr-gates.yml and pr-gates-skip.yml both report the check name `gates`; the skip twin exists so
-  // branch protection can require `gates` on docs-only PRs. They stay safe only while pr-gates.yml's
-  // `paths` and pr-gates-skip.yml's `paths-ignore` are identical. When they drift, a PR touching a
-  // path that is gated but NOT ignored fires both, and the two-second skip pass can be the one a
-  // reader sees while the real suite is red. This PR widened `paths` to cover harness/x402-census
-  // and PRODUCERS.json, so the invariant now has a test instead of a comment asking politely.
-  const list = (file: string, key: "paths" | "paths-ignore"): string[] => {
-    const lines = readFileSync(resolve(REPO, ".github/workflows", file), "utf8").split("\n");
-    const start = lines.findIndex((l) => new RegExp(`^\\s*${key}:\\s*$`).test(l));
-    if (start < 0) return [];
-    const out: string[] = [];
-    for (const line of lines.slice(start + 1)) {
-      const m = /^\s+-\s+'([^']+)'\s*$/.exec(line);
-      if (!m) break;                    // the list ends at the first line that is not an item
-      out.push(m[1]);
-    }
-    return out;
-  };
+describe("the gate that runs the census selftests cannot be masked by a second workflow", () => {
+  // HISTORY. pr-gates.yml and pr-gates-skip.yml both reported the check name `gates`; the skip
+  // twin existed so branch protection could require `gates` on docs-only PRs. The invariant this
+  // block used to assert was that pr-gates.yml's `paths` and pr-gates-skip.yml's `paths-ignore`
+  // stayed identical. They were identical, and it was still unsafe: `paths-ignore` skips a
+  // workflow only when EVERY changed file matches it, so a PR touching a gated path AND a docs
+  // path fired BOTH, and the two-second skip pass held the required context green while the real
+  // suite ran (measured on #1635: 08:49:28 vs 08:51:09, 1m41s).
+  //
+  // pr-gates-skip.yml is gone. pr-gates.yml now runs on every PR and scopes itself in its first
+  // step, so there is one list instead of two that must be edited together forever. These tests
+  // assert the new invariant: exactly one workflow publishes `gates`, it has no `paths:` filter
+  // to drift, and its scope regex still covers everything the old list did.
+  const WORKFLOWS = resolve(REPO, ".github/workflows");
+  const prGates = () => readFileSync(resolve(WORKFLOWS, "pr-gates.yml"), "utf8");
 
-  it("pr-gates paths and pr-gates-skip paths-ignore are the same list", () => {
-    const gated = list("pr-gates.yml", "paths");
-    const ignored = list("pr-gates-skip.yml", "paths-ignore");
-    expect(gated.length).toBeGreaterThan(5);
-    expect(ignored).toEqual(gated);
+  it("exactly one workflow declares a job named gates", () => {
+    const declaring = readdirSync(WORKFLOWS)
+      .filter((f) => /\.ya?ml$/.test(f))
+      .filter((f) => /^\s{2}gates:\s*$/m.test(readFileSync(resolve(WORKFLOWS, f), "utf8")));
+    expect(declaring).toEqual(["pr-gates.yml"]);
   });
+
+  it("pr-gates.yml has no paths filter, so there is no second list to drift from", () => {
+    const on = prGates().split("jobs:")[0];
+    expect(on).not.toMatch(/^\s*paths(-ignore)?:\s*$/m);
+  });
+
+  it("the scope step still covers every path the old paths list gated", () => {
+    // The scope step holds these inside a grep -E, so dots arrive escaped (`package\.json$`).
+    // Unescaping before the search compares the PATHS, not one particular way of spelling them.
+    const src = prGates().replace(/\\/g, "");
+    for (const p of [
+      "client/",
+      "public/",
+      "functions/",
+      "scripts/",
+      "harness/x402-census/",
+      "docs/operations/PRODUCERS",
+      "package.json",
+      "package-lock.json",
+      "wrangler.jsonc",
+      ".github/workflows/pr-gates",
+    ]) {
+      expect(src).toContain(p);
+    }
+    expect(prGates()).toContain("steps.scope.outputs.gated == 'true'");
+  });
+
   it("the census selftests are wired into the real gate, not only into this file", () => {
-    const src = readFileSync(resolve(REPO, ".github/workflows/pr-gates.yml"), "utf8");
+    const src = prGates();
     for (const p of [
       "scripts/grants/x402_census_round.py --selftest",
       "scripts/grants/x402_census_delta.py --selftest",
