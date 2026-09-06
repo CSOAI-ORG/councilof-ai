@@ -22,12 +22,28 @@ What that page lists, verbatim from its own status labels:
 ("OP rewarded in Retro Funding") alongside the Grants Council total. So the retro-funding door is
 not currently open under that name; the two open doors are Audit Grants and Governance Fund Missions.
 
-**What I could NOT verify.** The brief states OP Atlas is discontinued on 18 September. I could not
-confirm that from the estate-external record: the site carries no sunset banner I could read, the
-governance forum's HTML is bot-protected, and its `search.json` for "Atlas sunset" returns **0
-topics** while "Atlas discontinued" returns three topics that are about Season 7/8 mandates rather
-than a shutdown. **Recorded as unverified rather than repeated as fact.** If the owner has the
-announcement, one link settles it.
+**What I could NOT verify, and every avenue I tried.** The brief states OP Atlas is discontinued on
+18 September. It is **not verified**, and the avenues open to this lane are now exhausted:
+
+| Avenue | Result |
+|---|---|
+| `atlas.optimism.io`, rendered in a browser | live and serving; **no sunset banner** anywhere in the page text |
+| `retrofunding.optimism.io` | **redirects to Atlas** |
+| `gov.optimism.io` search, *"Atlas sunset"* | **No results found** |
+| `gov.optimism.io` search, *"Atlas deprecated OR sunset OR retiring"* | **No results found** |
+| `gov.optimism.io/search.json`, *"Atlas discontinued"* | 3 topics, all Season 7/8 mandates — none a shutdown |
+| `optimism.io/blog` | **behind a Terms & Conditions acceptance gate** |
+
+The forum searches were run **in a browser**, so "no results" is a real answer and not a bot-block —
+the earlier `search.json` attempt could not distinguish those.
+
+**The last avenue is owner-gated, not unavailable.** Accepting terms on a third party's site is a
+consent action this lane does not take. One link, or one acceptance by the owner, closes this row.
+Filed as a single owner line.
+
+**Recorded as unverified rather than repeated as fact.** A funding document that asserts a
+programme is closing, on a date nobody here could confirm, is exactly the kind of claim that
+discredits the documents around it.
 
 **Adjacent Superchain doors the same page names** (each a separate partner programme, not Optimism
 Foundation): Soneium *For All*; Unichain *Infinite Hackathon*, *Open Call*, *Retro Grants*;
