@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:15:59Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 120236898,
+      "block_hash": "0x05b07c353dbd591de3accce77eabfc3c6e014789ab54d4edc4b3bdd062dea29d",
+      "block_time": "2026-09-06T04:15:59Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "174709844718215638878036908",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 120236898 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2b9944c55aa105f5c445a7ba42e72ecce867d6ef92c9aa8047c8613e12f55d61",
+    "sig_ed25519": "779395ad956ffc9ee38038c6357a61ce966cd7a03fad34cfa3734b135f734df4885a1995309dabba52850bb6c5ddf91bfff8e37bb7083862902e79b20ec0ee07",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 120236898",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "8b9c77345123c17d3d322c7a3e4aca926c6809c2672b416e46702b2aff978f07",
+    "5227958d4eddbc91d65f9f5087f1e0f8720e42c8587f548ea6d944ec928cbfbb",
+    "ec5d14f600858ee728eb2c01b601b3f7b70d4cefb59b6f35b149fd2951361f98",
+    "a7dd3370da83a20d4eb6489802fadc6ccd354bdbb6f08e81111959effd999916",
+    "e4d0f8a03eda3bd145859530962ad5031b9b37d937d748e75c2b3406efa6779e",
+    "c81fddc807aac948e3cee0967f45d04a2ddb0dd8a21b54139188bfae27816846",
+    "969d22ecf16932f606445a61a1b2f21c1020a3b1dab7227e7ea475778e426d0e",
+    "76829f21c67d821b7b38d635fd21b0a4c9ecf6e87ebd18a23163f51f88ce18bb"
+  ]
+}

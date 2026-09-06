@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:01:20.693Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 2400,
+      "issuer": "GateHub",
+      "issuer_address": "r4GN9eEoz9K4BhMQXe4H1eYNtvtkwGdt8g",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 199432.3551708093,
+      "symbol": "GBP.gh",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "779244873df30e11e839682e3bb5255166760d9531e06ebe00494ff4c41b2584",
+    "sig_ed25519": "277868d39a10c21696a984ecc33f1aa199c2d2c08d63ea28051bea9d35feb7f4195fe0244feb6aa565702e54cc5dfca7c452b7d3a726353c23902e53a9facc06",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL GBP.gh public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "c16fee28998c450899390f20d667ddc97a97146b6601a1a17e8b337c2e78e745",
+    "46166e7b44b80d664a2f8ecf8759c3ea1f750920d7d53649cc8f7b0d7d4e9935",
+    "c17e9c1193c4dc8d7c57d78e67f090a3ce9332467fbf6c1c8786a3a557221ae8",
+    "af1076a003cf66d0d65e7537ee3ab2788304ebcd68f67193ce358b47e0fd8388",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "5c24b10396bf9814595a60ddfb10c0f64fdc92afb1147a68f0e7604c055d9d6f",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "bacb9a00f5f3453281705c29784a1b0f9e005324573fd6cf808361e9a60bb49c"
+  ]
+}
