@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "chainverdict.xyz",
+ "as_of": "2026-09-06T06:38:37Z",
+ "source_urls": [
+  "https://chainverdict.xyz/v1/data/block",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "chainverdict.xyz",
+  "resource": "https://chainverdict.xyz/v1/data/block",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xAe2634E709c454f2720C65A0b2F9ba168e431842",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xf4ff6764e23089dc66b32dbe6e65c2026a5ce995e28ccbab3dac60f1e31382eb",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.2,
+   "paid": 1.72
+  },
+  "delivered_bytes": 2220,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:37Z",
+  "n": 1
+ },
+ "sha256": "ff481b1857b4600b0c70f3a66907699f6fb1742bfd440a6bc719dbf2e8eed859",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

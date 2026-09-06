@@ -18,6 +18,9 @@ const LobbyMatrixPane = lazy(
 const DashboardArchivePane = lazy(
   () => import("@/components/DashboardArchivePane"),
 );
+const XrplInstrumentsPane = lazy(
+  () => import("@/components/XrplInstrumentsPane"),
+);
 const DashboardConsolePane = lazy(
   () => import("@/components/DashboardConsolePane"),
 );
@@ -69,6 +72,7 @@ const PANES: Record<string, React.LazyExoticComponent<any>> = {
   console: DashboardConsolePane, // the ONE console — same file as /gspc-console.html and the HF Space
   matrix: LobbyMatrixPane, // industry × regulation grid, native
   archive: DashboardArchivePane, // provable archive: signed hourly history of permission-state leaves (GET /archive/index.json)
+  xrpl: XrplInstrumentsPane, // XRPL public-root catalogue table (GET /api/xrpl), derived at load
   verify: LobbyVerifyPane,
   state: DashboardStatePane, // tapes beside the board: estate doors + XRPL reader (#1099)
   attestations: DashboardAttestationsPane, // the one root, its witnesses (states verbatim), search, corrections ledger

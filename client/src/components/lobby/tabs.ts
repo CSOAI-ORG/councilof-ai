@@ -43,6 +43,7 @@ export type LobbyTabId =
   | "models"
   | "fabric"
   | "tools"
+  | "xrpl"
   | "verify"
   | "cards"
   | "state"
@@ -216,6 +217,15 @@ export const LOBBY_TABS: LobbyTab[] = [
     path: "",
     kind: "native",
     cues: /\b(estate state|state endpoint|which number|counts?|how many (?:of )?(?:everything|things)|derived state|api\/state)\b/i,
+  },
+  {
+    id: "xrpl",
+    label: "XRPL instruments",
+    blurb:
+      "The XRPL public-root catalogue as a table: assets, holders, supply, verification path and the signed/unsigned split — derived at load, never typed.",
+    path: "",
+    kind: "native",
+    cues: /\\b(xrpl instruments?|xrpl catalogue|public[- ]root catalogue|xrpl assets|rwa evidence|xrpl public root)\\b/i,
   },
   {
     id: "archive",

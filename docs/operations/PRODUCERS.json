@@ -111,6 +111,24 @@
       "verified_2026_09_06": "check passes"
     },
     {
+      "id": "service-heroes",
+      "command": "node scripts/generate-service-heroes.mjs",
+      "check": "node scripts/generate-service-heroes.mjs --check",
+      "outputs": [
+        "public/images/services/finance-rwa.svg",
+        "public/images/services/compliance.svg",
+        "public/images/services/model-measurement.svg",
+        "public/images/services/agent-rails.svg",
+        "public/images/services/legacy-systems.svg",
+        "docs/press/services-heroes-contact-sheet.html"
+      ],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "VOLATILE BY DESIGN. Each hero PLOTS a live quantity — 13 filled marks of 16 because 13 of 16 XRPL instruments are signed — so the committed bytes go stale the moment the board moves, and that is the feature, not the drift. Gating it would paint every lane's CI red on a data change nobody made in this repo. It also reads five live endpoints per run, against a <=20/hour self-probe budget already spent by llms-txt.",
+      "refresh": "Re-run when a hero's number is quoted anywhere that matters, and always before the contact sheet goes to the owner. `--check` names which heroes moved and is safe to run by hand.",
+      "verified_2026_09_06": "check passes: 5 current against the live board (22 axes/22 measured, 13/16 XRPL signed, SWIFT n=26, 166 root leaves, 47 corrections)"
+    },
+    {
       "id": "ts-ratchet",
       "command": "node scripts/ts-ratchet.mjs",
       "check": "node scripts/ts-ratchet.mjs --check",
@@ -135,7 +153,7 @@
   ],
   "not_yet_classified": {
     "count_approx": 28,
-    "note": "About 40 scripts under scripts/ write into public/. The 11 entries above are the ones actually RUN and observed on 2026-09-06. The rest are unclassified rather than assumed safe, because guessing a producer is deterministic and gating it is how a permanently-red gate gets shipped.",
+    "note": "About 40 scripts under scripts/ write into public/. The 12 entries above are the ones actually RUN and observed on 2026-09-06. The rest are unclassified rather than assumed safe, because guessing a producer is deterministic and gating it is how a permanently-red gate gets shipped.",
     "next": "Classify in batches: run on a clean tree, record whether output moved, and only then set gated."
   }
 }

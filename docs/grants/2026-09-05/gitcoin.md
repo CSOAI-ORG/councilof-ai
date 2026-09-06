@@ -1,5 +1,18 @@
 # Gitcoin — mechanisms / Gitcoin Grants rounds — 2026-09-05
 
+> **Measured facts, each naming the endpoint or file that returns it.** Re-fetch before sending.
+>
+> - **Buyer's-eye x402 census (measured artefact).** 316 conformant hosts paid for real: **100 DELIVERED**,
+>   **213 REFUSED**, 2 NO_CHALLENGE, 1 MISMATCH. **13 hosts recorded an on-chain settlement and still
+>   delivered nothing** (0.193 USDC), each row carrying its tx hash so a reader can check the chain.
+>   Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census> — `summary-2026-09-06.json`.
+>   *One purchase per host, one moment: a single refusal is not a pattern. 1.3398 USDC spent, all of it ours.*
+> - **Revenue.** `/api/revenue` → `one_number.all_time` = **0** distinct non-self payers, status **MEASURED**.
+>   Separately `settled_usdc.count` is **`null`, status UNMEASURED** — null is not zero, and neither is
+>   revenue. Self-settlements (5) and zero-value settlements (4) are recorded and are never payers.
+> - **Hub cells.** `/api/hub-cards` → `counts`. These are **third-party models on the Hub, never our own
+>   coverage** — the endpoint says so in its own `population` field.
+
 Target: https://gitcoin.co/mechanisms · Rounds: https://gitcoin.co/campaigns · Governance: https://gov.gitcoin.co · Facts: `FACTS-2026-09-05.json`
 
 ## Status
@@ -8,7 +21,7 @@ Target: https://gitcoin.co/mechanisms · Rounds: https://gitcoin.co/campaigns ·
 |---|---|
 | What the target page is | **A taxonomy, not a door.** `/mechanisms` catalogues 78 funding mechanisms (quadratic funding, retro funding, bounties, conviction voting…) with a "Submit a Mechanism" button. It lists no rounds and takes no applications. |
 | Open round now | **NONE.** `/campaigns` lists Gitcoin Grants 20–24; the newest is **GG24** (Oct 2025, with the "Public Goods Tooling Development Round" running Oct 2025 – Mar 2026, retrospective posted 2026-05-27). **GG25 was planned for Q2 2026** ("Gitcoin 2026 Strategy — TL;DR", 2026-01-12) and the only GG25 threads are "Early thinking on GG25" (2025-11-25) and a **withdrawn** Octant matching proposal; no GG25 round announcement exists. Since July 2026 the forum is about **"Transition Stewards"** (meeting notes 2026-07-21 → 2026-08-28), a Governor upgrade (2026-08-08) and "Social contract of the gitcoin public goods treasury [2020 – 2026]" (2026-08-31) — a DAO in transition, not in a round. `grants.gitcoin.co` does not resolve in DNS (2026-09-05). |
-| Deadline | none; watch https://gov.gitcoin.co/c/proposals and https://gitcoin.co/campaigns for a GG25/26 announcement |
+| Deadline | none; watch https://gov.gitcoin.co/ (200) and https://gitcoin.co/campaigns (200) for a GG25/26 announcement. `gov.gitcoin.co/c/proposals` **404s** — the category path has moved; the forum root resolves. Verified 2026-09-06 |
 | Eligibility (general, still published) | OSS rounds: at least 3 of — first commit > 90 days ago; a commit in the last 30 days; activity on > 20 days in the last 90; fully open source with permissive licences; lawful. |
 | Our eligibility, by bytes | repo created 2026-02-10 (> 90 days) ✓ · pushed 2026-09-05 (< 30 days) ✓ · **51 distinct commit days in the last 90** (GitHub API, 2026-09-05) ✓ · licence file MIT, packages Apache-2.0 ✓ — **qualifies on all four** |
 | Sign-in when a round opens | **Wallet** (SIWE) on whichever allocation app the round uses — GG24 used **Gardens** (app.gardens.fund, conviction voting; proposals drafted first in Charmverse) and **Giveth** (OSS QF). No password, no OAuth. Payout address = the estate's Base address. The GG24 tooling round also required a **Karma GAP** project page for milestones. |

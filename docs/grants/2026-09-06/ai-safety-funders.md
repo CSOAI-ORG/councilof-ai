@@ -29,7 +29,7 @@ ask in the $30–60k band.
 **Conflicts / AI use** — drafted with an AI assistant from live facts; disclose if the form asks.
 
 ## What we will NOT claim
-Alignment results, users, revenue (one_number is 0), certification, or that our own council models are
+Alignment results, users, revenue (`/api/revenue` → `one_number.all_time` is 0, status MEASURED), certification, or that our own council models are
 "safe" — our rule excludes them from public leader rows on 8 axes.
 
 ## Owner path

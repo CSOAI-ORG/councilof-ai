@@ -1,5 +1,113 @@
 {
   "components": {
+    "schemas": {
+      "X402Accept": {
+        "properties": {
+          "amount": {
+            "description": "atomic units (x402 v2)",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "asset": {
+            "const": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            "description": "USDC contract, 6 decimals",
+            "type": "string"
+          },
+          "extra": {
+            "description": "EIP-712 domain of the asset",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "maxAmountRequired": {
+            "description": "atomic units (x402 v1 name for the same figure)",
+            "pattern": "^[0-9]+$",
+            "type": "string"
+          },
+          "maxTimeoutSeconds": {
+            "type": "integer"
+          },
+          "network": {
+            "const": "eip155:8453",
+            "description": "CAIP-2",
+            "type": "string"
+          },
+          "payTo": {
+            "const": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+            "type": "string"
+          },
+          "scheme": {
+            "const": "exact",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scheme",
+          "network",
+          "asset",
+          "payTo",
+          "amount",
+          "maxTimeoutSeconds"
+        ],
+        "type": "object"
+      },
+      "X402PaymentRequired": {
+        "properties": {
+          "accepts": {
+            "items": {
+              "$ref": "#/components/schemas/X402Accept"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "error": {
+            "type": "string"
+          },
+          "extensions": {
+            "description": "extensions.bazaar carries info.input (a sample request) and schema (input/output JSON Schema)",
+            "type": "object"
+          },
+          "resource": {
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "mimeType": {
+                "type": "string"
+              },
+              "serviceName": {
+                "type": "string"
+              },
+              "tags": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "url": {
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "x402Version": {
+            "const": 2,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "x402Version",
+          "accepts"
+        ],
+        "type": "object"
+      }
+    },
     "securitySchemes": {
       "ed25519": {
         "description": "Ed25519 signature of canonical body, under did:web:csoai.org#card-attestation-1",
@@ -11,19 +119,49 @@
   },
   "info": {
     "contact": {
+      "email": "nicholas@csoai.org",
       "name": "CSOAI Ltd",
       "url": "https://councilof.ai/"
     },
-    "description": "Independent AI governance measurement. 22 axes \u00b7 22 measured \u00b7 14 model-comparison \u00b7 8 deterministic-fact. Free, Ed25519-signed, verifiable in your browser. Measurement, not certification.",
+    "description": "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence \u2014 never a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate. Operations with security [] are free and unauthenticated. Operations with x-payment-info are x402 doors; an amount appears only inside a door's 402 challenge (documented as each door's 402 example).",
     "license": {
       "name": "CC-BY-4.0",
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "2026-09-03"
+    "version": "0.2+a270f3a00c27",
+    "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
-  "openapi": "3.0.3",
+  "openapi": "3.1.0",
   "paths": {
+    "/api/a2a": {
+      "get": {
+        "operationId": "get__api_a2a",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.\n *\n * WHY THIS EXISTS (2026-09-05, the a2aproject/A2A#2150 lane)\n * The agent card declared two `supportedI"
+      },
+      "post": {
+        "operationId": "post__api_a2a",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* POST /api/a2a \u2014 the A2A v1.0 JSON-RPC binding that /.well-known/agent-card.json points at.\n *\n * WHY THIS EXISTS (2026-09-05, the a2aproject/A2A#2150 lane)\n * The agent card declared two `supportedI"
+      }
+    },
     "/api/action-jobs": {
       "get": {
         "operationId": "get__api_action-jobs",
@@ -35,6 +173,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       },
       "patch": {
@@ -47,6 +186,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       },
       "post": {
@@ -59,6 +199,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* /api/action-jobs \u2014 bounded, durable action-intent ledger staging.\n *\n * This endpoint records reviewed intent and state reports. It never calls a\n * provider, starts a worker, writes GSPC, trains a "
       }
     },
@@ -90,6 +231,218 @@
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
+    "/api/art50/marking-evidence": {
+      "get": {
+        "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_art50_marking_evidence",
+        "parameters": [
+          {
+            "description": "Public URL of the generative output to measure (\u2264 20 MiB); or POST the bytes",
+            "example": "https://councilof.ai/og-image.png",
+            "in": "query",
+            "name": "url",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "1 = free unsigned measurement",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "25000000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "25000000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "url": "https://councilof.ai/og-image.png"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "payload": {
+                              "checked": [
+                                {
+                                  "method": "c2pa.manifest-store",
+                                  "result": "NOT_DETECTED"
+                                }
+                              ],
+                              "kind": "csoai.art50.marking-evidence/0.1",
+                              "statements": [
+                                "marking not detected by method c2pa.manifest-store"
+                              ]
+                            },
+                            "schema": "https://councilof.ai/schema/card-v0.json",
+                            "sig_ed25519": "<hex or null>",
+                            "surface": "art50.marking-evidence",
+                            "unmeasured": [
+                              "root_inclusion",
+                              "watermark.synthid"
+                            ]
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "preview": {
+                                    "description": "1 = free unsigned measurement",
+                                    "type": "string"
+                                  },
+                                  "url": {
+                                    "description": "Public URL of the generative output to measure (\u2264 20 MiB); or POST the bytes",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "url"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Article 50 marking evidenc",
+                    "tags": [
+                      "article-50",
+                      "c2pa",
+                      "marking",
+                      "measurement",
+                      "x402"
+                    ],
+                    "url": "https://councilof.ai/api/art50/marking-evidence"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "CSOAI Article 50 marking evidenc",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/art50_marking_evidence.json)",
+            "captured": true,
+            "payment_required_header_bytes": 7552
+          },
+          "door": "https://councilof.ai/api/art50/marking-evidence?url=<https://\u2026>",
+          "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https://\u2026>&preview=1",
+          "paid_for": "assembly"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
     "/api/article50": {
       "get": {
         "operationId": "get__api_article50",
@@ -101,6 +454,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
       },
       "post": {
@@ -113,6 +467,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/article50 \u2014 issues an Article 50 passport (free tier, HMAC-signed).\n * GET  /api/article50?verify=1&... \u2014 re-verifies a signature, statelessly.\n *\n * HONESTY OVER APPEARANCE (same discipli"
       }
     },
@@ -127,6 +482,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
       },
       "post": {
@@ -139,7 +495,36 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/assess \u2014 a deterministic, text-only EU AI Act screening helper.\n *\n * THE BRIDGE THIS CLOSES\n * The front end (/assess, AssessTool.tsx) has shipped for weeks pointing at\n * `https://api.cs"
+      }
+    },
+    "/api/atlas": {
+      "get": {
+        "operationId": "get__api_atlas",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* atlas \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_atlas",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* atlas \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/axis-register": {
@@ -153,6 +538,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/axis-register \u2014 the GSPC axis register (canonical scored rows).\n *\n * Slot counts live in GET /api/gspc totals (public_count, measured_axes,\n * quotable_axes). This register lists the bundl"
       }
     },
@@ -167,7 +553,23 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
+      }
+    },
+    "/api/bank-complete": {
+      "get": {
+        "operationId": "get__api_bank-complete",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* /api/bank-complete \u2014 evidence-derived reader for the bank \u00d7 chain \u00d7 stablecoin census.\n * Data is embedded at build time (zero-drift with public/interop/bank-registry.json)."
       }
     },
     "/api/benchmark-quality": {
@@ -181,6 +583,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "The day every artifact cited in this file was actually fetched."
       }
     },
@@ -195,7 +598,23 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/board-sign \u2014 GitHub OIDC only.\n * Signs a card-v0 payload with Pages secret BOARD_SIGN_KEY_PKCS8_B64.\n * The PKCS8 never leaves Cloudflare. Never logs the key. Not a grade."
+      }
+    },
+    "/api/body-state": {
+      "get": {
+        "operationId": "get__api_body-state",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* /api/body-state \u2014 per-workflow last run / last success / last failure.\n *\n * Rate-limit safe: ONE unauthenticated call to /actions/runs?per_page=100 gives\n * the latest runs across every workflow; w"
       }
     },
     "/api/cards": {
@@ -209,6 +628,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/cards \u2014 live signed-measurement surface (G4 fix).\n *\n * Serves the SIGNED living board + the index of signed measurement cards so the\n * public can verify the measurements the estate has ac"
       }
     },
@@ -223,6 +643,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       },
       "post": {
@@ -235,6 +656,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -249,6 +671,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -263,6 +686,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/checkout \u2014 public door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay empty."
       }
     },
@@ -277,6 +701,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -291,6 +716,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -305,6 +731,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/compute \u2014 probe surface for the two-machine wire.\n *\n * Quotes the committed Hub census digest. Probes the AG-UI wire when\n * AGUI_WIRE_URL is set. Never writes MEASURED. Never invents a po"
       }
     },
@@ -319,6 +746,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/contact \u2014 the contact form. Fields stored verbatim when KV (LEADS) is bound;\n * honest `stored:false` + fallback address when not. Nothing inferred, nothing forwarded\n * to third parties."
       }
     },
@@ -379,6 +807,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -393,6 +822,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/counters \u2014 Wave-1 public-utility counters (EXP 005), derived from artifacts.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHAT CHANGED (2026-08-26)"
       }
     },
@@ -407,6 +837,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -491,6 +922,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
       },
       "post": {
@@ -503,6 +935,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/detect \u2014 free Article 50 provenance VERIFICATION (EU AI Act 50(2)).\n * GET  /api/detect  \u2014 service descriptor.\n *\n * HONESTY OVER APPEARANCE (same discipline as article50.ts / assess/key.t"
       }
     },
@@ -517,6 +950,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/detector-interop \u2014 open, signed detector-interoperability matrix.\n *\n * EU AI Act Article 50 Code of Practice sets 2027-02-02 for interoperability\n * between detection mechanisms (\"does det"
       }
     },
@@ -531,6 +965,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -545,35 +980,451 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/embed \u2014 machine contract for the white-label kit.\n * Counts are not typed here. The badge and embed.js read GET /api/gspc."
+      }
+    },
+    "/api/eu-ai-act": {
+      "get": {
+        "operationId": "get__api_eu-ai-act",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* /api/eu-ai-act \u2014 evidence summary for the EU AI Act regime (Art 50, high-risk, GPAI).\n * Obligation map is the same one the evidence-bundle assembler uses (see ./_obligations)."
       }
     },
     "/api/eunomia-data": {
       "get": {
-        "operationId": "get__api_eunomia-data",
+        "description": "Signed enforcement + measurement feed, assembled (DATA only \u2014 never scores, never ranked). Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_eunomia_data",
+        "parameters": [
+          {
+            "example": "1",
+            "in": "query",
+            "name": "feed",
+            "required": true,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "one feed document: signed signals index, signed First-Fine Watch, root.json, card index \u2014 each block with its published signature",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
+            "description": "one feed document: signed signals index, signed First-Fine Watch, root.json, card index \u2014 each block with its published signature"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "feed": "1"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "blocks": {
+                              "card_index": {},
+                              "first_fine_watch": {},
+                              "root": {},
+                              "signals": {}
+                            },
+                            "kind": "feed",
+                            "schema": "csoai.eunomia-data/0.2"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "feed": {
+                                    "const": "1",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "feed"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Signed enforcement + measurement feed, assembled (DATA only \u2014 never scores, never ranked). Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Data Feed",
+                    "tags": [
+                      "data",
+                      "feed",
+                      "enforcement",
+                      "signed",
+                      "x402"
+                    ],
+                    "url": "https://councilof.ai/api/eunomia-data?feed=1"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": ""
+        "summary": "Signed data feed (assembly + cadence)",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/eunomia_data.json)",
+            "captured": true,
+            "payment_required_header_bytes": 3832
+          },
+          "door": "https://councilof.ai/api/eunomia-data?feed=1",
+          "free_preview": "https://councilof.ai/api/eunomia-data",
+          "never": [
+            "scores as a product",
+            "a ranking",
+            "a rating"
+          ],
+          "paid_for": "assembly",
+          "tier": "data_feed"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/evidence-bundle": {
       "get": {
-        "operationId": "get__api_evidence-bundle",
+        "description": "Evidence bundle mapped to EU-AI-ACT-50: OSCAL 1.1.0 assessment-results assembled from already-signed CSOAI cards (observations, relevant-to). Measurement, not certification \u2014 never a conformity determination. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_evidence_bundle",
+        "parameters": [
+          {
+            "example": "article-50",
+            "in": "query",
+            "name": "obligation",
+            "required": true,
+            "schema": {
+              "enum": [
+                "article-50",
+                "article-53",
+                "dora",
+                "cra"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Subject the cards must name (model id / instrument / vendor)",
+            "in": "query",
+            "name": "subject",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "example": "1",
+            "in": "query",
+            "name": "bundle",
+            "required": true,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
+            "description": "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "250000000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "250000000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "bundle": "1",
+                            "obligation": "article-50"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "cards": {},
+                            "kind": "bundle",
+                            "manifest_card": {
+                              "surface": "evidence.bundle"
+                            },
+                            "oscal": {
+                              "assessment-results": {}
+                            },
+                            "schema": "csoai.evidence-bundle/0.1"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "bundle": {
+                                    "const": "1",
+                                    "type": "string"
+                                  },
+                                  "obligation": {
+                                    "enum": [
+                                      "article-50",
+                                      "article-53",
+                                      "dora",
+                                      "cra"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "subject": {
+                                    "description": "Subject the cards must name (model id / instrument / vendor)",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "obligation",
+                                  "bundle"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Evidence bundle mapped to EU-AI-ACT-50: OSCAL 1.1.0 assessment-results assembled from already-signed CSOAI cards (observations, relevant-to). Measurement, not certification \u2014 never a conformity determination. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Evidence Bundle",
+                    "tags": [
+                      "evidence",
+                      "oscal",
+                      "eu-ai-act",
+                      "dora",
+                      "cra"
+                    ],
+                    "url": "https://councilof.ai/api/evidence-bundle?obligation=article-50&bundle=1"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "* GET /api/evidence-bundle \u2014 Tier 2: an evidence bundle mapped to ONE regulatory obligation.\n *\n *   free   ?obligation=<id>[&subject=<s>]      \u2192 the obligation record, the counsel gate, how many\n *  "
+        "summary": "Evidence bundle mapped to an obligation",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/evidence_bundle.json)",
+            "captured": true,
+            "payment_required_header_bytes": 17244
+          },
+          "door": "https://councilof.ai/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1",
+          "free_preview": "https://councilof.ai/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>",
+          "never": [
+            "a conformity determination",
+            "satisfied/not-satisfied findings",
+            "a certificate"
+          ],
+          "paid_for": "assembly",
+          "tier": "evidence_bundle"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/evidence-intake": {
@@ -587,6 +1438,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/evidence-intake \u2014 explicit candidate measurement intake.\n *\n * This is deliberately not a measurement endpoint. It verifies the ephemeral\n * browser signature on one <=3KB candidate receip"
       }
     },
@@ -601,6 +1453,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -615,6 +1468,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/fabric -- normalized, read-only capability evidence.\n *\n * This is not an action registry. Every positive state is derived from a bounded\n * same-origin probe made for this request. Catalog"
       }
     },
@@ -629,7 +1483,240 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
+      }
+    },
+    "/api/feeds/provider-diff": {
+      "get": {
+        "description": "Provider document diff feed \u2014 signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_feeds_provider_diff",
+        "parameters": [
+          {
+            "example": "1",
+            "in": "query",
+            "name": "history",
+            "required": true,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          },
+          {
+            "description": "ISO-8601 instant; return only diffs newer than this",
+            "in": "query",
+            "name": "since",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "25000000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "25000000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "history": "1"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "diffs": [],
+                            "kind": "history",
+                            "leaves": {},
+                            "root": {},
+                            "schema": "csoai.feeds.provider-diff/0.1"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "history": {
+                                    "const": "1",
+                                    "type": "string"
+                                  },
+                                  "since": {
+                                    "description": "ISO-8601 instant; return only diffs newer than this",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "history"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Provider document diff feed \u2014 signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Provider Diff Feed",
+                    "tags": [
+                      "diff",
+                      "terms",
+                      "model-card",
+                      "article-50",
+                      "x402"
+                    ],
+                    "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Provider document diff feed (signed historical batch / bespoke partner feed)",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/feeds_provider_diff.json)",
+            "captured": true,
+            "payment_required_header_bytes": 3416
+          },
+          "door": "https://councilof.ai/api/feeds/provider-diff?history=1",
+          "free_preview": "https://councilof.ai/api/feeds/provider-diff",
+          "never": [
+            "a verdict on any change",
+            "the content of any page (never captured)",
+            "a grade"
+          ],
+          "paid_for": "assembly",
+          "tier": "provider_diff_feed"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/api/files": {
+      "get": {
+        "operationId": "get__api_files",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* files \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_files",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* files \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/findings": {
@@ -643,6 +1730,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -657,7 +1745,103 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/fines \u2014 First-Fine Watch: signed coverage of the public AI enforcement record.\n *\n * R8 canon (load-bearing): regulators get signed streams free forever (verification free).\n * This endpoin"
+      }
+    },
+    "/api/free-door": {
+      "get": {
+        "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+        "operationId": "x402_free_door",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "0",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "0",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Payable and priced at zero \u2014 it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/free-door"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "free door \u2014 /api/free-door",
+        "tags": [
+          "x402",
+          "free"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "the door pins X402_AMOUNT to 0 and /.well-known/x402.json advertises amount 0",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/free-door",
+          "indexed_in": "x402 Bazaar (PayAI)",
+          "paid_for": null
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/fulfill": {
@@ -671,6 +1855,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/fulfill \u2014 public fulfillment door is closed.\n *\n * No public prices. A grade is never sold. Verify is free at /gspc-verify.\n * Get measured at /assess. We do not remediate. Empty cells stay"
       }
     },
@@ -700,6 +1885,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -714,6 +1900,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -728,7 +1915,8 @@
             "description": "OK"
           }
         },
-        "summary": ""
+        "security": [],
+        "summary": "* An index either answered or it did not. `ok: true` with zero cells is a real,\n * empty index \u2014 it has been read. Only `ok: false` is unread, and it always\n * carries the reason, because \"we could no"
       }
     },
     "/api/include": {
@@ -766,6 +1954,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/interop-bulk \u2014 metered bulk/replay access to signed interop surfaces.\n *\n * Free tier (default): single-shard access to the live interop registry (read-only,\n * the trust engine \u2014 never gat"
       }
     },
@@ -780,6 +1969,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
       },
       "post": {
@@ -792,6 +1982,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* POST /api/lead \u2014 accepts the \"email me the signed report\" form.\n *\n * HONESTY OVER APPEARANCE\n * There is no datastore bound to this project yet, and this endpoint does not pretend\n * otherwise: it "
       }
     },
@@ -834,6 +2025,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -848,6 +2040,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -862,7 +2055,36 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/mcp \u2014 the MCP registry, served from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return a hardcoded array of 6 servers in which every entry set\n *   l"
+      }
+    },
+    "/api/memory": {
+      "get": {
+        "operationId": "get__api_memory",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* memory \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_memory",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* memory \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/methodology": {
@@ -876,6 +2098,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -914,6 +2137,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -928,7 +2152,36 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/openapi.json \u2014 an OpenAPI 3.1 description of the PUBLIC read endpoints that\n * already exist, for ChatGPT / Custom-GPT Actions and any other schema importer.\n *\n * Honesty rules for this fi"
+      }
+    },
+    "/api/operator": {
+      "get": {
+        "operationId": "get__api_operator",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* operator \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_operator",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* operator \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/otel": {
@@ -942,6 +2195,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/otel \u2014 collector presence.\n * LIVE only if a collector answers. Else UNCHECKABLE. Not a 23rd axis."
       }
     },
@@ -956,7 +2210,23 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/pqc \u2014 continuity mill vs estate signer.\n * Not a 23rd axis. Continuity MEASURED \u2260 we are PQC."
+      }
+    },
+    "/api/press.json": {
+      "get": {
+        "operationId": "get__api_press.json",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* GET /api/press.json \u2014 what changed, with the command that proves each line.\n *\n * The press surface as CODE. Every figure is read from a committed artifact at build time and\n * every claim ships wit"
       }
     },
     "/api/prod-readiness": {
@@ -976,16 +2246,191 @@
     },
     "/api/proof": {
       "get": {
-        "operationId": "get__api_proof",
+        "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_proof",
+        "parameters": [
+          {
+            "description": "Must be 1 to request the paid proof bundle",
+            "example": "1",
+            "in": "query",
+            "name": "bundle",
+            "required": true,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
+            "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate.."
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "bundle": "1"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "kind": "bundle",
+                            "merkle_root": "<hex>",
+                            "n": 0,
+                            "note": "Paid bundle of inclusion proofs. Not a grade.",
+                            "proofs": [],
+                            "schema": "csoai.public-root-proof/0.1"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "bundle": {
+                                    "const": "1",
+                                    "description": "Must be 1 to request the paid proof bundle",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "bundle"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Proof Bundle",
+                    "tags": [
+                      "proof",
+                      "merkle",
+                      "measurement",
+                      "attestation"
+                    ],
+                    "url": "https://councilof.ai/api/proof?bundle=1"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "* GET /api/proof \u2014 inclusion proofs for public-root leaves.\n *\n * One inclusion (sha=) is free. bundle=1 is x402. Never a silent 404.\n * 402 without payment is OK. May trail the last published root (\u2264"
+        "summary": "CSOAI Proof Bundle",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/proof.json)",
+            "captured": true,
+            "payment_required_header_bytes": 3112
+          },
+          "door": "https://councilof.ai/api/proof?bundle=1",
+          "free_forever_on_this_path": [
+            "https://councilof.ai/api/proof?sha=<64-hex>"
+          ],
+          "paid_for": "assembly"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/provider-canary": {
@@ -999,6 +2444,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
       },
       "post": {
@@ -1011,7 +2457,249 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET  /api/provider-canary -- public configuration status; never probes.\n * POST /api/provider-canary -- authenticated, fixed one-token capability canary.\n *\n * This route is deliberately not user in"
+      }
+    },
+    "/api/receipts/batch": {
+      "get": {
+        "description": "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), assembled from the public root history. History assembly only \u2014 recent leaves are free; never a conclusion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+        "operationId": "x402_receipts_batch",
+        "parameters": [
+          {
+            "description": "Window start (ISO-8601). Required.",
+            "example": "2026-01-01T00:00:00Z",
+            "in": "query",
+            "name": "from",
+            "required": true,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Window end (ISO-8601). Defaults to now.",
+            "example": "2026-09-06T08:22:25Z",
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Free: count, span and the sha256 of the batch bytes, without the leaves",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "one canonical csoai.receipts.batch/0.1 document: every card-v0 leaf with as_of in the window (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it (from /receipts/root-history.json \u2014 the git history of root.json indexed at build time), plus one signed manifest card-v0 (surface receipts.batch) citing the batch sha256",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "one canonical csoai.receipts.batch/0.1 document: every card-v0 leaf with as_of in the window (\u2264200), each with its Merkle inclusion path and the public root(s) that carried it (from /receipts/root-history.json \u2014 the git history of root.json indexed at build time), plus one signed manifest card-v0 (surface receipts.batch) citing the batch sha256"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "100000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "100000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "from": "2026-01-01T00:00:00Z",
+                            "to": "2026-09-06T08:22:25Z"
+                          },
+                          "type": "http"
+                        },
+                        "output": {
+                          "example": {
+                            "batch": {
+                              "cap": 200,
+                              "count": 0,
+                              "items": [],
+                              "roots": [],
+                              "window": {
+                                "from": "<iso>",
+                                "to": "<iso>"
+                              }
+                            },
+                            "batch_sha256": "<64-hex>",
+                            "kind": "batch",
+                            "manifest_card": {
+                              "sig_ed25519": "<hex or null>",
+                              "surface": "receipts.batch"
+                            },
+                            "schema": "csoai.receipts.batch/0.1"
+                          },
+                          "type": "json"
+                        }
+                      },
+                      "schema": {
+                        "$schema": "https://json-schema.org/draft/2020-12/schema",
+                        "properties": {
+                          "input": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "method": {
+                                "enum": [
+                                  "GET",
+                                  "HEAD",
+                                  "DELETE"
+                                ],
+                                "type": "string"
+                              },
+                              "queryParams": {
+                                "properties": {
+                                  "from": {
+                                    "description": "Window start (ISO-8601). Required.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                  },
+                                  "preview": {
+                                    "const": "1",
+                                    "description": "Free: count, span and the sha256 of the batch bytes, without the leaves",
+                                    "type": "string"
+                                  },
+                                  "to": {
+                                    "description": "Window end (ISO-8601). Defaults to now.",
+                                    "format": "date-time",
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "from"
+                                ],
+                                "type": "object"
+                              },
+                              "type": {
+                                "const": "http",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "method"
+                            ],
+                            "type": "object"
+                          },
+                          "output": {
+                            "properties": {
+                              "example": {
+                                "type": "object"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "input"
+                        ],
+                        "type": "object"
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "Receipts batch: every signed card-v0 measurement leaf in a time window with its inclusion path and carrying root(s), assembled from the public root history. History assembly only \u2014 recent leaves are free; never a conclusion. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate..",
+                    "mimeType": "application/json",
+                    "serviceName": "CSOAI Receipts Batch",
+                    "tags": [
+                      "receipts",
+                      "merkle",
+                      "history",
+                      "attestation",
+                      "x402"
+                    ],
+                    "url": "https://councilof.ai/api/receipts/batch?from=2026-01-01T00%3A00%3A00Z&to=2026-09-06T08%3A22%3A25Z"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Receipts batch \u2014 historical measurement leaves for a window (assembly)",
+        "tags": [
+          "x402",
+          "assembly"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "captured live 402 (challenges/receipts_batch.json)",
+            "captured": true,
+            "payment_required_header_bytes": 5624
+          },
+          "door": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>",
+          "free_forever_on_this_path": [
+            "https://councilof.ai/api/receipts/batch?from=<iso>&preview=1"
+          ],
+          "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1",
+          "never": [
+            "a conclusion about any leaf",
+            "a grade",
+            "a certificate",
+            "a settlement-receipt claim"
+          ],
+          "paid_for": "assembly",
+          "tier": "receipts_batch"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/registers": {
@@ -1031,6 +2719,7 @@
             "description": "Unsigned static benchmark summary \u2014 no signature or proof material supplied"
           }
         },
+        "security": [],
         "summary": "* GET /api/registers \u2014 unsigned static benchmark summaries.\n *\n * This handler publishes hard-coded summary values. It does not load or verify\n * source records, signatures, receipts, or cryptographic",
         "x-csoai-evidence-state": "UNSIGNED_STATIC_SUMMARY"
       }
@@ -1046,6 +2735,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/regulation \u2014 source-cited regulation deadline feed.\n *\n * This endpoint deliberately serves a bounded, versioned register rather than\n * accepting generic writes. Dates are statements from "
       }
     },
@@ -1060,6 +2750,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -1120,6 +2811,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/reported \u2014 third-party figures we carry but did not measure.\n *\n * REPORTED is claims made by a source about itself or another system: unsigned, not\n * measured here, and never entering the"
       },
       "post": {
@@ -1147,16 +2839,125 @@
     },
     "/api/request-attestation": {
       "get": {
-        "operationId": "get__api_request-attestation",
+        "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+        "operationId": "x402_request_attestation",
+        "parameters": [
+          {
+            "example": "model-or-subject-id",
+            "in": "query",
+            "name": "subject",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "axis",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
-              "application/json": {}
+              "application/json": {
+                "schema": {
+                  "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+                  "type": "object"
+                }
+              }
             },
-            "description": "OK"
+            "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "subject": "model-or-subject-id"
+                          },
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "one card-v0 leaf, surface ras.commission, \u22643KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         },
-        "summary": "* GET /api/request-attestation \u2014 Tier 1: commission a signed card for a subject (\u00d7 optional axis).\n *\n * Sell path: pay-to-recompute / re-attest per request \u2014 never a rank, never a certificate,\n * nev"
+        "summary": "Commission a signed card (request-attestation)",
+        "tags": [
+          "x402",
+          "issuance"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+          "free_preview": "https://councilof.ai/api/request-attestation?subject=<id>",
+          "never": [
+            "a score",
+            "a rank",
+            "a certificate",
+            "a MEASURED cell minted by payment"
+          ],
+          "paid_for": "issuance",
+          "tier": "issuance"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
       }
     },
     "/api/revenue": {
@@ -1170,6 +2971,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/revenue \u2014 the three-SKU revenue instrumentation (EXEC-A-REVENUE.md \u00a75).\n *\n * Reads the revenue counters straight out of counters.json (the counter canon) and, WHERE A\n * store is bound, th"
       }
     },
@@ -1184,6 +2986,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/root \u2014 alias of public/root.json.\n * Same bytes the static door serves. Never a second forest."
       }
     },
@@ -1198,7 +3001,166 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* /api/router \u2014 the bounded discovery + interop + packages router."
+      }
+    },
+    "/api/rwa/evidence": {
+      "get": {
+        "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+        "operationId": "x402_rwa_evidence",
+        "parameters": [
+          {
+            "example": "RLUSD",
+            "in": "query",
+            "name": "asset",
+            "required": true,
+            "schema": {
+              "enum": [
+                "symbol",
+                "issuer_address"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "description": "Free preview: same request, no payment, no signature",
+            "in": "query",
+            "name": "preview",
+            "required": false,
+            "schema": {
+              "const": "1",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present"
+          },
+          "402": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accepts": [
+                    {
+                      "amount": "20000",
+                      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+                      "extra": {
+                        "decimals": 6,
+                        "name": "USD Coin",
+                        "symbol": "USDC",
+                        "version": "2"
+                      },
+                      "maxAmountRequired": "20000",
+                      "maxTimeoutSeconds": 300,
+                      "network": "eip155:8453",
+                      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+                      "scheme": "exact"
+                    }
+                  ],
+                  "error": "Payment required",
+                  "extensions": {
+                    "bazaar": {
+                      "info": {
+                        "input": {
+                          "method": "GET",
+                          "queryParams": {
+                            "asset": "RLUSD"
+                          },
+                          "type": "http"
+                        }
+                      }
+                    }
+                  },
+                  "resource": {
+                    "description": "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 \u2014 the same schema as the free public-root leaf), \u22643072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+                    "mimeType": "application/json",
+                    "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
+                  },
+                  "x402Version": 2
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/X402PaymentRequired"
+                }
+              }
+            },
+            "description": "Payment required \u2014 the x402 v2 challenge. The same JSON is base64-encoded in the PAYMENT-REQUIRED response header. Pay accepts[0] (scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31; amount in atomic units) and retry the same request with the X-PAYMENT header. Verification of the artefact stays free.",
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "base64(JSON) of this challenge body",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "XRPL asset evidence card (per request)",
+        "tags": [
+          "x402",
+          "issuance"
+        ],
+        "x-csoai": {
+          "challenge": {
+            "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
+            "captured": false
+          },
+          "door": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+          "never": [
+            "a rating",
+            "a guarantee",
+            "a verdict",
+            "a rank",
+            "a paywall on /api/xrpl or /root.json"
+          ],
+          "paid_for": "issuance",
+          "tier": "rwa_evidence"
+        },
+        "x-payment-info": {
+          "protocols": [
+            {
+              "x402": {}
+            }
+          ]
+        }
+      }
+    },
+    "/api/sandbox": {
+      "get": {
+        "operationId": "get__api_sandbox",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* sandbox \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
+      },
+      "post": {
+        "operationId": "post__api_sandbox",
+        "responses": {
+          "503": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
+          }
+        },
+        "summary": "* sandbox \u2014 retired until its response can be derived from current evidence.\n * @openapi-unavailable",
+        "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
     "/api/security": {
@@ -1212,6 +3174,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -1226,6 +3189,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/specialists \u2014 the signed specialist-team feed, served LIVE + pass-through.\n *\n * Honest PROXY of the estate's signed specialist-team feed\n * (https://csoai-sovereign.pages.dev/api/specialis"
       }
     },
@@ -1240,6 +3204,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/state \u2014 the ONE live state surface every lane quotes instead of asserting.\n *\n * \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n * WHY THIS EXISTS\n * In one w"
       }
     },
@@ -1300,6 +3265,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/swift \u2014 reader of public/interop/swift-census.json.\n * Three-state census tape (LIVE / COMMITTED / DISCOVERED). DISCOVERED-first,\n * not MEASURED. Not a SWIFT client feed. writes_board=fals"
       }
     },
@@ -1314,7 +3280,7 @@
             "description": "Unavailable \u2014 quarantined pre-release; no evidence is manufactured"
           }
         },
-        "summary": "* /api/synthesis \u2014 retired until mappings are generated from verified records.\n * @openapi-unavailable",
+        "summary": "* /api/synthesis \u2014 retired until mappings is derived from current evidence.\n * @openapi-unavailable",
         "x-csoai-lifecycle": "QUARANTINED_PRE_RELEASE"
       }
     },
@@ -1329,6 +3295,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/tools?q=<query> \u2014 the MCP tool catalogue, derived from a PROBED artifact.\n *\n * WHAT CHANGED (2026-08-26, lane A4)\n * This handler used to return `const CATALOGUE_TOTAL = 378` \u2014 a hardcoded"
       }
     },
@@ -1343,6 +3310,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints."
       },
       "post": {
@@ -1357,6 +3325,34 @@
         },
         "summary": "Resolve one published card by exact SHA-256. This endpoint reads; it never mints.",
         "x-csoai-lifecycle": "METHOD_NOT_ALLOWED"
+      }
+    },
+    "/api/verify": {
+      "get": {
+        "operationId": "get__api_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* POST /api/verify \u2014 verify a posted measurement card. GET explains how.\n *\n * WHY THIS EXISTS. /api/verify answered 404 while six /interop manifests and four generators\n * pointed at it, and the esta"
+      },
+      "post": {
+        "operationId": "post__api_verify",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "OK"
+          }
+        },
+        "security": [],
+        "summary": "* POST /api/verify \u2014 verify a posted measurement card. GET explains how.\n *\n * WHY THIS EXISTS. /api/verify answered 404 while six /interop manifests and four generators\n * pointed at it, and the esta"
       }
     },
     "/api/verify-batch": {
@@ -1418,6 +3414,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       },
       "post": {
@@ -1430,6 +3427,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -1444,6 +3442,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": ""
       }
     },
@@ -1458,6 +3457,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
       },
       "get": {
@@ -1470,6 +3470,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
       },
       "post": {
@@ -1482,6 +3483,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET/POST /api/webhooks \u2014 webhook CRUD (in-memory + KV if bound).\n * GET: returns array of { id, url, events, active, created_at }\n * POST: creates new webhook with { url, events }\n * DELETE: ?id=X r"
       }
     },
@@ -1570,6 +3572,7 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/x402 \u2014 the machine catalog of the metered rail. NO AMOUNTS HERE.\n *\n * One tier per line, one resource per tier, each with a free preview and a 402 door. Amounts\n * surface only inside a 40"
       }
     },
@@ -1584,18 +3587,86 @@
             "description": "OK"
           }
         },
+        "security": [],
         "summary": "* GET /api/xrpl \u2014 reader of the committed public-root 16.\n *\n * 200 only when this deploy's /root.json plus /cards yield exactly the locked\n * 16 xrpl.asset.state leaves whose sha256 sit on that root."
       }
     }
   },
   "servers": [
     {
-      "description": "Production",
       "url": "https://councilof.ai"
+    }
+  ],
+  "tags": [
+    {
+      "description": "HTTP 402 doors on the x402 rail \u2014 only inside each resource's 402 challenge (accepts[].amount) \u2014 never on this catalog, never in prose",
+      "name": "x402"
     },
     {
-      "description": "Apex (308 \u2192 councilof.ai for /)",
-      "url": "https://csoai.org"
+      "description": "sells issuance of a signed artefact",
+      "name": "issuance"
+    },
+    {
+      "description": "sells assembly of already-public evidence",
+      "name": "assembly"
+    },
+    {
+      "description": "a 402 route priced at zero",
+      "name": "free"
     }
-  ]
+  ],
+  "x-x402": {
+    "amounts": "only inside each resource's 402 challenge (accepts[].amount) \u2014 never on this catalog, never in prose",
+    "asset": {
+      "contract": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "decimals": 6,
+      "symbol": "USDC"
+    },
+    "catalog": "https://councilof.ai/api/x402",
+    "doors": [
+      "/api/free-door",
+      "/api/request-attestation",
+      "/api/evidence-bundle",
+      "/api/eunomia-data",
+      "/api/proof",
+      "/api/rwa/evidence",
+      "/api/art50/marking-evidence",
+      "/api/feeds/provider-diff",
+      "/api/receipts/batch"
+    ],
+    "facilitator": {
+      "configured": true,
+      "note": "the facilitator URL is a Cloudflare Pages env var (X402_FACILITATOR_URL) that no public surface publishes; /api/x402 reports only whether one is configured",
+      "url": null
+    },
+    "mcp": "https://councilof.ai/mcp",
+    "mode": "live",
+    "mode_note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+    "network": "eip155:8453",
+    "not": [
+      "score",
+      "certificate",
+      "filled-cells",
+      "pay-to-pass",
+      "rank"
+    ],
+    "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+    "public_operations": 85,
+    "quarantined": [
+      {
+        "buyable": false,
+        "free_status": "https://councilof.ai/api/witness/status?sha256=<64-hex>",
+        "lifecycle": "QUARANTINED_PRE_RELEASE",
+        "reason": "paid witness issuance is disabled until a release gate verifies leaf \u2192 signed root \u2192 sidecar \u2192 Rekor \u2192 OpenTimestamps",
+        "url": "https://councilof.ai/api/witness?sha256=<64-hex>"
+      }
+    ],
+    "revenue_truth": "https://councilof.ai/api/revenue",
+    "schema_of_source": {
+      "catalog": "csoai.x402-catalog/0.2",
+      "well_known": "csoai.x402/0.2"
+    },
+    "scheme": "exact",
+    "well_known": "https://councilof.ai/.well-known/x402.json"
+  }
 }

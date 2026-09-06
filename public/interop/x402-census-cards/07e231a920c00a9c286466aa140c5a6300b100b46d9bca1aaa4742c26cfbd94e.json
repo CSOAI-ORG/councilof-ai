@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "kristo-intelligence-api.onrender.com",
+ "as_of": "2026-09-06T06:40:59Z",
+ "source_urls": [
+  "https://kristo-intelligence-api.onrender.com/api/v1/signal",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "kristo-intelligence-api.onrender.com",
+  "resource": "https://kristo-intelligence-api.onrender.com/api/v1/signal",
+  "status": "DELIVERED",
+  "asked_units": 3000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xd4cdA900839C0FED4374EE37EA0DBE8e4c6fd08f",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": null,
+  "settle_tx_state": "host reported a settlement but its PAYMENT-RESPONSE did not parse into a tx reference",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.26,
+   "paid": 2.1
+  },
+  "delivered_bytes": 1178,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:40:59Z",
+  "n": 1
+ },
+ "sha256": "07e231a920c00a9c286466aa140c5a6300b100b46d9bca1aaa4742c26cfbd94e",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

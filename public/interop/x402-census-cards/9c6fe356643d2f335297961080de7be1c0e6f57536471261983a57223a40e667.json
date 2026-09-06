@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.predictionmarketdata.io",
+ "as_of": "2026-09-06T06:38:22Z",
+ "source_urls": [
+  "https://api.predictionmarketdata.io/market-news",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.predictionmarketdata.io",
+  "resource": "https://api.predictionmarketdata.io/market-news",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x995c0abdcd2ad76548e5f7deb54d32549b2b781f",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xec4bbe4f81eef81a4fc4039540dafe318cded001ce441e561bab80b0bad557d2",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 3.56,
+   "paid": 6.16
+  },
+  "delivered_bytes": 182632,
+  "delivered_content_type": "application/json",
+  "advertised_mime": null,
+  "observed_at": "2026-09-06T06:38:22Z",
+  "n": 1
+ },
+ "sha256": "9c6fe356643d2f335297961080de7be1c0e6f57536471261983a57223a40e667",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

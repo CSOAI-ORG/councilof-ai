@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.orcatrace.dev",
+ "as_of": "2026-09-06T06:43:07Z",
+ "source_urls": [
+  "https://api.orcatrace.dev/v1/latest",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.orcatrace.dev",
+  "resource": "https://api.orcatrace.dev/v1/latest",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xf444abc53f5e1e73caec7df64d147ddb119514a0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x930a08892ea77ab9de495bca90ffbd53f1ed3b04997c41ec9f5fac506695b0b0",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.41,
+   "paid": 1.2
+  },
+  "delivered_bytes": 1210,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:07Z",
+  "n": 1
+ },
+ "sha256": "8ba7e0aec61118cc97575c283a778cca3f685d3e90f5406326551c901efb16d5",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

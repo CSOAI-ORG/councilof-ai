@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.hergertsynthora.com",
+ "as_of": "2026-09-06T06:45:14Z",
+ "source_urls": [
+  "https://api.hergertsynthora.com/v1/space-weather-risk",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.hergertsynthora.com",
+  "resource": "https://api.hergertsynthora.com/v1/space-weather-risk",
+  "status": "DELIVERED",
+  "asked_units": 30000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xEf879BFD6C4AccB8F795136de90246e1EC245e06",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xc262ab7587c7437f6c18479cf8b4346b0828293e39846d0fb53ae6b50c7a9bc1",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.14,
+   "paid": 3.01
+  },
+  "delivered_bytes": 4007,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:14Z",
+  "n": 1
+ },
+ "sha256": "10fdb073d2513d24ccfe1a2beface853ed86ae450371b0bf83ab5bed653aaf7c",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

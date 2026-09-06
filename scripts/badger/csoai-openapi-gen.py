@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""csoai-openapi-gen.py — generate openapi.json from the live endpoints.
+"""csoai-openapi-gen.py — the functions/api WALKER behind public/openapi.json.
 
-Lane-doable: walks every function in functions/api/ and emits an OpenAPI
-3.0 spec that documents every public endpoint, every method, every
-parameter. The result is a signed-atom-backed machine-readable spec.
+Since 2026-09-06 this file is a LIBRARY plus a delegate: discover_endpoints() and
+build_openapi() enumerate the free read surface (every functions/api/*.ts and its
+lifecycle markers), and scripts/build_openapi.py composes the published document from
+that plus the x402 doors (/.well-known/x402.json + /api/x402 fixtures). Running this
+file writes EXACTLY what build_openapi.py writes, so the badger runner
+(csoai-1000x.py) and functions/api/truth-facades.test.ts cannot race a second producer.
 
-This is the live llms.txt / llms-sitemap.xml / llms-full.txt trio for
-machine-receivable specs.
+--probe still reports live reachability of each endpoint; it never changes the bytes
+written. The committed artefact is the offline, deterministic form
+(docs/operations/PRODUCERS.json gates it via `build_openapi.py --check`).
 """
 from __future__ import annotations
 
@@ -245,16 +249,23 @@ def main():
         live = "✓" if ep.get("live", {}).get("ok") else " "
         print(f"    [{live}] {methods:<12} {ep['path']}")
 
-    spec = build_openapi(endpoints)
-    out_path = REPO / args.out
-    out_path.write_text(json.dumps(spec, indent=2, sort_keys=True))
+    # Delegate the WRITE to the one producer (scripts/build_openapi.py) so this entry point and
+    # that one yield identical bytes. Imported lazily: build_openapi imports THIS file as a library.
+    import importlib.util
+    spec_loc = importlib.util.spec_from_file_location("build_openapi", REPO / "scripts" / "build_openapi.py")
+    producer = importlib.util.module_from_spec(spec_loc)
+    assert spec_loc.loader is not None
+    spec_loc.loader.exec_module(producer)
+    spec = producer.compose()
+    out_path = Path(args.out) if Path(args.out).is_absolute() else REPO / args.out
+    out_path.write_text(producer.render(spec))
     print()
     try:
         shown_path = out_path.relative_to(REPO)
     except ValueError:
         shown_path = out_path
-    print(f"  wrote: {shown_path} ({out_path.stat().st_size}B)")
-    print(f"  paths:  {len(spec['paths'])}")
+    print(f"  wrote: {shown_path} ({out_path.stat().st_size}B) via scripts/build_openapi.py")
+    print(f"  paths:  {len(spec['paths'])}  (x402 doors: {len(spec['x-x402']['doors'])})")
     return 0
 
 

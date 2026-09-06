@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "x402.fiasignals.com",
+ "as_of": "2026-09-06T06:45:31Z",
+ "source_urls": [
+  "https://x402.fiasignals.com/token-safety/batch",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "x402.fiasignals.com",
+  "resource": "https://x402.fiasignals.com/token-safety/batch",
+  "status": "DELIVERED",
+  "asked_units": 30000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x8D32c6a3EE3fB8a8b4c5378F7C5a26CC320a853F",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x708dd0b8a4c62367488a0c77cbc8a4cf12f689e70ff03f2f52fa20477991d169",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 1.03,
+   "paid": 3.97
+  },
+  "delivered_bytes": 5198,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:31Z",
+  "n": 1
+ },
+ "sha256": "a97cb8eae4e0e842944e416dad37edfe0aa0e6d535b2a5635f042fcc6230fc53",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

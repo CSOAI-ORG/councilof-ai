@@ -179,6 +179,7 @@ const cardsHeaderCount = (cardIndex as any).n_cards ?? null;
 export interface CorpusRelation {
   relationship: "SEPARATE_CORPORA" | "UNCHECKABLE";
   public_root_leaves: number | null;
+  producer: string;
   separately_indexed_signed_cards: number | null;
   identifier_overlap: number | null;
   duplicate_public_root_ids: number | null;
@@ -200,6 +201,7 @@ export function deriveCorpusRelation(rootDoc: unknown, indexDoc: unknown): Corpu
     return {
       relationship: "UNCHECKABLE",
       public_root_leaves: null,
+      producer: "functions/api/state.ts → deriveCorpusRelation(root.json, card_index.json)",
       separately_indexed_signed_cards: null,
       identifier_overlap: null,
       duplicate_public_root_ids: null,
@@ -229,6 +231,10 @@ export function deriveCorpusRelation(rootDoc: unknown, indexDoc: unknown): Corpu
   return {
     relationship: valid ? "SEPARATE_CORPORA" : "UNCHECKABLE",
     public_root_leaves: leaves.length,
+    // Every number in this block is derived here; nothing is read off a header. A number
+    // with no named producer is a number a reader cannot chase, which is the whole point
+    // of `source` on the typed facts -- these are numbers too.
+    producer: "functions/api/state.ts → deriveCorpusRelation(root.json, card_index.json)",
     separately_indexed_signed_cards: rows.length,
     identifier_overlap: overlap,
     duplicate_public_root_ids: duplicateRoot,
@@ -621,6 +627,7 @@ export const onRequestGet: PagesFunction = async () => {
         "Entries carrying a signature. signed=true means the card carries a JWS signature under kid.",
       ),
       header_agrees: {
+        producer: "functions/api/state.ts → card_index.json header vs cards[] recounted here",
         n_cards_header: cardsHeaderCount,
         agrees: cardsHeaderCount === cardsCounted,
         note: "If agrees is false the artifact is internally inconsistent and neither number is quotable.",
@@ -816,6 +823,7 @@ export const onRequestGet: PagesFunction = async () => {
         "as_of_field is null with it. A neighbouring file's date is not this file's date, and the " +
         "deploy time is nobody's measurement time. Unknown stays null.",
       header_agrees: {
+        producer: "functions/api/state.ts → rwa registry header vs instruments[] recounted here",
         header: rwaHeader,
         agrees: rwaHeaderAgrees,
         note: "The header block is recomputed from the instruments array rather than trusted.",

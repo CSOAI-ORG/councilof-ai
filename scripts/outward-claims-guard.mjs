@@ -193,11 +193,20 @@ async function checkAxisCounts() {
  * whole job of an outward-claims guard: the estate's own tests check what we do, not what we say
  * about ourselves somewhere else.
  *
- * BASELINE, not a target. It fails when the count goes UP, so a new bad entry cannot arrive
- * unnoticed, and it fails when the count goes DOWN without this number being lowered, so a fix
- * cannot be quietly un-recorded. Set REGISTRY_BASELINE=n to move it deliberately.
+ * BASELINE, not a target, and it is a LIST OF NAMES in a file — scripts/mcp-registry-baseline.json.
+ * It fails on any unfollowable entry not named there, so a new bad publish cannot arrive unnoticed,
+ * and it fails when a named entry has closed and has not been removed, so a fix cannot be quietly
+ * un-recorded.
+ *
+ * IT USED TO BE A COUNT IN AN ENV VAR, and that was wrong twice over. `REGISTRY_BASELINE ?? 0`
+ * meant a run without the variable failed with "up from 0" against a healthy registry, and any
+ * run could pass REGISTRY_BASELINE=999 and silence it; a baseline you can set from the command
+ * line is not a baseline. Worse, a count cannot see a SWAP. On 2026-09-06 the number fell 37 -> 19
+ * and every one of the 19 was NEW: the 2026-09-05 set had genuinely been fixed — republished with
+ * no repository field, which the ruling makes correct, or repointed at the real repo — while a
+ * fresh batch of 19 landed underneath. A count reported that as an improvement. Names do not.
  */
-const REGISTRY_BASELINE = Number(process.env.REGISTRY_BASELINE ?? 0);
+const REGISTRY_BASELINE_FILE = "scripts/mcp-registry-baseline.json";
 const REGISTRY = "https://registry.modelcontextprotocol.io/v0/servers";
 
 /** Semver-ish compare. Version parts are NUMBERS: "1.0.9" must lose to "1.0.10". */
@@ -272,22 +281,42 @@ async function checkRegistry() {
     if (!url) { noField++; continue; }
     let status = 0;
     try { status = (await fetch(url, { headers: UA, redirect: "follow" })).status; } catch { status = 0; }
-    if (status !== 200) unfollowable.push(`${s.name}: ${url} -> ${status || "unreachable"}`);
+    if (status !== 200) unfollowable.push({ name: s.name, repo: url, status });
   }
   ok("mcp registry repository field", `${noField} entries declare no repository, which the ` +
     `2026-09-05 ruling makes the correct state for a server with no public source`);
 
-  const n = unfollowable.length;
-  if (n > REGISTRY_BASELINE) {
+  const { readFileSync: readB, existsSync: hasB } = await import("node:fs");
+  if (!hasB(REGISTRY_BASELINE_FILE)) {
+    return bad("mcp registry repository claims",
+      `${unfollowable.length} unfollowable and ${REGISTRY_BASELINE_FILE} is missing — without the ` +
+      `recorded list there is nothing to compare against, and an empty comparison is not a pass.`);
+  }
+  const recorded = new Set(
+    (JSON.parse(readB(REGISTRY_BASELINE_FILE, "utf8")).entries ?? []).map((e) => e.server),
+  );
+  const seen = new Set(unfollowable.map((u) => u.name));
+  const arrived = unfollowable.filter((u) => !recorded.has(u.name));
+  const closed = [...recorded].filter((name) => !seen.has(name));
+
+  if (arrived.length) {
     bad("mcp registry repository claims",
-      `${n} entries advertise a repository a stranger cannot follow, up from ${REGISTRY_BASELINE}. ` +
-      `New: ${unfollowable.slice(0, 6).join("; ")}${n > 6 ? ` (+${n - 6} more)` : ""}`);
-  } else if (n < REGISTRY_BASELINE) {
+      `${arrived.length} ${arrived.length === 1 ? "entry advertises" : "entries advertise"} a ` +
+      `repository a stranger cannot follow and ${arrived.length === 1 ? "is" : "are"} NOT in ` +
+      `${REGISTRY_BASELINE_FILE}: ` +
+      `${arrived.slice(0, 6).map((u) => `${u.name} -> ${u.repo} (${u.status || "unreachable"})`).join("; ")}` +
+      `${arrived.length > 6 ? ` (+${arrived.length - 6} more)` : ""}. A new bad publish does not ` +
+      `hide inside an old allowance — fix it, or record it deliberately.`);
+  } else if (closed.length) {
     bad("mcp registry repository claims",
-      `${n} unfollowable, DOWN from ${REGISTRY_BASELINE} — good, but lower REGISTRY_BASELINE to ` +
-      `${n} in the same change, or the next regression hides inside the old allowance.`);
+      `${closed.length} recorded ${closed.length === 1 ? "entry is" : "entries are"} no longer ` +
+      `unfollowable: ` +
+      `${closed.slice(0, 6).join("; ")}${closed.length > 6 ? ` (+${closed.length - 6} more)` : ""}. ` +
+      `Good — remove them from ${REGISTRY_BASELINE_FILE} in the same change, or the next ` +
+      `regression hides inside the stale allowance.`);
   } else {
-    ok("mcp registry repository claims", `${n} unfollowable, unchanged from the recorded baseline`);
+    ok("mcp registry repository claims",
+      `${seen.size} unfollowable, exactly the set recorded in ${REGISTRY_BASELINE_FILE}`);
   }
 }
 
@@ -670,6 +699,56 @@ async function checkHfCards() {
  *
  * Offline by default. LIVE_PLATFORMS=1 probes every proof_url.
  */
+/**
+ * 13. THE SBOM SAYS package.json. npm ci INSTALLS package-lock.json.
+ *
+ * public/interop/sbom-councilof-ai.json is a PUBLISHED supply-chain claim, and its generator
+ * (scripts/gen_sbom.py) reads package.json — "Web runtime components listed from package.json".
+ * CI installs with `npm ci`, which builds the tree from package-lock.json. When the lock's root
+ * entry declares a dependency package.json does not, the published SBOM under-reports what is
+ * actually installed, and no test in the estate notices.
+ *
+ * MEASURED 2026-09-06, and it was not hypothetical. #1273 deleted six packages from package.json
+ * for five high-severity advisories; the SBOM was regenerated to 120 components without them and
+ * PRODUCERS.json recorded the fix. The lockfile root still declared all six — drizzle-orm,
+ * mysql2, nodemailer, xlsx, drizzle-kit, @types/nodemailer — so `npm ci` kept installing them and
+ * `npm audit` kept reporting drizzle-orm/nodemailer/xlsx HIGH. The artefact was honest about
+ * package.json and package.json was not what ran.
+ *
+ * Static, no network: both files are in the checkout.
+ */
+async function checkLockMatchesManifest() {
+  const { readFileSync, existsSync } = await import("node:fs");
+  for (const f of ["package.json", "package-lock.json"]) {
+    if (!existsSync(f)) return skip("sbom source vs installed tree", `${f} not in this checkout`);
+  }
+  let pj, root;
+  try {
+    pj = JSON.parse(readFileSync("package.json", "utf8"));
+    root = JSON.parse(readFileSync("package-lock.json", "utf8")).packages?.[""] ?? null;
+  } catch (e) {
+    return bad("sbom source vs installed tree", `could not read the manifests: ${e.message}`);
+  }
+  if (!root) return bad("sbom source vs installed tree", "package-lock.json has no root entry");
+
+  const extra = [];
+  for (const field of ["dependencies", "devDependencies", "optionalDependencies"]) {
+    const inLock = Object.keys(root[field] ?? {});
+    const declared = new Set(Object.keys(pj[field] ?? {}));
+    for (const name of inLock) if (!declared.has(name)) extra.push(`${name} (${field})`);
+  }
+  if (extra.length) {
+    bad("sbom source vs installed tree",
+      `package-lock.json declares ${extra.length} dependenc${extra.length === 1 ? "y" : "ies"} ` +
+      `package.json does not: ${extra.slice(0, 8).join(", ")}${extra.length > 8 ? ` (+${extra.length - 8} more)` : ""}. ` +
+      `The published SBOM is generated from package.json and npm ci installs from the lock, so the ` +
+      `SBOM under-reports what runs. Run \`npm install --package-lock-only\`.`);
+  } else {
+    ok("sbom source vs installed tree",
+      `the lockfile root declares nothing package.json does not, so the SBOM's source is what npm ci installs`);
+  }
+}
+
 async function checkPlatformProofs() {
   const { readFileSync, existsSync } = await import("node:fs");
   const FILE = "public/interop/platforms-registered.json";
@@ -930,7 +1009,42 @@ async function main() {
       console.error("selftest FAIL: a null manifest claims nothing and must pass"); bad++;
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 16 decision cases, all correct");
+    // The registry baseline as a SET, which is the whole reason it stopped being a count.
+    // The swap case is the one a count cannot see: same size, different members.
+    const setVerdict = (recorded, seen) => {
+      const arrived = seen.filter((x) => !recorded.includes(x));
+      const closed = recorded.filter((x) => !seen.includes(x));
+      return arrived.length ? "FAIL_NEW" : closed.length ? "FAIL_STALE" : "OK";
+    };
+    const SETC = [
+      { name: "same set", recorded: ["a", "b"], seen: ["b", "a"], want: "OK" },
+      { name: "a new bad entry", recorded: ["a", "b"], seen: ["a", "b", "c"], want: "FAIL_NEW" },
+      { name: "one closed, unrecorded", recorded: ["a", "b"], seen: ["a"], want: "FAIL_STALE" },
+      // Equal counts, different members. The old count baseline called this "unchanged".
+      { name: "a swap at equal count", recorded: ["a", "b"], seen: ["a", "c"], want: "FAIL_NEW" },
+      { name: "empty both ways", recorded: [], seen: [], want: "OK" },
+    ];
+    for (const c of SETC) {
+      const got = setVerdict(c.recorded, c.seen);
+      if (got !== c.want) { console.error(`selftest FAIL: baseline ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
+    }
+
+    // The SBOM's source vs what npm ci installs. Only ONE direction is a defect: a lock that
+    // declares MORE than package.json makes the published SBOM under-report. A lock that
+    // declares less is npm ci's own error and it refuses to run, so it cannot ship quietly.
+    const lockVerdict = (pj, lock) => (lock.filter((x) => !pj.includes(x)).length ? "FAIL" : "OK");
+    const LOCKC = [
+      { name: "identical", pj: ["a", "b"], lock: ["a", "b"], want: "OK" },
+      { name: "lock declares an extra", pj: ["a"], lock: ["a", "xlsx"], want: "FAIL" },
+      { name: "lock declares fewer (npm ci's error, not ours)", pj: ["a", "b"], lock: ["a"], want: "OK" },
+      { name: "both empty", pj: [], lock: [], want: "OK" },
+    ];
+    for (const c of LOCKC) {
+      const got = lockVerdict(c.pj, c.lock);
+      if (got !== c.want) { console.error(`selftest FAIL: lock ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 25 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
@@ -942,6 +1056,7 @@ async function main() {
   await checkProducers();
   await checkInstallLines();
   await checkHfCards();
+  await checkLockMatchesManifest();
   await checkPlatformProofs();
   await checkMarkerExpiry();
   await checkRegulatorCensus();
