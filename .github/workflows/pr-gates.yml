@@ -61,6 +61,13 @@ jobs:
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
 
+      # #1482 passed every PR check and then failed the deploy at the council-truth gate,
+      # which lived only in deploy.yml: a retired door (/cobol) was rewired to a real page and
+      # nothing on the PR could say so. Two deploys went red and nothing shipped for an hour.
+      # This is a source-level check (App.tsx + fixtures), so it can run on the PR.
+      - name: Council truth gate — no simulated BFT or phantom engine doors
+        run: npm run guard:council-truth
+
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
         run: node scripts/signed-json-guard.mjs dist/client
 
