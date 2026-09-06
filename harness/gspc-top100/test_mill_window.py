@@ -127,8 +127,8 @@ def test_millable_skips_already_tried() -> None:
 
 
 def test_millable_retries_hf_inference_uncheckable() -> None:
-    """1445 UNCHECKABLE were 'not supported by provider hf-inference'.
-    Those re-enter the window. Other UNCHECKABLE do not loop forever."""
+    """Chat-tag UNCHECKABLE still retry (bare slug 200s). A non-chat
+    hf-inference miss already ran the embed route — do not loop it."""
     models = [
         {
             "slug": "nomic-ai/nomic-embed-text-v1.5",
@@ -149,7 +149,7 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
         },
     ]
     got = millable_slugs(models)
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
     # Bare-slug chat 200s on the router; retry chat-tag UNCHECKABLE.
     assert "Qwen/Qwen3-8B" in got
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
@@ -221,7 +221,8 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     ]
     got = millable_slugs(models)
     assert "facebook/opt-125m" not in got
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    # hf-inference miss on a non-chat tag is the embed route already run.
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:

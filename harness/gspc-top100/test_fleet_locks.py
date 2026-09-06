@@ -254,6 +254,45 @@ def test_restore_original_membership_drops_injected_slugs() -> None:
     assert out["membership"] == "hf2200-download-ranked"
 
 
+def test_restore_persists_route_kind_and_nonchat_reason() -> None:
+    """apply_mill wrote route_kind; restore then rebuilt from git original
+    and dropped it, so millable stayed 449. What would make this fail:
+    overlay UNCHECKABLE MiniLM coming back without route_kind."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import restore_original_membership  # noqa: E402
+    from mill_window import millable_slugs  # noqa: E402
+
+    original = {
+        "n_locked": 2,
+        "writes_board": False,
+        "enters_board_means": False,
+        "models": [
+            {"slug": "nomic-ai/nomic-embed-text-v1.5", "status": "UNMEASURED", "pipeline_tag": "sentence-similarity"},
+            {"slug": "orig/b", "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+        ],
+    }
+    overlay = {
+        "models": [
+            {
+                "slug": "nomic-ai/nomic-embed-text-v1.5",
+                "status": "UNCHECKABLE",
+                "pipeline_tag": "sentence-similarity",
+                "route_kind": "similarity",
+                "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
+                "last_mill": "2026-09-06T20:29:00Z",
+            }
+        ]
+    }
+    out = restore_original_membership(original, [overlay])
+    row = out["models"][0]
+    assert row["status"] == "UNCHECKABLE"
+    assert row["route_kind"] == "similarity"
+    assert row["last_mill"] == "2026-09-06T20:29:00Z"
+    assert "hf-inference" in (row.get("reason") or "")
+    assert "nomic-ai/nomic-embed-text-v1.5" not in millable_slugs(out["models"])
+
+
 def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     """A green land-lock that patches the git lock (all UNMEASURED) and
     uploads it would wipe hub-queue n_measured. The workflow must fetch
@@ -279,5 +318,6 @@ if __name__ == "__main__":
     test_rebuild_keeps_practice_mill_and_prefers_chat()
     test_stamp_zero_provider_does_not_invent_n_measured()
     test_restore_original_membership_drops_injected_slugs()
+    test_restore_persists_route_kind_and_nonchat_reason()
     test_workflow_lands_from_hub_queue_not_git_zero()
-    print("test_fleet_locks: 11 passed")
+    print("test_fleet_locks: 12 passed")

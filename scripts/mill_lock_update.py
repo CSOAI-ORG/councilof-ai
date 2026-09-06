@@ -105,10 +105,20 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
                     row["last_mill"] = ov["last_mill"]
                 if ov.get("n") is not None:
                     row["n"] = ov["n"]
+                if ov.get("route_kind"):
+                    row["route_kind"] = ov["route_kind"]
+                if ov.get("pipeline_tag") and not row.get("pipeline_tag"):
+                    row["pipeline_tag"] = ov["pipeline_tag"]
             elif st == "UNCHECKABLE":
                 row["status"] = "UNCHECKABLE"
                 if ov.get("reason"):
                     row["reason"] = ov["reason"][:200]
+                if ov.get("last_mill"):
+                    row["last_mill"] = ov["last_mill"]
+                if ov.get("route_kind"):
+                    row["route_kind"] = ov["route_kind"]
+                if ov.get("pipeline_tag") and not row.get("pipeline_tag"):
+                    row["pipeline_tag"] = ov["pipeline_tag"]
         models.append(row)
     out = dict(original)
     out["models"] = models

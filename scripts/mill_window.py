@@ -253,11 +253,14 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 out.append(slug)
                 continue
             last_kind = m.get("route_kind") or ""
+            already_hf = "not supported by provider hf-inference" in reason
             # Chat mill 400 is not an embed miss. Retry non-chat tags once
-            # on their own route. Skip if that route already ran.
+            # on their own route. Skip if that route already ran, or if
+            # restore dropped route_kind but the hf-inference miss remains.
             if tag in NONCHAT_RETRY_TAGS:
-                if last_kind in CHAT_ROUTE_KINDS:
-                    out.append(slug)
+                if already_hf or last_kind not in CHAT_ROUTE_KINDS:
+                    continue
+                out.append(slug)
                 continue
             if _unserved_weight_pack(slug):
                 continue
@@ -266,6 +269,8 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 continue
             # Empty Hub tag: one re-probe so mill can fill pipeline_tag.
             if tag == "" and last_kind in ("", "chat"):
+                if already_hf:
+                    continue
                 out.append(slug)
                 continue
             if "provider or policy" in reason or "nebius" in reason:
