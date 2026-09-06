@@ -19,21 +19,65 @@ CHAT_TAGS = frozenset(
     }
 )
 
+# Measured 6 Sep 2026 mill (0): these weight packs 400 "not served" / "not a chat"
+# on router.huggingface.co/v1/chat/completions. Leaving them in the window
+# burns ~400 of 600 hourly slots as UNCHECKABLE.
+UNSERVED_MARKERS = (
+    "gptq",
+    "awq",
+    "nvfp4",
+    "exl2",
+    "-gguf",
+    ".gguf",
+    "/gguf",
+    "gguf",
+    "-mlx",
+    "mlx-",
+    "-fp8",
+    "fp8-",
+    "fp8",
+    "-int4",
+    "-int8",
+    "qat-w4a16",
+    "w4a16",
+    "-bnb",
+    "bnb-",
+)
+
+ALREADY_TRIED = frozenset({"practice-mill", "MEASURED", "UNCHECKABLE"})
+
+
+def _unserved_weight_pack(slug: str) -> bool:
+    low = slug.lower()
+    if any(m in low for m in UNSERVED_MARKERS):
+        return True
+    name = low.rsplit("/", 1)[-1]
+    return name.endswith("-base")
+
 
 def chat_capable_slugs(models: list[dict]) -> list[str]:
-    """Preserve lock order. Skip tags the chat mill cannot serve."""
+    """Preserve lock order. Skip tags and weight packs the chat mill cannot serve."""
     out: list[str] = []
     for m in models:
         slug = m.get("slug")
         if not slug:
             continue
-        low = slug.lower()
-        if low.endswith("-gguf") or ".gguf" in low or "-mlx-" in low or "/gguf" in low:
+        if _unserved_weight_pack(slug):
             continue
         tag = m.get("pipeline_tag") or ""
         if tag in CHAT_TAGS:
             out.append(slug)
     return out
+
+
+def millable_slugs(models: list[dict]) -> list[str]:
+    """Chat-capable, not a weight pack the router 400s, not already tried."""
+    skip = {
+        m.get("slug")
+        for m in models
+        if m.get("slug") and (m.get("status") or "UNMEASURED") in ALREADY_TRIED
+    }
+    return [s for s in chat_capable_slugs(models) if s not in skip]
 
 
 def select_window(
@@ -49,8 +93,14 @@ def select_window(
     shards = max(int(shards), 1)
     shard = int(shard) % shards
     take = min(int(limit), n)
+    if take * shards > n:
+        take = max(1, (n + shards - 1) // shards)
     hour = int(epoch_s) // 3600
-    stride = take * shards
-    offset = (hour * stride + shard * take) % n
-    window = [slugs[(offset + i) % n] for i in range(take)]
-    return offset, window
+    stride = min(take * shards, n)
+    rot = (hour * stride) % n
+    rotated = slugs[rot:] + slugs[:rot]
+    start = shard * take
+    if start >= n:
+        return start, []
+    window = rotated[start : start + take]
+    return start, window

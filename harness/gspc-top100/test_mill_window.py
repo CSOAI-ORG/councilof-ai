@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
-from mill_window import chat_capable_slugs, select_window  # noqa: E402
+from mill_window import chat_capable_slugs, millable_slugs, select_window  # noqa: E402
 
 
 def test_empty_fleet_empty_window() -> None:
@@ -65,10 +65,60 @@ def test_chat_capable_skips_embed_and_gguf() -> None:
     assert w[0] == "Qwen/Qwen3-8B"
 
 
+def test_shards_do_not_overlap_when_fleet_smaller_than_stride() -> None:
+    slugs = [f"m/{i}" for i in range(320)]
+    seen: list[str] = []
+    for shard in range(20):
+        _, w = select_window(slugs, 30, 1_780_000_000, shard=shard, shards=20)
+        seen.extend(w)
+    assert len(set(seen)) == len(seen), "shards must not overlap when n < limit*shards"
+    assert set(seen) == set(slugs)
+
+
+def test_chat_capable_skips_quant_and_base() -> None:
+    """6 Sep mill (0): GPTQ/AWQ/FP8/NVFP4/-Base 400 'not served'. Those must
+    not consume the hourly window. What would make this fail: putting a GPTQ
+    slug back in chat_capable_slugs."""
+    models = [
+        {"slug": "Qwen/Qwen2.5-72B-Instruct", "pipeline_tag": "text-generation"},
+        {"slug": "Qwen/Qwen2.5-72B-Instruct-AWQ", "pipeline_tag": "text-generation"},
+        {"slug": "Qwen/Qwen3.5-122B-A10B-GPTQ-Int4", "pipeline_tag": "text-generation"},
+        {"slug": "nvidia/Qwen3.6-35B-A3B-NVFP4", "pipeline_tag": "text-generation"},
+        {"slug": "ornith-ai/Ornith-1.0-35B-FP8", "pipeline_tag": "text-generation"},
+        {"slug": "HuggingFaceTB/SmolLM3-3B-Base", "pipeline_tag": "text-generation"},
+        {"slug": "google/gemma-4-E2B-it-qat-w4a16-ct", "pipeline_tag": "text-generation"},
+        {"slug": "google/gemma-3-27b-it", "pipeline_tag": "text-generation"},
+    ]
+    got = chat_capable_slugs(models)
+    assert got == ["Qwen/Qwen2.5-72B-Instruct", "google/gemma-3-27b-it"]
+    assert "GPTQ" not in "".join(got)
+    assert "AWQ" not in "".join(got)
+    assert "FP8" not in "".join(got)
+    assert "NVFP4" not in "".join(got)
+
+
+def test_millable_skips_already_tried() -> None:
+    models = [
+        {"slug": "a/unmeasured", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {"slug": "b/practiced", "pipeline_tag": "text-generation", "status": "practice-mill"},
+        {"slug": "c/uncheckable", "pipeline_tag": "text-generation", "status": "UNCHECKABLE"},
+        {"slug": "d/awq", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {"slug": "Qwen/Qwen2.5-7B-Instruct-AWQ", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+    ]
+    got = millable_slugs(models)
+    assert got == ["a/unmeasured"]
+    assert "b/practiced" not in got
+    assert "c/uncheckable" not in got
+    assert "Qwen/Qwen2.5-7B-Instruct-AWQ" not in got
+
+
 if __name__ == "__main__":
     test_empty_fleet_empty_window()
     test_window_is_not_always_prefix()
     test_shards_partition_one_hour()
     test_wraps_without_inventing_slugs()
     test_chat_capable_skips_embed_and_gguf()
-    print("test_mill_window: 5 passed")
+    test_shards_do_not_overlap_when_fleet_smaller_than_stride()
+    test_chat_capable_skips_quant_and_base()
+    test_millable_skips_already_tried()
+    print("test_mill_window: 8 passed")

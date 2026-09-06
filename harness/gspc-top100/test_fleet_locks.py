@@ -59,9 +59,52 @@ def test_apply_mill_counts_practice_mill_into_n_measured() -> None:
     assert out["models"][1]["status"] == "UNMEASURED"
 
 
+def test_uncheckable_is_not_n_measured_and_does_not_downgrade() -> None:
+    """UNCHECKABLE is a mill ledger state, not a measurement. n_measured
+    counts practice-mill / MEASURED only. A later 400 must not wipe a
+    practice-mill cell — that would be the land-lock git-zero class."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import apply_mill  # noqa: E402
+    lock = {
+        "n_measured": 2,
+        "models": [
+            {"slug": "a/x", "status": "practice-mill"},
+            {"slug": "b/y", "status": "UNMEASURED"},
+            {"slug": "c/z", "status": "UNMEASURED"},
+        ],
+    }
+    mill = {
+        "as_of": "2026-09-06T18:00:00Z",
+        "rows": [
+            {"slug": "a/x", "status": "UNCHECKABLE", "reason": "HTTP 400"},
+            {"slug": "b/y", "status": "UNCHECKABLE", "reason": "HTTP 400"},
+            {"slug": "c/z", "status": "practice-mill", "n": 1},
+        ],
+    }
+    out = apply_mill(lock, mill)
+    assert out["models"][0]["status"] == "practice-mill"
+    assert out["models"][1]["status"] == "UNCHECKABLE"
+    assert out["models"][2]["status"] == "practice-mill"
+    assert out["n_measured"] == 2
+
+
+def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
+    """A green land-lock that patches the git lock (all UNMEASURED) and
+    uploads it would wipe hub-queue n_measured. The workflow must fetch
+    the hub lock first and refuse to publish on a miss."""
+    yml = (ROOT / ".github/workflows/hf-inference-mill.yml").read_text()
+    assert "csoai/hub-queue" in yml
+    assert "HUB_LOCK_MISS" in yml
+    assert "HUB_LOCK_NOT_PUBLISHED" in yml
+    assert "JSONDecoder" in yml or "raw_decode" in yml
+
+
 if __name__ == "__main__":
     test_hf2200_lock_is_a_real_queue()
     test_kaggle_lock_is_a_real_queue()
     test_workflow_surfaces_inference_fail_in_summary()
     test_apply_mill_counts_practice_mill_into_n_measured()
-    print("test_fleet_locks: 4 passed")
+    test_uncheckable_is_not_n_measured_and_does_not_downgrade()
+    test_workflow_lands_from_hub_queue_not_git_zero()
+    print("test_fleet_locks: 6 passed")

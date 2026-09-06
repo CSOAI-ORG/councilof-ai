@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from mill_window import chat_capable_slugs, select_window  # noqa: E402
+from mill_window import millable_slugs, select_window  # noqa: E402
 
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
@@ -114,7 +114,8 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
     )
     try:
         with urllib.request.urlopen(req, timeout=20) as r:
-            d = json.loads(r.read())
+            raw = r.read()
+        d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
     except urllib.error.HTTPError as e:
         err = e.read()[:300].decode("utf-8", "replace")
         return "UNCHECKABLE", f"HTTP {e.code} {err[:180]}"
@@ -153,7 +154,7 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    slugs = chat_capable_slugs(lock.get("models") or [])
+    slugs = millable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
     shard = int(os.environ.get("MILL_SHARD", "0"))
     shards = int(os.environ.get("MILL_SHARDS", "1"))
@@ -223,7 +224,7 @@ def main() -> int:
             rec["reason"] = answers[0]["raw"] if answers else "no calls"
         else:
             rec["status"] = "practice-mill"
-            rec["accuracy"] = round(hits / len(GOV_ITEMS), 4)
+            rec["accuracy"] = round(hits / len(bank), 4)
         rows.append(rec)
         print(slug, rec["status"], rec.get("accuracy"), rec.get("inference_meta"), rec.get("reason", "")[:80], flush=True)
     blob = {

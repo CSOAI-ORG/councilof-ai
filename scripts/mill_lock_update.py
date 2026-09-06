@@ -6,26 +6,41 @@ import json
 import sys
 from pathlib import Path
 
+MEASURED_STATUSES = frozenset({"practice-mill", "MEASURED"})
+
 
 def apply_mill(lock: dict, mill: dict) -> dict:
     measured = {
         row.get("slug"): row
         for row in mill.get("rows") or []
-        if row.get("status") == "practice-mill" and row.get("slug")
+        if row.get("slug") and row.get("status")
     }
     as_of = mill.get("as_of")
     for m in lock.get("models") or []:
         slug = m.get("slug")
-        if slug in measured:
+        row = measured.get(slug)
+        if not row:
+            continue
+        cur = m.get("status") or "UNMEASURED"
+        st = row.get("status")
+        if cur in MEASURED_STATUSES:
+            continue
+        if st == "practice-mill":
             m["status"] = "practice-mill"
             m["last_mill"] = as_of
-            if measured[slug].get("n") is not None:
-                m["n"] = measured[slug]["n"]
+            if row.get("n") is not None:
+                m["n"] = row["n"]
+        elif st == "UNCHECKABLE":
+            m["status"] = "UNCHECKABLE"
+            m["last_mill"] = as_of
+            reason = row.get("reason") or ""
+            if reason:
+                m["reason"] = reason[:200]
     lock["n_locked"] = len(lock.get("models") or [])
     lock["n_measured"] = sum(
         1
         for m in (lock.get("models") or [])
-        if (m.get("status") or "UNMEASURED") not in ("UNMEASURED", "", None)
+        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
     )
     return lock
 
