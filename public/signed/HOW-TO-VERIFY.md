@@ -150,6 +150,38 @@ binary64**. After JSON parse there is no memory that a field was a Python float.
   fails the same 117. Both report a broken chain that is intact. There is a reference JavaScript
   implementation of Rule A at `scripts/verify-estate.mjs` (335/335); `canon.py` is the reference
   Python implementation of Rule B.
+
+  ### The Rule B signature recipe — established by trial, published so nobody repeats it
+
+  `arena_scoreboard.json` and `eat_compliance_board.json` carry a `signature` block and **publish no
+  `verify`, `sig_input` or `preimage_rule`**. Their rule was worked out by trial on 2026-09-06 and is
+  recorded here because a reimplementer would not guess the last step:
+
+  ```
+  body       = the document with its `signature` member removed
+  content_id = sha256( canon.cjson(body) )                     # Rule B canonicalisation
+  signature  = Ed25519 over the content_id AS ASCII HEX        # <- not the preimage,
+                                                               #    not the digest bytes
+  key        = signature.kid -> did:web:csoai.org#card-attestation-1
+  ```
+
+  The third line is the one that costs an afternoon. Verifying over the preimage fails; verifying
+  over `bytes.fromhex(content_id)` fails; verifying over the 64-character ASCII hex string succeeds.
+
+  **In JavaScript, Rule B needs no special machinery.** Sorted keys, no `\u` escaping, and integral
+  floats rendered as integers is exactly what `JSON.stringify` does natively — so `JSON.stringify`
+  over recursively sorted keys *is* Rule B. Rule A is the one that needs the raw numeric literals
+  preserved. `scripts/verify-estate.mjs` implements both and checks these two artefacts on every run.
+
+  **`gspc-board.signed.json` is different again** and does not need this: it publishes its own
+  `verify` field naming `scripts/gspc-board-verify.mjs`, and that script is now gated in `pr-gates`.
+  Use it rather than reimplementing — the recipe above does not apply to it.
+
+  **Why this lives here and not on the artefacts.** Adding a `verify` field *inside* the `signature`
+  block would be signature-safe — the preimage excludes that block, and the `content_id` is provably
+  unchanged by it. But both files are **producer artefacts**, and the standing rule is that producer
+  artefacts are never hand-edited: the next producer run would overwrite it. The durable fix is a
+  change to the producer in `harness/arena/`, which is not this lane's to make.
 - A Python-only dump of a board payload can still match Rule B **if** those
   fields are JSON ints, not floats.
 
