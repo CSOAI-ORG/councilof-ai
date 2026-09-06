@@ -33,15 +33,15 @@ const REGIMES: { name: string; detail: string }[] = [
 ];
 
 export default function CobolBridge() {
-  useEffect(() => { document.title = "CobolBridge — legacy system to signed evidence | CSOAI"; }, []);
+  useEffect(() => { document.title = "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI"; }, []);
   return (
     <div className="min-h-screen bg-white">
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-20">
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(720px 380px at 82% -12%, rgba(45,212,191,.22), transparent 60%)" }} />
         <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Evidence rail · in build · not a live mill</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">From a COBOL copybook to signed evidence — not a bond</h1>
+          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">Layer-0 MCP · councilof.ai/cobol · not cobolbridge.pages.dev</p>
+          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">COBOL Bridge — Council of AI Layer-0 MCP</h1>
           <p className="mt-5 max-w-3xl text-lg text-emerald-50/90">
             Banks and insurers modernizing legacy COBOL still need lineage they can show a supervisor. The migration can emit that lineage. This on-ramp is <strong>in build</strong> — <code>cobolbridge.ai</code> apex is HTTP 522 (Cloudflare origin timeout). Read <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="underline decoration-emerald-400/60 underline-offset-2 hover:text-white">SPEC.md</a>. Council of AI turns published lineage into an independent, Ed25519-signed measurement pack when a signed card exists. This is not a tokenized market and not a rating. We do not certify.
           </p>
@@ -136,15 +136,42 @@ export default function CobolBridge() {
         </div>
       </section>
 
+
+      {/* PRICING — Revenue draft 6 Sep 2026: named £79 only; Coming — Paddle; never Stripe on this door */}
+      <section className="max-w-6xl mx-auto px-6 py-14">
+        <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-700/80">pricing · named only</p>
+        <h2 className="mt-2 text-2xl font-bold text-gray-900">Free tier and Pro — human desk Coming — Paddle</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl border border-gray-200 p-5">
+            <div className="font-bold text-gray-900">Free: 10 calls/day</div>
+            <p className="mt-2 text-sm text-gray-600">Layer-0 MCP free tier on this door. Measurement, not certification.</p>
+          </div>
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <div className="font-bold text-emerald-950">Pro: £79/mo + signed root inclusion</div>
+            <p className="mt-2 text-sm text-emerald-900/90">Named Pro only — do not invent other £ amounts. Never a certificate. Never a CSGA partnership.</p>
+          </div>
+        </div>
+        <p className="mt-4 max-w-3xl text-sm text-gray-700">
+          <strong>Human paid desk:</strong> Coming — Paddle when wired. Never Stripe on this door.
+        </p>
+        <p className="mt-2 max-w-3xl text-sm text-gray-700">
+          <strong>Agents:</strong> Agents are first-class readers of /api/gspc, /root.json, and /api/xrpl.
+        </p>
+        <p className="mt-2 max-w-3xl text-xs text-gray-500">
+          Do not link buy.stripe or cobolbridge.pages.dev checkout from councilof.ai/cobol/. MEOK/Infra own pages.dev.
+        </p>
+      </section>
+
       {/* SECTION 5 — CTA */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 sm:p-10">
           <h2 className="text-2xl font-bold text-emerald-950">Bring us your migration</h2>
           <p className="mt-2 max-w-2xl text-emerald-900/90">
-            If you are modernizing a COBOL core under DORA, Basel III/IV, SOX or Solvency II, the lineage you have to produce anyway can become continuous measurement snapshots. Talk to us about the on-ramp. Verify is free; a grade is never sold; there are no public prices. We do not certify.
+            If you are modernizing a COBOL core under DORA, Basel III/IV, SOX or Solvency II, the lineage you have to produce anyway can become continuous measurement snapshots. Human paid desk: Coming — Paddle when wired. Never Stripe on this door. Free: 10 calls/day. Pro: £79/mo + signed root inclusion. Verify is free; a grade is never sold. We do not certify.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/contact" className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-500">Contact — enterprise →</a>
+            <span className="rounded-xl bg-emerald-600/80 px-5 py-2.5 text-sm font-bold text-white" aria-disabled="true">Coming — Paddle</span>
+            <a href="/contact" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Enquiry — enterprise →</a>
             <a href="https://github.com/CSOAI-ORG/cobol-bridge-mcp/blob/main/SPEC.md" target="_blank" rel="noopener" className="rounded-xl border border-emerald-400/50 px-5 py-2.5 text-sm font-semibold text-emerald-800 hover:bg-white/60">Open SPEC.md (in build) →</a>
           </div>
         </div>
