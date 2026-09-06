@@ -1,0 +1,26 @@
+# The full stranger-verification, on a schedule rather than on every pull request.
+#
+# WHY IT IS NOT IN pr-gates. Verifying all 335 cards costs ~337 requests to councilof.ai. The v3
+# rules cap self-probes at 20/hour on the Cloudflare free tier, so running the full set per-PR
+# breached the budget by ~17x. The PR gate samples 15 cards, which is enough to catch a
+# canonicalisation regression (117 of 335 cards carry a whole-number float, so any small sample
+# hits one). This job carries the complete claim: 335/335, once a day.
+name: Stranger verification (full)
+
+on:
+  schedule:
+    - cron: "40 5 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20" }
+      # An unreachable host exits CANNOT-RUN (0 under CI), not FAIL: a network flake is not a
+      # broken chain, and a gate that reddens for DNS teaches everybody to ignore it.
+      - name: Verify all 335 signed cards from published bytes
+        run: node scripts/verify-estate.mjs
