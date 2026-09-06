@@ -33,7 +33,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -220,7 +220,7 @@ async function handle(request: Request, env: Env, body: Uint8Array | null): Prom
         explainer: `${origin}/pricing`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid: timestamp, then queue. The TSA failing never voids the leaf — it is declared.

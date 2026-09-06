@@ -220,8 +220,15 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     expect(res.status).toBe(402);
     const body = (await res.json()) as { csoai?: { not_paid_reason?: string } };
     expect(body.csoai?.not_paid_reason).toBeTruthy();
-    // and a caller who presented nothing gets the plain challenge, with no verdict invented
-    const plain = (await (await call()).json()) as Record<string, unknown>;
-    expect(plain.csoai).toBeUndefined();
+    // and a caller who presented nothing gets the plain challenge, with no verdict invented.
+    //
+    // `csoai` is no longer undefined on that path: every 402 now carries `csoai.offer_receipt`,
+    // which says whether the door signed its offers and how to check them (x402 offer-receipt
+    // extension). That is provenance about a signature, not a verdict about a caller — so the
+    // invariant this test defends is stated as what it always meant: NOTHING here says anything
+    // about a payment that was never presented.
+    const plain = (await (await call()).json()) as { csoai?: Record<string, unknown> };
+    expect(plain.csoai?.not_paid_reason).toBeUndefined();
+    expect(Object.keys(plain.csoai ?? {})).toEqual(["offer_receipt"]);
   });
 });

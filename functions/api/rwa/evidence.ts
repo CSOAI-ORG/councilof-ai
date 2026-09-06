@@ -26,7 +26,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -307,7 +307,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const payment = preview ? { ok: false as const, reason: "preview" } : await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 
   if (!preview && !payment.ok) {
-    return paymentRequiredResponse(
+    return paymentRequiredResponseSigned(
       buildPaymentRequiredV2({
         resourceUrl,
         description,
@@ -333,6 +333,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
           catalog: `${origin}/api/x402`,
         },
       }),
+      env,
     );
   }
 

@@ -218,7 +218,7 @@ describe("attachOffers — the one call every door makes", () => {
     expect((out.extensions as Record<string, unknown>)[OFFER_RECEIPT_EXTENSION]).toBeUndefined();
     const side = (out.csoai as { offer_receipt: { signed: boolean; reason: string; spec_commit: string } }).offer_receipt;
     expect(side.signed).toBe(false);
-    expect(side.reason).toMatch(/BOARD_SIGN_KEY_PKCS8_B64 absent/);
+    expect(side.reason).toMatch(/no BOARD_SIGN_KEY_PKCS8_B64 is set/);
     expect(side.spec_commit).toBe(OFFER_RECEIPT_SPEC_SHA);
   });
 

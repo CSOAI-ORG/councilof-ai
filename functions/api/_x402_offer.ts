@@ -218,10 +218,10 @@ export async function attachOffers(
   });
 
   if (!pkcs8b64) {
-    return withSidecar(null, sidecar(false, "BOARD_SIGN_KEY_PKCS8_B64 absent in Pages env — this 402 carries no signed offer"));
+    return withSidecar(null, sidecar(false, "no BOARD_SIGN_KEY_PKCS8_B64 is set in the Pages environment, so this 402 carries no signed offer"));
   }
   if (!resourceUrl) {
-    return withSidecar(null, sidecar(false, "no resource.url on the PaymentRequired — an offer must name the resource it commits to"));
+    return withSidecar(null, sidecar(false, "the PaymentRequired carries no resource.url, and an offer must name the resource it commits to"));
   }
   try {
     const offers: SignedOffer[] = [];
