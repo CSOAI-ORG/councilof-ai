@@ -21,6 +21,22 @@ https://api.deps.dev/v3alpha/systems/npm/packages/<pkg>/versions/<v>:dependents
 gh api -X GET search/code -f q='<pkg>' -f per_page=100 -f page=N   # then group by repo owner
 ```
 
+## PyPI — the same question, and one honest gap
+
+| Package | PyPI | deps.dev dependents |
+|---|---|---|
+| `csoai` | **200**, v0.2.2, 6 releases | **0** — direct 0, indirect 0 |
+| `csoai-gspc` | **200**, v0.2.20260905, 2 releases | **NOT INDEXED for that version** |
+| `csoai-gspc-mcp` | **404** | npm only |
+| `csoai-governance` | **404** | npm only |
+
+`csoai-gspc` is the package the grant packs tell a reader to `pip install`. It exists and resolves,
+but deps.dev returns *dependents not found* for its current version. **That is UNMEASURED, not
+zero** — absent is not the same as none, and this file does not round it down to a convenient 0.
+
+Two of the four names 404 on PyPI entirely: they are npm packages and must never be written as
+`pip install`.
+
 ## Why each instrument is trusted
 
 A zero is only worth reporting if the instrument can produce a non-zero.
@@ -31,6 +47,12 @@ A zero is only worth reporting if the instrument can produce a non-zero.
 | | `left-pad` | **19,156** |
 | | `@modelcontextprotocol/sdk` | **125** |
 | GitHub code search | a string that cannot exist | **0** |
+| deps.dev (PyPI) | `requests` | **9** — non-zero, so the PyPI side discriminates too |
+
+*Caveat on that last control: I took the last entry in the version list, which is `requests@2.9.2`,
+not the latest release — hence 9 rather than a large number. It establishes that the endpoint
+returns non-zero for PyPI, which is all it is used for here, but it is a weaker control than the
+npm ones and is labelled as such rather than quietly presented as strong.*
 
 So `dependentCount: 0` for our packages is a **measured zero**, not an unindexed package.
 
