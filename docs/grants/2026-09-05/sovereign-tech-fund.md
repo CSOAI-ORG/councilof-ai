@@ -188,3 +188,27 @@ Blog or other publication
 ## Owner line
 
 Create the account at https://apply.sovereign.tech (native account, email confirmation, keep "notification emails" ON) and paste the text above in order. Everything else is done.
+
+## The x402 settlement census, and what it does and does not show
+
+On 6 September 2026 we paid **316** conformant x402 hosts on Base (`eip155:8453`) with correctly
+signed USDC payments and recorded what came back: **100 DELIVERED, 213 REFUSED**, 2 NO_CHALLENGE,
+1 MISMATCH. **104 of the 316 rows carry an on-chain settlement transaction hash**, and **13 hosts
+recorded a settlement and still delivered nothing** (0.193 USDC).
+
+Verifiable without asking us. Taking the earliest settlement in the dataset,
+`0x01f5646ebaa2f705b3e94cd9d4733399fc404c1166c8415d9ee53aea81c0b626`, an `eth_getTransactionReceipt`
+against `mainnet.base.org` returns **block 50943667, status SUCCESS**, `to`
+`0x833589fcd6edb6e08f4c7c32d4f71b54bda02913` — the USDC contract on Base. Every other row's hash
+checks the same way.
+
+Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census>
+
+**This is expenditure, not income.** Total spend **1.3398 USDC**, every cent of it ours. Paying
+other people is a cost. Our own `/api/revenue` reports `one_number.all_time` = **0** distinct
+non-self payers (status MEASURED) and `settled_usdc.count` = **null** (UNMEASURED). We have never
+been paid by a stranger, and this application does not imply otherwise.
+
+**What it is not:** not a ranking, not a recommendation, and no host is named. REFUSED is not proof
+of bad faith — a host may rate-limit, require an account, or have changed terms between the
+challenge and the retry. One purchase per host, at one moment: a single refusal is not a pattern.
