@@ -111,7 +111,7 @@ export function readRedirects(root) {
   return m;
 }
 
-if (SELFTEST) {
+if (SELFTEST && process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let bad = 0, CASES = 0;
   const must = (label, cond) => { CASES++; if (!cond) { console.error(`✖ selftest: ${label}`); bad++; } };
   const files = new Set(["/a.svg", "/page.html", "/dir/index.html"]);
@@ -133,6 +133,13 @@ if (SELFTEST) {
   console.log(`✓ link-gate selftest: ${CASES}/${CASES} — catches the dead link it was written for, passes what we serve`);
   process.exit(0);
 }
+
+// Importing this file must be side-effect free: the selftest above and the sweep below both run
+// only when this is the process entry point. Without this guard a test that wants isServed()
+// gets the whole sweep — and an exit(2) — the moment it imports, which is what happened the
+// first time anything tried.
+const IS_MAIN = process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (!IS_MAIN) { /* imported for its helpers */ } else {
 
 if (!existsSync(DIR)) { console.error(`link-gate: no such tree ${DIR} — build first.`); process.exit(2); }
 
@@ -184,3 +191,5 @@ if (stale) {
   process.exit(0);
 }
 console.log(`✓ link-gate: ${links} same-origin link(s) across ${scanned} published JSON file(s) all resolve to something we serve`);
+
+}
