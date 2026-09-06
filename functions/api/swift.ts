@@ -16,10 +16,64 @@ const json = (body: unknown, status = 200) =>
     },
   });
 
-type Row = { id: string; name: string; status: string; artifact_url: string | null };
+type Row = {
+  id: string;
+  name: string;
+  status: string;
+  artifact_url: string | null;
+  source?: string[];
+};
+
+/**
+ * Recount the tape rather than read its header, and give each row its own n.
+ *
+ * Every count this endpoint served came off the tape's header, and `n_measured` was the
+ * literal `0`. A typed zero cannot rise: if a row ever reached MEASURED the endpoint
+ * would still have said none had. And a header nobody recounts is the same trust the
+ * `header_agrees` blocks on /api/state exist to withdraw.
+ *
+ * A row's n is the number of PUBLIC SOURCES that name it and resolve in the tape's own
+ * `sources` map. A source key with no entry is UNCHECKABLE and is not counted — absent
+ * evidence is never counted as evidence. n stays far below 30 on every row, so every row
+ * is UNMEASURED, which is first-class and is what the card should say.
+ */
+export function deriveSwiftCounts(rows: Row[], sources: Record<string, unknown>) {
+  const byStatus: Record<string, number> = {};
+  const perRow = rows.map((r) => {
+    const keys = Array.isArray(r.source) ? r.source : [];
+    const resolved = keys.filter((k, i) => k in sources && keys.indexOf(k) === i);
+    const unresolved = keys.filter((k) => !(k in sources));
+    const st = String(r.status || "UNCHECKABLE").toUpperCase();
+    byStatus[st] = (byStatus[st] ?? 0) + 1;
+    return {
+      id: r.id,
+      status: st,
+      n: resolved.length,
+      n_unit: "distinct public sources naming this bank, resolved in sources{}",
+      sources_unresolvable: unresolved.length,
+      quotable: resolved.length >= 30,
+      unmeasured:
+        resolved.length >= 30
+          ? []
+          : [`n=${resolved.length} below the quotable threshold of 30`],
+    };
+  });
+  return {
+    producer: "functions/api/swift.ts → deriveSwiftCounts(rows[], sources{})",
+    n: rows.length,
+    n_measured: byStatus.MEASURED ?? 0,
+    n_live: byStatus.LIVE ?? 0,
+    n_committed: byStatus.COMMITTED ?? 0,
+    n_discovered: byStatus.DISCOVERED ?? 0,
+    by_status: byStatus,
+    per_row: perRow,
+    rows_with_no_resolvable_source: perRow.filter((r) => r.n === 0).length,
+  };
+}
 
 export const onRequestGet: PagesFunction = async () => {
   const t = tape as {
+    sources: Record<string, unknown>;
     schema: string;
     n: number;
     n_live: number;
@@ -27,22 +81,40 @@ export const onRequestGet: PagesFunction = async () => {
     n_discovered: number;
     status_all: string;
     as_of: string;
-    sources: unknown;
     universe_note: string;
     honest_count_statement: string;
     supersedes: string;
     rows: Row[];
   };
+  const d = deriveSwiftCounts(t.rows, (t.sources ?? {}) as Record<string, unknown>);
   return json({
     schema: t.schema,
     kind: "reader",
     writes_board: false,
     supersedes: t.supersedes,
-    n: t.n,
-    n_measured: 0,
-    n_live: t.n_live,
-    n_committed: t.n_committed,
-    n_discovered: t.n_discovered,
+    // Derived from rows[], never read off the header and never typed.
+    n: d.n,
+    n_measured: d.n_measured,
+    n_live: d.n_live,
+    n_committed: d.n_committed,
+    n_discovered: d.n_discovered,
+    per_card_n: d.per_row,
+    counts_producer: d.producer,
+    header_agrees: {
+      producer: "functions/api/swift.ts → tape header vs rows[] recounted here",
+      header: { n: t.n, n_live: t.n_live, n_committed: t.n_committed, n_discovered: t.n_discovered },
+      agrees:
+        t.n === d.n &&
+        t.n_live === d.n_live &&
+        t.n_committed === d.n_committed &&
+        t.n_discovered === d.n_discovered,
+      note: "If agrees is false the tape is internally inconsistent and neither set is quotable.",
+    },
+    recomputability:
+      "Each row's n is the count of public sources in sources{} that name it. Fetch this " +
+      "endpoint, resolve each row's source keys against sources{}, and you get the same n. " +
+      "n_measured is counted from rows[].status, so it rises when a row does — it is not a " +
+      "typed zero.",
     status_all: t.status_all,
     as_of: t.as_of,
     universe_note: t.universe_note,
