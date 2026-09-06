@@ -137,6 +137,47 @@ def test_roberta_base_is_millable() -> None:
     assert "HuggingFaceTB/SmolLM3-3B-Base" not in chat_capable_slugs(models)
 
 
+def test_retry_uncheckable_wrong_mask_payload() -> None:
+    """xlm-roberta UNCHECKABLE on [MASK] must re-enter the window so <mask> can 200."""
+    models = [
+        {
+            "slug": "FacebookAI/xlm-roberta-base",
+            "pipeline_tag": "fill-mask",
+            "status": "UNCHECKABLE",
+            "reason": 'HTTP 400 {"error":"No mask_token (<mask>) found on the input"}',
+        },
+        {
+            "slug": "intfloat/multilingual-e5-base",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "reason": "SentenceSimilarityPipeline.__call__() missing 1 required positional argument: 'sentences'",
+        },
+        {
+            "slug": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 not served",
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 not a chat model",
+        },
+        {
+            "slug": "Qwen/Qwen2.5-7B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "practice-mill",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "FacebookAI/xlm-roberta-base" in got
+    assert "intfloat/multilingual-e5-base" in got
+    assert "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF" not in got
+    assert "Qwen/Qwen3-8B" not in got
+    assert "Qwen/Qwen2.5-7B-Instruct" not in got
+
+
 def test_millable_includes_embed_and_fill_mask() -> None:
     """Chat mill 400s MiniLM; hf-inference similarity 200. Those slugs
     must enter the window or n_measured cannot leave the chat-only 96."""
@@ -202,8 +243,9 @@ if __name__ == "__main__":
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
     test_roberta_base_is_millable()
+    test_retry_uncheckable_wrong_mask_payload()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 13 passed")
+    print("test_mill_window: 14 passed")

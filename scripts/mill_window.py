@@ -117,22 +117,31 @@ def route_kind(tag: str, slug: str = "") -> str:
     return "try-chat-then-feature"
 
 
+RETRY_REASON = ("mask_token", "sentences", "missing 1 required")
+RETRY_TAGS = FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
+
+
 def millable_slugs(models: list[dict]) -> list[str]:
-    """UNMEASURED slugs that can 200. GGUF/GPTQ/FP8 stay out of the window
-    (they 400 and ate the 34048153790 shards). roberta-base is millable."""
-    skip = {
-        m.get("slug")
-        for m in models
-        if m.get("slug") and (m.get("status") or "UNMEASURED") in ALREADY_TRIED
-    }
+    """UNMEASURED, plus UNCHECKABLE rows that failed a wrong payload
+    ([MASK] vs <mask>, similarity missing sentences). Not GGUF/GPTQ."""
     out: list[str] = []
     for m in models:
         slug = m.get("slug")
-        if not slug or slug in skip:
+        if not slug or _unserved_weight_pack(slug):
             continue
-        if _unserved_weight_pack(slug):
+        st = m.get("status") or "UNMEASURED"
+        if st in ("practice-mill", "MEASURED"):
             continue
-        out.append(slug)
+        if st == "UNMEASURED":
+            out.append(slug)
+            continue
+        if st != "UNCHECKABLE":
+            continue
+        reason = m.get("reason") or ""
+        tag = m.get("pipeline_tag") or ""
+        name = slug.lower().rsplit("/", 1)[-1]
+        if any(s in reason for s in RETRY_REASON) or tag in RETRY_TAGS or name.endswith("-base"):
+            out.append(slug)
     return out
 
 
