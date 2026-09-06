@@ -1,0 +1,115 @@
+{
+  "card": {
+    "as_of": "2026-09-06T14:18:45Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL:arbitrum",
+      "symbol": "BUIDL",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "address": "0xa6525ae43edcd03dc08e775774dcabd3bb925872",
+      "block": 502366273,
+      "block_hash": "0x9f70f2769b675bc860619999e2bce76eb4a6d690c2e44a39d3a88b0d54f7c3b4",
+      "block_time": "2026-09-06T14:18:45Z",
+      "rpc": "arbitrum-one-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "symbol": "BUIDL",
+        "decimals": 6,
+        "totalSupply": 8557321890000,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0xdbf6db49066784a69244d3b33cf44c25ec86c0f7"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "fa9a25b7b92bef4c7998a2947dcbc790034487768cf0c0e91796ee09d6e83e2c",
+        "bytes": 9748,
+        "url": "/archive/proofs/eip1186/fa9a25b7b92bef4c.json",
+        "rpc": "arbitrum-one-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+          "storageHash": "0x76a5c8274428ad2e75d8c0e2549e0cb052058b692100e78d8ba881e0550a92f6",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xdbf6db49066784a69244d3b33cf44c25ec86c0f7",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 1
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 502366273 on arbitrum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "27b0af09d196ae8ab2c55ba6778b54df38206393374b5f5983b58ac966f34074",
+    "sig_ed25519": "55bcdc2f1b99060193bd6cfe03a7022692711ff8738514a11221a131d77bb1dbb8beec917e4cd8811e03822589c7599e06f25fd29e4f5a566cfec45b24c7e007",
+    "source_urls": [
+      "https://arbitrum-one-rpc.publicnode.com",
+      "https://arbiscan.io/token/0xa6525ae43edcd03dc08e775774dcabd3bb925872"
+    ],
+    "subject": "evm:BUIDL:arbitrum permission state at block 502366273",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-state",
+      "subject:BUIDL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "5798b8059111180377fed70be1ebaa9c256d9081281b4dda7673f3ff79a0c1eb",
+    "f9bfd1957f224af470b6697175f4ba6e26f25a150fcb3ecea92dd9ee4b16a05f",
+    "b45d75f48408b4050772734ba173cfab9129d2f1ace370eec3effc52b7664bb8",
+    "83341840630f8b4eb5e09052649735d9416f8aa87283a29b06f26e2280b7a0f9",
+    "8ecbf0f7c55d3b620fc1f92f8aa0886640d1c1d42917a83187322dc35d5686a7",
+    "2485989acc0deb348c00ac8c1bd3890d1d6dc324066e97bb14e07781ae5be19b",
+    "9c6f59e41fe5055cded467be27caa8ae96f73a817eba960e12ad24f0db2edb34",
+    "ee717dea1ae0269fb7165a69d44cf5485a9bdc9e1a84c86c9b48a6ec926e8eb3"
+  ]
+}

@@ -1,73 +1,64 @@
 {
-  "kind": "csoai.root-witness-pointer/v0",
-  "as_of": "2026-09-06T04:54:04Z",
-  "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes \u2014 not certification, not endorsement, not a rank sale. Never mint a token.",
-  "live_root": {
-    "url": "https://councilof.ai/root.json",
-    "also": "https://councilof.ai/api/root",
-    "sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
-    "bytes": 14446,
-    "merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
-    "card_count": 166,
-    "as_of": "2026-09-06T04:29:27Z"
-  },
-  "corpus_scope": {
-    "relationship": "SEPARATE_CORPORA",
-    "public_root_count": 166,
-    "public_root_sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
-    "signed_card_count": 335,
-    "signed_card_id_overlap": 0,
-    "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
-    "note": "The 166 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
-  },
-  "witness_sidecar": {
-    "url": "https://councilof.ai/interop/root-witness-latest.json",
-    "path": "public/interop/root-witness-latest.json",
-    "status": "PUBLISHED",
-    "dated_copy": "public/interop/root-witness-2026-09-06-e02c41de.json"
-  },
-  "drift": {
-    "status": "MATCH",
-    "checked_at": "2026-09-06T04:54:04Z",
-    "checked_against": "https://councilof.ai/root.json",
-    "witness_artifact_sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
-    "live_root_sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
-    "witness_artifact_merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
-    "live_root_merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
-    "live_root_bytes": 14446,
-    "match_sha256": true,
-    "match_merkle_root": true,
-    "reason": "live root.json bytes and merkle_root equal the witnessed artifact (e02c41de / e05a0fc1); MATCH is an observation at checked_at, not a standing all-clear \u2014 re-check before treating as current",
-    "history": [
-      {
-        "status": "DRIFTED",
-        "checked_at": "2026-09-06T04:29:35Z",
-        "live_root_sha256": "abc7e8a59ebad0f34acfdcafa75f28f9e45e2c7e0aa880438a645f6cb4ca4e4c",
-        "witness_artifact_sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
-        "note": "historical DRIFTED observation retained when pointer refreshed to MATCH"
-      }
-    ]
-  },
-  "witness_status_observed_at": "2026-09-06T04:29:33Z",
-  "witnesses": {
-    "rekor": "WITNESSED",
-    "ots": "STAMPED_PENDING_BITCOIN",
-    "eas_base": "NOT_YET",
-    "xrpl_memo": "NOT_YET"
-  },
-  "hard_stops": [
-    "Do not invent an .ots file or fake Rekor UUID for current live root.",
-    "Do not claim the published OTS/Rekor verify current live root bytes.",
-    "Do not modify signed public/root.json in this PR."
-  ],
-  "conflict": {
-    "status": "NONE",
-    "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
-    "as_of": "2026-09-06T04:29:27Z",
-    "merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
-    "sidecars_scanned": 15,
-    "conflicts": [],
-    "byte_variants": [],
-    "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
-  }
+ "kind": "csoai.root-witness-pointer/v0",
+ "as_of": "2026-09-06T14:21:35Z",
+ "note": "Timestamped pointer for the witnessed root. Drift is an observation at checked_at, not a standing all-clear. Existence/time of bytes — not certification, not endorsement, not a rank sale. Never mint a token.",
+ "live_root": {
+  "url": "https://councilof.ai/root.json",
+  "also": "https://councilof.ai/api/root",
+  "sha256": "78f87af321c8cc4e1b215c045d3228fb3332735d485fdac7698902bbb0735ccd",
+  "bytes": 14518,
+  "merkle_root": "27c96822bf79476cecb2a026481ff93ed3d0b21c4290766602025d53b647304b",
+  "card_count": 167,
+  "as_of": "2026-09-06T14:21:30Z"
+ },
+ "corpus_scope": {
+  "relationship": "SEPARATE_CORPORA",
+  "public_root_count": 167,
+  "public_root_sha256": "78f87af321c8cc4e1b215c045d3228fb3332735d485fdac7698902bbb0735ccd",
+  "signed_card_count": 335,
+  "signed_card_id_overlap": 0,
+  "ots_covers": "PUBLIC_ROOT_BYTES_ONLY",
+  "note": "The 167 public-root leaves and 335 separately indexed signed cards are separate corpora with 0 identifier overlap. This root and its OTS proof do not anchor the signed-card index."
+ },
+ "witness_sidecar": {
+  "url": "https://councilof.ai/interop/root-witness-latest.json",
+  "path": "public/interop/root-witness-latest.json",
+  "status": "PUBLISHED",
+  "dated_copy": "public/interop/root-witness-2026-09-06-78f87af3.json"
+ },
+ "drift": {
+  "status": "DRIFTED",
+  "checked_at": "2026-09-06T14:21:35Z",
+  "checked_against": "https://councilof.ai/root.json",
+  "witness_artifact_sha256": "78f87af321c8cc4e1b215c045d3228fb3332735d485fdac7698902bbb0735ccd",
+  "live_root_sha256": "e02c41de13a6c9e64b43cb26e3febea27d98cb0652ad8bfb429a49b41c4989a6",
+  "witness_artifact_merkle_root": "27c96822bf79476cecb2a026481ff93ed3d0b21c4290766602025d53b647304b",
+  "live_root_merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
+  "live_root_bytes": 14446,
+  "match_sha256": false,
+  "match_merkle_root": false,
+  "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
+ },
+ "witness_status_observed_at": "2026-09-06T14:21:34Z",
+ "witnesses": {
+  "rekor": "WITNESSED",
+  "ots": "STAMPED_PENDING_BITCOIN",
+  "eas_base": "NOT_YET",
+  "xrpl_memo": "NOT_YET"
+ },
+ "hard_stops": [
+  "Do not invent an .ots file or fake Rekor UUID for current live root.",
+  "Do not claim the published OTS/Rekor verify current live root bytes.",
+  "Do not modify signed public/root.json in this PR."
+ ],
+ "conflict": {
+  "status": "NONE",
+  "rule": "equal as_of + unequal merkle_root among this publisher's witnessed roots = CONFLICT; a reader must treat neither as current",
+  "as_of": "2026-09-06T14:21:30Z",
+  "merkle_root": "27c96822bf79476cecb2a026481ff93ed3d0b21c4290766602025d53b647304b",
+  "sidecars_scanned": 16,
+  "conflicts": [],
+  "byte_variants": [],
+  "limit": "sees only roots this publisher witnessed and kept; independent witnesses cover the hidden-root case"
+ }
 }
