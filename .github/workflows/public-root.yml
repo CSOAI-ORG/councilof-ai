@@ -195,15 +195,36 @@ jobs:
           # and let it auto-merge once `gates` passes. Same bytes, same protection, and
           # the tree is never thrown away because the branch outlives the run.
           echo "direct push rejected — routing the signed tree through a pull request"
-          branch="public-root/$(date -u +%Y%m%dT%H%M%SZ)"
-          if ! git push origin "HEAD:refs/heads/${branch}"; then
+          # ONE branch, not one per run. A timestamped branch per hour banks 24 stranded
+          # branches and 24 pull requests a day, and only the newest is worth landing —
+          # each tree already contains everything the previous one did. A single
+          # force-updated branch always holds the LATEST signed tree, so whoever lands it
+          # lands the current root, and there is exactly one thing to look at.
+          branch="public-root/pending"
+          if ! git push --force origin "HEAD:refs/heads/${branch}"; then
             echo "HALT: could not even push the publish branch ${branch}" >&2
             exit 1
           fi
+          echo "signed tree banked on ${branch} (force-updated to the latest)"
+          # Reuse the open PR if there is one; a force-push already updated it in place.
+          existing=$(gh pr list --head "${branch}" --state open --json url --jq '.[0].url' 2>/dev/null || true)
+          if [ -n "${existing:-}" ]; then
+            echo "existing publish PR updated in place: ${existing}"
+            echo "pushed=pr" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           url=$(gh pr create --base master --head "${branch}" \
-            --title "public-root: adapters → cards → merkle ($(date -u +%Y-%m-%dT%H:%MZ))" \
-            --body "Automated publication of the signed tree. Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check — a push creates a commit no check has run on yet. Auto-merges when \`gates\` passes." \
-            2>&1 | tail -1) || { echo "HALT: could not open the publish PR" >&2; exit 1; }
+            --title "public-root: publish the signed tree (rolling)" \
+            --body "Automated publication of the signed tree, force-updated each run so this PR always carries the LATEST root. Opened as a PR because a direct push to master cannot satisfy the required \`gates\` check — a push creates a commit no check has run on yet. Auto-merges when \`gates\` passes." \
+            2>&1 | tail -1) || {
+              # Stay RED. The tree is safe on the branch, but it is NOT on master and the
+              # root is therefore NOT published. A green tick here would say "published"
+              # about a root nobody can fetch — the same vacuous-check shape as a guard
+              # that passes because it never looked.
+              echo "HALT: tree banked on ${branch} but NOT published — gh pr create needs 'pull-requests: write'" >&2
+              echo "pushed=branch" >> "$GITHUB_OUTPUT"
+              exit 1
+            }
           echo "opened ${url}"
           gh pr merge "${url}" --squash --auto || echo "auto-merge unavailable; ${url} needs a human merge"
           echo "pushed=pr" >> "$GITHUB_OUTPUT"
