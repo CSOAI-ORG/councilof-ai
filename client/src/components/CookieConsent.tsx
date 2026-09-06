@@ -89,18 +89,29 @@ export default function CookieConsent() {
         Essential cookies only by default. Analytics need consent.{" "}
         <a href="/cookie-policy" className="text-primary underline underline-offset-2 hover:opacity-80">Details</a>
       </p>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <button
+          type="button"
           onClick={() => choose("declined")}
-          className="rounded-md border border-primary/40 px-2 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/10"
+          className="rounded-md border border-primary bg-primary px-2 py-1 text-[11px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Essential only
         </button>
         <button
+          type="button"
           onClick={() => choose("accepted")}
-          className="rounded-md border border-primary bg-primary px-2 py-1 text-[11px] font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="rounded-md border border-primary/40 px-2 py-1 text-[11px] font-semibold text-primary transition-colors hover:bg-primary/10"
         >
           Accept analytics
+        </button>
+        <button
+          type="button"
+          onClick={() => choose("declined")}
+          aria-label="Dismiss cookie notice"
+          title="Dismiss — essential cookies only"
+          className="rounded-md px-2 py-1 text-[11px] font-semibold text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          Dismiss
         </button>
       </div>
       </div>

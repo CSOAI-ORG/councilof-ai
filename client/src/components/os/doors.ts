@@ -1,11 +1,12 @@
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 
 /**
- * Council OS doors — six arms only: board · verify · cards · harness · space · assess.
- * Header rail: Board · Verify · Space · Assess · Harness (Cards is a URL mapping, not a tab).
- * AG-UI is presentation only — not a 7th door. Do not add Cobol/Cobalt Bridge as a door.
+ * Council OS doors — board · verify · cards · harness · space · assess · swift (SWIFT census + x402).
+ * Header rail: Board · Verify · Space · Assess · Harness · SWIFT · x402 (Cards is a URL mapping, not a tab).
+ * AG-UI is presentation only. Do not add Cobol/Cobalt Bridge as a door.
+ * Owner stranger-walk 6 Sep 2026: one tab for SWIFT census + x402 doors (verify free).
  */
-export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess";
+export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess" | "swift";
 
 export const DOORS: { id: DoorId; label: string }[] = [
   { id: "board", label: "Board" },
@@ -13,6 +14,7 @@ export const DOORS: { id: DoorId; label: string }[] = [
   { id: "space", label: "Space" },
   { id: "assess", label: "Assess" },
   { id: "harness", label: "Harness" },
+  { id: "swift", label: "SWIFT · x402" },
 ];
 
 export const LOBBY_TO_DOOR: Record<string, DoorId> = {
@@ -25,6 +27,8 @@ export const LOBBY_TO_DOOR: Record<string, DoorId> = {
   ras: "assess",
   assess: "assess",
   harness: "harness",
+  swift: "swift",
+  x402: "swift",
 };
 
 export const DOOR_TO_LOBBY: Record<DoorId, string> = {
@@ -34,6 +38,7 @@ export const DOOR_TO_LOBBY: Record<DoorId, string> = {
   space: "space",
   assess: "measured",
   harness: "harness",
+  swift: "swift",
 };
 
 const TASK_TO_DOOR: Record<string, DoorId> = {

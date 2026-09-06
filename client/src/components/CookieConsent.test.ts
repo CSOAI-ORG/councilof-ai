@@ -73,5 +73,6 @@ describe("cookie consent and the global workspace launcher", () => {
     expect(consent).toContain("Essential only");
     expect(consent).toContain("Accept analytics");
     expect(consent).toContain('href="/cookie-policy"');
+    expect(consent).toContain('aria-label="Dismiss cookie notice"');
   });
 });

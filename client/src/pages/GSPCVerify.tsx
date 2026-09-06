@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
 import { ANCHORING_CLAIM, CURRENT_ROOT_OTS_CLAIM } from "../data/anchoringClaim";
 import { Link } from "wouter";
@@ -16,9 +16,64 @@ import BoardAttestation from "@/components/board/BoardAttestation";
  * prove a published chain.
  */
 
+type PublishedRef = { id: string; url: string };
+
+async function pickPublishedCard(signal?: AbortSignal): Promise<PublishedRef> {
+  // Prefer the signed chain links with a published body; fall back to card_index.
+  // Never invent a body — only URLs the estate actually lists.
+  try {
+    const r = await fetch("/signed/chain.json", { signal, headers: { accept: "application/json" } });
+    if (r.ok) {
+      const j = await r.json();
+      const body = j?.body && typeof j.body === "object" ? j.body : j;
+      const links = Array.isArray(body?.links) ? body.links : [];
+      const published = links.filter(
+        (pos: any) => pos?.body_published === true && typeof pos?.card_url === "string" && pos.card_url,
+      );
+      const pool = published.length ? published : links.filter((pos: any) => typeof pos?.card_url === "string" && pos.card_url);
+      if (pool.length) {
+        const pos = pool[Math.floor(Math.random() * pool.length)];
+        return { id: String(pos.id || pos.card_url), url: pos.card_url };
+      }
+    }
+  } catch {
+    /* fall through to index */
+  }
+  const r2 = await fetch("/signed/card_index.json", { signal, headers: { accept: "application/json" } });
+  if (!r2.ok) throw new Error(`card list unreachable (chain + index HTTP ${r2.status})`);
+  const idx = await r2.json();
+  const cards = Array.isArray(idx?.cards) ? idx.cards : Array.isArray(idx) ? idx : [];
+  const withUrl = cards.filter((c: any) => typeof (c?.card_url || c?.url) === "string");
+  if (!withUrl.length) throw new Error("no published card body listed");
+  const c = withUrl[Math.floor(Math.random() * withUrl.length)];
+  const url = c.card_url || c.url;
+  return { id: String(c.id || c.card || url), url };
+}
+
 export default function GSPCVerify() {
   const [boardData, setBoardData] = useState<any>(null);
   const [mode, setMode] = useState<"estate" | "public-root">("estate");
+  const [seed, setSeed] = useState<string | undefined>(undefined);
+  const [seedNonce, setSeedNonce] = useState(0);
+  const [tryBusy, setTryBusy] = useState(false);
+  const [tryErr, setTryErr] = useState<string | null>(null);
+
+  const tryPublished = useCallback(async () => {
+    setTryBusy(true);
+    setTryErr(null);
+    try {
+      const ref = await pickPublishedCard();
+      const r = await fetch(ref.url, { headers: { accept: "application/json" } });
+      if (!r.ok) throw new Error(`GET ${ref.url} → HTTP ${r.status}`);
+      const raw = await r.text();
+      setSeed(raw);
+      setSeedNonce((n) => n + 1);
+    } catch (e: any) {
+      setTryErr(String(e?.message ?? e));
+    } finally {
+      setTryBusy(false);
+    }
+  }, []);
 
   useEffect(() => {
     document.title = "Verify a signed card — client-side | CSOAI";
@@ -114,8 +169,27 @@ export default function GSPCVerify() {
             against the published keys. Share a permalink and the recipient&apos;s browser re-runs
             the same check on the same bytes.
           </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={() => void tryPublished()}
+              disabled={tryBusy}
+              data-testid="try-published-card"
+              className="min-h-[44px] rounded-lg border border-emerald-400/40 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25 disabled:opacity-40"
+            >
+              {tryBusy ? "Loading…" : "Try a published card"}
+            </button>
+            <span className="text-[12px] text-emerald-100/65">
+              Fetches one leaf from the published chain (or card index) into the box — unaltered.
+            </span>
+          </div>
+          {tryErr && (
+            <p className="mt-2 text-[13px] text-amber-200/90" role="status">
+              Could not load a published card — {tryErr}. Paste still works.
+            </p>
+          )}
           <div className="mt-4 rounded-2xl border border-emerald-500/20 bg-[#05140d] p-6">
-            <RecordVerifyForm variant="dark" />
+            <RecordVerifyForm variant="dark" seed={seed} seedNonce={seedNonce} />
           </div>
         </section>
         )}

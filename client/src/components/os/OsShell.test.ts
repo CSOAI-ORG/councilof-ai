@@ -10,7 +10,7 @@ const launcher = readFileSync(resolve(__dirname, "../../pages/OsLauncher.tsx"), 
 
 describe("OsShell is not the homepage or /os directory", () => {
   it("keeps four tools in the unused shell", () => {
-    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
+    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness", "SWIFT · x402"]);
     expect(OS_TOOLS).toEqual(["board_totals", "get_axis", "verify_card", "list_cards"]);
     expect(shell).not.toMatch(/sov33|SOVOS|lifestyle|GPAI Code/i);
   });

@@ -66,7 +66,7 @@ export default function Leaderboard() {
   const [pinnedKey, setPinnedKey] = useState<Uint8Array | null>(null);
 
   useEffect(() => {
-    document.title = "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI";
+    document.title = "Benchmark corpus — not the governance board | Council of AI";
     setMetaDescription(
       "Not a single 'best AI'. Browse 64 indexed models across 16 benchmark axes: 335 measured cells derived from signed cards out of 1,024 possible pairs. This matrix is not the governance board.",
     );
@@ -108,7 +108,10 @@ function Hero() {
         <p className="font-mono text-[11px] uppercase tracking-[3px] text-emerald-300/70">
           Council of AI · measurement, not certification
         </p>
-        <h1 className="mt-3 text-4xl sm:text-5xl font-black tracking-tight">The Governance Leaderboard</h1>
+        <p className="mt-3 font-mono text-[12px] uppercase tracking-[2px] text-amber-200/80">
+          benchmark corpus — not the governance board
+        </p>
+        <h1 className="mt-2 text-4xl sm:text-5xl font-black tracking-tight">Benchmark corpus leaderboard</h1>
         <p className="mt-5 max-w-3xl text-[15px] leading-relaxed text-emerald-100/85">
           <strong className="text-emerald-200">There is no single &ldquo;best AI&rdquo;.</strong> A model strong on
           one axis is often weak on another; hiding that is the malpractice this board exists to correct. So there is
