@@ -146,21 +146,34 @@ def route_kind(tag: str, slug: str = "") -> str:
 
 
 def live_providers(mapping) -> list[str]:
-    """Parse Hub inferenceProviderMapping (dict or list). Pure. No HTTP."""
+    """Parse Hub inferenceProviderMapping (dict or list). Pure. No HTTP.
+
+    Dict keys are provider ids (together, featherless-ai). `providerId` is
+    the model id on that provider — not a provider name.
+    """
     out: list[str] = []
-    rows: list = []
     if isinstance(mapping, dict):
-        rows = list(mapping.values())
-    elif isinstance(mapping, list):
-        rows = mapping
-    for info in rows:
-        if not isinstance(info, dict):
-            continue
-        if (info.get("status") or "").lower() != "live":
-            continue
-        name = info.get("provider") or info.get("providerId") or ""
-        if name and name not in out:
-            out.append(name)
+        items = mapping.items()
+        for key, info in items:
+            if not isinstance(info, dict):
+                continue
+            if (info.get("status") or "").lower() != "live":
+                continue
+            name = info.get("provider") or key
+            if "/" in str(name):
+                name = key
+            if name and name not in out:
+                out.append(str(name))
+        return out
+    if isinstance(mapping, list):
+        for info in mapping:
+            if not isinstance(info, dict):
+                continue
+            if (info.get("status") or "").lower() != "live":
+                continue
+            name = info.get("provider") or info.get("providerId") or ""
+            if name and "/" not in str(name) and name not in out:
+                out.append(str(name))
     return out
 
 
@@ -188,6 +201,8 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if tag in SKIP_TAGS:
             continue
         if st in ALREADY_TRIED:
+            continue
+        if st == "UNMEASURED" and m.get("unmeasured_reason") == "no live Inference Provider":
             continue
         if st == "UNCHECKABLE":
             if _unserved_weight_pack(slug):

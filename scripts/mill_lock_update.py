@@ -114,6 +114,40 @@ def rebuild_provider_hosted_lock(lock: dict, candidates: list[dict], n: int = 22
     return out
 
 
+def stamp_zero_providers(lock: dict, fetch_live, as_of: str) -> dict:
+    """Record leftover UNMEASURED rows with empty Hub mapping.
+
+    n_measured is not incremented. Empty mapping is not a 200 and not a score.
+    Rows with a live provider stay millable UNMEASURED.
+    """
+    n_zero = 0
+    n_live = 0
+    for m in lock.get("models") or []:
+        if (m.get("status") or "UNMEASURED") != "UNMEASURED":
+            continue
+        slug = m.get("slug")
+        if not slug:
+            continue
+        live = [p for p in (fetch_live(slug) or []) if p]
+        if live:
+            m["providers_live"] = live
+            n_live += 1
+            continue
+        m["providers_live"] = []
+        m["unmeasured_reason"] = "no live Inference Provider"
+        m["zero_provider_as_of"] = as_of
+        n_zero += 1
+    lock["n_unmeasured_zero_provider"] = n_zero
+    lock["n_unmeasured_with_live_provider"] = n_live
+    lock["zero_provider_scan_as_of"] = as_of
+    lock["n_measured"] = sum(
+        1
+        for m in (lock.get("models") or [])
+        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
+    )
+    return lock
+
+
 def apply_dir(lock: dict, root: Path) -> dict:
     for p in sorted(root.rglob("hf_inf_*.json")):
         mill = json.loads(p.read_text())
@@ -121,7 +155,73 @@ def apply_dir(lock: dict, root: Path) -> dict:
     return lock
 
 
+def fetch_live_from_hub(slug: str, token: str) -> list[str]:
+    """Hub inferenceProviderMapping. Empty list means no live provider."""
+    import urllib.parse
+    import urllib.request
+
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from mill_window import live_providers  # noqa: E402
+
+    q = urllib.parse.urlencode({"expand[]": "inferenceProviderMapping"})
+    url = (
+        "https://huggingface.co/api/models/"
+        + urllib.parse.quote(slug, safe="/")
+        + "?"
+        + q
+    )
+    req = urllib.request.Request(
+        url,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "User-Agent": "csoai-mill-zero-provider",
+        },
+    )
+    with urllib.request.urlopen(req, timeout=20) as r:
+        meta = json.loads(r.read())
+    return live_providers(meta.get("inferenceProviderMapping") or {})
+
+
 def main() -> int:
+    if len(sys.argv) >= 2 and sys.argv[1] == "--stamp-zero":
+        import os
+        from datetime import datetime, timezone
+
+        lock_path = Path(sys.argv[2])
+        tok = (os.environ.get("HF_TOKEN") or os.environ.get("HF_INFERENCE_TOKEN") or "").strip()
+        if not tok:
+            print("HF_TOKEN empty — refuse to stamp (would mark live rows as zero)")
+            return 1
+        lock = json.loads(lock_path.read_text())
+        as_of = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        slugs = [
+            m.get("slug")
+            for m in (lock.get("models") or [])
+            if m.get("slug") and (m.get("status") or "UNMEASURED") == "UNMEASURED"
+        ]
+        live_map: dict[str, list[str]] = {}
+        with ThreadPoolExecutor(max_workers=20) as ex:
+            futs = {ex.submit(fetch_live_from_hub, s, tok): s for s in slugs}
+            for fut in as_completed(futs):
+                s = futs[fut]
+                try:
+                    live_map[s] = fut.result()
+                except Exception:
+                    live_map[s] = []
+
+        stamp_zero_providers(lock, lambda slug: live_map.get(slug, []), as_of)
+        lock_path.write_text(json.dumps(lock, indent=2) + "\n")
+        print(
+            "n_measured",
+            lock["n_measured"],
+            "n_zero_provider",
+            lock.get("n_unmeasured_zero_provider"),
+            "n_unmeasured_live",
+            lock.get("n_unmeasured_with_live_provider"),
+        )
+        return 0
     lock_path = Path(sys.argv[1])
     mill_root = Path(sys.argv[2])
     lock = json.loads(lock_path.read_text())

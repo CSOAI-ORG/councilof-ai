@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from mill_window import (  # noqa: E402
     DEFAULT_PROVIDERS,
     chat_capable_slugs,
+    live_providers,
     mill_exit_for_window,
     millable_slugs,
     provider_order,
@@ -152,6 +153,21 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
 
 
+def test_millable_skips_zero_provider_unmeasured() -> None:
+    models = [
+        {"slug": "a/fresh", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {
+            "slug": "b/none",
+            "pipeline_tag": "text-generation",
+            "status": "UNMEASURED",
+            "unmeasured_reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+    ]
+    got = millable_slugs(models)
+    assert got == ["a/fresh"]
+
+
 def test_provider_order_never_defaults_to_hf_inference() -> None:
     assert "hf-inference" not in DEFAULT_PROVIDERS
     assert provider_order(["hf-inference", "featherless-ai"])[0] == "featherless-ai"
@@ -160,6 +176,28 @@ def test_provider_order_never_defaults_to_hf_inference() -> None:
     assert "hf-inference" not in provider_order([])
     assert provider_order([])[0] == "groq"
     assert "nebius" not in DEFAULT_PROVIDERS
+
+
+def test_live_providers_uses_mapping_keys_not_model_ids() -> None:
+    """Hub mapping: key=together, providerId=Qwen/...-Turbo. Mill must
+    call slug:together, not slug:Qwen/...-Turbo."""
+    mapping = {
+        "together": {
+            "status": "live",
+            "providerId": "Qwen/Qwen2.5-7B-Instruct-Turbo",
+            "task": "conversational",
+        },
+        "featherless-ai": {
+            "status": "live",
+            "providerId": "Qwen/Qwen2.5-7B-Instruct",
+            "task": "conversational",
+        },
+        "offline": {"status": "error", "providerId": "x"},
+    }
+    got = live_providers(mapping)
+    assert got == ["together", "featherless-ai"]
+    assert "Qwen/Qwen2.5-7B-Instruct-Turbo" not in got
+    assert provider_order(got)[0] == "together"
 
 
 def test_millable_does_not_respray_provider_policy_fails() -> None:
@@ -268,11 +306,13 @@ if __name__ == "__main__":
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
     test_millable_retries_hf_inference_uncheckable()
+    test_millable_skips_zero_provider_unmeasured()
     test_provider_order_never_defaults_to_hf_inference()
+    test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
     test_millable_drops_image_lora_windows()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 16 passed")
+    print("test_mill_window: 18 passed")

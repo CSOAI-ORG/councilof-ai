@@ -142,6 +142,38 @@ def test_rebuild_keeps_practice_mill_and_prefers_chat() -> None:
     assert all(m["status"] == "UNMEASURED" for m in out["models"][2:])
 
 
+def test_stamp_zero_provider_does_not_invent_n_measured() -> None:
+    """Leftover UNMEASURED with empty Hub mapping are recorded, not scored."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import stamp_zero_providers  # noqa: E402
+
+    lock = {
+        "n_measured": 2,
+        "models": [
+            {"slug": "a/ok", "status": "practice-mill"},
+            {"slug": "a2/ok", "status": "practice-mill"},
+            {"slug": "b/empty", "status": "UNMEASURED"},
+            {"slug": "c/live", "status": "UNMEASURED"},
+        ],
+    }
+
+    def fetch(slug: str):
+        return ["featherless-ai"] if slug == "c/live" else []
+
+    out = stamp_zero_providers(lock, fetch, "2026-09-06T18:00:00Z")
+    assert out["n_measured"] == 2
+    assert out["models"][0]["status"] == "practice-mill"
+    assert out["models"][1]["status"] == "practice-mill"
+    assert out["models"][2]["unmeasured_reason"] == "no live Inference Provider"
+    assert out["models"][2]["providers_live"] == []
+    assert out["models"][2]["status"] == "UNMEASURED"
+    assert out["models"][3]["providers_live"] == ["featherless-ai"]
+    assert "unmeasured_reason" not in out["models"][3]
+    assert out["n_unmeasured_zero_provider"] == 1
+    assert out["n_unmeasured_with_live_provider"] == 1
+
+
 def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     """A green land-lock that patches the git lock (all UNMEASURED) and
     uploads it would wipe hub-queue n_measured. The workflow must fetch
@@ -161,5 +193,6 @@ if __name__ == "__main__":
     test_uncheckable_is_not_n_measured_and_does_not_downgrade()
     test_apply_mill_does_not_persist_429_as_uncheckable()
     test_rebuild_keeps_practice_mill_and_prefers_chat()
+    test_stamp_zero_provider_does_not_invent_n_measured()
     test_workflow_lands_from_hub_queue_not_git_zero()
-    print("test_fleet_locks: 8 passed")
+    print("test_fleet_locks: 9 passed")
