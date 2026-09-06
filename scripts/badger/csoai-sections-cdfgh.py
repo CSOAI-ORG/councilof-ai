@@ -172,20 +172,29 @@ def main() -> None:
     (INTEROP / "x402-receipts-index.json").write_text(json.dumps({
         "schema": "csoai.x402-receipts-index/0.1",
         "as_of": now(),
-        "principle": "Every priced SKU has a staged x402 receipt (settles on Base via PayAI).",
+        # OWNER RULING 2026-09-06: no prices on any page. An amount appears ONLY inside a
+        # resource's own 402 challenge (accepts[].amount) — never in a catalog, never in prose,
+        # never here. The shipped artefact already had its price_usdc fields stripped; this
+        # producer still carried them, so the next run would have put them back on a public
+        # surface. Fixing the artefact without the producer is not fixing it.
+        "principle": "Each SKU below is a paid artefact behind an x402 door. Amounts live only in that door's 402 challenge. Verification is free forever and a grade is never sold.",
         "settlement": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+        # swift-bank-pack is GONE, not silently repriced: /api/swift answers 200 with
+        # kind "reader" — a free census, never a 402 — so there is no door to buy it through.
+        # A SKU whose door does not exist is an offer we cannot honour. Opening a SWIFT door is
+        # a product decision with a deliverable attached; it is not mine to invent, and listing
+        # it meanwhile is the overclaim.
         "skus": [
-            {"sku": "commission-card", "price_usdc": 0.02},
-            {"sku": "evidence-bundle", "price_usdc": 0.50},
-            {"sku": "signed-data-feed", "price_usdc": 1.00},
-            {"sku": "xrpl-asset-evidence", "price_usdc": 0.05},
-            {"sku": "provider-diff-feed", "price_usdc": 1.00},
-            {"sku": "receipts-batch", "price_usdc": 0.25},
-            {"sku": "eu-ai-act-pack", "price_usdc": 0.50},
-            {"sku": "swift-bank-pack", "price_usdc": 0.25},
+            {"sku": "commission-card", "door": "/api/request-attestation"},
+            {"sku": "evidence-bundle", "door": "/api/evidence-bundle?obligation=<id>&subject=<model>&bundle=1"},
+            {"sku": "signed-data-feed", "door": "/api/eunomia-data"},
+            {"sku": "xrpl-asset-evidence", "door": "/api/rwa/evidence"},
+            {"sku": "provider-diff-feed", "door": "/api/feeds/provider-diff"},
+            {"sku": "receipts-batch", "door": "/api/receipts/batch"},
+            {"sku": "eu-ai-act-pack", "door": "/api/evidence-bundle?obligation=article-50|article-53&subject=<model>&bundle=1"},
         ],
     }, indent=2))
-    print(f"  ✓ interop/x402-receipts-index.json (8 priced SKUs)")
+    print(f"  ✓ interop/x402-receipts-index.json (7 SKUs, each with a door; no amounts)")
 
     (INTEROP / "a2a-engine-cards.json").write_text(json.dumps({
         "schema": "csoai.a2a-engine-cards/0.1",
