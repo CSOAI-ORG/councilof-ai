@@ -294,7 +294,7 @@ function walk(dir, out = []) {
     if (e.isDirectory()) {
       if (e.name === "assets" || e.name === "vendor") continue; // hashed bundles/static packs
       walk(full, out);
-    } else if (/\.(html|txt)$/.test(e.name) && !EXCLUDE_PAGES.test("/" + path.relative(DIST, full))) {
+    } else if (/\.(html|txt|svg)$/.test(e.name) && !EXCLUDE_PAGES.test("/" + path.relative(DIST, full))) {
       out.push(full);
     }
   }
@@ -371,7 +371,10 @@ const failures = [];
 for (const file of walk(DIST)) {
   const rel = path.relative(DIST, file);
   const raw = fs.readFileSync(file, "utf8");
-  const text = file.endsWith(".html") ? visibleText(raw) : raw;
+  // .svg joins .html here: an SVG's <title> IS its accessible name and its <text> IS rendered
+  // prose, so a shipped image can carry a banned display string just as a page can. Tag-stripping
+  // is the same operation for both.
+  const text = /\.(html|svg)$/.test(file) ? visibleText(raw) : raw;
   for (const rule of RULES) {
     if (rule.allowOn && rule.allowOn.test("/" + rel)) continue; // retraction-history page
     // Scan EVERY occurrence, not just the first: a page may disclose the retraction in one place
