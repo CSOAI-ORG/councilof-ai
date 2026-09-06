@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://councilof.ai/schema/card-v1.json",
+  "title": "CSOAI public card v1",
+  "description": "Permissionless public-state card — OUTER surface envelope, v1. IDENTICAL to card-v0 except that a v1 card STATES ITS OWN COVERAGE: digest_covers and sig_covers are required, and both are prose the reader can act on rather than a convention they must know. That is the whole reason v1 exists — card-v0 sets additionalProperties:false, so the two fields could not be added to it without a new $id.\n\nPublished under this $id on 2026-09-06 because 941 cards under /cards/ already named it and the URL was 404. Those cards are signed (sig_ed25519) and committed to the public root by a Merkle inclusion proof, so their bytes cannot be edited to point elsewhere — the honest fix is to serve the schema they name. The shape below was DERIVED by reading all 1072 cards in /cards/: 941 declare card-v1 and every one of those carries both new fields; the other 131 declare card-v0 and carry neither.\n\nInherited from v0: Permissionless public-state card — OUTER surface envelope. Fields: schema, surface, subject, as_of, source_urls, payload, sha256, unmeasured[]; optional sig_ed25519, did, tags. Canonical form: UTF-8 JSON, sorted keys, separators (',', ':'), ensure_ascii=false. SHA-256 over canonical payload only. 3KB hard cap on that payload. For surface gspc.behavioural, GSPC measure nests inside payload — not on the outer envelope. UNMEASURED[] required for missing fields — never invent. Additive surface enum 2026-09-01: keep live names; reserve grammar names. Do not fork a second atom. Leave Cobalt alone. Additive: cobol.legacy (CSOAI-ORG COBOL Bridge Layer-0, same root — not a competitor) + xdc.document.state + owasp.control (cite-only ASI/ASVS coverage leaf — never cert/endorsement) + genius.reserve (P.L. 119-27 cite-only, no endorsement) + cedulon.recon (EAT Abak/Cedulon population-probe + disposition accounting — unsigned bank input, never a GSPC axis fill). Microsoft Agent Framework+Channels = supported MCP client; harness stays authority; master plugin one card-v0. Unsigned leaf → GHA signs → one writer advances root; chain witnesses root hash only. CEO owns ERC-8004 minute + GENIUS hourly dry-run clocks. Additive 2026-09-02 (revenue rail, metered by x402): ras.commission (a paid request-attestation commission receipt — cites the settle tx, names the subject/axis, re-serves an existing signed card if one exists, NEVER a score, fresh_run stays UNMEASURED until a published run exists) + evidence.bundle (manifest of an assembled obligation bundle — lists the signed card shas it wraps, relation always relevant-to, never a conformity determination).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "surface",
+    "subject",
+    "as_of",
+    "source_urls",
+    "payload",
+    "sha256",
+    "unmeasured",
+    "digest_covers",
+    "sig_covers"
+  ],
+  "properties": {
+    "schema": {
+      "const": "https://councilof.ai/schema/card-v1.json",
+      "description": "The $id of THIS schema. A card names the schema it was written to; that is how a reader knows whether to expect digest_covers and sig_covers at all."
+    },
+    "surface": {
+      "type": "string",
+      "enum": [
+        "xrpl.asset.state",
+        "xrpl.basket.root",
+        "public.notice",
+        "benji.onchain.supply",
+        "gspc.behavioural",
+        "trace.runtime",
+        "otel.span",
+        "swift.notice",
+        "benji.supply",
+        "rwa.reserve",
+        "erc8004.callable",
+        "cobol.legacy",
+        "xdc.document.state",
+        "owasp.control",
+        "genius.reserve",
+        "aibom.document",
+        "redteam.evidence",
+        "eval.delta",
+        "cedulon.recon",
+        "ras.commission",
+        "evidence.bundle"
+      ]
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 1
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_urls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "format": "uri"
+      }
+    },
+    "payload": {
+      "type": "object",
+      "description": "Surface-specific facts only. For gspc.behavioural, nest the GSPC measure here (axis/model/accuracy/status/bank cites). Do not promote measure fields to the outer envelope. cobol.legacy nests copybook/CICS/JCL/VSAM + PII/crosswalk/source_hash. xdc.document.state nests document-state facts. owasp.control nests control coverage cites only — never a badge. genius.reserve nests P.L. 119-27 cite + reserve disclosure cites — never endorsement / never board MEASURED. cedulon.recon nests Abak disposition class_counts / conservation rows / package_pin / open_defects — EAT from public Cedulon probes; optional x402.challenge nest (price/status only; settlement UNCHECKABLE until facilitator receipt exists). Never a GSPC axis fill."
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sig_ed25519": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Hex Ed25519 over canonical payload. null = unsigned / gap. Laptop cannot use did:web:csoai.org#board-attestation-1."
+    },
+    "sig_pqc": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional ML-DSA-65 (FIPS 204) or hybrid beside Ed25519. Absent or null = UNCHECKABLE, not hidden. Continuity MEASURED does not make this field exist."
+    },
+    "otel_trace_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Optional OpenTelemetry trace id (GenAI spans). Absent = UNCHECKABLE. Card stays valid GSPC without it."
+    },
+    "otel_trace_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "SHA-256 of the OTLP export. Absent = UNCHECKABLE."
+    },
+    "did": {
+      "type": "string",
+      "description": "Intended verify DID. Layer-0 seals of the Merkle root are a different key."
+    },
+    "unmeasured": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Regulatory tree tags, not licences."
+    },
+    "digest_covers": {
+      "type": "string",
+      "description": "What the sha256 is taken over, in the card's own words. All 941 published v1 cards carry exactly: 'whole-card-except-sha256-and-sig_ed25519'. Not constrained to a const here: the field exists so a card can SAY what its digest covers, and pinning the prose would make a future coverage rule unrepresentable rather than merely different.",
+      "minLength": 1
+    },
+    "sig_covers": {
+      "type": "string",
+      "description": "What the Ed25519 signature is taken over, in the card's own words. All 941 published v1 cards carry the compact-envelope statement naming {did, schema, surface, as_of, sha256} and noting that sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload THROUGH it. A signature is an integrity claim, not a truth claim.",
+      "minLength": 1
+    }
+  }
+}
