@@ -122,3 +122,43 @@ describe("the served agent card passes a2aregistry's validation", () => {
     expect(doc.our_agent.skills).toBe((card.skills as unknown[]).length);
   });
 });
+
+// ---------------------------------------------------------------------------
+// WHY THIS EXISTS. On 2026-09-05 this file published NOT_LISTED for a registry we
+// had been listed in since 2026-08-19, healthy and conformant. The cause was one
+// act: GET /api/agents was read as the population when it is a PAGE. The very same
+// JSON carried `total: 370` beside `limit: 50`. Four separate published numbers were
+// wrong from that one read. A count is not a measurement until it is compared with
+// the source's own declared total — rule R5, and memory's
+// partial-read-totalled-as-population.
+// ---------------------------------------------------------------------------
+describe("a census may not conclude from a page", () => {
+  it("records the index's own declared total and what was actually scanned", () => {
+    const t = doc.totals;
+    expect(t.index_declared_total, "the source's own total must be recorded").toBeGreaterThan(0);
+    expect(t.agents_scanned, "what was scanned must be recorded").toBeGreaterThan(0);
+  });
+
+  it("scanned the whole index before drawing any conclusion from absence", () => {
+    const t = doc.totals;
+    expect(t.agents_scanned, "scanned fewer than the index declares: no absence claim is valid")
+      .toBe(t.index_declared_total);
+  });
+
+  it("never lets a page size stand in for a population", () => {
+    const t = doc.totals;
+    if (t.page_size && t.agents_scanned > t.page_size) {
+      expect(t.pages_fetched, "more than one page of data requires more than one page fetched")
+        .toBeGreaterThan(1);
+      expect(t.pages_fetched).toBe(Math.ceil(t.index_declared_total / t.page_size));
+    }
+  });
+
+  it("a NOT_LISTED row must name a full scan, not a sample", () => {
+    for (const r of doc.directories) {
+      if (r.state !== "NOT_LISTED") continue;
+      expect(doc.totals.agents_scanned, `${r.id}: NOT_LISTED asserted without a full scan`)
+        .toBe(doc.totals.index_declared_total);
+    }
+  });
+});
