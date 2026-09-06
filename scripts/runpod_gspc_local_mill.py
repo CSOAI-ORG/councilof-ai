@@ -87,7 +87,11 @@ def gguf_repo_for(model_id: str, token: str) -> str | None:
 
 
 _SPLIT_SUFFIX = re.compile(r"-\d{4,5}-of-\d{4,5}$", re.I)
-_QUANT_TAG = re.compile(r"^(i?q\d[0-9_a-z]*|f16|fp16|bf16|f32)$", re.I)
+# A shard index is not a quantisation; anything else might be. Quantisation naming is a
+# per-uploader choice and not a standard -- NVFP4, mxfp4 and TQ1_0 are all real tags in
+# use -- so this is a REJECT list, never an accept list. An accept list was tried first
+# and cost 227 of 528 models, including an NVFP4 repo that had already graded here.
+_NOT_A_QUANT = re.compile(r"^\d+$")
 
 
 class QuantLookupFailed(RuntimeError):
@@ -150,7 +154,7 @@ def quant_tag_for(repo: str, token: str, preferred: str) -> str | None:
         if "-" in stem:
             q = stem.rsplit("-", 1)[1]
             # A shard index is not a quantisation.
-            if _QUANT_TAG.match(q):
+            if not _NOT_A_QUANT.match(q):
                 quants.append(q)
     if not quants:
         return None
