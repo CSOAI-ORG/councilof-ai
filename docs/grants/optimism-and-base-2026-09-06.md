@@ -51,6 +51,29 @@ with these properties, taken from the page:
 - **open spec, open math** — "the same inputs always produce the same score";
 - optionally **attested onchain via EAS on Base**, "verifiable by anyone by recomputing the score".
 
+**Re-read 2026-09-06 with `document.body.innerText`, after the Atlas banner taught me that the
+`<main>` extractor hides things. It hid something here too — 204 characters, including this:**
+
+> Talent Protocol was acquired by IPTS, with support from Protocol Labs
+
+**The operator of Builder Score has changed hands**, and that is not a detail a funding pack can omit.
+
+**What is live, and what is not:**
+
+| Checked | Result |
+|---|---|
+| Attestations being created | **live** — leaderboard entries dated 2026-08-29 through **2026-09-05** |
+| The words *league*, *weekly reward*, *rewards round*, *season* anywhere on the page | **none — 0 matches** |
+
+So the **score and attestation system is running today**, while the **rewards programme is not
+advertised on the site at all**. That is materially better than "unverified": it is *no evidence of
+a live rewards league, from the operator's own homepage, following an acquisition*.
+
+**Stated as evidence, not as a conclusion.** The absence of the word "league" on a homepage is not
+proof a programme was cancelled — it may live on a sub-page, in a Farcaster channel, or under the
+acquirer's brand. What can be said is that a reader arriving at the official domain today is offered
+a score and an attestation, and no rewards.
+
 ### The boundary that matters for this lane
 
 Computing the score is **free, permissionless and account-free**, so it needs no owner keystroke.
