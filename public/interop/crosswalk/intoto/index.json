@@ -1,0 +1,151 @@
+{
+  "check": "python3 scripts/crosswalk/emit_intoto.py --check",
+  "crosswalk_doc": "https://councilof.ai/docs/interop/VOCABULARY-CROSSWALK.md",
+  "dsse_payload_type_when_signed": "application/vnd.in-toto+json",
+  "predicate_type": "https://councilof.ai/attestations/measurement/v1",
+  "producer": "scripts/crosswalk/emit_intoto.py",
+  "schema": "csoai.intoto-crosswalk-index/0.1",
+  "source_corpus": {
+    "measured": 878,
+    "note": "Separate corpus from the public root (public/cards/, 0 identifier overlap) and from public/signed/cards/. See public/interop/root-witness-pointer.json.",
+    "path": "public/interop/mill-cards-signed/",
+    "signed_cards_total": 973
+  },
+  "statement_type": "https://in-toto.io/Statement/v1",
+  "statements": [
+    {
+      "axis": "affect",
+      "card_id": "04bfac1c0dc8f6b5e564c3a5e5492d4a839b734507961194b1c3791f47adc860",
+      "file": "affect-04bfac1c0dc8f6b5.intoto.json",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/affect-04bfac1c0dc8f6b5.intoto.json"
+    },
+    {
+      "axis": "art5-safeguard",
+      "card_id": "022bc5c2408f3246814d43c3cea9b953a0e5ef44cbfde131573c8a9e3a235f0f",
+      "file": "art5-safeguard-022bc5c2408f3246.intoto.json",
+      "model": "swiss-ai/Apertus-8B-Instruct-2509",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/art5-safeguard-022bc5c2408f3246.intoto.json"
+    },
+    {
+      "axis": "care",
+      "card_id": "0085fce0a467d2f7887da25577a26a5f681f831ba91f0152430f8a49414610d3",
+      "file": "care-0085fce0a467d2f7.intoto.json",
+      "model": "Qwen/Qwen3-4B-Thinking-2507",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/care-0085fce0a467d2f7.intoto.json"
+    },
+    {
+      "axis": "conformance",
+      "card_id": "001219d25a5fa1a93615a826fd28a5b0ff78e2ddea51c43642dd8434713f36b3",
+      "file": "conformance-001219d25a5fa1a9.intoto.json",
+      "model": "google/gemma-2-9b-it",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/conformance-001219d25a5fa1a9.intoto.json"
+    },
+    {
+      "axis": "continuity",
+      "card_id": "047c55e407b9975a6faef6cec75f1e17dd016083d557430a3df84082bfadeda4",
+      "file": "continuity-047c55e407b9975a.intoto.json",
+      "model": "meta-llama/Llama-3.2-1B-Instruct",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/continuity-047c55e407b9975a.intoto.json"
+    },
+    {
+      "axis": "cross-reality",
+      "card_id": "047e7a524d3dfc8f4bca59ec484ae534d012df3e5db3b3394fbbd981771f1b1a",
+      "file": "cross-reality-047e7a524d3dfc8f.intoto.json",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/cross-reality-047e7a524d3dfc8f.intoto.json"
+    },
+    {
+      "axis": "detector-interop",
+      "card_id": "04d4a79517720b6657905f7f38a0ff411a673141b9269f81492b5ac09d865e78",
+      "file": "detector-interop-04d4a79517720b66.intoto.json",
+      "model": "meta-llama/Llama-3.2-3B-Instruct",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/detector-interop-04d4a79517720b66.intoto.json"
+    },
+    {
+      "axis": "governance",
+      "card_id": "082e381d4a304b9375000f37810acf6f03b3249961d4f8c1201a1d8321d01256",
+      "file": "governance-082e381d4a304b93.intoto.json",
+      "model": "Qwen/Qwen3-30B-A3B",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/governance-082e381d4a304b93.intoto.json"
+    },
+    {
+      "axis": "jail",
+      "card_id": "37d590185313fa2953c2bf151b12330da2e49d24f24c5fd4524325012fcbe6a4",
+      "file": "jail-37d590185313fa29.intoto.json",
+      "model": "ollama:qwen2.5:7b@sha256:845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+      "n": 41,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/jail-37d590185313fa29.intoto.json"
+    },
+    {
+      "axis": "machinery-conformity",
+      "card_id": "04a71377b637cfdc26177f26c98bad043fca8a6213f28ddd1e47e11426f11e21",
+      "file": "machinery-conformity-04a71377b637cfdc.intoto.json",
+      "model": "nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/machinery-conformity-04a71377b637cfdc.intoto.json"
+    },
+    {
+      "axis": "openness",
+      "card_id": "01a6498dda8d94fc3e1f4ea64fc3fc6a9cfb1ee888c7083bc3021db9aa37a090",
+      "file": "openness-01a6498dda8d94fc.intoto.json",
+      "model": "deepseek-ai/DeepSeek-V3.2",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/openness-01a6498dda8d94fc.intoto.json"
+    },
+    {
+      "axis": "provenance",
+      "card_id": "06cb9b8ad8478f49e939b65e62844e1e80edd56244fd5371db72b1603078b5dd",
+      "file": "provenance-06cb9b8ad8478f49.intoto.json",
+      "model": "deepseek-ai/DeepSeek-V3",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/provenance-06cb9b8ad8478f49.intoto.json"
+    },
+    {
+      "axis": "safety",
+      "card_id": "02444bfb68c77d045663bd55fd897ea246ccbed6036422f0271c297a5103fcb7",
+      "file": "safety-02444bfb68c77d04.intoto.json",
+      "model": "zai-org/GLM-5.2",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/safety-02444bfb68c77d04.intoto.json"
+    },
+    {
+      "axis": "swarm",
+      "card_id": "05dc89abb6e5038f5af947c7aa560a4ca39c63bfd4668e3ea972cdc199f83c20",
+      "file": "swarm-05dc89abb6e5038f.intoto.json",
+      "model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "n": 30,
+      "status": "MEASURED",
+      "url": "https://councilof.ai/interop/crosswalk/intoto/swarm-05dc89abb6e5038f.intoto.json"
+    }
+  ],
+  "subject_digest_rule": "subject[].digest.sha256 is the signed card's own id, which is sha256(canonical(body)) under the estate canonical rule.",
+  "what_this_is": "in-toto Statement v1 attestations DERIVED from Ed25519-signed GSPC measurement cards. One statement per axis, selected by rule: the lexicographically smallest card id whose body says MEASURED.",
+  "what_this_is_not": [
+    "Not a DSSE envelope — these Statements are unsigned, because this producer holds no key.",
+    "Not a certification, accreditation, endorsement or conformity assessment.",
+    "Not a new claim: every value in predicate.figure is copied from the signed card body.",
+    "Not a complete corpus: 973 signed cards exist; this is one representative card per axis."
+  ]
+}

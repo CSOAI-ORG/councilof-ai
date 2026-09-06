@@ -10,6 +10,22 @@ import PAID_TOOLS from "../mcp/paid-tools.json";
 
 export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATOR_URL?: string }> = async ({ request, env }) => {
   const origin = new URL(request.url).origin;
+  // v1-shaped PaymentRequirements (x402 spec v1 §5.1.2): a v1 consumer — Circle's own
+  // Gateway included — parses resources[].accepts[]; without it the door is invisible to
+  // every v1 client. All fields here are derived, never typed amounts: the amount itself
+  // still lives only in the 402 challenge (the ruling).
+  const req = (url: string, description: string) => ({
+    scheme: "exact" as const,
+    network: "base" as const, // v1 consumers read the chain NAME (spec §5.1.2); the CAIP2 stays in the v2 layer
+    payTo: resolvePayTo(env),
+    resource: url,
+    description,
+    mimeType: "application/json",
+    outputSchema: { type: "object" as const },
+    maxTimeoutSeconds: 60,
+    extra: { name: "USDC", version: "2" },
+  });
+
   const rail = railMode(env);
   const body = {
     schema: "csoai.x402/0.2",
@@ -68,28 +84,55 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         url: `${origin}/api/free-door`,
         paid_for: null,
         amount: "0",
+        description:
+          "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
+        accepts: [req(`${origin}/api/free-door`, "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.")],
         note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
         indexed_in: "x402 Bazaar (PayAI)",
       },
-      { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance" },
+      { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance",
+        description:
+          "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.",
+        accepts: [req(`${origin}/api/request-attestation?subject=<id>&axis=<slug>`, "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed.")]  },
       // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
       // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
       // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The
       // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
       // placeholder that names what it wants costs nothing and spends no round trip.
-      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
+      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly",
+        description:
+          "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.",
+        accepts: [req(`${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof.")]  },
+      { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly",
+        description:
+          "Signed derivative data feed — validated measurement series, authenticated and ready to build on.",
+        accepts: [req(`${origin}/api/eunomia-data?feed=1`, "Signed derivative data feed — validated measurement series, authenticated and ready to build on.")]  },
+      { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly",
+        description:
+          "Inclusion proof bundle — Merkle, Rekor and OpenTimestamps proofs for named leaves.",
+        accepts: [req(`${origin}/api/proof?bundle=1`, "Inclusion proof bundle — Merkle, Rekor and OpenTimestamps proofs for named leaves.")]  },
+      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1`,
+        description:
+          "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.",
+        accepts: [req(`${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview.")]  },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
       // 400 bad_request and never reached a payment challenge — a door listed as buyable that
       // could not be bought. Probed live 2026-09-05: ?vendor=openai -> 400,
       // ?url=<a real asset> -> 402.
-      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=<https://…>&preview=1` },
-      { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1` },
+      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=<https://…>&preview=1`,
+        description:
+          "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.",
+        accepts: [req(`${origin}/api/art50/marking-evidence?url=<https://…>`, "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview.")]  },
+      { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly",
+        description:
+          "Provider change record — measurable differences between two measurement rounds for a named model provider.",
+        accepts: [req(`${origin}/api/feeds/provider-diff?history=1`, "Provider change record — measurable differences between two measurement rounds for a named model provider.")]  },
+      { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1`,
+        description:
+          "Signed receipts batch — every settlement record in a date range, signed, with the payer's view.",
+        accepts: [req(`${origin}/api/receipts/batch?from=<iso>&to=<iso>`, "Signed receipts batch — every settlement record in a date range, signed, with the payer's view.")]  },
     ],
     mcp: {
       url: `${origin}/mcp`,
@@ -115,6 +158,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     agent_paths: ["@x402/fetch", "x402-fetch (v1)", "curl -i <resource> → read accepts[]"],
   };
   return new Response(JSON.stringify(body, null, 2), {
-    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, s-maxage=86400, stale-while-revalidate=86400", "access-control-allow-origin": "*" },
   });
 };
