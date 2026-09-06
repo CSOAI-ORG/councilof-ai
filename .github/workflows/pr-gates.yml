@@ -90,8 +90,17 @@ jobs:
       # Breaking the canonicalisation drops this from 335/335 to 218/335, so the gate demonstrably
       # fails. An unreachable host exits CANNOT-RUN (0 under CI) rather than FAIL: a network flake
       # is not a broken chain, and reporting it as one teaches everybody to ignore the gate.
-      - name: Stranger verification — 335 signed cards must verify from published bytes
-        run: node scripts/verify-estate.mjs
+      # RATE BUDGET, added 2026-09-06. The v3 rules cap self-probes at 20/hour (Cloudflare free
+      # tier). This step as first written fetched all 335 cards on EVERY pull request — roughly
+      # 337 requests to councilof.ai per run, which breaches that budget by ~17x and would have
+      # done so silently. The full run moved to a schedule; the PR gate samples.
+      #
+      # 15 is not arbitrary. 117 of 335 cards (34.9%) carry a whole-number float, so a
+      # canonicalisation regression shows up in any small sample: measured with the break applied,
+      # --limit 10 fails 5/10 and --limit 20 fails 13/20. 15 cards + card_index + root = 17
+      # requests, inside the 20/hour budget, and still red on the regression this gate exists for.
+      - name: Stranger verification — signed cards must verify from published bytes
+        run: node scripts/verify-estate.mjs --limit 15
 
       # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
       # GET /api/gspc and the three card corpora files. Both files used to tell their
