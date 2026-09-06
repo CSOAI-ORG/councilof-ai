@@ -147,9 +147,9 @@
       "id": "pulsemcp",
       "name": "PulseMCP",
       "url": "https://pulsemcp.com",
-      "state": "LISTED",
-      "evidence": "213 csoai server URLs in PulseMCP's own sitemap (23,833 URLs total), e.g. /servers/csoai-acord-bridge, /servers/csoai-agent-audit-logger. Five sampled, all resolve 200. Their documented v0beta API answers 410 Gone, which is why this row read UNKNOWN — a dead API is not absence, and the sitemap answered it.",
-      "probe": "curl -s https://www.pulsemcp.com/sitemap.xml | grep -c 'csoai' ; then fetch a sample of the csoai <loc> URLs and check for 200",
+      "state": "UNKNOWN",
+      "evidence": "WAS LISTED on 2026-09-05: 213 csoai server URLs in PulseMCP's own sitemap (23,833 total), five sampled, all 200. RE-PROBED 2026-09-06 10:35 BST and PulseMCP now refuses this client on every surface: sitemap 403, site search 403, and two known server pages from that same reading (/servers/csoai-acord-bridge, /servers/csoai-agent-audit-logger) 403 — all four returning an IDENTICAL 5487-byte body, which is what proves it is one block page and not four absences. Their documented v0beta API answers 410 Gone as before. A 403 is not a delisting and a uniform block page is not evidence about any URL behind it, so this reads UNKNOWN rather than NOT_LISTED — and it must not read LISTED either, because nothing here can currently confirm it. Re-check from an unblocked network or with the owner's browser profile.",
+      "probe": "curl -s -A '<browser UA>' -o /tmp/a -w '%{http_code} %{size_download}' https://www.pulsemcp.com/sitemap.xml ; repeat for /servers?q=csoai and for a known /servers/csoai-* page. IDENTICAL non-200 sizes across unrelated paths = one block page: report UNKNOWN, never NOT_LISTED. Only a 200 sitemap or a 200 server page may move this row.",
       "surface": "sitemap"
     },
     {
