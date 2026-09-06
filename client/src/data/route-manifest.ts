@@ -298,6 +298,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eu Act Classifier"
  },
  {
+  "path": "/cobol",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
+ },
+ {
   "path": "/cobolbridge",
   "comp": "CobolBridge",
   "title": "Cobol Bridge"
@@ -1381,6 +1386,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "path": "/policy-generator",
   "comp": "PolicyGenerator",
   "title": "Policy Generator"
+ },
+ {
+  "path": "/press",
+  "comp": "Press",
+  "title": "Press"
  },
  {
   "path": "/pricing",

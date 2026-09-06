@@ -1,42 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Games — Council of AI</title>
-<link rel="canonical" href="https://councilof.ai/dashboard/games">
-<link rel="icon" href="https://councilof.ai/csoai-icon.svg">
-<style>
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #ffffff; color: #1f2937; margin: 0; padding: 0; }
-header { border-bottom: 1px solid #e5e7eb; padding: 16px 24px; }
-h1 { color: #16a34a; font-size: 24px; margin: 0; }
-main { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
-.card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; background: #fafafa; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; }
-.card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-.card h2 { margin: 0 0 8px; color: #1f2937; font-size: 18px; }
-.card p { margin: 0 0 12px; color: #4b5563; font-size: 14px; }
-.card .icon { font-size: 36px; margin-bottom: 8px; }
-.card .meta { display: flex; gap: 8px; align-items: center; font-size: 12px; color: #6b7280; }
-.card .meta .pill { background: #16a34a; color: white; padding: 2px 8px; border-radius: 12px; }
-</style>
+<meta name="description" content="Council game concepts in preview, read from the planning catalogue. Design-review surface only — no game emits a signed card."/>
+<link rel="canonical" href="https://councilof.ai/dashboard/games"/>
+<link rel="icon" href="https://councilof.ai/csoai-icon.svg"/>
+<style>:root{color-scheme:dark}
+*{box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:#04070d;color:#e2e8f0;margin:0;line-height:1.55}
+a{color:#C8A05C;text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.9em;color:#e2e8f0}
+header.site{border-bottom:1px solid #1e293b;padding:14px 24px;display:flex;align-items:center;gap:10px}
+header.site .brand{font-weight:700;color:#e2e8f0}
+header.site nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
+main{max-width:52rem;margin:0 auto;padding:32px 24px 64px}
+.kicker{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#C8A05C;margin:0 0 10px}
+h1{font-size:1.6rem;margin:0 0 12px;color:#e2e8f0}
+h2{font-size:1.05rem;margin:0 0 6px;color:#e2e8f0}
+p,li{color:#cbd5e1}
+.meta{color:#94a3b8;font-size:.9rem}
+ul{padding-left:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:20px}
+.card{border:1px solid #1e293b;border-radius:12px;padding:18px;background:#070c16;display:block}
+.card:hover{border-color:#C8A05C}
+.card p{margin:0 0 10px;font-size:14px;color:#cbd5e1}
+.pill{display:inline-block;border:1px solid #C8A05C;color:#C8A05C;padding:2px 8px;border-radius:12px;font-size:11px;font-family:ui-monospace,monospace}
+footer.site{border-top:1px solid #1e293b;margin-top:48px;padding:20px 24px;color:#94a3b8;font-size:13px;max-width:52rem;margin-left:auto;margin-right:auto}
+@media (max-width:640px){main{padding:24px 16px 48px}header.site nav{display:none}}</style>
 </head>
 <body>
-<header><h1>Council of AI — Games Arcade</h1></header>
+<header class="site">
+  <img src="https://councilof.ai/csoai-icon.svg" alt="" width="22" height="22"/>
+  <span class="brand">Council of AI</span>
+  <nav>
+    <a href="https://councilof.ai/dashboard?tab=board">Board</a>
+    <a href="https://councilof.ai/gspc-verify">Verify</a>
+    <a href="https://councilof.ai/honesty">Honesty</a>
+  </nav>
+</header>
 <main>
-<p style="color: #4b5563;">10 Council game concepts in preview. No game emits a signed card yet. This is a design-review surface.</p>
-<div class="grid">
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🏛️</div><h2>Council Town</h2><p>Agent groups deliberate in shared world.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🧠</div><h2>Council Minds</h2><p>Structured multi-perspective deliberation.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🐝</div><h2>Hive Model</h2><p>Cooperation patterns among simulated agents.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🏟️</div><h2>Arena</h2><p>Side-by-side model comparison.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">📖</div><h2>Playbooks</h2><p>Guided governance scenarios.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🎓</div><h2>Course Player</h2><p>AI governance course — practice, never a certificate.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🔁</div><h2>PDCA Simulator</h2><p>Plan-Do-Check-Act cycle.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🐜</div><h2>Swarm</h2><p>Many agents on shared task.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🏛️</div><h2>Civic</h2><p>Civic-scale deliberation.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-  <a href="/interop/games-arcade.json" class="card"><div class="icon">🏆</div><h2>Tournament</h2><p>Model tournaments + leaderboards.</p><div class="meta"><span class="pill">PRACTICE_ONLY</span></div></a>
-</div>
+  <p class="kicker">Games · planning-catalogue · PRACTICE_ONLY</p>
+  <h1>Council games — concepts in preview</h1>
+  <p>10 concepts are catalogued for design review. None of them runs, and none emits a signed card.</p>
+  <p class="meta">As at 5 September 2026, read from the artifact named below.</p>
+    <div class="grid">
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Council Town</h2>
+      <p>Explore how agent groups could deliberate in a shared world.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Council Minds</h2>
+      <p>Explore structured multi-perspective deliberation.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Hive Model</h2>
+      <p>Explore cooperation patterns among simulated agents.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Arena</h2>
+      <p>Explore controlled side-by-side benchmark presentation.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>GSPC Arena</h2>
+      <p>Explore comparative presentation across GSPC topics.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Playbooks</h2>
+      <p>Explore multi-step governance scenarios.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Course Player</h2>
+      <p>Explore guided lessons on AI governance.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>PDCA Simulator</h2>
+      <p>Explore Plan-Do-Check-Act governance exercises.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Swarm</h2>
+      <p>Explore collective problem-solving patterns.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+    <a class="card" href="/interop/games-arcade.json">
+      <h2>Civic</h2>
+      <p>Explore simulated policy deliberation.</p>
+      <span class="pill">PRACTICE_ONLY</span>
+    </a>
+  </div>
+  <h2 style="margin-top:32px">What this page does not claim</h2>
+  <ul>
+    <li>No runtime, availability, connectivity, signing, payment, or deployment evidence is attached.</li>
+    <li>Entries are concepts, not public service or protocol declarations.</li>
+    <li>Nothing in this catalogue writes to the public measurement board.</li>
+    <li>No game emits a signed card. Nothing here is a measurement.</li>
+  </ul>
 </main>
+<footer class="site">
+  <p>We measure; we never certify. Verification is free. Empty slots stay empty and are named — a gap is a fact, not a zero.</p>
+  <p class="meta">Derived from public/interop/games-arcade.json (csoai.game-planning-catalogue/0.2). This page is generated by <code>scripts/build-static-pages.mjs</code> — edit the producer, never the html. Living board: <a href="https://councilof.ai/api/gspc">GET /api/gspc</a>.</p>
+</footer>
 </body>
 </html>
