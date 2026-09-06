@@ -165,7 +165,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+fcef882d2b71",
+    "version": "0.2+e9c46e2d6431",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Every 402 carries a server-signed offer and every settled 200 a signed receipt, per the x402 Offer & Receipt extension (JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json). Check either without trusting this document: POST it to /api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -3137,7 +3137,7 @@
                   "resource": {
                     "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee. preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
                     "mimeType": "application/json",
-                    "url": "https://councilof.ai/api/rwa/evidence?asset=<asset>"
+                    "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
                   },
                   "x402Version": 2
                 },
@@ -3167,8 +3167,8 @@
             "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
             "captured": false
           },
-          "door": "https://councilof.ai/api/rwa/evidence?asset=<asset>",
-          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<asset>&preview=1",
+          "door": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
           "never": [
             "a rating",
             "a guarantee",

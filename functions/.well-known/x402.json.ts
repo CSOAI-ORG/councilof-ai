@@ -80,7 +80,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
       { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<asset>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<asset>&preview=1` },
+      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
