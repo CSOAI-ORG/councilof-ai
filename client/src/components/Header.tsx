@@ -24,6 +24,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hideChrome = useSiteChromeHidden();
@@ -200,7 +201,6 @@ export function Header() {
           </div>
 
           <div className="hidden md:flex flex-nowrap items-center gap-2 2xl:gap-3">
-            <a href="/dashboard" className="hidden xl:inline-flex rounded-lg bg-emerald-700 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-800">Council OS</a>
             <button onClick={() => setSearchOpen(true)} className="p-2 rounded-lg text-muted-foreground hover:text-foreground/80 hover:bg-muted transition-colors" aria-label="Search">
               <Search className="h-5 w-5" />
             </button>
@@ -252,7 +252,7 @@ export function Header() {
               <a href="/" className={`block px-4 py-3 rounded-lg font-medium ${
                 location === '/' ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
               }`} onClick={() => setMobileMenuOpen(false)}>Home</a>
-              {PRIMARY_LINKS.map((item) => (
+              {PRIMARY_LINKS.filter((item) => !navigation.some((g) => g.name === item.name)).map((item) => (
                 <a key={item.href} href={item.href} className={`block px-4 py-3 rounded-lg font-medium ${
                   isActive(item.href) ? "text-emerald-700 bg-emerald-50" : "text-foreground/80"
                 }`} onClick={() => setMobileMenuOpen(false)}>{item.name}</a>
@@ -260,13 +260,27 @@ export function Header() {
               <a href="/library" className="block px-4 py-3 rounded-lg font-medium text-foreground/80" onClick={() => setMobileMenuOpen(false)}>Library</a>
               {navigation.map((item) => (
                 <div key={item.name} className="space-y-1">
-                  <a href={item.href} className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium ${
-                    isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
-                  }`} onClick={() => setMobileMenuOpen(false)}>
-                    <item.icon className="h-5 w-5 text-emerald-600" />
-                    {item.name}
-                  </a>
-                  <div className="ml-12 space-y-1">
+                  <button
+                    type="button"
+                    aria-expanded={openMobileGroup === item.name}
+                    aria-controls={`mobile-group-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                    onClick={() => setOpenMobileGroup(openMobileGroup === item.name ? null : item.name)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-left ${
+                      isActive(item.href) ? 'text-emerald-700 bg-emerald-50' : 'text-foreground/80'
+                    }`}
+                  >
+                    <item.icon className="h-5 w-5 text-emerald-600 shrink-0" />
+                    <span className="flex-1">{item.name}</span>
+                    <ChevronDown className={`h-4 w-4 transition-transform ${openMobileGroup === item.name ? 'rotate-180' : ''}`} />
+                  </button>
+                  <div
+                    id={`mobile-group-${item.name.replace(/\s+/g, '-').toLowerCase()}`}
+                    hidden={openMobileGroup !== item.name}
+                    className="ml-12 space-y-1"
+                  >
+                    <a href={item.href} className="block px-4 py-2 text-sm font-medium text-emerald-700" onClick={() => setMobileMenuOpen(false)}>
+                      All {item.name.toLowerCase()}
+                    </a>
                     {item.submenu.map((subItem) => (
                       <div key={subItem.href + subItem.name}>
                         {subItem.section && (
