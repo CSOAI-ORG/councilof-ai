@@ -21,13 +21,34 @@
  *   node scripts/producers-check.mjs --list     # what is gated, and what is not, and why
  */
 import { execSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(join(REPO, "docs/operations/PRODUCERS.json"), "utf8"));
 const run = (cmd) => execSync(cmd, { cwd: REPO, stdio: "pipe", encoding: "utf8" });
+
+/**
+ * Paths git currently reports as changed.
+ *
+ * Porcelain v1 lines are `XY PATH`, and X is a SPACE for an unstaged modification (" M path").
+ * Calling .trim() on the whole block therefore eats the leading space of the FIRST line only,
+ * so that one line's slice(3) started a character late ("ublic/interop/…") while every other
+ * line parsed fine. The consequence was not cosmetic: the CANNOT-CHECK guard below compares
+ * these strings against `outputs`, so whichever file sorts first in porcelain order was
+ * invisible to it, and a planted drift in that file exited 0. .trimEnd() keeps the column.
+ * Renames report `R  OLD -> NEW`; the post-run path is the one that matters.
+ */
+const parsePorcelain = (text) => new Set(
+  text
+    .trimEnd()
+    .split("\n")
+    .filter(Boolean)
+    .map((l) => l.slice(3).trim())
+    .map((pth) => (pth.includes(" -> ") ? pth.split(" -> ").pop() : pth)),
+);
+const dirtyPaths = () => parsePorcelain(run("git status --porcelain"));
 
 if (process.argv.includes("--list")) {
   for (const p of manifest.producers) {
@@ -42,18 +63,42 @@ if (process.argv.includes("--list")) {
 if (process.argv.includes("--selftest")) {
   const target = "public/interop/agent-card-jws-input.json";
   let bad = 0;
-  const orig = readFileSync(join(REPO, target));
-  try {
-    execSync(`printf '\\n' >> ${target}`, { cwd: REPO });
-    const dirty = run(`git status --porcelain -- ${target}`).trim();
-    if (!dirty) { console.error("✖ selftest: tampering the output did not show as a git change"); bad++; }
-  } finally {
-    execSync(`git checkout -- ${target}`, { cwd: REPO });
+  // Standing doctrine is a SPARSE worktree for data/doc PRs, so the tamper half of this selftest
+  // may have nothing to tamper with. That is not a failure of the gate — say so and check the
+  // parser anyway, rather than exiting on an ENOENT stack trace in the documented workflow.
+  const canTamper = existsSync(join(REPO, target));
+  if (!canTamper) console.log(`  (tamper check skipped — ${target} is not in this sparse checkout)`);
+  const orig = canTamper ? readFileSync(join(REPO, target)) : null;
+  if (canTamper) {
+    try {
+      execSync(`printf '\\n' >> ${target}`, { cwd: REPO });
+      const dirty = run(`git status --porcelain -- ${target}`).trim();
+      if (!dirty) { console.error("✖ selftest: tampering the output did not show as a git change"); bad++; }
+    } finally {
+      execSync(`git checkout -- ${target}`, { cwd: REPO });
+    }
+    const restored = readFileSync(join(REPO, target));
+    if (!restored.equals(orig)) { console.error("✖ selftest: failed to restore the tampered file"); bad++; }
   }
-  const restored = readFileSync(join(REPO, target));
-  if (!restored.equals(orig)) { console.error("✖ selftest: failed to restore the tampered file"); bad++; }
+
+  // The PARSER, over a fixture — not over whatever git happens to be reporting in this checkout.
+  // Driving it through a live `git status` is the trap: the trim() bug only mangled the FIRST
+  // line, so in any tree where the tampered file was not first the assertion passed under the
+  // bug and proved nothing. A literal block pins the shape that actually broke: an unstaged
+  // modification, whose X column is a SPACE, arriving first.
+  const PORCELAIN = [
+    " M public/interop/agent-card-jws-input.json", // X is a space — the case trim() destroyed
+    "M  public/llms.txt",
+    "?? scripts/new-thing.mjs",
+    "R  public/old.json -> public/new.json",
+  ].join("\n") + "\n";
+  const want = ["public/interop/agent-card-jws-input.json", "public/llms.txt", "scripts/new-thing.mjs", "public/new.json"];
+  const got = parsePorcelain(PORCELAIN);
+  for (const w of want) {
+    if (!got.has(w)) { console.error(`✖ selftest: parsePorcelain lost "${w}" — got: ${[...got].join(", ")}`); bad++; }
+  }
   if (bad) { console.error(`✖ producers-check selftest FAILED (${bad})`); process.exit(1); }
-  console.log("✓ producers-check selftest: a moved output is detectable, and the tree was restored");
+  console.log("✓ producers-check selftest: a moved output is detectable, its path parses exactly, and the tree was restored");
   process.exit(0);
 }
 
@@ -71,10 +116,7 @@ for (const p of gated) {
       // false green to a producer that writes somewhere it never declared — and leaves that file
       // dirty for every later step in the job. An undeclared output is a manifest bug, so it is
       // reported as one rather than silently tolerated.
-      const dirty = () => new Set(
-        run("git status --porcelain").trim().split("\n").filter(Boolean).map((l) => l.slice(3).trim()),
-      );
-      const before = dirty();
+      const before = dirtyPaths();
       if (p.outputs.some((o) => before.has(o))) {
         // In CI the tree is always clean, so this can only mean an earlier step touched the file.
         // Passing quietly would let a real staleness through, so it counts as a failure.
@@ -83,7 +125,7 @@ for (const p of gated) {
         continue;
       }
       run(p.command);
-      const moved = [...dirty()].filter((f) => !before.has(f));
+      const moved = [...dirtyPaths()].filter((f) => !before.has(f));
       const declared = moved.filter((f) => p.outputs.includes(f));
       const undeclared = moved.filter((f) => !p.outputs.includes(f));
       if (declared.length) {
