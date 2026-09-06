@@ -66,7 +66,7 @@ const differentiators = [
   {
     icon: DollarSign,
     title: "Pricing Model",
-    csoai: "Free tier available",
+    csoai: "Free — no tiers",
     competitors: "Enterprise only",
     description: "Accessibility for teams of all sizes, no pricing walls",
   },
@@ -271,7 +271,7 @@ const comparisonFeatures = [
     category: "Pricing & Accessibility",
     features: [
       {
-        name: "Free Tier Available",
+        name: "Free to use",
         csoai: "✓",
         traditional: "✗",
         aiTools: "Partial",
@@ -852,8 +852,8 @@ export default function ComparisonPage() {
                 a: "CSOAI offers REST APIs and pre-built integrations with popular GRC platforms. We work alongside your existing stack rather than replacing it entirely.",
               },
               {
-                q: "Can we start with the free tier?",
-                a: "Yes! The free tier supports up to 3 AI systems and includes access to training materials and the community watchdog reports.",
+                q: "What does it cost to start?",
+                a: "Nothing. Verification is free and there is no tier to sit in — training materials and the community watchdog reports are open. Where a route is metered it is x402, and the amount is quoted at the 402 itself, never on a page.",
               },
               {
                 q: "What's included in the Prosperity Fund?",
@@ -919,7 +919,7 @@ export default function ComparisonPage() {
               </Link>
             </div>
             <p className="text-sm text-muted-foreground mt-8">
-              No credit card required. Free tier includes training, the measurement credential path, and
+              No card, no account, no tier. Free includes training, the measurement credential path, and
               watchdog access.
             </p>
           </motion.div>

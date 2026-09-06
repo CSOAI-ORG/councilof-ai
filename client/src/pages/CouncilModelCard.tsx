@@ -119,8 +119,8 @@ export default function CouncilModelCard() {
           <p className="text-[13px] text-emerald-100/85 leading-relaxed">
             Council Workbench's own engine code and governance layer are CSOAI's IP. The base models it wraps are
             individually permissively licensed (Apache-2.0 / MIT — see table above); no copyleft (AGPL/GPL)
-            component is used in the paid tier, by design — copyleft dependencies are quarantined to
-            the fully-open free tier only, to avoid forcing the commercial stack open.
+            component is used in an owner's own instance, by design — copyleft dependencies are
+            quarantined to the published open frame only, to avoid forcing the commercial stack open.
           </p>
         </Section>
 

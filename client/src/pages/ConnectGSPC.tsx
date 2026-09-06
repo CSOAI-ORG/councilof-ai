@@ -58,7 +58,7 @@ function CopyBlock({ block }: { block: ConfigBlock }) {
 function GateBadge({ gate }: { gate: Gate }) {
   const map: Record<Gate, { label: string; cls: string }> = {
     live: { label: "Live now — self-serve", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-    paid: { label: "Self-serve · paid tier", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    paid: { label: "Self-serve · metered at the 402", cls: "bg-amber-50 text-amber-700 border-amber-200" },
     review: { label: "Review-gated", cls: "bg-slate-100 text-slate-600 border-slate-200" },
   };
   const m = map[gate];

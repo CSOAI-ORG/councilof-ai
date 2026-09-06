@@ -59,8 +59,8 @@ export default function CouncilWhitepaper() {
           <p>
             The substrate is bound to a person, not a platform. It runs on permissively-licensed open weights
             (MIT / Apache-2.0 / CC0), so it is portable across any host — the owner can switch clouds and the
-            substrate follows. Copyleft components (AGPL/GPL) are quarantined to the free/open tier only; the
-            paid tier is built on permissive-only dependencies plus the owner's own IP.
+            substrate follows. Copyleft components (AGPL/GPL) are quarantined to the published open frame only; an owner's
+            own instance is built on permissive-only dependencies plus the owner's own IP.
           </p>
         </Section>
 
@@ -94,13 +94,13 @@ export default function CouncilWhitepaper() {
           </p>
         </Section>
 
-        <Section n="07" title="Two tiers: the open frame and the growing tier">
+        <Section n="07" title="Two shapes: the open frame and the growing instance">
           <p>
-            Council Workbench ships as <b className="text-emerald-200">two tiers</b> from one substrate. <b
+            Council Workbench ships as <b className="text-emerald-200">two shapes</b> from one substrate. <b
             className="text-emerald-200">The open frame</b>: the published, forkable base — the governed-node
             shape, the six invariants, the open base weights, the capability contract. It does not grow; it is
             the fixed common ancestor anyone can run or audit. <b className="text-emerald-200">The growing
-            tier</b>: your own running instance, owner-bound, that accretes experts, memory, and lineages from your
+            instance</b>: your own running instance, owner-bound, that accretes experts, memory, and lineages from your
             own use. Two people starting from the identical open frame end up with instances that behave
             differently, because what diverges is not the frame but each instance's accreted usage pattern.
           </p>

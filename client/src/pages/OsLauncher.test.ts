@@ -50,7 +50,11 @@ describe("OsLauncher doors", () => {
     expect(launcher).toContain("/gspc-verify");
     expect(launcher).toContain("/assess");
     expect(launcher).not.toContain("Free. The card is yours.");
-    expect(launcher).toContain("Coming — Paddle");
+    // WAS: toContain("Coming — Paddle") — a pinned phrase naming a payment processor, which the
+    // OWNER RULING of 6 Sep 2026 forbids on any page. The truth it stood for is that measurement
+    // booking is not live; assert that, and ban the processor name instead of requiring it.
+    expect(launcher).toContain("booking is not live");
+    expect(launcher).not.toMatch(/\b(paddle|stripe|paypal)\b/i);
     expect(launcher).toContain("/watchdog-hub");
     expect(launcher).toContain("Incident submission is not live");
     expect(launcher).toContain("HfLivingRecord");

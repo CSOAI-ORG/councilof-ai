@@ -402,7 +402,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/globe": "Global Regulation Globe | CSOAI",
   "/tour": "Platform Tour | CSOAI",
   "/demo": "Demo | CSOAI",
-  "/assess": "Get measured — paid measurement; booking not live | Council of AI",
+  "/assess": "Get measured — booking not live | Council of AI",
   "/login": "Sign in | Council of AI",
   "/dashboard": "Council OS | Council of AI",
   "/os": "Council OS | Council of AI",

@@ -132,7 +132,7 @@ const faqData: FAQItem[] = [
     category: "AI GOVERNANCE",
     question: "How do I start implementing AI governance?",
     answer:
-      "Start by: (1) Conducting an AI inventory of all systems in use, (2) Assessing risks using CSOAI's risk classification tool, (3) Mapping regulatory requirements relevant to your jurisdiction and industry, (4) Implementing policies for model development and deployment, (5) Establishing monitoring and incident response procedures, (6) Training teams on governance frameworks, and (7) Using CSOAI's tools to track compliance. Our free tier and training programmes can guide you through each step.",
+      "Start by: (1) Conducting an AI inventory of all systems in use, (2) Assessing risks using CSOAI's risk classification tool, (3) Mapping regulatory requirements relevant to your jurisdiction and industry, (4) Implementing policies for model development and deployment, (5) Establishing monitoring and incident response procedures, (6) Training teams on governance frameworks, and (7) Using CSOAI's tools to track compliance. Our free tools and training programmes can guide you through each step.",
     tags: ["implementation", "getting-started"],
   },
   {
