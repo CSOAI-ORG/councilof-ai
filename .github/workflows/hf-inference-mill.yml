@@ -193,6 +193,7 @@ jobs:
       - name: patch HF2200.lock.json from shard mill-out (n_measured is counted)
         run: |
           set -euo pipefail
+          cp public/fleet/HF2200.lock.json /tmp/HF2200.original.json
           if ! curl -fsSL -H "Authorization: Bearer ${HF_TOKEN}" \
             -o public/fleet/HF2200.lock.json \
             "https://huggingface.co/datasets/csoai/hub-queue/resolve/main/locks/HF2200.lock.json"; then
@@ -201,12 +202,15 @@ jobs:
             exit 1
           fi
           python3 -c 'import json; d=json.load(open("public/fleet/HF2200.lock.json")); print("hub lock before mill n_measured", d.get("n_measured"), "n_locked", d.get("n_locked"))'
-          python3 scripts/mill_lock_update.py public/fleet/HF2200.lock.json mill-shards
+          python3 scripts/mill_lock_update.py public/fleet/HF2200.lock.json mill-shards /tmp/HF2200.original.json
           python3 - <<'PY'
           import json
           lock = json.load(open("public/fleet/HF2200.lock.json"))
           n = lock["n_measured"]
           print(f"lock n_measured={n} n_locked={lock['n_locked']}")
+          if lock["n_locked"] != 2200:
+              print("MEMBERSHIP_DRIFT n_locked", lock["n_locked"], "refusing upload of a substituted fleet")
+              raise SystemExit(1)
           open("n_measured.json", "w").write(json.dumps({"n_measured": n, "n_locked": lock["n_locked"]}, indent=2) + "\n")
           PY
       - name: upload patched lock (not a board rewrite)

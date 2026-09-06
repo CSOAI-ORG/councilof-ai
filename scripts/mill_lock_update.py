@@ -64,6 +64,59 @@ def apply_mill(lock: dict, mill: dict) -> dict:
     return lock
 
 
+def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
+    """Restore the download-ranked HF2200 2200-row membership.
+
+    Criterion 2 is coverage of those rows, not a replacement fleet.
+    Overlay practice-mill / UNCHECKABLE only for original slugs. Never
+    insert injected slugs. n_measured is counted. Practice-mill is not
+    downgraded.
+    """
+    by: dict[str, dict] = {}
+    for ov in overlays:
+        for m in ov.get("models") or []:
+            slug = m.get("slug")
+            if not slug:
+                continue
+            st = m.get("status") or "UNMEASURED"
+            prev = by.get(slug)
+            if prev and (prev.get("status") or "") in MEASURED_STATUSES:
+                continue
+            if st in MEASURED_STATUSES or st == "UNCHECKABLE":
+                by[slug] = m
+    models: list[dict] = []
+    for m in original.get("models") or []:
+        slug = m.get("slug")
+        row = dict(m)
+        ov = by.get(slug) if slug else None
+        if ov:
+            st = ov.get("status") or "UNMEASURED"
+            if st in MEASURED_STATUSES:
+                row["status"] = st
+                if ov.get("last_mill"):
+                    row["last_mill"] = ov["last_mill"]
+                if ov.get("n") is not None:
+                    row["n"] = ov["n"]
+            elif st == "UNCHECKABLE":
+                row["status"] = "UNCHECKABLE"
+                if ov.get("reason"):
+                    row["reason"] = ov["reason"][:200]
+        models.append(row)
+    out = dict(original)
+    out["models"] = models
+    out["n_locked"] = len(models)
+    out["n_target"] = original.get("n_target") or len(models)
+    out["n_measured"] = sum(
+        1
+        for m in models
+        if (m.get("status") or "UNMEASURED") in MEASURED_STATUSES
+    )
+    out["membership"] = "hf2200-download-ranked"
+    out["writes_board"] = original.get("writes_board", False)
+    out["enters_board_means"] = original.get("enters_board_means", False)
+    return out
+
+
 def rebuild_provider_hosted_lock(lock: dict, candidates: list[dict], n: int = 2200) -> dict:
     """Keep practice-mill rows. Fill remaining slots with provider-hosted
     candidates, chat-like tags first. n_measured is counted, never asserted."""
@@ -226,6 +279,15 @@ def main() -> int:
     mill_root = Path(sys.argv[2])
     lock = json.loads(lock_path.read_text())
     apply_dir(lock, mill_root)
+    if len(sys.argv) >= 4:
+        orig = json.loads(Path(sys.argv[3]).read_text())
+        lock = restore_original_membership(orig, [lock])
+        print(
+            "MEMBERSHIP_RESTORED n_measured",
+            lock["n_measured"],
+            "n_locked",
+            lock["n_locked"],
+        )
     lock_path.write_text(json.dumps(lock, indent=2) + "\n")
     print("n_measured", lock["n_measured"], "n_locked", lock["n_locked"])
     return 0
