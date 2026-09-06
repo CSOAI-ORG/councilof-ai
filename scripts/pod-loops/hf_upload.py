@@ -97,6 +97,9 @@ def main():
         if not tok:
             print(f"UNCHECKABLE no token; {sum(1 for _ in QUEUE.open())} queued uploads remain"); return 3
         jobs = [json.loads(l) for l in QUEUE.open() if l.strip()]
+        # One upload per (repo, path): a loop re-run for the same date queues the same path twice, and the
+        # LAST entry points at the bytes that are on disk now. Both files are the same path anyway.
+        jobs = list({(j["repo"], j["path_in_repo"]): j for j in jobs}.values())
         remaining, rc = [], 0
         for j in jobs:
             try:
