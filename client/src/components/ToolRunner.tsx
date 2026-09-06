@@ -16,6 +16,7 @@ import {
   type SovTool,
   type ToolResult,
 } from "../lib/sovTools";
+import X402PayButton from "@/components/X402PayButton";
 
 export type JsonSchema = {
   type?:
@@ -245,7 +246,8 @@ function fieldPlaceholder(name: string, kind: FieldKind): string {
   if (kind === "array") return '[\n  "value"\n]';
   if (kind === "json-or-string")
     return "Paste a card URL, JSON string, or JSON object";
-  if (name === "x_payment") return "Paste the wallet-signed x402 payload";
+  if (name === "x_payment")
+    return "Sign with your wallet below, or paste a payload signed elsewhere";
   return name;
 }
 
@@ -715,6 +717,12 @@ export default function ToolRunner({
                               autoComplete="off"
                             />
                           )}
+                          {name === "x_payment" && active.csoai?.route ? (
+                            <X402PayButton
+                              resourceUrl={active.csoai.route}
+                              onSigned={(header) => setField(name, header)}
+                            />
+                          ) : null}
                           {error ? (
                             <span
                               id={`${id}-error`}
