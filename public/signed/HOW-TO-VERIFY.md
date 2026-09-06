@@ -128,6 +128,28 @@ binary64**. After JSON parse there is no memory that a field was a Python float.
 - **Rule B** is the living board stamp (`sig_input` on `/api/gspc`), new catalog
   rows, and any artefact that declares `preimage_rule: "jcs-rfc8785"`. Emit ES6
   `ToString`; no `.0`; Python `repr` is the wrong algorithm (`1e-06` ≠ `0.000001`).
+
+  **Which published files are Rule B, and the reference implementation.** Added 2026-09-06 after a
+  verifier was written against the wrong rule. Rule B governs `public/signed/arena_scoreboard.json`,
+  `public/signed/eat_compliance_board.json` and `public/signed/gspc-board.signed.json` — the three
+  published artefacts carrying **`content_id`** rather than `id`. Their producer is
+  `harness/arena/canon.py` (MIT, public), whose docstring states the rule outright:
+
+  > *"Integer-valued floats emit as integers (Python `json.dumps(0.0)=="0.0"` but JS
+  > `JSON.stringify(0.0)=="0"`). We normalize int-valued floats to ints."*
+
+  and implements it as `if o.is_integer(): return int(o)`, with `ensure_ascii=False`.
+
+  **`content_id` means Rule B. `id` means Rule A.** That is the fastest way to tell which
+  canonicalisation an artefact was signed under, and it is checkable from the bytes alone. The 335
+  measurement cards in `signed/card_index.json` carry `id` and no `content_id`; the three board
+  artefacts above carry `content_id`.
+
+  **Applying the wrong rule fails loudly and misleadingly.** `canon.py` against a Rule A card fails
+  every card carrying an integral float — **117 of 335** — and a plain `JSON.stringify` verifier
+  fails the same 117. Both report a broken chain that is intact. There is a reference JavaScript
+  implementation of Rule A at `scripts/verify-estate.mjs` (335/335); `canon.py` is the reference
+  Python implementation of Rule B.
 - A Python-only dump of a board payload can still match Rule B **if** those
   fields are JSON ints, not floats.
 
