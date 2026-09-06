@@ -28,8 +28,11 @@ describe("/api/receipts?payer=", () => {
     const { body } = await call("?payer=0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31");
     const gap = body.unavailable_capability as unknown as Record<string, string>;
     expect(gap.capability).toBe("settlement-receipt persistence");
-    expect(gap.detail).toMatch(/X-PAYMENT-RESPONSE/);
-    expect(gap.proof).toMatch(/receipts\/latest/);
+    // Receipts ARE recorded now; UNRECORDED means THIS deployment has no store bound (a preview
+    // build without REVENUE_KV). The gap text must say that, or it teaches the wrong lesson.
+    expect(gap.detail).toMatch(/Receipts ARE written now/);
+    expect(gap.detail).toMatch(/REVENUE_KV/);
+    expect(gap.proof).toMatch(/kv_bound/);
   });
 
   it("requires a payer — it never answers for everyone", async () => {
@@ -58,6 +61,8 @@ describe("/api/receipts?payer=", () => {
     const honesty = body.honesty as unknown as Record<string, string>;
     expect(honesty.what_a_receipt_is_not).toMatch(/not evidence of payment/i);
     expect(honesty.empty_is_not_none).toMatch(/including\s+one who has paid/i);
+    expect(honesty.what_the_signature_covers).toMatch(/board-attestation-1/);
+    expect(honesty.what_the_signature_covers).toMatch(/NOT amount, asset/);
   });
 
   it("serves rows as OK once a store exists — the seam actually works", async () => {

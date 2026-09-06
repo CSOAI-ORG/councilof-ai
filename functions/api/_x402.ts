@@ -44,6 +44,8 @@ import {
 } from "./_x402_config";
 import { maybeMintCdpJwt, type CdpEnv } from "./_cdp_jwt";
 import { facilitatorDialect, toDialectPayload } from "./_x402_negotiate";
+import { attachOffers } from "./_x402_offer";
+import { buildReceiptRecord, receiptExtension, receiptPayload, signReceipt, storeReceipt } from "./_x402_receipt";
 
 // Re-exported so existing importers (and tests) keep their entry point after the converters moved
 // to _x402_config.ts to break an import cycle with _x402_negotiate.ts.
@@ -66,6 +68,11 @@ export type X402Env = CdpEnv & {
   X402_NETWORK?: string; // e.g. "base"
   X402_PAY_TO?: string; // overrides the estate default in _x402_config.ts
   X402_AMOUNT?: string; // atomic units required (string, as x402 encodes it)
+  // The ONE signing secret the edge holds: PKCS8 Ed25519 for did:web:csoai.org#board-attestation-1
+  // ("born and held in Cloudflare; the private half never leaves" — did.json). It signs the
+  // offer-receipt extension's offers and receipts. Absent ⇒ 402s and 200s are unsigned and SAY SO
+  // on the `csoai.offer_receipt` sidecar; nothing is ever fabricated in its place.
+  BOARD_SIGN_KEY_PKCS8_B64?: string;
   // Per-SKU price overrides (strings, as Cloudflare passes them) are read via _skus.ts.
   [k: string]: string | undefined;
 };
@@ -128,6 +135,15 @@ export type X402Result = {
     // What the facilitator said about Bazaar indexing, or that it said nothing. Never inferred.
     bazaar?: { status: "REPORTED" | "UNREPORTED" | "UNREADABLE"; detail: unknown; note: string };
   };
+  /**
+   * The x402 offer-receipt extension's signed receipt (§5), present only when the facilitator
+   * CONFIRMED a settle and the edge held the signing key. It is already inside `paymentResponse`;
+   * it is surfaced here too so a door can put it in its own JSON body without re-signing, and so
+   * an operator can tell "settled but unsigned" (key absent) from "not settled".
+   */
+  receipt?: { format: "jws"; signature: string };
+  /** Why there is no receipt on an otherwise successful settle. Absent when there is one. */
+  receiptGap?: string;
 };
 
 /** One entry of the canonical x402 `accepts` array (the `exact`/EIP-3009 scheme on Base). */
@@ -522,10 +538,25 @@ export async function verifyX402Payment(
     // which is the worst possible place to learn that lesson.
     const { bazaar: _bazaarSidechannel, recording_gap: _recordingGap, ...buyerFacing } =
       settlement as typeof settlement & { recording_gap?: string };
-    const paymentResponse = btoa(JSON.stringify({ success: true, ...buyerFacing }));
-    // Write it down. The grant above does not depend on this line.
-    // Write it down. The grant above does not depend on this line, but whether it SUCCEEDED is
-    // now carried on the result so an operator can tell "nothing settled" from "nothing recorded".
+
+    // ─── the signed receipt (offer-receipt extension §5) ────────────────────
+    // Issued ONLY here, after the facilitator answered success:true — "returned only on success"
+    // is the whole point of the artefact. It rides in the SettlementResponse under
+    // extensions["offer-receipt"].info.receipt (§5.1), which for this rail is the base64 JSON of
+    // the X-PAYMENT-RESPONSE header every door already echoes.
+    //
+    // A settle whose payer the facilitator did not name cannot be receipted: `payer` is a REQUIRED
+    // signed field (§5.2) and there is nothing honest to put in it. The buyer still gets the
+    // artefact — a receipt is evidence, never a gate.
+    let receipt: { format: "jws"; signature: string } | undefined;
+    let receiptGap: string | undefined;
+    const pkcs8 = (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim();
+    if (!settlement.payer) {
+      receiptGap = "the facilitator did not name a payer, and payer is a required signed field (spec §5.2)";
+    } else if (!pkcs8) {
+      receiptGap = "no BOARD_SIGN_KEY_PKCS8_B64 is set in the Pages environment, so the edge holds no key to sign a receipt with";
+    }
+
     const recorded = await recordSettlement(env, {
       transaction: settlement.transaction,
       network: settlement.network,
@@ -533,12 +564,63 @@ export async function verifyX402Payment(
       resource: resourceUrl,
       amount_atomic: accept?.amount || accept?.maxAmountRequired || null,
     });
+
+    if (!receiptGap && settlement.payer) {
+      try {
+        const rp = receiptPayload({
+          network: settlement.network || entry.network,
+          resourceUrl,
+          payer: settlement.payer,
+          issuedAt: Math.floor(Date.now() / 1000),
+          transaction: settlement.transaction,
+        });
+        receipt = await signReceipt(rp, pkcs8);
+        // The CSOAI envelope beside settled:tx:* — a NAMED extension of ours, not the spec
+        // artefact. `self` and `zero_value` are copied from the settlement record rather than
+        // recomputed, so the receipt ledger and the One Number cannot disagree about the same
+        // payment. When no record could be written they are null: unjudged, never guessed.
+        const stored = await storeReceipt(
+          env.REVENUE_KV as unknown as Parameters<typeof storeReceipt>[0],
+          buildReceiptRecord({
+            receipt,
+            payload: rp,
+            resource: resourceUrl,
+            amount_atomic: accept?.amount || accept?.maxAmountRequired || null,
+            asset: accept?.asset || null,
+            self: recorded.record ? recorded.record.self : null,
+            settlement_recorded: recorded.stored,
+          }),
+        );
+        if (!stored.stored) receiptGap = `receipt signed but not stored: ${stored.reason}`;
+      } catch (e) {
+        receipt = undefined;
+        receiptGap = `receipt signing failed: ${(e as Error).message}`;
+      }
+    }
+
+    const paymentResponse = btoa(
+      JSON.stringify({
+        success: true,
+        ...buyerFacing,
+        ...(receipt ? { extensions: receiptExtension(receipt) } : {}),
+      }),
+    );
+    // Whether the write SUCCEEDED is carried on the result so an operator can tell "nothing
+    // settled" from "nothing recorded". It is server-internal, exactly like the bazaar
+    // sidechannel: our bookkeeping gap, not a settlement fact the payer is owed, so it never
+    // reaches the X-PAYMENT-RESPONSE echo. (The call itself moved above the receipt block —
+    // the receipt copies `self` from the record rather than recomputing it.)
     if (!recorded.stored) {
-      // Server-internal, exactly like the bazaar sidechannel: it is our bookkeeping gap, not a
-      // settlement fact the payer is owed, so it must never reach the X-PAYMENT-RESPONSE echo.
       (settlement as Record<string, unknown>).recording_gap = recorded.reason;
     }
-    return { ok: true, reason: "facilitator verified and settled receipt", paymentResponse, settlement };
+    return {
+      ok: true,
+      reason: "facilitator verified and settled receipt",
+      paymentResponse,
+      settlement,
+      ...(receipt ? { receipt } : {}),
+      ...(receiptGap ? { receiptGap } : {}),
+    };
   } catch (e) {
     return { ok: false, reason: `facilitator error: ${(e as Error).message}` };
   }
@@ -702,4 +784,25 @@ export function paymentRequiredResponse(
       ...extraHeaders,
     },
   });
+}
+
+/**
+ * paymentRequiredResponseSigned — THE call every metered door makes instead of
+ * `paymentRequiredResponse`. It signs one offer per accepts[] entry (offer-receipt extension §4)
+ * and then builds the same 402, so the offers appear in BOTH the JSON body and the base64
+ * PAYMENT-REQUIRED header. That symmetry is not decoration: CDP Bazaar validate reads the header
+ * and most clients read the body, and an offer present in only one of them is an offer half the
+ * ecosystem cannot see.
+ *
+ * It is the only asynchronous thing about emitting a 402, and it never fails the response: when
+ * the key is absent or no accepts entry can be committed to, the 402 goes out exactly as before
+ * plus a `csoai.offer_receipt` sidecar saying, in words, why it carries no signature.
+ */
+export async function paymentRequiredResponseSigned(
+  paymentRequired: Record<string, unknown>,
+  env: X402Env,
+  extraHeaders: Record<string, string> = {},
+): Promise<Response> {
+  const signed = await attachOffers(paymentRequired, (env.BOARD_SIGN_KEY_PKCS8_B64 || "").trim() || undefined);
+  return paymentRequiredResponse(signed, extraHeaders);
 }

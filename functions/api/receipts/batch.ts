@@ -31,7 +31,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "../_x402";
@@ -265,7 +265,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
         explainer: `${origin}/pricing`,
       },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   // Paid: wrap the deterministic batch in one signed manifest leaf. Never re-sign the leaves.

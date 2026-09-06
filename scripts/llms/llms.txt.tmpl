@@ -38,6 +38,12 @@ Do not quote scores, n, leaders, or stamp tables from this file.
 - Discovery: GET https://councilof.ai/.well-known/x402.json — mode live · Base eip155:8453 · USDC (amounts from challenge only; no invent price)
 - Catalog: GET https://councilof.ai/api/x402
 - Free door (amount 0): GET https://councilof.ai/api/free-door — settles, charges nothing; proves the rail
+- Signed offers: every 402 carries `extensions["offer-receipt"].info.offers[]` — one server-signed offer per `accepts[]` entry (x402 Offer & Receipt extension, format jws, alg EdDSA, kid did:web:csoai.org#board-attestation-1)
+- Signed receipts: every settled 200 returns one in the X-PAYMENT-RESPONSE SettlementResponse at `extensions["offer-receipt"].info.receipt`
+- Check either without trusting us: POST https://councilof.ai/api/receipts/verify, or run scripts/verify_receipt.py against https://csoai.org/.well-known/did.json
+- Your receipts: GET https://councilof.ai/api/receipts?payer=0x… — status UNRECORDED means no store is bound on that deployment, never that you did not pay
+- We emit jws only, never eip712: the edge holds one Ed25519 key and no secp256k1 signer. A format we cannot produce is declared missing, not faked
+- A receipt proves this server signed those bytes. It is not proof money moved; check `transaction` against Base yourself
 - Verify stays free: https://councilof.ai/gspc-verify
 - Living board: GET https://councilof.ai/api/gspc — quote `totals.public_count` + `totals.lid` (never freeze here)
 - Human: free + x402 pay-as-you-go · human booking not live · no processor named

@@ -18,7 +18,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -94,7 +94,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       }),
       csoai: { schema: "csoai.eunomia-data/0.2", per: "feed-pull", lid: CSOAI_LID, ...preview, rail: railMode(env), not_paid_reason: payment.reason, catalog: `${origin}/api/x402` },
     });
-    return paymentRequiredResponse(paymentRequired);
+    return paymentRequiredResponseSigned(paymentRequired, env);
   }
 
   if (env.REVENUE_KV) {

@@ -406,7 +406,11 @@ def compose(fix: Path = FIX) -> dict:
         f"(accepts[0]: scheme {rail['scheme']}, network {rail['network']}, {rail['asset']['symbol']} {rail['asset']['contract']}, payTo {rail['pay_to']}); "
         f"pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. "
         f"Free previews are named per door under x-csoai.free_preview. Catalog: {rail['well_known']} and {cat['explainer'].rsplit('/', 1)[0]}/api/x402. "
-        f"Verify is free: {wk['verify']}. {lid}"
+        f"Verify is free: {wk['verify']}. "
+        f"Every 402 carries a server-signed offer and every settled 200 a signed receipt, per the x402 "
+        f"Offer & Receipt extension (JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at "
+        f"https://csoai.org/.well-known/did.json). Check either without trusting this document: POST it to "
+        f"/api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. {lid}"
     )
     spec = {
         "openapi": "3.1.0",
@@ -451,13 +455,65 @@ def compose(fix: Path = FIX) -> dict:
                         "error": {"type": "string"},
                         "resource": {"type": "object", "properties": {"url": {"type": "string"}, "description": {"type": "string"}, "mimeType": {"type": "string"}, "serviceName": {"type": "string"}, "tags": {"type": "array", "items": {"type": "string"}}}},
                         "accepts": {"type": "array", "minItems": 1, "items": {"$ref": "#/components/schemas/X402Accept"}},
-                        "extensions": {"type": "object", "description": "extensions.bazaar carries info.input (a sample request) and schema (input/output JSON Schema)"},
+                        "extensions": {
+                            "type": "object",
+                            "description": (
+                                "extensions.bazaar carries info.input (a sample request) and schema "
+                                "(input/output JSON Schema). extensions['offer-receipt'].info.offers[] "
+                                "carries one server-signed offer per accepts[] entry, format 'jws' — a "
+                                "compact EdDSA JWS whose payload is the offer (x402 Offer & Receipt "
+                                "extension \u00a74.1). It is present only when the edge holds its signing "
+                                "key; csoai.offer_receipt.signed says which, and why, on every 402."
+                            ),
+                            "properties": {
+                                "offer-receipt": {
+                                    "type": "object",
+                                    "properties": {
+                                        "info": {
+                                            "type": "object",
+                                            "properties": {
+                                                "offers": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "required": ["format", "signature"],
+                                                        "properties": {
+                                                            "format": {"type": "string", "const": "jws"},
+                                                            "acceptIndex": {"type": "integer", "description": "unsigned convenience field; match offers to accepts[] by payload fields, never by index (\u00a74.1.1)"},
+                                                            "signature": {"type": "string", "description": "JWS compact serialization containing the offer payload"},
+                                                        },
+                                                    },
+                                                }
+                                            },
+                                        }
+                                    },
+                                }
+                            },
+                        },
                     },
                 },
             },
         },
         "paths": paths,
         "x-x402": {
+            "offer_receipt": {
+                "supported": True,
+                "spec": "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
+                "spec_commit": "69652a69798f0b08f95bef33318896e36e210f7e",
+                "formats_emitted": ["jws"],
+                "formats_not_emitted": ["eip712"],
+                "why_no_eip712": (
+                    "the edge holds one Ed25519 signing key (a Cloudflare Pages secret) and no secp256k1 "
+                    "signer; eip712 would require a key nobody has provisioned, so we emit none rather "
+                    "than a format we cannot produce"
+                ),
+                "alg": "EdDSA",
+                "kid": "did:web:csoai.org#board-attestation-1",
+                "did_document": "https://csoai.org/.well-known/did.json",
+                "verify_hosted": f"{BASE}/api/receipts/verify",
+                "verify_offline": "scripts/verify_receipt.py",
+                "receipts_by_payer": f"{BASE}/api/receipts?payer=0x…",
+            },
             "schema_of_source": {"well_known": wk["schema"], "catalog": cat["schema"]},
             "scheme": rail["scheme"],
             "network": rail["network"],

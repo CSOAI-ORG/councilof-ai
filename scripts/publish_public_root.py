@@ -45,6 +45,7 @@ from adapters import (  # noqa: E402
     staged_leaves,
     swift_notices,
     witness_queue,
+    x402_receipts,
     xrpl,
 )
 
@@ -56,6 +57,10 @@ SURFACES = {
     "xrpl.basket.root",
     "public.notice",
     "benji.onchain.supply",
+    # One leaf per signed x402 receipt. Its own surface rather than public.notice because a
+    # receipt is a claim about THIS estate's own conduct, not a notice about the world, and a
+    # reader filtering the root must be able to tell the two apart without parsing kinds.
+    "receipts.v1",
 }
 PAYLOAD_CAP = 3072
 LIVE_ROOT = "https://councilof.ai/root.json"
@@ -524,6 +529,10 @@ def main() -> int:
     provider_diff_out = provider_diff.collect(ROOT)
     hub_out = hub_cite.collect(ROOT)
     witness_out = witness_queue.collect(ROOT)
+    # Signed x402 receipts (offer-receipt extension §5) from REVENUE_KV, plus disk mirrors.
+    # Never the compact JWS and never the payer address — see scripts/adapters/x402_receipts.py
+    # for why publishing either would spend the buyer's privacy on the buyer's behalf.
+    x402_receipts_out = x402_receipts.collect(ROOT)
     # EVM permission state (+ EIP-1186 proofs) and permission-event history for
     # the tokenised-RWA roster. Public RPCs only; never raise; dark RPC = fewer
     # leaves. See scripts/adapters/evm_permissions.py / evm_permission_events.py
@@ -553,6 +562,7 @@ def main() -> int:
     # summary) staged by scripts/watch/provider_watch.py. File reader, no
     # network, never raises. See scripts/adapters/provider_diff.py.
     leaves.extend(provider_diff_out["leaves"])
+    leaves.extend(x402_receipts_out["leaves"])
     leaves.extend(evm_out["leaves"])
     leaves.extend(evm_events_out["leaves"])
 

@@ -9,7 +9,7 @@ import {
   x402Accepts,
   buildPaymentRequiredV2,
   declareBazaarHttpGet,
-  paymentRequiredResponse,
+  paymentRequiredResponseSigned,
   CSOAI_LID,
   type X402Env,
 } from "./_x402";
@@ -95,7 +95,7 @@ export const onRequestGet: PagesFunction = async ({ request, env }) => {
           catalog: u("/api/x402"),
         },
       });
-      return paymentRequiredResponse(paymentRequired);
+      return paymentRequiredResponseSigned(paymentRequired, env);
     }
   }
 
