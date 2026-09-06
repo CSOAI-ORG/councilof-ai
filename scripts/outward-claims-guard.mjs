@@ -193,11 +193,20 @@ async function checkAxisCounts() {
  * whole job of an outward-claims guard: the estate's own tests check what we do, not what we say
  * about ourselves somewhere else.
  *
- * BASELINE, not a target. It fails when the count goes UP, so a new bad entry cannot arrive
- * unnoticed, and it fails when the count goes DOWN without this number being lowered, so a fix
- * cannot be quietly un-recorded. Set REGISTRY_BASELINE=n to move it deliberately.
+ * BASELINE, not a target, and it is a LIST OF NAMES in a file — scripts/mcp-registry-baseline.json.
+ * It fails on any unfollowable entry not named there, so a new bad publish cannot arrive unnoticed,
+ * and it fails when a named entry has closed and has not been removed, so a fix cannot be quietly
+ * un-recorded.
+ *
+ * IT USED TO BE A COUNT IN AN ENV VAR, and that was wrong twice over. `REGISTRY_BASELINE ?? 0`
+ * meant a run without the variable failed with "up from 0" against a healthy registry, and any
+ * run could pass REGISTRY_BASELINE=999 and silence it; a baseline you can set from the command
+ * line is not a baseline. Worse, a count cannot see a SWAP. On 2026-09-06 the number fell 37 -> 19
+ * and every one of the 19 was NEW: the 2026-09-05 set had genuinely been fixed — republished with
+ * no repository field, which the ruling makes correct, or repointed at the real repo — while a
+ * fresh batch of 19 landed underneath. A count reported that as an improvement. Names do not.
  */
-const REGISTRY_BASELINE = Number(process.env.REGISTRY_BASELINE ?? 0);
+const REGISTRY_BASELINE_FILE = "scripts/mcp-registry-baseline.json";
 const REGISTRY = "https://registry.modelcontextprotocol.io/v0/servers";
 
 /** Semver-ish compare. Version parts are NUMBERS: "1.0.9" must lose to "1.0.10". */
@@ -272,22 +281,42 @@ async function checkRegistry() {
     if (!url) { noField++; continue; }
     let status = 0;
     try { status = (await fetch(url, { headers: UA, redirect: "follow" })).status; } catch { status = 0; }
-    if (status !== 200) unfollowable.push(`${s.name}: ${url} -> ${status || "unreachable"}`);
+    if (status !== 200) unfollowable.push({ name: s.name, repo: url, status });
   }
   ok("mcp registry repository field", `${noField} entries declare no repository, which the ` +
     `2026-09-05 ruling makes the correct state for a server with no public source`);
 
-  const n = unfollowable.length;
-  if (n > REGISTRY_BASELINE) {
+  const { readFileSync: readB, existsSync: hasB } = await import("node:fs");
+  if (!hasB(REGISTRY_BASELINE_FILE)) {
+    return bad("mcp registry repository claims",
+      `${unfollowable.length} unfollowable and ${REGISTRY_BASELINE_FILE} is missing — without the ` +
+      `recorded list there is nothing to compare against, and an empty comparison is not a pass.`);
+  }
+  const recorded = new Set(
+    (JSON.parse(readB(REGISTRY_BASELINE_FILE, "utf8")).entries ?? []).map((e) => e.server),
+  );
+  const seen = new Set(unfollowable.map((u) => u.name));
+  const arrived = unfollowable.filter((u) => !recorded.has(u.name));
+  const closed = [...recorded].filter((name) => !seen.has(name));
+
+  if (arrived.length) {
     bad("mcp registry repository claims",
-      `${n} entries advertise a repository a stranger cannot follow, up from ${REGISTRY_BASELINE}. ` +
-      `New: ${unfollowable.slice(0, 6).join("; ")}${n > 6 ? ` (+${n - 6} more)` : ""}`);
-  } else if (n < REGISTRY_BASELINE) {
+      `${arrived.length} ${arrived.length === 1 ? "entry advertises" : "entries advertise"} a ` +
+      `repository a stranger cannot follow and ${arrived.length === 1 ? "is" : "are"} NOT in ` +
+      `${REGISTRY_BASELINE_FILE}: ` +
+      `${arrived.slice(0, 6).map((u) => `${u.name} -> ${u.repo} (${u.status || "unreachable"})`).join("; ")}` +
+      `${arrived.length > 6 ? ` (+${arrived.length - 6} more)` : ""}. A new bad publish does not ` +
+      `hide inside an old allowance — fix it, or record it deliberately.`);
+  } else if (closed.length) {
     bad("mcp registry repository claims",
-      `${n} unfollowable, DOWN from ${REGISTRY_BASELINE} — good, but lower REGISTRY_BASELINE to ` +
-      `${n} in the same change, or the next regression hides inside the old allowance.`);
+      `${closed.length} recorded ${closed.length === 1 ? "entry is" : "entries are"} no longer ` +
+      `unfollowable: ` +
+      `${closed.slice(0, 6).join("; ")}${closed.length > 6 ? ` (+${closed.length - 6} more)` : ""}. ` +
+      `Good — remove them from ${REGISTRY_BASELINE_FILE} in the same change, or the next ` +
+      `regression hides inside the stale allowance.`);
   } else {
-    ok("mcp registry repository claims", `${n} unfollowable, unchanged from the recorded baseline`);
+    ok("mcp registry repository claims",
+      `${seen.size} unfollowable, exactly the set recorded in ${REGISTRY_BASELINE_FILE}`);
   }
 }
 
@@ -930,7 +959,27 @@ async function main() {
       console.error("selftest FAIL: a null manifest claims nothing and must pass"); bad++;
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 16 decision cases, all correct");
+    // The registry baseline as a SET, which is the whole reason it stopped being a count.
+    // The swap case is the one a count cannot see: same size, different members.
+    const setVerdict = (recorded, seen) => {
+      const arrived = seen.filter((x) => !recorded.includes(x));
+      const closed = recorded.filter((x) => !seen.includes(x));
+      return arrived.length ? "FAIL_NEW" : closed.length ? "FAIL_STALE" : "OK";
+    };
+    const SETC = [
+      { name: "same set", recorded: ["a", "b"], seen: ["b", "a"], want: "OK" },
+      { name: "a new bad entry", recorded: ["a", "b"], seen: ["a", "b", "c"], want: "FAIL_NEW" },
+      { name: "one closed, unrecorded", recorded: ["a", "b"], seen: ["a"], want: "FAIL_STALE" },
+      // Equal counts, different members. The old count baseline called this "unchanged".
+      { name: "a swap at equal count", recorded: ["a", "b"], seen: ["a", "c"], want: "FAIL_NEW" },
+      { name: "empty both ways", recorded: [], seen: [], want: "OK" },
+    ];
+    for (const c of SETC) {
+      const got = setVerdict(c.recorded, c.seen);
+      if (got !== c.want) { console.error(`selftest FAIL: baseline ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 21 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
