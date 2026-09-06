@@ -19,7 +19,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from mill_window import select_window  # noqa: E402
+from mill_window import chat_capable_slugs, select_window  # noqa: E402
 
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
@@ -113,7 +113,7 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
         },
     )
     try:
-        with urllib.request.urlopen(req, timeout=90) as r:
+        with urllib.request.urlopen(req, timeout=20) as r:
             d = json.loads(r.read())
     except urllib.error.HTTPError as e:
         err = e.read()[:300].decode("utf-8", "replace")
@@ -153,7 +153,7 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    slugs = [m["slug"] for m in lock["models"] if m.get("slug")]
+    slugs = chat_capable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
     shard = int(os.environ.get("MILL_SHARD", "0"))
     shards = int(os.environ.get("MILL_SHARDS", "1"))
@@ -200,7 +200,10 @@ def main() -> int:
                     break
         order = [p for p in providers if p in mapped] + [p for p in mapped if p not in providers]
         router_names = [f"{slug}:{p}" for p in order] or [slug] + [f"{slug}:{p}" for p in providers]
-        for prompt, expected in GOV_ITEMS:
+        bank_n = max(1, min(int(os.environ.get("MILL_BANK_N", "10")), len(GOV_ITEMS)))
+        bank = GOV_ITEMS[:bank_n]
+        rec["n"] = len(bank)
+        for prompt, expected in bank:
             st, txt = "UNCHECKABLE", "no-provider"
             for name in router_names:
                 st, txt = chat(tok, name, INSTR + prompt)
