@@ -16,7 +16,7 @@
 **Do not submit from an agent session.** Owner applies.
 
 Official: https://www.nvidia.com/en-us/startups/  
-Apply: https://mynvidia.force.com/Inception/s/NVIDIA-Inception-for-Startups  
+Apply: https://www.nvidia.com/en-gb/startups/ (200, verified 2026-09-06). The previously listed `mynvidia.force.com/Inception/s/NVIDIA-Inception-for-Startups` **returns 404**, as does its parent `/Inception/s/` — that portal path is gone, so the pack could not be actioned from it.  
 FAQ: no fee, no equity. Incorporated + website + ≥1 developer + <10 years. Revenue not required. Bootstrapped OK.
 
 **Excluded (do not trigger):** consulting / outsourced dev, crypto-associated companies, cloud resellers, public companies. CSOAI is a **measurement product** (signed GSPC cards, Council OS, Hub mill). Not a consultancy. Not a token. XRPL Devnet hashes are pointers, not a product.
