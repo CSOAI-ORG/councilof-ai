@@ -61,6 +61,9 @@ const EXISTING = [
   // the documents already declare.
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
+  // /feeds is the public feed surface; the state-change feed (real) lives at
+  // /interop/feed.json. Exact 200 rule — never hand-written duplicate files.
+  "/feeds /interop/feed.json 200",
   "/arena                 /dashboard?tab=play  308",
   "/arena/                /dashboard?tab=play  308",
   "/arena.html            /dashboard?tab=play  308",
