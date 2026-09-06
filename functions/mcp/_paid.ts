@@ -70,6 +70,12 @@ export function buildPaidRequest(name: string, args: Record<string, unknown>, or
       if (flag("preview")) u.searchParams.set("preview", "1");
       break;
     }
+    case "provider_diff": {
+      const provider = str("provider");
+      if (provider) u.searchParams.set("provider", provider);
+      if (flag("history")) u.searchParams.set("history", "1");
+      break;
+    }
     case "receipts_batch": {
       if (!str("from")) return { error: "from is required (ISO-8601)" };
       u.searchParams.set("from", str("from"));
