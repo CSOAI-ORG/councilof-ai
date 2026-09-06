@@ -68,28 +68,46 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         url: `${origin}/api/free-door`,
         paid_for: null,
         amount: "0",
+        description:
+          "Live board totals and the signed public root — free: the GSPC board and Merkle root a buyer can verify without paying.",
         note: "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
         indexed_in: "x402 Bazaar (PayAI)",
       },
-      { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance" },
+      { method: "GET", url: `${origin}/api/request-attestation?subject=<id>&axis=<slug>`, paid_for: "issuance",
+        description:
+          "Signed measurement card — one model × one axis sealed under the board-attestation key, rooted and witnessed." },
       // `<id>` meant a MODEL id two lines above and an OBLIGATION id here, so a buyer reading
       // this file tries the obvious thing and gets 404 unknown_obligation. Probed 2026-09-05:
       // obligation=gpt-4o -> 404, obligation=dora|eu-cra|article-50|article-53 -> 402. The
       // endpoint does return the valid list in its 404 body, so the buyer can recover — but a
       // placeholder that names what it wants costs nothing and spends no round trip.
-      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1` },
+      { method: "GET", url: `${origin}/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1`, paid_for: "assembly",
+        description:
+          "Signed compliance evidence bundle — per-obligation EU AI Act Article 50, DORA, EU-CRA or Article 53 with signed per-item proof." },
+      { method: "GET", url: `${origin}/api/eunomia-data?feed=1`, paid_for: "assembly",
+        description:
+          "Signed derivative data feed — validated measurement series, authenticated and ready to build on." },
+      { method: "GET", url: `${origin}/api/proof?bundle=1`, paid_for: "assembly",
+        description:
+          "Inclusion proof bundle — Merkle, Rekor and OpenTimestamps proofs for named leaves." },
+      { method: "GET", url: `${origin}/api/rwa/evidence?asset=<symbol|issuer_address>`, paid_for: "issuance", free_preview: `${origin}/api/rwa/evidence?asset=<symbol>&preview=1`,
+        description:
+          "RWA asset evidence — signed evidence for an XRPL token (issuer, funding stage, compliance shape) with a free preview." },
       // PARAMETER NAME, CHECKED AGAINST THE HANDLER, NOT ASSUMED. This advertised `vendor=<slug>`
       // and the endpoint reads only `url=` (marking-evidence.ts: searchParams.get("url")); the
       // string "vendor" appears nowhere in it. A buyer following this document got
       // 400 bad_request and never reached a payment challenge — a door listed as buyable that
       // could not be bought. Probed live 2026-09-05: ?vendor=openai -> 400,
       // ?url=<a real asset> -> 402.
-      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=<https://…>&preview=1` },
-      { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly" },
-      { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1` },
+      { method: "GET", url: `${origin}/api/art50/marking-evidence?url=<https://…>`, paid_for: "assembly", free_preview: `${origin}/api/art50/marking-evidence?url=<https://…>&preview=1`,
+        description:
+          "Art. 50 marking evidence — EU AI Act Article 50 watermark/marking verification for a named URL, with a free preview." },
+      { method: "GET", url: `${origin}/api/feeds/provider-diff?history=1`, paid_for: "assembly",
+        description:
+          "Provider change record — measurable differences between two measurement rounds for a named model provider." },
+      { method: "GET", url: `${origin}/api/receipts/batch?from=<iso>&to=<iso>`, paid_for: "assembly", free_preview: `${origin}/api/receipts/batch?from=<iso>&to=<iso>&preview=1`,
+        description:
+          "Signed receipts batch — every settlement record in a date range, signed, with the payer's view." },
     ],
     mcp: {
       url: `${origin}/mcp`,
