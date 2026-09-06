@@ -22,6 +22,8 @@ on:
       - 'public/**'
       - 'functions/**'
       - 'scripts/**'
+      - 'harness/x402-census/**'
+      - 'docs/operations/PRODUCERS.json'
       - 'package.json'
       - 'package-lock.json'
       - 'wrangler.jsonc'
@@ -87,6 +89,20 @@ jobs:
       #
       # docs/operations/PRODUCERS.json names source -> producer -> output. This step re-runs the
       # producers proven deterministic and delegates to the --check the others already ship.
+      # The x402 census producers are Python and their --check is registered in PRODUCERS.json, but
+      # two of the three have nothing to compare until a second round exists — a check that cannot
+      # fail is decoration. Their --selftest CAN fail today: each renders twice, compares the bytes,
+      # then plants a single byte in the rows and asserts --check goes red. That is the half worth
+      # running on every PR, so it runs here rather than waiting for the gate to become real.
+      #
+      # Verified to fail: removing the `series` block from a leaf, or the `flipped` key from a delta,
+      # turns the matching selftest red and exits 1.
+      - name: x402 census producers — determinism, the n>=30 ladder, and a planted byte
+        run: |
+          python3 scripts/grants/x402_census_round.py --selftest
+          python3 scripts/grants/x402_census_delta.py --selftest
+          python3 harness/x402-census/build_cards.py --selftest
+
       # It deliberately does NOT re-run signers (keys are not in CI and must not be) or byte-diff
       # producers that stamp a timestamp or a random id — those are recorded ungated WITH THE
       # REASON, which is the more useful half of the manifest.
