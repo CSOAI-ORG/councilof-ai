@@ -1,0 +1,24 @@
+{
+  "alg": "Ed25519",
+  "body": {
+    "kind": "gspc.measurement-card",
+    "axis": "care",
+    "model": "microsoft/Phi-4-mini-instruct",
+    "issuer": "CSOAI Ltd",
+    "n": 30,
+    "accuracy": 0.2,
+    "status": "MEASURED",
+    "unmeasured": [],
+    "public_framing": "Measurement, not certification. Empty is not zero.",
+    "verify": "https://councilof.ai/gspc-verify",
+    "brand": "Council of AI",
+    "route": "hf-router"
+  },
+  "id": "1ae9fdbd47ba9520ca9363cab7f11cbf02be6ab24b6eae613a55d10c7a266de8",
+  "preimage_rule": "sha256(canonical body)",
+  "signature": "8921a898f9832d1acf25c368655e241b4c383e655dc108db9ba83471c5817687e4f4dbfd7fec50299d42b879bb8ed3c82cc70a5718a73c69ab9ba8e9021eb101",
+  "did": "did:web:csoai.org#board-attestation-1",
+  "n": 30,
+  "quotable": true,
+  "not_a_certificate": true
+}
