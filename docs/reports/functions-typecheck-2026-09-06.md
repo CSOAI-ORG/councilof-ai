@@ -22,8 +22,7 @@ strictness *I* chose, not a defect the repo has. Excluding `*.test.ts`.
 
 **181 of 233 are one missing package.** `@cloudflare/workers-types` is not installed, and two
 files already reference it directly (`hub-cards.ts` → *"Cannot find type definition file for
-'@cloudflare/workers-types'"*), so the dependency was assumed long before it was declared. Added
-to `devDependencies` here.
+'@cloudflare/workers-types'"*), so the dependency was assumed long before it was declared. **Not added here.** `npm install --package-lock-only` for it removed 53 other package entries from `package-lock.json` — `@drizzle-team/brocli`, the `@esbuild-kit/*` transitives — and a lockfile change that broad belongs in its own PR where it is the subject, not a side effect of a report. `pr-gates` runs `npm ci`, which fails outright when package.json and the lock disagree, so shipping the dependency without the lock was never an option either.
 
 Sixteen TS2307 "cannot find module" errors in the first run were **my sparse checkout**, not the
 code — JSON imports of `public/signed/*` and `evidence/*`. They vanished once those paths were
@@ -72,5 +71,6 @@ Deliberately. `pr-gates` is green today; adding this would turn it red on 126 fi
 and the v3 rule is that gates are never widened to make a tip deployable — the inverse applies
 too. Land the checker and the number first; fix in batches; wire the gate when the count is zero.
 
-    npm i -D @cloudflare/workers-types    # removes 181 of 233
+    npm i -D @cloudflare/workers-types    # removes 181 of 233; own PR, lockfile included
+    # then set "types": ["@cloudflare/workers-types"] in tsconfig.functions.json
     npm run check:functions               # then 52
