@@ -14,6 +14,7 @@ from mill_window import (  # noqa: E402
     chat_capable_slugs,
     live_providers,
     mill_exit_for_window,
+    mill_names_for_kind,
     millable_slugs,
     provider_order,
     route_kind,
@@ -222,6 +223,62 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     assert "nomic-ai/nomic-embed-text-v1.5" in got
 
 
+def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
+    """Chat mill last-fail was nebius. Embed/fill-mask/class rows were never
+    hit on their route. MILL_EXHAUSTED is not evidence they cannot 200.
+    What would make this fail: treating provider-or-policy as terminal for
+    sentence-similarity the same way as text-generation."""
+    models = [
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "sentence-transformers/all-MiniLM-L6-v2",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "answerdotai/ModernBERT-base",
+            "pipeline_tag": "fill-mask",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "BAAI/bge-small-en-v1.5",
+            "pipeline_tag": "feature-extraction",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "dslim/bert-base-NER",
+            "pipeline_tag": "token-classification",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "sentence-transformers/all-MiniLM-L6-v2-done",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "route_kind": "similarity",
+            "reason": "HTTP 400 embeddings not served",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "facebook/opt-125m" not in got
+    assert "sentence-transformers/all-MiniLM-L6-v2" in got
+    assert "answerdotai/ModernBERT-base" in got
+    assert "BAAI/bge-small-en-v1.5" in got
+    assert "dslim/bert-base-NER" in got
+    assert "sentence-transformers/all-MiniLM-L6-v2-done" not in got
+    assert route_kind("sentence-similarity") == "similarity"
+    assert route_kind("fill-mask") == "fill-mask"
+    assert route_kind("token-classification") == "text"
+
+
 def test_millable_drops_image_lora_windows() -> None:
     """34050320277 shard 15: 0/91 on text-to-image LoRAs. Those must not
     consume the window that chat-like UNMEASURED need for n_measured>=1000."""
@@ -287,6 +344,24 @@ def test_payload_for_kind_is_the_200_shapes() -> None:
     assert "sentences" in sim["inputs"]
     assert payload_for_kind("fill-mask")["inputs"] == "The [MASK] is here"
     assert payload_for_kind("feature")["inputs"] == "hello world"
+    zs = payload_for_kind("text", "zero-shot-classification")
+    assert zs["inputs"] == "This is a test."
+    assert "candidate_labels" in zs["parameters"]
+    qa = payload_for_kind("text", "question-answering")
+    assert "question" in qa["inputs"] and "context" in qa["inputs"]
+
+
+def test_mill_names_nonchat_pins_hf_inference_not_groq() -> None:
+    """Chat mill never defaults hf-inference. Embed mill must, or MiniLM
+    never 200s. What would make this fail: spraying groq onto bge."""
+    chat = mill_names_for_kind("Qwen/Qwen3-8B", "chat", ["featherless-ai"])
+    assert chat[0] == "Qwen/Qwen3-8B"
+    assert "Qwen/Qwen3-8B:featherless-ai" in chat
+    assert "Qwen/Qwen3-8B:hf-inference" not in chat
+    feat = mill_names_for_kind("BAAI/bge-small-en-v1.5", "feature", [])
+    assert feat[0] == "BAAI/bge-small-en-v1.5"
+    assert feat[1] == "BAAI/bge-small-en-v1.5:hf-inference"
+    assert "BAAI/bge-small-en-v1.5:groq" not in feat
 
 
 def test_exhausted_millable_is_not_a_cron_killing_fail() -> None:
@@ -310,9 +385,11 @@ if __name__ == "__main__":
     test_provider_order_never_defaults_to_hf_inference()
     test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
+    test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
+    test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 18 passed")
+    print("test_mill_window: 20 passed")

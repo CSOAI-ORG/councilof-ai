@@ -85,6 +85,9 @@ TEXT_TAGS = frozenset(
     }
 )
 ROUTER_TAGS = CHAT_TAGS | FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
+# Chat mill last-fail (nebius / provider-or-policy) is not an embed miss.
+NONCHAT_RETRY_TAGS = FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
+CHAT_ROUTE_KINDS = frozenset({"", "chat", "try-chat-then-feature"})
 
 # LoRA/image windows 400 on chat/embeddings (mill 34050320277 shard 15: 0/91).
 # Drop them so remaining chat-like UNMEASURED get the slots.
@@ -188,8 +191,30 @@ def provider_order(mapped: list[str], defaults: list[str] | tuple[str, ...] = DE
     return base
 
 
+def mill_names_for_kind(slug: str, kind: str, mapped: list[str] | None = None) -> list[str]:
+    """Which router model names to try. Pure. No HTTP.
+
+    Chat: bare slug then DEFAULT_PROVIDERS (never hf-inference first).
+    Non-chat: bare slug then hf-inference — MiniLM/bge/bert 200s on that path.
+    Do not spray groq/nebius onto an embed model.
+    """
+    mapped = list(mapped or [])
+    if kind == "chat":
+        order = provider_order(mapped)
+        return [slug] + [f"{slug}:{p}" for p in order]
+    names = [slug, f"{slug}:hf-inference"]
+    for p in mapped:
+        if not p or p == "hf-inference":
+            continue
+        n = f"{slug}:{p}"
+        if n not in names:
+            names.append(n)
+    return names
+
+
 def millable_slugs(models: list[dict]) -> list[str]:
-    """UNMEASURED, plus UNCHECKABLE that only failed on hf-inference.
+    """UNMEASURED, plus UNCHECKABLE that only failed on hf-inference,
+    plus non-chat UNCHECKABLE whose last mill was a chat spray.
     practice-mill / MEASURED stay out. A green tick is not evidence."""
     out: list[str] = []
     for m in models:
@@ -205,17 +230,26 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if st == "UNMEASURED" and m.get("unmeasured_reason") == "no live Inference Provider":
             continue
         if st == "UNCHECKABLE":
+            reason = (m.get("reason") or "").lower()
+            if "429" in reason:
+                out.append(slug)
+                continue
+            last_kind = m.get("route_kind") or ""
+            # Chat mill 400 is not an embed miss. Retry non-chat tags once
+            # on their own route. Skip if that route already ran.
+            if tag in NONCHAT_RETRY_TAGS:
+                if last_kind in CHAT_ROUTE_KINDS:
+                    out.append(slug)
+                continue
             if _unserved_weight_pack(slug):
                 continue
             name = slug.lower().rsplit("/", 1)[-1]
             if name.endswith("-base"):
                 continue
-            reason = (m.get("reason") or "").lower()
-            if "429" in reason:
+            # Empty Hub tag: one re-probe so mill can fill pipeline_tag.
+            if tag == "" and last_kind in ("", "chat"):
                 out.append(slug)
                 continue
-            # Already sprayed the router (bare slug + providers). Last call was
-            # often invalid nebius; do not spend another hour on the same 286.
             if "provider or policy" in reason or "nebius" in reason:
                 continue
             if "hf-inference" not in reason and tag not in CHAT_TAGS:

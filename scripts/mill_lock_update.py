@@ -46,6 +46,10 @@ def apply_mill(lock: dict, mill: dict) -> dict:
             m["last_mill"] = as_of
             if row.get("n") is not None:
                 m["n"] = row["n"]
+            if row.get("route_kind"):
+                m["route_kind"] = row["route_kind"]
+            if row.get("pipeline_tag") and not m.get("pipeline_tag"):
+                m["pipeline_tag"] = row["pipeline_tag"]
         elif st == "UNCHECKABLE":
             reason = row.get("reason") or ""
             if "429" in reason:
@@ -55,6 +59,10 @@ def apply_mill(lock: dict, mill: dict) -> dict:
             m["last_mill"] = as_of
             if reason:
                 m["reason"] = reason[:200]
+            if row.get("route_kind"):
+                m["route_kind"] = row["route_kind"]
+            if row.get("pipeline_tag") and not m.get("pipeline_tag"):
+                m["pipeline_tag"] = row["pipeline_tag"]
     lock["n_locked"] = len(lock.get("models") or [])
     lock["n_measured"] = sum(
         1

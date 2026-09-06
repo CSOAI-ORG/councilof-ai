@@ -24,6 +24,7 @@ from mill_window import (  # noqa: E402
     DEFAULT_PROVIDERS,
     live_providers,
     mill_exit_for_window,
+    mill_names_for_kind,
     millable_slugs,
     provider_order,
     route_kind,
@@ -192,12 +193,57 @@ def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
         return "UNCHECKABLE", f"{type(e).__name__}"
 
 
-def payload_for_kind(kind: str) -> dict:
+def payload_for_kind(kind: str, tag: str = "") -> dict:
     if kind == "similarity":
         return {"inputs": {"source_sentence": "hello", "sentences": ["hello", "world"]}}
     if kind == "fill-mask":
         return {"inputs": "The [MASK] is here"}
+    if tag == "zero-shot-classification":
+        return {
+            "inputs": "This is a test.",
+            "parameters": {"candidate_labels": ["ok", "not-ok"]},
+        }
+    if tag == "question-answering":
+        return {"inputs": {"question": "What is this?", "context": "This is a test."}}
     return {"inputs": "hello world"}
+
+
+def mill_nonchat(
+    tok: str, slug: str, kind: str, tag: str, names: list[str]
+) -> tuple[str, str, str]:
+    """Reachability mill for embed/fill-mask/class. Returns status, text, endpoint.
+
+    Chat mill 400s these. Counting HTTP 200 as practice-mill is not a GSPC grade.
+    """
+    if kind in ("similarity", "feature"):
+        st, txt = "UNCHECKABLE", "no-provider"
+        for name in names:
+            st, txt = embed(tok, name)
+            if st == "OK":
+                return st, txt, EMBED_ROUTER
+        st, txt = hf_infer(tok, slug, payload_for_kind(kind, tag))
+        return st, txt, HF_INFER
+    if kind in ("fill-mask", "text"):
+        payloads = [payload_for_kind(kind, tag)]
+        if kind == "fill-mask":
+            payloads = [
+                {"inputs": "The [MASK] is here"},
+                {"inputs": "The <mask> is here"},
+            ]
+        st, txt = "UNCHECKABLE", "no-payload"
+        for payload in payloads:
+            st, txt = hf_infer(tok, slug, payload)
+            if st == "OK":
+                return st, txt, HF_INFER
+        return st, txt, HF_INFER
+    # try-chat-then-feature: do not spray groq/nebius. Hub tag was empty.
+    st, txt = "UNCHECKABLE", "no-provider"
+    for name in names:
+        st, txt = embed(tok, name)
+        if st == "OK":
+            return st, txt, EMBED_ROUTER
+    st, txt = hf_infer(tok, slug, payload_for_kind("feature", tag))
+    return st, txt, HF_INFER
 
 
 def parse_token(text: str) -> str | None:
@@ -252,7 +298,8 @@ def main() -> int:
         rc = mill_exit_for_window(len(lock.get("models") or []), len(slugs), 0)
         if rc == 0:
             print(
-                "MILL_EXHAUSTED no millable slugs left — already tried or not chat-capable. "
+                "MILL_EXHAUSTED no millable slugs left — already tried, "
+                "or chat-policy spray with no unused non-chat route. "
                 "Not a coverage success; not a cron-killing fail.",
                 flush=True,
             )
@@ -300,33 +347,24 @@ def main() -> int:
             mapped = list(lock_providers[slug]) + [p for p in mapped if p not in lock_providers[slug]]
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
-        # Bare slug first: the router picks a live provider. Measured 6 Sep:
-        # Qwen/Qwen3-8B HTTP 200; Qwen/Qwen3-8B:groq 400. Never pin hf-inference.
-        router_names = [slug] + [f"{slug}:{p}" for p in order]
+        # Bare slug first for chat. Non-chat pins hf-inference (MiniLM/bge/bert 200).
+        if kind == "chat":
+            router_names = [slug] + [f"{slug}:{p}" for p in order]
+        else:
+            router_names = mill_names_for_kind(slug, kind, mapped)
+        rec["router_names"] = router_names
         if kind != "chat":
             rec["n"] = 1
             rec["note"] = (
                 "HF Inference Providers reachability mill. Not a GSPC board rewrite. n<30 unquotable."
             )
-            rec["endpoint"] = EMBED_ROUTER if kind in ("similarity", "feature") else ROUTER
-            st, txt = "UNCHECKABLE", "no-provider"
-            if kind in ("similarity", "feature", "text", "fill-mask"):
-                for name in router_names:
-                    st, txt = embed(tok, name)
-                    if st == "OK":
-                        rec["router_model"] = name
-                        break
-            if st != "OK":
-                rec["endpoint"] = ROUTER
-                for name in router_names:
-                    st, txt = chat(tok, name, INSTR + GOV_ITEMS[0][0])
-                    if st == "OK":
-                        rec["router_model"] = name
-                        break
+            st, txt, endpoint = mill_nonchat(tok, slug, kind, tag, router_names)
+            rec["endpoint"] = endpoint
             rec["hits"] = 1 if st == "OK" else 0
             rec["answers"] = [{"call": st, "raw": txt[:80]}]
             if st == "OK":
                 rec["status"] = "practice-mill"
+                rec["router_model"] = router_names[0]
             else:
                 rec["status"] = "UNCHECKABLE"
                 rec["reason"] = txt[:200]
