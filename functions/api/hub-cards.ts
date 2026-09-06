@@ -271,6 +271,17 @@ export const onRequestGet: PagesFunction = async (ctx) => {
       superseded_ledger: supersededIds
         ? `Read. ${supersededExcluded} served row(s) referenced a card the ledger has replaced and were dropped; the replacement carries the live status.`
         : "UNREADABLE. Staleness could not be checked, so no row was dropped and these counts are an UPPER BOUND on the live population, not the population.",
+      // LP07/08. Five numbers here describe the same population and nothing said how
+      // they relate, so a reader met 1232, 376, 0, 856 and 856 with no way to check any
+      // of them against the others. Stated once, with the live values, so the arithmetic
+      // is visible rather than reconstructable.
+      cell_arithmetic:
+        `rows_served_by_indexes ${rawCells.length} − duplicates_collapsed ${duplicatesCollapsed}` +
+        (supersededIds ? ` − superseded_excluded ${supersededExcluded}` : " − superseded_excluded UNCHECKABLE") +
+        ` = cells ${cells.length}. Of those cells, measured ${seen.measured} carry a signed body reading MEASURED. ` +
+        "The terms are never added to each other, and none of them is a coverage score. " +
+        "n_measured on /api/state → hub_census counts a DIFFERENT population (the 3M-listing " +
+        "census walk) and is not this number.",
       partial_read_has_no_total: complete
         ? "Every index answered, so counts are the whole published population."
         : "An index did not answer, so measured/unmeasured/cells are null. A subtotal is not a total, and the rows behind an unread index are disproportionately UNMEASURED — publishing the subtotal would understate what is unmeasured. Read counts.read_so_far instead, and treat it as a floor, never as the population.",

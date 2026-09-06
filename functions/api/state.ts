@@ -528,6 +528,33 @@ export const onRequestGet: PagesFunction = async () => {
     hub_census: {
       authority: SRC_CENSUS,
       live_endpoint: "/api/compute",
+      // LP07/08. Five numbers describe the hub cells and nothing said how they relate,
+      // so a reader met "measured 856" on /api/hub-cards and "n_measured 0" here with no
+      // way to know they count different populations. The rule is stated once, here,
+      // rather than five times in prose beside five numbers.
+      //
+      // No value is copied: /api/hub-cards serves those at request time from the
+      // published indexes, and duplicating them here would create a sixth number that
+      // goes stale. This states the ARITHMETIC and where each term is served.
+      cell_arithmetic: {
+        rule: "cells = rows_served_by_indexes − duplicates_collapsed − superseded_excluded",
+        served_by: "/api/hub-cards → counts",
+        terms: {
+          rows_served_by_indexes: "every row across the published indexes, before any collapse",
+          duplicates_collapsed: "rows dropped so a (model, axis) pair contributes ONE cell, not one per index it appears in",
+          superseded_excluded: "cells whose card SUPERSEDED.jsonl has retired; the file still resolves, the cell is not counted twice",
+          cells: "distinct (model, axis) pairs left, which is the only figure that may be called a cell count",
+          measured: "of those cells, the ones whose signed card body says MEASURED — passed through, never upgraded here",
+        },
+        never: "The terms are never added to each other, and no term is a coverage score.",
+      },
+      // The two "measured" figures on this estate count different populations, and the
+      // names alone do not say so.
+      n_measured_is_not_hub_cards_measured: {
+        this_field: "GSPC cells written by the 3M-listing census walk, out of listings_observed. It is 0.",
+        the_other: "/api/hub-cards → counts.measured is cells on third-party Hub models with a signed card body reading MEASURED.",
+        rule: "Different denominators, different populations. Never compare them and never add them.",
+      },
       listings_observed: fact(
         (hubCensus as { n_unique_ids?: number }).n_unique_ids ?? null,
         "catalogued",

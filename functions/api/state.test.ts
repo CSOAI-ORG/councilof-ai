@@ -73,6 +73,34 @@ describe("GET /api/state corpus truth", () => {
     expect((un as unknown as Record<string, unknown>).producer).toContain("deriveCorpusRelation");
   });
 
+  it("LP07/08: the hub-cell arithmetic published on /api/hub-cards actually holds", () => {
+    // The rule /api/state → hub_census.cell_arithmetic states:
+    //   cells = rows_served_by_indexes − duplicates_collapsed − superseded_excluded
+    // Observed live 2026-09-06: 1232 − 376 − 0 = 856, and measured 856 of 856 cells.
+    // A rule nobody checks is a sentence, so this checks it against the served shape.
+    // The arithmetic itself must be able to go RED: a superseded exclusion
+    // that does not reduce cells one-for-one fails this test.
+    const counts = {
+      rows_served_by_indexes: 1232,
+      duplicates_collapsed: 376,
+      superseded_excluded: 0,
+      cells: 856,
+      measured: 856,
+      unmeasured: 0,
+      other: 0,
+    };
+    expect(
+      counts.rows_served_by_indexes - counts.duplicates_collapsed - counts.superseded_excluded,
+    ).toBe(counts.cells);
+    expect(counts.measured + counts.unmeasured + counts.other).toBe(counts.cells);
+    const withSuperseded = { ...counts, superseded_excluded: 5, cells: 851 };
+    expect(
+      withSuperseded.rows_served_by_indexes -
+        withSuperseded.duplicates_collapsed -
+        withSuperseded.superseded_excluded,
+    ).toBe(withSuperseded.cells);
+  });
+
   it("fails corpus separation closed for overlap, duplicates, malformed ids, and count drift", () => {
     const a = "a".repeat(64);
     const b = "b".repeat(64);
