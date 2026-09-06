@@ -234,4 +234,24 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/free-door");
     expect(plain.csoai?.deliverable).toBeTruthy();
   });
+
+  // MEASURED 2026-09-06 against the live PayAI index: our entry's stored `description` is EXACTLY
+  // 120 characters, cut mid-sentence — "...free forever — this". That is the whole of what an agent
+  // browsing 28,230 resources is shown before it decides whether to open the door, and the record
+  // is a snapshot: it was written on 5 Sep and six settlements since have not refreshed it.
+  //
+  // So the first sentence has to survive alone at 120. Today it is 118 — it fits by two
+  // characters, and by accident rather than by rule. One more word in the opening clause and the
+  // Bazaar's copy of our only listing ends mid-word again, with nothing anywhere reporting it.
+  it("says the whole first sentence inside the 120 characters the Bazaar keeps", async () => {
+    const { DESCRIPTION } = await import("./free-door");
+    const first = DESCRIPTION.split(". ")[0] + ".";
+    expect(first.length,
+      `the Bazaar stores 120 chars; this first sentence is ${first.length} and would be cut mid-word`)
+      .toBeLessThanOrEqual(120);
+    expect(first, "the first sentence must name what the door serves, not only its price")
+      .toMatch(/board totals|signed root/);
+    expect(DESCRIPTION, "no price on any surface — the amount lives in accepts[] and nowhere else")
+      .not.toMatch(/\$|USDC|\d+\s*(cent|usd)/i);
+  });
 });
