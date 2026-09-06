@@ -415,3 +415,17 @@ describe("TUI 2 — OS instrument chrome", () => {
     });
   });
 });
+
+describe("XRPL instruments tab (M-OS03)", () => {
+  it("registers the native pane with no standalone path", () => {
+    const t = tabById("xrpl");
+    expect(t).toBeDefined();
+    expect(t?.kind).toBe("native");
+    expect(t?.path).toBe("");
+  });
+  it("painting no typed count into the rail", () => {
+    const t = tabById("xrpl");
+    expect(t?.label).toBe("XRPL instruments");
+    expect(JSON.stringify(t?.blurb ?? "")).not.toMatch(/1[0-9]\s*[/]\s*1[0-9]/);
+  });
+});
