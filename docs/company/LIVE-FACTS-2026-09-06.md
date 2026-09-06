@@ -18,11 +18,13 @@ under 24 hours.
 
 ## Safe to quote as-is
 
+*(The MCP registry row below moved on 06 Sep: 330 → 354. It is stable between our own publishes, not across them.)*
+
 | Figure | Value | Why it is stable |
 |---|---|---|
 | Board axes | **22 axes · 22 measured · 0 unmeasured** | unchanged across every check this week; `/api/gspc` → `totals` |
 | Signed card index | **335 / 335** (`n_cards == n_cells`) | locked by `BOARD-RULING.md`; do not clamp to 150 or 313 |
-| MCP registry servers | **330** | third-party registry, changes only when we publish |
+| MCP registry servers | **354** (353 PyPI, 1 npm) | re-counted 06 Sep 08:45Z — **was 330; +24 since**. Third-party registry; changes only when we publish. All 354 are `io.github.CSOAI-ORG/*` |
 | Interchange formats | **372** | `interop/index.json`; all 372 resolve (F65) |
 
 ## Which direction is legitimate, and why
