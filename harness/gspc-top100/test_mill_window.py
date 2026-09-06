@@ -15,6 +15,7 @@ from mill_window import (  # noqa: E402
     live_providers,
     mill_exit_for_window,
     mill_names_for_kind,
+    mill_router_names,
     millable_slugs,
     provider_order,
     resolve_route,
@@ -119,7 +120,8 @@ def test_millable_skips_already_tried() -> None:
     got = millable_slugs(models)
     assert "a/unmeasured" in got
     assert "b/practiced" not in got
-    assert "c/uncheckable" not in got
+    # ASR UNCHECKABLE without a Hub probe still needs providers_live.
+    assert "c/uncheckable" in got
     # Quant packs must be attempted so UNCHECKABLE is recorded, not skipped.
     assert "Qwen/Qwen2.5-7B-Instruct-AWQ" in got
     assert "d/awq" in got
@@ -149,10 +151,13 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
         },
     ]
     got = millable_slugs(models)
-    assert "nomic-ai/nomic-embed-text-v1.5" not in got
-    # Bare-slug chat 200s on the router; retry chat-tag UNCHECKABLE.
+    # No providers_live key: Hub probe, not a respray.
+    assert "nomic-ai/nomic-embed-text-v1.5" in got
     assert "Qwen/Qwen3-8B" in got
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
+    models[0]["providers_live"] = []
+    got = millable_slugs(models)
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
 
 
 def test_millable_skips_zero_provider_unmeasured() -> None:
@@ -223,6 +228,7 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
             "pipeline_tag": "text-generation",
             "status": "UNCHECKABLE",
             "route_kind": "chat",
+            "providers_live": [],
             "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
         },
     ]
@@ -232,13 +238,64 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     # because the last DEFAULT spray named nebius.
     assert "facebook/opt-125m" in got
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
-    # hf-inference miss on a non-chat tag is the embed route already run.
-    assert "nomic-ai/nomic-embed-text-v1.5" not in got
-    # After chat-bare the reason is no longer nebius. That must not re-open millable.
+    # nomic has no providers_live key — Hub probe, not an embed respray.
+    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    # After chat-bare the reason is no longer nebius. Bare respray is forbidden
+    # once Hub has been probed empty. Missing providers_live still needs a probe.
     models[0]["route_kind"] = "chat-bare"
     models[0]["reason"] = "HTTP 400 {\"error\":{\"message\":\"The requested model 'facebook/opt-125m' is not supported.\"}}"
+    models[0]["providers_live"] = []
     got = millable_slugs(models)
     assert "facebook/opt-125m" not in got
+
+
+def test_millable_probes_uncheckable_for_live_providers() -> None:
+    """millable=0 is not terminal. Hub live mapping is the 200-route.
+    What would make this fail: skipping chat-bare forever even when
+    providers_live is together, or HTTP-milling an empty mapping."""
+    models = [
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["featherless-ai"],
+        },
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": [],
+        },
+        {
+            "slug": "meta-llama/Llama-3.1-8B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-mapped",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["together"],
+        },
+        {
+            "slug": "needs/probe",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "Qwen/Qwen3-8B" in got
+    assert "facebook/opt-125m" not in got
+    assert "meta-llama/Llama-3.1-8B-Instruct" not in got
+    assert "needs/probe" in got
+    assert mill_router_names("facebook/opt-125m", "chat", [], uncheckable=True) == []
+    mapped = mill_router_names("Qwen/Qwen3-8B", "chat", ["featherless-ai"], uncheckable=True)
+    assert mapped == ["Qwen/Qwen3-8B:featherless-ai"]
+    assert "Qwen/Qwen3-8B:groq" not in mapped
+    assert "nebius" not in "".join(mapped)
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
@@ -283,6 +340,7 @@ def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
             "status": "UNCHECKABLE",
             "route_kind": "similarity",
             "reason": "HTTP 400 embeddings not served",
+            "providers_live": [],
         },
     ]
     got = millable_slugs(models)
@@ -436,6 +494,7 @@ if __name__ == "__main__":
     test_provider_order_never_defaults_to_hf_inference()
     test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
+    test_millable_probes_uncheckable_for_live_providers()
     test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
     test_millable_includes_embed_and_fill_mask()
@@ -445,4 +504,4 @@ if __name__ == "__main__":
     test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 22 passed")
+    print("test_mill_window: 23 passed")

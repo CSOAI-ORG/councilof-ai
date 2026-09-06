@@ -25,6 +25,7 @@ from mill_window import (  # noqa: E402
     live_providers,
     mill_exit_for_window,
     mill_names_for_kind,
+    mill_router_names,
     millable_slugs,
     provider_order,
     resolve_route,
@@ -301,9 +302,9 @@ def main() -> int:
         )
         if rc == 0:
             print(
-                "MILL_EXHAUSTED no millable slugs left — already tried, "
-                "or chat-policy spray with no unused non-chat route. "
-                "Not a coverage success; not a cron-killing fail.",
+                "MILL_EXHAUSTED no millable slugs left — Hub live mapping "
+                "empty or already milled. Not thousands coverage; "
+                "not a cron-killing fail.",
                 flush=True,
             )
         else:
@@ -354,18 +355,24 @@ def main() -> int:
             mapped = list(lock_providers[slug]) + [p for p in mapped if p not in lock_providers[slug]]
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
-        # Bare slug first for chat. UNCHECKABLE chat retries must not fill
-        # DEFAULT_PROVIDERS — that spray is what wrote 1311 nebius 400s.
-        if kind == "chat":
-            lock_st = lock_row.get("status") or "UNMEASURED"
-            if lock_st == "UNCHECKABLE":
-                router_names = mill_names_for_kind(slug, "chat", mapped, defaults=())
-                rec["route_kind"] = "chat-bare"
-            else:
-                router_names = [slug] + [f"{slug}:{p}" for p in order]
-        else:
-            router_names = mill_names_for_kind(slug, kind, mapped)
+        rec["providers_live"] = list(mapped)
+        lock_st = lock_row.get("status") or "UNMEASURED"
+        uncheckable = lock_st == "UNCHECKABLE"
+        # UNCHECKABLE: mapped providers only. Empty mapping: no HTTP mill.
+        router_names = mill_router_names(slug, kind, mapped, uncheckable=uncheckable)
+        if uncheckable and kind == "chat" and mapped:
+            rec["route_kind"] = "chat-mapped"
         rec["router_names"] = router_names
+        if uncheckable and not router_names:
+            rec["status"] = "UNCHECKABLE"
+            rec["reason"] = "no live Inference Provider"
+            rec["providers_live"] = []
+            rec["n"] = 0
+            rec["hits"] = 0
+            rec["answers"] = [{"call": "UNCHECKABLE", "raw": "no live Inference Provider"}]
+            rows.append(rec)
+            print(slug, rec["status"], rec["reason"], flush=True)
+            continue
         if kind != "chat":
             rec["n"] = 1
             rec["note"] = (

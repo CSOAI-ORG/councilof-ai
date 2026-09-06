@@ -50,6 +50,8 @@ def apply_mill(lock: dict, mill: dict) -> dict:
                 m["route_kind"] = row["route_kind"]
             if row.get("pipeline_tag") and not m.get("pipeline_tag"):
                 m["pipeline_tag"] = row["pipeline_tag"]
+            if "providers_live" in row:
+                m["providers_live"] = list(row.get("providers_live") or [])
         elif st == "UNCHECKABLE":
             reason = row.get("reason") or ""
             if "429" in reason:
@@ -63,6 +65,8 @@ def apply_mill(lock: dict, mill: dict) -> dict:
                 m["route_kind"] = row["route_kind"]
             if row.get("pipeline_tag") and not m.get("pipeline_tag"):
                 m["pipeline_tag"] = row["pipeline_tag"]
+            if "providers_live" in row:
+                m["providers_live"] = list(row.get("providers_live") or [])
     lock["n_locked"] = len(lock.get("models") or [])
     lock["n_measured"] = sum(
         1
@@ -109,6 +113,8 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
                     row["route_kind"] = ov["route_kind"]
                 if ov.get("pipeline_tag") and not row.get("pipeline_tag"):
                     row["pipeline_tag"] = ov["pipeline_tag"]
+                if "providers_live" in ov:
+                    row["providers_live"] = list(ov.get("providers_live") or [])
             elif st == "UNCHECKABLE":
                 row["status"] = "UNCHECKABLE"
                 if ov.get("reason"):
@@ -119,6 +125,8 @@ def restore_original_membership(original: dict, overlays: list[dict]) -> dict:
                     row["route_kind"] = ov["route_kind"]
                 if ov.get("pipeline_tag") and not row.get("pipeline_tag"):
                     row["pipeline_tag"] = ov["pipeline_tag"]
+                if "providers_live" in ov:
+                    row["providers_live"] = list(ov.get("providers_live") or [])
         models.append(row)
     out = dict(original)
     out["models"] = models

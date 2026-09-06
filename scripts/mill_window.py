@@ -104,10 +104,12 @@ SKIP_TAGS = frozenset(
 )
 
 
-def _unserved_weight_pack(slug: str) -> bool:
+def _unserved_weight_pack(slug: str, *, include_base: bool = True) -> bool:
     low = slug.lower()
     if any(m in low for m in UNSERVED_MARKERS):
         return True
+    if not include_base:
+        return False
     name = low.rsplit("/", 1)[-1]
     return name.endswith("-base")
 
@@ -236,10 +238,35 @@ def mill_names_for_kind(
     return names
 
 
+def mill_router_names(
+    slug: str,
+    kind: str,
+    mapped: list[str] | None,
+    *,
+    uncheckable: bool = False,
+) -> list[str]:
+    """HTTP mill names. Empty list means do not call the router.
+
+    Uncheckable + empty mapping: no DEFAULT spray, no bare respray.
+    Uncheckable chat + mapped: mapped suffixes only (bare already 400'd).
+    """
+    mapped = [p for p in (mapped or []) if p and p != "nebius"]
+    if uncheckable:
+        if not mapped:
+            return []
+        if kind == "chat":
+            return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
+        return mill_names_for_kind(slug, kind, mapped)
+    return mill_names_for_kind(slug, kind, mapped)
+
+
 def millable_slugs(models: list[dict]) -> list[str]:
-    """UNMEASURED, plus UNCHECKABLE that only failed on hf-inference,
-    plus non-chat UNCHECKABLE whose last mill was a chat spray.
-    practice-mill / MEASURED stay out. A green tick is not evidence."""
+    """UNMEASURED, plus UNCHECKABLE that still have a 200-route.
+
+    millable=0 is not thousands coverage. Hub live mapping is the route.
+    A probed-empty mapping must not respray known-unsupported 400s.
+    practice-mill / MEASURED stay out. A green tick is not evidence.
+    """
     out: list[str] = []
     for m in models:
         slug = m.get("slug")
@@ -259,38 +286,24 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 out.append(slug)
                 continue
             last_kind = m.get("route_kind") or ""
-            already_hf = "not supported by provider hf-inference" in reason
-            # Chat mill 400 is not an embed miss. Retry non-chat tags once
-            # on their own route. Skip if that route already ran, or if
-            # restore dropped route_kind but the hf-inference miss remains.
-            if tag in NONCHAT_RETRY_TAGS:
-                if already_hf or last_kind not in CHAT_ROUTE_KINDS:
+            probed = "providers_live" in m
+            live_list = [p for p in (m.get("providers_live") or []) if p] if probed else None
+            if probed and live_list:
+                if last_kind in ("chat-mapped",):
+                    continue
+                if _unserved_weight_pack(slug):
                     continue
                 out.append(slug)
                 continue
-            if _unserved_weight_pack(slug):
+            if probed and not live_list:
                 continue
-            name = slug.lower().rsplit("/", 1)[-1]
-            if name.endswith("-base"):
+            # Not Hub-probed: millable so mill can GET live mapping.
+            # HTTP mill runs only if mill_router_names is nonempty.
+            # -base is a chat-mill miss, not a Hub-probe skip (ModernBERT-base).
+            if _unserved_weight_pack(slug, include_base=False):
                 continue
-            # Empty Hub tag: one re-probe so mill can fill pipeline_tag.
-            if tag == "" and last_kind in ("", "chat"):
-                if already_hf:
-                    continue
-                out.append(slug)
-                continue
-            # Chat-bare already ran. The new reason is "model not supported",
-            # not nebius — that must not re-open millable.
-            if tag in CHAT_TAGS and last_kind in ("chat", "chat-bare"):
-                continue
-            # Chat policy/nebius: one retry without DEFAULT spray.
-            if tag in CHAT_TAGS and ("provider or policy" in reason or "nebius" in reason):
-                out.append(slug)
-                continue
-            if "provider or policy" in reason or "nebius" in reason:
-                continue
-            if "hf-inference" not in reason and tag not in CHAT_TAGS:
-                continue
+            out.append(slug)
+            continue
         out.append(slug)
     return out
 

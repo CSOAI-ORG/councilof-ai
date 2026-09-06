@@ -119,6 +119,7 @@ def test_apply_mill_persists_route_kind_so_nonchat_retry_is_once() -> None:
                 "route_kind": "similarity",
                 "pipeline_tag": "sentence-similarity",
                 "reason": "HTTP 400 embeddings not served",
+                "providers_live": [],
             }
         ],
     }
@@ -290,6 +291,9 @@ def test_restore_persists_route_kind_and_nonchat_reason() -> None:
     assert row["route_kind"] == "similarity"
     assert row["last_mill"] == "2026-09-06T20:29:00Z"
     assert "hf-inference" in (row.get("reason") or "")
+    overlay["models"][0]["providers_live"] = []
+    out = restore_original_membership(original, [overlay])
+    assert out["models"][0]["providers_live"] == []
     assert "nomic-ai/nomic-embed-text-v1.5" not in millable_slugs(out["models"])
 
 
