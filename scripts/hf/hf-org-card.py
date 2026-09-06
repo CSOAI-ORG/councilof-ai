@@ -46,6 +46,8 @@ LINKS = {
     "DID document (did:web:csoai.org)": "https://csoai.org/.well-known/did.json",
     "How to verify by hand": "https://councilof.ai/signed/HOW-TO-VERIFY.md",
     "A2A agent card": "https://councilof.ai/.well-known/agent-card.json",
+    "AG-UI stream (living board as events)": "https://councilof.ai/api/agui/gspc-state",
+    "Council OS (the board, for people)": "https://councilof.ai/dashboard",
     "Methodology DOI": f"https://doi.org/{DOI}",
 }
 # A stale string counts only in a sentence with no negation: "never print 2410 measured" is a guardrail.

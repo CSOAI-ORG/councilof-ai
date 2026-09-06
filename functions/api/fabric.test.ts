@@ -41,6 +41,7 @@ function fixtureFetcher(
     sameMerkleDifferentBytes?: boolean;
     inconsistentScope?: boolean;
     a2aReachable?: boolean;
+    a2aRpcError?: boolean;
     invalidRootSignature?: boolean;
   } = {},
 ) {
@@ -113,12 +114,34 @@ function fixtureFetcher(
           skills: [{ id: "board" }, { id: "verify" }],
         });
       }
-      if (url.pathname === "/api/a2a/key") {
+      // THE REAL A2A DOOR, in the shape it actually answers in. This fixture used to mock
+      // `/api/a2a/key`, an endpoint that has never existed: it 404s in production, so the
+      // manifest reported UNREACHABLE for a runtime that was answering the whole time, and the
+      // test agreed because it mocked the invented path. A fixture that invents its upstream
+      // certifies the bug. Verified against production 2026-09-06: SendMessage returns
+      // {jsonrpc, id, result: {message: {messageId, contextId, role, parts:[{text}]}}}, and a
+      // protocol error returns HTTP 200 with an `error` member — which is why the code under
+      // test reads the body, and why the middle branch below exists.
+      if (url.pathname === "/api/a2a") {
+        if (options.a2aRpcError) {
+          return json({
+            jsonrpc: "2.0",
+            id: "fabric-probe",
+            error: { code: -32602, message: "params.message needs messageId and parts" },
+          });
+        }
         return options.a2aReachable
           ? json({
-              kid: "did:web:example.test#key",
-              alg: "Ed25519",
-              publicKey: "abc",
+              jsonrpc: "2.0",
+              id: "fabric-probe",
+              result: {
+                message: {
+                  messageId: "m-1",
+                  contextId: "c-1",
+                  role: "ROLE_AGENT",
+                  parts: [{ text: "Lid: 22 axes measured" }],
+                },
+              },
             })
           : json({ error: "not_found" }, 404);
       }
@@ -342,6 +365,7 @@ describe("GET /api/fabric", () => {
     });
     expect(byId(manifest, "a2a-discovery").state).toBe("CATALOGUED");
     expect(byId(manifest, "a2a-runtime").state).toBe("UNREACHABLE");
+    expect(byId(manifest, "a2a-runtime").endpoint).toBe("/api/a2a");
     expect(byId(manifest, "a2ui-renderer").state).toBe("UNCHECKABLE");
     expect(byId(manifest, "hf-census")).toMatchObject({
       state: "CATALOGUED",
@@ -405,7 +429,22 @@ describe("GET /api/fabric", () => {
     });
   });
 
-  it("keeps a reachable A2A key catalogued and a matching witness state-specific", async () => {
+  it("does not call a JSON-RPC error a working runtime, though it arrives as HTTP 200", async () => {
+    // The mutation that matters. /api/a2a answers 200 for protocol errors, so a rail gated on
+    // `probe.ok` alone would print RUNTIME_OBSERVED over an error body. This pins the opposite.
+    const manifest = await buildFabricManifest(
+      "https://example.test/api/fabric",
+      fixtureFetcher({ a2aRpcError: true }),
+      OBSERVED_AT,
+    );
+
+    const runtime = byId(manifest, "a2a-runtime");
+    expect(runtime.state).toBe("UNCHECKABLE");
+    expect(runtime.state).not.toBe("RUNTIME_OBSERVED");
+    expect(runtime.last_error).toContain("-32602");
+  });
+
+  it("reports the answering A2A door as observed, and a matching witness state-specific", async () => {
     const manifest = await buildFabricManifest(
       "https://example.test/api/fabric",
       fixtureFetcher({ matchingWitness: true, a2aReachable: true }),
@@ -413,8 +452,9 @@ describe("GET /api/fabric", () => {
     );
 
     expect(byId(manifest, "a2a-runtime")).toMatchObject({
-      state: "CATALOGUED",
-      summary: expect.stringContaining("does not prove task routing"),
+      state: "RUNTIME_OBSERVED",
+      endpoint: "/api/a2a",
+      summary: expect.stringContaining("SendMessage was routed and answered"),
     });
     expect(byId(manifest, "root-witness")).toMatchObject({
       state: "RUNTIME_OBSERVED",
