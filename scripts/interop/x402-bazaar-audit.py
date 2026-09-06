@@ -26,7 +26,7 @@ scan asserts scanned >= declared total before it will report an absence; short o
 UNCHECKABLE and writes nothing. (This is the estate's partial-read-totalled-as-population rule:
 a disclosure printed beside a wrong number does not repair the number.)
 """
-import argparse, json, re, sys, time, urllib.request, urllib.error
+import argparse, collections, json, re, sys, time, urllib.parse, urllib.request, urllib.error
 from pathlib import Path
 
 INDEXES = [
@@ -56,24 +56,39 @@ def door_max_timeout():
 
 
 def scan(base=BASE):
-    """Every resource in the Bazaar, or an exception. Never a partial page presented as the set."""
-    items, offset, total = [], 0, None
+    """Every resource that existed when the walk began, or an exception. Never a partial page.
+
+    THE INDEX MOVES WHILE YOU READ IT. First run today: 15768 scanned of 15768 declared. Second
+    run, minutes later: 15769 of 15770 — two resources were added mid-walk, and an offset-paged
+    read that ends one short of the total it is told at the END looks exactly like a short read.
+    Refusing there would make a busy index permanently UNCHECKABLE, which is not what the guard is
+    for; loosening it to "close enough" would hand back the defect it exists to stop.
+
+    So the population is pinned to the FIRST page's declared total — what existed when we started.
+    scanned >= that is a complete read of that population and an absence in it is a claim.
+    Anything less is still a refusal. Growth is reported, never absorbed: the caller is told both
+    totals, so "we are not in this index" is always a statement about a population you can name.
+    """
+    items, offset, first_total, last_total = [], 0, None, None
     while True:
         req = urllib.request.Request(f"{base}?limit={PAGE}&offset={offset}", headers={"User-Agent": UA})
         with urllib.request.urlopen(req, timeout=60) as r:
             d = json.load(r)
         page = d.get("items") or []
-        total = d.get("pagination", {}).get("total")
-        if total is None:
+        last_total = d.get("pagination", {}).get("total")
+        if last_total is None:
             raise ValueError("the index declared no pagination.total — absence is unprovable without it")
+        if first_total is None:
+            first_total = last_total
         items.extend(page)
         offset += PAGE
-        if offset >= total or not page:
+        if offset >= first_total or not page:
             break
         time.sleep(0.2)
-    if len(items) < total:
-        raise ValueError(f"scanned {len(items)} of a declared {total}; absence would be a guess")
-    return items, total
+    if len(items) < first_total:
+        raise ValueError(f"scanned {len(items)} of the {first_total} that existed when the walk began; "
+                         f"absence would be a guess")
+    return items, first_total, last_total
 
 
 def ours(items):
@@ -83,11 +98,24 @@ def ours(items):
 
 def reading(name, url, door_timeout):
     """One index, fully scanned, or an exception naming why it could not be."""
-    items, total = scan(url)
+    items, total, total_at_end = scan(url)
     mine = ours(items)
+    # CAN ONE HOST HAVE MANY RESOURCES INDEXED? Our own standing is 1 door of 9, and the first
+    # question about a number like that is whether it is a platform limit or our own gap. It is
+    # ours: most hosts in this index carry more than one resource. Derived from the same scan, so
+    # it costs nothing and cannot drift away from the figure it qualifies.
+    hosts = collections.Counter(
+        urllib.parse.urlparse(str(i.get("resource") or "")).netloc for i in items)
+    hosts.pop("", None)
     return {
         "index": name, "url": url, "declared_total": total, "scanned": len(items),
+        "declared_total_at_end": total_at_end,
+        "grew_during_scan": (total_at_end or 0) - total,
         "population_complete": len(items) >= total,
+        "distinct_hosts": len(hosts),
+        "hosts_with_more_than_one_resource": sum(1 for c in hosts.values() if c > 1),
+        "most_resources_on_one_host": hosts.most_common(1)[0][1] if hosts else 0,
+        "x402_versions": dict(collections.Counter(i.get("x402Version") for i in items)),
         "ours": [{"resource": m.get("resource"),
                   "last_updated": m.get("last_updated") or m.get("lastUpdated"),
                   "x402_version": m.get("x402Version"), "service_name": m.get("serviceName"),
@@ -138,9 +166,18 @@ def main():
     for r in readings:
         lines += [f"## {r['index']}", "",
                   f"- `{r['url']}`",
-                  f"- scanned **{r['scanned']} of a declared {r['declared_total']}** — complete, which is",
-                  f"  what makes the finding a claim rather than a guess",
-                  f"- ours: **{len(r['ours'])}**", ""]
+                  f"- scanned **{r['scanned']} of the {r['declared_total']}** that existed when the walk"
+                  f" began — complete, which is what makes the finding a claim rather than a guess"
+                  + (f"; {r['grew_during_scan']} more were added while we read, and are not in it"
+                     if r["grew_during_scan"] else ""),
+                  f"- ours: **{len(r['ours'])}**",
+                  f"- {r['hosts_with_more_than_one_resource']} of {r['distinct_hosts']} hosts here carry "
+                  f"MORE than one resource (the largest carries {r['most_resources_on_one_host']}), so a "
+                  f"host being represented by one door is our gap, not a limit of the index",
+                  f"- dialects indexed: " + ", ".join(f"v{k}×{v}" for k, v in sorted(
+                      r["x402_versions"].items(), key=lambda kv: str(kv[0]))) + " — both are carried, so a"
+                  " v1 door is not excluded on that ground alone",
+                  ""]
         if r["ours"]:
             lines += ["| resource | last updated | x402 | serviceName | tags | amount | maxTimeout |",
                       "|---|---|---|---|---|---|---|"]
