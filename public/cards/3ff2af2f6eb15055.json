@@ -1,0 +1,99 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:28:03Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:arbitrum",
+      "chain": "arbitrum",
+      "chain_id": 42161,
+      "head": {
+        "block": 502226561,
+        "block_hash": "0xc31b5e12f603cf63e6003c9e3f0cf90f5cbd439c80d0234b9e14980c14ae5dd0",
+        "block_time": "2026-09-06T04:28:03Z"
+      },
+      "n_contracts": 5,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:arbitrum",
+          "from": 500901156,
+          "to": 500901305,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:USDY:arbitrum",
+          "from": 500898807,
+          "to": 500898956,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:BENJI:arbitrum",
+          "from": 500898831,
+          "to": 500898980,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:TBILL:arbitrum",
+          "from": 500902820,
+          "to": 500902969,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        },
+        {
+          "subject": "evm-events:USTBL:arbitrum",
+          "from": 500902820,
+          "to": 500902869,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 500891858,
+          "rpc": "arb1.arbitrum.io"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on arbitrum that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3ff2af2f6eb15055af1a8e4a3b3aa5a5d3b21cc3466aab6303bddf3905a7f886",
+    "sig_ed25519": "5e861724d92e610761cf80432adf9bd4896670edf9859956ee531067748b016c2efd613d2b8474fe16c91b0d5dbd532c065e626dcbbe664f4fb755b8d9711c00",
+    "source_urls": [
+      "https://arb1.arbitrum.io"
+    ],
+    "subject": "evm-events:scan:arbitrum coverage at block 502226561",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:arbitrum",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "670c28102b6a73c9eb45729f97244788bc873162c9ef5fe82f36ab8ef1394e2a",
+    "eefb4ed3207fe9d93510fa852c52928e754761288d50c08a12bde9f0504a8870",
+    "699114a9b8c95dde61f98521536144468dadd1ea84cf8c198a229d979ce3f824",
+    "4c49f2432383c59cc079950b2a7eb8f46e24b21276c1c8a03049edaaccf5839c",
+    "559100e88d7784ca9a180d6abdd11bc09682849a3ddb71f37eb5876c29e1a956",
+    "ef2499472ba0bb200b78c27ad1d6b65da3559830412470679c6cb21c751692d2",
+    "ada2a88cbc167b416df7cb07c33399e85c0f7325256b351622a8a80221f44c8c",
+    "b7ae9f8e2eafa40e8424ac1bd0cce2738dbee30fd6be7993aa39ef2c64bfac1d"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:16:22.466Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 10330,
+      "issuer": "Circle",
+      "issuer_address": "rGm7WCVp9gb4jZHWTEtGUr4dd74z2XuWhE",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 4306247.82890076,
+      "symbol": "USDC",
+      "verified_domain": null,
+      "verified_via": "XRPScan well-known directory"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "74d662e70bcf7ae5a50891a2906cf25714ae98dc86869df160322cbacce7d0ec",
+    "sig_ed25519": "cbd5ad00621990717bf84915cfe8d9ad159114bc1f2153208cc95b2895bcaeb80c19c79b024bd35f7d65dc7a4baedb4ccdac18cf111ec9c8994e7de7c41bf307",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDC public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": [
+      "strict_two_way_toml"
+    ]
+  },
+  "proof": [
+    "61b8d7fce49a8ffb66a422460de6803a011e7922b7e3d8068fdf7d57f91a53e7",
+    "fbfc8f118c77b83f3ad958e2e753958c9ca4f2a9036d9fcae640cdf35313500d",
+    "271302417d974c8e870c35e629e11560ec51fba3b8295df23c379b283cdfbb17",
+    "db2444100c08bdd487895839cc0af59a1c355cd75ef289abeb45dd4ca1abb5a6",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "f763899c3271c78a5633d112c4e5b7c22b2992908684e10b7e7c9d63ac1b4fbf",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "0aaec1ce2ec114c3530e8c777570015dca6e5dd878fe6ec2a5ffb19a01799f68"
+  ]
+}

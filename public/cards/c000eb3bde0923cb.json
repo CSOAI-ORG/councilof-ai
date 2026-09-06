@@ -1,0 +1,63 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:28:06Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-scan/0.1",
+      "subject": "evm-events:scan:polygon",
+      "chain": "polygon",
+      "chain_id": 137,
+      "head": {
+        "block": 93309235,
+        "block_hash": "0xe2f2173360ac5140ed5aa0addf55c9e15c7f3e0d80f8f597af369c0a91ac17aa",
+        "block_time": "2026-09-06T04:28:06Z"
+      },
+      "n_contracts": 1,
+      "coverage": [
+        {
+          "subject": "evm-events:BUIDL:polygon",
+          "from": 93291211,
+          "to": 93303210,
+          "events_new": 0,
+          "events_total": 0,
+          "scanned_from": 93100835,
+          "rpc": "polygon-bor-rpc.publicnode.com"
+        }
+      ],
+      "unmeasured": [
+        "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+      ],
+      "attests": "the block ranges of each roster contract on polygon that this run read with eth_getLogs for the listed permission events, and how many it found; absence in a range is stated only for that range",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c000eb3bde0923cb1225d3650e40260a030ae371e9913a1994fc4694c1ded5a8",
+    "sig_ed25519": "b5fdcff814bb25817a0eba0cdae876c9e35ff92fba7fa11638c23c069d53912caefa68a4987a73ca279279f325995aa4c7597028ac0b9191ff22e0c925f96408",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com"
+    ],
+    "subject": "evm-events:scan:polygon coverage at block 93309235",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:polygon",
+      "coverage:permission-events"
+    ],
+    "unmeasured": [
+      "events before scanned_from (public eth_getLogs is range-capped; archive endpoint needed)"
+    ]
+  },
+  "proof": [
+    "e9e36e018fd9720933ee4698aea2b99cc30d9f90762d11c9fae1c1d5ccdf529a",
+    "6a376550b3249cdd66f966ea3c83f4d1701ce699284660bcd68b078a1d28f9fe",
+    "a7b93ede776b1e9eca6d69c8c3405f8fbbac7d2dea2ce21975f8e628bb8fd490",
+    "4c49f2432383c59cc079950b2a7eb8f46e24b21276c1c8a03049edaaccf5839c",
+    "559100e88d7784ca9a180d6abdd11bc09682849a3ddb71f37eb5876c29e1a956",
+    "ef2499472ba0bb200b78c27ad1d6b65da3559830412470679c6cb21c751692d2",
+    "ada2a88cbc167b416df7cb07c33399e85c0f7325256b351622a8a80221f44c8c",
+    "b7ae9f8e2eafa40e8424ac1bd0cce2738dbee30fd6be7993aa39ef2c64bfac1d"
+  ]
+}

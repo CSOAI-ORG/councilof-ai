@@ -1,0 +1,115 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:27:35Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USTBL:ethereum",
+      "symbol": "USTBL",
+      "product": "Spiko US T-Bills Money Market Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0xe4880249745eac5f1ed9d8f7df844792d560e750",
+      "block": 25915907,
+      "block_hash": "0x483bb698fd6756b3a67bc6f74997c8db3ee5c88aa1387e72bf44c8fd50edaecc",
+      "block_time": "2026-09-06T04:27:35Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Spiko US T-Bills Money Market Fund",
+        "symbol": "USTBL",
+        "decimals": 5,
+        "totalSupply": 6962524084726,
+        "paused": false,
+        "owner": "0x0000000000000000000000000000000000000000",
+        "eip1967_implementation": "0x15ea0ec460a0e6847ec0aa8d50a84b3a51b95f74"
+      },
+      "absent": [
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "ab6b705d567329bd9f551d904045b4971045a1a3aed665e56e5fede0cc1f4c65",
+        "bytes": 11541,
+        "url": "/archive/proofs/eip1186/ab6b705d567329bd.json",
+        "rpc": "ethereum-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x5e4dcb0bb1910f6429e5fe91678990088a51c6d1cfe1b31d05fb9d948cc7867c",
+          "storageHash": "0xe9b0f65398f4e562d64d3352c0541ef47069ca7dba13c84d526a6c291d2dbe3a",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x15ea0ec460a0e6847ec0aa8d50a84b3a51b95f74",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 25915907 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "173b626b5aecb37ef1fcbe6a10d68472e43546ae3968ccf1feea65ba0729be9a",
+    "sig_ed25519": "060e4e6c8824e4ce918cd52a155db8e1e3c057ae34a93bb3b1fc64b4957ce6b687e98ad17b77092c15022f44705ad615ef661cd5ccc9eb3d998a21a813c9d60a",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0xe4880249745eac5f1ed9d8f7df844792d560e750"
+    ],
+    "subject": "evm:USTBL:ethereum permission state at block 25915907",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:USTBL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "469c8ea462f75f542a42f9756df1b51119cfb41a4f76b738ff80781182e2a8f3",
+    "605df18884aa0b216347e31bd8e54633132b8fe7c7f6ba176f857dbd603dcb6f",
+    "c7bcdb9565a3898e141400156695f1c84bf0993a27a8d2b7a22368bf6045613c",
+    "291c5b7d69ed09ae417a6136b5f2cfa71e3475ad22beb66edde3cf873580ccac",
+    "0acb3334035051e4e7509699ea6b1fef715685bfa24b614bc71fbc668b2e2d87",
+    "cd4b3134fc8fe6d430a40ca6116d26bb87aae4c962439017ac1f59170b9e2a03",
+    "ada2a88cbc167b416df7cb07c33399e85c0f7325256b351622a8a80221f44c8c",
+    "b7ae9f8e2eafa40e8424ac1bd0cce2738dbee30fd6be7993aa39ef2c64bfac1d"
+  ]
+}

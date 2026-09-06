@@ -1,0 +1,90 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:27:36Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:TBILL:bsc",
+      "symbol": "TBILL",
+      "product": "OpenEden T-Bills",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x5b4681f0d7a01b817675f25892d3ad73572fd1d9",
+      "block": 120238445,
+      "block_hash": "0x81f19a84edee2b6e528725acdbedd21377386c9f42e0322235f50d0939ec033b",
+      "block_time": "2026-09-06T04:27:36Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "OpenEden T-Bills",
+        "symbol": "TBILL",
+        "decimals": 18,
+        "totalSupply": "174709844718215638878036908",
+        "owner": "0x3ba6c5437232156baacba5c084c8a746e3217ed6",
+        "kycManager": "0xd9cf8c5bb16422d992595f3e3342de25fe7f5cf9",
+        "eip1967_implementation": "0xf3c7bbd9f91de0664a3e2ec5063e45872da472d9"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 120238445 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "dc3bfcfc9f8df998daf14fa0933090c6c451627fe7ba295baa06c5d092b6088c",
+    "sig_ed25519": "1e9639bf662c40e99f3e7e9ef2076984052e4a4d7030408da83ea4fabc86667fa4f7c777120e79dc0557db480336e56a47f23ce9281898ddf2b17b1330563f0a",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://docs.openeden.com/tbill/smart-contract-addresses"
+    ],
+    "subject": "evm:TBILL:bsc permission state at block 120238445",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:TBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "9c0cf0c2cf9f94db05629836b5efa9af48ea02be6746d64d980683d56f5d050d",
+    "895e9d5f77c57a99d8973dc910f53bc02943c05c3dfd527f5f039bd96c94e866",
+    "82958ffa0fe9b24e507177888ef11d7d2617e0add3ceeea7c8c59a2e4393baeb",
+    "291c5b7d69ed09ae417a6136b5f2cfa71e3475ad22beb66edde3cf873580ccac",
+    "0acb3334035051e4e7509699ea6b1fef715685bfa24b614bc71fbc668b2e2d87",
+    "cd4b3134fc8fe6d430a40ca6116d26bb87aae4c962439017ac1f59170b9e2a03",
+    "ada2a88cbc167b416df7cb07c33399e85c0f7325256b351622a8a80221f44c8c",
+    "b7ae9f8e2eafa40e8424ac1bd0cce2738dbee30fd6be7993aa39ef2c64bfac1d"
+  ]
+}

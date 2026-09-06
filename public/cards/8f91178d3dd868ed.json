@@ -1,0 +1,44 @@
+{
+  "card": {
+    "as_of": "2026-09-06T04:16:22.466Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "asset_class": "Stablecoin",
+      "holders": 60,
+      "issuer": "Braza Bank",
+      "issuer_address": "rB3y9EPnq1ZrZP3aXgfyfdXQThzdXMrLMc",
+      "kind": "distributed",
+      "source": "xrpl.fi/api/metrics",
+      "supply": 25917845.22000002,
+      "symbol": "USDB",
+      "verified_domain": "tokens.brazacripto.com.br",
+      "verified_via": "Bidirectional domain match"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "8f91178d3dd868edd44e803e0c5739f06a0ed8b0de6dfefafef1ed5836f7fd20",
+    "sig_ed25519": "9e1e7cab35425b44f61558787050dfb0a4be498abd0b06921a01e177eca9faf46d08704f90499493b8bfa0b4f4f93db1bc8fb208f3dcb832e3840a702c9b4e0a",
+    "source_urls": [
+      "https://xrpl.fi/api/metrics"
+    ],
+    "subject": "XRPL USDB public state",
+    "surface": "xrpl.asset.state",
+    "tags": [
+      "reg.tag:public-ledger",
+      "framework:xrpl",
+      "jurisdiction:permissionless"
+    ],
+    "unmeasured": []
+  },
+  "proof": [
+    "9bbae5f9724842eadd72d4284b0bc0d8ac1903250dbd1b2dcc75977b931e204f",
+    "92b87e1b8587b12983382541993cb0426fd95870d63538a6fead934bd79b6411",
+    "18a5aad99e7ad5fb494d40b928421ee82350e362f0be3af52eae5a42e35cbea0",
+    "c15eab26ae476fb1b85b259ee88427af09c209202c406625346b6495cb5b4a74",
+    "a3fd9f0bc37dab6f4c63c19253efa1d793999ae08b1668c6697234313986d93b",
+    "f763899c3271c78a5633d112c4e5b7c22b2992908684e10b7e7c9d63ac1b4fbf",
+    "1f8c18a81018ce899f5e63b552f96cdf0a7061f0e7f8a85225af2e22ac9a498c",
+    "0aaec1ce2ec114c3530e8c777570015dca6e5dd878fe6ec2a5ffb19a01799f68"
+  ]
+}
