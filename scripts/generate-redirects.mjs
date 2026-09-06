@@ -52,6 +52,15 @@ const EXISTING = [
   // historical machine evidence in public/arena/*.json{,l}, but route every
   // former human page into the one Council OS play surface. Exact rules are
   // deliberate: a broad /arena/* redirect would also hide signed evidence.
+  // A JSON Schema's $id is how a validator resolves it and how a $ref finds it.
+  // public/verifier/gspc-{measurement-card,card-index}.schema.json declare
+  // /schema/<name>-0.1.json as their $id but are served from /verifier/<name>.schema.json,
+  // so both canonical identifiers were 404 while the documents themselves were 200.
+  // Redirected rather than duplicated: two copies of a schema drift, and the first time they
+  // do the estate has two answers to "what is a measurement card". The $id stays exactly what
+  // the documents already declare.
+  "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
+  "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
   "/arena                 /dashboard?tab=play  308",
   "/arena/                /dashboard?tab=play  308",
   "/arena.html            /dashboard?tab=play  308",

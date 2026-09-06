@@ -9,6 +9,8 @@
 # Enforced by scripts/redirects-guard.mjs.
 
 # --- hand-written consolidation redirects (preserved) ---
+/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308
+/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308
 /arena                 /dashboard?tab=play  308
 /arena/                /dashboard?tab=play  308
 /arena.html            /dashboard?tab=play  308
@@ -223,7 +225,8 @@
 /for/regulator  /for/regulator/  308
 /for/sec-filer  /for/sec-filer/  308
 
-# --- every other concrete <Route> bare path → its prerendered trailing-slash (351) ---
+# --- every other concrete <Route> bare path → its prerendered trailing-slash (352) ---
+/404  /404/  308
 /ab-testing  /ab-testing/  308
 /accessibility  /accessibility/  308
 /accountability-loop  /accountability-loop/  308
