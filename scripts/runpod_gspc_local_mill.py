@@ -39,6 +39,7 @@ import argparse
 import json
 import os
 import shutil
+import re
 import subprocess
 import sys
 import time
@@ -83,6 +84,10 @@ def gguf_repo_for(model_id: str, token: str) -> str | None:
         if tail.replace("-gguf", "").replace(".gguf", "") == name.lower():
             return rid
     return None
+
+
+_SPLIT_SUFFIX = re.compile(r"-\d{4,5}-of-\d{4,5}$", re.I)
+_QUANT_TAG = re.compile(r"^(i?q\d[0-9_a-z]*|f16|fp16|bf16|f32)$", re.I)
 
 
 class QuantLookupFailed(RuntimeError):
@@ -137,10 +142,16 @@ def quant_tag_for(repo: str, token: str, preferred: str) -> str | None:
         fn = str(sib.get("rfilename") or "")
         if not fn.lower().endswith(".gguf") or "/" in fn:
             continue
-        stem = fn[: -len(".gguf")]
-        # <name>-<QUANT>.gguf -- the quant is the last dash-separated chunk
+        stem = _SPLIT_SUFFIX.sub("", fn[: -len(".gguf")])
+        # <name>-<QUANT>.gguf -- the quant is the last dash-separated chunk, AFTER the
+        # split-file suffix is removed. "qwen2.5-3b-instruct-fp16-00001-of-00002.gguf"
+        # otherwise yields the tag "00002", and `ollama pull hf.co/<repo>:00002` fails --
+        # measured 2026-09-06, twelve axes buried for a repo that publishes q4_k_m.
         if "-" in stem:
-            quants.append(stem.rsplit("-", 1)[1])
+            q = stem.rsplit("-", 1)[1]
+            # A shard index is not a quantisation.
+            if _QUANT_TAG.match(q):
+                quants.append(q)
     if not quants:
         return None
     for q in quants:
