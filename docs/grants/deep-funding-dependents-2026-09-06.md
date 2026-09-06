@@ -65,7 +65,7 @@ by the same query anyone can run.
 The defensible claims are about **published artefacts and their use surface**, not dependents:
 
 - both packages resolve on the public registry with real versions;
-- **330 servers** in the official MCP registry (`registry.modelcontextprotocol.io`, search
+- **354 servers** in the official MCP registry (`registry.modelcontextprotocol.io`, search
   `CSOAI-ORG`, count `isLatest`);
 - the buyer's-eye x402 census, which is a **measurement of other people's infrastructure** that
   nobody else has published — 316 hosts paid, 100 delivered, 213 refused
