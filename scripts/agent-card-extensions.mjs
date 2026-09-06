@@ -30,6 +30,8 @@ const EXT_DIR = resolve(ROOT, "public/a2a/extensions");
 const DRY = process.argv.includes("--dry");
 
 const a2a = existsSync(A2A_SRC) ? readFileSync(A2A_SRC, "utf8") : "";
+const X402_SRC = new URL("../functions/api/_x402.ts", import.meta.url).pathname;
+const x402 = existsSync(X402_SRC) ? readFileSync(X402_SRC, "utf8") : "";
 
 /**
  * Is the extension EMITTED by the door, or PUBLISHED as a draft we authored?
@@ -39,6 +41,25 @@ const a2a = existsSync(A2A_SRC) ? readFileSync(A2A_SRC, "utf8") : "";
 function stateOf(slug) {
   const emits = new RegExp(`(receipt|${slug})\\s*[:=][^\\n]*attach|attachReceipt|signedReceipt`, "i").test(a2a);
   return emits ? "EMITTED" : "PUBLISHED-NOT-EMITTED";
+}
+
+/**
+ * TWO DIFFERENT RECEIPTS, ON TWO DIFFERENT RAILS, and conflating them would put a false
+ * capability on the card:
+ *
+ *   signed-receipts/v1   an A2A TASK-OUTCOME receipt attached to a message response. a2a.ts
+ *                        attaches none, and stateOf() reads that from its source.
+ *   offer-and-receipt    an x402 SETTLEMENT receipt on the HTTP 402 doors. Landed in #1663.
+ *
+ * The second was about to be typed EMITTED, because everything that is not signed-receipts took
+ * that branch unconditionally. A state nobody derives is a state nobody can falsify, which is the
+ * defect this whole function exists to prevent — so it is read from the settlement path's source
+ * the same way. _x402.ts must actually import the signer and the extension emitter.
+ */
+function x402ReceiptState() {
+  const imports = /import\s*\{[^}]*\bsignReceipt\b[^}]*\}\s*from\s*"\.\/_x402_receipt"/.test(x402);
+  const emits = /receiptExtension\s*\(/.test(x402);
+  return imports && emits ? "EMITTED" : "PUBLISHED-NOT-EMITTED";
 }
 
 const EXTENSIONS = [
@@ -83,7 +104,12 @@ const EXTENSIONS = [
     slug: "offer-and-receipt",
     uri: "https://github.com/x402-foundation/x402/blob/69652a69798f0b08f95bef33318896e36e210f7e/specs/extensions/extension-offer-and-receipt.md",
     required: false,
-    lead: () => "x402 Offer & Receipt extension (v0.6), JWS profile.",
+    lead: (state) =>
+      state === "EMITTED"
+        ? "x402 Offer & Receipt extension (v0.6), JWS profile."
+        : "x402 Offer & Receipt extension (v0.6), JWS profile — PUBLISHED, NOT EMITTED: the"
+          + " settlement path does not currently sign, so treat the paragraph below as the"
+          + " intended shape rather than what this server does today.",
     tail:
       "Every HTTP 402 this agent's doors emit carries a server-signed offer committing to the "
       + "terms in each accepts[] entry; every settled response carries a signed receipt. Format "
@@ -98,7 +124,9 @@ const EXTENSIONS = [
 
 const published = existsSync(EXT_DIR) ? readdirSync(EXT_DIR) : [];
 const out = EXTENSIONS.map((e) => {
-  const state = e.slug === "signed-receipts" ? stateOf(e.slug) : "EMITTED";
+  const state = e.slug === "signed-receipts" ? stateOf(e.slug)
+    : e.slug === "offer-and-receipt" ? x402ReceiptState()
+    : "EMITTED";
   return { uri: e.uri, required: e.required, description: `${e.lead(state)} ${e.tail}`.replace(/\s+/g, " ").trim() };
 });
 
