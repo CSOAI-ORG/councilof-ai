@@ -66,9 +66,26 @@ What is actually differentiated is the *method*, and each element is checkable r
 | **UNMEASURED as a first-class published state** | `/api/hub-cards` → 70 of 761 cells say UNMEASURED | Leaderboards report what they measured and stay silent on the rest |
 | **Measurement, never certification** | `/api/x402` → `invariants.never_a_grade`, `measurement_not_certification` | AIUC and the TIC industry certify; that is a different, regulated posture |
 
-**The honest form of the moat claim:** *we are the only body in this set that publishes a signed,
-independently recomputable evidence chain and its own corrections ledger.* That is a statement about
-**method**, it is verifiable in four `curl` commands, and it does not depend on being big.
+**The honest form of the moat claim — narrowed 2026-09-06 after actually testing it**
+(`docs/research-intake/2026-09-06/moat-claim-tested.md`):
+
+> *No peer in this set publishes a DID-bound signing key or a machine-readable corrections endpoint
+> at a conventional path* — probed 2026-09-06, `0 of 14` for a DID document and `0 of 10 probeable
+> hosts` for a corrections/verify endpoint.
+
+The sentence that shipped here first said we are *"the only body in this set"* doing this. That was
+written from reasoning, not measurement, and it overreached in two ways the test exposed:
+
+- **Absence at a conventional path is not absence of the practice.** A corrections record can live
+  in a blog, a docs subdomain, a PDF or a customer portal; this probe would miss all four.
+- **Two of the twelve hosts could not be probed at all.** `lmarena.ai` and `trismik.com` return
+  **200 on a path that cannot exist**, so every response from them is meaningless. They are
+  UNMEASURED, not absent — and the raw numbers had credited LMArena with five surfaces it does not
+  have.
+
+It is still a statement about **method**, still verifiable in a few `curl` commands, and still does
+not depend on being big. It is now a statement about *published surfaces* rather than about what
+anyone does.
 
 ### Where the method is currently weaker than the claim
 
