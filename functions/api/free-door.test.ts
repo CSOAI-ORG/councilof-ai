@@ -220,8 +220,18 @@ describe("the zero price must survive verifyX402Payment itself", () => {
     expect(res.status).toBe(402);
     const body = (await res.json()) as { csoai?: { not_paid_reason?: string } };
     expect(body.csoai?.not_paid_reason).toBeTruthy();
-    // and a caller who presented nothing gets the plain challenge, with no verdict invented
-    const plain = (await (await call()).json()) as Record<string, unknown>;
-    expect(plain.csoai).toBeUndefined();
+    // and a caller who presented nothing gets the plain challenge, with no verdict invented.
+    //
+    // This used to read `expect(plain.csoai).toBeUndefined()`, because not_paid_reason was the
+    // ONLY thing the csoai block ever carried. Phase E then made every 402 body advertise its
+    // free preview and its deliverable in that same block, so absence-of-block stopped being
+    // able to express the rule. The rule was never "no block" — it was "no invented verdict".
+    // Both halves are now named, so neither can be lost by the other changing.
+    const plain = (await (await call()).json()) as {
+      csoai?: { not_paid_reason?: string; free_preview?: string; deliverable?: string };
+    };
+    expect(plain.csoai?.not_paid_reason).toBeUndefined();
+    expect(plain.csoai?.free_preview).toBe("https://councilof.ai/api/free-door");
+    expect(plain.csoai?.deliverable).toBeTruthy();
   });
 });
