@@ -148,3 +148,13 @@ Measurement only. Nothing here is a conformity mark. No SOV names. No invented s
   There is no "certified" badge and there never will be.
 - One-command MCP install: claude mcp add gspc -- npx -y csoai-gspc-mcp
 - Python reader and card verifier: pip install "csoai-gspc[verify]"
+
+## x402 discovery (agent pay rail)
+
+Live discovery — always fetch, do not freeze prices or product lists here:
+- GET https://councilof.ai/.well-known/x402.json
+- GET https://councilof.ai/api/x402
+- Free door (amount 0 forever): GET https://councilof.ai/api/free-door
+- Human/agent pay desk UX: https://councilof.ai/pay
+
+Locks: verification stays free; measurement credential never a grade; self-settle ≠ revenue; settlement UNCHECKABLE until facilitator receipt. payTo is merchant, not payer.
