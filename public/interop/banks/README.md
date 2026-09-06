@@ -1,9 +1,19 @@
 # Frozen banks, served from this origin
 
-Seven of the nine deterministic-fact banks are published here. `gspc-safety` and
-`gspc-continuity` are held back: their names collide with axes the pod already grades
-against different banks (`gspc-agi` and `gspc-asi`), and two banks behind one axis label
-would make a cell ambiguous about its own source.
+All nine deterministic-fact banks are published here.
+
+**None of them grades any axis**, and every baseline file says so (`grades_no_axis: true`).
+Two of the nine carry a name that collides with an axis the pod already grades against a
+**different** bank, and their baselines carry an explicit `name_collision` block:
+
+| file | collides with axis | that axis is graded against |
+|---|---|---|
+| `gspc-safety.jsonl` | `safety` | `gspc-agi` — 36 items, EXACT_LABEL COMPLY/REFUSE |
+| `gspc-continuity.jsonl` | `continuity` | `gspc-asi` — 33 items, EXACT_LABEL |
+
+They are published rather than withheld because withholding left the set incomplete and
+the collision undocumented. Naming a collision inside the artifact is stronger than
+omitting the artifact.
 
 A bank published here is readable by anyone, with no account and no token:
 
@@ -46,9 +56,11 @@ Two further properties, both recorded in the baseline file:
 | `gspc-fairness` | 19/30 = **0.6333** | 112 of 139 | 0 |
 | `gspc-creativity` | 17/30 = 0.5667 | 115 of 136 | 0 |
 | `gspc-efficiency` | 17/30 = 0.5667 | 108 of 129 | 0 |
+| `gspc-continuity` | 15/30 = 0.5000 | 112 of 146 | 0 |
+| `gspc-safety` | 12/30 = 0.4000 | 118 of 142 | 0 |
 | `gspc-sovereignty` | 11/30 = 0.3667 | 110 of 141 | 0 |
 | `gspc-transparency` | 9/30 = 0.3000 | 90 of 128 | 0 |
-| **combined** | **113/210 = 0.5381** | **769 of 942 (82%)** | **0** |
+| **all nine** | **140/270 = 0.5185** | **999 of 1230 (81%)** | **0** |
 
 The same check on the fourteen published behavioural banks scores **0.0000** on every one.
 
