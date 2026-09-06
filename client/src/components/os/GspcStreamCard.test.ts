@@ -8,14 +8,14 @@ const doorsSrc = readFileSync(resolve(__dirname, "doors.ts"), "utf8");
 const harness = readFileSync(resolve(__dirname, "OsDoors.tsx"), "utf8");
 
 describe("AG-UI live GSPC stream leftover (1 Sep 2026)", () => {
-  it("keeps exactly six DoorIds — no Cobol/Cobalt Bridge door", () => {
-    const ids: DoorId[] = ["board", "verify", "cards", "harness", "space", "assess"];
-    expect(Object.keys({ board: 1, verify: 1, cards: 1, harness: 1, space: 1, assess: 1 })).toHaveLength(6);
+  it("keeps six arms + owner SWIFT·x402 tab — no Cobol/Cobalt Bridge door", () => {
+    const ids: DoorId[] = ["board", "verify", "cards", "harness", "space", "assess", "swift"];
+    expect(Object.keys({ board: 1, verify: 1, cards: 1, harness: 1, space: 1, assess: 1, swift: 1 })).toHaveLength(7);
     expect(doorsSrc).toMatch(/six arms only/);
     expect(doorsSrc).toMatch(/Do not add Cobol\/Cobalt Bridge as a door/);
     expect(doorsSrc).not.toMatch(/id:\s*\"cobol\"|id:\s*\"cobalt\"|\"cobol\"\s*\|/);
-    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness"]);
-    expect(ids).toHaveLength(6);
+    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness", "swift"]);
+    expect(ids).toHaveLength(7);
   });
 
   it("stream card fetches live GSPC + root — never pasted scores", () => {

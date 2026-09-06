@@ -9,8 +9,8 @@ const lobbyHome = readFileSync(resolve(__dirname, "../components/lobby/LobbyHome
 
 describe("OsLauncher doors", () => {
   it("keeps the header rail to Board · Verify · Space · Assess · Harness", () => {
-    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness"]);
-    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness"]);
+    expect(DOORS.map((d) => d.id)).toEqual(["board", "verify", "space", "assess", "harness", "swift"]);
+    expect(DOORS.map((d) => d.label)).toEqual(["Board", "Verify", "Space", "Assess", "Harness", "SWIFT · x402"]);
   });
 
   it("maps ?lobby= onto those panes, including a harness panel query", () => {
@@ -19,6 +19,8 @@ describe("OsLauncher doors", () => {
     expect(doorFromSearch("lobby=verify")).toBe("verify");
     expect(doorFromSearch("lobby=cards")).toBe("cards");
     expect(doorFromSearch("lobby=harness")).toBe("harness");
+    expect(doorFromSearch("lobby=swift")).toBe("swift");
+    expect(doorFromSearch("lobby=x402")).toBe("swift");
     expect(doorFromSearch("lobby=home")).toBeNull();
     expect(doorFromSearch("")).toBeNull();
   });

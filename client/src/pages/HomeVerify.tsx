@@ -59,14 +59,14 @@ export default function HomeVerify() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(HOME_LD) }} />
       <HeroSlides />
 
-      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24">
+      <main className="mx-auto max-w-6xl px-4 py-16 sm:py-24" style={{ paddingBottom: "calc(6rem + var(--cookie-banner-h, 0px))" }}>
         <section aria-labelledby="os-h1">
           <h1 id="os-h1" className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">
             Check a claim. Request a measurement.
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
             Empty means not measured. Not a certificate. Verification is free, no account.
-            Measurement is paid and booking is not live yet.
+            Measurement is metered; verify stays free.
           </p>
           {/* Five access surfaces — the rail is reachable from every common agent + browser surface. */}
           <div className="mt-5 flex flex-wrap gap-2 max-w-3xl">
@@ -82,7 +82,7 @@ export default function HomeVerify() {
             items={[
               "Click a row. Its bench, n, interval and note open underneath — living GET /api/gspc.",
               "Paste a signed card. Your browser checks the hash and the signature. Nothing is sent.",
-              "Say what you use AI for. We route you to the paid measurement waitlist; booking is not live yet.",
+              "Say what you use AI for. Measurement is metered; verify stays free.",
               { kind: "usp", text: "Verification is free forever. A rank is never sold." },
             ]}
           />
@@ -96,7 +96,7 @@ export default function HomeVerify() {
             We measure AI against frozen tests, sign the card, and leave empty cells empty.
             Live board is GET /api/gspc — not a remembered count. Verify at /gspc-verify. Plugin at /plugin.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-wrap gap-3" data-testid="home-cta-fold">
             <Link
               href="/gspc-verify"
               data-testid="home-btn-verify"
