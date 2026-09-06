@@ -14,6 +14,15 @@ import { join, resolve } from "node:path";
  * This is a SOURCE check, deliberately. Probing nine live doors on every commit is a probe storm
  * against our own edge (governor rule G5), and the field either appears in the producer or it does
  * not.
+ *
+ * WHAT A GREEN RUN HERE DOES NOT MEAN. It does not mean the live edge serves the contract. On
+ * 2026-09-06 10:00 BST this file was green while nine GETs against councilof.ai found 2 of 9 doors
+ * carrying both fields: /api/rwa/evidence and /api/receipts/batch. /api/free-door served a 402
+ * with no `csoai` block at all. The doors agree with origin/master, where only one of
+ * free-door, evidence-bundle, eunomia-data, request-attestation, proof and witness names a
+ * free_preview at all — the contract lives on unmerged branches. Source-green and edge-green are
+ * two readings, and this file is only ever the first one. Re-take the second with nine GETs
+ * (~half of G5's hourly 20) after the carrying PRs merge and Pages redeploys.
  */
 const API = resolve(__dirname);
 
