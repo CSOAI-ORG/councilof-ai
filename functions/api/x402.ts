@@ -1,7 +1,7 @@
 /**
  * GET /api/x402 — the machine catalog of the metered rail. NO AMOUNTS HERE.
  *
- * One tier per line, one resource per tier, each with a free preview and a 402 door. Amounts
+ * One resource per entry, each with a free preview and a 402 door. Amounts
  * surface only inside a 402 challenge (accepts[]), which is how x402 states an amount — this
  * catalog says what an artefact IS and what it is NEVER, and reports the rail's honest mode
  * (challenge-only vs live) derived from env, never typed.
@@ -10,12 +10,22 @@
  * point, and five of seven `free_preview` values used to be a URL concatenated with an English
  * sentence — e.g. "https://…/api/witness?sha256=<64-hex> (the 402 body carries csoai.preview:
  * …)" — while `witness.resource` carried THREE URLs joined by " | " plus a parenthetical. A
- * client that did the obvious thing, `fetch(tier.free_preview)`, got a mangled URL, so the
- * documented free door was unreachable by machine on most tiers. Prose on surviving tiers moved
- * to sibling `*_note` fields; the witness tier is intentionally absent while paid issuance is
- * quarantined pre-release.
+ * client that did the obvious thing, `fetch(entry.free_preview)`, got a mangled URL, so the
+ * documented free door was unreachable by machine on most entries. Prose on surviving entries
+ * moved to sibling `*_note` fields; the witness entry is intentionally absent while paid
+ * issuance is quarantined pre-release.
  * Schema went 0.1 → 0.2 because the CONTENT of published fields changed shape, not just their
- * neighbours. If you add a tier: a URL field takes a URL template, never a sentence.
+ * neighbours. If you add an entry: a URL field takes a URL template, never a sentence.
+ *
+ * 0.2 → 0.3: the published key was `tiers`, and every entry carried a `tier: N` ordinal. The
+ * owner ruled on 2026-09-06 that no surface publishes tiers — everything is free or
+ * pay-as-you-go x402 at the 402. This catalog is the MACHINE-readable one, the surface a Bazaar
+ * indexer reads and re-presents to a buyer, so a ladder here travels further than one on a page.
+ * The ordinal also described nothing: the six entries were numbered 1, 2, 3, 1, 4, 3 — not
+ * unique, not ordered, and it had already produced one silent bug (see provider_diff_feed). It
+ * is removed rather than renamed. The only readers were this repository's own tests
+ * (x402-catalogue-urls.test.ts, metered-endpoints.test.ts), moved to `resources` with it; a
+ * search for `.tiers` across client, functions, scripts and public found no other consumer.
  */
 import { railMode, resolvePayTo, NETWORK_CAIP2_BASE } from "./_x402_config";
 import { USDC_BASE } from "./_skus";
@@ -25,7 +35,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
   const origin = new URL(request.url).origin;
   const u = (p: string) => `${origin}${p}`;
   const body = {
-    schema: "csoai.x402-catalog/0.2",
+    schema: "csoai.x402-catalog/0.3",
     one_line: "Verification is free forever. Agents pay per artefact: issuance, assembly, cadence — never a grade.",
     rail: {
       ...railMode(env),
@@ -36,9 +46,8 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       amounts: "only inside each resource's 402 challenge (accepts[].amount) — never on this catalog, never in prose",
       well_known: u("/.well-known/x402.json"),
     },
-    tiers: [
+    resources: [
       {
-        tier: 1,
         id: "issuance",
         name: "Commission a signed card (request-attestation)",
         resource: u("/api/request-attestation?subject=<id>&axis=<slug>"),
@@ -48,11 +57,10 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a score", "a rank", "a certificate", "a MEASURED cell minted by payment"],
       },
       {
-        tier: 2,
         id: "evidence_bundle",
         name: "Evidence bundle mapped to an obligation",
         resource: u("/api/evidence-bundle?obligation=article-50|article-53|dora|cra&subject=<model-id>&bundle=1"),
-        // `<id>` MEANT A MODEL ID on the request-attestation tier ten lines above, and an
+        // `<id>` MEANT A MODEL ID on the request-attestation entry ten lines above, and an
         // OBLIGATION id here. A buyer who does the obvious thing gets 404 unknown_obligation —
         // measured 2026-09-05: this exact free_preview, fetched verbatim, answered 404 while
         // ?obligation=dora&subject=gpt-4o answered 200. The valid set is named in the endpoint's
@@ -63,7 +71,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a conformity determination", "satisfied/not-satisfied findings", "a certificate"],
       },
       {
-        tier: 3,
         id: "data_feed",
         name: "Signed data feed (assembly + cadence)",
         resource: u("/api/eunomia-data?feed=1"),
@@ -73,7 +80,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
       },
       {
-        tier: 1,
         id: "rwa_evidence",
         name: "XRPL asset evidence card (per request)",
         resource: u("/api/rwa/evidence?asset=<symbol|issuer_address>"),
@@ -83,10 +89,9 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
       },
       {
-        // Was `tier: 1, tier: 4` — two keys in one literal. The second silently won, so the
-        // catalog published tier 4 while the source read as tier 1. Keeping 4 preserves the
-        // value that has actually been served; this is a de-duplication, not a re-pricing.
-        tier: 4,
+        // This entry once carried `tier: 1, tier: 4` — two keys in one object literal, the
+        // second silently winning. That defect is now structurally impossible here: the ordinal
+        // is gone, because it never described anything (see the header).
         id: "provider_diff_feed",
         name: "Provider document diff feed (signed historical batch / bespoke partner feed)",
         resource: u("/api/feeds/provider-diff?history=1"),
@@ -96,7 +101,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         never: ["a verdict on any change", "the content of any page (never captured)", "a grade"],
       },
       {
-        tier: 3,
         id: "receipts_batch",
         name: "Receipts batch — historical measurement leaves for a window (assembly)",
         resource: u("/api/receipts/batch?from=<iso>&to=<iso>"),
@@ -109,7 +113,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
       },
     ],
     // ONE free_forever. There were two keys of this name in this literal — the same defect the
-    // tier comment above records for `tier: 1, tier: 4` — so the second silently won and the
+    // provider_diff_feed comment above records — so the second silently won and the
     // first was dropped whole. The lost list was the only one naming /api/witness/status, a door
     // that IS free and was therefore missing from the published set: the catalog advertised 8
     // free surfaces where 9 are free. Under-claiming a free door is still a false published
@@ -146,7 +150,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     },
     invariants: {
       measurement_not_certification: "CSOAI LTD (UK 16939677) is an independent measurement body. It issues measurements and signed attestations, never certificates of conformity.",
-      never_a_grade: "No tier sells a grade, a score, a pass/fail verdict, or a place on the board.",
+      never_a_grade: "No resource sells a grade, a score, a pass/fail verdict, or a place on the board.",
       recomputable_for_free: "Every artefact is independently recomputable; a buyer pays for issuance, assembly and a durable independent signature — not for the answer.",
       no_public_price: "Amounts appear only in a 402 challenge.",
       financial_firewall: "No token, credit, or cash-settled index. Attestation is not tokenisation and confers no ownership.",
