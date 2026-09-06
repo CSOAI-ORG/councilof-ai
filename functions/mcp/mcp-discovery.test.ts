@@ -85,4 +85,24 @@ describe("MCP discovery keeps implementation identities truthful", () => {
     expect(REGISTRY_DESCRIPTOR.description.length).toBeLessThanOrEqual(100);
     expect(REGISTRY_DESCRIPTOR.description).toMatch(/measure, never certify/i);
   });
+
+  it("does not echo a protocolVersion this door does not speak", async () => {
+    // A green tick that accepted the client's 2025-03-26 would claim a
+    // redesign we have not implemented. The discovery catalog date
+    // (2026-07-28 on /.well-known/mcp.json) is a different namespace.
+    const newer = await post("initialize", {
+      protocolVersion: "2025-03-26",
+      capabilities: {},
+      clientInfo: { name: "newer-client", version: "0" },
+    });
+    expect(newer.result.protocolVersion).toBe("2024-11-05");
+    expect(newer.result.protocolVersion).not.toBe("2025-03-26");
+
+    const pin = await post("initialize", {
+      protocolVersion: "2024-11-05",
+      capabilities: {},
+      clientInfo: { name: "pin-client", version: "0" },
+    });
+    expect(pin.result.protocolVersion).toBe("2024-11-05");
+  });
 });

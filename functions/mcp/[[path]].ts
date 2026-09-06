@@ -195,6 +195,10 @@ export const onRequest: PagesFunction = async (ctx) => {
     }
 
     if (call?.method === "initialize") {
+      // Wire protocol pin. A client may send 2025-03-26 or later; this door
+      // speaks 2024-11-05 and answers with that, never echoing a version it
+      // does not implement. public/.well-known/mcp.json schema_version
+      // 2026-07-28 is a DISCOVERY catalog date, not this JSON-RPC protocol.
       return rpc(call.id, {
         protocolVersion: "2024-11-05",
         capabilities: { tools: {} },
