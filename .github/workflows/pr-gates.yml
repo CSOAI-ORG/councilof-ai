@@ -156,6 +156,16 @@ jobs:
       - name: llms.txt / llms-full.txt match the live board
         run: node scripts/llms-txt.mjs --check
 
+      # D45. One x402 change left FOUR derived artefacts stale on 2026-09-06 — the agent-card
+      # alias, its JWS signing input, the a2a census and public/llms.txt. Every one had a working
+      # test; every test went red; they were still found one at a time over an hour, because
+      # nothing recorded what derives from what. This re-runs every producer in
+      # docs/operations/PRODUCERS.json and fails if any output moves. It restores what it touches.
+      - name: Producers — every derived artefact is what its producer emits
+        run: |
+          node scripts/producers-gate.mjs --selftest
+          node scripts/producers-gate.mjs
+
       # A same-origin URL published in a machine surface must be a path we serve. Nothing read
       # link fields before: brand-gate reads display fields, facts-gate reads claims,
       # signed-json-guard reads structure — so six badge images that 404 sat in a published index

@@ -1,0 +1,73 @@
+{
+  "schema": "csoai.producers/0.1",
+  "why": "On 2026-09-06 one x402 change left FOUR derived artefacts stale at once — the byte-identical agent-card alias, the JWS signing input, the a2a census (our_agent.skills 6 against the card's 7), and public/llms.txt (missing 13 lines its own template already carried). Every one had a working test, every test went red, and they were found one at a time over an hour because nothing in the repo records which artefacts derive from what. This file is that record; scripts/producers-gate.mjs is the check that re-runs each producer and fails if any output moves.",
+  "rule": "An entry means: run `cmd`, and `outputs` must not change. If they change, the source moved and the artefact was not re-produced. Fix by running the producer, never by editing the output — every one of these files is generated. A producer may declare `volatile`: substrings whose lines are ignored when comparing, for fields like a build date that legitimately move on every run. Declaring one is a claim that the field carries no meaning a reader would act on — use it sparingly.",
+  "seeded_by": "TUI-6, 2026-09-06, with producers it verified by running them. Not exhaustive: extend it. An absent producer is an unguarded artefact, not a safe one.",
+  "producers": [
+    {
+      "id": "agent-card-jws",
+      "cmd": "python3 scripts/adapters/agent_card_jws.py",
+      "outputs": [
+        "public/interop/agent-card-jws-input.json"
+      ],
+      "derives_from": [
+        "public/.well-known/agent-card.json"
+      ],
+      "note": "JCS(card minus signatures) prepared for GHA OIDC. A stale input means signing bytes nobody serves."
+    },
+    {
+      "id": "route-manifest",
+      "cmd": "node scripts/generate-route-manifest.mjs",
+      "outputs": [
+        "client/src/data/route-manifest.ts"
+      ],
+      "derives_from": [
+        "client/src/App.tsx"
+      ],
+      "note": "Snapshot of App.tsx routes. link-gate reads it to know what the app serves."
+    },
+    {
+      "id": "redirects",
+      "cmd": "node scripts/generate-redirects.mjs",
+      "outputs": [
+        "public/_redirects"
+      ],
+      "derives_from": [
+        "client/src/App.tsx",
+        "client/src/data/answers.json"
+      ],
+      "note": "ORDER IS LOAD-BEARING in the output: a splat placed early bills every later rule to the 100-rule dynamic budget."
+    },
+    {
+      "id": "sitemap",
+      "cmd": "node scripts/generate-sitemap.mjs",
+      "outputs": [
+        "public/sitemap.xml"
+      ],
+      "derives_from": [
+        "client/src/App.tsx",
+        "public/_redirects",
+        "public/**/*.html"
+      ],
+      "note": "Must run AFTER redirects: it reconciles against public/_redirects. lastmod is stamped with the build date, so it moves every day; it is declared volatile and excluded from the drift comparison. Everything else in the file must be stable.",
+      "volatile": [
+        "<lastmod>"
+      ]
+    },
+    {
+      "id": "llms-txt",
+      "cmd": "node scripts/llms-txt.mjs",
+      "outputs": [
+        "public/llms.txt",
+        "public/llms-full.txt"
+      ],
+      "derives_from": [
+        "scripts/llms/llms.txt.tmpl",
+        "scripts/llms/llms-full.txt.tmpl",
+        "GET /api/gspc"
+      ],
+      "needs_network": true,
+      "note": "Reads the LIVE board, so a board change moves the output legitimately. The gate reports these separately and does not fail on them — scripts/llms-txt.mjs --check is the one that adjudicates, and it already runs in pr-gates."
+    }
+  ]
+}
