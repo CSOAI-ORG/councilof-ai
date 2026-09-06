@@ -73,7 +73,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   },
   {
     q: "Is verification free, and is a grade ever for sale?",
-    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Payment processing is coming via Paddle, not yet live.",
+    a: "Verification is free forever and needs no account. A grade is never sold. There are no public prices on this site — enterprise starts at the lobby door. Where measurement is paid it is pay-as-you-go x402, quoted at the 402 itself — not live yet.",
     url: "/enterprise",
   },
   {
