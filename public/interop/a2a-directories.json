@@ -19,17 +19,15 @@
       "id": "a2aregistry",
       "name": "A2A Registry",
       "url": "https://a2aregistry.org",
-      "state": "NOT_LISTED",
-      "evidence": "GET /api/agents returns 50 agents; zero match csoai or councilof. Registration is a single unauthenticated POST of a public well-known URI — no account, no key, no payment. Not submitted: the card names https://councilof.ai/api/a2a and that door is 404 (GET) / 405 (POST) during the B41 outage, and their worker health-checks every 30 minutes. A listing whose door does not resolve is worse than no listing.",
-      "probe": "curl -s https://a2aregistry.org/api/agents | jq '[.agents[]|select((.name+.url)|test(\"csoai|councilof\";\"i\"))]|length'",
+      "state": "LISTED",
+      "evidence": "Registered 2026-08-19T11:21:05Z as 'Council of AI — Measurement Agent' (id 48e5bba6-8848-4adc-8f92-b5fa2c0744e0), url https://councilof.ai/api/a2a, protocolVersion 1.0, author CSOAI. The registry reports is_healthy TRUE and conformance TRUE, last health check 2026-09-06T03:39:45Z. We were listed for EIGHTEEN DAYS before this file first claimed otherwise.",
+      "probe": "curl -s 'https://a2aregistry.org/api/agents?limit=50&offset=0' | jq '{total,limit}' # THEN paginate to .total before concluding anything",
       "surface": "api",
-      "blocked_by": "B41 (every /api/* Function 404s)",
       "submission": {
         "method": "POST https://a2aregistry.org/api/agents/register",
-        "body": {"wellKnownURI": "https://councilof.ai/.well-known/agent.json"},
+        "result": "409 — 'An agent from this host is already registered'",
         "auth": "none",
-        "our_card_validates": true,
-        "validated_how": "Their backend/app/validators.py was read and its strict rule set run against our live card: required = name, description, url, version, capabilities, defaultInputModes, defaultOutputModes, skills, with url and protocolVersion lifted from supportedInterfaces[0] by their own v1.0 compatibility path. Zero defects. A test in this repo re-runs those rules on every commit."
+        "note": "The 409 is how the error was found. Attempting a registration we did not need returned the id of the entry that already existed, which no amount of re-reading page 1 would have."
       }
     },
     {
@@ -54,11 +52,29 @@
   "totals": {
     "directories_probed": 3,
     "real_directories": 1,
-    "listed": 0,
-    "agents_in_a2aregistry": 50,
-    "a2aregistry_agents_on_v1_0": 0,
-    "a2aregistry_protocol_versions": {"0.3.0": 49, "0.3": 1},
-    "note": "Counts are DERIVED from GET https://a2aregistry.org/api/agents at as_of. They are not typed."
+    "listed": 1,
+    "index_declared_total": 370,
+    "agents_scanned": 370,
+    "pages_fetched": 8,
+    "page_size": 50,
+    "ours_in_index": 1,
+    "agents_on_1_x": 93,
+    "healthy": 363,
+    "protocol_versions": {
+      "0.3": 17,
+      "0.3.0": 227,
+      "1.0": 83,
+      "1.0.0": 8,
+      "2.0": 1,
+      "unknown": 26,
+      "1.0.1": 1,
+      "9.3.5": 1,
+      "1.2": 1,
+      "2025-06-27": 1,
+      "0.2.5": 2,
+      "0.2.0": 2
+    },
+    "note": "Counts are DERIVED by paginating to the index's OWN declared total (the `total` field it returns beside `limit` and `offset`), not by reading one page. They are not typed."
   },
   "what_this_does_not_establish": [
     "No directory named here endorses the Council of AI.",
@@ -75,7 +91,8 @@
     },
     "2026-09-05: this lane opened by reporting our own card as defective — 'protocolVersion: null, url: null, the A2A spec's required fields'. That was read off A2A v0.3.0's JSON schema, which does require both at the top level. In v1.0.1 neither field exists on AgentCard: both moved into AgentInterface, and our card carries them there. The card was conformant the whole time. Check the version of the spec you are holding before calling an artifact broken.",
     "2026-09-05: a2aregistry.org/docs still describes a 'Git-as-database model on GitHub' and the repository has an empty agents/ tree; registration has since moved to a POST against a backend with SQL migrations. The documented mechanism and the working mechanism had diverged — the README, not the docs page, carried the live one.",
-    "2026-09-05: /submit was first fetched WITHOUT -L and returned a 169-byte '301 Moved Permanently' body, from which a grep for github links found nothing. Absence measured through an unfollowed redirect is not absence."
+    "2026-09-05: /submit was first fetched WITHOUT -L and returned a 169-byte '301 Moved Permanently' body, from which a grep for github links found nothing. Absence measured through an unfollowed redirect is not absence.",
+    "2026-09-05/06: THIS FILE PUBLISHED THAT WE WERE NOT LISTED. We had been listed since 2026-08-19, healthy and conformant. Every wrong number in the row came from ONE act: GET /api/agents was read as the population when it is a PAGE. The response object carries `total: 370` beside `limit: 50` and `offset: 0` — the refutation was in the same JSON, unread. Consequences: state NOT_LISTED (wrong), '50 agents' (370), 'zero agents on v1.0' (93 on 1.x), and a backlog row claiming we would be the registry's first 1.0 agent when 83 already declare 1.0. The estate has this exact defect in memory as partial-read-totalled-as-population and as rule R5, and it was committed anyway. A count is not a measurement until it is compared with the source's own declared total."
   ],
   "links": {
     "self": "https://councilof.ai/interop/a2a-directories.json",
