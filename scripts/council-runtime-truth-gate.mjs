@@ -545,29 +545,6 @@ assert.match(appSource, /import \{ Header \} from "\.\/components\/Header"/);
 assert.match(appSource, /<Header \/>/);
 assert.match(appSource, /import \{ Footer \} from "\.\/components\/Footer"/);
 assert.match(appSource, /<Footer \/>/);
-
-// #1482 promoted /cobol off ContentReviewNotice onto CobolBridge. Keep tip deployable.
-assert.match(
-  appSource,
-  /const\s+CobolBridge\s*=\s*lazy\(\(\)\s*=>\s*import\(["']\.\/pages\/CobolBridge["']\)\)/,
-  "CobolBridge.tsx must remain imported by App.tsx",
-);
-assert.match(
-  appSource,
-  /<Route path=["']\/cobol["'] component=\{CobolBridge\} \/>/,
-  "/cobol must route to CobolBridge (not ContentReviewNotice)",
-);
-assert.match(
-  appSource,
-  /<Route path=["']\/cobolbridge["'] component=\{CobolBridge\} \/>/,
-  "/cobolbridge must remain an alias to CobolBridge",
-);
-assert.doesNotMatch(
-  appSource,
-  /<Route path=["']\/cobol["'] component=\{ContentReviewNotice\} \/>/,
-  "/cobol must not remain on ContentReviewNotice",
-);
-
 const headerSource = readFileSync("client/src/components/Header.tsx", "utf8");
 assert.match(headerSource, /import \{ GlobalSearch \} from ['"]@\/components\/GlobalSearch['"]/);
 assert.match(headerSource, /<GlobalSearch\b/);
@@ -737,6 +714,7 @@ for (const route of [
   "/cyber-scan",
   "/hives",
   "/legacy",
+  "/cobol",
   "/dpa",
   "/data-processing-agreement",
   "/legal/dpa",
