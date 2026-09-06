@@ -102,6 +102,26 @@ jobs:
       - name: Stranger verification — signed cards must verify from published bytes
         run: node scripts/verify-estate.mjs --limit 15
 
+      # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
+      # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the
+      # standing rule is that no vector changes without a new pin and a note to the counterparty.
+      #
+      # That rule was enforced only by whoever remembered to run the suite locally. `vitest` here is
+      # scoped to `client/src functions` and these are node:test .test.mjs files, so NO workflow ran
+      # them and a PR could have moved a vector on an agreed boundary with nothing going red.
+      #
+      # Verified to fail: tampering one field of one vector gives
+      #   "not ok 1 - corpus is pinned: every vector matches its manifest digest"  (35 pass / 1 fail)
+      # Untouched the suite is 134 pass / 0 fail, and it needs no network.
+      # Runs from the package directory, not the repo root. Two tests resolve fixture paths
+      # relative to cwd and fail from the root even on a clean tree (134/0 in-package vs 132/2 at
+      # the root). Shipping the root invocation would have added a PERMANENTLY RED gate, which is
+      # worse than no gate — a step that is always failing gets disabled, and then the boundary is
+      # unprotected while looking protected.
+      - name: Card-verifier package — 33-vector EMILIA boundary must still be pinned
+        working-directory: packages/gspc-card-verifier
+        run: node --test test/*.test.mjs
+
       # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
       # GET /api/gspc and the three card corpora files. Both files used to tell their
       # readers "do not freeze numbers in this file" while freezing the lid three times
