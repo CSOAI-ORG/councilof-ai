@@ -416,11 +416,19 @@ def _chat(url: str, key: str, model: str, prompt: str, max_tokens: int = 32,
         # without the key below, so an unsupported parameter costs one request, not a model.
         body["chat_template_kwargs"] = {"enable_thinking": False}
     payload = json.dumps(body).encode()
+    hdr = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json",
+        "User-Agent": "csoai-hub-queue-mill",
+    }
+    if "router.huggingface.co" in url:
+        # Org Team billing — bill inference to csoai, not personal Pro.
+        hdr["X-HF-Bill-To"] = "csoai"
     req = urllib.request.Request(
         url,
         data=payload,
         method="POST",
-        headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json", "User-Agent": "csoai-hub-queue-mill"},
+        headers=hdr,
     )
     try:
         with urllib.request.urlopen(req, timeout=60) as r:

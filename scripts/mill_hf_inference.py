@@ -120,7 +120,8 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
             "Authorization": f"Bearer {tok}",
             "Content-Type": "application/json",
             "User-Agent": UA,
-            "X-HF-Bill-To": (os.environ.get("HF_BILL_TO") or "csoai").strip(),
+            # Org Team billing — bill inference to csoai, not personal Pro.
+            "X-HF-Bill-To": os.environ.get("HF_BILL_TO", "csoai"),
         },
     )
     try:
