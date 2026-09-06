@@ -25,7 +25,7 @@ Target: https://atlas.optimism.io/missions/governance-fund-missions · Forum cat
 (Field order from the op-atlas project form: details → contributors → repos → contracts → grants & funding → publish. Every figure from `FACTS-2026-09-05.json`.)
 
 **Project name** — Council of AI (GSPC measurement board)
-**Description** — Independent, signed, recomputable measurement of AI-model behaviour. 22 axes on the public board ("22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate."), every card Ed25519-signed under did:web:csoai.org, committed to a public Merkle root (167 cards, as of 2026-09-05T12:39:29Z) and witnessed. Free verification for anyone (PyPI csoai-gspc, npm csoai-gspc-mcp, MCP at https://councilof.ai/mcp). Paid only per artefact over x402 on Base; the board and verification stay free. Measurement, not certification.
+**Description** — Independent, signed, recomputable measurement of AI-model behaviour. 22 axes on the public board ("22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate."), every card Ed25519-signed under did:web:csoai.org, committed to a public Merkle root (168 cards, as of 2026-09-05T16:02:38Z) and witnessed. Free verification for anyone (PyPI csoai-gspc, npm csoai-gspc-mcp, MCP at https://councilof.ai/mcp). Paid only per artefact over x402 on Base; the board and verification stay free. Measurement, not certification.
 **Category** — Utility / Developer tooling (choose "Utility" if "Tooling" is absent)
 **Website** — https://councilof.ai
 **Farcaster / Twitter** — (none held; leave blank — do not create)
