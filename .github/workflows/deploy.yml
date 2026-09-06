@@ -149,6 +149,17 @@ jobs:
           node scripts/structured-data-gate.mjs --selftest
           node scripts/structured-data-gate.mjs dist/client
 
+      # link-gate also runs HERE, on the prerendered tree, because pr-gates runs build:client
+      # WITHOUT the prerender and therefore cannot see a prerendered route at all. That gap made
+      # it report /library/company/ and /verify as unserved while both serve real, titled pages.
+      # The pr-gates run still blocks NEW dead links at review time against the baseline; this run
+      # is the one that measures what actually ships. prerender discovers its own routes (399,
+      # against the 389 in route-manifest.ts), so this tree is the only complete answer.
+      - name: Link gate — on the tree that actually ships
+        run: |
+          node scripts/link-gate.mjs --selftest
+          node scripts/link-gate.mjs dist/client
+
       - name: Copy corrected field pages from source into dist (vite skips public/*.html)
         run: |
           # Living board owns /gspc-scoreboard. A leftover gspc-scoreboard.html
