@@ -41,6 +41,12 @@ def test_mill_script_does_not_slice_prefix() -> None:
     assert "slugs[:limit]" not in src
     assert "select_window" in src
     assert "millable_slugs" in src
+    assert "provider_order" in src
+    assert "live_providers" in src
+    sys.path.insert(0, str(HERE.parents[1] / "scripts"))
+    from mill_window import DEFAULT_PROVIDERS  # noqa: E402
+
+    assert "hf-inference" not in DEFAULT_PROVIDERS
 
 
 def test_pick_emptiest_skips_measured() -> None:

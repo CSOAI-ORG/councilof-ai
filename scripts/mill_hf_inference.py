@@ -19,10 +19,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from mill_window import mill_exit_for_window, millable_slugs, route_kind, select_window  # noqa: E402
+from mill_window import (  # noqa: E402
+    DEFAULT_PROVIDERS,
+    live_providers,
+    mill_exit_for_window,
+    millable_slugs,
+    provider_order,
+    route_kind,
+    select_window,
+)
 
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
+EMBED_ROUTER = "https://router.huggingface.co/v1/embeddings"
 HF_INFER = "https://router.huggingface.co/hf-inference/models/"
 API_MODEL = "https://huggingface.co/api/models/"
 
@@ -136,8 +145,32 @@ def _bill_headers(tok: str) -> dict[str, str]:
     }
 
 
+def embed(tok: str, model: str, text: str = "hello world") -> tuple[str, str]:
+    """Inference Providers /v1/embeddings. HTTP 200 is reachability, not a grade."""
+    payload = {"model": model, "input": text}
+    body = json.dumps(payload).encode()
+    req = urllib.request.Request(
+        EMBED_ROUTER,
+        data=body,
+        method="POST",
+        headers=_bill_headers(tok),
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            raw = r.read()
+        d, _ = json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
+        if d.get("data") or d.get("embeddings"):
+            return "OK", "HTTP 200 embeddings"
+        return "UNCHECKABLE", f"HTTP 200 no embeddings {str(d)[:80]}"
+    except urllib.error.HTTPError as e:
+        err = e.read()[:300].decode("utf-8", "replace")
+        return "UNCHECKABLE", f"HTTP {e.code} {err[:180]}"
+    except Exception as e:
+        return "UNCHECKABLE", f"{type(e).__name__}"
+
+
 def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
-    """One POST to hf-inference. HTTP 200 is reachability, not a GSPC grade."""
+    """Legacy hf-inference provider path. Not the mill default."""
     body = json.dumps(payload).encode()
     req = urllib.request.Request(
         HF_INFER + slug,
@@ -230,27 +263,51 @@ def main() -> int:
             "status": "UNMEASURED",
             "note": "HF Inference Providers mill. Not a GSPC board rewrite. n<30 unquotable.",
         }
+        mapped: list[str] = []
         try:
-            meta = get_json(API_MODEL + slug, tok)
+            meta = get_json(API_MODEL + slug + "?expand[]=inferenceProviderMapping", tok)
             rec["inference_meta"] = meta.get("inference")
             rec["pipeline_tag"] = meta.get("pipeline_tag")
+            mapped = live_providers(meta.get("inferenceProviderMapping") or {})
         except Exception as e:
             rec["meta_error"] = type(e).__name__
         tag = rec.get("pipeline_tag") or ""
         kind = route_kind(tag, slug)
         rec["route_kind"] = kind
+        env_p = [
+            p.strip()
+            for p in (os.environ.get("HF_INF_PROVIDERS") or ",".join(DEFAULT_PROVIDERS)).split(",")
+            if p.strip() and p.strip() != "hf-inference"
+        ]
+        pmap = Path(os.environ.get("FLEET_PROVIDERS", str(lock_path.parent / "FLEET-B.providers.json")))
+        if pmap.exists():
+            for row in json.loads(pmap.read_text()).get("rows") or []:
+                if row.get("slug") == slug:
+                    mapped = list(row.get("providers_live") or mapped)
+                    break
+        order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
+        rec["providers"] = order
+        router_names = [f"{slug}:{p}" for p in order]
         if kind != "chat":
             rec["n"] = 1
             rec["note"] = (
                 "HF Inference Providers reachability mill. Not a GSPC board rewrite. n<30 unquotable."
             )
-            st, txt = "UNCHECKABLE", "no-call"
-            if kind == "try-chat-then-feature":
-                st, txt = chat(tok, slug, INSTR + GOV_ITEMS[0][0])
+            rec["endpoint"] = EMBED_ROUTER if kind in ("similarity", "feature") else ROUTER
+            st, txt = "UNCHECKABLE", "no-provider"
+            if kind in ("similarity", "feature", "text", "fill-mask"):
+                for name in router_names:
+                    st, txt = embed(tok, name)
+                    if st == "OK":
+                        rec["router_model"] = name
+                        break
             if st != "OK":
-                rec["endpoint"] = HF_INFER + slug
-                infer_kind = "feature" if kind == "try-chat-then-feature" else kind
-                st, txt = hf_infer(tok, slug, payload_for_kind(infer_kind))
+                rec["endpoint"] = ROUTER
+                for name in router_names:
+                    st, txt = chat(tok, name, INSTR + GOV_ITEMS[0][0])
+                    if st == "OK":
+                        rec["router_model"] = name
+                        break
             rec["hits"] = 1 if st == "OK" else 0
             rec["answers"] = [{"call": st, "raw": txt[:80]}]
             if st == "OK":
@@ -261,19 +318,10 @@ def main() -> int:
         else:
             hits = 0
             answers = []
-            providers = [p.strip() for p in (os.environ.get("HF_INF_PROVIDERS") or "groq,cerebras,together,fireworks-ai,nscale,novita,featherless-ai,deepinfra,hf-inference").split(",") if p.strip()]
-            mapped = []
-            pmap = Path(os.environ.get("FLEET_PROVIDERS", str(lock_path.parent / "FLEET-B.providers.json")))
-            if pmap.exists():
-                for row in json.loads(pmap.read_text()).get("rows") or []:
-                    if row.get("slug") == slug:
-                        mapped = row.get("providers_live") or []
-                        break
-            order = [p for p in providers if p in mapped] + [p for p in mapped if p not in providers]
-            router_names = [f"{slug}:{p}" for p in order] or [slug] + [f"{slug}:{p}" for p in providers]
             bank_n = max(1, min(int(os.environ.get("MILL_BANK_N", "10")), len(GOV_ITEMS)))
             bank = GOV_ITEMS[:bank_n]
             rec["n"] = len(bank)
+            rec["endpoint"] = ROUTER
             for prompt, expected in bank:
                 st, txt = "UNCHECKABLE", "no-provider"
                 for name in router_names:
@@ -290,16 +338,8 @@ def main() -> int:
             rec["hits"] = hits
             rec["answers"] = answers
             if all(a["call"] != "OK" for a in answers):
-                st2, txt2 = hf_infer(tok, slug, payload_for_kind("feature"))
-                rec["answers"].append({"call": st2, "raw": txt2[:80], "fallback": "feature"})
-                if st2 == "OK":
-                    rec["status"] = "practice-mill"
-                    rec["endpoint"] = HF_INFER + slug
-                    rec["route_kind"] = "chat-then-feature"
-                    rec["hits"] = 1
-                else:
-                    rec["status"] = "UNCHECKABLE"
-                    rec["reason"] = answers[0]["raw"] if answers else txt2[:200]
+                rec["status"] = "UNCHECKABLE"
+                rec["reason"] = answers[0]["raw"] if answers else "no calls"
             else:
                 rec["status"] = "practice-mill"
                 rec["accuracy"] = round(hits / len(bank), 4)
