@@ -121,3 +121,41 @@ describe("no per-host verdict is published below the threshold", () => {
     expect(idx.caveats.join(" ")).toMatch(/One purchase per host, one moment/);
   });
 });
+
+describe("the gate that runs the census selftests cannot be masked by its own skip twin", () => {
+  // pr-gates.yml and pr-gates-skip.yml both report the check name `gates`; the skip twin exists so
+  // branch protection can require `gates` on docs-only PRs. They stay safe only while pr-gates.yml's
+  // `paths` and pr-gates-skip.yml's `paths-ignore` are identical. When they drift, a PR touching a
+  // path that is gated but NOT ignored fires both, and the two-second skip pass can be the one a
+  // reader sees while the real suite is red. This PR widened `paths` to cover harness/x402-census
+  // and PRODUCERS.json, so the invariant now has a test instead of a comment asking politely.
+  const list = (file: string, key: "paths" | "paths-ignore"): string[] => {
+    const lines = readFileSync(resolve(REPO, ".github/workflows", file), "utf8").split("\n");
+    const start = lines.findIndex((l) => new RegExp(`^\\s*${key}:\\s*$`).test(l));
+    if (start < 0) return [];
+    const out: string[] = [];
+    for (const line of lines.slice(start + 1)) {
+      const m = /^\s+-\s+'([^']+)'\s*$/.exec(line);
+      if (!m) break;                    // the list ends at the first line that is not an item
+      out.push(m[1]);
+    }
+    return out;
+  };
+
+  it("pr-gates paths and pr-gates-skip paths-ignore are the same list", () => {
+    const gated = list("pr-gates.yml", "paths");
+    const ignored = list("pr-gates-skip.yml", "paths-ignore");
+    expect(gated.length).toBeGreaterThan(5);
+    expect(ignored).toEqual(gated);
+  });
+  it("the census selftests are wired into the real gate, not only into this file", () => {
+    const src = readFileSync(resolve(REPO, ".github/workflows/pr-gates.yml"), "utf8");
+    for (const p of [
+      "scripts/grants/x402_census_round.py --selftest",
+      "scripts/grants/x402_census_delta.py --selftest",
+      "harness/x402-census/build_cards.py --selftest",
+    ]) {
+      expect(src).toContain(p);
+    }
+  });
+});
