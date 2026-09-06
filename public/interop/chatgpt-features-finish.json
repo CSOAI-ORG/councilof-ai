@@ -4,146 +4,6 @@
   "principle": "Match ChatGPT's surface. But every interaction signed.",
   "features": [
     {
-      "id": "voice-mode",
-      "name": "Voice mode",
-      "kind": "voice",
-      "scope": "Audio input + output. Every utterance emits a 3KB signed card.",
-      "endpoint": "/api/voice",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/voice probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "vision",
-      "name": "Vision",
-      "kind": "vision",
-      "scope": "Upload image. Every measurement (axis, model, score) signed.",
-      "endpoint": "/api/vision",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/vision probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "image-generation",
-      "name": "Image generation",
-      "kind": "image-gen",
-      "scope": "DALL-E / Stable Diffusion. Every generated image signed + content-addressed.",
-      "endpoint": "/api/image-gen",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/image-gen probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "real-time-canvas",
-      "name": "Real-time canvas",
-      "kind": "canvas",
-      "scope": "Side-by-side rendered markdown + code. Every edit emits a signed event card.",
-      "endpoint": "/api/canvas",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/canvas probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "shared-links",
-      "name": "Shared links",
-      "kind": "sharing",
-      "scope": "Public link to a conversation. Link is content-addressed + signed.",
-      "endpoint": "/api/share",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/share probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "group-chats",
-      "name": "Group chats",
-      "kind": "collab",
-      "scope": "Multi-user chat room. Every user action signed.",
-      "endpoint": "/api/group",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/group probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "custom-gpts-marketplace",
-      "name": "Custom GPTs marketplace",
-      "kind": "marketplace",
-      "scope": "Hosted Custom GPTs. Every GPT signed + content-addressed.",
-      "endpoint": "/api/marketplace",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/marketplace probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "apps-sdk",
-      "name": "Apps SDK",
-      "kind": "sdk",
-      "scope": "Plug into Apps. Every plugin call signed.",
-      "endpoint": "/api/apps",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/apps probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "deep-research",
-      "name": "Deep Research",
-      "kind": "research",
-      "scope": "8-step research pipeline. Every claim measured + signed + anchored.",
-      "endpoint": "/api/research",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/research probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "scheduled-tasks",
-      "name": "Scheduled tasks",
-      "kind": "automation",
-      "scope": "Run any pane on schedule. Every run emits signed card.",
-      "endpoint": "/api/scheduled",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/scheduled probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "projects",
-      "name": "Projects",
-      "kind": "workspace",
-      "scope": "Workspace with files + chats + memos. Every change signed.",
-      "endpoint": "/api/projects",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/projects probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "side-by-side-models",
-      "name": "Side-by-side models",
-      "kind": "compare",
-      "scope": "Compare 2+ models on the same prompt. Every response signed.",
-      "endpoint": "/api/compare",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/compare probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "calendar",
-      "name": "Calendar",
-      "kind": "calendar",
-      "scope": "Schedule + reminders. Every event signed + x402-priced.",
-      "endpoint": "/api/calendar",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/calendar probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
-      "id": "email",
-      "name": "Email",
-      "kind": "email",
-      "scope": "Send / receive email. Every email signed + anchored.",
-      "endpoint": "/api/email",
-      "status": "live",
-      "wasm_required": false,
-      "endpoint_status": "NOT_IMPLEMENTED — /api/email probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
-    },
-    {
       "id": "sms-phone",
       "name": "SMS / phone calls",
       "kind": "telephony",
@@ -177,6 +37,25 @@
     "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
     "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
     "not_implemented": [
+      "/api/apps",
+      "/api/calendar",
+      "/api/canvas",
+      "/api/compare",
+      "/api/email",
+      "/api/group",
+      "/api/image-gen",
+      "/api/marketplace",
+      "/api/projects",
+      "/api/research",
+      "/api/scheduled",
+      "/api/share",
+      "/api/vision",
+      "/api/voice"
+    ]
+  },
+  "features_removed_2026-09-06": {
+    "why": "probed 404 and confirmed 2026-09-06 by absence of an implementing Pages Function (no functions/api/<name>.ts): these doors cannot exist, so advertising them tested and offered nothing. /api/verify was IMPLEMENTED on 2026-09-06 and kept.",
+    "removed": [
       "/api/apps",
       "/api/calendar",
       "/api/canvas",

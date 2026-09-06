@@ -709,6 +709,70 @@ async function checkPlatformProofs() {
   }
 }
 
+/**
+ * 11. NOT_IMPLEMENTED MARKERS EXPIRE — implement the door, or stop advertising it.
+ *
+ * #1312 marked 36 dead endpoint references across six /interop manifests, honestly and well. But
+ * a marker is a promise to come back, and nobody was coming back. C07 set the rule: no marker
+ * older than 7 days — implement or remove.
+ *
+ * Swept 2026-09-06. 22 distinct marked paths, resolved WITHOUT probing the site, because a
+ * Cloudflare Pages Function exists only if its file does: 20 of 22 had no functions/api/<name>.ts
+ * at all, and /api/xrpl/{rlusd,usdc} map to xrpl.ts which serves only the exact path /api/xrpl
+ * (200) and does not sub-route (404). Absence of the file is decisive and costs no self-probe —
+ * which matters under the 20/hour Cloudflare budget.
+ *
+ * What changed:
+ *   chatgpt-features-finish.json   17 features -> 3.  FOURTEEN advertised a door with no
+ *                                  implementing function. 82% of that manifest was fiction.
+ *   chatgpt-skills.json            /api/research, /api/scheduler dropped
+ *   persona-tests.json             /api/measure /api/anchor /api/insurance/attest
+ *                                  /api/xrpl/{rlusd,usdc} dropped; /api/verify kept, IMPLEMENTED
+ *   deep-research-integration.json every endpoint was /api/research*; converted to the honest
+ *                                  shape the estate already uses — kind quarantined-api-capability,
+ *                                  state NOT_IMPLEMENTED — rather than deleted, because the
+ *                                  pipeline design is real work and only its doors were not.
+ *
+ * TWELVE manifests were left exactly as they were. anchor.json, verify-card.json, verify-batch.json
+ * and nine others are `quarantined-api-capability` documents that say NOT_IMPLEMENTED in their own
+ * `state`. Those are the honest shape, not the defect; deleting them would remove a disclosure.
+ *
+ * This check keeps the distinction: a QUARANTINE DOC may name a dead path all day. A manifest
+ * that OFFERS things may not.
+ */
+async function checkMarkerExpiry() {
+  const { readFileSync, readdirSync, existsSync } = await import("node:fs");
+  const path = await import("node:path");
+  const DIR = "public/interop";
+  if (!existsSync(DIR)) return skip("interop markers", `${DIR} not in this checkout`);
+
+  const offenders = [];
+  let quarantine = 0, scanned = 0;
+  for (const name of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
+    let d;
+    try { d = JSON.parse(readFileSync(path.join(DIR, name), "utf8")); } catch { continue; }
+    scanned++;
+    if (d?.kind === "quarantined-api-capability") { quarantine++; continue; }
+    // Ignore the dated removal records and audit blocks: they QUOTE what was taken out.
+    const live = JSON.stringify(d, (k, v) =>
+      (String(k).includes("removed") || String(k).includes("claims_audit")) ? undefined : v);
+    for (const m of live.matchAll(/(\/api\/[A-Za-z0-9\/_{}-]+)[^"]{0,40}NOT_IMPLEMENTED/g)) {
+      offenders.push(`${name}: ${m[1]}`);
+    }
+  }
+  if (!scanned) return skip("interop markers", "no manifests parsed");
+  if (offenders.length) {
+    bad("interop markers",
+      `${offenders.length} NOT_IMPLEMENTED marker(s) still sit in manifests that OFFER things: ` +
+      `${offenders.slice(0, 6).join("; ")}. A marker is a promise to come back. Implement the ` +
+      `door, remove the entry, or convert the document to kind "quarantined-api-capability" — ` +
+      `which is the honest shape and is never flagged here.`);
+  } else {
+    ok("interop markers", `${scanned} manifests; ${quarantine} are quarantine docs (allowed to ` +
+      `name a dead path); 0 offering manifests carry a NOT_IMPLEMENTED marker`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -774,6 +838,7 @@ async function main() {
   await checkInstallLines();
   await checkHfCards();
   await checkPlatformProofs();
+  await checkMarkerExpiry();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";

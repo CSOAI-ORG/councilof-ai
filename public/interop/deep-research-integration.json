@@ -14,13 +14,8 @@
   ],
   "endpoints": {
     "research_start": "POST /api/research",
-    "research_status": "GET /api/research/{id}",
     "research_verify": "POST /api/research/{id}/verify",
-    "research_anchor": "POST /api/research/{id}/anchor",
-    "research_start_status": "NOT_IMPLEMENTED — /api/research probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
-    "research_status_status": "NOT_IMPLEMENTED — /api/research/{id} probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
-    "research_verify_status": "NOT_IMPLEMENTED — /api/research/{id}/verify probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
-    "research_anchor_status": "NOT_IMPLEMENTED — /api/research/{id}/anchor probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
+    "research_anchor": "POST /api/research/{id}/anchor"
   },
   "agents": [
     "Council OS deep research agent",
@@ -41,5 +36,11 @@
       "/api/research/{id}/anchor",
       "/api/research/{id}/verify"
     ]
-  }
+  },
+  "kind": "quarantined-api-capability",
+  "state": "NOT_IMPLEMENTED",
+  "name": "Deep research pipeline (unavailable)",
+  "description": "A design for a research pipeline. NONE of its endpoints exist: there is no functions/api/research.ts, and /api/research answered 404 on 2026-09-05 and 2026-09-06. Nothing here can be called.",
+  "state_note": "Kept rather than deleted: the pipeline design is real work and the endpoint names are its vocabulary. What was not real is that any of it could be invoked. Confirmed by absence of an implementing Pages Function, which is decisive and costs no probe.",
+  "endpoints_state": "NOT_IMPLEMENTED — every path above; no implementing function exists"
 }
