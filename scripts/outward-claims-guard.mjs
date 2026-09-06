@@ -691,6 +691,19 @@ async function checkPlatformProofs() {
     `these are marked live with no proof_url: ${unproven.join(", ")}. live means a URL shows the ` +
     `entry; without one the honest status is planned.`);
 
+  // A `manifest` names a CSOAI-side file a platform reads. On 2026-09-06 thirteen of twenty-five
+  // named a councilof.ai path that 404s — two on `live` rows — because nothing in the estate ever
+  // read the field, so it rotted silently for as long as it existed. A Pages path exists only if
+  // its file does, which makes this decidable with no network at all.
+  const ghost = regs
+    .filter((r) => typeof r.manifest === "string" && r.manifest.startsWith("https://councilof.ai/"))
+    .filter((r) => !existsSync(`public/${r.manifest.slice("https://councilof.ai/".length)}`))
+    .map((r) => `${r.platform}: ${r.manifest}`);
+  assertNo(ghost, "platform manifest files",
+    `these rows advertise a manifest that no file serves: ${ghost.join("; ")}. A Pages path exists ` +
+    `only if its file does. Null the field or write the file — never leave a URL standing for one ` +
+    `we intend to create.`);
+
   if (!process.env.LIVE_PLATFORMS) {
     return skip("platform proof urls (live)", "LIVE_PLATFORMS unset — proof URLs NOT probed");
   }
@@ -900,7 +913,24 @@ async function main() {
     if (!(cmpV("1.2.0", "1.3.0") < 0))   { console.error("selftest FAIL: 1.2.0 must lose to 1.3.0"); bad++; }
     if (!(cmpV("1.0.9", "1.0.10") < 0))  { console.error("selftest FAIL: version parts are numbers, not strings"); bad++; }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 13 decision cases, all correct");
+    // A manifest URL is a claim about a file. The rule is decidable with no network: a Pages
+    // path exists only if its file does. Both directions, because a check that cannot fail
+    // enforces nothing — and this one exists because the field went thirteen-of-twenty-five
+    // wrong while nothing read it.
+    const ghostVerdict = (manifest, fileExists) =>
+      typeof manifest === "string" && manifest.startsWith("https://councilof.ai/") && !fileExists
+        ? "FAIL" : "OK";
+    if (ghostVerdict("https://councilof.ai/interop/smithery-mcp.json", false) !== "FAIL") {
+      console.error("selftest FAIL: a manifest naming no file must fail"); bad++;
+    }
+    if (ghostVerdict("https://councilof.ai/.well-known/mcp.json", true) !== "OK") {
+      console.error("selftest FAIL: a manifest whose file exists must pass"); bad++;
+    }
+    if (ghostVerdict(null, false) !== "OK") {
+      console.error("selftest FAIL: a null manifest claims nothing and must pass"); bad++;
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 16 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
