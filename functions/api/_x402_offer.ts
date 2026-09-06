@@ -150,3 +150,99 @@ export async function verifyOffer(
   if (!checks.not_expired) return { ok: false, reason: `offer expired at ${vu} (now ${nowSeconds})`, kid, payload: p as OfferPayload, checks };
   return { ok: true, reason: "offer verifies under the resolved key and is within validUntil", kid, payload: p as OfferPayload, checks };
 }
+
+// ─── wiring helpers ─────────────────────────────────────────────────────────
+// These live here (not in _x402.ts) so the module graph stays acyclic:
+//   _x402.ts → _x402_receipt.ts → _x402_offer.ts → {_x402_jws, _x402_config, _lib/cardSign}
+// Nothing in this file imports _x402.ts.
+
+/** The `csoai.offer_receipt` sidecar — our own words about the extension, never inside a signed payload. */
+export type OfferReceiptSidecar = {
+  extension: typeof OFFER_RECEIPT_EXTENSION;
+  spec: string;
+  spec_commit: string;
+  format: "jws";
+  alg: "EdDSA";
+  kid: string;
+  signed: boolean;
+  reason: string;
+  verify: string;
+};
+
+/**
+ * attachOffers — take a PaymentRequired object as `buildPaymentRequiredV2` produced it and return
+ * a NEW object carrying one signed offer per accepts[] entry, plus the honest `csoai.offer_receipt`
+ * sidecar. Never mutates the input; never throws — a signing failure yields `signed:false` with the
+ * reason on the sidecar, because a 402 that still challenges correctly is better than a 500, and an
+ * invented offer would be worse than both.
+ *
+ * The offers array is OMITTED entirely when nothing could be signed. An empty `offers: []` under a
+ * `required: ["offers"]` schema would be a conformance lie: it says "here are the server's signed
+ * terms, and there are none", which no verifier can distinguish from a server that signs nothing.
+ */
+export async function attachOffers(
+  paymentRequired: Record<string, unknown>,
+  pkcs8b64: string | undefined,
+  nowSeconds: number = Math.floor(Date.now() / 1000),
+  kid: string = X402_SIGNER_KID,
+): Promise<Record<string, unknown>> {
+  const resourceUrl =
+    (paymentRequired.resource as { url?: string } | undefined)?.url ||
+    ((paymentRequired.accepts as OfferTerms[] | undefined)?.[0] as { resource?: string } | undefined)?.resource ||
+    "";
+  const accepts = Array.isArray(paymentRequired.accepts) ? (paymentRequired.accepts as OfferTerms[]) : [];
+
+  const sidecar = (signed: boolean, reason: string): OfferReceiptSidecar => ({
+    extension: OFFER_RECEIPT_EXTENSION,
+    spec: OFFER_RECEIPT_SPEC_URL,
+    spec_commit: OFFER_RECEIPT_SPEC_SHA,
+    format: "jws",
+    alg: "EdDSA",
+    kid,
+    signed,
+    reason,
+    verify:
+      "base64url-decode the JWS payload part, fetch https://csoai.org/.well-known/did.json, take the " +
+      "publicKeyJwk.x of the verificationMethod whose id equals the header kid, and verify Ed25519 over " +
+      "`header.payload`. POST the compact string to /api/receipts/verify to have us do it, or run " +
+      "scripts/verify_receipt.py to do it without us.",
+  });
+
+  const withSidecar = (offers: SignedOffer[] | null, note: OfferReceiptSidecar) => ({
+    ...paymentRequired,
+    extensions: {
+      ...((paymentRequired.extensions as Record<string, unknown>) || {}),
+      ...(offers && offers.length ? { [OFFER_RECEIPT_EXTENSION]: offersExtension(offers) } : {}),
+    },
+    csoai: { ...((paymentRequired.csoai as Record<string, unknown>) || {}), offer_receipt: note },
+  });
+
+  if (!pkcs8b64) {
+    return withSidecar(null, sidecar(false, "BOARD_SIGN_KEY_PKCS8_B64 absent in Pages env — this 402 carries no signed offer"));
+  }
+  if (!resourceUrl) {
+    return withSidecar(null, sidecar(false, "no resource.url on the PaymentRequired — an offer must name the resource it commits to"));
+  }
+  try {
+    const offers: SignedOffer[] = [];
+    const skipped: number[] = [];
+    for (let i = 0; i < accepts.length; i++) {
+      const payload = offerPayload(resourceUrl, accepts[i]!, nowSeconds);
+      if (!payload) {
+        skipped.push(i);
+        continue;
+      }
+      offers.push(await signOffer(payload, pkcs8b64, i, kid));
+    }
+    if (!offers.length) {
+      return withSidecar(null, sidecar(false, `no accepts entry could be committed to (payTo or amount missing): indices ${skipped.join(",") || "none present"}`));
+    }
+    const reason =
+      skipped.length === 0
+        ? `${offers.length} of ${accepts.length} accepts entries signed`
+        : `${offers.length} of ${accepts.length} accepts entries signed; ${skipped.join(",")} skipped (no payTo or non-integer amount)`;
+    return withSidecar(offers, sidecar(true, reason));
+  } catch (e) {
+    return withSidecar(null, sidecar(false, `signing failed: ${(e as Error).message}`));
+  }
+}
