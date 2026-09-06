@@ -14,7 +14,9 @@
     "allowJs": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "types": []
+    "types": [
+      "@cloudflare/workers-types"
+    ]
   },
   "include": [
     "functions/**/*.ts"
@@ -22,5 +24,5 @@
   "exclude": [
     "**/*.test.ts"
   ],
-  "_note": "Mirrors tsconfig.json (strict:false, ES2022, bundler) so the count reflects the repo, not a strictness chosen here. types:[] ON PURPOSE \u2014 @cloudflare/workers-types is not a dependency yet, so `npm run check:functions` reproduces the 233 in docs/reports/functions-typecheck-2026-09-06.md exactly. Adding that package (and the lockfile churn it brings) is step one of the fix, in its own PR."
+  "_note": "Mirrors tsconfig.json (strict:false, ES2022, bundler) so the count reflects the repo, not a strictness chosen here. types now names @cloudflare/workers-types, which is a real devDependency as of this change: it supplies PagesFunction, KVNamespace, Request/Response and the rest of the Workers globals, and removes 181 of the 233 errors recorded in docs/reports/functions-typecheck-2026-09-06.md. What is left is real."
 }
