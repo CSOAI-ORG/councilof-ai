@@ -379,6 +379,36 @@ def test_millable_drops_image_lora_windows() -> None:
     assert "Qwen/Qwen2.5-3B-Instruct" in got
 
 
+def test_millable_original_reachable_despite_skip_tags() -> None:
+    """Original HF2200 image/ASR rows Hub still lists on a provider must mill.
+    Unstamped LoRAs stay out. Membership is not expanded."""
+    models = [
+        {
+            "slug": "Falconsai/nsfw_image_detection",
+            "pipeline_tag": "image-classification",
+            "status": "UNCHECKABLE",
+            "providers_live": ["hf-inference"],
+            "reason": "HTTP 400 chat miss",
+        },
+        {
+            "slug": "prithivMLmods/QIE-outfit",
+            "pipeline_tag": "text-to-image",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 chat miss",
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "practice-mill",
+            "providers_live": ["featherless-ai"],
+        },
+    ]
+    got = millable_slugs(models)
+    assert "Falconsai/nsfw_image_detection" in got
+    assert "prithivMLmods/QIE-outfit" not in got
+    assert "Qwen/Qwen3-8B" not in got
+
+
 def test_millable_includes_embed_and_fill_mask() -> None:
     """Chat mill 400s MiniLM; hf-inference similarity 200. Those slugs
     must enter the window or n_measured cannot leave the chat-only 96."""
@@ -500,6 +530,7 @@ if __name__ == "__main__":
     test_millable_probes_uncheckable_for_live_providers()
     test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
+    test_millable_original_reachable_despite_skip_tags()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
@@ -507,4 +538,4 @@ if __name__ == "__main__":
     test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 23 passed")
+    print("test_mill_window: 24 passed")
