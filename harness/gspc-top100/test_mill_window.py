@@ -234,10 +234,10 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     ]
     got = millable_slugs(models)
     # n_measured still hundreds: retry chat policy rows that never had a
-    # non-nebius mill. What would make this fail: skipping opt-125m forever
-    # because the last DEFAULT spray named nebius.
+    # non-nebius mill. Empty mapping + route_kind=chat is Hub-probe only;
+    # mill the bare slug. chat-bare already 400'd that call.
     assert "facebook/opt-125m" in got
-    assert "Qwen/Qwen2.5-7B-Instruct" not in got
+    assert "Qwen/Qwen2.5-7B-Instruct" in got
     # nomic has no providers_live key — Hub probe, not an embed respray.
     assert "nomic-ai/nomic-embed-text-v1.5" in got
     # After chat-bare the reason is no longer nebius. Bare respray is forbidden
@@ -291,7 +291,11 @@ def test_millable_probes_uncheckable_for_live_providers() -> None:
     assert "facebook/opt-125m" not in got
     assert "meta-llama/Llama-3.1-8B-Instruct" not in got
     assert "needs/probe" in got
-    assert mill_router_names("facebook/opt-125m", "chat", [], uncheckable=True) == []
+    # Empty mapping is not terminal for chat: mill the bare slug.
+    # chat-bare already 400'd that call; chat-mapped already 400'd mapped.
+    assert mill_router_names("facebook/opt-125m", "chat", [], uncheckable=True) == [
+        "facebook/opt-125m"
+    ]
     mapped = mill_router_names("Qwen/Qwen3-8B", "chat", ["featherless-ai"], uncheckable=True)
     assert mapped == ["Qwen/Qwen3-8B:featherless-ai"]
     assert "Qwen/Qwen3-8B:groq" not in mapped
@@ -299,6 +303,54 @@ def test_millable_probes_uncheckable_for_live_providers() -> None:
     feat = mill_router_names("Qwen/Qwen3-Embedding-4B", "feature", ["deepinfra"], uncheckable=True)
     assert feat == ["Qwen/Qwen3-Embedding-4B:deepinfra"]
     assert "hf-inference" not in "".join(feat)
+
+
+def test_empty_mapping_chat_mills_bare_slug_not_treated_terminal() -> None:
+    """Hub inferenceProviderMapping=[] is not a router 400. Chat-like
+    UNCHECKABLE with empty mapping mill the bare slug. What would make
+    this fail: millable=0 because providers_live=[]."""
+    models = [
+        {
+            "slug": "google/gemma-4-E4B-it",
+            "pipeline_tag": "any-to-any",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-bare",
+            "reason": "HTTP 400 not supported",
+            "providers_live": [],
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat-mapped",
+            "reason": "HTTP 400 not supported",
+            "providers_live": ["together"],
+        },
+        {
+            "slug": "openai/whisper-tiny",
+            "pipeline_tag": "automatic-speech-recognition",
+            "status": "UNCHECKABLE",
+            "route_kind": "try-chat-then-feature",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+    ]
+    got = millable_slugs(models)
+    assert "google/gemma-4-E4B-it" in got
+    assert "facebook/opt-125m" not in got
+    assert "Qwen/Qwen3-8B" not in got
+    assert "openai/whisper-tiny" not in got
+    assert mill_router_names("google/gemma-4-E4B-it", "chat", [], uncheckable=True) == [
+        "google/gemma-4-E4B-it"
+    ]
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
@@ -528,6 +580,7 @@ if __name__ == "__main__":
     test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
     test_millable_probes_uncheckable_for_live_providers()
+    test_empty_mapping_chat_mills_bare_slug_not_treated_terminal()
     test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
     test_millable_original_reachable_despite_skip_tags()
@@ -538,4 +591,4 @@ if __name__ == "__main__":
     test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 24 passed")
+    print("test_mill_window: 25 passed")

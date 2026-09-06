@@ -371,8 +371,8 @@ def main() -> int:
         uncheckable = lock_st == "UNCHECKABLE"
         # UNCHECKABLE: mapped providers only. Empty mapping: no HTTP mill.
         router_names = mill_router_names(slug, kind, mapped, uncheckable=uncheckable)
-        if uncheckable and kind == "chat" and mapped:
-            rec["route_kind"] = "chat-mapped"
+        if uncheckable and kind == "chat":
+            rec["route_kind"] = "chat-mapped" if mapped else "chat-bare"
         rec["router_names"] = router_names
         if uncheckable and not router_names:
             rec["status"] = "UNCHECKABLE"

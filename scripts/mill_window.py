@@ -247,15 +247,16 @@ def mill_router_names(
 ) -> list[str]:
     """HTTP mill names. Empty list means do not call the router.
 
-    Uncheckable + empty mapping: no DEFAULT spray, no bare respray.
-    Uncheckable chat + mapped: mapped suffixes only (bare already 400'd).
+    Uncheckable chat + empty mapping: the bare slug. Hub [] is not a 400.
+    Uncheckable + mapped: mapped suffixes only (do not respray hf-inference).
     """
     mapped = [p for p in (mapped or []) if p and p != "nebius"]
     if uncheckable:
-        if not mapped:
-            return []
-        # Mapped suffixes only. Bare + hf-inference already 400'd.
-        return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
+        if mapped:
+            return [f"{slug}:{p}" for p in mapped if p != "hf-inference"]
+        if kind == "chat":
+            return [slug]
+        return []
     return mill_names_for_kind(slug, kind, mapped)
 
 
@@ -298,6 +299,10 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 out.append(slug)
                 continue
             if probed and not live_list:
+                # Hub [] is not a router 400. Chat-like mill the bare slug
+                # unless chat-bare / *-mapped already ran.
+                if tag in CHAT_TAGS and last_kind not in ("chat-bare",) and not last_kind.endswith("-mapped"):
+                    out.append(slug)
                 continue
             # Not Hub-probed: millable so mill can GET live mapping.
             # HTTP mill runs only if mill_router_names is nonempty.
