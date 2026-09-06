@@ -1,11 +1,12 @@
 import LobbyBoardPane from "@/components/lobby/LobbyBoardPane";
 
 /**
- * Council OS doors — board · verify · cards · harness · space · assess · swift (SWIFT census + x402).
+ * Council OS doors — six arms only: board · verify · cards · harness · space · assess,
+ * plus owner stranger-walk tab swift (SWIFT census + x402 doors, verify free).
  * Header rail: Board · Verify · Space · Assess · Harness · SWIFT · x402 (Cards is a URL mapping, not a tab).
  * AG-UI is presentation only. Do not add Cobol/Cobalt Bridge as a door.
- * Owner stranger-walk 6 Sep 2026: one tab for SWIFT census + x402 doors (verify free).
  */
+
 export type DoorId = "board" | "verify" | "cards" | "harness" | "space" | "assess" | "swift";
 
 export const DOORS: { id: DoorId; label: string }[] = [

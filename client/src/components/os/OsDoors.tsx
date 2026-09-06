@@ -427,39 +427,40 @@ function SwiftX402Door() {
       <section className="rounded-2xl border border-amber-200 bg-amber-50/60 p-4" data-testid="os-x402-metamask-next">
         <h3 className="text-sm font-semibold text-slate-800">MetaMask next — estate EDGE doors</h3>
         <p className="mt-1 text-[13px] text-slate-600">
-          Challenge amounts from the live 402 (USDC). Payer must ≠ payTo. Self-wallet settles are
-          receipts, not revenue. Free-door is skipped on purpose.
+          Open each door for its live 402 challenge — amounts live at the 402, never typed here.
+          Payer must ≠ payTo. Self-wallet settles are receipts, not revenue. Free-door is skipped
+          on purpose.
         </p>
         <ol className="mt-3 list-decimal space-y-1.5 pl-5 text-[13px] text-slate-800">
           <li>
             <a className="font-semibold text-emerald-800 underline" href="/api/request-attestation?subject=demo">
               /api/request-attestation
             </a>{" "}
-            · ~0.02 USDC · issuance
+            · issuance · amount at 402
           </li>
           <li>
             <a className="font-semibold text-emerald-800 underline" href="/api/proof?bundle=1">
               /api/proof?bundle=1
             </a>{" "}
-            · ~0.02 USDC · assembly
+            · assembly · amount at 402
           </li>
           <li>
             <a className="font-semibold text-emerald-800 underline" href="/api/eunomia-data?feed=1">
               /api/eunomia-data?feed=1
             </a>{" "}
-            · ~0.02 USDC · assembly
+            · assembly · amount at 402
           </li>
           <li>
             <a className="font-semibold text-emerald-800 underline" href="/api/rwa/evidence?asset=RLUSD">
               /api/rwa/evidence?asset=RLUSD
             </a>{" "}
-            · ~0.02 USDC · issuance
+            · issuance · amount at 402
           </li>
           <li>
             <a className="font-semibold text-emerald-800 underline" href="/api/receipts/batch">
               /api/receipts/batch
             </a>{" "}
-            · ~0.10 USDC · assembly
+            · assembly · amount at 402
           </li>
         </ol>
       </section>
