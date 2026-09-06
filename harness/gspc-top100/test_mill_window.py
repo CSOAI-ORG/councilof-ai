@@ -159,6 +159,29 @@ def test_provider_order_never_defaults_to_hf_inference() -> None:
     assert "hf-inference" not in provider_order(["hf-inference"])
     assert "hf-inference" not in provider_order([])
     assert provider_order([])[0] == "groq"
+    assert "nebius" not in DEFAULT_PROVIDERS
+
+
+def test_millable_does_not_respray_provider_policy_fails() -> None:
+    """34049312401: 286 millable were resprayed; last 400 was invalid nebius.
+    Those already had a real router attempt. Do not mill them every hour."""
+    models = [
+        {
+            "slug": "facebook/opt-125m",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
+        {
+            "slug": "nomic-ai/nomic-embed-text-v1.5",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
+        },
+    ]
+    got = millable_slugs(models)
+    assert "facebook/opt-125m" not in got
+    assert "nomic-ai/nomic-embed-text-v1.5" in got
 
 
 def test_millable_includes_embed_and_fill_mask() -> None:
@@ -225,8 +248,9 @@ if __name__ == "__main__":
     test_millable_skips_already_tried()
     test_millable_retries_hf_inference_uncheckable()
     test_provider_order_never_defaults_to_hf_inference()
+    test_millable_does_not_respray_provider_policy_fails()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 14 passed")
+    print("test_mill_window: 15 passed")
