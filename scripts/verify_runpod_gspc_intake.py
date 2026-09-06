@@ -800,6 +800,7 @@ def _validate_semantics(
         "model_manifest_digest": model_digest,
         "instrument_sha256": instrument_sha256,
         "items_sha256": items_sha256,
+        "parse_errors_excluded": counts.parse_errors,
         "transport_errors_excluded": 0,
     }
     if evidence != expected_evidence:
