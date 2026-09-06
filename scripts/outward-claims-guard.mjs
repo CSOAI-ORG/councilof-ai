@@ -699,6 +699,56 @@ async function checkHfCards() {
  *
  * Offline by default. LIVE_PLATFORMS=1 probes every proof_url.
  */
+/**
+ * 13. THE SBOM SAYS package.json. npm ci INSTALLS package-lock.json.
+ *
+ * public/interop/sbom-councilof-ai.json is a PUBLISHED supply-chain claim, and its generator
+ * (scripts/gen_sbom.py) reads package.json — "Web runtime components listed from package.json".
+ * CI installs with `npm ci`, which builds the tree from package-lock.json. When the lock's root
+ * entry declares a dependency package.json does not, the published SBOM under-reports what is
+ * actually installed, and no test in the estate notices.
+ *
+ * MEASURED 2026-09-06, and it was not hypothetical. #1273 deleted six packages from package.json
+ * for five high-severity advisories; the SBOM was regenerated to 120 components without them and
+ * PRODUCERS.json recorded the fix. The lockfile root still declared all six — drizzle-orm,
+ * mysql2, nodemailer, xlsx, drizzle-kit, @types/nodemailer — so `npm ci` kept installing them and
+ * `npm audit` kept reporting drizzle-orm/nodemailer/xlsx HIGH. The artefact was honest about
+ * package.json and package.json was not what ran.
+ *
+ * Static, no network: both files are in the checkout.
+ */
+async function checkLockMatchesManifest() {
+  const { readFileSync, existsSync } = await import("node:fs");
+  for (const f of ["package.json", "package-lock.json"]) {
+    if (!existsSync(f)) return skip("sbom source vs installed tree", `${f} not in this checkout`);
+  }
+  let pj, root;
+  try {
+    pj = JSON.parse(readFileSync("package.json", "utf8"));
+    root = JSON.parse(readFileSync("package-lock.json", "utf8")).packages?.[""] ?? null;
+  } catch (e) {
+    return bad("sbom source vs installed tree", `could not read the manifests: ${e.message}`);
+  }
+  if (!root) return bad("sbom source vs installed tree", "package-lock.json has no root entry");
+
+  const extra = [];
+  for (const field of ["dependencies", "devDependencies", "optionalDependencies"]) {
+    const inLock = Object.keys(root[field] ?? {});
+    const declared = new Set(Object.keys(pj[field] ?? {}));
+    for (const name of inLock) if (!declared.has(name)) extra.push(`${name} (${field})`);
+  }
+  if (extra.length) {
+    bad("sbom source vs installed tree",
+      `package-lock.json declares ${extra.length} dependenc${extra.length === 1 ? "y" : "ies"} ` +
+      `package.json does not: ${extra.slice(0, 8).join(", ")}${extra.length > 8 ? ` (+${extra.length - 8} more)` : ""}. ` +
+      `The published SBOM is generated from package.json and npm ci installs from the lock, so the ` +
+      `SBOM under-reports what runs. Run \`npm install --package-lock-only\`.`);
+  } else {
+    ok("sbom source vs installed tree",
+      `the lockfile root declares nothing package.json does not, so the SBOM's source is what npm ci installs`);
+  }
+}
+
 async function checkPlatformProofs() {
   const { readFileSync, existsSync } = await import("node:fs");
   const FILE = "public/interop/platforms-registered.json";
@@ -979,7 +1029,22 @@ async function main() {
       if (got !== c.want) { console.error(`selftest FAIL: baseline ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
     }
 
-    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 21 decision cases, all correct");
+    // The SBOM's source vs what npm ci installs. Only ONE direction is a defect: a lock that
+    // declares MORE than package.json makes the published SBOM under-report. A lock that
+    // declares less is npm ci's own error and it refuses to run, so it cannot ship quietly.
+    const lockVerdict = (pj, lock) => (lock.filter((x) => !pj.includes(x)).length ? "FAIL" : "OK");
+    const LOCKC = [
+      { name: "identical", pj: ["a", "b"], lock: ["a", "b"], want: "OK" },
+      { name: "lock declares an extra", pj: ["a"], lock: ["a", "xlsx"], want: "FAIL" },
+      { name: "lock declares fewer (npm ci's error, not ours)", pj: ["a", "b"], lock: ["a"], want: "OK" },
+      { name: "both empty", pj: [], lock: [], want: "OK" },
+    ];
+    for (const c of LOCKC) {
+      const got = lockVerdict(c.pj, c.lock);
+      if (got !== c.want) { console.error(`selftest FAIL: lock ${c.name} -> ${got}, wanted ${c.want}`); bad++; }
+    }
+
+    console.log(bad ? `selftest: ${bad} case(s) wrong` : "selftest OK — 25 decision cases, all correct");
     process.exit(bad ? 1 : 0);
   }
   await checkManifest();
@@ -991,6 +1056,7 @@ async function main() {
   await checkProducers();
   await checkInstallLines();
   await checkHfCards();
+  await checkLockMatchesManifest();
   await checkPlatformProofs();
   await checkMarkerExpiry();
   await checkRegulatorCensus();
