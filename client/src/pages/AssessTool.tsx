@@ -1,9 +1,9 @@
 /*
  * CSOAI Live Assessment Tool
  *
- * /assess must match /measure: paid measurement, booking not live, Coming — Paddle,
+ * /assess must match /measure: paid measurement, booking not live, Pay-as-you-go x402 (not live yet),
  * public verifies free, never a bought rank. This page must not claim a free
- * signed run. Do not put Paddle checkout chrome here (and never on /honesty).
+ * signed run. Do not put any payment-processor checkout chrome here (and never on /honesty).
  */
 
 import { useState } from "react";
@@ -83,7 +83,7 @@ export default function AssessTool() {
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-4">
-          Paid measurement. Booking is not live. Coming — Paddle. The public verifies free.
+          Paid measurement. Booking is not live. Pay-as-you-go x402 (not live yet). The public verifies free.
           Never a bought rank. Empty means we have not measured that system — we do not guess.
           Not a certificate.
         </p>
@@ -115,7 +115,7 @@ export default function AssessTool() {
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
             <Button onClick={run} disabled={true} className="w-full" aria-disabled="true">
-              Coming — Paddle · booking not live
+              Pay-as-you-go x402 (not live yet) · booking not live
             </Button>
             <p className="text-xs text-muted-foreground">
               Signed measurement is a paid engagement. Checkout is not on this page. Do not treat a disabled
