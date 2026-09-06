@@ -95,3 +95,13 @@ jobs:
       # UNCHECKABLE and does not go red; it also does not report a pass.
       - name: llms.txt / llms-full.txt match the live board
         run: node scripts/llms-txt.mjs --check
+
+      # A same-origin URL published in a machine surface must be a path we serve. Nothing read
+      # link fields before: brand-gate reads display fields, facts-gate reads claims,
+      # signed-json-guard reads structure — so six badge images that 404 sat in a published index
+      # with every gate green. Ratcheted against a dated baseline: NEW dead links fail here, the
+      # 64 known-dead targets are a named debt that may only shrink.
+      - name: Link gate — published JSON must not point at 404s
+        run: |
+          node scripts/link-gate.mjs --selftest
+          node scripts/link-gate.mjs dist/client
