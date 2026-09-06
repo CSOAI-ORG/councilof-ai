@@ -237,7 +237,7 @@ def main() -> int:
         except Exception as e:
             rec["meta_error"] = type(e).__name__
         tag = rec.get("pipeline_tag") or ""
-        kind = route_kind(tag)
+        kind = route_kind(tag, slug)
         rec["route_kind"] = kind
         if kind != "chat":
             rec["n"] = 1

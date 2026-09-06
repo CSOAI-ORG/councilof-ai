@@ -112,10 +112,13 @@ def test_millable_skips_already_tried() -> None:
         {"slug": "Qwen/Qwen2.5-7B-Instruct-AWQ", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
     ]
     got = millable_slugs(models)
-    assert got == ["a/unmeasured"]
+    assert "a/unmeasured" in got
     assert "b/practiced" not in got
     assert "c/uncheckable" not in got
-    assert "Qwen/Qwen2.5-7B-Instruct-AWQ" not in got
+    # Quant packs must be attempted so UNCHECKABLE is recorded, not skipped.
+    assert "Qwen/Qwen2.5-7B-Instruct-AWQ" in got
+    assert "d/awq" in got
+    assert route_kind("text-generation", "Qwen/Qwen2.5-7B-Instruct-AWQ") == "feature"
 
 
 def test_millable_includes_embed_and_fill_mask() -> None:
