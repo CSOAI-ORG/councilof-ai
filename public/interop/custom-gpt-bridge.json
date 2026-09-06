@@ -1,7 +1,7 @@
 {
   "schema": "csoai.custom-gpt-bridge/0.1",
-  "as_of": "20260905T045749Z",
-  "principle": "Every Custom GPT becomes a csoai:space — hosted, signed, x402-priced.",
+  "as_of": "20260906T045000Z",
+  "principle": "Every Custom GPT here calls doors that answer. An action is listed only after it was probed; verification is free and a payment challenge is the only place an amount ever appears.",
   "format": "openai.custom-gpt.v1",
   "gpts": [
     {
@@ -14,7 +14,29 @@
         "Verify a card",
         "Anchor a card to OTS"
       ],
-      "actions": []
+      "actions": [
+        {
+          "action": "read_board",
+          "method": "GET",
+          "endpoint": "https://councilof.ai/api/gspc",
+          "what": "The live board: 22 axes, with totals.lid quoted verbatim",
+          "probed": "200"
+        },
+        {
+          "action": "read_hub_results",
+          "method": "GET",
+          "endpoint": "https://councilof.ai/api/hub-cards",
+          "what": "Published third-party Hub cells, each with its status",
+          "probed": "200"
+        },
+        {
+          "action": "verify_card",
+          "method": "POST",
+          "endpoint": "https://councilof.ai/api/verify",
+          "what": "Verify a posted card: VALID / INVALID / UNCHECKABLE. A malformed body answers 400 UNCHECKABLE — that is the contract, not a failure.",
+          "probed": "200 GET (usage), 400 UNCHECKABLE on a malformed POST body"
+        }
+      ]
     },
     {
       "name": "XRPL evidence card",
@@ -25,7 +47,22 @@
         "Show Ripple's reserves",
         "Verify a USDC card"
       ],
-      "actions": []
+      "actions": [
+        {
+          "action": "read_xrpl_registry",
+          "method": "GET",
+          "endpoint": "https://councilof.ai/api/xrpl",
+          "what": "The XRPL issuer registry this estate publishes",
+          "probed": "200"
+        },
+        {
+          "action": "verify_card",
+          "method": "POST",
+          "endpoint": "https://councilof.ai/api/verify",
+          "what": "Verify a posted card: VALID / INVALID / UNCHECKABLE. A malformed body answers 400 UNCHECKABLE — that is the contract, not a failure.",
+          "probed": "200 GET (usage), 400 UNCHECKABLE on a malformed POST body"
+        }
+      ]
     },
     {
       "name": "EU AI Act Art 50 attestation",
@@ -38,10 +75,18 @@
       ],
       "actions": [
         {
-          "name": "attest_art50",
-          "description": "Attest EU AI Act Article 50",
+          "action": "article50",
+          "method": "GET",
           "endpoint": "https://councilof.ai/api/article50",
-          "method": "POST"
+          "what": "Article 50 marking guidance for a named subject",
+          "probed": "200"
+        },
+        {
+          "action": "inclusion_proof",
+          "method": "GET",
+          "endpoint": "https://councilof.ai/api/proof?sha=<64-hex>",
+          "what": "Free Merkle inclusion proof for a PUBLIC-ROOT LEAF sha. A bare GET is 400 by design (sha is required), and a sha from signed/card_index.json is 404 by design — the root leaves and the signed-card index are SEPARATE corpora with zero identifier overlap. Pass a sha from root.json card_sha256[].",
+          "probed": "200 with a root-leaf sha; 400 bare; 404 for a non-leaf sha"
         }
       ]
     }
@@ -83,5 +128,6 @@
         "why": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404"
       }
     ]
-  }
+  },
+  "actions_rule": "Probed 2026-09-06. Every endpoint answers. Two carry a documented non-2xx contract and neither is a fault: /api/verify returns 400 UNCHECKABLE for an unreadable body, and /api/proof returns 400 without ?sha= and 404 for a sha that is not a public-root leaf. 0 of 7 actions 404 when called as documented."
 }
