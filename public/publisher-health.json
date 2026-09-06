@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-06T15:09:52Z",
+  "as_of": "2026-09-06T15:34:49Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -353,7 +353,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 29,
+    "n_proofs": 27,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -361,51 +361,51 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 502378148,
-        "block_hash": "0x95c3edc9ecc9285b5a01fb08259ebdd953f39b143fa07193f57dd6904c42d7d2",
-        "block_time": "2026-09-06T15:08:13Z"
+        "block": 502383766,
+        "block_hash": "0x3e0545ad74c69c1859d34d4eb8258d72fa2573ffd8040b47aac9d01e276df508",
+        "block_time": "2026-09-06T15:31:43Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 94619659,
-        "block_hash": "0x9d65802f6828cc68127495a3c85a0d3d2ae528bfec7f9c39fea1576404966ff6",
-        "block_time": "2026-09-06T15:08:12Z"
+        "block": 94621034,
+        "block_hash": "0x526027a622a3bcb4ef32f18762ec569fd294ae6a342324aaaf612f9e4506b0c3",
+        "block_time": "2026-09-06T15:31:41Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 50958973,
-        "block_hash": "0x4076e6a12dfb0c2de872466bdfb2023017ca0f5930480ad978dcd20e047dd3eb",
-        "block_time": "2026-09-06T15:08:13Z"
+        "block": 50959678,
+        "block_hash": "0x1df1444268d2793a4a329d099da3775f27f8202df4866045da4150d835c28dbc",
+        "block_time": "2026-09-06T15:31:43Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 120323833,
-        "block_hash": "0xfbc008f59fb80a6e3d78bd8c16d5a47b19db86ebb9f2fe9b7feecabd2dc0af82",
-        "block_time": "2026-09-06T15:08:14Z"
+        "block": 120326965,
+        "block_hash": "0xb6e600a3767ac490dc8188cf56fe741572efa23e24a04c39126273f60dd8a1cf",
+        "block_time": "2026-09-06T15:31:45Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25919102,
-        "block_hash": "0xda9fbb066a3d96c25b4e57d64defd1539851897b6b4d51da7777a85a47d13ef3",
-        "block_time": "2026-09-06T15:08:11Z"
+        "block": 25919219,
+        "block_hash": "0xa5dae0a8a463e148dc402829b681e590998e055cb7d63d44163bafd41a220b1a",
+        "block_time": "2026-09-06T15:31:35Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100288491,
-        "block_hash": "0x9cf268122469be86c775fe2ebab4bea0d6d44573165d14ee049e8d9985853915",
-        "block_time": "2026-09-06T15:08:14Z"
+        "block": 100289196,
+        "block_hash": "0xdbfeab2b450ff07783260c574efb70cbc6c62a479aad13e433ed74dc9850e5bf",
+        "block_time": "2026-09-06T15:31:44Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 156554259,
-        "block_hash": "0xba15b9ce28c3325c1d73ace79942510db1346a930d35c696ae67cce7bd6fa552",
-        "block_time": "2026-09-06T15:08:15Z"
+        "block": 156554964,
+        "block_hash": "0x0019f1ea4400c3889787f1b56037bc30ae3117d64b69f9a39395ba34fc23454f",
+        "block_time": "2026-09-06T15:31:45Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93334842,
-        "block_hash": "0xf5d84598857c8aa150ad5a2bd3051c5087209feb6a9939d9bec9270cd7b1bed8",
-        "block_time": "2026-09-06T15:08:16Z"
+        "block": 93335783,
+        "block_hash": "0xd3af236148b8b458cd307237e4e10f33b41cdc1cec474040feaf683ffbd355fe",
+        "block_time": "2026-09-06T15:31:48Z"
       }
     },
     "failures": [
@@ -418,7 +418,15 @@
         "reason": "no endpoint answered eth_getProof"
       },
       {
+        "subject": "evm:TBILL:arbitrum",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
         "subject": "evm:VBILL:bsc",
+        "reason": "no endpoint answered eth_getProof"
+      },
+      {
+        "subject": "evm:bIB01:avalanche",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -427,40 +435,40 @@
   "evm_permission_events": {
     "schema": "csoai.evm.permission-event/0.1",
     "n_leaves": 5,
-    "n_contracts_scanned": 9,
+    "n_contracts_scanned": 11,
     "n_roster": 32,
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 502378283,
+        "block": 502384060,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 94619689,
+        "block": 94621104,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 50958990,
+        "block": 50959715,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 120323909,
+        "block": 120327127,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 25919104,
+        "block": 25919225,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100288508,
+        "block": 100289233,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 156554276,
+        "block": 156555001,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 93334864,
+        "block": 93335831,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -498,14 +506,6 @@
         "reason": "dark"
       },
       {
-        "subject": "evm-events:OUSG:ethereum",
-        "reason": "dark"
-      },
-      {
-        "subject": "evm-events:TBILL:ethereum",
-        "reason": "dark"
-      },
-      {
         "subject": "evm-events:TBILL:bsc",
         "reason": "dark"
       },
@@ -515,11 +515,11 @@
       },
       {
         "subject": "evm-events:MONY:ethereum",
-        "reason": "error"
+        "reason": "dark"
       },
       {
         "subject": "evm-events:mTBILL:ethereum",
-        "reason": "budget"
+        "reason": "error"
       },
       {
         "subject": "evm-events:mTBILL:base",

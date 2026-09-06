@@ -1,0 +1,118 @@
+{
+  "card": {
+    "as_of": "2026-09-06T15:31:35Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:USYC:ethereum",
+      "symbol": "USYC",
+      "product": "US Yield Coin",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x136471a34f6ef19fe571effc1ca711fdb8e49f2b",
+      "block": 25919219,
+      "block_hash": "0xa5dae0a8a463e148dc402829b681e590998e055cb7d63d44163bafd41a220b1a",
+      "block_time": "2026-09-06T15:31:35Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "US Yield Coin",
+        "symbol": "USYC",
+        "decimals": 6,
+        "totalSupply": 36868107603338,
+        "owner": "0x13ff8cabb86edf94a2df4f98773bda4005182dd6",
+        "eip1967_implementation": "0xbf0f2f3aad6b99893d80c550fbacec915545eb92"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "bc69632ebe9d93d0e1f07efdac26fc9e840bc3fc57af9b8622a495f19dcf3dc3",
+        "bytes": 12036,
+        "url": "/archive/proofs/eip1186/bc69632ebe9d93d0.json",
+        "rpc": "eth.drpc.org",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xbad33f5118bccb1da34d4e8e75b511a5863fdf58859a73a53202d432e1ff36c6",
+          "storageHash": "0xcf0655be07d554165952be139b32cbf0820d088406e16686c1acf95b5fc05962",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xbf0f2f3aad6b99893d80c550fbacec915545eb92",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 3
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 25919219 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "3692f86d1dc73cabb4b422a7edd3b9e709c6508256ae0016cca59407a65be95e",
+    "sig_ed25519": "e5f0caa1bd2fb03551f1da2e72f2298b05b6e81bac23826515146549e9a7ffa409179054dff66e0595a9cc50d298f24400be4ea6073f9bef766c643eb9cfe30c",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://usyc.docs.hashnote.com/overview/smart-contracts",
+      "https://eth.drpc.org"
+    ],
+    "subject": "evm:USYC:ethereum permission state at block 25919219",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:USYC"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "c20e8547026609e3b2461a348b50ea731acaf016a86eef94239cc4784ace1197",
+    "c8f20355b21e73280074411b7f1b9b5f9c39ff38fe3a0952a54af568fed53be8",
+    "cdd92551455405762d6df9421934d15a5ef22d14d7ce7d0628e80b395f54fcd0",
+    "5bc73731300fb7664efffe53246cb5306adb1e8e8e02a30fcce268282ff1aef7",
+    "76e823936341adb491c923d9f5eec779c1c32e85c3f6904efbfd573608556ee1",
+    "ac1221f18149c0e7383e49c2e0e140c9da6bc3c12bb98c72656c9bead8fa43fd",
+    "8a54d455b80b82065e27a1947850601c877796afe087302f766085a9cb5b08ac",
+    "e306d2ba2d5881e5652d197c798dc288e6ed173bf98b0b6cd033fec4557a86d2"
+  ]
+}

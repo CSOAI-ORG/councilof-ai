@@ -1,0 +1,116 @@
+{
+  "card": {
+    "as_of": "2026-09-06T15:31:45Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL:optimism",
+      "symbol": "BUIDL",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund",
+      "chain": "optimism",
+      "chain_id": 10,
+      "address": "0xa1cdab15bba75a80df4089cafba013e376957cf5",
+      "block": 156554964,
+      "block_hash": "0x0019f1ea4400c3889787f1b56037bc30ae3117d64b69f9a39395ba34fc23454f",
+      "block_time": "2026-09-06T15:31:45Z",
+      "rpc": "optimism-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "symbol": "BUIDL",
+        "decimals": 6,
+        "totalSupply": 26410519690000,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0xca91fa164b75da598e16b4d89fb2086b47140df3"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "08af301c7d6ab789b72fbe92c1e0e7c16fdf758880e407e54e36a94e366a3ed5",
+        "bytes": 11395,
+        "url": "/archive/proofs/eip1186/08af301c7d6ab789.json",
+        "rpc": "mainnet.optimism.io",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+          "storageHash": "0x4ecbd4861411c5899d732a6909d6f2681de44a4d2c4edfa70298eb9be2f6500e",
+          "nodes": 8
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0xca91fa164b75da598e16b4d89fb2086b47140df3",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 156554964 on optimism, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "2a5eaf9266ddbed3b2fb4be3c189c223d2c0f6ca85521cedbed7dce59e8bab37",
+    "sig_ed25519": "53141b8b572a3552a6cf41edccf8bf1b80d7e37f0e66c5c5220ef4bb6f4086a6d29129202973640f5e2858d46736cfca95c5648d06640e1bd6a960d100670b0b",
+    "source_urls": [
+      "https://optimism-rpc.publicnode.com",
+      "https://optimistic.etherscan.io/token/0xa1cdab15bba75a80df4089cafba013e376957cf5",
+      "https://mainnet.optimism.io"
+    ],
+    "subject": "evm:BUIDL:optimism permission state at block 156554964",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:optimism",
+      "coverage:permission-state",
+      "subject:BUIDL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "a410bd129e51a217e3e0dbd9a0e1db34c799c5910e494529a6325875ef42bda7",
+    "b6b97814806237e8309610e9cc4a6c4485813e58c30a846064d72c22f7e62566",
+    "cdd92551455405762d6df9421934d15a5ef22d14d7ce7d0628e80b395f54fcd0",
+    "5bc73731300fb7664efffe53246cb5306adb1e8e8e02a30fcce268282ff1aef7",
+    "76e823936341adb491c923d9f5eec779c1c32e85c3f6904efbfd573608556ee1",
+    "ac1221f18149c0e7383e49c2e0e140c9da6bc3c12bb98c72656c9bead8fa43fd",
+    "8a54d455b80b82065e27a1947850601c877796afe087302f766085a9cb5b08ac",
+    "e306d2ba2d5881e5652d197c798dc288e6ed173bf98b0b6cd033fec4557a86d2"
+  ]
+}
