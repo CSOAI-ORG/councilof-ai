@@ -43,7 +43,7 @@ async function grounded(q: string, origin: string): Promise<string | null> {
   if (refused) return refused;
 
   if (/\b(pricing|plans?|how much|grade cost|is (it|verify|verification) free)\b/i.test(q)) {
-    return `Verification and the published board are free. A scoped measurement is paid; booking and Paddle checkout are not live yet. /assess is the current request/waitlist surface, not a runnable free measurement. A rank is never sold.\n\n_Grounded in the published release state, not by a model._`;
+    return `Verification and the published board are free. A scoped measurement is paid; booking is not live yet; the only paid rail is pay-as-you-go x402 at the door. /assess is the current request/waitlist surface, not a runnable free measurement. A rank is never sold.\n\n_Grounded in the published release state, not by a model._`;
   }
 
   if (

@@ -1,0 +1,27 @@
+# The twin of pr-gates.yml for PRs that touch NONE of its gated paths (docs, harness, register,
+# workflows other than pr-gates). It reports the same check name, `gates`, as a pass, so master
+# branch protection can REQUIRE `gates` without blocking docs-only and data-only PRs forever.
+# Keep the paths-ignore list byte-identical to pr-gates.yml's paths list.
+name: pr-gates
+
+on:
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - 'client/**'
+      - 'public/**'
+      - 'functions/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'wrangler.jsonc'
+      - '.github/workflows/pr-gates.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "no gated path changed in this PR - gates report pass by construction (see pr-gates.yml for the real suite)"
