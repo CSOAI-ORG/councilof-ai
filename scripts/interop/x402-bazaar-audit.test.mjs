@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { afterAll } from "vitest";
 
 /**
  * The population guard on the x402 Bazaar audit.
@@ -27,11 +28,23 @@ function run(sourceUrl) {
   }
 }
 
-const dir = mkdtempSync(join(tmpdir(), "bazaar-"));
+/**
+ * Fixtures live beside the script, not in the OS temp directory.
+ *
+ * They were in `os.tmpdir()` and handed to python as a `file://` URL. That assumes both
+ * processes resolve the same temp path, and on the CI runner they did not: every case
+ * failed with `URLError: [Errno 2] No such file or directory` on a path node had just
+ * written, while the whole suite passed locally. The audit reads its source with
+ * `urllib.request.urlopen`, so the URL has to name a file python can actually open.
+ * `import.meta.dirname` is inside the checkout both processes already share — the script
+ * itself is loaded from there — so it cannot drift the way the temp directory did.
+ */
+const dir = mkdtempSync(join(import.meta.dirname, ".bazaar-fixtures-"));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
 const fixture = (name, body) => {
   const p = join(dir, name);
   writeFileSync(p, JSON.stringify(body));
-  return `file://${p}`;
+  return pathToFileURL(p).href;
 };
 
 describe("the Bazaar audit refuses to turn a partial read into a population", () => {

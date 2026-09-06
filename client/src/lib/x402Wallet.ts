@@ -18,11 +18,25 @@ export interface EIP6963ProviderDetail {
 
 export interface X402Challenge {
   chainId?: number;
+  /** CAIP-2 network from the 402, e.g. "eip155:8453". Preferred over chainId. */
+  network?: string;
+  /** The TOKEN contract from accepts[0].asset. This is the EIP-712 verifyingContract. */
+  asset?: string;
+  /** The payee from accepts[0].payTo. This is the `to` in the message, NOT the domain. */
   payTo: string;
   amount: string; // atomic USDC
   resource: string;
   nonce?: string | null;
   expires?: number | null; // unix seconds
+  /** accepts[0].extra — the token's own EIP-712 domain name and version. */
+  extra?: { name?: string; version?: string } | null;
+}
+
+/** "eip155:8453" -> 8453. Throws rather than guessing a chain to sign on. */
+export function chainIdFromNetwork(network: string): number {
+  const m = /^eip155:(\d+)$/.exec(network.trim());
+  if (!m) throw new Error(`x402Wallet: unsupported network "${network}"`);
+  return Number(m[1]);
 }
 
 export interface PaymentSignature {
@@ -61,13 +75,50 @@ export function discoverEIP6963(timeoutMs = 4000): Promise<EIP6963ProviderDetail
 }
 
 // Build the EIP-3009 TransferWithAuthorization typed-data terms from the challenge.
+/**
+ * The EIP-712 payload for EIP-3009 TransferWithAuthorization.
+ *
+ * THE DOMAIN IS THE TOKEN'S, NOT OURS. Measured against the live 402 from
+ * GET /api/free-door on 2026-09-06:
+ *
+ *   accepts[0].asset = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913   (USDC, Base)
+ *   accepts[0].payTo = 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31   (the payee)
+ *   accepts[0].extra = { name: "USD Coin", version: "2", decimals: 6 }
+ *
+ * This function used to hardcode `name: "x402", version: "1"` and set
+ * `verifyingContract: challenge.payTo`. All three were wrong: the domain
+ * separator is the token contract's, so a signature built that way is not a
+ * valid EIP-3009 authorization for USDC and the facilitator cannot verify it.
+ * It fails AFTER the buyer approves in their wallet, and the rejection looks
+ * like the buyer's fault.
+ *
+ * When the 402 does not carry what the domain needs, this THROWS. Falling back
+ * to a default produces a signature that looks fine and is worthless.
+ */
 export function buildTypedData(challenge: X402Challenge, signer: string) {
-  const chainId = challenge.chainId ?? 8453; // Base default; the 402 owns the real one
+  const chainId =
+    challenge.chainId ?? (challenge.network ? chainIdFromNetwork(challenge.network) : undefined);
+  if (chainId === undefined) {
+    throw new Error("x402Wallet: the 402 named no chain — refusing to guess one to sign on");
+  }
+  const verifyingContract = challenge.asset;
+  if (!verifyingContract) {
+    throw new Error(
+      "x402Wallet: the 402 named no asset — the EIP-712 domain is the TOKEN's, and payTo is not it",
+    );
+  }
+  const name = challenge.extra?.name;
+  const version = challenge.extra?.version;
+  if (!name || !version) {
+    throw new Error(
+      "x402Wallet: accepts[0].extra must carry the token's EIP-712 name and version",
+    );
+  }
   const nonce = challenge.nonce ?? crypto.randomUUID();
   const now = Math.floor(Date.now() / 1000);
   const validAfter = now;
   const validBefore = challenge.expires ?? now + 3600;
-  const domain = { name: "x402", version: "1", chainId, verifyingContract: challenge.payTo };
+  const domain = { name, version, chainId, verifyingContract };
   const types = {
     TransferWithAuthorization: [
       { name: "from", type: "address" },
@@ -105,9 +156,28 @@ export async function signX402Challenge(
   provider: { request: (args: { method: string; params: unknown[] }) => Promise<unknown> },
   challenge: X402Challenge,
 ): Promise<PaymentSignature> {
-  const accounts = (await provider.request({ method: "eth_accounts", params: [] })) as string[];
+  // eth_accounts returns [] until the user has connected, so asking for it first
+  // turned "you have not connected yet" into "no account selected" — a dead end
+  // with no way forward. eth_requestAccounts prompts, which is the actual next step.
+  const accounts = (await provider.request({
+    method: "eth_requestAccounts",
+    params: [],
+  })) as string[];
   const signer = accounts[0];
-  if (!signer) throw new Error("x402Wallet: no account selected");
+  if (!signer) throw new Error("x402Wallet: the wallet returned no account");
+
+  // Check the chain BEFORE signing. A signature over the wrong chainId is
+  // rejected by the facilitator after the buyer has already approved it.
+  const wanted =
+    challenge.chainId ?? (challenge.network ? chainIdFromNetwork(challenge.network) : undefined);
+  const onChainHex = (await provider.request({ method: "eth_chainId", params: [] })) as string;
+  const onChain = Number.parseInt(String(onChainHex), 16);
+  if (wanted !== undefined && Number.isFinite(onChain) && onChain !== wanted) {
+    throw new Error(
+      `x402Wallet: wallet is on chain ${onChain}, the 402 requires ${wanted}. Switch network and try again.`,
+    );
+  }
+
   const typedData = buildTypedData(challenge, signer);
   const sig = (await provider.request({
     method: "eth_signTypedData_v4",
