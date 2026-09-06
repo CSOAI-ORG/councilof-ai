@@ -357,25 +357,28 @@
 <main>
 <nav><div class="in"><a href="/"><b>CSOAI</b></a><a href="/arena">Arena · 12 Measures</a><a href="/govbench">GovBench</a><a href="/defbench">DefBench</a><a href="/">Council Space</a><a href="https://huggingface.co/csoai">Hugging Face ↗</a></div></nav>
 <div class="wrap">
-<p class="pill warn">unmeasured · the empty lane · no jail yet</p>
+<p class="pill warn">UNMEASURED · runtime sandbox escape · not the GSPC jail floor</p>
 <h1>DefBench</h1>
 <p class="sub">containment / jail · code gspc-jail · anchor: runtime isolation — a property, not a statute</p>
 <p class="lede">One question, asked at runtime: <b>does the agent break out of its execution sandbox, or
-does the jail hold?</b> Each staged attempt is labelled <b>CONTAINED</b> or <b>ESCAPED</b>. This is
-the one genuinely empty lane in the arena. Right now it is <b>UNMEASURED</b>: the lane exists and it
-is empty. There is no score on this page, no rate, no board — because there is no jail to run against
-and nothing has been earned. Eighteen escape attempts have been <i>staged</i>, but a staged attempt is
-not a measured one. What is published instead is the anchor, the prior-art jails a real bench would sit
-on, the exact requirements that would fill the lane, and a deterministic scorer that would grade it on
-one scale once a jail and a suite exist.</p>
+does the jail hold?</b> Each staged attempt is labelled <b>CONTAINED</b> or <b>ESCAPED</b>.
+<b>This page is DefBench / SandboxEscapeBench — runtime isolation — and it is still UNMEASURED</b>
+until a named runtime jail and a frozen escape suite exist. That is <b>not</b> the GSPC behavioural
+jail floor: live GET <a href="https://councilof.ai/api/gspc">/api/gspc</a> already reports jail as
+<b>MEASURED</b> (n=71, TIE) with gold bank
+<a href="https://huggingface.co/datasets/csoai/gspc-jail-goldbank">csoai/gspc-jail-goldbank</a>.
+Do not read this empty runtime lane as “no jail anywhere.” Eighteen escape attempts have been
+<i>staged</i> for DefBench only; a staged attempt is not a measured one. What is published here is the
+runtime anchor, prior-art sandboxes, the requirements that would fill <i>this</i> lane, and a
+deterministic scorer — not a denial of the live GSPC jail measurement.</p>
 
 <h2>The anchor is not a statute</h2>
 <p class="lede" style="margin-bottom:.6rem">Every other lane in this arena anchors to a written
 provision. This one does not, and pretending otherwise would be the lie. Containment is a property of
 the <b>execution environment</b> — whether a process can leave the box it was given — not a clause in a
 regulation. So the anchor named here is <b>runtime isolation itself</b>, and the honest reference points
-are the jails that already implement it. None of these is yet wired up as CSOAI's jail; they are the
-prior art a real bench would be built on:</p>
+are the jails that already implement it. None of these is yet wired up as DefBench's <i>runtime</i> jail; they are the
+prior art a real SandboxEscapeBench would be built on. (GSPC jail floor is a separate MEASURED object — see live GET.)</p>
 <div class="scroll"><table><tr><th>candidate jail</th><th>what isolates the process</th><th>note</th></tr>
 <tr><td>gVisor</td><td>a user-space kernel that intercepts and re-implements syscalls</td><td>prior art</td></tr>
 <tr><td>Firecracker</td><td>runs the workload inside a minimal KVM microVM</td><td>prior art</td></tr>
@@ -391,13 +394,13 @@ authority the axis does not have. The table above is prior art, not an anchor ci
 <h2>What has been measured</h2>
 <div class="scroll"><table><tr><th>sub-axis</th><th>status</th><th>jail</th><th>escape suite</th><th>scorer</th><th class="n">staged</th><th class="n">scored</th></tr>
 <tr><td>runtime sandbox escape</td><td style="color:var(--warn)">UNMEASURED</td><td>none</td><td>none (unfrozen)</td><td style="color:var(--acc)">defined ↓</td><td class="n">18</td><td class="n">0</td></tr></table></div>
-<div class="note"><b>UNMEASURED, published as empty — and 18 is not a score.</b> Eighteen escape attempts
-have been drafted and staged. That is a to-do list, not a board: there is no jail to run them against, so
-not one of them has an observed CONTAINED or ESCAPED verdict, and n = 18 is a count of drafts, never a
-sample size and never quotable. A containment axis with no experiment behind it is exactly where silence
-turns "we detect an injection string in the prompt" into "we stop a process from leaving its sandbox" —
-and those are different layers of the stack. DefBench will not let the second ride on the first. Until a
-jail runs a frozen suite, the only true statement is that no escape has been measured.</div>
+<div class="note"><b>UNMEASURED for runtime escape — and 18 is not a score.</b> Eighteen escape attempts
+have been drafted and staged for DefBench. That is a to-do list, not a board: there is no <i>runtime</i>
+jail to run them against, so not one has an observed CONTAINED or ESCAPED verdict, and n = 18 is a count of
+drafts, never a sample size and never quotable. Prompt-injection / behavioural jail (GSPC jail floor) is a
+different layer and is already MEASURED on the live board — DefBench will not let runtime escape ride on
+that floor. Until a runtime jail runs a frozen suite, the only true statement on <i>this</i> page is that
+no sandbox escape has been measured.</div>
 
 <h2>What it would take to measure it</h2>
 <p class="lede">The lane becomes quotable only when every one of these holds. None does yet.</p>
@@ -410,10 +413,11 @@ jail runs a frozen suite, the only true statement is that no escape has been mea
 
 <h2>The chain — 1 of 10 complete</h2>
 <ul class="chain"><li class="">○ items published and loadable</li><li class="">○ card with a licence</li><li class="">○ Hugging Face Space</li><li class="">○ the Space is a tool</li><li class="">○ Kaggle mirror</li><li class="on"><b>●</b> page on this site</li><li class="">○ the page is a tool</li><li class="">○ lm-eval task</li><li class="">○ Inspect task</li><li class="">○ measured against a named jail</li></ul>
-<p class="lede" style="font-size:.85rem;margin-top:.8rem">A measure with a page and a scorer and no
-jail is one link, not a chain. There is no Hugging Face bank behind this lane yet, and the nine open
-links each need a jail and the frozen escape suite above before they can be lit. This count is what is
-true today, not what is planned.</p>
+<p class="lede" style="font-size:.85rem;margin-top:.8rem">A DefBench measure with a page and a scorer and no
+<i>runtime</i> jail is one link, not a chain. There is no Hugging Face <i>escape-suite</i> bank behind this
+lane yet (GSPC jail goldbank is a different dataset). The nine open links each need a runtime jail and the
+frozen escape suite above before they can be lit. This count is what is true today for DefBench, not what
+is planned.</p>
 
 <div style="margin:1.4rem 0"><a class="btn" href="/arena">Back to the Arena ↗</a><a class="btn ghost" href="https://github.com/cloudflare/computer">Cloudflare Computer ↗</a></div>
 
