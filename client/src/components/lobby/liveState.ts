@@ -184,6 +184,10 @@ export function readLiveState(payload: unknown): LiveState {
       verified: readFact(chain.bodies_verified_valid),
       positions: readFact(chain.chain_positions),
       bodiesPublished: readFact(chain.bodies_published),
+      bodiesPublishedSigned: readFact(chain.bodies_published_signed),
+      bodiesWithheldSigned: readFact(chain.bodies_withheld_signed),
+      signedWithheldNowOnDisk: readFact(chain.signed_withheld_now_on_disk),
+      signedVsDiskRule: typeof chain.signed_vs_disk_rule === "string" ? chain.signed_vs_disk_rule : null,
     },
     census: {
       listingsObserved: readFact(census.listings_observed),

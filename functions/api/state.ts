@@ -705,6 +705,35 @@ export const onRequestGet: PagesFunction = async () => {
         (chainFacts as any).as_of_field,
         "Positions listed in the chain manifest, recounted from links[] rather than read off its header.",
       ),
+      // What the SIGNATURE attests, published beside what the directory holds. The
+      // header chip quoted the directory count and called it published, one click from a
+      // Verify pane reading the signed body -- 335 against 313, with neither surface
+      // saying why. Both are now published, each with its own kind, plus the rule.
+      bodies_published_signed: fact(
+        (chainFacts as any).chain.bodies_published_signed,
+        "declared",
+        SRC_CHAIN + " → chain.bodies_published_signed",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Bodies the SIGNED chain manifest attests as published. Not refreshed when a file appears beside it.",
+      ),
+      bodies_withheld_signed: fact(
+        (chainFacts as any).chain.bodies_withheld_signed,
+        "declared",
+        SRC_CHAIN + " → chain.bodies_withheld_signed",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "Positions the SIGNED manifest marks body_published=false. Correcting the flag would need a re-sign.",
+      ),
+      signed_withheld_now_on_disk: fact(
+        (chainFacts as any).chain.signed_withheld_now_on_disk,
+        "measured",
+        SRC_CHAIN + " → chain.signed_withheld_now_on_disk",
+        (chainFacts as any).as_of,
+        (chainFacts as any).as_of_field,
+        "How many of the signed-withheld positions now have a body on disk. This is the reconciliation, never an addend.",
+      ),
+      signed_vs_disk_rule: (chainFacts as any).chain.signed_vs_disk_rule,
       bodies_withheld: fact(
         (chainFacts as any).chain.bodies_withheld,
         "declared",
