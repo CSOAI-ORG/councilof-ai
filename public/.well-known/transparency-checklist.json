@@ -1,0 +1,42 @@
+{
+  "schema": "csoai.transparency-checklist/0.1",
+  "slug": "transparency-checklist",
+  "name": "Transparency surface checklist — run it on us",
+  "description": "Six checkable surfaces a measurement body can publish, the method for probing them without fooling yourself, and our own results. Designed to be run against the Council of AI, not only by it.",
+  "as_of": "20260906T000000Z",
+  "principle": "A body that asks others to show their evidence should publish the checklist it would be judged by, and its own score on it. This door is that checklist. Every row is a URL a stranger fetches; nothing here needs our cooperation.",
+  "run_the_control_first": {
+    "why": "A status code is not a surface. Two failure modes make naive probing produce confident wrong answers, and both were observed on real hosts in this sector on 2026-09-06.",
+    "soft_404": "A host can return 200 with a redirect page or a single-page-app shell. Two peers returned 200 for /.well-known/did.json and neither served a DID document; one was a '301 Moved Permanently' HTML page, the other a Vite SPA shell.",
+    "catch_all": "A host can return 200 for EVERY path. Requesting a path that cannot exist is the test.",
+    "control_request": "GET /csoai-control-path-that-cannot-exist-9f3a2b",
+    "control_rule": "If the control returns 200, that host cannot be probed this way and every result from it is UNMEASURED — not absent.",
+    "our_control_result": "404 — this host is probeable, so the results below can be checked against us."
+  },
+  "checks": [
+    { "id": "did", "what": "A DID document binding a signing key to the domain", "url": "https://csoai.org/.well-known/did.json", "ours": "200 — 5 keys, including #card-attestation-1 which signs every card" },
+    { "id": "signed-index", "what": "A signed index of every published measurement", "url": "https://councilof.ai/signed/card_index.json", "ours": "200 — 335 cards, all verifying" },
+    { "id": "root", "what": "A signed root committing to the whole set", "url": "https://councilof.ai/root.json", "ours": "200 — Ed25519 signed; NOT anchored to a timechain, see anchor-posture" },
+    { "id": "corrections", "what": "A public record of your own errors", "url": "https://councilof.ai/api/corrections", "ours": "200 — 46 entries" },
+    { "id": "verifier", "what": "A runnable verifier a stranger can execute without your help", "url": "https://councilof.ai/.well-known/verify-yourself.json", "ours": "200 — dependency-free, 335/335, reproduction script published" },
+    { "id": "security-txt", "what": "A published security contact", "url": "https://councilof.ai/.well-known/security.txt", "ours": "200" }
+  ],
+  "where_we_fail_our_own_checklist": [
+    "The root is SIGNED and NOT ANCHORED. No ots/rekor/anchor field. The signature proves WHO; nothing here proves WHEN. See /.well-known/anchor-posture.json.",
+    "One key signs every card. Verifying it proves CUSTODY, not independence — it shows we signed these bytes, not that anyone else agrees with them.",
+    "No counterparty signature exists anywhere in the estate. The chain is one-sided.",
+    "Settled revenue is null, not zero. Nothing has settled on the payment rail."
+  ],
+  "what_this_checklist_does_not_measure": [
+    "Whether any measurement is CORRECT. Every check here is about published surfaces and cryptographic integrity, not about whether a result is right.",
+    "Whether a body without these surfaces is untrustworthy. A team publishing none of this may do better work; absence at a conventional path is not absence of the practice.",
+    "Anything about a host whose control path returns 200. Those are UNMEASURED."
+  ],
+  "links": {
+    "self": "https://councilof.ai/.well-known/transparency-checklist.json",
+    "verify_yourself": "https://councilof.ai/.well-known/verify-yourself.json",
+    "anchor_posture": "https://councilof.ai/.well-known/anchor-posture.json",
+    "corrections": "https://councilof.ai/api/corrections"
+  },
+  "doctrine": "Publish the test you would be judged by, your own score, and the rows you fail."
+}
