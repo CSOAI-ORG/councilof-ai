@@ -1,0 +1,109 @@
+{
+  "schema": "csoai.x402/0.2",
+  "one_line": "agents pay per artefact — issuance, assembly, cadence; the board and verification stay free",
+  "x402Version": 2,
+  "scheme": "exact",
+  "network": "eip155:8453",
+  "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+  "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+  "mode": "live",
+  "mode_note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+  "resources": [
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/free-door",
+      "paid_for": null,
+      "amount": "0",
+      "note": "Payable and priced at zero — it settles, and charges nothing. It belongs in resources rather than quarantined because it is a live 402 route, not a withdrawn one.",
+      "indexed_in": "x402 Bazaar (PayAI)"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/request-attestation?subject=<id>&axis=<slug>",
+      "paid_for": "issuance"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/evidence-bundle?obligation=<dora|eu-cra|article-50|article-53>&subject=<model-id>&bundle=1",
+      "paid_for": "assembly"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/eunomia-data?feed=1",
+      "paid_for": "assembly"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/proof?bundle=1",
+      "paid_for": "assembly"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
+      "paid_for": "issuance",
+      "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/art50/marking-evidence?url=<https://…>",
+      "paid_for": "assembly",
+      "free_preview": "https://councilof.ai/api/art50/marking-evidence?url=<https://…>&preview=1"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/feeds/provider-diff?history=1",
+      "paid_for": "assembly"
+    },
+    {
+      "method": "GET",
+      "url": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>",
+      "paid_for": "assembly",
+      "free_preview": "https://councilof.ai/api/receipts/batch?from=<iso>&to=<iso>&preview=1"
+    }
+  ],
+  "mcp": {
+    "url": "https://councilof.ai/mcp",
+    "transport": "streamable-http",
+    "paid_tools": [
+      "commission_card",
+      "art50_marking_evidence",
+      "rwa_evidence",
+      "receipts_batch"
+    ],
+    "free_tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ],
+    "how": "tools/call without x_payment returns the route's 402 challenge as structuredContent; pay, then call again with x_payment"
+  },
+  "quarantined": [
+    {
+      "url": "https://councilof.ai/api/witness?sha256=<64-hex>",
+      "lifecycle": "QUARANTINED_PRE_RELEASE",
+      "buyable": false,
+      "reason": "paid witness issuance is disabled until a release gate verifies leaf → signed root → sidecar → Rekor → OpenTimestamps",
+      "free_status": "https://councilof.ai/api/witness/status?sha256=<64-hex>"
+    }
+  ],
+  "not": [
+    "score",
+    "certificate",
+    "filled-cells",
+    "pay-to-pass",
+    "rank"
+  ],
+  "catalog": "https://councilof.ai/api/x402",
+  "board": "https://councilof.ai/api/gspc",
+  "verify": "https://councilof.ai/gspc-verify",
+  "explainer": "https://councilof.ai/pricing",
+  "agent_paths": [
+    "@x402/fetch",
+    "x402-fetch (v1)",
+    "curl -i <resource> → read accepts[]"
+  ]
+}

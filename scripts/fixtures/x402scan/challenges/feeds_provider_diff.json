@@ -1,0 +1,144 @@
+{
+  "accepts": [
+    {
+      "amount": "25000000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "25000000",
+      "maxTimeoutSeconds": 300,
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "invoice_alternative": "https://councilof.ai/api/feeds/provider-diff?invoice=gbp&commissioned_by=<org>",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "a grade",
+      "a verdict on any change",
+      "the content of any page",
+      "a place on the board"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "per": "history-batch",
+    "preview": {
+      "as_of": "2026-09-05T09:06:18Z",
+      "n_diffs_total": 25,
+      "n_targets": 51,
+      "recent_free": "https://councilof.ai/api/feeds/provider-diff"
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.feeds.provider-diff/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "history": "1"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "diffs": [],
+            "kind": "history",
+            "leaves": {},
+            "root": {},
+            "schema": "csoai.feeds.provider-diff/0.1"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "history": {
+                    "const": "1",
+                    "type": "string"
+                  },
+                  "since": {
+                    "description": "ISO-8601 instant; return only diffs newer than this",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "history"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Provider document diff feed — signed historical batch: every hash-only diff leaf with its inclusion proof, assembled. Nothing about what changed or why. Measurement, not certification. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate..",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Provider Diff Feed",
+    "tags": [
+      "diff",
+      "terms",
+      "model-card",
+      "article-50",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/feeds/provider-diff?history=1"
+  },
+  "x402Version": 2
+}

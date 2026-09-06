@@ -1,0 +1,233 @@
+{
+  "accepts": [
+    {
+      "amount": "25000000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "25000000",
+      "maxTimeoutSeconds": 300,
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "deliverable": "one card-v0 leaf, surface art50.marking-evidence, ≤3KB payload, Ed25519-signed when the Pages key is present",
+    "free_preview": "https://councilof.ai/api/art50/marking-evidence?preview=1&url=…",
+    "invoice_gbp": "https://councilof.ai/api/art50/marking-evidence?commissioned_by=<organisation>&invoice=gbp",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "conformity opinion",
+      "guarantee",
+      "certificate",
+      "grade"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "per": "pack (1 output × 1 point in time)",
+    "preview": {
+      "checked": [
+        {
+          "method": "c2pa.manifest-store",
+          "result": "NOT_DETECTED"
+        },
+        {
+          "method": "iptc.digitalSourceType",
+          "result": "NOT_DETECTED"
+        }
+      ],
+      "detail": {
+        "active_manifest_label": null,
+        "assertion_hashes": {
+          "checked": 0,
+          "failed": [],
+          "reason": "no manifest store",
+          "status": "UNCHECKABLE"
+        },
+        "chain_trust": {
+          "reason": "no C2PA trust list is bundled in this Function; the leaf certificate verifies its own signature only. Anchoring to a trust list (e.g. c2patool --trust) is a separate step.",
+          "status": "UNCHECKABLE"
+        },
+        "claim": null,
+        "container": "png",
+        "data_hash": {
+          "alg": null,
+          "binding": null,
+          "exclusions": 0,
+          "exclusions_cover_manifest": null,
+          "reason": "no manifest store",
+          "status": "UNCHECKABLE"
+        },
+        "manifest_count": 0,
+        "manifest_store_bytes": null,
+        "manifest_store_present": false,
+        "manifest_store_sha256": null,
+        "notes": [
+          "no C2PA manifest store located in this container; metadata is strippable, so a manifest not being detected says nothing about the generator"
+        ],
+        "signature": {
+          "chain_length": null,
+          "cose_alg": null,
+          "leaf_cn": null,
+          "leaf_not_after": null,
+          "leaf_not_before": null,
+          "reason": "no manifest store",
+          "status": "UNCHECKABLE",
+          "timestamp": null
+        },
+        "xmp_digital_source_type": null
+      },
+      "gaps": {
+        "c2pa.chain-trust": "no C2PA trust list bundled; the leaf verifies its own signature only (anchor with c2patool --trust separately)",
+        "text.watermark": "no public detector for statistical text watermarks without the deployer's keys",
+        "watermark.dwtdct": "public detector exists (ShieldMnt/invisible-watermark, the Stable Diffusion 'SDV2' DWT-DCT mark) but is not implemented in this Function",
+        "watermark.keyed": "detectors published (Meta Stable Signature / Video Seal, github.com/facebookresearch/videoseal) but keyed to the deployer's private key; Digimarc/IMATAG proprietary",
+        "watermark.synthid": "no public key-free detector: SynthID text detection needs the deployer's watermark keys (github.com/google-deepmind/synthid-text); image/audio/video detection is Google-hosted, not public"
+      },
+      "statements": [
+        "marking not detected by method c2pa.manifest-store",
+        "marking not detected by method iptc.digitalSourceType",
+        "watermarks UNCHECKABLE by this Function (see gaps): a mark not detected here may still exist, and a mark detected here can be forged — detection at a time, not a guarantee"
+      ],
+      "subject": {
+        "bytes": 47635,
+        "container": "png",
+        "sha256": "9af9804269512c472dca2392c84055844f68470a56bc5959422c91493af92c32",
+        "source": "url",
+        "url": "https://councilof.ai/og-image.png"
+      },
+      "unmeasured": [
+        "c2pa.chain-trust",
+        "watermark.synthid",
+        "watermark.keyed",
+        "watermark.dwtdct",
+        "text.watermark"
+      ]
+    },
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.art50.marking-evidence/0.1"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "url": "https://councilof.ai/og-image.png"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "payload": {
+              "checked": [
+                {
+                  "method": "c2pa.manifest-store",
+                  "result": "NOT_DETECTED"
+                }
+              ],
+              "kind": "csoai.art50.marking-evidence/0.1",
+              "statements": [
+                "marking not detected by method c2pa.manifest-store"
+              ]
+            },
+            "schema": "https://councilof.ai/schema/card-v0.json",
+            "sig_ed25519": "<hex or null>",
+            "surface": "art50.marking-evidence",
+            "unmeasured": [
+              "root_inclusion",
+              "watermark.synthid"
+            ]
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "preview": {
+                    "description": "1 = free unsigned measurement",
+                    "type": "string"
+                  },
+                  "url": {
+                    "description": "Public URL of the generative output to measure (≤ 20 MiB); or POST the bytes",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "url"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate..",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Article 50 marking evidenc",
+    "tags": [
+      "article-50",
+      "c2pa",
+      "marking",
+      "measurement",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/art50/marking-evidence"
+  },
+  "x402Version": 2
+}

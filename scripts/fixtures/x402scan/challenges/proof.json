@@ -1,0 +1,133 @@
+{
+  "accepts": [
+    {
+      "amount": "20000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "20000",
+      "maxTimeoutSeconds": 300,
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "bazaar_note": "Listing is free; CDP indexes after first settled payment. Live catalog status is UNCHECKABLE until a facilitator settle exists (and CDP EXTENSION-RESPONSES / #2112).",
+    "catalog": "https://councilof.ai/api/x402",
+    "free": {
+      "one_inclusion": "/api/proof?sha=<64-hex>"
+    },
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "grade",
+      "rank",
+      "certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "per": "proof-bundle",
+    "schema": "csoai.public-root-proof/0.1",
+    "settle_mcp": "https://github.com/CSOAI-ORG/csoai-coinbase-x402-receipt-mcp",
+    "verification": "x402 facilitator /verify (fail-closed; unverified receipts are refused)"
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "bundle": "1"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "kind": "bundle",
+            "merkle_root": "<hex>",
+            "n": 0,
+            "note": "Paid bundle of inclusion proofs. Not a grade.",
+            "proofs": [],
+            "schema": "csoai.public-root-proof/0.1"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "bundle": {
+                    "const": "1",
+                    "description": "Must be 1 to request the paid proof bundle",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "bundle"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Bundle of inclusion proofs for the last published root (re-serve). Not a grade. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate..",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Proof Bundle",
+    "tags": [
+      "proof",
+      "merkle",
+      "measurement",
+      "attestation"
+    ],
+    "url": "https://councilof.ai/api/proof?bundle=1"
+  },
+  "x402Version": 2
+}
