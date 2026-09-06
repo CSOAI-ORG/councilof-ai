@@ -68,7 +68,8 @@
     "quest:instruments:check": "node scripts/generate-gspc-quest-instruments.mjs --check",
     "workspace-launcher": "node scripts/inject-workspace-launcher.mjs --dir dist/client",
     "workspace-launcher:check": "node scripts/inject-workspace-launcher.mjs --dir dist/client --check",
-    "workspace-launcher:selftest": "node scripts/inject-workspace-launcher.mjs --selftest"
+    "workspace-launcher:selftest": "node scripts/inject-workspace-launcher.mjs --selftest",
+    "check:functions": "tsc -p tsconfig.functions.json --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.30.0",
@@ -167,6 +168,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250109.0",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.1.3",
