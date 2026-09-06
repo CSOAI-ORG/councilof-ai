@@ -1,0 +1,88 @@
+{
+  "card": {
+    "as_of": "2026-09-06T21:17:10Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:VBILL:bsc",
+      "symbol": "VBILL",
+      "product": "VanEck Treasury Fund",
+      "chain": "bsc",
+      "chain_id": 56,
+      "address": "0x14d72634328c4d03bba184a48081df65f1911279",
+      "block": 120372979,
+      "block_hash": "0xf7b8122523d689fcb7d5acb802edcb3e173d2099a2836737a299981ae3615b05",
+      "block_time": "2026-09-06T21:17:10Z",
+      "rpc": "bsc-rpc.publicnode.com",
+      "checked": {
+        "name": "VanEck Treasury Fund",
+        "symbol": "VBILL",
+        "decimals": 6,
+        "totalSupply": 21536503430000,
+        "isPaused": false,
+        "owner": "0x59c1eacec450c57dcb9b8725d0f96635c2b676ee",
+        "eip1967_implementation": "0xcd01d1c5c78ad428cd01913d4664c20ed1e61923"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": null,
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+      ],
+      "attests": "historical permission state at block 120372979 on bsc, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "c40c9e03247b818c2a25f01e88305b7e9b3c0626038f94164b59002e3419d39f",
+    "sig_ed25519": "3c83122036d76281f70c1ea8ec4365bbab4e04e56f73fadfdbdac6989879fcba56dd958c5f7c0adb0284ba6ae4ba217702bf16a7a49a80a5e611ce3f65b1620b",
+    "source_urls": [
+      "https://bsc-rpc.publicnode.com",
+      "https://bscscan.com/token/0x14d72634328c4d03bba184a48081df65f1911279"
+    ],
+    "subject": "evm:VBILL:bsc permission state at block 120372979",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:bsc",
+      "coverage:permission-state",
+      "subject:VBILL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "EIP-1186 proof (no endpoint answered eth_getProof at this block)"
+    ]
+  },
+  "proof": [
+    "d1a8583f0ce03752ed286527ee0fb66cc1fe5b11695b4ece74a9fa2be9373068",
+    "2f81778e754d7161127e132a0ecb1d7457a74e928d6b23a4ed158c41a87d7108",
+    "464fef571fc89fa8503c6fbcb848db85d1deabecf7567f2cd58d005a62ce37fc",
+    "efe4ee4f4d22ea003694b2d5732ce7e8bc77fc5cc469e10a50ff32f6d0f89578",
+    "1b63cad4dc7a3f4d9c98b30437d82e63bda958d3b3445a12ef0aac6fcb1fec20",
+    "fc5c00e24c161a3c3d092757d40de1eca60d10b85e6f6b26e5883db0d351d407",
+    "654163b04b88f4b3eb3bb644a7f83123c3f11cb347bd3afd4f78d96585e3edcc",
+    "008fc852af9ad58e1c6ba888092a23581e47b855ed04f2ac6f8e6effc1e6e3b1"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "kind": "csoai.publisher-health/v0",
-  "as_of": "2026-09-06T15:34:49Z",
+  "as_of": "2026-09-06T21:18:48Z",
   "writer": "scripts/publish_public_root.py",
   "dry_run": false,
   "key": "present",
@@ -353,7 +353,7 @@
   "evm_permissions": {
     "schema": "csoai.evm.permission-state/0.1",
     "n_leaves": 32,
-    "n_proofs": 27,
+    "n_proofs": 30,
     "n_roster": 32,
     "n_unverified": 33,
     "aum_source": "https://app.rwa.xyz/treasuries",
@@ -361,72 +361,60 @@
     "chains": {
       "arbitrum": {
         "rpc": "arbitrum-one-rpc.publicnode.com",
-        "block": 502383766,
-        "block_hash": "0x3e0545ad74c69c1859d34d4eb8258d72fa2573ffd8040b47aac9d01e276df508",
-        "block_time": "2026-09-06T15:31:43Z"
+        "block": 502464944,
+        "block_hash": "0x23692604c94dd9637f90597bb0a9e2989986ed6fde3e6d9ba9908203bb7bd4cb",
+        "block_time": "2026-09-06T21:17:09Z"
       },
       "avalanche": {
         "rpc": "api.avax.network",
-        "block": 94621034,
-        "block_hash": "0x526027a622a3bcb4ef32f18762ec569fd294ae6a342324aaaf612f9e4506b0c3",
-        "block_time": "2026-09-06T15:31:41Z"
+        "block": 94641009,
+        "block_hash": "0x4afaa870b810ea99958c5d2e0238fec31bc679961d57522e8f471148e0dad5e8",
+        "block_time": "2026-09-06T21:17:08Z"
       },
       "base": {
         "rpc": "base-rpc.publicnode.com",
-        "block": 50959678,
-        "block_hash": "0x1df1444268d2793a4a329d099da3775f27f8202df4866045da4150d835c28dbc",
-        "block_time": "2026-09-06T15:31:43Z"
+        "block": 50970041,
+        "block_hash": "0xf65d28f6b2a728b17b8f631fb0d6ef511164579e20ad763409197005d895ecc4",
+        "block_time": "2026-09-06T21:17:09Z"
       },
       "bsc": {
         "rpc": "bsc-rpc.publicnode.com",
-        "block": 120326965,
-        "block_hash": "0xb6e600a3767ac490dc8188cf56fe741572efa23e24a04c39126273f60dd8a1cf",
-        "block_time": "2026-09-06T15:31:45Z"
+        "block": 120372979,
+        "block_hash": "0xf7b8122523d689fcb7d5acb802edcb3e173d2099a2836737a299981ae3615b05",
+        "block_time": "2026-09-06T21:17:10Z"
       },
       "ethereum": {
         "rpc": "ethereum-rpc.publicnode.com",
-        "block": 25919219,
-        "block_hash": "0xa5dae0a8a463e148dc402829b681e590998e055cb7d63d44163bafd41a220b1a",
-        "block_time": "2026-09-06T15:31:35Z"
+        "block": 25920941,
+        "block_hash": "0x5a9ab513cf146d9de50a3539fafb843b59a5c403fd8b404e7c84bc7a6e04fe58",
+        "block_time": "2026-09-06T21:16:59Z"
       },
       "mantle": {
         "rpc": "mantle-rpc.publicnode.com",
-        "block": 100289196,
-        "block_hash": "0xdbfeab2b450ff07783260c574efb70cbc6c62a479aad13e433ed74dc9850e5bf",
-        "block_time": "2026-09-06T15:31:44Z"
+        "block": 100299559,
+        "block_hash": "0xbc0aa55084adcf9d8a7fc19fcbd820bdf1dcad27cacf6b6ba627acc4b7abf766",
+        "block_time": "2026-09-06T21:17:10Z"
       },
       "optimism": {
         "rpc": "optimism-rpc.publicnode.com",
-        "block": 156554964,
-        "block_hash": "0x0019f1ea4400c3889787f1b56037bc30ae3117d64b69f9a39395ba34fc23454f",
-        "block_time": "2026-09-06T15:31:45Z"
+        "block": 156565327,
+        "block_hash": "0xaa14438f24baa16f65e9d80a781aed13463661a630271352bbf87fd826540dde",
+        "block_time": "2026-09-06T21:17:11Z"
       },
       "polygon": {
         "rpc": "polygon-bor-rpc.publicnode.com",
-        "block": 93335783,
-        "block_hash": "0xd3af236148b8b458cd307237e4e10f33b41cdc1cec474040feaf683ffbd355fe",
-        "block_time": "2026-09-06T15:31:48Z"
+        "block": 93349599,
+        "block_hash": "0x00af565ae32936cb61bd2a3e5115cd45ba1d934b1556efc332fb3950c95d1b2f",
+        "block_time": "2026-09-06T21:17:12Z"
       }
     },
     "failures": [
-      {
-        "subject": "evm:USYC:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
       {
         "subject": "evm:TBILL:bsc",
         "reason": "no endpoint answered eth_getProof"
       },
       {
-        "subject": "evm:TBILL:arbitrum",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
         "subject": "evm:VBILL:bsc",
-        "reason": "no endpoint answered eth_getProof"
-      },
-      {
-        "subject": "evm:bIB01:avalanche",
         "reason": "no endpoint answered eth_getProof"
       }
     ],
@@ -435,40 +423,40 @@
   "evm_permission_events": {
     "schema": "csoai.evm.permission-event/0.1",
     "n_leaves": 5,
-    "n_contracts_scanned": 11,
+    "n_contracts_scanned": 9,
     "n_roster": 32,
     "requests_used": 80,
     "chains": {
       "arbitrum": {
-        "block": 502384060,
+        "block": 502465076,
         "rpc": "arbitrum-one-rpc.publicnode.com"
       },
       "avalanche": {
-        "block": 94621104,
+        "block": 94641042,
         "rpc": "api.avax.network"
       },
       "base": {
-        "block": 50959715,
+        "block": 50970058,
         "rpc": "base-rpc.publicnode.com"
       },
       "bsc": {
-        "block": 120327127,
+        "block": 120373051,
         "rpc": "bsc-rpc.publicnode.com"
       },
       "ethereum": {
-        "block": 25919225,
+        "block": 25920944,
         "rpc": "ethereum-rpc.publicnode.com"
       },
       "mantle": {
-        "block": 100289233,
+        "block": 100299576,
         "rpc": "mantle-rpc.publicnode.com"
       },
       "optimism": {
-        "block": 156555001,
+        "block": 156565343,
         "rpc": "optimism-rpc.publicnode.com"
       },
       "polygon": {
-        "block": 93335831,
+        "block": 93349621,
         "rpc": "polygon-bor-rpc.publicnode.com"
       }
     },
@@ -498,11 +486,19 @@
         "reason": "dark"
       },
       {
-        "subject": "evm-events:JTRSY:ethereum",
+        "subject": "evm-events:BENJI:ethereum",
         "reason": "dark"
       },
       {
         "subject": "evm-events:USTB:ethereum",
+        "reason": "dark"
+      },
+      {
+        "subject": "evm-events:OUSG:ethereum",
+        "reason": "dark"
+      },
+      {
+        "subject": "evm-events:TBILL:ethereum",
         "reason": "dark"
       },
       {
@@ -515,11 +511,11 @@
       },
       {
         "subject": "evm-events:MONY:ethereum",
-        "reason": "dark"
+        "reason": "budget"
       },
       {
         "subject": "evm-events:mTBILL:ethereum",
-        "reason": "error"
+        "reason": "budget"
       },
       {
         "subject": "evm-events:mTBILL:base",
