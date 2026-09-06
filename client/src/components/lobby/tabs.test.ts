@@ -180,7 +180,7 @@ describe("Council OS tabs", () => {
       "/cra-readiness",
       "/financial-axes",
       "/distribution-integrity",
-      "/cobolbridge",
+      "/cobol",
     ]) {
       expect(owned.has(p)).toBe(true);
     }
@@ -223,7 +223,7 @@ describe("Council OS tabs", () => {
     expect(matchRoute("open distribution integrity")?.path).toBe(
       "/distribution-integrity",
     );
-    expect(matchRoute("show the legacy on-ramp")?.path).toBe("/cobolbridge");
+    expect(matchRoute("show the legacy on-ramp")?.path).toBe("/cobol");
     expect(matchRoute("open the regulators page")?.path).toBe("/regulators");
     expect(matchRoute("show insurers")?.path).toBe("/insurers");
   });
