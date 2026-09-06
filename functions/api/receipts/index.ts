@@ -25,6 +25,7 @@
  */
 
 /// <reference types="@cloudflare/workers-types" />
+import { readReceiptsByPayer } from "../_x402_receipt";
 
 const EIP55_ISH = /^0x[0-9a-fA-F]{40}$/;
 
@@ -36,20 +37,53 @@ export interface ReceiptRow {
   asset: string;
   resource: string;
   settledAt: string;
+  /** The x402 offer-receipt extension artefact (§5). Verifiable against did.json alone. */
+  receipt?: { format: "jws"; signature: string };
+  kid?: string;
+  zero_value?: boolean;
+  self?: boolean | null;
+  record_schema?: string;
 }
 
 /**
- * The one seam. Today there is no store, so this returns null — meaning "not recorded",
- * which is NOT the same as returning [] ("recorded, and there are none").
+ * The one seam, now wired. null still means "not recorded" (no store bound) and [] still means
+ * "recorded, and this payer has none" — the distinction this door was built to preserve.
+ *
+ * WHY KV AFTER ALL. The note above rejected KV because "LEADS KV deliberately provides no
+ * concurrency guarantee" (gaps-2026-09.md P0 #1). That objection is about read-modify-write —
+ * a counter two writers increment at once loses one. Receipt rows are not that: each row is
+ * written once, under a key derived from its own transaction hash, and never updated. A lost
+ * update is impossible where there is no update. The read-add-put tally in recordSettlement IS
+ * exposed to the race, which is exactly why /api/revenue derives its distinct-payer count from
+ * the records rather than from that tally. Same reasoning, applied here.
  */
-export async function readReceipts(_payer: string): Promise<ReceiptRow[] | null> {
-  return null;
+export async function readReceipts(
+  payer: string,
+  kv?: KVNamespace,
+): Promise<ReceiptRow[] | null> {
+  const rows = await readReceiptsByPayer(kv as unknown as Parameters<typeof readReceiptsByPayer>[0], payer);
+  if (rows === null) return null;
+  return rows.map((r) => ({
+    payer: r.payload.payer,
+    txHash: r.payload.transaction || "",
+    network: r.payload.network,
+    amount: r.amount_atomic ?? "",
+    asset: r.asset ?? "",
+    resource: r.resource,
+    settledAt: r.issued_at,
+    // The artefact a stranger can check without trusting this endpoint, and the record around it.
+    receipt: r.receipt,
+    kid: r.kid,
+    zero_value: r.zero_value,
+    self: r.self,
+    record_schema: r.schema,
+  }));
 }
 
 /** The handler, with the reader injected so the wired path is testable before it is wired. */
 export async function handle(
   request: Request,
-  read: (payer: string) => Promise<ReceiptRow[] | null> = readReceipts,
+  read: (payer: string) => Promise<ReceiptRow[] | null> = (p) => readReceipts(p),
 ): Promise<Response> {
   const url = new URL(request.url);
   const payer = (url.searchParams.get("payer") || "").trim();
@@ -60,9 +94,16 @@ export async function handle(
     query: { payer: payer || null },
     honesty: {
       empty_is_not_none:
-        "An empty list here would mean 'this payer has no receipts'. That is not what is true. " +
-        "Settlement receipts are not recorded anywhere yet, so no payer has a history — including " +
-        "one who has paid. status distinguishes the two.",
+        "An empty list means 'this payer has no receipts'. status UNRECORDED means something " +
+        "different and stronger: this deployment has no receipt store bound, so nobody has a " +
+        "history here — including one who has paid. Read status before you read count.",
+      what_the_signature_covers:
+        "Each item carries `receipt`, an x402 offer-receipt JWS signed by " +
+        "did:web:csoai.org#board-attestation-1. The signature covers only the fields inside it " +
+        "(version, network, resourceUrl, payer, issuedAt, transaction) — NOT amount, asset, " +
+        "self or zero_value, which are this endpoint's own bookkeeping and are unsigned. " +
+        "Check the JWS, not this envelope: POST it to /api/receipts/verify, or run " +
+        "scripts/verify_receipt.py against /.well-known/did.json without asking us anything.",
       what_a_receipt_is_not:
         "These are payment receipts. /api/receipts/batch serves card-v0 measurement leaves under " +
         "the signed public root, which are a different artefact and are not evidence of payment.",
@@ -114,10 +155,11 @@ export async function handle(
         unavailable_capability: {
           capability: "settlement-receipt persistence",
           detail:
-            "A settle returns X-PAYMENT-RESPONSE (tx hash, network, payer) and nothing stores it, " +
-            "so there is no per-payer history to read. Durable storage — D1 or a Durable Object — " +
-            "is the missing piece; KV is not it (no concurrency guarantee, gaps-2026-09.md P0 #1).",
-          proof: "GET /api/receipts/latest -> status UNPUBLISHED, count 0",
+            "Receipts ARE written now, to REVENUE_KV, one append-only row per settlement. This " +
+            "answer means the binding is missing on THIS deployment — a preview build without " +
+            "REVENUE_KV, typically — not that the estate records nothing. On production, a payer " +
+            "who has settled gets rows and a payer who has not gets an empty list.",
+          proof: "GET /api/revenue -> kv_bound tells you whether this deployment has the store",
         },
       },
       { status: 200, headers: { "cache-control": "no-store" } },
@@ -130,4 +172,5 @@ export async function handle(
   );
 }
 
-export const onRequestGet: PagesFunction = async ({ request }) => handle(request);
+export const onRequestGet: PagesFunction<{ REVENUE_KV?: KVNamespace }> = async ({ request, env }) =>
+  handle(request, (p) => readReceipts(p, env?.REVENUE_KV));
