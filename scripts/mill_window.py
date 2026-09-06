@@ -59,7 +59,7 @@ DEFAULT_PROVIDERS = (
     "featherless-ai",
     "deepinfra",
     "sambanova",
-    "nebius",
+    "baseten",
 )
 
 # Non-chat tags the hf-inference router serves (measured 6 Sep: MiniLM
@@ -175,10 +175,15 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if st == "UNCHECKABLE":
             if _unserved_weight_pack(slug):
                 continue
+            name = slug.lower().rsplit("/", 1)[-1]
+            if name.endswith("-base"):
+                continue
             reason = (m.get("reason") or "").lower()
+            # Already sprayed the router (bare slug + providers). Last call was
+            # often invalid nebius; do not spend another hour on the same 286.
+            if "provider or policy" in reason or "nebius" in reason:
+                continue
             tag = m.get("pipeline_tag") or ""
-            # hf-inference pin, or chat tag whose mill never tried the bare slug
-            # (Qwen/Qwen3-8B 200 on /v1/chat/completions without :provider).
             if "hf-inference" not in reason and tag not in CHAT_TAGS:
                 continue
         out.append(slug)

@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -226,6 +227,7 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
+    lock_tags = {m.get("slug"): m.get("pipeline_tag") for m in (lock.get("models") or []) if m.get("slug")}
     slugs = millable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
     shard = int(os.environ.get("MILL_SHARD", "0"))
@@ -265,13 +267,16 @@ def main() -> int:
         }
         mapped: list[str] = []
         try:
-            meta = get_json(API_MODEL + slug + "?expand[]=inferenceProviderMapping", tok)
+            q = urllib.parse.urlencode({"expand[]": "inferenceProviderMapping"})
+            meta = get_json(API_MODEL + urllib.parse.quote(slug, safe="/") + "?" + q, tok)
             rec["inference_meta"] = meta.get("inference")
-            rec["pipeline_tag"] = meta.get("pipeline_tag")
+            rec["pipeline_tag"] = meta.get("pipeline_tag") or lock_tags.get(slug)
             mapped = live_providers(meta.get("inferenceProviderMapping") or {})
         except Exception as e:
             rec["meta_error"] = type(e).__name__
-        tag = rec.get("pipeline_tag") or ""
+            rec["pipeline_tag"] = rec.get("pipeline_tag") or lock_tags.get(slug)
+        tag = rec.get("pipeline_tag") or lock_tags.get(slug) or ""
+        rec["pipeline_tag"] = tag
         kind = route_kind(tag, slug)
         rec["route_kind"] = kind
         env_p = [
