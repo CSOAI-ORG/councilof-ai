@@ -1,0 +1,122 @@
+{
+  "schema": "csoai.producers/0.1",
+  "as_of": "2026-09-06T07:20:00Z",
+  "why": "On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served. Its producer was correct; nothing re-ran it. The whole gates job was red for every lane until someone noticed. This manifest names source -> producer -> output so CI can notice instead.",
+  "how_to_read": "Each entry names what a producer WRITES and how to prove the committed bytes still match. `gated: true` entries are enforced by scripts/producers-check.mjs in CI. `gated: false` entries record WHY they cannot be, which is the more useful half.",
+  "extending": "Add an entry, run `node scripts/producers-check.mjs` locally, and only set gated:true once it passes on a clean tree. Never set gated:true on a producer that stamps a timestamp or a random id into its output, and never on one that signs.",
+
+  "producers": [
+    {
+      "id": "agent-card-jws-input",
+      "command": "python3 scripts/adapters/agent_card_jws.py",
+      "outputs": ["public/interop/agent-card-jws-input.json"],
+      "mode": "rerun-and-diff",
+      "gated": true,
+      "verified_2026_09_06": "re-run on a clean tree changed 0 files; no timestamp, no network, no signing key",
+      "note": "THE ONE THAT BROKE. Deterministic and offline, which is why regenerating it needed no key and cost nothing."
+    },
+    {
+      "id": "wellknown-index",
+      "command": "node scripts/wellknown-index-gen.mjs",
+      "check": "node scripts/wellknown-index-gen.mjs --check",
+      "outputs": ["public/.well-known/index.json"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 303 doors"
+    },
+    {
+      "id": "card-matrix",
+      "command": "node scripts/build-card-matrix.mjs",
+      "check": "node scripts/build-card-matrix.mjs --check",
+      "outputs": ["public/signed/card-matrix.json"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 335 cells, 64 models, 16 axes"
+    },
+    {
+      "id": "published-verifier-bundle",
+      "command": "node packages/gspc-card-verifier/scripts/bundle.mjs public/verifier/gspc-verify.mjs",
+      "check": "node packages/gspc-card-verifier/scripts/bundle.mjs --check public/verifier/gspc-verify.mjs",
+      "outputs": ["public/verifier/gspc-verify.mjs"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 58588 bytes"
+    },
+    {
+      "id": "gspc-quest-instruments",
+      "command": "node scripts/generate-gspc-quest-instruments.mjs",
+      "check": "node scripts/generate-gspc-quest-instruments.mjs --check",
+      "outputs": ["public/signed/gspc-quest-instruments.json"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 12 current"
+    },
+    {
+      "id": "harness-cards-staged-index",
+      "command": "node scripts/mine-harness-cards.mjs",
+      "check": "node scripts/mine-harness-cards.mjs --check",
+      "outputs": ["public/interop/rwa-staged-index.json"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 35 staged, 13 quarantined"
+    },
+    {
+      "id": "auto-eat-fold",
+      "command": "python3 scripts/auto-eat/fold_auto_eat.py",
+      "check": "python3 scripts/auto-eat/fold_auto_eat.py --check",
+      "outputs": ["public/interop/auto-eat/cards-compact.json", "public/interop/ledger-cards-compact.json"],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: drift=0"
+    },
+
+    {
+      "id": "sbom",
+      "command": "python3 scripts/gen_sbom.py",
+      "outputs": ["public/interop/sbom-councilof-ai.json"],
+      "mode": "manual",
+      "gated": false,
+      "reason": "NOT byte-diffable: the producer stamps a fresh `metadata.timestamp` and a RANDOM `serialNumber` (urn:uuid:<random>-councilof-ai) on every run, so a re-run-and-diff gate would be permanently red.",
+      "drift_found_2026_09_06": "The committed SBOM is dated 2026-08-25T13:20:09Z and lists 126 components; a fresh run emits 120. The published supply-chain artefact overstates the dependency set by 6 and is 12 days stale. A count/name-set comparison ignoring timestamp and serialNumber WOULD be gateable and is the recommended follow-up.",
+      "owner": "unclaimed"
+    },
+    {
+      "id": "llms-txt",
+      "command": "node scripts/llms-txt.mjs",
+      "check": "node scripts/llms-txt.mjs --check",
+      "outputs": ["public/llms.txt", "public/llms-full.txt"],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "Already gated separately in pr-gates.yml, and its --check fetches the LIVE board, so running it here too would double-spend the <=20/hour self-probe budget for no extra coverage.",
+      "verified_2026_09_06": "check passes"
+    },
+    {
+      "id": "ts-ratchet",
+      "command": "node scripts/ts-ratchet.mjs",
+      "check": "node scripts/ts-ratchet.mjs --check",
+      "outputs": [],
+      "mode": "delegate-to-check",
+      "gated": false,
+      "reason": "Environment-dependent: reports CANNOT-RUN when a local TypeScript compiler is absent. A gate that is red for a missing tool teaches people to ignore it."
+    },
+    {
+      "id": "signing-producers",
+      "members": [
+        "scripts/publish_public_root.py",
+        "scripts/publish-card-signatures.py",
+        "scripts/witness_public_root.py",
+        "scripts/build-root-history.mjs",
+        "scripts/derive-chain-facts.mjs"
+      ],
+      "mode": "never-in-ci",
+      "gated": false,
+      "reason": "These SIGN. Re-running them needs private keys that are deliberately not in CI, and a signature over freshly serialised bytes differs from the published one even when the content is identical. Signed bytes are superseded or ledgered, never regenerated to make a gate pass."
+    }
+  ],
+
+  "not_yet_classified": {
+    "count_approx": 28,
+    "note": "About 40 scripts under scripts/ write into public/. The 11 entries above are the ones actually RUN and observed on 2026-09-06. The rest are unclassified rather than assumed safe, because guessing a producer is deterministic and gating it is how a permanently-red gate gets shipped.",
+    "next": "Classify in batches: run on a clean tree, record whether output moved, and only then set gated."
+  }
+}

@@ -81,6 +81,23 @@ jobs:
       - name: Well-known index gate — the index must describe the directory
         run: node scripts/wellknown-index-gen.mjs --check
 
+      # D45. On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served.
+      # Its producer was correct the whole time; NOTHING RE-RAN IT. The gates job was red for every
+      # lane — four PRs across three lanes, two freshly rebased — until it was diagnosed by hand.
+      #
+      # docs/operations/PRODUCERS.json names source -> producer -> output. This step re-runs the
+      # producers proven deterministic and delegates to the --check the others already ship.
+      # It deliberately does NOT re-run signers (keys are not in CI and must not be) or byte-diff
+      # producers that stamp a timestamp or a random id — those are recorded ungated WITH THE
+      # REASON, which is the more useful half of the manifest.
+      #
+      # Verified to fail: bumping the source card's `version` without re-running the producer gives
+      #   "✗ agent-card-jws-input  STALE — re-running the producer changed its own output", exit 1.
+      - name: Producer manifest — committed outputs must still match their producers
+        run: |
+          node scripts/producers-check.mjs --selftest
+          node scripts/producers-check.mjs
+
       # The estate's central claim is that a stranger can recompute and verify the evidence from
       # published bytes. public/signed/HOW-TO-VERIFY.md carried a JavaScript snippet offering to do
       # exactly that, and on 2026-09-05 it was measured failing 85 of 335 cards (25.4%) — every one
