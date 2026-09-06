@@ -1,0 +1,167 @@
+{
+  "accepts": [
+    {
+      "amount": "20000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "extra": {
+        "decimals": 6,
+        "name": "USD Coin",
+        "symbol": "USDC",
+        "version": "2"
+      },
+      "maxAmountRequired": "20000",
+      "maxTimeoutSeconds": 300,
+      "network": "eip155:8453",
+      "payTo": "0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31",
+      "scheme": "exact"
+    }
+  ],
+  "csoai": {
+    "catalog": "https://councilof.ai/api/x402",
+    "data_only": true,
+    "free_for": [
+      "regulators",
+      "the public",
+      "anyone verifying"
+    ],
+    "lane": "commercial-data",
+    "lid": "22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate.",
+    "never": [
+      "scores as a product",
+      "ranking",
+      "rating",
+      "certificate"
+    ],
+    "not_paid_reason": "no x-payment header",
+    "per": "feed-pull",
+    "rail": {
+      "facilitator_configured": true,
+      "mode": "live",
+      "note": "A settled receipt (facilitator /verify then /settle) unlocks the paid artefact. Verification of every artefact stays free.",
+      "pay_to_configured": true
+    },
+    "schema": "csoai.eunomia-data/0.2",
+    "sold": "assembly + cadence of the feed (one document, every block carrying its published signature) — never the facts, which stay free",
+    "streams": {
+      "card_index": {
+        "href": "https://councilof.ai/signed/card_index.json",
+        "rows": 335
+      },
+      "first_fine_watch": {
+        "href": "https://councilof.ai/api/fines",
+        "kid": null,
+        "signed": true
+      },
+      "root": {
+        "as_of": "2026-09-06T04:29:27Z",
+        "card_count": 166,
+        "href": "https://councilof.ai/root.json",
+        "merkle_root": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031"
+      },
+      "signals": {
+        "each": "https://councilof.ai/signals/<axis>.signed.json",
+        "href": "https://councilof.ai/signals/_index.json",
+        "rows": 13,
+        "schema": "csoai.signals-index/0.1"
+      }
+    }
+  },
+  "error": "Payment required",
+  "extensions": {
+    "bazaar": {
+      "info": {
+        "input": {
+          "method": "GET",
+          "queryParams": {
+            "feed": "1"
+          },
+          "type": "http"
+        },
+        "output": {
+          "example": {
+            "blocks": {
+              "card_index": {},
+              "first_fine_watch": {},
+              "root": {},
+              "signals": {}
+            },
+            "kind": "feed",
+            "schema": "csoai.eunomia-data/0.2"
+          },
+          "type": "json"
+        }
+      },
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "input": {
+            "additionalProperties": false,
+            "properties": {
+              "method": {
+                "enum": [
+                  "GET",
+                  "HEAD",
+                  "DELETE"
+                ],
+                "type": "string"
+              },
+              "queryParams": {
+                "properties": {
+                  "feed": {
+                    "const": "1",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "feed"
+                ],
+                "type": "object"
+              },
+              "type": {
+                "const": "http",
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "method"
+            ],
+            "type": "object"
+          },
+          "output": {
+            "properties": {
+              "example": {
+                "type": "object"
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "input"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "resource": {
+    "description": "Signed enforcement + measurement feed, assembled (DATA only — never scores, never ranked). Measurement, not certification. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certificate..",
+    "mimeType": "application/json",
+    "serviceName": "CSOAI Data Feed",
+    "tags": [
+      "data",
+      "feed",
+      "enforcement",
+      "signed",
+      "x402"
+    ],
+    "url": "https://councilof.ai/api/eunomia-data?feed=1"
+  },
+  "x402Version": 2
+}
