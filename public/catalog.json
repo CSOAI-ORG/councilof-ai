@@ -1,10 +1,10 @@
 {
   "schema": "csoai.storefront/0.1",
-  "name": "Council of AI \u2014 Product Catalog",
-  "register": "measurement, not certification \u2014 assessed, not certified",
+  "name": "Council of AI — Product Catalog",
+  "register": "measurement, not certification — assessed, not certified",
   "updated": "2026-08-25",
   "board": {
-    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together \u2014 a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only \u2014 not board-quotable."
+    "note": "The live measurement board lives at /api/gspc and /arena-scoreboard. No count is frozen here: cite totals.public_count, which carries the slot count and the measured count together — a slot with no run behind it is published UNMEASURED and is never counted as a measurement. Jail is MEASURED with separation TIE. Slot-15 / human-vs-ai are measured in-lane only — not board-quotable."
   },
   "products": [
     {
@@ -13,7 +13,7 @@
       "status": "live",
       "href": "/claimguard",
       "payment": null,
-      "note": "measurement not certification \u2014 deterministic claim-vs-signed-artifact checking"
+      "note": "measurement not certification — deterministic claim-vs-signed-artifact checking"
     },
     {
       "id": "gspc-mcp",
@@ -21,7 +21,7 @@
       "status": "live",
       "href": "/.well-known/mcp.json",
       "payment": null,
-      "note": "measurement not certification \u2014 the current tool list is owned by /.well-known/mcp.json and POST /mcp tools/list; this catalogue does not duplicate it"
+      "note": "measurement not certification — the current tool list is owned by /.well-known/mcp.json and POST /mcp tools/list; this catalogue does not duplicate it"
     },
     {
       "id": "east-west",
@@ -29,7 +29,7 @@
       "status": "live",
       "href": "/api/east-west-bench",
       "payment": null,
-      "note": "measurement not certification \u2014 East-vs-West pair-gap context rail, not a grade"
+      "note": "measurement not certification — East-vs-West pair-gap context rail, not a grade"
     },
     {
       "id": "gspc-verify",
@@ -37,7 +37,7 @@
       "status": "live",
       "href": "/gspc-verify",
       "payment": null,
-      "note": "measurement not certification \u2014 signed measurement verification"
+      "note": "measurement not certification — signed measurement verification"
     },
     {
       "id": "gspc-arena",
@@ -45,7 +45,7 @@
       "status": "live",
       "href": "/gspc-arena",
       "payment": null,
-      "note": "measurement not certification \u2014 live measurement scoreboard"
+      "note": "measurement not certification — live measurement scoreboard"
     },
     {
       "id": "arena-scoreboard",
@@ -53,7 +53,7 @@
       "status": "live",
       "href": "/arena-scoreboard",
       "payment": null,
-      "note": "measurement not certification \u2014 signed per-axis rankings"
+      "note": "measurement not certification — signed per-axis rankings"
     },
     {
       "id": "article-50-pack",
@@ -61,7 +61,7 @@
       "status": "live",
       "href": "/packs/eu-article-50",
       "payment": null,
-      "note": "measurement not certification \u2014 signed C2PA durability attestation"
+      "note": "measurement not certification — signed C2PA durability attestation"
     },
     {
       "id": "benchmarks",
@@ -69,7 +69,7 @@
       "status": "live",
       "href": "/benchmarks",
       "payment": null,
-      "note": "measurement not certification \u2014 deterministic predicate benchmarks"
+      "note": "measurement not certification — deterministic predicate benchmarks"
     },
     {
       "id": "mcp-fleet",
@@ -77,7 +77,7 @@
       "status": "draft",
       "href": "/mcp-fleet",
       "payment": null,
-      "note": "in build \u2014 apex /mcp-fleet is Evidence review; catalog does not invent a live fleet. measurement not certification."
+      "note": "in build — apex /mcp-fleet is Evidence review; catalog does not invent a live fleet. measurement not certification."
     },
     {
       "id": "ras-booking",
@@ -85,7 +85,7 @@
       "status": "draft",
       "href": "/ras",
       "payment": null,
-      "note": "booking not live \u2014 draft/pending only; verify free; measurement credential never a grade; no public prices."
+      "note": "booking not live — draft/pending only; verify free; measurement credential never a grade; no public prices."
     },
     {
       "id": "cobol-bridge",
@@ -93,22 +93,22 @@
       "status": "live",
       "href": "/cobol",
       "payment": null,
-      "note": "CobolBridge Layer-0 on /cobol \u2014 verify free; no public prices; we do not certify."
+      "note": "CobolBridge Layer-0 on /cobol — verify free; no public prices; we do not certify."
     }
   ],
   "payment_rails": {
-    "paddle": {
-      "status": "pending",
-      "note": "free; paid step via x402 at the door"
+    "x402": {
+      "status": "live",
+      "note": "pay-as-you-go at the 402; verify stays free"
     },
-    "stripe": {
-      "status": "disabled",
-      "note": "Stripe NOT wired per CEO directive"
+    "human_booking": {
+      "status": "not_live",
+      "note": "no processor named or wired; free or pay-as-you-go x402 only"
     }
   },
   "verify": {
     "href": "/gspc-verify",
     "status": "free",
-    "note": "Verification is always free. Cite live totals.public_count \u2014 no count is frozen in this catalogue."
+    "note": "Verification is always free. Cite live totals.public_count — no count is frozen in this catalogue."
   }
 }

@@ -92,7 +92,35 @@ const __isDirect = (() => {
 if (__isDirect) __cliMain();
 `;
 
-const target = process.argv[2] || join(root, "dist-bundle", "gspc-verify.mjs");
+// --check rebuilds and COMPARES instead of writing. Added 2026-09-06: public/verifier/gspc-verify.mjs
+// is a PUBLISHED artefact — it serves at https://councilof.ai/verifier/gspc-verify.mjs — and nothing
+// rebuilt or compared it. It happened to be current (a fresh bundle was byte-identical, and the live
+// copy matched the committed sha 71923355…), but that was diligence, not a mechanism. A source change
+// landing without a rebuild would ship a verifier that disagrees with its own code, and the people
+// who would find out are strangers verifying our cards with it.
+const args = process.argv.slice(2).filter((a) => a !== "--check");
+const CHECK = process.argv.includes("--check");
+const target = args[0] || join(root, "dist-bundle", "gspc-verify.mjs");
+
+if (CHECK) {
+  let current = null;
+  try { current = readFileSync(target, "utf8"); } catch { /* missing counts as stale */ }
+  if (current === out) {
+    process.stdout.write(`\u2713 bundle is current: ${target} (${Buffer.byteLength(out, "utf8")} bytes)\n`);
+    process.exit(0);
+  }
+  process.stderr.write(
+    `\u2717 bundle is STALE — ${target} does not match a fresh build of its own source.\n` +
+    (current === null
+      ? `  the file is missing entirely.\n`
+      : `  committed ${Buffer.byteLength(current, "utf8")} bytes, fresh build ${Buffer.byteLength(out, "utf8")} bytes.\n`) +
+    `  This file is PUBLISHED at https://councilof.ai/verifier/gspc-verify.mjs — shipping it stale\n` +
+    `  means a stranger verifies our cards with code that is not the code we wrote.\n` +
+    `  Fix: npm run bundle\n`,
+  );
+  process.exit(1);
+}
+
 const { mkdirSync } = await import("node:fs");
 mkdirSync(dirname(target), { recursive: true });
 writeFileSync(target, out);

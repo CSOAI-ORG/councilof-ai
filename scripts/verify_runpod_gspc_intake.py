@@ -709,7 +709,8 @@ def _validate_semantics(
         "attempted": counts.attempted,
         "transport_ok": counts.transport_ok,
         "transport_errors_excluded": counts.transport_errors,
-        "parse_errors_counted_wrong": counts.parse_errors,
+        "parse_errors_excluded": counts.parse_errors,
+        "graded_n": counts.transport_ok - counts.parse_errors,
         "correct": counts.correct,
     }
     for count_name in expected_counts:
@@ -783,9 +784,12 @@ def _validate_semantics(
     reported_accuracy = _require_number(
         body.get("accuracy"), "SCORE_MISMATCH", "card accuracy"
     )
-    if n != counts.transport_ok or reported_accuracy != _expected_accuracy(
-        counts.correct, n
-    ):
+    # n is the number of items that were ANSWERED, not the number attempted. Transport
+    # errors already left it; parse errors used to stay in, so a response carrying no
+    # parseable label was scored as a wrong answer and this gate enforced that. An
+    # unanswered item is not a wrong answer -- absent is not zero.
+    graded_n = counts.transport_ok - counts.parse_errors
+    if n != graded_n or reported_accuracy != _expected_accuracy(counts.correct, n):
         raise IntakeError("SCORE_MISMATCH", "card n or accuracy does not recompute")
     evidence = _require_dict(
         body.get("compute_evidence"), "BAD_CARD", "compute evidence"

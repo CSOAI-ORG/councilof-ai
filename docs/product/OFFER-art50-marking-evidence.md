@@ -7,7 +7,7 @@
 |---|---|
 | free preview | HTTP 200 · 6128 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | FREE PREVIEW returns content; paid artefact at the 402 |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/art50-marking-evidence.md: signed cards, assembled server-side from

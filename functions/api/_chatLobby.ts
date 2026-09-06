@@ -10,7 +10,7 @@ _Grounded in ${src}, not by a model._`;
 const GET_MEASURED =
   `Get measured starts at /assess. You describe the system - purpose, domain, or a URL recorded as text. The assess function is a deterministic EU AI Act keyword classifier (Annex III / Art 5). It does not fetch or probe an endpoint and it is not a GSPC bench run.
 
-The booking flow is not live yet and the page currently labels measurement as paid / Coming — Paddle. When the endpoint is used, it returns a deterministic classification record; it is signed only when a valid signing key is configured and otherwise says UNSIGNED. Empty cells stay empty.
+The booking flow is not live yet and the page currently labels measurement as paid, with human booking not live. When the endpoint is used, it returns a deterministic classification record; it is signed only when a valid signing key is configured and otherwise says UNSIGNED. Empty cells stay empty.
 
 The card is not a certificate, not a conformity mark, and not legal advice. We do not remediate. We measure, sign, and publish what we cannot measure.
 

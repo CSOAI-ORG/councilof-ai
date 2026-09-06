@@ -1,6 +1,6 @@
 # Signed data feed (assembly + cadence)
 
-`signed-data-feed` — derived from live endpoints on 2026-09-06T05:00:05Z.
+`signed-data-feed` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
