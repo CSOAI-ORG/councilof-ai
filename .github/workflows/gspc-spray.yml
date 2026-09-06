@@ -59,16 +59,35 @@ jobs:
           python-version: "3.12"
 
       - name: deps
-        # kaggle 2.2.x in a fresh runner refuses kaggle.json and asks for `kaggle auth login`
-        # (an interactive OAuth flow; runs 33971286898 and 33972298729 both FAILED there while
-        # the Mac, which holds a cached OAuth access_token, publishes fine). 1.7.x reads
-        # ~/.kaggle/kaggle.json (username + key), which is exactly what the secrets carry.
-        run: pip install --quiet huggingface_hub "kaggle<2" build twine
+        # Pinning to 1.7.x was a workaround for the CLIENT that could not survive the SERVER
+        # moving. Measured 2026-09-06 with a valid legacy key: reads succeed (HTTP 200 on
+        # /api/v1/datasets/list, both www.kaggle.com and api.kaggle.com) but the WRITE path
+        # answers 401 {"code":401,"message":"Unauthenticated"} on
+        # blobs.BlobApiService/StartBlobUpload. Basic auth can no longer upload at all, so
+        # kaggle<2 + kaggle.json cannot publish however fresh the key is.
+        # The same probe with the OAuth access_token as a Bearer returns HTTP 200 — which is
+        # exactly why the Mac, holding a cached access_token, publishes fine. So: unpin, and
+        # give the runner the token rather than the key.
+        run: pip install --quiet huggingface_hub kaggle build twine
 
       # The kaggle CLI in the runner does not read KAGGLE_USERNAME/KAGGLE_KEY from the
       # environment (run 33971286898: it asked for `kaggle auth login` and the push FAILED
       # while HF, GitHub and Zenodo published). It reads ~/.kaggle/kaggle.json, so write that
       # file from the same two secrets, 0600, only when both exist. Nothing is printed.
+      # The write path needs the OAuth access_token, not the legacy key — see "deps" above.
+      # ~/.kaggle/access_token is the same cached-token file the Mac publishes from. Written
+      # 0600, only when the secret exists, and never printed.
+      - name: kaggle access_token from secrets (the legacy key cannot upload)
+        env:
+          KAGGLE_ACCESS_TOKEN: ${{ secrets.KAGGLE_ACCESS_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${KAGGLE_ACCESS_TOKEN:-}" ]; then echo "no Kaggle access token — upload will be skipped"; exit 0; fi
+          mkdir -p ~/.kaggle
+          printf '%s' "$KAGGLE_ACCESS_TOKEN" > ~/.kaggle/access_token
+          chmod 600 ~/.kaggle/access_token
+          echo "wrote ~/.kaggle/access_token ($(wc -c < ~/.kaggle/access_token) bytes)"
+
       - name: kaggle.json from secrets (the CLI ignores the env vars)
         env:
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
