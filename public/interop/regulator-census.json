@@ -1,0 +1,126 @@
+{
+  "schema": "csoai.regulator-census/0.1",
+  "as_of": "2026-09-06T04:21:32Z",
+  "producer": "scripts/regulator-census.mjs",
+  "principle": "An obligations row that names a regulator is worth what its door is worth. This records which registers a machine can actually read, and says UNRESOLVED where none was found.",
+  "method": "Each row is fetched at run time and its BODY is checked, not just its status line. https://digital-strategy.ec.europa.eu/en/policies/ai-act answers HTTP 200 and serves a 404 page; a census that trusted the status code would have recorded it as a working door.",
+  "not_claimed": "This measures reachability and record counts. It is not an assessment of any regulator, not legal advice, and not a claim that a readable register is a complete one.",
+  "totals": {
+    "targets": 6,
+    "readable": 3,
+    "unresolved": 3
+  },
+  "targets": [
+    {
+      "id": "gleif-lei",
+      "regulator": "GLEIF (Global LEI Foundation)",
+      "what": "Legal Entity Identifiers — the register that maps a legal entity to an LEI",
+      "url": "https://api.gleif.org/api/v1/lei-records?page%5Bsize%5D=1",
+      "kind": "json-api",
+      "http_status": 200,
+      "final_url": null,
+      "redirected_to_error_page": null,
+      "content_type": "application/json",
+      "bytes": 2496,
+      "state": "READABLE",
+      "count": {
+        "unit": "lei_records",
+        "value": 3422936
+      },
+      "error": null,
+      "note": null,
+      "probed_ms": 305
+    },
+    {
+      "id": "sec-edgar-companies",
+      "regulator": "US SEC (EDGAR)",
+      "what": "Every company with a ticker and a CIK",
+      "url": "https://www.sec.gov/files/company_tickers.json",
+      "kind": "json-file",
+      "http_status": 200,
+      "final_url": null,
+      "redirected_to_error_page": null,
+      "content_type": "application/json",
+      "bytes": 796994,
+      "state": "READABLE",
+      "count": {
+        "unit": "companies_with_tickers",
+        "value": 10412
+      },
+      "error": null,
+      "note": null,
+      "probed_ms": 237
+    },
+    {
+      "id": "ofac-sdn",
+      "regulator": "US Treasury OFAC",
+      "what": "Specially Designated Nationals list",
+      "url": "https://www.treasury.gov/ofac/downloads/sdn.csv",
+      "kind": "csv",
+      "http_status": 200,
+      "final_url": "https://wc2h-sls-prod-public-published.s3.us-gov-west-1.amazonaws.com/Published/59378d00-93aa-456f-af2b-bcaa6b3f4984/2026-09-03/99660c61-0e62-4850-be2f-77796b8efbc5/SDN.CSV?X-Amz-Expires=3600&X-Amz-Security-Token=FwoDYXdzEFoaDF7RhUpwRi7lH6gj9CLuBA0rNAbalG2Y%2Btn9KXZIAaWAXtWsxgQJA4vjyI%2FVTaoV0K604%2Bbf3BxUn%2Bnb07Kp%2BvZ3YBvTZNFELwBOK3ahwB%2BOhUa7h2vy9%2FZpJpYnEohzpEEuaS0%2F108kmfj1dV7qQKxZAmISSyl2rG%2B96z60zvILGyXzG8osMSRzD1%2F%2Bvlf51U2cV56UCweBHFefDABojwDkAotbA5%2BoShzD7KokeIIsS3BZF%2FJgOqwdvfztoTTOFXp4ilX3EIf0xSY%2F%2B%2B98kJcDnXE4C3RXFJsfw4j1mzS%2B6nJECuXwgBYJ1V%2BZ3TzdBpuzTCbp7a8E09kisLSiicyQ2Yf7LI8uBMwGIJUneC57TnI92JFn4BEL%2BmcuQwJyK8Z0FsONl1VHxrO4L7YV7pJ8PrOWYi1Dh22CCKwO9oKJJdHOQu2gLE0dMqL2TLyJkb2lYgnoKz3bKh%2FjpzjG08FnEb3LR%2BM0ZirbFrbAhQZG68Av6yGmUsWjX4BURg68sR5Wf%2FNPtL1j9NAOMbX8d7toMShLVM3tC4FfvqCPigkjFBftGmsCn3YMdAogwfFjt4Py7ihropJLMm%2BkoYPIbxugfsAIGTrLS1X6OqhaJn5ON8NzWKBEbVDnCuiZe3g8UUmKNrv2QEnDnskgVLdR1K%2BQsfIsJFoWeyAn7mhSEi3P8uz5IJIfGCldO5gWRKlIq2d3gbbZsi%2Bkk0GVvAH%2FkGg2TB0tJIPWpQV5%2BEbAo8POw9hSyrRI5D7wtFMyRGVHgZyFlCeiFKx5il0jTwBr0UccMpL1Ofxe8Fbgd0IOHJkKvfvRPreJFEZpmYF6hp8FWJ4bNICnkO%2BUYprxKYAo9MTz1AYyQe6MZ63k%2BXw4JLIZVtviFRiMYAN9SSENDiBhShB8joE1AoMg9H1IpMqnifQIlaPUHRWD2vgVKTc8094OuD6Wj6GI&response-content-disposition=attachment%3B%20filename%3D%22sdn.csv%22&response-content-type=text%2Fcsv&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIASARBLFPLFMT54LT4%2F20260906%2Fus-gov-west-1%2Fs3%2Faws4_request&X-Amz-Date=20260906T042118Z&X-Amz-SignedHeaders=host&X-Amz-Signature=57f7607a17ffde3b4fb151df970504c816d0a7945cde26fd6d97c010fdca095e",
+      "redirected_to_error_page": null,
+      "content_type": "text/csv",
+      "bytes": 5672451,
+      "state": "READABLE",
+      "count": {
+        "unit": "sdn_rows",
+        "value": 19330
+      },
+      "error": null,
+      "note": null,
+      "probed_ms": 23640
+    },
+    {
+      "id": "eu-ai-act-art71-db",
+      "regulator": "European Commission",
+      "what": "Article 71 public database of high-risk AI systems",
+      "url": "https://digital-strategy.ec.europa.eu/en/policies/ai-act",
+      "kind": "html",
+      "http_status": 200,
+      "final_url": "https://digital-strategy.ec.europa.eu/en/page-not-found",
+      "redirected_to_error_page": true,
+      "content_type": "text/html",
+      "bytes": 46112,
+      "state": "UNRESOLVED",
+      "count": null,
+      "error": null,
+      "note": "Answers HTTP 200 and REDIRECTS to /en/page-not-found. No machine-readable Article 71 register found from outside.",
+      "probed_ms": 254
+    },
+    {
+      "id": "esma-mica-register",
+      "regulator": "ESMA",
+      "what": "MiCA registers (CASPs, white papers, Art. 59)",
+      "url": "https://registers.esma.europa.eu/publication/searchRegister?core=esma_registers_mica",
+      "kind": "html",
+      "http_status": 200,
+      "final_url": null,
+      "redirected_to_error_page": null,
+      "content_type": "text/html",
+      "bytes": 174660,
+      "state": "UNRESOLVED",
+      "count": null,
+      "error": null,
+      "note": "Search UI only; no public JSON/solr endpoint found from outside the UI.",
+      "probed_ms": 225
+    },
+    {
+      "id": "ico-register",
+      "regulator": "UK ICO",
+      "what": "Register of data protection fee payers",
+      "url": "https://ico.org.uk/",
+      "kind": "html",
+      "http_status": 200,
+      "final_url": null,
+      "redirected_to_error_page": null,
+      "content_type": "text/html",
+      "bytes": 53141,
+      "state": "UNRESOLVED",
+      "count": null,
+      "error": null,
+      "note": "Register search timed out on the entry endpoint; no bulk download URL confirmed.",
+      "probed_ms": 124
+    }
+  ]
+}
