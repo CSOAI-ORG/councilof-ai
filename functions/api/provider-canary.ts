@@ -465,6 +465,8 @@ export async function runProviderCanary(
         "content-type": "application/json",
         accept: "application/json",
         "user-agent": "CSOAI-Provider-Canary/0.1",
+        // Org Team billing when the adapter is the HF router.
+        ...(provider === "hf" ? { "X-HF-Bill-To": "csoai" } : {}),
       },
       body: JSON.stringify({
         model: adapter.model,
