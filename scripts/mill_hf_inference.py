@@ -228,6 +228,11 @@ def main() -> int:
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
     lock_tags = {m.get("slug"): m.get("pipeline_tag") for m in (lock.get("models") or []) if m.get("slug")}
+    lock_providers = {
+        m.get("slug"): list(m.get("providers_live") or [])
+        for m in (lock.get("models") or [])
+        if m.get("slug")
+    }
     slugs = millable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
     shard = int(os.environ.get("MILL_SHARD", "0"))
@@ -290,6 +295,8 @@ def main() -> int:
                 if row.get("slug") == slug:
                     mapped = list(row.get("providers_live") or mapped)
                     break
+        if lock_providers.get(slug):
+            mapped = list(lock_providers[slug]) + [p for p in mapped if p not in lock_providers[slug]]
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
         # Bare slug first: the router picks a live provider. Measured 6 Sep:
