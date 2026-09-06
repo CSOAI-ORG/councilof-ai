@@ -83,6 +83,10 @@ def gguf_repo_for(model_id: str, token: str) -> str | None:
     return None
 
 
+def slugify(value: str) -> str:
+    return "".join(c if c.isalnum() or c in "-._" else "-" for c in value)
+
+
 def quant_tag_for(repo: str, token: str, preferred: str) -> str | None:
     """The quantisation tag this repo ACTUALLY publishes, or None.
 
@@ -207,6 +211,15 @@ def main() -> int:
             skipped_disk += 1
             continue
 
+        # A FRESH jobs dir per model. generate_runpod_gspc_playlist.py halts with
+        # "refusing to replace existing configs" rather than overwrite one, which is
+        # correct -- a stale config silently graded against the wrong model would be far
+        # worse -- so the orchestrator must not hand it the same directory twice.
+        jobs_dir = Path(args.jobs_dir) / slugify(tag)
+        if jobs_dir.exists():
+            shutil.rmtree(jobs_dir)
+        jobs_dir.mkdir(parents=True, exist_ok=True)
+
         rc, out = sh([args.ollama_bin, "pull", tag], env=env, timeout=3600)
         if rc != 0:
             print(f"PULL FAILED {tag}: {out.strip().splitlines()[-1][:120] if out.strip() else rc}")
@@ -219,7 +232,7 @@ def main() -> int:
                 "--workspace-root", args.scratch_root,
                 "--bank-dir", str(scratch_banks),
                 "--model-manifest-root", args.ephemeral_root,
-                "--jobs-dir", args.jobs_dir,
+                "--jobs-dir", str(jobs_dir),
                 "--output-root", args.output_root,
                 "--ollama-url", args.ollama_url,
                 "--models", tag,
@@ -228,7 +241,7 @@ def main() -> int:
                 print(f"CONFIG FAILED {tag}: {out.strip()[-200:]}")
                 failed += 1
                 continue
-            cfgs = sorted(Path(args.jobs_dir).glob(f"*{args.axis}*.json"))
+            cfgs = sorted(jobs_dir.glob(f"*{args.axis}*.json"))
             if not cfgs:
                 print(f"NO CONFIG for axis {args.axis} on {tag} — the generator emitted none")
                 failed += 1
@@ -238,6 +251,12 @@ def main() -> int:
                 "--config", str(cfgs[-1]), "--once",
             ], env=env, timeout=3600)
             print(f"{'GRADED' if rc == 0 else 'GRADE FAILED'} {mid} via {tag} rc={rc}")
+            if rc != 0:
+                # Print the worker's own words. Reporting only "rc=2" is how a whole run
+                # can fail for a reason nobody ever sees -- the same defect that hid an
+                # intake failure for a full cycle on 2026-09-05.
+                for line in (out or "").strip().splitlines()[-6:]:
+                    print(f"      {line[:160]}")
             if rc == 0:
                 # Measurements must outlive the container. /opt does not survive a pod
                 # restart; /workspace does.
