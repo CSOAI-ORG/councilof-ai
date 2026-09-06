@@ -5,9 +5,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
 /**
- * The population guard on the PayAI Bazaar audit.
+ * The population guard on the x402 Bazaar audit.
  *
- * The index holds 28,230 resources and pages at 1000. Asking it once and counting our hits gives
+ * PayAI holds 28,230 resources and CDP 15,768; both page at 1000. Asking it once and counting our hits gives
  * a true statement about the FIRST PAGE, and it reads exactly like a statement about the Bazaar —
  * "we appear once". That is the estate's partial-read-totalled-as-population defect, and it has
  * already published a NOT_LISTED for a registry we had been in for weeks.
@@ -15,7 +15,7 @@ import { join, resolve } from "node:path";
  * So `scan()` must refuse rather than under-report: an absence is only a claim when the number
  * scanned reaches the index's own declared total.
  */
-const SCRIPT = resolve(import.meta.dirname, "payai-bazaar-audit.py");
+const SCRIPT = resolve(import.meta.dirname, "x402-bazaar-audit.py");
 
 function run(sourceUrl) {
   try {
@@ -67,12 +67,12 @@ describe("the Bazaar audit refuses to turn a partial read into a population", ()
     });
     const r = run(src);
     expect(r.code).toBe(0);
-    const d = JSON.parse(r.out);
-    expect(d.population_complete).toBe(true);
-    expect(d.scanned).toBe(2);
-    expect(d.ours).toHaveLength(1);
-    expect(d.ours[0].resource).toBe("https://councilof.ai/api/free-door");
-    expect(d.ours[0].description_chars).toBe(120);
+    const [i] = JSON.parse(r.out).indexes;
+    expect(i.population_complete).toBe(true);
+    expect(i.scanned).toBe(2);
+    expect(i.ours).toHaveLength(1);
+    expect(i.ours[0].resource).toBe("https://councilof.ai/api/free-door");
+    expect(i.ours[0].description_chars).toBe(120);
   });
 
   it("an empty result is a claim only because the scan was complete", () => {
@@ -82,8 +82,8 @@ describe("the Bazaar audit refuses to turn a partial read into a population", ()
     });
     const r = run(src);
     expect(r.code).toBe(0);
-    const d = JSON.parse(r.out);
-    expect(d.population_complete).toBe(true);
-    expect(d.ours).toEqual([]);
+    const [i] = JSON.parse(r.out).indexes;
+    expect(i.population_complete).toBe(true);
+    expect(i.ours).toEqual([]);
   });
 });
