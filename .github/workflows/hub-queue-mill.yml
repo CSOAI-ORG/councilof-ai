@@ -228,5 +228,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hub-queue-mill-${{ github.run_id }}
-          path: mill-out
+          # dead_slugs.jsonl travels with the cards. append_dead_slugs() updates it in the
+          # runner and nothing carried it out, so every run's discoveries died with the job:
+          # the committed file held 5 rows from 2026-09-02 while each run reported
+          # dead_new: 14. The mill then re-probed the same dead models forever -- the wasted
+          # grades its own comment complains about. hub-queue-land carries it into the
+          # landing PR so it lands through the human gate like everything else.
+          path: |
+            mill-out
+            harness/gspc-top100/dead_slugs.jsonl
           if-no-files-found: warn

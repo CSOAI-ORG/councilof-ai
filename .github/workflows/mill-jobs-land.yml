@@ -1,0 +1,103 @@
+name: HF-Jobs mill — land the staged cards
+
+# scripts/hf/hf_jobs_mill.py runs the mill on HF Jobs, the door outside GitHub Actions'
+# 45-minute timeout, and uploads staged UNSIGNED cards to csoai/mill-jobs-staging.
+# Until this workflow nothing read that dataset, so the job's output was durable and
+# invisible -- the same shape the pod intake had before runpod-intake.yml existed.
+#
+# It does NOT sign, does not decide MEASURED, and deletes nothing from the dataset.
+# Signing stays with sign_mill_cards.py, which sets status from n (>=30 MEASURED, else
+# UNMEASURED). Two places deciding that is issue #1155.
+#
+# A card already present in public/interop/mill-cards-unsigned/ is left alone: the
+# inbox is append-only here, because re-writing a staged card after it has been signed
+# is how a measurement changes underneath its own signature.
+
+on:
+  schedule:
+    - cron: "43 2,8,14,20 * * *"   # 4x/day, off both the hour and runpod-intake's :17
+  workflow_dispatch:
+
+concurrency: { group: mill-jobs-land, cancel-in-progress: false }
+
+permissions:
+  contents: read
+
+jobs:
+  land:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+
+      - name: Install the hub client only
+        run: pip install --quiet "huggingface_hub>=0.25"
+
+      - name: Pull the staging dataset
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${HF_TOKEN}" ]; then
+            echo "HF_TOKEN absent — csoai/mill-jobs-staging is PRIVATE, so this cannot read it."
+            echo "That is UNCHECKABLE, not zero cards. Failing rather than landing nothing quietly."
+            exit 1
+          fi
+          python3 - <<'PY'
+          import os, pathlib, shutil
+          from huggingface_hub import snapshot_download
+          try:
+              p = snapshot_download("csoai/mill-jobs-staging", repo_type="dataset",
+                                    token=os.environ["HF_TOKEN"])
+          except Exception as e:
+              # A repo that does not exist yet is genuinely zero cards; anything else is not.
+              if "404" in str(e) or "Repository Not Found" in str(e):
+                  print("staging dataset does not exist yet — 0 cards, and that IS zero")
+                  pathlib.Path("staged").mkdir(exist_ok=True)
+                  raise SystemExit(0)
+              raise
+          dst = pathlib.Path("staged"); dst.mkdir(exist_ok=True)
+          n = 0
+          for f in pathlib.Path(p).rglob("unsigned-*.json"):
+              shutil.copy(f, dst / f.name); n += 1
+          print(f"pulled {n} staged card(s) from csoai/mill-jobs-staging")
+          PY
+
+      - name: Land only cards the inbox does not already hold
+        id: land
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee land-report.txt
+          import json, pathlib, shutil
+          inbox = pathlib.Path("public/interop/mill-cards-unsigned")
+          inbox.mkdir(parents=True, exist_ok=True)
+          new = same = bad = 0
+          for f in sorted(pathlib.Path("staged").glob("unsigned-*.json")):
+              try:
+                  body = json.loads(f.read_text(encoding="utf-8")).get("body")
+              except Exception:
+                  # A card that will not parse is never landed: an unreadable card in the
+                  # sign inbox becomes a signature over bytes nobody checked.
+                  print(f"REJECT unparseable {f.name}"); bad += 1; continue
+              if not isinstance(body, dict) or not isinstance(body.get("n"), int):
+                  print(f"REJECT no body/n {f.name}"); bad += 1; continue
+              dest = inbox / f.name
+              if dest.is_file():
+                  same += 1; continue
+              shutil.copy(f, dest); new += 1
+          print(f"landed {new} · already present {same} · rejected {bad}")
+          PY
+          echo "new=$(grep -oE 'landed [0-9]+' land-report.txt | head -1 | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+
+      - name: Upload what would be landed (a human merges, this never pushes)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mill-jobs-landed-${{ github.run_id }}
+          path: |
+            public/interop/mill-cards-unsigned
+            land-report.txt
+          if-no-files-found: warn
+          retention-days: 14

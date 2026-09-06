@@ -70,6 +70,23 @@ jobs:
           git config user.name "csoai-hub-queue-land"
           git config user.email "board@csoai.org"
           git checkout -b "$BR"
+          # The mill's dead-slug discoveries ride in the same artifact. Without this they
+          # died with the runner: the committed file held 5 rows from 2026-09-02 while every
+          # run reported dead_new: 14, so the mill re-probed the same dead models forever.
+          # Copied only when it GREW -- a shorter file means the artifact is stale or partial,
+          # and shrinking a dead list silently re-opens models we proved have no endpoint.
+          DEAD=staged/harness/gspc-top100/dead_slugs.jsonl
+          if [ -f "$DEAD" ]; then
+            before=$(wc -l < harness/gspc-top100/dead_slugs.jsonl 2>/dev/null || echo 0)
+            after=$(wc -l < "$DEAD")
+            if [ "$after" -gt "$before" ]; then
+              cp "$DEAD" harness/gspc-top100/dead_slugs.jsonl
+              git add harness/gspc-top100/dead_slugs.jsonl
+              echo "dead slugs $before -> $after"
+            else
+              echo "dead slugs unchanged or smaller ($before -> $after) — not copied"
+            fi
+          fi
           git add public/interop/mill-cards-unsigned
           git commit -m "mill: land ${{ steps.land.outputs.landed }} UNSIGNED ${AXIS} cards from hub-queue-mill run ${RUN_ID} (sign pending; nothing MEASURED)"
           git push origin "HEAD:$BR"
