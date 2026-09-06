@@ -37,10 +37,11 @@ def main() -> int:
         graded = n >= N_MIN and status in ("LIVE", "COMMITTED")
         rows.append({
             "id": r.get("id"), "name": r.get("name"), "family": "swift",
-            "status": "MEASURED" if graded else "UNMEASURED",
-            "tape_status": status, "n": n, "n_min": N_MIN,
+            "status": "STAGED" if graded else "UNMEASURED",
+            "tape_status": status, "records": n, "graded_observations": n if graded else 0,
+            "n_min": N_MIN,
             "graded": graded, "sig_ed25519": None,
-            "note": "UNMEASURED stays first-class: n<30 or DISCOVERED is never MEASURED",
+            "note": "STAGED = observations exist and are ready; the OIDC signer flips to MEASURED. n<30 or DISCOVERED never leaves UNMEASURED",
         })
     # BANKS: n = records (deterministic ledger facts); graded by n>=30 + kind.
     for b in banks.get("banks", []):
@@ -48,10 +49,11 @@ def main() -> int:
         graded = n >= N_MIN
         rows.append({
             "id": str(b.get("bank", "")).lower(), "name": b.get("bank"), "family": "bank",
-            "status": "MEASURED" if graded else "UNMEASURED",
-            "tape_status": "RECORDS", "n": n, "n_min": N_MIN,
+            "status": "STAGED" if graded else "UNMEASURED",
+            "tape_status": "RECORDS", "records": n, "graded_observations": n if graded else 0,
+            "n_min": N_MIN,
             "graded": graded, "sig_ed25519": None,
-            "note": "n = ledger records on the public-registry tape; graded MEASURED only after OIDC sign",
+            "note": "records = ledger facts on the public-registry tape; graded_observations = facts the grader verified (same count here); MEASURED only after the OIDC signer",
         })
 
     rows.sort(key=lambda r: (r["family"], r["id"] or ""))
