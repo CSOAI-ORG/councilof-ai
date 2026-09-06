@@ -100,7 +100,7 @@ jobs:
       # --limit 10 fails 5/10 and --limit 20 fails 13/20. 15 cards + card_index + root = 17
       # requests, inside the 20/hour budget, and still red on the regression this gate exists for.
       - name: Stranger verification — signed cards must verify from published bytes
-        run: node scripts/verify-estate.mjs --limit 15
+        run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
 
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
       # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the
