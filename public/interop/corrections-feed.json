@@ -84,6 +84,15 @@
       "why": "The Honest Gate did its job. The candidate is strong on Safety (80.0%) and Robustness (83.3%) but fails the governance-obligation dimensions it would have been sold on \u2014 Compliance 15.8%, signed-vote chain 27.1%, Accountability 27.6% \u2014 and complies 88.1% of the time on prompts where the taxonomy expects caution. The upsell thesis does not ship. Method published (n + deterministic predicates, no LLM-as-judge, temperature 0): docs/GATE_RUN_2026-08-01.md. Next: targeted governance-dimension training, then re-run.",
       "sha256": "c55358322ba8fc1eb8d3053e0d36fdf1e4df43c4797197118a79b7ea42dad9c7",
       "kind": "correction-card"
+    },
+    {
+      "refutation_id": "REF-010",
+      "claim": "public/root.json going 168 -> 166 means two cards left the attested set",
+      "measured": "61 leaves left and 59 joined in that rebuild (net -2); the next rebuild churned 59 out and 59 in for a net of 0",
+      "artefact": "public/root.json",
+      "why": "COUNT IS NOT IDENTITY. card_count is not a stable identifier of the root's contents. Measured across the eight most recent rebuilds of public/root.json: 45/44, 44/43, 43/45, 45/59, 44/45, 61/59, 59/59 leaves out/in, while the count moved 153, 152, 151, 153, 167, 168, 166, 166. The last rebuild replaced 36% of the set and changed the count by zero, so a reader watching card_count sees nothing. MECHANISM: card_sha256() v1 correctly binds the WHOLE card into the leaf digest, including as_of -- v0 hashed payload alone and left subject and source_urls outside the tree, which was the worse hole. But publish_public_root.py builds each card with `\"as_of\": leaf[\"as_of\"] or now_iso()`, so any adapter leaf whose source supplies no as_of gets the rebuild timestamp baked into the bytes the digest covers, and is a NEW leaf every run. Demonstrated on the shipped function: two cards identical but for as_of hash to f4c30add882d379c7ab48917c7067ac8 and 9f367f426e4f433032c65cf14d89811b. The fix is a stable as_of per source, not a change to the leaf rule -- the leaf rule is right.",
+      "kind": "correction-card",
+      "sha256": "98d77989b5c74dbd1e9379f0cd275f903733a0a5c047a9afdf10c805c87402f1"
     }
   ]
 }
