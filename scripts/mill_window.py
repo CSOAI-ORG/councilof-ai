@@ -300,7 +300,10 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 continue
             if probed and not live_list:
                 # Hub [] is not a router 400. Chat-like mill the bare slug
-                # unless chat-bare / *-mapped already ran.
+                # unless chat-bare / *-mapped already ran. GGUF/quant packs
+                # are not a chat 200-route.
+                if _unserved_weight_pack(slug, include_base=False):
+                    continue
                 if tag in CHAT_TAGS and last_kind not in ("chat-bare",) and not last_kind.endswith("-mapped"):
                     out.append(slug)
                 continue

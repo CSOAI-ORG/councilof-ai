@@ -351,6 +351,19 @@ def test_empty_mapping_chat_mills_bare_slug_not_treated_terminal() -> None:
     assert mill_router_names("google/gemma-4-E4B-it", "chat", [], uncheckable=True) == [
         "google/gemma-4-E4B-it"
     ]
+    models.append(
+        {
+            "slug": "unsloth/Qwen3-8B-GGUF",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "feature",
+            "reason": "no live Inference Provider",
+            "providers_live": [],
+        }
+    )
+    got = millable_slugs(models)
+    assert "unsloth/Qwen3-8B-GGUF" not in got
+    assert "google/gemma-4-E4B-it" in got
 
 
 def test_millable_retries_nonchat_after_chat_policy_spray() -> None:

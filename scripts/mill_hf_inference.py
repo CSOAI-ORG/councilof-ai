@@ -21,6 +21,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mill_window import (  # noqa: E402
+    CHAT_TAGS,
     DEFAULT_PROVIDERS,
     live_providers,
     mill_exit_for_window,
@@ -369,10 +370,14 @@ def main() -> int:
         rec["providers_live"] = list(mapped)
         lock_st = lock_row.get("status") or "UNMEASURED"
         uncheckable = lock_st == "UNCHECKABLE"
-        # UNCHECKABLE: mapped providers only. Empty mapping: no HTTP mill.
+        # Empty Hub mapping on a chat-like tag: mill the bare slug.
+        # route_kind() may say feature for *-base; that is not a 400.
+        if uncheckable and not mapped and tag in CHAT_TAGS:
+            kind = "chat"
+            rec["route_kind"] = "chat-bare"
         router_names = mill_router_names(slug, kind, mapped, uncheckable=uncheckable)
-        if uncheckable and kind == "chat":
-            rec["route_kind"] = "chat-mapped" if mapped else "chat-bare"
+        if uncheckable and kind == "chat" and mapped:
+            rec["route_kind"] = "chat-mapped"
         rec["router_names"] = router_names
         if uncheckable and not router_names:
             rec["status"] = "UNCHECKABLE"
