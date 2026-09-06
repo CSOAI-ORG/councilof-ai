@@ -1,0 +1,35 @@
+name: producers-guard
+
+on:
+  pull_request:
+    branches: [master]
+    paths:
+      - 'docs/operations/PRODUCERS.json'
+      - 'scripts/verify-producers.sh'
+      - 'public/**'
+      - 'scripts/llms-txt.mjs'
+      - 'scripts/generate-redirects.mjs'
+      - '.github/workflows/producers.yml'
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+concurrency:
+  group: producers-guard-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Verify producers (any byte drift fails)
+        run: |
+          chmod +x scripts/verify-producers.sh
+          ./scripts/verify-producers.sh
