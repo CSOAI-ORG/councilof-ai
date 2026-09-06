@@ -1,5 +1,9 @@
 # Gitcoin — mechanisms / Gitcoin Grants rounds — 2026-09-05
 
+> **Figures below are stamped `2026-09-05T16:02:38Z` and were correct then.**
+> Four headline numbers have since moved — the root card count *falls* when cards are
+> retracted. **Re-fetch before sending:** see `docs/company/LIVE-FACTS-2026-09-06.md`.
+
 Target: https://gitcoin.co/mechanisms · Rounds: https://gitcoin.co/campaigns · Governance: https://gov.gitcoin.co · Facts: `FACTS-2026-09-05.json`
 
 ## Status
