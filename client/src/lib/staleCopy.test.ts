@@ -95,7 +95,14 @@ describe("leftover: header mega-nav honesty", () => {
     expect(header).not.toMatch(/No account, no fee/);
     expect(header).not.toMatch(/Devnet pointer/);
     expect(header).toMatch(/Verify stays free/);
-    expect(header).toMatch(/Coming — Paddle waitlist/);
+    // WAS: toMatch(/Coming — Paddle waitlist/). That pinned a PHRASE, and the phrase named a
+    // payment processor. The OWNER RULING of 6 Sep 2026 forbids naming one on any page, so the
+    // phrase had to change and this assertion blocked the change while protecting nothing the
+    // line below does not protect better. What the case is really for — "does not sell /assess
+    // as a free signed assessment" — is the booking-not-live statement, so assert THAT, and ban
+    // the processor outright rather than requiring it.
+    expect(header).toMatch(/Booking is not live/);
+    expect(header).not.toMatch(/\b(paddle|stripe|paypal)\b/i);
     expect(header).toMatch(/XRPL_STATUS_LABEL/);
     expect(header).toMatch(/writes_board false/);
   });
