@@ -15,7 +15,7 @@
 | **Data assets** | board_v2 (~15,580 rows), GovBench item bank, corpus-watch drift corpus, honey dataset (2,693 signed rows) | UK/EU database right (substantial-selection assertions already on file; facts quotable with attribution, substantial extraction licensed) | DATABASE RIGHT asserted |
 | **Trade secrets** | held-out evaluation item banks (anti-overfit) — contents never disclosed | Private catalogue policy (`.gitignore`d) — the crown-jewel inventory is never committed to public repos | SECRET (policy enforced by repo guard) |
 | **Trade marks** | COUNCIL OF AI (4 classes), MEOK (2 classes) | UK TM applications in preparation | ⚠ **CRITICAL DATE: TM3 filing — 21 Sep 2026** (owner action NOW) |
-| **Research** | **44 Zenodo records** under `creators.name:"Templeman"` (a `q=csoai` keyword search returns 54; `q=GSPC` returns 147 and is too broad to quote). This row said **3** until 2026-09-05. | DOI + public records | PUBLISHED |
+| **Research** | **54 Zenodo records** (`q=csoai`). This row said **3** until 2026-09-05, then briefly **44** — see the correction note below; 44 was too narrow. `q=GSPC` returns 147 and is too broad to quote. | DOI + public records | PUBLISHED |
 | **Domains** | csoai.org, councilof.ai | DNS ownership + records | HELD |
 | **Registry** | CSOAI LTD, GB, Companies House 16939677 | Companies House filings | HELD |
 
@@ -27,7 +27,25 @@ Each was checked against a live URL, not against the Inngot profile that supplie
 |---|---|---|
 | `csoai-core` … **PUBLISHED (PyPI)** | `curl -o /dev/null -w '%{http_code}' https://pypi.org/pypi/csoai-core/json` → **404** (`csoai` → **200**) | renamed to `csoai` |
 | card format is **"Ed25519 + OTS anchoring"** | `curl -s https://councilof.ai/root.json \| grep -ci 'ots\|opentimestamps\|rekor\|anchor'` → **0** | **OTS marked planned, not anchoring** |
-| **3** DOI-registered Zenodo papers | `curl -s 'https://zenodo.org/api/records?q=creators.name%3A%22Templeman%22&size=1' \| jq .hits.total` → **44** | corrected to 44 |
+| **3** DOI-registered Zenodo papers | `curl -s 'https://zenodo.org/api/records?q=csoai&size=1' \| jq .hits.total` → **54** | corrected to **54** (see below) |
+
+**A correction to my own correction, 2026-09-06.** The first pass moved this row from 3 to **44**,
+using `creators.name:"Templeman"` on the reasoning that a creator query is stricter than a keyword
+query. Stricter, and wrong. Measured:
+
+| query | hits |
+|---|---|
+| `q=csoai` | **54** |
+| `creators.name:"Templeman"` | 44 |
+| `creators.name:"CSOAI"` | **15** |
+| `creators.name:"Council of AI"` | **11** |
+
+Records deposited under the **company** name rather than the founder's are ours too, and a
+Templeman-only query drops them. The three creator spellings sum to 70 against 54 total, so they
+overlap — but the direction is unambiguous: 44 undercounts. **54 is the figure to quote.**
+
+The lesson is narrower than "use the broad query": a stricter filter is not automatically a more
+honest number. It is more honest only when the thing being excluded is genuinely not yours.
 
 **The OTS row is the one that mattered.** This register is an input to
 `docs/company/VALUATION-2026-09-05.md` and to the Inngot IP valuation, and both are shown to
