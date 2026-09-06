@@ -760,9 +760,31 @@ export function buildPaymentRequiredV2(opts: PaymentRequiredV2Opts): Record<stri
   };
 }
 
-/** Encode PaymentRequired for the v2 `PAYMENT-REQUIRED` response header. */
+/** x402scan's client fails its fetch when PAYMENT-REQUIRED exceeds this, and falls back
+ * to a raw probe with a warning — so an oversized header costs the door its listing. */
+export const PAYMENT_REQUIRED_HEADER_LIMIT = 16 * 1024;
+
+/**
+ * Encode PaymentRequired for the v2 `PAYMENT-REQUIRED` response header.
+ *
+ * The BODY carries everything, including the `csoai` estate sidecar. The HEADER carries
+ * the challenge a machine needs to pay: x402Version, error, resource, accepts and
+ * extensions. `csoai.preview` is a courtesy for whoever reads the body — on
+ * /api/evidence-bundle its `preview.cards` alone is 10,610 B, which pushed that door's
+ * header to 17,244 B, over x402scan's 16 KiB limit, while every other door sits at
+ * 3-7 KB. Duplicating a preview into a header nobody reads it from cost that door its
+ * listing, so the sidecar's bulk is dropped from the header only.
+ */
 export function encodePaymentRequiredHeader(paymentRequired: unknown): string {
-  const json = JSON.stringify(paymentRequired);
+  let forHeader = paymentRequired;
+  if (paymentRequired && typeof paymentRequired === "object") {
+    const src = paymentRequired as Record<string, unknown>;
+    if (src.csoai && typeof src.csoai === "object") {
+      const { preview: _preview, ...csoaiRest } = src.csoai as Record<string, unknown>;
+      forHeader = { ...src, csoai: csoaiRest };
+    }
+  }
+  const json = JSON.stringify(forHeader);
   const bytes = new TextEncoder().encode(json);
   let binary = "";
   for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]!);
