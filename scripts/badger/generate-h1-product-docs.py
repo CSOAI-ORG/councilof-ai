@@ -169,6 +169,11 @@ def main() -> None:
         "data_feed": probe(f"{BASE}/api/eunomia-data"),
         "diff_feed": probe(f"{BASE}/api/feeds/provider-diff"),
         "receipts_batch": probe(f"{BASE}/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1"),
+        # 8 conformant Bazaar hosts are mapped to art50-marking-evidence in the published offer
+        # column and it had no source doc, so no offer page either. The door needs a `url` that
+        # resolves; an unreachable one returns a structured "uncheckable", which is the door
+        # working and not a reason to omit the SKU.
+        "art50_marking": probe(f"{BASE}/api/art50/marking-evidence?url=https://councilof.ai/&preview=1"),
         "gspc": probe(f"{BASE}/api/gspc"),
         "root_json": probe(f"{BASE}/root.json"),
         "free_door": probe(f"{BASE}/.well-known/x402"),
@@ -223,6 +228,7 @@ def main() -> None:
         "data_feed": probe(f"{BASE}/api/eunomia-data?feed=1"),
         "diff_feed": probe(f"{BASE}/api/feeds/provider-diff?history=1"),
         "receipts_batch": probe(f"{BASE}/api/receipts/batch?from=2026-09-01&to=2026-09-05"),
+        "art50_marking": probe(f"{BASE}/api/art50/marking-evidence?url=https://councilof.ai/"),
     }
     for k, v in paid.items():
         print(f"  paid {k:<18} {v['status']} {v['bytes']:>7}B")
@@ -247,6 +253,9 @@ def main() -> None:
          "/feeds/provider-diff/leaves/ + daily hash captures (robots-honouring)."),
         ("receipts-batch", "Receipts batch (historical measurement leaves)", "receipts_batch",
          "receipts corpus (preview shows counts + cap, not leaves)."),
+        ("art50-marking-evidence", "Article 50 transparency marking evidence (per asset)", "art50_marking",
+         "the asset itself is fetched at request time; evidence is what the marking said and when it "
+         "was read. A measurement of a marking, never a judgement that the marking is lawful."),
     ]
     for sku, title, key, ledger in spec:
         r = probes[key]
