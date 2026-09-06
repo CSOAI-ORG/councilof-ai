@@ -1,0 +1,41 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.vibe.airforce",
+ "as_of": "2026-09-06T06:38:32Z",
+ "source_urls": [
+  "https://api.vibe.airforce/api/x402/vibe-tools/twitter/search",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.vibe.airforce",
+  "resource": "https://api.vibe.airforce/api/x402/vibe-tools/twitter/search",
+  "status": "REFUSED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x80437842A9b6d7257d0bbF1Fbc8571121AC225a8",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xe9bba7f8d3e52b5f53b346e566173a896382f047596eb8150c76fa49f389bc15",
+  "x402_version": 2,
+  "delivered_bytes": 91,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:32Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "f755eeace02d0316169c037bb36b59887e3dca6edfba4c68b37503ec9a6f443b",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

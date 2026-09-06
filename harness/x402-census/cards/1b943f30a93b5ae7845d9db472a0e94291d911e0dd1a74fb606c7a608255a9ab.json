@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.signalis.dev",
+ "as_of": "2026-09-06T06:43:12Z",
+ "source_urls": [
+  "https://api.signalis.dev/v1/pulse/narratives",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.signalis.dev",
+  "resource": "https://api.signalis.dev/v1/pulse/narratives",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xf444abc53f5e1e73caec7df64d147ddb119514a0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x3d21251d2d7124ab120373b415c5561e839c81aa4fe26046dca763cc31bd7bf6",
+  "x402_version": 2,
+  "delivered_bytes": 5866,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:12Z",
+  "n": 1
+ },
+ "sha256": "1b943f30a93b5ae7845d9db472a0e94291d911e0dd1a74fb606c7a608255a9ab",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

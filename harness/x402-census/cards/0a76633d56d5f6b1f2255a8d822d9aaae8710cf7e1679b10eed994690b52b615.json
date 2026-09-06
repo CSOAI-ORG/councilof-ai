@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "oblique.markets",
+ "as_of": "2026-09-06T06:40:32Z",
+ "source_urls": [
+  "https://oblique.markets/api/v1/paid/bazaar-pulse",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "oblique.markets",
+  "resource": "https://oblique.markets/api/v1/paid/bazaar-pulse",
+  "status": "DELIVERED",
+  "asked_units": 2000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x970007590aCC5C938cd51345B17AF51B1B40D3Ab",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x981021783ffe84e3414df4b9fa1a7978d4963b364397c502a0dc5ddf153dfce6",
+  "x402_version": 2,
+  "delivered_bytes": 1112,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:40:32Z",
+  "n": 1
+ },
+ "sha256": "0a76633d56d5f6b1f2255a8d822d9aaae8710cf7e1679b10eed994690b52b615",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

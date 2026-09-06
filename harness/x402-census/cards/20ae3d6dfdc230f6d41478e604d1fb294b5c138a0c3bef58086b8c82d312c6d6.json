@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.bitrefill.com",
+ "as_of": "2026-09-06T06:40:01Z",
+ "source_urls": [
+  "https://api.bitrefill.com/x402/gift-cards/search",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.bitrefill.com",
+  "resource": "https://api.bitrefill.com/x402/gift-cards/search",
+  "status": "DELIVERED",
+  "asked_units": 2000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x480CD46E6faDe651a0437DeaddA53D5c8e7D846A",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xa584c3716592e845bdc9d3cb5f3814140e9e4137f349d4d6caa8643a3beb54ca",
+  "x402_version": 2,
+  "delivered_bytes": 10584,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:40:01Z",
+  "n": 1
+ },
+ "sha256": "20ae3d6dfdc230f6d41478e604d1fb294b5c138a0c3bef58086b8c82d312c6d6",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "x402 settlement census \u2014 316 conformant hosts paid as a buyer, 100 delivered, 213 refused",
+ "as_of": "2026-09-06T06:46:22Z",
+ "source_urls": [
+  "https://huggingface.co/datasets/csoai/x402-settlement-census",
+  "https://councilof.ai/api/x402"
+ ],
+ "payload": {
+  "kind": "csoai.x402-settlement/0.1",
+  "flags": {
+   "self_settlement": false,
+   "revenue": false,
+   "ranking": false,
+   "hosts_contacted": false
+  },
+  "method": "GET the resource, sign EIP-3009 for accepts[0] with the EIP-712 domain taken from the challenge itself, GET again with PAYMENT-SIGNATURE; the host's facilitator submits and pays gas",
+  "population": 316,
+  "outcome": {
+   "REFUSED": 213,
+   "DELIVERED": 100,
+   "NO_CHALLENGE": 2,
+   "MISMATCH": 1
+  },
+  "usdc_spent": 1.3398,
+  "caps": {
+   "per_host_units": 50000,
+   "total_usdc": 5.5
+  },
+  "settlement_txs": 100,
+  "took_settlement_and_refused": 13,
+  "distinct_pay_to": 174,
+  "top_pay_to_share": [
+   {
+    "pay_to": "0x2880EdfFF13100677Bf97A3CBdF3Bc34771C4E5E",
+    "hosts": 62
+   },
+   {
+    "pay_to": "0xFFc458dB291b4ABcE020fE3de4f91F2770E537b1",
+    "hosts": 18
+   },
+   {
+    "pay_to": "0xEf879BFD6C4AccB8F795136de90246e1EC245e06",
+    "hosts": 11
+   }
+  ],
+  "cards_emitted": 100,
+  "story": "Two in three conformant x402 hosts refused a correctly-signed payment. Thirteen reported a settlement transaction and refused anyway. Being listed and conformant is not the same as taking money and answering.",
+  "verified_via": "each row carries its settlement tx; the chain is the check"
+ },
+ "unmeasured": [
+  "reliability_per_host: n=1 per host, one purchase at one moment",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms",
+  "delivery_quality: bytes and content-type were recorded, the artefact was not evaluated",
+  "population_drift: a single round cannot show who changes, a second round would"
+ ],
+ "note": "Measurement, not certification. No host was contacted and none is ranked. Every USDC left our own wallet, so none of this is revenue.",
+ "sha256": "e20cbdf1fc6a481938b180a261c9193bd27b69d1eeed7454aee2126cc8307113"
+}

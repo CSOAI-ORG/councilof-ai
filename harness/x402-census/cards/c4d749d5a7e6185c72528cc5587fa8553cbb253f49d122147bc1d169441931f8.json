@@ -1,0 +1,41 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "keyronne.com",
+ "as_of": "2026-09-06T06:38:57Z",
+ "source_urls": [
+  "https://keyronne.com/api/json-repair",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "keyronne.com",
+  "resource": "https://keyronne.com/api/json-repair",
+  "status": "MISMATCH",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xB86F95EF5FA904318Ea9Df3b59AdCe099b478fC4",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x8d6d5a458ccb5d934c7411245526be462d8638aee1d237e8af4867eb36237a5c",
+  "x402_version": 2,
+  "delivered_bytes": 6153,
+  "delivered_content_type": "text/html; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:57Z",
+  "n": 1,
+  "note": "paid, answered 2xx, but the body was not the advertised type"
+ },
+ "sha256": "c4d749d5a7e6185c72528cc5587fa8553cbb253f49d122147bc1d169441931f8",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

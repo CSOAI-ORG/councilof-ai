@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.moltalyzer.xyz",
+ "as_of": "2026-09-06T06:44:38Z",
+ "source_urls": [
+  "https://api.moltalyzer.xyz/api/moltbook/digests",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.moltalyzer.xyz",
+  "resource": "https://api.moltalyzer.xyz/api/moltbook/digests",
+  "status": "DELIVERED",
+  "asked_units": 20000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xf444abc53f5e1e73caec7df64d147ddb119514a0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x2e0bfa46365488c4a6ca32107c013677be84ee2846f5f948c3beed7dc5de28f3",
+  "x402_version": 2,
+  "delivered_bytes": 239625,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:44:38Z",
+  "n": 1
+ },
+ "sha256": "6ee374fc1781838bf3d19cf187e25b06292bcfd569775a324b20ea609678ce23",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

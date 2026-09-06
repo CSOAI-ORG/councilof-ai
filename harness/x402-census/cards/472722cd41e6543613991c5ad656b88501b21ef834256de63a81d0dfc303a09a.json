@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "regimeshift.xyz",
+ "as_of": "2026-09-06T06:39:16Z",
+ "source_urls": [
+  "https://regimeshift.xyz/api/v1/asset/btc/vrp",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "regimeshift.xyz",
+  "resource": "https://regimeshift.xyz/api/v1/asset/btc/vrp",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x82B17D0bb4De9ae6c3491257B60E8245e70acd7B",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x388fb70ca58ece19164bb59a87fe91397c02e476da2126d34603db0b881aa70c",
+  "x402_version": 2,
+  "delivered_bytes": 357,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:39:16Z",
+  "n": 1
+ },
+ "sha256": "472722cd41e6543613991c5ad656b88501b21ef834256de63a81d0dfc303a09a",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

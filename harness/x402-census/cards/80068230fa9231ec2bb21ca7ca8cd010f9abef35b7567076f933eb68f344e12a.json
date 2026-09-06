@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "x402-factory.com",
+ "as_of": "2026-09-06T06:39:33Z",
+ "source_urls": [
+  "https://x402-factory.com/v1/ping",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "x402-factory.com",
+  "resource": "https://x402-factory.com/v1/ping",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xCc42Ed39a06b6cF3f484307eF76B88Bf56Fb305f",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x500fb018eba8ad166ab3da67e20407ee6e838ed444e39b78522ea831b218726f",
+  "x402_version": 2,
+  "delivered_bytes": 299,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:39:33Z",
+  "n": 1
+ },
+ "sha256": "80068230fa9231ec2bb21ca7ca8cd010f9abef35b7567076f933eb68f344e12a",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

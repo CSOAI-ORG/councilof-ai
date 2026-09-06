@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.losbeto.xyz",
+ "as_of": "2026-09-06T06:40:51Z",
+ "source_urls": [
+  "https://api.losbeto.xyz/pyth-price",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.losbeto.xyz",
+  "resource": "https://api.losbeto.xyz/pyth-price",
+  "status": "DELIVERED",
+  "asked_units": 3000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xd5Ba9711a3D052846a3695C70e7fcb8b3168FE7d",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x072630bdf4d57eb92d36e8f06084fe8db1f1dd9260a5ce3fc0fb73cc217a2d5b",
+  "x402_version": 2,
+  "delivered_bytes": 280,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:40:51Z",
+  "n": 1
+ },
+ "sha256": "1ec5085848bf6be124c0a7dbeac3fb3bd41808f5d5e143c94bcf6c0dd224a072",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

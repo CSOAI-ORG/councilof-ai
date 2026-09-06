@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.x402.printmoneylab.com",
+ "as_of": "2026-09-06T06:41:25Z",
+ "source_urls": [
+  "https://api.x402.printmoneylab.com/api/v1/buyers/:address/profile",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.x402.printmoneylab.com",
+  "resource": "https://api.x402.printmoneylab.com/api/v1/buyers/:address/profile",
+  "status": "DELIVERED",
+  "asked_units": 5000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xcF9223eCe895258dEa8D288AEBcf846Ab8E342fB",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xfebc316e99ff7aaeb81b6483debc05dc984ccca0f50b9fe4f3f2f9f62f4fbf27",
+  "x402_version": 2,
+  "delivered_bytes": 207,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:41:25Z",
+  "n": 1
+ },
+ "sha256": "300efe5549a9d0bafd755e575b5a0eb815106348faa81da67c8946a2db4bc018",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

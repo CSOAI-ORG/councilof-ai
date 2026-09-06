@@ -1,0 +1,41 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "wolframalpha.x402.paysponge.com",
+ "as_of": "2026-09-06T06:45:02Z",
+ "source_urls": [
+  "https://wolframalpha.x402.paysponge.com/v2/query",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "wolframalpha.x402.paysponge.com",
+  "resource": "https://wolframalpha.x402.paysponge.com/v2/query",
+  "status": "REFUSED",
+  "asked_units": 20000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x6302D9e6DBB22fEC3c350551568Bb39B4b35Ad57",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xce4b39d1831455267fb55216613d362157703ed06bf715934cdc482d0658a2c1",
+  "x402_version": 2,
+  "delivered_bytes": 120,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:02Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "b56f8aa612bee682799ec78e21cff665eff66c77b508f7c583743f8da6dc8870",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

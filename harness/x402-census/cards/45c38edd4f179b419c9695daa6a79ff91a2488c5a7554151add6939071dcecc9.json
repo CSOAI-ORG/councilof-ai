@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "entropy.rip",
+ "as_of": "2026-09-06T06:43:24Z",
+ "source_urls": [
+  "https://entropy.rip/api/financial/gas",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "entropy.rip",
+  "resource": "https://entropy.rip/api/financial/gas",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x4293f75E69b22Ee68AfA0F464dE86E5CD80BED75",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x6223ee61a8989c6e876fef004a929737220b145fe4fab39c53b460027212e38a",
+  "x402_version": 2,
+  "delivered_bytes": 755,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:24Z",
+  "n": 1
+ },
+ "sha256": "45c38edd4f179b419c9695daa6a79ff91a2488c5a7554151add6939071dcecc9",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

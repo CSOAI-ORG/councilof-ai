@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "mysticapi.com",
+ "as_of": "2026-09-06T06:43:37Z",
+ "source_urls": [
+  "https://mysticapi.com/v1/sky/today",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "mysticapi.com",
+  "resource": "https://mysticapi.com/v1/sky/today",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x40e5A6647803c2DD686049dcDC5F9c34817D7a7F",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x41b04c6e8ac5595d9494d9f2dd0a7baa195a08523eadc9dab58bf4dadf09ff97",
+  "x402_version": 2,
+  "delivered_bytes": 3190,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:37Z",
+  "n": 1
+ },
+ "sha256": "13e0afb0fc954759a3493b7c954ca500885b0ac174edc36fdab8760ab0ff4a7c",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

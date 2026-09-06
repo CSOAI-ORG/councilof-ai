@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "zeroclick.affiliate.com",
+ "as_of": "2026-09-06T06:45:06Z",
+ "source_urls": [
+  "https://zeroclick.affiliate.com/v1/merchants",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "zeroclick.affiliate.com",
+  "resource": "https://zeroclick.affiliate.com/v1/merchants",
+  "status": "DELIVERED",
+  "asked_units": 20000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x6e9c2ebca537f861fe9242f8f974d99b3df762b2",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xc123bcc1825fad95cf8a1652f8b0c7d8f85a298a42e25ce0d470faf97153dd1f",
+  "x402_version": 2,
+  "delivered_bytes": 36400,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:06Z",
+  "n": 1
+ },
+ "sha256": "568e966d7e83bb31532d27f9090c9c01d3b96e2c5702111c6ba16d622e927a44",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

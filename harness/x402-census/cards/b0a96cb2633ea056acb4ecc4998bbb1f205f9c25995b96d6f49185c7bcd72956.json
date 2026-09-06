@@ -1,0 +1,40 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.borisinc.com",
+ "as_of": "2026-09-06T06:38:06Z",
+ "source_urls": [
+  "https://api.borisinc.com/paid/ping",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.borisinc.com",
+  "resource": "https://api.borisinc.com/paid/ping",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x30A535132ea7573Fd339B30FEE8b677E0ec947E0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x607fa785f58e86bdd1547db8ad3f4003077297a790822b2c8149da3fdc230577",
+  "x402_version": 2,
+  "delivered_bytes": 79,
+  "delivered_content_type": "application/json",
+  "advertised_mime": null,
+  "observed_at": "2026-09-06T06:38:06Z",
+  "n": 1
+ },
+ "sha256": "b0a96cb2633ea056acb4ecc4998bbb1f205f9c25995b96d6f49185c7bcd72956",
+ "unmeasured": [
+  "reliability: n=1, a single purchase cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time; one moment only",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}
