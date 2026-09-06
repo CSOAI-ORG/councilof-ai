@@ -1,0 +1,115 @@
+{
+  "card": {
+    "as_of": "2026-09-06T15:08:16Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:BUIDL:polygon",
+      "symbol": "BUIDL",
+      "product": "BlackRock USD Institutional Digital Liquidity Fund",
+      "chain": "polygon",
+      "chain_id": 137,
+      "address": "0x2893ef551b6dd69f661ac00f11d93e5dc5dc0e99",
+      "block": 93334842,
+      "block_hash": "0xf5d84598857c8aa150ad5a2bd3051c5087209feb6a9939d9bec9270cd7b1bed8",
+      "block_time": "2026-09-06T15:08:16Z",
+      "rpc": "polygon-bor-rpc.publicnode.com",
+      "checked": {
+        "name": "BlackRock USD Institutional Digital Liquidity Fund",
+        "symbol": "BUIDL",
+        "decimals": 6,
+        "totalSupply": 4892748690000,
+        "isPaused": false,
+        "owner": "0xe01605f6b6dc593b7d2917f4a0940db2a625b09e",
+        "eip1967_implementation": "0x20c4c5194658e58fc783f4272254d3f8f18bb836"
+      },
+      "absent": [
+        "paused()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "hook()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "6677c6561753f0f48723d9167d29eb2e0f5146ed73d569fe9da269aeffcc3972",
+        "bytes": 11349,
+        "url": "/archive/proofs/eip1186/6677c6561753f0f4.json",
+        "rpc": "polygon-bor-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0xee8a105971995661291a9f284262a87abf2381b3cdc93b2c8fbeffe4cd636dd9",
+          "storageHash": "0x967b6f6f94e63bb0c72a969df37711480dc2f58f0ffebf57c56282b0f376b0ec",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x20c4c5194658e58fc783f4272254d3f8f18bb836",
+            "nodes": 4
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+      ],
+      "attests": "historical permission state at block 93334842 on polygon, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "79fdba44c8cdb39a1c99852f69cf520ad13f55116c9bb1ae59fd6c06c66a0656",
+    "sig_ed25519": "9d51ae5bb9b45b1965a3c59a42fde364f5ab358f00c7025289fc87c7b640775db6081a4c82f0310610e409dd5e6a6c9096bf0d3a150c1715bffacefee735950f",
+    "source_urls": [
+      "https://polygon-bor-rpc.publicnode.com",
+      "https://polygonscan.com/address/0x2893ef551b6dd69f661ac00f11d93e5dc5dc0e99"
+    ],
+    "subject": "evm:BUIDL:polygon permission state at block 93334842",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:polygon",
+      "coverage:permission-state",
+      "subject:BUIDL"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven"
+    ]
+  },
+  "proof": [
+    "456d3c675e9c4052cd69c0a579013110576dd49d64a12066018c3e68b3846edb",
+    "a05cf392a2e50d8745416efbb6df925482f1964be41748078d262e4cb20ac9c0",
+    "c494777e20846666b4d8b621c59fdef1b192affcc2b66a0ce8c7ba3bcd321d87",
+    "09184e2d60f8f1ae9f9bf29d4f04fcf01e8c7c2cf0636e84a89b7c711c85cd45",
+    "eccf9b718fe0cf264fb2b2bfe9ad6eab238d6e2d97fe168f31a388a2d28d46e8",
+    "33bfe336cb4302146ddcc4076f4047748940ee71ef0f2fe4612eec318e4294ca",
+    "04530f9344b595303b3dee88a2894cc7c727b8bb2a1d6d251e5b6d546b0461ba",
+    "28e661e2e858697d66e72862a3baf1cccbfde63972741e3cfd8c165fb1f11abf"
+  ]
+}

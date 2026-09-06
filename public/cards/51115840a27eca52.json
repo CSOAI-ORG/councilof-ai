@@ -1,0 +1,117 @@
+{
+  "card": {
+    "as_of": "2026-09-06T15:08:11Z",
+    "did": "did:web:csoai.org#board-attestation-1",
+    "digest_covers": "whole-card-except-sha256-and-sig_ed25519",
+    "sig_covers": "compact envelope {did,schema,surface,as_of,sha256}; sha256 is the whole-card digest, so the signature binds subject, source_urls, tags, unmeasured and payload through it",
+    "payload": {
+      "schema": "csoai.evm.permission-state/0.1",
+      "subject": "evm:JTRSY:ethereum",
+      "symbol": "JTRSY",
+      "product": "Janus Henderson Treasury Fund",
+      "chain": "ethereum",
+      "chain_id": 1,
+      "address": "0x8c213ee79581ff4984583c6a801e5263418c4b86",
+      "block": 25919102,
+      "block_hash": "0xda9fbb066a3d96c25b4e57d64defd1539851897b6b4d51da7777a85a47d13ef3",
+      "block_time": "2026-09-06T15:08:11Z",
+      "rpc": "ethereum-rpc.publicnode.com",
+      "checked": {
+        "name": "Janus Henderson Treasury Fund",
+        "symbol": "JTRSY",
+        "decimals": 6,
+        "totalSupply": 717141156780070,
+        "hook": "0x21cdcc686fecd9fb0d3ee300e555c06497b55ecc"
+      },
+      "absent": [
+        "paused()",
+        "isPaused()",
+        "owner()",
+        "getRoleMemberCount(bytes32=0x00)",
+        "blocklist()",
+        "allowlist()",
+        "sanctionsList()",
+        "allowList()",
+        "allowListV2()",
+        "accessControl()",
+        "kycManager()",
+        "pauser()",
+        "terms()",
+        "eip1967_implementation (slot zero)",
+        "eip1967_admin (slot zero)"
+      ],
+      "proof": {
+        "kind": "eip1186",
+        "sha256": "696a879dafb667ef32c4b6b9a7df76450fd2c828bc4f787eae470492763a851e",
+        "bytes": 10839,
+        "url": "/archive/proofs/eip1186/696a879dafb667ef.json",
+        "rpc": "ethereum-rpc.publicnode.com",
+        "account": {
+          "nonce": "0x1",
+          "codeHash": "0x7d02f853cd5ee5a6aa0a08213618a6f3c3d594d4c030be909d0e894b6a37c749",
+          "storageHash": "0xef27764021e536e8f4142121b60545cf98f573ab5fe4711b975445a2ef3ba750",
+          "nodes": 9
+        },
+        "slots": [
+          {
+            "label": "eip1967_implementation",
+            "key": "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+            "value": "0x0",
+            "nodes": 3
+          },
+          {
+            "label": "eip1967_admin",
+            "key": "0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103",
+            "value": "0x0",
+            "nodes": 2
+          }
+        ],
+        "verifies_against": "block_hash -> header.stateRoot (EIP-1186)"
+      },
+      "unmeasured": [
+        "allowlist/blocklist membership of any holder address",
+        "off-chain transfer-agent or KYC registry contents",
+        "issuer NAV, AUM and share-class terms (not on-chain)",
+        "source verification of bytecode against a published repository",
+        "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+        "pause flag (no paused()/isPaused() answered at this block)"
+      ],
+      "attests": "historical permission state at block 25919102 on ethereum, as answered by the named public RPC; discrete, point-in-time; not a rate, not a grade, not an opinion",
+      "method": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/PROVABLE-ARCHIVE-METHOD.md"
+    },
+    "schema": "https://councilof.ai/schema/card-v1.json",
+    "sha256": "51115840a27eca52ae82b30381baad158f27a4e4d6e13769af259807ada6cdcb",
+    "sig_ed25519": "a6247f2d2c89101d3ab94b4dccc890a6b93af48a06462d63ea815e8abcfed5b1538e8d54d5908e4fcaab172684c45bf435a11a4a7a8b614a04f4c95ebf496e0c",
+    "source_urls": [
+      "https://ethereum-rpc.publicnode.com",
+      "https://etherscan.io/token/0x8c213ee79581ff4984583c6a801e5263418c4b86"
+    ],
+    "subject": "evm:JTRSY:ethereum permission state at block 25919102",
+    "surface": "public.notice",
+    "tags": [
+      "framework:evm",
+      "reg.tag:public-ledger",
+      "chain:ethereum",
+      "coverage:permission-state",
+      "subject:JTRSY"
+    ],
+    "unmeasured": [
+      "allowlist/blocklist membership of any holder address",
+      "off-chain transfer-agent or KYC registry contents",
+      "issuer NAV, AUM and share-class terms (not on-chain)",
+      "source verification of bytecode against a published repository",
+      "slot-level proof of getter values (storage layout not in KNOWN_SLOTS); account storageHash proven",
+      "pause flag (no paused()/isPaused() answered at this block)"
+    ]
+  },
+  "proof": [
+    "414ce72dcbe71037e2e3c4505d71b38f0a842bb8422de262afa63f80bba811cc",
+    "4390de723219392c646526da23efc422afb43351022f6c0e92080b725c63da3a",
+    "d843c8d198f90b31f362e7d3a73f020e372e59141d1029338732b1a40d483a2a",
+    "a30ef6c145156b9f6e11e629c323377cd168761d3423912b5723dda52b5cb54d",
+    "eccf9b718fe0cf264fb2b2bfe9ad6eab238d6e2d97fe168f31a388a2d28d46e8",
+    "33bfe336cb4302146ddcc4076f4047748940ee71ef0f2fe4612eec318e4294ca",
+    "04530f9344b595303b3dee88a2894cc7c727b8bb2a1d6d251e5b6d546b0461ba",
+    "28e661e2e858697d66e72862a3baf1cccbfde63972741e3cfd8c165fb1f11abf"
+  ]
+}
