@@ -6,7 +6,7 @@
   "writes_board": false,
   "keystone": null,
   "halt": "HALT SIGNED at keystone. 4way harness ABSENT. Stranger-recompute leftover only. Do not sign.",
-  "board_write": "NOT WRITTEN. Live board stays 22 axis · 15 measured · 7 empty. These 4 unsigned financial slots remain UNMEASURED on GET /api/gspc.",
+  "board_write": "NOT WRITTEN. This UNSIGNED run did not write the GSPC board. Do not treat this file as live board authority. Live counts come only from GET https://councilof.ai/api/gspc (curl before citing). Historical sitting-day context: as of this run's as_of date the public board was 22·15·7; that is NOT today's board.",
   "certification": "NONE — never a certification, never a risk rating, never an endorsement",
   "risk_verdict": "UNMEASURED (needs counsel)",
   "mainnet_attestation": "PLANNED",
@@ -64,17 +64,6 @@
       "RWA.xyz public HTML 403 this run",
       "keystone HALT (do not sign)"
     ]
-  },
-  "live_lock": {
-    "url": "https://councilof.ai/api/gspc",
-    "schema": "csoai.gspc-axes/0.5",
-    "public_count": "22 axis · 15 measured",
-    "axes": 22,
-    "measured_axes": 15,
-    "unmeasured_axes": 7,
-    "financial_measured": 1,
-    "refetched_at": "2026-08-31T17:22:36Z",
-    "these_four_on_board": "UNMEASURED declared slots — this leftover does not close them"
   },
   "grading_rules": "Unchanged from /interop/financial-4axis-unsigned-n30-2026-08-28.json. Not a new methodology.",
   "current_rule_cutoff_original_leftover": "2026-07-14",
@@ -1500,12 +1489,28 @@
     "writes_board": false,
     "fourway_harness": "ABSENT — this file is a stranger-recompute leftover, not a 4way pass",
     "signed_path": "SIGNED requires n≥30 + 4way + keystone. n=30 HAVE. 4way incomplete (harness ABSENT + RWA HTML 403). keystone HALT. This run is UNSIGNED.",
-    "board": "GET /api/gspc remains the authority. 22 axis · 15 measured · 7 empty. Empty cells stay empty.",
+    "board": "GET /api/gspc remains the authority. Curl live before citing. Do not read this UNSIGNED leftover as today's board counts.",
     "never_invent_yes": true,
     "stranger_recompute": "Re-fetched leftover evidence_urls; applied leftover grading_rules; compared grades. Do not take any YES on trust.",
     "text": "UNSIGNED stranger-recompute of the 28 Aug n=30 4-axis leftover. Not a 4way harness. Not a credit rating, not investment advice, not a ranking, not an endorsement, never a certification. HALT SIGNED at keystone."
   },
-  "superseded_note": "SUPERSEDED 2026-09-02. Statements in this file that describe the live board as '22 axis · 15 measured · 7 empty/unmeasured' were true on the date this record was written and are FALSE NOW. Live GET https://councilof.ai/api/gspc reports 22 axis · 22 measured · 0 unmeasured (items 969); the signed freeze at https://councilof.ai/signed/gspc-board.signed.json agrees and verifies under did:web:csoai.org#gspc-board-22axis-2026. The historical sentences are left UNEDITED on purpose — this estate supersedes records, it does not rewrite them. The decision this file records (not stamping those slots MEASURED on that date) still stands as a description of that date.",
+  "superseded_note": "SUPERSEDED 2026-09-02. Statements in this file that describe the live board as '22 axis · 15 measured · 7 empty/unmeasured' were true on the date this record was written and are FALSE NOW. Live GET https://councilof.ai/api/gspc reports 22 axis · 22 measured · 0 unmeasured (items 969); the signed freeze at https://councilof.ai/signed/gspc-board.signed.json agrees and verifies under did:web:csoai.org#gspc-board-22axis-2026. board_write / live_lock present-tense freezes were edited 2026-09-06 so strangers do not read 15·7 as LIVE; historical as_of context retained. Run grades UNCHANGED. The decision this file records (not stamping those slots MEASURED on that date) still stands as a description of that date.",
   "superseded_on": "2026-09-02",
-  "live_authority": "https://councilof.ai/api/gspc"
+  "live_authority": "https://councilof.ai/api/gspc",
+  "historical_board_as_of_run": {
+    "as_of": "2026-08-31",
+    "url": "https://councilof.ai/api/gspc",
+    "schema": "csoai.gspc-axes/0.5",
+    "public_count_then": "22 axis · 15 measured",
+    "axes_then": 22,
+    "measured_axes_then": 15,
+    "unmeasured_axes_then": 7,
+    "financial_measured_then": 1,
+    "refetched_at": "2026-08-31T17:22:36Z",
+    "these_four_on_board_then": "UNMEASURED declared slots — this leftover does not close them",
+    "not_live": true,
+    "note": "Historical snapshot at run time ONLY. Live authority is GET https://councilof.ai/api/gspc (22·22·0 as of superseded_note)."
+  },
+  "honesty_edit_on": "2026-09-06",
+  "honesty_edit": "Kill present-tense live-board 15·7 freeze; defer to GET /api/gspc; keep UNSIGNED."
 }
