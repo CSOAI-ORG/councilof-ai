@@ -102,9 +102,7 @@
       "csoai_equivalent": "Council OS scheduler",
       "description": "Scheduled tasks. Every task emits a signed result.",
       "card_kind": "task",
-      "endpoints": [
-        "/api/scheduler — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
-      ]
+      "endpoints": []
     },
     "chatgpt_canvas": {
       "csoai_equivalent": "Council OS editor",
@@ -134,9 +132,7 @@
       "csoai_equivalent": "Council OS deep research",
       "description": "Deep research pipeline. Every finding is signed + anchored.",
       "card_kind": "research",
-      "endpoints": [
-        "/api/research — NOT_IMPLEMENTED (probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404)"
-      ]
+      "endpoints": []
     },
     "chatgpt_atlas": {
       "csoai_equivalent": "Council OS browser",
@@ -161,6 +157,13 @@
     "rule": "An endpoint advertised here must answer something other than 404 live. Everything below was advertised and answered 404 on 2026-09-05. Nothing here is a route; nothing here was ever implemented. Corrections ledger C-2026-0905-04.",
     "probe": "probed 2026-09-05 (GET and POST, https://councilof.ai) → HTTP 404",
     "not_implemented": [
+      "/api/research",
+      "/api/scheduler"
+    ]
+  },
+  "endpoints_removed_2026-09-06": {
+    "why": "probed 404 and confirmed 2026-09-06 by absence of an implementing Pages Function (no functions/api/<name>.ts): these doors cannot exist, so advertising them tested and offered nothing. /api/verify was IMPLEMENTED on 2026-09-06 and kept.",
+    "removed": [
       "/api/research",
       "/api/scheduler"
     ]
