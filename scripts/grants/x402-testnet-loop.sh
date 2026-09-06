@@ -38,13 +38,24 @@ UA="Mozilla/5.0 (compatible; csoai-testnet-loop/1.0)"
 
 # Base Sepolia constants (CAIP-2 eip155:84532). USDC address is the one named in the x402 v2
 # specification's own worked example and used by scripts/badger/prove-settle-testnet.py.
-CHAIN_ID=84532
-NETWORK_V2="eip155:84532"
-USDC_SEPOLIA="0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+# X402_MAINNET=1 runs the same loop on Base mainnet (eip155:8453, real USDC) against the live edge's own
+# challenge — the only path that produces a confirmed settle the Bazaars index. Fund the THROWAWAY payer
+# (scripts/badger/make-payer-wallet.sh) with about 1 USDC from the owner's wallet; the facilitator pays gas.
+# A payment from a wallet we control is recorded but is neither revenue nor a buyer (/api/revenue definition).
+if [ "${X402_MAINNET:-0}" = "1" ]; then
+  CHAIN_ID=8453
+  NETWORK_V2="eip155:8453"
+  USDC_SEPOLIA="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"   # USDC on Base mainnet (variable name kept for the rest of the script)
+else
+  CHAIN_ID=84532
+  NETWORK_V2="eip155:84532"
+  USDC_SEPOLIA="0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+fi
+export CHAIN_ID NETWORK_V2 USDC_SEPOLIA
 
 echo "[1/4] facilitator supports testnet?  $FACILITATOR/supported"
 curl -fsS --max-time 30 -A "$UA" "$FACILITATOR/supported" \
-  | python3 -c 'import sys,json; k=json.load(sys.stdin)["kinds"]; ok=[x for x in k if x.get("network") in ("eip155:84532","base-sepolia")]; print("   ", *[f"v{x["x402Version"]} {x["scheme"]} {x["network"]}" for x in ok], sep="\n    "); sys.exit(0 if ok else 1)'
+  | python3 -c 'import sys,json; k=json.load(sys.stdin)["kinds"]; ok=[x for x in k if x.get("network") in (__import__("os").environ.get("NETWORK_V2","eip155:84532"),"base-sepolia","base")]; print("   ", *[f"v{x["x402Version"]} {x["scheme"]} {x["network"]}" for x in ok], sep="\n    "); sys.exit(0 if ok else 1)'
 
 echo "[2/4] read the LIVE 402 shape from $RESOURCE (mainnet challenge; copied, then re-targeted)"
 PR=$(curl -sS --max-time 30 -A "$UA" -o /dev/null -D - "$RESOURCE" | tr -d '\r' | awk 'tolower($1)=="payment-required:"{print $2}')
@@ -71,13 +82,13 @@ typed = {"types": {"EIP712Domain": [{"name":"name","type":"string"},{"name":"ver
                                                  {"name":"value","type":"uint256"},{"name":"validAfter","type":"uint256"},
                                                  {"name":"validBefore","type":"uint256"},{"name":"nonce","type":"bytes32"}]},
          "primaryType": "TransferWithAuthorization",
-         "domain": {"name": "USDC", "version": "2", "chainId": 84532,
+         "domain": {"name": "USDC", "version": "2", "chainId": int(__import__("os").environ.get("CHAIN_ID","84532")),
                     "verifyingContract": "0x036CbD53842c5426634e7929541eC2318f3dCF7e"},
          "message": auth}
 sig = Account.sign_message(encode_typed_data(full_message=typed), acct.key).signature.hex()
 sig = sig if sig.startswith("0x") else "0x" + sig
 auth_s = {k: (str(v) if isinstance(v, int) else v) for k, v in auth.items()}
-reqs = {"scheme": "exact", "network": "eip155:84532", "amount": amount, "asset": "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+reqs = {"scheme": "exact", "network": __import__("os").environ.get("NETWORK_V2","eip155:84532"), "amount": amount, "asset": __import__("os").environ.get("USDC_SEPOLIA","0x036CbD53842c5426634e7929541eC2318f3dCF7e"),
         "payTo": pay_to, "resource": {"url": resource, "description": "", "mimeType": "application/json"},
         "maxTimeoutSeconds": 600, "extra": {"name": "USDC", "version": "2"}}
 body = {"x402Version": 2,
