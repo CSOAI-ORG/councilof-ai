@@ -1,6 +1,6 @@
 # Provider document diff feed
 
-`provider-diff-feed` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`provider-diff-feed` — derived from live endpoints on 2026-09-06T04:45:27Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -8,7 +8,7 @@
 
 ## 402 door
 `https://councilof.ai/api/feeds/provider-diff?history=1` — live status **402**
-(3939 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
+(4116 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
 `https://councilof.ai/api/feeds/provider-diff` — status **200**, **57485 bytes**, `sha256 5b483a458d7d4fad…`
@@ -25,7 +25,7 @@
   "counts": 
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

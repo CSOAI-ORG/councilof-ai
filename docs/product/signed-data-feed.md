@@ -1,6 +1,6 @@
 # Signed data feed (assembly + cadence)
 
-`signed-data-feed` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`signed-data-feed` — derived from live endpoints on 2026-09-06T04:45:27Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (4594 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/eunomia-data` — status **200**, **1610 bytes**, `sha256 39d5ff51c86f9cc1…`
+`https://councilof.ai/api/eunomia-data` — status **200**, **1605 bytes**, `sha256 7d287250a5ce7073…`
 
 ```json
 {
@@ -33,7 +33,7 @@
    
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,
