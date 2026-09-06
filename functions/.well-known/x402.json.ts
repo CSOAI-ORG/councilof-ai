@@ -158,6 +158,6 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
     agent_paths: ["@x402/fetch", "x402-fetch (v1)", "curl -i <resource> → read accepts[]"],
   };
   return new Response(JSON.stringify(body, null, 2), {
-    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, max-age=300", "access-control-allow-origin": "*" },
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "public, s-maxage=86400, stale-while-revalidate=86400", "access-control-allow-origin": "*" },
   });
 };
