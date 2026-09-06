@@ -1059,7 +1059,9 @@ function App() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gone-space" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  <Route path="/badges" component={BadgesPage} />
+                  {/* A second route for the same path stood here and was UNREACHABLE: wouter's
+                      Switch takes the first match, and the redirect above already owns that path
+                      (public/_redirects agrees with it). BadgesPage stays reachable at /authority. */}
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />
