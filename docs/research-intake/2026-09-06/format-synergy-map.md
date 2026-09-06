@@ -64,6 +64,28 @@ npx -y @circle-fin/cli services inspect https://councilof.ai/api/<a metered door
 a unilateral step, even for a read-only subcommand. Filed as one owner line. **`circle services pay`
 must never be run by an agent** — that spends.
 
+## Speaking the protocol is not the same as being findable
+
+`circle services search` searches for paid x402 services — which means it queries an **index**, not
+our origin. So the question is not only "do we speak x402" (we do) but "are we in the index".
+Measured today against the two indexes our own census reads from:
+
+| Index | Enumerated | Declared total | Distinct hosts | `councilof.ai` |
+|---|---:|---:|---:|---|
+| **PayAI** (`facilitator.payai.network/discovery/resources`) | 6000 | 28230 | 644 | **LISTED** |
+| **CDP Bazaar** (`api.cdp.coinbase.com/platform/v2/x402/discovery/resources`) | **15768** | **15768 (100%)** | **2585** | **ABSENT** |
+
+**We are in PayAI and not in the Coinbase index** — the larger of the two, at 2585 distinct hosts,
+and the one nearest to Circle's and Coinbase's own tooling. That single absence is the difference
+between an agent finding our doors and not.
+
+**Method note, because the first pass got this wrong.** Page one of each index showed us absent from
+both. Page one is 100 of 15768. I then enumerated with a loop capped at offset 5000, which reported
+"CDP: absent" from **32%** of the index — that is *unmeasured*, not absent, and reporting it would
+have been the estate's own R5 failure (a count is not a measurement until compared with the source's
+declared total). CDP accepts `limit=1000`; the full 15768 were enumerated before the word "absent"
+was written. **PayAI's listing was found only past page one**, which is exactly why the cap mattered.
+
 ## Why this matters more than building a new integration
 
 Every row is distribution already paid for. This estate's recurring failure is building the artefact
