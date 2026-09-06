@@ -718,7 +718,7 @@ function App() {
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
                   {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
-                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
+                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
