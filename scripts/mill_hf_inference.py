@@ -24,6 +24,9 @@ from mill_window import select_window  # noqa: E402
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
 API_MODEL = "https://huggingface.co/api/models/"
+# Team org billing. Personal monthly credits 402; the same token with this
+# header returned HTTP 200 against router.huggingface.co (measured 2026-09-06).
+BILL_TO = (os.environ.get("HF_BILL_TO") or "csoai").strip()
 
 # Tiny locked bank from gspc_flywheel governance (10 items). Probe only.
 GOV_ITEMS = [
@@ -109,6 +112,7 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
             "Authorization": f"Bearer {tok}",
             "Content-Type": "application/json",
             "User-Agent": UA,
+            "X-HF-Bill-To": BILL_TO,
         },
     )
     try:

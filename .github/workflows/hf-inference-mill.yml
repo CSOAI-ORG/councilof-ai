@@ -37,6 +37,7 @@ jobs:
     env:
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
       HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_BILL_TO: csoai
     steps:
       - uses: actions/checkout@v4
         with:
@@ -87,6 +88,7 @@ jobs:
                   "Authorization": f"Bearer {tok}",
                   "Content-Type": "application/json",
                   "User-Agent": "csoai-hf-inference-mill",
+                  "X-HF-Bill-To": os.environ.get("HF_BILL_TO") or "csoai",
               },
           )
           try:
@@ -131,6 +133,7 @@ jobs:
       HF_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
       HF_INFERENCE_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
       HUGGING_FACE_HUB_TOKEN: ${{ secrets.HF_INFERENCE_TOKEN }}
+      HF_BILL_TO: csoai
       FLEET_LOCK: public/fleet/HF2200.lock.json
       FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
       MILL_OUT: mill-out

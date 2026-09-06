@@ -39,6 +39,9 @@ def test_workflow_surfaces_inference_fail_in_summary() -> None:
     assert "timeout-minutes: 60" in yml
     assert "matrix:" in yml
     assert "HF2200.lock.json" in yml
+    assert "X-HF-Bill-To" in yml
+    mill = (ROOT / "scripts/mill_hf_inference.py").read_text()
+    assert "X-HF-Bill-To" in mill
 
 
 if __name__ == "__main__":
