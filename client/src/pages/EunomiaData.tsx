@@ -9,7 +9,7 @@ export default function EunomiaData() {
 
       <div className="mt-6 rounded-xl border border-emerald-400/25 bg-[#0d241b] p-5 font-mono text-sm">
         <div className="text-slate-400">GET /api/eunomia-data</div>
-        <div className="mt-1 text-emerald-300">lane: commercial-data · kind: x402 · price: 0.02 USD/query</div>
+        <div className="mt-1 text-emerald-300">lane: commercial-data · kind: x402 · amount quoted at the 402</div>
         <div className="text-xs text-slate-500">data_only: true — never a score, never a rank</div>
       </div>
 

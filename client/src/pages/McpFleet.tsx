@@ -113,7 +113,7 @@ export default function McpFleet() {
             </a>
             <a className="rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-3 hover:border-emerald-300/60" href="/products">
               <p className="font-mono text-sm text-emerald-100">x402 + SWIFT + XRPL</p>
-              <p className="text-xs text-emerald-200/80 mt-1">$1.00 USDC on Base — signed evidence per request</p>
+              <p className="text-xs text-emerald-200/80 mt-1">x402 metered — the amount is quoted at the 402, never here</p>
             </a>
           </div>
           <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl">

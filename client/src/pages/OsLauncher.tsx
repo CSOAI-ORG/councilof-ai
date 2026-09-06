@@ -38,7 +38,7 @@ export type { DoorId } from "@/components/os/doors";
 const PAGES: { name: string; href: string; what: string }[] = [
   { name: "Board", href: "/gspc-scoreboard", what: "What’s actually measured. Empty stays empty." },
   { name: "Verify", href: "/gspc-verify", what: "Paste a card. Nothing is sent." },
-  { name: "Assess", href: "/assess", what: "Paid measurement. Coming — Paddle. Booking is not live." },
+  { name: "Assess", href: "/assess", what: "Measurement booking is not live. Verify stays free." },
   { name: "Evidence", href: "/methodology", what: "How we grade. No model in the verdict." },
   { name: "Embed", href: "/embed", what: "Self-verifying badge. Measurement, not a mark." },
   { name: "Watchdog", href: "/watchdog-hub", what: "Public evidence surface. Incident submission is not live." },

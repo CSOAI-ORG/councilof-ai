@@ -28,7 +28,7 @@ import { Sparkles, ArrowRight, ShieldAlert, Scale, BookOpen, HelpCircle, Loader2
  * IT RUNS ENTIRELY IN THE BROWSER
  * ═══════════════════════════════════════════════════════════════════════════════
  * No account, no server call, no database. Nothing typed here is transmitted anywhere. That
- * is a privacy property and also a resilience one: the free tier cannot be taken down by our
+ * is a privacy property and also a resilience one: the free rail cannot be taken down by our
  * infrastructure, because it does not use any.
  *
  * ⚠️ ON HARVESTING THESE QUESTIONS FOR THE BENCHMARK — deliberately NOT done. Two reasons:

@@ -18,7 +18,7 @@ export default function EunomiaCatalog() {
     { name: "Signed registers", href: "/registers", desc: "Every axis row Ed25519-signed, stranger re-derivable" },
   ];
   const apis = [
-    { name: "GET /api/eunomia-data", href: "/api/eunomia-data", desc: "x402 0.02 USD/query · data-only, never scores" },
+    { name: "GET /api/eunomia-data", href: "/api/eunomia-data", desc: "x402 metered at the 402 · data-only, never scores" },
     { name: "GET /api/registers", href: "/api/registers", desc: "The signed financial-axis register (live DB)" },
   ];
   const hf = [

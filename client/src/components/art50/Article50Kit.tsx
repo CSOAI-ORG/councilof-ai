@@ -8,9 +8,12 @@ import { useEffect, useState } from "react";
  * on PyPI (9 tools, surfaced from source). Rethemed to the master wing
  * (dark-emerald on #03110b). Changes from the donor:
  *  - next/link + Next Metadata -> wouter + document.title (Vite SPA).
- *  - Donor posted to /api/checkout (a Next API route that does not exist in
- *    the master) with a Stripe-link fallback; the port uses the canonical
- *    Stripe payment links directly — same links, no dead hop.
+ *  - Donor posted to /api/checkout (a Next API route that does not exist in the
+ *    master) and fell back to a third-party checkout link. THE PORT CARRIES NEITHER:
+ *    its only external links are the EU AI Act text, csoai.org and schema.org, and its
+ *    JSON-LD offers render price "0". Under the OWNER RULING of 6 Sep 2026 no page may
+ *    name a payment processor or a price; this comment previously did both, describing
+ *    a checkout the code had already dropped.
  *  - "bespoke cert + 1-on-1 with the council" reworded to the attestation
  *    register (signed attestation + review session).
  *  - JSON-LD Product/SoftwareApplication/FAQ/Breadcrumb schemas kept verbatim.
