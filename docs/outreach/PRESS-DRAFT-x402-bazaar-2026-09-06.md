@@ -3,7 +3,10 @@
 **Status: DRAFT. Not sent. The owner sends, or does not.** Staged here per the outreach boundary —
 no send queue, no named recipient, no outbound from this lane.
 
-Facts only. Every number below is in the published dataset and recomputable by anyone:
+Facts only. **Every figure in this document — 316, 213, 100, 13, 174, 62, 144, 1.3398 USDC and the
+percentages derived from them — comes from the published dataset named here and nowhere else**, and
+is recomputable by anyone from it. The only exception is the revenue line, which is `/api/revenue`.
+Dataset:
 <https://huggingface.co/datasets/csoai/x402-settlement-census>
 
 ---
@@ -28,7 +31,7 @@ is not the same as taking money and answering, and that gap is what the Bazaar i
 ## Thirteen hosts took the money and delivered nothing
 
 **13 hosts recorded an on-chain settlement in their own PAYMENT-RESPONSE and then answered the
-retried request with 402/4xx.** Money moved; nothing came back. Total **0.193 USDC**.
+retried request with 402/4xx** (`summary-2026-09-06.json` → `took_a_settlement_and_still_refused`)**.** Money moved; nothing came back. Total **0.193 USDC**.
 
 Every one of those rows carries its settlement transaction hash, so a reader checks the chain
 rather than taking our word for it.
@@ -43,7 +46,8 @@ address, there are only **174 distinct `payTo` addresses** — so many "hosts" s
 | The five largest `payTo` operators | 107 (34% of all hosts) | **4 — 3.7%** |
 | Every other operator | 207 | **96 — 46.4%** |
 
-The single largest operator fronts **62 hosts and delivered on none of them**. Meanwhile **144 of
+The single largest operator fronts **62 hosts and delivered on none of them** (grouped from `pay_to` and
+`status` in `x402-settlement-census-2026-09-06.jsonl`). Meanwhile **144 of
 the 174 addresses serve exactly one host each**.
 
 A buyer who avoids the largest multi-host operators sees roughly **46%** delivery, not 32%. The
@@ -65,7 +69,8 @@ few operators rather than spread evenly across the market.
 
 ## Reproduce it
 
-The dataset carries the row per host, the summary, and the command. Anyone can rerun it against
+The dataset (<https://huggingface.co/datasets/csoai/x402-settlement-census>) carries the row per
+host, the summary, and the command. Anyone can rerun it against
 the same 316 hosts and get their own numbers — that is the point of publishing it.
 
 ---
