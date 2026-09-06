@@ -1,0 +1,38 @@
+{
+  "kind": "csoai.producers/0.1",
+  "as_of": "2026-09-06",
+  "note": "Every published artefact on this repo has ONE producer. If an output moves without its producer changing, the CI guard (producers.yml) fails the run. Never hand-edit an output.",
+  "producers": [
+    {
+      "output": "public/llms.txt",
+      "also_emits": ["public/llms-full.txt"],
+      "command": "node scripts/llms-txt.mjs",
+      "cwd": ".",
+      "env": [],
+      "deterministic": true
+    },
+    {
+      "output": "public/_redirects",
+      "command": "node scripts/generate-redirects.mjs",
+      "cwd": ".",
+      "env": [],
+      "deterministic": true,
+      "note": "hand-edit forbidden; the file header says generated"
+    },
+    {
+      "output": "public/interop/hf-badges-index.json",
+      "command": "python3 scripts/badger/csoai-hf-probe-and-badge.py",
+      "cwd": ".",
+      "env": [],
+      "deterministic": false,
+      "note": "includes live probes; the CI guard uses a hash-stable partial for this row, or skips with a comment per pr-gates"
+    },
+    {
+      "output": "public/interop/agent-card-jws-input.json",
+      "command": "python3 scripts/adapters/agent_card_jws.py",
+      "cwd": ".",
+      "env": [],
+      "deterministic": true
+    }
+  ]
+}
