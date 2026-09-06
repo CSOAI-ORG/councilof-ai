@@ -25,6 +25,20 @@ distinguish *absent* from *private* unauthenticated, so the 401 proves nothing i
 The conclusion above rests on the playbook's own status row and on `settled_usdc` being null, not
 on that status code.
 
+**UPDATE 2026-09-06 08:40 — the check that the 401 could not give us has now been made.** Queried
+through the *authenticated* Hub API, with a positive control so the instrument is shown to
+discriminate:
+
+| Query | Result |
+|---|---|
+| `hf://datasets/csoai/x402-settlement-census` | **`exists: false, type: missing`** |
+| `hf://datasets/csoai/gspc-hub-cards` (control) | `exists: true, type: repo` |
+
+The control matters: an authenticated query that returned "missing" for everything would prove
+nothing either. It returns `true` for a dataset we know exists and `false` for this one. **The
+dataset is genuinely absent** — not private, not gated. Trigger condition 2 below is therefore
+measured and unmet, rather than uncheckable.
+
 **The trigger, so the line goes in the moment it is earned.** Add it when **all three** hold:
 
 1. `/api/revenue` → `settled_usdc.count` is an **integer**, not `null`;
@@ -56,7 +70,7 @@ it, corrected it, moved the cards to UNSIGNED and staged, and the correction is 
 
 Almost nobody submits their own governance failure to an incident registry. Doing so is:
 
-- **consistent** — we publish a corrections ledger with 46 entries; this is one of them;
+- **consistent** — we publish a corrections ledger with **47** entries (06 Sep 2026); this is one of them;
 - **verifiable** — the correction id, the cards and the ledger are all public;
 - **not a claim about anyone else**, so it carries no risk of characterising a third party.
 
@@ -74,10 +88,15 @@ Almost nobody submits their own governance failure to an incident registry. Doin
 > **Reported by.** The issuer, about itself.
 > **Sources.** `https://councilof.ai/api/corrections` · `https://councilof.ai/signed/card_index.json`
 
+**Status: DONE as far as this lane may take it.** The draft above is complete and paste-ready.
+Submitting it is **owner-gated** — it posts under CSOAI's name to a third party's repository — so
+this lane does not send it. Filed as an owner line in `OWNER-ASKS-05Sep2026.md` with the submission
+URL (`aiaaic.org/aiaaic-repository`, free and permissionless, verified 200) and this text verbatim.
+
 ## F51 — MITRE ATLAS: **poor fit, and saying so is the finding**
 
 ATLAS catalogues **adversarial** threats to AI systems — attacker tactics and techniques. Live
-(`atlas.mitre.org` → 200), no `atlas` slug in our 302 doors, submission is a permissionless PR to
+(`atlas.mitre.org` → 200), no `atlas` slug in our 303 doors, submission is a permissionless PR to
 `atlas-data` in STIX 2.1.
 
 **We have nothing that belongs there.** Our corrections are self-inflicted integrity defects, not
