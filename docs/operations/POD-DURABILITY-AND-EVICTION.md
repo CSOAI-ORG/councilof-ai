@@ -99,3 +99,22 @@ left no restart running. Use `pkill -x <comm>`, or a pattern that cannot appear 
 invoking command. This is the `pgrep -f` self-match already recorded for probes, and it
 is worse for `pkill`: there the failure is a false ALIVE, here it is killing yourself
 mid-operation.
+
+## A threshold is checked once; a pull is not
+
+The first eviction guard fired below 25 GiB free. Observed 2026-09-06 with two shards:
+
+    EVICTED 0 manifest(s), 19.2 GiB of blobs (kept 2 in use) — free 4.7GB
+
+The check passed at 28 GiB, then two concurrent pulls of 20+ GiB models ran and the
+volume reached **4.7 GiB** before the next check. The guard was not wrong about its
+threshold; it was wrong to have one.
+
+Eviction now runs BEFORE EVERY PULL, keeping only tags a shard has claimed in
+`/workspace/inuse/`. That bounds the store to what is actually in use, and it prints on
+every model instead of only when the volume is nearly gone — which is what "every batch
+prints its evictions" has to mean to be worth anything. A shard that still finds under
+12 GiB after evicting waits five minutes for a sibling to finish rather than pulling into
+a full disk.
+
+    EVICTED 0 manifest(s), 4.5 GiB of blobs (kept 2 in use) — free 58.6GB

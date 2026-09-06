@@ -196,11 +196,18 @@ while True:
         log("=== every axis has attempted every resolvable GGUF model ==="); break
     mid, tag = nxt, TAGS[nxt]
     claim(tag)
-    if free_gb() < 25:
-        keep = in_use_by_others() | {tag}
-        dropped, freed = evict(keep)
-        log(f"  EVICTED {dropped} manifest(s), {freed / 1024 ** 3:.1f} GiB of blobs "
-            f"(kept {len(keep)} in use) — free {free_gb():.1f}GB")
+    # Evict BEFORE every pull, not only under a threshold. A threshold is checked once
+    # and then a 20+ GiB pull runs; with two shards pulling concurrently the volume fell
+    # to 4.7 GiB free on a guard set at 25. Keeping only what a shard has claimed bounds
+    # the store to what is actually in use, and prints on every model rather than only
+    # when it is nearly too late.
+    keep = in_use_by_others() | {tag}
+    dropped, freed = evict(keep)
+    log(f"  EVICTED {dropped} manifest(s), {freed / 1024 ** 3:.1f} GiB of blobs "
+        f"(kept {len(keep)} in use) — free {free_gb():.1f}GB")
+    if free_gb() < 12:
+        log(f"  LOW DISK {free_gb():.1f}GB after eviction — waiting 5 min for a sibling to finish")
+        time.sleep(300)
     todo_axes = [a for a in AXES if mid not in led.get(a, set())]
     attributed: dict[bool, int] = {}
     log(f"=== {mid} via {tag} | {len(todo_axes)} axes to do | free {free_gb():.1f}GB")
