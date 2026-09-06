@@ -264,7 +264,10 @@ def render(cards: list[dict]) -> dict[str, str]:
         },
         "producer": "scripts/crosswalk/emit_intoto.py",
         "check": "python3 scripts/crosswalk/emit_intoto.py --check",
-        "crosswalk_doc": "https://councilof.ai/docs/interop/VOCABULARY-CROSSWALK.md",
+        # The crosswalk prose lives in the repository, not on the site: councilof.ai serves
+        # no /docs/ path, so the councilof.ai URL was a 404 the moment it was published and
+        # link-gate caught it. Point a consumer at bytes that exist.
+        "crosswalk_doc": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/interop/VOCABULARY-CROSSWALK.md",
         "statements": statements,
     }
     return out, index
