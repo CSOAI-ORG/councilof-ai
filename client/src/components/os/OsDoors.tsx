@@ -409,7 +409,7 @@ function SwiftX402Door() {
       <section className="rounded-2xl border border-slate-200 bg-white p-4" data-testid="os-x402-doors">
         <h3 className="text-sm font-semibold text-slate-800">x402 — live Base · verify free</h3>
         <p className="mt-1 text-[13px] text-slate-600">
-          Discovery <code>/.well-known/x402.json</code> mode live · Base USDC · payTo merchant ≠ payer.
+          Discovery <code>/.well-known/x402.json</code> mode live · Base <code>eip155:8453</code> · payTo merchant ≠ payer.
           Free door amount 0 stays free. <code>settled_usdc</code> stays null until an EDGE non-self
           settle. Self-settle is not revenue. A grade is never sold.
         </p>
