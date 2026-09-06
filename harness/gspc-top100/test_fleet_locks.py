@@ -37,6 +37,7 @@ def test_workflow_surfaces_inference_fail_in_summary() -> None:
     assert "INFERENCE_FAIL" in yml
     assert "MILL_SHARDS" in yml
     assert "timeout-minutes: 60" in yml
+    assert "'110'" in yml or '"110"' in yml
     assert "matrix:" in yml
     assert "HF2200.lock.json" in yml
 
