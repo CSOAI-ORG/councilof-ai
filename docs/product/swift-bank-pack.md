@@ -1,6 +1,6 @@
 # SWIFT/bank census evidence pack
 
-`swift-bank-pack` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`swift-bank-pack` — derived from live endpoints on 2026-09-06T04:45:27Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (8675 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/evidence-bundle?obligation=dora` — status **200**, **13661 bytes**, `sha256 8ab65203e9ef8e24…`
+`https://councilof.ai/api/evidence-bundle?obligation=dora` — status **200**, **13714 bytes**, `sha256 c886e3572e4d9f7d…`
 
 ```json
 {
@@ -27,7 +27,7 @@
     "honesty": "D
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

@@ -22,7 +22,11 @@ signed-data-feed · provider-diff-feed · receipts-batch · commission-card
 evidence-bundle ✅ derivable · eu-ai-act-pack ✅ · swift-bank-pack ✅ ·
 xrpl-asset-evidence ✅ · signed-data-feed ✅ · provider-diff-feed ✅ ·
 receipts-batch ⚠️ needs the owner's PayAI/Rekor key (honestly staged) ·
-commission-card ✅ DELIVERABLE — corrected 2026-09-06. This line read
+commission-card ✅ DELIVERABLE, ⚠️ NOT ADVERTISED — corrected 2026-09-06. Two axes, not one:
+the door is live and delivers on settlement; it is not advertised because its free preview is the
+402 challenge rather than sampleable content, which is a standing marketing rule in
+scripts/badger/generate-h1-product-docs.py and it stands. What was wrong was writing the second as
+the first. This line read
 "⚠️ NOT DELIVERABLE (no signed-card commissions on demand)" and was wrong. The
 verdict came from probing /api/request-attestation with NO subject, while the
 door's own bazaar extension declares `subject` a REQUIRED input. With a subject

@@ -1,6 +1,6 @@
 # Evidence bundle mapped to an obligation
 
-`evidence-bundle` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`evidence-bundle` — derived from live endpoints on 2026-09-06T04:45:27Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (5592 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/evidence-bundle?obligation=article-50` — status **200**, **11497 bytes**, `sha256 3eb2487116aa9ceb…`
+`https://councilof.ai/api/evidence-bundle?obligation=article-50` — status **200**, **12694 bytes**, `sha256 92ce46c0d662de1f…`
 
 ```json
 {
@@ -28,7 +28,7 @@
     "existing_pack": "http
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

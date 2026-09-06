@@ -5,7 +5,7 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 402 · 4597 B |
+| free preview | HTTP 402 · 4592 B |
 | paid door | HTTP 402 (settle unlocks) |
 | deliverable | PAID DOOR — the free preview IS the 402 challenge; settle unlocks the artefact |
 
