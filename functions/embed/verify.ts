@@ -50,7 +50,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   return new Response(html, {
     headers: {
       "content-type": "text/html; charset=utf-8",
-      "cache-control": "public, max-age=300",
+      "cache-control": "public, s-maxage=86400, stale-while-revalidate=86400",
       // Embeddable in third-party pages by design — this is a public, read-only widget.
       "access-control-allow-origin": "*",
     },
