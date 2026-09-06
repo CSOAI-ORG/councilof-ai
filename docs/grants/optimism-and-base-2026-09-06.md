@@ -22,35 +22,24 @@ What that page lists, verbatim from its own status labels:
 ("OP rewarded in Retro Funding") alongside the Grants Council total. So the retro-funding door is
 not currently open under that name; the two open doors are Audit Grants and Governance Fund Missions.
 
-**What I could NOT verify, and every avenue I tried.** The brief states OP Atlas is discontinued on
-18 September. It is **not verified**, and the avenues open to this lane are now exhausted:
+**VERIFIED — Atlas is discontinued on 18 September 2026.** The site carries a banner, verbatim:
 
-| Avenue | Result |
-|---|---|
-| `atlas.optimism.io`, rendered in a browser | live and serving; **no sunset banner** anywhere in the page text |
-| `retrofunding.optimism.io` | **redirects to Atlas** |
-| `gov.optimism.io` search, *"Atlas sunset"* | **No results found** |
-| `gov.optimism.io` search, *"Atlas deprecated OR sunset OR retiring"* | **No results found** |
-| `gov.optimism.io/search.json`, *"Atlas discontinued"* | 3 topics, all Season 7/8 mandates — none a shutdown |
-| `optimism.io/blog` | **behind a Terms & Conditions acceptance gate** |
+> Atlas will be discontinued on September 18, 2026. Please save any information you need before then.
 
-The forum searches were run **in a browser**, so "no results" is a real answer and not a bot-block —
-the earlier `search.json` attempt could not distinguish those.
+**No successor is named anywhere on the page** — tested for *successor / instead / move to / migrate
+/ replaced by*: none present. So the retro-funding door closes on 18 Sep with no forwarding address
+on that site.
 
-**The last avenue is owner-gated, not unavailable.** Accepting terms on a third party's site is a
-consent action this lane does not take. One link, or one acceptance by the owner, closes this row.
-Filed as a single owner line.
+**How I got this wrong the first time, because it matters more than the answer.** I read the page
+with a text extractor that returns the `<main>` element. The banner sits **outside `<main>`**:
+`document.body.innerText` is 2358 characters, `main` is 2220 — the banner is in the 138-character
+difference. I then searched the forum, found nothing, hit a consent gate on the blog, and recorded
+the sunset as *unverified* — a conclusion built entirely on **not having looked at the whole page**.
 
-**Recorded as unverified rather than repeated as fact.** A funding document that asserts a
-programme is closing, on a date nobody here could confirm, is exactly the kind of claim that
-discredits the documents around it.
-
-**Adjacent Superchain doors the same page names** (each a separate partner programme, not Optimism
-Foundation): Soneium *For All*; Unichain *Infinite Hackathon*, *Open Call*, *Retro Grants*;
-World Foundation *Grants* and *RFPs*. Unichain **Retro Grants** — *"for developers, content
-creators and analysts with projects that show measurable impact"* — is the closest live analogue to
-retro funding, and "measurable impact" is the one phrase in this whole landscape that matches what
-this estate actually produces.
+The forum returning nothing was real. The blog gate was real. Neither mattered: the answer was on
+the first page I loaded, in the part I never read. **An extractor that silently narrows its scope is
+the same failure as a filter that silently ignores its qualifier** — it answers a question you did
+not ask and does not say so.
 
 ## Base Builder Rewards
 
