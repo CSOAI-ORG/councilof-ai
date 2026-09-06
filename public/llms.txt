@@ -91,7 +91,7 @@ The older https://councilof.ai/feed.xml is a hand-maintained item list kept for 
 - Verify free: https://councilof.ai/gspc-verify
 - Arena (slashless): https://councilof.ai/gspc-arena
 - Agent card: https://councilof.ai/.well-known/agent-card.json
-- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools after this release: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
+- MCP (flagship HTTP, remote URL for any host): POST https://councilof.ai/mcp — 11 tools: seven free readers plus four x402-metered evidence tools. `witness_hash` is quarantined on HTTP. No CSOAI account; package presence does not prove paid settlement or delivery.
 - Public root (https://councilof.ai/root.json): Merkle envelope. Quote live `sig_ed25519` — unsigned until keystone signs the compact preimage (kind, schema, as_of, merkle_root, card_count, did_intended). Leaves MAY carry GH-secret attestations — coverage harvest, not grades. Not MEASURED. Not a certificate. Free; not paywalled.
 - MCP (stdio, run locally, zero deps): npm `csoai-gspc-mcp@0.2.1` lists 12 tools (7 free + 5 x402). The live HTTP door lists 11 because `witness_hash` is quarantined there. Registry https://registry.npmjs.org/csoai-gspc-mcp
 - MCP registry: io.github.CSOAI-ORG/gspc (server 1.2.0 → https://councilof.ai/mcp)
