@@ -29,6 +29,11 @@ Jail is a measured containment floor on the behavioural half of the board — no
 Affect is MEASURED when the API says so; counsel-pending labels stay honest when present.
 Do not quote scores, n, leaders, or stamp tables from this file.
 
+## Agent-UI stream (agents)
+- Living GSPC as AG-UI events: GET https://councilof.ai/api/agui/gspc-state — SSE STATE_DELTA + TEXT_MESSAGE_CONTENT, derived from GET /api/gspc per request. Read-only presentation transport; it renders the board, it never awards a state. Empty cells stay visible; no score is invented to fill a frame.
+- Human view of the same board: https://councilof.ai/dashboard
+- This is AG-UI (agent to user). MCP is agent to tools; A2A is agent to agent (POST https://councilof.ai/api/a2a). Three different rails — do not read one as another, and do not treat this stream as an A2A extension.
+
 ## x402 discovery (agents)
 - Discovery: GET https://councilof.ai/.well-known/x402.json — mode live · Base eip155:8453 · USDC (amounts from challenge only; no invent price)
 - Catalog: GET https://councilof.ai/api/x402

@@ -1,6 +1,6 @@
 {
   "schema": "csoai.surface-catalog/1",
-  "as_of": "2026-08-26",
+  "as_of": "2026-09-06",
   "purpose": "Every live public surface, machine-readable — the single catalog of all sites, endpoints, datasets and rails. Strangers and lanes quote from here; /api/state holds the counts.",
   "doctrine": "measurement not certification; never certify/accredit/enforce/endorse/tokenize.",
   "sites": {
@@ -12,6 +12,8 @@
   },
   "api": [
     "/api/gspc (the living board \u2014 slot and measured counts are fields on totals, never typed here)", "/api/state (derived counts — the only quotable numbers)",
+    "/api/agui/gspc-state (AG-UI SSE stream of the living board \u2014 STATE_DELTA derived from /api/gspc per request; presentation transport only, it awards nothing)",
+    "/api/a2a (A2A v1.0 JSON-RPC \u2014 SendMessage answers with the live lid; the interface the agent card names)",
     "/api/cards", "/api/axis-register", "/api/detect (Art 50 C2PA verifier)",
     "/api/checkout (provider:meta = HTTP 402)", "/api/fulfill", "/api/interop-bulk (x402 bulk)",
     "/api/methodology (signed)"],
