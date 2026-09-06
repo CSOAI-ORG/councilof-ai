@@ -18,6 +18,9 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from mill_window import select_window  # noqa: E402
+
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
 API_MODEL = "https://huggingface.co/api/models/"
@@ -149,25 +152,23 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    slugs = [m["slug"] for m in lock["models"]]
+    slugs = [m["slug"] for m in lock["models"] if m.get("slug")]
     limit = int(os.environ.get("MILL_LIMIT", "8"))
-    # ROTATE. This was `slugs[:limit]`, which takes the SAME first `limit` models every
-    # run. On an hourly cron that is the whole fleet's budget spent on eight slugs for
-    # ever: the Inference Providers usage page shows Qwen3-8B on 1,980 requests and
-    # Qwen2.5-7B on 1,640, while hundreds of other models sit at 1. Breadth is the point
-    # of a fleet measurement -- re-measuring the same eight adds no coverage at all.
-    #
-    # Deterministic rotation by hour needs no cursor file and no state: nothing is
-    # committed to public/fleet/hf-inference (0 files on master), so there is nothing to
-    # dedup against. offset advances one window per hour and wraps, so 40 slugs at 8 per
-    # hour are fully covered every 5 hours and every model is measured equally often.
-    # MILL_OFFSET overrides it for a targeted re-run.
-    if os.environ.get("MILL_OFFSET"):
-        offset = int(os.environ["MILL_OFFSET"]) % max(len(slugs), 1)
-    else:
-        offset = (int(time.time()) // 3600 * limit) % max(len(slugs), 1)
-    window = [slugs[(offset + i) % len(slugs)] for i in range(min(limit, len(slugs)))]
-    print(f"fleet={len(slugs)} limit={limit} offset={offset} window={window}", flush=True)
+    shard = int(os.environ.get("MILL_SHARD", "0"))
+    shards = int(os.environ.get("MILL_SHARDS", "1"))
+    # ROTATE via mill_window.select_window. The old mill took a fixed prefix
+    # of the slug list every hour. MILL_OFFSET, if set, is an epoch-seconds
+    # override so a test or a targeted re-run can pin the hour; it is not a
+    # slug index.
+    epoch = float(os.environ.get("MILL_OFFSET") or time.time())
+    offset, window = select_window(slugs, limit, epoch, shard=shard, shards=shards)
+    print(
+        f"fleet={len(slugs)} limit={limit} shard={shard}/{shards} offset={offset} window={window}",
+        flush=True,
+    )
+    if not window:
+        print("MILL_EMPTY no slugs in window — a run that measures nothing is not success", flush=True)
+        return 1
     rows = []
     for slug in window:
         rec = {
@@ -230,9 +231,25 @@ def main() -> int:
         "not_a_certification": True,
         "rows": rows,
     }
-    p = out_dir / f"hf_inf_{int(time.time())}.json"
+    p = out_dir / f"hf_inf_{int(time.time())}_s{shard}.json"
     p.write_text(json.dumps(blob, indent=2) + "\n")
-    print("wrote", p)
+    n_ok = sum(1 for r in rows if r.get("status") == "practice-mill")
+    n_fail = sum(1 for r in rows if r.get("status") == "UNCHECKABLE")
+    cov = {
+        "kind": "csoai.hf-inference-mill-coverage/0.1",
+        "writes_board": False,
+        "shard": shard,
+        "shards": shards,
+        "offset": offset,
+        "n_window": len(window),
+        "n_ok": n_ok,
+        "n_uncheckable": n_fail,
+        "window": window,
+    }
+    (out_dir / f"coverage_s{shard}.json").write_text(json.dumps(cov, indent=2) + "\n")
+    print("wrote", p, "n_ok", n_ok, "n_uncheckable", n_fail, flush=True)
+    if n_ok == 0 and rows:
+        print("MILL_ZERO_OK every slug UNCHECKABLE — visible, not a silent green mill", flush=True)
     return 0
 
 
