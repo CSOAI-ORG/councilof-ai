@@ -186,6 +186,10 @@ class Fixture:
                 "transport_ok": transport_ok,
                 "transport_errors_excluded": 0,
                 "parse_errors_excluded": parse_errors,
+                "truncated_by_budget": sum(
+                    1 for r in self.rows
+                    if r["parsed_label"] is None and r.get("done_reason") == "length"
+                ),
                 "graded_n": n,
                 "correct": correct,
             },
@@ -445,6 +449,8 @@ class IntakeTests(unittest.TestCase):
         self.assertEqual(self.fixture.body["accuracy"], 1)
         self.assertEqual(self.fixture.run["counts"]["transport_ok"], 2)
         self.assertEqual(self.fixture.run["counts"]["parse_errors_excluded"], 1)
+        # and it is attributed to the BUDGET, not to the model refusing to answer
+        self.assertEqual(self.fixture.run["counts"]["truncated_by_budget"], 1)
 
     def test_counting_an_unparsed_item_as_wrong_is_rejected(self) -> None:
         """The regression. n=2 accuracy=0.5 is what the old code produced here."""

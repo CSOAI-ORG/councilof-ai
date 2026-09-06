@@ -1123,6 +1123,7 @@ def run_once(
     transport_errors = 0
     correct = 0
     parse_errors = 0
+    truncated = 0
     halted_code: str | None = None
     run_started = utc_now()
     health.update(
@@ -1183,6 +1184,15 @@ def run_once(
                         else False
                     )
                     parse_errors += int(parsed_label is None)
+                    # A response the token budget cut off is INSTRUMENT-limited. It does
+                    # not tell us the model would not answer -- it tells us we stopped it
+                    # before it could. Measured 2026-09-06 on Qwen3-0.6B, same prompt:
+                    # num_predict 64 -> length, 256 -> length, 512 -> stop, and the answer
+                    # it finally gave was "COMPLY | REFUSE". Truncation had been hiding an
+                    # instruction-echo behind what looked like silence, and the two are
+                    # different findings about the model.
+                    if parsed_label is None and result.done_reason == "length":
+                        truncated += 1
                 else:
                     grade = grade_keyword_match(raw_output, item.required_keywords)
                 correct += int(grade)
@@ -1269,6 +1279,8 @@ def run_once(
     graded_n = transport_ok - parse_errors
     if parse_errors:
         reason = f"{reason}; {parse_errors} of {transport_ok} responses carried no parseable label"
+        if truncated:
+            reason = f"{reason} ({truncated} cut off by the token budget, so those are instrument-limited, not model silence)"
 
     card = stage_unsigned_card(
         config=config,
@@ -1321,6 +1333,7 @@ def run_once(
             "transport_ok": transport_ok,
             "transport_errors_excluded": transport_errors,
             "parse_errors_excluded": parse_errors,
+            "truncated_by_budget": truncated,
             "graded_n": graded_n,
             "correct": correct,
         },

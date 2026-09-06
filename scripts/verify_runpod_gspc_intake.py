@@ -401,6 +401,7 @@ class ItemCounts:
     transport_ok: int
     transport_errors: int
     parse_errors: int
+    truncated: int
     correct: int
 
 
@@ -462,6 +463,7 @@ def _parse_items(
 
     correct = 0
     parse_errors = 0
+    truncated = 0
     seen_items: set[str] = set()
     for index, line in enumerate(lines, 1):
         if not line.endswith(b"\n") or line == b"\n":
@@ -543,6 +545,8 @@ def _parse_items(
             if row.get("parsed_label") != parsed_label:
                 raise IntakeError("GRADE_MISMATCH", "parsed label does not recompute")
             parse_errors += int(parsed_label is None)
+            if parsed_label is None and row.get("done_reason") == "length":
+                truncated += 1
             keywords = row.get("required_keywords")
             if keywords != []:
                 raise IntakeError(
@@ -582,6 +586,7 @@ def _parse_items(
         transport_ok=len(lines),
         transport_errors=0,
         parse_errors=parse_errors,
+        truncated=truncated,
         correct=correct,
     )
 
@@ -710,6 +715,7 @@ def _validate_semantics(
         "transport_ok": counts.transport_ok,
         "transport_errors_excluded": counts.transport_errors,
         "parse_errors_excluded": counts.parse_errors,
+        "truncated_by_budget": counts.truncated,
         "graded_n": counts.transport_ok - counts.parse_errors,
         "correct": counts.correct,
     }
