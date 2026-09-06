@@ -127,8 +127,12 @@ class Fixture:
         (self.source / "items.jsonl").write_bytes(items_raw)
         items_sha = intake.sha256_bytes(items_raw)
         correct = sum(row["grade"] is True for row in self.rows)
-        n = len(self.rows)
-        accuracy = intake._expected_accuracy(correct, n)
+        transport_ok = len(self.rows)
+        # An item whose response carried no parseable label was not ANSWERED, so it is
+        # not in the denominator. It is not a wrong answer either.
+        parse_errors = sum(row["parsed_label"] is None for row in self.rows)
+        n = transport_ok - parse_errors
+        accuracy = intake._expected_accuracy(correct, n) if n else None
         self.body: dict[str, Any] = {
             "kind": "gspc.measurement-card",
             "axis": "governance",
@@ -177,11 +181,12 @@ class Fixture:
             "items_sha256": items_sha,
             "card_sha256": intake.sha256_bytes(card_raw.rstrip(b"\n")),
             "counts": {
-                "bank_items": n,
-                "attempted": n,
-                "transport_ok": n,
+                "bank_items": transport_ok,
+                "attempted": transport_ok,
+                "transport_ok": transport_ok,
                 "transport_errors_excluded": 0,
-                "parse_errors_counted_wrong": 0,
+                "parse_errors_excluded": parse_errors,
+                "graded_n": n,
                 "correct": correct,
             },
             "complete": True,
@@ -215,6 +220,24 @@ class IntakeTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.temporary.cleanup()
+
+    def add_unparsed_row(self, raw: str = "Okay, the user wants exactly one token") -> None:
+        """A second item whose response carries no label the bank uses.
+
+        This is the shape that put 0.0000 on the board: a reasoning model spends the
+        token budget on its preamble, the response parses to nothing, and the item was
+        still counted in n as though the model had answered and answered wrongly.
+        """
+        row = dict(self.fixture.rows[0])
+        row["item_id"] = "item-000002-deadbeefcafe"
+        row["sequence"] = 2
+        row["raw_output"] = raw
+        row["raw_output_sha256"] = intake.sha256_bytes(raw.encode("utf-8"))
+        row["done_reason"] = "length"
+        row["parsed_label"] = None
+        row["grade"] = False
+        self.fixture.rows.append(row)
+        self.fixture.rebuild()
 
     def assert_rejects(self, code: str) -> None:
         with self.assertRaises(intake.IntakeError) as caught:
@@ -410,6 +433,42 @@ class IntakeTests(unittest.TestCase):
         self.fixture.rows[0]["instrument_sha256"] = "f" * 64
         self.fixture.rebuild()
         self.assert_rejects("ROW_PIN_MISMATCH")
+
+    def test_unparsed_item_leaves_the_denominator(self) -> None:
+        """Two items, one answered, one not: n is 1, and accuracy is 1.0 not 0.5."""
+        self.add_unparsed_row()
+        destination, verification = intake.verify_to_quarantine(
+            self.fixture.source, self.fixture.allowlist, self.fixture.quarantine
+        )
+        self.assertEqual(verification["state"], "VERIFIED_QUARANTINE")
+        self.assertEqual(self.fixture.body["n"], 1)
+        self.assertEqual(self.fixture.body["accuracy"], 1)
+        self.assertEqual(self.fixture.run["counts"]["transport_ok"], 2)
+        self.assertEqual(self.fixture.run["counts"]["parse_errors_excluded"], 1)
+
+    def test_counting_an_unparsed_item_as_wrong_is_rejected(self) -> None:
+        """The regression. n=2 accuracy=0.5 is what the old code produced here."""
+        self.add_unparsed_row()
+        self.fixture.body["n"] = 2
+        self.fixture.body["accuracy"] = 0.5
+        self.fixture.run["counts"]["graded_n"] = 2
+        self.fixture.run["counts"]["parse_errors_excluded"] = 0
+        self.fixture.write_card()
+        self.fixture.write_run()
+        self.assert_rejects("COUNT_MISMATCH")
+
+    def test_card_n_that_includes_an_unparsed_item_is_rejected(self) -> None:
+        """Counts honest, card body inflated: the card's own n must recompute too.
+
+        The previous test trips the counts-dict comparison first, so this one keeps
+        run.json truthful and lies only in the signed-shaped body -- which is the byte
+        a reader would actually quote.
+        """
+        self.add_unparsed_row()
+        self.fixture.body["n"] = 2
+        self.fixture.body["accuracy"] = 0.5
+        self.fixture.write_card()
+        self.assert_rejects("SCORE_MISMATCH")
 
     def test_relative_source_path_is_rejected(self) -> None:
         with self.assertRaises(intake.IntakeError) as caught:
