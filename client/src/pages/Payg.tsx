@@ -88,7 +88,7 @@ export default function Payg() {
       </div>
 
       <p className="text-center text-sm text-muted-foreground mt-10">
-        Prefer a fixed monthly plan for humans? See the <a href="/pricing" className="underline">Council rail →</a>
+        Human booking is not live. Verification stays free; the only paid rail is pay-as-you-go x402 at the door.
       </p>
     </div>
   );
