@@ -15,111 +15,6 @@ export const V1_INDEX = {
   "not_a_certificate": true,
   "publishers": [
     {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/lmarena.json",
-      "card_payload_bytes": 1161,
-      "id": "lmarena",
-      "n": {
-        "fail": 27,
-        "pass": 6,
-        "predicates": 35,
-        "resolved": 33,
-        "unmeasured": 2
-      },
-      "publisher": "LMArena",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/vals-ai.json",
-      "card_payload_bytes": 1142,
-      "id": "vals-ai",
-      "n": {
-        "fail": 19,
-        "pass": 14,
-        "predicates": 35,
-        "resolved": 33,
-        "unmeasured": 2
-      },
-      "publisher": "Vals AI",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/helm-crfm.json",
-      "card_payload_bytes": 1181,
-      "id": "helm-crfm",
-      "n": {
-        "fail": 0,
-        "pass": 4,
-        "predicates": 35,
-        "resolved": 4,
-        "unmeasured": 31
-      },
-      "publisher": "HELM",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/epoch-ai.json",
-      "card_payload_bytes": 1138,
-      "id": "epoch-ai",
-      "n": {
-        "fail": 28,
-        "pass": 7,
-        "predicates": 35,
-        "resolved": 35,
-        "unmeasured": 0
-      },
-      "publisher": "Epoch AI",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/artificial-analysis.json",
-      "card_payload_bytes": 1179,
-      "id": "artificial-analysis",
-      "n": {
-        "fail": 27,
-        "pass": 6,
-        "predicates": 35,
-        "resolved": 33,
-        "unmeasured": 2
-      },
-      "publisher": "Artificial Analysis",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/scale-seal.json",
-      "card_payload_bytes": 1148,
-      "id": "scale-seal",
-      "n": {
-        "fail": 25,
-        "pass": 5,
-        "predicates": 35,
-        "resolved": 30,
-        "unmeasured": 5
-      },
-      "publisher": "Scale SEAL",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
-      "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/uk-aisi-inspect.json",
-      "card_payload_bytes": 1171,
-      "id": "uk-aisi-inspect",
-      "n": {
-        "fail": 24,
-        "pass": 10,
-        "predicates": 35,
-        "resolved": 34,
-        "unmeasured": 1
-      },
-      "publisher": "UK AISI (Inspect)",
-      "self_assessed": false,
-      "status": "STAGED"
-    },
-    {
       "card": "https://councilof.ai/interop/benchmark-quality/2026-09-06/council-of-ai.json",
       "card_payload_bytes": 1180,
       "id": "council-of-ai",
@@ -147,12 +42,12 @@ export const V1_INDEX = {
   "status": "STAGED",
   "surface": "benchmark-quality.v1",
   "totals": {
-    "cells": 280,
-    "fail": 166,
+    "cells": 35,
+    "fail": 16,
     "note": "Counts, not a score. Do not rank publishers by them.",
-    "pass": 69,
+    "pass": 17,
     "predicates_per_publisher": 35,
-    "publishers": 8,
-    "unmeasured": 45
+    "publishers": 1,
+    "unmeasured": 2
   }
 } as const;

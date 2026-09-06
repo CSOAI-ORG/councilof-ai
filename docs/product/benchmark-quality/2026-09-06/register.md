@@ -18,29 +18,22 @@ The producer makes no network call. Its whole input is the bytes under `scripts/
 
 | publisher | pass | fail | unmeasured | resolved | results surface | self-assessed |
 |---|---|---|---|---|---|---|
-| LMArena | 6 | 27 | 2 | 33 | server-rendered | no |
-| Vals AI | 14 | 19 | 2 | 33 | server-rendered | no |
-| HELM | 4 | 0 | 31 | 4 | client-rendered shell | no |
-| Epoch AI | 7 | 28 | 0 | 35 | server-rendered | no |
-| Artificial Analysis | 6 | 27 | 2 | 33 | server-rendered | no |
-| Scale SEAL | 5 | 25 | 5 | 30 | server-rendered | no |
-| UK AISI (Inspect) | 10 | 24 | 1 | 34 | server-rendered | no |
 | Council of AI | 17 | 16 | 2 | 33 | server-rendered | YES |
 
-280 cells: 69 PASS, 166 FAIL, 45 UNMEASURED. Counts, not a score. Do not rank publishers by them.
+35 cells: 17 PASS, 16 FAIL, 2 UNMEASURED. Counts, not a score. Do not rank publishers by them.
 
 
 ## method transparency
 
 _What the publisher says about how the numbers are produced._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `method_page_linked` | PASS | PASS | UNMEAS | FAIL | PASS | FAIL | FAIL | PASS |
-| `scorer_named_on_board` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
-| `structured_data_on_board` | FAIL | FAIL | UNMEAS | FAIL | PASS | PASS | FAIL | PASS |
-| `changelog_linked` | PASS | PASS | UNMEAS | FAIL | FAIL | PASS | PASS | PASS |
-| `limitations_stated` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `method_page_linked` | PASS |
+| `scorer_named_on_board` | FAIL |
+| `structured_data_on_board` | PASS |
+| `changelog_linked` | PASS |
+| `limitations_stated` | FAIL |
 
 - **`method_page_linked`** — Does the results surface link a page describing how the numbers are produced? Read from: board_href. A number whose method is not one click away cannot be argued with.
 - **`scorer_named_on_board`** — Does the results surface name the mechanism that produces a score? Read from: board. Elo, a rubric, a unit test and a model judge are four different instruments; a reader is entitled to know which one made the number.
@@ -52,13 +45,13 @@ _What the publisher says about how the numbers are produced._
 
 _Whether the items behind the numbers can be obtained and under what licence._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `item_data_channel_linked` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | PASS | FAIL |
-| `open_dataset_in_public_index` | PASS | PASS | PASS | PASS | PASS | UNMEAS | PASS | PASS |
-| `dataset_licence_machine_readable` | PASS | PASS | PASS | PASS | PASS | UNMEAS | PASS | PASS |
-| `item_count_published_on_board` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `held_out_set_declared` | FAIL | PASS | UNMEAS | FAIL | FAIL | PASS | FAIL | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `item_data_channel_linked` | FAIL |
+| `open_dataset_in_public_index` | PASS |
+| `dataset_licence_machine_readable` | PASS |
+| `item_count_published_on_board` | PASS |
+| `held_out_set_declared` | FAIL |
 
 - **`item_data_channel_linked`** — Does the results surface link a channel from which the underlying items or results can be obtained? Read from: board_href. Without the items, every number on the page is a claim about work nobody else can inspect.
 - **`open_dataset_in_public_index`** — Does the publisher appear in a public open-data index with at least one dataset or repository? Read from: machine. Asked of the index rather than of a URL we invented, so an empty answer is about the publisher and not about our guess.
@@ -70,13 +63,13 @@ _Whether the items behind the numbers can be obtained and under what licence._
 
 _Whether a stranger has code, a command and data enough to re-run it._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `code_repository_linked` | FAIL | PASS | UNMEAS | PASS | FAIL | FAIL | PASS | PASS |
-| `code_licence_machine_readable` | UNMEAS | UNMEAS | PASS | PASS | UNMEAS | UNMEAS | PASS | UNMEAS |
-| `run_command_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | PASS | FAIL |
-| `environment_pinning_stated` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | PASS | FAIL |
-| `stranger_recompute_path_complete` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | PASS | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `code_repository_linked` | PASS |
+| `code_licence_machine_readable` | UNMEAS |
+| `run_command_published` | FAIL |
+| `environment_pinning_stated` | FAIL |
+| `stranger_recompute_path_complete` | FAIL |
 
 - **`code_repository_linked`** — Does the results surface link source code? Read from: board_href. The first thing a reproducer needs is the code that made the number.
 - **`code_licence_machine_readable`** — Does an indexed repository or dataset for this publisher carry a machine-readable SPDX licence? Read from: machine. Unlicensed code is code a third party may read and may not run.
@@ -88,13 +81,13 @@ _Whether a stranger has code, a command and data enough to re-run it._
 
 _Whether uncertainty, sample size and separation are published beside scores._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `uncertainty_shown_beside_scores` | PASS | PASS | UNMEAS | FAIL | FAIL | PASS | FAIL | FAIL |
-| `sample_size_shown_beside_scores` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
-| `separation_rule_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
-| `minimum_n_rule_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
-| `repeats_or_variance_disclosed` | FAIL | PASS | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `uncertainty_shown_beside_scores` | FAIL |
+| `sample_size_shown_beside_scores` | FAIL |
+| `separation_rule_published` | FAIL |
+| `minimum_n_rule_published` | FAIL |
+| `repeats_or_variance_disclosed` | FAIL |
 
 - **`uncertainty_shown_beside_scores`** — Is an uncertainty quantity shown on the results surface? Read from: board. A ranking of point estimates is a ranking of noise until the intervals are drawn.
 - **`sample_size_shown_beside_scores`** — Is the number of observations behind a figure shown on the results surface? Read from: board. Two scores with the same value and different n are not comparable, and the reader cannot tell without the n.
@@ -106,13 +99,13 @@ _Whether uncertainty, sample size and separation are published beside scores._
 
 _Freshness, machine channels, crawl policy, and whether outages are visible._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `as_of_date_on_board` | FAIL | FAIL | UNMEAS | PASS | FAIL | FAIL | FAIL | FAIL |
-| `as_of_within_30_days` | UNMEAS | UNMEAS | UNMEAS | PASS | UNMEAS | UNMEAS | UNMEAS | UNMEAS |
-| `machine_readable_channel_linked` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `robots_permits_results_surface` | PASS | PASS | PASS | PASS | PASS | UNMEAS | PASS | PASS |
-| `status_or_uptime_page_linked` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `as_of_date_on_board` | FAIL |
+| `as_of_within_30_days` | UNMEAS |
+| `machine_readable_channel_linked` | PASS |
+| `robots_permits_results_surface` | PASS |
+| `status_or_uptime_page_linked` | FAIL |
 
 - **`as_of_date_on_board`** — Does the results surface carry a date saying when the numbers were last refreshed? Read from: board. A leaderboard with no as-of date cannot be stale, because it can never be shown to be.
 - **`as_of_within_30_days`** — Is that date within 30 days of the register run date? Read from: board. Model releases move weekly; a board more than a month old is describing a different field.
@@ -124,13 +117,13 @@ _Freshness, machine channels, crawl policy, and whether outages are visible._
 
 _Whether a result can be tied to its publisher by something other than trust._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `results_carry_a_signature` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `verification_key_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `transparency_log_or_witness` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `content_hash_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `persistent_identifier_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
+| predicate | Council of AI |
+|---|---|
+| `results_carry_a_signature` | PASS |
+| `verification_key_published` | PASS |
+| `transparency_log_or_witness` | PASS |
+| `content_hash_published` | PASS |
+| `persistent_identifier_published` | PASS |
 
 - **`results_carry_a_signature`** — Is a cryptographic signature over the results present or linked on the results surface? Read from: board_raw. Unsigned, a leaderboard row cannot be distinguished from a screenshot of one, and neither can be quoted back to its publisher.
 - **`verification_key_published`** — Is a key or key document published against which such a signature could be checked? Read from: board_raw. A signature with no discoverable key is decoration.
@@ -142,13 +135,13 @@ _Whether a result can be tied to its publisher by something other than trust._
 
 _Corrections, funding, and disclosed commercial interest in the ranked parties._
 
-| predicate | LMArena | Vals AI | HELM | Epoch AI | Artificial Analysis | Scale SEAL | UK AISI (Inspect) | Council of AI |
-|---|---|---|---|---|---|---|---|---|
-| `corrections_route_published` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `corrections_ledger_public` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | PASS |
-| `funding_or_ownership_disclosed` | FAIL | FAIL | UNMEAS | FAIL | FAIL | PASS | FAIL | PASS |
-| `commercial_offering_disclosed` | FAIL | FAIL | UNMEAS | FAIL | PASS | FAIL | FAIL | FAIL |
-| `results_licence_stated_on_board` | FAIL | FAIL | UNMEAS | FAIL | FAIL | FAIL | FAIL | FAIL |
+| predicate | Council of AI |
+|---|---|
+| `corrections_route_published` | PASS |
+| `corrections_ledger_public` | PASS |
+| `funding_or_ownership_disclosed` | PASS |
+| `commercial_offering_disclosed` | FAIL |
+| `results_licence_stated_on_board` | FAIL |
 
 - **`corrections_route_published`** — Is there a stated route by which a reader can report an error in a published figure? Read from: board_raw. An instrument with no error-reporting route treats its own output as final, which no instrument's output is.
 - **`corrections_ledger_public`** — Is there a public record of corrections that were actually made — not merely a route to request one? Read from: board_raw. A route where reports go in and nothing comes out in public is unfalsifiable; a ledger is the part that costs something.
@@ -158,67 +151,6 @@ _Corrections, funding, and disclosed commercial interest in the ranked parties._
 
 ## Every UNMEASURED, with its reason
 
-
-### LMArena — 2 UNMEASURED
-
-- `code_licence_machine_readable` — The index queried for this publisher was the Hugging Face dataset index, which holds no source-repository records. A code licence is not answerable from the artifact fetched, and a fourth fetch would break the budget every publisher shares.
-- `as_of_within_30_days` — as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.
-
-### Vals AI — 2 UNMEASURED
-
-- `code_licence_machine_readable` — The index queried for this publisher was the Hugging Face dataset index, which holds no source-repository records. A code licence is not answerable from the artifact fetched, and a fourth fetch would break the budget every publisher shares.
-- `as_of_within_30_days` — as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.
-
-### HELM — 31 UNMEASURED
-
-- `method_page_linked` — The results surface returned 45 characters of visible text after script and style removal (1295 bytes on the wire) — a client-rendered shell. The bytes that would answer this predicate are not in the response. Rendering it would require executing the publisher's JavaScript, which this register does not do.
-- `scorer_named_on_board` — as above.
-- `structured_data_on_board` — as above.
-- `changelog_linked` — as above.
-- `limitations_stated` — as above.
-- `item_data_channel_linked` — as above.
-- `item_count_published_on_board` — as above.
-- `held_out_set_declared` — as above.
-- `code_repository_linked` — as above.
-- `run_command_published` — as above.
-- `environment_pinning_stated` — as above.
-- `stranger_recompute_path_complete` — as above.
-- `uncertainty_shown_beside_scores` — as above.
-- `sample_size_shown_beside_scores` — as above.
-- `separation_rule_published` — as above.
-- `minimum_n_rule_published` — as above.
-- `repeats_or_variance_disclosed` — as above.
-- `as_of_date_on_board` — as above.
-- `as_of_within_30_days` — as above.
-- `machine_readable_channel_linked` — as above.
-- `status_or_uptime_page_linked` — as above.
-- `results_carry_a_signature` — as above.
-- `verification_key_published` — as above.
-- `transparency_log_or_witness` — as above.
-- `content_hash_published` — as above.
-- `persistent_identifier_published` — as above.
-- `corrections_route_published` — as above.
-- `corrections_ledger_public` — as above.
-- `funding_or_ownership_disclosed` — as above.
-- `commercial_offering_disclosed` — as above.
-- `results_licence_stated_on_board` — as above.
-
-### Artificial Analysis — 2 UNMEASURED
-
-- `code_licence_machine_readable` — The index queried for this publisher was the Hugging Face dataset index, which holds no source-repository records. A code licence is not answerable from the artifact fetched, and a fourth fetch would break the budget every publisher shares.
-- `as_of_within_30_days` — as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.
-
-### Scale SEAL — 5 UNMEASURED
-
-- `open_dataset_in_public_index` — The index query returned no record attributable to this publisher. A zero from one search term establishes something about the term, not about the publisher — so this is UNMEASURED and never FAIL. Query: https://huggingface.co/api/datasets?search=scale-seal&full=true&limit=50. If the publisher's handle in this index differs, tell us and the record is recomputed against it.
-- `dataset_licence_machine_readable` — No attributable record to read a licence from. Query: https://huggingface.co/api/datasets?search=scale-seal&full=true&limit=50
-- `code_licence_machine_readable` — The index queried for this publisher was the Hugging Face dataset index, which holds no source-repository records. A code licence is not answerable from the artifact fetched, and a fourth fetch would break the budget every publisher shares.
-- `as_of_within_30_days` — as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.
-- `robots_permits_results_surface` — The results surface resolved to labs.scale.com, a different host from scale.com where robots.txt was fetched. Under RFC 9309 a robots.txt governs only its own authority, so the file we hold does not answer this question. Fetching the second host would exceed the three-artifact budget every publisher is held to.
-
-### UK AISI (Inspect) — 1 UNMEASURED
-
-- `as_of_within_30_days` — as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.
 
 ### Council of AI — 2 UNMEASURED
 

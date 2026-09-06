@@ -428,10 +428,10 @@ def tally(res: dict) -> dict:
             "unmeasured": v.count("UNMEASURED"), "resolved": v.count("PASS") + v.count("FAIL")}
 
 
-def build() -> dict:
+def build(self_only: bool = False) -> dict:
     by_id = {p["id"]: p for p in P}
     rows = {}
-    for pid in PUBLISHERS:
+    for pid in (SELF_ASSESSED if self_only else PUBLISHERS):
         res = evaluate(pid)
         a = Artifacts(pid)
         t = tally(res)
@@ -721,6 +721,7 @@ def outputs(reg: dict) -> dict[pathlib.Path, str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("--self-only", action="store_true", help="publish OUR row alone (self-assessed publisher); no third-party rows")
     ap.add_argument("--check", action="store_true", help="recompute and exit 1 on any drift")
     ap.add_argument("--explain", metavar="PUB:PRED", help="print one cell, its bytes and its verdict")
     a = ap.parse_args()
@@ -756,7 +757,7 @@ def main() -> int:
         print(f"why it is here: {p['why']}")
         return 0
 
-    reg = build()
+    reg = build(self_only=a.self_only)
     files = outputs(reg)
     drift = []
     for path, content in files.items():
