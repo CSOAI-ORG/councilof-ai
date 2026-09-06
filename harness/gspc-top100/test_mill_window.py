@@ -109,7 +109,7 @@ def test_millable_skips_already_tried() -> None:
     models = [
         {"slug": "a/unmeasured", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
         {"slug": "b/practiced", "pipeline_tag": "text-generation", "status": "practice-mill"},
-        {"slug": "c/uncheckable", "pipeline_tag": "text-generation", "status": "UNCHECKABLE"},
+        {"slug": "c/uncheckable", "pipeline_tag": "automatic-speech-recognition", "status": "UNCHECKABLE", "reason": "HTTP 400 not served"},
         {"slug": "d/awq", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
         {"slug": "Qwen/Qwen2.5-7B-Instruct-AWQ", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
     ]
@@ -147,7 +147,8 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
     ]
     got = millable_slugs(models)
     assert "nomic-ai/nomic-embed-text-v1.5" in got
-    assert "Qwen/Qwen3-8B" not in got
+    # Bare-slug chat 200s on the router; retry chat-tag UNCHECKABLE.
+    assert "Qwen/Qwen3-8B" in got
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
 
 

@@ -173,8 +173,13 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if st in ALREADY_TRIED:
             continue
         if st == "UNCHECKABLE":
+            if _unserved_weight_pack(slug):
+                continue
             reason = (m.get("reason") or "").lower()
-            if "hf-inference" not in reason:
+            tag = m.get("pipeline_tag") or ""
+            # hf-inference pin, or chat tag whose mill never tried the bare slug
+            # (Qwen/Qwen3-8B 200 on /v1/chat/completions without :provider).
+            if "hf-inference" not in reason and tag not in CHAT_TAGS:
                 continue
         out.append(slug)
     return out

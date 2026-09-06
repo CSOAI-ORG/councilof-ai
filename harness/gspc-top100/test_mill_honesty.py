@@ -43,6 +43,7 @@ def test_mill_script_does_not_slice_prefix() -> None:
     assert "millable_slugs" in src
     assert "provider_order" in src
     assert "live_providers" in src
+    assert "router_names = [slug]" in src or "router_names = [slug] +" in src
     sys.path.insert(0, str(HERE.parents[1] / "scripts"))
     from mill_window import DEFAULT_PROVIDERS  # noqa: E402
 
