@@ -80,6 +80,18 @@ export const LEDGER = {
       status: "RECORDED — the claim was a measurement error (KV eventual consistency read at 6s); no settlement was lost",
     },
     {
+      id: "C-2026-0906-01",
+      date: "2026-09-06",
+      what_was_wrong:
+        "CSOAI-ORG/proofof-ai-mcp shipped detect_deepfake_image with a substring-blacklist path check ('/etc/', '/var/', '..'). A blacklist is not a boundary: any path outside the list, and any symlink into a listed directory, was readable — a Local File Inclusion. A security researcher reported it on 2026-06-12 (issue #8) and the report sat unanswered for 86 days.",
+      how_caught:
+        "The 2026-09-06 HF + GitHub audit listed every open issue across the org older than 7 days; the only security report was this one, with zero comments.",
+      fix:
+        "PR #20 on that repository: an allowlist under PROOFOF_ALLOWED_DIR (default ./uploads), realpath-resolved, regular files only, symlink escapes rejected; verified against /etc/hosts, ../ traversal, an escaping symlink and ~/.ssh/id_rsa. The reporter was answered on the issue.",
+      status:
+        "CORRECTED IN SOURCE. Whether any deployment of that server was exploited is unknown; it keeps no access log. The 86-day silence is the defect this entry records: security reports across the org are now part of the outward-claims guard's issue sweep.",
+    },
+    {
       id: "C-2026-0905-01",
       date: "2026-09-05",
       what_was_wrong:
