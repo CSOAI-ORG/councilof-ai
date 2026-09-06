@@ -174,6 +174,48 @@ def test_stamp_zero_provider_does_not_invent_n_measured() -> None:
     assert out["n_unmeasured_with_live_provider"] == 1
 
 
+def test_restore_original_membership_drops_injected_slugs() -> None:
+    """1030 on a substituted lock is not the HF2200 thousands bar.
+    Restore keeps the original 2200 slugs in order and overlays
+    practice-mill only for those slugs."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import restore_original_membership  # noqa: E402
+
+    original = {
+        "n_measured": 0,
+        "n_locked": 4,
+        "n_target": 4,
+        "writes_board": False,
+        "enters_board_means": False,
+        "models": [
+            {"slug": "orig/a", "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+            {"slug": "orig/b", "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+            {"slug": "orig/c", "status": "UNMEASURED", "pipeline_tag": "feature-extraction"},
+            {"slug": "orig/d", "status": "UNMEASURED", "pipeline_tag": "text-generation"},
+        ],
+    }
+    overlay_sub = {
+        "n_measured": 3,
+        "models": [
+            {"slug": "orig/a", "status": "practice-mill", "n": 1},
+            {"slug": "injected/warm", "status": "practice-mill", "n": 1},
+            {"slug": "orig/b", "status": "UNCHECKABLE", "reason": "HTTP 400"},
+            {"slug": "orig/a", "status": "UNCHECKABLE", "reason": "should not downgrade"},
+        ],
+    }
+    out = restore_original_membership(original, [overlay_sub])
+    slugs = [m["slug"] for m in out["models"]]
+    assert slugs == ["orig/a", "orig/b", "orig/c", "orig/d"]
+    assert "injected/warm" not in slugs
+    assert out["n_locked"] == 4
+    assert out["n_measured"] == 1
+    assert out["models"][0]["status"] == "practice-mill"
+    assert out["models"][1]["status"] == "UNCHECKABLE"
+    assert out["models"][2]["status"] == "UNMEASURED"
+    assert out["membership"] == "hf2200-download-ranked"
+
+
 def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     """A green land-lock that patches the git lock (all UNMEASURED) and
     uploads it would wipe hub-queue n_measured. The workflow must fetch
@@ -183,6 +225,9 @@ def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     assert "HUB_LOCK_MISS" in yml
     assert "HUB_LOCK_NOT_PUBLISHED" in yml
     assert "JSONDecoder" in yml or "raw_decode" in yml
+    assert "HF2200.original.json" in yml
+    assert "MEMBERSHIP_DRIFT" in yml
+    assert "restore_original_membership" in (ROOT / "scripts" / "mill_lock_update.py").read_text()
 
 
 if __name__ == "__main__":
@@ -194,5 +239,6 @@ if __name__ == "__main__":
     test_apply_mill_does_not_persist_429_as_uncheckable()
     test_rebuild_keeps_practice_mill_and_prefers_chat()
     test_stamp_zero_provider_does_not_invent_n_measured()
+    test_restore_original_membership_drops_injected_slugs()
     test_workflow_lands_from_hub_queue_not_git_zero()
-    print("test_fleet_locks: 9 passed")
+    print("test_fleet_locks: 10 passed")
