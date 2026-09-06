@@ -96,13 +96,12 @@
     "rows_dry": "https://huggingface.co/datasets/csoai/x402-settlement-census/resolve/main/rounds/2026-09-06/dry.jsonl",
     "rows_in_repo": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/x402-census/rounds/2026-09-06/settle.jsonl",
     "analysis": "https://github.com/CSOAI-ORG/councilof-ai/blob/master/docs/product/x402-census/rounds/2026-09-06/analysis.md",
-    "leaves": "https://councilof.ai/interop/x402-census/leaves/2026-09-06/",
     "deltas": [],
     "root": "https://councilof.ai/root.json",
     "witness_pointer": "https://councilof.ai/interop/root-witness-pointer.json"
   },
   "leaves": {
     "staged": null,
-    "note": "one unsigned public.notice leaf per paid row (DELIVERED/REFUSED/MISMATCH), staged for the public-root writer; a leaf is in the root only once root.json lists its sha256"
+    "note": "none staged for this round: its 316 purchases are already published as the 104 cards under /interop/x402-census-cards/, and a second leaf set for the same event would fork one corpus into two. No leaves URL is published because there are no leaves to serve."
   }
 }

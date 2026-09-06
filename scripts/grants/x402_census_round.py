@@ -222,20 +222,29 @@ def round_manifest(round_id: str, settle_rows: list[dict], dry_rows: list[dict],
 def public_round(manifest: OrderedDict, deltas_touching: list[str], leaves_n: int | None) -> OrderedDict:
     rid = manifest["round_id"]
     out = OrderedDict(manifest)
-    out["urls"] = OrderedDict(
+    urls = OrderedDict(
         rows_settle=f"{HF_DATASET}/resolve/main/rounds/{rid}/settle.jsonl",
         rows_dry=f"{HF_DATASET}/resolve/main/rounds/{rid}/dry.jsonl",
         rows_in_repo=f"https://github.com/CSOAI-ORG/councilof-ai/blob/master/{ROUNDS_REL}/{rid}/settle.jsonl",
         analysis=f"https://github.com/CSOAI-ORG/councilof-ai/blob/master/{ROUNDS_REL}/{rid}/analysis.md",
-        leaves=f"{SITE}/interop/x402-census/leaves/{rid}/",
-        deltas=[f"{SITE}/interop/x402-census/deltas/{d}.json" for d in deltas_touching],
-        root=f"{SITE}/root.json",
-        witness_pointer=f"{SITE}/interop/root-witness-pointer.json",
     )
+    # A URL is emitted only when the bytes behind it exist. A published link to an empty leaf
+    # directory is a promise a consumer follows into a 404, which the link gate is right to refuse:
+    # absence is stated in `leaves.note`, never dressed up as a path.
+    if leaves_n:
+        urls["leaves"] = f"{SITE}/interop/x402-census/leaves/{rid}/"
+    urls["deltas"] = [f"{SITE}/interop/x402-census/deltas/{d}.json" for d in deltas_touching]
+    urls["root"] = f"{SITE}/root.json"
+    urls["witness_pointer"] = f"{SITE}/interop/root-witness-pointer.json"
+    out["urls"] = urls
     out["leaves"] = OrderedDict(
         staged=leaves_n,
-        note=("one unsigned public.notice leaf per paid row (DELIVERED/REFUSED/MISMATCH), staged for the "
-              "public-root writer; a leaf is in the root only once root.json lists its sha256"),
+        note=("one unsigned card-v0 leaf per paid row (DELIVERED/REFUSED/MISMATCH), staged for the "
+              "public-root writer; a leaf is in the root only once root.json lists its sha256"
+              if leaves_n else
+              "none staged for this round: its 316 purchases are already published as the 104 cards "
+              "under /interop/x402-census-cards/, and a second leaf set for the same event would fork "
+              "one corpus into two. No leaves URL is published because there are no leaves to serve."),
     )
     return out
 
