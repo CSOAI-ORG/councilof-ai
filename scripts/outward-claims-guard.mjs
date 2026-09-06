@@ -773,6 +773,81 @@ async function checkMarkerExpiry() {
   }
 }
 
+/**
+ * 12. THE REGULATOR CENSUS — does the door still open, and does the count still hold?
+ *
+ * The obligations ledger points at regulators. A row that names one is worth what its door is
+ * worth: if the register cannot be read by a machine, the row is a citation, not evidence.
+ * scripts/regulator-census.mjs measures which is which; this keeps that measurement honest.
+ *
+ * Measured 2026-09-06 — 3 of 6 targets have a machine-readable door:
+ *
+ *   READABLE    GLEIF LEI records          3,422,936
+ *   READABLE    SEC EDGAR companies           10,412
+ *   READABLE    OFAC SDN rows                 19,330
+ *   UNRESOLVED  EU AI Act Art 71 database   200, redirects to /en/page-not-found
+ *   UNRESOLVED  ESMA MiCA registers        search UI only, no public JSON endpoint
+ *   UNRESOLVED  UK ICO register            entry endpoint timed out, no bulk download confirmed
+ *
+ * UNRESOLVED IS A RESULT, not a gap. Three regulators cannot back an obligations row with a
+ * fetch today, and the ledger should say so rather than imply a source it does not have.
+ *
+ * WHAT THIS CHECKS is the census's own honesty, because it got this wrong once: a target that
+ * answers HTTP 200 while redirecting to an error page must never be READABLE. The EC row is the
+ * worked example — a status-only census reports it READABLE, and the first version of the
+ * producer did exactly that.
+ *
+ * Offline by default. LIVE_REGULATORS=1 re-probes every READABLE door.
+ */
+async function checkRegulatorCensus() {
+  const { readFileSync, existsSync } = await import("node:fs");
+  const FILE = "public/interop/regulator-census.json";
+  if (!existsSync(FILE)) return skip("regulator census", `${FILE} not in this checkout`);
+  let d;
+  try { d = JSON.parse(readFileSync(FILE, "utf8")); } catch { return bad("regulator census", "not JSON"); }
+  const rows = d.targets ?? [];
+  if (!rows.length) return bad("regulator census", "no targets");
+
+  // STATIC and decisive: an error-page redirect can never be READABLE, and a READABLE row must
+  // carry a derived count. Both bite with no network.
+  const lying = rows.filter((r) => r.state === "READABLE" && r.redirected_to_error_page)
+    .map((r) => `${r.id} -> ${r.final_url}`);
+  if (lying.length) {
+    return bad("regulator census",
+      `these rows are READABLE while redirecting to an error page: ${lying.join("; ")}. ` +
+      `A 200 is not a door; the final URL and the visible body decide.`);
+  }
+  const countless = rows.filter((r) => r.state === "READABLE" && !r.count?.value).map((r) => r.id);
+  if (countless.length) {
+    return bad("regulator census",
+      `READABLE with no derived count: ${countless.join(", ")}. READABLE means a machine read it ` +
+      `and got a number; without one the honest state is UNRESOLVED.`);
+  }
+  ok("regulator census", `${d.totals?.readable}/${d.totals?.targets} readable, each with a count derived at probe time`);
+
+  if (!process.env.LIVE_REGULATORS) {
+    return skip("regulator doors (live)", "LIVE_REGULATORS unset — doors NOT re-probed");
+  }
+  const closed = [];
+  for (const r of rows.filter((x) => x.state === "READABLE")) {
+    let code = 0, finalUrl = r.url;
+    try {
+      const res = await fetch(r.url, { headers: { "user-agent": "csoai-outward-claims-guard/1.0" }, redirect: "follow" });
+      code = res.status; finalUrl = res.url || r.url;
+    } catch { code = 0; }
+    if (code < 200 || code >= 400 || /page-not-found|\/404|not-?found/i.test(finalUrl)) {
+      closed.push(`${r.id}: ${r.url} -> ${code || "unreachable"}${finalUrl !== r.url ? ` (${finalUrl})` : ""}`);
+    }
+  }
+  if (closed.length) {
+    bad("regulator doors (live)",
+      `doors recorded READABLE that no longer open: ${closed.join("; ")}. Re-run ` +
+      `scripts/regulator-census.mjs — the census is a measurement with a date, not a standing fact.`);
+  } else {
+    ok("regulator doors (live)", `${rows.filter((r) => r.state === "READABLE").length} readable doors still open`);
+  }
+}
+
 async function main() {
   if (process.argv.includes("--selftest")) {
     // Exercise the actual decision, not a toy comparison. Each case asserts the verdict this
@@ -839,6 +914,7 @@ async function main() {
   await checkHfCards();
   await checkPlatformProofs();
   await checkMarkerExpiry();
+  await checkRegulatorCensus();
   const fails = results.filter((r) => r.state === "FAIL");
   for (const r of results) {
     const mark = r.state === "OK" ? "  ok  " : r.state === "SKIP" ? " skip " : " FAIL ";
