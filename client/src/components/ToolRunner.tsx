@@ -1,3 +1,4 @@
+import { signX402Challenge, discoverEIP6963 } from "@/lib/x402Wallet";
 import { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
@@ -245,7 +246,7 @@ function fieldPlaceholder(name: string, kind: FieldKind): string {
   if (kind === "array") return '[\n  "value"\n]';
   if (kind === "json-or-string")
     return "Paste a card URL, JSON string, or JSON object";
-  if (name === "x_payment") return "Paste the wallet-signed x402 payload";
+  if (name === "x_payment") return "Wallet signature (x_payment) — signed in wallet, or paste one";
   return name;
 }
 
@@ -297,6 +298,48 @@ export default function ToolRunner({
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState<"" | "copied" | "blocked">("");
   const [reloadKey, setReloadKey] = useState(0);
+  const [walletMsg, setWalletMsg] = useState("");
+  const [signing, setSigning] = useState(false);
+
+  // Sign the last 402 challenge in the user's wallet (EIP-6963) and fill x_payment.
+  // The page never sees a key: the wallet signs typed-data, we put the signature in the field.
+  const signInWallet = async () => {
+    setSigning(true);
+    setWalletMsg("");
+    try {
+      const anyWindow = window as unknown as { ethereum?: { request: (a: { method: string; params: unknown[] }) => Promise<unknown> } };
+      const discovered = await discoverEIP6963();
+      const provider =
+        (discovered as unknown as { providers?: { request: (a: { method: string; params: unknown[] }) => Promise<unknown> }[] })?.providers?.[0] ||
+        (discovered as unknown as { provider?: { request: (a: { method: string; params: unknown[] }) => Promise<unknown> } })?.provider ||
+        anyWindow.ethereum;
+      if (!provider) throw new Error("No EIP-6963 wallet found — open MetaMask (or paste a signed payload)");
+      const raw = (output?.result as { structuredContent?: string; content?: { text: string }[] } | string) as unknown;
+      let text = "";
+      if (typeof raw === "string") text = raw;
+      else {
+        const r = raw as { structuredContent?: string; content?: { text: string }[] };
+        text = r?.structuredContent ?? r?.content?.[0]?.text ?? JSON.stringify(r ?? {});
+      }
+      const obj = JSON.parse(text);
+      const ch = obj.challenge || obj.x402 || obj.requirements?.x402 || obj;
+      const challenge = {
+        chainId: ch.chainId,
+        payTo: ch.payTo,
+        amount: ch.amount,
+        resource: ch.resource,
+        nonce: ch.nonce ?? "",
+        expires: ch.expires ?? null,
+      };
+      const sig = await signX402Challenge(provider, challenge);
+      setDraft((d) => ({ ...d, x_payment: sig.header }));
+      setWalletMsg(`✓ signed as ${sig.address.slice(0, 6)}…${sig.address.slice(-4)} — x_payment filled`);
+    } catch (e) {
+      setWalletMsg(e instanceof Error ? `✗ ${e.message}` : "✗ signing failed");
+    } finally {
+      setSigning(false);
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -556,10 +599,25 @@ export default function ToolRunner({
                     Run without{" "}
                     <code className="font-mono text-[11px]">x_payment</code> to
                     receive the route’s 402 challenge and any published free
-                    preview. Nothing is charged by that call. This page never
-                    asks for a seed phrase or private key and does not sign
-                    wallet payments.
+                    preview. Nothing is charged by that call. Then{" "}
+                    <strong>Sign in wallet</strong> (MetaMask or any
+                    EIP-6963 provider) to produce the{" "}
+                    <code className="font-mono text-[11px]">x_payment</code>{" "}
+                    from the challenge — the page never asks for a seed phrase
+                    or private key, it only asks the wallet to sign the
+                    typed-data transfer.
                   </p>
+                  <button
+                    type="button"
+                    onClick={signInWallet}
+                    disabled={signing || busy || !output}
+                    className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-amber-900 px-3 py-1.5 text-[11px] font-semibold text-amber-50 transition hover:bg-amber-800 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {signing ? "Waiting for wallet…" : "Sign in wallet"}
+                  </button>
+                  {walletMsg ? (
+                    <p className="mt-1.5 text-[11px] text-amber-900">{walletMsg}</p>
+                  ) : null}
                 </div>
               ) : null}
 
