@@ -27,6 +27,7 @@ from mill_window import (  # noqa: E402
     mill_names_for_kind,
     millable_slugs,
     provider_order,
+    resolve_route,
     route_kind,
     select_window,
 )
@@ -274,11 +275,11 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    lock_tags = {m.get("slug"): m.get("pipeline_tag") for m in (lock.get("models") or []) if m.get("slug")}
+    lock_by = {m.get("slug"): m for m in (lock.get("models") or []) if m.get("slug")}
+    lock_tags = {s: (m.get("pipeline_tag") or "") for s, m in lock_by.items()}
     lock_providers = {
-        m.get("slug"): list(m.get("providers_live") or [])
-        for m in (lock.get("models") or [])
-        if m.get("slug")
+        s: list(m.get("providers_live") or [])
+        for s, m in lock_by.items()
     }
     slugs = millable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
@@ -328,9 +329,13 @@ def main() -> int:
         except Exception as e:
             rec["meta_error"] = type(e).__name__
             rec["pipeline_tag"] = rec.get("pipeline_tag") or lock_tags.get(slug)
-        tag = rec.get("pipeline_tag") or lock_tags.get(slug) or ""
+        lock_row = lock_by.get(slug) or {}
+        lock_tag = lock_row.get("pipeline_tag") or lock_tags.get(slug) or ""
+        hub_tag = rec.get("pipeline_tag") or ""
+        tag, kind = resolve_route(
+            lock_tag, hub_tag, lock_row.get("status") or "UNMEASURED", slug
+        )
         rec["pipeline_tag"] = tag
-        kind = route_kind(tag, slug)
         rec["route_kind"] = kind
         env_p = [
             p.strip()

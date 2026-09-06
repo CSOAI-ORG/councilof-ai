@@ -191,6 +191,24 @@ def provider_order(mapped: list[str], defaults: list[str] | tuple[str, ...] = DE
     return base
 
 
+def resolve_route(
+    lock_tag: str, hub_tag: str, lock_status: str, slug: str = ""
+) -> tuple[str, str]:
+    """Pick pipeline_tag + route_kind. Pure. No HTTP.
+
+    Empty lock tags are re-probed on Hub. If Hub fills a chat tag on a row
+    the chat mill already marked UNCHECKABLE, do not spray groq/nebius again.
+    """
+    lock_tag = (lock_tag or "").strip()
+    hub_tag = (hub_tag or "").strip()
+    # millable decided from the lock tag. Hub must not retag MiniLM as chat.
+    tag = lock_tag or hub_tag
+    kind = route_kind(tag, slug)
+    if (lock_status or "") == "UNCHECKABLE" and not lock_tag and kind == "chat":
+        return tag, "try-chat-then-feature"
+    return tag, kind
+
+
 def mill_names_for_kind(slug: str, kind: str, mapped: list[str] | None = None) -> list[str]:
     """Which router model names to try. Pure. No HTTP.
 

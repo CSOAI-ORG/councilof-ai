@@ -17,6 +17,7 @@ from mill_window import (  # noqa: E402
     mill_names_for_kind,
     millable_slugs,
     provider_order,
+    resolve_route,
     route_kind,
     select_window,
 )
@@ -351,6 +352,22 @@ def test_payload_for_kind_is_the_200_shapes() -> None:
     assert "question" in qa["inputs"] and "context" in qa["inputs"]
 
 
+def test_resolve_route_refuses_chat_respray_on_empty_lock_tag() -> None:
+    """215 empty-tag UNCHECKABLE would Hub-fill as text-generation and
+    spray nebius again. What would make this fail: using Hub chat tag as
+    a fresh mill."""
+    tag, kind = resolve_route("", "text-generation", "UNCHECKABLE", "google/electra-base-discriminator")
+    assert tag == "text-generation"
+    assert kind == "try-chat-then-feature"
+    tag, kind = resolve_route("", "fill-mask", "UNCHECKABLE", "google/electra-base-discriminator")
+    assert kind == "fill-mask"
+    tag, kind = resolve_route("", "text-generation", "UNMEASURED", "Qwen/Qwen3-8B")
+    assert kind == "chat"
+    tag, kind = resolve_route("sentence-similarity", "text-generation", "UNCHECKABLE")
+    assert tag == "sentence-similarity"
+    assert kind == "similarity"
+
+
 def test_mill_names_nonchat_pins_hf_inference_not_groq() -> None:
     """Chat mill never defaults hf-inference. Embed mill must, or MiniLM
     never 200s. What would make this fail: spraying groq onto bge."""
@@ -390,6 +407,7 @@ if __name__ == "__main__":
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
+    test_resolve_route_refuses_chat_respray_on_empty_lock_tag()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 20 passed")
+    print("test_mill_window: 21 passed")
