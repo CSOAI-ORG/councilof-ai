@@ -6,9 +6,13 @@ import PublicRootCatalogue from "@/components/gspc/PublicRootCatalogue";
  * /xrpl-attest — public-root catalogue reader, not a DEVNET grade.
  *
  * Living feed is GET /root.json. GET /api/xrpl is a reader of that root
- * (writes_board false, n=16). Live /api/xrpl: 14/16 GH-secret sigs;
- * EURQ/USDQ unsigned (NO_LAPTOP_SIGN). Historical DEVNET txs are not this feed.
+ * (writes_board false). Historical DEVNET txs are not this feed.
  * Do not restamp. Do not mix represented TVL. Do not add /api/swift.
+ *
+ * THE SIGNED COUNT IS DERIVED, NOT TYPED. This page carried "14/16 GH-secret sigs" in its
+ * comment, its <title> and its meta description. Live /api/xrpl carries 16 assets of which
+ * 13 have sig_ed25519 set — the typed 14 was wrong by one and had no way of noticing.
+ * It is now counted from the response on every render.
  */
 
 type RootDoc = {
@@ -23,21 +27,42 @@ type RootDoc = {
 export default function XrplAttest() {
   const [root, setRoot] = useState<RootDoc | null>(null);
   const [xrplStatus, setXrplStatus] = useState<number | null>(null);
+  const [sigs, setSigs] = useState<{ signed: number; total: number } | null>(null);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "XRPL public-root catalogue — 14/16 GH-secret sigs; EURQ/USDQ unsigned | Council of AI";
+    // Title and description are set once with no count in them, then refined below when the
+    // real numbers arrive. A page that names a count before it has fetched one is guessing.
+    document.title = "XRPL public-root catalogue | Council of AI";
     setMetaDescription(
-      "GET /root.json is the living XRPL catalogue. GET /api/xrpl: 14/16 GH-secret sigs; EURQ/USDQ unsigned (NO_LAPTOP_SIGN). writes_board false. DEVNET historical. Not a GSPC grade.",
+      "GET /root.json is the living XRPL catalogue. GET /api/xrpl reads that root: writes_board false, DEVNET historical, not a GSPC grade.",
     );
     fetch("/root.json")
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error("GET /root.json HTTP " + r.status))))
       .then(setRoot)
       .catch((e) => setErr(String(e)));
     fetch("/api/xrpl")
-      .then((r) => setXrplStatus(r.status))
+      .then((r) => {
+        setXrplStatus(r.status);
+        return r.ok ? r.json() : null;
+      })
+      .then((d: { assets?: { sig_ed25519?: string | null }[] } | null) => {
+        if (!d || !Array.isArray(d.assets)) return;             // absent stays absent, never 0
+        const total = d.assets.length;
+        const signed = d.assets.filter((a) => Boolean(a.sig_ed25519)).length;
+        setSigs({ signed, total });
+        document.title = `XRPL public-root catalogue — ${signed}/${total} signed | Council of AI`;
+        setMetaDescription(
+          `GET /root.json is the living XRPL catalogue. GET /api/xrpl reads that root: ${signed} of ${total} assets carry sig_ed25519; the rest are unsigned (NO_LAPTOP_SIGN). writes_board false. DEVNET historical. Not a GSPC grade.`,
+        );
+      })
       .catch(() => setXrplStatus(0));
   }, []);
+
+
+  // One expression for every place the count is shown. Until /api/xrpl answers it renders
+  // "counting" — never a number, and never 0, because neither would be true yet.
+  const sigText = sigs ? `${sigs.signed}/${sigs.total} signed` : "counting…";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 via-white to-white">
@@ -49,7 +74,7 @@ export default function XrplAttest() {
         <p className="mt-4 max-w-3xl text-gray-600">
           Living catalogue is GET <a className="text-emerald-700 underline" href="/root.json">/root.json</a>.
           GET <a className="text-emerald-700 underline" href="/api/xrpl">/api/xrpl</a> has{" "}
-          <strong>14/16 GH-secret sigs</strong>; <code>EURQ</code>/<code>USDQ</code> unsigned
+          <strong>{sigText}</strong> (sig_ed25519 present); the remainder unsigned
           (<code>sig_ed25519</code> null, NO_LAPTOP_SIGN). Do not say all leaves unsigned.
           Inclusion is membership in that hash list — not a laptop-signed card check for the two
           unsigned leaves. Schema:{" "}
@@ -65,7 +90,7 @@ export default function XrplAttest() {
           <p className="mt-2">
             GET <code>/api/xrpl</code> is a <strong>reader</strong> of <code>/root.json</code>
             {xrplStatus != null ? <> (HTTP {xrplStatus} this load)</> : null}.{" "}
-            <code>writes_board</code> is false. Live n=16: 14/16 GH-secret sigs; EURQ/USDQ unsigned.
+            <code>writes_board</code> is false. Live: {sigText}, counted from the response.
             Do not stamp MEASURED from this catalogue. Do not restamp. Historical XRPL DEVNET
             Payment-memo / CredentialCreate hashes are not this feed. Hugging Face mirror:{" "}
             <a className="underline" href="https://huggingface.co/datasets/csoai/gspc-boards">
@@ -99,7 +124,7 @@ export default function XrplAttest() {
             </div>
             <div className="rounded-xl border border-slate-200 bg-white p-4">
               <dt className="text-xs uppercase tracking-wide text-slate-500">/api/xrpl sigs</dt>
-              <dd className="mt-1 font-mono">14/16 GH-secret; EURQ/USDQ unsigned</dd>
+              <dd className="mt-1 font-mono">{sigText}</dd>
             </div>
           </dl>
         )}
@@ -111,7 +136,7 @@ export default function XrplAttest() {
         <p className="mt-8 text-sm text-gray-600">
           Estate cards still recompute at{" "}
           <a className="text-emerald-700 underline" href="/gspc-verify">/gspc-verify</a>{" "}
-          (estate mode). Public-root mode on that page loads this same catalogue: 14/16 GH-secret
+          (estate mode). Public-root mode on that page loads this same catalogue: {sigText}
           sigs on GET /api/xrpl; EURQ/USDQ unsigned; DEVNET historical.
         </p>
       </div>

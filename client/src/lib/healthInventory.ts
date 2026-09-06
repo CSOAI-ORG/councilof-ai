@@ -48,6 +48,10 @@ export const LIVE_HEALTH_PIN = {
   index_rows: 15,
   index_schema: "csoai.sov-signal-index/1",
   not_a_certification: true,
+  // PINNED SNAPSHOT, NOT A LIVE NUMBER. This file's own comment records that corrections went
+  // 30 -> 38 -> 39 inside 2026-09-02; it was 47 by 2026-09-06. HealthInventory.tsx now reads
+  // GET /api/corrections and shows this value only when that fetch fails, labelled with as_at.
+  // Do not quote this field as current.
   corrections: 39,
   as_at: "2 September 2026",
   board: "22 axis · 22 measured",

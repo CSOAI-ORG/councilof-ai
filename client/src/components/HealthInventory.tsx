@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   boardHealthLine,
   HEALTH_FACTS,
@@ -8,6 +9,23 @@ import {
 } from "@/lib/healthInventory";
 
 export default function HealthInventory({ tone = "dark" }: { tone?: "dark" | "light" }) {
+  // The corrections count MOVES, and healthInventory.ts says so in its own comment: it went
+  // 30 -> 38 -> 39 inside a single day, was pinned at 39, and is 47 live. A pin with an as_at
+  // is honest about being a snapshot but still shows a stale number as the headline. Read the
+  // ledger instead and keep the pin only as the labelled fallback.
+  const [liveCorrections, setLiveCorrections] = useState<number | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/corrections")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { corrections?: unknown[] } | null) => {
+        if (cancelled || !d || !Array.isArray(d.corrections)) return;  // absent stays absent
+        setLiveCorrections(d.corrections.length);
+      })
+      .catch(() => { /* leave null: the pin is shown, labelled as of its own date */ });
+    return () => { cancelled = true; };
+  }, []);
+
   const dark = tone === "dark";
   const panel = dark
     ? "rounded-2xl border border-emerald-400/20 bg-emerald-950/40 p-4"
@@ -27,10 +45,13 @@ export default function HealthInventory({ tone = "dark" }: { tone?: "dark" | "li
           {HEALTH_RULING}
         </h2>
         <p className={`mt-3 text-sm ${body}`}>
-          How healthy the record is, as at {LIVE_HEALTH_PIN.as_at}: {LIVE_HEALTH_PIN.board},{" "}
-          {LIVE_HEALTH_PIN.empty} empty, {LIVE_HEALTH_PIN.index_rows} signed index rows,{" "}
-          {LIVE_HEALTH_PIN.corrections} corrections. That is coverage. It is not a grade of
-          the model, and it is a snapshot — the living board is GET /api/gspc.
+          How healthy the record is: {LIVE_HEALTH_PIN.board}, {LIVE_HEALTH_PIN.empty} empty,{" "}
+          {LIVE_HEALTH_PIN.index_rows} signed index rows,{" "}
+          {liveCorrections === null
+            ? `${LIVE_HEALTH_PIN.corrections} corrections as at ${LIVE_HEALTH_PIN.as_at}`
+            : `${liveCorrections} corrections (live, GET /api/corrections)`}
+          . That is coverage. It is not a grade of the model, and the living board is
+          GET /api/gspc.
         </p>
         <p className={`mt-3 font-mono text-[13px] ${title}`}>{HEALTH_PUBLIC_LINE}</p>
         <p className={`mt-2 text-sm ${body}`}>Board today: {boardHealthLine()}</p>
