@@ -307,6 +307,11 @@ def millable_slugs(models: list[dict]) -> list[str]:
                 if tag in CHAT_TAGS and last_kind not in ("chat-bare",) and not last_kind.endswith("-mapped"):
                     out.append(slug)
                 continue
+            # Restore dropped providers_live. The mill reason is the evidence.
+            if "no live inference provider" in reason:
+                continue
+            if "http 400" in reason or "http 404" in reason or "http 410" in reason:
+                continue
             # Not Hub-probed: millable so mill can GET live mapping.
             # HTTP mill runs only if mill_router_names is nonempty.
             # -base is a chat-mill miss, not a Hub-probe skip (ModernBERT-base).

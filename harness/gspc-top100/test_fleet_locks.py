@@ -105,7 +105,6 @@ def test_apply_mill_persists_route_kind_so_nonchat_retry_is_once() -> None:
                 "slug": "sentence-transformers/all-MiniLM-L6-v2",
                 "pipeline_tag": "sentence-similarity",
                 "status": "UNCHECKABLE",
-                "reason": "HTTP 400 nebius",
             }
         ],
     }

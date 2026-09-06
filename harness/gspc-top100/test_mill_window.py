@@ -120,8 +120,8 @@ def test_millable_skips_already_tried() -> None:
     got = millable_slugs(models)
     assert "a/unmeasured" in got
     assert "b/practiced" not in got
-    # ASR UNCHECKABLE without a Hub probe still needs providers_live.
-    assert "c/uncheckable" in got
+    # HTTP 400 is a mill even if restore dropped providers_live.
+    assert "c/uncheckable" not in got
     # Quant packs must be attempted so UNCHECKABLE is recorded, not skipped.
     assert "Qwen/Qwen2.5-7B-Instruct-AWQ" in got
     assert "d/awq" in got
@@ -151,13 +151,10 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
         },
     ]
     got = millable_slugs(models)
-    # No providers_live key: Hub probe, not a respray.
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
-    assert "Qwen/Qwen3-8B" in got
-    assert "Qwen/Qwen2.5-7B-Instruct" not in got
-    models[0]["providers_live"] = []
-    got = millable_slugs(models)
+    # HTTP 400 is a mill even if restore dropped providers_live.
     assert "nomic-ai/nomic-embed-text-v1.5" not in got
+    assert "Qwen/Qwen3-8B" not in got
+    assert "Qwen/Qwen2.5-7B-Instruct" not in got
 
 
 def test_millable_skips_zero_provider_unmeasured() -> None:
@@ -233,13 +230,11 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
         },
     ]
     got = millable_slugs(models)
-    # n_measured still hundreds: retry chat policy rows that never had a
-    # non-nebius mill. Empty mapping + route_kind=chat is Hub-probe only;
-    # mill the bare slug. chat-bare already 400'd that call.
-    assert "facebook/opt-125m" in got
+    # HTTP 400 without providers_live is already milled (restore dropped the key).
+    assert "facebook/opt-125m" not in got
+    # Empty mapping + route_kind=chat is Hub-probe only; mill the bare slug.
     assert "Qwen/Qwen2.5-7B-Instruct" in got
-    # nomic has no providers_live key — Hub probe, not an embed respray.
-    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    assert "nomic-ai/nomic-embed-text-v1.5" not in got
     # After chat-bare the reason is no longer nebius. Bare respray is forbidden
     # once Hub has been probed empty. Missing providers_live still needs a probe.
     models[0]["route_kind"] = "chat-bare"
@@ -282,8 +277,6 @@ def test_millable_probes_uncheckable_for_live_providers() -> None:
             "slug": "needs/probe",
             "pipeline_tag": "text-generation",
             "status": "UNCHECKABLE",
-            "route_kind": "chat-bare",
-            "reason": "HTTP 400 not supported",
         },
     ]
     got = millable_slugs(models)
@@ -303,6 +296,42 @@ def test_millable_probes_uncheckable_for_live_providers() -> None:
     feat = mill_router_names("Qwen/Qwen3-Embedding-4B", "feature", ["deepinfra"], uncheckable=True)
     assert feat == ["Qwen/Qwen3-Embedding-4B:deepinfra"]
     assert "hf-inference" not in "".join(feat)
+
+
+def test_millable_honors_reason_when_restore_drops_providers_live() -> None:
+    """Published lock lost providers_live/route_kind; millable reopened to
+    1049. A HTTP 400 or 'no live Inference Provider' reason is the mill.
+    What would make this fail: treating a missing key as never-tried."""
+    models = [
+        {
+            "slug": "cross-encoder/ms-marco-MiniLM-L6-v2",
+            "pipeline_tag": "text-ranking",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"The requested model 'cross-encoder/ms-marco-MiniLM-L6-v2' is not a chat model.\"}}",
+        },
+        {
+            "slug": "google/gemma-4-E4B-it",
+            "pipeline_tag": "any-to-any",
+            "status": "UNCHECKABLE",
+            "reason": "no live Inference Provider",
+        },
+        {
+            "slug": "needs/probe",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+        },
+        {
+            "slug": "rate/limited",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 429 Too Many Requests",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "cross-encoder/ms-marco-MiniLM-L6-v2" not in got
+    assert "google/gemma-4-E4B-it" not in got
+    assert "needs/probe" in got
+    assert "rate/limited" in got
 
 
 def test_empty_mapping_chat_mills_bare_slug_not_treated_terminal() -> None:
@@ -412,12 +441,16 @@ def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
         },
     ]
     got = millable_slugs(models)
-    assert "facebook/opt-125m" in got
-    assert "sentence-transformers/all-MiniLM-L6-v2" in got
-    assert "answerdotai/ModernBERT-base" in got
-    assert "BAAI/bge-small-en-v1.5" in got
-    assert "dslim/bert-base-NER" in got
+    assert "facebook/opt-125m" not in got
+    assert "sentence-transformers/all-MiniLM-L6-v2" not in got
+    assert "answerdotai/ModernBERT-base" not in got
+    assert "BAAI/bge-small-en-v1.5" not in got
+    assert "dslim/bert-base-NER" not in got
     assert "sentence-transformers/all-MiniLM-L6-v2-done" not in got
+    models[1]["providers_live"] = ["together"]
+    models[1]["route_kind"] = "chat-bare"
+    got = millable_slugs(models)
+    assert "sentence-transformers/all-MiniLM-L6-v2" in got
     assert route_kind("sentence-similarity") == "similarity"
     assert route_kind("fill-mask") == "fill-mask"
     assert route_kind("token-classification") == "text"
@@ -593,6 +626,7 @@ if __name__ == "__main__":
     test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
     test_millable_probes_uncheckable_for_live_providers()
+    test_millable_honors_reason_when_restore_drops_providers_live()
     test_empty_mapping_chat_mills_bare_slug_not_treated_terminal()
     test_millable_retries_nonchat_after_chat_policy_spray()
     test_millable_drops_image_lora_windows()
@@ -604,4 +638,4 @@ if __name__ == "__main__":
     test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 25 passed")
+    print("test_mill_window: 26 passed")
