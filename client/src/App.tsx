@@ -88,6 +88,7 @@ const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
+const Status = lazy(() => import("./pages/Status"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
@@ -1071,7 +1072,7 @@ function App() {
                   <Route path="/onboard" component={OnboardOS} />
                   <Route path="/open-media" component={OpenMedia} />
                   <Route path="/commons" component={OpenMedia} />
-                  <Route path="/status" component={ContentReviewNotice} />
+                  <Route path="/status" component={Status} />
                   <Route path="/system" component={ContentReviewNotice} />
                   <Route path="/graph" component={GovGraph} />
                   <Route path="/governance-graph" component={GovGraph} />

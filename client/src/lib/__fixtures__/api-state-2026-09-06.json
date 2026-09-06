@@ -1,0 +1,623 @@
+{
+  "schema": "csoai.live-state/1",
+  "title": "CSOAI live state — the numbers a lane may quote",
+  "public_count": {
+    "value": "22 axis · 22 measured",
+    "kind": "declared",
+    "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → derived public_count (also published at board.public_count)",
+    "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+    "as_of_field": "MEASURED_ON.date",
+    "note": "The short sentence. Safe to quote verbatim. Same grammar as GET /api/gspc."
+  },
+  "contract": {
+    "quote_this": "Every count a lane publishes must come from this endpoint, by field name.",
+    "not_here_not_established": "If a number is not in this payload, it is NOT established. Do not publish it as a fact, do not carry it forward from an older report, and do not reconcile two stale figures by picking one. Measure it, or say it is unmeasured.",
+    "derivation": "Every value below is computed from a committed artifact. No count in this endpoint's source is typed by hand.",
+    "freshness": "as_of is read OUT OF the artifact and as_of_field names the key it came from. There is no new Date() in this endpoint. Two calls any interval apart return identical as_of values; if they ever differ, this endpoint has the defect it was built to prevent.",
+    "freshness_self_test": "curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/a; sleep 5; curl -s https://councilof.ai/api/state | jq -S '[..|objects|select(has(\"as_of\"))|{source,as_of_field,as_of}]' > /tmp/b; diff /tmp/a /tmp/b && echo IDENTICAL",
+    "kinds": {
+      "measured": "A run happened against a frozen bank or source and was graded.",
+      "probed": "Something was contacted and answered, at as_of.",
+      "catalogued": "It is listed in a register. Nothing was contacted and nothing was run.",
+      "declared": "A slot or claim published so a gap is visible. No run behind it.",
+      "unmeasured": "It exists and we have not measured it — stated, not implied."
+    },
+    "kinds_rule": "These are never collapsed and never summed together. A catalogue entry is not a reachable server; a declared slot is not a measurement. Adding across kinds is how a fleet of 1 reachable server got published as 378."
+  },
+  "board": {
+    "authority": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)",
+    "live_endpoint": "/api/gspc",
+    "axis_slots": {
+      "value": 22,
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → length",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "A count of SLOTS on the board. A slot is published so a gap is visible; it is not evidence that anything was measured. Never quote this number alone. Same derivation as GET /api/gspc."
+    },
+    "measured_axes": {
+      "value": 22,
+      "kind": "measured",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → filter(status === 'MEASURED').length",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "Slots with a real graded run behind them. This is the number to quote if you quote only one. Same derivation as GET /api/gspc totals.measured_axes. This is the number to file."
+    },
+    "unmeasured_axes": {
+      "value": 0,
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → length - measured",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "Declared slots with no run behind them. Published so the gap is visible."
+    },
+    "public_count": {
+      "value": "22 axis · 22 measured",
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → derived public_count",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "The short sentence. Safe to quote verbatim because it carries both numbers. Same grammar as GET /api/gspc."
+    },
+    "count_grammar": {
+      "value": "22 axis are on the board and every one carries a measurement — no declared slot is empty. Both counts are DERIVED from the axis array, never typed; if a future slot is added with no run behind it, this line separates the two again on its own.",
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → derived count_grammar",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "The long form, derived from the same axis arrays /api/gspc uses."
+    },
+    "by_family": {
+      "value": {
+        "gspc": {
+          "axes": 14,
+          "measured": 14,
+          "note": "The 14 behavioural axes: a model fleet answers a frozen bank, graded deterministically."
+        },
+        "financial": {
+          "axes": 8,
+          "measured": 8,
+          "note": "The 8 financial/domain axis (ADR-001), all MEASURED as deterministic-facts runs. Measured is not scored. None has a leader, an accuracy or a separation determination."
+        }
+      },
+      "kind": "declared",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from) → by family",
+      "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+      "as_of_field": "MEASURED_ON.date",
+      "note": "The two families are measured by two different instruments and their counts are not interchangeable. A behavioural-family figure is not a board figure."
+    },
+    "live_derivation_crosscheck": {
+      "note": "Live counts above are derived from the committed axis arrays — the same source GET /api/gspc uses. The signed file is an MPC freeze of that computation. Drift is published rather than silently inherited.",
+      "source": "functions/api/_gspc_axes_{a,b,fin}.ts (the arrays /api/gspc derives from)",
+      "live_axis_slots": 22,
+      "live_measured_axes": 22,
+      "live_unmeasured_axes": 0,
+      "signed_snapshot_counts_agree": true,
+      "signed_snapshot_agrees": false,
+      "signed_snapshot": {
+        "source": "public/signed/gspc-board.signed.json",
+        "axis_slots": 22,
+        "measured_axes": 22,
+        "unmeasured_axes": 0,
+        "public_count": "22 axis · 22 measured",
+        "as_of": "behavioural axes 2026-08-12 · jail 2026-08-18 · financial-fact axes 2026-08-25",
+        "claim_state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+        "status_source": "public/signed/gspc-board.status.json",
+        "status": "superseded or drifted freeze — do not file"
+      },
+      "on_disagreement": "Quote GET /api/gspc and this endpoint's board.measured_axes — both derive from the committed axis arrays. The preserved signed snapshot at public/signed/gspc-board.signed.json is not current while signed_snapshot_agrees is false: either its counts drift or its status records a known claim defect. Read /signed/gspc-board.status.json. Re-signing that file is an owner MPC ceremony, not a laptop sign and not the Pages 3KB card-sign path."
+    },
+    "signature": {
+      "artifact_state": "SUPERSEDED_KNOWN_CLAIM_DEFECT",
+      "signer": "did:web:csoai.org#gspc-board-22axis-2026",
+      "alg": "Ed25519",
+      "keyid": "sha256:51dd13decb9932423495dd378484fe2b43d7304d69d6526fad10251b88216ab7",
+      "content_id": "72ba8a3371fcc895be835f4283fefca0c2edd1e1fc857b3e49276277f94ccb10",
+      "custody": "3-party MPC (Coinbase cb-mpc, Ed25519 additive), owner's own Oracle tenancy",
+      "verify": "node scripts/gspc-board-verify.mjs <this file>  — needs no estate code, see the script header",
+      "sig_input": "canonical JSON (recursively sorted keys, no whitespace) of this payload with the custody_attestation field removed; content_id is sha256 of exactly those bytes"
+    },
+    "caveat": "Measurement, not certification. A score describes a measured run on a frozen split on a date; it does not describe anyone's compliance with anything."
+  },
+  "council_http_mcp": {
+    "authority": "evidence/council-mcp-door.json",
+    "url": "https://councilof.ai/mcp",
+    "tools_count": {
+      "value": 7,
+      "kind": "probed",
+      "source": "evidence/council-mcp-door.json → tools_count",
+      "as_of": "2026-09-01T03:41:26Z",
+      "as_of_field": "as_of",
+      "note": "POST /mcp tools/list. Seven tools. Distinct from mcp_fleet.tools_probed (8 from two other servers on 2026-08-27). Do not add those numbers."
+    },
+    "tools": [
+      "board_totals",
+      "get_axis",
+      "verify_card",
+      "list_cards",
+      "get_root",
+      "get_card",
+      "verify_inclusion"
+    ]
+  },
+  "mcp_fleet": {
+    "authority": "evidence/mcp-registry.json",
+    "live_endpoint": "/api/mcp",
+    "produced_by": "scripts/mcp-probe.mjs",
+    "probe_method": "JSON-RPC 2.0 over HTTPS POST: initialize -> tools/list, MCP protocolVersion 2024-11-05. A server counts as reachable only if initialize returned a JSON-RPC result.",
+    "probe_host": "NICHOLASs-MacBook-Air-2.local",
+    "reachable_distinct_servers": {
+      "value": 2,
+      "kind": "probed",
+      "source": "evidence/mcp-registry.json → counts.reachable_distinct_servers",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Servers that answered MCP initialize from probe_host. Alias endpoints for the same server are excluded, so this is the honest fleet size."
+    },
+    "reachable_endpoints": {
+      "value": 2,
+      "kind": "probed",
+      "source": "evidence/mcp-registry.json → counts.reachable_endpoints",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "URLs that answered. Larger than the distinct server count when a server is behind an alias."
+    },
+    "unreachable_endpoints": {
+      "value": 2,
+      "kind": "probed",
+      "source": "evidence/mcp-registry.json → counts.unreachable_endpoints",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Contacted and did not answer. This is a result, not an absence of one."
+    },
+    "catalogued_not_probed": {
+      "value": 6,
+      "kind": "catalogued",
+      "source": "evidence/mcp-registry.json → counts.catalogued_not_probed",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Ids with no published endpoint. NEVER contacted. Adding this to a reachable count is the specific arithmetic that produced the inflated fleet figures."
+    },
+    "tools_probed": {
+      "value": 8,
+      "kind": "probed",
+      "source": "evidence/mcp-registry.json → counts.tools_probed",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Derived from the length of a tools array a server actually returned."
+    },
+    "tools_catalogued_not_probed": {
+      "value": null,
+      "kind": "unmeasured",
+      "source": "evidence/mcp-registry.json → counts.tools_catalogued_not_probed",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Null is the honest value: a catalogue's asserted tool count is never adopted as a probed one."
+    },
+    "external_catalogues_not_probed": {
+      "value": [
+        {
+          "id": "gspc-os-vendored",
+          "count": 363,
+          "unit": "server directories",
+          "source": "CSOAI-ORG/gspc-os servers/ (private, pod-only)",
+          "probe_state": "UNVERIFIABLE from any machine that has not checked out gspc-os. Probe with scripts/mcp-stdio-probe.py on a host where the repo exists; commit its output before citing any number from it."
+        }
+      ],
+      "kind": "catalogued",
+      "source": "evidence/mcp-registry.json → counts.external_catalogues_not_probed",
+      "as_of": "2026-08-27T05:04:56.259Z",
+      "as_of_field": "counts.finished",
+      "note": "Directory listings in other repos. Each entry states why its number is unverifiable from this machine. These counts are NOT part of any fleet figure and must not be quoted as one."
+    },
+    "never_sum": "reachable and catalogued-not-probed are different kinds and are never added. A directory listing is not a fleet."
+  },
+  "hub_census": {
+    "authority": "public/signed/hub-census-baseline.json",
+    "live_endpoint": "/api/compute",
+    "listings_observed": {
+      "value": 3032028,
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → n_unique_ids",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "Unique Hub repo ids seen on a metadata walk. DISCOVERED listings. Not models graded. Not MEASURED. Never quote this as a coverage score."
+    },
+    "n_measured": {
+      "value": 0,
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → n_measured",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "GSPC cells written by this walk. Zero. Do not stamp MEASURED on the queue."
+    },
+    "listing_state_all": {
+      "value": "DISCOVERED",
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → listing_state_all",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "Every row in this walk is a listing. A listing is not a grade."
+    },
+    "status_all": {
+      "value": "UNMEASURED",
+      "kind": "unmeasured",
+      "source": "public/signed/hub-census-baseline.json → status_all",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "The walk did not grade. UNMEASURED is the finding."
+    },
+    "complete": {
+      "value": true,
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → complete",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "The Hub list_models cursor exhausted. That is a finished walk, not a finished grade."
+    },
+    "complete_reason": {
+      "value": "hub-exhausted",
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → complete_reason",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of"
+    },
+    "pages_done": {
+      "value": 3033,
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → pages_done",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of"
+    },
+    "sha256_jsonl": {
+      "value": "0a510a890fa336f099a516a503df86340a529c90b935f026d291e5dcd8e8f1e9",
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → sha256_jsonl",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "Digest of the listings file. A census digest is not a signed GSPC cell."
+    },
+    "weights_downloaded": {
+      "value": 0,
+      "kind": "catalogued",
+      "source": "public/signed/hub-census-baseline.json → weights_downloaded",
+      "as_of": "2026-08-31T03:58:08Z",
+      "as_of_field": "as_of",
+      "note": "Must stay 0. A census machine does not download weights."
+    }
+  },
+  "signed_cards": {
+    "authority": "public/signed/card_index.json",
+    "live_endpoint": "/api/cards",
+    "corpus_relation": {
+      "relationship": "SEPARATE_CORPORA",
+      "public_root_leaves": 166,
+      "separately_indexed_signed_cards": 335,
+      "identifier_overlap": 0,
+      "duplicate_public_root_ids": 0,
+      "duplicate_signed_card_ids": 0,
+      "ots_scope": "PUBLIC_ROOT_BYTES_ONLY",
+      "reason": "Declared counts agree, identifiers are well formed and unique, and the two sets have no overlap.",
+      "ots_scope_note": "A valid current public-root OTS proof covers root.json bytes only; it does not anchor this signed-card index."
+    },
+    "count": {
+      "value": 335,
+      "kind": "catalogued",
+      "source": "public/signed/card_index.json → cards[].length",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "created",
+      "note": "Counted from the index array, not read off its n_cards header, so a header that drifts from its own contents cannot become the published number."
+    },
+    "signed_entries": {
+      "value": 335,
+      "kind": "catalogued",
+      "source": "public/signed/card_index.json → cards[].filter(signed === true).length",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "created",
+      "note": "Entries carrying a signature. signed=true means the card carries a JWS signature under kid."
+    },
+    "header_agrees": {
+      "n_cards_header": 335,
+      "agrees": true,
+      "note": "If agrees is false the artifact is internally inconsistent and neither number is quotable."
+    },
+    "packaged_at": {
+      "value": "2026-08-28T15:39:25.229647+00:00",
+      "kind": "declared",
+      "source": "public/signed/card_index.json → packaged_at",
+      "as_of": "2026-08-28T15:39:25.229647+00:00",
+      "as_of_field": "packaged_at",
+      "note": "When the bundle was packaged. Later than `created`, and not a measurement date."
+    },
+    "chain_head": "66856aca4a1f9390f0f51d89b8b96d984ab902852ed77b0254730758260ad1da",
+    "pubkey": "d4cb0eaa16d5f50bf7633a36aa34fe09a55e124b9316ded2abdb122bb9c37e38",
+    "how_to_verify": {
+      "steps": [
+        "1. Fetch /signed/card_index.json — the index and its chain head.",
+        "2. Fetch /.well-known/did.json — the estate's published keys. Trust anchors HERE, not in the payload.",
+        "3. Verify each card's Ed25519 signature against the kid on its entry.",
+        "4. Re-walk the SHA-256 hash chain and check it terminates at `head`."
+      ],
+      "offline": "The whole path runs offline. It needs neither our servers nor our permission.",
+      "guide": "/signed/HOW-TO-VERIFY.md",
+      "page": "/gspc-verify"
+    },
+    "floor_note": "This count is the verifiable floor: it is what the published index actually contains. Larger figures have circulated for card sets in other repos and for cards never published here — see not_covered. A number that no published index contains is not a card count."
+  },
+  "card_chain": {
+    "authority": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body)",
+    "manifest": "/signed/chain.json",
+    "verifier": "/signed/verify-card.mjs",
+    "guide": "/signed/HOW-TO-VERIFY.md",
+    "bodies_published": {
+      "value": 335,
+      "kind": "catalogued",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → bodies.published",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "Card bodies present in public/signed/cards/, counted from the directory."
+    },
+    "bodies_verified_valid": {
+      "value": 335,
+      "kind": "measured",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → bodies.verified_valid",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "Bodies that VERIFY: id recomputed from the canonical body and the Ed25519 signature checked against the pinned card-attestation key, by the same verifier we publish. This is a measurement, not a catalogue entry — the check was run."
+    },
+    "distinct_signing_keys": {
+      "value": 1,
+      "kind": "measured",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → bodies.distinct_pubkeys",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "Distinct pubkey values across the published bodies."
+    },
+    "chain_positions": {
+      "value": 335,
+      "kind": "catalogued",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → chain.positions",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "Positions listed in the chain manifest, recounted from links[] rather than read off its header."
+    },
+    "bodies_withheld": {
+      "value": 0,
+      "kind": "declared",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → chain.bodies_withheld",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "None. Every chain position has a verifying body on disk. The 150-row floor previously published is a subset of this 335-card chain, not a second measurement."
+    },
+    "withheld_attested_by_published_parent": {
+      "value": 0,
+      "kind": "measured",
+      "source": "public/signed/chain-facts.json (derived by scripts/derive-chain-facts.mjs from chain.json + every card body) → withheld.attested_by_published_parent",
+      "as_of": "2026-08-19T09:24:39.174287+00:00",
+      "as_of_field": "card_index.json → created",
+      "note": "A withheld id is INDEPENDENTLY attested when a PUBLISHED card's signed body names it as `prev` — that signature covers the reference from outside the manifest. For the rest, the id and per-link signature appear inside the manifest, whose envelope is itself signature-attested: the list is non-repudiable, but it is still our own attestation of our own list, which is a weaker bind than a published parent's signed body. Both numbers must travel together; quoting only the count of withheld positions would present a disclosure as a proof."
+    },
+    "manifest_signed": {
+      "value": true,
+      "note": "true means the card-shaped envelope of /signed/chain.json was VERIFIED here by the shipped verifier (public/signed/verify-card.mjs) under the pinned card-attestation key — the ordering and the no-silent-drop claim are now signature-attested. This makes the published set non-repudiable; it still does not prove the set was not chosen."
+    },
+    "index_relationship": "card_index.json lists every published card body on disk (rows == files == chain positions). The 150-row floor is a subset of this chain, not a second measurement.",
+    "never_conflate": "bodies_published is the STORE. signed_cards.count is the INDEX. bodies_withheld is a DISCLOSURE, and only withheld_attested_by_published_parent is a PROOF. Four different numbers about four different things — never substituted for one another."
+  },
+  "claims_register": {
+    "authority": "public/claims-register.json",
+    "page": "/claims-register",
+    "corrections_feed": "/api/corrections",
+    "rows_total": {
+      "value": 20,
+      "kind": "declared",
+      "source": "public/claims-register.json → claims[].length",
+      "as_of": "2026-09-04",
+      "as_of_field": "generated_at",
+      "note": "Every material capability claim made on a public surface, with its evidence."
+    },
+    "rows_by_status": {
+      "value": {
+        "live": 6,
+        "devnet": 1,
+        "unmeasured": 1,
+        "planned": 6,
+        "retired": 6
+      },
+      "kind": "declared",
+      "source": "public/claims-register.json → claims[] tallied by .status",
+      "as_of": "2026-09-04",
+      "as_of_field": "generated_at",
+      "note": "Tallied from the rows. A status declared in the register's vocabulary but used by no row reports 0 rather than being omitted, so the absence is visible."
+    },
+    "status_vocabulary": "live = shipped and checkable today · devnet = proven on a test network only, not production · unmeasured = the thing exists but we have not measured it, and we say so rather than implying we have · planned = intended, not built or not shipped · retired = previously published, now withdrawn (with the reason).",
+    "undeclared_statuses_found": [],
+    "undeclared_note": "Non-empty means a row uses a status the register never declared — an artifact defect, not a new category. Fix the artifact; do not invent a meaning for it here.",
+    "how_to_challenge": "If a claim here does not match what you can verify, that is a defect. Report it at nicholas@csoai.org and it goes to the corrections feed at /api/corrections."
+  },
+  "rwa_instruments": {
+    "authority": "public/interop/rwa-registry.json",
+    "chain": "XRPL",
+    "named": {
+      "value": 8,
+      "kind": "catalogued",
+      "source": "public/interop/rwa-registry.json → instruments[].length",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "Instruments the registry NAMES. Naming is not locating, attesting, or measuring. See /interop/xrpl-16.json for the 16-name catalogue (located 9 / not-located 7)."
+    },
+    "located": {
+      "value": 8,
+      "kind": "catalogued",
+      "source": "public/interop/rwa-registry.json → instruments[].address_status in {mainnet-verified, evm-located}",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "Has a public r-address or EVM contract. Located is not attested and is not MEASURED."
+    },
+    "mainnet_verified_and_attested": {
+      "value": 6,
+      "kind": "probed",
+      "source": "public/interop/rwa-registry.json → instruments[].filter(address_status === 'mainnet-verified').length",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "XRPL issuer accounts with a locatable public r-address (six). Not EVM. Not an attestation TX (those remain DEVNET). Control-facts MEASURED is a different field."
+    },
+    "control_facts_measured": {
+      "value": 8,
+      "kind": "measured",
+      "source": "public/interop/rwa-registry.json → instruments[].control_facts starts MEASURED",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "Signed control-facts run exists (XRPL v0.2 and EVM facts). Risk verdict stays UNMEASURED."
+    },
+    "not_located": {
+      "value": 0,
+      "kind": "unmeasured",
+      "source": "public/interop/rwa-registry.json → instruments[].filter(address_status === 'not-located').length",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "No independently confirmable public r-address. Accounted for, never attested. This gap is SCOPE, not staleness."
+    },
+    "risk_status": {
+      "value": {
+        "UNMEASURED": 0,
+        "of": 8
+      },
+      "kind": "unmeasured",
+      "source": "public/interop/rwa-registry.json → instruments[].status",
+      "as_of": null,
+      "as_of_field": null,
+      "note": "What the control facts imply about any instrument's risk, solvency or creditworthiness is UNMEASURED and needs counsel. Not a rating, not advice, not an endorsement."
+    },
+    "no_timestamp_note": "This artifact carries NO timestamp of any kind, so every as_of above is null and as_of_field is null with it. A neighbouring file's date is not this file's date, and the deploy time is nobody's measurement time. Unknown stays null.",
+    "header_agrees": {
+      "header": {
+        "named": 8,
+        "located": 8,
+        "xrpl_located": 6,
+        "evm_located": 2,
+        "mainnet_verified_and_attested": 6,
+        "not_located": 0,
+        "control_facts_measured": 8
+      },
+      "agrees": true,
+      "note": "The header block is recomputed from the instruments array rather than trusted."
+    },
+    "rail_honesty": "Only instruments with REAL verified addresses are listed; control-facts status quoted from signed runs. Never an endorsement."
+  },
+  "public_root": {
+    "authority": "public/root.json",
+    "live_endpoint": "/root.json",
+    "xrpl_reader": "/api/xrpl",
+    "card_count": {
+      "value": 166,
+      "kind": "catalogued",
+      "source": "public/root.json → card_count",
+      "as_of": "2026-09-06T04:29:27Z",
+      "as_of_field": "as_of",
+      "note": "Leaves on the permissionless public-root. The validated corpus relation records 166 root leaves, 335 separately indexed signed cards and zero overlap. The root OTS proof covers root.json bytes only, not the signed-card index or GSPC."
+    },
+    "corpus_relation": {
+      "relationship": "SEPARATE_CORPORA",
+      "public_root_leaves": 166,
+      "separately_indexed_signed_cards": 335,
+      "identifier_overlap": 0,
+      "duplicate_public_root_ids": 0,
+      "duplicate_signed_card_ids": 0,
+      "ots_scope": "PUBLIC_ROOT_BYTES_ONLY",
+      "reason": "Declared counts agree, identifiers are well formed and unique, and the two sets have no overlap."
+    },
+    "xrpl_asset_count_attempted": {
+      "value": 16,
+      "kind": "catalogued",
+      "source": "public/root.json → xrpl_asset_count_attempted",
+      "as_of": "2026-09-06T04:29:27Z",
+      "as_of_field": "as_of",
+      "note": "xrpl.fi instruments attempted this fold. Not a GSPC mill. Not 377 instruments."
+    },
+    "merkle_root": {
+      "value": "e05a0fc13d927cccb87833319c9fb4c1415155eecd861906044df4e2413b9031",
+      "kind": "catalogued",
+      "source": "public/root.json → merkle_root",
+      "as_of": "2026-09-06T04:29:27Z",
+      "as_of_field": "as_of",
+      "note": "Merkle over card_sha256[]. Stranger inclusion is membership in that list."
+    },
+    "schema": {
+      "value": "https://councilof.ai/schema/public-root-v1.json",
+      "kind": "declared",
+      "source": "public/root.json → schema",
+      "as_of": "2026-09-06T04:29:27Z",
+      "as_of_field": "as_of",
+      "note": "Frozen card-v0 schema URL."
+    },
+    "signature_state": {
+      "value": "SIGNED_ENVELOPE_PRESENT",
+      "kind": "catalogued",
+      "source": "public/root.json → sig_ed25519",
+      "as_of": "2026-09-06T04:29:27Z",
+      "as_of_field": "as_of",
+      "note": "A 64-byte Ed25519 envelope signature is present. The release gate verifies it against did_intended; this endpoint derives presence and shape from the committed artifact and does not turn that into a per-leaf signature claim."
+    },
+    "caveat": "The root envelope signature authenticates the six-field public-root statement; it does not individually sign each leaf, admit queued candidates, or make this GSPC. Hugging Face csoai/gspc-boards public-root/root.json is a mirror of these bytes, not a second board."
+  },
+  "not_covered": {
+    "rule": "This endpoint speaks ONLY for the committed artifacts named above, in this repo (CSOAI-ORG/councilof-ai). For anything below, /api/state is silent — and silence here is not permission to quote a figure from somewhere else as if it were.",
+    "items": [
+      {
+        "subject": "csoai-static-deploy2 (the separate static estate)",
+        "why_not": "A different repo with its own card set and its own card count, which is a DIFFERENT NUMBER about a different set of bytes. Conflating it with signed_cards.count above is the single most common source of the competing card figures.",
+        "where": "That estate's own signed index. Quote it as that estate's number, never as this one's."
+      },
+      {
+        "subject": "gspc-os vendored server directories",
+        "why_not": "A private, pod-only checkout. Its server directories have never been contacted from any machine that publishes this endpoint, so its size is a directory listing, not a fleet.",
+        "where": "Probe with scripts/mcp-stdio-probe.py on a host where the repo exists, commit the output, then it becomes quotable — as a probed count, on its own line."
+      },
+      {
+        "subject": "arena / leaderboard axis counts",
+        "why_not": "The arena measures a different set of axes with a different instrument. Its figures are not board figures and were mistaken for contradictions of the board before now.",
+        "where": "/api/arena surfaces, labelled as arena figures."
+      },
+      {
+        "subject": "benchmark-results/ working files in coai-dashboard",
+        "why_not": "In-flight run state, not published evidence. Nothing there has been signed or gated, and an in-lane honesty probe is explicitly not board-quotable.",
+        "where": "Only after a result is promoted into a signed artifact in this repo."
+      },
+      {
+        "subject": "MEOK / SOVOS / sov34 model figures",
+        "why_not": "A different estate with a different boundary. CSOAI measures; it does not host that model. Its numbers never belong in a CSOAI count.",
+        "where": "That estate's own surfaces."
+      },
+      {
+        "subject": "the csoai.org static site",
+        "why_not": "A separate deploy with separate content and its own figures.",
+        "where": "That site's own artifacts."
+      },
+      {
+        "subject": "Hugging Face Hub live listing counts",
+        "why_not": "HF is a mirror of committed bytes in this repo (public-root/root.json on csoai/gspc-boards). This endpoint does not probe the Hub. A Hub file matching is a three-host checksum, not a second board and not a GSPC grade.",
+        "where": "GET /root.json here, then GET https://huggingface.co/datasets/csoai/gspc-boards/resolve/main/public-root/root.json"
+      },
+      {
+        "subject": "traffic, users, customers, revenue",
+        "why_not": "Not measured and not published. There is no counter behind these anywhere in this repo, so any figure would be invented.",
+        "where": "Nowhere. UNPUBLISHED is the honest answer, and it is the whole answer."
+      },
+      {
+        "subject": "live RunPod pod inventory and grokbot estate GPUs",
+        "why_not": "This repo has no RunPod API identity. The 2026-08-22 inventory IPs are stale. A pod being up is not a measurement, and a remembered address is not a fleet.",
+        "where": "GET /api/compute probes the AG-UI wire only. Quote that probe, never a remembered IP."
+      },
+      {
+        "subject": "AG-UI / grokbot live session state",
+        "why_not": "Live probes are forbidden in /api/state. The wire is configured by AGUI_WIRE_URL on Cloudflare Pages. Copying a serve-time ping here would stamp freshness nobody measured.",
+        "where": "GET /api/compute and GET /api/agui/health."
+      }
+    ]
+  },
+  "doctrine": {
+    "instruction_for_lanes": "council-os/QUOTING-NUMBERS.md",
+    "one_line": "Quote /api/state by field name. Never assert a count in a report. If it is not here, it is not established."
+  }
+}

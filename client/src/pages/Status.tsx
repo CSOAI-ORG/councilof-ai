@@ -1,315 +1,173 @@
 import { useEffect, useState } from "react";
-import { trpc } from "@/lib/trpc";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import StatusCorpusWatch from "@/pages/StatusCorpusWatch";
-import { 
-  CheckCircle2, 
-  AlertTriangle, 
-  XCircle, 
-  Clock, 
-  TrendingUp,
-  Bell,
-  RefreshCw
-} from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
+import { Helmet } from "react-helmet-async";
+import { headline, readState, type StateCell, type StateRead } from "@/lib/liveState";
+
+/**
+ * /status — what the estate can presently establish, read from GET /api/state.
+ *
+ * Before 2026-09-06 this route rendered ContentReviewNotice: "This legacy page
+ * is temporarily withdrawn", noindex,nofollow. It is a PRIMARY_PATH under
+ * Evidence (client/src/data/library-ia.ts) and a stop on the product tour,
+ * where demoTour.ts narrates it as "The status page reports the checks it
+ * actually performs." Meanwhile the prerendered title said "System Status |
+ * CSOAI". The title promised a page the body withdrew.
+ *
+ * This page performs no checks of its own and computes nothing. It quotes
+ * /api/state by field name, keeps every figure's `kind`, renders the payload's
+ * own cautions, and prints the list of things that endpoint refuses to speak
+ * for. If the endpoint does not answer, the page says so — it does not fall
+ * back to a remembered number.
+ */
+
+function Cell({ c }: { c: StateCell }) {
+  return (
+    <div className="rounded-xl border border-slate-700/60 bg-slate-900/50 p-3">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-sm capitalize text-slate-300">{c.label}</span>
+        {c.kind ? (
+          <span className="rounded-md border border-emerald-400/30 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
+            {c.kind}
+          </span>
+        ) : null}
+      </div>
+      <div className="mt-1 text-2xl font-bold text-slate-50">{c.value}</div>
+      <div className="mt-1 font-mono text-[11px] text-slate-500">{c.field}</div>
+      {c.as_of ? (
+        <div className="mt-1 text-[11px] text-slate-400">
+          as at {c.as_of}
+          {c.as_of_field ? <span className="text-slate-500"> · from {c.as_of_field}</span> : null}
+        </div>
+      ) : null}
+      {c.note ? <p className="mt-2 text-[12px] leading-snug text-slate-400">{c.note}</p> : null}
+    </div>
+  );
+}
 
 export default function Status() {
-  const [autoRefresh, setAutoRefresh] = useState(true);
-  const [email, setEmail] = useState("");
+  const [read, setRead] = useState<StateRead>({ state: "unread", reason: "not read yet" });
+  const [raw, setRaw] = useState<unknown>(null);
 
-  // Fetch data
-  const { data: services, refetch: refetchServices } = trpc.status.getServiceStatus.useQuery();
-  const { data: incidents } = trpc.status.getIncidents.useQuery({ limit: 10, includeResolved: false });
-  const { data: uptime30 } = trpc.status.getOverallUptime.useQuery({ days: 30 });
-  const { data: uptime60 } = trpc.status.getOverallUptime.useQuery({ days: 60 });
-  const { data: uptime90 } = trpc.status.getOverallUptime.useQuery({ days: 90 });
-
-  const subscribeMutation = trpc.status.subscribe.useMutation({
-    onSuccess: () => {
-      toast.success("Subscribed to status updates! Check your email for confirmation.");
-      setEmail("");
-    },
-    onError: (error) => {
-      toast.error(`Failed to subscribe: ${error.message}`);
-    },
-  });
-
-  // Auto-refresh every 60 seconds
   useEffect(() => {
-    if (!autoRefresh) return;
-    const interval = setInterval(() => {
-      refetchServices();
-    }, 60000);
-    return () => clearInterval(interval);
-  }, [autoRefresh, refetchServices]);
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "operational":
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
-      case "degraded":
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
-      case "partial_outage":
-        return <AlertTriangle className="h-5 w-5 text-orange-500" />;
-      case "major_outage":
-        return <XCircle className="h-5 w-5 text-red-500" />;
-      default:
-        return <Clock className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
-      operational: { variant: "default", label: "Operational" },
-      degraded: { variant: "secondary", label: "Degraded" },
-      partial_outage: { variant: "destructive", label: "Partial Outage" },
-      major_outage: { variant: "destructive", label: "Major Outage" },
+    let alive = true;
+    void fetch("/api/state", { headers: { accept: "application/json" }, cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((j) => {
+        if (!alive) return;
+        setRaw(j);
+        setRead(readState(j));
+      })
+      .catch((err: Error) => alive && setRead({ state: "unread", reason: err.message }));
+    return () => {
+      alive = false;
     };
-    const config = variants[status] || { variant: "outline" as const, label: "Unknown" };
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
+  }, []);
 
-  const getIncidentStatusBadge = (status: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
-      investigating: { variant: "destructive", label: "Investigating" },
-      identified: { variant: "secondary", label: "Identified" },
-      monitoring: { variant: "secondary", label: "Monitoring" },
-      resolved: { variant: "default", label: "Resolved" },
-    };
-    const config = variants[status] || { variant: "outline" as const, label: status };
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  const getSeverityBadge = (severity: string) => {
-    const variants: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; label: string }> = {
-      minor: { variant: "secondary", label: "Minor" },
-      major: { variant: "destructive", label: "Major" },
-      critical: { variant: "destructive", label: "Critical" },
-    };
-    const config = variants[severity] || { variant: "outline" as const, label: severity };
-    return <Badge variant={config.variant}>{config.label}</Badge>;
-  };
-
-  const allOperational = services?.every((s) => s.status === "operational");
+  const head = raw ? headline(raw) : null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto py-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-4xl font-bold tracking-tight">System Status</h1>
-              <p className="text-muted-foreground mt-2">
-                Real-time status and uptime monitoring for COAI Platform
-              </p>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  refetchServices();
-                  toast.success("Status refreshed");
-                }}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
-              </Button>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button size="sm">
-                    <Bell className="h-4 w-4 mr-2" />
-                    Subscribe to Updates
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Subscribe to Status Updates</DialogTitle>
-                    <DialogDescription>
-                      Get notified via email when incidents occur or are resolved.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      onClick={() => subscribeMutation.mutate({ email })}
-                      disabled={!email || subscribeMutation.isPending}
-                    >
-                      {subscribeMutation.isPending ? "Subscribing..." : "Subscribe"}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </div>
+    <main className="min-h-screen bg-slate-950 px-5 py-16 text-slate-100">
+      <Helmet>
+        <title>System Status | CSOAI</title>
+        <meta
+          name="description"
+          content="What Council of AI can presently establish, read live from GET /api/state — every figure with the kind and date the endpoint gave it."
+        />
+      </Helmet>
+
+      <div className="mx-auto max-w-5xl">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300">
+          System status · read from GET /api/state
+        </p>
+        <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
+          What we can establish right now.
+        </h1>
+        <p className="mt-4 max-w-3xl leading-7 text-slate-300">
+          Every figure below is quoted from <code className="text-slate-200">GET /api/state</code> by
+          field name, with the <em>kind</em> and date that endpoint attached to it. Nothing on this
+          page is computed here and nothing is added up: a declared slot, a catalogue entry and a
+          verified measurement are different kinds of fact, and the endpoint's own contract says
+          they are never summed. If a number is not in that payload, it is not established, and it
+          is not here.
+        </p>
+
+        {read.state === "unread" ? (
+          <div
+            data-testid="state-unread"
+            className="mt-8 rounded-2xl border border-amber-300/30 bg-amber-950/20 p-5"
+          >
+            <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Unread</p>
+            <p className="mt-2 leading-7 text-slate-300">
+              <code className="text-slate-200">GET /api/state</code> did not answer ({read.reason}).
+              This page has nothing to report, which is not the same as reporting zero — no figure
+              is shown rather than a remembered one.
+            </p>
           </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto py-8 space-y-8">
-        {/* Overall Status */}
-        <Card className="p-8">
-          <div className="flex items-center gap-4">
-            {allOperational ? (
-              <CheckCircle2 className="h-12 w-12 text-green-500" />
-            ) : (
-              <AlertTriangle className="h-12 w-12 text-yellow-500" />
-            )}
-            <div>
-              <h2 className="text-2xl font-bold">
-                {allOperational ? "All Systems Operational" : "Some Systems Experiencing Issues"}
-              </h2>
-              <p className="text-muted-foreground">
-                {allOperational
-                  ? "All services are running smoothly"
-                  : "We're working to resolve any issues"}
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Uptime Statistics */}
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">30-Day Uptime</p>
-                <p className="text-3xl font-bold mt-2">{uptime30?.uptime || 0}%</p>
-              </div>
-              <TrendingUp className="h-8 w-8 text-green-500" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              {uptime30?.successfulChecks || 0} / {uptime30?.totalChecks || 0} checks successful
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">60-Day Uptime</p>
-                <p className="text-3xl font-bold mt-2">{uptime60?.uptime || 0}%</p>
-              </div>
-              <TrendingUp className="h-8 w-8 text-green-500" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              {uptime60?.successfulChecks || 0} / {uptime60?.totalChecks || 0} checks successful
-            </p>
-          </Card>
-
-          <Card className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">90-Day Uptime</p>
-                <p className="text-3xl font-bold mt-2">{uptime90?.uptime || 0}%</p>
-              </div>
-              <TrendingUp className="h-8 w-8 text-green-500" />
-            </div>
-            <p className="text-xs text-muted-foreground mt-4">
-              {uptime90?.successfulChecks || 0} / {uptime90?.totalChecks || 0} checks successful
-            </p>
-          </Card>
-        </div>
-
-        {/* Active Incidents */}
-        {incidents && incidents.length > 0 && (
-          <Card className="p-6">
-            <h3 className="text-xl font-bold mb-4">Active Incidents</h3>
-            <div className="space-y-4">
-              {incidents.map((incident) => (
-                <div
-                  key={incident.id}
-                  className="border rounded-lg p-4 space-y-2"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-semibold">{incident.title}</h4>
-                        {getSeverityBadge(incident.severity)}
-                        {getIncidentStatusBadge(incident.status)}
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        {incident.description}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Started: {new Date(incident.startedAt).toLocaleString()}
-                  </p>
+        ) : (
+          <>
+            {head ? (
+              <div className="mt-8 rounded-2xl border border-emerald-400/25 bg-emerald-950/25 p-5">
+                <div className="text-3xl font-black text-emerald-200">{head.value}</div>
+                <div className="mt-1 font-mono text-[11px] text-emerald-300/70">
+                  public_count · {head.kind}
+                  {head.as_of ? ` · as at ${head.as_of}` : ""}
                 </div>
+                {head.note ? <p className="mt-2 text-sm text-slate-300">{head.note}</p> : null}
+              </div>
+            ) : null}
+
+            <div className="mt-8 space-y-8">
+              {read.sections.map((s) => (
+                <section key={s.id} data-testid={`state-section-${s.id}`}>
+                  <h2 className="text-xl font-bold capitalize text-slate-100">{s.title}</h2>
+                  <div className="mt-1 font-mono text-[11px] text-slate-500">
+                    {s.authority ? <>authority {s.authority}</> : null}
+                    {s.live_endpoint ? <> · live {s.live_endpoint}</> : null}
+                  </div>
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {s.cells.map((c) => (
+                      <Cell key={c.field} c={c} />
+                    ))}
+                  </div>
+                  {s.cautions.map((t) => (
+                    <p key={t.slice(0, 40)} className="mt-3 text-[12px] leading-snug text-amber-200/80">
+                      {t}
+                    </p>
+                  ))}
+                </section>
               ))}
             </div>
-          </Card>
-        )}
 
-        {/* Service Status */}
-        <Card className="p-6">
-          <h3 className="text-xl font-bold mb-4">Service Status</h3>
-          <div className="space-y-3">
-            {services?.map((service) => (
-              <div
-                key={service.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  {getStatusIcon(service.status)}
-                  <div>
-                    <p className="font-medium">{service.displayName}</p>
-                    {service.description && (
-                      <p className="text-sm text-muted-foreground">
-                        {service.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                {getStatusBadge(service.status)}
-              </div>
-            ))}
-          </div>
-        </Card>
+            {read.notCovered.length ? (
+              <section className="mt-12" data-testid="state-not-covered">
+                <h2 className="text-xl font-bold text-slate-100">What this page does not cover</h2>
+                <p className="mt-1 text-sm text-slate-400">
+                  The endpoint speaks only for the committed artifacts above. These are named as out
+                  of scope, with the reason.
+                </p>
+                <ul className="mt-3 space-y-2">
+                  {read.notCovered.map((n) => (
+                    <li
+                      key={n.subject}
+                      className="rounded-xl border border-slate-700/60 bg-slate-900/40 p-3"
+                    >
+                      <span className="font-semibold text-slate-200">{n.subject}</span>
+                      {n.why_not ? (
+                        <p className="mt-1 text-[12px] leading-snug text-slate-400">{n.why_not}</p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
-        {/* SLA Compliance */}
-        <Card className="p-6 bg-gradient-to-r from-green-500/10 to-emerald-500/10 border-green-500/20">
-          <div className="flex items-center gap-4">
-            <CheckCircle2 className="h-10 w-10 text-green-500" />
-            <div>
-              <h3 className="text-xl font-bold">99.9% Uptime SLA</h3>
-              <p className="text-muted-foreground">
-                We're committed to maintaining enterprise-grade reliability. Current 90-day uptime:{" "}
-                <span className="font-bold text-green-600">{uptime90?.uptime || 0}%</span>
+            {read.doctrine ? (
+              <p className="mt-10 border-t border-slate-800 pt-5 text-[12px] leading-snug text-slate-400">
+                {read.doctrine}
               </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Corpus-watcher heartbeat (Lane 8 / drift product) */}
-        <div data-lanelock="8" data-section="corpus-watch-status">
-          <StatusCorpusWatch />
-        </div>
+            ) : null}
+          </>
+        )}
       </div>
-    </div>
+    </main>
   );
 }
