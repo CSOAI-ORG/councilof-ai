@@ -24,23 +24,35 @@ OUT = ROOT / "public" / "interop" / "receipts"
 
 def card_for(row: dict) -> dict:
     fields = (
-        "host", "url", "advertised_units", "indexes", "x402_version",
-        "pay_to", "mime", "probe_s", "status", "observed_at", "mode",
+        "host", "url", "indexes", "x402_version", "pay_to", "payer",
+        "status", "paid_status", "paid_s", "bytes", "settle_tx", "spent_units_running",
+        "mode", "observed_at",
     )
-    card = {"schema": "csoai.x402-census-card/0.1", "kind": "census-card"}
+    card = {"schema": "csoai.x402-settlement-card/0.1", "kind": "settlement-card"}
     for f in fields:
         if f in row and row[f] not in (None, ""):
             card[f] = row[f]
     card["sig_ed25519"] = None
     card["state"] = "queued"
-    card["signed_means"] = "card root signed by the OIDC signer; a census card is never a grade"
+    card["signed_means"] = "card root signed by the OIDC signer; a settlement card is never a grade"
     return card
 
 def main() -> int:
-    tape = sorted(glob.glob(str(ROOT / "docs" / "product" / "x402-settlement-census-*.jsonl")))
-    if not tape:
-        print("no x402-settlement-census-*.jsonl input"); return 1
-    src = pathlib.Path(tape[-1])
+    tapes = sorted(glob.glob(str(ROOT / "docs" / "product" / "x402-settlement-census-*.jsonl")))
+    # Receipts come from the paid (SETTLE) pass, never the dry one: a row without a
+    # mode, or mode DRY, is not a settlement and carries no tx hash.
+    src = None
+    for p in tapes:
+        try:
+            first = json.loads(pathlib.Path(p).read_text(errors="replace").splitlines()[0])
+            if first.get("mode") == "SETTLE":
+                src = p
+                break
+        except Exception:
+            continue
+    if src is None:
+        print("no SETTLE-mode census tape (paid rows) — refused to build from a dry pass"); return 1
+    src = pathlib.Path(src)
     rows = [json.loads(l) for l in src.read_text(errors="replace").splitlines() if l.strip()]
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "cards").mkdir(parents=True, exist_ok=True)
