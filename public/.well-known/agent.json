@@ -123,6 +123,23 @@
       "examples": [
         "POST /api/assess {\"system\": \"<what the system does and for whom>\"}"
       ]
+    },
+    {
+      "id": "x402-discovery",
+      "name": "x402 discovery + free door",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only \u2014 no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing \u2014 proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming\u2014Paddle not live. No card-processor invent. Measurement, never certification.",
+      "tags": [
+        "x402",
+        "discovery",
+        "payments",
+        "measurement"
+      ],
+      "examples": [
+        "GET https://councilof.ai/.well-known/x402.json",
+        "GET https://councilof.ai/api/free-door",
+        "GET https://councilof.ai/api/gspc",
+        "GET https://councilof.ai/gspc-verify"
+      ]
     }
   ],
   "catalogUrl": "https://councilof.ai/interop/surface-catalog.json",
