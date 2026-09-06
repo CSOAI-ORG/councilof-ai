@@ -390,8 +390,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/packs/eu-article-50": "EU Article 50 evidence pack — signed C2PA durability | CSOAI",
   "/gpai-evidence": "GPAI Evidence Pack — independent evidence for the AI Office | CSOAI",
   "/cra-readiness": "CRA Readiness Kit — the 24h/72h/14-day runbook, signed | CSOAI",
-  "/cobolbridge": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
-  "/cobol": "COBOL Bridge — Council of AI Layer-0 MCP | CSOAI",
+  "/cobolbridge": "CobolBridge — legacy system to signed evidence | CSOAI",
   "/verify": "Verify a signed CSOAI measurement | CSOAI",
   "/governance-layer": "Council Governance Layer | CSOAI",
   "/status": "System Status | CSOAI",
@@ -403,7 +402,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/globe": "Global Regulation Globe | CSOAI",
   "/tour": "Platform Tour | CSOAI",
   "/demo": "Demo | CSOAI",
-  "/assess": "Paid assessment — booking not live · Coming — Paddle | Council of AI",
+  "/assess": "Get measured — paid measurement; booking not live | Council of AI",
   "/login": "Sign in | Council of AI",
   "/dashboard": "Council OS | Council of AI",
   "/os": "Council OS | Council of AI",
@@ -906,7 +905,7 @@ function App() {
                   <Route path="/sov-towns">{() => <Redirect to="/gspc-arena?view=towns" />}</Route>
                   {/* KILLED (audit §0.2 #22): internal strategy page ("goldmines/black swans") was public. */}
                   <Route path="/crown-jewels">{() => <Redirect to="/" />}</Route>
-                  <Route path="/cobol" component={CobolBridge} />
+                  <Route path="/cobol" component={ContentReviewNotice} />
                   <Route path="/cobolbridge" component={CobolBridge} />
                   <Route path="/risk-heatmap" component={RiskHeatmap} />
                   <Route path="/webhooks" component={ContentReviewNotice} />
