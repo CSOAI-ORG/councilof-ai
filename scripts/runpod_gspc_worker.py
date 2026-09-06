@@ -834,6 +834,7 @@ PUBLIC_HEALTH_KEYS = (
     "invalid_config_count",
     "jobs_degraded",
     "successful_runs",
+    "counters_scope",
     "failed_runs",
     "last_failure_at",
     "last_failure_code",
@@ -849,8 +850,21 @@ PUBLIC_HEALTH_KEYS = (
 )
 
 
+# successful_runs / failed_runs count THIS PROCESS since it started, not the runs that
+# exist. On 2026-09-05 health reported successful_runs: 70 while 112 run directories sat
+# on disk from earlier worker generations (the release dir is versioned, so there have
+# been others). Both numbers are right about different things and neither said which:
+# read as "runs we hold" the counter undercounts the durable set by 42, and read as
+# "this worker's output" the directory count overcounts it. A counter that is a
+# per-process tally should say so where it is published.
+COUNTERS_SCOPE = "successful_runs/failed_runs count THIS worker process since started_at, not the run directories on disk"
+
+
 def sanitized_health(value: dict[str, Any]) -> dict[str, Any]:
-    return {key: value[key] for key in PUBLIC_HEALTH_KEYS if key in value}
+    out = {key: value[key] for key in PUBLIC_HEALTH_KEYS if key in value}
+    if "successful_runs" in out or "failed_runs" in out:
+        out["counters_scope"] = COUNTERS_SCOPE
+    return out
 
 
 class ReadOnlyHealthServer:
