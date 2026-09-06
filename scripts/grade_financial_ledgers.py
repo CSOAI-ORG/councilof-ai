@@ -121,7 +121,10 @@ def main() -> int:
     try:
         registry = json.loads((INTEROP / "bank-registry.json").read_text())
         coverage = json.loads((INTEROP / "coverage-xrpl-swift.json").read_text())
-        swift = json.loads((INTEROP / "swift-17.json").read_text())
+        # swift-census.json supersedes swift-17.json and carries 26 rows, which is the
+        # cohort the brief names. I graded the 17-row tape first because I had not found
+        # this one; /api/swift reads it and its own `supersedes` field says so.
+        swift = json.loads((INTEROP / "swift-census.json").read_text())
     except Exception as exc:  # noqa: BLE001
         print(f"UNCHECKABLE: cannot read the registries: {exc}", file=sys.stderr)
         return 2
@@ -132,6 +135,7 @@ def main() -> int:
     banks = [str(b.get("bank") or "") for b in (registry.get("banks") or [])]
     swift_rows = swift.get("rows") or []
     swift_names = [str(r.get("name") or r.get("institution") or r.get("bank") or "") for r in swift_rows]
+    swift_source = "public/interop/swift-census.json"
 
     cards = [grade_subject(b, "bank", issuers, probe) for b in banks if b]
     cards += [grade_subject(s, "swift-cohort", issuers, probe) for s in swift_names if s]
@@ -154,7 +158,7 @@ def main() -> int:
         "source_urls": [args.node,
                         "https://councilof.ai/interop/bank-registry.json",
                         "https://councilof.ai/interop/coverage-xrpl-swift.json",
-                        "https://councilof.ai/interop/swift-17.json"],
+                        "https://councilof.ai/interop/swift-census.json"],
         "payload": {
             "kind": "csoai.financial-ledger-n/0.1",
             "flags": {"read_only": True, "keyless": True, "writes_board": False, "signs_nothing": False},
