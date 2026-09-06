@@ -5,9 +5,9 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 200 · 13714 B |
+| free preview | HTTP 200 · 13654 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | FREE PREVIEW returns content; paid artefact at the 402 |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/swift-bank-pack.md: signed cards, assembled server-side from

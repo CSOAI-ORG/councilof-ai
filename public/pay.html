@@ -3,474 +3,208 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>x402 integration status — Council of AI</title>
+<title>Pay — free · x402 pay-as-you-go | Council of AI</title>
 <meta name="robots" content="index,follow" />
-<meta name="description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
+<meta name="description" content="Council of AI pay desk: free verify door, RAS x402 pay-as-you-go on Base USDC, Human booking not live. No invent prices. Measurement credential, never a grade." />
 <link rel="canonical" href="https://councilof.ai/pay" />
-<meta property="og:title" content="x402 integration status — Council of AI" />
-<meta property="og:description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
+<meta property="og:title" content="Pay — free · x402 pay-as-you-go | Council of AI" />
+<meta property="og:description" content="Quote → confirm. Free verify. RAS via x402 (Base USDC). Human booking not live. Across / MetaMask Bridge helper only — we do not bridge funds." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://councilof.ai/pay" />
 <meta property="og:image" content="https://councilof.ai/og-default.png" />
-<meta property="og:site_name" content="CSOAI Ltd" />
+<meta property="og:site_name" content="Council of AI" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="x402 integration status — Council of AI" />
-<meta name="twitter:description" content="CSOAI x402 integration status. Pricing and successful production settlement remain pending verification." />
+<meta name="twitter:title" content="Pay — free · x402 pay-as-you-go | Council of AI" />
+<meta name="twitter:description" content="Quote → confirm. Free verify. RAS via x402 (Base USDC). Human booking not live." />
 <meta name="twitter:image" content="https://councilof.ai/og-default.png" />
 <meta name="theme-color" content="#16a34a" />
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "CSOAI \u2014 Council of AI",
-  "url": "https://councilof.ai/pay",
-  "description": "CSOAI x402 integration status. Pricing and successful production settlement remain pending verification.",
-  "publisher": {
-    "@type": "Organization",
-    "name": "CSOAI Ltd",
-    "url": "https://csoai.org"
-  }
-}
-</script>
 <style>
   :root {
-    --accent: #16a34a;
-    --accent-hover: #15803d;
-    --accent-light: #dcfce7;
-    --bg: #ffffff;
-    --fg: #1f2937;
-    --muted: #6b7280;
-    --muted-light: #f3f4f6;
-    --card: #f9fafb;
-    --card-hover: #f3f4f6;
-    --border: #e5e7eb;
-    --border-strong: #d1d5db;
-    --code-bg: #f3f4f6;
-    --warning: #dc2626;
-    --success: #16a34a;
-    --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, monospace;
+    --accent: #16a34a; --accent-hover: #15803d; --accent-light: #dcfce7;
+    --bg: #fff; --fg: #1f2937; --muted: #6b7280; --card: #f9fafb; --border: #e5e7eb;
+    --code-bg: #f3f4f6; --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: var(--font-sans);
-    background: var(--bg);
-    color: var(--fg);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-  /* Header */
-  .site-header {
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(8px);
-    background: rgba(255,255,255,0.95);
-  }
-  .site-header-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-  }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    color: var(--fg);
-    font-weight: 900;
-    font-size: 18px;
-    letter-spacing: -0.02em;
-  }
-  .logo-mark {
-    width: 32px;
-    height: 32px;
-    background: var(--accent);
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    color: white;
-    font-weight: 900;
-    font-size: 18px;
-  }
-  .logo-text { color: var(--fg); }
-  .logo-text strong { color: var(--accent); }
-  .nav { display: flex; gap: 4px; align-items: center; }
-  .nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background 0.15s, color 0.15s;
-  }
+  body { margin: 0; font-family: var(--font-sans); background: var(--bg); color: var(--fg); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
+  .site-header { border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); }
+  .site-header-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--fg); font-weight: 900; font-size: 17px; }
+  .logo-mark { width: 30px; height: 30px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; color: #fff; font-weight: 900; }
+  .nav a { color: var(--muted); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 6px; }
   .nav a:hover { color: var(--fg); background: var(--card); }
-  .nav .nav-cta {
-    background: var(--accent);
-    color: white;
-    padding: 8px 16px;
-    margin-left: 8px;
-  }
-  .nav .nav-cta:hover { background: var(--accent-hover); color: white; }
-  /* Main */
-  main {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 64px 24px 96px;
-  }
-  .lid {
-    display: inline-block;
-    background: var(--accent-light);
-    border: 1px solid var(--accent);
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent-hover);
-    margin-bottom: 24px;
-  }
-  h1 {
-    font-size: 48px;
-    line-height: 1.1;
-    margin: 0 0 16px;
-    font-weight: 900;
-    letter-spacing: -0.03em;
-    color: var(--fg);
-  }
-  h2 {
-    font-size: 28px;
-    margin: 56px 0 16px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-    border-top: 1px solid var(--border);
-    padding-top: 56px;
-  }
-  h3 {
-    font-size: 20px;
-    margin: 32px 0 12px;
-    font-weight: 700;
-    color: var(--fg);
-  }
-  p {
-    font-size: 17px;
-    line-height: 1.7;
-    color: var(--muted);
-    margin: 0 0 16px;
-  }
-  p strong, p em { color: var(--fg); }
-  a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-decoration-color: var(--border-strong);
-    text-underline-offset: 3px;
-  }
-  a:hover { text-decoration-color: var(--accent); }
-  code {
-    background: var(--code-bg);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.9em;
-    color: var(--fg);
-  }
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    padding: 16px;
-    border-radius: 8px;
-    overflow-x: auto;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.6;
-    margin: 16px 0;
-    color: var(--fg);
-  }
-  pre code { background: none; padding: 0; color: inherit; }
-  /* Components */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .card:hover { border-color: var(--border-strong); }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin: 32px 0;
-  }
-  .card-name {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent);
-    margin: 0 0 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .price {
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--fg);
-    margin: 0 0 8px;
-    letter-spacing: -0.02em;
-  }
-  .card-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-    margin: 8px 0 0;
-  }
-  .cta {
-    display: inline-block;
-    background: var(--accent);
-    color: white;
-    padding: 14px 28px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 15px;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .cta:hover { background: var(--accent-hover); color: white; }
-  .cta-secondary {
-    background: var(--bg);
-    color: var(--accent);
-    border: 1px solid var(--accent);
-  }
-  .cta-secondary:hover { background: var(--accent-light); }
-  .meta {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px 24px;
-    margin: 32px 0;
-    padding: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 14px;
-  }
+  main { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+  .lid { display: inline-block; background: var(--accent-light); border: 1px solid var(--accent); padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; color: var(--accent-hover); margin-bottom: 20px; }
+  h1 { font-size: clamp(32px, 5vw, 44px); line-height: 1.1; margin: 0 0 12px; font-weight: 900; letter-spacing: -.03em; }
+  .lede { font-size: 17px; color: var(--muted); margin: 0 0 28px; max-width: 46rem; }
+  h2 { font-size: 22px; margin: 40px 0 14px; font-weight: 800; letter-spacing: -.02em; }
+  p { font-size: 16px; color: var(--muted); margin: 0 0 14px; }
+  .doors { display: grid; gap: 14px; margin: 24px 0 8px; }
+  .door { border: 1px solid var(--border); border-radius: 14px; background: var(--card); padding: 18px 18px 16px; }
+  .door h3 { margin: 0 0 6px; font-size: 18px; font-weight: 800; color: var(--fg); }
+  .door .tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .door .desc { font-size: 14px; color: var(--muted); margin: 0 0 14px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button, .btn { appearance: none; border: 0; cursor: pointer; border-radius: 8px; padding: 10px 16px; font-weight: 650; font-size: 14px; text-decoration: none; display: inline-block; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-ghost { background: #fff; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-muted { background: #fff; color: var(--muted); border: 1px solid var(--border); cursor: not-allowed; }
+  .panel { display: none; margin-top: 14px; padding: 14px; border-radius: 10px; background: #fff; border: 1px dashed var(--border); }
+  .panel.open { display: block; }
+  .panel h4 { margin: 0 0 8px; font-size: 14px; font-weight: 800; color: var(--fg); }
+  .quote-line { font-family: var(--font-mono); font-size: 13px; color: var(--fg); background: var(--code-bg); padding: 10px 12px; border-radius: 8px; margin: 0 0 12px; word-break: break-word; }
+  .helper { margin-top: 28px; padding: 16px 18px; border-radius: 12px; border: 1px solid var(--border); background: #fff; }
+  .helper h2 { margin-top: 0; border: 0; padding: 0; font-size: 18px; }
+  .meta { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; margin: 24px 0; padding: 16px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; font-size: 13px; }
   .meta-key { color: var(--muted); font-weight: 500; }
   .meta-val { color: var(--fg); font-family: var(--font-mono); word-break: break-all; }
-  /* Footer */
-  footer.site-footer {
-    border-top: 1px solid var(--border);
-    background: var(--card);
-    padding: 48px 24px;
-    margin-top: 96px;
-  }
-  .footer-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 48px;
-  }
-  @media (max-width: 768px) {
-    .footer-inner { grid-template-columns: 1fr; }
-    .site-header-inner { flex-direction: column; align-items: flex-start; }
-    h1 { font-size: 36px; }
-    main { padding: 32px 16px 64px; }
-  }
-  .footer-col h4 {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--fg);
-    margin: 0 0 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .footer-col a {
-    display: block;
-    color: var(--muted);
-    text-decoration: none;
-    padding: 4px 0;
-    font-size: 14px;
-  }
-  .footer-col a:hover { color: var(--accent); }
-  .footer-bottom {
-    max-width: 1200px;
-    margin: 32px auto 0;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 13px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .lid-phrase {
-    color: var(--accent);
-    font-weight: 600;
-  }
-  /* Hero */
-  .hero { padding: 96px 0 64px; }
-  .hero h1 { font-size: 56px; max-width: 720px; }
-  .hero p { font-size: 19px; max-width: 640px; }
-  /* Badges */
-  .badge {
-    display: inline-block;
-    padding: 3px 8px;
-    background: var(--accent-light);
-    color: var(--accent-hover);
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-right: 4px;
-  }
-  .badge-muted {
-    background: var(--muted-light);
-    color: var(--muted);
-  }
+  .warn { font-size: 13px; color: #b45309; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 12px; margin: 12px 0; }
+  footer.site-footer { border-top: 1px solid var(--border); background: var(--card); padding: 28px 24px; margin-top: 56px; font-size: 13px; color: var(--muted); text-align: center; }
 </style>
 </head>
 <body>
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="logo">
-      <span class="logo-mark">C</span>
-      <span class="logo-text">CS<strong>O</strong>AI</span>
-    </a>
+    <a class="logo" href="/"><span class="logo-mark">C</span><span>Council of AI</span></a>
     <nav class="nav">
       <a href="/api/gspc">Board</a>
-      <a href="/.well-known/">Discover</a>
       <a href="/gspc-verify">Verify</a>
-      <a href="/pay">x402 status</a>
-      <a href="/pay" class="nav-cta">Use the board</a>
+      <a href="/ras">RAS</a>
+      <a href="/pay">Pay</a>
     </nav>
   </div>
 </header>
 
 <main>
-<div class="container">
+  <div class="lid">GET board 22·22·0 · measurement credential · never a grade</div>
+  <h1>Pay</h1>
+  <p class="lede">Across-style quote → confirm. Free verify stays free and loginless. RAS agent rail is x402 on Base USDC. Human booking is not live yet. We do not invent prices. Settlement stays UNCHECKABLE until a facilitator receipt.</p>
 
-<h1>x402 resource designs — pricing and settlement pending verification</h1>
-<p>No successful production settlement receipt is claimed here. A future receipt is trustworthy only if its own Ed25519 signature verifies at <a href="https://councilof.ai/gspc-verify" style="color: var(--accent);">/gspc-verify</a>.</p>
-<p>The <a href="https://councilof.ai/api/x402" style="color: var(--accent);">x402 status endpoint</a> may describe challenges and resource names; that does not prove a price is current or that settlement succeeds. Inspect the endpoint response before relying on either. No price is asserted by this page.</p>
+  <div class="doors">
+    <section class="door" data-door="free">
+      <div class="tag">Door 1 · free</div>
+      <h3>Verify / measure free paths</h3>
+      <p class="desc">No charge. Live cite <code>/api/free-door</code> (amount 0). Re-check signed cards and the public board. Measurement credential — never certification, never sell rank.</p>
+      <div class="row">
+        <button type="button" class="btn-primary" data-quote="free">Quote</button>
+      </div>
+      <div class="panel" id="panel-free">
+        <h4>Quote</h4>
+        <div class="quote-line">cite: /api/free-door · amount: 0 · maxAmountRequired: 0 · charge: none · login: not required</div>
+        <p class="desc">Confirm opens the free-door challenge (price zero forever) and the free verifier. Nothing is billed. A grade is never sold.</p>
+        <div class="row">
+          <a class="btn-primary" href="/api/free-door">Confirm · /api/free-door (amount 0)</a>
+          <a class="btn-ghost" href="/gspc-verify">verify</a>
+          <a class="btn-ghost" href="/api/gspc">Board API</a>
+        </div>
+      </div>
+    </section>
 
-<div class="grid">
-  <div class="card">
-    <p class="card-name">Issuance</p>
-    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
-    <p class="card-desc">Proposed scoped measurement request for a named model, agent, or asset. Output and signature state must be checked in the response.</p>
+    <section class="door" data-door="x402">
+      <div class="tag">Door 2 · agent rail</div>
+      <h3>RAS pay-as-you-go via x402</h3>
+      <p class="desc">Base USDC. Quote from live discovery — this page does not invent a price. Header ≠ settlement. No <code>/proof</code> until live.</p>
+      <div class="row">
+        <button type="button" class="btn-primary" data-quote="x402">Quote</button>
+      </div>
+      <div class="panel" id="panel-x402">
+        <h4>Quote</h4>
+        <div class="quote-line" id="x402-quote">loading live discovery…</div>
+        <div class="warn">Settlement UNCHECKABLE until a published facilitator receipt and on-chain result can be independently checked. Bazaar densify sits until settle receipt. <strong>payTo ≠ payer</strong> — merchant address is not the signer/payer; never fund settle from payTo 0x2126… as if it were your wallet.</div>
+        <p class="desc">Confirm opens discovery / status only — do not treat a challenge as paid.</p>
+        <div class="row">
+          <a class="btn-primary" href="/.well-known/x402.json">Confirm · open x402 discovery</a>
+          <a class="btn-ghost" href="/api/x402">x402 status</a>
+          <a class="btn-ghost" href="/interop/x402-challenge/">challenge</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="door" data-door="human-booking">
+      <div class="tag">Door 3 · human hop</div>
+      <h3>Human booking (not live)</h3>
+      <p class="desc">Human-rail booking checkout is not live. Waitlist / not-live label only — never invent a live checkout or a price.</p>
+      <div class="row">
+        <button type="button" class="btn-primary" data-quote="human-booking">Quote</button>
+      </div>
+      <div class="panel" id="panel-human-booking">
+        <h4>Quote</h4>
+        <div class="quote-line">status: not live · checkout: unavailable · amount: not published</div>
+        <p class="desc">Confirm is disabled until CEO names a live human checkout. Booking desk stays draft.</p>
+        <div class="row">
+          <button type="button" class="btn-muted" disabled>Confirm · not live</button>
+          <a class="btn-ghost" href="/ras">RAS desk</a>
+          <a class="btn-ghost" href="/catalog.json">catalog</a>
+        </div>
+      </div>
+    </section>
   </div>
-  <div class="card">
-    <p class="card-name">Evidence bundle</p>
-    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
-    <p class="card-desc">Proposed assembly of existing scoped cards for a named obligation. No universal evidence pack is available.</p>
+
+  <section class="helper">
+    <h2>Need Eth → Base first?</h2>
+    <p>We are <strong>not</strong> a bridge and we do not move your funds. If you need Eth→Base for x402, use a third-party bridge as a helper only:</p>
+    <div class="row">
+      <a class="btn-ghost" href="https://across.to/" rel="noopener noreferrer" target="_blank">Across (helper)</a>
+      <a class="btn-ghost" href="https://portfolio.metamask.io/bridge" rel="noopener noreferrer" target="_blank">MetaMask Bridge (helper)</a>
+    </div>
+    <p style="margin:12px 0 0;font-size:13px;">Deep-link only. Council of AI never claims to bridge, custody, or settle via Across / MetaMask.</p>
+  </section>
+
+  <h2>Live rails (read-only)</h2>
+  <div class="meta">
+    <span class="meta-key">Network</span><span class="meta-val">eip155:8453 (Base)</span>
+    <span class="meta-key">Asset</span><span class="meta-val">USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)</span>
+    <span class="meta-key">payTo</span><span class="meta-val">0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 (merchant · ≠ payer)</span>
+    <span class="meta-key">Standard</span><span class="meta-val">EIP-3009 transferWithAuthorization</span>
+    <span class="meta-key">Discovery</span><span class="meta-val">https://councilof.ai/.well-known/x402.json</span>
+    <span class="meta-key">Verify</span><span class="meta-val">https://councilof.ai/gspc-verify</span>
   </div>
-  <div class="card">
-    <p class="card-name">Eunomia data feed</p>
-    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
-    <p class="card-desc">Proposed dated-delta feed. No continuous feed or automatically signed bundle is claimed.</p>
-  </div>
-  <div class="card">
-    <p class="card-name">Proof bundle</p>
-    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
-    <p class="card-desc">Proposed request for a card&rsquo;s exact-root inclusion material, when that card is actually a leaf of that root.</p>
-  </div>
-  <div class="card">
-    <p class="card-name">Custom audit</p>
-    <p class="price">Planned <span class="price-currency">settlement unverified</span></p>
-    <p class="card-desc">Proposed scoped measurement workflow. No signed card, PDF, or legal determination is promised by this page.</p>
-  </div>
-</div>
+  <p>Card-processor invent stays off this desk. No invent prices. Header ≠ settlement. Public names only: Council of AI, RAS, GSPC.</p>
 
-<h2>Proposed flow</h2>
-<ol style="color: var(--muted); line-height: 1.8; font-size: 16px;">
-  <li>A client inspects the resource and current x402 status.</li>
-  <li>If a valid HTTP 402 challenge is returned, the client validates its network, asset, recipient and amount.</li>
-  <li>A wallet authorization and facilitator submission must remain explicit user actions.</li>
-  <li>Only a confirmed on-chain result and a separately verified artefact receipt establish settlement and output.</li>
-</ol>
-
-<h2>Read-only status check</h2>
-<div class="code"><span style="color: var(--muted);"># These requests do not authorize or settle a payment.</span>
-curl https://councilof.ai/.well-known/x402.json
-curl https://councilof.ai/api/x402</div>
-<p style="color: var(--muted); font-size: 14px;">Do not fund or sign from this page. Pricing and end-to-end settlement remain pending until a published successful receipt and transaction can be independently checked.</p>
-
-<a href="https://councilof.ai/api/x402" class="cta">Inspect current x402 state →</a>
-
-<h2>Receipt requirements</h2>
-<p>A successful future flow must expose the transaction hash, resource, network, asset, amount, artefact digest and signature material. None is implied merely by an HTTP 402 challenge.</p>
-
-<div class="meta">
-  <span class="meta-key">Network</span><span class="meta-val">eip155:8453 (Base)</span>
-  <span class="meta-key">Asset</span><span class="meta-val">USDC (0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)</span>
-  <span class="meta-key">payTo</span><span class="meta-val">0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31</span>
-  <span class="meta-key">Standard</span><span class="meta-val">EIP-3009 transferWithAuthorization</span>
-  <span class="meta-key">Receipt seal</span><span class="meta-val">did:web:csoai.org#card-attestation-1</span>
-  <span class="meta-key">Verify</span><span class="meta-val">https://councilof.ai/gspc-verify</span>
-  <span class="meta-key">Discovery</span><span class="meta-val">https://councilof.ai/.well-known/x402.json</span>
-</div>
-
-<hr>
-
-<h2>What stays free</h2>
-<p>The board (<a href="/api/gspc" style="color: var(--accent);">/api/gspc</a>), root (<a href="/root.json" style="color: var(--accent);">/root.json</a>), corrections ledger (<a href="/api/corrections" style="color: var(--accent);">/api/corrections</a>), MCP door (<a href="/mcp" style="color: var(--accent);">/mcp</a>), A2A card (<a href="/.well-known/agent-card.json" style="color: var(--accent);">/.well-known/agent-card.json</a>) and verifier (<a href="/gspc-verify" style="color: var(--accent);">/gspc-verify</a>) are public routes. Check their current responses and terms; this page makes no perpetual availability promise. We do not sell a legal-compliance determination, certificate, or rank.</p>
-
-<h2>What we eat</h2>
-<p>The current repository root is <code>9b426735bc7c0e94d32ce64ccd87605880c531350ca957ecccde5046bde505cd</code> (154 leaves; Merkle root <code>2fe2a76f310ea79268c73a94543c91125fa7acc3bbf11ed489afdfeb845ea745</code>). Its Ed25519 signature verifies and its exact preimage is witnessed in Rekor at log index <code>2714574265</code>. Its OpenTimestamps proof has SHA-256 <code>91dae23c5e4d8c4914fbfca77e8274e1ddfd71b00baadd8f58e43f3633bdfc99</code> and state <strong>STAMPED_PENDING_BITCOIN</strong>: there is no Bitcoin block confirmation. This root covers only its 154 listed leaves, not every card or measurement. See <a href="/interop/root-witness-latest.json" style="color: var(--accent);">the exact-root witness</a>.</p>
-
-</div>
-
-<footer>
-<p>CSOAI Ltd · UK 16939677 · <a href="https://councilof.ai">councilof.ai</a> · <a href="https://csoai.org">csoai.org</a></p>
-<p style="margin-top: 8px;">The lid phrase: 22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact. Measurement, not certification. Anyone can re-check.</p>
-</footer>
+  <h2>What stays free</h2>
+  <p>Board (<a href="/api/gspc">/api/gspc</a>), root (<a href="/root.json">/root.json</a>), verifier (<a href="/gspc-verify">/gspc-verify</a>), MCP (<a href="/mcp">/mcp</a>). We do not sell a legal-compliance determination, certificate, or rank.</p>
 </main>
 
 <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-col">
-      <a href="/" class="logo" style="margin-bottom: 16px;">
-        <span class="logo-mark">C</span>
-        <span class="logo-text">CS<strong>O</strong>AI</span>
-      </a>
-      <p style="font-size: 14px; line-height: 1.6;">
-        Independent AI-governance measurement body.<br>
-        The current exact root is Ed25519-signed and Rekor-witnessed; its OTS stamp is pending Bitcoin confirmation. See /api/state.
-      </p>
-      <p class="lid-phrase" style="font-size: 13px; margin-top: 12px;">
-        22 axes · 22 measured
-      </p>
-    </div>
-    <div class="footer-col">
-      <h4>Product</h4>
-      <a href="/api/gspc">Board API</a>
-      <a href="/gspc-verify">Verifier</a>
-      <a href="/pay">x402 status</a>
-      <a href="/.well-known/">Discovery</a>
-      <a href="/workbench-paper">Workbench paper</a>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <a href="https://csoai.org">csoai.org</a>
-      <a href="https://huggingface.co/csoai">HuggingFace</a>
-      <a href="https://github.com/CSOAI-ORG/councilof-ai">GitHub</a>
-      <a href="/.well-known/did.json">DID</a>
-      <a href="https://x.com/csoai_org">X / Twitter</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>CSOAI Ltd · UK 16939677 · Measurement, not certification</span>
-    <span class="lid-phrase">22 axes · 22 measured · 14 model-comparison · 8 deterministic-fact</span>
-  </div>
+  <p>CSOAI Ltd · UK 16939677 · Measurement, not certification · Anyone can re-check</p>
 </footer>
 
+<script>
+(function () {
+  function openPanel(id) {
+    document.querySelectorAll(".panel").forEach(function (p) { p.classList.remove("open"); });
+    var el = document.getElementById("panel-" + id);
+    if (el) el.classList.add("open");
+  }
+  document.querySelectorAll("[data-quote]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var id = btn.getAttribute("data-quote");
+      openPanel(id);
+      if (id === "x402") loadX402Quote();
+    });
+  });
+  function loadX402Quote() {
+    var box = document.getElementById("x402-quote");
+    if (!box) return;
+    box.textContent = "fetching /.well-known/x402.json …";
+    fetch("/.well-known/x402.json", { credentials: "omit" })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok) { box.textContent = "discovery HTTP error — open /.well-known/x402.json manually; no invent price"; return; }
+        var j = res.j || {};
+        var resources = j.resources || j.accepts || j.offers || [];
+        var n = Array.isArray(resources) ? resources.length : 0;
+        var network = j.network || (j.extra && j.extra.network) || "eip155:8453";
+        var payTo = (j.accepts && j.accepts[0] && j.accepts[0].payTo) || (Array.isArray(resources) && resources[0] && resources[0].payTo) || "see discovery";
+        box.textContent = "live discovery ok · resources/offers listed: " + n + " · network hint: " + network + " · amount: see discovery (not invented here) · payTo: " + payTo + " · payTo≠payer (merchant≠signer) · settlement: UNCHECKABLE until receipt";
+      })
+      .catch(function () {
+        box.textContent = "discovery unreachable from this browser — open /.well-known/x402.json; amount not invented on this page";
+      });
+  }
+})();
+</script>
 </body>
 </html>

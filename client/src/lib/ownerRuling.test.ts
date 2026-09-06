@@ -163,3 +163,41 @@ describe("route titles obey the ruling and type no count", () => {
     expect(bad, "the page's own rule is that no page types a count").toEqual([]);
   });
 });
+
+/**
+ * JSON-LD is the copy a search engine reads, and the body-text checks above cannot see it: a price
+ * there is written `price: "99"` with the currency in a SEPARATE key, so no currency-symbol regex
+ * matches it. MCPDetail.tsx carried `price: "99", priceCurrency: "USD", category: "subscription"`
+ * on the /mcp/:slug route — one page per MCP server in the registry, every one of them advertising
+ * a $99 subscription for a free, permissively-licensed package. Structured data gets its own check.
+ */
+describe("structured data offers nothing we do not sell", () => {
+  it("no JSON-LD price is non-zero", () => {
+    // ONLY structured data. A first pass matched every `price:` key and flagged seventeen UI cards
+    // reading "Free", "per evaluation", "Market-set" — all compliant, none of them machine-readable
+    // offers. Scope to the inside of an Offer block, which is what a search engine renders.
+    const bad: string[] = [];
+    for (const f of FILES) {
+      const src = readFileSync(f, "utf8");
+      for (const off of src.matchAll(/@type["'`]?\s*:\s*["'`]Offer["'`][\s\S]{0,220}/g)) {
+        const m = off[0].match(/\bprice:\s*["'`]([^"'`]+)["'`]/);
+        if (m && m[1].trim() !== "0") bad.push(`${rel(f)}: Offer price "${m[1]}"`);
+      }
+    }
+    expect(bad, "structured data prints a price; the amount belongs at the 402").toEqual([]);
+  });
+
+  it("no JSON-LD offer is categorised as a subscription", () => {
+    const bad: string[] = [];
+    for (const f of FILES) {
+      const src = readFileSync(f, "utf8");
+      if (/category:\s*["'`]subscription["'`]/i.test(src)) bad.push(rel(f));
+    }
+    expect(bad, "there are no subscriptions").toEqual([]);
+  });
+
+  it("finds JSON-LD at all, so this cannot pass vacuously", () => {
+    const withLd = FILES.filter((f) => /@type["'`]?\s*:\s*["'`]Offer/.test(readFileSync(f, "utf8")));
+    expect(withLd.length, "no Offer blocks found — the guard would be empty").toBeGreaterThan(0);
+  });
+});

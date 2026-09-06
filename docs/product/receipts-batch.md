@@ -1,6 +1,6 @@
 # Receipts batch (historical measurement leaves)
 
-`receipts-batch` — derived from live endpoints on 2026-09-06T04:45:27Z.
+`receipts-batch` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (6337 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1` — status **200**, **2047 bytes**, `sha256 27093a64beb491ac…`
+`https://councilof.ai/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1` — status **200**, **2047 bytes**, `sha256 d634f4c9a98ad2ed…`
 
 ```json
 {
@@ -32,7 +32,7 @@
   },
   "roots_in_window": 23,
   "roots_indexed_total": 29,
-  "batch_sha256": "8b8cf6d27e1e0e9fd
+  "batch_sha256": "cc4a0e3ea6adbee33
 ```
 
 **DELIVERABLE — free preview answers with real bytes.** Advertised.

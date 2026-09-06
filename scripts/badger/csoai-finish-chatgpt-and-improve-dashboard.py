@@ -198,7 +198,7 @@ def build_chatgpt_features_map() -> dict:
                 "kind": "telephony",
                 "scope": "Send SMS + place calls. Every message signed.",
                 "endpoint": "/api/phone",
-                "status": "live",
+                "status": "not_live",
                 "wasm_required": False,
             },
             {
@@ -207,7 +207,7 @@ def build_chatgpt_features_map() -> dict:
                 "kind": "ocr",
                 "scope": "Scan docs (PDF / image / handwritten). Every field signed.",
                 "endpoint": "/api/scanner",
-                "status": "live",
+                "status": "not_live",
                 "wasm_required": False,
             },
             {
@@ -216,7 +216,7 @@ def build_chatgpt_features_map() -> dict:
                 "kind": "qr",
                 "scope": "Scan QR codes. Every code resolved + signed.",
                 "endpoint": "/api/qr",
-                "status": "live",
+                "status": "not_live",
                 "wasm_required": False,
             },
         ],

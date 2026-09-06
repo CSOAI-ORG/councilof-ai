@@ -1,6 +1,6 @@
 # XRPL asset evidence card (per request)
 
-`xrpl-asset-evidence` — derived from live endpoints on 2026-09-06T04:45:27Z.
+`xrpl-asset-evidence` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (4429 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1` — status **200**, **4055 bytes**, `sha256 bf5dcbb53228a98e…`
+`https://councilof.ai/api/rwa/evidence?asset=RLUSD&preview=1` — status **200**, **4063 bytes**, `sha256 2bd790cfe1c67a03…`
 
 ```json
 {
@@ -21,7 +21,7 @@
     "schema": "https://councilof.ai/schema/card-v0.json",
     "surface": "public.notice",
     "subject": "XRPL RLUSD (Ripple) two-way domain PASS + on-chain obligation",
-    "as_of": "2026-09-06T04:45:25Z",
+    "as_of": "2026-09-06T06:00:15Z",
     "source_urls": [
       "https://councilof.ai/api/xrpl",
       "https://ripple.com/.well-known/xrp-ledger.toml",

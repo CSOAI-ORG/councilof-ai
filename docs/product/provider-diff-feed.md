@@ -1,6 +1,6 @@
 # Provider document diff feed
 
-`provider-diff-feed` — derived from live endpoints on 2026-09-06T04:45:27Z.
+`provider-diff-feed` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
