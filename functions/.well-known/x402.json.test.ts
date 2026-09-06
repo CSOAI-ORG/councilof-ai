@@ -122,3 +122,21 @@ describe("door descriptions are buyer-first (2026-09-06)", () => {
     }
   });
 });
+
+describe("resources are v1-shaped (accepts[] with outputSchema)", () => {
+  it("every resource declares the v1 PaymentRequirements", async () => {
+    const body = await get();
+    const resources = body.resources as {
+      url: string;
+      accepts?: { scheme: string; network: string; payTo: string; description: string; outputSchema?: object }[];
+    }[];
+    for (const r of resources) {
+      expect(r.accepts, `${r.url} must declare accepts[] for v1 consumers`).toBeTruthy();
+      const a = r.accepts![0];
+      expect(a.scheme).toBe("exact");
+      expect(a.network).toMatch(/base/i);
+      expect(a.payTo).toMatch(/^0x/i);
+      expect(a.outputSchema).toBeTruthy();
+    }
+  });
+});
