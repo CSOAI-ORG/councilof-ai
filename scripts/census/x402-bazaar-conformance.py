@@ -12,6 +12,15 @@ HTTP 402 AND a PAYMENT-REQUIRED response header AND x402Version 2 in the body AN
 block. Identifiable UA, 12 s timeout, 24 concurrent. Nothing signed, nothing paid, no door settled.
 Both indexes answer keyless: CDP paginates limit=100&offset=N, PayAI limit=1000&offset=N.
 
+Two readings the 2026-09-05 snapshot forces, established by re-probing its own rows on 6 Sep:
+  * "x402Version 2 in the body" is literal. Most doors carry a v2 challenge WITH the bazaar block in the
+    PAYMENT-REQUIRED header and a v1 (or empty) body; the snapshot scores those NON-conformant
+    (394 of 3,520). Reading the header first scored 1,310 of 2,800 — a rule change, not an overnight
+    change. So `x402_version` / `has_bazaar_extension` / `accepts` come from the BODY here, and the header's
+    own reading is kept beside them as header_x402_version / header_has_bazaar_extension.
+  * A listing without a scheme (2,817 PayAI rows on 6 Sep) is still a listed host: the snapshot kept 761
+    such probe_urls. They are probed as https:// and flagged listed_without_scheme.
+
     x402-bazaar-conformance.py --out-dir /workspace/lanes/out/x402-bazaar-conformance [--date 2026-09-06]
                                [--previous <jsonl>]   # diff basis; default = newest earlier snapshot in out-dir,
                                                       # else the 2026-09-05 snapshot on the Hub
@@ -76,24 +85,29 @@ def probe(host, url):
         return row
     h = {k.lower(): v for k, v in headers.items()}
     row["status"] = status
-    ch = None
+    hdr = None
     if h.get("payment-required"):
         try:
-            ch = json.loads(base64.b64decode(h["payment-required"]))
+            hdr = json.loads(base64.b64decode(h["payment-required"]))
         except Exception:
-            ch = None
-    if ch is None:
-        try:
-            ch = json.loads(body.decode() or "null")
-        except Exception:
-            ch = None
-    if not isinstance(ch, dict):
+            hdr = None
+    try:
+        bod = json.loads(body.decode() or "null")
+    except Exception:
+        bod = None
+    if not isinstance(bod, dict):
+        bod = {}
+    if not isinstance(hdr, dict):
+        hdr = {}
+    if not bod and not hdr:
         row["conformant"] = False
         return row
-    accepts = ch.get("accepts") or []
+    accepts = bod.get("accepts") or hdr.get("accepts") or []
     row.update(payment_required_header=bool(h.get("payment-required")),
-               x402_version=ch.get("x402Version"), has_accepts=bool(accepts),
-               has_bazaar_extension=isinstance((ch.get("extensions") or {}).get("bazaar"), dict))
+               x402_version=bod.get("x402Version"), has_accepts=bool(accepts),
+               has_bazaar_extension=isinstance((bod.get("extensions") or {}).get("bazaar"), dict),
+               header_x402_version=hdr.get("x402Version") if hdr else None,
+               header_has_bazaar_extension=isinstance((hdr.get("extensions") or {}).get("bazaar"), dict) if hdr else None)
     if accepts and isinstance(accepts[0], dict):
         a = accepts[0]
         row.update(scheme=a.get("scheme"), network=a.get("network"),
@@ -120,15 +134,20 @@ def main():
     t0 = time.time()
     cdp, cdp_meta = enumerate_index("cdp", CDP, 100, log)
     payai, payai_meta = enumerate_index("payai", PAYAI, 1000, log)
-    hosts, skipped = {}, {"cdp": 0, "payai": 0}
+    hosts, noscheme = {}, {"cdp": 0, "payai": 0}
     for name, items in (("cdp", cdp), ("payai", payai)):
         for it in items:
-            res = it.get("resource") or ""
-            host = urllib.parse.urlparse(res).netloc.lower() if res.startswith("http") else ""
-            if not host:  # a listing with no http(s) URL has no door to probe; counted, never dropped silently
-                skipped[name] += 1
+            res = str(it.get("resource") or "").strip()
+            if not res:
                 continue
-            e = hosts.setdefault(host, {"probe_url": res, "indexes": []})
+            flag = not res.startswith("http")
+            if flag:  # a listed host without a scheme is still a listed host (the snapshot kept 761 of them)
+                noscheme[name] += 1
+                res = "https://" + res
+            host = urllib.parse.urlparse(res).netloc.lower()
+            if not host or " " in host:
+                continue
+            e = hosts.setdefault(host, {"probe_url": res, "indexes": [], "listed_without_scheme": flag})
             if name not in e["indexes"]:
                 e["indexes"].append(name)
     order = sorted(hosts)
@@ -141,7 +160,10 @@ def main():
     with cf.ThreadPoolExecutor(CONCURRENCY) as ex:
         futs = {ex.submit(probe, h, hosts[h]["probe_url"]): h for h in order}
         for i, f in enumerate(cf.as_completed(futs), 1):
-            r = f.result(); r["indexes"] = hosts[r["host"]]["indexes"]; rows.append(r)
+            r = f.result(); r["indexes"] = hosts[r["host"]]["indexes"]
+            if hosts[r["host"]]["listed_without_scheme"]:
+                r["listed_without_scheme"] = True
+            rows.append(r)
             if i % 500 == 0:
                 log(f"  probed {i}/{len(order)}")
     rows.sort(key=lambda r: r["host"])
@@ -168,8 +190,13 @@ def main():
                    "header AND x402Version 2 in the body AND an extensions.bazaar block. Identifiable UA, 12s timeout, "
                    "24 concurrent. Nothing signed, nothing paid, no door settled."),
         "indexes": {"cdp": cdp_meta, "payai": payai_meta},
-        "resources_without_http_url": skipped,
+        "resources_listed_without_scheme": noscheme,
         "hosts_distinct": len(hosts), "hosts_probed": len(rows), "partial": partial,
+        "rule_note": ("x402_version and has_bazaar_extension are read from the BODY, as the 2026-09-05 snapshot did; "
+                      "header_x402_version / header_has_bazaar_extension carry the PAYMENT-REQUIRED header's own reading. "
+                      "header_v2_bazaar_not_body counts doors that pass in the header only."),
+        "header_v2_bazaar_not_body": sum(1 for r in rows if r.get("status") == 402 and r.get("header_x402_version") == 2
+                                         and r.get("header_has_bazaar_extension") and not r["conformant"]),
         "headline": {"conformant": len(conf), "conformant_pct": round(100 * len(conf) / max(1, len(rows)), 2),
                      "answered_402": sum(1 for r in rows if r.get("status") == 402),
                      "unreachable": sum(1 for r in rows if r.get("status") is None),
