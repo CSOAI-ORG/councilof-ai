@@ -1,0 +1,41 @@
+name: growth-loop
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # weekly, Monday 06:00 UTC — closes the money loop each week
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Run the growth loop producer
+        run: |
+          python3 scripts/growth/revenue_loop.py
+          ls docs/growth/*/loop.json
+      - name: Commit the emitted run
+        run: |
+          DATE=$(date -u +%F)
+          git config user.name "CSOAI-ORG"
+          git config user.email "bot@csoai.org"
+          git add docs/growth/
+          if git diff --cached --quiet; then
+            echo "no growth-loop changes this week"; exit 0
+          fi
+          git commit -q -m "growth: revenue loop $DATE (producer output)"
+          git push origin HEAD:growth-loop/weekly-$DATE
+      - name: Open the loop PR
+        continue-on-error: true
+        run: |
+          DATE=$(date -u +%F)
+          gh pr create --repo CSOAI-ORG/councilof-ai --head growth-loop/weekly-$DATE \
+            --base master --title "growth: revenue loop $DATE" \
+            --body "Weekly revenue-loop run. Numbers: one_number as measured, funnel per door (as recorded), gate state verbatim, ≤5 next moves each with a PROOF, retro line. Read docs/growth/$DATE/loop.md; the governor reviews; nothing here is a forecast."

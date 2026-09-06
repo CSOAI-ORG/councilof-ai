@@ -48,6 +48,28 @@ export function functionRoutes(fnDir) {
   return out;
 }
 
+/**
+ * The app's own route list. pr-gates runs build:client WITHOUT the prerender, so a tree measured
+ * there contains no prerendered route — and link-gate reported /library/company/ and /verify as
+ * unserved while both serve real, distinct, titled pages (a nonsense path 404s, so that is not a
+ * catch-all artefact). The gate was right about its tree and wrong about the site.
+ *
+ * route-manifest.ts is GENERATED from App.tsx by scripts/generate-route-manifest.mjs precisely so
+ * something other than a browser can know what the app routes. Reading it makes the gate's model
+ * of "served" match what the edge actually serves, in either tree.
+ */
+export function appRoutes(repo) {
+  const out = new Set();
+  try {
+    const src = readFileSync(join(repo, "client/src/data/route-manifest.ts"), "utf8");
+    for (const m of src.matchAll(/"path"\s*:\s*"([^"]+)"/g)) {
+      const p = m[1].replace(/\/+$/, "") || "/";
+      if (!p.includes(":")) out.add(p);   // a :param route is not a concrete path
+    }
+  } catch { /* no manifest: the gate simply keeps its previous, narrower model */ }
+  return out;
+}
+
 const staticFiles = (root) => {
   const out = new Set();
   const walk = (d, prefix = "") => {
@@ -81,7 +103,7 @@ export function isServed(pathname, files, routes, redirects = new Map()) {
   if (files.has(p)) return true;                 // exact file
   if (files.has(`${p}.html`)) return true;       // prerendered page
   if (files.has(`${p}/index.html`)) return true; // directory page
-  if (routes.has(p)) return true;                // Pages Function
+  if (routes.has(p)) return true;                // Pages Function or app route
   // A canonical redirect is a served path, not a dead one: /gspc-verify 308s to /gspc-verify/,
   // which is exactly the retirement/canonicalisation pattern the sitemap generator already
   // honours. Follow one hop and judge the target.
@@ -125,6 +147,8 @@ if (SELFTEST && process.argv[1] && resolve(process.argv[1]) === fileURLToPath(im
   must("finds a link nested in an array of objects",
     linksIn({ badges: [{ image: "https://councilof.ai/badge/x.svg" }] })[0]?.at === "badges[0].image");
   must("ignores third-party urls", linksIn({ a: "https://example.com/x" }).length === 0);
+  must("counts a real app route as served", isServed("/library/company/", new Set(), new Set(["/library/company"])));
+  must("does not accept a :param route as a concrete path", !appRoutes("/nonexistent-repo").has("/x/:id"));
   must("strips a sentence's full stop off a url",
     linksIn({ a: "see https://councilof.ai/api/gspc." })[0].url === "https://councilof.ai/api/gspc");
   must("follows a canonical redirect", isServed("/gspc-verify", new Set(["/gspc-verify/index.html"]), routes, new Map([["/gspc-verify", "/gspc-verify/"]])));
@@ -144,7 +168,7 @@ if (!IS_MAIN) { /* imported for its helpers */ } else {
 if (!existsSync(DIR)) { console.error(`link-gate: no such tree ${DIR} — build first.`); process.exit(2); }
 
 const files = staticFiles(DIR);
-const routes = functionRoutes(join(REPO, "functions"));
+const routes = new Set([...functionRoutes(join(REPO, "functions")), ...appRoutes(REPO)]);
 const redirects = readRedirects(REPO);
 const failures = [];
 let scanned = 0, links = 0;

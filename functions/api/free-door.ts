@@ -184,10 +184,20 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   // The challenge names the catalogue too. An agent deciding whether to pay reads the 402 body,
   // not the fulfilment payload it has not earned yet — putting the pointer only behind payment
   // would hide it from every buyer still deciding.
+  // Every 402 on this rail names, in the challenge itself, where a stranger looks for free and
+  // exactly what settling buys. On 2026-09-06 five of nine doors carried neither, and this one
+  // carried no csoai block at all — so a buyer reading the challenge could not tell what it was
+  // for. This door is the free one: its deliverable says so plainly rather than implying a purchase.
+  const csoaiBase = {
+    free_preview: `${url.origin}/api/free-door`,
+    deliverable:
+      "the Bazaar door itself: this resource is free and settles for zero. It exists so an index " +
+      "can discover the rail; it sells nothing and a settlement here buys nothing.",
+  };
   const withCatalog = { ...body, catalog: `${url.origin}/api/x402` };
   const answer = presented
-    ? { ...withCatalog, csoai: { not_paid_reason: payment.reason } }
-    : withCatalog;
+    ? { ...withCatalog, csoai: { ...csoaiBase, not_paid_reason: payment.reason } }
+    : { ...withCatalog, csoai: csoaiBase };
 
   // Use the shared responder, which sets the PAYMENT-REQUIRED header. This route hand-rolled its
   // own Response and omitted it, making it the only one of nine 402 doors whose challenge lived

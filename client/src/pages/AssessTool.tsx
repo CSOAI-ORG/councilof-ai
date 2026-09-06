@@ -1,9 +1,27 @@
 /*
  * CSOAI Live Assessment Tool
  *
- * /assess must match /measure: paid measurement, booking not live, Pay-as-you-go x402 (not live yet),
- * public verifies free, never a bought rank. This page must not claim a free
- * signed run. Do not put any payment-processor checkout chrome here (and never on /honesty).
+ * /assess must match /measure: paid measurement, booking not live, public
+ * verifies free, never a bought rank. This page must not claim a free signed
+ * run. Do not put any payment-processor checkout chrome here (and never on
+ * /honesty). OWNER RULING 6 Sep 2026: no prices, no tiers, no payment-processor
+ * names anywhere — free, or pay-as-you-go x402 at the 402.
+ *
+ * This page used to say "Pay-as-you-go x402 (not live yet)" in three places.
+ * Measured 2026-09-06 that was false: /.well-known/x402.json publishes
+ * mode "live" with 9 resources on eip155:8453, and GET /api/free-door answers
+ * 402 — the rail issues real payment challenges today.
+ *
+ * What is genuinely unavailable is paying for an ASSESSMENT that way:
+ * /api/assess is NOT one of the 9 published doors. The page now separates the
+ * two claims instead of understating the rail to stay safe. Understating is
+ * still misstating, and "not live yet" on a live rail is the same class of
+ * error as a stale count on /products — a typed claim about a moving surface
+ * that nobody re-read.
+ *
+ * assessHonesty.test.ts binds this to the rail's own bytes: it asserts
+ * /api/assess is absent from the committed manifest fixture, so the day
+ * assessment IS published as a door, the test reds and this copy must change.
  */
 
 import { useState } from "react";
@@ -83,7 +101,9 @@ export default function AssessTool() {
           <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
         </div>
         <p className="text-muted-foreground mb-4">
-          Paid measurement. Booking is not live. Pay-as-you-go x402 (not live yet). The public verifies free.
+          Paid measurement. Booking is not live. The x402 rail is live for the doors it
+          publishes at <code>/.well-known/x402.json</code>, and assessment is not one of
+          them yet — so there is nothing to pay at a 402 here today. The public verifies free.
           Never a bought rank. Empty means we have not measured that system — we do not guess.
           Not a certificate.
         </p>
@@ -115,7 +135,7 @@ export default function AssessTool() {
                 onChange={(e) => setForm({ ...form, logging: e.target.checked })} /> Logging / record-keeping</label>
             </div>
             <Button onClick={run} disabled={true} className="w-full" aria-disabled="true">
-              Pay-as-you-go x402 (not live yet) · booking not live
+              Booking is not live
             </Button>
             <p className="text-xs text-muted-foreground">
               Signed measurement is a paid engagement. Checkout is not on this page. Do not treat a disabled

@@ -155,7 +155,7 @@ describe("Tier 3 — /api/eunomia-data", () => {
 describe("catalog + discovery", () => {
   it("/api/x402 and /.well-known/x402.json name no amounts and report the honest mode", async () => {
     const c = await (await catalog(ctx("/api/x402"))).json();
-    expect(c.tiers.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "provider_diff_feed", "receipts_batch"]);
+    expect(c.resources.map((t: { id: string }) => t.id)).toEqual(["issuance", "evidence_bundle", "data_feed", "rwa_evidence", "provider_diff_feed", "receipts_batch"]);
     expect(c.mcp.paid_tools.map((t: { name: string }) => t.name)).toEqual(["commission_card", "art50_marking_evidence", "rwa_evidence", "receipts_batch"]);
     expect(JSON.stringify(c)).not.toContain('"id":"witness_hash"');
     expect(c.free_forever).toEqual(

@@ -148,7 +148,12 @@ def build_discovery(slug: str, name: str, desc: str) -> dict:
         "description": desc,
         "as_of": now(),
         "links": {
-            "self": f"https://councilof.ai/.well-known/{slug}",
+            # `slug` reaches here spelled both ways - some callers pass "charter", others
+            # "aida.json" - and `self` used the raw value while the `slug` field above stripped
+            # the extension. So 142 of these files published a self link ending .json and NINE
+            # published an extensionless one that is not a path we serve. Same producer, same
+            # field, two answers, decided by how the caller happened to spell an argument.
+            "self": f"https://councilof.ai/.well-known/{slug.replace('.json', '')}.json",
             "live_board": "https://councilof.ai/api/gspc",
             "verify": "https://councilof.ai/gspc-verify",
             "x402_catalog": "https://councilof.ai/api/x402",

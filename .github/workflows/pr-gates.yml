@@ -14,20 +14,27 @@
 
 name: pr-gates
 
+# NO `paths:` FILTER, DELIBERATELY. This workflow runs on every PR and decides its own scope in
+# its first step, because the pair it replaced could not be made safe.
+#
+# pr-gates-skip.yml published the same check name, `gates`, as an unconditional `echo`, and
+# `paths-ignore` skips a workflow only when EVERY changed file matches it. A PR touching a gated
+# path AND a docs path therefore ran BOTH. Measured on #1635 (scripts/ + public/ + docs/):
+#
+#   pr-gates-skip  run 34022928201  08:49:27 -> 08:49:28   2s, echo, PASS
+#   pr-gates       run 34022928307  08:49:24 -> 08:51:09   the real suite
+#
+# For 1m41s the required context was green on the strength of an `echo`. The skip file's own
+# header asked for the two lists to be kept byte-identical; they WERE identical, and identical
+# lists do not make two workflows exclusive.
+#
+# Making the cheap one FAIL out of scope was tried (#1648) and is worse: both results then sit in
+# the rollup and GitHub blocks on the failure. Two check runs sharing a required context name have
+# no safe order. One workflow is the fix, and the two lists can no longer drift because there is
+# only one.
 on:
   pull_request:
     branches: [master]
-    paths:
-      - 'client/**'
-      - 'public/**'
-      - 'functions/**'
-      - 'scripts/**'
-      - 'harness/x402-census/**'
-      - 'docs/operations/PRODUCERS.json'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'wrangler.jsonc'
-      - '.github/workflows/pr-gates.yml'
   workflow_dispatch: {}
 
 # Supersede a lane's own older run; never cancel another lane's.
@@ -43,22 +50,58 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      # No checkout: the file list comes from the API, so an out-of-scope PR costs a few seconds
+      # and pulls no history. This regex IS the old `paths:` filter - keep them in step.
+      - name: Scope - does this PR touch a gated path?
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "${PR:-}" ]; then
+            echo "gated=true" >> "$GITHUB_OUTPUT"   # workflow_dispatch: no PR to scope, run everything
+            exit 0
+          fi
+          changed=$(gh api --paginate "repos/$REPO/pulls/$PR/files" --jq '.[].filename')
+          gated=$(printf '%s\n' "$changed" | grep -E '^(client/|public/|functions/|scripts/|harness/x402-census/|docs/operations/PRODUCERS\.json$|package\.json$|package-lock\.json$|wrangler\.jsonc$|\.github/workflows/pr-gates\.yml$)' || true)
+          if [ -n "$gated" ]; then
+            echo "gated=true" >> "$GITHUB_OUTPUT"
+            echo "gated paths in this PR:"; printf '  %s\n' $gated
+          else
+            echo "gated=false" >> "$GITHUB_OUTPUT"
+            echo "no gated path changed - the suite below is skipped and gates passes by scope."
+            printf '%s\n' "$changed" | sed 's/^/  /'
+          fi
+
       - uses: actions/checkout@v4
+        if: steps.scope.outputs.gated == 'true'
       - uses: actions/setup-node@v4
+        if: steps.scope.outputs.gated == 'true'
         with: { node-version: 20 }
 
       - name: Install deps
+        if: steps.scope.outputs.gated == 'true'
         run: npm ci --no-audit --no-fund
 
-      - name: Unit tests — client and functions
-        run: npx vitest run client/src functions
+      # `scripts` joined this line on 2026-09-06. It was absent, and EIGHT test files under
+      # scripts/ had therefore never run in CI - 1007 assertions, including the vocabulary gate
+      # over docs/PROVABLE-ARCHIVE-METHOD.md and the outreach drafts, the EAS attestation
+      # fallback, the payer-key shadow test and the card evidence-trust test. They all pass on a
+      # full checkout; they were simply never invoked. A test nobody runs is a comment.
+      - name: Unit tests — client, functions and scripts
+        if: steps.scope.outputs.gated == 'true'
+        run: npx vitest run client/src functions scripts
 
       - name: Build client
+        if: steps.scope.outputs.gated == 'true'
         run: npm run build:client
 
       # --selftest first: a gate that has never been seen failing is decoration,
       # so it proves it can go red on every run before it is trusted on our bytes.
       - name: Brand gate — selftest, then the real dist
+        if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/brand-gate.mjs --selftest
           node scripts/brand-gate.mjs dist/client
@@ -68,9 +111,11 @@ jobs:
       # nothing on the PR could say so. Two deploys went red and nothing shipped for an hour.
       # This is a source-level check (App.tsx + fixtures), so it can run on the PR.
       - name: Council truth gate — no simulated BFT or phantom engine doors
+        if: steps.scope.outputs.gated == 'true'
         run: npm run guard:council-truth
 
       - name: Signed-JSON guard — a stub or broken /signed/*.json blocks the deploy
+        if: steps.scope.outputs.gated == 'true'
         run: node scripts/signed-json-guard.mjs dist/client
 
       # A door that serves 200 but is absent from /.well-known/index.json is live and
@@ -81,6 +126,7 @@ jobs:
       # 9 doors live at 200 and listed nowhere, plus `index` listing itself as a door.
       # The generator derives the list from the directory; this gate stops it drifting again.
       - name: Well-known index gate — the index must describe the directory
+        if: steps.scope.outputs.gated == 'true'
         run: node scripts/wellknown-index-gen.mjs --check
 
       # D45. On 2026-09-06 public/interop/agent-card-jws-input.json described a card nobody served.
@@ -98,6 +144,7 @@ jobs:
       # Verified to fail: removing the `series` block from a leaf, or the `flipped` key from a delta,
       # turns the matching selftest red and exits 1.
       - name: x402 census producers — determinism, the n>=30 ladder, and a planted byte
+        if: steps.scope.outputs.gated == 'true'
         run: |
           python3 scripts/grants/x402_census_round.py --selftest
           python3 scripts/grants/x402_census_delta.py --selftest
@@ -110,6 +157,7 @@ jobs:
       # Verified to fail: bumping the source card's `version` without re-running the producer gives
       #   "✗ agent-card-jws-input  STALE — re-running the producer changed its own output", exit 1.
       - name: Producer manifest — committed outputs must still match their producers
+        if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/producers-check.mjs --selftest
           node scripts/producers-check.mjs
@@ -133,6 +181,7 @@ jobs:
       # --limit 10 fails 5/10 and --limit 20 fails 13/20. 15 cards + card_index + root = 17
       # requests, inside the 20/hour budget, and still red on the regression this gate exists for.
       - name: Stranger verification — signed cards must verify from published bytes
+        if: steps.scope.outputs.gated == 'true'
         run: node scripts/verify-estate.mjs --limit 15 --did-drift public/.well-known/did.json
 
       # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026 with a 3-party
@@ -145,6 +194,7 @@ jobs:
       # Offline, no network, ~0.2s. Verified to fail: flipping one byte of the signature gives
       # "signature does NOT verify", exit 1.
       - name: Signed GSPC board must verify under its own published recipe
+        if: steps.scope.outputs.gated == 'true'
         run: node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json
 
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
@@ -164,6 +214,7 @@ jobs:
       # worse than no gate — a step that is always failing gets disabled, and then the boundary is
       # unprotected while looking protected.
       - name: Card-verifier package — 33-vector EMILIA boundary must still be pinned
+        if: steps.scope.outputs.gated == 'true'
         working-directory: packages/gspc-card-verifier
         run: node --test test/*.test.mjs
 
@@ -176,6 +227,7 @@ jobs:
       #
       # Verified to fail: appending one comment line gives "bundle is STALE", exit 1.
       - name: Published verifier bundle must match a fresh build of its source
+        if: steps.scope.outputs.gated == 'true'
         working-directory: packages/gspc-card-verifier
         run: node scripts/bundle.mjs --check ../../public/verifier/gspc-verify.mjs
 
@@ -187,6 +239,7 @@ jobs:
       # committed bytes no longer match what they derive from. A network failure reports
       # UNCHECKABLE and does not go red; it also does not report a pass.
       - name: llms.txt / llms-full.txt match the live board
+        if: steps.scope.outputs.gated == 'true'
         run: node scripts/llms-txt.mjs --check
 
       # A same-origin URL published in a machine surface must be a path we serve. Nothing read
@@ -195,6 +248,7 @@ jobs:
       # with every gate green. Ratcheted against a dated baseline: NEW dead links fail here, the
       # 64 known-dead targets are a named debt that may only shrink.
       - name: Link gate — published JSON must not point at 404s
+        if: steps.scope.outputs.gated == 'true'
         run: |
           node scripts/link-gate.mjs --selftest
           node scripts/link-gate.mjs dist/client
