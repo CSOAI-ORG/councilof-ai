@@ -86,6 +86,20 @@ TEXT_TAGS = frozenset(
 )
 ROUTER_TAGS = CHAT_TAGS | FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
 
+# LoRA/image windows 400 on chat/embeddings (mill 34050320277 shard 15: 0/91).
+# Drop them so remaining chat-like UNMEASURED get the slots.
+SKIP_TAGS = frozenset(
+    {
+        "text-to-image",
+        "image-to-image",
+        "image-to-video",
+        "text-to-video",
+        "image-text-to-video",
+        "image-classification",
+        "zero-shot-image-classification",
+    }
+)
+
 
 def _unserved_weight_pack(slug: str) -> bool:
     low = slug.lower()
@@ -170,6 +184,9 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if not slug:
             continue
         st = m.get("status") or "UNMEASURED"
+        tag = m.get("pipeline_tag") or ""
+        if tag in SKIP_TAGS:
+            continue
         if st in ALREADY_TRIED:
             continue
         if st == "UNCHECKABLE":
@@ -179,11 +196,13 @@ def millable_slugs(models: list[dict]) -> list[str]:
             if name.endswith("-base"):
                 continue
             reason = (m.get("reason") or "").lower()
+            if "429" in reason:
+                out.append(slug)
+                continue
             # Already sprayed the router (bare slug + providers). Last call was
             # often invalid nebius; do not spend another hour on the same 286.
             if "provider or policy" in reason or "nebius" in reason:
                 continue
-            tag = m.get("pipeline_tag") or ""
             if "hf-inference" not in reason and tag not in CHAT_TAGS:
                 continue
         out.append(slug)

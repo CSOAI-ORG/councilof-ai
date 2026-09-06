@@ -47,9 +47,12 @@ def apply_mill(lock: dict, mill: dict) -> dict:
             if row.get("n") is not None:
                 m["n"] = row["n"]
         elif st == "UNCHECKABLE":
+            reason = row.get("reason") or ""
+            if "429" in reason:
+                # Rate-limit is not a measurement and not a terminal miss.
+                continue
             m["status"] = "UNCHECKABLE"
             m["last_mill"] = as_of
-            reason = row.get("reason") or ""
             if reason:
                 m["reason"] = reason[:200]
     lock["n_locked"] = len(lock.get("models") or [])
