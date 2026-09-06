@@ -94,26 +94,38 @@ def main():
     ap.add_argument("--total-cap", type=float, default=4.0, help="USDC")
     ap.add_argument("--network", default="eip155:8453")
     ap.add_argument("--out", default="docs/product/x402-settlement-census.jsonl")
+    ap.add_argument("--url", action="append", default=[],
+                    help="pay this exact resource instead of the census (repeatable); Move A = our own 8 doors")
+    ap.add_argument("--allow-self", action="store_true",
+                    help="permit councilof.ai targets (self-settlement: recorded by the edge, never revenue; "
+                         "the payer MUST be in X402_SELF_WALLETS first or /api/revenue counts it as a buyer)")
     a = ap.parse_args()
     settle = os.environ.get("SETTLE") == "1"
     key = os.environ.get("X402_PAYER_KEY")
     if settle and not key:
         sys.exit("SETTLE=1 needs X402_PAYER_KEY (a THROWAWAY key; scripts/badger/make-payer-wallet.sh)")
 
-    raw = (urllib.request.urlopen(urllib.request.Request(a.census, headers={"User-Agent": UA})).read().decode()
-           if a.census.startswith("http") else open(a.census).read())
-    rows = [json.loads(l) for l in raw.splitlines() if l.strip()]
+    if a.url:
+        from urllib.parse import urlparse
+        rows = [{"host": urlparse(u).netloc, "probe_url": u, "conformant": True, "network": a.network,
+                 "scheme": "exact", "amount": str(a.per_host_cap), "indexes": ["explicit"]} for u in a.url]
+    else:
+        raw = (urllib.request.urlopen(urllib.request.Request(a.census, headers={"User-Agent": UA})).read().decode()
+               if a.census.startswith("http") else open(a.census).read())
+        rows = [json.loads(l) for l in raw.splitlines() if l.strip()]
+    self_hosts = set() if a.allow_self else SELF_HOSTS
     cand = {}
     for r in rows:
         if not r.get("conformant") or r.get("network") != a.network or r.get("scheme") != "exact":
             continue
-        if r["host"] in SELF_HOSTS or not str(r.get("amount", "")).isdigit():
+        if r["host"] in self_hosts or not str(r.get("amount", "")).isdigit():
             continue
         amt = int(r["amount"])
         if amt <= 0 or amt > a.per_host_cap:
             continue
-        if r["host"] not in cand or amt < int(cand[r["host"]]["amount"]):
-            cand[r["host"]] = r
+        key = r["probe_url"] if a.url else r["host"]
+        if key not in cand or amt < int(cand[key]["amount"]):
+            cand[key] = r
     targets = sorted(cand.values(), key=lambda r: (int(r["amount"]), r["host"]))[: a.max_hosts]
     print(f"census rows {len(rows)} -> eligible hosts {len(cand)} -> targets {len(targets)} "
           f"(cap {a.per_host_cap} units/host, {a.total_cap} USDC total, mode {'SETTLE' if settle else 'DRY'})", file=sys.stderr)
