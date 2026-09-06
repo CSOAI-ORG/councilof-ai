@@ -75,7 +75,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     return json({ schema: "csoai.eunomia-data/0.2", kind: "preview", ...preview, buy: { resource: resourceUrl, how: "GET the resource → 402 → pay accepts[] (x402) → retry with X-PAYMENT", catalog: `${origin}/api/x402`, explainer: `${origin}/pricing` }, rail: railMode(env) });
   }
 
-  const description = "Signed enforcement + measurement feed, assembled (DATA only — never scores, never ranked). Measurement, not certification. " + CSOAI_LID + ".";
+  const description = "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.";
   const accepts = x402Accepts(env, resourceUrl, { skuId: "issuance", tier: "reserve", description });
   const payment = await verifyX402Payment(request, env, resourceUrl, accepts[0]);
 

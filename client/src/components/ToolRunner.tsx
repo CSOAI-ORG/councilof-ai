@@ -239,15 +239,34 @@ export function isPaidTool(tool: RunnerTool): boolean {
  * `accepts` array; we sign the FIRST entry only, and we return null rather
  * than guess when the fields a signature needs are not all present.
  */
+function resourceUrl(value: unknown): string | null {
+  if (typeof value === "string" && /^https?:\/\//.test(value)) return value;
+  if (value && typeof value === "object") {
+    const url = (value as { url?: unknown }).url;
+    if (typeof url === "string" && /^https?:\/\//.test(url)) return url;
+  }
+  return null;
+}
+
 export function challengeFromResult(
   result: RunnerToolResult,
 ): X402Challenge | null {
   const roots: unknown[] = [result.structuredContent, (result as { raw?: unknown }).raw];
+  const raw = (result as { raw?: Record<string, unknown> }).raw;
+  const rpcResult =
+    raw && typeof raw.result === "object" && raw.result
+      ? (raw.result as Record<string, unknown>)
+      : null;
+  if (rpcResult?.structuredContent) roots.push(rpcResult.structuredContent);
   for (const root of roots) {
     if (!root || typeof root !== "object") continue;
     const bag = root as Record<string, unknown>;
     const nested = bag.error && typeof bag.error === "object" ? (bag.error as Record<string, unknown>) : null;
-    for (const holder of [bag, nested]) {
+    const paymentRequired =
+      bag.payment_required && typeof bag.payment_required === "object"
+        ? (bag.payment_required as Record<string, unknown>)
+        : null;
+    for (const holder of [bag, nested, paymentRequired]) {
       if (!holder) continue;
       const accepts = holder.accepts;
       if (!Array.isArray(accepts) || accepts.length === 0) continue;
@@ -259,12 +278,7 @@ export function challengeFromResult(
           : typeof a.maxAmountRequired === "string"
             ? a.maxAmountRequired
             : null;
-      const resource =
-        typeof a.resource === "string"
-          ? a.resource
-          : typeof holder.resource === "string"
-            ? (holder.resource as string)
-            : null;
+      const resource = resourceUrl(a.resource) || resourceUrl(holder.resource);
       if (!payTo || !amount || !resource) continue;
       return {
         network: typeof a.network === "string" ? a.network : undefined,

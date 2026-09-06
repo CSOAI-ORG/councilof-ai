@@ -67,7 +67,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         resource: u("/api/request-attestation?subject=<id>&axis=<slug>"),
         free_preview: u("/api/request-attestation?subject=<id>"),
         free_preview_note: "the 402 body carries csoai.preview: signed cards already on file",
-        deliverable: "one card-v0 leaf, surface ras.commission, ≤3KB payload, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present (else sig_ed25519:null, declared)",
+        deliverable: "A signed card-v0 commission receipt for one named subject, plus every already-signed measurement card on file for it. Payment never mints a MEASURED cell.",
         never: ["a score", "a rank", "a certificate", "a MEASURED cell minted by payment"],
       },
       {
@@ -81,7 +81,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         // own 404 body (article-50, article-53, dora, cra; eu-cra resolves as an alias, checked).
         // A placeholder that names the wrong kind of value costs a buyer their first call.
         free_preview: u("/api/evidence-bundle?obligation=<dora|cra|article-50|article-53>&subject=<model-id>"),
-        deliverable: "OSCAL 1.1.0 assessment-results of already-signed cards (observations, relevant-to) + one manifest card-v0 (surface evidence.bundle) + the existing signed pack where one exists (/packs/eu-article-50)",
+        deliverable: "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to one named obligation. Not a conformity determination.",
         never: ["a conformity determination", "satisfied/not-satisfied findings", "a certificate"],
       },
       {
@@ -89,7 +89,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         name: "Signed data feed (assembly + cadence)",
         resource: u("/api/eunomia-data?feed=1"),
         free_preview: u("/api/eunomia-data"),
-        deliverable: "one feed document: signed signals index, signed First-Fine Watch, root.json, card index — each block with its published signature",
+        deliverable: "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only — no scores, no ranking.",
         never: ["scores as a product", "a ranking", "a rating"],
         also: { proof_bundle: u("/api/proof?bundle=1"), one_inclusion_free: u("/api/proof?sha=<64-hex>") },
       },
@@ -99,7 +99,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         resource: u("/api/rwa/evidence?asset=<symbol|issuer_address>"),
         free_preview: u("/api/rwa/evidence?asset=<symbol>&preview=1"),
         free_preview_note: "unsigned state, no raw-fetch hashes; symbols at /api/xrpl",
-        deliverable: "one canonical card-v0 leaf (public.notice / csoai.eater.xrpl-issuer/0.1 — the same schema as the free public-root leaf), ≤3072 bytes: AccountRoot flags, Domain, two-way TOML check, gateway_balances obligation, holders as the reader has them, per-fetch sha256 + inputs_sha256, Ed25519 under did:web:csoai.org#board-attestation-1 when the Pages key is present",
+        deliverable: "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state — not a rating or a guarantee.",
         never: ["a rating", "a guarantee", "a verdict", "a rank", "a paywall on /api/xrpl or /root.json"],
       },
       {
@@ -111,7 +111,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         resource: u("/api/feeds/provider-diff?history=1"),
         free_preview: u("/api/feeds/provider-diff"),
         free_preview_note: "recent diffs + latest state per target, free; leaves in /feeds/provider-diff/leaves/",
-        deliverable: "every hash-only csoai.diff.provider-terms/0.1 leaf to date with its inclusion proof to the signed root, assembled; or a bespoke per-partner target list on the same method (GBP invoice: ?invoice=gbp&commissioned_by=<org>)",
+        deliverable: "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only — no page content, no verdict.",
         never: ["a verdict on any change", "the content of any page (never captured)", "a grade"],
       },
       {
@@ -120,7 +120,7 @@ export const onRequestGet: PagesFunction<{ X402_PAY_TO?: string; X402_FACILITATO
         resource: u("/api/receipts/batch?from=<iso>&to=<iso>"),
         free_preview: u("/api/receipts/batch?from=<iso>&to=<iso>&preview=1"),
         free_preview_note: "count, span, root count and the sha256 of the exact batch bytes — no leaves",
-        deliverable: "one canonical csoai.receipts.batch/0.1 document: every card-v0 leaf with as_of in the window (≤200), each with its Merkle inclusion path and the public root(s) that carried it (from /receipts/root-history.json — the git history of root.json indexed at build time), plus one signed manifest card-v0 (surface receipts.batch) citing the batch sha256",
+        deliverable: "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly — not a conclusion.",
         recent_free: [u("/root.json"), u("/cards/<sha16>.json"), u("/api/proof?sha=<64-hex>"), u("/receipts/root-history.json")],
         honesty: "no settlement-receipt stream exists (/api/receipts/latest is UNPUBLISHED); these are measurement leaves, not payment receipts",
         never: ["a conclusion about any leaf", "a grade", "a certificate", "a settlement-receipt claim"],

@@ -29,14 +29,14 @@ const STEPS = [
   {
     number: "02",
     icon: WalletCards,
-    title: "Authorise outside this page",
-    body: "If you choose to continue, your wallet signs against the exact accepts[] entry returned by that challenge. This workspace never asks for a seed phrase or private key and never constructs a payment on your behalf.",
+    title: "Pay from the challenge",
+    body: "If you choose to continue, the Pay button signs the exact accepts[] entry from that 402 in your wallet. This workspace never asks for a seed phrase or private key and never invents an amount.",
   },
   {
     number: "03",
     icon: FileCheck2,
-    title: "Re-call, inspect, then verify",
-    body: "Paste the wallet-signed x_payment and call again. Treat a receipt as delivered only when the response says DELIVERED. Treat it as signed only when the returned card actually carries a verifiable signature.",
+    title: "Inspect the receipt, then verify",
+    body: "Treat a receipt as delivered only when the response says DELIVERED. Treat it as signed only when the returned card actually carries a verifiable signature. Verify is free.",
   },
 ] as const;
 

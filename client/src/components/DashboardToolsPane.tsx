@@ -110,11 +110,10 @@ export default function DashboardToolsPane() {
             </div>
           </div>
           <p className="mt-3 text-xs leading-relaxed text-amber-950/85">
-            Call without a payment payload to inspect the route’s 402 challenge
-            and any free preview. Nothing is charged. A delivery call requires a
-            wallet-signed{" "}
-            <code className="font-mono text-[10px]">x_payment</code>; this UI
-            never requests or handles a private key.
+            Call without payment to inspect the route’s 402 challenge and any
+            free preview. Nothing is charged. When a 402 returns, the Pay
+            button signs it in your wallet and retries — this page never asks
+            for a seed phrase or private key.
           </p>
           <p className="mt-2 break-words font-mono text-[10px] leading-relaxed text-amber-950/65">
             {METERED_TOOLS.join(" · ")}
@@ -153,8 +152,8 @@ export default function DashboardToolsPane() {
           />
           <p className="text-[11px] leading-relaxed text-muted-foreground">
             <strong className="text-foreground">Payment stays explicit.</strong>{" "}
-            The endpoint carries the challenge; your wallet remains outside this
-            page.
+            The endpoint carries the challenge; the Pay button signs it in your
+            wallet. Only the signature is sent.
           </p>
         </div>
       </div>

@@ -274,9 +274,7 @@ const handle: PagesFunction<Env> = async ({ request, env }) => {
   const m = await measure(input);
   const law = await art50LawBlock();
   const description =
-    "Article 50 marking evidence: one signed card-v0 leaf recording whether a machine-readable mark was DETECTED in one output by named methods at one time (C2PA recomputed; watermarks UNCHECKABLE where no public detector exists). Beside it, the verbatim Art 50(2) text hash and the Art 99(4) ceiling. Detection at a time, never a conformity opinion. " +
-    CSOAI_LID +
-    ".";
+    "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.";
 
   // No measurable input means no deliverable. Reject it before either the x402 facilitator or
   // invoice-reference path is entered; payment may never precede deliverability validation.
