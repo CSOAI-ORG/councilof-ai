@@ -140,10 +140,9 @@ jobs:
       MILL_LIMIT: ${{ github.event.inputs.limit || '30' }}
       MILL_SHARD: ${{ matrix.shard }}
       MILL_SHARDS: "20"
+      MILL_BANK_N: "1"
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: master
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -159,4 +158,61 @@ jobs:
           name: hf-inference-mill-${{ matrix.shard }}
           path: mill-out
           if-no-files-found: warn
+
+  land-lock:
+    needs: [probe, mill]
+    if: always() && needs.probe.outputs.ok == '1'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: hf-inference-mill-*
+          path: mill-shards
+          merge-multiple: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: patch HF2200.lock.json from shard mill-out (n_measured is counted)
+        run: |
+          set -euo pipefail
+          python3 scripts/mill_lock_update.py public/fleet/HF2200.lock.json mill-shards
+          python3 - <<'PY'
+          import json
+          lock = json.load(open("public/fleet/HF2200.lock.json"))
+          n = lock["n_measured"]
+          print(f"lock n_measured={n} n_locked={lock['n_locked']}")
+          open("n_measured.json", "w").write(json.dumps({"n_measured": n, "n_locked": lock["n_locked"]}, indent=2) + "\n")
+          PY
+      - name: upload patched lock (not a board rewrite)
+        uses: actions/upload-artifact@v4
+        with:
+          name: hf2200-lock-after-mill
+          path: |
+            public/fleet/HF2200.lock.json
+            n_measured.json
+      - name: push lock to hub-queue (HF_TOKEN write; not GITHUB_TOKEN)
+        run: |
+          pip install --quiet "huggingface_hub>=0.25"
+          python3 - <<'PY'
+          import os, json
+          from huggingface_hub import HfApi
+          tok = (os.environ.get("HF_TOKEN") or "").strip()
+          lock = json.load(open("public/fleet/HF2200.lock.json"))
+          print("uploading n_measured", lock["n_measured"])
+          if not tok:
+              print("HF_TOKEN empty — lock stays in the artifact only")
+              raise SystemExit(0)
+          HfApi(token=tok).upload_file(
+              path_or_fileobj="public/fleet/HF2200.lock.json",
+              path_in_repo="locks/HF2200.lock.json",
+              repo_id="csoai/hub-queue",
+              repo_type="dataset",
+              commit_message=f"mill land n_measured={lock['n_measured']} (not a board rewrite)",
+          )
+          PY
+
 

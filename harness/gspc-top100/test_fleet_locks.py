@@ -41,8 +41,27 @@ def test_workflow_surfaces_inference_fail_in_summary() -> None:
     assert "HF2200.lock.json" in yml
 
 
+def test_apply_mill_counts_practice_mill_into_n_measured() -> None:
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import apply_mill  # noqa: E402
+    lock = {
+        "n_measured": 0,
+        "models": [
+            {"slug": "a/x", "status": "UNMEASURED"},
+            {"slug": "b/y", "status": "UNMEASURED"},
+        ],
+    }
+    mill = {"as_of": "2026-09-06T00:00:00Z", "rows": [{"slug": "a/x", "status": "practice-mill", "n": 1}]}
+    out = apply_mill(lock, mill)
+    assert out["n_measured"] == 1
+    assert out["models"][0]["status"] == "practice-mill"
+    assert out["models"][1]["status"] == "UNMEASURED"
+
+
 if __name__ == "__main__":
     test_hf2200_lock_is_a_real_queue()
     test_kaggle_lock_is_a_real_queue()
     test_workflow_surfaces_inference_fail_in_summary()
-    print("test_fleet_locks: 3 passed")
+    test_apply_mill_counts_practice_mill_into_n_measured()
+    print("test_fleet_locks: 4 passed")

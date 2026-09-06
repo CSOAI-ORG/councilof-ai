@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
-from mill_window import select_window  # noqa: E402
+from mill_window import chat_capable_slugs, select_window  # noqa: E402
 
 
 def test_empty_fleet_empty_window() -> None:
@@ -46,9 +46,29 @@ def test_wraps_without_inventing_slugs() -> None:
     assert len(w) == 3
 
 
+def test_chat_capable_skips_embed_and_gguf() -> None:
+    models = [
+        {"slug": "sentence-transformers/all-MiniLM-L6-v2", "pipeline_tag": "sentence-similarity"},
+        {"slug": "Qwen/Qwen3-8B", "pipeline_tag": "text-generation"},
+        {"slug": "unsloth/MiniMax-H3-GGUF", "pipeline_tag": "text-generation"},
+        {"slug": "google/siglip2", "pipeline_tag": "zero-shot-image-classification"},
+        {"slug": "Qwen/Qwen2.5-VL-7B-Instruct", "pipeline_tag": "image-text-to-text"},
+        {"slug": "", "pipeline_tag": "text-generation"},
+    ]
+    got = chat_capable_slugs(models)
+    assert "sentence-transformers/all-MiniLM-L6-v2" not in got
+    assert "google/siglip2" not in got
+    assert "unsloth/MiniMax-H3-GGUF" not in got
+    assert got[0] == "Qwen/Qwen3-8B"
+    assert "Qwen/Qwen2.5-VL-7B-Instruct" in got
+    _, w = select_window(got, 2, 0)
+    assert w[0] == "Qwen/Qwen3-8B"
+
+
 if __name__ == "__main__":
     test_empty_fleet_empty_window()
     test_window_is_not_always_prefix()
     test_shards_partition_one_hour()
     test_wraps_without_inventing_slugs()
-    print("test_mill_window: 4 passed")
+    test_chat_capable_skips_embed_and_gguf()
+    print("test_mill_window: 5 passed")
