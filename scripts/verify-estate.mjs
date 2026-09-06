@@ -239,6 +239,51 @@ else if (edVerify(null, rootPre, edKey(keys[rootKid]), Buffer.from(root.sig_ed25
   console.log(`\nroot.json signature           : VALID against #${rootKid} (${root.card_count} cards, merkle ${root.merkle_root.slice(0, 12)}…)`);
 else fail(`root.json signature INVALID against #${rootKid}`);
 
+// ---- Rule B artefacts ------------------------------------------------------------------------
+//
+// The estate publishes TWO canonicalisations and until 2026-09-06 this verifier only knew one.
+//
+//   Rule A  the 335 measurement cards. CPython json.dumps(sort_keys, separators, ensure_ascii=True):
+//           non-ASCII escaped, and an integral float renders "0.0". Reproducing it in JavaScript
+//           needs the raw numeric literals preserved — see parsePreservingNumbers above.
+//   Rule B  harness/arena/canon.py. Sorted keys, compact, ensure_ascii=FALSE, and integral floats
+//           NORMALISED TO INTS. That is precisely what a JS engine does natively, so Rule B needs
+//           none of the machinery Rule A does — JSON.stringify over sorted keys IS Rule B.
+//
+// The signature is Ed25519 over the content_id AS ASCII HEX — not over the preimage, and not over
+// the digest bytes. Neither artefact publishes that; it was established by trial on 2026-09-06 and
+// is recorded here so the next reader does not repeat it.
+const ruleB = (v) =>
+  Array.isArray(v) ? "[" + v.map(ruleB).join(",") + "]"
+  : v && typeof v === "object"
+    ? "{" + Object.keys(v).sort().map((k) => JSON.stringify(k) + ":" + ruleB(v[k])).join(",") + "}"
+    : JSON.stringify(v);
+
+for (const name of ["arena_scoreboard", "eat_compliance_board"]) {
+  let doc;
+  try { doc = await getJSON(`${SITE}/signed/${name}.json`); }
+  catch (e) { fail(`fetch ${name}: ${e.message}`); continue; }
+  const sig = doc.signature;
+  if (!sig?.sig || !sig?.content_id) { fail(`${name}: no signature block`); continue; }
+  const { signature: _drop, ...body } = doc;
+  const cid = createHash("sha256").update(Buffer.from(ruleB(body))).digest("hex");
+  if (cid !== sig.content_id) { fail(`${name}: content_id does not recompute`); continue; }
+  const kid = String(sig.kid || "").split("#").pop();
+  const pk = keys[kid];
+  if (!pk) { fail(`${name}: names key #${kid}, which the DID does not publish`); continue; }
+  try {
+    if (edVerify(null, Buffer.from(cid, "ascii"), edKey(pk), Buffer.from(sig.sig, "hex")))
+      console.log(`Rule B ${name.padEnd(22)}: VALID against #${kid}`);
+    else fail(`${name}: Ed25519 INVALID against #${kid}`);
+  } catch (e) { fail(`${name}: Ed25519 error — ${e.message}`); }
+}
+
+// gspc-board.signed.json is Rule B too but has its own preimage shape and its own published
+// verifier — `node scripts/gspc-board-verify.mjs <file>`, named in the artefact's own `verify`
+// field. It is deliberately NOT reimplemented here: duplicating a subtle recipe in a second place
+// is how the two drift, and the artefact already tells a reader exactly what to run.
+console.log(`Rule B gspc-board.signed    : run scripts/gspc-board-verify.mjs (its own published verifier)`);
+
 // ---- the anchor question, answered honestly ---------------------------------------------------
 const anchored = ["ots", "opentimestamps", "anchor", "rekor"].some((k) => JSON.stringify(root).toLowerCase().includes(`"${k}`));
 console.log(`root anchored to a timechain  : ${anchored ? "yes" : "NO — signed, not anchored"}`);
