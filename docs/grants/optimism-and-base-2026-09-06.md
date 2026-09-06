@@ -22,19 +22,24 @@ What that page lists, verbatim from its own status labels:
 ("OP rewarded in Retro Funding") alongside the Grants Council total. So the retro-funding door is
 not currently open under that name; the two open doors are Audit Grants and Governance Fund Missions.
 
-**What I could NOT verify.** The brief states OP Atlas is discontinued on 18 September. I could not
-confirm that from the estate-external record: the site carries no sunset banner I could read, the
-governance forum's HTML is bot-protected, and its `search.json` for "Atlas sunset" returns **0
-topics** while "Atlas discontinued" returns three topics that are about Season 7/8 mandates rather
-than a shutdown. **Recorded as unverified rather than repeated as fact.** If the owner has the
-announcement, one link settles it.
+**VERIFIED — Atlas is discontinued on 18 September 2026.** The site carries a banner, verbatim:
 
-**Adjacent Superchain doors the same page names** (each a separate partner programme, not Optimism
-Foundation): Soneium *For All*; Unichain *Infinite Hackathon*, *Open Call*, *Retro Grants*;
-World Foundation *Grants* and *RFPs*. Unichain **Retro Grants** — *"for developers, content
-creators and analysts with projects that show measurable impact"* — is the closest live analogue to
-retro funding, and "measurable impact" is the one phrase in this whole landscape that matches what
-this estate actually produces.
+> Atlas will be discontinued on September 18, 2026. Please save any information you need before then.
+
+**No successor is named anywhere on the page** — tested for *successor / instead / move to / migrate
+/ replaced by*: none present. So the retro-funding door closes on 18 Sep with no forwarding address
+on that site.
+
+**How I got this wrong the first time, because it matters more than the answer.** I read the page
+with a text extractor that returns the `<main>` element. The banner sits **outside `<main>`**:
+`document.body.innerText` is 2358 characters, `main` is 2220 — the banner is in the 138-character
+difference. I then searched the forum, found nothing, hit a consent gate on the blog, and recorded
+the sunset as *unverified* — a conclusion built entirely on **not having looked at the whole page**.
+
+The forum returning nothing was real. The blog gate was real. Neither mattered: the answer was on
+the first page I loaded, in the part I never read. **An extractor that silently narrows its scope is
+the same failure as a filter that silently ignores its qualifier** — it answers a question you did
+not ask and does not say so.
 
 ## Base Builder Rewards
 
@@ -45,6 +50,29 @@ with these properties, taken from the page:
 - **no account required** — "public RPC and public APIs only";
 - **open spec, open math** — "the same inputs always produce the same score";
 - optionally **attested onchain via EAS on Base**, "verifiable by anyone by recomputing the score".
+
+**Re-read 2026-09-06 with `document.body.innerText`, after the Atlas banner taught me that the
+`<main>` extractor hides things. It hid something here too — 204 characters, including this:**
+
+> Talent Protocol was acquired by IPTS, with support from Protocol Labs
+
+**The operator of Builder Score has changed hands**, and that is not a detail a funding pack can omit.
+
+**What is live, and what is not:**
+
+| Checked | Result |
+|---|---|
+| Attestations being created | **live** — leaderboard entries dated 2026-08-29 through **2026-09-05** |
+| The words *league*, *weekly reward*, *rewards round*, *season* anywhere on the page | **none — 0 matches** |
+
+So the **score and attestation system is running today**, while the **rewards programme is not
+advertised on the site at all**. That is materially better than "unverified": it is *no evidence of
+a live rewards league, from the operator's own homepage, following an acquisition*.
+
+**Stated as evidence, not as a conclusion.** The absence of the word "league" on a homepage is not
+proof a programme was cancelled — it may live on a sub-page, in a Farcaster channel, or under the
+acquirer's brand. What can be said is that a reader arriving at the official domain today is offered
+a score and an attestation, and no rewards.
 
 ### The boundary that matters for this lane
 

@@ -1,0 +1,71 @@
+{
+  "schema": "csoai.growth-loop/0.1",
+  "date": "2026-09-06",
+  "as_of": "2026-09-06T08:51:43Z",
+  "one_number": {
+    "value": 0,
+    "last_30d": 0,
+    "settlements": 0,
+    "self_settlements": 5,
+    "zero_value_settlements": 4,
+    "status": "MEASURED",
+    "gate": null
+  },
+  "funnel_per_door": {
+    "receipts_lookup_available": false,
+    "distinct_nonself_payers": "?",
+    "settlements_listed": 0,
+    "note": "402s-issued counter lands with TUI-1's builder change; until then this reads settles only"
+  },
+  "signals": {
+    "board_lid": "22 axis \u00b7 22 measured",
+    "census_files": {
+      "x402-settlement-census-dry-2026-09-06.summary.json": "0.0000"
+    },
+    "index_probes": {
+      "mcp_so": 200,
+      "mcpservers": 200,
+      "pulsemcp": 200,
+      "glama": 200,
+      "arcade": 200,
+      "hf_dataset": 200
+    },
+    "hf_downloads": {
+      "x402-settlement-census": 0
+    },
+    "pypi_downloads": {
+      "meok-watermark-attest-mcp": null,
+      "csoai-axis-engine": null
+    }
+  },
+  "costs": {
+    "census_usdc_spent": "0.0000"
+  },
+  "next_moves": [
+    {
+      "rank": 1,
+      "move": "one_number=0 and settles exist \u2192 shape-or-price leak; do not add doors; run the index-presence row (402s not discovered)",
+      "proof": "settles=0; one_number=0",
+      "owner": false
+    },
+    {
+      "rank": 2,
+      "move": "index listing state probe (mcp_so/pulsemcp/glama/arcade = codes above) \u2192 row for any non-200",
+      "proof": "{\"mcp_so\": 200, \"mcpservers\": 200, \"pulsemcp\": 200, \"glama\": 200, \"arcade\": 200, \"hf_dataset\": 200}",
+      "owner": false
+    },
+    {
+      "rank": 3,
+      "move": "self-settlements recorded \u2014 shown as self, never growth",
+      "proof": "self=5",
+      "owner": false
+    },
+    {
+      "rank": 4,
+      "move": "open grant window on the map \u2014 TUI-5 pack row",
+      "proof": "8 line(s) say open",
+      "owner": true
+    }
+  ],
+  "retro": []
+}

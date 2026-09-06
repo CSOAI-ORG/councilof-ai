@@ -107,7 +107,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     cards: reserve.cells.slice(0, 40).map((c) => ({ axis: c.axis, card: c.card, card_url: c.card_url })),
     corpus_as_of: reserve.as_of,
     read_from: reserve.source,
-    free_verify: `${origin}/gspc-verify`,
+    free_preview: `${origin}/api/request-attestation?subject=<id>`,
+        free_verify: `${origin}/gspc-verify`,
     free_board: `${origin}/api/gspc`,
   };
 

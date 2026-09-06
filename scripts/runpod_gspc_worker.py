@@ -991,6 +991,7 @@ def stage_unsigned_card(
     evidence_sha256: str,
     hits: int,
     n: int,
+    parse_errors: int,
     transport_errors: int,
     reason: str,
 ) -> dict[str, Any]:
@@ -1020,6 +1021,7 @@ def stage_unsigned_card(
             "model_manifest_digest": model_manifest_digest,
             "instrument_sha256": instrument_sha256,
             "items_sha256": evidence_sha256,
+            "parse_errors_excluded": parse_errors,
             "transport_errors_excluded": transport_errors,
         },
     }
@@ -1267,8 +1269,10 @@ def run_once(
         reason = "unsigned compute output; admission and verification required"
 
     graded_n = transport_ok - parse_errors
-    if parse_errors:
-        reason = f"{reason}; {parse_errors} of {transport_ok} responses carried no parseable label"
+    # NOT appended to `reason`: that string becomes body.unmeasured, which the intake
+    # verifier requires to be EXACTLY the admission-boundary sentence. Appending rejected
+    # every run that had a parse error -- the runs this change exists for. The count is a
+    # PIN in compute_evidence, recomputed by the verifier, not prose on a contract string.
 
     card = stage_unsigned_card(
         config=config,
@@ -1278,6 +1282,7 @@ def run_once(
         instrument_sha256=instrument_sha256,
         evidence_sha256=evidence_sha256,
         hits=correct,
+        parse_errors=parse_errors,
         # An item whose response carried no parseable label was NOT answered, and is
         # therefore not a wrong answer either. transport errors already left n; parse
         # errors stayed in it, and the counter below was literally named

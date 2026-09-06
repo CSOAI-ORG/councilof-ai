@@ -1,52 +1,186 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { buildCatalogue, type Catalogue } from "@/lib/servicesCatalogue";
 
-// Services - what CSOAI offers, as one connected OS. Funnels every visitor to the
-// front door (/try) and the sector view (/playbooks).
-type Svc = { name: string; glyph: string; body: string; href: string; cta: string };
-const SERVICES: Svc[] = [
-  { name: "Council design demo", glyph: "Vote", body: "Classify a scenario locally and inspect the proposed 33-seat review design. No live Council vote, independent-agent debate, or signed verdict runs on this page.", href: "/try", cta: "Inspect the demo" },
-  { name: "Industry Playbooks", glyph: "SEC", body: "Your sector's scenario, the frameworks that bind you, the bridges you need, and the exact next steps - across 47 industries.", href: "/playbooks", cta: "Find your sector" },
-  { name: "MEOK Law", glyph: "LAW", body: "For any place - city, state, nation, bloc - the full stack of AI rules that apply and how each layer cross-references the others.", href: "/meok-law", cta: "What governs you" },
-  { name: "Framework Temples", glyph: "GOV", body: "Published regulations and standards - EU AI Act, NIST AI RMF, ISO 42001 - each with its own temple, mapped to your systems.", href: "/temples", cta: "See the temples" },
-  { name: "Council Towns", glyph: "TWN", body: "Explore the planned training and knowledge-workflow views. They are product concepts, not a live compounding learning engine.", href: "/towns", cta: "Explore the concept" },
-  { name: "Legacy Bridge", glyph: "BRG", body: "Inspect the proposed COBOL and mainframe adapter pattern. A production control-plane integration is not configured from this public page.", href: "/legacy", cta: "Inspect the design" },
-];
+/**
+ * /services — the doors the rail actually publishes, read at run time.
+ *
+ * PHASE C. Until 2026-09-06 this page was a TYPED LIST of six marketing tiles
+ * that had nothing to do with the payment rail. Two of its links were dead
+ * ends: "Legacy Bridge — Inspect the design" pointed at /legacy, which returns
+ * 200 and renders "this legacy page is temporarily withdrawn". A services page
+ * whose call to action is a withdrawal notice is worse than no services page.
+ *
+ * Every card here now comes from GET /.well-known/x402.json. Nothing about a
+ * door is restated in this file — not its name, not its URL, not whether it is
+ * paid, not its free preview. Add a door to the rail and it appears; withdraw
+ * one and it disappears. The ONLY thing decided here is which of the five
+ * groups a path belongs to, and servicesCatalogue.ts fails loudly rather than
+ * quietly when it meets a path it does not recognise: the door lands in
+ * `ungrouped`, the section says so out loud, and the test reds.
+ *
+ * No prices, no tiers, no payment-processor names — OWNER RULING 6 Sep 2026.
+ * The pay line is the ruling's own words and comes from the manifest's amount,
+ * never from a judgement made here.
+ */
+
+const MANIFEST = "/.well-known/x402.json";
+
+type Load =
+  | { state: "loading" }
+  | { state: "unread"; reason: string }
+  | { state: "live"; catalogue: Catalogue };
 
 export default function Services() {
-  useEffect(() => { document.title = "Services — measure, sign, check"; }, []);
+  const [load, setLoad] = useState<Load>({ state: "loading" });
+
+  useEffect(() => {
+    document.title = "Services — the doors the rail publishes";
+    let alive = true;
+    void fetch(MANIFEST, { headers: { accept: "application/json" }, cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+      .then((j) => alive && setLoad({ state: "live", catalogue: buildCatalogue(j) }))
+      .catch((err: Error) => alive && setLoad({ state: "unread", reason: err.message }));
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const cat = load.state === "live" ? load.catalogue : null;
+
   return (
-    <div className="min-h-screen bg-white">
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-900 to-teal-900 text-white py-16">
-        <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(700px 380px at 80% -10%, rgba(45,212,191,.22), transparent 60%)" }} />
-        <div className="relative max-w-6xl mx-auto px-6">
-          <p className="font-mono text-[11px] uppercase tracking-[2px] text-emerald-300/80">CSOAI - services</p>
-          <h1 className="mt-3 text-4xl sm:text-4xl font-black tracking-tight">Measure once. Check the signed card.</h1>
-          <p className="mt-4 max-w-2xl text-lg text-emerald-50/90">Reproducible measurement, not a checklist product. Published cards identify their exact subject, method, signer and evidence state; empty cells stay empty. Verification stays free.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <a href="/try" className="rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white hover:bg-emerald-400">Start with the Council -&gt;</a>
-            <a href="/dashboard?tab=home" className="rounded-xl border border-emerald-300/60 px-5 py-2.5 text-sm font-semibold text-emerald-50 hover:bg-white/10">Open the full OS -&gt;</a>
-          </div>
+    <div className="min-h-screen bg-slate-950 text-slate-100">
+      <Helmet>
+        <title>Services — the doors the rail publishes | Council of AI</title>
+        <meta
+          name="description"
+          content="Every machine door Council of AI publishes, read live from /.well-known/x402.json — what each one measures, its free preview where one exists, and pay-as-you-go x402 at the 402."
+        />
+      </Helmet>
+
+      <section className="border-b border-slate-800 px-6 py-14">
+        <div className="mx-auto max-w-6xl">
+          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300">
+            Services · read from {MANIFEST}
+          </p>
+          <h1 className="mt-3 text-4xl font-black tracking-tight">
+            Every door the rail publishes.
+          </h1>
+          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-300">
+            This page is not a brochure of what we could build. It is the machine doors that answer
+            today, read from the rail's own manifest when you loaded the page. Each one says what it
+            measures, in the manifest's words. Verification stays free.
+          </p>
+          {cat ? (
+            <p className="mt-4 font-mono text-[12px] text-slate-400" data-testid="services-source">
+              {cat.total} door{cat.total === 1 ? "" : "s"} · manifest mode{" "}
+              <span className="text-emerald-300">{cat.mode ?? "unstated"}</span> ·{" "}
+              <a href={MANIFEST} className="underline">
+                {cat.source}
+              </a>
+            </p>
+          ) : null}
         </div>
       </section>
-      <section className="max-w-6xl mx-auto px-6 py-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {SERVICES.map((s) => (
-          <div key={s.name} className="flex flex-col rounded-2xl border border-gray-200 p-6 hover:border-emerald-300 hover:shadow-sm transition">
-            <div className="flex h-11 items-center justify-center self-start rounded-xl bg-emerald-50 px-3 text-sm font-black text-emerald-700">{s.glyph}</div>
-            <div className="mt-3 text-lg font-bold text-gray-900">{s.name}</div>
-            <p className="mt-1 flex-1 text-sm text-gray-600 leading-snug">{s.body}</p>
-            <a href={s.href} className="mt-4 text-sm font-bold text-emerald-700 hover:text-emerald-600">{s.cta} -&gt;</a>
+
+      <section className="mx-auto max-w-6xl px-6 py-12">
+        {load.state === "loading" ? (
+          <p className="text-slate-400">Reading the manifest…</p>
+        ) : load.state === "unread" ? (
+          <div
+            data-testid="services-unread"
+            className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-6"
+          >
+            <p className="font-mono text-xs uppercase tracking-widest text-amber-300">Unread</p>
+            <p className="mt-2 leading-7 text-slate-300">
+              The rail's manifest at <code className="text-slate-200">{MANIFEST}</code> did not
+              answer ({load.reason}). No doors are listed, because listing a door we could not read
+              would be inventing one. This is not a claim that the rail is down.
+            </p>
           </div>
-        ))}
+        ) : (
+          <div className="space-y-12">
+            {load.catalogue.groups.map(({ group, cards }) => (
+              <section key={group.id} data-testid={`services-group-${group.id}`}>
+                <h2 className="text-2xl font-bold">{group.title}</h2>
+                <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-400">{group.measures}</p>
+
+                {cards.length === 0 ? (
+                  <p className="mt-4 rounded-xl border border-slate-800 bg-slate-900/40 p-4 text-sm text-slate-400">
+                    No door in this group is published on the rail today. The group is shown empty
+                    rather than hidden — an empty group is a fact, not an embarrassment.
+                  </p>
+                ) : (
+                  <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    {cards.map((c) => (
+                      <article
+                        key={c.path}
+                        data-testid={`services-door-${c.path}`}
+                        className="flex flex-col rounded-2xl border border-slate-700/70 bg-slate-900/50 p-5"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="rounded-md border border-slate-600 px-1.5 py-0.5 font-mono text-[10px] text-slate-300">
+                            {c.method}
+                          </span>
+                          {c.freeForever ? (
+                            <span className="rounded-md border border-emerald-400/40 px-1.5 py-0.5 font-mono text-[10px] text-emerald-300">
+                              FREE
+                            </span>
+                          ) : null}
+                        </div>
+                        <h3 className="mt-2 font-mono text-sm font-bold text-slate-100">{c.path}</h3>
+                        <p className="mt-2 flex-1 text-sm leading-6 text-slate-300">{c.measures}</p>
+                        <p className="mt-3 text-[12px] text-slate-400">{c.payLine}</p>
+                        {c.freePreview ? (
+                          <a
+                            href={c.freePreview}
+                            className="mt-3 text-sm font-semibold text-emerald-300 underline underline-offset-4"
+                          >
+                            Free preview →
+                          </a>
+                        ) : (
+                          <p className="mt-3 text-[12px] text-slate-500">
+                            No free preview is published for this door.
+                          </p>
+                        )}
+                      </article>
+                    ))}
+                  </div>
+                )}
+              </section>
+            ))}
+
+            {load.catalogue.ungrouped.length ? (
+              <section
+                data-testid="services-ungrouped"
+                className="rounded-2xl border border-amber-300/30 bg-amber-950/20 p-5"
+              >
+                <h2 className="text-lg font-bold text-amber-200">
+                  Published on the rail, not yet grouped here
+                </h2>
+                <p className="mt-1 text-sm text-slate-300">
+                  These doors answer today but this page does not know where to file them. They are
+                  named rather than dropped, because a door nobody can find is the failure this
+                  section exists to prevent.
+                </p>
+                <ul className="mt-3 font-mono text-sm text-amber-100">
+                  {load.catalogue.ungrouped.map((p) => (
+                    <li key={p}>{p}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </div>
+        )}
       </section>
-      <section className="max-w-6xl mx-auto px-6 pb-16">
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6 text-center">
-          <div className="text-xl font-black text-emerald-900">Governance, rediscovered - not invented</div>
-          <p className="mx-auto mt-2 max-w-2xl text-sm text-emerald-900/80">The site documents historical governance patterns and a proposed Council architecture. The architecture is not a live consensus or failure-resilience claim.</p>
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <a href="/lineage" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4,000-year lineage -&gt;</a>
-            <a href="/dragonfly" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">The 4-Wing architecture -&gt;</a>
-            <a href="/hive" className="rounded-xl border border-emerald-300 px-4 py-2 text-sm font-semibold text-emerald-700 hover:bg-white">How the hive decides -&gt;</a>
-          </div>
+
+      <section className="mx-auto max-w-6xl px-6 pb-16">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-6">
+          <p className="leading-7 text-slate-300">
+            Verification is free and always will be. A grade is never sold, and a measurement is
+            never a certification. Where a door is paid, it is paid at the 402 itself — there is no
+            checkout on this page and no price on this site.
+          </p>
         </div>
       </section>
     </div>

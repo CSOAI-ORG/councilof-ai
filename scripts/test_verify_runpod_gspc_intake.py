@@ -153,6 +153,7 @@ class Fixture:
                 "model_manifest_digest": MODEL_DIGEST,
                 "instrument_sha256": self.instrument_sha,
                 "items_sha256": items_sha,
+                "parse_errors_excluded": parse_errors,
                 "transport_errors_excluded": 0,
             },
         }

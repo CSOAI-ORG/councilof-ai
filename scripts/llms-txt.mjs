@@ -13,6 +13,14 @@
  *   {{PUBLIC_LEADER_COUNT}} {{MODEL_FLEETS}} {{FACT_RUNS}} {{DOI}}      GET /api/gspc
  *   {{BOARD_SNAPSHOT_JSON}}                                            GET /api/gspc (whole body)
  *   {{CARD_CORPORA_SECTION}}                                           the three corpora files
+ *   {{MCP_TOOLS}} {{MCP_FREE}} {{MCP_PAID}} {{MCP_FREE_WORD}} {{MCP_PAID_WORD}}
+ *                                                                      functions/mcp/{gspc,paid}-tools.json
+ *
+ * The tool counts were the exception this file forgot about itself. The header said "DERIVED,
+ * never typed" while the template typed "11 tools ... seven free readers plus four x402-metered"
+ * — three numbers and two number-words that nothing retires. The door's tool set has changed twice
+ * this month (witness_hash quarantined, then dropped from the packaged manifest), and each change
+ * silently aged this file. They come from the same two JSON files the door itself reads.
  *
  * The lid is copied VERBATIM from totals.lid. It is never re-phrased here: re-phrasing is how
  * the error gets reintroduced.
@@ -31,6 +39,15 @@ const CHECK = process.argv.includes("--check");
 const BOARD = process.env.CSOAI_BOARD_URL || "https://councilof.ai/api/gspc";
 const p = (...a) => path.join(REPO, ...a);
 const readJSON = (f) => JSON.parse(fs.readFileSync(p(f), "utf8"));
+
+// The door's own tool definitions — the same two files functions/mcp/[[path]].ts serves from.
+const WORDS = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve"];
+const numWord = (n) => WORDS[n] ?? String(n);
+const mcpCounts = () => {
+  const free = readJSON("functions/mcp/gspc-tools.json").tools.length;
+  const paid = readJSON("functions/mcp/paid-tools.json").tools.length;
+  return { free, paid, total: free + paid };
+};
 
 async function board() {
   const r = await fetch(BOARD, { headers: { accept: "application/json" } });
@@ -81,6 +98,11 @@ function render(tmpl, t, snapshotJson, corpora) {
     PUBLIC_LEADER_COUNT: t.public_leader_count,
     MODEL_FLEETS: t.model_fleets, FACT_RUNS: t.fact_runs,
     DOI: t.doi, BOARD_SNAPSHOT_JSON: snapshotJson, CARD_CORPORA_SECTION: corpora,
+    ...(() => {
+      const m = mcpCounts();
+      return { MCP_TOOLS: m.total, MCP_FREE: m.free, MCP_PAID: m.paid,
+               MCP_FREE_WORD: numWord(m.free), MCP_PAID_WORD: numWord(m.paid) };
+    })(),
   };
   let out = tmpl;
   for (const [k, v] of Object.entries(map)) {

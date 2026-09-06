@@ -62,6 +62,31 @@ def build(text):
                "records_unreadable": r["one_number"].get("records_unreadable"),
                "settled_usdc": (r.get("settled_usdc") or {}).get("value")} for d, r in sorted(by_date.items())]
     latest = series[-1] if series else None
+    # THE STREAK IS THE POINT OF KEEPING A SERIES. The estate's own gates are written against time,
+    # not against a reading: "0 for 30 days: the shape or the price is wrong; do not add doors",
+    # ">=1 repeat: open the next door". None can be evaluated from `latest` alone, and until now
+    # nothing derived it, so the series was published and the number it exists to answer was not.
+    #
+    # A NULL DAY IS NOT A ZERO DAY. `all_time: null` means the endpoint had no source that day —
+    # we did not observe zero buyers, we observed nothing. Counting it as a zero would manufacture
+    # evidence for "the price is wrong" out of a day we failed to read. The walk therefore stops at
+    # the first day that is not an integer 0, and `stopped_at` says which kind of day stopped it,
+    # so a short streak can never be mistaken for a short run of zeros.
+    streak, stopped_at = 0, None
+    for r in reversed(series):
+        v = r.get("all_time")
+        if isinstance(v, int) and not isinstance(v, bool) and v == 0:
+            streak += 1
+            continue
+        stopped_at = {"date": r["date"], "all_time": v,
+                      "kind": "unreadable" if v is None else "a buyer"}
+        break
+    if series and not (isinstance(series[-1].get("all_time"), int)
+                       and not isinstance(series[-1].get("all_time"), bool)):
+        streak = None  # the latest day is unreadable: the current run is unknown, never 0
+    nonzero = [r["date"] for r in series
+               if isinstance(r.get("all_time"), int) and not isinstance(r.get("all_time"), bool)
+               and r["all_time"] > 0]
     return {
         "kind": "csoai.revenue-history/v0",
         "as_of": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -70,7 +95,15 @@ def build(text):
                     "this file is derived by scripts/interop/pull-revenue-history.py and never hand-edited",
         "one_number_definition": rows[-1]["one_number"]["definition"] if rows else None,
         "null_rule": "A value is null, never 0, when the endpoint had no source that day.",
-        "days": len(series), "latest": latest, "series": series, "rows_rejected": rejected,
+        "days": len(series), "latest": latest,
+        "consecutive_days_at_zero_buyers": streak,
+        "streak_stopped_at": stopped_at,
+        "streak_rule": "counted back from the latest day while all_time is an integer 0. A null day is "
+                       "unreadable, not zero: it stops the walk and is named in streak_stopped_at. If the "
+                       "latest day itself is unreadable the streak is null, never 0.",
+        "days_unreadable": sum(1 for r in series if r.get("all_time") is None),
+        "days_with_a_buyer": nonzero,
+        "series": series, "rows_rejected": rejected,
         "not": "revenue is earned on issuance, assembly and a durable signature — never a grade; aggregate-only, no per-user data",
     }
 
@@ -99,7 +132,12 @@ def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(doc, indent=2) + "\n")
     print(f"wrote {OUT}: {doc['days']} days, latest {doc['latest']['date']} all_time={doc['latest']['all_time']} "
-          f"rejected={len(doc['rows_rejected'])}")
+          f"zero-buyer streak={doc['consecutive_days_at_zero_buyers']} rejected={len(doc['rows_rejected'])}")
+    if doc["days_with_a_buyer"]:
+        print(f"STOP AND REPORT: a non-self buyer was recorded on {', '.join(doc['days_with_a_buyer'])}. "
+              f"The one number is only ever moved by an external payer; self-settlements are excluded "
+              f"upstream in functions/api/revenue.ts. Verify before this is published as revenue.",
+              file=sys.stderr)
     return 0
 
 
