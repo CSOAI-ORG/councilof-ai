@@ -204,7 +204,7 @@ def test_live_providers_uses_mapping_keys_not_model_ids() -> None:
 
 def test_millable_does_not_respray_provider_policy_fails() -> None:
     """34049312401: 286 millable were resprayed; last 400 was invalid nebius.
-    Those already had a real router attempt. Do not mill them every hour."""
+    A later chat-bare retry is allowed once. After route_kind=chat, stop."""
     models = [
         {
             "slug": "facebook/opt-125m",
@@ -218,9 +218,20 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
             "status": "UNCHECKABLE",
             "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
         },
+        {
+            "slug": "Qwen/Qwen2.5-7B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "route_kind": "chat",
+            "reason": "HTTP 400 {\"error\":{\"message\":\"the provider or policy you attempted to specify 'nebius' is not valid.\"}}",
+        },
     ]
     got = millable_slugs(models)
-    assert "facebook/opt-125m" not in got
+    # n_measured still hundreds: retry chat policy rows that never had a
+    # non-nebius mill. What would make this fail: skipping opt-125m forever
+    # because the last DEFAULT spray named nebius.
+    assert "facebook/opt-125m" in got
+    assert "Qwen/Qwen2.5-7B-Instruct" not in got
     # hf-inference miss on a non-chat tag is the embed route already run.
     assert "nomic-ai/nomic-embed-text-v1.5" not in got
 
@@ -270,7 +281,7 @@ def test_millable_retries_nonchat_after_chat_policy_spray() -> None:
         },
     ]
     got = millable_slugs(models)
-    assert "facebook/opt-125m" not in got
+    assert "facebook/opt-125m" in got
     assert "sentence-transformers/all-MiniLM-L6-v2" in got
     assert "answerdotai/ModernBERT-base" in got
     assert "BAAI/bge-small-en-v1.5" in got
@@ -369,6 +380,19 @@ def test_resolve_route_refuses_chat_respray_on_empty_lock_tag() -> None:
     assert kind == "similarity"
 
 
+def test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray() -> None:
+    """DEFAULT spray is what wrote 1311 nebius 400s. A retry with empty
+    Hub mapping must be the bare slug only. What would make this fail:
+    provider_order filling groq/cerebras when mapped is []."""
+    bare = mill_names_for_kind("facebook/opt-125m", "chat", [], defaults=())
+    assert bare == ["facebook/opt-125m"]
+    mapped = mill_names_for_kind("Qwen/Qwen3-8B", "chat", ["featherless-ai"], defaults=())
+    assert mapped[0] == "Qwen/Qwen3-8B"
+    assert "Qwen/Qwen3-8B:featherless-ai" in mapped
+    assert "Qwen/Qwen3-8B:groq" not in mapped
+    assert "nebius" not in "".join(mapped)
+
+
 def test_mill_names_nonchat_pins_hf_inference_not_groq() -> None:
     """Chat mill never defaults hf-inference. Embed mill must, or MiniLM
     never 200s. What would make this fail: spraying groq onto bge."""
@@ -409,6 +433,7 @@ if __name__ == "__main__":
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_resolve_route_refuses_chat_respray_on_empty_lock_tag()
+    test_mill_names_uncheckable_chat_is_bare_plus_mapped_not_default_spray()
     test_mill_names_nonchat_pins_hf_inference_not_groq()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 21 passed")
+    print("test_mill_window: 22 passed")

@@ -352,9 +352,15 @@ def main() -> int:
             mapped = list(lock_providers[slug]) + [p for p in mapped if p not in lock_providers[slug]]
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
-        # Bare slug first for chat. Non-chat pins hf-inference (MiniLM/bge/bert 200).
+        # Bare slug first for chat. UNCHECKABLE chat retries must not fill
+        # DEFAULT_PROVIDERS — that spray is what wrote 1311 nebius 400s.
         if kind == "chat":
-            router_names = [slug] + [f"{slug}:{p}" for p in order]
+            lock_st = lock_row.get("status") or "UNMEASURED"
+            if lock_st == "UNCHECKABLE":
+                router_names = mill_names_for_kind(slug, "chat", mapped, defaults=())
+                rec["route_kind"] = "chat-bare"
+            else:
+                router_names = [slug] + [f"{slug}:{p}" for p in order]
         else:
             router_names = mill_names_for_kind(slug, kind, mapped)
         rec["router_names"] = router_names

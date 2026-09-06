@@ -209,16 +209,22 @@ def resolve_route(
     return tag, kind
 
 
-def mill_names_for_kind(slug: str, kind: str, mapped: list[str] | None = None) -> list[str]:
+def mill_names_for_kind(
+    slug: str,
+    kind: str,
+    mapped: list[str] | None = None,
+    defaults: list[str] | tuple[str, ...] = DEFAULT_PROVIDERS,
+) -> list[str]:
     """Which router model names to try. Pure. No HTTP.
 
-    Chat: bare slug then DEFAULT_PROVIDERS (never hf-inference first).
+    Chat: bare slug then defaults (never hf-inference first).
+    Pass defaults=() for an UNCHECKABLE retry so an empty Hub mapping
+    is the bare slug only — DEFAULT spray is what wrote 1311 nebius 400s.
     Non-chat: bare slug then hf-inference — MiniLM/bge/bert 200s on that path.
-    Do not spray groq/nebius onto an embed model.
     """
     mapped = list(mapped or [])
     if kind == "chat":
-        order = provider_order(mapped)
+        order = provider_order(mapped, defaults)
         return [slug] + [f"{slug}:{p}" for p in order]
     names = [slug, f"{slug}:hf-inference"]
     for p in mapped:
@@ -270,6 +276,13 @@ def millable_slugs(models: list[dict]) -> list[str]:
             # Empty Hub tag: one re-probe so mill can fill pipeline_tag.
             if tag == "" and last_kind in ("", "chat"):
                 if already_hf:
+                    continue
+                out.append(slug)
+                continue
+            # Chat policy/nebius: one retry without DEFAULT spray. After
+            # route_kind=chat the retry has run; do not mill every hour.
+            if tag in CHAT_TAGS and ("provider or policy" in reason or "nebius" in reason):
+                if last_kind in ("chat", "chat-bare"):
                     continue
                 out.append(slug)
                 continue
