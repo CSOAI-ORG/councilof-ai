@@ -41,6 +41,8 @@ import os
 import shutil
 import subprocess
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -83,6 +85,23 @@ def gguf_repo_for(model_id: str, token: str) -> str | None:
     return None
 
 
+class QuantLookupFailed(RuntimeError):
+    """The Hub did not answer. Distinct from "the repo publishes no .gguf", which is None."""
+
+
+def manifest_root(store_root: str) -> Path:
+    """Where ollama actually keeps manifests for a given model store.
+
+    Accepts either the store root or the manifests dir itself, so an operator who
+    already pointed at the right place is not punished for it."""
+    p = Path(store_root)
+    return p if p.name == "manifests" else p / "manifests"
+
+
+def slugify(value: str) -> str:
+    return "".join(c if c.isalnum() or c in "-._" else "-" for c in value)
+
+
 def quant_tag_for(repo: str, token: str, preferred: str) -> str | None:
     """The quantisation tag this repo ACTUALLY publishes, or None.
 
@@ -95,10 +114,24 @@ def quant_tag_for(repo: str, token: str, preferred: str) -> str | None:
     """
     url = f"https://huggingface.co/api/models/{repo}"
     req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"} if token else {})
-    try:
-        d = json.loads(urllib.request.urlopen(req, timeout=30).read())
-    except Exception:
-        return None
+    d = None
+    for attempt in range(4):
+        try:
+            d = json.loads(urllib.request.urlopen(req, timeout=30).read())
+            break
+        except urllib.error.HTTPError as e:
+            # A rate limit is not an answer about the repository. Returning None for one
+            # is how a caller records "publishes no quantisation" for a model it merely
+            # asked about too quickly: on 2026-09-06 that marked Qwen/Qwen3-0.6B NO_QUANT
+            # on twelve axes three minutes after it graded fine via Q8_0.
+            if e.code in (429, 503):
+                time.sleep(5 * (attempt + 1))
+                continue
+            raise QuantLookupFailed(f"HTTP {e.code}") from e
+        except Exception as e:
+            raise QuantLookupFailed(type(e).__name__) from e
+    if d is None:
+        raise QuantLookupFailed("rate-limited")
     quants = []
     for sib in d.get("siblings") or []:
         fn = str(sib.get("rfilename") or "")
@@ -178,9 +211,16 @@ def main() -> int:
         return 2
 
     host = args.ollama_url.split("//", 1)[-1]
-    env = {"OLLAMA_HOST": host, "OLLAMA_MODELS": args.ephemeral_root}
+    # AUGMENT the environment, never replace it. A bare {"OLLAMA_HOST", "OLLAMA_MODELS"}
+    # dict strips PATH and HOME from the pull subprocess, and OLLAMA_MODELS is meaningless
+    # here anyway: the model store belongs to the ALREADY-RUNNING daemon, which read its
+    # own OLLAMA_MODELS at startup and does not re-read a client's. Setting it here only
+    # created the illusion of control -- pulls landed in the daemon's store while the
+    # generator looked in this one, so every model failed at CONFIG with
+    # "No such file or directory: <ephemeral_root>/<registry>/<ns>/<name>/<tag>".
+    env = dict(os.environ, OLLAMA_HOST=host)
 
-    picked = graded = skipped_nogguf = skipped_disk = failed = 0
+    picked = graded = skipped_nogguf = skipped_disk = failed = unchecked = 0
     for mid in ids:
         if picked >= args.limit:
             break
@@ -188,7 +228,14 @@ def main() -> int:
         if not repo:
             skipped_nogguf += 1
             continue
-        q = quant_tag_for(repo, token, args.quantisation)
+        try:
+            q = quant_tag_for(repo, token, args.quantisation)
+        except QuantLookupFailed as e:
+            # UNCHECKABLE, and it must not be counted with the models that genuinely
+            # publish no .gguf -- the caller has to be able to retry this one.
+            print(f"UNCHECKABLE {repo} — quantisation lookup did not answer ({e})", file=sys.stderr)
+            unchecked += 1
+            continue
         if not q:
             # A GGUF-tagged repo with no readable .gguf file is not a pull we can make.
             print(f"SKIP {repo} — no readable .gguf quantisation in the repo")
@@ -207,6 +254,15 @@ def main() -> int:
             skipped_disk += 1
             continue
 
+        # A FRESH jobs dir per model. generate_runpod_gspc_playlist.py halts with
+        # "refusing to replace existing configs" rather than overwrite one, which is
+        # correct -- a stale config silently graded against the wrong model would be far
+        # worse -- so the orchestrator must not hand it the same directory twice.
+        jobs_dir = Path(args.jobs_dir) / slugify(tag)
+        if jobs_dir.exists():
+            shutil.rmtree(jobs_dir)
+        jobs_dir.mkdir(parents=True, exist_ok=True)
+
         rc, out = sh([args.ollama_bin, "pull", tag], env=env, timeout=3600)
         if rc != 0:
             print(f"PULL FAILED {tag}: {out.strip().splitlines()[-1][:120] if out.strip() else rc}")
@@ -218,8 +274,11 @@ def main() -> int:
                 sys.executable, str(Path(__file__).resolve().parent / "generate_runpod_gspc_playlist.py"),
                 "--workspace-root", args.scratch_root,
                 "--bank-dir", str(scratch_banks),
-                "--model-manifest-root", args.ephemeral_root,
-                "--jobs-dir", args.jobs_dir,
+                # ollama writes manifests under <store>/manifests/<registry>/<ns>/<name>/<tag>.
+                # Passing the store root drops the "manifests" segment and the generator
+                # halts on a path that never existed.
+                "--model-manifest-root", str(manifest_root(args.ephemeral_root)),
+                "--jobs-dir", str(jobs_dir),
                 "--output-root", args.output_root,
                 "--ollama-url", args.ollama_url,
                 "--models", tag,
@@ -228,7 +287,7 @@ def main() -> int:
                 print(f"CONFIG FAILED {tag}: {out.strip()[-200:]}")
                 failed += 1
                 continue
-            cfgs = sorted(Path(args.jobs_dir).glob(f"*{args.axis}*.json"))
+            cfgs = sorted(jobs_dir.glob(f"*{args.axis}*.json"))
             if not cfgs:
                 print(f"NO CONFIG for axis {args.axis} on {tag} — the generator emitted none")
                 failed += 1
@@ -238,6 +297,12 @@ def main() -> int:
                 "--config", str(cfgs[-1]), "--once",
             ], env=env, timeout=3600)
             print(f"{'GRADED' if rc == 0 else 'GRADE FAILED'} {mid} via {tag} rc={rc}")
+            if rc != 0:
+                # Print the worker's own words. Reporting only "rc=2" is how a whole run
+                # can fail for a reason nobody ever sees -- the same defect that hid an
+                # intake failure for a full cycle on 2026-09-05.
+                for line in (out or "").strip().splitlines()[-6:]:
+                    print(f"      {line[:160]}")
             if rc == 0:
                 # Measurements must outlive the container. /opt does not survive a pod
                 # restart; /workspace does.
@@ -258,7 +323,7 @@ def main() -> int:
 
     print(
         f"local-mill axis={args.axis} picked={picked} graded={graded} "
-        f"no-gguf={skipped_nogguf} skipped-disk={skipped_disk} failed={failed}"
+        f"no-gguf={skipped_nogguf} unchecked={unchecked} skipped-disk={skipped_disk} failed={failed}"
         + (" DRY RUN" if args.dry_run else "")
     )
     return 0
