@@ -44,7 +44,23 @@ UNSERVED_MARKERS = (
     "bnb-",
 )
 
-ALREADY_TRIED = frozenset({"practice-mill", "MEASURED", "UNCHECKABLE"})
+ALREADY_TRIED = frozenset({"practice-mill", "MEASURED"})
+
+# Inference Providers router. hf-inference is one provider; 1445 of 1880
+# UNCHECKABLE on 6 Sep were "Model not supported by provider hf-inference".
+# Default order must not pin that provider.
+DEFAULT_PROVIDERS = (
+    "groq",
+    "cerebras",
+    "together",
+    "fireworks-ai",
+    "nscale",
+    "novita",
+    "featherless-ai",
+    "deepinfra",
+    "sambanova",
+    "nebius",
+)
 
 # Non-chat tags the hf-inference router serves (measured 6 Sep: MiniLM
 # similarity 200, bge feature-extraction 200, bert fill-mask 200). Chat
@@ -115,20 +131,51 @@ def route_kind(tag: str, slug: str = "") -> str:
     return "try-chat-then-feature"
 
 
+def live_providers(mapping) -> list[str]:
+    """Parse Hub inferenceProviderMapping (dict or list). Pure. No HTTP."""
+    out: list[str] = []
+    rows: list = []
+    if isinstance(mapping, dict):
+        rows = list(mapping.values())
+    elif isinstance(mapping, list):
+        rows = mapping
+    for info in rows:
+        if not isinstance(info, dict):
+            continue
+        if (info.get("status") or "").lower() != "live":
+            continue
+        name = info.get("provider") or info.get("providerId") or ""
+        if name and name not in out:
+            out.append(name)
+    return out
+
+
+def provider_order(mapped: list[str], defaults: list[str] | tuple[str, ...] = DEFAULT_PROVIDERS) -> list[str]:
+    """Other live providers first. Never default to hf-inference.
+    If mapping is only hf-inference, fall through to DEFAULT_PROVIDERS."""
+    others = [p for p in (mapped or []) if p and p != "hf-inference"]
+    base = [p for p in defaults if p and p != "hf-inference"]
+    if others:
+        rest = [p for p in base if p not in others]
+        return others + rest
+    return base
+
+
 def millable_slugs(models: list[dict]) -> list[str]:
-    """Every UNMEASURED slug gets an HTTP attempt. Quant packs 400; that
-    UNCHECKABLE is the recorded attempt, not a silent skip that leaves
-    n_measured stuck and 665 rows untried."""
-    skip = {
-        m.get("slug")
-        for m in models
-        if m.get("slug") and (m.get("status") or "UNMEASURED") in ALREADY_TRIED
-    }
+    """UNMEASURED, plus UNCHECKABLE that only failed on hf-inference.
+    practice-mill / MEASURED stay out. A green tick is not evidence."""
     out: list[str] = []
     for m in models:
         slug = m.get("slug")
-        if not slug or slug in skip:
+        if not slug:
             continue
+        st = m.get("status") or "UNMEASURED"
+        if st in ALREADY_TRIED:
+            continue
+        if st == "UNCHECKABLE":
+            reason = (m.get("reason") or "").lower()
+            if "hf-inference" not in reason:
+                continue
         out.append(slug)
     return out
 

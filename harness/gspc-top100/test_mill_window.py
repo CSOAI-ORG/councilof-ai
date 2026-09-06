@@ -10,9 +10,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from mill_window import (  # noqa: E402
+    DEFAULT_PROVIDERS,
     chat_capable_slugs,
     mill_exit_for_window,
     millable_slugs,
+    provider_order,
     route_kind,
     select_window,
 )
@@ -121,6 +123,43 @@ def test_millable_skips_already_tried() -> None:
     assert route_kind("text-generation", "Qwen/Qwen2.5-7B-Instruct-AWQ") == "feature"
 
 
+def test_millable_retries_hf_inference_uncheckable() -> None:
+    """1445 UNCHECKABLE were 'not supported by provider hf-inference'.
+    Those re-enter the window. Other UNCHECKABLE do not loop forever."""
+    models = [
+        {
+            "slug": "nomic-ai/nomic-embed-text-v1.5",
+            "pipeline_tag": "sentence-similarity",
+            "status": "UNCHECKABLE",
+            "reason": 'HTTP 400 {"error":"Model not supported by provider hf-inference"}',
+        },
+        {
+            "slug": "Qwen/Qwen3-8B",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 400 not a chat model",
+        },
+        {
+            "slug": "Qwen/Qwen2.5-7B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "practice-mill",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "nomic-ai/nomic-embed-text-v1.5" in got
+    assert "Qwen/Qwen3-8B" not in got
+    assert "Qwen/Qwen2.5-7B-Instruct" not in got
+
+
+def test_provider_order_never_defaults_to_hf_inference() -> None:
+    assert "hf-inference" not in DEFAULT_PROVIDERS
+    assert provider_order(["hf-inference", "featherless-ai"])[0] == "featherless-ai"
+    assert "hf-inference" not in provider_order(["hf-inference", "featherless-ai"])
+    assert "hf-inference" not in provider_order(["hf-inference"])
+    assert "hf-inference" not in provider_order([])
+    assert provider_order([])[0] == "groq"
+
+
 def test_millable_includes_embed_and_fill_mask() -> None:
     """Chat mill 400s MiniLM; hf-inference similarity 200. Those slugs
     must enter the window or n_measured cannot leave the chat-only 96."""
@@ -183,8 +222,10 @@ if __name__ == "__main__":
     test_shards_do_not_overlap_when_fleet_smaller_than_stride()
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
+    test_millable_retries_hf_inference_uncheckable()
+    test_provider_order_never_defaults_to_hf_inference()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 12 passed")
+    print("test_mill_window: 14 passed")
