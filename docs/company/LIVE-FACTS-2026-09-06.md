@@ -33,12 +33,12 @@ This matters more than the digits, because a reader who sees 168 in one document
 another will assume one of them is wrong. Both were right when stamped.
 
 - **Root card count can go DOWN.** It fell 168 → 166 because cards get *retracted*. Correction
-  `C-2026-0905-02` alone retracted 26 cards whose `signature` field held a digest. A falling root
+  `C-2026-0905-02` alone retracted 26 cards whose `signature` field held a digest (`/api/corrections`). A falling root
   count is the corrections ledger working, not evidence loss — and it is the number most likely to
   embarrass someone who quotes a stale high value.
 - **Corrections only go UP.** 46 → 47. That is the intended direction; the count is a measure of
   how much we have admitted, not of how much is broken.
-- **Doors only go up** absent a deliberate removal. 292 → 303 includes 9 doors that existed on
+- **Doors only go up** absent a deliberate removal (`/.well-known/index.json`). 292 → 303 includes 9 doors that existed on
   disk but were missing from the index, plus the removal of a self-referential `index` entry, both
   fixed 2026-09-06.
 - **Hub cells go up as more third-party models are read.** Note this is *third-party models on the
