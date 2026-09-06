@@ -124,3 +124,61 @@ for u in https://oecd.ai/en/catalogue/tools/submit https://mcpservers.org/submit
   printf '%s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' -L --max-time 20 "$u")" "$u"
 done
 ```
+
+---
+
+## STATUS BOARD — 20 directories probed, 1 submitted (updated 2026-09-06)
+
+| surface | outcome | why |
+|---|---|---|
+| **mcpservers.org** | **SUBMITTED** | account-free, fee-free, captcha-free. "Submission Successful… reviewed within 12 hours." |
+| OECD.AI catalogue | **pre-filled, awaiting owner** | reCAPTCHA + a personal certification checkbox |
+| mcp.so | owner ask | paid account exists; the paid submission route is not discoverable in the UI |
+| pulsemcp | owner ask | HTTP 403, "API-based access… contact hello@pulsemcp.com" |
+| MCP Hub | blocked | **HTTP 402 Payment Required** at the protocol level |
+| AI Incident Database | **refused on fit** | open form, but it is a corpus for reporting AI *incidents*. We have none. See below. |
+| Product Hunt · toolify.ai | blocked | 403 + reCAPTCHA |
+| glama.ai | **already listed** | `/mcp/servers/CSOAI-ORG/councilof-ai` with get_axis, board_totals, verify_card |
+| mcp-get.com · opentools.com | blocked | 404 — no submission surface exists |
+| mcpmarket.com · futuretools.io | blocked | paid tier / reCAPTCHA |
+
+**The pattern, measured rather than assumed:** of 20 directories, exactly **one** accepted an
+account-free submission. This market is mostly paid placement or human-gated. "Submit to
+directories" is not a volume activity.
+
+### Why the AI Incident Database was refused
+
+Its form is open, uncaptcha'd, accountless and takes 12 fields. It is also a database for
+reporting **AI incidents**, an evidence base other researchers rely on. We have no incident to
+report, and filing a measurement-board listing there would pollute someone else's corpus. A form
+being open is not an invitation. If one of our own published figures ever causes harm, that is the
+row that belongs there — and the corrections ledger is where it would start.
+
+---
+
+## OECD.AI — the exact values, so this survives a browser restart
+
+A tab is pre-filled in the `~/.hermes/browser-profile` Chrome and verified by reading each field
+back. If that tab is lost, paste these:
+
+| field | value |
+|---|---|
+| Name of the tool | `Council of AI — GSPC measurement board` |
+| Website | `https://councilof.ai` |
+| Github | `https://github.com/CSOAI-ORG/councilof-ai` |
+| Email | `nicholas@csoai.org` |
+| Your relation | *I work in or am affiliated to the organisation that created the tool* |
+| Licence | CC-BY-4.0 (board data) |
+| Country | United Kingdom (Companies House 16939677) |
+
+**Excerpt (paste verbatim):**
+
+> A free, public, keyless measurement board for AI systems. Every published figure is derived from
+> a signed artifact at request time, never typed, and each measurement links to the Ed25519 card
+> behind it, which anyone can verify offline — no account, no key, no fee. UNMEASURED is published
+> with equal prominence, and a public corrections ledger records every figure we got wrong, how it
+> was caught, and the fix. Measurement, not certification.
+
+**Left to the owner, deliberately:** the "I certify that all information included in this…"
+checkbox (a personal certification, not an agent's to tick), the reCAPTCHA (an anti-bot control,
+not ours to defeat), and Submit. Optional fields left blank: Benefits, Enforcements, Keywords.
