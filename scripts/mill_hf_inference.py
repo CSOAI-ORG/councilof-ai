@@ -287,7 +287,9 @@ def main() -> int:
                     break
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
-        router_names = [f"{slug}:{p}" for p in order]
+        # Bare slug first: the router picks a live provider. Measured 6 Sep:
+        # Qwen/Qwen3-8B HTTP 200; Qwen/Qwen3-8B:groq 400. Never pin hf-inference.
+        router_names = [slug] + [f"{slug}:{p}" for p in order]
         if kind != "chat":
             rec["n"] = 1
             rec["note"] = (
