@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 from mill_window import (  # noqa: E402
     DEFAULT_PROVIDERS,
     chat_capable_slugs,
+    live_providers,
     mill_exit_for_window,
     millable_slugs,
     provider_order,
@@ -152,6 +153,21 @@ def test_millable_retries_hf_inference_uncheckable() -> None:
     assert "Qwen/Qwen2.5-7B-Instruct" not in got
 
 
+def test_millable_skips_zero_provider_unmeasured() -> None:
+    models = [
+        {"slug": "a/fresh", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {
+            "slug": "b/none",
+            "pipeline_tag": "text-generation",
+            "status": "UNMEASURED",
+            "unmeasured_reason": "no live Inference Provider",
+            "providers_live": [],
+        },
+    ]
+    got = millable_slugs(models)
+    assert got == ["a/fresh"]
+
+
 def test_provider_order_never_defaults_to_hf_inference() -> None:
     assert "hf-inference" not in DEFAULT_PROVIDERS
     assert provider_order(["hf-inference", "featherless-ai"])[0] == "featherless-ai"
@@ -160,6 +176,28 @@ def test_provider_order_never_defaults_to_hf_inference() -> None:
     assert "hf-inference" not in provider_order([])
     assert provider_order([])[0] == "groq"
     assert "nebius" not in DEFAULT_PROVIDERS
+
+
+def test_live_providers_uses_mapping_keys_not_model_ids() -> None:
+    """Hub mapping: key=together, providerId=Qwen/...-Turbo. Mill must
+    call slug:together, not slug:Qwen/...-Turbo."""
+    mapping = {
+        "together": {
+            "status": "live",
+            "providerId": "Qwen/Qwen2.5-7B-Instruct-Turbo",
+            "task": "conversational",
+        },
+        "featherless-ai": {
+            "status": "live",
+            "providerId": "Qwen/Qwen2.5-7B-Instruct",
+            "task": "conversational",
+        },
+        "offline": {"status": "error", "providerId": "x"},
+    }
+    got = live_providers(mapping)
+    assert got == ["together", "featherless-ai"]
+    assert "Qwen/Qwen2.5-7B-Instruct-Turbo" not in got
+    assert provider_order(got)[0] == "together"
 
 
 def test_millable_does_not_respray_provider_policy_fails() -> None:
@@ -184,6 +222,27 @@ def test_millable_does_not_respray_provider_policy_fails() -> None:
     assert "nomic-ai/nomic-embed-text-v1.5" in got
 
 
+def test_millable_drops_image_lora_windows() -> None:
+    """34050320277 shard 15: 0/91 on text-to-image LoRAs. Those must not
+    consume the window that chat-like UNMEASURED need for n_measured>=1000."""
+    models = [
+        {"slug": "Qwen/Qwen3-8B", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {"slug": "prithivMLmods/QIE-outfit", "pipeline_tag": "text-to-image", "status": "UNMEASURED"},
+        {"slug": "black-forest-labs/FLUX.2-klein-4B", "pipeline_tag": "image-to-image", "status": "UNMEASURED"},
+        {
+            "slug": "Qwen/Qwen2.5-3B-Instruct",
+            "pipeline_tag": "text-generation",
+            "status": "UNCHECKABLE",
+            "reason": "HTTP 429 Too Many Requests",
+        },
+    ]
+    got = millable_slugs(models)
+    assert "Qwen/Qwen3-8B" in got
+    assert "prithivMLmods/QIE-outfit" not in got
+    assert "black-forest-labs/FLUX.2-klein-4B" not in got
+    assert "Qwen/Qwen2.5-3B-Instruct" in got
+
+
 def test_millable_includes_embed_and_fill_mask() -> None:
     """Chat mill 400s MiniLM; hf-inference similarity 200. Those slugs
     must enter the window or n_measured cannot leave the chat-only 96."""
@@ -199,7 +258,7 @@ def test_millable_includes_embed_and_fill_mask() -> None:
     assert "google-bert/bert-base-uncased" in got
     assert "BAAI/bge-small-en-v1.5" in got
     assert "Qwen/Qwen3-8B" in got
-    assert "google/siglip2" in got
+    assert "google/siglip2" not in got
     assert route_kind("zero-shot-image-classification") == "try-chat-then-feature"
     assert route_kind("sentence-similarity") == "similarity"
     assert route_kind("text-generation") == "chat"
@@ -247,10 +306,13 @@ if __name__ == "__main__":
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
     test_millable_retries_hf_inference_uncheckable()
+    test_millable_skips_zero_provider_unmeasured()
     test_provider_order_never_defaults_to_hf_inference()
+    test_live_providers_uses_mapping_keys_not_model_ids()
     test_millable_does_not_respray_provider_policy_fails()
+    test_millable_drops_image_lora_windows()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 15 passed")
+    print("test_mill_window: 18 passed")

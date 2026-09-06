@@ -86,6 +86,20 @@ TEXT_TAGS = frozenset(
 )
 ROUTER_TAGS = CHAT_TAGS | FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT_TAGS
 
+# LoRA/image windows 400 on chat/embeddings (mill 34050320277 shard 15: 0/91).
+# Drop them so remaining chat-like UNMEASURED get the slots.
+SKIP_TAGS = frozenset(
+    {
+        "text-to-image",
+        "image-to-image",
+        "image-to-video",
+        "text-to-video",
+        "image-text-to-video",
+        "image-classification",
+        "zero-shot-image-classification",
+    }
+)
+
 
 def _unserved_weight_pack(slug: str) -> bool:
     low = slug.lower()
@@ -132,21 +146,34 @@ def route_kind(tag: str, slug: str = "") -> str:
 
 
 def live_providers(mapping) -> list[str]:
-    """Parse Hub inferenceProviderMapping (dict or list). Pure. No HTTP."""
+    """Parse Hub inferenceProviderMapping (dict or list). Pure. No HTTP.
+
+    Dict keys are provider ids (together, featherless-ai). `providerId` is
+    the model id on that provider — not a provider name.
+    """
     out: list[str] = []
-    rows: list = []
     if isinstance(mapping, dict):
-        rows = list(mapping.values())
-    elif isinstance(mapping, list):
-        rows = mapping
-    for info in rows:
-        if not isinstance(info, dict):
-            continue
-        if (info.get("status") or "").lower() != "live":
-            continue
-        name = info.get("provider") or info.get("providerId") or ""
-        if name and name not in out:
-            out.append(name)
+        items = mapping.items()
+        for key, info in items:
+            if not isinstance(info, dict):
+                continue
+            if (info.get("status") or "").lower() != "live":
+                continue
+            name = info.get("provider") or key
+            if "/" in str(name):
+                name = key
+            if name and name not in out:
+                out.append(str(name))
+        return out
+    if isinstance(mapping, list):
+        for info in mapping:
+            if not isinstance(info, dict):
+                continue
+            if (info.get("status") or "").lower() != "live":
+                continue
+            name = info.get("provider") or info.get("providerId") or ""
+            if name and "/" not in str(name) and name not in out:
+                out.append(str(name))
     return out
 
 
@@ -170,7 +197,12 @@ def millable_slugs(models: list[dict]) -> list[str]:
         if not slug:
             continue
         st = m.get("status") or "UNMEASURED"
+        tag = m.get("pipeline_tag") or ""
+        if tag in SKIP_TAGS:
+            continue
         if st in ALREADY_TRIED:
+            continue
+        if st == "UNMEASURED" and m.get("unmeasured_reason") == "no live Inference Provider":
             continue
         if st == "UNCHECKABLE":
             if _unserved_weight_pack(slug):
@@ -179,11 +211,13 @@ def millable_slugs(models: list[dict]) -> list[str]:
             if name.endswith("-base"):
                 continue
             reason = (m.get("reason") or "").lower()
+            if "429" in reason:
+                out.append(slug)
+                continue
             # Already sprayed the router (bare slug + providers). Last call was
             # often invalid nebius; do not spend another hour on the same 286.
             if "provider or policy" in reason or "nebius" in reason:
                 continue
-            tag = m.get("pipeline_tag") or ""
             if "hf-inference" not in reason and tag not in CHAT_TAGS:
                 continue
         out.append(slug)

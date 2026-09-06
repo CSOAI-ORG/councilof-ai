@@ -90,6 +90,90 @@ def test_uncheckable_is_not_n_measured_and_does_not_downgrade() -> None:
     assert out["n_measured"] == 2
 
 
+def test_apply_mill_does_not_persist_429_as_uncheckable() -> None:
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import apply_mill  # noqa: E402
+    lock = {"n_measured": 0, "models": [{"slug": "a/x", "status": "UNMEASURED"}]}
+    mill = {
+        "as_of": "2026-09-06T18:00:00Z",
+        "rows": [{"slug": "a/x", "status": "UNCHECKABLE", "reason": "HTTP 429 Too Many Requests"}],
+    }
+    out = apply_mill(lock, mill)
+    assert out["models"][0]["status"] == "UNMEASURED"
+    assert out["n_measured"] == 0
+
+
+def test_rebuild_keeps_practice_mill_and_prefers_chat() -> None:
+    """Mixed-download UNCHECKABLE cannot 200. Filling with provider-hosted
+    chat-like slugs must not drop already-counted practice-mill."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import rebuild_provider_hosted_lock  # noqa: E402
+
+    lock = {
+        "kind": "csoai.fleet-lock/0.1",
+        "n_measured": 2,
+        "n_locked": 4,
+        "writes_board": False,
+        "models": [
+            {"slug": "a/ok", "status": "practice-mill", "pipeline_tag": "sentence-similarity"},
+            {"slug": "b/ok", "status": "practice-mill", "pipeline_tag": "text-generation"},
+            {"slug": "c/dead", "status": "UNCHECKABLE", "pipeline_tag": "text-to-image"},
+            {"slug": "d/dead", "status": "UNCHECKABLE", "pipeline_tag": "automatic-speech-recognition"},
+        ],
+    }
+    candidates = [
+        {"id": "img/one", "downloads": 9, "pipeline_tag": "text-to-image"},
+        {"id": "chat/two", "downloads": 8, "pipeline_tag": "text-generation", "providers": ["featherless-ai"]},
+        {"id": "a/ok", "downloads": 99, "pipeline_tag": "sentence-similarity"},
+        {"id": "vlm/three", "downloads": 7, "pipeline_tag": "image-text-to-text"},
+    ]
+    out = rebuild_provider_hosted_lock(lock, candidates, n=4)
+    slugs = [m["slug"] for m in out["models"]]
+    assert out["n_locked"] == 4
+    assert out["n_measured"] == 2
+    assert "a/ok" in slugs and "b/ok" in slugs
+    assert slugs[2] == "chat/two"
+    assert slugs[3] == "vlm/three"
+    assert out["models"][2].get("providers_live") == ["featherless-ai"]
+    assert "c/dead" not in slugs
+    assert all(m["status"] == "practice-mill" for m in out["models"][:2])
+    assert all(m["status"] == "UNMEASURED" for m in out["models"][2:])
+
+
+def test_stamp_zero_provider_does_not_invent_n_measured() -> None:
+    """Leftover UNMEASURED with empty Hub mapping are recorded, not scored."""
+    import sys
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from mill_lock_update import stamp_zero_providers  # noqa: E402
+
+    lock = {
+        "n_measured": 2,
+        "models": [
+            {"slug": "a/ok", "status": "practice-mill"},
+            {"slug": "a2/ok", "status": "practice-mill"},
+            {"slug": "b/empty", "status": "UNMEASURED"},
+            {"slug": "c/live", "status": "UNMEASURED"},
+        ],
+    }
+
+    def fetch(slug: str):
+        return ["featherless-ai"] if slug == "c/live" else []
+
+    out = stamp_zero_providers(lock, fetch, "2026-09-06T18:00:00Z")
+    assert out["n_measured"] == 2
+    assert out["models"][0]["status"] == "practice-mill"
+    assert out["models"][1]["status"] == "practice-mill"
+    assert out["models"][2]["unmeasured_reason"] == "no live Inference Provider"
+    assert out["models"][2]["providers_live"] == []
+    assert out["models"][2]["status"] == "UNMEASURED"
+    assert out["models"][3]["providers_live"] == ["featherless-ai"]
+    assert "unmeasured_reason" not in out["models"][3]
+    assert out["n_unmeasured_zero_provider"] == 1
+    assert out["n_unmeasured_with_live_provider"] == 1
+
+
 def test_workflow_lands_from_hub_queue_not_git_zero() -> None:
     """A green land-lock that patches the git lock (all UNMEASURED) and
     uploads it would wipe hub-queue n_measured. The workflow must fetch
@@ -107,5 +191,8 @@ if __name__ == "__main__":
     test_workflow_surfaces_inference_fail_in_summary()
     test_apply_mill_counts_practice_mill_into_n_measured()
     test_uncheckable_is_not_n_measured_and_does_not_downgrade()
+    test_apply_mill_does_not_persist_429_as_uncheckable()
+    test_rebuild_keeps_practice_mill_and_prefers_chat()
+    test_stamp_zero_provider_does_not_invent_n_measured()
     test_workflow_lands_from_hub_queue_not_git_zero()
-    print("test_fleet_locks: 6 passed")
+    print("test_fleet_locks: 9 passed")
