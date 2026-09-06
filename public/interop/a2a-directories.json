@@ -3,7 +3,7 @@
   "slug": "a2a-directories",
   "schema": "csoai.interop-listing-state/0.1",
   "principle": "Where the estate's A2A agent is listed, and where it is not. Every row is a probe of the DIRECTORY, never of our own filesystem. This file mirrors mcp-directories.json deliberately: that file was wrong six times in one day, and every one of those errors came from answering 'do we hold a note saying we are listed' instead of asking the directory. UNKNOWN is a permitted state and is not NOT_LISTED.",
-  "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists — a rendered search echoes the query back, which produced both a false LISTED and a false NOT_LISTED in the MCP census on 2026-09-05. `api` and `sitemap` are authoritative.",
+  "surface_note": "Each row names the surface its state came from. `ours` is never valid evidence about a third party. `rendered` is NECESSARY where a directory has no API and NOT SUFFICIENT where one exists \u2014 a rendered search echoes the query back, which produced both a false LISTED and a false NOT_LISTED in the MCP census on 2026-09-05. `api` and `sitemap` are authoritative.",
   "as_of": "20260905T185400Z",
   "our_agent": {
     "card": "https://councilof.ai/.well-known/agent-card.json",
@@ -12,7 +12,7 @@
     "interface": "https://councilof.ai/api/a2a",
     "protocol_binding": "JSONRPC",
     "skills": 7,
-    "note": "Card shape is A2A v1.0.1: the AgentCard carries NO top-level url or protocolVersion — both are REQUIRED fields of AgentInterface instead, and ours carries all three (url, protocolBinding, protocolVersion). Verified against specification/a2a.proto at tag v1.0.1, not against a remembered field list."
+    "note": "Card shape is A2A v1.0.1: the AgentCard carries NO top-level url or protocolVersion \u2014 both are REQUIRED fields of AgentInterface instead, and ours carries all three (url, protocolBinding, protocolVersion). Verified against specification/a2a.proto at tag v1.0.1, not against a remembered field list."
   },
   "directories": [
     {
@@ -20,12 +20,12 @@
       "name": "A2A Registry",
       "url": "https://a2aregistry.org",
       "state": "LISTED",
-      "evidence": "Registered 2026-08-19T11:21:05Z as 'Council of AI — Measurement Agent' (id 48e5bba6-8848-4adc-8f92-b5fa2c0744e0), url https://councilof.ai/api/a2a, protocolVersion 1.0, author CSOAI. The registry reports is_healthy TRUE and conformance TRUE, last health check 2026-09-06T03:39:45Z. We were listed for EIGHTEEN DAYS before this file first claimed otherwise.",
+      "evidence": "Registered 2026-08-19T11:21:05Z as 'Council of AI \u2014 Measurement Agent' (id 48e5bba6-8848-4adc-8f92-b5fa2c0744e0), url https://councilof.ai/api/a2a, protocolVersion 1.0, author CSOAI. The registry reports is_healthy TRUE and conformance TRUE, last health check 2026-09-06T03:39:45Z. We were listed for EIGHTEEN DAYS before this file first claimed otherwise.",
       "probe": "curl -s 'https://a2aregistry.org/api/agents?limit=50&offset=0' | jq '{total,limit}' # THEN paginate to .total before concluding anything",
       "surface": "api",
       "submission": {
         "method": "POST https://a2aregistry.org/api/agents/register",
-        "result": "409 — 'An agent from this host is already registered'",
+        "result": "409 \u2014 'An agent from this host is already registered'",
         "auth": "none",
         "note": "The 409 is how the error was found. Attempting a registration we did not need returned the id of the entry that already existed, which no amount of re-reading page 1 would have."
       }
@@ -44,7 +44,7 @@
       "name": "agentcards.org",
       "url": "https://agentcards.org",
       "state": "NOT_A_DIRECTORY",
-      "evidence": "Parked domain offered for sale. Every path including /sitemap.xml returns HTTP 200 with the title 'For Sale Domain: agentcards.org'. A 200 here is a parking page, not a directory — this row exists so the name is never re-probed and read as live.",
+      "evidence": "Parked domain offered for sale. Every path including /sitemap.xml returns HTTP 200 with the title 'For Sale Domain: agentcards.org'. A 200 here is a parking page, not a directory \u2014 this row exists so the name is never re-probed and read as live.",
       "probe": "curl -sL https://agentcards.org/sitemap.xml | grep -o '<title>[^<]*</title>'",
       "surface": "api"
     }
@@ -89,10 +89,10 @@
       "detail": "a2aregistry's schemas/registry-agent.schema.json $refs a2a-official.schema.json#/definitions/AgentCard. That file is not in the repository tree, so the published schema cannot be resolved by a stranger. Their running backend validates in Python instead and is unaffected.",
       "probe": "gh api repos/prassanna-ravishankar/a2a-registry/git/trees/main?recursive=1 --jq '.tree[].path' | grep schemas/"
     },
-    "2026-09-05: this lane opened by reporting our own card as defective — 'protocolVersion: null, url: null, the A2A spec's required fields'. That was read off A2A v0.3.0's JSON schema, which does require both at the top level. In v1.0.1 neither field exists on AgentCard: both moved into AgentInterface, and our card carries them there. The card was conformant the whole time. Check the version of the spec you are holding before calling an artifact broken.",
-    "2026-09-05: a2aregistry.org/docs still describes a 'Git-as-database model on GitHub' and the repository has an empty agents/ tree; registration has since moved to a POST against a backend with SQL migrations. The documented mechanism and the working mechanism had diverged — the README, not the docs page, carried the live one.",
+    "2026-09-05: this lane opened by reporting our own card as defective \u2014 'protocolVersion: null, url: null, the A2A spec's required fields'. That was read off A2A v0.3.0's JSON schema, which does require both at the top level. In v1.0.1 neither field exists on AgentCard: both moved into AgentInterface, and our card carries them there. The card was conformant the whole time. Check the version of the spec you are holding before calling an artifact broken.",
+    "2026-09-05: a2aregistry.org/docs still describes a 'Git-as-database model on GitHub' and the repository has an empty agents/ tree; registration has since moved to a POST against a backend with SQL migrations. The documented mechanism and the working mechanism had diverged \u2014 the README, not the docs page, carried the live one.",
     "2026-09-05: /submit was first fetched WITHOUT -L and returned a 169-byte '301 Moved Permanently' body, from which a grep for github links found nothing. Absence measured through an unfollowed redirect is not absence.",
-    "2026-09-05/06: THIS FILE PUBLISHED THAT WE WERE NOT LISTED. We had been listed since 2026-08-19, healthy and conformant. Every wrong number in the row came from ONE act: GET /api/agents was read as the population when it is a PAGE. The response object carries `total: 370` beside `limit: 50` and `offset: 0` — the refutation was in the same JSON, unread. Consequences: state NOT_LISTED (wrong), '50 agents' (370), 'zero agents on v1.0' (93 on 1.x), and a backlog row claiming we would be the registry's first 1.0 agent when 83 already declare 1.0. The estate has this exact defect in memory as partial-read-totalled-as-population and as rule R5, and it was committed anyway. A count is not a measurement until it is compared with the source's own declared total."
+    "2026-09-05/06: THIS FILE PUBLISHED THAT WE WERE NOT LISTED. We had been listed since 2026-08-19, healthy and conformant. Every wrong number in the row came from ONE act: GET /api/agents was read as the population when it is a PAGE. The response object carries `total: 370` beside `limit: 50` and `offset: 0` \u2014 the refutation was in the same JSON, unread. Consequences: state NOT_LISTED (wrong), '50 agents' (370), 'zero agents on v1.0' (93 on 1.x), and a backlog row claiming we would be the registry's first 1.0 agent when 83 already declare 1.0. The estate has this exact defect in memory as partial-read-totalled-as-population and as rule R5, and it was committed anyway. A count is not a measurement until it is compared with the source's own declared total."
   ],
   "links": {
     "self": "https://councilof.ai/interop/a2a-directories.json",
