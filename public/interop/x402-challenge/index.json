@@ -1,0 +1,20 @@
+{
+  "schema": "csoai.x402-challenge-index/0.1",
+  "pack": "x402-challenge",
+  "as_of": "2026-09-02T03:32:11Z",
+  "status": "PROBED",
+  "writes_board": false,
+  "honest_sentence": "Live HTTP 402 probe only. Settlement UNCHECKABLE until facilitator receipt exists. Never MEASURED. Never certify. Never invent settlement.",
+  "probe": {
+    "path": "probe-2026-09-02.json",
+    "url": "https://councilof.ai/api/eunomia-data?x402=1",
+    "http_status": 402,
+    "settlement": "UNCHECKABLE",
+    "probed_at": "2026-09-02T03:32:11Z"
+  },
+  "files": [
+    {"path": "README.md", "role": "readme"},
+    {"path": "probe-2026-09-02.json", "role": "live_probe"},
+    {"path": "card-unsigned.example.json", "role": "unsigned_card_example", "sig_ed25519": null}
+  ]
+}
