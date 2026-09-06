@@ -106,7 +106,16 @@ for (const p of gated) {
     }
   } catch (e) {
     failures++;
-    console.error(`  ✗ ${p.id.padEnd(28)} ${(e.stdout || e.stderr || e.message || "").toString().trim().split("\n").pop()}`);
+    // Do NOT print the last line of a stack trace: for a crashing Node script that is the version
+    // banner ("Node.js v20.20.2"), which names neither the fault nor the file. CI showed exactly
+    // that and the failure had to be reproduced by hand to learn anything. Print the lines that
+    // carry a message instead.
+    const text = [e.stderr, e.stdout, e.message].map((x) => (x ?? "").toString()).join("\n");
+    const useful = text.split("\n").map((l) => l.trim())
+      .filter((l) => l && !/^Node\.js v/.test(l) && !/^\s*at /.test(l))
+      .slice(0, 4);
+    console.error(`  ✗ ${p.id.padEnd(28)} FAILED — ${p.check ?? p.command}`);
+    for (const l of useful) console.error(`      ${l}`);
   }
 }
 
