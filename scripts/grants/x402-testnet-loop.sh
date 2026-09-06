@@ -82,20 +82,25 @@ typed = {"types": {"EIP712Domain": [{"name":"name","type":"string"},{"name":"ver
                                                  {"name":"value","type":"uint256"},{"name":"validAfter","type":"uint256"},
                                                  {"name":"validBefore","type":"uint256"},{"name":"nonce","type":"bytes32"}]},
          "primaryType": "TransferWithAuthorization",
-         "domain": {"name": "USDC", "version": "2", "chainId": int(__import__("os").environ.get("CHAIN_ID","84532")),
-                    "verifyingContract": "0x036CbD53842c5426634e7929541eC2318f3dCF7e"},
+         # EIP-712 domain comes from the challenge itself: the asset contract and its declared name/version.
+         # Base Sepolia test USDC is ("USDC", "2", 0x036C...); Base mainnet USDC is ("USD Coin", "2", 0x8335...2913).
+         # Hard-coding the Sepolia pair made every X402_MAINNET=1 signature invalid (found 2026-09-06 before the first real settle).
+         "domain": {"name": (acc.get("extra") or {}).get("name", "USDC"),
+                    "version": (acc.get("extra") or {}).get("version", "2"),
+                    "chainId": int(__import__("os").environ.get("CHAIN_ID","84532")),
+                    "verifyingContract": __import__("os").environ.get("USDC_SEPOLIA", acc.get("asset"))},
          "message": auth}
 sig = Account.sign_message(encode_typed_data(full_message=typed), acct.key).signature.hex()
 sig = sig if sig.startswith("0x") else "0x" + sig
 auth_s = {k: (str(v) if isinstance(v, int) else v) for k, v in auth.items()}
 reqs = {"scheme": "exact", "network": __import__("os").environ.get("NETWORK_V2","eip155:84532"), "amount": amount, "asset": __import__("os").environ.get("USDC_SEPOLIA","0x036CbD53842c5426634e7929541eC2318f3dCF7e"),
         "payTo": pay_to, "resource": {"url": resource, "description": "", "mimeType": "application/json"},
-        "maxTimeoutSeconds": 600, "extra": {"name": "USDC", "version": "2"}}
+        "maxTimeoutSeconds": 600, "extra": {"name": (acc.get("extra") or {}).get("name", "USDC"), "version": (acc.get("extra") or {}).get("version", "2")}}
 body = {"x402Version": 2,
         "paymentPayload": {"x402Version": 2, "accepted": reqs,
                            "payload": {"signature": sig, "authorization": auth_s}},
         "paymentRequirements": reqs}
-sys.stderr.write(f"    payer {acct.address}  ->  {int(amount)/1e6:.6f} testnet USDC  ->  {pay_to}\n")
+sys.stderr.write(f"    payer {acct.address}  ->  {int(amount)/1e6:.6f} USDC on {__import__('os').environ.get('NETWORK_V2')}  ->  {pay_to}\n")
 print(json.dumps(body))
 PY
 )
@@ -108,5 +113,5 @@ if [ "${SETTLE:-0}" != "1" ]; then echo "[4/4] settle skipped (SETTLE=1 to submi
 echo "[4/4] POST /settle"
 S=$(curl -sS --max-time 120 -A "$UA" -H 'content-type: application/json' -d "$BODY" "$FACILITATOR/settle")
 echo "    settle: $S"
-echo "$S" | python3 -c 'import sys,json; d=json.load(sys.stdin); tx=d.get("transaction"); print(f"    https://sepolia.basescan.org/tx/{tx}" if tx else ""); sys.exit(0 if d.get("success") else 1)' \
-  && echo "    SETTLED on Base Sepolia. Testnet money: not revenue, not on /api/revenue, indexes nothing."
+echo "$S" | python3 -c 'import sys,json; d=json.load(sys.stdin); tx=d.get("transaction"); import os; ex="https://basescan.org" if os.environ.get("CHAIN_ID")=="8453" else "https://sepolia.basescan.org"; print(f"    {ex}/tx/{tx}" if tx else ""); sys.exit(0 if d.get("success") else 1)' \
+  && { if [ "$CHAIN_ID" = "8453" ]; then echo "    SETTLED on Base mainnet. A self-wallet paying our own door is recorded, never revenue (one_number counts non-self payers only)."; else echo "    SETTLED on Base Sepolia. Testnet money: not revenue, not on /api/revenue, indexes nothing."; fi; }
