@@ -94,8 +94,13 @@ def chat_capable_slugs(models: list[dict]) -> list[str]:
     return out
 
 
-def route_kind(tag: str) -> str:
+def route_kind(tag: str, slug: str = "") -> str:
     """Which Inference Providers path to hit. Pure. No HTTP."""
+    if slug and _unserved_weight_pack(slug):
+        # One hf-inference POST. Chat mill walks 9 providers on these
+        # and they all 400 "not served". Record UNCHECKABLE, do not burn
+        # the shard timeout.
+        return "feature"
     t = tag or ""
     if t in CHAT_TAGS:
         return "chat"
@@ -111,7 +116,9 @@ def route_kind(tag: str) -> str:
 
 
 def millable_slugs(models: list[dict]) -> list[str]:
-    """UNMEASURED slugs the router can attempt. Not already tried. Not GGUF/GPTQ."""
+    """Every UNMEASURED slug gets an HTTP attempt. Quant packs 400; that
+    UNCHECKABLE is the recorded attempt, not a silent skip that leaves
+    n_measured stuck and 665 rows untried."""
     skip = {
         m.get("slug")
         for m in models
@@ -121,8 +128,6 @@ def millable_slugs(models: list[dict]) -> list[str]:
     for m in models:
         slug = m.get("slug")
         if not slug or slug in skip:
-            continue
-        if _unserved_weight_pack(slug):
             continue
         out.append(slug)
     return out
