@@ -13,9 +13,9 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Models per shard this hour (default 30)"
+        description: "Models per shard this hour (default 110 so 20 shards cover HF2200)"
         type: string
-        default: "30"
+        default: "110"
   workflow_run:
     workflows: ["public-root"]
     types: [completed]
@@ -140,7 +140,7 @@ jobs:
       FLEET_LOCK: public/fleet/HF2200.lock.json
       FLEET_PROVIDERS: public/fleet/FLEET-B.providers.json
       MILL_OUT: mill-out
-      MILL_LIMIT: ${{ github.event.inputs.limit || '30' }}
+      MILL_LIMIT: ${{ github.event.inputs.limit || '110' }}
       MILL_SHARD: ${{ matrix.shard }}
       MILL_SHARDS: "20"
       MILL_BANK_N: "1"

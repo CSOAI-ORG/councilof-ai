@@ -19,10 +19,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from mill_window import millable_slugs, select_window  # noqa: E402
+from mill_window import mill_exit_for_window, millable_slugs, route_kind, select_window  # noqa: E402
 
 UA = "CSOAI-HF-INF/0.1"
 ROUTER = "https://router.huggingface.co/v1/chat/completions"
+HF_INFER = "https://router.huggingface.co/hf-inference/models/"
 API_MODEL = "https://huggingface.co/api/models/"
 
 # Tiny locked bank from gspc_flywheel governance (10 items). Probe only.
@@ -126,6 +127,44 @@ def chat(tok: str, model: str, prompt: str) -> tuple[str, str]:
     return "OK", txt
 
 
+def _bill_headers(tok: str) -> dict[str, str]:
+    return {
+        "Authorization": f"Bearer {tok}",
+        "Content-Type": "application/json",
+        "User-Agent": UA,
+        "X-HF-Bill-To": (os.environ.get("HF_BILL_TO") or "csoai").strip(),
+    }
+
+
+def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
+    """One POST to hf-inference. HTTP 200 is reachability, not a GSPC grade."""
+    body = json.dumps(payload).encode()
+    req = urllib.request.Request(
+        HF_INFER + slug,
+        data=body,
+        method="POST",
+        headers=_bill_headers(tok),
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            raw = r.read()
+        json.JSONDecoder().raw_decode(raw.decode("utf-8", "replace").lstrip())
+        return "OK", f"HTTP 200 {raw[:80].decode('utf-8', 'replace')}"
+    except urllib.error.HTTPError as e:
+        err = e.read()[:300].decode("utf-8", "replace")
+        return "UNCHECKABLE", f"HTTP {e.code} {err[:180]}"
+    except Exception as e:
+        return "UNCHECKABLE", f"{type(e).__name__}"
+
+
+def payload_for_kind(kind: str) -> dict:
+    if kind == "similarity":
+        return {"inputs": {"source_sentence": "hello", "sentences": ["hello", "world"]}}
+    if kind == "fill-mask":
+        return {"inputs": "The [MASK] is here"}
+    return {"inputs": "hello world"}
+
+
 def parse_token(text: str) -> str | None:
     up = text.upper().replace("-", "_").replace(" ", "_")
     for t in TOKENS:
@@ -169,8 +208,16 @@ def main() -> int:
         flush=True,
     )
     if not window:
-        print("MILL_EMPTY no slugs in window — a run that measures nothing is not success", flush=True)
-        return 1
+        rc = mill_exit_for_window(len(lock.get("models") or []), len(slugs), 0)
+        if rc == 0:
+            print(
+                "MILL_EXHAUSTED no millable slugs left — already tried or not chat-capable. "
+                "Not a coverage success; not a cron-killing fail.",
+                flush=True,
+            )
+        else:
+            print("MILL_EMPTY no slugs in window — a run that measures nothing is not success", flush=True)
+        return rc
     rows = []
     for slug in window:
         rec = {
@@ -189,42 +236,73 @@ def main() -> int:
             rec["pipeline_tag"] = meta.get("pipeline_tag")
         except Exception as e:
             rec["meta_error"] = type(e).__name__
-        hits = 0
-        answers = []
-        providers = [p.strip() for p in (os.environ.get("HF_INF_PROVIDERS") or "groq,cerebras,together,fireworks-ai,nscale,novita,featherless-ai,deepinfra,hf-inference").split(",") if p.strip()]
-        mapped = []
-        pmap = Path(os.environ.get("FLEET_PROVIDERS", str(lock_path.parent / "FLEET-B.providers.json")))
-        if pmap.exists():
-            for row in json.loads(pmap.read_text()).get("rows") or []:
-                if row.get("slug") == slug:
-                    mapped = row.get("providers_live") or []
-                    break
-        order = [p for p in providers if p in mapped] + [p for p in mapped if p not in providers]
-        router_names = [f"{slug}:{p}" for p in order] or [slug] + [f"{slug}:{p}" for p in providers]
-        bank_n = max(1, min(int(os.environ.get("MILL_BANK_N", "10")), len(GOV_ITEMS)))
-        bank = GOV_ITEMS[:bank_n]
-        rec["n"] = len(bank)
-        for prompt, expected in bank:
-            st, txt = "UNCHECKABLE", "no-provider"
-            for name in router_names:
-                st, txt = chat(tok, name, INSTR + prompt)
-                if st == "OK":
-                    rec["router_model"] = name
-                    break
-            pred = parse_token(txt) if st == "OK" else None
-            ok = pred == expected
-            if ok:
-                hits += 1
-            answers.append({"expected": expected, "got": pred, "raw": txt[:80], "call": st})
-            time.sleep(0.3)
-        rec["hits"] = hits
-        rec["answers"] = answers
-        if all(a["call"] != "OK" for a in answers):
-            rec["status"] = "UNCHECKABLE"
-            rec["reason"] = answers[0]["raw"] if answers else "no calls"
+        tag = rec.get("pipeline_tag") or ""
+        kind = route_kind(tag)
+        rec["route_kind"] = kind
+        if kind != "chat":
+            rec["n"] = 1
+            rec["note"] = (
+                "HF Inference Providers reachability mill. Not a GSPC board rewrite. n<30 unquotable."
+            )
+            st, txt = "UNCHECKABLE", "no-call"
+            if kind == "try-chat-then-feature":
+                st, txt = chat(tok, slug, INSTR + GOV_ITEMS[0][0])
+            if st != "OK":
+                rec["endpoint"] = HF_INFER + slug
+                infer_kind = "feature" if kind == "try-chat-then-feature" else kind
+                st, txt = hf_infer(tok, slug, payload_for_kind(infer_kind))
+            rec["hits"] = 1 if st == "OK" else 0
+            rec["answers"] = [{"call": st, "raw": txt[:80]}]
+            if st == "OK":
+                rec["status"] = "practice-mill"
+            else:
+                rec["status"] = "UNCHECKABLE"
+                rec["reason"] = txt[:200]
         else:
-            rec["status"] = "practice-mill"
-            rec["accuracy"] = round(hits / len(bank), 4)
+            hits = 0
+            answers = []
+            providers = [p.strip() for p in (os.environ.get("HF_INF_PROVIDERS") or "groq,cerebras,together,fireworks-ai,nscale,novita,featherless-ai,deepinfra,hf-inference").split(",") if p.strip()]
+            mapped = []
+            pmap = Path(os.environ.get("FLEET_PROVIDERS", str(lock_path.parent / "FLEET-B.providers.json")))
+            if pmap.exists():
+                for row in json.loads(pmap.read_text()).get("rows") or []:
+                    if row.get("slug") == slug:
+                        mapped = row.get("providers_live") or []
+                        break
+            order = [p for p in providers if p in mapped] + [p for p in mapped if p not in providers]
+            router_names = [f"{slug}:{p}" for p in order] or [slug] + [f"{slug}:{p}" for p in providers]
+            bank_n = max(1, min(int(os.environ.get("MILL_BANK_N", "10")), len(GOV_ITEMS)))
+            bank = GOV_ITEMS[:bank_n]
+            rec["n"] = len(bank)
+            for prompt, expected in bank:
+                st, txt = "UNCHECKABLE", "no-provider"
+                for name in router_names:
+                    st, txt = chat(tok, name, INSTR + prompt)
+                    if st == "OK":
+                        rec["router_model"] = name
+                        break
+                pred = parse_token(txt) if st == "OK" else None
+                ok = pred == expected
+                if ok:
+                    hits += 1
+                answers.append({"expected": expected, "got": pred, "raw": txt[:80], "call": st})
+                time.sleep(0.3)
+            rec["hits"] = hits
+            rec["answers"] = answers
+            if all(a["call"] != "OK" for a in answers):
+                st2, txt2 = hf_infer(tok, slug, payload_for_kind("feature"))
+                rec["answers"].append({"call": st2, "raw": txt2[:80], "fallback": "feature"})
+                if st2 == "OK":
+                    rec["status"] = "practice-mill"
+                    rec["endpoint"] = HF_INFER + slug
+                    rec["route_kind"] = "chat-then-feature"
+                    rec["hits"] = 1
+                else:
+                    rec["status"] = "UNCHECKABLE"
+                    rec["reason"] = answers[0]["raw"] if answers else txt2[:200]
+            else:
+                rec["status"] = "practice-mill"
+                rec["accuracy"] = round(hits / len(bank), 4)
         rows.append(rec)
         print(slug, rec["status"], rec.get("accuracy"), rec.get("inference_meta"), rec.get("reason", "")[:80], flush=True)
     blob = {

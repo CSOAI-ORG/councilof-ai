@@ -9,7 +9,13 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
-from mill_window import chat_capable_slugs, millable_slugs, select_window  # noqa: E402
+from mill_window import (  # noqa: E402
+    chat_capable_slugs,
+    mill_exit_for_window,
+    millable_slugs,
+    route_kind,
+    select_window,
+)
 
 
 def test_empty_fleet_empty_window() -> None:
@@ -112,6 +118,59 @@ def test_millable_skips_already_tried() -> None:
     assert "Qwen/Qwen2.5-7B-Instruct-AWQ" not in got
 
 
+def test_millable_includes_embed_and_fill_mask() -> None:
+    """Chat mill 400s MiniLM; hf-inference similarity 200. Those slugs
+    must enter the window or n_measured cannot leave the chat-only 96."""
+    models = [
+        {"slug": "sentence-transformers/all-MiniLM-L6-v2", "pipeline_tag": "sentence-similarity", "status": "UNMEASURED"},
+        {"slug": "google-bert/bert-base-uncased", "pipeline_tag": "fill-mask", "status": "UNMEASURED"},
+        {"slug": "BAAI/bge-small-en-v1.5", "pipeline_tag": "feature-extraction", "status": "UNMEASURED"},
+        {"slug": "google/siglip2", "pipeline_tag": "zero-shot-image-classification", "status": "UNMEASURED"},
+        {"slug": "Qwen/Qwen3-8B", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+    ]
+    got = millable_slugs(models)
+    assert "sentence-transformers/all-MiniLM-L6-v2" in got
+    assert "google-bert/bert-base-uncased" in got
+    assert "BAAI/bge-small-en-v1.5" in got
+    assert "Qwen/Qwen3-8B" in got
+    assert "google/siglip2" in got
+    assert route_kind("zero-shot-image-classification") == "try-chat-then-feature"
+    assert route_kind("sentence-similarity") == "similarity"
+    assert route_kind("text-generation") == "chat"
+    assert route_kind("fill-mask") == "fill-mask"
+    assert route_kind("") == "try-chat-then-feature"
+
+
+def test_shards_cover_2200_at_limit_110() -> None:
+    slugs = [f"m/{i}" for i in range(2200)]
+    seen: list[str] = []
+    for shard in range(20):
+        _, w = select_window(slugs, 110, 1_780_000_000, shard=shard, shards=20)
+        assert len(w) == 110
+        seen.extend(w)
+    assert len(seen) == 2200
+    assert len(set(seen)) == 2200, "20×110 must cover HF2200 once in one hour"
+
+
+def test_payload_for_kind_is_the_200_shapes() -> None:
+    """MiniLM 400s on {inputs: str}; 200 on source_sentence. Drive the
+    shipped payload builder, no HTTP."""
+    from mill_hf_inference import payload_for_kind  # noqa: E402
+
+    sim = payload_for_kind("similarity")
+    assert "source_sentence" in sim["inputs"]
+    assert "sentences" in sim["inputs"]
+    assert payload_for_kind("fill-mask")["inputs"] == "The [MASK] is here"
+    assert payload_for_kind("feature")["inputs"] == "hello world"
+
+
+def test_exhausted_millable_is_not_a_cron_killing_fail() -> None:
+    assert mill_exit_for_window(2200, 0, 0) == 0
+    assert mill_exit_for_window(0, 0, 0) == 1
+    assert mill_exit_for_window(2200, 10, 0) == 1
+    assert mill_exit_for_window(2200, 10, 8) == 0
+
+
 if __name__ == "__main__":
     test_empty_fleet_empty_window()
     test_window_is_not_always_prefix()
@@ -121,4 +180,8 @@ if __name__ == "__main__":
     test_shards_do_not_overlap_when_fleet_smaller_than_stride()
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
-    print("test_mill_window: 8 passed")
+    test_millable_includes_embed_and_fill_mask()
+    test_shards_cover_2200_at_limit_110()
+    test_payload_for_kind_is_the_200_shapes()
+    test_exhausted_millable_is_not_a_cron_killing_fail()
+    print("test_mill_window: 12 passed")
