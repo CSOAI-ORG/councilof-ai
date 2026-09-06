@@ -21,11 +21,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from mill_window import (  # noqa: E402
+    CHAT_TAGS,
     DEFAULT_PROVIDERS,
     live_providers,
     mill_exit_for_window,
+    mill_names_for_kind,
+    mill_router_names,
     millable_slugs,
     provider_order,
+    resolve_route,
     route_kind,
     select_window,
 )
@@ -192,12 +196,68 @@ def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
         return "UNCHECKABLE", f"{type(e).__name__}"
 
 
-def payload_for_kind(kind: str) -> dict:
+def payload_for_kind(kind: str, tag: str = "") -> dict:
     if kind == "similarity":
         return {"inputs": {"source_sentence": "hello", "sentences": ["hello", "world"]}}
     if kind == "fill-mask":
         return {"inputs": "The [MASK] is here"}
+    if tag == "zero-shot-classification":
+        return {
+            "inputs": "This is a test.",
+            "parameters": {"candidate_labels": ["ok", "not-ok"]},
+        }
+    if tag == "question-answering":
+        return {"inputs": {"question": "What is this?", "context": "This is a test."}}
     return {"inputs": "hello world"}
+
+
+def mill_nonchat(
+    tok: str, slug: str, kind: str, tag: str, names: list[str], *, hf_infer_ok: bool = True
+) -> tuple[str, str, str]:
+    """Reachability mill for embed/fill-mask/class. Returns status, text, endpoint.
+
+    Chat mill 400s these. Counting HTTP 200 as practice-mill is not a GSPC grade.
+    """
+    if kind in ("similarity", "feature"):
+        st, txt = "UNCHECKABLE", "no-provider"
+        for name in names:
+            st, txt = embed(tok, name)
+            if st == "OK":
+                return st, txt, EMBED_ROUTER
+        if not hf_infer_ok:
+            return st, txt, EMBED_ROUTER
+        st, txt = hf_infer(tok, slug, payload_for_kind(kind, tag))
+        return st, txt, HF_INFER
+    if kind in ("fill-mask", "text"):
+        if not hf_infer_ok:
+            st, txt = "UNCHECKABLE", "no-provider"
+            for name in names:
+                st, txt = embed(tok, name)
+                if st == "OK":
+                    return st, txt, EMBED_ROUTER
+            return st, txt, EMBED_ROUTER
+        payloads = [payload_for_kind(kind, tag)]
+        if kind == "fill-mask":
+            payloads = [
+                {"inputs": "The [MASK] is here"},
+                {"inputs": "The <mask> is here"},
+            ]
+        st, txt = "UNCHECKABLE", "no-payload"
+        for payload in payloads:
+            st, txt = hf_infer(tok, slug, payload)
+            if st == "OK":
+                return st, txt, HF_INFER
+        return st, txt, HF_INFER
+    # try-chat-then-feature: do not spray groq/nebius. Hub tag was empty.
+    st, txt = "UNCHECKABLE", "no-provider"
+    for name in names:
+        st, txt = embed(tok, name)
+        if st == "OK":
+            return st, txt, EMBED_ROUTER
+    if not hf_infer_ok:
+        return st, txt, EMBED_ROUTER
+    st, txt = hf_infer(tok, slug, payload_for_kind("feature", tag))
+    return st, txt, HF_INFER
 
 
 def parse_token(text: str) -> str | None:
@@ -228,11 +288,11 @@ def main() -> int:
     lock = json.loads(lock_path.read_text())
     out_dir = Path(os.environ.get("MILL_OUT", str(lock_path.parent / "hf-inference")))
     out_dir.mkdir(parents=True, exist_ok=True)
-    lock_tags = {m.get("slug"): m.get("pipeline_tag") for m in (lock.get("models") or []) if m.get("slug")}
+    lock_by = {m.get("slug"): m for m in (lock.get("models") or []) if m.get("slug")}
+    lock_tags = {s: (m.get("pipeline_tag") or "") for s, m in lock_by.items()}
     lock_providers = {
-        m.get("slug"): list(m.get("providers_live") or [])
-        for m in (lock.get("models") or [])
-        if m.get("slug")
+        s: list(m.get("providers_live") or [])
+        for s, m in lock_by.items()
     }
     slugs = millable_slugs(lock.get("models") or [])
     limit = int(os.environ.get("MILL_LIMIT", "8"))
@@ -249,11 +309,14 @@ def main() -> int:
         flush=True,
     )
     if not window:
-        rc = mill_exit_for_window(len(lock.get("models") or []), len(slugs), 0)
+        rc = mill_exit_for_window(
+            len(lock.get("models") or []), len(slugs), 0, start=offset
+        )
         if rc == 0:
             print(
-                "MILL_EXHAUSTED no millable slugs left — already tried or not chat-capable. "
-                "Not a coverage success; not a cron-killing fail.",
+                "MILL_EXHAUSTED no millable slugs left — Hub live mapping "
+                "empty or already milled. Not thousands coverage; "
+                "not a cron-killing fail.",
                 flush=True,
             )
         else:
@@ -281,9 +344,13 @@ def main() -> int:
         except Exception as e:
             rec["meta_error"] = type(e).__name__
             rec["pipeline_tag"] = rec.get("pipeline_tag") or lock_tags.get(slug)
-        tag = rec.get("pipeline_tag") or lock_tags.get(slug) or ""
+        lock_row = lock_by.get(slug) or {}
+        lock_tag = lock_row.get("pipeline_tag") or lock_tags.get(slug) or ""
+        hub_tag = rec.get("pipeline_tag") or ""
+        tag, kind = resolve_route(
+            lock_tag, hub_tag, lock_row.get("status") or "UNMEASURED", slug
+        )
         rec["pipeline_tag"] = tag
-        kind = route_kind(tag, slug)
         rec["route_kind"] = kind
         env_p = [
             p.strip()
@@ -300,36 +367,54 @@ def main() -> int:
             mapped = list(lock_providers[slug]) + [p for p in mapped if p not in lock_providers[slug]]
         order = provider_order(mapped, env_p or DEFAULT_PROVIDERS)
         rec["providers"] = order
-        # Bare slug first: the router picks a live provider. Measured 6 Sep:
-        # Qwen/Qwen3-8B HTTP 200; Qwen/Qwen3-8B:groq 400. Never pin hf-inference.
-        router_names = [slug] + [f"{slug}:{p}" for p in order]
+        rec["providers_live"] = list(mapped)
+        lock_st = lock_row.get("status") or "UNMEASURED"
+        uncheckable = lock_st == "UNCHECKABLE"
+        # Empty Hub mapping on a chat-like tag: mill the bare slug.
+        # route_kind() may say feature for *-base; that is not a 400.
+        if uncheckable and not mapped and tag in CHAT_TAGS:
+            kind = "chat"
+            rec["route_kind"] = "chat-bare"
+        router_names = mill_router_names(slug, kind, mapped, uncheckable=uncheckable)
+        if uncheckable and kind == "chat" and mapped:
+            rec["route_kind"] = "chat-mapped"
+        rec["router_names"] = router_names
+        if uncheckable and not router_names:
+            rec["status"] = "UNCHECKABLE"
+            rec["reason"] = "no live Inference Provider"
+            rec["providers_live"] = []
+            rec["n"] = 0
+            rec["hits"] = 0
+            rec["answers"] = [{"call": "UNCHECKABLE", "raw": "no live Inference Provider"}]
+            rows.append(rec)
+            print(slug, rec["status"], rec["reason"], flush=True)
+            continue
         if kind != "chat":
             rec["n"] = 1
             rec["note"] = (
                 "HF Inference Providers reachability mill. Not a GSPC board rewrite. n<30 unquotable."
             )
-            rec["endpoint"] = EMBED_ROUTER if kind in ("similarity", "feature") else ROUTER
-            st, txt = "UNCHECKABLE", "no-provider"
-            if kind in ("similarity", "feature", "text", "fill-mask"):
-                for name in router_names:
-                    st, txt = embed(tok, name)
-                    if st == "OK":
-                        rec["router_model"] = name
-                        break
-            if st != "OK":
-                rec["endpoint"] = ROUTER
+            st, txt, endpoint = mill_nonchat(
+                tok, slug, kind, tag, router_names, hf_infer_ok=not uncheckable
+            )
+            if uncheckable and st != "OK":
                 for name in router_names:
                     st, txt = chat(tok, name, INSTR + GOV_ITEMS[0][0])
                     if st == "OK":
                         rec["router_model"] = name
+                        endpoint = ROUTER
                         break
+            rec["endpoint"] = endpoint
             rec["hits"] = 1 if st == "OK" else 0
             rec["answers"] = [{"call": st, "raw": txt[:80]}]
             if st == "OK":
                 rec["status"] = "practice-mill"
+                rec["router_model"] = rec.get("router_model") or router_names[0]
             else:
                 rec["status"] = "UNCHECKABLE"
                 rec["reason"] = txt[:200]
+            if uncheckable:
+                rec["route_kind"] = "chat-mapped" if kind == "chat" else f"{kind}-mapped"
         else:
             hits = 0
             answers = []
