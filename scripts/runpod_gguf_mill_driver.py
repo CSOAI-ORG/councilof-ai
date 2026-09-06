@@ -46,6 +46,22 @@ for l in open("/workspace/gguf-quants.jsonl"):
         if r["state"] == "OK" and r.get("quant"):
             TAGS[r["id"]] = f"hf.co/{r['repo']}:{r['quant']}"
 ids = [i for i in (json.loads(l)["id"] for l in open("/workspace/gguf-queue.jsonl") if l.strip()) if i in TAGS]
+def size_hint(model_id: str) -> float:
+    """Parameter count from the model name, for ORDERING only — never for grading.
+
+    Measured 2026-09-06 over the 532 usable models: 77 are <=4B, 174 are 4-9B, 41 are
+    9-20B and 149 are >20B (91 carry no parseable hint). A 32B Q4_K_M is a ~20 GiB pull
+    that takes ten minutes before a single item is graded, while a 1B model is graded in
+    seconds. Head-first ordering spent the batch on the giants; smallest-first clears 251
+    models before touching the 149 that dominate the wall clock.
+
+    This changes the ORDER, never the quant and never the grade. A model with no hint
+    sorts last rather than first, because an unknown size is not a small one.
+    """
+    m = re.findall(r"(\d+(?:\.\d+)?)\s*[bB](?![a-zA-Z])", model_id.split("/")[-1])
+    return max(float(x) for x in m) if m else float("inf")
+
+
 if SHARDS > 1:
     # Stable assignment by digest, not stride slicing: a shard's membership must not
     # change when the queue is reordered or a model is added, or a resumed run would
@@ -59,6 +75,10 @@ if SHARDS > 1:
 # CONFIG_DIR/.worker-state, and the mill makes CONFIG_DIR from --jobs-dir plus the model
 # slug -- so disjoint jobs roots mean disjoint locks, and the lock keeps doing the one
 # job it exists for: stopping two workers sharing one state dir.
+ids.sort(key=lambda m: (size_hint(m), m))
+print(f"ordered smallest-first: {sum(1 for m in ids if size_hint(m) <= 9)} models <=9B ahead of "
+      f"{sum(1 for m in ids if size_hint(m) > 9)} larger/unknown", flush=True)
+
 JOBS = f"/workspace/gspc-jobs-{SHARD}"
 OUT = f"/workspace/gspc-out-{SHARD}"
 os.makedirs(JOBS, exist_ok=True)

@@ -118,3 +118,34 @@ prints its evictions" has to mean to be worth anything. A shard that still finds
 a full disk.
 
     EVICTED 0 manifest(s), 4.5 GiB of blobs (kept 2 in use) — free 58.6GB
+
+## Order the batch smallest-first
+
+The driver took models in queue order, which is roughly by download rank, so it spent
+its hours on the largest models first. Measured over the 532 usable models:
+
+| size hint | models |
+|---|---:|
+| ≤ 4B | 77 |
+| 4–9B | 174 |
+| 9–20B | 41 |
+| **> 20B** | **149** |
+| no parseable hint | 91 |
+
+A 32B `Q4_K_M` is a ~20 GiB pull that takes ten minutes before a single item is graded;
+a 0.5B model is graded in seconds. Two shards were observed sitting on
+`GLM-4.7-Flash-GGUF:Q4_K_M` and `Qwen3-32B-GGUF:Q4_K_M` simultaneously, both mid-pull,
+with the ledger flat for nine minutes.
+
+`size_hint()` reads the parameter count out of the model name and the todo list is
+sorted ascending. **This changes the order, never the quant and never the grade.** A
+model with no parseable hint sorts LAST, because an unknown size is not a small one.
+
+Throughput, measured on the same hardware:
+
+    before sharding          0.27 completions/min
+    3 shards, queue order    1.6
+    2 shards, smallest-first 3.6      (ledger 204 -> 210 in 100s)
+
+Restarting to pick up the ordering killed two in-flight pulls; `evict()` reclaimed the
+18.4 GiB of orphaned partial blobs on the next model, which is what it is for.
