@@ -88,6 +88,7 @@ const WatchdogLeaderboard = lazy(() => import("./pages/WatchdogLeaderboard"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const RegulatorDashboard = lazy(() => import("./pages/RegulatorDashboard"));
 const ContentReviewNotice = lazy(() => import("./pages/ContentReviewNotice"));
+const Press = lazy(() => import("./pages/Press"));
 const AnswersIndex = lazy(() => import("./pages/Answers"));
 const AnswerPage = lazy(() => import("./pages/Answers").then((m) => ({ default: m.AnswerPage })));
 const Recommendations = lazy(() => import("./pages/Recommendations"));
@@ -892,7 +893,7 @@ function App() {
                   <Route path="/oscal-readiness" component={Fedramp} />
                   <Route path="/readiness" component={Readiness} />
                   <Route path="/agents" component={Agents} />
-                  <Route path="/press" component={ContentReviewNotice} />
+                  <Route path="/press" component={Press} />
                   <Route path="/pressroom" component={ContentReviewNotice} />
                   <Route path="/sector-atlas" component={SectorsAtlas} />
                   <Route path="/learn" component={Academy} />
