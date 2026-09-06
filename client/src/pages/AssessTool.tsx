@@ -80,9 +80,8 @@ export default function AssessTool() {
       <div className="max-w-3xl mx-auto px-4 py-10">
         <div className="flex items-center gap-3 mb-2">
           <ShieldCheck className="h-7 w-7 text-emerald-600" />
-          <h1 className="text-3xl font-black tracking-tight">Get measured</h1>
+          <h1 className="text-3xl font-black tracking-tight">Paid assessment — booking not live</h1>
         </div>
-        <p className="text-sm font-semibold text-foreground mb-2">Paid assessment — booking not live</p>
         <p className="text-muted-foreground mb-4">
           Coming — Paddle. Waitlist only. No price on this page until Nick names one. A signed pack enquiry is an enquiry, never a bought rank. Public verify stays free at /gspc-verify. Never a grade. Never Stripe. Never free RAS.
           Empty means we have not measured that system — we do not guess. Not a certificate.

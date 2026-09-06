@@ -393,8 +393,8 @@ export const LOBBY_ROUTES: LobbyRoute[] = [
   {
     label: "Legacy on-ramp",
     blurb:
-      "In build — COBOL lineage toward signed evidence. Apex 522. SPEC only.",
-    path: "/cobolbridge",
+      "COBOL Bridge Layer-0 MCP — Free 10/day · Pro £79/mo + signed root inclusion · Coming — Paddle. Never Stripe.",
+    path: "/cobol",
     group: "product",
     cues: /\b(legacy on[- ]?ramp|mainframe|cobol)\b/i,
   },

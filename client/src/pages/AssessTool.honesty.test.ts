@@ -8,13 +8,19 @@ describe("/assess aligns to /measure — paid, booking not live, Coming — Padd
   it("does not claim a free signed run", () => {
     expect(page).not.toContain("Free. No account. The card is yours.");
     expect(page).not.toContain("Run signed measurement");
-    expect(page).toContain("Paid measurement");
-    expect(page).toContain("Booking is not live");
+    expect(page).toContain("Paid assessment — booking not live");
     expect(page).toContain("Coming — Paddle");
-    expect(page).toContain("public verifies free");
-    expect(page).toContain("Never a bought rank");
+    expect(page).toContain("Waitlist only");
+    expect(page).toContain("No price on this page until Nick names one");
+    expect(page).toContain("never a bought rank");
+    expect(page).toContain("Public verify stays free at /gspc-verify");
+    expect(page).toContain("Never a grade");
+    expect(page).toContain("Never Stripe");
+    expect(page).toContain("Never free RAS");
     expect(page).toContain('disabled={true}');
     expect(page).not.toContain("$199");
-    expect(page).not.toMatch(/Paddle\.Checkout|paddle-js|pw-price/i);
+    expect(page).not.toContain("£199");
+    expect(page).not.toMatch(/Paddle\.Checkout|paddle-js|pw-price|buy\.stripe|pages\.dev/i);
+    expect(page).not.toMatch(/MetaMask/i);
   });
 });
