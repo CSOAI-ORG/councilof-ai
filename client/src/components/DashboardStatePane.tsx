@@ -7,6 +7,7 @@ const McpReaderRail = lazy(() => import("@/components/gspc/McpReaderRail"));
 const A2aReaderRail = lazy(() => import("@/components/gspc/A2aReaderRail"));
 const TraceReaderRail = lazy(() => import("@/components/gspc/TraceReaderRail"));
 const OtelReaderRail = lazy(() => import("@/components/gspc/OtelReaderRail"));
+const OsPanels = lazy(() => import("@/components/OsPanels"));
 /** Council OS · state tab — the tapes beside the board (errata: readers/doors are not axes 23+).
  *  Moved here from the home page (owner ruling 2 Sep: the home board is the living Space).
  *
@@ -31,6 +32,16 @@ export default function DashboardStatePane() {
           <TraceReaderRail />
           <OtelReaderRail />
         </div>
+        <section data-testid="dashboard-state-panels">
+          <h2 className="text-base font-semibold">Derived panels — every figure names its door</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            The rails above are tapes. These are the derived reads: each number carries the endpoint
+            and field it came from, and an unread source renders its reason rather than a zero.
+          </p>
+          <div className="mt-3">
+            <OsPanels />
+          </div>
+        </section>
         <EstateDoors />
       </div>
     </Suspense>
