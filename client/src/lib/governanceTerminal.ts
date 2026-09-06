@@ -29,7 +29,10 @@ export const TERMINAL_ROWS: TerminalRow[] = [
     id: "moat-corrections",
     kind: "moat",
     title: "Corrections ledger",
-    does: "Thirty dated addenda. A competitor cannot fake having been wrong in public.",
+    // The count is NOT restated here. It was "Thirty" while the ledger stood at 47
+    // on 2026-09-06 — a word-number, undated, 17 short. A moving count belongs at
+    // its door, not in prose that nobody re-reads.
+    does: "Dated addenda, appended and never silently edited — the count is live at GET /api/corrections. A competitor cannot fake having been wrong in public.",
   },
   {
     id: "moat-empty",
