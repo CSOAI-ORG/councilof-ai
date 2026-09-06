@@ -27,6 +27,7 @@ permissions:
   actions: write   # to dispatch deploy.yml — see "trigger site deploy"
   contents: write
   id-token: write
+  pull-requests: write   # publisher opens its own PR; a direct push cannot satisfy the required gates check
 
 jobs:
   publish:
