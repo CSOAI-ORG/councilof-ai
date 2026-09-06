@@ -54,6 +54,23 @@ NEGATION = re.compile(r"\b(never|not|no|nothing|superseded|retired|earlier|histo
 FILLER_TAGS = ["council-of-ai", "measurement", "transparency", "ai-governance", "responsible-ai", "evaluation"]
 DATA_EXT = (".parquet", ".jsonl", ".csv")
 
+# The 14 frozen predicate/behaviour banks. Their cards carry the canary rule and
+# each bank's OWN state under it, because three different canary conventions are
+# live across them and nothing on the cards said which was which -- so `n` meant
+# different things on different axes and a reader had no way to know.
+BANK_SLUGS = (
+    "gspc-agi", "gspc-prv", "gspc-asi", "gspc-mcp", "gspc-oss", "gspc-mach",
+    "gspc-xr", "gspc-det", "gspc-art5", "gspc-affect", "gspc-jail", "gspc-swarm",
+    "gspc-care", "gspc-gov",
+)
+BANK_REPOS = {f"{ORG}/{s}" for s in BANK_SLUGS}
+
+# Imported, never re-implemented. If the card and the test could each carry their
+# own copy of "what a canary is", the card would eventually describe a rule the
+# test does not enforce -- which is the exact failure the rule exists to end.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "harness" / "gspc-top100"))
+from test_bank_canary_rule import check as canary_check, is_canary  # noqa: E402
+
 
 def fetch_json(url: str, timeout: int = 30, data: bytes | None = None, headers: dict | None = None) -> tuple[dict | None, str]:
     h = {"accept": "application/json", "user-agent": "csoai-hf-org-card/1"}
@@ -337,7 +354,96 @@ def count_rows(api, repo: str, kind: str, path: str, dest: Path, max_bytes: int 
     return None
 
 
-def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[str, int], as_of: str) -> str:
+def canary_facts(items_path: Path) -> dict | None:
+    """This bank's own state under the canary rule, computed from its bytes.
+
+    Returns None when the bank could not be read: "we did not look" and "there are
+    no violations" are different facts, and a card that prints the second when it
+    means the first is worse than a card that says nothing.
+    """
+    if not items_path.is_file():
+        return None
+    rows = []
+    for line in items_path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rows.append(json.loads(line))
+        except json.JSONDecodeError:
+            pass
+    if not rows:
+        return None
+    canaries = [i for i, r in enumerate(rows, 1) if is_canary(r)]
+    # How a bank reader counts n: a row is an item iff it carries an expected label.
+    graded = [r for r in rows if r.get("expected") not in (None, "")]
+    return {
+        "rows": len(rows),
+        "graded": len(graded),
+        "canaries": canaries,
+        "violations": canary_check(rows),
+    }
+
+
+def canary_section(f: dict | None) -> list[str]:
+    """The rule, then what this bank actually does under it."""
+    out = [
+        "",
+        "## How `n` is counted — the canary rule",
+        "",
+        "A **canary** is a contamination sentinel: a row placed in the bank so that a model which has",
+        "memorised the bank gives itself away. It is not a question anyone is graded on.",
+        "",
+        "> **The rule.** A canary row MUST NOT carry a non-null `expected`.",
+        "",
+        "A reader counts items by `expected`, so this one property is what keeps a canary out of `n` and",
+        "out of the allowed-label set — in every bank, without the reader needing to know which canary",
+        "convention that bank uses. Three conventions are live across these 14 banks (a standalone",
+        "`_canary` row; a `_canary` field present on every row and set on one; a `__CANARY__` sentinel in",
+        "a string field), and under this rule all three count the same. A canary that carries an",
+        "`expected` inflates `n` by one **and** adds a label no real item uses.",
+        "",
+    ]
+    if f is None:
+        out += [
+            "**This bank under the rule:** `UNCHECKABLE` — `items.jsonl` was not read when this card was",
+            "refreshed. That is not the same as compliant.",
+            "",
+        ]
+        return out
+    n_can = len(f["canaries"])
+    where = f" (row {f['canaries'][0]})" if n_can == 1 else f" (rows {', '.join(map(str, f['canaries']))})" if n_can else ""
+    out.append(f"**This bank under the rule:** {f['rows']} rows, of which **{f['graded']} carry an `expected`** "
+               f"and are the graded items; {n_can} canary row{'' if n_can == 1 else 's'}{where}.")
+    out.append("")
+    if f["violations"]:
+        out += [
+            "**This bank VIOLATES the rule** — its canary carries an `expected`, so it is inside the graded",
+            "count rather than beside it, and its label is in the allowed set:",
+            "",
+        ]
+        out += [f"- {v}" for v in f["violations"]]
+        out += [
+            "",
+            f"So a reader counting by `expected` gets **n = {f['graded']}** on this axis where the number of real",
+            f"questions is **{f['graded'] - len(f['violations'])}**. The canary is not one of the {f['graded'] - len(f['violations'])} — it is the extra one.",
+            "",
+            "The bank is **frozen** and cards are pinned to its digest, so this is corrected by publishing a",
+            "superseded version — never by editing these bytes.",
+            "",
+        ]
+    else:
+        out += ["No canary in this bank carries an `expected`, so none is counted in `n`.", ""]
+    out += [
+        "Enforced by `harness/gspc-top100/test_bank_canary_rule.py` in the councilof-ai repository, which",
+        "reads all 14 banks live and carries a `--selftest` proving it goes red on a counted canary and",
+        "green without one. This card and that test import the same predicate.",
+        "",
+    ]
+    return out
+
+
+def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[str, int], as_of: str, canary: dict | None = None) -> str:
     mcp_n, _ = mcp_tool_count()
     slug = repo.split("/")[1]
     title = None
@@ -393,6 +499,10 @@ def hubcard_block(repo: str, kind: str, d: dict, tree: list[dict], rows: dict[st
         "",
         f"`manifest.jsonl` is derived from this repository's own file tree at {as_of}; it lists every file with its",
         "size, its blob hash and a direct URL, so an agent can enumerate the repo without cloning it.",
+    ]
+    if repo in BANK_REPOS:
+        lines += canary_section(canary)
+    lines += [
         "",
         "## Citation",
         "",
@@ -528,7 +638,16 @@ def hubcard(repo: str, d: dict, push: bool, out: Path, kind: str = "dataset") ->
 
     if repo in REPLACE_BODY:
         body = REPLACE_BODY[repo](d)
-    block = hubcard_block(repo, kind, d, tree, rows, as_of)
+    # A bank card states this bank's own state under the canary rule, from its bytes.
+    # Downloaded here rather than reused from count_rows' cache: the card must not be
+    # able to print "no violations" because a file happened to be lying around.
+    canary = None
+    if repo in BANK_REPOS:
+        try:
+            canary = canary_facts(hf_download(repo, kind, "items.jsonl", dest / "canary"))
+        except Exception as e:  # noqa: BLE001 - UNCHECKABLE is printed, never "clean"
+            print(f"{repo}: items.jsonl unreadable ({type(e).__name__}) — canary state UNCHECKABLE", file=sys.stderr)
+    block = hubcard_block(repo, kind, d, tree, rows, as_of, canary)
     body = splice(body, block, HUB_OPEN, HUB_CLOSE, before=None)
     new = join_front_matter(fm, body)
     (dest / "README.md").write_text(new, encoding="utf-8")
