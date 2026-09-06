@@ -1,5 +1,18 @@
 # Sovereign Tech Fund (Sovereign Tech Agency, DE) — 2026-09-05
 
+> **Measured facts, each naming the endpoint or file that returns it.** Re-fetch before sending.
+>
+> - **Buyer's-eye x402 census (measured artefact).** 316 conformant hosts paid for real: **100 DELIVERED**,
+>   **213 REFUSED**, 2 NO_CHALLENGE, 1 MISMATCH. **13 hosts recorded an on-chain settlement and still
+>   delivered nothing** (0.193 USDC), each row carrying its tx hash so a reader can check the chain.
+>   Dataset: <https://huggingface.co/datasets/csoai/x402-settlement-census> — `summary-2026-09-06.json`.
+>   *One purchase per host, one moment: a single refusal is not a pattern. 1.3398 USDC spent, all of it ours.*
+> - **Revenue.** `/api/revenue` → `one_number.all_time` = **0** distinct non-self payers, status **MEASURED**.
+>   Separately `settled_usdc.count` is **`null`, status UNMEASURED** — null is not zero, and neither is
+>   revenue. Self-settlements (5) and zero-value settlements (4) are recorded and are never payers.
+> - **Hub cells.** `/api/hub-cards` → `counts`. These are **third-party models on the Hub, never our own
+>   coverage** — the endpoint says so in its own `population` field.
+
 Target: https://apply.sovereign.tech/ · Programme page: https://www.sovereign.tech/programs/fund · Form preview (PDF, "1 November 2024"): https://www.sovereign.tech/public/files/Application-Form-Sovereign-Tech-Fund-1-November-2024.pdf · Facts: `FACTS-2026-09-05.json`
 
 ## Status
@@ -108,10 +121,10 @@ Volunteer contribution: none beyond the maintainer; two external reviewers have 
 - Bus factor of one. One person writes the signer, the verifier, the edge and the corrections. The format is documented, but no second implementation exists to prove the documentation is sufficient.
 - Key custody. Signing is a single Ed25519 key issued to the edge via OIDC. Rotation has no ledger; a "3-of-3 threshold" once described in metadata was JSON, not cryptography, and was retracted. A real rotation and multi-party story is needed before others rely on the DID.
 - Tree construction. `root.json` v1 duplicates an odd node (Bitcoin-style). It is collision-prone in the CVE-2012-2459 sense and safe only because `card_count` is inside the signed preimage; verifiers must reject mismatched lengths. Moving to RFC 6962 domain separation changes every root — a migration, not a patch.
-- Signed-bytes discipline. Two incidents this month: a silent edit that broke a signature for five days, and 26 cards published with a digest in the `sig_ed25519` field (C-2026-0905-02). Both are now guarded in CI; both show that the guards arrived after the mistake.
+- Signed-bytes discipline. Two incidents this month: a silent edit that broke a signature for five days, and 26 cards published with a digest in the `sig_ed25519` field (C-2026-0905-02, `/api/corrections`). Both are now guarded in CI; both show that the guards arrived after the mistake.
 - Dependency and build hygiene. No SBOM, no reproducible-build check, no fuzzing of the canonicalisation and parsers that the verifier trusts.
 - Standards follow-through. The SCITT framing draft is an individual submission with no implementation report yet; the A2A issue is open.
-- Coverage of the mill is bounded by inference endpoints (13 of the top 60 models reachable), which is a measurement problem, not a verifier problem — listed so the scope boundary is clear.
+- Coverage of the mill is bounded by inference-provider availability — `public/fleet/FLEET-B.providers.json` records **31 of 40** locked models with a live provider (`as_of` 2026-08-31, source `GET huggingface.co/api/models/{slug}?expand[]=inferenceProviderMapping`). This is a measurement problem, not a verifier problem — listed so the scope boundary is clear.
 - Issue backlog and roadmapping are done in one person's head and a set of markdown files; there is no maintainer succession plan.
 
 **What are possible alternatives to your project and how does your project compare to them? (300 words)**
