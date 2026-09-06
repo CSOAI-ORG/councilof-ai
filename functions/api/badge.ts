@@ -35,6 +35,7 @@
 // to /gspc-verify, where the number is recomputable from its rows.
 
 import { AXES_A } from "./_gspc_axes_a";
+import { publicLeaderCount } from "./gspc";
 import { AXES_B } from "./_gspc_axes_b";
 import { AXES_FIN } from "./_gspc_axes_fin";
 import { verifyCard } from "../_lib/cardVerify";
@@ -77,13 +78,17 @@ const boardCounts = () => {
   // grammar functions/api/gspc.ts serves as totals.public_count — so a README
   // badge and GET /api/gspc can never drift apart by wording.
   const publicCount = `${quotable} axis · ${measured} measured`;
-  // Bare "22 measured" without the 3-leader clause is retired (A1).
-  const withLeaders = `${publicCount} · 3 public leader scores`;
+  // DERIVED, not typed. This was the literal 3 while the ruling string below claimed it
+  // was "computed here from the same axis arrays". Same rule GET /api/gspc applies,
+  // imported rather than restated, so the badge cannot drift from the board.
+  const leaders = publicLeaderCount(AXES);
+  // Bare "22 measured" without the leader clause is retired (A1).
+  const withLeaders = `${publicCount} · ${leaders} public leader scores`;
   const jailUntested = m.some((a) => a.axis === "jail" && a.separation === "UNTESTED");
   const defaultMessage = jailUntested
     ? `${withLeaders}; jail floor untested`
     : withLeaders;
-  return { measured, quotable, unmeasured, publicCount, defaultMessage, lid: BOARD_LID };
+  return { measured, quotable, unmeasured, publicCount, leaders, defaultMessage, lid: BOARD_LID };
 };
 
 const VERIFY_URL = "https://councilof.ai/gspc-verify";
@@ -315,14 +320,14 @@ export const onRequestGet: PagesFunction = async (context) => {
         color: colour,
         verify: VERIFY_URL,
         public_count: board.publicCount,
-        public_leader_count: 3,
+        public_leader_count: board.leaders,
         lid: board.lid,
         // Says what this handler actually does. It reads the same axis arrays
         // functions/api/gspc.ts reads and applies the same rule; it does not call the
         // endpoint. The previous wording claimed a derivation that never happened.
         unmeasured: board.unmeasured,
         ruling:
-          `${board.publicCount} · 3 public leader scores — computed here from the same axis arrays GET /api/gspc ` +
+          `${board.publicCount} · ${board.leaders} public leader scores — computed here from the same axis arrays GET /api/gspc ` +
           `serves (_gspc_axes_a + _gspc_axes_b + _gspc_axes_fin), under the same rule: ` +
           `axes counts slots, measured counts slots with a run. ${board.unmeasured} are ` +
           `declared slots with no run behind them and are never quoted as measured. ` +

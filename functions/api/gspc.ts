@@ -189,6 +189,27 @@ const dropUncardedLeader = (a: PublicAxis): PublicAxis => {
   };
 };
 
+/**
+ * The PUBLIC view of the axes, and the count of axes that still carry a public leader.
+ *
+ * Exported because /api/badge published `public_leader_count: 3` as a LITERAL while its
+ * own `ruling` string said the number was "computed here from the same axis arrays".
+ * It was not computed anywhere. The value happened to be right, and would have stayed 3
+ * the day a signed card appeared for one of the three NO_SIGNED_CARD axes and this
+ * endpoint moved to 4.
+ *
+ * A second implementation would be a second opinion about what a public leader is, and
+ * the estate has been bitten by two places deciding what a count means. One rule, here,
+ * used by both.
+ */
+export const publicView = (axes: typeof AXES) =>
+  axes.map(excludeOwnLeader).map(dropUncardedLeader);
+
+export const publicLeaderCount = (axes: typeof AXES): number =>
+  publicView(axes).filter(
+    (a) => a.kind === "model-comparison" && a.status === "MEASURED" && typeof a.leader === "string",
+  ).length;
+
 export const onRequestGet: PagesFunction = async (context) => {
   const url = new URL(context.request.url);
   const axis = url.searchParams.get("axis");
