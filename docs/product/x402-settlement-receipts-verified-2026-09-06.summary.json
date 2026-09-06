@@ -1,0 +1,91 @@
+{
+  "schema": "csoai.x402-receipts-verified/0.1",
+  "as_of": "2026-09-06T08:46:06Z",
+  "method": "Every settlement transaction the 2026-09-06 census published, re-read from Base with eth_getTransactionReceipt. Not the host's word for it \u2014 the chain's.",
+  "verified": 100,
+  "receipt_status": {
+    "0x1": 100
+  },
+  "failures": 0,
+  "block_range": [
+    50943667,
+    50943918
+  ],
+  "refused_with_confirmed_settlement": {
+    "hosts": 13,
+    "what_it_now_means": "These reported a settlement AND the transaction exists on Base with status 0x1 AND the retried request was still refused. Before this check the claim rested on each host's own PAYMENT-RESPONSE; it now rests on the chain. Money left the payer, the transfer succeeded, and nothing was delivered.",
+    "rows": [
+      {
+        "host": "api.vibe.airforce",
+        "tx": "0xe9bba7f8d3e52b5f53b346e566173a896382f047596eb8150c76fa49f389bc15",
+        "block": 50943684
+      },
+      {
+        "host": "5108-x402.community.iamstarchild.com",
+        "tx": "0x00aa4923b82a19d1447f07c10e284c02e7c3ef36508ed1b6e8b7bc3dc8a4e08a",
+        "block": 50943728
+      },
+      {
+        "host": "agent.api.0x.org",
+        "tx": "0xddf564dbe6cfb93d0b8aee0f88e5a7c28d559d3a14a08e1c1157ae369592c793",
+        "block": 50943794
+      },
+      {
+        "host": "agents.bytemine.ai",
+        "tx": "0x9b143a686a7265f42dbedb509906deef0f6cd0fed4e08ca2ab0383ae7506560e",
+        "block": 50943796
+      },
+      {
+        "host": "linklens-sand.vercel.app",
+        "tx": "0xb6e0cc06928e709d183306a6b28222466277ac0562f64057c84d84d578b65eb2",
+        "block": 50943832
+      },
+      {
+        "host": "rentcast.x402.paysponge.com",
+        "tx": "0x05adb3a1be357a1e09488d64fa9f99fc20e2b816dc279809e5116554607f4330",
+        "block": 50943844
+      },
+      {
+        "host": "tripadvisor.x402.paysponge.com",
+        "tx": "0x66cfef13db6641a6e8d74a04c70c6eec04b0108a988d5bdc290b9f76cf6a6877",
+        "block": 50943851
+      },
+      {
+        "host": "url-extractor.x402.paysponge.com",
+        "tx": "0xe8c860ce72c6ef82952202584ae6eebcf5702321216aa557a0dcc5bd0e83d788",
+        "block": 50943853
+      },
+      {
+        "host": "agent-proxy.alchemy.com",
+        "tx": "0x452d1ba528cbc7ff2e684451bdcb7de9fe94c98cacb7e6727a3949ce090c0685",
+        "block": 50943861
+      },
+      {
+        "host": "agents.x402stock.xyz",
+        "tx": "0x4a577262638e4316cc86cb280b10c551c1109a72d2c4a887cc5c3ec5aafe3986",
+        "block": 50943863
+      },
+      {
+        "host": "screenshotone.x402.paysponge.com",
+        "tx": "0x97e33e1d05380a9ed2eea8e7c950d1eae1db68f3046713c968783c02c28437fb",
+        "block": 50943875
+      },
+      {
+        "host": "wolframalpha.x402.paysponge.com",
+        "tx": "0xce4b39d1831455267fb55216613d362157703ed06bf715934cdc482d0658a2c1",
+        "block": 50943879
+      },
+      {
+        "host": "formo.x402.paysponge.com",
+        "tx": "0xaec93dcc900b7e5cee0fc8d515cd02ed56690624518be0b894944614be03856f",
+        "block": 50943908
+      }
+    ]
+  },
+  "what_this_is_not": [
+    "Not proof of intent. A confirmed transfer with no delivery is consistent with a bug, a race, an account requirement, or a decision \u2014 the chain cannot tell them apart and neither can we.",
+    "Not a ranking and not a recommendation. No host was contacted.",
+    "One purchase per host at one moment. Round two is what would make a pattern."
+  ],
+  "reproduce": "for each settle_tx: eth_getTransactionReceipt on https://mainnet.base.org, expect status 0x1. Run it serially \u2014 a concurrent sweep is rate-limited and returns HTTP errors that look exactly like missing transactions."
+}

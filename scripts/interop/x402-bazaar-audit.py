@@ -58,8 +58,14 @@ def door_max_timeout():
 def scan(base=BASE):
     """Every resource in the Bazaar, or an exception. Never a partial page presented as the set."""
     items, offset, total = [], 0, None
+    # Only an HTTP index paginates. A file:// source is one document, and appending
+    # ?limit=&offset= to it makes the query string part of the filename: urlopen then
+    # fails with ENOENT on a path that exists, which is how this read failed on CI while
+    # passing locally. Paginate what pages; read a local source once.
+    paged = base.startswith(("http://", "https://"))
     while True:
-        req = urllib.request.Request(f"{base}?limit={PAGE}&offset={offset}", headers={"User-Agent": UA})
+        url = f"{base}?limit={PAGE}&offset={offset}" if paged else base
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
         with urllib.request.urlopen(req, timeout=60) as r:
             d = json.load(r)
         page = d.get("items") or []
@@ -67,6 +73,8 @@ def scan(base=BASE):
         if total is None:
             raise ValueError("the index declared no pagination.total — absence is unprovable without it")
         items.extend(page)
+        if not paged:
+            break
         offset += PAGE
         if offset >= total or not page:
             break
