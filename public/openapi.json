@@ -165,7 +165,7 @@
       "url": "https://creativecommons.org/licenses/by/4.0/"
     },
     "title": "Council of AI \u2014 Public API",
-    "version": "0.2+19d1ecba5a69",
+    "version": "0.2+fcef882d2b71",
     "x-guidance": "Free board: GET /api/gspc \u2014 quote totals.lid verbatim, never compose a count. Paid doors are the operations carrying x-payment-info: GET without payment answers HTTP 402 with the x402 v2 challenge (accepts[0]: scheme exact, network eip155:8453, USDC 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913, payTo 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31); pay it and retry with the X-PAYMENT header. Required query parameters carry an example that reaches the 402. Free previews are named per door under x-csoai.free_preview. Catalog: https://councilof.ai/.well-known/x402.json and https://councilof.ai/api/x402. Verify is free: https://councilof.ai/gspc-verify. Every 402 carries a server-signed offer and every settled 200 a signed receipt, per the x402 Offer & Receipt extension (JWS/EdDSA, kid did:web:csoai.org#board-attestation-1, published at https://csoai.org/.well-known/did.json). Check either without trusting this document: POST it to /api/receipts/verify, or run scripts/verify_receipt.py, which reads did.json and contacts nobody. 22 axes measured \u00b7 14 model fleets \u00b7 3 public leader scores \u00b7 8 fact runs \u00b7 TIE is TIE \u00b7 not a certificate."
   },
   "openapi": "3.1.0",
@@ -269,7 +269,7 @@
     },
     "/api/art50/marking-evidence": {
       "get": {
-        "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion.",
+        "description": "A signed card recording whether a machine-readable mark was detected in one named output, by named methods, at one time. Detection, never a conformity opinion. preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
         "operationId": "x402_art50_marking_evidence",
         "parameters": [
           {
@@ -1037,10 +1037,11 @@
     },
     "/api/eunomia-data": {
       "get": {
-        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking.",
+        "description": "A signed JSON feed of enforcement and measurement artefacts already on the public root. Data only \u2014 no scores, no ranking. Bare path (no query) is the free preview tier (HTTP 200). Paid signed feed requires feed=1 (HTTP 402).",
         "operationId": "x402_eunomia_data",
         "parameters": [
           {
+            "description": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
             "example": "1",
             "in": "query",
             "name": "feed",
@@ -1127,6 +1128,7 @@
                                 "properties": {
                                   "feed": {
                                     "const": "1",
+                                    "description": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
                                     "type": "string"
                                   }
                                 },
@@ -1231,10 +1233,11 @@
     },
     "/api/evidence-bundle": {
       "get": {
-        "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination.",
+        "description": "An OSCAL 1.1.0 assessment-results bundle of already-signed CSOAI cards, mapped to EU-AI-ACT-50. Not a conformity determination. Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
         "operationId": "x402_evidence_bundle",
         "parameters": [
           {
+            "description": "Obligation the evidence bundle maps to (required with bundle=1).",
             "example": "article-50",
             "in": "query",
             "name": "obligation",
@@ -1259,6 +1262,7 @@
             }
           },
           {
+            "description": "Paid-tier gate. Must be the string 1 together with other required params (HTTP 402).",
             "example": "1",
             "in": "query",
             "name": "bundle",
@@ -1347,9 +1351,11 @@
                                 "properties": {
                                   "bundle": {
                                     "const": "1",
+                                    "description": "Paid-tier gate. Must be the string 1 together with other required params (HTTP 402).",
                                     "type": "string"
                                   },
                                   "obligation": {
+                                    "description": "Obligation the evidence bundle maps to (required with bundle=1).",
                                     "enum": [
                                       "article-50",
                                       "article-53",
@@ -1525,10 +1531,11 @@
     },
     "/api/feeds/provider-diff": {
       "get": {
-        "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict.",
+        "description": "Every hash-only provider-document diff leaf to date, each with its inclusion proof to the signed root. Hashes only \u2014 no page content, no verdict. Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
         "operationId": "x402_feeds_provider_diff",
         "parameters": [
           {
+            "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200).",
             "example": "1",
             "in": "query",
             "name": "history",
@@ -1621,6 +1628,7 @@
                                 "properties": {
                                   "history": {
                                     "const": "1",
+                                    "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200).",
                                     "type": "string"
                                   },
                                   "since": {
@@ -2282,7 +2290,7 @@
     },
     "/api/proof": {
       "get": {
-        "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade.",
+        "description": "The inclusion-proof bundle for the last published Merkle root, re-served. Not a grade. Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
         "operationId": "x402_proof",
         "parameters": [
           {
@@ -2293,6 +2301,16 @@
             "required": true,
             "schema": {
               "const": "1",
+              "type": "string"
+            }
+          },
+          {
+            "description": "Free inclusion proof for one known leaf (64-hex). Omit; use bundle=1 for the paid root bundle.",
+            "in": "query",
+            "name": "sha",
+            "required": false,
+            "schema": {
+              "pattern": "^[0-9a-f]{64}$",
               "type": "string"
             }
           }
@@ -2499,7 +2517,7 @@
     },
     "/api/receipts/batch": {
       "get": {
-        "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion.",
+        "description": "Every signed measurement leaf in a time window, each with its Merkle inclusion path and carrying root. History assembly \u2014 not a conclusion. preview=1 is free digest. Paid leaves require from (HTTP 402).",
         "operationId": "x402_receipts_batch",
         "parameters": [
           {
@@ -2879,6 +2897,7 @@
         "operationId": "x402_request_attestation",
         "parameters": [
           {
+            "description": "Subject the door names (model id / instrument / vendor). Required on request-attestation; optional on evidence-bundle.",
             "example": "model-or-subject-id",
             "in": "query",
             "name": "subject",
@@ -2888,6 +2907,7 @@
             }
           },
           {
+            "description": "Optional axis slug for a more specific attestation SKU.",
             "in": "query",
             "name": "axis",
             "required": false,
@@ -3043,19 +3063,16 @@
     },
     "/api/rwa/evidence": {
       "get": {
-        "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
+        "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee. preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
         "operationId": "x402_rwa_evidence",
         "parameters": [
           {
+            "description": "XRPL asset symbol or issuer address to evidence (required). Example RLUSD. Use preview=1 for free unsigned measurement.",
             "example": "RLUSD",
             "in": "query",
             "name": "asset",
             "required": true,
             "schema": {
-              "enum": [
-                "symbol",
-                "issuer_address"
-              ],
               "type": "string"
             }
           },
@@ -3118,9 +3135,9 @@
                     }
                   },
                   "resource": {
-                    "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee.",
+                    "description": "A signed XRPL evidence card: AccountRoot flags, Domain, two-way TOML check, and cited raw-fetch hashes. Historical state \u2014 not a rating or a guarantee. preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
                     "mimeType": "application/json",
-                    "url": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>"
+                    "url": "https://councilof.ai/api/rwa/evidence?asset=<asset>"
                   },
                   "x402Version": 2
                 },
@@ -3150,8 +3167,8 @@
             "amount_source": "functions/api/_skus.ts default band request_attestation.per_request (owner env override not visible offline)",
             "captured": false
           },
-          "door": "https://councilof.ai/api/rwa/evidence?asset=<symbol|issuer_address>",
-          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<symbol>&preview=1",
+          "door": "https://councilof.ai/api/rwa/evidence?asset=<asset>",
+          "free_preview": "https://councilof.ai/api/rwa/evidence?asset=<asset>&preview=1",
           "never": [
             "a rating",
             "a guarantee",

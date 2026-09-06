@@ -101,8 +101,44 @@ def split_template(url: str) -> tuple[str, list[tuple[str, str]]]:
 
 def placeholder_kind(v: str) -> str:
     if v.startswith("<") and v.endswith(">"):
-        return "enum" if "|" in v and "://" not in v else "placeholder"
+        if "|" in v and "://" not in v:
+            # Real value enums look like <article-50|article-53|dora>. Type-token
+            # placeholders (symbol|issuer_address) must NOT become OpenAPI enums —
+            # CDP would then probe with the word "symbol" and never reach a 402.
+            parts = [x.strip() for x in v[1:-1].split("|") if x.strip()]
+            type_tokens = {"symbol", "issuer", "issuer_address", "address", "id", "slug", "iso", "asset", "model-id", "model_id"}
+            if parts and all(part.lower().replace("-", "_") in type_tokens or "_" in part for part in parts):
+                return "placeholder"
+            return "enum"
+        return "placeholder"
     return "literal"
+
+
+# Paid-gate query params: descriptions indexers need so bare ≠ paid is explicit.
+# Filled only when the captured challenge schema left description empty.
+PARAM_GATE_DESC: dict[str, str] = {
+    "feed": "Paid-tier gate. Must be the string 1 to request the signed feed (HTTP 402). Omit for free preview on the bare path (HTTP 200).",
+    "history": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200). Optional since narrows the window.",
+    "bundle": "Paid-tier gate. Must be the string 1 together with the other required params to request the paid artefact (HTTP 402). Without bundle=1 the door stays on free preview / validation.",
+    "obligation": "Obligation the evidence bundle maps to (required with bundle=1 for the paid tier). Incomplete probes (bundle alone) stay HTTP 400.",
+    "asset": "XRPL asset symbol or issuer address to evidence (required). Example RLUSD. Use preview=1 for free unsigned measurement.",
+    "url": "Public URL of the generative output to measure. Use preview=1 for free unsigned measurement.",
+    "from": "Window start (ISO-8601). Required for the paid receipts batch. Use preview=1 for a free digest without leaves.",
+    "subject": "Subject the door names (model id / instrument / vendor). Required on request-attestation; optional on evidence-bundle.",
+    "axis": "Optional axis slug for a more specific attestation SKU.",
+    "sha": "Free inclusion proof for one known leaf (64-hex). Omit; use bundle=1 for the paid root bundle.",
+}
+
+# Operation-level free vs paid note (appended when missing from challenge prose).
+FREE_TIER_OP_NOTE: dict[str, str] = {
+    "/api/proof": "Bare path is validation (HTTP 400 naming sha or bundle). Free inclusion via optional sha. Paid root bundle when bundle=1 (HTTP 402).",
+    "/api/eunomia-data": "Bare path (no query) is the free preview tier (HTTP 200). Paid signed feed requires feed=1 (HTTP 402).",
+    "/api/feeds/provider-diff": "Bare path is free recent diffs (HTTP 200). Paid historical batch requires history=1 (HTTP 402).",
+    "/api/evidence-bundle": "Preview = obligation(+subject) without bundle=1. Paid tier requires obligation + bundle=1 (HTTP 402). Incomplete bundle alone stays HTTP 400.",
+    "/api/rwa/evidence": "preview=1 is free unsigned. Paid signed card requires asset (HTTP 402).",
+    "/api/art50/marking-evidence": "preview=1 is free unsigned. Paid signed card requires url (HTTP 402).",
+    "/api/receipts/batch": "preview=1 is free digest. Paid leaves require from (HTTP 402).",
+}
 
 
 def sha12(*blobs: bytes) -> str:
@@ -294,6 +330,8 @@ def compose(fix: Path = FIX) -> dict:
                 prm["example"] = example
             if "description" in schema:
                 prm["description"] = schema.pop("description")
+            if not prm.get("description") and k in PARAM_GATE_DESC:
+                prm["description"] = PARAM_GATE_DESC[k]
             parameters.append(prm)
             seen.add(k)
         for k, s in cap_props.items():
@@ -303,6 +341,8 @@ def compose(fix: Path = FIX) -> dict:
             prm = {"name": k, "in": "query", "required": k in cap_required, "schema": schema}
             if "description" in schema:
                 prm["description"] = schema.pop("description")
+            if not prm.get("description") and k in PARAM_GATE_DESC:
+                prm["description"] = PARAM_GATE_DESC[k]
             if k in sampled:
                 prm["example"] = sampled[k]
             parameters.append(prm)
@@ -345,7 +385,21 @@ def compose(fix: Path = FIX) -> dict:
                 if accepts0.get(k) != want:
                     raise SystemExit(f"{did}: challenge {k}={accepts0.get(k)!r} disagrees with /api/x402 rail {want!r}")
 
+        # Free inclusion path on /api/proof — indexers otherwise only see the paid bundle gate.
+        if path == "/api/proof" and "sha" not in seen:
+            parameters.append({
+                "name": "sha",
+                "in": "query",
+                "required": False,
+                "schema": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "description": PARAM_GATE_DESC["sha"],
+            })
+            seen.add("sha")
+
         description = (challenge or {}).get("resource", {}).get("description") or (tier or {}).get("deliverable") or r.get("note") or ""
+        note = FREE_TIER_OP_NOTE.get(path)
+        if note and note not in description:
+            description = f"{description.rstrip()} {note}".strip() if description else note
         deliverable = (tier or {}).get("deliverable") or (challenge or {}).get("resource", {}).get("description") or r.get("note") or ""
         summary = (tier or {}).get("name") or (challenge or {}).get("resource", {}).get("serviceName") or f"{r.get('paid_for') or 'free'} door — {path}"
         tags = ["x402", r.get("paid_for") or "free"]

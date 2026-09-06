@@ -1,13 +1,19 @@
 {
-  "_what": "Sample values for placeholder query params (<id>, <symbol|issuer_address>, ...) on doors whose live 402 has NOT been captured under challenges/. build_openapi.py uses them (a) as the OpenAPI `example` so an indexer's probe reaches the 402, and (b) as the probe values for --fetch-challenges. A captured challenge's own info.input.queryParams always wins over this file.",
   "_sources": {
+    "art50_marking_evidence.url": "an asset on our own origin (public/og-image.png) so a probe never fetches a third party",
     "request_attestation.subject": "functions/api/request-attestation.ts — the door's own bazaar sample: queryParams.subject defaults to \"model-or-subject-id\"",
-    "rwa_evidence.asset": "public/interop/xrpl-two-way-check.json — first symbol the estate has already checked two-way (RLUSD)",
-    "art50_marking_evidence.url": "an asset on our own origin (public/og-image.png) so a probe never fetches a third party"
+    "rwa_evidence.asset": "public/interop/xrpl-two-way-check.json — first symbol the estate has already checked two-way (RLUSD)"
   },
+  "_what": "Sample values for placeholder query params (<id>, <asset>, ...) on doors whose live 402 has NOT been captured under challenges/. build_openapi.py uses them (a) as the OpenAPI `example` so an indexer's probe reaches the 402, and (b) as the probe values for --fetch-challenges. A captured challenge's own info.input.queryParams always wins over this file.",
   "samples": {
-    "request_attestation": { "subject": "model-or-subject-id" },
-    "rwa_evidence": { "asset": "RLUSD" },
-    "art50_marking_evidence": { "url": "https://councilof.ai/og-image.png" }
+    "art50_marking_evidence": {
+      "url": "https://councilof.ai/og-image.png"
+    },
+    "request_attestation": {
+      "subject": "model-or-subject-id"
+    },
+    "rwa_evidence": {
+      "asset": "RLUSD"
+    }
   }
 }
