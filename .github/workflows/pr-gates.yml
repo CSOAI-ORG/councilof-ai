@@ -122,6 +122,18 @@ jobs:
         working-directory: packages/gspc-card-verifier
         run: node --test test/*.test.mjs
 
+      # public/verifier/gspc-verify.mjs is PUBLISHED — it serves at
+      # https://councilof.ai/verifier/gspc-verify.mjs and is the copy a stranger downloads to check
+      # our cards. Nothing rebuilt or compared it. It was current on 2026-09-06 (a fresh build was
+      # byte-identical and the live copy matched the committed sha 71923355…) — but by diligence,
+      # not by mechanism. A source change landing without a rebuild ships a verifier that disagrees
+      # with its own code, and the people who find out are the strangers using it.
+      #
+      # Verified to fail: appending one comment line gives "bundle is STALE", exit 1.
+      - name: Published verifier bundle must match a fresh build of its source
+        working-directory: packages/gspc-card-verifier
+        run: node scripts/bundle.mjs --check ../../public/verifier/gspc-verify.mjs
+
       # llms.txt and llms-full.txt are DERIVED (scripts/llms-txt.mjs) from live
       # GET /api/gspc and the three card corpora files. Both files used to tell their
       # readers "do not freeze numbers in this file" while freezing the lid three times
