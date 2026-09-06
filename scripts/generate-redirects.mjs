@@ -67,6 +67,11 @@ const EXISTING = [
   "/favicon.ico           /csoai-icon.svg      308",
   "/schema/gspc-measurement-card-0.1.json  /verifier/gspc-measurement-card.schema.json  308",
   "/schema/gspc-card-index-0.1.json        /verifier/gspc-card-index.schema.json        308",
+  // Eat lid 2026-09-01 (still true 2026-09-06): GET /publisher-health.json 200,
+  // GET /signed/publisher-health.json 404. The writer is scripts/publish_public_root.py
+  // and it emits one file at public/publisher-health.json. A second copy under
+  // /signed/ would drift. Redirect the signed path to the one writer.
+  "/signed/publisher-health.json  /publisher-health.json  308",
   "/arena                 /dashboard?tab=play  308",
   "/arena/                /dashboard?tab=play  308",
   "/arena.html            /dashboard?tab=play  308",
