@@ -102,6 +102,18 @@ jobs:
       - name: Stranger verification — signed cards must verify from published bytes
         run: node scripts/verify-estate.mjs --limit 15
 
+      # public/signed/gspc-board.signed.json is signed under #gspc-board-22axis-2026 with a 3-party
+      # MPC key, and the artefact NAMES its own verifier in its `verify` field:
+      #   node scripts/gspc-board-verify.mjs <this file>
+      # The script existed, worked, returned VERIFIED — and no workflow ran it. A verifier nobody
+      # runs is the same shape as the EMILIA vector pin and the published bundle, both found ungated
+      # earlier today: real, correct, and enforced by whoever happens to remember.
+      #
+      # Offline, no network, ~0.2s. Verified to fail: flipping one byte of the signature gives
+      # "signature does NOT verify", exit 1.
+      - name: Signed GSPC board must verify under its own published recipe
+        run: node scripts/gspc-board-verify.mjs public/signed/gspc-board.signed.json
+
       # packages/gspc-card-verifier/test/vectors is a FROZEN RECIPROCAL BOUNDARY with EMILIA: 33
       # vectors (9 VALID, 17 INVALID, 7 UNCHECKABLE) pinned by sha256 in manifest.json, and the
       # standing rule is that no vector changes without a new pin and a note to the counterparty.
