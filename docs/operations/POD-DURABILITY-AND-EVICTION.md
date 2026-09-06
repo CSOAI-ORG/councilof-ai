@@ -60,3 +60,42 @@ model prints `ATTRIBUTION n ok · m mismatched`, and a mismatch is recorded as
 It was not. It ran only on the pod — the same way `#1516`'s orchestrator fixes ran only
 on the pod while master carried none of them. Code that produces published cards belongs
 where it can be reviewed and restored.
+
+## The restart drill, performed 2026-09-06
+
+Not asserted. Everything the mill depends on was killed and restarted, with the state
+hashed on both sides.
+
+    banks_set_sha256 = sha256 of every /workspace/gspc-banks/*.jsonl, sorted
+
+| | banks | banks_set_sha256 | run dirs | ledger rows |
+|---|---:|---|---:|---:|
+| before | 38 | `b8c2b1972e96058e` | 87 | 90 |
+| after teardown (drivers, workers, ollama all killed) | 38 | `b8c2b1972e96058e` | 87 | 90 |
+| after restart | 38 | `b8c2b1972e96058e` | 87 | **106** |
+
+Nothing was lost. The daemon came back on the durable store —
+`OLLAMA_MODELS=/workspace/ollama-models` read straight out of `/proc/<pid>/environ`,
+`/api/tags` 200 with 7 models still present — and both shards **resumed from the
+ledger**, each reporting `7 axes to do` on the model they were part-way through rather
+than starting it again.
+
+### Eviction, printed
+
+The first two lines the restarted shards wrote:
+
+    EVICTED 1 manifest(s), 38.5 GiB after nvidia/Qwen3.6-35B-A3B-NVFP4 — free 44.0GB
+    EVICTED 1 manifest(s),  4.4 GiB after Qwen/Qwen2.5-7B-Instruct     — free 35.5GB
+
+38.5 GiB reclaimed from one 35B model. Under the old guard that space was never
+returned, which is how a 100 GB volume reached 4.0K free.
+
+### One trap this drill walked into twice
+
+`pkill -9 -f "ollama serve"` **killed the SSH shell running it**, because that shell's
+own command line contains the pattern. Same for `pkill -f "runpod_gspc_worker"`. The
+first teardown looked like it had done nothing; the second silently took ollama down and
+left no restart running. Use `pkill -x <comm>`, or a pattern that cannot appear in the
+invoking command. This is the `pgrep -f` self-match already recorded for probes, and it
+is worse for `pkill`: there the failure is a false ALIVE, here it is killing yourself
+mid-operation.
