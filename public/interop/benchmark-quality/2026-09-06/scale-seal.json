@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "4b19b102f344969e19985ef34cd4b077a06eb4f7fdfd43f3c6441082e2f4ba16",
+      "machine": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "robots": "839d62a3cf7826b0ba1f69d36ca6525c472185e78cf1a8ffc0f333b5c3d6a97a"
+    },
+    "by_group": {
+      "data": "FFPUU",
+      "governance": "FFFFP",
+      "method_transparency": "FFFPP",
+      "operations": "FFFUU",
+      "provenance": "FFFFF",
+      "reproducibility": "FFFFU",
+      "statistics": "FFFFP"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/scale-seal.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "Scale AI, Inc.",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 25,
+      "pass": 5,
+      "predicates": 35,
+      "resolved": 30,
+      "unmeasured": 5
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "Scale SEAL",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://labs.scale.com/leaderboard",
+    "https://huggingface.co/api/datasets?search=scale-seal&full=true&limit=50",
+    "https://scale.com/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "Scale SEAL \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

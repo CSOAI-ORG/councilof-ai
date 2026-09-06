@@ -70,6 +70,29 @@ Hub listings are DISCOVERED, not MEASURED. Do not mill 3,032,028 listings. Uniqu
 
 Empty cells stay empty. Measurement, never certification.
 
+## Benchmark-quality register (we grade ourselves in it, and we lose)
+
+Two registers, both deterministic predicates only — the scorer is `re.search`, no language model
+judges anything. v0.1 grades BENCHMARKS and structurally excludes us. v1 grades BENCHMARK
+PUBLISHERS — LMArena, Vals AI, HELM, Epoch AI, Artificial Analysis, Scale SEAL, UK AISI — and
+INCLUDES us as the eighth row, from the same 3 public artifacts and the same 35 predicates.
+Our row is flagged `self_assessed` and is NOT independent evidence about us.
+
+Counts are not a score. They are unweighted, non-independent and non-exhaustive; do not rank
+publishers by them and do not quote a total as a grade. STAGED until the OIDC signer moves a
+row to MEASURED, which it may only do at resolved (PASS+FAIL) >= 30.
+
+- Index: https://councilof.ai/interop/benchmark-quality/index.json
+- Full register, every cell with the URL, the fetch date and the SHA-256 that decided it:
+  https://councilof.ai/interop/benchmark-quality/2026-09-06/register.json
+- Our own row, including our failures: https://councilof.ai/interop/benchmark-quality/2026-09-06/council-of-ai.json
+- API: https://councilof.ai/api/benchmark-quality?register=v1
+- Recompute from the committed bytes, no network: `python3 scripts/benchmark_quality/register.py --check`
+- Argue with one cell: `python3 scripts/benchmark_quality/register.py --explain <publisher>:<predicate>`
+
+An UNMEASURED cell is a result, not a zero. A FAIL is scoped to one URL on one date and says
+what a publisher put there — never what a publisher is. Right of reply: https://councilof.ai/contact
+
 ## East-West (cross-border)
 
 - Flagship: https://councilof.ai/east-west

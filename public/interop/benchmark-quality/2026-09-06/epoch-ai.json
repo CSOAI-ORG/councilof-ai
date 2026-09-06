@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "8f50d3f0e6be6c86523bc47ba191e8ee67e9da873275825ee5b98ffa32bca59a",
+      "machine": "00b009e8462080d157b9356e297bb69875f0a2ea88be2c94f6237dad4737c7db",
+      "robots": "6ff02e26d9fa4b2250e4d3e2b280c689821a1353e0dd43e1e6721b092e0e02c0"
+    },
+    "by_group": {
+      "data": "FFFPP",
+      "governance": "FFFFF",
+      "method_transparency": "FFFFF",
+      "operations": "FFPPP",
+      "provenance": "FFFFF",
+      "reproducibility": "FFFPP",
+      "statistics": "FFFFF"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/epoch-ai.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "Epoch AI",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 28,
+      "pass": 7,
+      "predicates": 35,
+      "resolved": 35,
+      "unmeasured": 0
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "Epoch AI",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": false
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://epoch.ai/benchmarks",
+    "https://api.github.com/search/repositories?q=user:epoch-research&sort=stars",
+    "https://epoch.ai/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "Epoch AI \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

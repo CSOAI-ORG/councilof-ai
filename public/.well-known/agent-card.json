@@ -90,15 +90,19 @@
     {
       "id": "benchmark-quality-register",
       "name": "Benchmark-quality register",
-      "description": "Signed register of what third-party AI benchmarks disclose about their own process integrity. Deterministic predicates only — no language model judges. Records are unsolicited; nothing on the register is certification or endorsement.",
+      "description": "Two registers of what evaluators disclose about their own process, both from deterministic predicates only — no language model judges. v0.1 grades BENCHMARKS (MMLU, SWE-bench, GPQA and others) and structurally excludes Council of AI. v1 grades BENCHMARK PUBLISHERS (LMArena, Vals AI, HELM, Epoch AI, Artificial Analysis, Scale SEAL, UK AISI) and INCLUDES Council of AI as one of its eight rows, flagged self_assessed, graded by the same 35 predicates from the same 3 public artifacts. Records are unsolicited, no subject participated, and nothing here is certification or endorsement. Counts are not a score and must not be used to rank publishers.",
       "tags": [
         "meta-evaluation",
         "benchmark-quality",
         "reproducibility",
-        "governance"
+        "governance",
+        "self-assessed-row"
       ],
       "examples": [
-        "GET /api/benchmark-quality"
+        "GET /api/benchmark-quality",
+        "GET /api/benchmark-quality?register=v1",
+        "GET /interop/benchmark-quality/index.json",
+        "GET /interop/benchmark-quality/2026-09-06/council-of-ai.json"
       ]
     },
     {

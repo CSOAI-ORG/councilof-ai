@@ -1,0 +1,1140 @@
+{
+  "access": "public_artifacts_only",
+  "as_of": "2026-09-06",
+  "attribution": "Council of AI, CSOAI Ltd 16939677, councilof.ai",
+  "authored_by": "did:web:csoai.org",
+  "corrections": "https://councilof.ai/api/corrections",
+  "endorsement": "none",
+  "groups": [
+    {
+      "id": "method_transparency",
+      "predicates": [
+        "method_page_linked",
+        "scorer_named_on_board",
+        "structured_data_on_board",
+        "changelog_linked",
+        "limitations_stated"
+      ],
+      "what": "What the publisher says about how the numbers are produced."
+    },
+    {
+      "id": "data",
+      "predicates": [
+        "item_data_channel_linked",
+        "open_dataset_in_public_index",
+        "dataset_licence_machine_readable",
+        "item_count_published_on_board",
+        "held_out_set_declared"
+      ],
+      "what": "Whether the items behind the numbers can be obtained and under what licence."
+    },
+    {
+      "id": "reproducibility",
+      "predicates": [
+        "code_repository_linked",
+        "code_licence_machine_readable",
+        "run_command_published",
+        "environment_pinning_stated",
+        "stranger_recompute_path_complete"
+      ],
+      "what": "Whether a stranger has code, a command and data enough to re-run it."
+    },
+    {
+      "id": "statistics",
+      "predicates": [
+        "uncertainty_shown_beside_scores",
+        "sample_size_shown_beside_scores",
+        "separation_rule_published",
+        "minimum_n_rule_published",
+        "repeats_or_variance_disclosed"
+      ],
+      "what": "Whether uncertainty, sample size and separation are published beside scores."
+    },
+    {
+      "id": "operations",
+      "predicates": [
+        "as_of_date_on_board",
+        "as_of_within_30_days",
+        "machine_readable_channel_linked",
+        "robots_permits_results_surface",
+        "status_or_uptime_page_linked"
+      ],
+      "what": "Freshness, machine channels, crawl policy, and whether outages are visible."
+    },
+    {
+      "id": "provenance",
+      "predicates": [
+        "results_carry_a_signature",
+        "verification_key_published",
+        "transparency_log_or_witness",
+        "content_hash_published",
+        "persistent_identifier_published"
+      ],
+      "what": "Whether a result can be tied to its publisher by something other than trust."
+    },
+    {
+      "id": "governance",
+      "predicates": [
+        "corrections_route_published",
+        "corrections_ledger_public",
+        "funding_or_ownership_disclosed",
+        "commercial_offering_disclosed",
+        "results_licence_stated_on_board"
+      ],
+      "what": "Corrections, funding, and disclosed commercial interest in the ranked parties."
+    }
+  ],
+  "issuer": "CSOAI Ltd (GB, Companies House 16939677)",
+  "kind": "csoai.benchmark-quality-register/1.0",
+  "license": "CC-BY-4.0",
+  "limitations": [
+    "These predicates measure DISCLOSURE ON A NAMED SURFACE. They do not measure whether any publisher's numbers are correct, whether a benchmark measures what its name claims, or whether one publisher is better than another. Construct validity is not scored here because no regular expression can score it.",
+    "There is no total, no score and no ranking. The counts are unweighted, the predicates are not independent, and the set is not exhaustive. Ordering publishers by PASS count would be a misuse of this file, and the file deliberately contains nothing that makes it easy.",
+    "A FAIL is bounded by one URL on one date. Most of these publishers document more, elsewhere, than the surface a reader lands on. That gap is the thing being measured, and it is not the same as an absence.",
+    "Three artifacts per publisher is a small window, chosen so that ours is the same size. A wider window would resolve more predicates for everyone and would change results in both directions.",
+    "Regular expressions produce false positives. A page that says 'we publish no confidence intervals' matches the interval pattern. Every PASS carries the matched span so that a reader can see this happen, and any such case is a correction we will make.",
+    "One row is self-assessed. It is marked everywhere it appears and it is not independent evidence.",
+    "No language model judged anything on this register. The scorer is re.search."
+  ],
+  "measured_gate": {
+    "current": "STAGED",
+    "rule": "A publisher row may be signed to MEASURED only where resolved (PASS+FAIL) >= 30. Nothing in this producer can write MEASURED; only the OIDC signer can, and it re-checks the count.",
+    "threshold_resolved": 30
+  },
+  "method": {
+    "explain_one_cell": "python3 scripts/benchmark_quality/register.py --explain <publisher>:<predicate_id>",
+    "fetch_budget": {
+      "applies_to": "every publisher including Council of AI",
+      "artifacts": [
+        "robots.txt",
+        "the results surface a reader lands on",
+        "a public index query (Hugging Face datasets API or GitHub repository search)"
+      ],
+      "artifacts_per_publisher": 3,
+      "why": "Marking ourselves would be worthless on a wider budget than everyone else's, so the budget is identical and enforced in scripts/benchmark_quality/fetch.py."
+    },
+    "index_queries_are_searches_not_guesses": "Where absence matters the query goes to an index, not to a URL we invented, because a 404 on a constructed path is evidence about the guess.",
+    "input": "Only the files under scripts/fixtures/benchmark-quality/. This producer makes no network call.",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "scorer": "re.search, an RFC 9309 path evaluation, and field lookups in a JSON index. Nothing else."
+  },
+  "no_model_judgment": true,
+  "not_a_certificate": true,
+  "predicate_catalogue": [
+    {
+      "evaluable_from": "board_href",
+      "evidence_type": "hyperlink target on the fetched results surface",
+      "group": "method_transparency",
+      "id": "method_page_linked",
+      "narrowed_after_run_1": "Run 2: bare `/about` matched an organisation page and was scored as a method page.",
+      "pattern": "(?i)(method|methodolog|how-?it-?works|how_it_works|/faq|/docs/(?:eval|scor|grad))",
+      "question": "Does the results surface link a page describing how the numbers are produced?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:method_page_linked",
+      "why": "A number whose method is not one click away cannot be argued with."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "method_transparency",
+      "id": "scorer_named_on_board",
+      "pattern": "(?i)\\b(exact match|unit tests?|pass@\\d|bradley[-\u2013 ]terry|\\belo\\b|rubric|human (?:vote|rater|annotator|preference|judge)|llm[-\u2013 ]as[-\u2013 ]a[-\u2013 ]judge|model[-\u2013 ]graded|auto(?:matically)?[- ]graded|deterministic(?:ally)? grad)",
+      "question": "Does the results surface name the mechanism that produces a score?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:scorer_named_on_board",
+      "why": "Elo, a rubric, a unit test and a model judge are four different instruments; a reader is entitled to know which one made the number."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "method_transparency",
+      "id": "structured_data_on_board",
+      "pattern": "(?i)<script[^>]+type=[\"\\']application/ld\\+json[\"\\']",
+      "question": "Does the results surface carry machine-readable structured data (JSON-LD)?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:structured_data_on_board",
+      "why": "The surface an answer engine reads is now the surface that matters; JSON-LD is the only part of it a machine does not have to guess at."
+    },
+    {
+      "evaluable_from": "board_href",
+      "evidence_type": "hyperlink target on the fetched results surface",
+      "group": "method_transparency",
+      "id": "changelog_linked",
+      "pattern": "(?i)(changelog|release-?notes?|whats-?new|what-?s-?new|/updates|/news|/blog)",
+      "question": "Does the results surface link a dated record of its own changes?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:changelog_linked",
+      "why": "A leaderboard that changes silently cannot be cited, because the thing cited is gone."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "method_transparency",
+      "id": "limitations_stated",
+      "pattern": "(?i)(limitation|caveat|does not measure|is not a (?:measure|guarantee|certification)|known issues|we do not claim|not intended to)",
+      "question": "Does the results surface state what its numbers do not establish?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:limitations_stated",
+      "why": "Every instrument has a boundary; publishing it is the difference between a measurement and a claim."
+    },
+    {
+      "evaluable_from": "board_href",
+      "evidence_type": "hyperlink target on the fetched results surface",
+      "group": "data",
+      "id": "item_data_channel_linked",
+      "pattern": "(?i)(huggingface\\.co/datasets|\\.csv|\\.jsonl|\\.parquet|\\.tsv|/datasets?/|github\\.com/[^\\\"'\\s]+/(?:releases|tree|blob)|/download)",
+      "question": "Does the results surface link a channel from which the underlying items or results can be obtained?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:item_data_channel_linked",
+      "why": "Without the items, every number on the page is a claim about work nobody else can inspect."
+    },
+    {
+      "directional": "PASS or UNMEASURED only, never FAIL. An index query that returns nothing tells you about the search term, not about the publisher \u2014 so a zero here is recorded as UNMEASURED with the query on it, and a correction naming the right handle is applied.",
+      "evaluable_from": "machine",
+      "evidence_type": "response body of an index query (Hugging Face datasets API / GitHub repository search)",
+      "group": "data",
+      "id": "open_dataset_in_public_index",
+      "question": "Does the publisher appear in a public open-data index with at least one dataset or repository?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:open_dataset_in_public_index",
+      "why": "Asked of the index rather than of a URL we invented, so an empty answer is about the publisher and not about our guess."
+    },
+    {
+      "evaluable_from": "machine",
+      "evidence_type": "licence field of an indexed record",
+      "group": "data",
+      "id": "dataset_licence_machine_readable",
+      "question": "Does at least one indexed record carry a machine-readable licence identifier?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:dataset_licence_machine_readable",
+      "why": "A licence a machine cannot read is a licence a reuse pipeline will ignore."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "data",
+      "id": "item_count_published_on_board",
+      "pattern": "(?i)\\b(?:\\d{1,3}(?:,\\d{3})+|\\d+(?:\\.\\d+)?\\s?[KM]\\b|\\d{2,})\\s*\\+?\\s*(items?|questions?|prompts?|rows?|instances?|tasks?|conversations?|votes?|battles?|problems?|examples?|samples?)\\b",
+      "question": "Does the results surface publish how many items are behind the numbers?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:item_count_published_on_board",
+      "why": "A score without an n is not yet a measurement."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "data",
+      "id": "held_out_set_declared",
+      "pattern": "(?i)(private (?:test|held[-\u2013 ]?out|eval|data ?set|set)|held[-\u2013 ]?out (?:set|split|items)|not (?:publicly )?released|unreleased (?:test|items|problems)|kept private)",
+      "question": "Does the results surface declare that some portion of the items is withheld?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:held_out_set_declared",
+      "why": "Withholding items is a defensible contamination control and a real limit on reproduction; either way it must be said, not discovered."
+    },
+    {
+      "evaluable_from": "board_href",
+      "evidence_type": "hyperlink target on the fetched results surface",
+      "group": "reproducibility",
+      "id": "code_repository_linked",
+      "pattern": "(?i)(github\\.com|gitlab\\.com|codeberg\\.org)",
+      "question": "Does the results surface link source code?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:code_repository_linked",
+      "why": "The first thing a reproducer needs is the code that made the number."
+    },
+    {
+      "evaluable_from": "machine",
+      "evidence_type": "SPDX identifier in the indexed record",
+      "group": "reproducibility",
+      "id": "code_licence_machine_readable",
+      "question": "Does an indexed repository or dataset for this publisher carry a machine-readable SPDX licence?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:code_licence_machine_readable",
+      "why": "Unlicensed code is code a third party may read and may not run."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "reproducibility",
+      "id": "run_command_published",
+      "pattern": "(?i)(pip install|uv (?:pip )?(?:install|add)|npm i(?:nstall)? |pnpm add|docker run|docker pull|git clone|conda install|inspect eval|helm-run|\\$ [a-z]+ )",
+      "question": "Does the results surface publish a command a reader could run?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:run_command_published",
+      "why": "A repository link is an invitation; a command is an instruction. Only one of them gets run."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "reproducibility",
+      "id": "environment_pinning_stated",
+      "pattern": "(?i)(docker|container(?:ised|ized)?|lock ?file|requirements\\.txt|pyproject|pinned version|fixed seed|random seed|seed\\s*=|temperature\\s*=?\\s*0|deterministic decoding)",
+      "question": "Does the results surface state anything that pins the evaluation environment?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:environment_pinning_stated",
+      "why": "Unpinned, a re-run is a different experiment and a disagreement about numbers cannot be settled."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "composite of three predicates on this register",
+      "group": "reproducibility",
+      "id": "stranger_recompute_path_complete",
+      "inputs": [
+        "item_data_channel_linked",
+        "code_repository_linked",
+        "run_command_published"
+      ],
+      "question": "Are data, code and a runnable command all present on the same surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:stranger_recompute_path_complete",
+      "why": "Each of the three alone is common; all three together is what a stranger actually needs, and it is the composite nobody publishes by accident."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "statistics",
+      "id": "uncertainty_shown_beside_scores",
+      "pattern": "(\u00b1|\\+/-|(?i:confidence interval|credible interval|standard error|error bars?|\\bCI\\b|\\bSEM\\b))",
+      "question": "Is an uncertainty quantity shown on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:uncertainty_shown_beside_scores",
+      "why": "A ranking of point estimates is a ranking of noise until the intervals are drawn."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "statistics",
+      "id": "sample_size_shown_beside_scores",
+      "pattern": "(?i)(\\bn\\s*=\\s*\\d+|\\b\\d[\\d,]*\\s*(?:votes|battles|samples|runs|trials|repeats)\\b)",
+      "question": "Is the number of observations behind a figure shown on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:sample_size_shown_beside_scores",
+      "why": "Two scores with the same value and different n are not comparable, and the reader cannot tell without the n."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "statistics",
+      "id": "separation_rule_published",
+      "narrowed_after_run_1": "Run 1 matched `p=0.9`, which on a model page is the top-p sampling parameter, and scored a publisher PASS for a significance rule it does not publish.",
+      "pattern": "(?i)(statistically (?:significant|indistinguishable|tied)|significance (?:test|threshold|level)|p[- ]values?|p\\s*<\\s*0?\\.0\\d|overlapping (?:confidence )?intervals?|rank(?:ing)? range|not significantly different|shared rank|95% (?:CI|confidence))",
+      "question": "Does the results surface publish a rule for when two systems are not separated?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:separation_rule_published",
+      "why": "Ranks are read as differences; without a separation rule a one-place gap and a ten-point gap look the same."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "statistics",
+      "id": "minimum_n_rule_published",
+      "pattern": "(?i)(n\\s*(?:\u2265|>=|&ge;|at least )\\s*\\d+|minimum (?:of )?\\d+ (?:votes|items|samples|responses|battles)|at least \\d+ (?:votes|items|samples|battles)|(?:do not|don'?t|will not|won'?t) (?:report|publish|quote|rank)[^.]{0,70}(?:below|fewer than|until))",
+      "question": "Does the results surface publish a threshold below which it refuses to report a figure?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:minimum_n_rule_published",
+      "why": "The discipline that costs a publisher something is the refusal to publish a thin cell; it is also the one nobody adopts unprompted."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "statistics",
+      "id": "repeats_or_variance_disclosed",
+      "pattern": "(?i)(repeat(?:ed|s)? (?:runs?|trials?)|\\b\\d+ (?:runs?|repeats?|trials?)\\b|run[-\u2013 ]to[-\u2013 ]run|variance|std\\.? ?dev|standard deviation|re-?run(?:s|ning)? (?:each|the) )",
+      "question": "Does the results surface disclose repeated runs or run-to-run variance?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:repeats_or_variance_disclosed",
+      "why": "A single sampled run is one draw from a distribution, and nothing on a leaderboard says so unless the publisher says so."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "visible text of the fetched results surface",
+      "group": "operations",
+      "id": "as_of_date_on_board",
+      "pattern": "(?i)(?:updated|last updated|as[- ]of|refreshed|published)\\D{0,25}(\\d{4}[-/]\\d{1,2}[-/]\\d{1,2}|\\d{1,2}[/-]\\d{1,2}[/-]\\d{4}|[A-Z][a-z]{2,8}\\.? \\d{1,2},? \\d{4}|\\d{1,2} [A-Z][a-z]{2,8} \\d{4})",
+      "question": "Does the results surface carry a date saying when the numbers were last refreshed?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:as_of_date_on_board",
+      "why": "A leaderboard with no as-of date cannot be stale, because it can never be shown to be."
+    },
+    {
+      "evaluable_from": "board",
+      "evidence_type": "the date captured by as_of_date_on_board",
+      "group": "operations",
+      "id": "as_of_within_30_days",
+      "question": "Is that date within 30 days of the register run date?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:as_of_within_30_days",
+      "why": "Model releases move weekly; a board more than a month old is describing a different field."
+    },
+    {
+      "evaluable_from": "board_href",
+      "evidence_type": "hyperlink target on the fetched results surface",
+      "group": "operations",
+      "id": "machine_readable_channel_linked",
+      "narrowed_after_run_1": "Run 2: bare `.xml` matched `/sitemap-index.xml`. A sitemap is a machine channel for crawlers, not a channel that carries the results.",
+      "pattern": "(?i)(/api[/.]|api\\.[a-z0-9-]+\\.|\\.json|\\.csv|\\.parquet|openapi|/docs/api|/feeds?(?:/|\\.|\\b)|(?:feed|rss|atom)[^\\\"']*\\.xml|\\.rss)",
+      "question": "Does the results surface link a machine-readable channel of its own?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:machine_readable_channel_linked",
+      "why": "If the only way to read the numbers is to render the page, the numbers are not published \u2014 they are displayed."
+    },
+    {
+      "evaluable_from": "robots",
+      "evidence_type": "the fetched robots.txt, evaluated per RFC 9309",
+      "group": "operations",
+      "id": "robots_permits_results_surface",
+      "question": "Does the publisher's robots.txt permit a general-purpose agent to fetch the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:robots_permits_results_surface",
+      "why": "A results page an agent may not fetch is not a public result in the way the web now works. Recorded as a fact about the file, not as criticism: reserving a surface is a legitimate choice."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "operations",
+      "id": "status_or_uptime_page_linked",
+      "narrowed_after_run_1": "Run 1 matched `x.com/<user>/status/...` \u2014 a social post permalink \u2014 and scored two publishers PASS for a status page neither has. Bare `/status` and bare `uptime` went with it.",
+      "pattern": "(?i)(https?://status\\.[a-z0-9.-]+|statuspage\\.io|uptime (?:page|status|history|guarantee)|incident (?:history|report|log))",
+      "question": "Does the results surface link a status or uptime page?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:status_or_uptime_page_linked",
+      "why": "Everything on this list is a service; a service with no status page has no way to tell you it was down when you read it."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "provenance",
+      "id": "results_carry_a_signature",
+      "pattern": "(?i)(ed25519|\\\"sig(?:nature)?\\\"\\s*:|\\.sig\\b|detached signature|\\bJWS\\b|pgp signature|minisign|signed (?:card|receipt|board|result|attestation))",
+      "question": "Is a cryptographic signature over the results present or linked on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:results_carry_a_signature",
+      "why": "Unsigned, a leaderboard row cannot be distinguished from a screenshot of one, and neither can be quoted back to its publisher."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "provenance",
+      "id": "verification_key_published",
+      "pattern": "(?i)(did\\.json|/\\.well-known/|did:web:|public[- ]key|pgp key|gpg key|\\.asc\\b|jwks)",
+      "question": "Is a key or key document published against which such a signature could be checked?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:verification_key_published",
+      "why": "A signature with no discoverable key is decoration."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "provenance",
+      "id": "transparency_log_or_witness",
+      "pattern": "(?i)(rekor|sigstore|opentimestamps|\\bOTS\\b|merkle|inclusion proof|transparency log|certificate transparency|witness(?:ed)?)",
+      "question": "Is the result committed to an append-only log or a third-party witness?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:transparency_log_or_witness",
+      "why": "A signature proves who; a log proves when, and stops the signer from quietly changing what was signed."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "provenance",
+      "id": "content_hash_published",
+      "pattern": "(?i)(sha-?256|sha256[:=]|blake3|checksum|integrity=\\\"|md5sum)",
+      "question": "Is a content hash of any published artifact shown on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:content_hash_published",
+      "why": "A hash is the cheapest thing that makes 'the file I downloaded' and 'the file you published' the same sentence."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "provenance",
+      "id": "persistent_identifier_published",
+      "pattern": "(?i)(doi\\.org/10\\.|zenodo\\.org|arxiv\\.org/abs/|\\b10\\.\\d{4,9}/[-._;()/:a-z0-9]+)",
+      "question": "Is a persistent identifier \u2014 DOI, Zenodo record or arXiv id \u2014 published on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:persistent_identifier_published",
+      "why": "URLs rot; a benchmark that expects to be cited in five years needs an identifier that does not depend on its own DNS."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "governance",
+      "id": "corrections_route_published",
+      "narrowed_after_run_1": "Run 1 matched github.com/quarto-dev/quarto-cli/issues \u2014 the DOCS TOOLCHAIN's tracker, injected into the footer by the static site generator \u2014 and scored a publisher PASS for a corrections route it does not offer. Bare `dispute` and `feedback` went with it.",
+      "pattern": "(?i)(correction|errata|report (?:an? )?(?:error|inaccuracy|mistake)|dispute (?:a|the|any|our)|amend(?:ment)? request|(?:flag|challenge) (?:an? )?(?:error|result|score|number))",
+      "question": "Is there a stated route by which a reader can report an error in a published figure?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:corrections_route_published",
+      "why": "An instrument with no error-reporting route treats its own output as final, which no instrument's output is."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "governance",
+      "id": "corrections_ledger_public",
+      "pattern": "(?i)(corrections? (?:log|ledger|history|register|page)|errata (?:log|list|page)|retraction|amended on|corrected on)",
+      "question": "Is there a public record of corrections that were actually made \u2014 not merely a route to request one?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:corrections_ledger_public",
+      "why": "A route where reports go in and nothing comes out in public is unfalsifiable; a ledger is the part that costs something."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "governance",
+      "id": "funding_or_ownership_disclosed",
+      "narrowed_after_run_1": "Run 2: a case-insensitive `Inc\\.` matched `https://www.inc.com/...` \u2014 Inc. Magazine in a press logo strip \u2014 and was recorded as a disclosed legal entity. Entity suffixes are now case-sensitive and bounded. Bare `funding` went too: it matched article headlines about other companies' funding.",
+      "pattern": "(?i)(funded by|our funders?|funding from|investors?|backed by|series [a-e] (?:round|funding)|non-?profit|501\\(c\\)|charity (?:number|no)|compan(?:y|ies house) (?:number|registration|no\\.)|registered (?:in|office)|(?-i:(?<![A-Za-z/.])(?:Ltd|LLC|Inc\\.|Pty Ltd|GmbH|B\\.V\\.)(?![A-Za-z/])))",
+      "question": "Is who pays for, or who owns, the publisher disclosed on the results surface?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:funding_or_ownership_disclosed",
+      "why": "Who funds the instrument is the first question asked of any ranking, and the surface that answers it elsewhere has not answered it."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "governance",
+      "id": "commercial_offering_disclosed",
+      "narrowed_after_run_1": "Run 2: bare `pricing` matched the RANKED MODELS' prices \u2014 the thing several of these publishers report about others \u2014 and recorded it as the publisher's own commercial offering. It now needs a link or a sales phrase. Run 1 matched a newsletter `Subscribe` button on three surfaces and recorded that as a disclosed commercial offering.",
+      "pattern": "(?i)(href=\\\"[^\\\"]*/pricing|contact sales|book a demo|request a (?:quote|demo|trial)|enterprise (?:plan|tier|edition)|commissioned (?:by|eval)|sponsored by|href=\\\"[^\\\"]*/plans\\b|per seat|paid (?:plan|tier)|free trial|upgrade to)",
+      "question": "Does the results surface disclose that the publisher also sells something to the kind of party it ranks?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:commercial_offering_disclosed",
+      "why": "Selling evaluations to the labs you rank is legitimate and common; being able to read that off the page is the part that is not automatic. This register records the disclosure, never a price and never an inference about influence."
+    },
+    {
+      "evaluable_from": "board_raw",
+      "evidence_type": "markup of the fetched results surface",
+      "group": "governance",
+      "id": "results_licence_stated_on_board",
+      "narrowed_after_run_1": "Run 2: bare `Apache 2.0` matched the licence of a RANKED MODEL inside the board's own JSON payload \u2014 `\"licenseName\":\"Apache 2.0\"` \u2014 and was recorded as the licence of the results. A licence token now only counts inside a licence-granting phrase. Run 1 matched a bare `cc0` inside a hashed asset filename and scored two publishers PASS for a licence neither states. Bare `SPDX` and bare `creative commons` went too.",
+      "pattern": "(?i)(SPDX-License-Identifier|creativecommons\\.org/licen|opendatacommons\\.org|(?:licen[cs]ed under|available under|released under|published under|(?:data|content|results?|leaderboard|site) licen[cs]e[: ])[^<>]{0,40}(?:CC[ -]?BY|CC0|Apache|MIT|ODC|Open Data))",
+      "question": "Is a licence for the results stated on the results surface itself?",
+      "recompute": "python3 scripts/benchmark_quality/register.py --explain <publisher>:results_licence_stated_on_board",
+      "why": "Numbers with no licence are quoted anyway; the publisher just loses the ability to say how."
+    }
+  ],
+  "publishers": {
+    "council-of-ai": {
+      "artifacts": [
+        {
+          "bytes_decoded": 100928,
+          "bytes_on_the_wire": 20428,
+          "content_type": "text/html; charset=utf-8",
+          "fetched": "2026-09-06",
+          "http_status": 200,
+          "key": "board",
+          "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+          "url_effective": "https://councilof.ai/board/",
+          "url_requested": "https://councilof.ai/board"
+        },
+        {
+          "bytes_decoded": 96195,
+          "bytes_on_the_wire": 19880,
+          "content_type": "application/json; charset=utf-8",
+          "fetched": "2026-09-06",
+          "http_status": 200,
+          "key": "machine",
+          "sha256": "1f1e6932c5f19a0318b922415060ec0f660f44e49d8ac960077ae77c144ed652",
+          "url_effective": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50",
+          "url_requested": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50"
+        },
+        {
+          "bytes_decoded": 5922,
+          "bytes_on_the_wire": 2376,
+          "content_type": "text/plain; charset=utf-8",
+          "fetched": "2026-09-06",
+          "http_status": 200,
+          "key": "robots",
+          "sha256": "7fe65597c932138eed828d20cff824d768f57660eea387ac73ae5c8b9359f528",
+          "url_effective": "https://councilof.ai/robots.txt",
+          "url_requested": "https://councilof.ai/robots.txt"
+        }
+      ],
+      "homepage": "https://councilof.ai/",
+      "legal_entity": "CSOAI Ltd (GB, Companies House 16939677)",
+      "n": {
+        "fail": 16,
+        "pass": 17,
+        "predicates": 35,
+        "resolved": 33,
+        "unmeasured": 2
+      },
+      "predicates": {
+        "as_of_date_on_board": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "operations",
+          "pattern": "(?i)(?:updated|last updated|as[- ]of|refreshed|published)\\D{0,25}(\\d{4}[-/]\\d{1,2}[-/]\\d{1,2}|\\d{1,2}[/-]\\d{1,2}[/-]\\d{4}|[A-Z][a-z]{2,8}\\.? \\d{1,2},? \\d{4}|\\d{1,2} [A-Z][a-z]{2,8} \\d{4})",
+          "result": "FAIL"
+        },
+        "as_of_within_30_days": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "operations",
+          "reason": "as_of_date_on_board did not yield a parseable date, so there is no date to compare. Absence of a date is recorded there; it is not restated as a failure here.",
+          "result": "UNMEASURED"
+        },
+        "changelog_linked": {
+          "captured": "/blog",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026gspc /methodology /honesty /api/corrections /llms.txt /api-docs /about /contact /partners /blog /faq /careers /disclaimers /privacy-policy /terms-of-service /dpa https://digital-strateg\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "/blog",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "method_transparency",
+          "pattern": "(?i)(changelog|release-?notes?|whats-?new|what-?s-?new|/updates|/news|/blog)",
+          "result": "PASS"
+        },
+        "code_licence_machine_readable": {
+          "evidence": {
+            "artifact": "machine",
+            "bytes": 96195,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "1f1e6932c5f19a0318b922415060ec0f660f44e49d8ac960077ae77c144ed652",
+            "source_url": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50",
+            "url_requested": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50"
+          },
+          "group": "reproducibility",
+          "reason": "The index queried for this publisher was the Hugging Face dataset index, which holds no source-repository records. A code licence is not answerable from the artifact fetched, and a fourth fetch would break the budget every publisher shares.",
+          "result": "UNMEASURED"
+        },
+        "code_repository_linked": {
+          "captured": "github.com",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026interop/sbom-councilof-ai.json /signed/chain.json /challenge /refutation-ledger / https://github.com/CSOAI-ORG https://linkedin.com/company/csoai /cdn-cgi/l/email-protection#53303c3d27323027\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "github.com",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "reproducibility",
+          "pattern": "(?i)(github\\.com|gitlab\\.com|codeberg\\.org)",
+          "result": "PASS"
+        },
+        "commercial_offering_disclosed": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "governance",
+          "pattern": "(?i)(href=\\\"[^\\\"]*/pricing|contact sales|book a demo|request a (?:quote|demo|trial)|enterprise (?:plan|tier|edition)|commissioned (?:by|eval)|sponsored by|href=\\\"[^\\\"]*/plans\\b|per seat|paid (?:plan|tier)|free trial|upgrade to)",
+          "result": "FAIL"
+        },
+        "content_hash_published": {
+          "captured": "SHA-256",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026t issues verified measurement credentials \u2014 3KB measurement cards signed with Ed25519 and SHA-256 hash-chained against did:web:csoai.org (OpenTimestamps anchoring is on the roadmap, not y\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "SHA-256",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "provenance",
+          "pattern": "(?i)(sha-?256|sha256[:=]|blake3|checksum|integrity=\\\"|md5sum)",
+          "result": "PASS"
+        },
+        "corrections_ledger_public": {
+          "captured": "corrections ledger",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026d.xml\"> <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Council of AI \u2014 corrections ledger\" href=\"https://councilof.ai/feeds/corrections.xml\"> <link rel=\"alternate\" type=\"appli\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "corrections ledger",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "governance",
+          "pattern": "(?i)(corrections? (?:log|ledger|history|register|page)|errata (?:log|list|page)|retraction|amended on|corrected on)",
+          "result": "PASS"
+        },
+        "corrections_route_published": {
+          "captured": "correction",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026d.xml\"> <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Council of AI \u2014 corrections ledger\" href=\"https://councilof.ai/feeds/corrections.xml\"> <link rel=\"alternate\" typ\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "correction",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "governance",
+          "pattern": "(?i)(correction|errata|report (?:an? )?(?:error|inaccuracy|mistake)|dispute (?:a|the|any|our)|amend(?:ment)? request|(?:flag|challenge) (?:an? )?(?:error|result|score|number))",
+          "result": "PASS"
+        },
+        "dataset_licence_machine_readable": {
+          "evidence": {
+            "artifact": "machine",
+            "bytes": 96195,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "csoai/aiact-frozen-split-harness \u2192 cc-by-4.0",
+            "sha256": "1f1e6932c5f19a0318b922415060ec0f660f44e49d8ac960077ae77c144ed652",
+            "source_url": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50",
+            "url_requested": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50"
+          },
+          "group": "data",
+          "result": "PASS"
+        },
+        "environment_pinning_stated": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "reproducibility",
+          "pattern": "(?i)(docker|container(?:ised|ized)?|lock ?file|requirements\\.txt|pyproject|pinned version|fixed seed|random seed|seed\\s*=|temperature\\s*=?\\s*0|deterministic decoding)",
+          "result": "FAIL"
+        },
+        "funding_or_ownership_disclosed": {
+          "captured": "Ltd",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026justify-between items-center gap-4\"><p class=\"text-muted-foreground text-xs\">\u00a9 2026 CSOAI Ltd \u00b7 UK Companies House 16939677 \u00b7 London \u00b7 <a href=\"/cdn-cgi/l/email-protection\" class=\"__c\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "Ltd",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "governance",
+          "pattern": "(?i)(funded by|our funders?|funding from|investors?|backed by|series [a-e] (?:round|funding)|non-?profit|501\\(c\\)|charity (?:number|no)|compan(?:y|ies house) (?:number|registration|no\\.)|registered (?:in|office)|(?-i:(?<![A-Za-z/.])(?:Ltd|LLC|Inc\\.|Pty Ltd|GmbH|B\\.V\\.)(?![A-Za-z/])))",
+          "result": "PASS"
+        },
+        "held_out_set_declared": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "data",
+          "pattern": "(?i)(private (?:test|held[-\u2013 ]?out|eval|data ?set|set)|held[-\u2013 ]?out (?:set|split|items)|not (?:publicly )?released|unreleased (?:test|items|problems)|kept private)",
+          "result": "FAIL"
+        },
+        "item_count_published_on_board": {
+          "captured": "rows",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026its date was read from, so you can open the file and check. Choose a set The public board 22 rows \u00b7 22 with a measurement The fresh-benchmark engine 4 rows \u00b7 4 with a measurement The head\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "22 rows",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "data",
+          "pattern": "(?i)\\b(?:\\d{1,3}(?:,\\d{3})+|\\d+(?:\\.\\d+)?\\s?[KM]\\b|\\d{2,})\\s*\\+?\\s*(items?|questions?|prompts?|rows?|instances?|tasks?|conversations?|votes?|battles?|problems?|examples?|samples?)\\b",
+          "result": "PASS"
+        },
+        "item_data_channel_linked": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "data",
+          "pattern": "(?i)(huggingface\\.co/datasets|\\.csv|\\.jsonl|\\.parquet|\\.tsv|/datasets?/|github\\.com/[^\\\"'\\s]+/(?:releases|tree|blob)|/download)",
+          "result": "FAIL"
+        },
+        "limitations_stated": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "method_transparency",
+          "pattern": "(?i)(limitation|caveat|does not measure|is not a (?:measure|guarantee|certification)|known issues|we do not claim|not intended to)",
+          "result": "FAIL"
+        },
+        "machine_readable_channel_linked": {
+          "captured": "/feed.",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "https://councilof.ai/board https://councilof.ai/feed.xml https://councilof.ai/feeds/corrections.xml https://councilof.ai/feeds/corrections.atom\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "/feed.",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "operations",
+          "pattern": "(?i)(/api[/.]|api\\.[a-z0-9-]+\\.|\\.json|\\.csv|\\.parquet|openapi|/docs/api|/feeds?(?:/|\\.|\\b)|(?:feed|rss|atom)[^\\\"']*\\.xml|\\.rss)",
+          "result": "PASS"
+        },
+        "method_page_linked": {
+          "captured": "method",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026hboard?tab=board /tools /assess /contact?arm=ledger /contact?arm=data /library /api/gspc /methodology /honesty /api/corrections /llms.txt /api-docs /about /contact /partners /blog /faq /\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "method",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "method_transparency",
+          "pattern": "(?i)(method|methodolog|how-?it-?works|how_it_works|/faq|/docs/(?:eval|scor|grad))",
+          "result": "PASS"
+        },
+        "minimum_n_rule_published": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "statistics",
+          "pattern": "(?i)(n\\s*(?:\u2265|>=|&ge;|at least )\\s*\\d+|minimum (?:of )?\\d+ (?:votes|items|samples|responses|battles)|at least \\d+ (?:votes|items|samples|battles)|(?:do not|don'?t|will not|won'?t) (?:report|publish|quote|rank)[^.]{0,70}(?:below|fewer than|until))",
+          "result": "FAIL"
+        },
+        "open_dataset_in_public_index": {
+          "evidence": {
+            "artifact": "machine",
+            "bytes": 96195,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "49 record(s): csoai/aiact-frozen-split-harness, csoai/coai-bench, csoai/compbench, csoai/arena-matrices",
+            "sha256": "1f1e6932c5f19a0318b922415060ec0f660f44e49d8ac960077ae77c144ed652",
+            "source_url": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50",
+            "url_requested": "https://huggingface.co/api/datasets?search=csoai&full=true&limit=50"
+          },
+          "group": "data",
+          "result": "PASS"
+        },
+        "persistent_identifier_published": {
+          "captured": "doi.org/10.",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026\" src=\"/images/badges/verify/kaggle.svg\"><span>Kaggle</span></a></li><li><a href=\"https://doi.org/10.5281/zenodo.21991104\" target=\"_blank\" rel=\"noopener noreferrer\" title=\"Canonical concept D\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "doi.org/10.",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "provenance",
+          "pattern": "(?i)(doi\\.org/10\\.|zenodo\\.org|arxiv\\.org/abs/|\\b10\\.\\d{4,9}/[-._;()/:a-z0-9]+)",
+          "result": "PASS"
+        },
+        "repeats_or_variance_disclosed": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "statistics",
+          "pattern": "(?i)(repeat(?:ed|s)? (?:runs?|trials?)|\\b\\d+ (?:runs?|repeats?|trials?)\\b|run[-\u2013 ]to[-\u2013 ]run|variance|std\\.? ?dev|standard deviation|re-?run(?:s|ning)? (?:each|the) )",
+          "result": "FAIL"
+        },
+        "results_carry_a_signature": {
+          "captured": "signed attestation",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026, we re-attest\"> <meta property=\"og:description\" content=\"Independent measurement and signed attestation for AI governance. We measure and sign the evidence; regulators and accredited bodies dec\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "signed attestation",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "provenance",
+          "pattern": "(?i)(ed25519|\\\"sig(?:nature)?\\\"\\s*:|\\.sig\\b|detached signature|\\bJWS\\b|pgp signature|minisign|signed (?:card|receipt|board|result|attestation))",
+          "result": "PASS"
+        },
+        "results_licence_stated_on_board": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "governance",
+          "pattern": "(?i)(SPDX-License-Identifier|creativecommons\\.org/licen|opendatacommons\\.org|(?:licen[cs]ed under|available under|released under|published under|(?:data|content|results?|leaderboard|site) licen[cs]e[: ])[^<>]{0,40}(?:CC[ -]?BY|CC0|Apache|MIT|ODC|Open Data))",
+          "result": "FAIL"
+        },
+        "robots_permits_results_surface": {
+          "evidence": {
+            "artifact": "robots",
+            "bytes": 5922,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "Allow: /",
+            "note": "path /board/; longest match wins, ties to Allow (RFC 9309 \u00a72.2.2)",
+            "sha256": "7fe65597c932138eed828d20cff824d768f57660eea387ac73ae5c8b9359f528",
+            "source_url": "https://councilof.ai/robots.txt",
+            "url_requested": "https://councilof.ai/robots.txt"
+          },
+          "group": "operations",
+          "result": "PASS"
+        },
+        "run_command_published": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "reproducibility",
+          "pattern": "(?i)(pip install|uv (?:pip )?(?:install|add)|npm i(?:nstall)? |pnpm add|docker run|docker pull|git clone|conda install|inspect eval|helm-run|\\$ [a-z]+ )",
+          "result": "FAIL"
+        },
+        "sample_size_shown_beside_scores": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "statistics",
+          "pattern": "(?i)(\\bn\\s*=\\s*\\d+|\\b\\d[\\d,]*\\s*(?:votes|battles|samples|runs|trials|repeats)\\b)",
+          "result": "FAIL"
+        },
+        "scorer_named_on_board": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "method_transparency",
+          "pattern": "(?i)\\b(exact match|unit tests?|pass@\\d|bradley[-\u2013 ]terry|\\belo\\b|rubric|human (?:vote|rater|annotator|preference|judge)|llm[-\u2013 ]as[-\u2013 ]a[-\u2013 ]judge|model[-\u2013 ]graded|auto(?:matically)?[- ]graded|deterministic(?:ally)? grad)",
+          "result": "FAIL"
+        },
+        "separation_rule_published": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "statistics",
+          "pattern": "(?i)(statistically (?:significant|indistinguishable|tied)|significance (?:test|threshold|level)|p[- ]values?|p\\s*<\\s*0?\\.0\\d|overlapping (?:confidence )?intervals?|rank(?:ing)? range|not significantly different|shared rank|95% (?:CI|confidence))",
+          "result": "FAIL"
+        },
+        "status_or_uptime_page_linked": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "operations",
+          "pattern": "(?i)(https?://status\\.[a-z0-9.-]+|statuspage\\.io|uptime (?:page|status|history|guarantee)|incident (?:history|report|log))",
+          "result": "FAIL"
+        },
+        "stranger_recompute_path_complete": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "item_data_channel_linked=FAIL, code_repository_linked=PASS, run_command_published=FAIL",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "reproducibility",
+          "inputs": {
+            "code_repository_linked": "PASS",
+            "item_data_channel_linked": "FAIL",
+            "run_command_published": "FAIL"
+          },
+          "result": "FAIL"
+        },
+        "structured_data_on_board": {
+          "captured": null,
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026es\"> <meta name=\"apple-mobile-web-app-status-bar-style\" content=\"default\"> <script type=\"application/ld+json\"> { \"@context\": \"https://schema.org\", \"@type\": \"Organization\", \"@id\"\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "<script type=\"application/ld+json\"",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "method_transparency",
+          "pattern": "(?i)<script[^>]+type=[\"\\']application/ld\\+json[\"\\']",
+          "result": "PASS"
+        },
+        "transparency_log_or_witness": {
+          "captured": "OpenTimestamps",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026measurement cards signed with Ed25519 and SHA-256 hash-chained against did:web:csoai.org (OpenTimestamps anchoring is on the roadmap, not yet wired) \u2014 never certification, accreditation or confo\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "OpenTimestamps",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "provenance",
+          "pattern": "(?i)(rekor|sigstore|opentimestamps|\\bOTS\\b|merkle|inclusion proof|transparency log|certificate transparency|witness(?:ed)?)",
+          "result": "PASS"
+        },
+        "uncertainty_shown_beside_scores": {
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "statistics",
+          "pattern": "(\u00b1|\\+/-|(?i:confidence interval|credible interval|standard error|error bars?|\\bCI\\b|\\bSEM\\b))",
+          "result": "FAIL"
+        },
+        "verification_key_published": {
+          "captured": "public key",
+          "evidence": {
+            "artifact": "board",
+            "bytes": 100928,
+            "bytes_note": "decoded bytes, the ones the sha256 covers and the ones every predicate reads",
+            "context": "\u2026gulators and accredited bodies decide. Every signed artefact verifies against a published public key.\"> <meta property=\"og:image\" content=\"https://councilof.ai/og-image.png\"> <meta p\u2026",
+            "fetched": "2026-09-06",
+            "http_status": 200,
+            "matched": "public key",
+            "sha256": "fb6086670e6dab9d9b9f86a31ff50a29434a8b9f26eb09cf9729e5208538417c",
+            "source_url": "https://councilof.ai/board/",
+            "url_requested": "https://councilof.ai/board"
+          },
+          "group": "provenance",
+          "pattern": "(?i)(did\\.json|/\\.well-known/|did:web:|public[- ]key|pgp key|gpg key|\\.asc\\b|jwks)",
+          "result": "PASS"
+        }
+      },
+      "publisher": "Council of AI",
+      "results_surface_is_client_rendered_shell": false,
+      "self_assessed": true,
+      "status": "STAGED",
+      "visible_text_chars_on_results_surface": 15343
+    }
+  },
+  "record_type": "measured-current-state",
+  "register": "Benchmark-quality register \u2014 deterministic predicates applied to the process integrity of eight AI benchmark publishers, ourselves included",
+  "result_semantics": {
+    "FAIL": "The artifact was read and the pattern did not match. Scoped to that artifact on that date: a statement about what the publisher put at that URL, never about the publisher.",
+    "PASS": "The pattern matched the named artifact. The matched span and the artifact's SHA-256 are on the result.",
+    "UNMEASURED": "The bytes that would answer the question are not in the artifact \u2014 a client-rendered shell, a redirect to a host outside the budget, an index with no attributable record, or a question downstream of an unresolved one. A result, not a zero and not a failure."
+  },
+  "right_of_reply": "https://councilof.ai/contact",
+  "run_date": "2026-09-06",
+  "schema": "https://councilof.ai/schema/benchmark-quality.v1.json",
+  "self_assessment": {
+    "declared": true,
+    "row": "council-of-ai",
+    "rule": "Our row is graded by the same 35 predicates from the same 3 artifacts, and is flagged self_assessed on the register, on the card and in every export. A self-assessed row is not independent evidence about us and must never be read as such. It is here because a register of other people's disclosure that exempted its author would be worth nothing.",
+    "supersedes": "The v0.1 register at functions/api/benchmark-quality.ts excludes Council of AI by an impartiality firewall. That firewall is correct for v0.1, which grades benchmarks we do not publish. v1 grades PUBLISHERS, we are one, and the honest handling of a conflict of interest at this scale is disclosure plus identical treatment rather than silence. The two surfaces are separate and both remain live. This is an owner-visible doctrine change, flagged in the PR, not a quiet edit."
+  },
+  "solicited": false,
+  "status": "STAGED",
+  "subject_participation": "none",
+  "surface": "benchmark-quality.v1",
+  "totals": {
+    "cells": 35,
+    "fail": 16,
+    "note": "Counts, not a score. Do not rank publishers by them.",
+    "pass": 17,
+    "predicates_per_publisher": 35,
+    "publishers": 1,
+    "unmeasured": 2
+  }
+}

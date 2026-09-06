@@ -1,0 +1,51 @@
+{
+  "as_of": "2026-09-06",
+  "not_a_certificate": true,
+  "payload": {
+    "artifact_sha256": {
+      "board": "7b5ae08a8aad37b4ba0fe04ccb68d68a62d23695ec874aff3e81833acca8cca0",
+      "machine": "b5f9c4bec90d6c61ed36966e302ec7163dfa0aff1f2e29ff7de07666cf175fd0",
+      "robots": "1c87b0064d792ccf85f8f9e847465ec047bb2724ffde0b78078c909d8e64c078"
+    },
+    "by_group": {
+      "data": "PPUUU",
+      "governance": "UUUUU",
+      "method_transparency": "UUUUU",
+      "operations": "PUUUU",
+      "provenance": "UUUUU",
+      "reproducibility": "PUUUU",
+      "statistics": "UUUUU"
+    },
+    "flags": {
+      "keyless": true,
+      "no_model_judgment": true,
+      "read_only": true,
+      "self_assessed": false,
+      "writes_board": false
+    },
+    "full_row": "https://councilof.ai/interop/benchmark-quality/2026-09-06/helm-crfm.json",
+    "kind": "csoai.benchmark-quality-register/1.0",
+    "legal_entity": "Stanford Center for Research on Foundation Models (CRFM)",
+    "method": "35 deterministic predicates over 3 cached artifacts. Scorer: re.search plus an RFC 9309 path evaluation. No language model judged anything.",
+    "n": {
+      "fail": 0,
+      "pass": 4,
+      "predicates": 35,
+      "resolved": 4,
+      "unmeasured": 31
+    },
+    "not_a_ranking": "Counts, not a score. This card cannot be compared with another to order publishers.",
+    "publisher": "HELM",
+    "recompute": "python3 scripts/benchmark_quality/register.py --check",
+    "results_surface_client_rendered": true
+  },
+  "schema": "https://councilof.ai/schema/card-v0.json",
+  "source_urls": [
+    "https://crfm.stanford.edu/helm/",
+    "https://api.github.com/search/repositories?q=helm+user:stanford-crfm&sort=stars",
+    "https://crfm.stanford.edu/robots.txt"
+  ],
+  "status": "STAGED",
+  "subject": "HELM \u2014 disclosure on three public artifacts, 2026-09-06",
+  "surface": "benchmark-quality.v1"
+}

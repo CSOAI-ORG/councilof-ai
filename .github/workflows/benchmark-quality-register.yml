@@ -1,0 +1,85 @@
+# benchmark-quality-register — the register must be what its fixtures produce.
+#
+# The producer reads only committed bytes and makes no network call, so `--check` is a real
+# drift gate rather than a second opinion: the same 24 cached artifacts must yield the same
+# 280 cells, or the build fails and someone has hand-edited a published measurement.
+#
+# The flip test is the other half. A register whose cells cannot move is a table of constants
+# dressed as a measurement, so test_register.py mutates every fixture and asserts each of the
+# 35 predicates changes verdict. It runs on every PR, not on a path filter, because a change
+# to the producer that a path filter misses is exactly the change that must not land quietly.
+name: benchmark-quality-register
+on:
+  pull_request:
+  push:
+    branches: [master]
+    paths:
+      - "scripts/benchmark_quality/**"
+      - "scripts/fixtures/benchmark-quality/**"
+      - "docs/product/benchmark-quality/**"
+      - "public/interop/benchmark-quality/**"
+      - "functions/api/_benchmark-quality-v1.ts"
+      - "functions/api/benchmark-quality.ts"
+      - ".github/workflows/benchmark-quality-register.yml"
+  workflow_dispatch:
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The tests first, so a red gate is diagnosed by the test that explains it rather than
+      # by a drift diff. Includes: the flip test, the shell gate (a client-rendered surface
+      # must produce UNMEASURED and never FAIL), the doctrine checks, and the 3 KB card cap.
+      - name: register tests (flip test, shell gate, doctrine, card cap)
+        run: python3 scripts/benchmark_quality/test_register.py
+
+      # DRIFT. Recomputes every output from the cached artifacts and exits 1 on a byte
+      # difference — including functions/api/_benchmark-quality-v1.ts, which is what the
+      # served API reads, so the endpoint cannot drift from the register behind it.
+      - name: register --check (no network; committed bytes only)
+        run: python3 scripts/benchmark_quality/register.py --check
+
+      # PROVE THE GATE CAN FAIL. A guard nobody has watched fail is not a guard. Corrupt one
+      # published cell and require --check to reject it; then restore.
+      - name: prove --check rejects a hand-edited register
+        run: |
+          set -e
+          F=docs/product/benchmark-quality/2026-09-06/register.json
+          cp "$F" /tmp/register.orig.json
+          python3 - "$F" <<'PY'
+          import json, sys
+          p = sys.argv[1]
+          d = json.load(open(p))
+          row = d["publishers"]["council-of-ai"]["predicates"]["uncertainty_shown_beside_scores"]
+          row["result"] = "PASS"          # the exact edit this gate exists to catch:
+          row["evidence"]["matched"] = "±"  # our own worst cell, quietly turned green
+          json.dump(d, open(p, "w"), indent=2, sort_keys=True)
+          open(p, "a").write("\n")
+          PY
+          if python3 scripts/benchmark_quality/register.py --check; then
+            cp /tmp/register.orig.json "$F"
+            echo "::error::--check accepted a hand-edited register. The drift gate is not enforcing."
+            exit 1
+          fi
+          cp /tmp/register.orig.json "$F"
+          python3 scripts/benchmark_quality/register.py --check
+          echo "the drift gate rejected the edit and the register restored clean"
+
+      # The fetch budget is the thing that makes our own row worth reading. If a future change
+      # gives any publisher a fourth artifact, everyone gets a fourth or nobody does.
+      - name: fetch budget is identical for every publisher, us included
+        run: |
+          python3 - <<'PY'
+          import sys; sys.path.insert(0, "scripts/benchmark_quality")
+          import fetch
+          sizes = {k: len(v["fetch"]) for k, v in fetch.PLAN.items()}
+          assert len(set(sizes.values())) == 1, f"asymmetric fetch budget: {sizes}"
+          assert max(sizes.values()) <= fetch.FETCH_BUDGET, sizes
+          print(f"{len(sizes)} publishers, {max(sizes.values())} artifacts each, budget {fetch.FETCH_BUDGET}")
+          PY
