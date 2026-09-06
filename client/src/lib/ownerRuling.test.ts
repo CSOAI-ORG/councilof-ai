@@ -118,3 +118,43 @@ describe("the exemptions stay honest", () => {
     });
   }
 });
+
+/**
+ * Page titles were missed by the checks above and carried the clearest violations of all:
+ *   "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI"
+ *   "/products": "Council OS — four SKUs, one workspace"      (a typed count)
+ * A <title> is what a browser tab and a search result show, so it is the most-read copy we own,
+ * and the body-text checks skipped it because "MCP tiers" and "plans" are not the specific
+ * phrases those regexes look for. Titles are few and high-visibility, so they get a stricter
+ * rule than body text: no bare tier/plan/subscription words, no currency, no typed count.
+ */
+describe("route titles obey the ruling and type no count", () => {
+  const app = readFileSync(new URL("../App.tsx", import.meta.url), "utf8");
+  const block = app.match(/const ROUTE_TITLES[^=]*=\s*\{([\s\S]*?)\n\};/)?.[1] ?? "";
+  // Only the TITLE VALUE is copy. The route key is a URL — /plans may keep its path while its
+  // title says the rail is free, and renaming a live route to satisfy a copy rule breaks links.
+  const titles = [...block.matchAll(/"[^"]*"\s*:\s*"([^"]*)"/g)].map((m) => m[1]);
+
+  it("finds the title map, so this cannot pass vacuously", () => {
+    expect(block.length).toBeGreaterThan(500);
+    expect(block).toMatch(/"\/products":/);
+    expect(titles.length, "no titles parsed — the guard would be empty").toBeGreaterThan(50);
+  });
+
+  it("no title sells a tier, a plan or a subscription", () => {
+    const bad = titles.filter((t) => /\b(tier|tiers|plans?|subscription|per-seat)\b/i.test(t));
+    expect(bad, "a page title names a tier or plan").toEqual([]);
+  });
+
+  it("no title prints a price or a payment processor", () => {
+    const bad = titles.filter((t) =>
+      /[£$€]\s?\d|\b\d+(?:\.\d{2})?\s?(?:USD|USDC|GBP|EUR)\b|\b(paddle|stripe|paypal)\b/i.test(t));
+    expect(bad).toEqual([]);
+  });
+
+  it("no title types a count", () => {
+    const bad = titles.filter((t) =>
+      /\b(one|two|three|four|five|six|seven|eight|nine|ten|\d+)\s+(SKUs?|tools?|axes|tiers?|models?|servers?)\b/i.test(t));
+    expect(bad, "the page's own rule is that no page types a count").toEqual([]);
+  });
+});

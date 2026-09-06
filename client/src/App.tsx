@@ -317,8 +317,8 @@ function ScrollToTop() {
 }
 
 const ROUTE_TITLES: Record<string, string> = {
-  "/pricing": "Pricing — AI governance plans & MCP tiers | CSOAI",
-  "/products": "Council OS — four SKUs, one workspace | Council of AI",
+  "/pricing": "Pricing — the rail is free, metered routes quote at the 402 | Council of AI",
+  "/products": "Council OS — the SKUs, one workspace | Council of AI",
   "/badge": "White-label badge — Council of AI",
   "/get-listed": "You are listed. You are not graded. — Council of AI",
   "/licensing-agreement": "Measurement licence — evidence and data | Council of AI",
@@ -334,7 +334,7 @@ const ROUTE_TITLES: Record<string, string> = {
   "/webhooks": "Regulatory webhooks — live framework updates | CSOAI",
   "/models": "AI model registry & scoreboard | CSOAI",
   "/": "Council OS | Council of AI",
-  "/plans": "Plans | CSOAI",
+  "/plans": "The rail is free — one signed card | Council of AI",
   "/gspc-arena": "GSPC Arena | CSOAI",
   "/arena-scoreboard": "Signed Per-Axis Leaderboard | CSOAI",
   "/leaderboard": "The AI Governance Leaderboard — sorted by the axis you care about | Council of AI",
