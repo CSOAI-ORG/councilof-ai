@@ -198,8 +198,17 @@
       "reason": "No leaves are committed for round 2026-09-06. The same 316 purchases are already published as the 104 legacy cards under public/interop/x402-census-cards/, and staging a second set of 314 leaves for the same event would fork one corpus into two — the exact defect council-os/CARD-CORPORA.md exists to prevent. With nothing on disk the check has nothing to compare.",
       "becomes_gated_when": "round 2026-09-13's leaves are committed — the first round whose leaves are the only cards for that round.",
       "meanwhile": "the selftest runs on every PR and proves the property that actually matters: a leaf written for round 1 still reads observations=1 after round 2 exists. If it did not, every signature over an earlier leaf would break on the next round.",
-      "observed_2026_09_06": "generated to a temp dir: 314 leaves (PAID rows only — the 2 NO_CHALLENGE rows correctly produce none), largest 2,714 B against the 3,072 B cap, --check OK"
-    }
+      "observed_2026_09_06": "generated to a temp dir: 314 leaves (PAID rows only — the 2 NO_CHALLENGE rows correctly produce none), largest 2,714 B against the 3,072 B cap, --check OK",
+    "id": "crosswalk-intoto",
+      "command": "python3 scripts/crosswalk/emit_intoto.py",
+      "check": "python3 scripts/crosswalk/emit_intoto.py --check",
+      "outputs": [
+        "public/interop/crosswalk/intoto/index.json"
+      ],
+      "mode": "delegate-to-check",
+      "gated": true,
+      "verified_2026_09_06": "check passes: 15 files, 14 axes, 878 MEASURED of 973 signed mill cards",
+      "note": "in-toto Statement v1 attestations DERIVED from the Ed25519-signed mill cards. No clock, no network, no signing key — the mill-card bodies carry no timestamp, so the output cannot drift with the wall clock. It HALTS rather than emits if any card's id stops equalling sha256(canonical(body)). Unsigned Statements by design: DSSE signing needs did:web:csoai.org#board-attestation-1, which this producer does not hold, and a fabricated signature would be worse than none. Tests: python3 scripts/crosswalk/test_emit_intoto.py."    }
   ],
   "not_yet_classified": {
     "count_approx": 28,
