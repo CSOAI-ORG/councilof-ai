@@ -67,10 +67,15 @@ function walk(dir: string): string[] {
   for (const e of readdirSync(dir)) {
     const p = join(dir, e);
     if (statSync(p).isDirectory()) out.push(...walk(p));
-    else if (p.endsWith(".tsx")) out.push(p);
+    else if (p.endsWith(".tsx") || COPY_DATA.has(p)) out.push(p);
   }
   return out;
 }
+// Copy that lives in a .ts data file and is rendered verbatim on a page. The .tsx-only walk
+// missed data/home-faq.ts, so "Payment processing is coming via Paddle" stayed on the home
+// page after #1502 removed every other mention (06 Sep live walk). Add a file here when it
+// carries reader-facing sentences, not when it carries ids, URLs or third-party product names.
+const COPY_DATA = new Set([join(SRC, "data/home-faq.ts")]);
 const rel = (f: string) => f.split("/client/src/")[1] ?? f;
 // what a reader sees: not block comments, line comments or imports
 const rendered = (s: string) =>
