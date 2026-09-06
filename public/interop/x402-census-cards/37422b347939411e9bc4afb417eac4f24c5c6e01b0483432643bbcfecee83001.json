@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.creativeforesight.io",
+ "as_of": "2026-09-06T06:45:37Z",
+ "source_urls": [
+  "https://api.creativeforesight.io/v1/signals",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.creativeforesight.io",
+  "resource": "https://api.creativeforesight.io/v1/signals",
+  "status": "DELIVERED",
+  "asked_units": 50000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x9eDB521A5aD936Ef5D7054Ed94252D4d7978cf90",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x247e08468062066c7cf3198bd40e902aebcd755133b6a831bbc63a8aeba4f9e0",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.68,
+   "paid": 1.59
+  },
+  "delivered_bytes": 92290,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:37Z",
+  "n": 1
+ },
+ "sha256": "37422b347939411e9bc4afb417eac4f24c5c6e01b0483432643bbcfecee83001",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

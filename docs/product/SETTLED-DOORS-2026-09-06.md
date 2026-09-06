@@ -8,11 +8,11 @@ the rail settles real USDC on Base mainnet end to end; it does not make a buyer.
 | # | door | amount | payer | payTo | network | tx | block | observed |
 |---|---|---|---|---|---|---|---|---|
 | 1 | `GET /api/request-attestation?subject=csoai&axis=honesty` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [0xac49241b…1c91](https://basescan.org/tx/0xac49241b1e65ab5942e5a84ff48daf52b8de2dd99d3ac23103d18578821b1c91) | 50942514 | 2026-09-06T05:59:35Z |
-| 2 | `GET /api/request-attestation?subject=clan-csoai-plain:latest` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0xeec6b053…b8dd`](https://basescan.org/tx/0xeec6b0532d058194d810b52574928fdd5e1e6e3a4fd48ab0304ba2807589b8dd) | — | 2026-09-06T08:01:20Z |
-| 3 | `GET /api/eunomia-data?feed=1` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x444155d9…c46c`](https://basescan.org/tx/0x444155d966fcf140cb93531ec0e804e2da2c17224631ae531d19183e7fa9c46c) | — | 2026-09-06T08:04:16Z |
-| 4 | `GET /api/proof?bundle=1` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x0207386d…64f7`](https://basescan.org/tx/0x0207386dd0549c6f952e2e271cd65a8a8d6c417c9bffa1fb6ede7ae6279164f7) | — | 2026-09-06T08:04:18Z |
-| 5 | `GET /api/rwa/evidence?asset=RLUSD` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x8b647288…7c9a`](https://basescan.org/tx/0x8b6472885cad7b5f5e88b150bad10d7122da28a06470077cf6988cb509b47c9a) | — | 2026-09-06T08:04:20Z |
-| 6 | `GET /api/receipts/batch?from=2026-09-01&to=2026-09-06` | 0.10 USDC (100000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x835109e1…197a`](https://basescan.org/tx/0x835109e14f2d1ca2573e87a84b14b63e779fb2c6a11af0d3e62402c0de7e197a) | — | 2026-09-06T08:05:34Z |
+| 2 | `GET /api/request-attestation?subject=clan-csoai-plain:latest` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0xeec6b053…b8dd`](https://basescan.org/tx/0xeec6b0532d058194d810b52574928fdd5e1e6e3a4fd48ab0304ba2807589b8dd) | 50946169 | 2026-09-06T08:01:20Z |
+| 3 | `GET /api/eunomia-data?feed=1` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x444155d9…c46c`](https://basescan.org/tx/0x444155d966fcf140cb93531ec0e804e2da2c17224631ae531d19183e7fa9c46c) | 50946256 | 2026-09-06T08:04:16Z |
+| 4 | `GET /api/proof?bundle=1` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x0207386d…64f7`](https://basescan.org/tx/0x0207386dd0549c6f952e2e271cd65a8a8d6c417c9bffa1fb6ede7ae6279164f7) | 50946257 | 2026-09-06T08:04:18Z |
+| 5 | `GET /api/rwa/evidence?asset=RLUSD` | 0.02 USDC (20000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x8b647288…7c9a`](https://basescan.org/tx/0x8b6472885cad7b5f5e88b150bad10d7122da28a06470077cf6988cb509b47c9a) | 50946258 | 2026-09-06T08:04:20Z |
+| 6 | `GET /api/receipts/batch?from=2026-09-01&to=2026-09-06` | 0.10 USDC (100000 units) | 0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7 (self, throwaway) | 0x212686404A7D1E1fD88F35eD6200c3aF7A78ae31 | eip155:8453 | [`0x835109e1…197a`](https://basescan.org/tx/0x835109e14f2d1ca2573e87a84b14b63e779fb2c6a11af0d3e62402c0de7e197a) | 50946295 | 2026-09-06T08:05:34Z |
 | 7 | `GET /api/art50/marking-evidence?url=<https://…>` | **25 USDC** (25000000 units) | — | — | eip155:8453 | **NOT SETTLED — priced above the payer balance** | — | 2026-09-06T08:05Z |
 | 8 | `GET /api/feeds/provider-diff?history=1` | **25 USDC** (25000000 units) | — | — | eip155:8453 | **NOT SETTLED — priced above the payer balance** | — | 2026-09-06T08:05Z |
 | 9 | `GET /api/evidence-bundle?obligation=cra&bundle=1` | **250 USDC** (250000000 units) | — | — | eip155:8453 | **NOT SETTLED — priced above the payer balance** | — | 2026-09-06T08:05Z |
@@ -77,3 +77,31 @@ curl -s -X POST https://mainnet.base.org -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionReceipt","params":["0xac49241b1e65ab5942e5a84ff48daf52b8de2dd99d3ac23103d18578821b1c91"]}'
 ```
 Expect `status 0x1`, and a `Transfer` log on 0x8335…2913 from 0x4db7…02b7 to 0x2126…ae31 with data 0x4e20 (20000).
+
+## Receipts, checked on chain
+
+All five Move A settlements are `status 0x1` on Base, in consecutive blocks:
+
+| tx | block | status |
+|---|---|---|
+| `0xeec6b053…` | 50946169 | `0x1` |
+| `0x444155d9…` | 50946256 | `0x1` |
+| `0x0207386d…` | 50946257 | `0x1` |
+| `0x8b647288…` | 50946258 | `0x1` |
+| `0x835109e1…` | 50946295 | `0x1` |
+
+```
+curl -s -X POST https://mainnet.base.org -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionReceipt","params":["<tx>"]}'
+```
+
+## Why rows 7–9 are prices, not failures
+
+Move A was specified as eight doors. Three are priced at 250, 25 and 25 USD **by design** —
+`functions/api/_skus.ts` bands them deliberately, and evidence-bundle's note says it "substitutes for
+an auditor line-item". `usdToAtomic(250)` is 250000000, exactly what the live 402 asks, so nothing is
+miscalculated. Settling all eight costs about 300 USDC against a payer holding ~4.4.
+
+Each band carries an env override, so a low value would make a self-settlement affordable — and would
+change the price the door advertises to everyone. A cheap self-test is not worth publishing a price we
+do not mean. Owner ask filed; five is the honest ceiling today.

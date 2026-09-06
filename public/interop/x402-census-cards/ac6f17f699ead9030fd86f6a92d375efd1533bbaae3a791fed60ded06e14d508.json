@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.stelardigital.com",
+ "as_of": "2026-09-06T06:41:22Z",
+ "source_urls": [
+  "https://api.stelardigital.com/telemetry",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.stelardigital.com",
+  "resource": "https://api.stelardigital.com/telemetry",
+  "status": "DELIVERED",
+  "asked_units": 5000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x32d711C66dD1AD0c42D0cFe48e58ee5f2dE7c243",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x5676321c4cd1c7c90cdb81f372877d3dd403a5425af603dbdfc75c6dd0d99f01",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.6,
+   "paid": 2.28
+  },
+  "delivered_bytes": 450,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:41:22Z",
+  "n": 1
+ },
+ "sha256": "ac6f17f699ead9030fd86f6a92d375efd1533bbaae3a791fed60ded06e14d508",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

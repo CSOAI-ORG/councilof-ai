@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "piprail.com",
+ "as_of": "2026-09-06T06:43:43Z",
+ "source_urls": [
+  "https://piprail.com/x402/demo",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "piprail.com",
+  "resource": "https://piprail.com/x402/demo",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x28Dc25bf88BF06fc0a3Af1747D1aA4a21f313ed0",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0xc207fdc763365a093953fc10cbdd00cadf82c4ef2b596f6e69ebb3fa4c0e3ecd",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 3.5,
+   "paid": 1.23
+  },
+  "delivered_bytes": 507,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": null,
+  "observed_at": "2026-09-06T06:43:43Z",
+  "n": 1
+ },
+ "sha256": "7279b77a972582273c280c9b59ff884673b88125ab908f2c423a43b6631ea30a",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

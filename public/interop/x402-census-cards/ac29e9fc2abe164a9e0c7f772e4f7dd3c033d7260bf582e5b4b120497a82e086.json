@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "app.heinrichstech.com",
+ "as_of": "2026-09-06T06:38:35Z",
+ "source_urls": [
+  "https://app.heinrichstech.com/v1/cdp/echo",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "app.heinrichstech.com",
+  "resource": "https://app.heinrichstech.com/v1/cdp/echo",
+  "status": "DELIVERED",
+  "asked_units": 1000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xDa2F35d283c42dd60B965322394bc658a5c1769F",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x9f8f091966ec04a20fa21f84e956190e0d61e902f19e22cff5b2c7968ce44746",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.56,
+   "paid": 1.77
+  },
+  "delivered_bytes": 307,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:38:35Z",
+  "n": 1
+ },
+ "sha256": "ac29e9fc2abe164a9e0c7f772e4f7dd3c033d7260bf582e5b4b120497a82e086",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

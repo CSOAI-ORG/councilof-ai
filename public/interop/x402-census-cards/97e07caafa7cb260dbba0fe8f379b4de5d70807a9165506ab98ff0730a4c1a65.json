@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "paddock.finance",
+ "as_of": "2026-09-06T06:43:40Z",
+ "source_urls": [
+  "https://paddock.finance/api/paddock/mcp/gaps",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "paddock.finance",
+  "resource": "https://paddock.finance/api/paddock/mcp/gaps",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x153AA87807D8f6deb65Bd53B137Cee7AD2dacCDb",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x4042b9745e6bceadf9074cc081f56c5eec7aefe5520bb09035fceca55b5b85cf",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.53,
+   "paid": 1.11
+  },
+  "delivered_bytes": 2825,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:40Z",
+  "n": 1
+ },
+ "sha256": "97e07caafa7cb260dbba0fe8f379b4de5d70807a9165506ab98ff0730a4c1a65",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

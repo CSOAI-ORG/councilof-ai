@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "commodity-macro.hergertsynthora.com",
+ "as_of": "2026-09-06T06:45:58Z",
+ "source_urls": [
+  "https://commodity-macro.hergertsynthora.com/service",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "commodity-macro.hergertsynthora.com",
+  "resource": "https://commodity-macro.hergertsynthora.com/service",
+  "status": "DELIVERED",
+  "asked_units": 50000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xEf879BFD6C4AccB8F795136de90246e1EC245e06",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x20d0b4161bec66ebc97831d431e13d5ad482d5a75f79b6a0fe9f16ac40fc23b2",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.15,
+   "paid": 1.45
+  },
+  "delivered_bytes": 3001,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:58Z",
+  "n": 1
+ },
+ "sha256": "89e2207decbed58ab454184d0acb5635627c7f69201911a64e5cdb7bf4c9f476",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

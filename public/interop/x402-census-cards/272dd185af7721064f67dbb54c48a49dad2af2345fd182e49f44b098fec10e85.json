@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "rest.coincap.io",
+ "as_of": "2026-09-06T06:43:54Z",
+ "source_urls": [
+  "https://rest.coincap.io/v3/agentFriendly/history/bitcoin",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "rest.coincap.io",
+  "resource": "https://rest.coincap.io/v3/agentFriendly/history/bitcoin",
+  "status": "DELIVERED",
+  "asked_units": 10000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x9baa4417D1E78F2eD5b09aa4Abfb541aeB2cD6Ed",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x2405aba23dd382085b851f3fabc6367573e15d5bcc57aacaf0a442fbf6038a79",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.16,
+   "paid": 1.59
+  },
+  "delivered_bytes": 2503,
+  "delivered_content_type": "application/json; charset=utf-8",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:43:54Z",
+  "n": 1
+ },
+ "sha256": "272dd185af7721064f67dbb54c48a49dad2af2345fd182e49f44b098fec10e85",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

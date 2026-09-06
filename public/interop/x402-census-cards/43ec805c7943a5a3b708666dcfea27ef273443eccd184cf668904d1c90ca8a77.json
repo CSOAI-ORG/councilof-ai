@@ -1,0 +1,47 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "screenshotone.x402.paysponge.com",
+ "as_of": "2026-09-06T06:44:55Z",
+ "source_urls": [
+  "https://screenshotone.x402.paysponge.com/take",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "screenshotone.x402.paysponge.com",
+  "resource": "https://screenshotone.x402.paysponge.com/take",
+  "status": "REFUSED",
+  "asked_units": 20000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0x6302D9e6DBB22fEC3c350551568Bb39B4b35Ad57",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x97e33e1d05380a9ed2eea8e7c950d1eae1db68f3046713c968783c02c28437fb",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.37,
+   "paid": 1.51
+  },
+  "delivered_bytes": 161,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:44:55Z",
+  "n": 1,
+  "note": "a settlement transaction was reported and the retried request was still refused: money moved, nothing was delivered"
+ },
+ "sha256": "43ec805c7943a5a3b708666dcfea27ef273443eccd184cf668904d1c90ca8a77",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}

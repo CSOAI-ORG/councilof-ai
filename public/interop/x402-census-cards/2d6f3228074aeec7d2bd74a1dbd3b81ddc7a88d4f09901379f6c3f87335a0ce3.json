@@ -1,0 +1,46 @@
+{
+ "schema": "https://councilof.ai/schema/card-v0.json",
+ "surface": "x402.settlement",
+ "subject": "api.robinx.io",
+ "as_of": "2026-09-06T06:45:23Z",
+ "source_urls": [
+  "https://api.robinx.io/agent/features",
+  "https://huggingface.co/datasets/csoai/x402-settlement-census"
+ ],
+ "payload": {
+  "host": "api.robinx.io",
+  "resource": "https://api.robinx.io/agent/features",
+  "status": "DELIVERED",
+  "asked_units": 30000,
+  "asset": "USDC",
+  "network": "eip155:8453",
+  "pay_to": "0xA13d363AeCCCF878Ec64f6eB687Eb4A771FB0599",
+  "payer": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7",
+  "settle_tx": "0x985be633d95ebbfd55d1c1e9526b668745496e759a1c61812eedbe5e51e057c1",
+  "settle_tx_state": "parsed",
+  "x402_version": 2,
+  "latency_s": {
+   "challenge": 0.27,
+   "paid": 4.79
+  },
+  "delivered_bytes": 9007,
+  "delivered_content_type": "application/json",
+  "advertised_mime": "application/json",
+  "observed_at": "2026-09-06T06:45:23Z",
+  "n": 1
+ },
+ "sha256": "2d6f3228074aeec7d2bd74a1dbd3b81ddc7a88d4f09901379f6c3f87335a0ce3",
+ "unmeasured": [
+  "one purchase at one moment",
+  "reliability: n=1 cannot establish whether this host delivers repeatedly",
+  "availability: not observed over time",
+  "good_faith: a refusal may be rate-limiting, an account requirement, or changed terms \u2014 indistinguishable from outside",
+  "price_stability: the amount asked was read once and may move"
+ ],
+ "tags": [
+  "x402",
+  "settlement",
+  "census",
+  "n=1"
+ ]
+}
