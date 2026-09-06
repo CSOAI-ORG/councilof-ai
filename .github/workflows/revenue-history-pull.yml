@@ -1,0 +1,59 @@
+# Pull side of /interop/revenue-history.json.
+#
+# The producer runs on the RunPod pod (scripts/pod-loops/revenue-snapshot.sh, 04:00Z) and appends one
+# row per UTC day to the Hub dataset csoai/revenue-history. This workflow reads that public file with
+# scripts/interop/pull-revenue-history.py and commits the derived public/interop/revenue-history.json.
+# The artefact is never hand-edited; if the Hub file cannot be read the script exits 2 and nothing is
+# committed (an unreadable source is not an empty history).
+#
+# workflow_dispatch only. Adding a `schedule:` (e.g. "30 4 * * *", after the 04:00Z producer) is the
+# governor's call, as with agent-interop-census.yml — this job writes to master.
+
+name: revenue-history-pull
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: revenue-history-pull
+  cancel-in-progress: false
+
+jobs:
+  pull:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: Pull csoai/revenue-history -> public/interop/revenue-history.json
+        id: pull
+        run: |
+          set -uo pipefail
+          python3 scripts/interop/pull-revenue-history.py; rc=$?
+          echo "rc=$rc" >> "$GITHUB_OUTPUT"
+          if [ "$rc" = 2 ]; then echo "UNCHECKABLE: dataset not readable; nothing to commit"; exit 0; fi
+          exit $rc
+
+      - name: Commit if changed (rebase-and-retry, as public-root.yml does)
+        if: steps.pull.outputs.rc == '0'
+        run: |
+          set -euo pipefail
+          git config user.name "csoai-revenue-history"
+          git config user.email "board@csoai.org"
+          git add public/interop/revenue-history.json
+          if git diff --cached --quiet; then echo "no change"; exit 0; fi
+          git commit -m "interop: revenue-history pulled from csoai/revenue-history ($(date -u +%Y-%m-%dT%H:%MZ))"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:master; then echo "pushed on attempt $attempt"; exit 0; fi
+            git fetch origin master
+            git rebase origin/master || { git rebase --abort; exit 1; }
+          done
+          exit 1
