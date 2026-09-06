@@ -34,8 +34,9 @@ that has cards the FREE preview returns the signed cards, their hashes, their
 URLs and corpus_as_of; the door states its own deliverable as "one card-v0 leaf,
 surface ras.commission". It re-serves existing signed cards and never invents a
 score — which is a description of the product, not a reason it cannot be served.
-art50-marking-evidence ✅ door live (returns a structured "uncheckable" for a URL
-that does not resolve, which is the door working)
+art50-marking-evidence ✅ DELIVERABLE and advertised — free preview 200 (6128 B), paid door 402.
+Added to the source producer on 2026-09-06; it had been absent from generate-h1-product-docs.py
+entirely, which is why 8 mapped Bazaar hosts had no offer page to read.
 
 ## Vocabulary map — dataset `offer_sku` ↔ door ↔ doc
 
@@ -51,7 +52,7 @@ scripts/badger/generate-partner-offer-docs.py — do not hand-edit their fact ta
 | request-attestation | 95 | /api/request-attestation | OFFER-commission-card.md |
 | rwa-evidence | 63 | /api/rwa/evidence | OFFER-xrpl-asset-evidence.md |
 | evidence-bundle | 13 | /api/evidence-bundle | OFFER-evidence-bundle.md |
-| art50-marking-evidence | 8 | /api/art50/marking-evidence | PENDING — needs docs/product/art50-marking-evidence.md first; the door is live and the producer emits the offer page as soon as that source doc exists |
+| art50-marking-evidence | 8 | /api/art50/marking-evidence | OFFER-art50-marking-evidence.md |
 | (no offer_sku) | — | /api/eunomia-data | OFFER-signed-data-feed.md |
 | (no offer_sku) | — | /api/receipts/batch | OFFER-receipts-batch.md |
 

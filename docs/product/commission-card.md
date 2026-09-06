@@ -1,6 +1,6 @@
 # Commission a signed card (request-attestation)
 
-`commission-card` — derived from live endpoints on 2026-09-06T04:45:27Z.
+`commission-card` — derived from live endpoints on 2026-09-06T05:00:05Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below

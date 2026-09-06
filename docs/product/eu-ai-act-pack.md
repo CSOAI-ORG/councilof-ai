@@ -1,6 +1,6 @@
 # EU AI Act pack (Article 50 / 53 transparency)
 
-`eu-ai-act-pack` — derived from live endpoints on 2026-09-06T04:45:27Z.
+`eu-ai-act-pack` — derived from live endpoints on 2026-09-06T05:00:05Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (8802 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/evidence-bundle?obligation=article-53` — status **200**, **14683 bytes**, `sha256 c1c3326ac6364781…`
+`https://councilof.ai/api/evidence-bundle?obligation=article-53` — status **200**, **14683 bytes**, `sha256 9994ce6b6960fc2f…`
 
 ```json
 {

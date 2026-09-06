@@ -5,7 +5,7 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 200 · 12694 B |
+| free preview | HTTP 200 · 12992 B |
 | paid door | HTTP 402 (settle unlocks) |
 | deliverable | FREE PREVIEW returns content; paid artefact at the 402 |
 
