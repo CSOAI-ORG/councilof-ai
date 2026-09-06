@@ -787,6 +787,8 @@ def mill(
     only_ids: set[str] | None = None,
     dead_path: Path | None = None,
     dead_max_age_days: int | None = None,
+    shard: int = 0,
+    shards: int = 1,
     probe_first: bool = False,
     probe_fetch=None,
     inflight_path: Path | None = None,
@@ -796,6 +798,16 @@ def mill(
     dead = load_dead_slugs(dead_path, dead_max_age_days)
     inflight = load_inflight_cells(inflight_path)
     picked = pick_emptiest(rows, pick_n, generative_only=generative_only, axis=ax, only_ids=only_ids, dead=dead, inflight=inflight)
+    if shards > 1:
+        # Shard membership is a function of the MODEL ID ONLY -- never of position in
+        # `picked`. Stride-slicing would be disjoint for one snapshot and overlapping the
+        # moment two parallel jobs read the queue a few seconds apart, because a changed
+        # queue reorders `picked` and both shards would grade the same model while another
+        # went ungraded. A stable hash makes the split independent of ordering, timing and
+        # of how many rows were picked, so N jobs launched by hand still partition cleanly.
+        before = len(picked)
+        picked = [r for r in picked if int(hashlib.sha256(str(r.get("id") or "").encode()).hexdigest()[:8], 16) % shards == shard]
+        print(f"shard {shard}/{shards}: {len(picked)} of {before} picked rows", file=sys.stderr)
     out_dir.mkdir(parents=True, exist_ok=True)
     skips: list[dict] = []
     staged: list[dict] = []
@@ -915,6 +927,8 @@ def main() -> int:
     ap.add_argument("--only", default="", help="file of provider-live hub slugs (one id per line); skip rank-dead 400s")
     ap.add_argument("--dead", default="", help="persistent dead-slug jsonl (honoured on pick; appended from this run's no-endpoint skips)")
     ap.add_argument("--dead-max-age-days", type=int, default=None, help="re-probe a dead slug older than this (default: never expire). An undated row counts as expired.")
+    ap.add_argument("--shards", type=int, default=1, help="split the picked rows across N parallel runs (hash of model id, not position)")
+    ap.add_argument("--shard", type=int, default=0, help="which shard this run grades, 0..shards-1")
     ap.add_argument("--probe-first", action="store_true", help="ask the Hub inferenceProviderMapping before spending a grade")
     ap.add_argument("--inflight", default="", help="jsonl of {id, axis} cells already staged in open landing PRs (see inflight_cells.py); never re-picked")
     args = ap.parse_args()
@@ -931,6 +945,8 @@ def main() -> int:
         only_ids=only,
         dead_path=Path(args.dead) if args.dead else None,
         dead_max_age_days=args.dead_max_age_days,
+        shard=args.shard,
+        shards=args.shards,
         probe_first=args.probe_first,
         inflight_path=Path(args.inflight) if args.inflight else None,
     )

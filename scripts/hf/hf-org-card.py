@@ -164,7 +164,11 @@ def render(d: dict) -> str:
 
 def splice(readme: str, block: str, open_: str = OPEN, close: str = CLOSE, before: str | None = HUB_OPEN) -> str:
     if open_ in readme and close in readme:
-        return re.sub(re.escape(open_) + r".*?" + re.escape(close) + r"\n?", block, readme, count=1, flags=re.S)
+        # `block` is DATA, not a replacement template. Passing it directly makes re.sub parse
+        # backslash escapes in it: a card whose derived block contained "\\u" raised
+        # `re.PatternError: bad escape \\u` and killed a six-card push mid-run, after two cards
+        # had already been written. A lambda replacement is inert.
+        return re.sub(re.escape(open_) + r".*?" + re.escape(close) + r"\n?", lambda _m: block, readme, count=1, flags=re.S)
     if before and before in readme:
         return readme.replace(before, block + "\n" + before, 1)
     return readme.rstrip("\n") + "\n\n" + block
@@ -226,7 +230,26 @@ def stale_hits(body: str) -> list[str]:
 def score_card(kind: str, text: str, files: list[str], viewer_ok: bool | None) -> tuple[int, int, list[str]]:
     fm, body = split_front_matter(text)
     ds = kind == "dataset"
-    viewer_pass = (fm.get("viewer") is False) or (bool(fm.get("configs")) and viewer_ok is True)
+    # R13: a check that cannot reach its input says CANNOT-RUN, never FAILED.
+    #
+    # This line used to be `(viewer is False) or (configs and viewer_ok is True)`, which collapses
+    # an UNKNOWN viewer into False. datasets-server answers "the server is busier than usual" for
+    # minutes at a time, and three cards were scored FAILING on a viewer nobody had been able to
+    # look at. A card cannot fix that by changing anything about itself.
+    #
+    # Missing `configs:` is still a real fail — that IS the card's own doing, and it is why
+    # csoai/mcp-registry-self-audit is 15/16 while its viewer demonstrably works (/splits returns
+    # one split). The two halves are now judged separately instead of being and-ed into a lie.
+    if fm.get("viewer") is False:
+        viewer_pass: bool | None = True          # declares no viewer, honestly
+    elif not fm.get("configs"):
+        viewer_pass = False                      # the card's own omission
+    elif viewer_ok is True:
+        viewer_pass = True
+    elif viewer_ok is False:
+        viewer_pass = False                      # the viewer is genuinely broken
+    else:
+        viewer_pass = None                       # unknown — excluded, not failed
     checks: list[tuple[str, bool | None]] = [
         ("license", bool(fm.get("license"))),
         ("pretty_name/title", bool(fm.get("pretty_name") or fm.get("title"))),

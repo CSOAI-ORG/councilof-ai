@@ -5,9 +5,9 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 200 · 11497 B |
+| free preview | HTTP 200 · 12992 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | NON-EMPTY PREVIEW (see doc) |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/evidence-bundle.md: signed cards, assembled server-side from

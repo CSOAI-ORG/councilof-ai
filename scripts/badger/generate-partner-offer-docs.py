@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,12 +30,19 @@ def get(url: str) -> dict:
 def main() -> None:
     print("=== B07/B08 derived docs ===")
 
+    # B08 reads only local docs; B07 probes three live registries. Regenerating an offer page
+    # should not cost self-probes — the governor caps a lane at 20 an hour (G5) and this script
+    # was silently spending three of them to rewrite files it could rewrite offline.
+    b08_only = "--b08-only" in sys.argv
+    if b08_only:
+        print("  --b08-only: skipping B07 (no network, no self-probes)")
+
     # B07 — evidence density from live registries
-    bank = get(BASE + "/api/bank-complete")
+    bank = {} if b08_only else get(BASE + "/api/bank-complete")
     banks = sorted(bank.get("banks", []), key=lambda b: -(b.get("records") or 0))[:10]
-    xrpl = get(BASE + "/interop/xrpl-issuer-registry.json")
+    xrpl = {} if b08_only else get(BASE + "/interop/xrpl-issuer-registry.json")
     issuers = sorted(xrpl.get("issuers", []), key=lambda i: -(i.get("evidence_cards") or 0))[:10]
-    diff = get(BASE + "/api/feeds/provider-diff")
+    diff = {} if b08_only else get(BASE + "/api/feeds/provider-diff")
     targets = diff.get("targets", [])
     prov = {}
     for t in targets:
@@ -74,13 +82,22 @@ def main() -> None:
         "2. I hand over the signed diff for their waterline (provider-diff-feed, delta since receipt).",
         "3. No mass send: one recipient, one receipt, one signed delta.",
     ]
-    (OUT / "PARTNERS-SHORTLIST.md").write_text("\n".join(md))
-    print(f"  ✓ PARTNERS-SHORTLIST.md ({len(banks)} banks / {len(aiprov)} providers / {len(issuers)} issuers)")
+    if b08_only:
+        # Without the B07 probes every table above is empty, and writing that would REPLACE a
+        # real shortlist with a blank one. Skip the write; --b08-only means offer docs only.
+        print("  – PARTNERS-SHORTLIST.md untouched (--b08-only: no data was fetched to write it)")
+    else:
+        (OUT / "PARTNERS-SHORTLIST.md").write_text("\n".join(md))
+        print(f"  ✓ PARTNERS-SHORTLIST.md ({len(banks)} banks / {len(aiprov)} providers / {len(issuers)} issuers)")
 
     # B08 — one-page offer per SKU derived from the live probe facts in docs/product/<sku>.md
     SKUS = [
         "commission-card", "evidence-bundle", "eu-ai-act-pack", "swift-bank-pack",
         "xrpl-asset-evidence", "signed-data-feed", "provider-diff-feed", "receipts-batch",
+        # 8 conformant Bazaar hosts are mapped to art50-marking-evidence and it has no offer page.
+        # The door is live. This entry emits one as soon as docs/product/art50-marking-evidence.md
+        # exists; until then the loop prints "! missing — skip", which is the honest state.
+        "art50-marking-evidence",
     ]
     for sku in SKUS:
         f = OUT / f"{sku}.md"
@@ -93,7 +110,20 @@ def main() -> None:
         status, bytes_n = (m.group(1), m.group(2)) if m else ("?", "?")
         mres = re.search(r"live status \*\*(\d+)\*\*", text)
         res_status = mres.group(1) if mres else "?"
-        deliverable = "NON-EMPTY PREVIEW (see doc)" if status == "200" and int(bytes_n) > 0 else "NOT DELIVERABLE today (preview empty/402)"
+        # ONE RULE, ONE PLACE. This used to recompute the verdict from the status it scraped, which
+        # meant the advertise rule lived in two producers and they drifted: the upstream one was
+        # fixed and this one would have overwritten it on the next run. The source doc already
+        # states the verdict in bold, decided by generate-h1-product-docs.py under the governor
+        # ruling of 06 Sep 2026 ("a parseable 402 with accepts[] is a door"). Mirror it.
+        # Match the VERDICT sentence, not the "status **402**, **4592 bytes**" line above it: the
+        # verdict always opens with one of the states generate-h1-product-docs.py can emit.
+        mver = re.search(r"\*\*((?:DELIVERABLE|NOT ADVERTISED|UNVERIFIED)[^*]*)\*\*([^\n]*)", text)
+        if mver:
+            deliverable = (mver.group(1) + mver.group(2)).strip()
+        elif status == "200" and bytes_n not in ("?", "0"):
+            deliverable = "FREE PREVIEW returns content; paid artefact at the 402"
+        else:
+            deliverable = f"UNKNOWN — the source doc states no verdict (status {status}); run generate-h1-product-docs.py"
         offer = [
             f"# Offer — {sku}",
             "",

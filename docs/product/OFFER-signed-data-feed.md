@@ -5,9 +5,9 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 200 · 1610 B |
+| free preview | HTTP 200 · 1605 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | NON-EMPTY PREVIEW (see doc) |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/signed-data-feed.md: signed cards, assembled server-side from

@@ -1,6 +1,6 @@
 # EU AI Act pack (Article 50 / 53 transparency)
 
-`eu-ai-act-pack` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`eu-ai-act-pack` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -11,7 +11,7 @@
 (8802 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/evidence-bundle?obligation=article-53` — status **200**, **10090 bytes**, `sha256 986320f15e29ea0c…`
+`https://councilof.ai/api/evidence-bundle?obligation=article-53` — status **200**, **14683 bytes**, `sha256 9994ce6b6960fc2f…`
 
 ```json
 {
@@ -24,7 +24,7 @@
     "obligation": "Article 53(1)(a)–(d) — GPAI provider documentation + downstream-provider information; in force since 2 August 2025 (Art 113)",
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

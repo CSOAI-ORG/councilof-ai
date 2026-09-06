@@ -1,6 +1,6 @@
 # Commission a signed card (request-attestation)
 
-`commission-card` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`commission-card` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -8,10 +8,10 @@
 
 ## 402 door
 `https://councilof.ai/api/request-attestation?subject=csoai&axis=honesty` — live status **402**
-(4681 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
+(4676 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/request-attestation` — status **402**, **4597 bytes**, `sha256 caeda603a8cd2370…`
+`https://councilof.ai/api/request-attestation` — status **402**, **4592 bytes**, `sha256 ce7daf22e31f43da…`
 
 ```json
 {
@@ -22,7 +22,7 @@
     "description": "Request attestation (RAS): commission a signed card-v0 receipt for one subject on the frozen bank — re-serves existing signed measurement cards, never invents a score. Measurement, not certification. 22 axes measured · 14 model fleets · 3 public leader scores · 8 fact runs · TIE is TIE · not a certifi
 ```
 
-**NOT DELIVERABLE today.** Status 402, 4597 bytes. This SKU is not advertised until a non-empty free preview exists.
+**DELIVERABLE — the 402 IS the door.** Advertised. The challenge parses as x402 v2 carrying 1 accepts[] entry (4592 bytes); the free preview is delivered inside it and a settled receipt unlocks the paid artefact.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

@@ -5,9 +5,9 @@
 
 | fact | value |
 |---|---|
-| free preview | HTTP 200 · 10090 B |
+| free preview | HTTP 200 · 14683 B |
 | paid door | HTTP 402 (settle unlocks) |
-| deliverable | NON-EMPTY PREVIEW (see doc) |
+| deliverable | DELIVERABLE — free preview answers with real bytes. Advertised. |
 
 ## What you receive
 The artefact described in docs/product/eu-ai-act-pack.md: signed cards, assembled server-side from

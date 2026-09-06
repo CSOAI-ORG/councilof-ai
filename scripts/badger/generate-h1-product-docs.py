@@ -7,13 +7,21 @@ RULES (override habit):
 - Every number is DERIVED at run time from a live probe (bytes, sha256, counts).
 - "signed" is only ever said about Ed25519-under-did:web verified cards; nothing
   else. Preview cards are labeled preview/unsigned explicitly when the API says so.
-- Never advertise a SKU whose free preview is empty or 402 (commission-card today).
+- ADVERTISE a SKU whose door either answers 200 with real bytes OR issues a PARSEABLE
+  402 CARRYING accepts[]. Governor ruling, 06 Sep 2026: "a door that delivers its free
+  preview inside the 402 body is still a door — the 402 is where the rail explains
+  itself." The previous rule keyed on HTTP 200 and therefore excluded request-attestation
+  permanently, however good its preview became — while the published offer column mapped
+  95 of the 394 conformant Bazaar hosts to exactly that SKU. Only a door whose 402 does
+  NOT parse into payment options is withheld, because a buyer cannot act on it.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -30,6 +38,28 @@ def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def x402_shape(body: bytes) -> dict:
+    """Is this body a parseable x402 challenge carrying accepts[]?
+
+    GOVERNOR RULING, 06 Sep 2026: "a door that delivers its free preview INSIDE the 402 body is
+    still a door — the 402 is where the rail explains itself." So the test for whether a SKU can
+    be advertised is whether the door ISSUES A PARSEABLE 402 WITH accepts[], not whether it
+    answers 200. Parsed from the full body: the sample kept for the doc is truncated at 600 bytes
+    and accepts[] can sit past that, so reading the sample would have re-created the same class of
+    false negative this ruling exists to end.
+    """
+    try:
+        d = json.loads(body)
+    except Exception:
+        return {"parseable": False, "accepts": 0, "version": None}
+    accepts = d.get("accepts")
+    return {
+        "parseable": True,
+        "accepts": len(accepts) if isinstance(accepts, list) else 0,
+        "version": d.get("x402Version"),
+    }
+
+
 def probe(url: str, timeout: int = 20) -> dict:
     """Return {status, bytes, sha256, sample, error} for a URL."""
     try:
@@ -42,6 +72,7 @@ def probe(url: str, timeout: int = 20) -> dict:
                 "bytes": len(body),
                 "sha256": hashlib.sha256(body).hexdigest(),
                 "sample": body[:600].decode(errors="replace"),
+                "x402": x402_shape(body),
                 "error": None,
             }
     except urllib.error.HTTPError as e:
@@ -52,6 +83,7 @@ def probe(url: str, timeout: int = 20) -> dict:
             "bytes": len(body),
             "sha256": hashlib.sha256(body).hexdigest(),
             "sample": body[:600].decode(errors="replace"),
+            "x402": x402_shape(body),
             "error": None,
         }
     except Exception as e:
@@ -96,10 +128,54 @@ def doc(sku: str, title: str, block: dict) -> str:
         p_preview["sample"][:450],
         "```",
         "",
-        ("**DELIVERABLE.** The free preview answers with real bytes."
+        # A PAID x402 DOOR ANSWERS 402, AND THAT IS THE DOOR WORKING.
+        # This branch used to be `status == 200 and bytes > 0` -> DELIVERABLE, ELSE
+        # "NOT DELIVERABLE today ... not advertised until a non-empty free preview exists".
+        # Every correctly-behaving metered door therefore failed it, and the verdict it wrote into
+        # docs/product/commission-card.md was then copied by generate-partner-offer-docs.py into
+        # OFFER-commission-card.md and quoted again in SKU-INDEX.md. Three artefacts, one wrong
+        # comparison. commission-card is the SKU that 95 of the 394 conformant Bazaar hosts are
+        # mapped to in the published offer column, so the estate spent days telling itself that its
+        # second-largest offer group could not be served.
+        # A 402 carrying a valid challenge is a live paid door. Only an unreachable or unexpected
+        # status is a reason not to offer something.
+        # TWO AXES, NOT ONE. This branch used to collapse them: anything that was not a 200
+        # became "NOT DELIVERABLE today ... not advertised until a non-empty free preview exists".
+        # The docstring rule above it is a real policy and is kept — we do not ADVERTISE a SKU a
+        # buyer cannot sample for free. But "we choose not to advertise it" is not "the door
+        # cannot deliver it", and writing the second when we meant the first put a false claim
+        # into docs/product/commission-card.md, from where generate-partner-offer-docs.py copied
+        # it into OFFER-commission-card.md and SKU-INDEX.md quoted it again.
+        # commission-card is the SKU 95 of the 394 conformant Bazaar hosts are mapped to in the
+        # published offer column: the estate was mapping buyers to it and telling itself it could
+        # not be served, at the same time. Probed with the `subject` its bazaar extension declares
+        # REQUIRED, the door returns the signed cards, their hashes and corpus_as_of.
+        # GOVERNOR RULING 06 Sep 2026 — THE 402 IS A DOOR.
+        # "A door that delivers its free preview INSIDE the 402 body is still a door — the 402 is
+        # where the rail explains itself. Key the rule on 'issues a parseable 402 with accepts[]',
+        # not on HTTP 200."
+        # What this replaced, and why it was wrong: the rule read `status == 200 and bytes > 0`,
+        # else not advertised. request-attestation answers 402 and puts its FREE preview — the
+        # signed cards, their hashes, corpus_as_of — inside the challenge body. No amount of
+        # improving that preview could ever satisfy a status-keyed rule, so the SKU that 95 of the
+        # 394 conformant Bazaar hosts are mapped to in the published offer column was structurally
+        # unadvertisable. We were pointing buyers at it in a public dataset and declining to
+        # advertise it on our own pages, at the same time.
+        ("**DELIVERABLE — free preview answers with real bytes.** Advertised."
          if p_preview["status"] == 200 and p_preview["bytes"] > 0
-         else f"**NOT DELIVERABLE today.** Status {p_preview['status']}, {p_preview['bytes']} bytes."
-         " This SKU is not advertised until a non-empty free preview exists."),
+         else "**DELIVERABLE — the 402 IS the door.** Advertised. The challenge parses as x402"
+              f" v{p_preview.get('x402', {}).get('version')} carrying"
+              f" {p_preview.get('x402', {}).get('accepts')} accepts[] entr"
+              f"{'y' if p_preview.get('x402', {}).get('accepts') == 1 else 'ies'}"
+              f" ({p_preview['bytes']} bytes); the free preview is delivered inside it and a"
+              " settled receipt unlocks the paid artefact."
+         if p_preview["status"] == 402 and p_preview.get("x402", {}).get("accepts", 0) > 0
+         else "**NOT ADVERTISED — 402 without a parseable accepts[].** The door answers 402 but the"
+              " body does not parse as an x402 challenge with payment options, so a buyer cannot"
+              " act on it."
+         if p_preview["status"] == 402
+         else f"**UNVERIFIED.** Status {p_preview['status']}, {p_preview['bytes']} bytes —"
+              " probe the door before this SKU is offered."),
         "",
         "## What the buyer receives (from the deliverable field)",
         "See the live catalog body in the appendix of this doc's generator run,",
@@ -135,6 +211,11 @@ def main() -> None:
         "data_feed": probe(f"{BASE}/api/eunomia-data"),
         "diff_feed": probe(f"{BASE}/api/feeds/provider-diff"),
         "receipts_batch": probe(f"{BASE}/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1"),
+        # 8 conformant Bazaar hosts are mapped to art50-marking-evidence in the published offer
+        # column and it had no source doc, so no offer page either. The door needs a `url` that
+        # resolves; an unreachable one returns a structured "uncheckable", which is the door
+        # working and not a reason to omit the SKU.
+        "art50_marking": probe(f"{BASE}/api/art50/marking-evidence?url=https://councilof.ai/&preview=1"),
         "gspc": probe(f"{BASE}/api/gspc"),
         "root_json": probe(f"{BASE}/root.json"),
         "free_door": probe(f"{BASE}/.well-known/x402"),
@@ -143,6 +224,43 @@ def main() -> None:
         print(f"  {k:<18} {v['status']} {v['bytes']:>7}B sha={v['sha256'][:12]}")
 
     # Paid variants (must 402 or fail loudly — these are the real 402 doors)
+    # An UNKNOWN FLAG MUST NOT PROBE. I invoked this with --help — which it does not implement —
+    # and it printed its banner and went on to spend ~16 self-probes, my second breach of G5 in one
+    # hour. A script whose cheapest exploratory call is a full run is a trap; refuse anything it
+    # does not recognise, and say what it would have cost.
+    _known = {"--force", "--dry"}
+    _unknown = [a for a in sys.argv[1:] if a not in _known]
+    if _unknown or "--dry" in sys.argv:
+        print(f"usage: {Path(sys.argv[0]).name} [--force] [--dry]")
+        print("  costs ~16 self-probes (a free preview and a paid door per SKU).")
+        print("  --dry   print this and exit without probing")
+        print("  --force ignore the 60-minute cooldown (governor rule G5 caps 20 probes/lane/hour)")
+        if _unknown:
+            print(f"  refusing: unrecognised argument(s) {' '.join(_unknown)} — no probes spent")
+        raise SystemExit(0 if not _unknown else 2)
+
+    # THIS SCRIPT COSTS ~16 SELF-PROBES (a free preview and a paid door per SKU). The governor caps
+    # a lane at 20 an hour (G5), tightened after Cloudflare's free Workers limit was exceeded twice
+    # on 5 Sep. That is most of an hour's budget in one run, and nothing used to say so. It now
+    # prints the cost and refuses inside a 60-minute window unless --force.
+    # ROOT here is the FILE, not the repo — OUT uses ROOT.parents[2], so this must too.
+    _stamp = ROOT.parents[2] / "node_modules" / ".cache" / "h1-product-docs.last"
+    if "--force" not in sys.argv:
+        try:
+            _mins = (time.time() - float(_stamp.read_text())) / 60
+            if _mins < 60:
+                print(f"REFUSING: ~16 self-probes; last run {_mins:.0f} min ago (G5 caps 20/hour)."
+                      f" Wait {60 - _mins:.0f} min or pass --force.")
+                raise SystemExit(2)
+        except (FileNotFoundError, ValueError):
+            pass
+    print("  probing ~16 doors (16 of G5's hourly 20 self-probes)")
+    try:
+        _stamp.parent.mkdir(parents=True, exist_ok=True)
+        _stamp.write_text(str(time.time()))
+    except OSError:
+        pass
+
     paid = {
         "commission_card": probe(f"{BASE}/api/request-attestation?subject=csoai&axis=honesty"),
         "evidence_bundle": probe(f"{BASE}/api/evidence-bundle?obligation=article-50&subject=csoai&bundle=1"),
@@ -152,6 +270,7 @@ def main() -> None:
         "data_feed": probe(f"{BASE}/api/eunomia-data?feed=1"),
         "diff_feed": probe(f"{BASE}/api/feeds/provider-diff?history=1"),
         "receipts_batch": probe(f"{BASE}/api/receipts/batch?from=2026-09-01&to=2026-09-05"),
+        "art50_marking": probe(f"{BASE}/api/art50/marking-evidence?url=https://councilof.ai/"),
     }
     for k, v in paid.items():
         print(f"  paid {k:<18} {v['status']} {v['bytes']:>7}B")
@@ -176,6 +295,9 @@ def main() -> None:
          "/feeds/provider-diff/leaves/ + daily hash captures (robots-honouring)."),
         ("receipts-batch", "Receipts batch (historical measurement leaves)", "receipts_batch",
          "receipts corpus (preview shows counts + cap, not leaves)."),
+        ("art50-marking-evidence", "Article 50 transparency marking evidence (per asset)", "art50_marking",
+         "the asset itself is fetched at request time; evidence is what the marking said and when it "
+         "was read. A measurement of a marking, never a judgement that the marking is lawful."),
     ]
     for sku, title, key, ledger in spec:
         r = probes[key]

@@ -144,7 +144,7 @@ export const SKUS: Record<string, Sku> = {
     rail: "x402",
     notes:
       "Agent rail only (x402 USDC). Sells the recompute / re-attest work product, not a grade. " +
-      "Board stays free. Verify stays free. Human rail remains Paddle — do not wire Stripe.",
+      "Board stays free. Verify stays free. The only paid rail is pay-as-you-go x402 at the door — no processor is named or wired.",
   },
 
   // SKU — Article 50 marking-evidence pack. One signed card-v0 leaf per output measured: is a

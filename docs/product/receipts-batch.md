@@ -1,6 +1,6 @@
 # Receipts batch (historical measurement leaves)
 
-`receipts-batch` — derived from live endpoints on 2026-09-05T12:20:02Z.
+`receipts-batch` — derived from live endpoints on 2026-09-06T06:00:18Z.
 
 > Doctrine: measurement, not certification. Verification is free forever;
 > a grade is never sold. Nothing in this file is typed — every number below
@@ -8,10 +8,10 @@
 
 ## 402 door
 `https://councilof.ai/api/receipts/batch?from=2026-09-01&to=2026-09-05` — live status **402**
-(6342 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
+(6337 B) — the paid artefact sits behind the x402 rail; a settled receipt unlocks it.
 
 ## Free preview (must be non-empty)
-`https://councilof.ai/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1` — status **200**, **2047 bytes**, `sha256 d9ea85b9bb59ee92…`
+`https://councilof.ai/api/receipts/batch?from=2026-09-01&to=2026-09-05&preview=1` — status **200**, **2047 bytes**, `sha256 d634f4c9a98ad2ed…`
 
 ```json
 {
@@ -32,10 +32,10 @@
   },
   "roots_in_window": 23,
   "roots_indexed_total": 29,
-  "batch_sha256": "c9d2342e8037d8478
+  "batch_sha256": "cc4a0e3ea6adbee33
 ```
 
-**DELIVERABLE.** The free preview answers with real bytes.
+**DELIVERABLE — free preview answers with real bytes.** Advertised.
 
 ## What the buyer receives (from the deliverable field)
 See the live catalog body in the appendix of this doc's generator run,

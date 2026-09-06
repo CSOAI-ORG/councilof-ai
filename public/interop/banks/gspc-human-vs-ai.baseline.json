@@ -1,0 +1,28 @@
+{
+  "bank": "gspc-human-vs-ai",
+  "bank_bytes": 11349,
+  "bank_sha256": "a2ed38550cf9dd456cef914cb13ffe4c254fd8677f85000f0ee5bf4aa80fb8da",
+  "canary_rows": 0,
+  "graded_items": 30,
+  "grader": "all(normalize(keyword) in normalize(raw_output) for keyword in must_inc)",
+  "grades_no_axis": true,
+  "honesty": {
+    "no_canary": "No contamination sentinel. All fourteen behavioural banks carry one. Contamination here is UNCHECKABLE, not absent.",
+    "not_a_measurement_yet": "Published so it can be read and recomputed by anyone. Being readable is not being sound. No board cell is produced from it in this state.",
+    "provenance": "Rows carry a 'gen-...-unsealed' source \u2014 generated to fill a gap, not authored like the behavioural banks ('csoai-authored').",
+    "what_this_number_means": "A model that repeats the question back scores this. It is a FLOOR under every cell this axis could produce, not a chance baseline to compare against."
+  },
+  "keywords_already_in_their_own_prompt": 110,
+  "keywords_total": 133,
+  "kind": "csoai.bank-baseline/0.1",
+  "parrot_accuracy": 0.6667,
+  "parrot_hits": 20,
+  "predicate": "KEYWORD_MATCH",
+  "recompute": [
+    "curl -sL <this bank url> -o bank.jsonl",
+    "shasum -a 256 bank.jsonl            # must equal bank_sha256",
+    "python3 harness/gspc-top100/check_bank_discriminates.py bank.jsonl"
+  ],
+  "rows": 30,
+  "trivial_strategy": "answer every item with its own prompt text, nothing else"
+}
