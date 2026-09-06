@@ -27,8 +27,8 @@
   "dated_copy": "public/interop/root-witness-2026-09-05-abc7e8a5.json"
  },
  "drift": {
-  "status": "MATCHED",
-  "checked_at": "2026-09-06T02:42:50Z",
+  "status": "MATCH",
+  "checked_at": "2026-09-06T03:24:21Z",
   "checked_against": "https://councilof.ai/root.json",
   "witness_artifact_sha256": "abc7e8a59ebad0f34acfdcafa75f28f9e45e2c7e0aa880438a645f6cb4ca4e4c",
   "live_root_sha256": "abc7e8a59ebad0f34acfdcafa75f28f9e45e2c7e0aa880438a645f6cb4ca4e4c",
@@ -37,22 +37,7 @@
   "live_root_bytes": 14590,
   "match_sha256": true,
   "match_merkle_root": true,
-  "reason": "live root.json bytes and merkle_root equal the witnessed artifact (abc7e8a5 / 00356bbf); MATCHED is an observation at checked_at, not a standing all-clear — re-check before treating as current",
-  "history": [
-   {
-    "status": "DRIFTED",
-    "checked_at": "2026-09-05T16:02:47Z",
-    "checked_against": "https://councilof.ai/root.json",
-    "witness_artifact_sha256": "abc7e8a59ebad0f34acfdcafa75f28f9e45e2c7e0aa880438a645f6cb4ca4e4c",
-    "live_root_sha256": "8c6a27eae08cb7570d5b3e570fbecc4f7f3220942cc158c893565aab814b80c2",
-    "witness_artifact_merkle_root": "00356bbf5729aae4f1228ad94c1a0f9bdb304777782c33824ff95a0e1d1c7f88",
-    "live_root_merkle_root": "6347384aa686920feca2f6cd875664c4719b1cd8224c0021dd7a38347f872353",
-    "live_root_bytes": 14518,
-    "match_sha256": false,
-    "match_merkle_root": false,
-    "reason": "the live root differs from the witnessed bytes; this observation does not establish which is newer — publish the witnessed candidate or witness the live root before treating either as current"
-   }
-  ]
+  "reason": "the live root a reader fetches is byte-identical to the witnessed bytes"
  },
  "witness_status_observed_at": "2026-09-05T16:02:46Z",
  "witnesses": {
