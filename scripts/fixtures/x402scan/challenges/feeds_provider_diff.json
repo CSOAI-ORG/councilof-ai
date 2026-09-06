@@ -82,6 +82,7 @@
                 "properties": {
                   "history": {
                     "const": "1",
+                    "description": "Paid-tier gate. Must be the string 1 to request the signed historical batch (HTTP 402). Omit for free recent diffs on the bare path (HTTP 200).",
                     "type": "string"
                   },
                   "since": {

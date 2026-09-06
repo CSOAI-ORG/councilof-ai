@@ -360,9 +360,11 @@
                 "properties": {
                   "bundle": {
                     "const": "1",
+                    "description": "Paid-tier gate. Must be the string 1 together with other required params (HTTP 402).",
                     "type": "string"
                   },
                   "obligation": {
+                    "description": "Obligation the evidence bundle maps to (required with bundle=1).",
                     "enum": [
                       "article-50",
                       "article-53",
