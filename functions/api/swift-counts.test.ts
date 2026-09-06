@@ -58,6 +58,32 @@ describe("/api/swift counts are recomputed, never read off the header and never 
     expect(d.n_live + d.n_committed + d.n_discovered + d.n_measured).toBe(d.n);
   });
 
+  it("press status is not a ladder position, and the gate is the artifact", () => {
+    // The tape says it itself: "Not MEASURED — no ISO 20022 / copybook / MT artifact
+    // fetched." Reading LIVE 3 as "3 measured" is the mistake this separation prevents.
+    const d = deriveSwiftCounts(
+      [
+        { id: "1", name: "a", status: "LIVE", artifact_url: null, source: ["a"] },
+        { id: "2", name: "b", status: "COMMITTED", artifact_url: null, source: ["b"] },
+      ],
+      sources,
+    );
+    expect(d.press_axis.counts.LIVE).toBe(1);
+    expect(d.measurement_ladder.rows_with_an_artifact).toBe(0);
+    expect(d.measurement_ladder.highest_reachable_today).toBe("DISCOVERED");
+    expect(d.n_measured).toBe(0);
+
+    // and an artifact is what moves the ceiling, not a press headline
+    const withArt = deriveSwiftCounts(
+      [{ id: "1", name: "a", status: "LIVE", artifact_url: "https://x/iso20022.xml", source: ["a"] }],
+      sources,
+    );
+    expect(withArt.measurement_ladder.rows_with_an_artifact).toBe(1);
+    expect(withArt.measurement_ladder.highest_reachable_today).toBe("STAGED");
+    // still not MEASURED — only the OIDC signer does that, at n>=30
+    expect(withArt.n_measured).toBe(0);
+  });
+
   it("counts name their producer", () => {
     expect(deriveSwiftCounts([], sources).producer).toContain("deriveSwiftCounts");
   });

@@ -58,8 +58,34 @@ export function deriveSwiftCounts(rows: Row[], sources: Record<string, unknown>)
           : [`n=${resolved.length} below the quotable threshold of 30`],
     };
   });
+  // TWO DIFFERENT AXES, and conflating them would read "LIVE 3" as "3 measured".
+  // The tape's LIVE / COMMITTED / DISCOVERED is PRESS EVIDENCE: a dated, reachable press
+  // URL saying a bank went live, committed, or was named. The tape says so itself --
+  // "Not MEASURED — no ISO 20022 / copybook / MT artifact fetched."
+  //
+  // The MEASUREMENT ladder is DISCOVERED -> STAGED -> MEASURED, and what moves a row up
+  // it is an artifact: something fetched from the bank's own rails. That is artifact_url,
+  // and it is null on every row. So no row can be above DISCOVERED on the measurement
+  // axis, whatever its press status says, and this counts the gate rather than asserting
+  // the conclusion.
+  const withArtifact = rows.filter((r) => typeof r.artifact_url === "string" && r.artifact_url).length;
   return {
     producer: "functions/api/swift.ts → deriveSwiftCounts(rows[], sources{})",
+    press_axis: {
+      what: "dated, reachable press URLs. LIVE/COMMITTED/DISCOVERED. Not a measurement.",
+      counts: byStatus,
+    },
+    measurement_ladder: {
+      order: ["DISCOVERED", "STAGED", "MEASURED"],
+      gate: "artifact_url — an ISO 20022 / copybook / MT artifact fetched from the bank's own rails",
+      rows_with_an_artifact: withArtifact,
+      rows_without: rows.length - withArtifact,
+      highest_reachable_today: withArtifact ? "STAGED" : "DISCOVERED",
+      note:
+        "No row carries an artifact_url, so no row is above DISCOVERED on the measurement " +
+        "axis regardless of its press status. A bank being LIVE in the press is not a " +
+        "measurement of that bank, and n_measured counts the second, never the first.",
+    },
     n: rows.length,
     n_measured: byStatus.MEASURED ?? 0,
     n_live: byStatus.LIVE ?? 0,
