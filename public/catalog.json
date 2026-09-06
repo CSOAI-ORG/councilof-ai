@@ -74,36 +74,36 @@
     {
       "id": "mcp-fleet",
       "name": "MCP Fleet",
-      "status": "live",
+      "status": "draft",
       "href": "/mcp-fleet",
       "payment": null,
-      "note": "measurement not certification — MCP server registry"
+      "note": "in build — apex /mcp-fleet is Evidence review; catalog does not invent a live fleet. measurement not certification."
     },
     {
       "id": "ras-booking",
       "name": "RAS Booking Desk",
       "status": "draft",
       "href": "/ras",
-      "payment": "paddle_pending",
-      "note": "measurement not certification — human-rail readiness assessment booking (DRAFT)"
+      "payment": null,
+      "note": "booking not live — draft/pending only; verify free; measurement credential never a grade; no public prices."
     },
     {
       "id": "cobol-bridge",
       "name": "COBOL Bridge",
-      "status": "draft",
+      "status": "live",
       "href": "/cobol",
       "payment": null,
-      "note": "measurement not certification — legacy system integration (DRAFT, same-owner shelf)"
+      "note": "CobolBridge Layer-0 on /cobol — verify free; no public prices; we do not certify."
     }
   ],
   "payment_rails": {
-    "paddle": {
-      "status": "pending",
-      "note": "free; paid step via x402 at the door"
+    "x402": {
+      "status": "live",
+      "note": "pay-as-you-go at the 402; verify stays free"
     },
-    "stripe": {
-      "status": "disabled",
-      "note": "Stripe NOT wired per CEO directive"
+    "human_booking": {
+      "status": "not_live",
+      "note": "no processor named or wired; free or pay-as-you-go x402 only"
     }
   },
   "verify": {

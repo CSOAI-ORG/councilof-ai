@@ -862,7 +862,7 @@ export function normalizeLobbyTabId(id: string): string {
     assessment: "measured",
     "get-measured": "measured",
     ras: "measured",
-    rankings: "leaderboard",
+    rankings: "board",
     scoreboard: "board",
     chat: "home",
     "ag-ui": "home",

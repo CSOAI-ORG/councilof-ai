@@ -110,23 +110,20 @@ def main() -> None:
         status, bytes_n = (m.group(1), m.group(2)) if m else ("?", "?")
         mres = re.search(r"live status \*\*(\d+)\*\*", text)
         res_status = mres.group(1) if mres else "?"
-        # A PAID DOOR ANSWERS 402. That is the door working, not the door failing.
-        # This line used to read: 200 and bytes>0 -> deliverable, ELSE "NOT DELIVERABLE today".
-        # Every correctly-behaving x402 door therefore came out NOT DELIVERABLE, because a 402
-        # challenge is not a 200. It published that verdict about commission-card, which is the
-        # SKU 95 of the 394 conformant Bazaar hosts are mapped to in csoai/x402-bazaar-conformance,
-        # and SKU-INDEX repeated it. Probed with the `subject` its own bazaar extension declares
-        # REQUIRED, that door returns the signed cards, their hashes and corpus_as_of in the FREE
-        # preview. Conflating "the preview is free and returns 200" with "the door can deliver"
-        # is what produced a false negative about our own product.
-        if status == "200" and int(bytes_n) > 0:
+        # ONE RULE, ONE PLACE. This used to recompute the verdict from the status it scraped, which
+        # meant the advertise rule lived in two producers and they drifted: the upstream one was
+        # fixed and this one would have overwritten it on the next run. The source doc already
+        # states the verdict in bold, decided by generate-h1-product-docs.py under the governor
+        # ruling of 06 Sep 2026 ("a parseable 402 with accepts[] is a door"). Mirror it.
+        # Match the VERDICT sentence, not the "status **402**, **4592 bytes**" line above it: the
+        # verdict always opens with one of the states generate-h1-product-docs.py can emit.
+        mver = re.search(r"\*\*((?:DELIVERABLE|NOT ADVERTISED|UNVERIFIED)[^*]*)\*\*([^\n]*)", text)
+        if mver:
+            deliverable = (mver.group(1) + mver.group(2)).strip()
+        elif status == "200" and bytes_n not in ("?", "0"):
             deliverable = "FREE PREVIEW returns content; paid artefact at the 402"
-        elif status == "402":
-            deliverable = "PAID DOOR — the free preview IS the 402 challenge; settle unlocks the artefact"
-        elif status == "?":
-            deliverable = "UNKNOWN — the source doc records no probe; run the probe that writes it"
         else:
-            deliverable = f"UNEXPECTED — preview returned {status}; probe the door before offering it"
+            deliverable = f"UNKNOWN — the source doc states no verdict (status {status}); run generate-h1-product-docs.py"
         offer = [
             f"# Offer — {sku}",
             "",

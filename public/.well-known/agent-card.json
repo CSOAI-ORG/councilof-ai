@@ -24,6 +24,11 @@
         "uri": "https://councilof.ai/a2a/extensions/signed-receipts/v1/",
         "description": "Ed25519-signed task-outcome receipts plus a did:web key-trust convention for AgentCard signing (A2A v1.0 §8.4). A receipt is evidence of what was claimed, not a certification, and a signature over it is an integrity claim rather than a truth claim.",
         "required": false
+      },
+      {
+        "uri": "https://councilof.ai/.well-known/x402.json",
+        "description": "x402 discovery index for the agent pay rail (also GET /api/x402). Free door amount 0 at /api/free-door. Verification stays free. payTo is merchant not payer. Self-settle is not revenue. Settlement UNCHECKABLE until facilitator receipt. Measurement credential, never a grade.",
+        "required": false
       }
     ]
   },
@@ -117,6 +122,23 @@
       ],
       "examples": [
         "POST /api/assess {\"system\": \"<what the system does and for whom>\"}"
+      ]
+    },
+    {
+      "id": "x402-discovery",
+      "name": "x402 discovery + free door",
+      "description": "Agents discover paid artefact rails via GET https://councilof.ai/.well-known/x402.json (mode live, Base eip155:8453, USDC; amounts from challenge only — no invent price). Catalog GET /api/x402. Free door GET /api/free-door amount 0 settles and charges nothing — proves the rail. Living board GET /api/gspc. Verification stays free at /gspc-verify. payTo is merchant receive, never the signer. Self-settle proves the rail; stranger revenue is separate (do not invent buyers). Coming—Paddle not live. No card-processor invent. Measurement, never certification.",
+      "tags": [
+        "x402",
+        "discovery",
+        "payments",
+        "measurement"
+      ],
+      "examples": [
+        "GET https://councilof.ai/.well-known/x402.json",
+        "GET https://councilof.ai/api/free-door",
+        "GET https://councilof.ai/api/gspc",
+        "GET https://councilof.ai/gspc-verify"
       ]
     }
   ],

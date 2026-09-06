@@ -13,6 +13,14 @@
   "compatibility_date": "2026-07-29",
   "pages_build_output_dir": "./dist/client",
 
+  // Wallets the estate controls. A payment from any of these is a self-settlement: recorded by the
+  // edge, never a buyer, never revenue (functions/api/_x402.ts selfWallets; /api/revenue one_number).
+  // Plain variables for this project are managed HERE, not in the dashboard (dashboard = secrets only).
+  // 0x4dB7…02B7 = the throwaway payer funded 2026-09-06 for Move A/B (scripts/badger/make-payer-wallet.sh).
+  "vars": {
+    "X402_SELF_WALLETS": "0x4dB7AAFbe797a39Cd6Cc4E7aa64d970F7F6E02B7"
+  },
+
   // SOV_ARENA_STATE feeds /api/sov-arena/rounds.jsonl — live arena evidence from
   // sov_arena.py (oracle-micro), synced to KV by the Mac-side cron. Same namespace
   // the csoai-site project binds (created 2026-08-09, EAT lane).

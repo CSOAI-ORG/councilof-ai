@@ -718,7 +718,7 @@ function App() {
                   <Route path="/ag-ui" component={AgUiBridge} />
                   <Route path="/chat" component={AgUiBridge} />
                   {/* Direct: /leaderboard itself redirects into the Dashboard, so this used to hop twice. */}
-                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=leaderboard" />}</Route>
+                  <Route path="/rankings">{() => <Redirect to="/dashboard?tab=board" />}</Route>
                   <Route path="/methodology" component={Methodology} />
                   <Route path="/answers/:slug" component={AnswerPage} />
                   <Route path="/answers" component={AnswersIndex} />
@@ -1059,7 +1059,9 @@ function App() {
                   <Route path="/sovereign-space">{() => <Redirect to="/gone-space" />}</Route>
                   <Route path="/stripe-checkout.js" component={Gone} />
                   <Route path="/simulate">{() => <Redirect to="/gspc-arena" />}</Route>
-                  <Route path="/badges" component={BadgesPage} />
+                  {/* A second route for the same path stood here and was UNREACHABLE: wouter's
+                      Switch takes the first match, and the redirect above already owns that path
+                      (public/_redirects agrees with it). BadgesPage stays reachable at /authority. */}
                   <Route path="/authority" component={BadgesPage} />
                   <Route path="/world-3d" component={RealWorldMap} />
                   <Route path="/real-world" component={RealWorldMap} />

@@ -7,11 +7,13 @@ RULES (override habit):
 - Every number is DERIVED at run time from a live probe (bytes, sha256, counts).
 - "signed" is only ever said about Ed25519-under-did:web verified cards; nothing
   else. Preview cards are labeled preview/unsigned explicitly when the API says so.
-- Never ADVERTISE a SKU whose free preview is empty or 402 (commission-card today).
-  That is a marketing rule and it stands. It is NOT a claim that such a door cannot
-  deliver: a 402 carrying a valid challenge is a live paid door, and conflating the two
-  wrote "NOT DELIVERABLE" about commission-card into three artefacts while the published
-  offer column mapped 95 conformant Bazaar hosts to exactly that SKU.
+- ADVERTISE a SKU whose door either answers 200 with real bytes OR issues a PARSEABLE
+  402 CARRYING accepts[]. Governor ruling, 06 Sep 2026: "a door that delivers its free
+  preview inside the 402 body is still a door — the 402 is where the rail explains
+  itself." The previous rule keyed on HTTP 200 and therefore excluded request-attestation
+  permanently, however good its preview became — while the published offer column mapped
+  95 of the 394 conformant Bazaar hosts to exactly that SKU. Only a door whose 402 does
+  NOT parse into payment options is withheld, because a buyer cannot act on it.
 """
 
 from __future__ import annotations
@@ -36,6 +38,28 @@ def now() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def x402_shape(body: bytes) -> dict:
+    """Is this body a parseable x402 challenge carrying accepts[]?
+
+    GOVERNOR RULING, 06 Sep 2026: "a door that delivers its free preview INSIDE the 402 body is
+    still a door — the 402 is where the rail explains itself." So the test for whether a SKU can
+    be advertised is whether the door ISSUES A PARSEABLE 402 WITH accepts[], not whether it
+    answers 200. Parsed from the full body: the sample kept for the doc is truncated at 600 bytes
+    and accepts[] can sit past that, so reading the sample would have re-created the same class of
+    false negative this ruling exists to end.
+    """
+    try:
+        d = json.loads(body)
+    except Exception:
+        return {"parseable": False, "accepts": 0, "version": None}
+    accepts = d.get("accepts")
+    return {
+        "parseable": True,
+        "accepts": len(accepts) if isinstance(accepts, list) else 0,
+        "version": d.get("x402Version"),
+    }
+
+
 def probe(url: str, timeout: int = 20) -> dict:
     """Return {status, bytes, sha256, sample, error} for a URL."""
     try:
@@ -48,6 +72,7 @@ def probe(url: str, timeout: int = 20) -> dict:
                 "bytes": len(body),
                 "sha256": hashlib.sha256(body).hexdigest(),
                 "sample": body[:600].decode(errors="replace"),
+                "x402": x402_shape(body),
                 "error": None,
             }
     except urllib.error.HTTPError as e:
@@ -58,6 +83,7 @@ def probe(url: str, timeout: int = 20) -> dict:
             "bytes": len(body),
             "sha256": hashlib.sha256(body).hexdigest(),
             "sample": body[:600].decode(errors="replace"),
+            "x402": x402_shape(body),
             "error": None,
         }
     except Exception as e:
@@ -124,13 +150,29 @@ def doc(sku: str, title: str, block: dict) -> str:
         # published offer column: the estate was mapping buyers to it and telling itself it could
         # not be served, at the same time. Probed with the `subject` its bazaar extension declares
         # REQUIRED, the door returns the signed cards, their hashes and corpus_as_of.
+        # GOVERNOR RULING 06 Sep 2026 — THE 402 IS A DOOR.
+        # "A door that delivers its free preview INSIDE the 402 body is still a door — the 402 is
+        # where the rail explains itself. Key the rule on 'issues a parseable 402 with accepts[]',
+        # not on HTTP 200."
+        # What this replaced, and why it was wrong: the rule read `status == 200 and bytes > 0`,
+        # else not advertised. request-attestation answers 402 and puts its FREE preview — the
+        # signed cards, their hashes, corpus_as_of — inside the challenge body. No amount of
+        # improving that preview could ever satisfy a status-keyed rule, so the SKU that 95 of the
+        # 394 conformant Bazaar hosts are mapped to in the published offer column was structurally
+        # unadvertisable. We were pointing buyers at it in a public dataset and declining to
+        # advertise it on our own pages, at the same time.
         ("**DELIVERABLE — free preview answers with real bytes.** Advertised."
          if p_preview["status"] == 200 and p_preview["bytes"] > 0
-         else "**DELIVERABLE — PAID DOOR, NOT ADVERTISED.** The door is live and a settled receipt"
-              f" unlocks the artefact; the free preview is the 402 challenge itself"
-              f" ({p_preview['bytes']} bytes), so by the rule above this SKU is not advertised."
-              " Not advertised is a choice about marketing; it is not a statement that the door"
-              " cannot deliver."
+         else "**DELIVERABLE — the 402 IS the door.** Advertised. The challenge parses as x402"
+              f" v{p_preview.get('x402', {}).get('version')} carrying"
+              f" {p_preview.get('x402', {}).get('accepts')} accepts[] entr"
+              f"{'y' if p_preview.get('x402', {}).get('accepts') == 1 else 'ies'}"
+              f" ({p_preview['bytes']} bytes); the free preview is delivered inside it and a"
+              " settled receipt unlocks the paid artefact."
+         if p_preview["status"] == 402 and p_preview.get("x402", {}).get("accepts", 0) > 0
+         else "**NOT ADVERTISED — 402 without a parseable accepts[].** The door answers 402 but the"
+              " body does not parse as an x402 challenge with payment options, so a buyer cannot"
+              " act on it."
          if p_preview["status"] == 402
          else f"**UNVERIFIED.** Status {p_preview['status']}, {p_preview['bytes']} bytes —"
               " probe the door before this SKU is offered."),

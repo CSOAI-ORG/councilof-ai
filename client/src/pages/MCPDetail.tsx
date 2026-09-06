@@ -54,7 +54,13 @@ export default function MCPDetail() {
     operatingSystem: "Any",
     description: server.description,
     softwareHelp: server.url,
-    offers: { "@type": "Offer", price: "99", priceCurrency: "USD", category: "subscription" },
+    // JSON-LD is machine-readable and syndicated: this block is what a search engine reads and can
+    // render as a price beside the result. It said price "99" USD, category "subscription", on a
+    // route that renders ONE PAGE PER MCP SERVER — so every server in the registry advertised a $99
+    // subscription. These are free, permissively-licensed packages, and the owner ruling of
+    // 6 Sep 2026 is that everything is free or pay-as-you-go x402 quoted at the 402 itself. There
+    // is no subscription to sell and there never was one at this price.
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD", availability: "https://schema.org/InStock" },
     publisher: { "@type": "Organization", name: "CSOAI LTD", url: "https://csoai.org" },
   };
 

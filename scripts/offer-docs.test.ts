@@ -80,3 +80,47 @@ describe("the dataset's offer_sku vocabulary resolves to a document", () => {
     expect(broken, "the dataset maps buyers to a SKU with no document and no stated reason").toEqual([]);
   });
 });
+
+/**
+ * GOVERNOR RULING, 06 Sep 2026: "a door that delivers its free preview INSIDE the 402 body is still
+ * a door — the 402 is where the rail explains itself. Key the rule on 'issues a parseable 402 with
+ * accepts[]', not on HTTP 200."
+ *
+ * The rule it replaced keyed on HTTP 200, which request-attestation can never return: it answers
+ * 402 and puts its free preview — the signed cards, their hashes, corpus_as_of — inside the
+ * challenge. No improvement to that preview could ever have satisfied a status-keyed rule, so the
+ * SKU that 95 of the 394 conformant Bazaar hosts are mapped to in the published offer column was
+ * structurally unadvertisable while we pointed buyers at it in a public dataset.
+ */
+describe("the 402 is a door", () => {
+  const sources = readdirSync(DOCS).filter(
+    (f) => f.endsWith(".md") && !f.startsWith("OFFER-") && !f.startsWith("SKU-") && !f.startsWith("PARTNERS-"),
+  );
+
+  it("reads some source docs, so this cannot pass vacuously", () => {
+    const withVerdict = sources.filter((f) =>
+      /\*\*(DELIVERABLE|NOT ADVERTISED|UNVERIFIED)/.test(readFileSync(resolve(DOCS, f), "utf8")));
+    expect(withVerdict.length, "no source doc states a verdict").toBeGreaterThan(4);
+  });
+
+  it("a door whose 402 parses with accepts[] is advertised", () => {
+    const bad: string[] = [];
+    for (const f of sources) {
+      const t = readFileSync(resolve(DOCS, f), "utf8");
+      if (!/the 402 IS the door/.test(t)) continue;
+      if (!/\bAdvertised\b/.test(t)) bad.push(f);
+    }
+    expect(bad, "a parseable 402 with accepts[] is a live door and must be advertised").toEqual([]);
+  });
+
+  it("NOT ADVERTISED is only ever for a 402 that does not parse into payment options", () => {
+    const bad: string[] = [];
+    for (const f of sources) {
+      const t = readFileSync(resolve(DOCS, f), "utf8");
+      const m = t.match(/\*\*NOT ADVERTISED[^*]*\*\*/);
+      if (!m) continue;
+      if (!/without a parseable accepts\[\]/.test(m[0])) bad.push(`${f}: ${m[0].slice(0, 70)}`);
+    }
+    expect(bad, "withholding a SKU for any other reason contradicts the 06 Sep ruling").toEqual([]);
+  });
+});
