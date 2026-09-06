@@ -115,10 +115,26 @@ def test_millable_skips_already_tried() -> None:
     assert "a/unmeasured" in got
     assert "b/practiced" not in got
     assert "c/uncheckable" not in got
-    # Quant packs must be attempted so UNCHECKABLE is recorded, not skipped.
-    assert "Qwen/Qwen2.5-7B-Instruct-AWQ" in got
-    assert "d/awq" in got
-    assert route_kind("text-generation", "Qwen/Qwen2.5-7B-Instruct-AWQ") == "feature"
+    # Quant packs 400 on every path and ate the 34048153790 windows.
+    assert "Qwen/Qwen2.5-7B-Instruct-AWQ" not in got
+
+
+def test_roberta_base_is_millable() -> None:
+    """endswith('-base') used to skip fill-mask checkpoints the router serves.
+    Remaining UNMEASURED after 313 is 77 of these."""
+    models = [
+        {"slug": "FacebookAI/roberta-base", "pipeline_tag": "fill-mask", "status": "UNMEASURED"},
+        {"slug": "intfloat/multilingual-e5-base", "pipeline_tag": "sentence-similarity", "status": "UNMEASURED"},
+        {"slug": "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+        {"slug": "HuggingFaceTB/SmolLM3-3B-Base", "pipeline_tag": "text-generation", "status": "UNMEASURED"},
+    ]
+    got = millable_slugs(models)
+    assert "FacebookAI/roberta-base" in got
+    assert "intfloat/multilingual-e5-base" in got
+    assert "unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF" not in got
+    # chat *Base weights still millable as fill/feature fallback; chat_capable skips them
+    assert "HuggingFaceTB/SmolLM3-3B-Base" in got
+    assert "HuggingFaceTB/SmolLM3-3B-Base" not in chat_capable_slugs(models)
 
 
 def test_millable_includes_embed_and_fill_mask() -> None:
@@ -158,12 +174,14 @@ def test_shards_cover_2200_at_limit_110() -> None:
 def test_payload_for_kind_is_the_200_shapes() -> None:
     """MiniLM 400s on {inputs: str}; 200 on source_sentence. Drive the
     shipped payload builder, no HTTP."""
-    from mill_hf_inference import payload_for_kind  # noqa: E402
+    from mill_hf_inference import payload_for_kind, payloads_for_kind  # noqa: E402
 
     sim = payload_for_kind("similarity")
     assert "source_sentence" in sim["inputs"]
     assert "sentences" in sim["inputs"]
-    assert payload_for_kind("fill-mask")["inputs"] == "The [MASK] is here"
+    masks = [p["inputs"] for p in payloads_for_kind("fill-mask")]
+    assert "The <mask> is here" in masks
+    assert "The [MASK] is here" in masks
     assert payload_for_kind("feature")["inputs"] == "hello world"
 
 
@@ -183,8 +201,9 @@ if __name__ == "__main__":
     test_shards_do_not_overlap_when_fleet_smaller_than_stride()
     test_chat_capable_skips_quant_and_base()
     test_millable_skips_already_tried()
+    test_roberta_base_is_millable()
     test_millable_includes_embed_and_fill_mask()
     test_shards_cover_2200_at_limit_110()
     test_payload_for_kind_is_the_200_shapes()
     test_exhausted_millable_is_not_a_cron_killing_fail()
-    print("test_mill_window: 12 passed")
+    print("test_mill_window: 13 passed")

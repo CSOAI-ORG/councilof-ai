@@ -157,12 +157,31 @@ def hf_infer(tok: str, slug: str, payload: dict) -> tuple[str, str]:
         return "UNCHECKABLE", f"{type(e).__name__}"
 
 
-def payload_for_kind(kind: str) -> dict:
+def payloads_for_kind(kind: str) -> list[dict]:
+    """xlm-roberta/roberta-base 400 on [MASK] ('No mask_token (<mask>)');
+    mdeberta 200 on [MASK]. Try both. Drive with tests, no HTTP."""
     if kind == "similarity":
-        return {"inputs": {"source_sentence": "hello", "sentences": ["hello", "world"]}}
+        return [{"inputs": {"source_sentence": "hello", "sentences": ["hello", "world"]}}]
     if kind == "fill-mask":
-        return {"inputs": "The [MASK] is here"}
-    return {"inputs": "hello world"}
+        return [
+            {"inputs": "The <mask> is here"},
+            {"inputs": "The [MASK] is here"},
+        ]
+    return [{"inputs": "hello world"}]
+
+
+def payload_for_kind(kind: str) -> dict:
+    return payloads_for_kind(kind)[0]
+
+
+def hf_infer_kind(tok: str, slug: str, kind: str) -> tuple[str, str]:
+    last = ("UNCHECKABLE", "no-payload")
+    for payload in payloads_for_kind(kind):
+        st, txt = hf_infer(tok, slug, payload)
+        if st == "OK":
+            return st, txt
+        last = (st, txt)
+    return last
 
 
 def parse_token(text: str) -> str | None:
@@ -219,6 +238,7 @@ def main() -> int:
             print("MILL_EMPTY no slugs in window — a run that measures nothing is not success", flush=True)
         return rc
     rows = []
+    lock_tags = {m.get("slug"): m.get("pipeline_tag") for m in (lock.get("models") or []) if m.get("slug")}
     for slug in window:
         rec = {
             "slug": slug,
@@ -228,15 +248,23 @@ def main() -> int:
             "axis": "governance",
             "n": len(GOV_ITEMS),
             "status": "UNMEASURED",
+            "pipeline_tag": lock_tags.get(slug) or "",
             "note": "HF Inference Providers mill. Not a GSPC board rewrite. n<30 unquotable.",
         }
         try:
-            meta = get_json(API_MODEL + slug, tok)
+            meta = get_json(API_MODEL + slug + "?expand[]=inferenceProviderMapping", tok)
             rec["inference_meta"] = meta.get("inference")
-            rec["pipeline_tag"] = meta.get("pipeline_tag")
+            rec["pipeline_tag"] = meta.get("pipeline_tag") or rec.get("pipeline_tag")
+            mapping = meta.get("inferenceProviderMapping") or {}
+            if isinstance(mapping, dict):
+                for info in mapping.values():
+                    if isinstance(info, dict) and info.get("status") == "live" and info.get("task"):
+                        rec["infer_task"] = info["task"]
+                        rec["pipeline_tag"] = rec.get("pipeline_tag") or info["task"]
+                        break
         except Exception as e:
             rec["meta_error"] = type(e).__name__
-        tag = rec.get("pipeline_tag") or ""
+        tag = rec.get("infer_task") or rec.get("pipeline_tag") or ""
         kind = route_kind(tag, slug)
         rec["route_kind"] = kind
         if kind != "chat":
@@ -250,7 +278,7 @@ def main() -> int:
             if st != "OK":
                 rec["endpoint"] = HF_INFER + slug
                 infer_kind = "feature" if kind == "try-chat-then-feature" else kind
-                st, txt = hf_infer(tok, slug, payload_for_kind(infer_kind))
+                st, txt = hf_infer_kind(tok, slug, infer_kind)
             rec["hits"] = 1 if st == "OK" else 0
             rec["answers"] = [{"call": st, "raw": txt[:80]}]
             if st == "OK":
@@ -290,7 +318,7 @@ def main() -> int:
             rec["hits"] = hits
             rec["answers"] = answers
             if all(a["call"] != "OK" for a in answers):
-                st2, txt2 = hf_infer(tok, slug, payload_for_kind("feature"))
+                st2, txt2 = hf_infer_kind(tok, slug, "feature")
                 rec["answers"].append({"call": st2, "raw": txt2[:80], "fallback": "feature"})
                 if st2 == "OK":
                     rec["status"] = "practice-mill"

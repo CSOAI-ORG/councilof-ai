@@ -72,11 +72,10 @@ ROUTER_TAGS = CHAT_TAGS | FEATURE_TAGS | SIMILARITY_TAGS | FILL_MASK_TAGS | TEXT
 
 
 def _unserved_weight_pack(slug: str) -> bool:
+    """GPTQ/GGUF/FP8 400 on every router path. Do not treat *-base fill-mask
+    (roberta-base, t5-base) as a weight pack — those are live hf-inference."""
     low = slug.lower()
-    if any(m in low for m in UNSERVED_MARKERS):
-        return True
-    name = low.rsplit("/", 1)[-1]
-    return name.endswith("-base")
+    return any(m in low for m in UNSERVED_MARKERS)
 
 
 def chat_capable_slugs(models: list[dict]) -> list[str]:
@@ -87,6 +86,9 @@ def chat_capable_slugs(models: list[dict]) -> list[str]:
         if not slug:
             continue
         if _unserved_weight_pack(slug):
+            continue
+        name = slug.lower().rsplit("/", 1)[-1]
+        if name.endswith("-base"):
             continue
         tag = m.get("pipeline_tag") or ""
         if tag in CHAT_TAGS:
@@ -116,9 +118,8 @@ def route_kind(tag: str, slug: str = "") -> str:
 
 
 def millable_slugs(models: list[dict]) -> list[str]:
-    """Every UNMEASURED slug gets an HTTP attempt. Quant packs 400; that
-    UNCHECKABLE is the recorded attempt, not a silent skip that leaves
-    n_measured stuck and 665 rows untried."""
+    """UNMEASURED slugs that can 200. GGUF/GPTQ/FP8 stay out of the window
+    (they 400 and ate the 34048153790 shards). roberta-base is millable."""
     skip = {
         m.get("slug")
         for m in models
@@ -128,6 +129,8 @@ def millable_slugs(models: list[dict]) -> list[str]:
     for m in models:
         slug = m.get("slug")
         if not slug or slug in skip:
+            continue
+        if _unserved_weight_pack(slug):
             continue
         out.append(slug)
     return out
