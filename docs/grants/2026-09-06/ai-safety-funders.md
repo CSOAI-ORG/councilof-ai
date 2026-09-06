@@ -7,14 +7,13 @@ Source: Manifund "AI Safety Funder Bulletin", last updated 1 Sep 2026
 |---|---|---|---|---|
 | **Transformative AI Fund** (EA Funds) | "We are always open to applications." | "$10k–$150k … rarely exceed $300k" | https://av20jp3z.paperform.co/?fund=Transformative%20AI%20Fund | **3** — funds "infrastructure" and "demonstration projects"; we are evaluation infrastructure |
 | **Manifund** | rolling | $0–$500k, regrantor-driven | https://manifund.org/ (create a project page) | 2 |
-| BlueDot Impact | rolling rapid grants ≤$10k (bulletin); grants page itself showed no detail today | ≤$10k | https://bluedot.org/ | 2 — aimed at individuals moving into AI safety |
+| BlueDot Impact | rapid grants ≤$10k per the bulletin; its own page showed no detail today | ≤$10k | https://bluedot.org/ | 2 |
 
 ## TAIF — form fields answered (paste, then edit in own voice)
 
 **Project title** — Signed, recomputable measurement of frontier-model behaviour (GSPC board and verifier)
-**One-line summary** — We publish what AI models actually do on frozen banks — refusals, marking of generated
-content, provenance and continuity behaviour — as Ed25519-signed cards under a public Merkle root that anyone
-can verify offline. Measurement, not certification.
+**One-line summary** — We publish what AI models actually do on frozen banks (refusals, marking, provenance,
+continuity) as Ed25519-signed cards under a public Merkle root anyone can verify offline. Measurement, not certification.
 **What exists (evidence)** — https://councilof.ai/api/gspc (22 axes measured, 14 fleets, "not a certificate");
 166 signed cards under https://councilof.ai/root.json; corrections ledger https://councilof.ai/api/corrections;
 DOI https://doi.org/10.5281/zenodo.21991104; verifier on PyPI/npm; IETF I-D draft-templeman-scitt-framing-space.
@@ -30,8 +29,8 @@ ask in the $30–60k band.
 **Conflicts / AI use** — drafted with an AI assistant from live facts; disclose if the form asks.
 
 ## What we will NOT claim
-Alignment breakthroughs, users, revenue (one_number is 0), certification, or that our own council models
-are "safe" — they are excluded from public leader rows on 8 axes by our own rule.
+Alignment results, users, revenue (one_number is 0), certification, or that our own council models are
+"safe" — our rule excludes them from public leader rows on 8 axes.
 
 ## Owner path
 TAIF paperform (identity + org details), one sitting. Manifund page only if a regrantor shows interest.
