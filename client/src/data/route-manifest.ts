@@ -298,6 +298,11 @@ export const ROUTE_MANIFEST: RouteEntry[] = [
   "title": "Eu Act Classifier"
  },
  {
+  "path": "/cobol",
+  "comp": "CobolBridge",
+  "title": "Cobol Bridge"
+ },
+ {
   "path": "/cobolbridge",
   "comp": "CobolBridge",
   "title": "Cobol Bridge"
