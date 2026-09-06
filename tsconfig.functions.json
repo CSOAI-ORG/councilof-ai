@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "es2022",
+      "dom",
+      "dom.iterable"
+    ],
+    "strict": false,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowJs": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": []
+  },
+  "include": [
+    "functions/**/*.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts"
+  ],
+  "_note": "Mirrors tsconfig.json (strict:false, ES2022, bundler) so the count reflects the repo, not a strictness chosen here. types:[] ON PURPOSE \u2014 @cloudflare/workers-types is not a dependency yet, so `npm run check:functions` reproduces the 233 in docs/reports/functions-typecheck-2026-09-06.md exactly. Adding that package (and the lockfile churn it brings) is step one of the fix, in its own PR."
+}
